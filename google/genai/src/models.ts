@@ -10,6 +10,7 @@ import {ApiClient} from './_api_client';
 import * as common from './_common';
 import {BaseModule} from './_common';
 import * as t from './_transformers';
+import {PagedItem, Pager} from './pagers';
 import * as types from './types';
 
 function partToMldev(
@@ -2229,6 +2230,11 @@ function computeTokensParametersToMldev(
     throw new Error('contents parameter is not supported in Google AI.');
   }
 
+  let fromConfig = common.getValueByPath(fromObject, ['config']);
+  if (fromConfig !== undefined) {
+    common.setValueByPath(toObject, ['config'], fromConfig);
+  }
+
   return toObject;
 }
 
@@ -2260,6 +2266,11 @@ function computeTokensParametersToVertex(
         }),
       ),
     );
+  }
+
+  let fromConfig = common.getValueByPath(fromObject, ['config']);
+  if (fromConfig !== undefined) {
+    common.setValueByPath(toObject, ['config'], fromConfig);
   }
 
   return toObject;

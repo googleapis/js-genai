@@ -1035,6 +1035,11 @@ function getCachedContentParametersToMldev(
     );
   }
 
+  let fromConfig = common.getValueByPath(fromObject, ['config']);
+  if (fromConfig !== undefined) {
+    common.setValueByPath(toObject, ['config'], fromConfig);
+  }
+
   return toObject;
 }
 
@@ -1052,6 +1057,11 @@ function getCachedContentParametersToVertex(
       ['_url', 'name'],
       t.tCachedContentName(apiClient, fromName),
     );
+  }
+
+  let fromConfig = common.getValueByPath(fromObject, ['config']);
+  if (fromConfig !== undefined) {
+    common.setValueByPath(toObject, ['config'], fromConfig);
   }
 
   return toObject;
@@ -1073,6 +1083,11 @@ function deleteCachedContentParametersToMldev(
     );
   }
 
+  let fromConfig = common.getValueByPath(fromObject, ['config']);
+  if (fromConfig !== undefined) {
+    common.setValueByPath(toObject, ['config'], fromConfig);
+  }
+
   return toObject;
 }
 
@@ -1090,6 +1105,11 @@ function deleteCachedContentParametersToVertex(
       ['_url', 'name'],
       t.tCachedContentName(apiClient, fromName),
     );
+  }
+
+  let fromConfig = common.getValueByPath(fromObject, ['config']);
+  if (fromConfig !== undefined) {
+    common.setValueByPath(toObject, ['config'], fromConfig);
   }
 
   return toObject;

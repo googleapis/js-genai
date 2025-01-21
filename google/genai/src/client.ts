@@ -6,13 +6,14 @@
 
 import {GoogleAuthOptions} from 'google-auth-library';
 
-import {ApiClient, ApiClientInitOptions, HttpOptions} from './_api_client';
+import {ApiClient, ApiClientInitOptions} from './_api_client';
 import {Caches} from './caches';
 import {Chats} from './chats';
 import {Files} from './files';
 import {Live} from './live';
 import {Models} from './models';
 import {Tunings} from './tunings';
+import {HttpOptions} from './types';
 
 export interface ClientInitOpts extends ApiClientInitOptions {}
 
@@ -23,7 +24,7 @@ export class Client {
   private readonly googleAuthOptions?: GoogleAuthOptions;
   private readonly project?: string;
   private readonly location?: string;
-  private readonly apiVersion?: 'v1'|'v1beta1'|'v1beta'|'v1alpha';
+  private readonly apiVersion?: string;
   readonly models: Models;
   readonly live: Live;
   readonly tunings: Tunings;
