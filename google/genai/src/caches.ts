@@ -21,7 +21,7 @@ function partToMldev(
   let toObject: Record<string, any> = {};
 
   if (common.getValueByPath(fromObject, ['videoMetadata']) !== undefined) {
-    throw new Error('videoMetadata parameter is not supported in Google AI.');
+    throw new Error('videoMetadata parameter is not supported in Gemini API.');
   }
 
   let fromThought = common.getValueByPath(fromObject, ['thought']);
@@ -202,65 +202,65 @@ function schemaToMldev(
   let toObject: Record<string, any> = {};
 
   if (common.getValueByPath(fromObject, ['minItems']) !== undefined) {
-    throw new Error('minItems parameter is not supported in Google AI.');
+    throw new Error('minItems parameter is not supported in Gemini API.');
   }
 
   if (common.getValueByPath(fromObject, ['example']) !== undefined) {
-    throw new Error('example parameter is not supported in Google AI.');
+    throw new Error('example parameter is not supported in Gemini API.');
   }
 
   if (common.getValueByPath(fromObject, ['propertyOrdering']) !== undefined) {
     throw new Error(
-      'propertyOrdering parameter is not supported in Google AI.',
+      'propertyOrdering parameter is not supported in Gemini API.',
     );
   }
 
   if (common.getValueByPath(fromObject, ['pattern']) !== undefined) {
-    throw new Error('pattern parameter is not supported in Google AI.');
+    throw new Error('pattern parameter is not supported in Gemini API.');
   }
 
   if (common.getValueByPath(fromObject, ['minimum']) !== undefined) {
-    throw new Error('minimum parameter is not supported in Google AI.');
+    throw new Error('minimum parameter is not supported in Gemini API.');
   }
 
   if (common.getValueByPath(fromObject, ['default']) !== undefined) {
-    throw new Error('default parameter is not supported in Google AI.');
+    throw new Error('default parameter is not supported in Gemini API.');
   }
 
   if (common.getValueByPath(fromObject, ['anyOf']) !== undefined) {
-    throw new Error('anyOf parameter is not supported in Google AI.');
+    throw new Error('anyOf parameter is not supported in Gemini API.');
   }
 
   if (common.getValueByPath(fromObject, ['maxLength']) !== undefined) {
-    throw new Error('maxLength parameter is not supported in Google AI.');
+    throw new Error('maxLength parameter is not supported in Gemini API.');
   }
 
   if (common.getValueByPath(fromObject, ['title']) !== undefined) {
-    throw new Error('title parameter is not supported in Google AI.');
+    throw new Error('title parameter is not supported in Gemini API.');
   }
 
   if (common.getValueByPath(fromObject, ['minLength']) !== undefined) {
-    throw new Error('minLength parameter is not supported in Google AI.');
+    throw new Error('minLength parameter is not supported in Gemini API.');
   }
 
   if (common.getValueByPath(fromObject, ['minProperties']) !== undefined) {
-    throw new Error('minProperties parameter is not supported in Google AI.');
+    throw new Error('minProperties parameter is not supported in Gemini API.');
   }
 
   if (common.getValueByPath(fromObject, ['maxItems']) !== undefined) {
-    throw new Error('maxItems parameter is not supported in Google AI.');
+    throw new Error('maxItems parameter is not supported in Gemini API.');
   }
 
   if (common.getValueByPath(fromObject, ['maximum']) !== undefined) {
-    throw new Error('maximum parameter is not supported in Google AI.');
+    throw new Error('maximum parameter is not supported in Gemini API.');
   }
 
   if (common.getValueByPath(fromObject, ['nullable']) !== undefined) {
-    throw new Error('nullable parameter is not supported in Google AI.');
+    throw new Error('nullable parameter is not supported in Gemini API.');
   }
 
   if (common.getValueByPath(fromObject, ['maxProperties']) !== undefined) {
-    throw new Error('maxProperties parameter is not supported in Google AI.');
+    throw new Error('maxProperties parameter is not supported in Gemini API.');
   }
 
   let fromType = common.getValueByPath(fromObject, ['type']);
@@ -431,7 +431,7 @@ function functionDeclarationToMldev(
   let toObject: Record<string, any> = {};
 
   if (common.getValueByPath(fromObject, ['response']) !== undefined) {
-    throw new Error('response parameter is not supported in Google AI.');
+    throw new Error('response parameter is not supported in Gemini API.');
   }
 
   let fromDescription = common.getValueByPath(fromObject, ['description']);
@@ -621,7 +621,7 @@ export function toolToMldev(
   }
 
   if (common.getValueByPath(fromObject, ['retrieval']) !== undefined) {
-    throw new Error('retrieval parameter is not supported in Google AI.');
+    throw new Error('retrieval parameter is not supported in Gemini API.');
   }
 
   let fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
