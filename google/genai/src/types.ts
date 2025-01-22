@@ -1415,7 +1415,7 @@ export interface TuningJob {
   description?: string;
   /** The base model that is being tuned, e.g., "gemini-1.0-pro-002". . */
   baseModel?: string;
-  /** Output only. The tuned model resources assiociated with this TuningJob. */
+  /** Output only. The tuned model resources associated with this TuningJob. */
   tunedModel?: TunedModel;
   /** Tuning Spec for Supervised Fine Tuning. */
   supervisedTuningSpec?: SupervisedTuningSpec;
@@ -1720,12 +1720,6 @@ export interface UploadFileConfig {
   mimeType?: string;
   /** Optional display name of the file. */
   displayName?: string;
-}
-
-/** Used to override the default configuration. */
-export interface DownloadFileConfig {
-  /** Used to override HTTP request options. */
-  httpOptions?: Record<string, any>;
 }
 
 /** Configuration for upscaling an image.
