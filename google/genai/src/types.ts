@@ -260,7 +260,7 @@ export class FunctionResponse {
   response?: Record<string, any>;
 }
 
-/** Content blob. It's preferred to send as text directly rather than raw bytes. */
+/** Content blob. */
 export interface Blob {
   /** Required. Raw bytes. */
   data?: string;
