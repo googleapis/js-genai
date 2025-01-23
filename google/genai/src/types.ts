@@ -1063,6 +1063,8 @@ export interface Image {
       or the ``gcs_uri`` field but not both.
        */
   imageBytes?: string;
+  /** The MIME type of the image. */
+  mimeType?: string;
 }
 
 /** Class that represents an output image. */
@@ -1931,7 +1933,7 @@ export interface LiveServerMessage {
 
 /** Message contains configuration that will apply for the duration of the streaming session. */
 export interface LiveClientSetup {
-  /** 
+  /**
       The fully qualified name of the publisher model or tuned model endpoint to
       use.
        */
