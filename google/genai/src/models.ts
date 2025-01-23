@@ -2875,6 +2875,11 @@ function imageFromMldev(
     );
   }
 
+  let fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+  if (fromMimeType !== undefined) {
+    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+  }
+
   return toObject;
 }
 
@@ -2899,6 +2904,11 @@ function imageFromVertex(
       ['imageBytes'],
       t.tBytes(apiClient, fromImageBytes),
     );
+  }
+
+  let fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+  if (fromMimeType !== undefined) {
+    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
   }
 
   return toObject;
