@@ -6,7 +6,9 @@
 
 import {GoogleAuth, GoogleAuthOptions} from 'google-auth-library';
 import {URL} from 'url';
+
 import * as types from './types';
+import {HttpOptions} from './types';
 
 const AUTHORIZATION_HEADER = 'Authorization';
 const CONTENT_TYPE_HEADER = 'Content-Type';
@@ -61,21 +63,12 @@ export class ServerError extends Error {
   }
 }
 
-export interface HttpOptions {
-  [key: string]: any;
-  baseUrl?: string;
-  apiVersion?: 'v1' | 'v1beta1' | 'v1beta' | 'v1alpha';
-  headers?: Record<string, any>;
-  timeout?: number; // in milliseconds
-  response_payload?: Record<any, any>;
-}
-
 export interface ApiClientInitOptions {
   project?: string;
   location?: string;
   apiKey?: string;
   vertexai?: boolean;
-  apiVersion?: 'v1' | 'v1beta1' | 'v1beta' | 'v1alpha';
+  apiVersion?: string;
   googleAuthOptions?: GoogleAuthOptions;
   httpOptions?: HttpOptions;
 }
@@ -315,8 +308,14 @@ export class ApiClient {
     for (const [key, value] of Object.entries(requestHttpOptions)) {
       // Records compile to objects.
       if (typeof value === 'object') {
+        // @ts-ignore TS2345TS7053: Element implicitly has an 'any' type because
+        // expression of type 'string' can't be used to index type
+        // 'HttpOptions'.
         patchedHttpOptions[key] = {...patchedHttpOptions[key], ...value};
       } else if (value) {
+        // @ts-ignore TS2345TS7053: Element implicitly has an 'any' type because
+        // expression of type 'string' can't be used to index type
+        // 'HttpOptions'.
         patchedHttpOptions[key] = value;
       }
     }

@@ -306,6 +306,18 @@ export interface Content {
   role?: string;
 }
 
+/** HTTP options to be used in each of the requests. */
+export interface HttpOptions {
+  /** The base URL for the AI platform service endpoint. */
+  baseUrl?: string;
+  /** Specifies the version of the API to use. */
+  apiVersion?: string;
+  /** Additional HTTP headers to be sent with the request. */
+  headers?: Record<string, string>;
+  /** Timeout for the request in milliseconds. */
+  timeout?: number;
+}
+
 /** Schema that defines the format of input and output data.
 
   Represents a select subset of an OpenAPI 3.0 schema object.

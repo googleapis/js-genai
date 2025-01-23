@@ -10,6 +10,7 @@ import {ApiClient} from './_api_client';
 import * as common from './_common';
 import {BaseModule} from './_common';
 import * as t from './_transformers';
+import {PagedItem, Pager} from './pagers';
 import * as types from './types';
 
 function getTuningJobParametersToMldev(
@@ -22,6 +23,11 @@ function getTuningJobParametersToMldev(
   let fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined) {
     common.setValueByPath(toObject, ['_url', 'name'], fromName);
+  }
+
+  let fromConfig = common.getValueByPath(fromObject, ['config']);
+  if (fromConfig !== undefined) {
+    common.setValueByPath(toObject, ['config'], fromConfig);
   }
 
   return toObject;
@@ -37,6 +43,11 @@ function getTuningJobParametersToVertex(
   let fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined) {
     common.setValueByPath(toObject, ['_url', 'name'], fromName);
+  }
+
+  let fromConfig = common.getValueByPath(fromObject, ['config']);
+  if (fromConfig !== undefined) {
+    common.setValueByPath(toObject, ['config'], fromConfig);
   }
 
   return toObject;
