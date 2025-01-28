@@ -414,7 +414,11 @@ export class ApiClient {
     })
       .then(async (response) => {
         await throwErrorIfNotOK(response, url.toString(), requestInit);
-        return response.json();
+        if ( response.headers.get('content-type')?.includes('application/json')) {
+          return response.json();
+        } else {
+          return response.text();
+        }
       })
       .catch((e) => {
         if (e instanceof Error) {
