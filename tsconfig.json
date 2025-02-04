@@ -9,5 +9,6 @@
     "resolveJsonModule": true,
     "lib": ["es2022", "dom", "dom.iterable"]
   },
-  "include": ["src/**/*.ts", "test/**/*.ts", "samples/**/*.ts"]
+  "include": ["src/**/*.ts", "test/**/*.ts", "samples/**/*.ts"],
+  "exclude": ["test/sample_*.ts"]
 }
