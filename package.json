@@ -16,6 +16,7 @@
   "author": "",
   "license": "Apache-2.0",
   "devDependencies": {
+    "@types/express": "^5.0.0",
     "@types/jasmine": "^5.1.2",
     "@types/node": "^20.9.0",
     "@types/ws": "^8.5.13",
@@ -30,7 +31,9 @@
     "typescript": "~5.2.0"
   },
   "dependencies": {
+    "express": "^4.21.2",
     "google-auth-library": "^9.14.2",
+    "socket.io": "^4.8.1",
     "ws": "^8.18.0"
   }
 }
