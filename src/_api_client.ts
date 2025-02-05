@@ -198,9 +198,7 @@ export class ApiClient {
   }
 
   getBaseResourcePath() {
-    return `projects/${this.clientOptions.project}/locations/${
-      this.clientOptions.location
-    }`;
+    return `projects/${this.clientOptions.project}/locations/${this.clientOptions.location}`;
   }
 
   getApiKey() {

@@ -16,10 +16,9 @@
  */
 
 import {ApiClient} from './_api_client';
-import {Models} from './models';
 import * as t from './_transformers';
+import {Models} from './models';
 import * as types from './types';
-
 
 /**
  * Validates the GenerateContentResponse.
@@ -46,7 +45,7 @@ function validateResponse(response: types.GenerateContentResponse): boolean {
       return false;
     }
   }
-  return true
+  return true;
 }
 
 /**
@@ -57,14 +56,13 @@ function validateResponse(response: types.GenerateContentResponse): boolean {
  * @param inputContent The input content which sends to the model.
  * @returns generator of the stream response.
  */
-async function*
-    processStreamResponse(
-        streamResponse: AsyncGenerator<types.GenerateContentResponse>,
-        curatedHistory: types.Content[],
-        inputContent: types.Content,
-    ) {
+async function* processStreamResponse(
+  streamResponse: AsyncGenerator<types.GenerateContentResponse>,
+  curatedHistory: types.Content[],
+  inputContent: types.Content,
+) {
   const outputContent: types.Content[] = [];
-  let finishReason: types.FinishReason|undefined = undefined;
+  let finishReason: types.FinishReason | undefined = undefined;
   for await (const chunk of streamResponse) {
     if (validateResponse(chunk)) {
       const content = chunk?.candidates?.[0]?.content;
@@ -73,7 +71,7 @@ async function*
       }
       if (chunk?.candidates?.[0]?.finishReason !== undefined) {
         finishReason = chunk.candidates[0].finishReason;
-      };
+      }
     }
     if (outputContent.length && finishReason !== undefined) {
       curatedHistory.push(inputContent);
@@ -104,8 +102,10 @@ export class Chats {
    * @returns A new chat session.
    */
   create(
-      model: string, config: types.GenerateContentConfig = {},
-      history: types.Content[] = []) {
+    model: string,
+    config: types.GenerateContentConfig = {},
+    history: types.Content[] = [],
+  ) {
     return new Chat(this.apiClient, this.modelsModule, model, config, history);
   }
 }
@@ -120,11 +120,12 @@ export class Chat {
   private sendPromise: Promise<void> = Promise.resolve();
 
   constructor(
-      private readonly apiClient: ApiClient,
-      private readonly modelsModule: Models,
-      private readonly model: string,
-      private readonly config: types.GenerateContentConfig,
-      private readonly curatedHistory: types.Content[]) {}
+    private readonly apiClient: ApiClient,
+    private readonly modelsModule: Models,
+    private readonly model: string,
+    private readonly config: types.GenerateContentConfig,
+    private readonly curatedHistory: types.Content[],
+  ) {}
 
   /**
    * Sends a message to the model and returns the response.
@@ -136,12 +137,16 @@ export class Chat {
    * @param message The message to send.
    * @returns The model's response.
    */
-  async sendMessage(message: types.PartListUnion):
-      Promise<types.GenerateContentResponse> {
+  async sendMessage(
+    message: types.PartListUnion,
+  ): Promise<types.GenerateContentResponse> {
     await this.sendPromise;
     const inputContent = t.tContent(this.apiClient, message);
     const responsePromise = this.modelsModule.generateContent(
-        this.model, this.curatedHistory.concat(inputContent), this.config);
+      this.model,
+      this.curatedHistory.concat(inputContent),
+      this.config,
+    );
     this.sendPromise = (async () => {
       const response = await responsePromise;
       if (validateResponse(response)) {
@@ -167,16 +172,23 @@ export class Chat {
    * @param message The message to send.
    * @returns The model's response.
    */
-  async sendMessageStream(message: types.PartListUnion):
-      Promise<AsyncGenerator<types.GenerateContentResponse>> {
+  async sendMessageStream(
+    message: types.PartListUnion,
+  ): Promise<AsyncGenerator<types.GenerateContentResponse>> {
     await this.sendPromise;
     const inputContent = t.tContent(this.apiClient, message);
     const streamResponse = this.modelsModule.generateContentStream(
-        this.model, this.curatedHistory.concat(inputContent), this.config);
+      this.model,
+      this.curatedHistory.concat(inputContent),
+      this.config,
+    );
     this.sendPromise = streamResponse.then(() => undefined);
     const response = await streamResponse;
-    const result =
-        processStreamResponse(response, this.curatedHistory, inputContent);
+    const result = processStreamResponse(
+      response,
+      this.curatedHistory,
+      inputContent,
+    );
     return result;
   }
 }

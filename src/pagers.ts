@@ -12,7 +12,7 @@ export enum PagedItem {
   PAGED_ITEM_MODELS = 'models',
   PAGED_ITEM_TUNING_JOBS = 'tuningJobs',
   PAGED_ITEM_FILES = 'files',
-  PAGED_ITEM_CACHED_CONTENTS = 'cachedContents'
+  PAGED_ITEM_CACHED_CONTENTS = 'cachedContents',
 }
 
 /**
@@ -27,10 +27,10 @@ class BasePager<T> {
   protected _idx!: number;
 
   _init(
-      name: PagedItem,
-      request: (config: any) => any,
-      response: any,
-      config: any,
+    name: PagedItem,
+    request: (config: any) => any,
+    response: any,
+    config: any,
   ) {
     this._name = name;
     this._request = request;
@@ -53,10 +53,10 @@ class BasePager<T> {
   }
 
   constructor(
-      name: PagedItem,
-      request: (config: any) => any,
-      response: any,
-      config: any,
+    name: PagedItem,
+    request: (config: any) => any,
+    response: any,
+    config: any,
   ) {
     this._init(name, request, response, config);
   }
@@ -127,10 +127,10 @@ class BasePager<T> {
  */
 export class Pager<T> extends BasePager<T> implements AsyncIterable<T> {
   constructor(
-      name: PagedItem,
-      request: (config: any) => any,
-      response: any,
-      config: any,
+    name: PagedItem,
+    request: (config: any) => any,
+    response: any,
+    config: any,
   ) {
     super(name, request, response, config);
   }
@@ -151,7 +151,7 @@ export class Pager<T> extends BasePager<T> implements AsyncIterable<T> {
       },
       return: async () => {
         return {value: undefined, done: true};
-      }
+      },
     };
   }
 

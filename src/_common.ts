@@ -24,7 +24,10 @@ export function formatMap(
 }
 
 export function setValueByPath(
-    data: Record<string, any>, keys: string[], value: any): void {
+  data: Record<string, any>,
+  keys: string[],
+  value: any,
+): void {
   for (let i = 0; i < keys.length - 1; i++) {
     const key = keys[i];
     if (key.endsWith('[]')) {
@@ -34,7 +37,8 @@ export function setValueByPath(
           data[keyName] = Array.from({length: value.length}, () => ({}));
         } else {
           throw new Error(
-              `value ${value} must be a list given an array path ${key}`);
+            `value ${value} must be a list given an array path ${key}`,
+          );
         }
       }
       if (Array.isArray(value)) {
@@ -56,7 +60,7 @@ export function setValueByPath(
   data[keys[keys.length - 1]] = value;
 }
 
-export function getValueByPath(data: object|any, keys: string[]): any|null {
+export function getValueByPath(data: object | any, keys: string[]): any | null {
   try {
     if (keys.length === 1 && keys[0] === '_self') {
       return data;
@@ -66,8 +70,9 @@ export function getValueByPath(data: object|any, keys: string[]): any|null {
       if (key.endsWith('[]')) {
         const keyName = key.slice(0, -2);
         if (keyName in data) {
-          return data[keyName].map(
-              (d: any) => getValueByPath(d, keys.slice(i + 1)));
+          return data[keyName].map((d: any) =>
+            getValueByPath(d, keys.slice(i + 1)),
+          );
         } else {
           return undefined;
         }
