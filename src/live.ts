@@ -662,6 +662,7 @@ export class Session {
   }
 
   // Transmits a message over the established websocket connection.
+  // At this time, only audio and video inputs are supported.
   // The live module is experimental.
   send(
       message: types.ContentListUnion|types.LiveClientContent|
