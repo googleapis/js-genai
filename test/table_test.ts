@@ -497,6 +497,9 @@ describe('TableTest', () => {
         const requestArgs = fetchSpy.calls.argsFor(i);
         const request = requestArgs[1];
         const url = requestArgs[0];
+        console.log(
+          `=== asserting request for replay test: ${replayTest.fullTestName}`,
+        );
         assertMessagesEqual(
             normalizeRequest(request, url),
             expectedRequestCamelCase,
@@ -518,6 +521,9 @@ describe('TableTest', () => {
         snakeToCamel(JSON.stringify(expectedResponse)),
       );
 
+      console.log(
+        `=== asserting response for replay test: ${replayTest.fullTestName}`,
+      );
       assertMessagesEqual(responseCamelCase, expectedResponseCamelCase);
     });
   }
@@ -525,6 +531,9 @@ describe('TableTest', () => {
   for (const apiTest of apiTests) {
     it(apiTest.fullTestName, async () => {
       const parameters = normalizeParameters(apiTest.testTableItem.parameters!);
+      console.log(
+        `=== calling api for test: ${apiTest.fullTestName}`,
+      );
       await apiTest.method.apply(apiTest.client, [parameters]);
     });
   }
