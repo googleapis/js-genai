@@ -780,18 +780,29 @@ export class Session {
    */
   async receive(): Promise<types.LiveServerMessage> {
     // Create a promise that resolves when a message is actually received.
-    return new Promise((resolve: any) => {
-      this.conn.setOnMessageCallback((event: any) => {
+    return new Promise((resolve: any, reject: any) => {
+      this.conn.setOnMessageCallback(async (event: any) => {
+        let msg: any;
+        try {
+          if (typeof event.data === 'string') {
+            msg = JSON.parse(event.data);
+          } else {
+            msg = JSON.parse(await event.data.text());
+          }
+        } catch (e: unknown) {
+          reject(e);
+          return;
+        }
         let serverMessage: Record<string, any> = {};
         if (this.apiClient.isVertexAI()) {
           serverMessage = liveServerMessageFromVertex(
             this.apiClient,
-            JSON.parse(event.data),
+              msg,
           );
         } else {
           serverMessage = liveServerMessageFromMldev(
             this.apiClient,
-            JSON.parse(event.data),
+              msg,
           );
         }
 
