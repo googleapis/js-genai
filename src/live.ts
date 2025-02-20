@@ -618,11 +618,11 @@ export class Live {
    @experimental
   */
 export class Session {
-  onmessage?: ((msg: types.LiveServerMessage) => void);
+  onmessage?: (msg: types.LiveServerMessage) => void;
 
   constructor(
-      readonly conn: WebSocket,
-      private readonly apiClient: ApiClient,
+    readonly conn: WebSocket,
+    private readonly apiClient: ApiClient,
   ) {
     conn.setOnMessageCallback((event: any) => {
       try {
@@ -639,44 +639,89 @@ export class Session {
     }
     let serverMessage: Record<string, any> = {};
     let data: any;
-    if (typeof event.data === 'string') {
-      data = JSON.parse(event.data);
-    } else {
+    if (event.data instanceof Blob) {
       data = JSON.parse(await event.data.text());
+    } else {
+      data = JSON.parse(event.data);
     }
     if (this.apiClient.isVertexAI()) {
-      serverMessage = liveServerMessageFromVertex(
-          this.apiClient,
-          data,
-      );
+      serverMessage = liveServerMessageFromVertex(this.apiClient, data);
     } else {
-      serverMessage = liveServerMessageFromMldev(
-          this.apiClient,
-          data,
-      );
+      serverMessage = liveServerMessageFromMldev(this.apiClient, data);
     }
     this.onmessage(serverMessage);
   }
 
-  private parseClientMessage(
+  private parseClientContent(
+    apiClient: ApiClient,
+    input: types.ContentListUnion | types.LiveClientContent,
+    turnComplete: boolean = false,
+  ): Record<string, any> {
+    if (typeof input === 'string') {
+      input = [input];
+    }
+
+    let clientMessage: Record<string, any> = input;
+    if (Array.isArray(input) && input.some((c) => typeof c === 'string')) {
+      const toObject: Record<string, any> = {};
+      const contents = apiClient.isVertexAI()
+        ? t
+            .tContents(apiClient, input as types.ContentListUnion)
+            .map((item) => contentToVertex(apiClient, item, toObject))
+        : t
+            .tContents(apiClient, input as types.ContentListUnion)
+            .map((item) => contentToMldev(apiClient, item, toObject));
+
+      clientMessage = {
+        clientContent: {turns: contents, turnComplete: turnComplete},
+      };
+    } else if (
+      typeof input === 'object' &&
+      input !== null &&
+      'content' in input
+    ) {
+      clientMessage = {clientContent: input};
+    } else if (
+      typeof input === 'object' &&
+      input !== null &&
+      'turns' in input
+    ) {
+      // LiveClientContent
+      clientMessage = {clientContent: input};
+    } else {
+      throw new Error(
+        `Unsupported input type '${typeof input}' or input content '${input}'.`,
+      );
+    }
+
+    return clientMessage;
+  }
+
+  private parseRealtimeInput(
+    apiClient: ApiClient,
+    input: types.LiveClientRealtimeInput,
+  ): Record<string, any> {
+    let clientMessage: Record<string, any> = input;
+    if (typeof input === 'object' && input !== null && 'mediaChunks' in input) {
+      // LiveClientRealtimeInput
+      clientMessage = {realtimeInput: input};
+    } else {
+      throw new Error(
+        `Unsupported input type '${typeof input}' or input content '${input}'.`,
+      );
+    }
+
+    return clientMessage;
+  }
+
+  private parseToolResponse(
     apiClient: ApiClient,
     input:
-      | types.ContentListUnion
-      | types.LiveClientContent
-      | types.LiveClientRealtimeInput
       | types.LiveClientToolResponse
       | types.FunctionResponse
       | types.FunctionResponse[],
-    turnComplete: boolean = false,
   ): Record<string, any> {
-    if (typeof input === 'object' && input !== null && 'setup' in input) {
-      throw new Error(
-        "Message type 'setup' is not supported in send(). Use connect() instead.",
-      );
-    }
-    if (typeof input === 'string') {
-      input = [input];
-    } else if (
+    if (
       typeof input === 'object' &&
       input !== null &&
       'name' in input &&
@@ -699,42 +744,6 @@ export class Session {
     ) {
       // ToolResponse.FunctionResponse
       clientMessage = {toolResponse: {functionResponses: input}};
-    } else if (
-      Array.isArray(input) &&
-      input.some((c) => typeof c === 'string')
-    ) {
-      const toObject: Record<string, any> = {};
-      const contents = apiClient.isVertexAI()
-        ? t
-            .tContents(apiClient, input as types.ContentListUnion)
-            .map((item) => contentToVertex(apiClient, item, toObject))
-        : t
-            .tContents(apiClient, input as types.ContentListUnion)
-            .map((item) => contentToMldev(apiClient, item, toObject));
-
-      clientMessage = {
-        clientContent: {turns: contents, turnComplete: turnComplete},
-      };
-    } else if (
-      typeof input === 'object' &&
-      input !== null &&
-      'content' in input
-    ) {
-      clientMessage = {clientContent: input};
-    } else if (
-      typeof input === 'object' &&
-      input !== null &&
-      'mediaChunks' in input
-    ) {
-      // LiveClientRealtimeInput
-      clientMessage = {realtimeInput: input};
-    } else if (
-      typeof input === 'object' &&
-      input !== null &&
-      'turns' in input
-    ) {
-      // LiveClientContent
-      clientMessage = {clientContent: input};
     } else if (
       typeof input === 'object' &&
       input !== null &&
@@ -790,20 +799,46 @@ export class Session {
 
      @experimental
    */
-  send(
+  sendClientContent(
+    message: types.ContentListUnion | types.LiveClientContent,
+    turnComplete: boolean = false,
+  ) {
+    const clientMessage: Record<string, any> = this.parseClientContent(
+      this.apiClient,
+      message,
+      turnComplete,
+    );
+    this.conn.send(JSON.stringify(clientMessage));
+  }
+
+  /**
+     Transmits a message over the established websocket connection.
+
+     @experimental
+   */
+  sendRealtimeInput(message: types.LiveClientRealtimeInput) {
+    const clientMessage: Record<string, any> = this.parseRealtimeInput(
+      this.apiClient,
+      message,
+    );
+    this.conn.send(JSON.stringify(clientMessage));
+  }
+
+  /**
+     Transmits a message over the established websocket connection.
+
+     @experimental
+   */
+  sendToolResponse(
     message:
-      | types.ContentListUnion
-      | types.LiveClientContent
-      | types.LiveClientRealtimeInput
       | types.LiveClientToolResponse
       | types.FunctionResponse
       | types.FunctionResponse[],
     turnComplete: boolean = false,
   ) {
-    const clientMessage: Record<string, any> = this.parseClientMessage(
+    const clientMessage: Record<string, any> = this.parseToolResponse(
       this.apiClient,
       message,
-      turnComplete,
     );
     this.conn.send(JSON.stringify(clientMessage));
   }

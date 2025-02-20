@@ -28,7 +28,7 @@ export class NodeWebSocket implements WebSocket {
   ) {}
 
   connect(): void {
-    this.ws = new NodeWs(this.url);
+    this.ws = new NodeWs(this.url, this.headers);
 
     this.ws.onopen = this.callbacks.onopen;
     this.ws.onerror = this.callbacks.onerror;
