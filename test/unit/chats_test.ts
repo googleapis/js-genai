@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Client} from '../../src/node/client';
+import {NodeClient} from '../../src/node/node_client';
 import {GenerateContentResponse} from '../../src/types';
 
 describe('sendMessage invalid response', () => {
@@ -52,7 +52,7 @@ describe('sendMessage invalid response', () => {
 
   testCases.forEach(async (testCase) => {
     it(testCase.name, async () => {
-      const client = new Client({vertexai: false, apiKey: 'fake-api-key'});
+      const client = new NodeClient({vertexai: false, apiKey: 'fake-api-key'});
       const modelsModule = client.models;
       spyOn(modelsModule, 'generateContent').and.returnValue(
         Promise.resolve(testCase.response),
@@ -78,7 +78,7 @@ describe('sendMessage invalid response', () => {
 
 describe('sendMessage valid response', () => {
   it('GenerateContent returns valid response', async () => {
-    const client = new Client({vertexai: false, apiKey: 'fake-api-key'});
+    const client = new NodeClient({vertexai: false, apiKey: 'fake-api-key'});
     const validResponse = Object.setPrototypeOf(
       {
         candidates: [
@@ -164,7 +164,7 @@ describe('sendMessageStream invalid response', () => {
   }
 
   it('GenerateContentStream no finish reason', async () => {
-    const client = new Client({vertexai: false, apiKey: 'fake-api-key'});
+    const client = new NodeClient({vertexai: false, apiKey: 'fake-api-key'});
     const modelsModule = client.models;
     spyOn(modelsModule, 'generateContentStream').and.returnValue(
       Promise.resolve(mockStreamResponse()),
@@ -229,7 +229,7 @@ describe('sendMessageStream valid response', () => {
   }
 
   it('GenerateContentStream with finish reason', async () => {
-    const client = new Client({vertexai: false, apiKey: 'fake-api-key'});
+    const client = new NodeClient({vertexai: false, apiKey: 'fake-api-key'});
     const modelsModule = client.models;
     spyOn(modelsModule, 'generateContentStream').and.returnValue(
       Promise.resolve(mockStreamResponse()),

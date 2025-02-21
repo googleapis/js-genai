@@ -91,22 +91,22 @@ export interface ClientInitOptions {
   Usage for the Gemini Developer API:
 
   ```ts
-    import * as genai from ("@google/genai");
+    import * as genai from ("@google/genai/node");
 
-    const client = genai.Client({apiKey: 'my-api-key'})
+    const client = genai.NodeClient({apiKey: 'my-api-key'})
   ```
 
   Usage for the Vertex AI API:
 
   ```ts
-    import * as genai from ("@google/genai");
+    import * as genai from ("@google/genai/node");
 
-    const client = genai.Client({
+    const client = genai.NodeClient({
         vertexai: true, project: 'my-project-id', location: 'us-central1'
     })
   ```
   */
-export class Client {
+export class NodeClient {
   [key: string]: any;
   protected readonly apiClient: ApiClient;
   private readonly apiKey?: string;

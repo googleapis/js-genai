@@ -3,7 +3,7 @@
  * Copyright 2025 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
-import {Client} from '@google/genai/node';
+import {NodeClient} from '@google/genai/node';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
@@ -11,7 +11,7 @@ const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
 const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
 
 async function generateContentFromMLDev() {
-  const client = new Client({vertexai: false, apiKey: GEMINI_API_KEY});
+  const client = new NodeClient({vertexai: false, apiKey: GEMINI_API_KEY});
 
   const response = await client.models.generateContent({
     // Only 002 models + flash 1.5 8b models are enabled with log probs option.
@@ -26,7 +26,7 @@ async function generateContentFromMLDev() {
 }
 
 async function generateContentFromVertexAI() {
-  const client = new Client({
+  const client = new NodeClient({
     vertexai: true,
     project: GOOGLE_CLOUD_PROJECT,
     location: GOOGLE_CLOUD_LOCATION,

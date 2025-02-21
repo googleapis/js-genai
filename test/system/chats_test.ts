@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Client} from '../../src/node/client';
+import {NodeClient} from '../../src/node/node_client';
 import {Tool, Type} from '../../src/types';
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
@@ -34,7 +34,7 @@ describe('sendMessage', () => {
   const testCases = [
     {
       name: 'Google AI with text',
-      client: new Client({vertexai: false, apiKey: GOOGLE_API_KEY}),
+      client: new NodeClient({vertexai: false, apiKey: GOOGLE_API_KEY}),
       model: 'gemini-1.5-flash',
       config: {},
       history: [],
@@ -42,7 +42,7 @@ describe('sendMessage', () => {
     },
     {
       name: 'Vertex AI with text',
-      client: new Client({vertexai: true, project: GOOGLE_CLOUD_PROJECT}),
+      client: new NodeClient({vertexai: true, project: GOOGLE_CLOUD_PROJECT}),
       model: 'gemini-1.5-flash',
       config: {},
       history: [],
@@ -50,7 +50,7 @@ describe('sendMessage', () => {
     },
     {
       name: 'Google AI with config',
-      client: new Client({vertexai: false, apiKey: GOOGLE_API_KEY}),
+      client: new NodeClient({vertexai: false, apiKey: GOOGLE_API_KEY}),
       model: 'gemini-1.5-flash',
       config: {temperature: 0.5, maxOutputTokens: 20},
       history: [],
@@ -58,7 +58,7 @@ describe('sendMessage', () => {
     },
     {
       name: 'Vertex AI with config',
-      client: new Client({vertexai: true, project: GOOGLE_CLOUD_PROJECT}),
+      client: new NodeClient({vertexai: true, project: GOOGLE_CLOUD_PROJECT}),
       model: 'gemini-1.5-flash',
       config: {temperature: 0.5, maxOutputTokens: 20},
       history: [],
@@ -66,7 +66,7 @@ describe('sendMessage', () => {
     },
     {
       name: 'Google AI with history',
-      client: new Client({vertexai: false, apiKey: GOOGLE_API_KEY}),
+      client: new NodeClient({vertexai: false, apiKey: GOOGLE_API_KEY}),
       model: 'gemini-1.5-flash',
       config: {},
       history: [
@@ -77,7 +77,7 @@ describe('sendMessage', () => {
     },
     {
       name: 'Vertex AI with history',
-      client: new Client({vertexai: true, project: GOOGLE_CLOUD_PROJECT}),
+      client: new NodeClient({vertexai: true, project: GOOGLE_CLOUD_PROJECT}),
       model: 'gemini-1.5-flash',
       config: {},
       history: [
@@ -88,7 +88,7 @@ describe('sendMessage', () => {
     },
     {
       name: 'Google AI multiple messages',
-      client: new Client({vertexai: false, apiKey: GOOGLE_API_KEY}),
+      client: new NodeClient({vertexai: false, apiKey: GOOGLE_API_KEY}),
       model: 'gemini-1.5-flash',
       config: {},
       history: [],
@@ -99,7 +99,7 @@ describe('sendMessage', () => {
     },
     {
       name: 'Vertex AI multilple messages',
-      client: new Client({vertexai: true, project: GOOGLE_CLOUD_PROJECT}),
+      client: new NodeClient({vertexai: true, project: GOOGLE_CLOUD_PROJECT}),
       model: 'gemini-1.5-flash',
       config: {},
       history: [],
@@ -145,7 +145,7 @@ describe('sendMessage', () => {
   });
 
   it('Google AI array of strings', async () => {
-    const client = new Client({vertexai: false, apiKey: GOOGLE_API_KEY});
+    const client = new NodeClient({vertexai: false, apiKey: GOOGLE_API_KEY});
     const chat = client.chats.create('gemini-1.5-flash');
     const response = await chat.sendMessage([
       'why is the sky blue?',
@@ -155,7 +155,10 @@ describe('sendMessage', () => {
   });
 
   it('Vertex AI array of strings', async () => {
-    const client = new Client({vertexai: true, project: GOOGLE_CLOUD_PROJECT});
+    const client = new NodeClient({
+      vertexai: true,
+      project: GOOGLE_CLOUD_PROJECT,
+    });
     const chat = client.chats.create('gemini-1.5-flash');
     const response = await chat.sendMessage([
       'why is the sky blue?',
@@ -169,7 +172,7 @@ describe('chats function calling', () => {
   const testCases = [
     {
       name: 'Google AI with function calling',
-      client: new Client({vertexai: false, apiKey: GOOGLE_API_KEY}),
+      client: new NodeClient({vertexai: false, apiKey: GOOGLE_API_KEY}),
       model: 'gemini-1.5-flash',
       config: {tools: [function_calling]},
       history: [],
@@ -177,7 +180,7 @@ describe('chats function calling', () => {
     },
     {
       name: 'Vertex AI with function calling',
-      client: new Client({vertexai: true, project: GOOGLE_CLOUD_PROJECT}),
+      client: new NodeClient({vertexai: true, project: GOOGLE_CLOUD_PROJECT}),
       model: 'gemini-1.5-flash',
       config: {tools: [function_calling]},
       history: [],

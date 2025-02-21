@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import {Part} from '@google/genai';
-import {Client} from '@google/genai/node';
+import {NodeClient} from '@google/genai/node';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
@@ -16,7 +16,7 @@ async function createCacheFromMLDev() {
 }
 
 async function createCacheFromVertexAI() {
-  const client = new Client({
+  const client = new NodeClient({
     vertexai: true,
     project: GOOGLE_CLOUD_PROJECT,
     location: GOOGLE_CLOUD_LOCATION,
@@ -46,13 +46,9 @@ async function createCacheFromVertexAI() {
 
 async function main() {
   if (GOOGLE_GENAI_USE_VERTEXAI) {
-    await createCacheFromVertexAI().catch(
-        (e) => console.error('got error', e),
-    );
+    await createCacheFromVertexAI().catch((e) => console.error('got error', e));
   } else {
-    await createCacheFromMLDev().catch(
-        (e) => console.error('got error', e),
-    );
+    await createCacheFromMLDev().catch((e) => console.error('got error', e));
   }
 }
 
