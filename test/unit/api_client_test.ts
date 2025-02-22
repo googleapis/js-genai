@@ -749,42 +749,85 @@ describe('ApiClient', () => {
         'https://custom-client-base-url.googleapis.com/v1beta1/test-path?param1=value1&param2=value2',
       );
     });
-    it('should use baseUrl when apiVersion is set to empty string', async () => {
-      const client = new ApiClient({
-        auth: new FakeAuth('test-api-key'),
-        apiKey: 'test-api-key',
-        httpOptions: {
-          baseUrl: 'https://custom-client-base-url.googleapis.com',
-        },
-      });
+    it('should use baseUrl without trailing slash when apiVersion is set to empty string',
+       async () => {
+         const client = new ApiClient({
+           auth: new FakeAuth('test-api-key'),
+           apiKey: 'test-api-key',
+           httpOptions: {
+             baseUrl: 'https://custom-client-base-url.googleapis.com',
+           },
+         });
 
-      const fakeResponse = new Response(
-        JSON.stringify(mockGenerateContentResponse),
-        fetchOkOptions,
-      );
-      spyOn(global, 'fetch').and.returnValue(
-        Promise.resolve(
-          new Response(
-            JSON.stringify(mockGenerateContentResponse),
-            fetchOkOptions,
-          ),
-        ),
-      );
-      const json = {data: 'test'};
-      await client.request({
-        path: 'test-path/shouldBeUsedVersion',
-        body: JSON.stringify(json),
-        httpOptions: {
-          apiVersion: '',
-          headers: {'google-custom-header': 'custom-header-request-value'},
-        },
-        httpMethod: 'POST',
-      });
-      expect(global.fetch).toHaveBeenCalledWith(
-        'https://custom-client-base-url.googleapis.com/test-path/shouldBeUsedVersion',
-        jasmine.any(Object),
-      );
-    });
+         const fakeResponse = new Response(
+             JSON.stringify(mockGenerateContentResponse),
+             fetchOkOptions,
+         );
+         spyOn(global, 'fetch')
+             .and.returnValue(
+                 Promise.resolve(
+                     new Response(
+                         JSON.stringify(mockGenerateContentResponse),
+                         fetchOkOptions,
+                         ),
+                     ),
+             );
+         const json = {data: 'test'};
+         await client.request({
+           path: 'test-path/shouldBeUsedVersion',
+           body: JSON.stringify(json),
+           httpOptions: {
+             apiVersion: '',
+             headers: {'google-custom-header': 'custom-header-request-value'},
+           },
+           httpMethod: 'POST',
+         });
+         expect(global.fetch)
+             .toHaveBeenCalledWith(
+                 'https://custom-client-base-url.googleapis.com/test-path/shouldBeUsedVersion',
+                 jasmine.any(Object),
+             );
+       });
+    it('should use baseUrl when path is not set and apiVersion is set to empty string in the request http options',
+       async () => {
+         const client = new ApiClient({
+           auth: new FakeAuth('test-api-key'),
+           apiKey: 'test-api-key',
+           httpOptions: {
+             baseUrl: 'https://custom-client-base-url.googleapis.com',
+           },
+         });
+
+         const fakeResponse = new Response(
+             JSON.stringify(mockGenerateContentResponse),
+             fetchOkOptions,
+         );
+         spyOn(global, 'fetch')
+             .and.returnValue(
+                 Promise.resolve(
+                     new Response(
+                         JSON.stringify(mockGenerateContentResponse),
+                         fetchOkOptions,
+                         ),
+                     ),
+             );
+         await client.request({
+           path: '',
+           body: 'test-content-string',
+           httpOptions: {
+             apiVersion: '',
+             baseUrl:
+                 'https://custom-client-base-url-set-in-request-path.googleapis.com/test-path/shouldBeUsedVersion',
+             headers: {'google-custom-header': 'custom-header-request-value'},
+           },
+           httpMethod: 'POST',
+         });
+         expect(global.fetch)
+             .toHaveBeenCalledWith(
+                 'https://custom-client-base-url-set-in-request-path.googleapis.com/test-path/shouldBeUsedVersion',
+                 jasmine.any(Object),
+             );
+       });
     it('should return HttpResponse with proper headers', async () => {
       const client = new ApiClient({
         auth: new FakeAuth('test-api-key'),

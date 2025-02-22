@@ -8,7 +8,7 @@ import {fail} from 'assert';
 import {GoogleAuthOptions} from 'google-auth-library';
 
 import {NodeClient} from '../../src/node/node_client';
-import {Part} from '../../src/types';
+import {GetFileParameters, Part, UploadFileConfig} from '../../src/types';
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
@@ -579,4 +579,101 @@ describe('files', () => {
       JSON.stringify(response),
     );
   });
+
+  it('ML Dev should upload png files with specified parameters', async () => {
+    const client = new NodeClient({vertexai: false, apiKey: GOOGLE_API_KEY});
+    let config: UploadFileConfig = {
+      mimeType: 'image/png',
+      displayName: 'google.png',
+    };
+    const file = await client.files.upload(
+        'test/system/data/google.png',
+        config,
+    );
+    console.log('file name', file.name);
+    expect(file.name?.startsWith('files/'))
+        .withContext(`File name "${file.name}" should start with files/`)
+        .toBeTrue();
+  });
+  it('ML Dev should upload jpg files with specified parameters', async () => {
+    const client = new NodeClient({vertexai: false, apiKey: GOOGLE_API_KEY});
+    let config: UploadFileConfig = {
+      mimeType: 'image/jpg',
+      displayName: 'google.jpg',
+    };
+    const file = await client.files.upload(
+        'test/system/data/google.jpg',
+        config,
+    );
+    expect(file.name?.startsWith('files/'))
+        .withContext(`File name "${file.name}" should start with files/`)
+        .toBeTrue();
+  });
+  it('ML Dev should upload pdf files with specified parameters', async () => {
+    const client = new NodeClient({vertexai: false, apiKey: GOOGLE_API_KEY});
+    let config: UploadFileConfig = {
+      mimeType: 'application/pdf',
+      displayName: 'story.pdf',
+    };
+    const file = await client.files.upload(
+        'test/system/data/story.pdf',
+        config,
+    );
+    expect(file.name?.startsWith('files/'))
+        .withContext(`File name "${file.name}" should start with files/`)
+        .toBeTrue();
+  });
+  it('ML Dev should upload mp4 files with specified parameters', async () => {
+    const client = new NodeClient({vertexai: false, apiKey: GOOGLE_API_KEY});
+    let config: UploadFileConfig = {
+      mimeType: 'video/mp4',
+      displayName: 'animal.mp4',
+    };
+    const file = await client.files.upload(
+        'test/system/data/animal.mp4',
+        config,
+    );
+    expect(file.name?.startsWith('files/'))
+        .withContext(`File name "${file.name}" should start with files/`)
+        .toBeTrue();
+  });
+  it('ML Dev should upload m4a files with specified parameters', async () => {
+    const client = new NodeClient({vertexai: false, apiKey: GOOGLE_API_KEY});
+    let config: UploadFileConfig = {
+      mimeType: 'audio/m4a',
+      displayName: 'pixel.m4a',
+    };
+    const file = await client.files.upload(
+        'test/system/data/pixel.m4a',
+        config,
+    );
+    expect(file.name?.startsWith('files/'))
+        .withContext(`File name "${file.name}" should start with files/`)
+        .toBeTrue();
+  });
+  it('ML Dev should upload and get the file just uploaded with specified parameters',
+     async () => {
+       const client = new NodeClient({vertexai: false, apiKey: GOOGLE_API_KEY});
+       // upload the file
+       let upLoadConfig: UploadFileConfig = {
+         mimeType: 'image/png',
+         displayName: 'google.png',
+       };
+       const file = await client.files.upload(
+           'test/system/data/google.png',
+           upLoadConfig,
+       );
+       expect(file.name?.startsWith('files/'))
+           .withContext(`File name "${file.name}" should start with files/`)
+           .toBeTrue();
+
+       // get the file just uploaded
+       let config: GetFileParameters = {
+         // type assertion is safe because the file name is guaranteed to start
+         // with files/ above
+         name: file.name as string,
+       };
+       const getFile = await client.files.get(config);
+       console.log('getFile', getFile);
+     });
 });

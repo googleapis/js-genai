@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import * as fs from 'fs/promises';
+
 import {Auth} from './_auth';
 import {HttpOptions, HttpResponse} from './types';
 
@@ -112,7 +114,7 @@ export interface HttpRequest {
    * Optional request body in json string format, GET request doesn't need a
    * request body.
    */
-  body?: string;
+  body?: string | Blob;
   /**
    * The HTTP method to be used for the request.
    */
@@ -250,6 +252,20 @@ export class ApiClient {
     }
   }
 
+  constructUrl(requestPath: string, patchedHttpOptions: HttpOptions): URL {
+    const urlElement: Array<string> =
+        [this.getRequestUrlInternal(patchedHttpOptions)];
+    if (this.clientOptions.vertexai && !requestPath.startsWith('projects/')) {
+      urlElement.push(this.getBaseResourcePath());
+    }
+    if (requestPath !== '') {
+      urlElement.push(requestPath);
+    }
+    const url = new URL(`${urlElement.join('/')}`);
+
+    return url;
+  }
+
   async request(request: HttpRequest): Promise<HttpResponse> {
     let patchedHttpOptions = this.clientOptions.httpOptions!;
     if (request.httpOptions) {
@@ -258,13 +274,8 @@ export class ApiClient {
         request.httpOptions,
       );
     }
-    let path = request.path;
-    if (this.clientOptions.vertexai && !path.startsWith('projects/')) {
-      path = `${this.getBaseResourcePath()}/${path}`;
-    }
-    const url = new URL(
-      `${this.getRequestUrlInternal(patchedHttpOptions)}/${path}`,
-    );
+
+    let url = this.constructUrl(request.path, patchedHttpOptions);
     if (request.queryParams) {
       for (const [key, value] of Object.entries(request.queryParams)) {
         url.searchParams.append(key, String(value));
@@ -326,16 +337,12 @@ export class ApiClient {
         request.httpOptions,
       );
     }
-    let path: string = request.path;
-    if (this.clientOptions.vertexai && !path.startsWith('projects/')) {
-      path = `${this.getBaseResourcePath()}/${path}`;
-    }
-    const url = new URL(
-      `${this.getRequestUrlInternal(patchedHttpOptions)}/${path}`,
-    );
+
+    let url = this.constructUrl(request.path, patchedHttpOptions);
     if (!url.searchParams.has('alt') || url.searchParams.get('alt') !== 'sse') {
       url.searchParams.set('alt', 'sse');
     }
+
     let requestInit: RequestInit = {};
     requestInit.body = request.body;
     requestInit = await this.includeExtraHttpOptionsToRequestInit(
@@ -485,6 +492,68 @@ export class ApiClient {
     }
     await this.clientOptions.auth.addAuthHeaders(headers);
     return headers;
+  }
+
+  /**
+   * Uploads a file to the specified URL using resumable upload protocol.
+   *
+   * @param filePath The path to the file to upload.
+   * @param uploadUrl The URL to upload the file to.
+   * @param uploadSize The total size of the file in bytes.
+   * @return A promise that resolves to the JSON response from the final upload
+   *     request.
+   * @throws An error if the upload fails or if the file cannot be read.
+   */
+  async uploadFile(filePath: string, uploadUrl: string, uploadSize: number):
+      Promise<any> {
+      const fileData =
+          await fs.readFile(filePath);
+      const fileBlob = new Blob([fileData]);
+
+      let offset = 0;
+      let response: HttpResponse;
+      const chunkSize = 1024 * 1024 * 8;  // 8 MB chunk size
+      while (offset < uploadSize) {
+        const chunk = fileBlob.slice(offset, offset + chunkSize);
+        const currentChunkSize = chunk.size;
+        let uploadCommand = 'upload';
+
+        if (offset + currentChunkSize >= uploadSize) {
+          uploadCommand += ', finalize';
+        }
+        response = await this.request({
+          path: '',
+          body: chunk,
+          httpMethod: 'POST',
+          httpOptions: {
+            apiVersion: '',
+            baseUrl: uploadUrl,
+            headers: {
+              'X-Goog-Upload-Command': uploadCommand,
+              'X-Goog-Upload-Offset': String(offset),
+              'Content-Length': String(currentChunkSize),
+            },
+          },
+        });
+
+        if (response.headers?.['x-goog-upload-status'] !== 'active') {
+          if (uploadSize <= offset) {
+            const responseJson = await response.json();
+            throw new Error(
+                'All content has been uploaded, but the upload status is not' +
+                ` finalized. ${response.headers}, body: ${responseJson}`);
+          }
+          if (response.headers?.['x-goog-upload-status'] !== 'final') {
+            const responseJson = await response.json();
+            throw new Error(
+                'Failed to upload file: Upload status is not finalized. headers:' +
+                ` ${response.headers}, body: ${responseJson}`);
+          }
+          const responseJson = await response.json();
+          return responseJson;
+        }
+        offset += currentChunkSize;
+      }
   }
 }
 
