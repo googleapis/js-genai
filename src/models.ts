@@ -108,6 +108,63 @@ export class Models extends BaseModule {
     return await this.generateContentStreamInternal(params);
   };
 
+  /**
+   * Generates an image based on a text description and configuration.
+   *
+   * @param model - The model to use.
+   * @param prompt - A text description of the image to generate.
+   * @param [config] - The config for image generation.
+   * @return The response from the API.
+   *
+   * @example
+   * ```ts
+   * const response = await client.models.generateImages({
+   *  model: 'imagen-3.0-generate-002',
+   *  prompt: 'Robot holding a red skateboard',
+   *  config: {
+   *    numberOfImages: 1,
+   *    includeRaiReason: true,
+   *  },
+   * });
+   * console.log(response?.generatedImages?.[0]?.image?.imageBytes);
+   * ```
+   */
+  generateImages = async (
+    params: types.GenerateImagesParameters,
+  ): Promise<types.GenerateImagesResponse> => {
+    return await this.generateImagesInternal(params).then((apiResponse) => {
+      let positivePromptSafetyAttributes;
+      const generatedImages = [];
+
+      if (apiResponse?.generatedImages) {
+        for (const generatedImage of apiResponse.generatedImages) {
+          if (
+            generatedImage &&
+            generatedImage?.safetyAttributes &&
+            generatedImage?.safetyAttributes?.contentType === 'Positive Prompt'
+          ) {
+            positivePromptSafetyAttributes = generatedImage?.safetyAttributes;
+          } else {
+            generatedImages.push(generatedImage);
+          }
+        }
+      }
+      let response: types.GenerateImagesResponse;
+
+      if (positivePromptSafetyAttributes) {
+        response = {
+          generatedImages: generatedImages,
+          positivePromptSafetyAttributes: positivePromptSafetyAttributes,
+        };
+      } else {
+        response = {
+          generatedImages: generatedImages,
+        };
+      }
+      return response;
+    });
+  };
+
   private async generateContentInternal(
     params: types.GenerateContentParameters,
   ): Promise<types.GenerateContentResponse> {
@@ -360,7 +417,7 @@ export class Models extends BaseModule {
    * console.log(response?.generatedImages?.[0]?.image?.imageBytes);
    * ```
    */
-  async generateImages(
+  private async generateImagesInternal(
     params: types.GenerateImagesParameters,
   ): Promise<types.GenerateImagesResponse> {
     let response: Promise<types.GenerateImagesResponse>;
@@ -3572,6 +3629,11 @@ function safetyAttributesFromMldev(
     common.setValueByPath(toObject, ['scores'], fromScores);
   }
 
+  const fromContentType = common.getValueByPath(fromObject, ['contentType']);
+  if (fromContentType != null) {
+    common.setValueByPath(toObject, ['contentType'], fromContentType);
+  }
+
   return toObject;
 }
 
@@ -3595,6 +3657,11 @@ function safetyAttributesFromVertex(
   ]);
   if (fromScores != null) {
     common.setValueByPath(toObject, ['scores'], fromScores);
+  }
+
+  const fromContentType = common.getValueByPath(fromObject, ['contentType']);
+  if (fromContentType != null) {
+    common.setValueByPath(toObject, ['contentType'], fromContentType);
   }
 
   return toObject;
@@ -3704,6 +3771,17 @@ function generateImagesResponseFromMldev(
     }
   }
 
+  const fromPositivePromptSafetyAttributes = common.getValueByPath(fromObject, [
+    'positivePromptSafetyAttributes',
+  ]);
+  if (fromPositivePromptSafetyAttributes != null) {
+    common.setValueByPath(
+      toObject,
+      ['positivePromptSafetyAttributes'],
+      safetyAttributesFromMldev(apiClient, fromPositivePromptSafetyAttributes),
+    );
+  }
+
   return toObject;
 }
 
@@ -3728,6 +3806,17 @@ function generateImagesResponseFromVertex(
     } else {
       common.setValueByPath(toObject, ['generatedImages'], fromGeneratedImages);
     }
+  }
+
+  const fromPositivePromptSafetyAttributes = common.getValueByPath(fromObject, [
+    'positivePromptSafetyAttributes',
+  ]);
+  if (fromPositivePromptSafetyAttributes != null) {
+    common.setValueByPath(
+      toObject,
+      ['positivePromptSafetyAttributes'],
+      safetyAttributesFromVertex(apiClient, fromPositivePromptSafetyAttributes),
+    );
   }
 
   return toObject;
