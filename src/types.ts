@@ -1090,8 +1090,8 @@ export class GenerateContentResponse {
   }
 }
 
-export /** Optional parameters for the embed_content method. */
-interface EmbedContentConfig {
+/** Optional parameters for the embed_content method. */
+export interface EmbedContentConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
   /** Type of task for which the embedding will be used.
@@ -1930,56 +1930,6 @@ export class ListFilesResponse {
   nextPageToken?: string;
   /** The list of files. */
   files?: File[];
-}
-
-/** Used to override the default configuration. */
-export interface CreateFileConfig {
-  /** Used to override HTTP request options. */
-  httpOptions?: HttpOptions;
-}
-
-/** Generates the parameters for the private _create method. */
-export interface CreateFileParameters {
-  /** The file to be uploaded.
-            mime_type: (Required) The MIME type of the file. Must be provided.
-            name: (Optional) The name of the file in the destination (e.g.
-            'files/sample-image').
-            display_name: (Optional) The display name of the file.
-       */
-  file: File;
-  /** Used to override the default configuration. */
-  config?: CreateFileConfig;
-}
-
-/** A wrapper class for the http response. */
-export class HttpResponse {
-  /** Used to retain the processed HTTP headers in the response. */
-  headers?: Record<string, string>;
-  /**
-   * The original http response.
-   */
-  responseInternal: Response;
-
-  constructor(response: Response) {
-    // Process the headers.
-    let headers: Record<string, string> = {};
-    for (const pair of response.headers.entries()) {
-      headers[pair[0]] = pair[1];
-    }
-    this.headers = headers;
-
-    // Keep the original response.
-    this.responseInternal = response;
-  }
-
-  json(): Promise<any> {
-    return this.responseInternal.json();
-  }
-}
-/** Response for the create file method. */
-export class CreateFileResponse {
-  /** Used to retain the full HTTP response. */
-  sdkHttpResponse?: HttpResponse;
 }
 
 /** Used to override the default configuration. */

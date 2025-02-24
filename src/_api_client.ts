@@ -5,7 +5,7 @@
  */
 
 import {Auth} from './_auth';
-import {HttpOptions, HttpResponse} from './types';
+import {HttpOptions} from './types';
 
 const CONTENT_TYPE_HEADER = 'Content-Type';
 const USER_AGENT_HEADER = 'User-Agent';
@@ -189,7 +189,7 @@ export class ApiClient {
     ) {
       throw new Error('HTTP options are not correctly set.');
     }
-    if (!httpOptions.baseUrl.endsWith('/') && httpOptions.apiVersion) {
+    if (!httpOptions.baseUrl.endsWith('/')) {
       return `${httpOptions.baseUrl}/${httpOptions.apiVersion}`;
     }
     return `${httpOptions.baseUrl}${httpOptions.apiVersion}`;
@@ -224,8 +224,9 @@ export class ApiClient {
     path: string,
     requestObject: Record<string, unknown>,
     requestHttpOptions?: HttpOptions,
+    // any will be replaced with the full http response.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ): Promise<HttpResponse> {
+  ): Promise<any> {
     return this.request(path, requestObject, 'GET', requestHttpOptions);
   }
 
@@ -233,8 +234,9 @@ export class ApiClient {
     path: string,
     requestObject: Record<string, unknown>,
     requestHttpOptions?: HttpOptions,
+    // any will be replaced with the full http response.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ): Promise<HttpResponse> {
+  ): Promise<any> {
     return this.request(path, requestObject, 'POST', requestHttpOptions);
   }
 
@@ -242,8 +244,9 @@ export class ApiClient {
     path: string,
     requestObject: Record<string, unknown>,
     requestHttpOptions?: HttpOptions,
+    // any will be replaced with the full http response.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ): Promise<HttpResponse> {
+  ): Promise<any> {
     return this.request(path, requestObject, 'PATCH', requestHttpOptions);
   }
 
@@ -251,8 +254,9 @@ export class ApiClient {
     path: string,
     requestObject: Record<string, unknown>,
     requestHttpOptions?: HttpOptions,
+    // any will be replaced with the full http response.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ): Promise<HttpResponse> {
+  ): Promise<any> {
     return this.request(path, requestObject, 'DELETE', requestHttpOptions);
   }
 
@@ -261,8 +265,9 @@ export class ApiClient {
     requestJson: Record<string, unknown>,
     httpMethod: 'GET' | 'POST' | 'PATCH' | 'DELETE',
     requestHttpOptions?: HttpOptions,
+    // any will be replaced with the full http response.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ): Promise<HttpResponse> {
+  ): Promise<any> {
     // Copy the json locally so as to not modify the user provided one.
     // request json could be any request.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -327,7 +332,7 @@ export class ApiClient {
         // expression of type 'string' can't be used to index type
         // 'HttpOptions'.
         patchedHttpOptions[key] = {...patchedHttpOptions[key], ...value};
-      } else if (value !== undefined) {
+      } else if (value) {
         // @ts-expect-error TS2345TS7053: Element implicitly has an 'any' type because
         // expression of type 'string' can't be used to index type
         // 'HttpOptions'.
@@ -393,15 +398,16 @@ export class ApiClient {
     url: URL,
     requestInit: RequestInit,
     httpMethod: 'GET' | 'POST' | 'PATCH' | 'DELETE',
+    // any will be replaced with the full http response.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ): Promise<HttpResponse> {
+  ): Promise<any> {
     return this.apiCall(url.toString(), {
       ...requestInit,
       method: httpMethod,
     })
       .then(async (response) => {
         await throwErrorIfNotOK(response, url.toString(), requestInit);
-        return new HttpResponse(response);
+        return response.json();
       })
       .catch((e) => {
         if (e instanceof Error) {

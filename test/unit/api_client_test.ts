@@ -717,68 +717,6 @@ describe('ApiClient', () => {
         'https://custom-client-base-url.googleapis.com/v1beta1/test-path?param1=value1&param2=value2',
       );
     });
-    it('should use baseUrl when apiVersion is set to empty string', async () => {
-      const client = new ApiClient({
-        auth: new FakeAuth('test-api-key'),
-        apiKey: 'test-api-key',
-        httpOptions: {
-          baseUrl: 'https://custom-client-base-url.googleapis.com',
-        },
-      });
-
-      const fakeResponse = new Response(
-        JSON.stringify(mockGenerateContentResponse),
-        fetchOkOptions,
-      );
-      spyOn(global, 'fetch').and.returnValue(
-        Promise.resolve(
-          new Response(
-            JSON.stringify(mockGenerateContentResponse),
-            fetchOkOptions,
-          ),
-        ),
-      );
-      await client.post(
-        'test-path/shouldBeUsedVersion',
-        {data: 'test'},
-        {
-          apiVersion: '',
-          headers: {'google-custom-header': 'custom-header-request-value'},
-        },
-      );
-      expect(global.fetch).toHaveBeenCalledWith(
-        'https://custom-client-base-url.googleapis.com/test-path/shouldBeUsedVersion',
-        jasmine.any(Object),
-      );
-    });
-    it('should return HttpResponse with proper headers', async () => {
-      const client = new ApiClient({
-        auth: new FakeAuth('test-api-key'),
-        apiKey: 'test-api-key',
-        httpOptions: {
-          baseUrl: 'https://custom-client-base-url.googleapis.com',
-        },
-      });
-      const customHeaders = {
-        'content-type': 'application/json',
-        'x-custom-header': 'custom-value',
-      };
-      const customResponse = new Response(
-        JSON.stringify(mockGenerateContentResponse),
-        {
-          status: 200,
-          statusText: 'OK',
-          headers: customHeaders,
-        },
-      );
-      spyOn(global, 'fetch').and.returnValue(Promise.resolve(customResponse));
-
-      const postResponse = await client.post('test-path', {});
-
-      expect(postResponse instanceof types.HttpResponse).toBeTrue();
-      expect(postResponse.headers).toEqual(customHeaders);
-      expect(postResponse.headers?.['x-custom-header']).toBe('custom-value');
-    });
   });
   describe('postStream', () => {
     it('should throw ServerError if response is 500', async () => {
