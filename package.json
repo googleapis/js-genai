@@ -21,8 +21,6 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "author": "",
-  "license": "Apache-2.0",
   "devDependencies": {
     "@eslint/js": "9.20.0",
     "@types/jasmine": "^5.1.2",
@@ -43,5 +41,15 @@
   "dependencies": {
     "google-auth-library": "^9.14.2",
     "ws": "^8.18.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/googleapis/js-genai.git"
+  },
+  "bugs": {
+    "url": "https://github.com/googleapis/js-genai/issues"
+  },
+  "homepage": "https://github.com/googleapis/js-genai#readme",
+  "author": "",
+  "license": "Apache-2.0"
 }
