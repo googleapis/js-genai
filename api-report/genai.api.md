@@ -997,7 +997,7 @@ export class Live {
     // Warning: (ae-forgotten-export) The symbol "WebSocketFactory" needs to be exported by the entry point index.d.ts
     constructor(apiClient: ApiClient, auth: Auth, webSocketFactory: WebSocketFactory);
     // Warning: (ae-forgotten-export) The symbol "WebSocketCallbacks" needs to be exported by the entry point index.d.ts
-    connect(model: string, config: types.LiveConnectConfig, callbacks?: WebSocketCallbacks): Promise<Session>;
+    connect(params: types.LiveConnectParameters, callbacks?: WebSocketCallbacks): Promise<Session>;
 }
 
 // @public
@@ -1039,6 +1039,12 @@ export interface LiveConnectConfig {
     speechConfig?: SpeechConfig;
     systemInstruction?: Content;
     tools?: Tool[];
+}
+
+// @public
+export interface LiveConnectParameters {
+    config?: LiveConnectConfig;
+    model: string;
 }
 
 // @public
