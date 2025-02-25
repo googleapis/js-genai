@@ -13,9 +13,7 @@ tar -zxvf "${TARBALL}" -C "${TMPDIR}"
 PACKAGE_PATH="${TMPDIR}/package"
 
 cd samples
-npm install "file:${PACKAGE_PATH}"
-npm install
-npm ls --all
+npm install "file:${PACKAGE_PATH}" --install-links
 # Now the samples package is using the `npm pack` output as @google/genai
 
 npm run build
