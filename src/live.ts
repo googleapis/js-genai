@@ -509,6 +509,18 @@ export class Live {
 
      @experimental
 
+         As this is an experimental API, you need to specify API version
+     "v1alpha" when creating the client as shown below:
+
+     ```ts
+      const client = new WebClient({
+        apiKey,
+        httpOptions: {
+          apiVersion: 'v1alpha',
+        },
+      });
+     ```
+
      @param model - Model to use for the Live session.
      @param config - Configuration parameters for the Live session.
      @param callbacks - Optional callbacks for websocket events. If not
@@ -518,26 +530,34 @@ export class Live {
 
      @example
      ```ts
-     const session = await client.live.connect({
-       model: 'gemini-2.0-flash-exp',
-       config: {
-         responseModalities: [Modality.AUDIO],
-       },
-       callbacks: {
-         onopen: () => {
-           console.log('Connected to the socket.');
-         },
-         onmessage: (e: MessageEvent) => {
-           console.log('Received message from the server: %s\n', debug(e.data));
-         },
-         onerror: (e: ErrorEvent) => {
-           console.log('Error occurred: %s\n', debug(e.error));
-         },
-         onclose: (e: CloseEvent) => {
-           console.log('Connection closed.');
-         },
-       },
-     });
+      const session = await client.live.connect(
+        {
+          model: 'gemini-2.0-flash-exp',
+          config: {
+            //responseModalities: [types.Modality.AUDIO],
+          },
+        },
+        {
+          onopen: () => {
+            console.log('Connected to the socket.');
+          },
+          onmessage: (e: MessageEvent) => {
+            console.log('Received message from the server: %s\n', e.data);
+          },
+          onerror: (e: ErrorEvent) => {
+            console.log('Error occurred: %s\n', e.error);
+          },
+          onclose: (e: CloseEvent) => {
+            console.log('Connection closed.');
+          },
+        },
+      );
+      session.send('Hello what should we talk about?', true);
+      const setupMessage = await receive(session);
+
+      const message = await receive(session);
+
+      session.close();
      ```
     */
   async connect(
