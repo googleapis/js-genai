@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import * as NodeWs from 'ws';
+import {WebSocket as NodeWs} from 'ws';
 
 import {WebSocket, WebSocketCallbacks, WebSocketFactory} from '../_websocket';
 
