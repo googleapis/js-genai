@@ -30,7 +30,7 @@ export class Files extends BaseModule {
    *
    * const listResponse = await client.files.list({config: {'pageSize': 2}});
    * for await (const file of listResponse) {
-   *   console.log(file.name());
+   *   console.log(file?.name);
    * }
    */
   list = async (
