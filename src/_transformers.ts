@@ -53,11 +53,12 @@ export function tCachesModel(
   }
 }
 
+
 export function tPart(
   apiClient: ApiClient,
   origin?: types.PartUnion | null,
 ): types.Part {
-  if (!origin) {
+  if (origin === null || origin === undefined) {
     throw new Error('PartUnion is required');
   }
   if (typeof origin === 'object') {
@@ -73,7 +74,11 @@ export function tParts(
   apiClient: ApiClient,
   origin?: types.PartListUnion | null,
 ): types.Part[] {
-  if (!origin) {
+  if (
+    origin === null ||
+    origin === undefined ||
+    (Array.isArray(origin) && origin.length === 0)
+  ) {
     throw new Error('PartListUnion is required');
   }
   if (Array.isArray(origin)) {
@@ -82,20 +87,77 @@ export function tParts(
   return [tPart(apiClient, origin)!];
 }
 
+function _isContent(origin: unknown): boolean {
+  return (
+    origin !== null &&
+    origin !== undefined &&
+    typeof origin === 'object' &&
+    'parts' in origin &&
+    Array.isArray(origin.parts)
+  );
+}
+
+function _isFunctionCallPart(origin: unknown): boolean {
+  return (
+    origin !== null &&
+    origin !== undefined &&
+    typeof origin === 'object' &&
+    'functionCall' in origin
+  );
+}
+
+function _isUserPart(origin: unknown): boolean {
+  if (origin === null || origin === undefined) {
+    return false;
+  }
+  if (_isFunctionCallPart(origin)) {
+    return false;
+  }
+  return true;
+}
+
+function _areUserParts(origin: types.PartListUnion[]): boolean {
+  if (
+    origin === null ||
+    origin === undefined ||
+    (Array.isArray(origin) && origin.length === 0)
+  ) {
+    return false;
+  }
+  const result: boolean = _isUserPart(origin[0]);
+  for (let i = 1; i < origin.length; i++) {
+    // since this function is scoped within t_contents,
+    // this branch should never be reached
+    if (result !== _isUserPart(origin[i])) {
+      throw new Error('All parts must be homogeneously user or model parts.');
+    }
+  }
+  return result;
+}
+
 export function tContent(
   apiClient: ApiClient,
   origin?: types.ContentUnion,
 ): types.Content {
-  if (!origin) {
+  if (origin === null || origin === undefined) {
     throw new Error('ContentUnion is required');
   }
-  if (typeof origin === 'object' && 'parts' in origin) {
+  if (_isContent(origin)) {
+    // @ts-expect-error: _isContent is a utility function that checks if the origin is a Content.
     return origin;
   }
-  return {
-    role: 'user',
-    parts: tParts(apiClient, origin as types.PartListUnion)!,
-  };
+  
+  if (_isUserPart(origin)) {
+    return {
+      role: 'user',
+      parts: tParts(apiClient, origin as types.PartListUnion)!,
+    };
+  } else {
+    return {
+      role: 'model',
+      parts: tParts(apiClient, origin as types.PartListUnion)!,
+    };
+  }
 }
 
 export function tContentsForEmbed(
@@ -136,17 +198,95 @@ export function tContentsForEmbed(
   return [tContent(apiClient, origin as types.ContentUnion)!];
 }
 
+
+function _appendAccumulatedPartsAsContent(
+  apiClient: ApiClient,
+  result: types.Content[],
+  accumulatedParts: types.PartUnion[],
+) {
+  if (accumulatedParts.length === 0) {
+    return;
+  }
+  if (_areUserParts(accumulatedParts)) {
+    result.push({
+      role: 'user',
+      parts: tParts(apiClient, accumulatedParts),
+    });
+  } else {
+    result.push({
+      role: 'model',
+      parts: tParts(apiClient, accumulatedParts),
+    });
+  }
+  accumulatedParts.length = 0; // clear the array inplace
+}
+
+function _handleCurrentPart(
+  apiClient: ApiClient,
+  result: types.Content[],
+  accumulatedParts: types.PartUnion[],
+  currentPart: types.PartUnion,
+) {
+  if (_isUserPart(currentPart) && _areUserParts(accumulatedParts)) {
+    accumulatedParts.push(currentPart);
+  } else if (_isUserPart(currentPart) && !_areUserParts(accumulatedParts)) {
+    _appendAccumulatedPartsAsContent(apiClient, result, accumulatedParts);
+    accumulatedParts.length = 0;
+    accumulatedParts.push(currentPart);
+  } else if (!_isUserPart(currentPart) && _areUserParts(accumulatedParts)) {
+    _appendAccumulatedPartsAsContent(apiClient, result, accumulatedParts);
+    accumulatedParts.length = 0;
+    accumulatedParts.push(currentPart);
+  } else {
+    accumulatedParts.push(currentPart);
+  }
+}
+
 export function tContents(
   apiClient: ApiClient,
   origin: types.ContentListUnion,
 ): types.Content[] {
-  if (!origin) {
-    return [];
+  if (
+    origin === null ||
+    origin === undefined ||
+    Array.isArray(origin) && origin.length === 0
+  ) {
+    throw new Error('contents are required');
   }
-  if (Array.isArray(origin)) {
-    return origin.map((item) => tContent(apiClient, item));
+  if (!Array.isArray(origin)) {
+    return [tContent(apiClient, origin)];
   }
-  return [tContent(apiClient, origin)];
+
+  const result: types.Content[] = [];
+  const accumulatedParts: types.PartUnion[] = [];
+
+  for (const content of origin) {
+    if (_isContent(content)) {
+      _appendAccumulatedPartsAsContent(apiClient, result, accumulatedParts);
+      // @ts-expect-error: content is a Content here
+      result.push(content);
+    } else if (
+      typeof content === 'string' ||
+      (typeof content === 'object' && !Array.isArray(content))
+    ) {
+      // @ts-expect-error: content is a part here
+      _handleCurrentPart(apiClient, result, accumulatedParts, content);
+    } else if (Array.isArray(content)) {
+      // if there're consecutive user parts before the list,
+      // convert to UserContent and append to result
+      _appendAccumulatedPartsAsContent(apiClient, result, accumulatedParts);
+      result.push({
+        role: 'user',
+        parts: tParts(apiClient, content),
+      });
+
+    } else {
+      throw new Error(`Unsupported content type: ${typeof content}`);
+    }
+  }
+  _appendAccumulatedPartsAsContent(apiClient, result, accumulatedParts);
+
+  return result;
 }
 
 export function processSchema(apiClient: ApiClient, schema: types.Schema) {
