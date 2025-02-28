@@ -1050,6 +1050,7 @@ export class GenerateContentResponse {
     }
     let text = '';
     let anyTextPartText = false;
+    const nonTextParts = [];
     for (const part of this?.candidates?.[0]?.content?.parts ?? []) {
       for (const [fieldName, fieldValue] of Object.entries(part)) {
         if (
@@ -1057,9 +1058,7 @@ export class GenerateContentResponse {
           fieldName !== 'thought' &&
           (fieldValue !== null || fieldValue !== undefined)
         ) {
-          throw new Error(
-            `GenerateContentResponse.text only supports text parts, but got ${fieldName} part ${JSON.stringify(part)}`,
-          );
+          nonTextParts.push(fieldName);
         }
       }
       if (typeof part.text === 'string') {
@@ -1069,6 +1068,11 @@ export class GenerateContentResponse {
         anyTextPartText = true;
         text += part.text;
       }
+    }
+    if (nonTextParts.length > 0) {
+      console.warn(
+        `there are non-text parts ${nonTextParts} in the response, returning concatenation of all text parts. Please refer to the non text parts for a full response from model.`,
+      );
     }
     // part.text === '' is different from part.text is null
     return anyTextPartText ? text : undefined;

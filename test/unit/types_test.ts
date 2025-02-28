@@ -59,7 +59,12 @@ describe('GenerateContentResponse.text', () => {
       {content: {parts: [{text: 'First candidate'}]}} as Candidate,
       {content: {parts: [{text: 'Second candidate'}]}} as Candidate,
     ];
+    spyOn(console, 'warn');
+
     expect(response.text()).toBe('First candidate');
+    expect(console.warn).toHaveBeenCalledWith(
+      'there are multiple candidates in the response, returning text from the first one.',
+    );
   });
 
   it('should return concatenated text from valid text parts', () => {
@@ -74,7 +79,7 @@ describe('GenerateContentResponse.text', () => {
     expect(response.text()).toBe('Hello world!');
   });
 
-  it('should throw an error when parts contain invalid fields', () => {
+  it('should log a warning when parts contain invalid fields', () => {
     const response = new GenerateContentResponse();
     response.candidates = [
       {
@@ -91,10 +96,11 @@ describe('GenerateContentResponse.text', () => {
         },
       } as Candidate,
     ];
-    expect(() => response.text()).toThrow(
-      new Error(
-        'GenerateContentResponse.text only supports text parts, but got inlineData part {"inlineData":{"data":"world!","mimeType":"text/plain"}}',
-      ),
+    spyOn(console, 'warn');
+
+    expect(response.text()).toEqual('Hello ');
+    expect(console.warn).toHaveBeenCalledWith(
+      'there are non-text parts inlineData in the response, returning concatenation of all text parts. Please refer to the non text parts for a full response from model.',
     );
   });
 
@@ -135,7 +141,12 @@ describe('GenerateContentResponse.functionCalls', () => {
       {content: {parts: [{functionCall: {name: 'func1'}}]}},
       {content: {parts: [{functionCall: {name: 'func2'}}]}},
     ];
+    spyOn(console, 'warn');
+
     expect(response.functionCalls()).toEqual([{name: 'func1'}]);
+    expect(console.warn).toHaveBeenCalledWith(
+      'there are multiple candidates in the response, returning function calls from the first one.',
+    );
   });
 
   it('should return an array of function calls when candidates[0].content.parts contains valid function calls', () => {
