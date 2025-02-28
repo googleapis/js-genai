@@ -144,10 +144,9 @@ describe('sendMessage config', () => {
   beforeEach(() => {
     client = new Client({vertexai: false, apiKey: 'fake-api-key'});
     modelsModule = client.models;
-    modelsSpy = spyOn(modelsModule, 'generateContent')
-                    .and.returnValue(
-                        Promise.resolve(response),
-                    );
+    modelsSpy = spyOn(modelsModule, 'generateContent').and.returnValue(
+      Promise.resolve(response),
+    );
   });
 
   it('use default config', async () => {
@@ -158,10 +157,9 @@ describe('sendMessage config', () => {
     });
     await chat.sendMessage({message: 'send message'});
 
-    expect(modelsModule.generateContent)
-        .toHaveBeenCalledWith(
-            jasmine.objectContaining({config: defaultConfig}),
-        );
+    expect(modelsModule.generateContent).toHaveBeenCalledWith(
+      jasmine.objectContaining({config: defaultConfig}),
+    );
   });
 
   it('use per-request config', async () => {
@@ -205,10 +203,9 @@ describe('sendMessageStream config', () => {
   beforeEach(() => {
     client = new Client({vertexai: false, apiKey: 'fake-api-key'});
     modelsModule = client.models;
-    modelsSpy = spyOn(modelsModule, 'generateContentStream')
-                    .and.returnValue(
-                        Promise.resolve(mockStreamResponse()),
-                    );
+    modelsSpy = spyOn(modelsModule, 'generateContentStream').and.returnValue(
+      Promise.resolve(mockStreamResponse()),
+    );
   });
 
   it('use default config', async () => {
@@ -219,10 +216,9 @@ describe('sendMessageStream config', () => {
     });
     await chat.sendMessageStream({message: 'send message'});
 
-    expect(modelsModule.generateContentStream)
-        .toHaveBeenCalledWith(
-            jasmine.objectContaining({config: defaultConfig}),
-        );
+    expect(modelsModule.generateContentStream).toHaveBeenCalledWith(
+      jasmine.objectContaining({config: defaultConfig}),
+    );
   });
 
   it('use per-request config', async () => {
