@@ -21,7 +21,7 @@ class FakeFiles {
   };
 
   private listInternal(
-      _params: ListFilesParameters,
+      params: ListFilesParameters,
       ): Promise<ListFilesResponse> {
     return Promise.resolve(this.responses[this.responseIndex++]);
   }

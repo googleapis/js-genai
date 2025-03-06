@@ -30,10 +30,36 @@ jobs:
       run: |
         echo "Formatting failed. To resolve this issue, please run `npm run format` on your change."
         exit 1
-    - name: Run linting
-      run: npm run lint
+    - name: Get PR lint count
+      id: pr-lint-count
+      run: |
+        PR_LINT_COUNT=$(npm run lint | tail -n 2 | head -n 1 | awk '{print $2 + 0}')
+        echo "pr_count=$PR_LINT_COUNT" >> $GITHUB_OUTPUT
     - name: Check lint result
       if: ${{ failure() }}
       run: |
         echo "Linting failed. To resolve this issue, please run `npm run lint-fix` on your change."
         exit 1
+    - name: Get main lint count
+      id: main-lint-count
+      uses: actions/checkout@v4
+      with:
+        ref: main
+        fetch-depth: 0
+      run: |
+        MAIN_LINT_COUNT=$(npm run lint | tail -n 2 | head -n 1 | awk '{print $2 + 0}')
+        echo "main_count=$MAIN_LINT_COUNT" >> $GITHUB_OUTPUT
+    - name: Compare Lint Counts
+        run: |
+          PR_COUNT=${{ steps.pr-lint-count.outputs.pr_count }}
+          MAIN_COUNT=${{ steps.main-lint-count.outputs.main_count }}
+
+          echo "PR Lint Count: $PR_COUNT"
+          echo "Main Lint Count: $MAIN_COUNT"
+
+          if [[ "$PR_COUNT" -gt "$MAIN_COUNT" ]]; then
+            echo "Error: PR lint count ($PR_COUNT) is greater than main branch lint count ($MAIN_COUNT)"
+            exit 1
+          else
+            echo "PR lint count is not greater than main branch lint count.  Success!"
+          fi
