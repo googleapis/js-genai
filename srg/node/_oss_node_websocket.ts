@@ -19,7 +19,7 @@ export class NodeWebSocketFactory implements WebSocketFactory {
 }
 
 export class NodeWebSocket implements WebSocket {
-  private ws?: NodeWs;
+  private ws?: NodeWs.WebSocket;
 
   constructor(
     private readonly url: string,
@@ -28,7 +28,7 @@ export class NodeWebSocket implements WebSocket {
   ) {}
 
   connect(): void {
-    this.ws = new NodeWs(this.url, this.headers);
+    this.ws = new NodeWs.WebSocket(this.url, this.headers);
 
     this.ws.onopen = this.callbacks.onopen;
     this.ws.onerror = this.callbacks.onerror;

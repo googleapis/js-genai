@@ -2098,6 +2098,28 @@ export interface SendMessageParameters {
   config?: GenerateContentConfig;
 }
 
+/** Parameters for sending client content to the live API. */
+export interface SessionSendClientContentParameters {
+  /** Client content to send to the session. */
+  turns?: ContentListUnion;
+  /** If true, indicates that the server content generation should start with
+  the currently accumulated prompt. Otherwise, the server will await
+  additional messages before starting generation. */
+  turnComplete?: boolean;
+}
+
+/** Parameters for sending realtime input to the live API. */
+export interface SessionSendRealtimeInputParameters {
+  /** Realtime input to send to the session. */
+  media: Blob;
+}
+
+/** Parameters for sending tool responses to the live API. */
+export class SessionSendToolResponseParameters {
+  /** Tool responses to send to the session. */
+  functionResponses: FunctionResponse | FunctionResponse[] = [];
+}
+
 export type PartUnion = Part | string;
 
 export type PartListUnion = PartUnion[] | PartUnion;

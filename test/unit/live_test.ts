@@ -82,7 +82,9 @@ describe('live', () => {
     expect(onopenString).toContain('onopenResolve({});');
     expect(
       JSON.stringify(websocketFactorySpyCall.args[2].onclose.toString()),
-    ).toBe('"function (e) { }"');
+    ).toBe(
+      '"function (e) {\\n                                void e;\\n                            }"',
+    );
     expect(session).toBeDefined();
   });
 
@@ -102,9 +104,15 @@ describe('live', () => {
           onopen: () => {
             throw new Error('custom onopen error');
           },
-          onmessage: (e: MessageEvent) => {},
-          onerror: (e: ErrorEvent) => {},
-          onclose: (e: CloseEvent) => {},
+          onmessage: (e: MessageEvent) => {
+            console.debug(e.data);
+          },
+          onerror: (e: ErrorEvent) => {
+            console.debug(e.message);
+          },
+          onclose: (e: CloseEvent) => {
+            console.debug(e.reason);
+          },
         },
       );
     } catch (e: unknown) {
@@ -128,9 +136,15 @@ describe('live', () => {
       {},
       {
         onopen: function () {},
-        onmessage: function (e: MessageEvent) {},
-        onerror: function (e: ErrorEvent) {},
-        onclose: function (e: CloseEvent) {},
+        onmessage: function (e: MessageEvent) {
+          console.debug(e.data);
+        },
+        onerror: function (e: ErrorEvent) {
+          console.debug(e.message);
+        },
+        onclose: function (e: CloseEvent) {
+          console.debug(e.reason);
+        },
       },
     );
     spyOn(websocket, 'connect').and.callThrough();
@@ -167,10 +181,14 @@ describe('live', () => {
     expect(onopenString).toContain('onopenResolve({});');
     expect(
       JSON.stringify(websocketFactorySpyCall.args[2].onerror.toString()),
-    ).toBe('"function (e) { }"');
+    ).toBe(
+      '"function (e) {\\n                                void e;\\n                            }"',
+    );
     expect(
       JSON.stringify(websocketFactorySpyCall.args[2].onclose.toString()),
-    ).toBe('"function (e) { }"');
+    ).toBe(
+      '"function (e) {\\n                                void e;\\n                            }"',
+    );
     expect(websocket.connect).toHaveBeenCalled();
     const websocketSpyCall = websocketSpy.calls.all()[0];
     expect(websocketSpyCall.args[0]).toBe(

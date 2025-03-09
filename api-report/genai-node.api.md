@@ -1239,7 +1239,25 @@ export class Session {
     readonly conn: WebSocket_2;
     // (undocumented)
     onmessage?: (msg: types.LiveServerMessage) => void;
-    send(message: types.ContentListUnion | types.LiveClientContent | types.LiveClientRealtimeInput | types.LiveClientToolResponse | types.FunctionResponse | types.FunctionResponse[], turnComplete?: boolean): void;
+    sendClientContent(params: types.SessionSendClientContentParameters): void;
+    sendRealtimeInput(params: types.SessionSendRealtimeInputParameters): void;
+    sendToolResponse(params: types.SessionSendToolResponseParameters): void;
+}
+
+// @public
+export interface SessionSendClientContentParameters {
+    turnComplete?: boolean;
+    turns?: ContentListUnion;
+}
+
+// @public
+export interface SessionSendRealtimeInputParameters {
+    media: Blob_2;
+}
+
+// @public
+export class SessionSendToolResponseParameters {
+    functionResponses: FunctionResponse | FunctionResponse[];
 }
 
 // @public

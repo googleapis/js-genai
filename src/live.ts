@@ -66,9 +66,9 @@ function liveConnectConfigToMldev(
   ]);
   if (fromSystemInstruction !== undefined && fromSystemInstruction !== null) {
     common.setValueByPath(
-      toObject,
-      ['systemInstruction'],
-      contentToMldev(apiClient, fromSystemInstruction),
+        toObject,
+        ['systemInstruction'],
+        contentToMldev(apiClient, fromSystemInstruction),
     );
   }
 
@@ -79,11 +79,11 @@ function liveConnectConfigToMldev(
     Array.isArray(fromTools)
   ) {
     common.setValueByPath(
-      toObject,
-      ['tools'],
-      fromTools.map((item: types.Tool) => {
-        return toolToMldev(apiClient, item);
-      }),
+        toObject,
+        ['tools'],
+        fromTools.map((item: types.Tool) => {
+          return toolToMldev(apiClient, item);
+        }),
     );
   }
 
@@ -135,9 +135,9 @@ function liveConnectConfigToVertex(
   ]);
   if (fromSystemInstruction !== undefined && fromSystemInstruction !== null) {
     common.setValueByPath(
-      toObject,
-      ['systemInstruction'],
-      contentToVertex(apiClient, fromSystemInstruction),
+        toObject,
+        ['systemInstruction'],
+        contentToVertex(apiClient, fromSystemInstruction),
     );
   }
 
@@ -148,11 +148,11 @@ function liveConnectConfigToVertex(
     Array.isArray(fromTools)
   ) {
     common.setValueByPath(
-      toObject,
-      ['tools'],
-      fromTools.map((item: types.Tool) => {
-        return toolToVertex(apiClient, item);
-      }),
+        toObject,
+        ['tools'],
+        fromTools.map((item: types.Tool) => {
+          return toolToVertex(apiClient, item);
+        }),
     );
   }
 
@@ -214,9 +214,9 @@ function liveServerContentFromMldev(
   const fromModelTurn = common.getValueByPath(fromObject, ['modelTurn']);
   if (fromModelTurn !== undefined && fromModelTurn !== null) {
     common.setValueByPath(
-      toObject,
-      ['modelTurn'],
-      contentFromMldev(apiClient, fromModelTurn),
+        toObject,
+        ['modelTurn'],
+        contentFromMldev(apiClient, fromModelTurn),
     );
   }
 
@@ -242,9 +242,9 @@ function liveServerContentFromVertex(
   const fromModelTurn = common.getValueByPath(fromObject, ['modelTurn']);
   if (fromModelTurn !== undefined && fromModelTurn !== null) {
     common.setValueByPath(
-      toObject,
-      ['modelTurn'],
-      contentFromVertex(apiClient, fromModelTurn),
+        toObject,
+        ['modelTurn'],
+        contentFromVertex(apiClient, fromModelTurn),
     );
   }
 
@@ -572,9 +572,18 @@ export class Live {
 
     const websocketCallbacks: WebSocketCallbacks = {
       onopen: onopenAwaitedCallback,
-      onmessage: callbacks?.onmessage ?? function (e: MessageEvent) {},
-      onerror: callbacks?.onerror ?? function (e: ErrorEvent) {},
-      onclose: callbacks?.onclose ?? function (e: CloseEvent) {},
+      onmessage: callbacks?.onmessage ??
+          function(e: MessageEvent) {
+            void e;
+          },
+      onerror: callbacks?.onerror ??
+          function(e: ErrorEvent) {
+            void e;
+          },
+      onclose: callbacks?.onclose ??
+          function(e: CloseEvent) {
+            void e;
+          },
     };
 
     const conn = this.webSocketFactory.create(
@@ -659,165 +668,199 @@ export class Session {
     this.onmessage(serverMessage);
   }
 
-  private parseClientMessage(
-    apiClient: ApiClient,
-    input:
-      | types.ContentListUnion
-      | types.LiveClientContent
-      | types.LiveClientRealtimeInput
-      | types.LiveClientToolResponse
-      | types.FunctionResponse
-      | types.FunctionResponse[],
-    turnComplete: boolean = false,
-  ): types.LiveClientMessage {
-    if (typeof input === 'object' && input !== null && 'setup' in input) {
-      throw new Error(
-        "Message type 'setup' is not supported in send(). Use connect() instead.",
-      );
-    }
-    if (typeof input === 'string') {
-      input = [input];
-    } else if (
-      typeof input === 'object' &&
-      input !== null &&
-      'name' in input &&
-      'response' in input
-    ) {
-      // ToolResponse.FunctionResponse
-      if (!apiClient.isVertexAI() && !('id' in input)) {
-        throw new Error(FUNCTION_RESPONSE_REQUIRES_ID);
+  private tLiveClientContent(
+      apiClient: ApiClient,
+      params: types.SessionSendClientContentParameters,
+      ): types.LiveClientMessage {
+    if (params.turns !== null && params.turns !== undefined) {
+      let contents: types.Content[] = [];
+      try {
+        contents = t.tContents(apiClient, params.turns as types.ContentListUnion)
+        if (apiClient.isVertexAI()){
+            contents = contents.map((item) => contentToVertex(apiClient, item))
+        } else {
+            contents = contents.map((item) => contentToMldev(apiClient, item))
+        }
+      } catch {
+        throw new Error(
+            `Failed to parse client content "turns", type: '${
+                typeof params.turns}'`,
+        );
       }
-      input = [input];
+      return {
+        clientContent: {turns: contents, turnComplete: params.turnComplete},
+      };
     }
 
+    return {
+        clientContent: {turnComplete: params.turnComplete},
+    };
+  }
+
+  private tLiveClientRealtimeInput(
+      apiClient: ApiClient,
+      params: types.SessionSendRealtimeInputParameters,
+      ): types.LiveClientMessage {
     let clientMessage: types.LiveClientMessage = {};
-    if (
-      Array.isArray(input) &&
-      input.some(
-        (c) =>
-          typeof c === 'object' && c !== null && 'name' in c && 'response' in c,
-      )
-    ) {
-      // ToolResponse.FunctionResponse
-      clientMessage = {
-        toolResponse: {functionResponses: input as types.FunctionResponse[]},
-      };
-    } else if (
-      Array.isArray(input) &&
-      input.some((c) => typeof c === 'string')
-    ) {
-      const contents = apiClient.isVertexAI()
-        ? t
-            .tContents(apiClient, input as types.ContentListUnion)
-            .map((item) => contentToVertex(apiClient, item))
-        : t
-            .tContents(apiClient, input as types.ContentListUnion)
-            .map((item) => contentToMldev(apiClient, item));
-
-      clientMessage = {
-        clientContent: {turns: contents, turnComplete: turnComplete},
-      };
-    } else if (
-      typeof input === 'object' &&
-      input !== null &&
-      'content' in input
-    ) {
-      clientMessage = {clientContent: input as types.LiveClientContent};
-    } else if (
-      typeof input === 'object' &&
-      input !== null &&
-      'mediaChunks' in input
-    ) {
-      // LiveClientRealtimeInput
-      clientMessage = {realtimeInput: input};
-    } else if (
-      typeof input === 'object' &&
-      input !== null &&
-      'turns' in input
-    ) {
-      // LiveClientContent
-      clientMessage = {clientContent: input};
-    } else if (
-      typeof input === 'object' &&
-      input !== null &&
-      'functionResponses' in input
-    ) {
-      // LiveClientToolResponse
-      if (!apiClient.isVertexAI() && !input.functionResponses![0].id) {
-        throw new Error(FUNCTION_RESPONSE_REQUIRES_ID);
-      }
-      clientMessage = {toolResponse: input};
-    } else if (
-      typeof input === 'object' &&
-      input !== null &&
-      'name' in input &&
-      'response' in input
-    ) {
-      // FunctionResponse
-      if (!apiClient.isVertexAI() && !input.id) {
-        throw new Error(FUNCTION_RESPONSE_REQUIRES_ID);
-      }
-      clientMessage = {
-        toolResponse: {
-          functionResponses: [input],
-        },
-      };
-    } else if (
-      Array.isArray(input) &&
-      typeof input[0] === 'object' &&
-      input[0] !== null &&
-      'name' in input[0] &&
-      'response' in input[0]
-    ) {
-      // FunctionResponse[]
-      if (!apiClient.isVertexAI() && !input[0].id) {
-        throw new Error(FUNCTION_RESPONSE_REQUIRES_ID);
-      }
-      clientMessage = {
-        toolResponse: {
-          functionResponses: input.map((c) => c as types.FunctionResponse),
-        },
-      };
-    } else {
+    if (!('media' in params) || !params.media){
       throw new Error(
-        `Unsupported input type '${typeof input}' or input content '${input}'.`,
+        `Failed to convert realtime input "media", type: '${
+            typeof params.media}'`,
       );
     }
 
+    // LiveClientRealtimeInput
+    clientMessage = {realtimeInput: {mediaChunks: [params.media]}};
+    return clientMessage;
+  }
+
+  private tLiveClienttToolResponse(
+      apiClient: ApiClient,
+      params: types.SessionSendToolResponseParameters,
+      ): types.LiveClientMessage {
+    let functionResponses: types.FunctionResponse[] = [];
+
+    if (params.functionResponses == null) {
+      throw new Error('functionResponses is required.');
+    }
+
+    if (!Array.isArray(params.functionResponses)) {
+      functionResponses = [params.functionResponses];
+    }
+
+    if (functionResponses.length === 0){
+      throw new Error('functionResponses is required.');
+    }
+
+    for (const functionResponse of functionResponses) {
+      if (typeof functionResponse !== 'object' || functionResponse === null ||
+          !('name' in functionResponse) || !('response' in functionResponse)) {
+            throw new Error(
+              `Could not parse function response, type '${
+                  typeof functionResponse}'.`,
+          );
+        }
+        if (!apiClient.isVertexAI() && !('id' in functionResponse)) {
+          throw new Error(FUNCTION_RESPONSE_REQUIRES_ID);
+        }
+    }
+
+    const clientMessage: types.LiveClientMessage = {
+      toolResponse: {functionResponses: functionResponses}
+    };
     return clientMessage;
   }
 
   /**
-     Transmits a message over the established WebSocket connection.
+    Send a message over the established connection.
 
-     @experimental
+    @param params - Contains two **optional** properties, `turns` and `turnComplete`. 
 
-     @example
-     ```ts
-     const session = await client.live.connect({
-       model: 'gemini-2.0-flash-exp',
-       config: {
-         responseModalities: [Modality.AUDIO],
-       }
-     });
+      - `turns` will be converted to a `Content[]`
+      - `turnComplete: true` indicates that you are done sending content and expect a response.
 
-     session.send('Hello world!');
-     ```
+    @experimental
+
+    @remanks
+    There are two ways to send messages to the live API:
+    `sendClientContent` and `sendRealtimeInput`.
+
+    `sendClientContent` messages are added to the model context **in order**.
+    Having a conversation using `sendClientContent` messages is roughly equivalent to
+    using the `Chat.sendMessageStream`,
+    except that the state of the `chat` history is stored on the API server instead of locally.
+
+    Because of `sendClientContent`'s order guarantee, the model cannot respons as quickly to
+    `sendClientContent` messages as to `sendRealtimeInput` messages. This makes the biggest
+    difference when sending objects that have significant preprocessing time (typically images).
+
+    The `sendClientContent` message sends a `Content[]`
+    which has more options than the `Blob` sent by `sendRealtimeInput`.
+
+    So the main use-cases for `sendClientContent` over `sendRealtimeInput` are:
+
+    - Sending anything that can't be represented as a `Blob` (text, `sendClientContent({turns="Hello?"}`)).
+    - Managing turns when not using audio input and voice activity detection.
+      (`sendClientContent({turnComplete:true})` or the short form `sendClientContent()`)
+    - Prefilling a conversation context
+      ```
+      sendClientContent({
+          turns: [
+            Content({role:user, parts:...}),
+            Content({role:user, parts:...}),
+            ...
+          ]
+      })
+      ```
+    @experimental
    */
-  send(
-    message:
-      | types.ContentListUnion
-      | types.LiveClientContent
-      | types.LiveClientRealtimeInput
-      | types.LiveClientToolResponse
-      | types.FunctionResponse
-      | types.FunctionResponse[],
-    turnComplete: boolean = false,
-  ) {
-    const clientMessage: types.LiveClientMessage = this.parseClientMessage(
-      this.apiClient,
-      message,
-      turnComplete,
+  sendClientContent(params: types.SessionSendClientContentParameters) {
+    if (params.turns == null && params.turnComplete == null) {
+      params = {
+        turnComplete: true,
+      };
+    }
+    const clientMessage: types.LiveClientMessage =
+        this.tLiveClientContent(this.apiClient, params);
+    this.conn.send(JSON.stringify(clientMessage));
+  }
+
+  /**
+    Send a realtime message over the established connection.
+
+    @param params - Contains one property, `media`. 
+
+      - `media` will be converted to a `Blob`
+
+    @experimental
+
+    @remanks
+    Use `sendRealtimeInput` for realtime audio chunks and video frames (images).
+
+    With `sendRealtimeInput` the api will respond to audio automatically 
+    based on voice activity detection (VAD). 
+
+    `sendRealtimeInput` is optimized for responsivness at the expense of 
+    deterministic ordering guarantees. Audio and video tokens are to the
+    context when they become available. 
+
+    Note: The Call signature expects a `Blob` object, but only a subset
+    of audio and image mimetypes are allowed.
+   */
+  sendRealtimeInput(params: types.SessionSendRealtimeInputParameters) {
+    if (params.media == null) {
+      throw new Error('Media is required.');
+    }
+
+    const clientMessage: types.LiveClientMessage = this.tLiveClientRealtimeInput(
+        this.apiClient,
+        params,
+    );
+    this.conn.send(JSON.stringify(clientMessage));
+  }
+
+  /**
+    Send a function response message over the established connection.
+
+    @param params - Contains property `functionResponses`. 
+
+      - `functionResponses` will be converted to a `functionResponses[]`
+
+    @remanks
+    Use `sendFunctionResponse` to reply to `LiveServerToolCall` from the server.
+
+    Use {@link LiveConnectConfig#tools} to configure the callable functions.
+
+    @experimental
+   */
+  sendToolResponse(params: types.SessionSendToolResponseParameters) {
+    if (params.functionResponses == null) {
+      throw new Error('Tool response parameters are required.');
+    }
+
+    const clientMessage: types.LiveClientMessage = this.tLiveClienttToolResponse(
+        this.apiClient,
+        params,
     );
     this.conn.send(JSON.stringify(clientMessage));
   }
