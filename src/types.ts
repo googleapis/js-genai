@@ -1803,6 +1803,23 @@ export interface GetFileParameters {
   config?: GetFileConfig;
 }
 
+/** Used to override the default configuration. */
+export interface DeleteFileConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+}
+
+/** Generates the parameters for the get method. */
+export interface DeleteFileParameters {
+  /** The name identifier for the file to be deleted. */
+  name: string;
+  /** Used to override the default configuration. */
+  config?: DeleteFileConfig;
+}
+
+/** Response for the delete file method. */
+export class DeleteFileResponse {}
+
 export interface TestTableItem {
   /** The name of the test. This is used to derive the replay id. */
   name?: string;

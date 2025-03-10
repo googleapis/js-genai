@@ -302,6 +302,70 @@ export class Files extends BaseModule {
       });
     }
   }
+
+  async delete(
+    params: types.DeleteFileParameters,
+  ): Promise<types.DeleteFileResponse> {
+    let response: Promise<types.DeleteFileResponse>;
+    let path: string = '';
+    let queryParams: Record<string, string> = {};
+    if (this.apiClient.isVertexAI()) {
+      const body = deleteFileParametersToVertex(this.apiClient, params);
+      path = common.formatMap('None', body['_url'] as Record<string, unknown>);
+      queryParams = body['_query'] as Record<string, string>;
+      delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'DELETE',
+          httpOptions: params.config?.httpOptions,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json();
+        }) as Promise<types.DeleteFileResponse>;
+
+      return response.then((apiResponse) => {
+        const resp = deleteFileResponseFromVertex(this.apiClient, apiResponse);
+        const typedResp = new types.DeleteFileResponse();
+        Object.assign(typedResp, resp);
+        return typedResp;
+      });
+    } else {
+      const body = deleteFileParametersToMldev(this.apiClient, params);
+      path = common.formatMap(
+        'files/{file}',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
+      delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'DELETE',
+          httpOptions: params.config?.httpOptions,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json();
+        }) as Promise<types.DeleteFileResponse>;
+
+      return response.then((apiResponse) => {
+        const resp = deleteFileResponseFromMldev(this.apiClient, apiResponse);
+        const typedResp = new types.DeleteFileResponse();
+        Object.assign(typedResp, resp);
+        return typedResp;
+      });
+    }
+  }
 }
 
 function listFilesConfigToMldev(
@@ -648,6 +712,46 @@ function getFileParametersToVertex(
   return toObject;
 }
 
+function deleteFileParametersToMldev(
+  apiClient: ApiClient,
+  fromObject: types.DeleteFileParameters,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromName = common.getValueByPath(fromObject, ['name']);
+  if (fromName != null) {
+    common.setValueByPath(
+      toObject,
+      ['_url', 'file'],
+      t.tFileName(apiClient, fromName),
+    );
+  }
+
+  const fromConfig = common.getValueByPath(fromObject, ['config']);
+  if (fromConfig != null) {
+    common.setValueByPath(toObject, ['config'], fromConfig);
+  }
+
+  return toObject;
+}
+
+function deleteFileParametersToVertex(
+  apiClient: ApiClient,
+  fromObject: types.DeleteFileParameters,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  if (common.getValueByPath(fromObject, ['name']) !== undefined) {
+    throw new Error('name parameter is not supported in Vertex AI.');
+  }
+
+  if (common.getValueByPath(fromObject, ['config']) !== undefined) {
+    throw new Error('config parameter is not supported in Vertex AI.');
+  }
+
+  return toObject;
+}
+
 function fileStatusFromMldev(
   apiClient: ApiClient,
   fromObject: types.FileStatus,
@@ -841,6 +945,24 @@ function createFileResponseFromVertex(
   if (fromHttpHeaders != null) {
     common.setValueByPath(toObject, ['httpHeaders'], fromHttpHeaders);
   }
+
+  return toObject;
+}
+
+function deleteFileResponseFromMldev(
+  apiClient: ApiClient,
+  fromObject: types.DeleteFileResponse,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  return toObject;
+}
+
+function deleteFileResponseFromVertex(
+  apiClient: ApiClient,
+  fromObject: types.DeleteFileResponse,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   return toObject;
 }
