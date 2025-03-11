@@ -55,19 +55,19 @@ Use server-side implementations in production environments.</p>
 <a id="googlegenai-overview" class="tsd-anchor"></a><h2 class="tsd-anchor-link">GoogleGenAI overview<a href="#googlegenai-overview" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>All API features are accessed through an instance of the <code>GoogleGenAI</code> classes.
 The submodules bundle together related API methods:</p>
 <ul>
-<li><a href="https://googleapis.github.io/js-genai/classes/models.Models.html"><code>client.models</code></a>:
+<li><a href="https://googleapis.github.io/js-genai/classes/models.Models.html"><code>ai.models</code></a>:
 Use <code>models</code> to query models (<code>generateContent</code>, <code>generateImages</code>, ...), or
 examine their metadata.</li>
-<li><a href="https://googleapis.github.io/js-genai/classes/caches.Caches.html"><code>client.caches</code></a>:
+<li><a href="https://googleapis.github.io/js-genai/classes/caches.Caches.html"><code>ai.caches</code></a>:
 Create and manage <code>caches</code> to reduce costs when repeatedly using the same
 large prompt prefix.</li>
-<li><a href="https://googleapis.github.io/js-genai/classes/chats.Chats.html"><code>client.chats</code></a>:
+<li><a href="https://googleapis.github.io/js-genai/classes/chats.Chats.html"><code>ai.chats</code></a>:
 Create local stateful <code>chat</code> objects to simplify multi turn interactions.</li>
-<li><a href="https://googleapis.github.io/js-genai/classes/files.Files.html"><code>client.files</code></a>:
+<li><a href="https://googleapis.github.io/js-genai/classes/files.Files.html"><code>ai.files</code></a>:
 Upload <code>files</code> to the API and reference them in your prompts.
 This reduces bandwidth if you use a file many times, and handles files too
 large to fit inline with your prompt.</li>
-<li><a href="https://googleapis.github.io/js-genai/classes/live.Live.html"><code>client.live</code></a>:
+<li><a href="https://googleapis.github.io/js-genai/classes/live.Live.html"><code>ai.live</code></a>:
 Start a <code>live</code> session for real time interaction, allows text + audio + video
 input, and text or audio output.</li>
 </ul>

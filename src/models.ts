@@ -45,7 +45,10 @@ export class Models extends BaseModule {
    *
    * @example
    * ```ts
-   * const response = await client.models.generateContent({
+   * import {GoogleGenAI} from '@google/genai';
+   * ai = const ai = new GoogleGenAI();
+   * 
+   * const response = await ai.models.generateContent({
    *   model: 'gemini-2.0-flash',
    *   contents: 'why is the sky blue?',
    *   config: {
@@ -90,7 +93,10 @@ export class Models extends BaseModule {
    *
    * @example
    * ```ts
-   * const response = await client.models.generateContentStream({
+   * import {GoogleGenAI} from '@google/genai';
+   * ai = const ai = new GoogleGenAI();
+   *
+   * const response = await ai.models.generateContentStream({
    *   model: 'gemini-2.0-flash',
    *   contents: 'why is the sky blue?',
    *   config: {
@@ -258,7 +264,10 @@ export class Models extends BaseModule {
    *
    * @example
    * ```ts
-   * const response = await client.models.embedContent({
+   * import {GoogleGenAI} from '@google/genai';
+   * ai = const ai = new GoogleGenAI();
+   * 
+   * const response = await ai.models.embedContent({
    *  model: 'text-embedding-004',
    *  contents: [
    *    'What is your name?',
@@ -349,7 +358,10 @@ export class Models extends BaseModule {
    *
    * @example
    * ```ts
-   * const response = await client.models.generateImages({
+   * import {GoogleGenAI} from '@google/genai';
+   * ai = const ai = new GoogleGenAI();
+   * 
+   * const response = await ai.models.generateImages({
    *  model: 'imagen-3.0-generate-002',
    *  prompt: 'Robot holding a red skateboard',
    *  config: {
@@ -442,7 +454,10 @@ export class Models extends BaseModule {
    *
    * @example
    * ```ts
-   * const response = await client.models.countTokens({
+   * import {GoogleGenAI} from '@google/genai';
+   * ai = const ai = new GoogleGenAI();
+   * 
+   * const response = await ai.models.countTokens({
    *  model: 'gemini-2.0-flash',
    *  contents: 'The quick brown fox jumps over the lazy dog.'
    * });
@@ -527,7 +542,10 @@ export class Models extends BaseModule {
    *
    * @example
    * ```ts
-   * const response = await client.models.computeTokens({
+   * import {GoogleGenAI} from '@google/genai';
+   * ai = const ai = new GoogleGenAI();
+   * 
+   * const response = await ai.models.computeTokens({
    *  model: 'gemini-2.0-flash',
    *  contents: 'What is your name?'
    * });

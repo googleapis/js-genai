@@ -26,7 +26,10 @@ export class Caches extends BaseModule {
    *
    * @example
    * ```ts
-   * const cachedContents = await client.caches.list({config: {'pageSize': 2}});
+   * import {GoogleGenAI} from '@google/genai';
+   * const ai = new GoogleGenAI();
+   *
+   * const response = await ai.caches.list({config: {'pageSize': 2}});
    * for (const cachedContent of cachedContents) {
    *   console.log(cachedContent);
    * }
@@ -51,8 +54,11 @@ export class Caches extends BaseModule {
    *
    * @example
    * ```ts
+   * import {GoogleGenAI} from '@google/genai';
+   * const ai = new GoogleGenAI();
+   *
    * const contents = ...; // Initialize the content to cache.
-   * const response = await client.caches.create({
+   * const response = await ai.caches.create({
    *   model: 'gemini-2.0-flash',
    *   config: {
    *    'contents': contents,
@@ -137,9 +143,18 @@ export class Caches extends BaseModule {
    * @param params - The parameters for the get request.
    * @return The cached content.
    *
+   * @remarks
+   * This method fetches the metadata describing the cached content.
+   * There is no way to download the cached content itself.
+   * Caches are write only.
+   *
    * @example
    * ```ts
-   * await client.caches.get({name: 'gemini-1.5-flash'});
+   * import {GoogleGenAI} from '@google/genai';
+   * const ai = new GoogleGenAI();
+   *
+   * const cache = await ai.caches.create({...})
+   * const response = await ai.caches.get({name: cache.name});
    * ```
    */
   async get(
@@ -215,7 +230,11 @@ export class Caches extends BaseModule {
    *
    * @example
    * ```ts
-   * await client.caches.delete({name: 'gemini-1.5-flash'});
+   * import {GoogleGenAI} from '@google/genai';
+   * const ai = new GoogleGenAI();
+   *
+   * const cache = await ai.caches.create({...})
+   * const response = await ai.caches.delete({name: cache.name});
    * ```
    */
   async delete(
@@ -302,8 +321,13 @@ export class Caches extends BaseModule {
    *
    * @example
    * ```ts
-   * const response = await client.caches.update({
-   *   name: 'gemini-1.5-flash',
+   * import {GoogleGenAI} from '@google/genai';
+   * const ai = new GoogleGenAI();
+   *
+   * cache = await ai.caches.create({...});
+   *
+   * const response = await ai.caches.update({
+   *   name: cache.name,
    *   config: {'ttl': '7600s'}
    * });
    * ```
