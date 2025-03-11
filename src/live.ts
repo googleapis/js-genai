@@ -542,7 +542,8 @@ export class Live {
      Establishes a connection to the specified model with the given
      configuration and returns a Session object representing that connection.
 
-    > [!CAUTION] This SDK does not yet support the live API for **Google Vertex AI**.
+    > [!CAUTION] This SDK does not yet support the live API for **Google Vertex
+    AI**.
 
      @experimental
 
@@ -551,7 +552,10 @@ export class Live {
 
      @example
      ```ts
-     const session = await client.live.connect({
+     import {GoogleGenAI} from '@google/genai';
+
+     ai = const ai = new GoogleGenAI();
+     const session = await ai.live.connect({
        model: 'gemini-2.0-flash-exp',
        config: {
          responseModalities: [Modality.AUDIO],
@@ -796,13 +800,13 @@ export class Session {
     So the main use-cases for `sendClientContent` over `sendRealtimeInput` are:
 
     - Sending anything that can't be represented as a `Blob` (text,
-    `sendClientContent({turns="Hello?"}`)).
+    `session.sendClientContent({turns="Hello?"}`)).
     - Managing turns when not using audio input and voice activity detection.
-      (`sendClientContent({turnComplete:true})` or the short form
-    `sendClientContent()`)
+      (`session.sendClientContent({turnComplete:true})` or the short form
+    `session.sendClientContent()`)
     - Prefilling a conversation context
       ```
-      sendClientContent({
+      session.sendClientContent({
           turns: [
             Content({role:user, parts:...}),
             Content({role:user, parts:...}),
@@ -892,7 +896,10 @@ export class Session {
 
      @example
      ```ts
-     const session = await client.live.connect({
+     import {GoogleGenAI} from '@google/genai';
+     const ai = new GoogleGenAI();
+
+     const session = await ai.live.connect({
        model: 'gemini-2.0-flash-exp',
        config: {
          responseModalities: [Modality.AUDIO],

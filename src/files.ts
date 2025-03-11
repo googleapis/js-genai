@@ -29,7 +29,10 @@ export class Files extends BaseModule {
    * size of each page is 10.
    *
    * ```ts
-   * const listResponse = await client.files.list({config: {'pageSize': 10}});
+   * import {GoogleGenAI} from '@google/genai';
+   * ai = const ai = new GoogleGenAI();
+   *
+   * const response = await ai.files.list({config: {'pageSize': 10}});
    * for await (const file of listResponse) {
    *   console.log(file.name);
    * }
@@ -76,13 +79,17 @@ export class Files extends BaseModule {
    * @throws An error if called on a Vertex AI client.
    * @throws An error if the `mimeType` is not provided and can not be inferred,
    * the `mimeType` can be provided in the `config` parameter.
-   * @throws An error occurs if a suitable upload location cannot be established.
+   * @throws An error occurs if a suitable upload location cannot be
+   *     established.
    *
    * @example
    * The following code uploads a file to Gemini API.
    *
    * ```ts
-   * const file = await client.files.upload('file.txt', {
+   * import {GoogleGenAI} from '@google/genai';
+   * ai = const ai = new GoogleGenAI();
+   *
+   * const response = await ai.files.upload('file.txt', {
    *   mimeType: 'text/plain',
    * });
    * console.log(file.name);
@@ -237,10 +244,13 @@ export class Files extends BaseModule {
    *
    * @example
    * ```ts
+   * import {GetFileParameters, GoogleGenAI} from '@google/genai';
+   * ai = const ai = new GoogleGenAI();
+   *
    * const config: GetFileParameters = {
    *   name: fileName,
    * };
-   * file = await client.files.get(config);
+   * file = await ai.files.get(config);
    * console.log(file.name);
    * ```
    */
