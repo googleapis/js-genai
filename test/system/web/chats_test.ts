@@ -4,11 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {GoogleGenAI} from '../../src/node/node_client';
-import {Tool, Type} from '../../src/types';
+import {GoogleGenAI} from '../../../src/web/web_client';
+import {Tool, Type} from '../../../src/types';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 
 const function_calling: Tool = {
   functionDeclarations: [
@@ -41,24 +40,8 @@ describe('sendMessage', () => {
       messages: ['why is the sky blue?'],
     },
     {
-      name: 'Vertex AI with text',
-      client: new GoogleGenAI({vertexai: true, project: GOOGLE_CLOUD_PROJECT}),
-      model: 'gemini-2.0-flash',
-      config: {},
-      history: [],
-      messages: ['why is the sky blue?'],
-    },
-    {
       name: 'Google AI with config',
       client: new GoogleGenAI({vertexai: false, apiKey: GEMINI_API_KEY}),
-      model: 'gemini-2.0-flash',
-      config: {temperature: 0.5, maxOutputTokens: 20},
-      history: [],
-      messages: ['why is the sky blue?'],
-    },
-    {
-      name: 'Vertex AI with config',
-      client: new GoogleGenAI({vertexai: true, project: GOOGLE_CLOUD_PROJECT}),
       model: 'gemini-2.0-flash',
       config: {temperature: 0.5, maxOutputTokens: 20},
       history: [],
@@ -76,30 +59,8 @@ describe('sendMessage', () => {
       messages: ['what is the value of a+b?'],
     },
     {
-      name: 'Vertex AI with history',
-      client: new GoogleGenAI({vertexai: true, project: GOOGLE_CLOUD_PROJECT}),
-      model: 'gemini-2.0-flash',
-      config: {},
-      history: [
-        {parts: [{text: 'a=5'}], role: 'user'},
-        {parts: [{text: 'b=10'}], role: 'user'},
-      ],
-      messages: ['what is the value of a+b?'],
-    },
-    {
       name: 'Google AI multiple messages',
       client: new GoogleGenAI({vertexai: false, apiKey: GEMINI_API_KEY}),
-      model: 'gemini-2.0-flash',
-      config: {},
-      history: [],
-      messages: [
-        'Tell me a story in 100 words?',
-        'What is the title of the story?',
-      ],
-    },
-    {
-      name: 'Vertex AI multilple messages',
-      client: new GoogleGenAI({vertexai: true, project: GOOGLE_CLOUD_PROJECT}),
       model: 'gemini-2.0-flash',
       config: {},
       history: [],
@@ -160,18 +121,6 @@ describe('sendMessage', () => {
     });
     console.log('chat.sendMessage response: ', response.text);
   });
-
-  it('Vertex AI array of strings', async () => {
-    const client = new GoogleGenAI({
-      vertexai: true,
-      project: GOOGLE_CLOUD_PROJECT,
-    });
-    const chat = client.chats.create({model: 'gemini-2.0-flash'});
-    const response = await chat.sendMessage({
-      message: ['why is the sky blue?', 'Can the sky appear in other colors?'],
-    });
-    console.log('chat.sendMessage response: ', response.text);
-  });
 });
 
 describe('chats function calling', () => {
@@ -179,14 +128,6 @@ describe('chats function calling', () => {
     {
       name: 'Google AI with function calling',
       client: new GoogleGenAI({vertexai: false, apiKey: GEMINI_API_KEY}),
-      model: 'gemini-2.0-flash',
-      config: {tools: [function_calling]},
-      history: [],
-      messages: ['what is the result of 100/2', 'what is the result of 50/2?'],
-    },
-    {
-      name: 'Vertex AI with function calling',
-      client: new GoogleGenAI({vertexai: true, project: GOOGLE_CLOUD_PROJECT}),
       model: 'gemini-2.0-flash',
       config: {tools: [function_calling]},
       history: [],
