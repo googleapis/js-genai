@@ -31,26 +31,6 @@ export function listFilesConfigToMldev(
   return toObject;
 }
 
-export function listFilesConfigToVertex(
-  apiClient: ApiClient,
-  fromObject: types.ListFilesConfig,
-  parentObject: Record<string, unknown>,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
-  if (parentObject !== undefined && fromPageSize != null) {
-    common.setValueByPath(parentObject, ['_query', 'pageSize'], fromPageSize);
-  }
-
-  const fromPageToken = common.getValueByPath(fromObject, ['pageToken']);
-  if (parentObject !== undefined && fromPageToken != null) {
-    common.setValueByPath(parentObject, ['_query', 'pageToken'], fromPageToken);
-  }
-
-  return toObject;
-}
-
 export function listFilesParametersToMldev(
   apiClient: ApiClient,
   fromObject: types.ListFilesParameters,
@@ -64,19 +44,6 @@ export function listFilesParametersToMldev(
       ['config'],
       listFilesConfigToMldev(apiClient, fromConfig, toObject),
     );
-  }
-
-  return toObject;
-}
-
-export function listFilesParametersToVertex(
-  apiClient: ApiClient,
-  fromObject: types.ListFilesParameters,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (common.getValueByPath(fromObject, ['config']) !== undefined) {
-    throw new Error('config parameter is not supported in Vertex AI.');
   }
 
   return toObject;
@@ -101,27 +68,6 @@ export function fileStatusToMldev(
   const fromCode = common.getValueByPath(fromObject, ['code']);
   if (fromCode != null) {
     common.setValueByPath(toObject, ['code'], fromCode);
-  }
-
-  return toObject;
-}
-
-export function fileStatusToVertex(
-  apiClient: ApiClient,
-  fromObject: types.FileStatus,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (common.getValueByPath(fromObject, ['details']) !== undefined) {
-    throw new Error('details parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['message']) !== undefined) {
-    throw new Error('message parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['code']) !== undefined) {
-    throw new Error('code parameter is not supported in Vertex AI.');
   }
 
   return toObject;
@@ -214,71 +160,6 @@ export function fileToMldev(
   return toObject;
 }
 
-export function fileToVertex(
-  apiClient: ApiClient,
-  fromObject: types.File,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (common.getValueByPath(fromObject, ['name']) !== undefined) {
-    throw new Error('name parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
-    throw new Error('displayName parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['mimeType']) !== undefined) {
-    throw new Error('mimeType parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['sizeBytes']) !== undefined) {
-    throw new Error('sizeBytes parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['createTime']) !== undefined) {
-    throw new Error('createTime parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['expirationTime']) !== undefined) {
-    throw new Error('expirationTime parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['updateTime']) !== undefined) {
-    throw new Error('updateTime parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['sha256Hash']) !== undefined) {
-    throw new Error('sha256Hash parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['uri']) !== undefined) {
-    throw new Error('uri parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['downloadUri']) !== undefined) {
-    throw new Error('downloadUri parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['state']) !== undefined) {
-    throw new Error('state parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['source']) !== undefined) {
-    throw new Error('source parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['videoMetadata']) !== undefined) {
-    throw new Error('videoMetadata parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['error']) !== undefined) {
-    throw new Error('error parameter is not supported in Vertex AI.');
-  }
-
-  return toObject;
-}
-
 export function createFileParametersToMldev(
   apiClient: ApiClient,
   fromObject: types.CreateFileParameters,
@@ -293,23 +174,6 @@ export function createFileParametersToMldev(
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
     common.setValueByPath(toObject, ['config'], fromConfig);
-  }
-
-  return toObject;
-}
-
-export function createFileParametersToVertex(
-  apiClient: ApiClient,
-  fromObject: types.CreateFileParameters,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (common.getValueByPath(fromObject, ['file']) !== undefined) {
-    throw new Error('file parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['config']) !== undefined) {
-    throw new Error('config parameter is not supported in Vertex AI.');
   }
 
   return toObject;
@@ -338,23 +202,6 @@ export function getFileParametersToMldev(
   return toObject;
 }
 
-export function getFileParametersToVertex(
-  apiClient: ApiClient,
-  fromObject: types.GetFileParameters,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (common.getValueByPath(fromObject, ['name']) !== undefined) {
-    throw new Error('name parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['config']) !== undefined) {
-    throw new Error('config parameter is not supported in Vertex AI.');
-  }
-
-  return toObject;
-}
-
 export function fileStatusFromMldev(
   apiClient: ApiClient,
   fromObject: types.FileStatus,
@@ -375,12 +222,6 @@ export function fileStatusFromMldev(
   if (fromCode != null) {
     common.setValueByPath(toObject, ['code'], fromCode);
   }
-
-  return toObject;
-}
-
-export function fileStatusFromVertex(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
 
   return toObject;
 }
@@ -472,12 +313,6 @@ export function fileFromMldev(
   return toObject;
 }
 
-export function fileFromVertex(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
 export function listFilesResponseFromMldev(
   apiClient: ApiClient,
   fromObject: types.ListFilesResponse,
@@ -509,27 +344,7 @@ export function listFilesResponseFromMldev(
   return toObject;
 }
 
-export function listFilesResponseFromVertex(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
 export function createFileResponseFromMldev(
-  apiClient: ApiClient,
-  fromObject: types.CreateFileResponse,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromHttpHeaders = common.getValueByPath(fromObject, ['httpHeaders']);
-  if (fromHttpHeaders != null) {
-    common.setValueByPath(toObject, ['httpHeaders'], fromHttpHeaders);
-  }
-
-  return toObject;
-}
-
-export function createFileResponseFromVertex(
   apiClient: ApiClient,
   fromObject: types.CreateFileResponse,
 ): Record<string, unknown> {

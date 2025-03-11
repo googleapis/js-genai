@@ -74,72 +74,6 @@ export function partToMldev(
   return toObject;
 }
 
-export function partToVertex(
-  apiClient: ApiClient,
-  fromObject: types.Part,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromVideoMetadata = common.getValueByPath(fromObject, [
-    'videoMetadata',
-  ]);
-  if (fromVideoMetadata != null) {
-    common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
-  }
-
-  const fromThought = common.getValueByPath(fromObject, ['thought']);
-  if (fromThought != null) {
-    common.setValueByPath(toObject, ['thought'], fromThought);
-  }
-
-  const fromCodeExecutionResult = common.getValueByPath(fromObject, [
-    'codeExecutionResult',
-  ]);
-  if (fromCodeExecutionResult != null) {
-    common.setValueByPath(
-      toObject,
-      ['codeExecutionResult'],
-      fromCodeExecutionResult,
-    );
-  }
-
-  const fromExecutableCode = common.getValueByPath(fromObject, [
-    'executableCode',
-  ]);
-  if (fromExecutableCode != null) {
-    common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
-  }
-
-  const fromFileData = common.getValueByPath(fromObject, ['fileData']);
-  if (fromFileData != null) {
-    common.setValueByPath(toObject, ['fileData'], fromFileData);
-  }
-
-  const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
-  if (fromFunctionCall != null) {
-    common.setValueByPath(toObject, ['functionCall'], fromFunctionCall);
-  }
-
-  const fromFunctionResponse = common.getValueByPath(fromObject, [
-    'functionResponse',
-  ]);
-  if (fromFunctionResponse != null) {
-    common.setValueByPath(toObject, ['functionResponse'], fromFunctionResponse);
-  }
-
-  const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
-  if (fromInlineData != null) {
-    common.setValueByPath(toObject, ['inlineData'], fromInlineData);
-  }
-
-  const fromText = common.getValueByPath(fromObject, ['text']);
-  if (fromText != null) {
-    common.setValueByPath(toObject, ['text'], fromText);
-  }
-
-  return toObject;
-}
-
 export function contentToMldev(
   apiClient: ApiClient,
   fromObject: types.Content,
@@ -154,35 +88,6 @@ export function contentToMldev(
         ['parts'],
         fromParts.map((item) => {
           return partToMldev(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(toObject, ['parts'], fromParts);
-    }
-  }
-
-  const fromRole = common.getValueByPath(fromObject, ['role']);
-  if (fromRole != null) {
-    common.setValueByPath(toObject, ['role'], fromRole);
-  }
-
-  return toObject;
-}
-
-export function contentToVertex(
-  apiClient: ApiClient,
-  fromObject: types.Content,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromParts = common.getValueByPath(fromObject, ['parts']);
-  if (fromParts != null) {
-    if (Array.isArray(fromParts)) {
-      common.setValueByPath(
-        toObject,
-        ['parts'],
-        fromParts.map((item) => {
-          return partToVertex(apiClient, item);
         }),
       );
     } else {
@@ -311,131 +216,6 @@ export function schemaToMldev(
   return toObject;
 }
 
-export function schemaToVertex(
-  apiClient: ApiClient,
-  fromObject: types.Schema,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromExample = common.getValueByPath(fromObject, ['example']);
-  if (fromExample != null) {
-    common.setValueByPath(toObject, ['example'], fromExample);
-  }
-
-  const fromPattern = common.getValueByPath(fromObject, ['pattern']);
-  if (fromPattern != null) {
-    common.setValueByPath(toObject, ['pattern'], fromPattern);
-  }
-
-  const fromDefault = common.getValueByPath(fromObject, ['default']);
-  if (fromDefault != null) {
-    common.setValueByPath(toObject, ['default'], fromDefault);
-  }
-
-  const fromMaxLength = common.getValueByPath(fromObject, ['maxLength']);
-  if (fromMaxLength != null) {
-    common.setValueByPath(toObject, ['maxLength'], fromMaxLength);
-  }
-
-  const fromTitle = common.getValueByPath(fromObject, ['title']);
-  if (fromTitle != null) {
-    common.setValueByPath(toObject, ['title'], fromTitle);
-  }
-
-  const fromMinLength = common.getValueByPath(fromObject, ['minLength']);
-  if (fromMinLength != null) {
-    common.setValueByPath(toObject, ['minLength'], fromMinLength);
-  }
-
-  const fromMinProperties = common.getValueByPath(fromObject, [
-    'minProperties',
-  ]);
-  if (fromMinProperties != null) {
-    common.setValueByPath(toObject, ['minProperties'], fromMinProperties);
-  }
-
-  const fromMaxProperties = common.getValueByPath(fromObject, [
-    'maxProperties',
-  ]);
-  if (fromMaxProperties != null) {
-    common.setValueByPath(toObject, ['maxProperties'], fromMaxProperties);
-  }
-
-  const fromAnyOf = common.getValueByPath(fromObject, ['anyOf']);
-  if (fromAnyOf != null) {
-    common.setValueByPath(toObject, ['anyOf'], fromAnyOf);
-  }
-
-  const fromDescription = common.getValueByPath(fromObject, ['description']);
-  if (fromDescription != null) {
-    common.setValueByPath(toObject, ['description'], fromDescription);
-  }
-
-  const fromEnum = common.getValueByPath(fromObject, ['enum']);
-  if (fromEnum != null) {
-    common.setValueByPath(toObject, ['enum'], fromEnum);
-  }
-
-  const fromFormat = common.getValueByPath(fromObject, ['format']);
-  if (fromFormat != null) {
-    common.setValueByPath(toObject, ['format'], fromFormat);
-  }
-
-  const fromItems = common.getValueByPath(fromObject, ['items']);
-  if (fromItems != null) {
-    common.setValueByPath(toObject, ['items'], fromItems);
-  }
-
-  const fromMaxItems = common.getValueByPath(fromObject, ['maxItems']);
-  if (fromMaxItems != null) {
-    common.setValueByPath(toObject, ['maxItems'], fromMaxItems);
-  }
-
-  const fromMaximum = common.getValueByPath(fromObject, ['maximum']);
-  if (fromMaximum != null) {
-    common.setValueByPath(toObject, ['maximum'], fromMaximum);
-  }
-
-  const fromMinItems = common.getValueByPath(fromObject, ['minItems']);
-  if (fromMinItems != null) {
-    common.setValueByPath(toObject, ['minItems'], fromMinItems);
-  }
-
-  const fromMinimum = common.getValueByPath(fromObject, ['minimum']);
-  if (fromMinimum != null) {
-    common.setValueByPath(toObject, ['minimum'], fromMinimum);
-  }
-
-  const fromNullable = common.getValueByPath(fromObject, ['nullable']);
-  if (fromNullable != null) {
-    common.setValueByPath(toObject, ['nullable'], fromNullable);
-  }
-
-  const fromProperties = common.getValueByPath(fromObject, ['properties']);
-  if (fromProperties != null) {
-    common.setValueByPath(toObject, ['properties'], fromProperties);
-  }
-
-  const fromPropertyOrdering = common.getValueByPath(fromObject, [
-    'propertyOrdering',
-  ]);
-  if (fromPropertyOrdering != null) {
-    common.setValueByPath(toObject, ['propertyOrdering'], fromPropertyOrdering);
-  }
-
-  const fromRequired = common.getValueByPath(fromObject, ['required']);
-  if (fromRequired != null) {
-    common.setValueByPath(toObject, ['required'], fromRequired);
-  }
-
-  const fromType = common.getValueByPath(fromObject, ['type']);
-  if (fromType != null) {
-    common.setValueByPath(toObject, ['type'], fromType);
-  }
-
-  return toObject;
-}
-
 export function safetySettingToMldev(
   apiClient: ApiClient,
   fromObject: types.SafetySetting,
@@ -444,30 +224,6 @@ export function safetySettingToMldev(
 
   if (common.getValueByPath(fromObject, ['method']) !== undefined) {
     throw new Error('method parameter is not supported in Gemini API.');
-  }
-
-  const fromCategory = common.getValueByPath(fromObject, ['category']);
-  if (fromCategory != null) {
-    common.setValueByPath(toObject, ['category'], fromCategory);
-  }
-
-  const fromThreshold = common.getValueByPath(fromObject, ['threshold']);
-  if (fromThreshold != null) {
-    common.setValueByPath(toObject, ['threshold'], fromThreshold);
-  }
-
-  return toObject;
-}
-
-export function safetySettingToVertex(
-  apiClient: ApiClient,
-  fromObject: types.SafetySetting,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromMethod = common.getValueByPath(fromObject, ['method']);
-  if (fromMethod != null) {
-    common.setValueByPath(toObject, ['method'], fromMethod);
   }
 
   const fromCategory = common.getValueByPath(fromObject, ['category']);
@@ -511,73 +267,13 @@ export function functionDeclarationToMldev(
   return toObject;
 }
 
-export function functionDeclarationToVertex(
-  apiClient: ApiClient,
-  fromObject: types.FunctionDeclaration,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromResponse = common.getValueByPath(fromObject, ['response']);
-  if (fromResponse != null) {
-    common.setValueByPath(
-      toObject,
-      ['response'],
-      schemaToVertex(apiClient, fromResponse),
-    );
-  }
-
-  const fromDescription = common.getValueByPath(fromObject, ['description']);
-  if (fromDescription != null) {
-    common.setValueByPath(toObject, ['description'], fromDescription);
-  }
-
-  const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName != null) {
-    common.setValueByPath(toObject, ['name'], fromName);
-  }
-
-  const fromParameters = common.getValueByPath(fromObject, ['parameters']);
-  if (fromParameters != null) {
-    common.setValueByPath(toObject, ['parameters'], fromParameters);
-  }
-
-  return toObject;
-}
-
 export function googleSearchToMldev(): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   return toObject;
 }
 
-export function googleSearchToVertex(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
 export function dynamicRetrievalConfigToMldev(
-  apiClient: ApiClient,
-  fromObject: types.DynamicRetrievalConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromMode = common.getValueByPath(fromObject, ['mode']);
-  if (fromMode != null) {
-    common.setValueByPath(toObject, ['mode'], fromMode);
-  }
-
-  const fromDynamicThreshold = common.getValueByPath(fromObject, [
-    'dynamicThreshold',
-  ]);
-  if (fromDynamicThreshold != null) {
-    common.setValueByPath(toObject, ['dynamicThreshold'], fromDynamicThreshold);
-  }
-
-  return toObject;
-}
-
-export function dynamicRetrievalConfigToVertex(
   apiClient: ApiClient,
   fromObject: types.DynamicRetrievalConfig,
 ): Record<string, unknown> {
@@ -612,26 +308,6 @@ export function googleSearchRetrievalToMldev(
       toObject,
       ['dynamicRetrievalConfig'],
       dynamicRetrievalConfigToMldev(apiClient, fromDynamicRetrievalConfig),
-    );
-  }
-
-  return toObject;
-}
-
-export function googleSearchRetrievalToVertex(
-  apiClient: ApiClient,
-  fromObject: types.GoogleSearchRetrieval,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromDynamicRetrievalConfig = common.getValueByPath(fromObject, [
-    'dynamicRetrievalConfig',
-  ]);
-  if (fromDynamicRetrievalConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['dynamicRetrievalConfig'],
-      dynamicRetrievalConfigToVertex(apiClient, fromDynamicRetrievalConfig),
     );
   }
 
@@ -695,90 +371,7 @@ export function toolToMldev(
   return toObject;
 }
 
-export function toolToVertex(
-  apiClient: ApiClient,
-  fromObject: types.Tool,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromFunctionDeclarations = common.getValueByPath(fromObject, [
-    'functionDeclarations',
-  ]);
-  if (fromFunctionDeclarations != null) {
-    if (Array.isArray(fromFunctionDeclarations)) {
-      common.setValueByPath(
-        toObject,
-        ['functionDeclarations'],
-        fromFunctionDeclarations.map((item) => {
-          return functionDeclarationToVertex(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(
-        toObject,
-        ['functionDeclarations'],
-        fromFunctionDeclarations,
-      );
-    }
-  }
-
-  const fromRetrieval = common.getValueByPath(fromObject, ['retrieval']);
-  if (fromRetrieval != null) {
-    common.setValueByPath(toObject, ['retrieval'], fromRetrieval);
-  }
-
-  const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
-  if (fromGoogleSearch != null) {
-    common.setValueByPath(toObject, ['googleSearch'], googleSearchToVertex());
-  }
-
-  const fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
-    'googleSearchRetrieval',
-  ]);
-  if (fromGoogleSearchRetrieval != null) {
-    common.setValueByPath(
-      toObject,
-      ['googleSearchRetrieval'],
-      googleSearchRetrievalToVertex(apiClient, fromGoogleSearchRetrieval),
-    );
-  }
-
-  const fromCodeExecution = common.getValueByPath(fromObject, [
-    'codeExecution',
-  ]);
-  if (fromCodeExecution != null) {
-    common.setValueByPath(toObject, ['codeExecution'], fromCodeExecution);
-  }
-
-  return toObject;
-}
-
 export function functionCallingConfigToMldev(
-  apiClient: ApiClient,
-  fromObject: types.FunctionCallingConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromMode = common.getValueByPath(fromObject, ['mode']);
-  if (fromMode != null) {
-    common.setValueByPath(toObject, ['mode'], fromMode);
-  }
-
-  const fromAllowedFunctionNames = common.getValueByPath(fromObject, [
-    'allowedFunctionNames',
-  ]);
-  if (fromAllowedFunctionNames != null) {
-    common.setValueByPath(
-      toObject,
-      ['allowedFunctionNames'],
-      fromAllowedFunctionNames,
-    );
-  }
-
-  return toObject;
-}
-
-export function functionCallingConfigToVertex(
   apiClient: ApiClient,
   fromObject: types.FunctionCallingConfig,
 ): Record<string, unknown> {
@@ -823,41 +416,7 @@ export function toolConfigToMldev(
   return toObject;
 }
 
-export function toolConfigToVertex(
-  apiClient: ApiClient,
-  fromObject: types.ToolConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromFunctionCallingConfig = common.getValueByPath(fromObject, [
-    'functionCallingConfig',
-  ]);
-  if (fromFunctionCallingConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['functionCallingConfig'],
-      functionCallingConfigToVertex(apiClient, fromFunctionCallingConfig),
-    );
-  }
-
-  return toObject;
-}
-
 export function prebuiltVoiceConfigToMldev(
-  apiClient: ApiClient,
-  fromObject: types.PrebuiltVoiceConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromVoiceName = common.getValueByPath(fromObject, ['voiceName']);
-  if (fromVoiceName != null) {
-    common.setValueByPath(toObject, ['voiceName'], fromVoiceName);
-  }
-
-  return toObject;
-}
-
-export function prebuiltVoiceConfigToVertex(
   apiClient: ApiClient,
   fromObject: types.PrebuiltVoiceConfig,
 ): Record<string, unknown> {
@@ -891,26 +450,6 @@ export function voiceConfigToMldev(
   return toObject;
 }
 
-export function voiceConfigToVertex(
-  apiClient: ApiClient,
-  fromObject: types.VoiceConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromPrebuiltVoiceConfig = common.getValueByPath(fromObject, [
-    'prebuiltVoiceConfig',
-  ]);
-  if (fromPrebuiltVoiceConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['prebuiltVoiceConfig'],
-      prebuiltVoiceConfigToVertex(apiClient, fromPrebuiltVoiceConfig),
-    );
-  }
-
-  return toObject;
-}
-
 export function speechConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.SpeechConfig,
@@ -929,41 +468,7 @@ export function speechConfigToMldev(
   return toObject;
 }
 
-export function speechConfigToVertex(
-  apiClient: ApiClient,
-  fromObject: types.SpeechConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromVoiceConfig = common.getValueByPath(fromObject, ['voiceConfig']);
-  if (fromVoiceConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['voiceConfig'],
-      voiceConfigToVertex(apiClient, fromVoiceConfig),
-    );
-  }
-
-  return toObject;
-}
-
 export function thinkingConfigToMldev(
-  apiClient: ApiClient,
-  fromObject: types.ThinkingConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromIncludeThoughts = common.getValueByPath(fromObject, [
-    'includeThoughts',
-  ]);
-  if (fromIncludeThoughts != null) {
-    common.setValueByPath(toObject, ['includeThoughts'], fromIncludeThoughts);
-  }
-
-  return toObject;
-}
-
-export function thinkingConfigToVertex(
   apiClient: ApiClient,
   fromObject: types.ThinkingConfig,
 ): Record<string, unknown> {
@@ -1201,6 +706,880 @@ export function generateContentConfigToMldev(
   return toObject;
 }
 
+export function generateContentParametersToMldev(
+  apiClient: ApiClient,
+  fromObject: types.GenerateContentParameters,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromModel = common.getValueByPath(fromObject, ['model']);
+  if (fromModel != null) {
+    common.setValueByPath(
+      toObject,
+      ['_url', 'model'],
+      t.tModel(apiClient, fromModel),
+    );
+  }
+
+  const fromContents = common.getValueByPath(fromObject, ['contents']);
+  if (fromContents != null) {
+    if (Array.isArray(fromContents)) {
+      common.setValueByPath(
+        toObject,
+        ['contents'],
+        t.tContents(
+          apiClient,
+          t.tContents(apiClient, fromContents).map((item) => {
+            return contentToMldev(apiClient, item);
+          }),
+        ),
+      );
+    } else {
+      common.setValueByPath(
+        toObject,
+        ['contents'],
+        t.tContents(apiClient, fromContents),
+      );
+    }
+  }
+
+  const fromConfig = common.getValueByPath(fromObject, ['config']);
+  if (fromConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['generationConfig'],
+      generateContentConfigToMldev(apiClient, fromConfig, toObject),
+    );
+  }
+
+  return toObject;
+}
+
+export function embedContentConfigToMldev(
+  apiClient: ApiClient,
+  fromObject: types.EmbedContentConfig,
+  parentObject: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromTaskType = common.getValueByPath(fromObject, ['taskType']);
+  if (parentObject !== undefined && fromTaskType != null) {
+    common.setValueByPath(
+      parentObject,
+      ['requests[]', 'taskType'],
+      fromTaskType,
+    );
+  }
+
+  const fromTitle = common.getValueByPath(fromObject, ['title']);
+  if (parentObject !== undefined && fromTitle != null) {
+    common.setValueByPath(parentObject, ['requests[]', 'title'], fromTitle);
+  }
+
+  const fromOutputDimensionality = common.getValueByPath(fromObject, [
+    'outputDimensionality',
+  ]);
+  if (parentObject !== undefined && fromOutputDimensionality != null) {
+    common.setValueByPath(
+      parentObject,
+      ['requests[]', 'outputDimensionality'],
+      fromOutputDimensionality,
+    );
+  }
+
+  if (common.getValueByPath(fromObject, ['mimeType']) !== undefined) {
+    throw new Error('mimeType parameter is not supported in Gemini API.');
+  }
+
+  if (common.getValueByPath(fromObject, ['autoTruncate']) !== undefined) {
+    throw new Error('autoTruncate parameter is not supported in Gemini API.');
+  }
+
+  return toObject;
+}
+
+export function embedContentParametersToMldev(
+  apiClient: ApiClient,
+  fromObject: types.EmbedContentParameters,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromModel = common.getValueByPath(fromObject, ['model']);
+  if (fromModel != null) {
+    common.setValueByPath(
+      toObject,
+      ['_url', 'model'],
+      t.tModel(apiClient, fromModel),
+    );
+  }
+
+  const fromContents = common.getValueByPath(fromObject, ['contents']);
+  if (fromContents != null) {
+    common.setValueByPath(
+      toObject,
+      ['requests[]', 'content'],
+      t.tContentsForEmbed(apiClient, fromContents),
+    );
+  }
+
+  const fromConfig = common.getValueByPath(fromObject, ['config']);
+  if (fromConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['config'],
+      embedContentConfigToMldev(apiClient, fromConfig, toObject),
+    );
+  }
+
+  const fromModelForEmbedContent = common.getValueByPath(fromObject, ['model']);
+  if (fromModelForEmbedContent !== undefined) {
+    common.setValueByPath(
+      toObject,
+      ['requests[]', 'model'],
+      t.tModel(apiClient, fromModelForEmbedContent),
+    );
+  }
+
+  return toObject;
+}
+
+export function generateImagesConfigToMldev(
+  apiClient: ApiClient,
+  fromObject: types.GenerateImagesConfig,
+  parentObject: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  if (common.getValueByPath(fromObject, ['outputGcsUri']) !== undefined) {
+    throw new Error('outputGcsUri parameter is not supported in Gemini API.');
+  }
+
+  if (common.getValueByPath(fromObject, ['negativePrompt']) !== undefined) {
+    throw new Error('negativePrompt parameter is not supported in Gemini API.');
+  }
+
+  const fromNumberOfImages = common.getValueByPath(fromObject, [
+    'numberOfImages',
+  ]);
+  if (parentObject !== undefined && fromNumberOfImages != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'sampleCount'],
+      fromNumberOfImages,
+    );
+  }
+
+  const fromAspectRatio = common.getValueByPath(fromObject, ['aspectRatio']);
+  if (parentObject !== undefined && fromAspectRatio != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'aspectRatio'],
+      fromAspectRatio,
+    );
+  }
+
+  const fromGuidanceScale = common.getValueByPath(fromObject, [
+    'guidanceScale',
+  ]);
+  if (parentObject !== undefined && fromGuidanceScale != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'guidanceScale'],
+      fromGuidanceScale,
+    );
+  }
+
+  if (common.getValueByPath(fromObject, ['seed']) !== undefined) {
+    throw new Error('seed parameter is not supported in Gemini API.');
+  }
+
+  const fromSafetyFilterLevel = common.getValueByPath(fromObject, [
+    'safetyFilterLevel',
+  ]);
+  if (parentObject !== undefined && fromSafetyFilterLevel != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'safetySetting'],
+      fromSafetyFilterLevel,
+    );
+  }
+
+  const fromPersonGeneration = common.getValueByPath(fromObject, [
+    'personGeneration',
+  ]);
+  if (parentObject !== undefined && fromPersonGeneration != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'personGeneration'],
+      fromPersonGeneration,
+    );
+  }
+
+  const fromIncludeSafetyAttributes = common.getValueByPath(fromObject, [
+    'includeSafetyAttributes',
+  ]);
+  if (parentObject !== undefined && fromIncludeSafetyAttributes != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'includeSafetyAttributes'],
+      fromIncludeSafetyAttributes,
+    );
+  }
+
+  const fromIncludeRaiReason = common.getValueByPath(fromObject, [
+    'includeRaiReason',
+  ]);
+  if (parentObject !== undefined && fromIncludeRaiReason != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'includeRaiReason'],
+      fromIncludeRaiReason,
+    );
+  }
+
+  const fromLanguage = common.getValueByPath(fromObject, ['language']);
+  if (parentObject !== undefined && fromLanguage != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'language'],
+      fromLanguage,
+    );
+  }
+
+  const fromOutputMimeType = common.getValueByPath(fromObject, [
+    'outputMimeType',
+  ]);
+  if (parentObject !== undefined && fromOutputMimeType != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'outputOptions', 'mimeType'],
+      fromOutputMimeType,
+    );
+  }
+
+  const fromOutputCompressionQuality = common.getValueByPath(fromObject, [
+    'outputCompressionQuality',
+  ]);
+  if (parentObject !== undefined && fromOutputCompressionQuality != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'outputOptions', 'compressionQuality'],
+      fromOutputCompressionQuality,
+    );
+  }
+
+  if (common.getValueByPath(fromObject, ['addWatermark']) !== undefined) {
+    throw new Error('addWatermark parameter is not supported in Gemini API.');
+  }
+
+  if (common.getValueByPath(fromObject, ['enhancePrompt']) !== undefined) {
+    throw new Error('enhancePrompt parameter is not supported in Gemini API.');
+  }
+
+  return toObject;
+}
+
+export function generateImagesParametersToMldev(
+  apiClient: ApiClient,
+  fromObject: types.GenerateImagesParameters,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromModel = common.getValueByPath(fromObject, ['model']);
+  if (fromModel != null) {
+    common.setValueByPath(
+      toObject,
+      ['_url', 'model'],
+      t.tModel(apiClient, fromModel),
+    );
+  }
+
+  const fromPrompt = common.getValueByPath(fromObject, ['prompt']);
+  if (fromPrompt != null) {
+    common.setValueByPath(toObject, ['instances[0]', 'prompt'], fromPrompt);
+  }
+
+  const fromConfig = common.getValueByPath(fromObject, ['config']);
+  if (fromConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['config'],
+      generateImagesConfigToMldev(apiClient, fromConfig, toObject),
+    );
+  }
+
+  return toObject;
+}
+
+export function countTokensConfigToMldev(
+  apiClient: ApiClient,
+  fromObject: types.CountTokensConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  if (common.getValueByPath(fromObject, ['systemInstruction']) !== undefined) {
+    throw new Error(
+      'systemInstruction parameter is not supported in Gemini API.',
+    );
+  }
+
+  if (common.getValueByPath(fromObject, ['tools']) !== undefined) {
+    throw new Error('tools parameter is not supported in Gemini API.');
+  }
+
+  if (common.getValueByPath(fromObject, ['generationConfig']) !== undefined) {
+    throw new Error(
+      'generationConfig parameter is not supported in Gemini API.',
+    );
+  }
+
+  return toObject;
+}
+
+export function countTokensParametersToMldev(
+  apiClient: ApiClient,
+  fromObject: types.CountTokensParameters,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromModel = common.getValueByPath(fromObject, ['model']);
+  if (fromModel != null) {
+    common.setValueByPath(
+      toObject,
+      ['_url', 'model'],
+      t.tModel(apiClient, fromModel),
+    );
+  }
+
+  const fromContents = common.getValueByPath(fromObject, ['contents']);
+  if (fromContents != null) {
+    if (Array.isArray(fromContents)) {
+      common.setValueByPath(
+        toObject,
+        ['contents'],
+        t.tContents(
+          apiClient,
+          t.tContents(apiClient, fromContents).map((item) => {
+            return contentToMldev(apiClient, item);
+          }),
+        ),
+      );
+    } else {
+      common.setValueByPath(
+        toObject,
+        ['contents'],
+        t.tContents(apiClient, fromContents),
+      );
+    }
+  }
+
+  const fromConfig = common.getValueByPath(fromObject, ['config']);
+  if (fromConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['config'],
+      countTokensConfigToMldev(apiClient, fromConfig),
+    );
+  }
+
+  return toObject;
+}
+
+export function partToVertex(
+  apiClient: ApiClient,
+  fromObject: types.Part,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromVideoMetadata = common.getValueByPath(fromObject, [
+    'videoMetadata',
+  ]);
+  if (fromVideoMetadata != null) {
+    common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
+  }
+
+  const fromThought = common.getValueByPath(fromObject, ['thought']);
+  if (fromThought != null) {
+    common.setValueByPath(toObject, ['thought'], fromThought);
+  }
+
+  const fromCodeExecutionResult = common.getValueByPath(fromObject, [
+    'codeExecutionResult',
+  ]);
+  if (fromCodeExecutionResult != null) {
+    common.setValueByPath(
+      toObject,
+      ['codeExecutionResult'],
+      fromCodeExecutionResult,
+    );
+  }
+
+  const fromExecutableCode = common.getValueByPath(fromObject, [
+    'executableCode',
+  ]);
+  if (fromExecutableCode != null) {
+    common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
+  }
+
+  const fromFileData = common.getValueByPath(fromObject, ['fileData']);
+  if (fromFileData != null) {
+    common.setValueByPath(toObject, ['fileData'], fromFileData);
+  }
+
+  const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
+  if (fromFunctionCall != null) {
+    common.setValueByPath(toObject, ['functionCall'], fromFunctionCall);
+  }
+
+  const fromFunctionResponse = common.getValueByPath(fromObject, [
+    'functionResponse',
+  ]);
+  if (fromFunctionResponse != null) {
+    common.setValueByPath(toObject, ['functionResponse'], fromFunctionResponse);
+  }
+
+  const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
+  if (fromInlineData != null) {
+    common.setValueByPath(toObject, ['inlineData'], fromInlineData);
+  }
+
+  const fromText = common.getValueByPath(fromObject, ['text']);
+  if (fromText != null) {
+    common.setValueByPath(toObject, ['text'], fromText);
+  }
+
+  return toObject;
+}
+
+export function contentToVertex(
+  apiClient: ApiClient,
+  fromObject: types.Content,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromParts = common.getValueByPath(fromObject, ['parts']);
+  if (fromParts != null) {
+    if (Array.isArray(fromParts)) {
+      common.setValueByPath(
+        toObject,
+        ['parts'],
+        fromParts.map((item) => {
+          return partToVertex(apiClient, item);
+        }),
+      );
+    } else {
+      common.setValueByPath(toObject, ['parts'], fromParts);
+    }
+  }
+
+  const fromRole = common.getValueByPath(fromObject, ['role']);
+  if (fromRole != null) {
+    common.setValueByPath(toObject, ['role'], fromRole);
+  }
+
+  return toObject;
+}
+
+export function schemaToVertex(
+  apiClient: ApiClient,
+  fromObject: types.Schema,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromExample = common.getValueByPath(fromObject, ['example']);
+  if (fromExample != null) {
+    common.setValueByPath(toObject, ['example'], fromExample);
+  }
+
+  const fromPattern = common.getValueByPath(fromObject, ['pattern']);
+  if (fromPattern != null) {
+    common.setValueByPath(toObject, ['pattern'], fromPattern);
+  }
+
+  const fromDefault = common.getValueByPath(fromObject, ['default']);
+  if (fromDefault != null) {
+    common.setValueByPath(toObject, ['default'], fromDefault);
+  }
+
+  const fromMaxLength = common.getValueByPath(fromObject, ['maxLength']);
+  if (fromMaxLength != null) {
+    common.setValueByPath(toObject, ['maxLength'], fromMaxLength);
+  }
+
+  const fromTitle = common.getValueByPath(fromObject, ['title']);
+  if (fromTitle != null) {
+    common.setValueByPath(toObject, ['title'], fromTitle);
+  }
+
+  const fromMinLength = common.getValueByPath(fromObject, ['minLength']);
+  if (fromMinLength != null) {
+    common.setValueByPath(toObject, ['minLength'], fromMinLength);
+  }
+
+  const fromMinProperties = common.getValueByPath(fromObject, [
+    'minProperties',
+  ]);
+  if (fromMinProperties != null) {
+    common.setValueByPath(toObject, ['minProperties'], fromMinProperties);
+  }
+
+  const fromMaxProperties = common.getValueByPath(fromObject, [
+    'maxProperties',
+  ]);
+  if (fromMaxProperties != null) {
+    common.setValueByPath(toObject, ['maxProperties'], fromMaxProperties);
+  }
+
+  const fromAnyOf = common.getValueByPath(fromObject, ['anyOf']);
+  if (fromAnyOf != null) {
+    common.setValueByPath(toObject, ['anyOf'], fromAnyOf);
+  }
+
+  const fromDescription = common.getValueByPath(fromObject, ['description']);
+  if (fromDescription != null) {
+    common.setValueByPath(toObject, ['description'], fromDescription);
+  }
+
+  const fromEnum = common.getValueByPath(fromObject, ['enum']);
+  if (fromEnum != null) {
+    common.setValueByPath(toObject, ['enum'], fromEnum);
+  }
+
+  const fromFormat = common.getValueByPath(fromObject, ['format']);
+  if (fromFormat != null) {
+    common.setValueByPath(toObject, ['format'], fromFormat);
+  }
+
+  const fromItems = common.getValueByPath(fromObject, ['items']);
+  if (fromItems != null) {
+    common.setValueByPath(toObject, ['items'], fromItems);
+  }
+
+  const fromMaxItems = common.getValueByPath(fromObject, ['maxItems']);
+  if (fromMaxItems != null) {
+    common.setValueByPath(toObject, ['maxItems'], fromMaxItems);
+  }
+
+  const fromMaximum = common.getValueByPath(fromObject, ['maximum']);
+  if (fromMaximum != null) {
+    common.setValueByPath(toObject, ['maximum'], fromMaximum);
+  }
+
+  const fromMinItems = common.getValueByPath(fromObject, ['minItems']);
+  if (fromMinItems != null) {
+    common.setValueByPath(toObject, ['minItems'], fromMinItems);
+  }
+
+  const fromMinimum = common.getValueByPath(fromObject, ['minimum']);
+  if (fromMinimum != null) {
+    common.setValueByPath(toObject, ['minimum'], fromMinimum);
+  }
+
+  const fromNullable = common.getValueByPath(fromObject, ['nullable']);
+  if (fromNullable != null) {
+    common.setValueByPath(toObject, ['nullable'], fromNullable);
+  }
+
+  const fromProperties = common.getValueByPath(fromObject, ['properties']);
+  if (fromProperties != null) {
+    common.setValueByPath(toObject, ['properties'], fromProperties);
+  }
+
+  const fromPropertyOrdering = common.getValueByPath(fromObject, [
+    'propertyOrdering',
+  ]);
+  if (fromPropertyOrdering != null) {
+    common.setValueByPath(toObject, ['propertyOrdering'], fromPropertyOrdering);
+  }
+
+  const fromRequired = common.getValueByPath(fromObject, ['required']);
+  if (fromRequired != null) {
+    common.setValueByPath(toObject, ['required'], fromRequired);
+  }
+
+  const fromType = common.getValueByPath(fromObject, ['type']);
+  if (fromType != null) {
+    common.setValueByPath(toObject, ['type'], fromType);
+  }
+
+  return toObject;
+}
+
+export function safetySettingToVertex(
+  apiClient: ApiClient,
+  fromObject: types.SafetySetting,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromMethod = common.getValueByPath(fromObject, ['method']);
+  if (fromMethod != null) {
+    common.setValueByPath(toObject, ['method'], fromMethod);
+  }
+
+  const fromCategory = common.getValueByPath(fromObject, ['category']);
+  if (fromCategory != null) {
+    common.setValueByPath(toObject, ['category'], fromCategory);
+  }
+
+  const fromThreshold = common.getValueByPath(fromObject, ['threshold']);
+  if (fromThreshold != null) {
+    common.setValueByPath(toObject, ['threshold'], fromThreshold);
+  }
+
+  return toObject;
+}
+
+export function functionDeclarationToVertex(
+  apiClient: ApiClient,
+  fromObject: types.FunctionDeclaration,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromResponse = common.getValueByPath(fromObject, ['response']);
+  if (fromResponse != null) {
+    common.setValueByPath(
+      toObject,
+      ['response'],
+      schemaToVertex(apiClient, fromResponse),
+    );
+  }
+
+  const fromDescription = common.getValueByPath(fromObject, ['description']);
+  if (fromDescription != null) {
+    common.setValueByPath(toObject, ['description'], fromDescription);
+  }
+
+  const fromName = common.getValueByPath(fromObject, ['name']);
+  if (fromName != null) {
+    common.setValueByPath(toObject, ['name'], fromName);
+  }
+
+  const fromParameters = common.getValueByPath(fromObject, ['parameters']);
+  if (fromParameters != null) {
+    common.setValueByPath(toObject, ['parameters'], fromParameters);
+  }
+
+  return toObject;
+}
+
+export function googleSearchToVertex(): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  return toObject;
+}
+
+export function dynamicRetrievalConfigToVertex(
+  apiClient: ApiClient,
+  fromObject: types.DynamicRetrievalConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromMode = common.getValueByPath(fromObject, ['mode']);
+  if (fromMode != null) {
+    common.setValueByPath(toObject, ['mode'], fromMode);
+  }
+
+  const fromDynamicThreshold = common.getValueByPath(fromObject, [
+    'dynamicThreshold',
+  ]);
+  if (fromDynamicThreshold != null) {
+    common.setValueByPath(toObject, ['dynamicThreshold'], fromDynamicThreshold);
+  }
+
+  return toObject;
+}
+
+export function googleSearchRetrievalToVertex(
+  apiClient: ApiClient,
+  fromObject: types.GoogleSearchRetrieval,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromDynamicRetrievalConfig = common.getValueByPath(fromObject, [
+    'dynamicRetrievalConfig',
+  ]);
+  if (fromDynamicRetrievalConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['dynamicRetrievalConfig'],
+      dynamicRetrievalConfigToVertex(apiClient, fromDynamicRetrievalConfig),
+    );
+  }
+
+  return toObject;
+}
+
+export function toolToVertex(
+  apiClient: ApiClient,
+  fromObject: types.Tool,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromFunctionDeclarations = common.getValueByPath(fromObject, [
+    'functionDeclarations',
+  ]);
+  if (fromFunctionDeclarations != null) {
+    if (Array.isArray(fromFunctionDeclarations)) {
+      common.setValueByPath(
+        toObject,
+        ['functionDeclarations'],
+        fromFunctionDeclarations.map((item) => {
+          return functionDeclarationToVertex(apiClient, item);
+        }),
+      );
+    } else {
+      common.setValueByPath(
+        toObject,
+        ['functionDeclarations'],
+        fromFunctionDeclarations,
+      );
+    }
+  }
+
+  const fromRetrieval = common.getValueByPath(fromObject, ['retrieval']);
+  if (fromRetrieval != null) {
+    common.setValueByPath(toObject, ['retrieval'], fromRetrieval);
+  }
+
+  const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
+  if (fromGoogleSearch != null) {
+    common.setValueByPath(toObject, ['googleSearch'], googleSearchToVertex());
+  }
+
+  const fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
+    'googleSearchRetrieval',
+  ]);
+  if (fromGoogleSearchRetrieval != null) {
+    common.setValueByPath(
+      toObject,
+      ['googleSearchRetrieval'],
+      googleSearchRetrievalToVertex(apiClient, fromGoogleSearchRetrieval),
+    );
+  }
+
+  const fromCodeExecution = common.getValueByPath(fromObject, [
+    'codeExecution',
+  ]);
+  if (fromCodeExecution != null) {
+    common.setValueByPath(toObject, ['codeExecution'], fromCodeExecution);
+  }
+
+  return toObject;
+}
+
+export function functionCallingConfigToVertex(
+  apiClient: ApiClient,
+  fromObject: types.FunctionCallingConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromMode = common.getValueByPath(fromObject, ['mode']);
+  if (fromMode != null) {
+    common.setValueByPath(toObject, ['mode'], fromMode);
+  }
+
+  const fromAllowedFunctionNames = common.getValueByPath(fromObject, [
+    'allowedFunctionNames',
+  ]);
+  if (fromAllowedFunctionNames != null) {
+    common.setValueByPath(
+      toObject,
+      ['allowedFunctionNames'],
+      fromAllowedFunctionNames,
+    );
+  }
+
+  return toObject;
+}
+
+export function toolConfigToVertex(
+  apiClient: ApiClient,
+  fromObject: types.ToolConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromFunctionCallingConfig = common.getValueByPath(fromObject, [
+    'functionCallingConfig',
+  ]);
+  if (fromFunctionCallingConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['functionCallingConfig'],
+      functionCallingConfigToVertex(apiClient, fromFunctionCallingConfig),
+    );
+  }
+
+  return toObject;
+}
+
+export function prebuiltVoiceConfigToVertex(
+  apiClient: ApiClient,
+  fromObject: types.PrebuiltVoiceConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromVoiceName = common.getValueByPath(fromObject, ['voiceName']);
+  if (fromVoiceName != null) {
+    common.setValueByPath(toObject, ['voiceName'], fromVoiceName);
+  }
+
+  return toObject;
+}
+
+export function voiceConfigToVertex(
+  apiClient: ApiClient,
+  fromObject: types.VoiceConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromPrebuiltVoiceConfig = common.getValueByPath(fromObject, [
+    'prebuiltVoiceConfig',
+  ]);
+  if (fromPrebuiltVoiceConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['prebuiltVoiceConfig'],
+      prebuiltVoiceConfigToVertex(apiClient, fromPrebuiltVoiceConfig),
+    );
+  }
+
+  return toObject;
+}
+
+export function speechConfigToVertex(
+  apiClient: ApiClient,
+  fromObject: types.SpeechConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromVoiceConfig = common.getValueByPath(fromObject, ['voiceConfig']);
+  if (fromVoiceConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['voiceConfig'],
+      voiceConfigToVertex(apiClient, fromVoiceConfig),
+    );
+  }
+
+  return toObject;
+}
+
+export function thinkingConfigToVertex(
+  apiClient: ApiClient,
+  fromObject: types.ThinkingConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromIncludeThoughts = common.getValueByPath(fromObject, [
+    'includeThoughts',
+  ]);
+  if (fromIncludeThoughts != null) {
+    common.setValueByPath(toObject, ['includeThoughts'], fromIncludeThoughts);
+  }
+
+  return toObject;
+}
+
 export function generateContentConfigToVertex(
   apiClient: ApiClient,
   fromObject: types.GenerateContentConfig,
@@ -1430,55 +1809,6 @@ export function generateContentConfigToVertex(
   return toObject;
 }
 
-export function generateContentParametersToMldev(
-  apiClient: ApiClient,
-  fromObject: types.GenerateContentParameters,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromModel = common.getValueByPath(fromObject, ['model']);
-  if (fromModel != null) {
-    common.setValueByPath(
-      toObject,
-      ['_url', 'model'],
-      t.tModel(apiClient, fromModel),
-    );
-  }
-
-  const fromContents = common.getValueByPath(fromObject, ['contents']);
-  if (fromContents != null) {
-    if (Array.isArray(fromContents)) {
-      common.setValueByPath(
-        toObject,
-        ['contents'],
-        t.tContents(
-          apiClient,
-          t.tContents(apiClient, fromContents).map((item) => {
-            return contentToMldev(apiClient, item);
-          }),
-        ),
-      );
-    } else {
-      common.setValueByPath(
-        toObject,
-        ['contents'],
-        t.tContents(apiClient, fromContents),
-      );
-    }
-  }
-
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['generationConfig'],
-      generateContentConfigToMldev(apiClient, fromConfig, toObject),
-    );
-  }
-
-  return toObject;
-}
-
 export function generateContentParametersToVertex(
   apiClient: ApiClient,
   fromObject: types.GenerateContentParameters,
@@ -1523,49 +1853,6 @@ export function generateContentParametersToVertex(
       ['generationConfig'],
       generateContentConfigToVertex(apiClient, fromConfig, toObject),
     );
-  }
-
-  return toObject;
-}
-
-export function embedContentConfigToMldev(
-  apiClient: ApiClient,
-  fromObject: types.EmbedContentConfig,
-  parentObject: Record<string, unknown>,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromTaskType = common.getValueByPath(fromObject, ['taskType']);
-  if (parentObject !== undefined && fromTaskType != null) {
-    common.setValueByPath(
-      parentObject,
-      ['requests[]', 'taskType'],
-      fromTaskType,
-    );
-  }
-
-  const fromTitle = common.getValueByPath(fromObject, ['title']);
-  if (parentObject !== undefined && fromTitle != null) {
-    common.setValueByPath(parentObject, ['requests[]', 'title'], fromTitle);
-  }
-
-  const fromOutputDimensionality = common.getValueByPath(fromObject, [
-    'outputDimensionality',
-  ]);
-  if (parentObject !== undefined && fromOutputDimensionality != null) {
-    common.setValueByPath(
-      parentObject,
-      ['requests[]', 'outputDimensionality'],
-      fromOutputDimensionality,
-    );
-  }
-
-  if (common.getValueByPath(fromObject, ['mimeType']) !== undefined) {
-    throw new Error('mimeType parameter is not supported in Gemini API.');
-  }
-
-  if (common.getValueByPath(fromObject, ['autoTruncate']) !== undefined) {
-    throw new Error('autoTruncate parameter is not supported in Gemini API.');
   }
 
   return toObject;
@@ -1624,51 +1911,6 @@ export function embedContentConfigToVertex(
   return toObject;
 }
 
-export function embedContentParametersToMldev(
-  apiClient: ApiClient,
-  fromObject: types.EmbedContentParameters,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromModel = common.getValueByPath(fromObject, ['model']);
-  if (fromModel != null) {
-    common.setValueByPath(
-      toObject,
-      ['_url', 'model'],
-      t.tModel(apiClient, fromModel),
-    );
-  }
-
-  const fromContents = common.getValueByPath(fromObject, ['contents']);
-  if (fromContents != null) {
-    common.setValueByPath(
-      toObject,
-      ['requests[]', 'content'],
-      t.tContentsForEmbed(apiClient, fromContents),
-    );
-  }
-
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      embedContentConfigToMldev(apiClient, fromConfig, toObject),
-    );
-  }
-
-  const fromModelForEmbedContent = common.getValueByPath(fromObject, ['model']);
-  if (fromModelForEmbedContent !== undefined) {
-    common.setValueByPath(
-      toObject,
-      ['requests[]', 'model'],
-      t.tModel(apiClient, fromModelForEmbedContent),
-    );
-  }
-
-  return toObject;
-}
-
 export function embedContentParametersToVertex(
   apiClient: ApiClient,
   fromObject: types.EmbedContentParameters,
@@ -1700,142 +1942,6 @@ export function embedContentParametersToVertex(
       ['config'],
       embedContentConfigToVertex(apiClient, fromConfig, toObject),
     );
-  }
-
-  return toObject;
-}
-
-export function generateImagesConfigToMldev(
-  apiClient: ApiClient,
-  fromObject: types.GenerateImagesConfig,
-  parentObject: Record<string, unknown>,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (common.getValueByPath(fromObject, ['outputGcsUri']) !== undefined) {
-    throw new Error('outputGcsUri parameter is not supported in Gemini API.');
-  }
-
-  if (common.getValueByPath(fromObject, ['negativePrompt']) !== undefined) {
-    throw new Error('negativePrompt parameter is not supported in Gemini API.');
-  }
-
-  const fromNumberOfImages = common.getValueByPath(fromObject, [
-    'numberOfImages',
-  ]);
-  if (parentObject !== undefined && fromNumberOfImages != null) {
-    common.setValueByPath(
-      parentObject,
-      ['parameters', 'sampleCount'],
-      fromNumberOfImages,
-    );
-  }
-
-  const fromAspectRatio = common.getValueByPath(fromObject, ['aspectRatio']);
-  if (parentObject !== undefined && fromAspectRatio != null) {
-    common.setValueByPath(
-      parentObject,
-      ['parameters', 'aspectRatio'],
-      fromAspectRatio,
-    );
-  }
-
-  const fromGuidanceScale = common.getValueByPath(fromObject, [
-    'guidanceScale',
-  ]);
-  if (parentObject !== undefined && fromGuidanceScale != null) {
-    common.setValueByPath(
-      parentObject,
-      ['parameters', 'guidanceScale'],
-      fromGuidanceScale,
-    );
-  }
-
-  if (common.getValueByPath(fromObject, ['seed']) !== undefined) {
-    throw new Error('seed parameter is not supported in Gemini API.');
-  }
-
-  const fromSafetyFilterLevel = common.getValueByPath(fromObject, [
-    'safetyFilterLevel',
-  ]);
-  if (parentObject !== undefined && fromSafetyFilterLevel != null) {
-    common.setValueByPath(
-      parentObject,
-      ['parameters', 'safetySetting'],
-      fromSafetyFilterLevel,
-    );
-  }
-
-  const fromPersonGeneration = common.getValueByPath(fromObject, [
-    'personGeneration',
-  ]);
-  if (parentObject !== undefined && fromPersonGeneration != null) {
-    common.setValueByPath(
-      parentObject,
-      ['parameters', 'personGeneration'],
-      fromPersonGeneration,
-    );
-  }
-
-  const fromIncludeSafetyAttributes = common.getValueByPath(fromObject, [
-    'includeSafetyAttributes',
-  ]);
-  if (parentObject !== undefined && fromIncludeSafetyAttributes != null) {
-    common.setValueByPath(
-      parentObject,
-      ['parameters', 'includeSafetyAttributes'],
-      fromIncludeSafetyAttributes,
-    );
-  }
-
-  const fromIncludeRaiReason = common.getValueByPath(fromObject, [
-    'includeRaiReason',
-  ]);
-  if (parentObject !== undefined && fromIncludeRaiReason != null) {
-    common.setValueByPath(
-      parentObject,
-      ['parameters', 'includeRaiReason'],
-      fromIncludeRaiReason,
-    );
-  }
-
-  const fromLanguage = common.getValueByPath(fromObject, ['language']);
-  if (parentObject !== undefined && fromLanguage != null) {
-    common.setValueByPath(
-      parentObject,
-      ['parameters', 'language'],
-      fromLanguage,
-    );
-  }
-
-  const fromOutputMimeType = common.getValueByPath(fromObject, [
-    'outputMimeType',
-  ]);
-  if (parentObject !== undefined && fromOutputMimeType != null) {
-    common.setValueByPath(
-      parentObject,
-      ['parameters', 'outputOptions', 'mimeType'],
-      fromOutputMimeType,
-    );
-  }
-
-  const fromOutputCompressionQuality = common.getValueByPath(fromObject, [
-    'outputCompressionQuality',
-  ]);
-  if (parentObject !== undefined && fromOutputCompressionQuality != null) {
-    common.setValueByPath(
-      parentObject,
-      ['parameters', 'outputOptions', 'compressionQuality'],
-      fromOutputCompressionQuality,
-    );
-  }
-
-  if (common.getValueByPath(fromObject, ['addWatermark']) !== undefined) {
-    throw new Error('addWatermark parameter is not supported in Gemini API.');
-  }
-
-  if (common.getValueByPath(fromObject, ['enhancePrompt']) !== undefined) {
-    throw new Error('enhancePrompt parameter is not supported in Gemini API.');
   }
 
   return toObject;
@@ -2002,38 +2108,6 @@ export function generateImagesConfigToVertex(
   return toObject;
 }
 
-export function generateImagesParametersToMldev(
-  apiClient: ApiClient,
-  fromObject: types.GenerateImagesParameters,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromModel = common.getValueByPath(fromObject, ['model']);
-  if (fromModel != null) {
-    common.setValueByPath(
-      toObject,
-      ['_url', 'model'],
-      t.tModel(apiClient, fromModel),
-    );
-  }
-
-  const fromPrompt = common.getValueByPath(fromObject, ['prompt']);
-  if (fromPrompt != null) {
-    common.setValueByPath(toObject, ['instances[0]', 'prompt'], fromPrompt);
-  }
-
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      generateImagesConfigToMldev(apiClient, fromConfig, toObject),
-    );
-  }
-
-  return toObject;
-}
-
 export function generateImagesParametersToVertex(
   apiClient: ApiClient,
   fromObject: types.GenerateImagesParameters,
@@ -2060,31 +2134,6 @@ export function generateImagesParametersToVertex(
       toObject,
       ['config'],
       generateImagesConfigToVertex(apiClient, fromConfig, toObject),
-    );
-  }
-
-  return toObject;
-}
-
-export function countTokensConfigToMldev(
-  apiClient: ApiClient,
-  fromObject: types.CountTokensConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (common.getValueByPath(fromObject, ['systemInstruction']) !== undefined) {
-    throw new Error(
-      'systemInstruction parameter is not supported in Gemini API.',
-    );
-  }
-
-  if (common.getValueByPath(fromObject, ['tools']) !== undefined) {
-    throw new Error('tools parameter is not supported in Gemini API.');
-  }
-
-  if (common.getValueByPath(fromObject, ['generationConfig']) !== undefined) {
-    throw new Error(
-      'generationConfig parameter is not supported in Gemini API.',
     );
   }
 
@@ -2138,55 +2187,6 @@ export function countTokensConfigToVertex(
   return toObject;
 }
 
-export function countTokensParametersToMldev(
-  apiClient: ApiClient,
-  fromObject: types.CountTokensParameters,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromModel = common.getValueByPath(fromObject, ['model']);
-  if (fromModel != null) {
-    common.setValueByPath(
-      toObject,
-      ['_url', 'model'],
-      t.tModel(apiClient, fromModel),
-    );
-  }
-
-  const fromContents = common.getValueByPath(fromObject, ['contents']);
-  if (fromContents != null) {
-    if (Array.isArray(fromContents)) {
-      common.setValueByPath(
-        toObject,
-        ['contents'],
-        t.tContents(
-          apiClient,
-          t.tContents(apiClient, fromContents).map((item) => {
-            return contentToMldev(apiClient, item);
-          }),
-        ),
-      );
-    } else {
-      common.setValueByPath(
-        toObject,
-        ['contents'],
-        t.tContents(apiClient, fromContents),
-      );
-    }
-  }
-
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      countTokensConfigToMldev(apiClient, fromConfig),
-    );
-  }
-
-  return toObject;
-}
-
 export function countTokensParametersToVertex(
   apiClient: ApiClient,
   fromObject: types.CountTokensParameters,
@@ -2231,33 +2231,6 @@ export function countTokensParametersToVertex(
       ['config'],
       countTokensConfigToVertex(apiClient, fromConfig, toObject),
     );
-  }
-
-  return toObject;
-}
-
-export function computeTokensParametersToMldev(
-  apiClient: ApiClient,
-  fromObject: types.ComputeTokensParameters,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromModel = common.getValueByPath(fromObject, ['model']);
-  if (fromModel != null) {
-    common.setValueByPath(
-      toObject,
-      ['_url', 'model'],
-      t.tModel(apiClient, fromModel),
-    );
-  }
-
-  if (common.getValueByPath(fromObject, ['contents']) !== undefined) {
-    throw new Error('contents parameter is not supported in Gemini API.');
-  }
-
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
   }
 
   return toObject;
@@ -2367,72 +2340,6 @@ export function partFromMldev(
   return toObject;
 }
 
-export function partFromVertex(
-  apiClient: ApiClient,
-  fromObject: types.Part,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromVideoMetadata = common.getValueByPath(fromObject, [
-    'videoMetadata',
-  ]);
-  if (fromVideoMetadata != null) {
-    common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
-  }
-
-  const fromThought = common.getValueByPath(fromObject, ['thought']);
-  if (fromThought != null) {
-    common.setValueByPath(toObject, ['thought'], fromThought);
-  }
-
-  const fromCodeExecutionResult = common.getValueByPath(fromObject, [
-    'codeExecutionResult',
-  ]);
-  if (fromCodeExecutionResult != null) {
-    common.setValueByPath(
-      toObject,
-      ['codeExecutionResult'],
-      fromCodeExecutionResult,
-    );
-  }
-
-  const fromExecutableCode = common.getValueByPath(fromObject, [
-    'executableCode',
-  ]);
-  if (fromExecutableCode != null) {
-    common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
-  }
-
-  const fromFileData = common.getValueByPath(fromObject, ['fileData']);
-  if (fromFileData != null) {
-    common.setValueByPath(toObject, ['fileData'], fromFileData);
-  }
-
-  const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
-  if (fromFunctionCall != null) {
-    common.setValueByPath(toObject, ['functionCall'], fromFunctionCall);
-  }
-
-  const fromFunctionResponse = common.getValueByPath(fromObject, [
-    'functionResponse',
-  ]);
-  if (fromFunctionResponse != null) {
-    common.setValueByPath(toObject, ['functionResponse'], fromFunctionResponse);
-  }
-
-  const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
-  if (fromInlineData != null) {
-    common.setValueByPath(toObject, ['inlineData'], fromInlineData);
-  }
-
-  const fromText = common.getValueByPath(fromObject, ['text']);
-  if (fromText != null) {
-    common.setValueByPath(toObject, ['text'], fromText);
-  }
-
-  return toObject;
-}
-
 export function contentFromMldev(
   apiClient: ApiClient,
   fromObject: types.Content,
@@ -2462,35 +2369,6 @@ export function contentFromMldev(
   return toObject;
 }
 
-export function contentFromVertex(
-  apiClient: ApiClient,
-  fromObject: types.Content,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromParts = common.getValueByPath(fromObject, ['parts']);
-  if (fromParts != null) {
-    if (Array.isArray(fromParts)) {
-      common.setValueByPath(
-        toObject,
-        ['parts'],
-        fromParts.map((item) => {
-          return partFromVertex(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(toObject, ['parts'], fromParts);
-    }
-  }
-
-  const fromRole = common.getValueByPath(fromObject, ['role']);
-  if (fromRole != null) {
-    common.setValueByPath(toObject, ['role'], fromRole);
-  }
-
-  return toObject;
-}
-
 export function citationMetadataFromMldev(
   apiClient: ApiClient,
   fromObject: types.CitationMetadata,
@@ -2498,20 +2376,6 @@ export function citationMetadataFromMldev(
   const toObject: Record<string, unknown> = {};
 
   const fromCitations = common.getValueByPath(fromObject, ['citationSources']);
-  if (fromCitations != null) {
-    common.setValueByPath(toObject, ['citations'], fromCitations);
-  }
-
-  return toObject;
-}
-
-export function citationMetadataFromVertex(
-  apiClient: ApiClient,
-  fromObject: types.CitationMetadata,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromCitations = common.getValueByPath(fromObject, ['citations']);
   if (fromCitations != null) {
     common.setValueByPath(toObject, ['citations'], fromCitations);
   }
@@ -2548,82 +2412,6 @@ export function candidateFromMldev(
   const fromTokenCount = common.getValueByPath(fromObject, ['tokenCount']);
   if (fromTokenCount != null) {
     common.setValueByPath(toObject, ['tokenCount'], fromTokenCount);
-  }
-
-  const fromFinishReason = common.getValueByPath(fromObject, ['finishReason']);
-  if (fromFinishReason != null) {
-    common.setValueByPath(toObject, ['finishReason'], fromFinishReason);
-  }
-
-  const fromAvgLogprobs = common.getValueByPath(fromObject, ['avgLogprobs']);
-  if (fromAvgLogprobs != null) {
-    common.setValueByPath(toObject, ['avgLogprobs'], fromAvgLogprobs);
-  }
-
-  const fromGroundingMetadata = common.getValueByPath(fromObject, [
-    'groundingMetadata',
-  ]);
-  if (fromGroundingMetadata != null) {
-    common.setValueByPath(
-      toObject,
-      ['groundingMetadata'],
-      fromGroundingMetadata,
-    );
-  }
-
-  const fromIndex = common.getValueByPath(fromObject, ['index']);
-  if (fromIndex != null) {
-    common.setValueByPath(toObject, ['index'], fromIndex);
-  }
-
-  const fromLogprobsResult = common.getValueByPath(fromObject, [
-    'logprobsResult',
-  ]);
-  if (fromLogprobsResult != null) {
-    common.setValueByPath(toObject, ['logprobsResult'], fromLogprobsResult);
-  }
-
-  const fromSafetyRatings = common.getValueByPath(fromObject, [
-    'safetyRatings',
-  ]);
-  if (fromSafetyRatings != null) {
-    common.setValueByPath(toObject, ['safetyRatings'], fromSafetyRatings);
-  }
-
-  return toObject;
-}
-
-export function candidateFromVertex(
-  apiClient: ApiClient,
-  fromObject: types.Candidate,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromContent = common.getValueByPath(fromObject, ['content']);
-  if (fromContent != null) {
-    common.setValueByPath(
-      toObject,
-      ['content'],
-      contentFromVertex(apiClient, fromContent),
-    );
-  }
-
-  const fromCitationMetadata = common.getValueByPath(fromObject, [
-    'citationMetadata',
-  ]);
-  if (fromCitationMetadata != null) {
-    common.setValueByPath(
-      toObject,
-      ['citationMetadata'],
-      citationMetadataFromVertex(apiClient, fromCitationMetadata),
-    );
-  }
-
-  const fromFinishMessage = common.getValueByPath(fromObject, [
-    'finishMessage',
-  ]);
-  if (fromFinishMessage != null) {
-    common.setValueByPath(toObject, ['finishMessage'], fromFinishMessage);
   }
 
   const fromFinishReason = common.getValueByPath(fromObject, ['finishReason']);
@@ -2712,80 +2500,8 @@ export function generateContentResponseFromMldev(
   return toObject;
 }
 
-export function generateContentResponseFromVertex(
-  apiClient: ApiClient,
-  fromObject: types.GenerateContentResponse,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromCandidates = common.getValueByPath(fromObject, ['candidates']);
-  if (fromCandidates != null) {
-    if (Array.isArray(fromCandidates)) {
-      common.setValueByPath(
-        toObject,
-        ['candidates'],
-        fromCandidates.map((item) => {
-          return candidateFromVertex(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(toObject, ['candidates'], fromCandidates);
-    }
-  }
-
-  const fromCreateTime = common.getValueByPath(fromObject, ['createTime']);
-  if (fromCreateTime != null) {
-    common.setValueByPath(toObject, ['createTime'], fromCreateTime);
-  }
-
-  const fromResponseId = common.getValueByPath(fromObject, ['responseId']);
-  if (fromResponseId != null) {
-    common.setValueByPath(toObject, ['responseId'], fromResponseId);
-  }
-
-  const fromModelVersion = common.getValueByPath(fromObject, ['modelVersion']);
-  if (fromModelVersion != null) {
-    common.setValueByPath(toObject, ['modelVersion'], fromModelVersion);
-  }
-
-  const fromPromptFeedback = common.getValueByPath(fromObject, [
-    'promptFeedback',
-  ]);
-  if (fromPromptFeedback != null) {
-    common.setValueByPath(toObject, ['promptFeedback'], fromPromptFeedback);
-  }
-
-  const fromUsageMetadata = common.getValueByPath(fromObject, [
-    'usageMetadata',
-  ]);
-  if (fromUsageMetadata != null) {
-    common.setValueByPath(toObject, ['usageMetadata'], fromUsageMetadata);
-  }
-
-  return toObject;
-}
-
 export function contentEmbeddingStatisticsFromMldev(): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
-export function contentEmbeddingStatisticsFromVertex(
-  apiClient: ApiClient,
-  fromObject: types.ContentEmbeddingStatistics,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromTruncated = common.getValueByPath(fromObject, ['truncated']);
-  if (fromTruncated != null) {
-    common.setValueByPath(toObject, ['truncated'], fromTruncated);
-  }
-
-  const fromTokenCount = common.getValueByPath(fromObject, ['token_count']);
-  if (fromTokenCount != null) {
-    common.setValueByPath(toObject, ['tokenCount'], fromTokenCount);
-  }
 
   return toObject;
 }
@@ -2804,51 +2520,8 @@ export function contentEmbeddingFromMldev(
   return toObject;
 }
 
-export function contentEmbeddingFromVertex(
-  apiClient: ApiClient,
-  fromObject: types.ContentEmbedding,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromValues = common.getValueByPath(fromObject, ['values']);
-  if (fromValues != null) {
-    common.setValueByPath(toObject, ['values'], fromValues);
-  }
-
-  const fromStatistics = common.getValueByPath(fromObject, ['statistics']);
-  if (fromStatistics != null) {
-    common.setValueByPath(
-      toObject,
-      ['statistics'],
-      contentEmbeddingStatisticsFromVertex(apiClient, fromStatistics),
-    );
-  }
-
-  return toObject;
-}
-
 export function embedContentMetadataFromMldev(): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
-export function embedContentMetadataFromVertex(
-  apiClient: ApiClient,
-  fromObject: types.EmbedContentMetadata,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromBillableCharacterCount = common.getValueByPath(fromObject, [
-    'billableCharacterCount',
-  ]);
-  if (fromBillableCharacterCount != null) {
-    common.setValueByPath(
-      toObject,
-      ['billableCharacterCount'],
-      fromBillableCharacterCount,
-    );
-  }
 
   return toObject;
 }
@@ -2886,42 +2559,6 @@ export function embedContentResponseFromMldev(
   return toObject;
 }
 
-export function embedContentResponseFromVertex(
-  apiClient: ApiClient,
-  fromObject: types.EmbedContentResponse,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromEmbeddings = common.getValueByPath(fromObject, [
-    'predictions[]',
-    'embeddings',
-  ]);
-  if (fromEmbeddings != null) {
-    if (Array.isArray(fromEmbeddings)) {
-      common.setValueByPath(
-        toObject,
-        ['embeddings'],
-        fromEmbeddings.map((item) => {
-          return contentEmbeddingFromVertex(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(toObject, ['embeddings'], fromEmbeddings);
-    }
-  }
-
-  const fromMetadata = common.getValueByPath(fromObject, ['metadata']);
-  if (fromMetadata != null) {
-    common.setValueByPath(
-      toObject,
-      ['metadata'],
-      embedContentMetadataFromVertex(apiClient, fromMetadata),
-    );
-  }
-
-  return toObject;
-}
-
 export function imageFromMldev(
   apiClient: ApiClient,
   fromObject: types.Image,
@@ -2947,67 +2584,7 @@ export function imageFromMldev(
   return toObject;
 }
 
-export function imageFromVertex(
-  apiClient: ApiClient,
-  fromObject: types.Image,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromGcsUri = common.getValueByPath(fromObject, ['gcsUri']);
-  if (fromGcsUri != null) {
-    common.setValueByPath(toObject, ['gcsUri'], fromGcsUri);
-  }
-
-  const fromImageBytes = common.getValueByPath(fromObject, [
-    'bytesBase64Encoded',
-  ]);
-  if (fromImageBytes != null) {
-    common.setValueByPath(
-      toObject,
-      ['imageBytes'],
-      t.tBytes(apiClient, fromImageBytes),
-    );
-  }
-
-  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
-  if (fromMimeType != null) {
-    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
-  }
-
-  return toObject;
-}
-
 export function safetyAttributesFromMldev(
-  apiClient: ApiClient,
-  fromObject: types.SafetyAttributes,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromCategories = common.getValueByPath(fromObject, [
-    'safetyAttributes',
-    'categories',
-  ]);
-  if (fromCategories != null) {
-    common.setValueByPath(toObject, ['categories'], fromCategories);
-  }
-
-  const fromScores = common.getValueByPath(fromObject, [
-    'safetyAttributes',
-    'scores',
-  ]);
-  if (fromScores != null) {
-    common.setValueByPath(toObject, ['scores'], fromScores);
-  }
-
-  const fromContentType = common.getValueByPath(fromObject, ['contentType']);
-  if (fromContentType != null) {
-    common.setValueByPath(toObject, ['contentType'], fromContentType);
-  }
-
-  return toObject;
-}
-
-export function safetyAttributesFromVertex(
   apiClient: ApiClient,
   fromObject: types.SafetyAttributes,
 ): Record<string, unknown> {
@@ -3075,6 +2652,464 @@ export function generatedImageFromMldev(
   return toObject;
 }
 
+export function generateImagesResponseFromMldev(
+  apiClient: ApiClient,
+  fromObject: types.GenerateImagesResponse,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromGeneratedImages = common.getValueByPath(fromObject, [
+    'predictions',
+  ]);
+  if (fromGeneratedImages != null) {
+    if (Array.isArray(fromGeneratedImages)) {
+      common.setValueByPath(
+        toObject,
+        ['generatedImages'],
+        fromGeneratedImages.map((item) => {
+          return generatedImageFromMldev(apiClient, item);
+        }),
+      );
+    } else {
+      common.setValueByPath(toObject, ['generatedImages'], fromGeneratedImages);
+    }
+  }
+
+  const fromPositivePromptSafetyAttributes = common.getValueByPath(fromObject, [
+    'positivePromptSafetyAttributes',
+  ]);
+  if (fromPositivePromptSafetyAttributes != null) {
+    common.setValueByPath(
+      toObject,
+      ['positivePromptSafetyAttributes'],
+      safetyAttributesFromMldev(apiClient, fromPositivePromptSafetyAttributes),
+    );
+  }
+
+  return toObject;
+}
+
+export function countTokensResponseFromMldev(
+  apiClient: ApiClient,
+  fromObject: types.CountTokensResponse,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromTotalTokens = common.getValueByPath(fromObject, ['totalTokens']);
+  if (fromTotalTokens != null) {
+    common.setValueByPath(toObject, ['totalTokens'], fromTotalTokens);
+  }
+
+  const fromCachedContentTokenCount = common.getValueByPath(fromObject, [
+    'cachedContentTokenCount',
+  ]);
+  if (fromCachedContentTokenCount != null) {
+    common.setValueByPath(
+      toObject,
+      ['cachedContentTokenCount'],
+      fromCachedContentTokenCount,
+    );
+  }
+
+  return toObject;
+}
+
+export function partFromVertex(
+  apiClient: ApiClient,
+  fromObject: types.Part,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromVideoMetadata = common.getValueByPath(fromObject, [
+    'videoMetadata',
+  ]);
+  if (fromVideoMetadata != null) {
+    common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
+  }
+
+  const fromThought = common.getValueByPath(fromObject, ['thought']);
+  if (fromThought != null) {
+    common.setValueByPath(toObject, ['thought'], fromThought);
+  }
+
+  const fromCodeExecutionResult = common.getValueByPath(fromObject, [
+    'codeExecutionResult',
+  ]);
+  if (fromCodeExecutionResult != null) {
+    common.setValueByPath(
+      toObject,
+      ['codeExecutionResult'],
+      fromCodeExecutionResult,
+    );
+  }
+
+  const fromExecutableCode = common.getValueByPath(fromObject, [
+    'executableCode',
+  ]);
+  if (fromExecutableCode != null) {
+    common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
+  }
+
+  const fromFileData = common.getValueByPath(fromObject, ['fileData']);
+  if (fromFileData != null) {
+    common.setValueByPath(toObject, ['fileData'], fromFileData);
+  }
+
+  const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
+  if (fromFunctionCall != null) {
+    common.setValueByPath(toObject, ['functionCall'], fromFunctionCall);
+  }
+
+  const fromFunctionResponse = common.getValueByPath(fromObject, [
+    'functionResponse',
+  ]);
+  if (fromFunctionResponse != null) {
+    common.setValueByPath(toObject, ['functionResponse'], fromFunctionResponse);
+  }
+
+  const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
+  if (fromInlineData != null) {
+    common.setValueByPath(toObject, ['inlineData'], fromInlineData);
+  }
+
+  const fromText = common.getValueByPath(fromObject, ['text']);
+  if (fromText != null) {
+    common.setValueByPath(toObject, ['text'], fromText);
+  }
+
+  return toObject;
+}
+
+export function contentFromVertex(
+  apiClient: ApiClient,
+  fromObject: types.Content,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromParts = common.getValueByPath(fromObject, ['parts']);
+  if (fromParts != null) {
+    if (Array.isArray(fromParts)) {
+      common.setValueByPath(
+        toObject,
+        ['parts'],
+        fromParts.map((item) => {
+          return partFromVertex(apiClient, item);
+        }),
+      );
+    } else {
+      common.setValueByPath(toObject, ['parts'], fromParts);
+    }
+  }
+
+  const fromRole = common.getValueByPath(fromObject, ['role']);
+  if (fromRole != null) {
+    common.setValueByPath(toObject, ['role'], fromRole);
+  }
+
+  return toObject;
+}
+
+export function citationMetadataFromVertex(
+  apiClient: ApiClient,
+  fromObject: types.CitationMetadata,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromCitations = common.getValueByPath(fromObject, ['citations']);
+  if (fromCitations != null) {
+    common.setValueByPath(toObject, ['citations'], fromCitations);
+  }
+
+  return toObject;
+}
+
+export function candidateFromVertex(
+  apiClient: ApiClient,
+  fromObject: types.Candidate,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromContent = common.getValueByPath(fromObject, ['content']);
+  if (fromContent != null) {
+    common.setValueByPath(
+      toObject,
+      ['content'],
+      contentFromVertex(apiClient, fromContent),
+    );
+  }
+
+  const fromCitationMetadata = common.getValueByPath(fromObject, [
+    'citationMetadata',
+  ]);
+  if (fromCitationMetadata != null) {
+    common.setValueByPath(
+      toObject,
+      ['citationMetadata'],
+      citationMetadataFromVertex(apiClient, fromCitationMetadata),
+    );
+  }
+
+  const fromFinishMessage = common.getValueByPath(fromObject, [
+    'finishMessage',
+  ]);
+  if (fromFinishMessage != null) {
+    common.setValueByPath(toObject, ['finishMessage'], fromFinishMessage);
+  }
+
+  const fromFinishReason = common.getValueByPath(fromObject, ['finishReason']);
+  if (fromFinishReason != null) {
+    common.setValueByPath(toObject, ['finishReason'], fromFinishReason);
+  }
+
+  const fromAvgLogprobs = common.getValueByPath(fromObject, ['avgLogprobs']);
+  if (fromAvgLogprobs != null) {
+    common.setValueByPath(toObject, ['avgLogprobs'], fromAvgLogprobs);
+  }
+
+  const fromGroundingMetadata = common.getValueByPath(fromObject, [
+    'groundingMetadata',
+  ]);
+  if (fromGroundingMetadata != null) {
+    common.setValueByPath(
+      toObject,
+      ['groundingMetadata'],
+      fromGroundingMetadata,
+    );
+  }
+
+  const fromIndex = common.getValueByPath(fromObject, ['index']);
+  if (fromIndex != null) {
+    common.setValueByPath(toObject, ['index'], fromIndex);
+  }
+
+  const fromLogprobsResult = common.getValueByPath(fromObject, [
+    'logprobsResult',
+  ]);
+  if (fromLogprobsResult != null) {
+    common.setValueByPath(toObject, ['logprobsResult'], fromLogprobsResult);
+  }
+
+  const fromSafetyRatings = common.getValueByPath(fromObject, [
+    'safetyRatings',
+  ]);
+  if (fromSafetyRatings != null) {
+    common.setValueByPath(toObject, ['safetyRatings'], fromSafetyRatings);
+  }
+
+  return toObject;
+}
+
+export function generateContentResponseFromVertex(
+  apiClient: ApiClient,
+  fromObject: types.GenerateContentResponse,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromCandidates = common.getValueByPath(fromObject, ['candidates']);
+  if (fromCandidates != null) {
+    if (Array.isArray(fromCandidates)) {
+      common.setValueByPath(
+        toObject,
+        ['candidates'],
+        fromCandidates.map((item) => {
+          return candidateFromVertex(apiClient, item);
+        }),
+      );
+    } else {
+      common.setValueByPath(toObject, ['candidates'], fromCandidates);
+    }
+  }
+
+  const fromCreateTime = common.getValueByPath(fromObject, ['createTime']);
+  if (fromCreateTime != null) {
+    common.setValueByPath(toObject, ['createTime'], fromCreateTime);
+  }
+
+  const fromResponseId = common.getValueByPath(fromObject, ['responseId']);
+  if (fromResponseId != null) {
+    common.setValueByPath(toObject, ['responseId'], fromResponseId);
+  }
+
+  const fromModelVersion = common.getValueByPath(fromObject, ['modelVersion']);
+  if (fromModelVersion != null) {
+    common.setValueByPath(toObject, ['modelVersion'], fromModelVersion);
+  }
+
+  const fromPromptFeedback = common.getValueByPath(fromObject, [
+    'promptFeedback',
+  ]);
+  if (fromPromptFeedback != null) {
+    common.setValueByPath(toObject, ['promptFeedback'], fromPromptFeedback);
+  }
+
+  const fromUsageMetadata = common.getValueByPath(fromObject, [
+    'usageMetadata',
+  ]);
+  if (fromUsageMetadata != null) {
+    common.setValueByPath(toObject, ['usageMetadata'], fromUsageMetadata);
+  }
+
+  return toObject;
+}
+
+export function contentEmbeddingStatisticsFromVertex(
+  apiClient: ApiClient,
+  fromObject: types.ContentEmbeddingStatistics,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromTruncated = common.getValueByPath(fromObject, ['truncated']);
+  if (fromTruncated != null) {
+    common.setValueByPath(toObject, ['truncated'], fromTruncated);
+  }
+
+  const fromTokenCount = common.getValueByPath(fromObject, ['token_count']);
+  if (fromTokenCount != null) {
+    common.setValueByPath(toObject, ['tokenCount'], fromTokenCount);
+  }
+
+  return toObject;
+}
+
+export function contentEmbeddingFromVertex(
+  apiClient: ApiClient,
+  fromObject: types.ContentEmbedding,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromValues = common.getValueByPath(fromObject, ['values']);
+  if (fromValues != null) {
+    common.setValueByPath(toObject, ['values'], fromValues);
+  }
+
+  const fromStatistics = common.getValueByPath(fromObject, ['statistics']);
+  if (fromStatistics != null) {
+    common.setValueByPath(
+      toObject,
+      ['statistics'],
+      contentEmbeddingStatisticsFromVertex(apiClient, fromStatistics),
+    );
+  }
+
+  return toObject;
+}
+
+export function embedContentMetadataFromVertex(
+  apiClient: ApiClient,
+  fromObject: types.EmbedContentMetadata,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromBillableCharacterCount = common.getValueByPath(fromObject, [
+    'billableCharacterCount',
+  ]);
+  if (fromBillableCharacterCount != null) {
+    common.setValueByPath(
+      toObject,
+      ['billableCharacterCount'],
+      fromBillableCharacterCount,
+    );
+  }
+
+  return toObject;
+}
+
+export function embedContentResponseFromVertex(
+  apiClient: ApiClient,
+  fromObject: types.EmbedContentResponse,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromEmbeddings = common.getValueByPath(fromObject, [
+    'predictions[]',
+    'embeddings',
+  ]);
+  if (fromEmbeddings != null) {
+    if (Array.isArray(fromEmbeddings)) {
+      common.setValueByPath(
+        toObject,
+        ['embeddings'],
+        fromEmbeddings.map((item) => {
+          return contentEmbeddingFromVertex(apiClient, item);
+        }),
+      );
+    } else {
+      common.setValueByPath(toObject, ['embeddings'], fromEmbeddings);
+    }
+  }
+
+  const fromMetadata = common.getValueByPath(fromObject, ['metadata']);
+  if (fromMetadata != null) {
+    common.setValueByPath(
+      toObject,
+      ['metadata'],
+      embedContentMetadataFromVertex(apiClient, fromMetadata),
+    );
+  }
+
+  return toObject;
+}
+
+export function imageFromVertex(
+  apiClient: ApiClient,
+  fromObject: types.Image,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromGcsUri = common.getValueByPath(fromObject, ['gcsUri']);
+  if (fromGcsUri != null) {
+    common.setValueByPath(toObject, ['gcsUri'], fromGcsUri);
+  }
+
+  const fromImageBytes = common.getValueByPath(fromObject, [
+    'bytesBase64Encoded',
+  ]);
+  if (fromImageBytes != null) {
+    common.setValueByPath(
+      toObject,
+      ['imageBytes'],
+      t.tBytes(apiClient, fromImageBytes),
+    );
+  }
+
+  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+  if (fromMimeType != null) {
+    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+  }
+
+  return toObject;
+}
+
+export function safetyAttributesFromVertex(
+  apiClient: ApiClient,
+  fromObject: types.SafetyAttributes,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromCategories = common.getValueByPath(fromObject, [
+    'safetyAttributes',
+    'categories',
+  ]);
+  if (fromCategories != null) {
+    common.setValueByPath(toObject, ['categories'], fromCategories);
+  }
+
+  const fromScores = common.getValueByPath(fromObject, [
+    'safetyAttributes',
+    'scores',
+  ]);
+  if (fromScores != null) {
+    common.setValueByPath(toObject, ['scores'], fromScores);
+  }
+
+  const fromContentType = common.getValueByPath(fromObject, ['contentType']);
+  if (fromContentType != null) {
+    common.setValueByPath(toObject, ['contentType'], fromContentType);
+  }
+
+  return toObject;
+}
+
 export function generatedImageFromVertex(
   apiClient: ApiClient,
   fromObject: types.GeneratedImage,
@@ -3118,43 +3153,6 @@ export function generatedImageFromVertex(
   return toObject;
 }
 
-export function generateImagesResponseFromMldev(
-  apiClient: ApiClient,
-  fromObject: types.GenerateImagesResponse,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromGeneratedImages = common.getValueByPath(fromObject, [
-    'predictions',
-  ]);
-  if (fromGeneratedImages != null) {
-    if (Array.isArray(fromGeneratedImages)) {
-      common.setValueByPath(
-        toObject,
-        ['generatedImages'],
-        fromGeneratedImages.map((item) => {
-          return generatedImageFromMldev(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(toObject, ['generatedImages'], fromGeneratedImages);
-    }
-  }
-
-  const fromPositivePromptSafetyAttributes = common.getValueByPath(fromObject, [
-    'positivePromptSafetyAttributes',
-  ]);
-  if (fromPositivePromptSafetyAttributes != null) {
-    common.setValueByPath(
-      toObject,
-      ['positivePromptSafetyAttributes'],
-      safetyAttributesFromMldev(apiClient, fromPositivePromptSafetyAttributes),
-    );
-  }
-
-  return toObject;
-}
-
 export function generateImagesResponseFromVertex(
   apiClient: ApiClient,
   fromObject: types.GenerateImagesResponse,
@@ -3192,31 +3190,6 @@ export function generateImagesResponseFromVertex(
   return toObject;
 }
 
-export function countTokensResponseFromMldev(
-  apiClient: ApiClient,
-  fromObject: types.CountTokensResponse,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromTotalTokens = common.getValueByPath(fromObject, ['totalTokens']);
-  if (fromTotalTokens != null) {
-    common.setValueByPath(toObject, ['totalTokens'], fromTotalTokens);
-  }
-
-  const fromCachedContentTokenCount = common.getValueByPath(fromObject, [
-    'cachedContentTokenCount',
-  ]);
-  if (fromCachedContentTokenCount != null) {
-    common.setValueByPath(
-      toObject,
-      ['cachedContentTokenCount'],
-      fromCachedContentTokenCount,
-    );
-  }
-
-  return toObject;
-}
-
 export function countTokensResponseFromVertex(
   apiClient: ApiClient,
   fromObject: types.CountTokensResponse,
@@ -3226,20 +3199,6 @@ export function countTokensResponseFromVertex(
   const fromTotalTokens = common.getValueByPath(fromObject, ['totalTokens']);
   if (fromTotalTokens != null) {
     common.setValueByPath(toObject, ['totalTokens'], fromTotalTokens);
-  }
-
-  return toObject;
-}
-
-export function computeTokensResponseFromMldev(
-  apiClient: ApiClient,
-  fromObject: types.ComputeTokensResponse,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromTokensInfo = common.getValueByPath(fromObject, ['tokensInfo']);
-  if (fromTokensInfo != null) {
-    common.setValueByPath(toObject, ['tokensInfo'], fromTokensInfo);
   }
 
   return toObject;
