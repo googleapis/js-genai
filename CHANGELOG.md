@@ -1,6 +1,13 @@
 # Changelog
 
 
+## [0.3.2](https://github.com/googleapis/js-genai/compare/v0.3.1...v0.3.2) (2025-03-12)
+
+
+### Features
+
+* enable union type for Schema when calling Gemini API, enable required field when doing automatic function calling for Gemini API. ([180983c](https://github.com/googleapis/js-genai/commit/180983c05857344d00133561aeae1e7a46e3475a))
+
 ## 0.3.1 (2025-03-11)
 
 ## 0.3.0 (2025-03-11)
