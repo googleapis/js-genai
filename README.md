@@ -62,7 +62,7 @@ main();
 The package contents are also available unzipped in the
 `package/` directory of the bucket, so an equivalent web example is:
 
-```
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
