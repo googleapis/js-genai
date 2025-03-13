@@ -390,7 +390,6 @@ export class ApiClient {
     url: URL,
     requestInit: RequestInit,
     httpMethod: 'GET' | 'POST' | 'PATCH' | 'DELETE',
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<HttpResponse> {
     return this.apiCall(url.toString(), {
       ...requestInit,
