@@ -250,7 +250,7 @@ export class Caches extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.DeleteCachedContentResponse>;
 
-      return response.then((apiResponse) => {
+      return response.then(() => {
         const resp = deleteCachedContentResponseFromVertex();
         const typedResp = new types.DeleteCachedContentResponse();
         Object.assign(typedResp, resp);
@@ -279,7 +279,7 @@ export class Caches extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.DeleteCachedContentResponse>;
 
-      return response.then((apiResponse) => {
+      return response.then(() => {
         const resp = deleteCachedContentResponseFromMldev();
         const typedResp = new types.DeleteCachedContentResponse();
         Object.assign(typedResp, resp);
