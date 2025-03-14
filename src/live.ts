@@ -770,7 +770,7 @@ export class Session {
 
     @experimental
 
-    @remanks
+    @remarks
     There are two ways to send messages to the live API:
     `sendClientContent` and `sendRealtimeInput`.
 
@@ -828,7 +828,7 @@ export class Session {
 
     @experimental
 
-    @remanks
+    @remarks
     Use `sendRealtimeInput` for realtime audio chunks and video frames (images).
 
     With `sendRealtimeInput` the api will respond to audio automatically
@@ -858,10 +858,10 @@ export class Session {
 
       - `functionResponses` will be converted to a `functionResponses[]`
 
-    @remanks
+    @remarks
     Use `sendFunctionResponse` to reply to `LiveServerToolCall` from the server.
 
-    Use {@link LiveConnectConfig#tools} to configure the callable functions.
+    Use {@link types.LiveConnectConfig#tools} to configure the callable functions.
 
     @experimental
    */

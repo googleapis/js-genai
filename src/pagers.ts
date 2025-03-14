@@ -5,7 +5,7 @@
  */
 
 /**
- * @fileoverview Pagers for the GenAI List APIs.
+ * Pagers for the GenAI List APIs.
  */
 
 export enum PagedItem {
