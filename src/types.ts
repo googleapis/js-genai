@@ -94,6 +94,13 @@ export enum BlockedReason {
   PROHIBITED_CONTENT = 'PROHIBITED_CONTENT',
 }
 
+export enum Modality {
+  MODALITY_UNSPECIFIED = 'MODALITY_UNSPECIFIED',
+  TEXT = 'TEXT',
+  IMAGE = 'IMAGE',
+  AUDIO = 'AUDIO',
+}
+
 export enum State {
   STATE_UNSPECIFIED = 'STATE_UNSPECIFIED',
   ACTIVE = 'ACTIVE',
@@ -173,13 +180,6 @@ export enum SubjectReferenceType {
   SUBJECT_TYPE_PERSON = 'SUBJECT_TYPE_PERSON',
   SUBJECT_TYPE_ANIMAL = 'SUBJECT_TYPE_ANIMAL',
   SUBJECT_TYPE_PRODUCT = 'SUBJECT_TYPE_PRODUCT',
-}
-
-export enum Modality {
-  MODALITY_UNSPECIFIED = 'MODALITY_UNSPECIFIED',
-  TEXT = 'TEXT',
-  IMAGE = 'IMAGE',
-  AUDIO = 'AUDIO',
 }
 
 /** Metadata describes the input video content. */
@@ -989,15 +989,35 @@ export class GenerateContentResponsePromptFeedback {
   safetyRatings?: SafetyRating[];
 }
 
+/** Represents token counting info for a single modality. */
+export interface ModalityTokenCount {
+  /** The modality associated with this token count. */
+  modality?: Modality;
+  /** Number of tokens. */
+  tokenCount?: number;
+}
+
 /** Usage metadata about response(s). */
 export class GenerateContentResponseUsageMetadata {
+  /** Output only. List of modalities of the cached content in the request input. */
+  cacheTokensDetails?: ModalityTokenCount[];
   /** Output only. Number of tokens in the cached part in the input (the cached content). */
   cachedContentTokenCount?: number;
   /** Number of tokens in the response(s). */
   candidatesTokenCount?: number;
+  /** Output only. List of modalities that were returned in the response. */
+  candidatesTokensDetails?: ModalityTokenCount[];
   /** Number of tokens in the request. When `cached_content` is set, this is still the total effective prompt size meaning this includes the number of tokens in the cached content. */
   promptTokenCount?: number;
-  /** Total token count for prompt and response candidates. */
+  /** Output only. List of modalities that were processed in the request input. */
+  promptTokensDetails?: ModalityTokenCount[];
+  /** Output only. Number of tokens present in thoughts output. */
+  thoughtsTokenCount?: number;
+  /** Output only. Number of tokens present in tool-use prompt(s). */
+  toolUsePromptTokenCount?: number;
+  /** Output only. List of modalities that were processed for tool-use request inputs. */
+  toolUsePromptTokensDetails?: ModalityTokenCount[];
+  /** Total token count for prompt, response candidates, and tool-use prompts (if present). */
   totalTokenCount?: number;
 }
 
