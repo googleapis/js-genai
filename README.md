@@ -160,7 +160,7 @@ The submodules bundle together related API methods:
 ## Samples
 
 More samples can be found in the
-[github samples directory](https://github.com/google-gemini/generative-ai-js/tree/main/sdk-samples).
+[github samples directory](https://github.com/googleapis/js-genai/tree/main/sdk-samples).
 
 
 ### Streaming
