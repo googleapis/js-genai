@@ -7,7 +7,7 @@ import * as fs from 'fs/promises';
 
 import {ApiClient} from '../_api_client';
 import {FileStat, Uploader} from '../_uploader';
-import {CrossUploader, MAX_CHUNK_SIZE} from '../cross/_cross_uploader';
+import {MAX_CHUNK_SIZE, getBlobStat, uploadBlob} from '../cross/_cross_uploader';
 import {File, HttpResponse} from '../types';
 
 export class NodeUploader implements Uploader {
@@ -19,9 +19,7 @@ export class NodeUploader implements Uploader {
       fileStat.type = this.inferMimeType(file);
       return fileStat;
     } else {
-      fileStat.type = file.type;
-      fileStat.size = file.size;
-      return fileStat;
+      return await getBlobStat(file);
     }
   }
 
@@ -33,8 +31,7 @@ export class NodeUploader implements Uploader {
     if (typeof file === 'string') {
       return await this.uploadFileFromPath(file, uploadUrl, apiClient);
     } else {
-      const crossUploader = new CrossUploader();
-      return await crossUploader.uploadBlob(file, uploadUrl, apiClient);
+      return uploadBlob(file, uploadUrl, apiClient);
     }
   }
 
