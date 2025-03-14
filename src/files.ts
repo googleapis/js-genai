@@ -9,7 +9,7 @@
 import {ApiClient} from './_api_client';
 import * as common from './_common';
 import {BaseModule} from './_common';
-import * as t from './_transformers';
+import * as converters from './_files_converters';
 import {PagedItem, Pager} from './pagers';
 import * as types from './types';
 
@@ -98,7 +98,7 @@ export class Files extends BaseModule {
     return this.apiClient
       .uploadFile(params.file, params.config)
       .then((response) => {
-        const file = fileFromMldev(this.apiClient, response);
+        const file = converters.fileFromMldev(this.apiClient, response);
         return file as types.File;
       });
   }
@@ -114,7 +114,10 @@ export class Files extends BaseModule {
         'This method is only supported by the Gemini Developer API.',
       );
     } else {
-      const body = listFilesParametersToMldev(this.apiClient, params);
+      const body = converters.listFilesParametersToMldev(
+        this.apiClient,
+        params,
+      );
       path = common.formatMap('files', body['_url'] as Record<string, unknown>);
       queryParams = body['_query'] as Record<string, string>;
       delete body['config'];
@@ -134,7 +137,10 @@ export class Files extends BaseModule {
         }) as Promise<types.ListFilesResponse>;
 
       return response.then((apiResponse) => {
-        const resp = listFilesResponseFromMldev(this.apiClient, apiResponse);
+        const resp = converters.listFilesResponseFromMldev(
+          this.apiClient,
+          apiResponse,
+        );
         const typedResp = new types.ListFilesResponse();
         Object.assign(typedResp, resp);
         return typedResp;
@@ -153,7 +159,10 @@ export class Files extends BaseModule {
         'This method is only supported by the Gemini Developer API.',
       );
     } else {
-      const body = createFileParametersToMldev(this.apiClient, params);
+      const body = converters.createFileParametersToMldev(
+        this.apiClient,
+        params,
+      );
       path = common.formatMap(
         'upload/v1beta/files',
         body['_url'] as Record<string, unknown>,
@@ -176,7 +185,10 @@ export class Files extends BaseModule {
         }) as Promise<types.CreateFileResponse>;
 
       return response.then((apiResponse) => {
-        const resp = createFileResponseFromMldev(this.apiClient, apiResponse);
+        const resp = converters.createFileResponseFromMldev(
+          this.apiClient,
+          apiResponse,
+        );
         const typedResp = new types.CreateFileResponse();
         Object.assign(typedResp, resp);
         return typedResp;
@@ -208,7 +220,7 @@ export class Files extends BaseModule {
         'This method is only supported by the Gemini Developer API.',
       );
     } else {
-      const body = getFileParametersToMldev(this.apiClient, params);
+      const body = converters.getFileParametersToMldev(this.apiClient, params);
       path = common.formatMap(
         'files/{file}',
         body['_url'] as Record<string, unknown>,
@@ -231,542 +243,10 @@ export class Files extends BaseModule {
         }) as Promise<types.File>;
 
       return response.then((apiResponse) => {
-        const resp = fileFromMldev(this.apiClient, apiResponse);
+        const resp = converters.fileFromMldev(this.apiClient, apiResponse);
 
         return resp as types.File;
       });
     }
   }
-}
-
-function listFilesConfigToMldev(
-  apiClient: ApiClient,
-  fromObject: types.ListFilesConfig,
-  parentObject: Record<string, unknown>,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
-  if (parentObject !== undefined && fromPageSize != null) {
-    common.setValueByPath(parentObject, ['_query', 'pageSize'], fromPageSize);
-  }
-
-  const fromPageToken = common.getValueByPath(fromObject, ['pageToken']);
-  if (parentObject !== undefined && fromPageToken != null) {
-    common.setValueByPath(parentObject, ['_query', 'pageToken'], fromPageToken);
-  }
-
-  return toObject;
-}
-
-function listFilesConfigToVertex(
-  apiClient: ApiClient,
-  fromObject: types.ListFilesConfig,
-  parentObject: Record<string, unknown>,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
-  if (parentObject !== undefined && fromPageSize != null) {
-    common.setValueByPath(parentObject, ['_query', 'pageSize'], fromPageSize);
-  }
-
-  const fromPageToken = common.getValueByPath(fromObject, ['pageToken']);
-  if (parentObject !== undefined && fromPageToken != null) {
-    common.setValueByPath(parentObject, ['_query', 'pageToken'], fromPageToken);
-  }
-
-  return toObject;
-}
-
-function listFilesParametersToMldev(
-  apiClient: ApiClient,
-  fromObject: types.ListFilesParameters,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      listFilesConfigToMldev(apiClient, fromConfig, toObject),
-    );
-  }
-
-  return toObject;
-}
-
-function listFilesParametersToVertex(
-  apiClient: ApiClient,
-  fromObject: types.ListFilesParameters,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (common.getValueByPath(fromObject, ['config']) !== undefined) {
-    throw new Error('config parameter is not supported in Vertex AI.');
-  }
-
-  return toObject;
-}
-
-function fileStatusToMldev(
-  apiClient: ApiClient,
-  fromObject: types.FileStatus,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromDetails = common.getValueByPath(fromObject, ['details']);
-  if (fromDetails != null) {
-    common.setValueByPath(toObject, ['details'], fromDetails);
-  }
-
-  const fromMessage = common.getValueByPath(fromObject, ['message']);
-  if (fromMessage != null) {
-    common.setValueByPath(toObject, ['message'], fromMessage);
-  }
-
-  const fromCode = common.getValueByPath(fromObject, ['code']);
-  if (fromCode != null) {
-    common.setValueByPath(toObject, ['code'], fromCode);
-  }
-
-  return toObject;
-}
-
-function fileStatusToVertex(
-  apiClient: ApiClient,
-  fromObject: types.FileStatus,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (common.getValueByPath(fromObject, ['details']) !== undefined) {
-    throw new Error('details parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['message']) !== undefined) {
-    throw new Error('message parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['code']) !== undefined) {
-    throw new Error('code parameter is not supported in Vertex AI.');
-  }
-
-  return toObject;
-}
-
-function fileToMldev(
-  apiClient: ApiClient,
-  fromObject: types.File,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName != null) {
-    common.setValueByPath(toObject, ['name'], fromName);
-  }
-
-  const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
-  if (fromDisplayName != null) {
-    common.setValueByPath(toObject, ['displayName'], fromDisplayName);
-  }
-
-  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
-  if (fromMimeType != null) {
-    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
-  }
-
-  const fromSizeBytes = common.getValueByPath(fromObject, ['sizeBytes']);
-  if (fromSizeBytes != null) {
-    common.setValueByPath(toObject, ['sizeBytes'], fromSizeBytes);
-  }
-
-  const fromCreateTime = common.getValueByPath(fromObject, ['createTime']);
-  if (fromCreateTime != null) {
-    common.setValueByPath(toObject, ['createTime'], fromCreateTime);
-  }
-
-  const fromExpirationTime = common.getValueByPath(fromObject, [
-    'expirationTime',
-  ]);
-  if (fromExpirationTime != null) {
-    common.setValueByPath(toObject, ['expirationTime'], fromExpirationTime);
-  }
-
-  const fromUpdateTime = common.getValueByPath(fromObject, ['updateTime']);
-  if (fromUpdateTime != null) {
-    common.setValueByPath(toObject, ['updateTime'], fromUpdateTime);
-  }
-
-  const fromSha256Hash = common.getValueByPath(fromObject, ['sha256Hash']);
-  if (fromSha256Hash != null) {
-    common.setValueByPath(toObject, ['sha256Hash'], fromSha256Hash);
-  }
-
-  const fromUri = common.getValueByPath(fromObject, ['uri']);
-  if (fromUri != null) {
-    common.setValueByPath(toObject, ['uri'], fromUri);
-  }
-
-  const fromDownloadUri = common.getValueByPath(fromObject, ['downloadUri']);
-  if (fromDownloadUri != null) {
-    common.setValueByPath(toObject, ['downloadUri'], fromDownloadUri);
-  }
-
-  const fromState = common.getValueByPath(fromObject, ['state']);
-  if (fromState != null) {
-    common.setValueByPath(toObject, ['state'], fromState);
-  }
-
-  const fromSource = common.getValueByPath(fromObject, ['source']);
-  if (fromSource != null) {
-    common.setValueByPath(toObject, ['source'], fromSource);
-  }
-
-  const fromVideoMetadata = common.getValueByPath(fromObject, [
-    'videoMetadata',
-  ]);
-  if (fromVideoMetadata != null) {
-    common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
-  }
-
-  const fromError = common.getValueByPath(fromObject, ['error']);
-  if (fromError != null) {
-    common.setValueByPath(
-      toObject,
-      ['error'],
-      fileStatusToMldev(apiClient, fromError),
-    );
-  }
-
-  return toObject;
-}
-
-function fileToVertex(
-  apiClient: ApiClient,
-  fromObject: types.File,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (common.getValueByPath(fromObject, ['name']) !== undefined) {
-    throw new Error('name parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
-    throw new Error('displayName parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['mimeType']) !== undefined) {
-    throw new Error('mimeType parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['sizeBytes']) !== undefined) {
-    throw new Error('sizeBytes parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['createTime']) !== undefined) {
-    throw new Error('createTime parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['expirationTime']) !== undefined) {
-    throw new Error('expirationTime parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['updateTime']) !== undefined) {
-    throw new Error('updateTime parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['sha256Hash']) !== undefined) {
-    throw new Error('sha256Hash parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['uri']) !== undefined) {
-    throw new Error('uri parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['downloadUri']) !== undefined) {
-    throw new Error('downloadUri parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['state']) !== undefined) {
-    throw new Error('state parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['source']) !== undefined) {
-    throw new Error('source parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['videoMetadata']) !== undefined) {
-    throw new Error('videoMetadata parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['error']) !== undefined) {
-    throw new Error('error parameter is not supported in Vertex AI.');
-  }
-
-  return toObject;
-}
-
-function createFileParametersToMldev(
-  apiClient: ApiClient,
-  fromObject: types.CreateFileParameters,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromFile = common.getValueByPath(fromObject, ['file']);
-  if (fromFile != null) {
-    common.setValueByPath(toObject, ['file'], fileToMldev(apiClient, fromFile));
-  }
-
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
-  }
-
-  return toObject;
-}
-
-function createFileParametersToVertex(
-  apiClient: ApiClient,
-  fromObject: types.CreateFileParameters,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (common.getValueByPath(fromObject, ['file']) !== undefined) {
-    throw new Error('file parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['config']) !== undefined) {
-    throw new Error('config parameter is not supported in Vertex AI.');
-  }
-
-  return toObject;
-}
-
-function getFileParametersToMldev(
-  apiClient: ApiClient,
-  fromObject: types.GetFileParameters,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName != null) {
-    common.setValueByPath(
-      toObject,
-      ['_url', 'file'],
-      t.tFileName(apiClient, fromName),
-    );
-  }
-
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
-  }
-
-  return toObject;
-}
-
-function getFileParametersToVertex(
-  apiClient: ApiClient,
-  fromObject: types.GetFileParameters,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (common.getValueByPath(fromObject, ['name']) !== undefined) {
-    throw new Error('name parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['config']) !== undefined) {
-    throw new Error('config parameter is not supported in Vertex AI.');
-  }
-
-  return toObject;
-}
-
-function fileStatusFromMldev(
-  apiClient: ApiClient,
-  fromObject: types.FileStatus,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromDetails = common.getValueByPath(fromObject, ['details']);
-  if (fromDetails != null) {
-    common.setValueByPath(toObject, ['details'], fromDetails);
-  }
-
-  const fromMessage = common.getValueByPath(fromObject, ['message']);
-  if (fromMessage != null) {
-    common.setValueByPath(toObject, ['message'], fromMessage);
-  }
-
-  const fromCode = common.getValueByPath(fromObject, ['code']);
-  if (fromCode != null) {
-    common.setValueByPath(toObject, ['code'], fromCode);
-  }
-
-  return toObject;
-}
-
-function fileStatusFromVertex(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
-function fileFromMldev(
-  apiClient: ApiClient,
-  fromObject: types.File,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName != null) {
-    common.setValueByPath(toObject, ['name'], fromName);
-  }
-
-  const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
-  if (fromDisplayName != null) {
-    common.setValueByPath(toObject, ['displayName'], fromDisplayName);
-  }
-
-  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
-  if (fromMimeType != null) {
-    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
-  }
-
-  const fromSizeBytes = common.getValueByPath(fromObject, ['sizeBytes']);
-  if (fromSizeBytes != null) {
-    common.setValueByPath(toObject, ['sizeBytes'], fromSizeBytes);
-  }
-
-  const fromCreateTime = common.getValueByPath(fromObject, ['createTime']);
-  if (fromCreateTime != null) {
-    common.setValueByPath(toObject, ['createTime'], fromCreateTime);
-  }
-
-  const fromExpirationTime = common.getValueByPath(fromObject, [
-    'expirationTime',
-  ]);
-  if (fromExpirationTime != null) {
-    common.setValueByPath(toObject, ['expirationTime'], fromExpirationTime);
-  }
-
-  const fromUpdateTime = common.getValueByPath(fromObject, ['updateTime']);
-  if (fromUpdateTime != null) {
-    common.setValueByPath(toObject, ['updateTime'], fromUpdateTime);
-  }
-
-  const fromSha256Hash = common.getValueByPath(fromObject, ['sha256Hash']);
-  if (fromSha256Hash != null) {
-    common.setValueByPath(toObject, ['sha256Hash'], fromSha256Hash);
-  }
-
-  const fromUri = common.getValueByPath(fromObject, ['uri']);
-  if (fromUri != null) {
-    common.setValueByPath(toObject, ['uri'], fromUri);
-  }
-
-  const fromDownloadUri = common.getValueByPath(fromObject, ['downloadUri']);
-  if (fromDownloadUri != null) {
-    common.setValueByPath(toObject, ['downloadUri'], fromDownloadUri);
-  }
-
-  const fromState = common.getValueByPath(fromObject, ['state']);
-  if (fromState != null) {
-    common.setValueByPath(toObject, ['state'], fromState);
-  }
-
-  const fromSource = common.getValueByPath(fromObject, ['source']);
-  if (fromSource != null) {
-    common.setValueByPath(toObject, ['source'], fromSource);
-  }
-
-  const fromVideoMetadata = common.getValueByPath(fromObject, [
-    'videoMetadata',
-  ]);
-  if (fromVideoMetadata != null) {
-    common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
-  }
-
-  const fromError = common.getValueByPath(fromObject, ['error']);
-  if (fromError != null) {
-    common.setValueByPath(
-      toObject,
-      ['error'],
-      fileStatusFromMldev(apiClient, fromError),
-    );
-  }
-
-  return toObject;
-}
-
-function fileFromVertex(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
-function listFilesResponseFromMldev(
-  apiClient: ApiClient,
-  fromObject: types.ListFilesResponse,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromNextPageToken = common.getValueByPath(fromObject, [
-    'nextPageToken',
-  ]);
-  if (fromNextPageToken != null) {
-    common.setValueByPath(toObject, ['nextPageToken'], fromNextPageToken);
-  }
-
-  const fromFiles = common.getValueByPath(fromObject, ['files']);
-  if (fromFiles != null) {
-    if (Array.isArray(fromFiles)) {
-      common.setValueByPath(
-        toObject,
-        ['files'],
-        fromFiles.map((item) => {
-          return fileFromMldev(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(toObject, ['files'], fromFiles);
-    }
-  }
-
-  return toObject;
-}
-
-function listFilesResponseFromVertex(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
-function createFileResponseFromMldev(
-  apiClient: ApiClient,
-  fromObject: types.CreateFileResponse,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromHttpHeaders = common.getValueByPath(fromObject, ['httpHeaders']);
-  if (fromHttpHeaders != null) {
-    common.setValueByPath(toObject, ['httpHeaders'], fromHttpHeaders);
-  }
-
-  return toObject;
-}
-
-function createFileResponseFromVertex(
-  apiClient: ApiClient,
-  fromObject: types.CreateFileResponse,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromHttpHeaders = common.getValueByPath(fromObject, ['httpHeaders']);
-  if (fromHttpHeaders != null) {
-    common.setValueByPath(toObject, ['httpHeaders'], fromHttpHeaders);
-  }
-
-  return toObject;
 }
