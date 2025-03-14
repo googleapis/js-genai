@@ -1543,9 +1543,9 @@ export class ComputeTokensResponse {
 export interface CreateCachedContentConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
-  /** The TTL for this resource. The expiration time is computed: now + TTL. */
+  /** The TTL for this resource. The expiration time is computed: now + TTL. It is a duration string, with up to nine fractional digits, terminated by 's'. Example: "3.5s". */
   ttl?: string;
-  /** Timestamp of when this resource is considered expired. */
+  /** Timestamp of when this resource is considered expired. Uses RFC 3339 format, e.g. 2014-10-02T15:01:23Z. */
   expireTime?: string;
   /** The user-generated meaningful display name of the cached content.
    */
@@ -1644,9 +1644,9 @@ export class DeleteCachedContentResponse {}
 export interface UpdateCachedContentConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
-  /** The TTL for this resource. The expiration time is computed: now + TTL. */
+  /** The TTL for this resource. The expiration time is computed: now + TTL. It is a duration string, with up to nine fractional digits, terminated by 's'. Example: "3.5s". */
   ttl?: string;
-  /** Timestamp of when this resource is considered expired. */
+  /** Timestamp of when this resource is considered expired. Uses RFC 3339 format, e.g. 2014-10-02T15:01:23Z. */
   expireTime?: string;
 }
 
