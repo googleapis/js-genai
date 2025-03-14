@@ -543,6 +543,11 @@ export class Live {
 
      @experimental
 
+     @remarks
+     Live is currently only supported for the Gemini API behind API version
+     `v1alpha`. Ensure that the API version is set to `v1alpha` when
+     initializing the SDK.
+
      @param params - The parameters for establishing a connection to the model.
      @return A live session.
 
