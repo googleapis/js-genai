@@ -1,6 +1,7 @@
-import { useState, ChangeEvent } from 'react'
-import './App.css'
+import {ChangeEvent, useState} from 'react';
+import './App.css';
 import GenerateContentText from './GenerateContentText';
+import TextAndImage from './TextAndImage';
 import UploadFile from './UploadFile';
 
 function App() {
@@ -8,7 +9,7 @@ function App() {
 
   const handleKeyChange = (event: ChangeEvent<HTMLInputElement>) => {
     setApiKey(event.target.value);
-  }
+  };
 
   return (
     <>
@@ -16,13 +17,20 @@ function App() {
       <div className="card">
         <form>
           <label htmlFor="apikey">API key:</label>
-          <input className="form-control" id="apikey" type='password' onChange={handleKeyChange} value={apiKey} />
+          <input
+            className="form-control"
+            id="apikey"
+            type="password"
+            onChange={handleKeyChange}
+            value={apiKey}
+          />
         </form>
       </div>
-        <GenerateContentText apiKey={apiKey} />
-        <UploadFile apiKey={apiKey} />
+      <GenerateContentText apiKey={apiKey} />
+      <UploadFile apiKey={apiKey} />
+      <TextAndImage apiKey={apiKey} />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
