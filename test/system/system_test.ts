@@ -307,7 +307,7 @@ describe('generateImages', () => {
       jasmine.anything(),
       'Expected image bytes to be non-empty',
     );
-    expect(response?.generatedImages?.[1]?.safetyAttributes).toEqual(
+    expect(response?.positivePromptSafetyAttributes).toEqual(
       jasmine.anything(),
       'Expected positive prompt safety attributes to be non-empty',
     );
@@ -336,7 +336,7 @@ describe('generateImages', () => {
       jasmine.anything(),
       'Expected image bytes to be non-empty',
     );
-    expect(response?.generatedImages?.[1]?.safetyAttributes).toEqual(
+    expect(response?.positivePromptSafetyAttributes).toEqual(
       jasmine.anything(),
       'Expected positive prompt safety attributes to be non-empty',
     );

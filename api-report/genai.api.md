@@ -567,6 +567,7 @@ export interface GenerateImagesParameters {
 // @public
 export class GenerateImagesResponse {
     generatedImages?: GeneratedImage[];
+    positivePromptSafetyAttributes?: SafetyAttributes;
 }
 
 // @public
@@ -1052,7 +1053,7 @@ export class Models extends BaseModule {
     embedContent(params: types.EmbedContentParameters): Promise<types.EmbedContentResponse>;
     generateContent: (params: types.GenerateContentParameters) => Promise<types.GenerateContentResponse>;
     generateContentStream: (params: types.GenerateContentParameters) => Promise<AsyncGenerator<types.GenerateContentResponse>>;
-    generateImages(params: types.GenerateImagesParameters): Promise<types.GenerateImagesResponse>;
+    generateImages: (params: types.GenerateImagesParameters) => Promise<types.GenerateImagesResponse>;
 }
 
 // @public
@@ -1163,6 +1164,7 @@ export interface RetrievalMetadata {
 // @public
 export interface SafetyAttributes {
     categories?: string[];
+    contentType?: string;
     scores?: number[];
 }
 
