@@ -3123,14 +3123,14 @@ function candidateFromMldev(
     common.setValueByPath(toObject, ['tokenCount'], fromTokenCount);
   }
 
-  const fromAvgLogprobs = common.getValueByPath(fromObject, ['avgLogprobs']);
-  if (fromAvgLogprobs != null) {
-    common.setValueByPath(toObject, ['avgLogprobs'], fromAvgLogprobs);
-  }
-
   const fromFinishReason = common.getValueByPath(fromObject, ['finishReason']);
   if (fromFinishReason != null) {
     common.setValueByPath(toObject, ['finishReason'], fromFinishReason);
+  }
+
+  const fromAvgLogprobs = common.getValueByPath(fromObject, ['avgLogprobs']);
+  if (fromAvgLogprobs != null) {
+    common.setValueByPath(toObject, ['avgLogprobs'], fromAvgLogprobs);
   }
 
   const fromGroundingMetadata = common.getValueByPath(fromObject, [
@@ -3199,14 +3199,14 @@ function candidateFromVertex(
     common.setValueByPath(toObject, ['finishMessage'], fromFinishMessage);
   }
 
-  const fromAvgLogprobs = common.getValueByPath(fromObject, ['avgLogprobs']);
-  if (fromAvgLogprobs != null) {
-    common.setValueByPath(toObject, ['avgLogprobs'], fromAvgLogprobs);
-  }
-
   const fromFinishReason = common.getValueByPath(fromObject, ['finishReason']);
   if (fromFinishReason != null) {
     common.setValueByPath(toObject, ['finishReason'], fromFinishReason);
+  }
+
+  const fromAvgLogprobs = common.getValueByPath(fromObject, ['avgLogprobs']);
+  if (fromAvgLogprobs != null) {
+    common.setValueByPath(toObject, ['avgLogprobs'], fromAvgLogprobs);
   }
 
   const fromGroundingMetadata = common.getValueByPath(fromObject, [

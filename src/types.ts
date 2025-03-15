@@ -68,6 +68,7 @@ export enum FinishReason {
   PROHIBITED_CONTENT = 'PROHIBITED_CONTENT',
   SPII = 'SPII',
   MALFORMED_FUNCTION_CALL = 'MALFORMED_FUNCTION_CALL',
+  IMAGE_SAFETY = 'IMAGE_SAFETY',
 }
 
 export enum HarmProbability {
@@ -951,10 +952,12 @@ export interface Candidate {
   /** Number of tokens for this candidate.
    */
   tokenCount?: number;
+  /** The reason why the model stopped generating tokens.
+      If empty, the model has not stopped generating the tokens.
+       */
+  finishReason?: FinishReason;
   /** Output only. Average log probability score of the candidate. */
   avgLogprobs?: number;
-  /** Output only. The reason why the model stopped generating tokens. If empty, the model has not stopped generating the tokens. */
-  finishReason?: FinishReason;
   /** Output only. Metadata specifies sources used to ground generated content. */
   groundingMetadata?: GroundingMetadata;
   /** Output only. Index of the candidate. */
