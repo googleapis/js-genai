@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+
 (function() {
     addIcons();
     function addIcons() {
