@@ -636,7 +636,7 @@ function fileFromMldev(
 
   const fromSizeBytes = common.getValueByPath(fromObject, ['sizeBytes']);
   if (fromSizeBytes != null) {
-    common.setValueByPath(toObject, ['sizeBytes'], fromSizeBytes);
+    common.setValueByPath(toObject, ['sizeBytes'], Number(fromSizeBytes));
   }
 
   const fromCreateTime = common.getValueByPath(fromObject, ['createTime']);

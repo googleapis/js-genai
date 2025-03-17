@@ -1261,12 +1261,9 @@ function createCachedContentConfigToMldev(
       common.setValueByPath(
         parentObject,
         ['contents'],
-        t.tContents(
-          apiClient,
-          t.tContents(apiClient, fromContents).map((item) => {
-            return contentToMldev(apiClient, item);
-          }),
-        ),
+        t.tContents(apiClient, fromContents).map((item) => {
+          return contentToMldev(apiClient, item);
+        }),
       );
     } else {
       common.setValueByPath(
@@ -1343,12 +1340,9 @@ function createCachedContentConfigToVertex(
       common.setValueByPath(
         parentObject,
         ['contents'],
-        t.tContents(
-          apiClient,
-          t.tContents(apiClient, fromContents).map((item) => {
-            return contentToVertex(apiClient, item);
-          }),
-        ),
+        t.tContents(apiClient, fromContents).map((item) => {
+          return contentToVertex(apiClient, item);
+        }),
       );
     } else {
       common.setValueByPath(

@@ -618,6 +618,7 @@ describe('files', () => {
     while (pager.hasNextPage()) {
       for (const file of page) {
         console.log(file.name);
+        expect(typeof file.sizeBytes).toBe('number');
       }
       page = await pager.nextPage();
     }
