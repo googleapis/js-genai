@@ -1684,12 +1684,9 @@ function generateContentConfigToMldev(
       common.setValueByPath(
         parentObject,
         ['tools'],
-        t.tTools(
-          apiClient,
-          t.tTools(apiClient, fromTools).map((item) => {
-            return toolToMldev(apiClient, t.tTool(apiClient, item));
-          }),
-        ),
+        t.tTools(apiClient, fromTools).map((item) => {
+          return toolToMldev(apiClient, t.tTool(apiClient, item));
+        }),
       );
     } else {
       common.setValueByPath(
@@ -1909,12 +1906,9 @@ function generateContentConfigToVertex(
       common.setValueByPath(
         parentObject,
         ['tools'],
-        t.tTools(
-          apiClient,
-          t.tTools(apiClient, fromTools).map((item) => {
-            return toolToVertex(apiClient, t.tTool(apiClient, item));
-          }),
-        ),
+        t.tTools(apiClient, fromTools).map((item) => {
+          return toolToVertex(apiClient, t.tTool(apiClient, item));
+        }),
       );
     } else {
       common.setValueByPath(
@@ -2022,12 +2016,9 @@ function generateContentParametersToMldev(
       common.setValueByPath(
         toObject,
         ['contents'],
-        t.tContents(
-          apiClient,
-          t.tContents(apiClient, fromContents).map((item) => {
-            return contentToMldev(apiClient, item);
-          }),
-        ),
+        t.tContents(apiClient, fromContents).map((item) => {
+          return contentToMldev(apiClient, item);
+        }),
       );
     } else {
       common.setValueByPath(
@@ -2071,12 +2062,9 @@ function generateContentParametersToVertex(
       common.setValueByPath(
         toObject,
         ['contents'],
-        t.tContents(
-          apiClient,
-          t.tContents(apiClient, fromContents).map((item) => {
-            return contentToVertex(apiClient, item);
-          }),
-        ),
+        t.tContents(apiClient, fromContents).map((item) => {
+          return contentToVertex(apiClient, item);
+        }),
       );
     } else {
       common.setValueByPath(
@@ -2730,12 +2718,9 @@ function countTokensParametersToMldev(
       common.setValueByPath(
         toObject,
         ['contents'],
-        t.tContents(
-          apiClient,
-          t.tContents(apiClient, fromContents).map((item) => {
-            return contentToMldev(apiClient, item);
-          }),
-        ),
+        t.tContents(apiClient, fromContents).map((item) => {
+          return contentToMldev(apiClient, item);
+        }),
       );
     } else {
       common.setValueByPath(
@@ -2779,12 +2764,9 @@ function countTokensParametersToVertex(
       common.setValueByPath(
         toObject,
         ['contents'],
-        t.tContents(
-          apiClient,
-          t.tContents(apiClient, fromContents).map((item) => {
-            return contentToVertex(apiClient, item);
-          }),
-        ),
+        t.tContents(apiClient, fromContents).map((item) => {
+          return contentToVertex(apiClient, item);
+        }),
       );
     } else {
       common.setValueByPath(
@@ -2855,12 +2837,9 @@ function computeTokensParametersToVertex(
       common.setValueByPath(
         toObject,
         ['contents'],
-        t.tContents(
-          apiClient,
-          t.tContents(apiClient, fromContents).map((item) => {
-            return contentToVertex(apiClient, item);
-          }),
-        ),
+        t.tContents(apiClient, fromContents).map((item) => {
+          return contentToVertex(apiClient, item);
+        }),
       );
     } else {
       common.setValueByPath(
