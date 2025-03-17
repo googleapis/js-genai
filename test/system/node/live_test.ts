@@ -9,7 +9,7 @@ import {Session} from '../../../src/live';
 import {GoogleGenAI} from '../../../src/node/node_client';
 import * as types from '../../../src/types';
 
-const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+const API_KEY = process.env.GEMINI_API_KEY ?? process.env.GOOGLE_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
 
@@ -108,10 +108,10 @@ describe('live', () => {
     expect(client.live).not.toBeNull();
   });
 
-  it('ML Dev should send text in async session', async () => {
+  fit('ML Dev should send text in async session', async () => {
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
-      apiKey: GOOGLE_API_KEY,
+      apiKey: API_KEY,
       httpOptions: {
         apiVersion: 'v1alpha',
       },
@@ -166,7 +166,7 @@ describe('live', () => {
   it('ML Dev should send content dict in async session', async () => {
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
-      apiKey: GOOGLE_API_KEY,
+      apiKey: API_KEY,
       httpOptions: {
         apiVersion: 'v1alpha',
       },
@@ -222,7 +222,7 @@ describe('live', () => {
   it('ML Dev should return error for invalid input in async session', async () => {
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
-      apiKey: GOOGLE_API_KEY,
+      apiKey: API_KEY,
       httpOptions: {
         apiVersion: 'v1alpha',
       },
@@ -307,7 +307,7 @@ describe('live', () => {
   it('ML Dev should send tool response', async () => {
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
-      apiKey: GOOGLE_API_KEY,
+      apiKey: API_KEY,
       httpOptions: {
         apiVersion: 'v1alpha',
       },

@@ -5,13 +5,13 @@
  */
 import {GoogleGenAI, Type} from '@google/genai';
 
-const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+const API_KEY = process.env.GEMINI_API_KEY ?? process.env.GOOGLE_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
 const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
 
 async function generateContentFromMLDev() {
-  const ai = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+  const ai = new GoogleGenAI({vertexai: false, apiKey: API_KEY});
 
   const response = await ai.models.generateContent({
     model: 'gemini-2.0-flash',

@@ -10,7 +10,7 @@ import {createZeroFilledTempFile} from '../../../src/_generate_test_file';
 import {GenerateContentResponse} from '../../../src/types';
 import {GoogleGenAI} from '../../../src/web/web_client';
 
-const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+const API_KEY = process.env.GEMINI_API_KEY ?? process.env.GOOGLE_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
 
@@ -18,7 +18,7 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000; // 30 seconds
 
 describe('generateContent', () => {
   it('ML Dev should generate content with specified parameters', async () => {
-    const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+    const client = new GoogleGenAI({vertexai: false, apiKey: API_KEY});
     const response = await client.models.generateContent({
       model: 'gemini-1.5-flash',
       contents: 'why is the sky blue?',
@@ -40,7 +40,7 @@ describe('generateContent', () => {
   });
 
   it('ML Dev should generate content with system instruction', async () => {
-    const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+    const client = new GoogleGenAI({vertexai: false, apiKey: API_KEY});
     const response = await client.models.generateContent({
       model: 'gemini-1.5-flash',
       contents: 'high',
@@ -60,7 +60,7 @@ describe('generateContent', () => {
 
 describe('generateContentStream', () => {
   it('ML Dev should stream generate content with specified parameters', async () => {
-    const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+    const client = new GoogleGenAI({vertexai: false, apiKey: API_KEY});
     const response = await client.models.generateContentStream({
       model: 'gemini-1.5-flash',
       contents: 'why is the sky blue?',
@@ -89,7 +89,7 @@ describe('generateContentStream', () => {
   });
 
   it('ML Dev should stream generate content with system instruction', async () => {
-    const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+    const client = new GoogleGenAI({vertexai: false, apiKey: API_KEY});
     const response = await client.models.generateContentStream({
       model: 'gemini-1.5-flash',
       contents: 'high',
@@ -124,7 +124,7 @@ describe('generateContentStream', () => {
 
 describe('generateImages', () => {
   it('ML Dev should generate image with specified parameters', async () => {
-    const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+    const client = new GoogleGenAI({vertexai: false, apiKey: API_KEY});
     const response = await client.models.generateImages({
       model: 'imagen-3.0-generate-002',
       prompt: 'Robot holding a red skateboard',
@@ -154,7 +154,7 @@ describe('test async performance', () => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 15000; // 15 seconds
   });
   it('generate content should complete in less than 10 seconds', async () => {
-    const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+    const client = new GoogleGenAI({vertexai: false, apiKey: API_KEY});
     async function firstAsyncFunc() {
       client.models.generateContent({
         model: 'gemini-1.5-flash',
@@ -191,7 +191,7 @@ describe('test async performance', () => {
     }
   });
   it('stream generate content should complete in less than 10 seconds', async () => {
-    const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+    const client = new GoogleGenAI({vertexai: false, apiKey: API_KEY});
     async function firstAsyncFunc() {
       client.models.generateContentStream({
         model: 'gemini-1.5-flash',
@@ -233,7 +233,7 @@ describe('test forward compatibility', () => {
   it('generate content should not return thought field', async () => {
     const client = new GoogleGenAI({
       vertexai: false,
-      apiKey: GOOGLE_API_KEY,
+      apiKey: API_KEY,
       httpOptions: {apiVersion: 'v1alpha'},
     });
     const response = await client.models.generateContent({
@@ -254,7 +254,7 @@ describe('test forward compatibility', () => {
 
 describe('countTokens', () => {
   it('ML Dev should count tokens with specified parameters', async () => {
-    const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+    const client = new GoogleGenAI({vertexai: false, apiKey: API_KEY});
 
     const response = await client.models.countTokens({
       model: 'gemini-1.5-flash',
@@ -273,7 +273,7 @@ describe('countTokens', () => {
 
 describe('files', () => {
   it('ML Dev list files with specified parameters', async () => {
-    const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+    const client = new GoogleGenAI({vertexai: false, apiKey: API_KEY});
     const response = await client.files.list({config: {'pageSize': 2}});
     expect(response!.pageLength ?? 0).toBeGreaterThan(
       0,
@@ -286,7 +286,7 @@ describe('files', () => {
     );
   });
   it('ML Dev list files with pagers', async () => {
-    const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+    const client = new GoogleGenAI({vertexai: false, apiKey: API_KEY});
     const pager = await client.files.list({config: {pageSize: 2}});
     let page = pager.page;
     for (const file of page) {
@@ -302,7 +302,7 @@ describe('files', () => {
     expect(pager.pageLength).toBeGreaterThan(0);
   });
   it('ML Dev should fail when provided with a string file path', async () => {
-    const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+    const client = new GoogleGenAI({vertexai: false, apiKey: API_KEY});
     // generate a temp file
     const filePath = await createZeroFilledTempFile(1024 * 1024 * 10);
 
@@ -319,7 +319,7 @@ describe('files', () => {
     }
   });
   it('ML Dev should upload the file from a Blob and get just uploaded file with specified parameters', async () => {
-    const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+    const client = new GoogleGenAI({vertexai: false, apiKey: API_KEY});
     // generate a temp file
     const fileBlob = new Blob([new Uint8Array(1024 * 1024 * 30)], {
       type: 'text/plain',
