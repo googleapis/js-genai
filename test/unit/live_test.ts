@@ -199,6 +199,34 @@ describe('live', () => {
     );
     expect(session).toBeDefined();
   });
+
+  it('connect should throw error if httpOptions is set', async () => {
+    const apiClient = new ApiClient({
+      auth: new FakeAuth(),
+      apiKey: 'test-api-key',
+      uploader: new CrossUploader(),
+    });
+    const websocketFactory = new FakeWebSocketFactory();
+    const live = new Live(apiClient, new FakeAuth(), websocketFactory);
+
+    try {
+      await live.connect({
+        model: 'models/gemini-2.0-flash-exp',
+        config: {httpOptions: {baseUrl: 'test-proxy'}},
+        callbacks: {
+          onmessage: function(e: types.LiveServerMessage) {
+            void e;
+          },
+        },
+      });
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        console.log('handle error')
+        expect(e.message).toBe(
+            'httpOptions is not supported in LiveConnectParameters.config');
+      }
+    }
+  });
 });
 
 // TODO: b/395958466 - Add unit tests for Session.
