@@ -10,6 +10,7 @@ import {GoogleGenAI} from '../../../src/node/node_client';
 describe('Client', () => {
   afterEach(() => {
     delete process.env['GOOGLE_API_KEY'];
+    delete process.env['GEMINI_API_KEY'];
     delete process.env['GOOGLE_GENAI_USE_VERTEXAI'];
     delete process.env['GOOGLE_CLOUD_PROJECT'];
     delete process.env['GOOGLE_CLOUD_LOCATION'];
@@ -20,10 +21,23 @@ describe('Client', () => {
     expect(client).toBeDefined();
   });
 
-  it('should set apiKey from environment', () => {
+  it('should set apiKey use GOOGLE_API_KEY environment variable when GEMINI_API_KEY is not set', () => {
     process.env['GOOGLE_API_KEY'] = 'test_api_key';
     const client = new GoogleGenAI({});
     expect(client['apiKey']).toBe('test_api_key');
+  });
+
+  it('should set apiKey use GEMINI_API_KEY environment variable when GOOGLE_API_KEY is not set', () => {
+    process.env['GEMINI_API_KEY'] = 'gemini_api_key';
+    const client = new GoogleGenAI({});
+    expect(client['apiKey']).toBe('gemini_api_key');
+  });
+
+  it('should set apiKey use GEMINI_API_KEY environment variable when both GOOGLE_API_KEY and GEMINI_API_KEY are set', () => {
+    process.env['GEMINI_API_KEY'] = 'gemini_api_key';
+    process.env['GOOGLE_API_KEY'] = 'google_api_key';
+    const client = new GoogleGenAI({});
+    expect(client['apiKey']).toBe('gemini_api_key');
   });
 
   it('should set vertexai from environment', () => {

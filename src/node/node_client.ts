@@ -72,7 +72,8 @@ export class GoogleGenAI {
     // With Google Cloud Express an API key can be used with vertex.
     // TODO: Set the API key also when vertexai is true.
     if (!this.vertexai) {
-      this.apiKey = options.apiKey ?? getEnv('GOOGLE_API_KEY');
+      this.apiKey =
+        options.apiKey ?? getEnv('GEMINI_API_KEY') ?? getEnv('GOOGLE_API_KEY');
     }
     this.project = options.project ?? getEnv('GOOGLE_CLOUD_PROJECT');
     this.location = options.location ?? getEnv('GOOGLE_CLOUD_LOCATION');
