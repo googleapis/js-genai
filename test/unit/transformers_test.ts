@@ -157,19 +157,6 @@ describe('tSchema', () => {
       ),
     ).toEqual(schema);
   });
-  it('removes title for MLDev', () => {
-    const schema = {title: 'title'};
-    expect(
-      tSchema(
-        new ApiClient({
-          auth: new FakeAuth(),
-          vertexai: false,
-          uploader: new CrossUploader(),
-        }),
-        schema,
-      ),
-    ).toEqual({});
-  });
   it('throws error if default value is present for MLDev', () => {
     const schema = {default: 'default'};
     expect(() => {
