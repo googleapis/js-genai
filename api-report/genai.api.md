@@ -293,6 +293,21 @@ export class DeleteCachedContentResponse {
 }
 
 // @public
+export interface DeleteFileConfig {
+    httpOptions?: HttpOptions;
+}
+
+// @public
+export interface DeleteFileParameters {
+    config?: DeleteFileConfig;
+    name: string;
+}
+
+// @public
+export class DeleteFileResponse {
+}
+
+// @public
 export interface DownloadFileConfig {
     httpOptions?: HttpOptions;
 }
