@@ -15,6 +15,8 @@ import {
   tSpeechConfig,
   tTool,
 } from '../../src/_transformers';
+import * as types from '../../src/types';
+
 import {CrossUploader} from '../../src/cross/_cross_uploader';
 import {FakeAuth} from '../_fake_auth';
 
@@ -145,7 +147,7 @@ describe('tTool', () => {
 
 describe('tSchema', () => {
   it('no change', () => {
-    const schema = {title: 'title'};
+    const schema = {title: 'title'} as types.Schema;
     expect(
       tSchema(
         new ApiClient({
@@ -156,9 +158,6 @@ describe('tSchema', () => {
         schema,
       ),
     ).toEqual(schema);
-  });
-  it('removes title for MLDev', () => {
-    const schema = {title: 'title'};
     expect(
       tSchema(
         new ApiClient({
@@ -168,10 +167,18 @@ describe('tSchema', () => {
         }),
         schema,
       ),
-    ).toEqual({});
+    ).toEqual(schema);
   });
   it('throws error if default value is present for MLDev', () => {
-    const schema = {default: 'default'};
+    const schema = {
+      type: 'STRING',
+      properties: {
+        'name': {
+          type: 'STRING',
+          default: 'test',
+        },
+      },
+    } as types.Schema;
     expect(() => {
       tSchema(
         new ApiClient({
@@ -187,9 +194,72 @@ describe('tSchema', () => {
   });
   it('processes anyOf', () => {
     const schema = {
-      title: 'title',
-      anyOf: [{title: 'subSchemaTitle1'}, {title: 'subSchemaTitle2'}],
-    };
+      type: 'OBJECT',
+      anyOf: [{type: 'STRING'}, {type: 'NUMBER'}],
+    } as types.Schema;
+    expect(
+      tSchema(
+        new ApiClient({
+          auth: new FakeAuth(),
+          vertexai: true,
+          uploader: new CrossUploader(),
+        }),
+        schema,
+      ),
+    ).toEqual(schema);
+    expect(
+      tSchema(
+        new ApiClient({
+          auth: new FakeAuth(),
+          vertexai: false,
+          uploader: new CrossUploader(),
+        }),
+        schema,
+      ),
+    ).toEqual(schema);
+  });
+  it('processes items', () => {
+    const schema = {
+      type: 'OBJECT',
+      properties: {
+        type: {
+          type: 'ARRAY',
+          items: {
+            type: 'STRING',
+          },
+        },
+      },
+    } as types.Schema;
+    expect(
+      tSchema(
+        new ApiClient({
+          auth: new FakeAuth(),
+          vertexai: true,
+          uploader: new CrossUploader(),
+        }),
+        schema,
+      ),
+    ).toEqual(schema);
+    expect(
+      tSchema(
+        new ApiClient({
+          auth: new FakeAuth(),
+          vertexai: false,
+          uploader: new CrossUploader(),
+        }),
+        schema,
+      ),
+    ).toEqual(schema);
+  });
+  it('process properties', () => {
+    const schema = {
+      type: 'OBJECT',
+      properties: {
+        type: {
+          type: 'STRING',
+        },
+      },
+    } as types.Schema;
     expect(
       tSchema(
         new ApiClient({

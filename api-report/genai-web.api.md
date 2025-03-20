@@ -1351,6 +1351,7 @@ export interface TestTableItem {
     exceptionIfMldev?: string;
     exceptionIfVertex?: string;
     hasUnion?: boolean;
+    ignoreKeys?: string[];
     name?: string;
     overrideReplayId?: string;
     parameters?: Record<string, unknown>;
