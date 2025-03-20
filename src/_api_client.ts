@@ -12,7 +12,7 @@ import {File, HttpOptions, HttpResponse, UploadFileConfig} from './types';
 const CONTENT_TYPE_HEADER = 'Content-Type';
 const USER_AGENT_HEADER = 'User-Agent';
 const GOOGLE_API_CLIENT_HEADER = 'x-goog-api-client';
-export const SDK_VERSION = '0.5.0'; // x-release-please-version
+export const SDK_VERSION = '0.6.0'; // x-release-please-version
 const LIBRARY_LABEL = `google-genai-sdk/${SDK_VERSION}`;
 const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
 const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';
