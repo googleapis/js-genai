@@ -1849,6 +1849,8 @@ export interface TestTableItem {
   hasUnion?: boolean;
   /** When set to a reason string, this test will be skipped in the API mode. Use this flag for tests that can not be reproduced with the real API. E.g. a test that deletes a resource. */
   skipInApiMode?: string;
+  /** Keys to ignore when comparing the request and response. This is useful for tests that are not deterministic. */
+  ignoreKeys?: string[];
 }
 
 export interface TestTableFile {

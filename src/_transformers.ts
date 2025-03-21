@@ -274,10 +274,6 @@ export function tContents(
 
 export function processSchema(apiClient: ApiClient, schema: types.Schema) {
   if (!apiClient.isVertexAI()) {
-    if ('title' in schema) {
-      delete schema['title'];
-    }
-
     if ('default' in schema) {
       throw new Error(
         'Default value is not supported in the response schema for the Gemini API.',
@@ -288,6 +284,20 @@ export function processSchema(apiClient: ApiClient, schema: types.Schema) {
   if ('anyOf' in schema) {
     if (schema['anyOf'] !== undefined) {
       for (const subSchema of schema['anyOf']) {
+        processSchema(apiClient, subSchema);
+      }
+    }
+  }
+
+  if ('items' in schema) {
+    if (schema['items'] !== undefined) {
+      processSchema(apiClient, schema['items']);
+    }
+  }
+
+  if ('properties' in schema) {
+    if (schema['properties'] !== undefined) {
+      for (const subSchema of Object.values(schema['properties'])) {
         processSchema(apiClient, subSchema);
       }
     }
