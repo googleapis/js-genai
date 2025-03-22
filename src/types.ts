@@ -457,8 +457,6 @@ export interface Schema {
   default?: unknown;
   /** Optional. Maximum length of the Type.STRING */
   maxLength?: string;
-  /** Optional. The title of the Schema. */
-  title?: string;
   /** Optional. SCHEMA FIELDS FOR TYPE STRING Minimum length of the Type.STRING */
   minLength?: string;
   /** Optional. Minimum number of the properties for Type.OBJECT. */
@@ -491,6 +489,8 @@ export interface Schema {
   propertyOrdering?: string[];
   /** Optional. Required properties of Type.OBJECT. */
   required?: string[];
+  /** Optional. The title of the Schema. */
+  title?: string;
   /** Optional. The type of the data. */
   type?: Type;
 }

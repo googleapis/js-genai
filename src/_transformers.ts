@@ -134,7 +134,8 @@ export function tContent(
     throw new Error('ContentUnion is required');
   }
   if (_isContent(origin)) {
-    // @ts-expect-error: _isContent is a utility function that checks if the origin is a Content.
+    // @ts-expect-error: _isContent is a utility function that checks if the
+    // origin is a Content.
     return origin;
   }
 
@@ -274,10 +275,6 @@ export function tContents(
 
 export function processSchema(apiClient: ApiClient, schema: types.Schema) {
   if (!apiClient.isVertexAI()) {
-    if ('title' in schema) {
-      delete schema['title'];
-    }
-
     if ('default' in schema) {
       throw new Error(
         'Default value is not supported in the response schema for the Gemini API.',
