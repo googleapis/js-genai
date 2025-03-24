@@ -2233,6 +2233,8 @@ export interface LiveClientMessage {
 
 /** Session config for the API connection. */
 export interface LiveConnectConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
   /** The generation configuration for the session. */
   generationConfig?: GenerationConfig;
   /** The requested modalities of the response. Represents the set of

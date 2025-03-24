@@ -107,6 +107,13 @@ export class Live {
      ```
     */
   async connect(params: types.LiveConnectParameters): Promise<Session> {
+    // TODO(b/404946746): Remove this check once httpOptions is supported.
+    if (params.config && params.config.httpOptions) {
+      throw new Error(
+        'httpOptions is not supported in LiveConnectParameters.config',
+      );
+    }
+
     const websocketBaseUrl = this.apiClient.getWebsocketBaseUrl();
     const apiVersion = this.apiClient.getApiVersion();
     let url: string;
