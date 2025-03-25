@@ -1,6 +1,21 @@
 # Changelog
 
 
+## [0.6.1](https://github.com/googleapis/js-genai/compare/v0.6.0...v0.6.1) (2025-03-25)
+
+
+### Features
+
+* Add engine to VertexAISearch ([69dfbaf](https://github.com/googleapis/js-genai/commit/69dfbaf95c6e0c98d962ef7172aa41a455ecbdc1))
+* allow title property to be sent to Gemini API. Gemini API now supports the title property, so it's ok to pass this onto both Vertex and Gemini API. ([c5855a3](https://github.com/googleapis/js-genai/commit/c5855a310b02fcf2d12ec5d23a7f7fac943aa22f))
+* implement files.delete for JS client SDK. ([4ac44de](https://github.com/googleapis/js-genai/commit/4ac44de9b1cb5d71274b24287149b39a3b934257))
+* Save prompt safety attributes in dedicated field for generate_images ([1a774fa](https://github.com/googleapis/js-genai/commit/1a774fa18db4ca26bc97e1947f308837b16620ae))
+
+
+### Bug Fixes
+
+* schema transformer logic fix. ([6311f60](https://github.com/googleapis/js-genai/commit/6311f60539a12f6a0287c746c1367904af274197))
+
 ## [0.6.0](https://github.com/googleapis/js-genai/compare/v0.5.0...v0.6.0) (2025-03-20)
 
 
