@@ -548,7 +548,7 @@ export class ApiClient {
 
     const uploader = this.clientOptions.uploader;
     const fileStat = await uploader.stat(file);
-    fileToUpload.sizeBytes = fileStat.size;
+    fileToUpload.sizeBytes = `${fileStat.size}`;
     const mimeType = config?.mimeType ?? fileStat.type;
     if (mimeType === undefined || mimeType === '') {
       throw new Error(

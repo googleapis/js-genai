@@ -1733,7 +1733,7 @@ export declare interface File {
   /** Output only. MIME type of the file. */
   mimeType?: string;
   /** Output only. Size of the file in bytes. */
-  sizeBytes?: number;
+  sizeBytes?: string;
   /** Output only. The timestamp of when the `File` was created. */
   createTime?: string;
   /** Output only. The timestamp of when the `File` will be deleted. Only set if the `File` is scheduled to expire. */
