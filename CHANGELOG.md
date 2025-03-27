@@ -1,6 +1,24 @@
 # Changelog
 
 
+## [0.7.0](https://github.com/googleapis/js-genai/compare/v0.6.1...v0.7.0) (2025-03-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* Change File.sizeBytes from number type to string type
+
+### Features
+
+* Add experimental generate_video support ([0fa1f05](https://github.com/googleapis/js-genai/commit/0fa1f053e3904f72218ad19b44e42acf180e8364))
+* add MediaModalities for ModalityTokenCount ([9869098](https://github.com/googleapis/js-genai/commit/98690986bccb7e13707cd283a71c7ce6e1ccccb0))
+
+
+### Bug Fixes
+
+* Change File.sizeBytes from number type to string type ([184c7db](https://github.com/googleapis/js-genai/commit/184c7db957e7abb0e572660272f717f1b40abac1))
+* Update tLiveClienttToolResponse() to accept FunctionResponse[] ([4cab8bf](https://github.com/googleapis/js-genai/commit/4cab8bfe19dab6ac6708e9d3f6e5ab6bba6969f1))
+
 ## [0.6.1](https://github.com/googleapis/js-genai/compare/v0.6.0...v0.6.1) (2025-03-25)
 
 
