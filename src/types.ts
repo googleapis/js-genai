@@ -183,6 +183,18 @@ export enum SubjectReferenceType {
   SUBJECT_TYPE_PRODUCT = 'SUBJECT_TYPE_PRODUCT',
 }
 
+export enum ActivityHandling {
+  ACTIVITY_HANDLING_UNSPECIFIED = 'ACTIVITY_HANDLING_UNSPECIFIED',
+  START_OF_ACTIVITY_INTERRUPTS = 'START_OF_ACTIVITY_INTERRUPTS',
+  NO_INTERRUPTION = 'NO_INTERRUPTION',
+}
+
+export enum TurnCoverage {
+  TURN_COVERAGE_UNSPECIFIED = 'TURN_COVERAGE_UNSPECIFIED',
+  TURN_INCLUDES_ONLY_ACTIVITY = 'TURN_INCLUDES_ONLY_ACTIVITY',
+  TURN_INCLUDES_ALL_INPUT = 'TURN_INCLUDES_ALL_INPUT',
+}
+
 export enum MediaModality {
   MODALITY_UNSPECIFIED = 'MODALITY_UNSPECIFIED',
   TEXT = 'TEXT',
@@ -2143,6 +2155,26 @@ export declare interface LiveServerMessage {
   toolCallCancellation?: LiveServerToolCallCancellation;
 }
 
+/** Configures automatic detection of activity. */
+export declare interface AutomaticActivityDetection {
+  /** If enbled, detected voice and text input count as activity. If disabled, the client must send activity signals. */
+  enabled?: boolean;
+}
+
+/** Marks the end of user activity.
+
+  This can only be sent if automatic (i.e. server-side) activity detection is
+  disabled.
+   */
+export declare interface RealtimeInputConfig {
+  /** If not set, automatic activity detection is enabled by default. If automatic voice detection is disabled, the client must send activity signals. */
+  automaticActivityDetection?: AutomaticActivityDetection;
+  /** Defines what effect activity has. */
+  activityHandling?: ActivityHandling;
+  /** Defines which input is included in the user's turn. */
+  turnCoverage?: TurnCoverage;
+}
+
 /** Message contains configuration that will apply for the duration of the streaming session. */
 export declare interface LiveClientSetup {
   /** 
@@ -2172,6 +2204,8 @@ The following fields are supported:
       external systems to perform an action, or set of actions, outside of
       knowledge and scope of the model. */
   tools?: ToolListUnion;
+  /** Configures the realtime input behavior in BidiGenerateContent. */
+  realtimeInputConfig?: RealtimeInputConfig;
 }
 
 /** Incremental update of the current conversation delivered from the client.
@@ -2195,6 +2229,20 @@ export declare interface LiveClientContent {
   turnComplete?: boolean;
 }
 
+/** Marks the start of user activity.
+
+  This can only be sent if automatic (i.e. server-side) activity detection is
+  disabled.
+   */
+export declare interface ActivityStart {}
+
+/** Marks the end of user activity.
+
+  This can only be sent if automatic (i.e. server-side) activity detection is
+  disabled.
+   */
+export declare interface ActivityEnd {}
+
 /** User input that is sent in real time.
 
   This is different from `ClientContentUpdate` in a few ways:
@@ -2213,6 +2261,10 @@ export declare interface LiveClientContent {
 export declare interface LiveClientRealtimeInput {
   /** Inlined bytes data for media input. */
   mediaChunks?: Blob[];
+  /** Marks the start of user activity. */
+  activityStart?: ActivityStart;
+  /** Marks the end of user activity. */
+  activityEnd?: ActivityEnd;
 }
 
 /** Client generated response to a `ToolCall` received from the server.
