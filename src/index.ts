@@ -6,6 +6,7 @@
 
 export * from './caches';
 export * from './chats';
+export {overrideHttpOptions} from './_api_client';
 export {GoogleGenAI, GoogleGenAIOptions} from './client';
 export {Files} from './files';
 export * from './live';
