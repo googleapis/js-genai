@@ -393,8 +393,7 @@ export class Files extends BaseModule {
     delete(params: types.DeleteFileParameters): Promise<types.DeleteFileResponse>;
     get(params: types.GetFileParameters): Promise<types.File>;
     list: (params?: types.ListFilesParameters) => Promise<Pager<types.File>>;
-    // Warning: (ae-forgotten-export) The symbol "common" needs to be exported by the entry point index.d.ts
-    upload(params: common.UploadFileParameters): Promise<types.File>;
+    upload(params: types.UploadFileParameters): Promise<types.File>;
 }
 
 // @public (undocumented)
@@ -1588,6 +1587,12 @@ export interface UploadFileConfig {
     httpOptions?: HttpOptions;
     mimeType?: string;
     name?: string;
+}
+
+// @public
+export interface UploadFileParameters {
+    config?: UploadFileConfig;
+    file: string | globalThis.Blob;
 }
 
 // @public

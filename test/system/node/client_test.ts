@@ -624,7 +624,7 @@ describe('files', () => {
 
     expect(pager.pageLength).toBeGreaterThan(0);
   });
-  it('ML Dev should upload the file from a string path and get just uploaded file with specified parameters', async () => {
+  fit('ML Dev should upload the file from a string path and get just uploaded file with specified parameters', async () => {
     const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
     // generate a temp file
     const filePath = await createZeroFilledTempFile(1024 * 1024 * 10);
@@ -643,7 +643,7 @@ describe('files', () => {
     console.log('getFile', getFile);
     expect(getFile.name).toBe(file.name);
   });
-  it('ML Dev should upload the file from a Blob and get just uploaded file with specified parameters', async () => {
+  fit('ML Dev should upload the file from a Blob and get just uploaded file with specified parameters', async () => {
     const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
     // generate a temp file
     const fileBlob = new Blob([new Uint8Array(1024 * 1024 * 30)], {

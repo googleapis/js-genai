@@ -4,18 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {UploadFileConfig} from './types';
-
 export class BaseModule {}
-
-// TODO (b/406332263): Move this to a place where it can be linked for doc.
-/** Parameters for the upload file method. */
-export interface UploadFileParameters {
-  /** The string path to the file to be uploaded or a Blob object. */
-  file: string | Blob;
-  /** Configuration that contains optional parameters. */
-  config?: UploadFileConfig;
-}
 
 export function formatMap(
   templateString: string,
