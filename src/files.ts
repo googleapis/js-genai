@@ -70,7 +70,9 @@ export class Files extends BaseModule {
    * This section can contain multiple paragraphs and code examples.
    *
    * @param params - Optional parameters specified in the
-   *        `common.UploadFileParameters` interface.
+   *        `types.UploadFileParameters` interface. Include the file to be
+   *         uploaded and optional configuration.
+   *         @see {@link types.UploadFileParameters#config}
    * @return A promise that resolves to a `types.File` object.
    * @throws An error if called on a Vertex AI client.
    * @throws An error if the `mimeType` is not provided and can not be inferred,
@@ -87,7 +89,7 @@ export class Files extends BaseModule {
    * console.log(file.name);
    * ```
    */
-  async upload(params: common.UploadFileParameters): Promise<types.File> {
+  async upload(params: types.UploadFileParameters): Promise<types.File> {
     if (this.apiClient.isVertexAI()) {
       throw new Error(
         'Vertex AI does not support uploading files. You can share files through a GCS bucket.',
