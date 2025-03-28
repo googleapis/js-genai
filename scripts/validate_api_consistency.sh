@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# ----------------------------------------------------------
+# @license
+# Copyright 2025 Google LLC
+# SPDX-License-Identifier: Apache-2.0
+# ----------------------------------------------------------
 
 # Define the file paths
 crossplatform="api-report/genai.api.md"

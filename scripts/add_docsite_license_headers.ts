@@ -17,6 +17,9 @@ const header = `/**
 
 function addHeader(filePath: string) {
   const content = fs.readFileSync(filePath, 'utf8');
+  if (content.startsWith(header)) {
+    return;
+  }
   fs.writeFileSync(filePath, header + content);
 }
 
@@ -35,5 +38,6 @@ function processDirectory(directory: string) {
   }
 }
 
-const docsDir = path.join(__dirname, '..', 'docs');
+const targetDirName: string = process.argv[2] || 'docs';
+const docsDir = path.join(__dirname, '..', targetDirName);
 processDirectory(docsDir);

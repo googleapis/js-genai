@@ -41,6 +41,8 @@
     "unit-test": "ts-node node_modules/jasmine/bin/jasmine test/unit/**/*_test.ts test/unit/*_test.ts",
     "system-test": "ts-node node_modules/jasmine/bin/jasmine test/system/**/*_test.ts",
     "docs": "typedoc && ts-node scripts/add_docsite_license_headers.ts",
+    "pages-main": "./scripts/generate_pages.sh main",
+    "pages-release": "./scripts/generate_pages.sh release",
     "format": "prettier '**/*.ts' '**/*.mjs' '**/*.json' --write",
     "lint": "eslint '**/*.ts'",
     "lint-fix": "eslint --fix '**/*.ts'"
