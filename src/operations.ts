@@ -20,10 +20,10 @@ export class Operations extends BaseModule {
   /**
    * Gets the status of a long-running operation.
    *
-   * @param operation The Operation object returned by a previous API call.
+   * @param parameters The parameters for the get operation request.
    * @return The updated Operation object, with the latest status or result.
    */
-  async get(
+  async getVideosOperation(
     parameters: types.OperationGetParameters,
   ): Promise<types.GenerateVideosOperation> {
     const operation = parameters.operation;
