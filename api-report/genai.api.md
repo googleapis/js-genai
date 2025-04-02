@@ -1520,6 +1520,7 @@ export interface TestTableItem {
 // @public
 export interface ThinkingConfig {
     includeThoughts?: boolean;
+    thinkingBudget?: number;
 }
 
 // @public

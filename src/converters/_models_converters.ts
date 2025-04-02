@@ -482,6 +482,13 @@ export function thinkingConfigToMldev(
     common.setValueByPath(toObject, ['includeThoughts'], fromIncludeThoughts);
   }
 
+  const fromThinkingBudget = common.getValueByPath(fromObject, [
+    'thinkingBudget',
+  ]);
+  if (fromThinkingBudget != null) {
+    common.setValueByPath(toObject, ['thinkingBudget'], fromThinkingBudget);
+  }
+
   return toObject;
 }
 
@@ -1731,6 +1738,13 @@ export function thinkingConfigToVertex(
   ]);
   if (fromIncludeThoughts != null) {
     common.setValueByPath(toObject, ['includeThoughts'], fromIncludeThoughts);
+  }
+
+  const fromThinkingBudget = common.getValueByPath(fromObject, [
+    'thinkingBudget',
+  ]);
+  if (fromThinkingBudget != null) {
+    common.setValueByPath(toObject, ['thinkingBudget'], fromThinkingBudget);
   }
 
   return toObject;
