@@ -676,6 +676,11 @@ export declare interface ThinkingConfig {
   /** Indicates whether to include thoughts in the response. If true, thoughts are returned only if the model supports thought and thoughts are available.
    */
   includeThoughts?: boolean;
+  /** Maximum token budget allocated for the model's internal reasoning ('thoughts').
+      This counts towards the `max_output_tokens` limit and must be less than it
+      to leave capacity for the final response.
+       */
+  thinkingBudget?: number;
 }
 
 /** When automated routing is specified, the routing will be determined by the pretrained routing model and customer provided model routing preference. */
