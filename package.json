@@ -73,6 +73,7 @@
     "@eslint/js": "9.20.0",
     "@microsoft/api-extractor": "^7.50.1",
     "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.1",
     "@types/jasmine": "^5.1.2",
     "@types/node": "^20.9.0",
     "@types/unist": "^3.0.3",
@@ -93,7 +94,9 @@
   },
   "dependencies": {
     "google-auth-library": "^9.14.2",
-    "ws": "^8.18.0"
+    "ws": "^8.18.0",
+    "zod": "^3.22.4",
+    "zod-to-json-schema": "^3.22.4"
   },
   "repository": {
     "type": "git",

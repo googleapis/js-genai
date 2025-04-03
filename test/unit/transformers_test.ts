@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {z} from 'zod';
+
 import {ApiClient} from '../../src/_api_client';
 import {
   tContent,
@@ -15,9 +17,8 @@ import {
   tSpeechConfig,
   tTool,
 } from '../../src/_transformers';
-import * as types from '../../src/types';
-
 import {CrossUploader} from '../../src/cross/_cross_uploader';
+import * as types from '../../src/types';
 import {FakeAuth} from '../_fake_auth';
 
 describe('tModel', () => {
@@ -280,6 +281,22 @@ describe('tSchema', () => {
         schema,
       ),
     ).toEqual(schema);
+  });
+  it('accept zod object', () => {
+    const testZodSchema = z.object({
+      foo: z.string(),
+      bar: z.number(),
+    });
+    expect(() => {
+      tSchema(
+        new ApiClient({
+          auth: new FakeAuth(),
+          vertexai: false,
+          uploader: new CrossUploader(),
+        }),
+        testZodSchema,
+      );
+    }).not.toThrow();
   });
 });
 

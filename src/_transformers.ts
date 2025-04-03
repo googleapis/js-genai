@@ -4,6 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {z} from 'zod';
+import {zodToJsonSchema} from 'zod-to-json-schema';
+
 import {ApiClient} from './_api_client';
 import * as types from './types';
 
@@ -305,10 +308,25 @@ export function processSchema(apiClient: ApiClient, schema: types.Schema) {
   }
 }
 
+function processJsonSchema(
+  apiClient: ApiClient,
+  zodSchema: Record<string, unknown>,
+): types.Schema {
+  // This is a placeholder for now, will implement it in next CL.
+  const schema: types.Schema = {};
+  return schema;
+}
+
 export function tSchema(
   apiClient: ApiClient,
-  schema: types.Schema,
+  schema: types.Schema | z.ZodObject<z.ZodRawShape>,
 ): types.Schema {
+  if (schema instanceof z.ZodObject) {
+    const jsonSchema = zodToJsonSchema(schema, 'zodSchema').definitions![
+      'zodSchema'
+    ] as Record<string, unknown>;
+    schema = processJsonSchema(apiClient, jsonSchema);
+  }
   processSchema(apiClient, schema);
   return schema;
 }
