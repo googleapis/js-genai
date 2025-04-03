@@ -1,12 +1,14 @@
 import json from '@rollup/plugin-json';
 import {readFileSync} from 'fs';
 import typescript from 'rollup-plugin-typescript2';
+import resolve from '@rollup/plugin-node-resolve'; 
 
 const pkg = JSON.parse(
   readFileSync(new URL('./package.json', import.meta.url), 'utf8'),
 );
 
 const rollupPlugins = [
+  resolve(),
   typescript({
     tsconfigOverride: {
       exclude: ['test/**'],
