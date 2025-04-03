@@ -16,6 +16,7 @@ import {
   tTool,
 } from '../../src/_transformers';
 import * as types from '../../src/types';
+import {z} from 'zod';
 
 import {CrossUploader} from '../../src/cross/_cross_uploader';
 import {FakeAuth} from '../_fake_auth';
@@ -280,6 +281,20 @@ describe('tSchema', () => {
         schema,
       ),
     ).toEqual(schema);
+  });
+  it('accept zod object', () => {
+    const testZodSchema = z.object({
+      foo: z.string(),
+      bar: z.number(),
+    });
+    tSchema(
+      new ApiClient({
+        auth: new FakeAuth(),
+        vertexai: false,
+        uploader: new CrossUploader(),
+      }),
+      testZodSchema,
+    );
   });
 });
 
