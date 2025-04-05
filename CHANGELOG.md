@@ -1,6 +1,20 @@
 # Changelog
 
 
+## [0.7.1](https://github.com/googleapis/js-genai/compare/v0.7.0...v0.7.1) (2025-04-05)
+
+
+### Features
+
+* expose generation_complete, input/output_transcription & input/output_audio_transcription to SDK for Vertex Live API ([1e8be50](https://github.com/googleapis/js-genai/commit/1e8be506f635b910d421ef9b4d6f1785a4c94935))
+* merge GenerationConfig into LiveConnectConfig ([d25d77d](https://github.com/googleapis/js-genai/commit/d25d77d442ab7e2408c59d0e0c88f02eeaa31d2f))
+* Support models.get() for getting model information ([fc62381](https://github.com/googleapis/js-genai/commit/fc62381883db7b837640038d320adb563cbb83e3))
+
+
+### Bug Fixes
+
+* Use authentication headers as provided by google-auth-library ([94b11a1](https://github.com/googleapis/js-genai/commit/94b11a1b6e62c60bb03b3d49c150bccf0b1d97c7))
+
 ## [0.7.0](https://github.com/googleapis/js-genai/compare/v0.6.1...v0.7.0) (2025-03-27)
 
 
