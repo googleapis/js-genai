@@ -699,10 +699,10 @@ export class Models extends BaseModule {
    *
    * while (!operation.done) {
    *   await new Promise(resolve => setTimeout(resolve, 10000));
-   *   operation = await ai.operations.get({operation: operation});
+   *   operation = await ai.operations.getVideosOperation({operation: operation});
    * }
    *
-   * console.log(operation.result?.generatedVideos?.[0]?.video?.uri);
+   * console.log(operation.response?.generatedVideos?.[0]?.video?.uri);
    * ```
    */
 

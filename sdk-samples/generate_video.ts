@@ -16,7 +16,7 @@ async function delay(ms: number): Promise<void> {
 
 async function generateContentFromMLDev() {
   const ai = new GoogleGenAI({vertexai: false, apiKey: GEMINI_API_KEY});
-  var operation = await ai.models.generateVideos({
+  let operation = await ai.models.generateVideos({
     model: 'veo-2.0-generate-001',
     prompt: 'Man with a dog',
     config: {
@@ -27,10 +27,10 @@ async function generateContentFromMLDev() {
   while (!operation.done) {
     console.log('Waiting for completion');
     await delay(1000);
-    operation = await ai.operations.get({operation: operation});
+    operation = await ai.operations.getVideosOperation({operation: operation});
   }
 
-  const response = operation.result;
+  const response = operation.response;
   const fileName = response?.generatedVideos?.[0].video?.uri;
   console.log(fileName);
 }
@@ -41,7 +41,7 @@ async function generateContentFromVertexAI() {
     project: GOOGLE_CLOUD_PROJECT,
     location: GOOGLE_CLOUD_LOCATION,
   });
-  var operation = await ai.models.generateVideos({
+  let operation = await ai.models.generateVideos({
     model: 'veo-2.0-generate-001',
     prompt: 'Man with a dog',
   });
@@ -49,10 +49,10 @@ async function generateContentFromVertexAI() {
   while (!operation.done) {
     console.log('Waiting for completion');
     await delay(1000);
-    operation = await ai.operations.get({operation: operation});
+    operation = await ai.operations.getVideosOperation({operation: operation});
   }
 
-  const response = operation.result;
+  const response = operation.response;
   const fileName = response?.generatedVideos?.[0].video?.uri;
   console.log(fileName);
 }

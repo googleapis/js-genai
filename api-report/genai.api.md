@@ -635,8 +635,7 @@ export interface GenerateVideosOperation {
     error?: Record<string, unknown>;
     metadata?: Record<string, unknown>;
     name?: string;
-    response?: Record<string, unknown>;
-    result?: GenerateVideosResponse;
+    response?: GenerateVideosResponse;
 }
 
 // @public
@@ -1195,7 +1194,7 @@ export interface OperationGetParameters {
 // @public (undocumented)
 export class Operations extends BaseModule {
     constructor(apiClient: ApiClient);
-    get(parameters: types.OperationGetParameters): Promise<types.GenerateVideosOperation>;
+    getVideosOperation(parameters: types.OperationGetParameters): Promise<types.GenerateVideosOperation>;
 }
 
 // @public

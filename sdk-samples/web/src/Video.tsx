@@ -38,10 +38,12 @@ export const VideoGeneration: React.FC<VideoProps> = ({apiKey, vertexai}) => {
       while (!operation.done) {
         console.log('Waiting for completion');
         await delay(1000);
-        operation = await ai.operations.get({operation: operation});
+        operation = await ai.operations.getVideosOperation({
+          operation: operation,
+        });
       }
       setIsGenerating(false);
-      setVideo(operation.result?.generatedVideos?.[0].video);
+      setVideo(operation.response?.generatedVideos?.[0].video);
     } catch (error) {
       setIsGenerating(false);
       if (error instanceof Error) {

@@ -3173,9 +3173,16 @@ export function generateVideosOperationFromMldev(
     common.setValueByPath(toObject, ['error'], fromError);
   }
 
-  const fromResponse = common.getValueByPath(fromObject, ['response']);
+  const fromResponse = common.getValueByPath(fromObject, [
+    'response',
+    'generateVideoResponse',
+  ]);
   if (fromResponse != null) {
-    common.setValueByPath(toObject, ['response'], fromResponse);
+    common.setValueByPath(
+      toObject,
+      ['response'],
+      generateVideosResponseFromMldev(apiClient, fromResponse),
+    );
   }
 
   const fromResult = common.getValueByPath(fromObject, [
@@ -3819,7 +3826,11 @@ export function generateVideosOperationFromVertex(
 
   const fromResponse = common.getValueByPath(fromObject, ['response']);
   if (fromResponse != null) {
-    common.setValueByPath(toObject, ['response'], fromResponse);
+    common.setValueByPath(
+      toObject,
+      ['response'],
+      generateVideosResponseFromVertex(apiClient, fromResponse),
+    );
   }
 
   const fromResult = common.getValueByPath(fromObject, ['response']);
