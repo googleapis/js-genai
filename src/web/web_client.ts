@@ -7,11 +7,12 @@
 import {ApiClient} from '../_api_client';
 import {Caches} from '../caches';
 import {Chats} from '../chats';
-import {GoogleGenAIOptions} from '../client';
+import {BaseUrlParameters, GoogleGenAIOptions} from '../client';
 import {Files} from '../files';
 import {Live} from '../live';
 import {Models} from '../models';
 import {Operations} from '../operations';
+import {HttpOptions} from '../types';
 
 import {BrowserUploader} from './_browser_uploader';
 import {BrowserWebSocketFactory} from './_browser_websocket';
@@ -60,6 +61,7 @@ export class GoogleGenAI {
   private readonly apiKey?: string;
   public readonly vertexai: boolean;
   private readonly apiVersion?: string;
+  private readonly httpOptions?: HttpOptions;
   readonly models: Models;
   readonly live: Live;
   readonly chats: Chats;
@@ -81,6 +83,7 @@ export class GoogleGenAI {
 
     this.apiKey = options.apiKey;
     this.apiVersion = options.apiVersion;
+    this.httpOptions = options.httpOptions;
     const auth = new WebAuth(this.apiKey);
     this.apiClient = new ApiClient({
       auth: auth,
@@ -97,5 +100,20 @@ export class GoogleGenAI {
     this.caches = new Caches(this.apiClient);
     this.files = new Files(this.apiClient);
     this.operations = new Operations(this.apiClient);
+  }
+
+  // Override the base URLs for the Gemini API and Vertex AI API.
+  setDefaultBaseUrls(baseUrlParams: BaseUrlParameters) {
+    if (this.httpOptions && this.httpOptions.baseUrl) {
+      // If the base URL has already been set via the httpOptions, do not
+      // override it.
+      return;
+    }
+
+    if (this.vertexai && baseUrlParams.vertexUrl) {
+      this.apiClient.setBaseUrl(baseUrlParams.vertexUrl);
+    } else if (!this.vertexai && baseUrlParams.geminiUrl) {
+      this.apiClient.setBaseUrl(baseUrlParams.geminiUrl);
+    }
   }
 }

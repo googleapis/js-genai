@@ -83,6 +83,25 @@ export interface GoogleGenAIOptions {
 }
 
 /**
+ * Parameters for setting the base URLs for the Gemini API and Vertex AI API.
+ * Will not be used if the base URLs have already been set via the httpOptions.
+ *
+ * @example
+ * ```ts
+ * const ai = new GoogleGenAI({apiKey: 'GEMINI_API_KEY'});
+ * // Override the base URL for the Gemini API.
+ * ai.setDefaultBaseUrls({geminiUrl:'https://gemini.google.com'});
+ *
+ * // Override the base URL for the Vertex AI API.
+ * ai.setDefaultBaseUrls({vertexUrl: 'https://vertexai.googleapis.com'});
+ * ```
+ */
+export interface BaseUrlParameters {
+  geminiUrl?: string;
+  vertexUrl?: string;
+}
+
+/**
  * The Google GenAI SDK.
  *
  * @remarks
@@ -118,6 +137,7 @@ export class GoogleGenAI {
   private readonly apiKey?: string;
   public readonly vertexai: boolean;
   private readonly apiVersion?: string;
+  private readonly httpOptions?: HttpOptions;
   readonly models: Models;
   readonly live: Live;
   readonly chats: Chats;
@@ -134,6 +154,7 @@ export class GoogleGenAI {
     this.vertexai = options.vertexai ?? false;
     this.apiKey = options.apiKey;
     this.apiVersion = options.apiVersion;
+    this.httpOptions = options.httpOptions;
     const auth = new WebAuth(this.apiKey);
     this.apiClient = new ApiClient({
       auth: auth,
@@ -150,5 +171,20 @@ export class GoogleGenAI {
     this.caches = new Caches(this.apiClient);
     this.files = new Files(this.apiClient);
     this.operations = new Operations(this.apiClient);
+  }
+
+  // Override the base URLs for the Gemini API and Vertex AI API.
+  setDefaultBaseUrls(baseUrlParams: BaseUrlParameters) {
+    if (this.httpOptions && this.httpOptions.baseUrl) {
+      // If the base URL has already been set via the httpOptions, do not
+      // override it.
+      return;
+    }
+
+    if (this.vertexai && baseUrlParams.vertexUrl) {
+      this.apiClient.setBaseUrl(baseUrlParams.vertexUrl);
+    } else if (!this.vertexai && baseUrlParams.geminiUrl) {
+      this.apiClient.setBaseUrl(baseUrlParams.geminiUrl);
+    }
   }
 }

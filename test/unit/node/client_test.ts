@@ -13,6 +13,8 @@ describe('Client', () => {
     delete process.env['GOOGLE_GENAI_USE_VERTEXAI'];
     delete process.env['GOOGLE_CLOUD_PROJECT'];
     delete process.env['GOOGLE_CLOUD_LOCATION'];
+    delete process.env['GOOGLE_GEMINI_BASE_URL'];
+    delete process.env['GOOGLE_VERTEX_BASE_URL'];
   });
 
   it('should initialize without any options', () => {
@@ -127,5 +129,38 @@ describe('Client', () => {
     expect(client['apiClient'].clientOptions.uploader).toBeInstanceOf(
       NodeUploader,
     );
+  });
+  it('should set default base Gemini URL', () => {
+    const client = new GoogleGenAI({});
+    client.setDefaultBaseUrls({geminiUrl: 'https://gemini.google.com'});
+    expect(client['apiClient'].getBaseUrl()).toBe('https://gemini.google.com');
+  });
+  it('should set default base Vertex URL', () => {
+    const client = new GoogleGenAI({vertexai: true});
+    client.setDefaultBaseUrls({vertexUrl: 'https://vertexai.googleapis.com'});
+    expect(client['apiClient'].getBaseUrl()).toBe(
+      'https://vertexai.googleapis.com',
+    );
+  });
+  it('should set default base Gemini URL from environment variables', () => {
+    process.env['GOOGLE_GEMINI_BASE_URL'] = 'https://gemini.google.com';
+    const client = new GoogleGenAI({});
+    client.setDefaultBaseUrls({});
+    expect(client['apiClient'].getBaseUrl()).toBe('https://gemini.google.com');
+  });
+  it('should set default base Vertex URL from environment variables', () => {
+    process.env['GOOGLE_VERTEX_BASE_URL'] = 'https://vertexai.googleapis.com';
+    const client = new GoogleGenAI({vertexai: true});
+    client.setDefaultBaseUrls({});
+    expect(client['apiClient'].getBaseUrl()).toBe(
+      'https://vertexai.googleapis.com',
+    );
+  });
+  it('should not override base URL if set via httpOptions', () => {
+    const client = new GoogleGenAI({
+      httpOptions: {baseUrl: 'https://gemini.google.com'},
+    });
+    client.setDefaultBaseUrls({vertexUrl: 'https://vertexai.googleapis.com'});
+    expect(client['apiClient'].getBaseUrl()).toBe('https://gemini.google.com');
   });
 });

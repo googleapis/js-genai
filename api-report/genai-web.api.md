@@ -739,6 +739,10 @@ export class GoogleGenAI {
     readonly models: Models;
     // (undocumented)
     readonly operations: Operations;
+    // Warning: (ae-forgotten-export) The symbol "BaseUrlParameters" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    setDefaultBaseUrls(baseUrlParams: BaseUrlParameters): void;
     // (undocumented)
     readonly vertexai: boolean;
 }

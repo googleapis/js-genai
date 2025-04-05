@@ -9,13 +9,14 @@ import {GoogleAuthOptions} from 'google-auth-library';
 import {ApiClient} from '../_api_client';
 import {Caches} from '../caches';
 import {Chats} from '../chats';
-import {GoogleGenAIOptions} from '../client';
+import {BaseUrlParameters, GoogleGenAIOptions} from '../client';
 import {Files} from '../files';
 import {Live} from '../live';
 import {Models} from '../models';
 import {NodeAuth} from '../node/_node_auth';
 import {NodeWebSocketFactory} from '../node/_node_websocket';
 import {Operations} from '../operations';
+import {HttpOptions} from '../types';
 
 import {NodeUploader} from './_node_uploader';
 
@@ -69,6 +70,7 @@ export class GoogleGenAI {
   private readonly project?: string;
   private readonly location?: string;
   private readonly apiVersion?: string;
+  private readonly httpOptions?: HttpOptions;
   readonly models: Models;
   readonly live: Live;
   readonly chats: Chats;
@@ -123,6 +125,7 @@ export class GoogleGenAI {
     }
 
     this.apiVersion = options.apiVersion;
+    this.httpOptions = options.httpOptions;
     const auth = new NodeAuth({
       apiKey: this.apiKey,
       googleAuthOptions: options.googleAuthOptions,
@@ -144,6 +147,26 @@ export class GoogleGenAI {
     this.caches = new Caches(this.apiClient);
     this.files = new Files(this.apiClient);
     this.operations = new Operations(this.apiClient);
+  }
+
+  // Override the base URLs for the Gemini API and Vertex AI API.
+  setDefaultBaseUrls(baseUrlParams: BaseUrlParameters) {
+    if (this.httpOptions && this.httpOptions.baseUrl) {
+      // If the base URL has already been set via the httpOptions, do not
+      // override it.
+      return;
+    }
+
+    const vertexBaseUrl =
+      baseUrlParams.vertexUrl ?? getEnv('GOOGLE_VERTEX_BASE_URL');
+    const geminiBaseUrl =
+      baseUrlParams.geminiUrl ?? getEnv('GOOGLE_GEMINI_BASE_URL');
+
+    if (this.vertexai && vertexBaseUrl) {
+      this.apiClient.setBaseUrl(vertexBaseUrl);
+    } else if (!this.vertexai && geminiBaseUrl) {
+      this.apiClient.setBaseUrl(geminiBaseUrl);
+    }
   }
 }
 
