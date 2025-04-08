@@ -371,6 +371,18 @@ export interface ExecutableCode {
     language?: Language;
 }
 
+// @public
+export enum FeatureSelectionPreference {
+    // (undocumented)
+    BALANCED = "BALANCED",
+    // (undocumented)
+    FEATURE_SELECTION_PREFERENCE_UNSPECIFIED = "FEATURE_SELECTION_PREFERENCE_UNSPECIFIED",
+    // (undocumented)
+    PRIORITIZE_COST = "PRIORITIZE_COST",
+    // (undocumented)
+    PRIORITIZE_QUALITY = "PRIORITIZE_QUALITY"
+}
+
 // @public (undocumented)
 export interface FetchPredictOperationConfig {
     httpOptions?: HttpOptions;
@@ -519,6 +531,7 @@ export interface GenerateContentConfig {
     cachedContent?: string;
     candidateCount?: number;
     frequencyPenalty?: number;
+    generateContentModelConfig?: GenerationConfigModelConfig;
     httpOptions?: HttpOptions;
     labels?: Record<string, string>;
     logprobs?: number;
@@ -689,6 +702,11 @@ export interface GenerationConfig {
     temperature?: number;
     topK?: number;
     topP?: number;
+}
+
+// @public
+export interface GenerationConfigModelConfig {
+    featureSelectionPreference?: FeatureSelectionPreference;
 }
 
 // @public
