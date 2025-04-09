@@ -1,7 +1,7 @@
 # Changelog
 
 
-## [0.7.1](https://github.com/googleapis/js-genai/compare/v0.7.0...v0.7.1) (2025-04-09)
+## [0.8.0](https://github.com/googleapis/js-genai/compare/v0.7.0...v0.8.0) (2025-04-09)
 
 
 ### Features
