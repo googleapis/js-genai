@@ -75,9 +75,6 @@ export class Live {
      @experimental
 
      @remarks
-     If using the Gemini API, Live is currently only supported behind API
-     version `v1alpha`. Ensure that the API version is set to `v1alpha` when
-     initializing the SDK if relying on the Gemini API.
 
      @param params - The parameters for establishing a connection to the model.
      @return A live session.
@@ -85,7 +82,7 @@ export class Live {
      @example
      ```ts
      const session = await ai.live.connect({
-       model: 'gemini-2.0-flash-exp',
+       model: 'gemini-2.0-flash-live-001',
        config: {
          responseModalities: [Modality.AUDIO],
        },
@@ -433,7 +430,7 @@ export class Session {
      @example
      ```ts
      const session = await ai.live.connect({
-       model: 'gemini-2.0-flash-exp',
+       model: 'gemini-2.0-flash-live-001',
        config: {
          responseModalities: [Modality.AUDIO],
        }

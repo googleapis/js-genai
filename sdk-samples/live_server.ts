@@ -49,14 +49,11 @@ async function main() {
       // Google AI
       vertexai: false,
       apiKey: GOOGLE_API_KEY,
-      httpOptions: {
-        apiVersion: 'v1alpha',
-      },
     };
   }
   const ai = new GoogleGenAI(options);
   const session = await ai.live.connect({
-    model: 'gemini-2.0-flash-exp',
+    model: 'gemini-2.0-flash-live-001',
     callbacks: {
       onopen: () => {
         console.log('Live Session Opened');

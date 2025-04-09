@@ -60,7 +60,7 @@ describe('live', () => {
 
     // Default callbacks are used.
     const session = await live.connect({
-      model: 'models/gemini-2.0-flash-exp',
+      model: 'models/gemini-2.0-flash-live-001',
       callbacks: {
         onmessage: function (e: types.LiveServerMessage) {
           void e;
@@ -102,7 +102,7 @@ describe('live', () => {
 
     try {
       await live.connect({
-        model: 'models/gemini-2.0-flash-exp',
+        model: 'models/gemini-2.0-flash-live-001',
         callbacks: {
           onopen: () => {
             throw new Error('custom onopen error');
@@ -158,7 +158,7 @@ describe('live', () => {
     );
 
     const session = await live.connect({
-      model: 'models/gemini-2.0-flash-exp',
+      model: 'models/gemini-2.0-flash-live-001',
       callbacks: {
         onmessage: function (e: types.LiveServerMessage) {
           void e;
@@ -192,7 +192,7 @@ describe('live', () => {
     expect(websocket.connect).toHaveBeenCalled();
     const websocketSpyCall = websocketSpy.calls.all()[0];
     expect(websocketSpyCall.args[0]).toBe(
-      '{"setup":{"model":"models/gemini-2.0-flash-exp"}}',
+      '{"setup":{"model":"models/gemini-2.0-flash-live-001"}}',
     );
     expect(session).toBeDefined();
   });
@@ -231,7 +231,7 @@ describe('live', () => {
 
     try {
       await live.connect({
-        model: 'models/gemini-2.0-flash-exp',
+        model: 'models/gemini-2.0-flash-live-001',
         config: {
           sessionResumption: {
             handle: 'test_handle',
@@ -289,7 +289,7 @@ describe('live', () => {
     );
 
     const session = await live.connect({
-      model: 'models/gemini-2.0-flash-exp',
+      model: 'models/gemini-2.0-flash-live-001',
       config: {
         sessionResumption: {
           handle: 'test_handle',
@@ -305,7 +305,7 @@ describe('live', () => {
 
     const websocketSpyCall = websocketSpy.calls.all()[0];
     expect(websocketSpyCall.args[0]).toBe(
-      '{"setup":{"generationConfig":{"responseModalities":["AUDIO"]},"sessionResumption":{"handle":"test_handle","transparent":true},"model":"models/gemini-2.0-flash-exp"}}',
+      '{"setup":{"generationConfig":{"responseModalities":["AUDIO"]},"sessionResumption":{"handle":"test_handle","transparent":true},"model":"models/gemini-2.0-flash-live-001"}}',
     );
     expect(session).toBeDefined();
   });
@@ -346,7 +346,7 @@ describe('live', () => {
     );
 
     const session = await live.connect({
-      model: 'models/gemini-2.0-flash-exp',
+      model: 'models/gemini-2.0-flash-live-001',
       config: {
         contextWindowCompression: {
           triggerTokens: '1000',
@@ -364,7 +364,7 @@ describe('live', () => {
 
     const websocketSpyCall = websocketSpy.calls.all()[0];
     expect(websocketSpyCall.args[0]).toBe(
-      '{"setup":{"generationConfig":{"responseModalities":["AUDIO"]},"contextWindowCompression":{"triggerTokens":"1000","slidingWindow":{"targetTokens":"10"}},"model":"models/gemini-2.0-flash-exp"}}',
+      '{"setup":{"generationConfig":{"responseModalities":["AUDIO"]},"contextWindowCompression":{"triggerTokens":"1000","slidingWindow":{"targetTokens":"10"}},"model":"models/gemini-2.0-flash-live-001"}}',
     );
     expect(session).toBeDefined();
   });
@@ -405,7 +405,7 @@ describe('live', () => {
     );
 
     const session = await live.connect({
-      model: 'models/gemini-2.0-flash-exp',
+      model: 'models/gemini-2.0-flash-live-001',
       config: {
         realtimeInputConfig: {
           automaticActivityDetection: {
@@ -426,7 +426,7 @@ describe('live', () => {
 
     const websocketSpyCall = websocketSpy.calls.all()[0];
     expect(websocketSpyCall.args[0]).toBe(
-      '{"setup":{"generationConfig":{"responseModalities":["AUDIO"]},"realtimeInputConfig":{"automaticActivityDetection":{"startOfSpeechSensitivity":"START_SENSITIVITY_HIGH","endOfSpeechSensitivity":"END_SENSITIVITY_HIGH"},"activityHandling":"NO_INTERRUPTION","turnCoverage":"TURN_INCLUDES_ALL_INPUT"},"model":"models/gemini-2.0-flash-exp"}}',
+      '{"setup":{"generationConfig":{"responseModalities":["AUDIO"]},"realtimeInputConfig":{"automaticActivityDetection":{"startOfSpeechSensitivity":"START_SENSITIVITY_HIGH","endOfSpeechSensitivity":"END_SENSITIVITY_HIGH"},"activityHandling":"NO_INTERRUPTION","turnCoverage":"TURN_INCLUDES_ALL_INPUT"},"model":"models/gemini-2.0-flash-live-001"}}',
     );
     expect(session).toBeDefined();
   });
@@ -451,7 +451,7 @@ describe('live', () => {
     const incomingMessages: types.LiveServerMessage[] = [];
 
     const session = await live.connect({
-      model: 'models/gemini-2.0-flash-exp',
+      model: 'models/gemini-2.0-flash-live-001',
       callbacks: {
         onmessage: function (e: types.LiveServerMessage) {
           incomingMessages.push(e);
@@ -487,7 +487,7 @@ describe('live', () => {
     const incomingMessages: types.LiveServerMessage[] = [];
 
     const session = await live.connect({
-      model: 'models/gemini-2.0-flash-exp',
+      model: 'models/gemini-2.0-flash-live-001',
       callbacks: {
         onmessage: function (e: types.LiveServerMessage) {
           incomingMessages.push(e);

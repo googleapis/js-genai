@@ -112,14 +112,11 @@ describe('live', () => {
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
       apiKey: GOOGLE_API_KEY,
-      httpOptions: {
-        apiVersion: 'v1alpha',
-      },
     };
     const client = new GoogleGenAI(clientOpts);
     const session = await make_session_with_queue(
       client,
-      'models/gemini-2.0-flash-exp',
+      'models/gemini-2.0-flash-live-001',
     );
 
     session.sendClientContent({
@@ -146,7 +143,7 @@ describe('live', () => {
     const client = new GoogleGenAI(clientOpts);
     const session = await make_session_with_queue(
       client,
-      'gemini-2.0-flash-exp',
+      'gemini-2.0-flash-live-001',
     );
 
     session.sendClientContent({
@@ -167,14 +164,11 @@ describe('live', () => {
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
       apiKey: GOOGLE_API_KEY,
-      httpOptions: {
-        apiVersion: 'v1alpha',
-      },
     };
     const client = new GoogleGenAI(clientOpts);
     const session = await make_session_with_queue(
       client,
-      'models/gemini-2.0-flash-exp',
+      'models/gemini-2.0-flash-live-001',
     );
 
     session.sendClientContent({
@@ -201,7 +195,7 @@ describe('live', () => {
     const client = new GoogleGenAI(clientOpts);
     const session = await make_session_with_queue(
       client,
-      'gemini-2.0-flash-exp',
+      'gemini-2.0-flash-live-001',
     );
 
     session.sendClientContent({
@@ -223,14 +217,11 @@ describe('live', () => {
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
       apiKey: GOOGLE_API_KEY,
-      httpOptions: {
-        apiVersion: 'v1alpha',
-      },
     };
     const client = new GoogleGenAI(clientOpts);
     const session = await make_session_with_queue(
       client,
-      'models/gemini-2.0-flash-exp',
+      'models/gemini-2.0-flash-live-001',
     );
 
     try {
@@ -254,7 +245,7 @@ describe('live', () => {
     const client = new GoogleGenAI(clientOpts);
     const session = await make_session_with_queue(
       client,
-      'gemini-2.0-flash-exp',
+      'gemini-2.0-flash-live-001',
     );
 
     try {
@@ -279,7 +270,7 @@ describe('live', () => {
     const client = new GoogleGenAI(clientOpts);
     const session = await make_session_with_queue(
       client,
-      'publishers/google/models/gemini-2.0-flash-exp',
+      'publishers/google/models/gemini-2.0-flash-live-001',
     );
     const setupMessage = await session.receive();
     expect(setupMessage.setupComplete).not.toBeNull();
@@ -296,7 +287,7 @@ describe('live', () => {
     const client = new GoogleGenAI(clientOpts);
     const session = await make_session_with_queue(
       client,
-      'gemini-2.0-flash-exp',
+      'gemini-2.0-flash-live-001',
     );
     const setupMessage = await session.receive();
     expect(setupMessage.setupComplete).not.toBeNull();
@@ -308,14 +299,11 @@ describe('live', () => {
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
       apiKey: GOOGLE_API_KEY,
-      httpOptions: {
-        apiVersion: 'v1alpha',
-      },
     };
     const client = new GoogleGenAI(clientOpts);
     const session = await make_session_with_queue(
       client,
-      'models/gemini-2.0-flash-exp',
+      'models/gemini-2.0-flash-live-001',
       {
         tools: [
           {
@@ -371,7 +359,7 @@ describe('live', () => {
     const client = new GoogleGenAI(clientOpts);
     const session = await make_session_with_queue(
       client,
-      'gemini-2.0-flash-exp',
+      'gemini-2.0-flash-live-001',
       {
         tools: [
           {
@@ -422,14 +410,11 @@ describe('live', () => {
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
       apiKey: GOOGLE_API_KEY,
-      httpOptions: {
-        apiVersion: 'v1alpha',
-      },
     };
     const client = new GoogleGenAI(clientOpts);
     const session = await make_session_with_queue(
       client,
-      'models/gemini-2.0-flash-exp',
+      'models/gemini-2.0-flash-live-001',
     );
 
     session.sendToolResponse({
@@ -455,7 +440,7 @@ describe('live', () => {
     const client = new GoogleGenAI(clientOpts);
     const session = await make_session_with_queue(
       client,
-      'gemini-2.0-flash-exp',
+      'gemini-2.0-flash-live-001',
     );
 
     session.sendToolResponse({

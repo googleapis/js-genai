@@ -43,18 +43,18 @@ async function live(client: GoogleGenAI) {
   }
 
   const session = await client.live.connect({
-    model: 'gemini-2.0-flash-exp',
+    model: 'gemini-2.0-flash-live-001',
     callbacks: {
-      onopen: function () {
+      onopen: function() {
         console.debug('Opened');
       },
-      onmessage: function (message: LiveServerMessage) {
+      onmessage: function(message: LiveServerMessage) {
         responseQueue.push(message);
       },
-      onerror: function (e: ErrorEvent) {
+      onerror: function(e: ErrorEvent) {
         console.debug('Error:', e.message);
       },
-      onclose: function (e: CloseEvent) {
+      onclose: function(e: CloseEvent) {
         console.debug('Close:', e.reason);
       },
     },
@@ -99,9 +99,6 @@ async function main() {
     const client = new GoogleGenAI({
       vertexai: false,
       apiKey: GEMINI_API_KEY,
-      httpOptions: {
-        apiVersion: 'v1alpha',
-      },
     });
     await live(client).catch((e) => console.error('got error', e));
   }

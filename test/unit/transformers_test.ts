@@ -33,25 +33,25 @@ describe('tModel', () => {
     expect(
       tModel(
         new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
-        'models/gemini-1.5-flash-exp',
+        'models/gemini-2.0-flash',
       ),
-    ).toEqual('models/gemini-1.5-flash-exp');
+    ).toEqual('models/gemini-2.0-flash');
   });
   it('returns model name for MLDev starting with tunedModels', () => {
     expect(
       tModel(
         new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
-        'tunedModels/gemini-1.5-flash-exp',
+        'tunedModels/gemini-2.0-flash',
       ),
-    ).toEqual('tunedModels/gemini-1.5-flash-exp');
+    ).toEqual('tunedModels/gemini-2.0-flash');
   });
   it('returns model prefix for MLDev', () => {
     expect(
       tModel(
         new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
-        'gemini-1.5-flash-exp',
+        'gemini-2.0-flash',
       ),
-    ).toEqual('models/gemini-1.5-flash-exp');
+    ).toEqual('models/gemini-2.0-flash');
   });
   it('returns model name for Vertex starting with publishers', () => {
     expect(
@@ -61,9 +61,9 @@ describe('tModel', () => {
           vertexai: true,
           uploader: new CrossUploader(),
         }),
-        'publishers/gemini-1.5-flash-exp',
+        'publishers/gemini-2.0-flash',
       ),
-    ).toEqual('publishers/gemini-1.5-flash-exp');
+    ).toEqual('publishers/gemini-2.0-flash');
   });
   it('returns model name for Vertex starting with projects', () => {
     expect(
@@ -73,9 +73,9 @@ describe('tModel', () => {
           vertexai: true,
           uploader: new CrossUploader(),
         }),
-        'projects/gemini-1.5-flash-exp',
+        'projects/gemini-2.0-flash',
       ),
-    ).toEqual('projects/gemini-1.5-flash-exp');
+    ).toEqual('projects/gemini-2.0-flash');
   });
   it('returns model name for Vertex starting with models', () => {
     expect(
@@ -85,9 +85,9 @@ describe('tModel', () => {
           vertexai: true,
           uploader: new CrossUploader(),
         }),
-        'models/gemini-1.5-flash-exp',
+        'models/gemini-2.0-flash',
       ),
-    ).toEqual('models/gemini-1.5-flash-exp');
+    ).toEqual('models/gemini-2.0-flash');
   });
   it('returns publisher prefix for Vertex with slash', () => {
     expect(
@@ -97,9 +97,9 @@ describe('tModel', () => {
           vertexai: true,
           uploader: new CrossUploader(),
         }),
-        'google/gemini-1.5-flash-exp',
+        'google/gemini-2.0-flash',
       ),
-    ).toEqual('publishers/google/models/gemini-1.5-flash-exp');
+    ).toEqual('publishers/google/models/gemini-2.0-flash');
   });
   it('returns publisher prefix for Vertex', () => {
     expect(
@@ -109,9 +109,9 @@ describe('tModel', () => {
           vertexai: true,
           uploader: new CrossUploader(),
         }),
-        'gemini-1.5-flash-exp',
+        'gemini-2.0-flash',
       ),
-    ).toEqual('publishers/google/models/gemini-1.5-flash-exp');
+    ).toEqual('publishers/google/models/gemini-2.0-flash');
   });
 });
 

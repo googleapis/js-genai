@@ -15,7 +15,7 @@ async function generateContentFromMLDev() {
   const ai = new GoogleGenAI({vertexai: false, apiKey: GEMINI_API_KEY});
 
   const response = await ai.models.generateContentStream({
-    model: 'gemini-2.0-flash-exp',
+    model: 'gemini-2.0-flash',
     contents:
       'Generate a story about a cute baby turtle in a 3d digital art style. For each scene, generate an image.',
     config: {
@@ -47,7 +47,7 @@ async function generateContentFromVertexAI() {
   });
 
   const response = await ai.models.generateContentStream({
-    model: 'gemini-2.0-flash-exp',
+    model: 'gemini-2.0-flash',
     contents:
       'Generate a story about a cute baby turtle in a 3d digital art style. For each scene, generate an image.',
     config: {

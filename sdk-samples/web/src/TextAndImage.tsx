@@ -47,7 +47,7 @@ export default function TextAndImage({
     contents.push(createPartFromUri(inputImage.uri, inputImage.mimeType));
     try {
       const response = await ai.models.generateContent({
-        model: 'gemini-2.0-flash-exp',
+        model: 'gemini-2.0-flash',
         contents: contents,
         config: {
           responseModalities: ['image', 'text'],
