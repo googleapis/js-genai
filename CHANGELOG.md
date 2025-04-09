@@ -1,6 +1,33 @@
 # Changelog
 
 
+## [0.7.1](https://github.com/googleapis/js-genai/compare/v0.7.0...v0.7.1) (2025-04-09)
+
+
+### Features
+
+* Add domain to Web GroundingChunk ([dc56670](https://github.com/googleapis/js-genai/commit/dc56670247463694903e039e6a241a18c1fbc2cb))
+* Add generationComplete notification to LiveServerContent ([4d9811b](https://github.com/googleapis/js-genai/commit/4d9811b452455d5e3462de4a21964a037c9e42bf))
+* add session resumption to live module ([b5c6975](https://github.com/googleapis/js-genai/commit/b5c69758819c0313cdd883d07dc5e18891d46cd2))
+* add session resumption. ([fff2b66](https://github.com/googleapis/js-genai/commit/fff2b66470fabcca4959aa4cfc80e350d776b91d))
+* Add thinking_budget to ThinkingConfig for Gemini Thinking Models ([76e0e18](https://github.com/googleapis/js-genai/commit/76e0e183dea9dee7dd3ea14ed3dff3970d94a3c5))
+* Add traffic type to GenerateContentResponseUsageMetadata ([d84156e](https://github.com/googleapis/js-genai/commit/d84156e0e0dfa40cdf0e0ebe3d9530acbf26251d))
+* Add types for configurable speech detection ([fc861bc](https://github.com/googleapis/js-genai/commit/fc861bc2c01b9c391fdcf7a3aa1abff3a9ec809b))
+* Add types to support continuous sessions with a sliding window ([0fd8256](https://github.com/googleapis/js-genai/commit/0fd825664b203e9594e2a5ea8524c8aefc5f7733))
+* Add UsageMetadata to LiveServerMessage ([67b34f7](https://github.com/googleapis/js-genai/commit/67b34f70dd4433883feabf4a8d6a44a3dcb9b629))
+* expose generation_complete, input/output_transcription & input/output_audio_transcription to SDK for Vertex Live API ([1e8be50](https://github.com/googleapis/js-genai/commit/1e8be506f635b910d421ef9b4d6f1785a4c94935))
+* merge GenerationConfig into LiveConnectConfig ([d25d77d](https://github.com/googleapis/js-genai/commit/d25d77d442ab7e2408c59d0e0c88f02eeaa31d2f))
+* Populate X-Server-Timeout header when a request timeout is set. ([6f00495](https://github.com/googleapis/js-genai/commit/6f0049540998f6344819177ccabccf9961d3b200))
+* support media resolution ([9ebd58b](https://github.com/googleapis/js-genai/commit/9ebd58b8552a55e30f9f01a1ca34b5c3b8c2a44d))
+* Support models.get() for getting model information ([fc62381](https://github.com/googleapis/js-genai/commit/fc62381883db7b837640038d320adb563cbb83e3))
+* Update Live converters to pass along configurable speech detection parameters ([8301fa2](https://github.com/googleapis/js-genai/commit/8301fa2bd8e4d1312212ac3b47286ca69ef5cdf2))
+* Update Live converters to pass along params to support continuous sessions with a sliding window ([3814d92](https://github.com/googleapis/js-genai/commit/3814d929a8a8a0eb37ccc71f575d49b90bda8e02))
+
+
+### Bug Fixes
+
+* Use authentication headers as provided by google-auth-library ([94b11a1](https://github.com/googleapis/js-genai/commit/94b11a1b6e62c60bb03b3d49c150bccf0b1d97c7))
+
 ## [0.7.0](https://github.com/googleapis/js-genai/compare/v0.6.1...v0.7.0) (2025-03-27)
 
 
