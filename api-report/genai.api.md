@@ -586,6 +586,7 @@ export class GenerateContentResponse {
     candidates?: Candidate[];
     get codeExecutionResult(): string | undefined;
     createTime?: string;
+    get data(): string | undefined;
     get executableCode(): string | undefined;
     get functionCalls(): FunctionCall[] | undefined;
     modelVersion?: string;

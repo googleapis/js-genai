@@ -116,6 +116,113 @@ describe('GenerateContentResponse.text', () => {
   });
 });
 
+describe('GenerateContentResponse.data', () => {
+  it('should return undefined when candidates is undefined', () => {
+    const response = new GenerateContentResponse();
+    expect(response.data).toBeUndefined();
+  });
+
+  it('should return undefined when candidates is an empty array', () => {
+    const response = new GenerateContentResponse();
+    response.candidates = [];
+    expect(response.data).toBeUndefined();
+  });
+
+  it('should return undefined when content is undefined', () => {
+    const response = new GenerateContentResponse();
+    response.candidates = [{} as Candidate];
+    expect(response.data).toBeUndefined();
+  });
+
+  it('should return undefined when content.parts is undefined', () => {
+    const response = new GenerateContentResponse();
+    response.candidates = [{content: {} as Content} as Candidate];
+    expect(response.data).toBeUndefined();
+  });
+
+  it('should return undefined when content.parts is empty array', () => {
+    const response = new GenerateContentResponse();
+    response.candidates = [{content: {parts: []}} as Candidate];
+    expect(response.data).toBeUndefined();
+  });
+
+  it('should use first candidate when there are multiple candidates', () => {
+    const response = new GenerateContentResponse();
+    response.candidates = [
+      {
+        content: {
+          parts: [
+            {inlineData: {data: 'SGVsbG8gV29ybGQh', mimeType: 'text/plain'}},
+          ],
+        },
+      } as Candidate,
+      {
+        content: {
+          parts: [
+            {
+              inlineData: {
+                data: 'WW91IGFyZSBhd2Vzb21lIQ==',
+                mimeType: 'text/plain',
+              },
+            },
+          ],
+        },
+      } as Candidate,
+    ];
+    spyOn(console, 'warn');
+
+    expect(response.data).toBe('SGVsbG8gV29ybGQh');
+    expect(console.warn).toHaveBeenCalledWith(
+      'there are multiple candidates in the response, returning data from the first one.',
+    );
+  });
+
+  it('should return concatenated inline data from valid data parts', () => {
+    const response = new GenerateContentResponse();
+    response.candidates = [
+      {
+        content: {
+          parts: [
+            {inlineData: {data: 'SGVsbG8gV29ybGQh', mimeType: 'text/plain'}},
+            {
+              inlineData: {
+                data: 'WW91IGFyZSBhd2Vzb21lIQ==',
+                mimeType: 'text/plain',
+              },
+            },
+          ],
+        },
+      } as Candidate,
+    ];
+    expect(response.data).toBe('SGVsbG8gV29ybGQhWW91IGFyZSBhd2Vzb21lIQ==');
+  });
+
+  it('should log a warning when parts contain invalid fields', () => {
+    const response = new GenerateContentResponse();
+    response.candidates = [
+      {
+        content: {
+          parts: [
+            {text: 'Hello '},
+            {
+              inlineData: {
+                data: 'SGVsbG8gV29ybGQh',
+                mimeType: 'text/plain',
+              },
+            },
+          ],
+        },
+      } as Candidate,
+    ];
+    spyOn(console, 'warn');
+
+    expect(response.data).toEqual('SGVsbG8gV29ybGQh');
+    expect(console.warn).toHaveBeenCalledWith(
+      'there are non-data parts text in the response, returning concatenation of all data parts. Please refer to the non data parts for a full response from model.',
+    );
+  });
+});
+
 describe('GenerateContentResponse.functionCalls', () => {
   it('should return undefined when candidates is undefined', () => {
     const response = new GenerateContentResponse();

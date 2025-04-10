@@ -1167,6 +1167,48 @@ export class GenerateContentResponse {
   }
 
   /**
+   * Returns the concatenation of all inline data parts from the first candidate
+   * in the response.
+   *
+   * @remarks
+   * If there are multiple candidates in the response, the inline data from the
+   * first one will be returned. If there are non-inline data parts in the
+   * response, the concatenation of all inline data parts will be returned, and
+   * a warning will be logged.
+   */
+  get data(): string | undefined {
+    if (this.candidates?.[0]?.content?.parts?.length === 0) {
+      return undefined;
+    }
+    if (this.candidates && this.candidates.length > 1) {
+      console.warn(
+        'there are multiple candidates in the response, returning data from the first one.',
+      );
+    }
+    let data = '';
+    const nonDataParts = [];
+    for (const part of this.candidates?.[0]?.content?.parts ?? []) {
+      for (const [fieldName, fieldValue] of Object.entries(part)) {
+        if (
+          fieldName !== 'inlineData' &&
+          (fieldValue !== null || fieldValue !== undefined)
+        ) {
+          nonDataParts.push(fieldName);
+        }
+      }
+      if (part.inlineData && typeof part.inlineData.data === 'string') {
+        data += atob(part.inlineData.data);
+      }
+    }
+    if (nonDataParts.length > 0) {
+      console.warn(
+        `there are non-data parts ${nonDataParts} in the response, returning concatenation of all data parts. Please refer to the non data parts for a full response from model.`,
+      );
+    }
+    return data.length > 0 ? btoa(data) : undefined;
+  }
+
+  /**
    * Returns the function calls from the first candidate in the response.
    *
    * @remarks
