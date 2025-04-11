@@ -20,8 +20,8 @@ export function zodToGoogleGenAISchema(
 }
 
 function processJsonSchema(
-  isVertexAI: boolean,
-  zodSchema: Record<string, unknown>,
+  _isVertexAI: boolean,
+  _zodSchema: Record<string, unknown>,
 ): Schema {
   // TODO(b/398409940): implement this function in a follow up CL.
   throw new Error(
