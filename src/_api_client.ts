@@ -665,7 +665,7 @@ async function throwErrorIfNotOK(response: Response | undefined) {
     } else {
       errorBody = {
         error: {
-          message: 'exception parsing response',
+          message: await response.text(),
           code: response.status,
           status: response.statusText,
         },
