@@ -604,6 +604,15 @@ export function generateContentConfigToMldev(
     throw new Error('routingConfig parameter is not supported in Gemini API.');
   }
 
+  if (
+    common.getValueByPath(fromObject, ['generateContentModelConfig']) !==
+    undefined
+  ) {
+    throw new Error(
+      'generateContentModelConfig parameter is not supported in Gemini API.',
+    );
+  }
+
   const fromSafetySettings = common.getValueByPath(fromObject, [
     'safetySettings',
   ]);
@@ -1891,6 +1900,17 @@ export function generateContentConfigToVertex(
   ]);
   if (fromRoutingConfig != null) {
     common.setValueByPath(toObject, ['routingConfig'], fromRoutingConfig);
+  }
+
+  const fromGenerateContentModelConfig = common.getValueByPath(fromObject, [
+    'generateContentModelConfig',
+  ]);
+  if (fromGenerateContentModelConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['modelConfig'],
+      fromGenerateContentModelConfig,
+    );
   }
 
   const fromSafetySettings = common.getValueByPath(fromObject, [

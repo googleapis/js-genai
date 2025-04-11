@@ -64,6 +64,14 @@ export enum Mode {
   MODE_DYNAMIC = 'MODE_DYNAMIC',
 }
 
+/** Options for feature selection preference. */
+export enum FeatureSelectionPreference {
+  FEATURE_SELECTION_PREFERENCE_UNSPECIFIED = 'FEATURE_SELECTION_PREFERENCE_UNSPECIFIED',
+  PRIORITIZE_QUALITY = 'PRIORITIZE_QUALITY',
+  BALANCED = 'BALANCED',
+  PRIORITIZE_COST = 'PRIORITIZE_COST',
+}
+
 /** Output only. The reason why the model stopped generating tokens.
 
   If empty, the model has not stopped generating the tokens.
@@ -787,6 +795,12 @@ export declare interface GenerationConfigRoutingConfig {
   manualMode?: GenerationConfigRoutingConfigManualRoutingMode;
 }
 
+/** Config for model selection. */
+export declare interface GenerationConfigModelConfig {
+  /** Options for feature selection preference. */
+  featureSelectionPreference?: FeatureSelectionPreference;
+}
+
 /** Optional model configuration parameters.
 
   For more information, see `Content generation parameters
@@ -857,9 +871,13 @@ export declare interface GenerateContentConfig {
   /** Schema that the generated candidate text must adhere to.
    */
   responseSchema?: SchemaUnion;
-  /** Configuration for model router requests.
-   */
+  /** Deprecated. Configuration for model router requests. This field is
+      deprecated, please use the `generate_content_model_config` field instead.
+       */
   routingConfig?: GenerationConfigRoutingConfig;
+  /** Configuration for model selection.
+   */
+  generateContentModelConfig?: GenerationConfigModelConfig;
   /** Safety settings in the request to block unsafe content in the
       response.
        */
