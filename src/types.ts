@@ -1372,6 +1372,9 @@ export class GenerateContentResponse {
   }
 }
 
+import {z} from 'zod';
+export type SchemaUnion = Schema | z.ZodObject<z.ZodRawShape>;
+
 export /** Optional parameters for the embed_content method. */
 declare interface EmbedContentConfig {
   /** Used to override HTTP request options. */
@@ -2832,8 +2835,6 @@ export type PartListUnion = PartUnion[] | PartUnion;
 export type ContentUnion = Content | PartUnion[] | PartUnion;
 
 export type ContentListUnion = Content | Content[] | PartUnion | PartUnion[];
-
-export type SchemaUnion = Schema;
 
 export type SpeechConfigUnion = SpeechConfig | string;
 
