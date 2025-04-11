@@ -35,7 +35,7 @@ export class Operations extends BaseModule {
 
     if (this.apiClient.isVertexAI()) {
       const resourceName = operation.name.split('/operations/')[0];
-      var httpOptions: types.HttpOptions | undefined = undefined;
+      let httpOptions: types.HttpOptions | undefined = undefined;
 
       if (config && 'httpOptions' in config) {
         httpOptions = config.httpOptions;

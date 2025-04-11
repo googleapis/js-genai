@@ -24,7 +24,7 @@ jobs:
     - name: Get PR lint count
       id: pr-lint-count
       run: |
-        PR_LINT_COUNT=$(npm run lint | tail -n 2 | head -n 1 | awk '{print $2 + 0}')
+        PR_LINT_COUNT=$(npm run lint | tail -n 3 | head -n 2 | grep -oP '✖ \K\d+' || echo 0)
         echo "pr_count=$PR_LINT_COUNT" >> $GITHUB_OUTPUT
     - name: Checkout Main Branch
       uses: actions/checkout@v4
@@ -39,7 +39,7 @@ jobs:
     - name: Get main lint count
       id: main-lint-count
       run: |
-        MAIN_LINT_COUNT=$(npm run lint | tail -n 2 | head -n 1 | awk '{print $2 + 0}')
+        MAIN_LINT_COUNT=$(npm run lint | tail -n 3 | head -n 2 | grep -oP '✖ \K\d+' || echo 0)
         echo "main_count=$MAIN_LINT_COUNT" >> $GITHUB_OUTPUT
     - name: Compare Lint Counts
       run: |
