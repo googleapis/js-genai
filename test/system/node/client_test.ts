@@ -6,8 +6,10 @@
 
 import {fail} from 'assert';
 import {GoogleAuthOptions} from 'google-auth-library';
+import {z} from 'zod';
 
 import {GoogleGenAI} from '../../../src/node/node_client';
+import {zodToGoogleGenAISchema} from '../../../src/schema_helper';
 import {GenerateContentResponse, Part} from '../../../src/types';
 import {createZeroFilledTempFile} from '../../_generate_test_file';
 
@@ -151,6 +153,68 @@ describe('generateContent', () => {
         );
       }
     }
+  });
+  it('ML Dev should generate content with given zod schema', async () => {
+    const innerObject = z.object({
+      innerString: z.string(),
+      innerNumber: z.number(),
+    });
+    const nestedSchema = z.object({
+      simpleString: z.string().describe('This is a simple string'),
+      stringDatatime: z.string().datetime(),
+      stringWithEnum: z.enum(['enumvalue1', 'enumvalue2', 'enumvalue3']),
+      stringWithLength: z.string().min(1).max(10),
+      simpleNumber: z.number(),
+      simpleInteger: z.number().int(),
+      integerInt64: z.bigint(),
+      numberWithMinMax: z.number().min(1).max(10),
+      simpleBoolean: z.boolean(),
+      inner: innerObject,
+    });
+    const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+    const response = await client.models.generateContent({
+      model: 'gemini-1.5-flash',
+      contents: 'populate the following object',
+      config: {
+        responseMimeType: 'application/json',
+        responseSchema: zodToGoogleGenAISchema(client.vertexai, nestedSchema),
+      },
+    });
+    console.log('mldev response', response.candidates![0].content);
+  });
+
+  it('Vertex AI should generate content with given zod schema', async () => {
+    const innerObject = z.object({
+      innerString: z.string(),
+      innerNumber: z.number(),
+    });
+    const nestedSchema = z.object({
+      simpleString: z.string().default('default'),
+      stringDatetime: z.string().datetime(),
+      stringWithEnum: z.enum(['enumvalue1', 'enumvalue2', 'enumvalue3']),
+      stringWithLength: z.string().min(1).max(10),
+      simpleNumber: z.number(),
+      simpleInteger: z.number().int(),
+      integerInt64: z.bigint(),
+      numberWithMinMax: z.number().min(1).max(10),
+      simpleBoolean: z.boolean(),
+      inner: innerObject,
+    });
+
+    const client = new GoogleGenAI({
+      vertexai: true,
+      project: GOOGLE_CLOUD_PROJECT,
+      location: GOOGLE_CLOUD_LOCATION,
+    });
+    const response = await client.models.generateContent({
+      model: 'gemini-1.5-flash',
+      contents: 'populate the following object',
+      config: {
+        responseMimeType: 'application/json',
+        responseSchema: zodToGoogleGenAISchema(client.vertexai, nestedSchema),
+      },
+    });
+    console.log('vertex ai response', response.candidates![0].content);
   });
 });
 
