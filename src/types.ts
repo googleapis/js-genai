@@ -2576,6 +2576,9 @@ export declare interface ContextWindowCompressionConfig {
   slidingWindow?: SlidingWindow;
 }
 
+/** The audio transcription configuration in Setup. */
+export declare interface AudioTranscriptionConfig {}
+
 /** Message contains configuration that will apply for the duration of the streaming session. */
 export declare interface LiveClientSetup {
   /** 
@@ -2694,9 +2697,6 @@ export declare interface LiveClientMessage {
   /** Response to a `ToolCallMessage` received from the server. */
   toolResponse?: LiveClientToolResponse;
 }
-
-/** The audio transcription configuration in Setup. */
-export declare interface AudioTranscriptionConfig {}
 
 /** Session config for the API connection. */
 export declare interface LiveConnectConfig {

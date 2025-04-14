@@ -58,39 +58,6 @@ async function main() {
 main();
 ```
 
-## Web quickstart
-
-The package contents are also available unzipped in the
-`package/` directory of the bucket, so an equivalent web example is:
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Using My Package</title>
-  </head>
-  <body>
-    <script type="module">
-      import {GoogleGenAI} from 'https://cdn.jsdelivr.net/npm/@google/genai@latest/+esm'
-
-          const ai = new GoogleGenAI({apiKey:"GEMINI_API_KEY"});
-
-          async function main() {
-            const response = await ai.models.generateContent({
-              model: 'gemini-2.0-flash-001',
-              contents: 'Why is the sky blue?',
-            });
-            console.log(response.text);
-          }
-
-          main();
-    </script>
-  </body>
-</html>
-```
-
 ## Initialization
 
 The Google Gen AI SDK provides support for both the
