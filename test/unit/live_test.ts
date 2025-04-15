@@ -211,20 +211,18 @@ describe('live', () => {
       {},
       {
         onopen: function () {},
-        onmessage: function (e: MessageEvent) {},
-        onerror: function (e: ErrorEvent) {},
-        onclose: function (e: CloseEvent) {},
+        onmessage: function (_e: MessageEvent) {},
+        onerror: function (_e: ErrorEvent) {},
+        onclose: function (_e: CloseEvent) {},
       },
     );
     spyOn(websocket, 'connect').and.callThrough();
-    let websocketSpy = spyOn(websocket, 'send').and.callThrough();
-    const websocketFactorySpy = spyOn(websocketFactory, 'create').and.callFake(
+    spyOn(websocketFactory, 'create').and.callFake(
       (url, headers, callbacks) => {
         // Update the websocket spy instance with callbacks provided by
         // the websocket factory.
         websocket = new FakeWebSocket(url, headers, callbacks);
         spyOn(websocket, 'connect').and.callThrough();
-        websocketSpy = spyOn(websocket, 'send').and.callThrough();
         return websocket;
       },
     );
@@ -270,14 +268,14 @@ describe('live', () => {
       {},
       {
         onopen: function () {},
-        onmessage: function (e: MessageEvent) {},
-        onerror: function (e: ErrorEvent) {},
-        onclose: function (e: CloseEvent) {},
+        onmessage: function (_e: MessageEvent) {},
+        onerror: function (_e: ErrorEvent) {},
+        onclose: function (_e: CloseEvent) {},
       },
     );
     spyOn(websocket, 'connect').and.callThrough();
     let websocketSpy = spyOn(websocket, 'send').and.callThrough();
-    const websocketFactorySpy = spyOn(websocketFactory, 'create').and.callFake(
+    spyOn(websocketFactory, 'create').and.callFake(
       (url, headers, callbacks) => {
         // Update the websocket spy instance with callbacks provided by
         // the websocket factory.
@@ -327,14 +325,14 @@ describe('live', () => {
       {},
       {
         onopen: function () {},
-        onmessage: function (e: MessageEvent) {},
-        onerror: function (e: ErrorEvent) {},
-        onclose: function (e: CloseEvent) {},
+        onmessage: function (_e: MessageEvent) {},
+        onerror: function (_e: ErrorEvent) {},
+        onclose: function (_e: CloseEvent) {},
       },
     );
     spyOn(websocket, 'connect').and.callThrough();
     let websocketSpy = spyOn(websocket, 'send').and.callThrough();
-    const websocketFactorySpy = spyOn(websocketFactory, 'create').and.callFake(
+    spyOn(websocketFactory, 'create').and.callFake(
       (url, headers, callbacks) => {
         // Update the websocket spy instance with callbacks provided by
         // the websocket factory.
@@ -386,14 +384,14 @@ describe('live', () => {
       {},
       {
         onopen: function () {},
-        onmessage: function (e: MessageEvent) {},
-        onerror: function (e: ErrorEvent) {},
-        onclose: function (e: CloseEvent) {},
+        onmessage: function (_e: MessageEvent) {},
+        onerror: function (_e: ErrorEvent) {},
+        onclose: function (_e: CloseEvent) {},
       },
     );
     spyOn(websocket, 'connect').and.callThrough();
     let websocketSpy = spyOn(websocket, 'send').and.callThrough();
-    const websocketFactorySpy = spyOn(websocketFactory, 'create').and.callFake(
+    spyOn(websocketFactory, 'create').and.callFake(
       (url, headers, callbacks) => {
         // Update the websocket spy instance with callbacks provided by
         // the websocket factory.
@@ -448,14 +446,14 @@ describe('live', () => {
       {},
       {
         onopen: function () {},
-        onmessage: function (e: MessageEvent) {},
-        onerror: function (e: ErrorEvent) {},
-        onclose: function (e: CloseEvent) {},
+        onmessage: function (_e: MessageEvent) {},
+        onerror: function (_e: ErrorEvent) {},
+        onclose: function (_e: CloseEvent) {},
       },
     );
     spyOn(websocket, 'connect').and.callThrough();
     let websocketSpy = spyOn(websocket, 'send').and.callThrough();
-    const websocketFactorySpy = spyOn(websocketFactory, 'create').and.callFake(
+    spyOn(websocketFactory, 'create').and.callFake(
       (url, headers, callbacks) => {
         // Update the websocket spy instance with callbacks provided by
         // the websocket factory.
@@ -501,7 +499,7 @@ describe('live', () => {
     const websocketFactory = new FakeWebSocketFactory();
     const live = new Live(apiClient, new FakeAuth(), websocketFactory);
 
-    const websocketFactorySpy = spyOn(websocketFactory, 'create').and.callFake(
+    spyOn(websocketFactory, 'create').and.callFake(
       (url, headers, callbacks) => {
         const websocket = new FakeWebSocket(url, headers, callbacks);
         websocket.send('{"goAway":{"timeLeft":"10s"}}');
@@ -511,7 +509,7 @@ describe('live', () => {
 
     const incomingMessages: types.LiveServerMessage[] = [];
 
-    const session = await live.connect({
+    await live.connect({
       model: 'models/gemini-2.0-flash-live-001',
       callbacks: {
         onmessage: function (e: types.LiveServerMessage) {
@@ -535,7 +533,7 @@ describe('live', () => {
     const websocketFactory = new FakeWebSocketFactory();
     const live = new Live(apiClient, new FakeAuth(), websocketFactory);
 
-    const websocketFactorySpy = spyOn(websocketFactory, 'create').and.callFake(
+    spyOn(websocketFactory, 'create').and.callFake(
       (url, headers, callbacks) => {
         const websocket = new FakeWebSocket(url, headers, callbacks);
         websocket.send(
@@ -547,7 +545,7 @@ describe('live', () => {
 
     const incomingMessages: types.LiveServerMessage[] = [];
 
-    const session = await live.connect({
+    await live.connect({
       model: 'models/gemini-2.0-flash-live-001',
       callbacks: {
         onmessage: function (e: types.LiveServerMessage) {

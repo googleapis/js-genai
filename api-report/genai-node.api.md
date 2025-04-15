@@ -402,6 +402,18 @@ export interface ExecutableCode {
     language?: Language;
 }
 
+// @public
+export enum FeatureSelectionPreference {
+    // (undocumented)
+    BALANCED = "BALANCED",
+    // (undocumented)
+    FEATURE_SELECTION_PREFERENCE_UNSPECIFIED = "FEATURE_SELECTION_PREFERENCE_UNSPECIFIED",
+    // (undocumented)
+    PRIORITIZE_COST = "PRIORITIZE_COST",
+    // (undocumented)
+    PRIORITIZE_QUALITY = "PRIORITIZE_QUALITY"
+}
+
 // @public (undocumented)
 export interface FetchPredictOperationConfig {
     httpOptions?: HttpOptions;
@@ -555,6 +567,7 @@ export interface GenerateContentConfig {
     logprobs?: number;
     maxOutputTokens?: number;
     mediaResolution?: MediaResolution;
+    modelSelectionConfig?: ModelSelectionConfig;
     presencePenalty?: number;
     responseLogprobs?: boolean;
     responseMimeType?: string;
@@ -1288,6 +1301,11 @@ export class Models extends BaseModule {
     generateImages: (params: types.GenerateImagesParameters) => Promise<types.GenerateImagesResponse>;
     generateVideos(params: types.GenerateVideosParameters): Promise<types.GenerateVideosOperation>;
     get(params: types.GetModelParameters): Promise<types.Model>;
+}
+
+// @public
+export interface ModelSelectionConfig {
+    featureSelectionPreference?: FeatureSelectionPreference;
 }
 
 // @public

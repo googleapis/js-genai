@@ -132,6 +132,14 @@ export enum MediaResolution {
   MEDIA_RESOLUTION_HIGH = 'MEDIA_RESOLUTION_HIGH',
 }
 
+/** Options for feature selection preference. */
+export enum FeatureSelectionPreference {
+  FEATURE_SELECTION_PREFERENCE_UNSPECIFIED = 'FEATURE_SELECTION_PREFERENCE_UNSPECIFIED',
+  PRIORITIZE_QUALITY = 'PRIORITIZE_QUALITY',
+  BALANCED = 'BALANCED',
+  PRIORITIZE_COST = 'PRIORITIZE_COST',
+}
+
 /** Config for the dynamic retrieval config mode. */
 export enum DynamicRetrievalConfigMode {
   MODE_UNSPECIFIED = 'MODE_UNSPECIFIED',
@@ -560,6 +568,12 @@ export declare interface Schema {
   type?: Type;
 }
 
+/** Config for model selection. */
+export declare interface ModelSelectionConfig {
+  /** Options for feature selection preference. */
+  featureSelectionPreference?: FeatureSelectionPreference;
+}
+
 /** Safety settings. */
 export declare interface SafetySetting {
   /** Determines if the harm block method uses probability or probability
@@ -860,6 +874,9 @@ export declare interface GenerateContentConfig {
   /** Configuration for model router requests.
    */
   routingConfig?: GenerationConfigRoutingConfig;
+  /** Configuration for model selection.
+   */
+  modelSelectionConfig?: ModelSelectionConfig;
   /** Safety settings in the request to block unsafe content in the
       response.
        */

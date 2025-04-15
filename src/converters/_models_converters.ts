@@ -217,6 +217,24 @@ export function schemaToMldev(
   return toObject;
 }
 
+export function modelSelectionConfigToMldev(
+  apiClient: ApiClient,
+  fromObject: types.ModelSelectionConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  if (
+    common.getValueByPath(fromObject, ['featureSelectionPreference']) !==
+    undefined
+  ) {
+    throw new Error(
+      'featureSelectionPreference parameter is not supported in Gemini API.',
+    );
+  }
+
+  return toObject;
+}
+
 export function safetySettingToMldev(
   apiClient: ApiClient,
   fromObject: types.SafetySetting,
@@ -602,6 +620,14 @@ export function generateContentConfigToMldev(
 
   if (common.getValueByPath(fromObject, ['routingConfig']) !== undefined) {
     throw new Error('routingConfig parameter is not supported in Gemini API.');
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['modelSelectionConfig']) !== undefined
+  ) {
+    throw new Error(
+      'modelSelectionConfig parameter is not supported in Gemini API.',
+    );
   }
 
   const fromSafetySettings = common.getValueByPath(fromObject, [
@@ -1496,6 +1522,26 @@ export function schemaToVertex(
   return toObject;
 }
 
+export function modelSelectionConfigToVertex(
+  apiClient: ApiClient,
+  fromObject: types.ModelSelectionConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromFeatureSelectionPreference = common.getValueByPath(fromObject, [
+    'featureSelectionPreference',
+  ]);
+  if (fromFeatureSelectionPreference != null) {
+    common.setValueByPath(
+      toObject,
+      ['featureSelectionPreference'],
+      fromFeatureSelectionPreference,
+    );
+  }
+
+  return toObject;
+}
+
 export function safetySettingToVertex(
   apiClient: ApiClient,
   fromObject: types.SafetySetting,
@@ -1891,6 +1937,17 @@ export function generateContentConfigToVertex(
   ]);
   if (fromRoutingConfig != null) {
     common.setValueByPath(toObject, ['routingConfig'], fromRoutingConfig);
+  }
+
+  const fromModelSelectionConfig = common.getValueByPath(fromObject, [
+    'modelSelectionConfig',
+  ]);
+  if (fromModelSelectionConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['modelConfig'],
+      modelSelectionConfigToVertex(apiClient, fromModelSelectionConfig),
+    );
   }
 
   const fromSafetySettings = common.getValueByPath(fromObject, [
