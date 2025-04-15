@@ -38,6 +38,14 @@ export interface AutomaticActivityDetection {
 }
 
 // @public
+export interface BaseClient {
+    // Warning: (ae-forgotten-export) The symbol "ApiClient" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    apiClient: ApiClient;
+}
+
+// @public
 interface Blob_2 {
     data?: string;
     mimeType?: string;
@@ -82,7 +90,6 @@ export interface CachedContentUsageMetadata {
 //
 // @public (undocumented)
 export class Caches extends BaseModule {
-    // Warning: (ae-forgotten-export) The symbol "ApiClient" needs to be exported by the entry point index.d.ts
     constructor(apiClient: ApiClient);
     create(params: types.CreateCachedContentParameters): Promise<types.CachedContent>;
     delete(params: types.DeleteCachedContentParameters): Promise<types.DeleteCachedContentResponse>;
@@ -816,6 +823,13 @@ export class GoogleGenAI {
     readonly operations: Operations;
     // (undocumented)
     readonly vertexai: boolean;
+}
+
+// @public
+export class GoogleGenAiClient implements BaseClient {
+    constructor(options: GoogleGenAIOptions);
+    // (undocumented)
+    readonly apiClient: ApiClient;
 }
 
 // @public
