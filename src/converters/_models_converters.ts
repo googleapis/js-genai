@@ -21,11 +21,6 @@ export function partToMldev(
     throw new Error('videoMetadata parameter is not supported in Gemini API.');
   }
 
-  const fromThought = common.getValueByPath(fromObject, ['thought']);
-  if (fromThought != null) {
-    common.setValueByPath(toObject, ['thought'], fromThought);
-  }
-
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
     'codeExecutionResult',
   ]);
@@ -69,6 +64,11 @@ export function partToMldev(
   const fromText = common.getValueByPath(fromObject, ['text']);
   if (fromText != null) {
     common.setValueByPath(toObject, ['text'], fromText);
+  }
+
+  const fromThought = common.getValueByPath(fromObject, ['thought']);
+  if (fromThought != null) {
+    common.setValueByPath(toObject, ['thought'], fromThought);
   }
 
   return toObject;
@@ -342,13 +342,13 @@ export function toolToMldev(
     }
   }
 
-  if (common.getValueByPath(fromObject, ['retrieval']) !== undefined) {
-    throw new Error('retrieval parameter is not supported in Gemini API.');
-  }
-
   const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
   if (fromGoogleSearch != null) {
     common.setValueByPath(toObject, ['googleSearch'], googleSearchToMldev());
+  }
+
+  if (common.getValueByPath(fromObject, ['retrieval']) !== undefined) {
+    throw new Error('retrieval parameter is not supported in Gemini API.');
   }
 
   const fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
@@ -367,6 +367,17 @@ export function toolToMldev(
   ]);
   if (fromCodeExecution != null) {
     common.setValueByPath(toObject, ['codeExecution'], fromCodeExecution);
+  }
+
+  const fromEnterpriseWebSearch = common.getValueByPath(fromObject, [
+    'enterpriseWebSearch',
+  ]);
+  if (fromEnterpriseWebSearch != null) {
+    common.setValueByPath(
+      toObject,
+      ['enterpriseWebSearch'],
+      fromEnterpriseWebSearch,
+    );
   }
 
   return toObject;
@@ -414,38 +425,11 @@ export function toolConfigToMldev(
     );
   }
 
-  return toObject;
-}
-
-export function prebuiltVoiceConfigToMldev(
-  apiClient: ApiClient,
-  fromObject: types.PrebuiltVoiceConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromVoiceName = common.getValueByPath(fromObject, ['voiceName']);
-  if (fromVoiceName != null) {
-    common.setValueByPath(toObject, ['voiceName'], fromVoiceName);
-  }
-
-  return toObject;
-}
-
-export function voiceConfigToMldev(
-  apiClient: ApiClient,
-  fromObject: types.VoiceConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromPrebuiltVoiceConfig = common.getValueByPath(fromObject, [
-    'prebuiltVoiceConfig',
+  const fromRetrievalConfig = common.getValueByPath(fromObject, [
+    'retrievalConfig',
   ]);
-  if (fromPrebuiltVoiceConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['prebuiltVoiceConfig'],
-      prebuiltVoiceConfigToMldev(apiClient, fromPrebuiltVoiceConfig),
-    );
+  if (fromRetrievalConfig != null) {
+    common.setValueByPath(toObject, ['retrievalConfig'], fromRetrievalConfig);
   }
 
   return toObject;
@@ -457,18 +441,14 @@ export function speechConfigToMldev(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromVoiceConfig = common.getValueByPath(fromObject, ['voiceConfig']);
-  if (fromVoiceConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['voiceConfig'],
-      voiceConfigToMldev(apiClient, fromVoiceConfig),
-    );
-  }
-
   const fromLanguageCode = common.getValueByPath(fromObject, ['languageCode']);
   if (fromLanguageCode != null) {
     common.setValueByPath(toObject, ['languageCode'], fromLanguageCode);
+  }
+
+  const fromVoiceConfig = common.getValueByPath(fromObject, ['voiceConfig']);
+  if (fromVoiceConfig != null) {
+    common.setValueByPath(toObject, ['voiceConfig'], fromVoiceConfig);
   }
 
   return toObject;
@@ -1289,11 +1269,6 @@ export function partToVertex(
     common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
   }
 
-  const fromThought = common.getValueByPath(fromObject, ['thought']);
-  if (fromThought != null) {
-    common.setValueByPath(toObject, ['thought'], fromThought);
-  }
-
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
     'codeExecutionResult',
   ]);
@@ -1337,6 +1312,11 @@ export function partToVertex(
   const fromText = common.getValueByPath(fromObject, ['text']);
   if (fromText != null) {
     common.setValueByPath(toObject, ['text'], fromText);
+  }
+
+  const fromThought = common.getValueByPath(fromObject, ['thought']);
+  if (fromThought != null) {
+    common.setValueByPath(toObject, ['thought'], fromThought);
   }
 
   return toObject;
@@ -1627,14 +1607,14 @@ export function toolToVertex(
     }
   }
 
-  const fromRetrieval = common.getValueByPath(fromObject, ['retrieval']);
-  if (fromRetrieval != null) {
-    common.setValueByPath(toObject, ['retrieval'], fromRetrieval);
-  }
-
   const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
   if (fromGoogleSearch != null) {
     common.setValueByPath(toObject, ['googleSearch'], googleSearchToVertex());
+  }
+
+  const fromRetrieval = common.getValueByPath(fromObject, ['retrieval']);
+  if (fromRetrieval != null) {
+    common.setValueByPath(toObject, ['retrieval'], fromRetrieval);
   }
 
   const fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
@@ -1653,6 +1633,17 @@ export function toolToVertex(
   ]);
   if (fromCodeExecution != null) {
     common.setValueByPath(toObject, ['codeExecution'], fromCodeExecution);
+  }
+
+  const fromEnterpriseWebSearch = common.getValueByPath(fromObject, [
+    'enterpriseWebSearch',
+  ]);
+  if (fromEnterpriseWebSearch != null) {
+    common.setValueByPath(
+      toObject,
+      ['enterpriseWebSearch'],
+      fromEnterpriseWebSearch,
+    );
   }
 
   return toObject;
@@ -1700,38 +1691,11 @@ export function toolConfigToVertex(
     );
   }
 
-  return toObject;
-}
-
-export function prebuiltVoiceConfigToVertex(
-  apiClient: ApiClient,
-  fromObject: types.PrebuiltVoiceConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromVoiceName = common.getValueByPath(fromObject, ['voiceName']);
-  if (fromVoiceName != null) {
-    common.setValueByPath(toObject, ['voiceName'], fromVoiceName);
-  }
-
-  return toObject;
-}
-
-export function voiceConfigToVertex(
-  apiClient: ApiClient,
-  fromObject: types.VoiceConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromPrebuiltVoiceConfig = common.getValueByPath(fromObject, [
-    'prebuiltVoiceConfig',
+  const fromRetrievalConfig = common.getValueByPath(fromObject, [
+    'retrievalConfig',
   ]);
-  if (fromPrebuiltVoiceConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['prebuiltVoiceConfig'],
-      prebuiltVoiceConfigToVertex(apiClient, fromPrebuiltVoiceConfig),
-    );
+  if (fromRetrievalConfig != null) {
+    common.setValueByPath(toObject, ['retrievalConfig'], fromRetrievalConfig);
   }
 
   return toObject;
@@ -1743,18 +1707,14 @@ export function speechConfigToVertex(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromVoiceConfig = common.getValueByPath(fromObject, ['voiceConfig']);
-  if (fromVoiceConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['voiceConfig'],
-      voiceConfigToVertex(apiClient, fromVoiceConfig),
-    );
-  }
-
   const fromLanguageCode = common.getValueByPath(fromObject, ['languageCode']);
   if (fromLanguageCode != null) {
     common.setValueByPath(toObject, ['languageCode'], fromLanguageCode);
+  }
+
+  const fromVoiceConfig = common.getValueByPath(fromObject, ['voiceConfig']);
+  if (fromVoiceConfig != null) {
+    common.setValueByPath(toObject, ['voiceConfig'], fromVoiceConfig);
   }
 
   return toObject;
@@ -2693,11 +2653,6 @@ export function partFromMldev(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromThought = common.getValueByPath(fromObject, ['thought']);
-  if (fromThought != null) {
-    common.setValueByPath(toObject, ['thought'], fromThought);
-  }
-
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
     'codeExecutionResult',
   ]);
@@ -2741,6 +2696,11 @@ export function partFromMldev(
   const fromText = common.getValueByPath(fromObject, ['text']);
   if (fromText != null) {
     common.setValueByPath(toObject, ['text'], fromText);
+  }
+
+  const fromThought = common.getValueByPath(fromObject, ['thought']);
+  if (fromThought != null) {
+    common.setValueByPath(toObject, ['thought'], fromThought);
   }
 
   return toObject;
@@ -3360,11 +3320,6 @@ export function partFromVertex(
     common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
   }
 
-  const fromThought = common.getValueByPath(fromObject, ['thought']);
-  if (fromThought != null) {
-    common.setValueByPath(toObject, ['thought'], fromThought);
-  }
-
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
     'codeExecutionResult',
   ]);
@@ -3408,6 +3363,11 @@ export function partFromVertex(
   const fromText = common.getValueByPath(fromObject, ['text']);
   if (fromText != null) {
     common.setValueByPath(toObject, ['text'], fromText);
+  }
+
+  const fromThought = common.getValueByPath(fromObject, ['thought']);
+  if (fromThought != null) {
+    common.setValueByPath(toObject, ['thought'], fromThought);
   }
 
   return toObject;
