@@ -1669,6 +1669,7 @@ export class Models extends BaseModule {
     // (undocumented)
     list: (params?: types.ListModelsParameters) => Promise<Pager<types.Model>>;
     update(params: types.UpdateModelParameters): Promise<types.Model>;
+    upscaleImage: (params: types.UpscaleImageParameters) => Promise<types.UpscaleImageResponse>;
 }
 
 // @public
@@ -2348,6 +2349,11 @@ export interface UpscaleImageParameters {
     image: Image_2;
     model: string;
     upscaleFactor: string;
+}
+
+// @public (undocumented)
+export class UpscaleImageResponse {
+    generatedImages?: GeneratedImage[];
 }
 
 // @public
