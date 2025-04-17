@@ -1,6 +1,30 @@
 # Changelog
 
 
+## [0.9.0](https://github.com/googleapis/js-genai/compare/v0.8.0...v0.9.0) (2025-04-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* Simplified the types allowed on the generateContent contents parameter.
+
+### Features
+
+* add a helper module to process zod objecsts. ([fad2789](https://github.com/googleapis/js-genai/commit/fad278993bdb34202cf8d6ddc390d6abc467d62a))
+* add support for model_selection_config to GenerateContentConfig ([37a9cae](https://github.com/googleapis/js-genai/commit/37a9cae47597d65c820e618d365af56255b56099))
+* Define supporting scope for structured output with validation. ([2d4ffd6](https://github.com/googleapis/js-genai/commit/2d4ffd623b8a3b856bd071385cf4ea29207b81f9))
+* Define supporting scope for structured output with validation. ([6fe9847](https://github.com/googleapis/js-genai/commit/6fe98473c3b68da9f613c193ff4d747017a8928f))
+* Expose transcription configurations for audio in TS, and move generationConfig to the top level LiveConnectConfig ([d3a841d](https://github.com/googleapis/js-genai/commit/d3a841d2db1845fc9ed278a30d509dc5c6e699a8))
+* Simplified the types allowed on the generateContent contents parameter. ([324d158](https://github.com/googleapis/js-genai/commit/324d1588aa87ff07a76db79f4b71dcbabe63bb38))
+* Support audio transcription in Vertex Live API ([8d11c04](https://github.com/googleapis/js-genai/commit/8d11c045dd17a141dfb6561030be05e3ccde92b0))
+* Support RealtimeInputConfig, and language_code in SpeechConfig in python ([004ff6a](https://github.com/googleapis/js-genai/commit/004ff6a2f44072c96969ace22cffbf7679ad684b))
+* Update VertexRagStore ([043d06c](https://github.com/googleapis/js-genai/commit/043d06cc4ca0db1593f7a28aaae9f012c0a60763))
+
+
+### Bug Fixes
+
+* **CI:** Fix stable docs generation with release event ([89c61b9](https://github.com/googleapis/js-genai/commit/89c61b904baf44f7c3738acf7e13177ac22cd387))
+
 ## [0.8.0](https://github.com/googleapis/js-genai/compare/v0.7.0...v0.8.0) (2025-04-09)
 
 
