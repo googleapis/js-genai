@@ -6,7 +6,7 @@
 
 import {GoogleAuthOptions} from 'google-auth-library';
 
-import {ApiClient} from './_api_client';
+import {ApiClient, ApiClientInitOptions, BaseClient} from './_api_client';
 import {Caches} from './caches';
 import {Chats} from './chats';
 import {crossError} from './cross/_cross_error';
@@ -20,6 +20,31 @@ import {HttpOptions} from './types';
 import {WebAuth} from './web/_web_auth';
 
 const LANGUAGE_LABEL_PREFIX = 'gl-node/';
+
+function getApiClientInitOptions(
+  options: GoogleGenAIOptions,
+): ApiClientInitOptions {
+  if (options.apiKey == null) {
+    throw new Error(
+      `An API Key must be set when running in an unspecified environment.\n + ${
+        crossError().message
+      }`,
+    );
+  }
+  const vertexai = options.vertexai ?? false;
+  const apiKey = options.apiKey;
+  const apiVersion = options.apiVersion;
+  const auth = new WebAuth(apiKey);
+  return {
+    auth: auth,
+    apiVersion: apiVersion,
+    apiKey: apiKey,
+    vertexai: vertexai,
+    httpOptions: options.httpOptions,
+    userAgentExtra: LANGUAGE_LABEL_PREFIX + 'cross',
+    uploader: new CrossUploader(),
+  };
+}
 
 /**
  * Google Gen AI SDK's configuration options.
@@ -126,29 +151,72 @@ export class GoogleGenAI {
   readonly operations: Operations;
 
   constructor(options: GoogleGenAIOptions) {
-    if (options.apiKey == null) {
-      throw new Error(
-        `An API Key must be set when running in an unspecified environment.\n + ${crossError().message}`,
-      );
-    }
-    this.vertexai = options.vertexai ?? false;
-    this.apiKey = options.apiKey;
-    this.apiVersion = options.apiVersion;
-    const auth = new WebAuth(this.apiKey);
-    this.apiClient = new ApiClient({
-      auth: auth,
-      apiVersion: this.apiVersion,
-      apiKey: this.apiKey,
-      vertexai: this.vertexai,
-      httpOptions: options.httpOptions,
-      userAgentExtra: LANGUAGE_LABEL_PREFIX + 'cross',
-      uploader: new CrossUploader(),
-    });
+    const apiClientInitOptions = getApiClientInitOptions(options);
+
+    this.apiKey = apiClientInitOptions.apiKey;
+    this.vertexai = apiClientInitOptions.vertexai ?? false;
+    this.apiVersion = apiClientInitOptions.apiVersion;
+
+    this.apiClient = new ApiClient(apiClientInitOptions);
     this.models = new Models(this.apiClient);
-    this.live = new Live(this.apiClient, auth, new CrossWebSocketFactory());
+    this.live = new Live(
+      this.apiClient,
+      apiClientInitOptions.auth,
+      new CrossWebSocketFactory(),
+    );
     this.chats = new Chats(this.models, this.apiClient);
     this.caches = new Caches(this.apiClient);
     this.files = new Files(this.apiClient);
     this.operations = new Operations(this.apiClient);
+  }
+}
+
+/**
+ * The Google GenAI SDK Client for use with Standalone Functions.
+ *
+ * @remarks
+ * Provides access to the GenAI features through either the {@link
+ * https://cloud.google.com/vertex-ai/docs/reference/rest | Gemini API} or
+ * the {@link https://cloud.google.com/vertex-ai/docs/reference/rest | Vertex AI
+ * API}.
+ *
+ * The {@link GoogleGenAIOptions.vertexai} value determines which of the API
+ * services to use.
+ *
+ * When using the Gemini API, a {@link GoogleGenAIOptions.apiKey} must also be
+ * set. When using Vertex AI, both {@link GoogleGenAIOptions.project} and {@link
+ * GoogleGenAIOptions.location} must be set, or a {@link
+ * GoogleGenAIOptions.apiKey} must be set when using Express Mode.
+ *
+ * Explicitly passed in values in {@link GoogleGenAIOptions} will always take
+ * precedence over environment variables. If both project/location and api_key
+ * exist in the environment variables, the project/location will be used.
+ *
+ * @example
+ * Initializing the SDK for using the Gemini API:
+ * ```ts
+ * import {GoogleGenAiClient} from '@google/genai';
+ * const ai = new GoogleGenAiClient({apiKey: 'GEMINI_API_KEY'});
+ * ```
+ *
+ * @example
+ * Initializing the SDK for using the Vertex AI API:
+ * ```ts
+ * import {GoogleGenAiClient} from '@google/genai';
+ * const ai = new GoogleGenAiClient({
+ *   vertexai: true,
+ *   project: 'PROJECT_ID',
+ *   location: 'PROJECT_LOCATION'
+ * });
+ * ```
+ *
+ */
+export class GoogleGenAiClient implements BaseClient {
+  public readonly apiClient: ApiClient;
+
+  constructor(options: GoogleGenAIOptions) {
+    const apiClientInitOptions = getApiClientInitOptions(options);
+
+    this.apiClient = new ApiClient(apiClientInitOptions);
   }
 }

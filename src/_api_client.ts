@@ -102,6 +102,13 @@ export interface ApiClientInitOptions {
 }
 
 /**
+ * Base client interface.
+ */
+export interface BaseClient {
+  apiClient: ApiClient;
+}
+
+/**
  * Represents the necessary information to send a request to an API endpoint.
  * This interface defines the structure for constructing and executing HTTP
  * requests.
