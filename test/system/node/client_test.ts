@@ -6,9 +6,18 @@
 
 import {fail} from 'assert';
 import {GoogleAuthOptions} from 'google-auth-library';
+import {z} from 'zod';
 
 import {GoogleGenAI} from '../../../src/node/node_client';
-import {GenerateContentResponse, Part} from '../../../src/types';
+import {
+  functionDeclarationFromZod,
+  responseSchemaFromZod,
+} from '../../../src/schema_helper';
+import {
+  FunctionCallingConfigMode,
+  GenerateContentResponse,
+  Part,
+} from '../../../src/types';
 import {createZeroFilledTempFile} from '../../_generate_test_file';
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
@@ -152,6 +161,169 @@ describe('generateContent', () => {
       }
     }
   });
+  it('ML Dev should generate content with given zod schema', async () => {
+    const innerObject = z.object({
+      innerString: z.string(),
+      innerNumber: z.number(),
+    });
+    const nullableInnerObject = z.object({
+      innerString: z.string(),
+      innerNumber: z.number(),
+    });
+    const nestedSchema = z.object({
+      simpleString: z.string().describe('This is a simple string'),
+      stringDatatime: z.string().datetime(),
+      stringWithEnum: z.enum(['enumvalue1', 'enumvalue2', 'enumvalue3']),
+      stringWithLength: z.string().min(1).max(10),
+      simpleNumber: z.number(),
+      simpleInteger: z.number().int(),
+      integerInt64: z.number().int(),
+      numberWithMinMax: z.number().min(1).max(10),
+      simpleBoolean: z.boolean(),
+      arrayFiled: z.array(z.string()),
+      unionField: z.union([z.string(), z.number()]),
+      nullableField: z.string().nullable(),
+      nullableArrayField: z.array(z.string()).nullable(),
+      nullableObjectField: nullableInnerObject.nullable(),
+      inner: innerObject,
+    });
+    const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+    const response = await client.models.generateContent({
+      model: 'gemini-1.5-flash',
+      contents: 'populate the following object',
+      config: {
+        responseMimeType: 'application/json',
+        responseSchema: responseSchemaFromZod(client.vertexai, nestedSchema),
+      },
+    });
+    const parsedResponse = JSON.parse(
+      response.candidates![0].content!['parts']![0].text as string,
+    );
+    console.log('mldev response', parsedResponse);
+    const validationResult = nestedSchema.safeParse(parsedResponse);
+    expect(validationResult.success).toEqual(true);
+  });
+
+  it('Vertex AI should generate content with given zod schema', async () => {
+    const innerObject = z.object({
+      innerString: z.string(),
+      innerNumber: z.number(),
+    });
+    const nullableInnerObject = z.object({
+      innerString: z.string(),
+      innerNumber: z.number(),
+    });
+    const nestedSchema = z.object({
+      simpleString: z.string().default('default'),
+      stringDatetime: z.string().datetime(),
+      stringWithEnum: z.enum(['enumvalue1', 'enumvalue2', 'enumvalue3']),
+      stringWithLength: z.string().min(1).max(10),
+      simpleNumber: z.number(),
+      simpleInteger: z.number().int(),
+      integerInt64: z.number().int(),
+      numberWithMinMax: z.number().min(1).max(10),
+      simpleBoolean: z.boolean(),
+      arrayFiled: z.array(z.string()),
+      unionField: z.union([z.string(), z.number()]),
+      nullableField: z.string().nullable(),
+      nullableArrayField: z.array(z.string()).nullable(),
+      nullableObjectField: nullableInnerObject.nullable(),
+      inner: innerObject,
+    });
+
+    const client = new GoogleGenAI({
+      vertexai: true,
+      project: GOOGLE_CLOUD_PROJECT,
+      location: GOOGLE_CLOUD_LOCATION,
+    });
+    const response = await client.models.generateContent({
+      model: 'gemini-1.5-flash',
+      contents: 'populate the following object',
+      config: {
+        responseMimeType: 'application/json',
+        responseSchema: responseSchemaFromZod(client.vertexai, nestedSchema),
+      },
+    });
+    const parsedResponse = JSON.parse(
+      response.candidates![0].content!['parts']![0].text as string,
+    );
+    console.log('vertex ai response', parsedResponse);
+    const validationResult = nestedSchema.safeParse(parsedResponse);
+    expect(validationResult.success).toEqual(true);
+  });
+  it('ML Dev should generate function call with given zod function schema', async () => {
+    const concatStringFunction = z
+      .function()
+      .args(z.object({firstString: z.string(), secondString: z.string()}))
+      .returns(z.void())
+      .describe('this is a concat string function');
+    const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+    const response = await client.models.generateContent({
+      model: 'gemini-1.5-flash',
+      contents: 'populate the following object',
+      config: {
+        tools: [
+          {
+            functionDeclarations: [
+              functionDeclarationFromZod(client.vertexai, {
+                name: 'concatStringFunction',
+                zodFunctionSchema: concatStringFunction,
+              }),
+            ],
+          },
+        ],
+        toolConfig: {
+          functionCallingConfig: {
+            mode: FunctionCallingConfigMode.ANY,
+            allowedFunctionNames: ['concatStringFunction'],
+          },
+        },
+      },
+    });
+    const functionCallResponse =
+      response.candidates![0].content!['parts']![0].functionCall;
+    expect(functionCallResponse!.name).toEqual('concatStringFunction');
+    expect(Object.keys(functionCallResponse!.args!).length).toEqual(2);
+  });
+});
+it('Vertex AI should generate function call with given zod function schema', async () => {
+  const concatStringFunction = z
+    .function()
+    .args(z.object({firstString: z.string(), secondString: z.string()}))
+    .returns(z.string())
+    .describe('this is a concat string function');
+  const client = new GoogleGenAI({
+    vertexai: true,
+    project: GOOGLE_CLOUD_PROJECT,
+    location: GOOGLE_CLOUD_LOCATION,
+  });
+  const response = await client.models.generateContent({
+    model: 'gemini-1.5-flash',
+    contents: 'populate the following object',
+    config: {
+      tools: [
+        {
+          functionDeclarations: [
+            functionDeclarationFromZod(client.vertexai, {
+              name: 'concatStringFunction',
+              zodFunctionSchema: concatStringFunction,
+            }),
+          ],
+        },
+      ],
+      toolConfig: {
+        functionCallingConfig: {
+          mode: FunctionCallingConfigMode.ANY,
+          allowedFunctionNames: ['concatStringFunction'],
+        },
+      },
+    },
+  });
+  const functionCallResponse =
+    response.candidates![0].content!['parts']![0].functionCall;
+  console.log('vertex ai function call response', functionCallResponse);
+  expect(functionCallResponse!.name).toEqual('concatStringFunction');
+  expect(Object.keys(functionCallResponse!.args!).length).toEqual(2);
 });
 
 describe('generateContentStream', () => {
