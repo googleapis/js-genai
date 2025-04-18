@@ -1,6 +1,14 @@
 # Changelog
 
 
+## [0.9.1](https://github.com/googleapis/js-genai/compare/v0.9.0...v0.9.1) (2025-04-18)
+
+
+### Bug Fixes
+
+* Return actual error text from streaming response ([808e0b5](https://github.com/googleapis/js-genai/commit/808e0b5e14023f1484eb01d3bc02d0e76e584d92)), closes [#346](https://github.com/googleapis/js-genai/issues/346)
+* Update _api_client to parse and throw errors during processing stream responses (fixes [#461](https://github.com/googleapis/js-genai/issues/461)) ([1932f1d](https://github.com/googleapis/js-genai/commit/1932f1dd7d5012747918cb6f8f0dcbd9b4581838))
+
 ## [0.9.0](https://github.com/googleapis/js-genai/compare/v0.8.0...v0.9.0) (2025-04-17)
 
 
