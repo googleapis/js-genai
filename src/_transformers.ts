@@ -53,6 +53,55 @@ export function tCachesModel(
   }
 }
 
+export function tBlobs(
+  apiClient: ApiClient,
+  blobs: types.BlobImageUnion | types.BlobImageUnion[],
+): types.Blob[] {
+  if (Array.isArray(blobs)) {
+    return blobs.map((blob) => tBlob(apiClient, blob));
+  } else {
+    return [tBlob(apiClient, blobs)];
+  }
+}
+
+export function tBlob(
+  apiClient: ApiClient,
+  blob: types.BlobImageUnion,
+): types.Blob {
+  if (typeof blob === 'object' && blob !== null) {
+    return blob;
+  }
+
+  throw new Error(
+    `Could not parse input as Blob. Unsupported blob type: ${typeof blob}`,
+  );
+}
+
+export function tImageBlob(
+  apiClient: ApiClient,
+  blob: types.BlobImageUnion,
+): types.Blob {
+  const transformedBlob = tBlob(apiClient, blob);
+  if (
+    transformedBlob.mimeType &&
+    transformedBlob.mimeType.startsWith('image/')
+  ) {
+    return transformedBlob;
+  }
+  throw new Error(`Unsupported mime type: ${transformedBlob.mimeType!}`);
+}
+
+export function tAudioBlob(apiClient: ApiClient, blob: types.Blob): types.Blob {
+  const transformedBlob = tBlob(apiClient, blob);
+  if (
+    transformedBlob.mimeType &&
+    transformedBlob.mimeType.startsWith('audio/')
+  ) {
+    return transformedBlob;
+  }
+  throw new Error(`Unsupported mime type: ${transformedBlob.mimeType!}`);
+}
+
 export function tPart(
   apiClient: ApiClient,
   origin?: types.PartUnion | null,
@@ -268,7 +317,7 @@ export function tSpeechConfig(
   apiClient: ApiClient,
   speechConfig: types.SpeechConfigUnion,
 ): types.SpeechConfig {
-  if (typeof speechConfig === 'object' && 'voiceConfig' in speechConfig) {
+  if (typeof speechConfig === 'object') {
     return speechConfig;
   } else if (typeof speechConfig === 'string') {
     return {

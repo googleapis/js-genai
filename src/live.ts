@@ -265,28 +265,6 @@ export class Session {
     };
   }
 
-  private tLiveClientRealtimeInput(
-    apiClient: ApiClient,
-    params: types.LiveSendRealtimeInputParameters,
-  ): types.LiveClientMessage {
-    let clientMessage: types.LiveClientMessage = {};
-    if (!('media' in params) || !params.media) {
-      throw new Error(
-        `Failed to convert realtime input "media", type: '${typeof params.media}'`,
-      );
-    }
-
-    // LiveClientRealtimeInput
-    clientMessage = {
-      realtimeInput: {
-        mediaChunks: [params.media],
-        activityStart: params.activityStart,
-        activityEnd: params.activityEnd,
-      },
-    };
-    return clientMessage;
-  }
-
   private tLiveClienttToolResponse(
     apiClient: ApiClient,
     params: types.LiveSendToolResponseParameters,
@@ -414,12 +392,23 @@ export class Session {
     of audio and image mimetypes are allowed.
    */
   sendRealtimeInput(params: types.LiveSendRealtimeInputParameters) {
-    if (params.media == null) {
-      throw new Error('Media is required.');
-    }
+    let clientMessage: types.LiveClientMessage = {};
 
-    const clientMessage: types.LiveClientMessage =
-      this.tLiveClientRealtimeInput(this.apiClient, params);
+    if (this.apiClient.isVertexAI()) {
+      clientMessage = {
+        'realtimeInput': converters.liveSendRealtimeInputParametersToVertex(
+          this.apiClient,
+          params,
+        ),
+      };
+    } else {
+      clientMessage = {
+        'realtimeInput': converters.liveSendRealtimeInputParametersToMldev(
+          this.apiClient,
+          params,
+        ),
+      };
+    }
     this.conn.send(JSON.stringify(clientMessage));
   }
 

@@ -10,6 +10,7 @@ import {
   WebSocketCallbacks,
   WebSocketFactory,
 } from '../../src/_websocket';
+import * as converters from '../../src/converters/_live_converters';
 import {CrossUploader} from '../../src/cross/_cross_uploader';
 import {Live} from '../../src/live';
 import * as types from '../../src/types';
@@ -675,6 +676,20 @@ describe('live', () => {
     expect(
       liveServerMessage.sessionResumptionUpdate!.lastConsumedClientMessageIndex,
     ).toBe('123456789');
+  });
+
+  it('Converters should block bad MimeTypes', async () => {
+    const apiClient = new ApiClient({
+      auth: new FakeAuth(),
+      apiKey: 'test-api-key',
+      uploader: new CrossUploader(),
+    });
+
+    expect(() => {
+      converters.liveSendRealtimeInputParametersToMldev(apiClient, {
+        audio: {data: 'AAAA', mimeType: 'image/png'},
+      } as types.LiveSendRealtimeInputParameters);
+    }).toThrowError(Error, 'Unsupported mime type: image/png');
   });
 });
 

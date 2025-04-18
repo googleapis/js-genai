@@ -44,6 +44,9 @@ interface Blob_2 {
 }
 export { Blob_2 as Blob }
 
+// @public (undocumented)
+export type BlobImageUnion = Blob_2;
+
 // @public
 export enum BlockedReason {
     // (undocumented)
@@ -1074,7 +1077,11 @@ export interface LiveClientMessage {
 export interface LiveClientRealtimeInput {
     activityEnd?: ActivityEnd;
     activityStart?: ActivityStart;
+    audio?: Blob_2;
+    audioStreamEnd?: boolean;
     mediaChunks?: Blob_2[];
+    text?: string;
+    video?: Blob_2;
 }
 
 // @public
@@ -1132,7 +1139,11 @@ export interface LiveSendClientContentParameters {
 export interface LiveSendRealtimeInputParameters {
     activityEnd?: ActivityEnd;
     activityStart?: ActivityStart;
-    media: Blob_2;
+    audio?: Blob_2;
+    audioStreamEnd?: boolean;
+    media?: BlobImageUnion;
+    text?: string;
+    video?: BlobImageUnion;
 }
 
 // @public
