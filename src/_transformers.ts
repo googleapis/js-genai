@@ -6,6 +6,7 @@
 
 import {ApiClient} from './_api_client';
 import * as types from './types';
+import {z} from 'zod';
 
 export function tModel(apiClient: ApiClient, model: string | unknown): string {
   if (!model || typeof model !== 'string') {
@@ -256,12 +257,26 @@ export function processSchema(apiClient: ApiClient, schema: types.Schema) {
   }
 }
 
+
+function processZodToSchema(
+  apiClient: ApiClient,
+  zodSchema: z.ZodObject<z.ZodRawShape>,
+  ): types.Schema {
+// This is a placeholder function to process zod schema to schema.
+// It will be implemented in subcequent CLs.
+const processZodSchema: types.Schema = {};
+return processZodSchema;
+}
+
 export function tSchema(
   apiClient: ApiClient,
-  schema: types.Schema,
-): types.Schema {
-  processSchema(apiClient, schema);
-  return schema;
+  schema: types.Schema|z.ZodObject<z.ZodRawShape>,
+  ): types.Schema {
+if (schema instanceof z.ZodObject) {
+  schema = processZodToSchema(apiClient, schema);
+}
+processSchema(apiClient, schema);
+return schema;
 }
 
 export function tSpeechConfig(
