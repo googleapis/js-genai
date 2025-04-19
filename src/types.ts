@@ -515,6 +515,12 @@ export declare interface HttpOptions {
   headers?: Record<string, string>;
   /** Timeout for the request in milliseconds. */
   timeout?: number;
+  /** Abort signal which can be used to cancel the request.
+
+  Note: This is intended to be set within the HttpOptions from each API call's config.
+  Setting this from the ApiClientInitOptions's HttpOptions will cause an error.
+       */
+  abortSignal?: AbortSignal;
 }
 
 /** Schema that defines the format of input and output data.

@@ -164,6 +164,12 @@ export class ApiClient {
 
     const initHttpOptions: HttpOptions = {};
 
+    if (this.clientOptions.httpOptions?.abortSignal) {
+      throw new Error(
+        'AbortSignal cannot be set from ApiClientInitOptions. Please set it from each API call instead.',
+      );
+    }
+
     if (this.clientOptions.vertexai) {
       initHttpOptions.apiVersion =
         this.clientOptions.apiVersion ?? VERTEX_AI_API_DEFAULT_VERSION;
@@ -366,23 +372,25 @@ export class ApiClient {
     baseHttpOptions: HttpOptions,
     requestHttpOptions: HttpOptions,
   ): HttpOptions {
-    const patchedHttpOptions = JSON.parse(
-      JSON.stringify(baseHttpOptions),
-    ) as HttpOptions;
+    const patchedHttpOptions: HttpOptions = {...baseHttpOptions};
 
-    for (const [key, value] of Object.entries(requestHttpOptions)) {
-      // Records compile to objects.
-      if (typeof value === 'object') {
-        // @ts-expect-error TS2345TS7053: Element implicitly has an 'any' type
-        // because expression of type 'string' can't be used to index type
-        // 'HttpOptions'.
-        patchedHttpOptions[key] = {...patchedHttpOptions[key], ...value};
-      } else if (value !== undefined) {
-        // @ts-expect-error TS2345TS7053: Element implicitly has an 'any' type
-        // because expression of type 'string' can't be used to index type
-        // 'HttpOptions'.
-        patchedHttpOptions[key] = value;
-      }
+    if (requestHttpOptions.baseUrl !== undefined) {
+      patchedHttpOptions.baseUrl = requestHttpOptions.baseUrl;
+    }
+    if (requestHttpOptions.apiVersion !== undefined) {
+      patchedHttpOptions.apiVersion = requestHttpOptions.apiVersion;
+    }
+    if (requestHttpOptions.headers) {
+      patchedHttpOptions.headers = {
+        ...(patchedHttpOptions.headers ?? {}),
+        ...requestHttpOptions.headers,
+      };
+    }
+    if (requestHttpOptions.timeout !== undefined) {
+      patchedHttpOptions.timeout = requestHttpOptions.timeout;
+    }
+    if (requestHttpOptions.abortSignal !== undefined) {
+      patchedHttpOptions.abortSignal = requestHttpOptions.abortSignal;
     }
     return patchedHttpOptions;
   }
@@ -420,10 +428,17 @@ export class ApiClient {
     requestInit: RequestInit,
     httpOptions: HttpOptions,
   ): Promise<RequestInit> {
-    if (httpOptions && httpOptions.timeout && httpOptions.timeout > 0) {
+    if (httpOptions && (httpOptions.timeout || httpOptions.abortSignal)) {
       const abortController = new AbortController();
       const signal = abortController.signal;
-      setTimeout(() => abortController.abort(), httpOptions.timeout);
+      if (httpOptions.timeout && httpOptions?.timeout > 0) {
+        setTimeout(() => abortController.abort(), httpOptions.timeout);
+      }
+      if (httpOptions.abortSignal) {
+        httpOptions.abortSignal.addEventListener('abort', () => {
+          abortController.abort();
+        });
+      }
       requestInit.signal = signal;
     }
     requestInit.headers = await this.getHeadersInternal(httpOptions);

@@ -954,6 +954,7 @@ export enum HarmSeverity {
 
 // @public
 export interface HttpOptions {
+    abortSignal?: AbortSignal;
     apiVersion?: string;
     baseUrl?: string;
     headers?: Record<string, string>;

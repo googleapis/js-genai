@@ -630,6 +630,50 @@ describe('ApiClient', () => {
       // @ts-expect-error TS2532: Object is possibly 'undefined'.
       expect(fetchArgs[0][1].signal.aborted).toBeFalse();
     });
+    it('should throw error when AbortSignal is set from ApiClientInitOptions', async () => {
+      const externalAbortController = new AbortController();
+
+      expect(
+        () =>
+          new ApiClient({
+            auth: new FakeAuth('test-api-key'),
+            apiKey: 'test-api-key',
+            httpOptions: {abortSignal: externalAbortController.signal},
+            uploader: new CrossUploader(),
+          }),
+      ).toThrowError(
+        'AbortSignal cannot be set from ApiClientInitOptions. Please set it from each API call instead.',
+      );
+    });
+    it('should include AbortSignal when AbortSignal is set from HttpOptions', async () => {
+      const externalAbortController = new AbortController();
+      const client = new ApiClient({
+        auth: new FakeAuth('test-api-key'),
+        apiKey: 'test-api-key',
+        uploader: new CrossUploader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(
+            JSON.stringify(mockGenerateContentResponse),
+            fetchOkOptions,
+          ),
+        ),
+      );
+      await client.request({
+        path: 'test-path',
+        httpMethod: 'POST',
+        httpOptions: {abortSignal: externalAbortController.signal},
+      });
+
+      externalAbortController.abort();
+
+      const fetchArgs = fetchSpy.calls.allArgs();
+      // @ts-expect-error TS2532: Object is possibly 'undefined'.
+      expect(fetchArgs[0][1].signal instanceof AbortSignal).toBeTrue();
+      // @ts-expect-error TS2532: Object is possibly 'undefined'.
+      expect(fetchArgs[0][1].signal.aborted).toBeTrue();
+    });
     it('should apply requestHttpOptions when provided', async () => {
       const client = new ApiClient({
         auth: new FakeAuth('test-api-key'),
