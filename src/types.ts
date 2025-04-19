@@ -282,6 +282,8 @@ export declare interface ExecutableCode {
 
 /** URI based data. */
 export declare interface FileData {
+  /** Optional. Display name of the file data. Used to provide a label or filename to distinguish file datas. This field is only returned in PromptMessage for prompt management. It is not currently used in the Gemini GenerateContent calls. */
+  displayName?: string;
   /** Required. URI. */
   fileUri?: string;
   /** Required. The IANA standard MIME type of the source data. */
@@ -314,6 +316,8 @@ export class FunctionResponse {
 export declare interface Blob {
   /** Required. Raw bytes. */
   data?: string;
+  /** Optional. Display name of the blob. Used to provide a label or filename to distinguish blobs. This field is only returned in PromptMessage for prompt management. It is not currently used in the Gemini GenerateContent calls. */
+  displayName?: string;
   /** Required. The IANA standard MIME type of the source data. */
   mimeType?: string;
 }
@@ -619,6 +623,9 @@ export declare interface GoogleSearchRetrieval {
   dynamicRetrievalConfig?: DynamicRetrievalConfig;
 }
 
+/** Tool to search public web data, powered by Vertex AI Search and Sec4 compliance. */
+export declare interface EnterpriseWebSearch {}
+
 /** Retrieve from Vertex AI Search datastore or engine for grounding. datastore and engine are mutually exclusive. See https://cloud.google.com/products/agent-builder */
 export declare interface VertexAISearch {
   /** Optional. Fully-qualified Vertex AI Search data store resource ID. Format: `projects/{project}/locations/{location}/collections/{collection}/dataStores/{dataStore}` */
@@ -721,7 +728,10 @@ export declare interface Tool {
   googleSearch?: GoogleSearch;
   /** Optional. GoogleSearchRetrieval tool type. Specialized retrieval tool that is powered by Google search. */
   googleSearchRetrieval?: GoogleSearchRetrieval;
-  /** Optional. CodeExecution tool type. Enables the model to execute code as part of generation. This field is only used by the Gemini Developer API services. */
+  /** Optional. Enterprise web search tool type. Specialized retrieval
+      tool that is powered by Vertex AI Search and Sec4 compliance. */
+  enterpriseWebSearch?: EnterpriseWebSearch;
+  /** Optional. CodeExecution tool type. Enables the model to execute code as part of generation. */
   codeExecution?: ToolCodeExecution;
 }
 
@@ -733,6 +743,22 @@ export declare interface FunctionCallingConfig {
   allowedFunctionNames?: string[];
 }
 
+/** An object that represents a latitude/longitude pair. This is expressed as a pair of doubles to represent degrees latitude and degrees longitude. Unless specified otherwise, this object must conform to the WGS84 standard. Values must be within normalized ranges. */
+export declare interface GoogleTypeLatLng {
+  /** The latitude in degrees. It must be in the range [-90.0, +90.0]. */
+  latitude?: number;
+  /** The longitude in degrees. It must be in the range [-180.0, +180.0]. */
+  longitude?: number;
+}
+
+/** Retrieval config. */
+export declare interface RetrievalConfig {
+  /** The language code of the user. */
+  languageCode?: string;
+  /** The location of the user. */
+  latLng?: GoogleTypeLatLng;
+}
+
 /** Tool config.
 
   This config is shared for all tools provided in the request.
@@ -740,6 +766,8 @@ export declare interface FunctionCallingConfig {
 export declare interface ToolConfig {
   /** Optional. Function calling config. */
   functionCallingConfig?: FunctionCallingConfig;
+  /** Optional. Retrieval config. */
+  retrievalConfig?: RetrievalConfig;
 }
 
 /** The configuration for the prebuilt speaker to use. */
@@ -1675,12 +1703,16 @@ export declare interface GenerationConfig {
   responseLogprobs?: boolean;
   /** Optional. Output response mimetype of the generated candidate text. Supported mimetype: - `text/plain`: (default) Text output. - `application/json`: JSON response in the candidates. The model needs to be prompted to output the appropriate response type, otherwise the behavior is undefined. This is a preview feature. */
   responseMimeType?: string;
+  /** Optional. The modalities of the response. */
+  responseModalities?: Modality[];
   /** Optional. The `Schema` object allows the definition of input and output data types. These types can be objects, but also primitives and arrays. Represents a select subset of an [OpenAPI 3.0 schema object](https://spec.openapis.org/oas/v3.0.3#schema). If set, a compatible response_mime_type must also be set. Compatible mimetypes: `application/json`: Schema for JSON response. */
   responseSchema?: Schema;
   /** Optional. Routing configuration. */
   routingConfig?: GenerationConfigRoutingConfig;
   /** Optional. Seed. */
   seed?: number;
+  /** Optional. The speech generation config. */
+  speechConfig?: SpeechConfig;
   /** Optional. Stop sequences. */
   stopSequences?: string[];
   /** Optional. Controls the randomness of predictions. */

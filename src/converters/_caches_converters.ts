@@ -292,6 +292,12 @@ export function googleSearchRetrievalToMldev(
   return toObject;
 }
 
+export function enterpriseWebSearchToMldev(): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  return toObject;
+}
+
 export function toolToMldev(
   apiClient: ApiClient,
   fromObject: types.Tool,
@@ -336,6 +342,14 @@ export function toolToMldev(
       toObject,
       ['googleSearchRetrieval'],
       googleSearchRetrievalToMldev(apiClient, fromGoogleSearchRetrieval),
+    );
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['enterpriseWebSearch']) !== undefined
+  ) {
+    throw new Error(
+      'enterpriseWebSearch parameter is not supported in Gemini API.',
     );
   }
 
@@ -389,6 +403,13 @@ export function toolConfigToMldev(
       ['functionCallingConfig'],
       functionCallingConfigToMldev(apiClient, fromFunctionCallingConfig),
     );
+  }
+
+  const fromRetrievalConfig = common.getValueByPath(fromObject, [
+    'retrievalConfig',
+  ]);
+  if (fromRetrievalConfig != null) {
+    common.setValueByPath(toObject, ['retrievalConfig'], fromRetrievalConfig);
   }
 
   return toObject;
@@ -934,6 +955,12 @@ export function googleSearchRetrievalToVertex(
   return toObject;
 }
 
+export function enterpriseWebSearchToVertex(): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  return toObject;
+}
+
 export function toolToVertex(
   apiClient: ApiClient,
   fromObject: types.Tool,
@@ -979,6 +1006,17 @@ export function toolToVertex(
       toObject,
       ['googleSearchRetrieval'],
       googleSearchRetrievalToVertex(apiClient, fromGoogleSearchRetrieval),
+    );
+  }
+
+  const fromEnterpriseWebSearch = common.getValueByPath(fromObject, [
+    'enterpriseWebSearch',
+  ]);
+  if (fromEnterpriseWebSearch != null) {
+    common.setValueByPath(
+      toObject,
+      ['enterpriseWebSearch'],
+      enterpriseWebSearchToVertex(),
     );
   }
 
@@ -1032,6 +1070,13 @@ export function toolConfigToVertex(
       ['functionCallingConfig'],
       functionCallingConfigToVertex(apiClient, fromFunctionCallingConfig),
     );
+  }
+
+  const fromRetrievalConfig = common.getValueByPath(fromObject, [
+    'retrievalConfig',
+  ]);
+  if (fromRetrievalConfig != null) {
+    common.setValueByPath(toObject, ['retrievalConfig'], fromRetrievalConfig);
   }
 
   return toObject;
