@@ -15,6 +15,7 @@ and [Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/over
 
 The Google Gen AI SDK is designed to work with Gemini 2.0 features.
 
+
 > [!NOTE]
 > **SDK Preview:**
 > See: [Preview Launch](#preview-launch).
