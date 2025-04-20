@@ -14,3 +14,4 @@ export {Operations} from '../operations';
 export {PagedItem, Pager} from '../pagers';
 export * from '../types';
 export * from './web_client';
+export * from '../errors';

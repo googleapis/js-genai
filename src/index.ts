@@ -13,3 +13,4 @@ export {Models} from './models';
 export {Operations} from './operations';
 export {PagedItem, Pager} from './pagers';
 export * from './types';
+export * from './errors'

@@ -2917,3 +2917,21 @@ export type SchemaUnion = Schema;
 export type SpeechConfigUnion = SpeechConfig | string;
 
 export type ToolListUnion = Tool[];
+
+export type ApiErrorResponse = {
+  error: {
+    code: number;
+    message: string;
+    status?: string;
+    details?: Array<{
+      "@type": string;
+      reason?: string;
+      domain?: string;
+      metadata?: {
+        service?: string;
+      };
+      locale?: string;
+      message?: string;
+    }>;
+  };
+}

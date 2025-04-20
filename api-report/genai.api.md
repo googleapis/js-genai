@@ -25,6 +25,38 @@ export interface ActivityStart {
 }
 
 // @public
+export class ApiError extends Error {
+    constructor({ code, details, message, status }: ApiErrorResponse['error'], stackTrace?: string);
+    // (undocumented)
+    code: ApiErrorResponse['error']['code'];
+    // (undocumented)
+    details: ApiErrorResponse['error']['details'];
+    // (undocumented)
+    name: string;
+    // (undocumented)
+    status: ApiErrorResponse['error']['status'];
+}
+
+// @public (undocumented)
+export type ApiErrorResponse = {
+    error: {
+        code: number;
+        message: string;
+        status?: string;
+        details?: Array<{
+            "@type": string;
+            reason?: string;
+            domain?: string;
+            metadata?: {
+                service?: string;
+            };
+            locale?: string;
+            message?: string;
+        }>;
+    };
+};
+
+// @public
 export interface AudioTranscriptionConfig {
 }
 
@@ -133,6 +165,11 @@ export interface Citation {
 // @public
 export interface CitationMetadata {
     citations?: Citation[];
+}
+
+// @public
+export class ClientError extends ApiError {
+    constructor(response: ApiErrorResponse['error'], stackTrace?: string);
 }
 
 // @public
@@ -1598,6 +1635,11 @@ export interface Segment {
 export interface SendMessageParameters {
     config?: GenerateContentConfig;
     message: PartListUnion;
+}
+
+// @public
+export class ServerError extends ApiError {
+    constructor(response: ApiErrorResponse['error'], stackTrace?: string);
 }
 
 // @public
