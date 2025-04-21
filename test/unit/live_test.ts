@@ -619,6 +619,7 @@ describe('live', () => {
     const session = await live.connect({
       model: 'models/gemini-2.0-flash-live-001',
       config: {
+        inputAudioTranscription: {},
         outputAudioTranscription: {},
       },
       callbacks: {
@@ -630,7 +631,7 @@ describe('live', () => {
 
     const websocketSpyCall = websocketSpy.calls.all()[0];
     expect(websocketSpyCall.args[0]).toBe(
-      '{"setup":{"model":"models/gemini-2.0-flash-live-001","generationConfig":{"responseModalities":["AUDIO"]},"outputAudioTranscription":{}}}',
+      '{"setup":{"model":"models/gemini-2.0-flash-live-001","generationConfig":{"responseModalities":["AUDIO"]},"inputAudioTranscription":{},"outputAudioTranscription":{}}}',
     );
     expect(session).toBeDefined();
   });
