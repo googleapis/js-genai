@@ -81,6 +81,7 @@ export class Operations extends BaseModule {
           body: JSON.stringify(body),
           httpMethod: 'GET',
           httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
           return httpResponse.json();
@@ -115,6 +116,7 @@ export class Operations extends BaseModule {
           body: JSON.stringify(body),
           httpMethod: 'GET',
           httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
           return httpResponse.json();
@@ -158,6 +160,7 @@ export class Operations extends BaseModule {
           body: JSON.stringify(body),
           httpMethod: 'POST',
           httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
           return httpResponse.json();

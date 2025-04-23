@@ -53,6 +53,55 @@ export function tCachesModel(
   }
 }
 
+export function tBlobs(
+  apiClient: ApiClient,
+  blobs: types.BlobImageUnion | types.BlobImageUnion[],
+): types.Blob[] {
+  if (Array.isArray(blobs)) {
+    return blobs.map((blob) => tBlob(apiClient, blob));
+  } else {
+    return [tBlob(apiClient, blobs)];
+  }
+}
+
+export function tBlob(
+  apiClient: ApiClient,
+  blob: types.BlobImageUnion,
+): types.Blob {
+  if (typeof blob === 'object' && blob !== null) {
+    return blob;
+  }
+
+  throw new Error(
+    `Could not parse input as Blob. Unsupported blob type: ${typeof blob}`,
+  );
+}
+
+export function tImageBlob(
+  apiClient: ApiClient,
+  blob: types.BlobImageUnion,
+): types.Blob {
+  const transformedBlob = tBlob(apiClient, blob);
+  if (
+    transformedBlob.mimeType &&
+    transformedBlob.mimeType.startsWith('image/')
+  ) {
+    return transformedBlob;
+  }
+  throw new Error(`Unsupported mime type: ${transformedBlob.mimeType!}`);
+}
+
+export function tAudioBlob(apiClient: ApiClient, blob: types.Blob): types.Blob {
+  const transformedBlob = tBlob(apiClient, blob);
+  if (
+    transformedBlob.mimeType &&
+    transformedBlob.mimeType.startsWith('audio/')
+  ) {
+    return transformedBlob;
+  }
+  throw new Error(`Unsupported mime type: ${transformedBlob.mimeType!}`);
+}
+
 export function tPart(
   apiClient: ApiClient,
   origin?: types.PartUnion | null,
@@ -224,43 +273,10 @@ export function tContents(
   return result;
 }
 
-export function processSchema(apiClient: ApiClient, schema: types.Schema) {
-  if (!apiClient.isVertexAI()) {
-    if ('default' in schema) {
-      throw new Error(
-        'Default value is not supported in the response schema for the Gemini API.',
-      );
-    }
-  }
-
-  if ('anyOf' in schema) {
-    if (schema['anyOf'] !== undefined) {
-      for (const subSchema of schema['anyOf']) {
-        processSchema(apiClient, subSchema);
-      }
-    }
-  }
-
-  if ('items' in schema) {
-    if (schema['items'] !== undefined) {
-      processSchema(apiClient, schema['items']);
-    }
-  }
-
-  if ('properties' in schema) {
-    if (schema['properties'] !== undefined) {
-      for (const subSchema of Object.values(schema['properties'])) {
-        processSchema(apiClient, subSchema);
-      }
-    }
-  }
-}
-
 export function tSchema(
   apiClient: ApiClient,
   schema: types.Schema,
 ): types.Schema {
-  processSchema(apiClient, schema);
   return schema;
 }
 
@@ -268,7 +284,7 @@ export function tSpeechConfig(
   apiClient: ApiClient,
   speechConfig: types.SpeechConfigUnion,
 ): types.SpeechConfig {
-  if (typeof speechConfig === 'object' && 'voiceConfig' in speechConfig) {
+  if (typeof speechConfig === 'object') {
     return speechConfig;
   } else if (typeof speechConfig === 'string') {
     return {

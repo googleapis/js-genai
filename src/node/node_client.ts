@@ -7,6 +7,7 @@
 import {GoogleAuthOptions} from 'google-auth-library';
 
 import {ApiClient} from '../_api_client';
+import {getBaseUrl} from '../_base_url';
 import {Caches} from '../caches';
 import {Chats} from '../chats';
 import {GoogleGenAIOptions} from '../client';
@@ -119,6 +120,19 @@ export class GoogleGenAI {
             ' precedence over the API key from the environment variables.',
         );
         this.apiKey = undefined;
+      }
+    }
+
+    const baseUrl = getBaseUrl(
+      options,
+      getEnv('GOOGLE_VERTEX_BASE_URL'),
+      getEnv('GOOGLE_GEMINI_BASE_URL'),
+    );
+    if (baseUrl) {
+      if (options.httpOptions) {
+        options.httpOptions.baseUrl = baseUrl;
+      } else {
+        options.httpOptions = {baseUrl: baseUrl};
       }
     }
 

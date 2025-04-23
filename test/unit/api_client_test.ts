@@ -361,6 +361,44 @@ describe('ApiClient', () => {
       expect(client.isVertexAI()).toBeFalse();
     });
 
+    it('should set websocket protocol to ws when base URL is http', () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        project: 'project-from-opts',
+        location: 'location-from-opts',
+        apiKey: 'apikey-from-opts',
+        vertexai: false,
+        apiVersion: 'v1beta',
+        httpOptions: {
+          baseUrl: 'http://custom-base-url.googleapis.com',
+        },
+        uploader: new CrossUploader(),
+      });
+
+      expect(client.getWebsocketBaseUrl()).toBe(
+        'ws://custom-base-url.googleapis.com/',
+      );
+    });
+
+    it('should set websocket protocol to wss when base URL is https', () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        project: 'project-from-opts',
+        location: 'location-from-opts',
+        apiKey: 'apikey-from-opts',
+        vertexai: false,
+        apiVersion: 'v1beta',
+        httpOptions: {
+          baseUrl: 'https://custom-base-url.googleapis.com',
+        },
+        uploader: new CrossUploader(),
+      });
+
+      expect(client.getWebsocketBaseUrl()).toBe(
+        'wss://custom-base-url.googleapis.com/',
+      );
+    });
+
     it('should override base URL with provided values', () => {
       const client = new ApiClient({
         auth: new FakeAuth(),
@@ -629,6 +667,35 @@ describe('ApiClient', () => {
       expect(fetchArgs[0][1].signal instanceof AbortSignal).toBeTrue();
       // @ts-expect-error TS2532: Object is possibly 'undefined'.
       expect(fetchArgs[0][1].signal.aborted).toBeFalse();
+    });
+    it('should include AbortSignal when AbortSignal is set from request', async () => {
+      const externalAbortController = new AbortController();
+      const client = new ApiClient({
+        auth: new FakeAuth('test-api-key'),
+        apiKey: 'test-api-key',
+        uploader: new CrossUploader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(
+            JSON.stringify(mockGenerateContentResponse),
+            fetchOkOptions,
+          ),
+        ),
+      );
+      await client.request({
+        path: 'test-path',
+        httpMethod: 'POST',
+        abortSignal: externalAbortController.signal,
+      });
+
+      externalAbortController.abort();
+
+      const fetchArgs = fetchSpy.calls.allArgs();
+      // @ts-expect-error TS2532: Object is possibly 'undefined'.
+      expect(fetchArgs[0][1].signal instanceof AbortSignal).toBeTrue();
+      // @ts-expect-error TS2532: Object is possibly 'undefined'.
+      expect(fetchArgs[0][1].signal.aborted).toBeTrue();
     });
     it('should apply requestHttpOptions when provided', async () => {
       const client = new ApiClient({

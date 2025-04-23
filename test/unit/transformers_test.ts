@@ -147,7 +147,10 @@ describe('tTool', () => {
 
 describe('tSchema', () => {
   it('no change', () => {
-    const schema = {title: 'title'} as types.Schema;
+    const schema = {
+      title: 'title',
+      default: 'default',
+    } as types.Schema;
     expect(
       tSchema(
         new ApiClient({
@@ -168,29 +171,6 @@ describe('tSchema', () => {
         schema,
       ),
     ).toEqual(schema);
-  });
-  it('throws error if default value is present for MLDev', () => {
-    const schema = {
-      type: 'STRING',
-      properties: {
-        'name': {
-          type: 'STRING',
-          default: 'test',
-        },
-      },
-    } as types.Schema;
-    expect(() => {
-      tSchema(
-        new ApiClient({
-          auth: new FakeAuth(),
-          vertexai: false,
-          uploader: new CrossUploader(),
-        }),
-        schema,
-      );
-    }).toThrowError(
-      'Default value is not supported in the response schema for the Gemini API.',
-    );
   });
   it('processes anyOf', () => {
     const schema = {

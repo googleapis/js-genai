@@ -26,15 +26,13 @@ async function generateContentFromMLDev() {
   let i = 0;
   for await (const chunk of response) {
     const text = chunk.text;
+    const data = chunk.data;
     if (text) {
       console.debug(text);
-    } else if (chunk.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data) {
+    } else if (data) {
       const fileName = `generate_content_streaming_image_${i++}.png`;
       console.debug(`Writing response image to file: ${fileName}.`);
-      fs.writeFileSync(
-        fileName,
-        chunk.candidates[0].content.parts[0].inlineData.data,
-      );
+      fs.writeFileSync(fileName, data);
     }
   }
 }
@@ -58,15 +56,13 @@ async function generateContentFromVertexAI() {
   let i = 0;
   for await (const chunk of response) {
     const text = chunk.text;
+    const data = chunk.data;
     if (text) {
       console.debug(text);
-    } else if (chunk.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data) {
+    } else if (data) {
       const fileName = `generate_content_streaming_image_${i++}.png`;
       console.debug(`Writing response image to file: ${fileName}.`);
-      fs.writeFileSync(
-        fileName,
-        chunk.candidates[0].content.parts[0].inlineData.data,
-      );
+      fs.writeFileSync(fileName, data);
     }
   }
 }

@@ -809,6 +809,13 @@ export declare interface GenerationConfigRoutingConfig {
 export declare interface GenerateContentConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
   /** Instructions for the model to steer it toward better performance.
       For example, "Answer as concisely as possible" or "Don't use technical
       terms in your response".
@@ -1234,6 +1241,48 @@ export class GenerateContentResponse {
   }
 
   /**
+   * Returns the concatenation of all inline data parts from the first candidate
+   * in the response.
+   *
+   * @remarks
+   * If there are multiple candidates in the response, the inline data from the
+   * first one will be returned. If there are non-inline data parts in the
+   * response, the concatenation of all inline data parts will be returned, and
+   * a warning will be logged.
+   */
+  get data(): string | undefined {
+    if (this.candidates?.[0]?.content?.parts?.length === 0) {
+      return undefined;
+    }
+    if (this.candidates && this.candidates.length > 1) {
+      console.warn(
+        'there are multiple candidates in the response, returning data from the first one.',
+      );
+    }
+    let data = '';
+    const nonDataParts = [];
+    for (const part of this.candidates?.[0]?.content?.parts ?? []) {
+      for (const [fieldName, fieldValue] of Object.entries(part)) {
+        if (
+          fieldName !== 'inlineData' &&
+          (fieldValue !== null || fieldValue !== undefined)
+        ) {
+          nonDataParts.push(fieldName);
+        }
+      }
+      if (part.inlineData && typeof part.inlineData.data === 'string') {
+        data += atob(part.inlineData.data);
+      }
+    }
+    if (nonDataParts.length > 0) {
+      console.warn(
+        `there are non-data parts ${nonDataParts} in the response, returning concatenation of all data parts. Please refer to the non data parts for a full response from model.`,
+      );
+    }
+    return data.length > 0 ? btoa(data) : undefined;
+  }
+
+  /**
    * Returns the function calls from the first candidate in the response.
    *
    * @remarks
@@ -1393,6 +1442,13 @@ export /** Optional parameters for the embed_content method. */
 declare interface EmbedContentConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
   /** Type of task for which the embedding will be used.
    */
   taskType?: string;
@@ -1474,6 +1530,13 @@ export class EmbedContentResponse {
 export declare interface GenerateImagesConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
   /** Cloud Storage URI used to store the generated images.
    */
   outputGcsUri?: string;
@@ -1601,6 +1664,13 @@ export class GenerateImagesResponse {
 export declare interface GetModelConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
 }
 
 export declare interface GetModelParameters {
@@ -1695,6 +1765,13 @@ export declare interface GenerationConfig {
 export declare interface CountTokensConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
   /** Instructions for the model to steer it toward better performance.
    */
   systemInstruction?: ContentUnion;
@@ -1731,6 +1808,13 @@ export class CountTokensResponse {
 export declare interface ComputeTokensConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
 }
 
 /** Parameters for computing tokens. */
@@ -1765,6 +1849,13 @@ export class ComputeTokensResponse {
 export declare interface GenerateVideosConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
   /** Number of output videos. */
   numberOfVideos?: number;
   /** The gcs bucket where to save the generated videos. */
@@ -1847,6 +1938,13 @@ export declare interface GenerateVideosOperation {
 export declare interface CreateCachedContentConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
   /** The TTL for this resource. The expiration time is computed: now + TTL. It is a duration string, with up to nine fractional digits, terminated by 's'. Example: "3.5s". */
   ttl?: string;
   /** Timestamp of when this resource is considered expired. Uses RFC 3339 format, Example: 2014-10-02T15:01:23Z. */
@@ -1913,6 +2011,13 @@ export declare interface CachedContent {
 export declare interface GetCachedContentConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
 }
 
 /** Parameters for caches.get method. */
@@ -1929,6 +2034,13 @@ export declare interface GetCachedContentParameters {
 export declare interface DeleteCachedContentConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
 }
 
 /** Parameters for caches.delete method. */
@@ -1948,6 +2060,13 @@ export class DeleteCachedContentResponse {}
 export declare interface UpdateCachedContentConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
   /** The TTL for this resource. The expiration time is computed: now + TTL. It is a duration string, with up to nine fractional digits, terminated by 's'. Example: "3.5s". */
   ttl?: string;
   /** Timestamp of when this resource is considered expired. Uses RFC 3339 format, Example: 2014-10-02T15:01:23Z. */
@@ -1967,6 +2086,13 @@ export declare interface UpdateCachedContentParameters {
 export declare interface ListCachedContentsConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
   pageSize?: number;
   pageToken?: string;
 }
@@ -1989,6 +2115,13 @@ export class ListCachedContentsResponse {
 export declare interface ListFilesConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
   pageSize?: number;
   pageToken?: string;
 }
@@ -2053,6 +2186,13 @@ export class ListFilesResponse {
 export declare interface CreateFileConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
 }
 
 /** Generates the parameters for the private _create method. */
@@ -2131,6 +2271,13 @@ export class CreateFileResponse {
 export declare interface GetFileConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
 }
 
 /** Generates the parameters for the get method. */
@@ -2145,6 +2292,13 @@ export declare interface GetFileParameters {
 export declare interface DeleteFileConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
 }
 
 /** Generates the parameters for the get method. */
@@ -2161,6 +2315,13 @@ export class DeleteFileResponse {}
 export declare interface GetOperationConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
 }
 
 /** Parameters for the GET method. */
@@ -2174,6 +2335,13 @@ export declare interface GetOperationParameters {
 export declare interface FetchPredictOperationConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
 }
 
 /** Parameters for the fetchPredictOperation method. */
@@ -2243,6 +2411,13 @@ export declare interface ReplayFile {
 export declare interface UploadFileConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
   /** The name of the file in the destination (e.g., 'files/sample-image'. If not provided one will be generated. */
   name?: string;
   /** mime_type: The MIME type of the file. If not provided, it will be inferred from the file extension. */
@@ -2255,6 +2430,13 @@ export declare interface UploadFileConfig {
 export declare interface DownloadFileConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
 }
 
 /** Configuration for upscaling an image.
@@ -2266,6 +2448,13 @@ export declare interface DownloadFileConfig {
 export declare interface UpscaleImageConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
   /** Whether to include a reason for filtered-out images in the
       response. */
   includeRaiReason?: boolean;
@@ -2708,6 +2897,22 @@ export declare interface ActivityEnd {}
 export declare interface LiveClientRealtimeInput {
   /** Inlined bytes data for media input. */
   mediaChunks?: Blob[];
+  /** The realtime audio input stream. */
+  audio?: Blob;
+  /** 
+Indicates that the audio stream has ended, e.g. because the microphone was
+turned off.
+
+This should only be sent when automatic activity detection is enabled
+(which is the default).
+
+The client can reopen the stream by sending an audio message.
+ */
+  audioStreamEnd?: boolean;
+  /** The realtime video input stream. */
+  video?: Blob;
+  /** The realtime text input stream. */
+  text?: string;
   /** Marks the start of user activity. */
   activityStart?: ActivityStart;
   /** Marks the end of user activity. */
@@ -2883,7 +3088,23 @@ export declare interface LiveSendClientContentParameters {
 /** Parameters for sending realtime input to the live API. */
 export declare interface LiveSendRealtimeInputParameters {
   /** Realtime input to send to the session. */
-  media: Blob;
+  media?: BlobImageUnion;
+  /** The realtime audio input stream. */
+  audio?: Blob;
+  /** 
+Indicates that the audio stream has ended, e.g. because the microphone was
+turned off.
+
+This should only be sent when automatic activity detection is enabled
+(which is the default).
+
+The client can reopen the stream by sending an audio message.
+ */
+  audioStreamEnd?: boolean;
+  /** The realtime video input stream. */
+  video?: BlobImageUnion;
+  /** The realtime text input stream. */
+  text?: string;
   /** Marks the start of user activity. */
   activityStart?: ActivityStart;
   /** Marks the end of user activity. */
@@ -2903,6 +3124,8 @@ export declare interface OperationGetParameters {
   /** Used to override the default configuration. */
   config?: GetOperationConfig;
 }
+
+export type BlobImageUnion = Blob;
 
 export type PartUnion = Part | string;
 

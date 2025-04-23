@@ -107,19 +107,19 @@ const ai = new GoogleGenAI({
 All API features are accessed through an instance of the `GoogleGenAI` classes.
 The submodules bundle together related API methods:
 
-- [`ai.models`](https://googleapis.github.io/js-genai/classes/models.Models.html):
+- [`ai.models`](https://googleapis.github.io/js-genai/main/classes/models.Models.html):
   Use `models` to query models (`generateContent`, `generateImages`, ...), or
   examine their metadata.
-- [`ai.caches`](https://googleapis.github.io/js-genai/classes/caches.Caches.html):
+- [`ai.caches`](https://googleapis.github.io/js-genai/main/classes/caches.Caches.html):
   Create and manage `caches` to reduce costs when repeatedly using the same
   large prompt prefix.
-- [`ai.chats`](https://googleapis.github.io/js-genai/classes/chats.Chats.html):
+- [`ai.chats`](https://googleapis.github.io/js-genai/main/classes/chats.Chats.html):
   Create local stateful `chat` objects to simplify multi turn interactions.
-- [`ai.files`](https://googleapis.github.io/js-genai/classes/files.Files.html):
+- [`ai.files`](https://googleapis.github.io/js-genai/main/classes/files.Files.html):
   Upload `files` to the API and reference them in your prompts.
   This reduces bandwidth if you use a file many times, and handles files too
   large to fit inline with your prompt.
-- [`ai.live`](https://googleapis.github.io/js-genai/classes/live.Live.html):
+- [`ai.live`](https://googleapis.github.io/js-genai/main/classes/live.Live.html):
   Start a `live` session for real time interaction, allows text + audio + video
   input, and text or audio output.
 

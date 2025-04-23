@@ -115,6 +115,10 @@ export interface HttpRequest {
    * Optional set of customizable configuration for HTTP requests.
    */
   httpOptions?: HttpOptions;
+  /**
+   * Optional abort signal which can be used to cancel the request.
+   */
+  abortSignal?: AbortSignal;
 }
 
 /**
@@ -243,7 +247,7 @@ export class ApiClient {
   getWebsocketBaseUrl() {
     const baseUrl = this.getBaseUrl();
     const urlParts = new URL(baseUrl);
-    urlParts.protocol = 'wss';
+    urlParts.protocol = urlParts.protocol == 'http:' ? 'ws' : 'wss';
     return urlParts.toString();
   }
 
@@ -329,6 +333,7 @@ export class ApiClient {
     requestInit = await this.includeExtraHttpOptionsToRequestInit(
       requestInit,
       patchedHttpOptions,
+      request.abortSignal,
     );
     return this.unaryApiCall(url, requestInit, request.httpMethod);
   }
@@ -383,6 +388,7 @@ export class ApiClient {
     requestInit = await this.includeExtraHttpOptionsToRequestInit(
       requestInit,
       patchedHttpOptions,
+      request.abortSignal,
     );
     return this.streamApiCall(url, requestInit, request.httpMethod);
   }
@@ -390,11 +396,19 @@ export class ApiClient {
   private async includeExtraHttpOptionsToRequestInit(
     requestInit: RequestInit,
     httpOptions: HttpOptions,
+    abortSignal?: AbortSignal,
   ): Promise<RequestInit> {
-    if (httpOptions && httpOptions.timeout && httpOptions.timeout > 0) {
+    if ((httpOptions && httpOptions.timeout) || abortSignal) {
       const abortController = new AbortController();
       const signal = abortController.signal;
-      setTimeout(() => abortController.abort(), httpOptions.timeout);
+      if (httpOptions.timeout && httpOptions?.timeout > 0) {
+        setTimeout(() => abortController.abort(), httpOptions.timeout);
+      }
+      if (abortSignal) {
+        abortSignal.addEventListener('abort', () => {
+          abortController.abort();
+        });
+      }
       requestInit.signal = signal;
     }
     requestInit.headers = await this.getHeadersInternal(httpOptions);

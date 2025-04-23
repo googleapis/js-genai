@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {setDefaultBaseUrls} from '../../../src/_base_url';
 import {NodeUploader} from '../../../src/node/_node_uploader';
 import {GoogleGenAI} from '../../../src/node/node_client';
 
@@ -13,6 +14,10 @@ describe('Client', () => {
     delete process.env['GOOGLE_GENAI_USE_VERTEXAI'];
     delete process.env['GOOGLE_CLOUD_PROJECT'];
     delete process.env['GOOGLE_CLOUD_LOCATION'];
+    delete process.env['GOOGLE_GEMINI_BASE_URL'];
+    delete process.env['GOOGLE_VERTEX_BASE_URL'];
+
+    setDefaultBaseUrls({});
   });
 
   it('should initialize without any options', () => {
@@ -126,6 +131,103 @@ describe('Client', () => {
     const client = new GoogleGenAI({});
     expect(client['apiClient'].clientOptions.uploader).toBeInstanceOf(
       NodeUploader,
+    );
+  });
+  it('should persist base URL specified from HttpOptions Mldev', () => {
+    setDefaultBaseUrls({
+      geminiUrl: 'https://custom-gemini-base-url.googleapis.com',
+      vertexUrl: 'https://custom-vertex-base-url.googleapis.com',
+    });
+    process.env['GOOGLE_GEMINI_BASE_URL'] =
+      'https://gemini-base-url.googleapis.com';
+    process.env['GOOGLE_VERTEX_BASE_URL'] =
+      'https://vertex-base-url.googleapis.com';
+
+    const client = new GoogleGenAI({
+      httpOptions: {baseUrl: 'https://original-gemini-base-url.googleapis.com'},
+    });
+
+    expect(client['apiClient'].getBaseUrl()).toBe(
+      'https://original-gemini-base-url.googleapis.com',
+    );
+  });
+  it('should persist base URL specified from HttpOptions Vertex', () => {
+    setDefaultBaseUrls({
+      geminiUrl: 'https://custom-gemini-base-url.googleapis.com',
+      vertexUrl: 'https://custom-vertex-base-url.googleapis.com',
+    });
+    process.env['GOOGLE_GEMINI_BASE_URL'] =
+      'https://gemini-base-url.googleapis.com';
+    process.env['GOOGLE_VERTEX_BASE_URL'] =
+      'https://vertex-base-url.googleapis.com';
+
+    const client = new GoogleGenAI({
+      vertexai: true,
+      httpOptions: {baseUrl: 'https://original-vertex-base-url.googleapis.com'},
+    });
+
+    expect(client['apiClient'].getBaseUrl()).toBe(
+      'https://original-vertex-base-url.googleapis.com',
+    );
+  });
+  it('should override base URL with values from getDefaultBaseUrls Mldev', () => {
+    setDefaultBaseUrls({
+      geminiUrl: 'https://custom-gemini-base-url.googleapis.com',
+      vertexUrl: 'https://custom-vertex-base-url.googleapis.com',
+    });
+    process.env['GOOGLE_GEMINI_BASE_URL'] =
+      'https://gemini-base-url.googleapis.com';
+    process.env['GOOGLE_VERTEX_BASE_URL'] =
+      'https://vertex-base-url.googleapis.com';
+
+    const client = new GoogleGenAI({});
+
+    expect(client['apiClient'].getBaseUrl()).toBe(
+      'https://custom-gemini-base-url.googleapis.com',
+    );
+  });
+  it('should override base URL with values from getDefaultBaseUrls Vertex', () => {
+    setDefaultBaseUrls({
+      geminiUrl: 'https://custom-gemini-base-url.googleapis.com',
+      vertexUrl: 'https://custom-vertex-base-url.googleapis.com',
+    });
+    process.env['GOOGLE_GEMINI_BASE_URL'] =
+      'https://gemini-base-url.googleapis.com';
+    process.env['GOOGLE_VERTEX_BASE_URL'] =
+      'https://vertex-base-url.googleapis.com';
+
+    const client = new GoogleGenAI({
+      vertexai: true,
+    });
+
+    expect(client['apiClient'].getBaseUrl()).toBe(
+      'https://custom-vertex-base-url.googleapis.com',
+    );
+  });
+  it('should override base URL with values from environment variables Mldev', () => {
+    process.env['GOOGLE_GEMINI_BASE_URL'] =
+      'https://gemini-base-url.googleapis.com';
+    process.env['GOOGLE_VERTEX_BASE_URL'] =
+      'https://vertex-base-url.googleapis.com';
+
+    const client = new GoogleGenAI({});
+
+    expect(client['apiClient'].getBaseUrl()).toBe(
+      'https://gemini-base-url.googleapis.com',
+    );
+  });
+  it('should override base URL with values from environment variables Vertex', () => {
+    process.env['GOOGLE_GEMINI_BASE_URL'] =
+      'https://gemini-base-url.googleapis.com';
+    process.env['GOOGLE_VERTEX_BASE_URL'] =
+      'https://vertex-base-url.googleapis.com';
+
+    const client = new GoogleGenAI({
+      vertexai: true,
+    });
+
+    expect(client['apiClient'].getBaseUrl()).toBe(
+      'https://vertex-base-url.googleapis.com',
     );
   });
 });

@@ -1447,6 +1447,139 @@ export function liveConnectParametersToVertex(
   return toObject;
 }
 
+export function activityStartToMldev(): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  return toObject;
+}
+
+export function activityStartToVertex(): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  return toObject;
+}
+
+export function activityEndToMldev(): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  return toObject;
+}
+
+export function activityEndToVertex(): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  return toObject;
+}
+
+export function liveSendRealtimeInputParametersToMldev(
+  apiClient: ApiClient,
+  fromObject: types.LiveSendRealtimeInputParameters,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromMedia = common.getValueByPath(fromObject, ['media']);
+  if (fromMedia != null) {
+    common.setValueByPath(
+      toObject,
+      ['mediaChunks'],
+      t.tBlobs(apiClient, fromMedia),
+    );
+  }
+
+  const fromAudio = common.getValueByPath(fromObject, ['audio']);
+  if (fromAudio != null) {
+    common.setValueByPath(
+      toObject,
+      ['audio'],
+      t.tAudioBlob(apiClient, fromAudio),
+    );
+  }
+
+  const fromAudioStreamEnd = common.getValueByPath(fromObject, [
+    'audioStreamEnd',
+  ]);
+  if (fromAudioStreamEnd != null) {
+    common.setValueByPath(toObject, ['audioStreamEnd'], fromAudioStreamEnd);
+  }
+
+  const fromVideo = common.getValueByPath(fromObject, ['video']);
+  if (fromVideo != null) {
+    common.setValueByPath(
+      toObject,
+      ['video'],
+      t.tImageBlob(apiClient, fromVideo),
+    );
+  }
+
+  const fromText = common.getValueByPath(fromObject, ['text']);
+  if (fromText != null) {
+    common.setValueByPath(toObject, ['text'], fromText);
+  }
+
+  const fromActivityStart = common.getValueByPath(fromObject, [
+    'activityStart',
+  ]);
+  if (fromActivityStart != null) {
+    common.setValueByPath(toObject, ['activityStart'], activityStartToMldev());
+  }
+
+  const fromActivityEnd = common.getValueByPath(fromObject, ['activityEnd']);
+  if (fromActivityEnd != null) {
+    common.setValueByPath(toObject, ['activityEnd'], activityEndToMldev());
+  }
+
+  return toObject;
+}
+
+export function liveSendRealtimeInputParametersToVertex(
+  apiClient: ApiClient,
+  fromObject: types.LiveSendRealtimeInputParameters,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromMedia = common.getValueByPath(fromObject, ['media']);
+  if (fromMedia != null) {
+    common.setValueByPath(
+      toObject,
+      ['mediaChunks'],
+      t.tBlobs(apiClient, fromMedia),
+    );
+  }
+
+  if (common.getValueByPath(fromObject, ['audio']) !== undefined) {
+    throw new Error('audio parameter is not supported in Vertex AI.');
+  }
+
+  const fromAudioStreamEnd = common.getValueByPath(fromObject, [
+    'audioStreamEnd',
+  ]);
+  if (fromAudioStreamEnd != null) {
+    common.setValueByPath(toObject, ['audioStreamEnd'], fromAudioStreamEnd);
+  }
+
+  if (common.getValueByPath(fromObject, ['video']) !== undefined) {
+    throw new Error('video parameter is not supported in Vertex AI.');
+  }
+
+  if (common.getValueByPath(fromObject, ['text']) !== undefined) {
+    throw new Error('text parameter is not supported in Vertex AI.');
+  }
+
+  const fromActivityStart = common.getValueByPath(fromObject, [
+    'activityStart',
+  ]);
+  if (fromActivityStart != null) {
+    common.setValueByPath(toObject, ['activityStart'], activityStartToVertex());
+  }
+
+  const fromActivityEnd = common.getValueByPath(fromObject, ['activityEnd']);
+  if (fromActivityEnd != null) {
+    common.setValueByPath(toObject, ['activityEnd'], activityEndToVertex());
+  }
+
+  return toObject;
+}
+
 export function liveClientSetupToMldev(
   apiClient: ApiClient,
   fromObject: types.LiveClientSetup,
@@ -1726,30 +1859,6 @@ export function liveClientContentToVertex(
   return toObject;
 }
 
-export function activityStartToMldev(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
-export function activityStartToVertex(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
-export function activityEndToMldev(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
-export function activityEndToVertex(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
 export function liveClientRealtimeInputToMldev(
   apiClient: ApiClient,
   fromObject: types.LiveClientRealtimeInput,
@@ -1759,6 +1868,28 @@ export function liveClientRealtimeInputToMldev(
   const fromMediaChunks = common.getValueByPath(fromObject, ['mediaChunks']);
   if (fromMediaChunks != null) {
     common.setValueByPath(toObject, ['mediaChunks'], fromMediaChunks);
+  }
+
+  const fromAudio = common.getValueByPath(fromObject, ['audio']);
+  if (fromAudio != null) {
+    common.setValueByPath(toObject, ['audio'], fromAudio);
+  }
+
+  const fromAudioStreamEnd = common.getValueByPath(fromObject, [
+    'audioStreamEnd',
+  ]);
+  if (fromAudioStreamEnd != null) {
+    common.setValueByPath(toObject, ['audioStreamEnd'], fromAudioStreamEnd);
+  }
+
+  const fromVideo = common.getValueByPath(fromObject, ['video']);
+  if (fromVideo != null) {
+    common.setValueByPath(toObject, ['video'], fromVideo);
+  }
+
+  const fromText = common.getValueByPath(fromObject, ['text']);
+  if (fromText != null) {
+    common.setValueByPath(toObject, ['text'], fromText);
   }
 
   const fromActivityStart = common.getValueByPath(fromObject, [
@@ -1785,6 +1916,22 @@ export function liveClientRealtimeInputToVertex(
   const fromMediaChunks = common.getValueByPath(fromObject, ['mediaChunks']);
   if (fromMediaChunks != null) {
     common.setValueByPath(toObject, ['mediaChunks'], fromMediaChunks);
+  }
+
+  if (common.getValueByPath(fromObject, ['audio']) !== undefined) {
+    throw new Error('audio parameter is not supported in Vertex AI.');
+  }
+
+  if (common.getValueByPath(fromObject, ['audioStreamEnd']) !== undefined) {
+    throw new Error('audioStreamEnd parameter is not supported in Vertex AI.');
+  }
+
+  if (common.getValueByPath(fromObject, ['video']) !== undefined) {
+    throw new Error('video parameter is not supported in Vertex AI.');
+  }
+
+  if (common.getValueByPath(fromObject, ['text']) !== undefined) {
+    throw new Error('text parameter is not supported in Vertex AI.');
   }
 
   const fromActivityStart = common.getValueByPath(fromObject, [

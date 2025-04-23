@@ -5,6 +5,7 @@
  */
 
 import {ApiClient} from '../_api_client';
+import {getBaseUrl} from '../_base_url';
 import {Caches} from '../caches';
 import {Chats} from '../chats';
 import {GoogleGenAIOptions} from '../client';
@@ -80,6 +81,20 @@ export class GoogleGenAI {
     this.vertexai = options.vertexai ?? false;
 
     this.apiKey = options.apiKey;
+
+    const baseUrl = getBaseUrl(
+      options,
+      /*vertexBaseUrlFromEnv*/ undefined,
+      /*geminiBaseUrlFromEnv*/ undefined,
+    );
+    if (baseUrl) {
+      if (options.httpOptions) {
+        options.httpOptions.baseUrl = baseUrl;
+      } else {
+        options.httpOptions = {baseUrl: baseUrl};
+      }
+    }
+
     this.apiVersion = options.apiVersion;
     const auth = new WebAuth(this.apiKey);
     this.apiClient = new ApiClient({

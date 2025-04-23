@@ -132,6 +132,7 @@ export class Files extends BaseModule {
           body: JSON.stringify(body),
           httpMethod: 'GET',
           httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
           return httpResponse.json();
@@ -180,6 +181,7 @@ export class Files extends BaseModule {
           body: JSON.stringify(body),
           httpMethod: 'POST',
           httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
           return httpResponse.json();
@@ -235,6 +237,7 @@ export class Files extends BaseModule {
           body: JSON.stringify(body),
           httpMethod: 'GET',
           httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
           return httpResponse.json();
@@ -292,6 +295,7 @@ export class Files extends BaseModule {
           body: JSON.stringify(body),
           httpMethod: 'DELETE',
           httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
           return httpResponse.json();
