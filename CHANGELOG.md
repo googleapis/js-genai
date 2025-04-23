@@ -1,6 +1,27 @@
 # Changelog
 
 
+## [0.9.1](https://github.com/googleapis/js-genai/compare/v0.9.0...v0.9.1) (2025-04-23)
+
+
+### Features
+
+* add additional realtime input fields ([2150416](https://github.com/googleapis/js-genai/commit/2150416bb255418ff22c77006b4f8fa907b1c69c))
+* Add helper function `GenerateContentResponse.data` to return concatenation of all inline data parts. ([97b59a2](https://github.com/googleapis/js-genai/commit/97b59a29c0170ff7eabbecc8f6e335fd92d19aaa))
+* Allow users to set AbortSignal inside per request config to cancel http request ([c44f48d](https://github.com/googleapis/js-genai/commit/c44f48d91a60c564abb904f0d3c1fe70f8d833c9))
+* Define supporting scope for structured output with validation. ([77d4241](https://github.com/googleapis/js-genai/commit/77d42417814b33a48e323f2be12f4b71bd72d725))
+* implement helper function to generate FunctionDeclaration. ([96684d6](https://github.com/googleapis/js-genai/commit/96684d6695162605d17e973c6fb99884f02d4fe3))
+* implement mapping from zod schema to types.Schema. ([8214cf9](https://github.com/googleapis/js-genai/commit/8214cf96a34b35e480a8d371bb6fe667d7238780))
+* support `default` field in Schema when users call Gemini API ([2e61cce](https://github.com/googleapis/js-genai/commit/2e61cce3d45b1ab94d6b488286d918bbf7b3f41f))
+* Support setting the default base URL in clients via setDefaultBaseUrls() ([df978b8](https://github.com/googleapis/js-genai/commit/df978b8c42fd5c634d9ad4ba8c42bc301807d492))
+* Use ws:// for websockets established over http base URLs. ([774505b](https://github.com/googleapis/js-genai/commit/774505bd14a5b438464c4ab9a17da81b7c971d7c))
+
+
+### Bug Fixes
+
+* Return actual error text from streaming response ([808e0b5](https://github.com/googleapis/js-genai/commit/808e0b5e14023f1484eb01d3bc02d0e76e584d92)), closes [#346](https://github.com/googleapis/js-genai/issues/346)
+* Update _api_client to parse and throw errors during processing stream responses (fixes [#461](https://github.com/googleapis/js-genai/issues/461)) ([1932f1d](https://github.com/googleapis/js-genai/commit/1932f1dd7d5012747918cb6f8f0dcbd9b4581838))
+
 ## [0.9.0](https://github.com/googleapis/js-genai/compare/v0.8.0...v0.9.0) (2025-04-17)
 
 
