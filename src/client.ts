@@ -32,7 +32,7 @@ export interface GoogleGenAIOptions {
    *
    * @remarks
    * When true, the {@link https://cloud.google.com/vertex-ai/docs/reference/rest | Vertex AI API} will used.
-   * When false, the {@link https://cloud.google.com/vertex-ai/docs/reference/rest | Gemini API} will be used.
+   * When false, the {@link https://ai.google.dev/api | Gemini API} will be used.
    *
    * If unset, default SDK behavior is to use the Gemini API service.
    */
@@ -40,12 +40,14 @@ export interface GoogleGenAIOptions {
   /**
    * Optional. The Google Cloud project ID for Vertex AI clients.
    *
+   * Find your project ID: https://cloud.google.com/resource-manager/docs/creating-managing-projects#identifying_projects
+   *
    * @remarks
    * Only supported on Node runtimes, ignored on browser runtimes.
    */
   project?: string;
   /**
-   * Optional. The Google Cloud project region for Vertex AI clients.
+   * Optional. The Google Cloud project {@link https://cloud.google.com/vertex-ai/generative-ai/docs/learn/locations | location} for Vertex AI clients.
    *
    * @remarks
    * Only supported on Node runtimes, ignored on browser runtimes.
