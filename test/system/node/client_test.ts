@@ -11,7 +11,7 @@ import {z} from 'zod';
 import {GoogleGenAI} from '../../../src/node/node_client';
 import {
   functionDeclarationFromZodFunction,
-  responseSchemaFromZodType,
+  schemaFromZodType,
 } from '../../../src/schema_helper';
 import {
   FunctionCallingConfigMode,
@@ -193,10 +193,7 @@ describe('generateContent', () => {
       contents: 'populate the following object',
       config: {
         responseMimeType: 'application/json',
-        responseSchema: responseSchemaFromZodType(
-          client.vertexai,
-          nestedSchema,
-        ),
+        responseSchema: schemaFromZodType(nestedSchema),
       },
     });
     const parsedResponse = JSON.parse(
@@ -244,10 +241,7 @@ describe('generateContent', () => {
       contents: 'populate the following object',
       config: {
         responseMimeType: 'application/json',
-        responseSchema: responseSchemaFromZodType(
-          client.vertexai,
-          nestedSchema,
-        ),
+        responseSchema: schemaFromZodType(nestedSchema),
       },
     });
     const parsedResponse = JSON.parse(
@@ -275,7 +269,7 @@ describe('generateContent', () => {
         tools: [
           {
             functionDeclarations: [
-              functionDeclarationFromZodFunction(client.vertexai, {
+              functionDeclarationFromZodFunction({
                 name: 'concatStringFunction',
                 zodFunctionSchema: concatStringFunction,
               }),
@@ -317,7 +311,7 @@ it('ML Dev should generate function call with given zod function schema no separ
       tools: [
         {
           functionDeclarations: [
-            functionDeclarationFromZodFunction(client.vertexai, {
+            functionDeclarationFromZodFunction({
               name: 'concatStringFunction',
               zodFunctionSchema: concatStringFunction,
             }),
@@ -367,7 +361,7 @@ it('Vertex AI should generate function call with given zod function schema', asy
       tools: [
         {
           functionDeclarations: [
-            functionDeclarationFromZodFunction(client.vertexai, {
+            functionDeclarationFromZodFunction({
               name: 'concatStringFunction',
               zodFunctionSchema: concatStringFunction,
             }),

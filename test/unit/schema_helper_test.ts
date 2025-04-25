@@ -1,34 +1,22 @@
 import {z, ZodError} from 'zod';
 
-import {
-  functionDeclarationFromZodFunction,
-  responseSchemaFromZodType,
-} from '../../src/schema_helper';
+import {functionDeclarationFromZodFunction, schemaFromJson, schemaFromZodType,} from '../../src/schema_helper';
 import * as types from '../../src/types';
+
 describe('schema helper', () => {
-  describe('responseSchemaFromZodType can convert zod schema to Google AI schema', () => {
+  describe('schemaFromZodType can convert zod schema to Google AI schema', () => {
     // throw zod error whe item is not JSONSchema.
     it('should throw zod error for tuple schema due to item field data type mismatch', () => {
       const tupleSchema = z.object({
         tupleField: z.tuple([z.string(), z.number()]),
       });
-      expect(() => responseSchemaFromZodType(true, tupleSchema)).toThrowError(
-        ZodError,
-      );
-      expect(() => responseSchemaFromZodType(false, tupleSchema)).toThrowError(
-        ZodError,
-      );
+      expect(() => schemaFromZodType(tupleSchema)).toThrowError(ZodError);
     });
     it('should throw zod error for set schema due to unsupported property: uniqueItems', () => {
       const setSchema = z.object({
         setField: z.set(z.string()),
       });
-      expect(() => responseSchemaFromZodType(true, setSchema)).toThrowError(
-        ZodError,
-      );
-      expect(() => responseSchemaFromZodType(false, setSchema)).toThrowError(
-        ZodError,
-      );
+      expect(() => schemaFromZodType(setSchema)).toThrowError(ZodError);
     });
     it('should not throw zod error for supported schema.', () => {
       const supportedSchema = z.object({
@@ -43,12 +31,9 @@ describe('schema helper', () => {
         numberWithMinMax: z.number().min(1).max(10),
         simpleBoolean: z.boolean(),
       });
-      expect(() =>
-        responseSchemaFromZodType(true, supportedSchema),
-      ).not.toThrowError(ZodError);
-      expect(() =>
-        responseSchemaFromZodType(false, supportedSchema),
-      ).not.toThrowError(ZodError);
+      expect(() => schemaFromZodType(supportedSchema)).not.toThrowError(
+        ZodError,
+      );
     });
     it('should throw zod error for nested zod object referred twice due to unsupported property: $ref', () => {
       const innerObject = z.object({
@@ -61,12 +46,7 @@ describe('schema helper', () => {
         inner: innerObject,
         notherInner: innerObject,
       });
-      expect(() => responseSchemaFromZodType(true, nestedSchema)).toThrowError(
-        ZodError,
-      );
-      expect(() => responseSchemaFromZodType(false, nestedSchema)).toThrowError(
-        ZodError,
-      );
+      expect(() => schemaFromZodType(nestedSchema)).toThrowError(ZodError);
     });
     it('should throw zod error for all fields that failed validation together', () => {
       const unsupportedSchema = z.object({
@@ -109,29 +89,16 @@ describe('schema helper', () => {
       //     "message": "Expected boolean, received object"
       //   }
       // ]
-      // Above is the error message from responseSchemaFromZodType, it lists all
+      // Above is the error message from schemaFromZodType, it lists all
       // incompatible fields
       let vertextZodError: ZodError = new ZodError([]);
       try {
-        responseSchemaFromZodType(true, unsupportedSchema);
+        schemaFromZodType(unsupportedSchema);
       } catch (error) {
         vertextZodError = error as ZodError;
       }
-      expect(() =>
-        responseSchemaFromZodType(true, unsupportedSchema),
-      ).toThrowError(ZodError);
+      expect(() => schemaFromZodType(unsupportedSchema)).toThrowError(ZodError);
       expect(vertextZodError.errors.length).toBe(3);
-
-      let genaiZodError: ZodError = new ZodError([]);
-      try {
-        responseSchemaFromZodType(false, unsupportedSchema);
-      } catch (error) {
-        genaiZodError = error as ZodError;
-      }
-      expect(() =>
-        responseSchemaFromZodType(false, unsupportedSchema),
-      ).toThrowError(ZodError);
-      expect(genaiZodError.errors.length).toBe(3);
     });
     it('should process simple zod object, with optional fields', () => {
       const zodSchema = z.object({
@@ -192,8 +159,7 @@ describe('schema helper', () => {
           'simpleBoolean',
         ],
       };
-      expect(responseSchemaFromZodType(false, zodSchema)).toEqual(expected);
-      expect(responseSchemaFromZodType(true, zodSchema)).toEqual(expected);
+      expect(schemaFromZodType(zodSchema)).toEqual(expected);
     });
     it('should process nested zod object if it was only referred once', () => {
       const innerObject = z.object({
@@ -227,8 +193,8 @@ describe('schema helper', () => {
         },
         required: ['simpleString', 'simpleInteger', 'inner'],
       };
-      expect(responseSchemaFromZodType(false, nestedSchema)).toEqual(expected);
-      expect(responseSchemaFromZodType(true, nestedSchema)).toEqual(expected);
+      expect(schemaFromZodType(nestedSchema)).toEqual(expected);
+      expect(schemaFromZodType(nestedSchema)).toEqual(expected);
     });
     it('should process primitive types directly', () => {
       const stringDirectly = z
@@ -252,35 +218,23 @@ describe('schema helper', () => {
         pattern: '^[a-zA-Z]{1,10}$',
         description: 'This is a simple string',
       };
-      expect(responseSchemaFromZodType(false, stringDirectly)).toEqual(
-        expectedStringDirectly,
-      );
-      expect(responseSchemaFromZodType(true, stringDirectly)).toEqual(
-        expectedStringDirectly,
-      );
-
+      expect(schemaFromZodType(stringDirectly)).toEqual(expectedStringDirectly);
       const expectedNumberDirectly = {
         type: types.Type.NUMBER,
         minimum: 1,
         maximum: 10,
         description: 'This is a simple number',
       };
-      expect(responseSchemaFromZodType(false, numberDirectly)).toEqual(
-        expectedNumberDirectly,
-      );
-      expect(responseSchemaFromZodType(true, numberDirectly)).toEqual(
-        expectedNumberDirectly,
-      );
-
+      expect(schemaFromZodType(numberDirectly)).toEqual(expectedNumberDirectly);
       const expectedIntegerDirectly = {
         type: types.Type.INTEGER,
         format: 'int64',
         description: 'This is a simple integer',
       };
-      expect(responseSchemaFromZodType(false, integerDirectly)).toEqual(
+      expect(schemaFromZodType(integerDirectly)).toEqual(
         expectedIntegerDirectly,
       );
-      expect(responseSchemaFromZodType(true, integerDirectly)).toEqual(
+      expect(schemaFromZodType(integerDirectly)).toEqual(
         expectedIntegerDirectly,
       );
 
@@ -288,10 +242,7 @@ describe('schema helper', () => {
         type: types.Type.BOOLEAN,
         description: 'This is a simple boolean',
       };
-      expect(responseSchemaFromZodType(false, booleanDirectly)).toEqual(
-        expectedBooleanDirectly,
-      );
-      expect(responseSchemaFromZodType(true, booleanDirectly)).toEqual(
+      expect(schemaFromZodType(booleanDirectly)).toEqual(
         expectedBooleanDirectly,
       );
     });
@@ -325,8 +276,7 @@ describe('schema helper', () => {
         required: ['stringArray', 'numberArray'],
       };
 
-      expect(responseSchemaFromZodType(true, zodSchema)).toEqual(expected);
-      expect(responseSchemaFromZodType(false, zodSchema)).toEqual(expected);
+      expect(schemaFromZodType(zodSchema)).toEqual(expected);
     });
     it('should process zod array of objects', () => {
       const innerObject = z.object({
@@ -336,7 +286,7 @@ describe('schema helper', () => {
       const objectArray = z.object({
         arrayOfObjects: z.array(innerObject),
       });
-      expect(responseSchemaFromZodType(true, objectArray)).toEqual({
+      expect(schemaFromZodType(objectArray)).toEqual({
         type: types.Type.OBJECT,
         properties: {
           arrayOfObjects: {
@@ -356,37 +306,20 @@ describe('schema helper', () => {
         required: ['arrayOfObjects'],
       });
     });
-    it('ML dev should throw error and vertex ai should not throw error for when there is default value', () => {
-      const innerObject = z.object({
-        simpleString: z.string().default('default'),
-        anotherString: z.string(),
+    it('should process default value', () => {
+      const defaultObject = z.object({
+        simpleString: z.string().default('default string'),
       });
-      const objectArray = z.object({
-        arrayOfObjects: z.array(innerObject),
-      });
-      expect(() => responseSchemaFromZodType(false, objectArray)).toThrowError(
-        'Default value is not supported for Gemini API.',
-      );
-      expect(responseSchemaFromZodType(true, objectArray)).toEqual({
+      const expected = {
         type: types.Type.OBJECT,
         properties: {
-          arrayOfObjects: {
-            type: types.Type.ARRAY,
-            items: {
-              type: types.Type.OBJECT,
-              properties: {
-                simpleString: {
-                  type: types.Type.STRING,
-                  default: 'default',
-                },
-                anotherString: {type: types.Type.STRING},
-              },
-              required: ['anotherString'],
-            },
+          simpleString: {
+            type: types.Type.STRING,
+            default: 'default string',
           },
         },
-        required: ['arrayOfObjects'],
-      });
+      };
+      expect(schemaFromZodType(defaultObject)).toEqual(expected);
     });
     it('should process primitive nullables', () => {
       /*
@@ -412,34 +345,30 @@ describe('schema helper', () => {
         },
         required: ['nullablePrimitives'],
       };
-      expect(responseSchemaFromZodType(true, objectNullable)).toEqual(expected);
-      expect(responseSchemaFromZodType(false, objectNullable)).toEqual(
-        expected,
-      );
+      expect(schemaFromZodType(objectNullable)).toEqual(expected);
     });
     it('should throw error when there is only null in the type', () => {
       const objectNullable = z.object({
         nullValue: z.null(),
       });
 
-      expect(() =>
-        responseSchemaFromZodType(true, objectNullable),
-      ).toThrowError(
+      expect(() => schemaFromZodType(objectNullable)).toThrowError(
         'type: null can not be the only possible type for the field.',
       );
-      expect(() =>
-        responseSchemaFromZodType(false, objectNullable),
-      ).toThrowError(
+      expect(() => schemaFromZodType(objectNullable)).toThrowError(
         'type: null can not be the only possible type for the field.',
       );
     });
     it('should process nullable array and remove anyOf filed when necessary', () => {
       /*
-         Resulted JSONSchema:
-         { anyOf: [ { type: 'array', items: {type: 'string'} }, { type: 'null' }
-         ]
-         }
-         */
+      Resulted JSONSchema:
+        { anyOf: 
+          [ 
+            { type: 'array', items: {type: 'string'} }, 
+            { type: 'null' }
+          ]
+        }
+      */
       const nullableArray = z.array(z.string()).nullable();
       const expected = {
         type: types.Type.ARRAY,
@@ -448,19 +377,23 @@ describe('schema helper', () => {
         },
         nullable: true,
       };
-      expect(responseSchemaFromZodType(true, nullableArray)).toEqual(expected);
-      expect(responseSchemaFromZodType(false, nullableArray)).toEqual(expected);
+      expect(schemaFromZodType(nullableArray)).toEqual(expected);
     });
     it('should process nullable object and remove anyOf filed when necessary', () => {
       /*
-         Resulted JSONSchema:
-         {
-           type: 'object',
-           properties: { nullableObject: { anyOf: [{ type: 'object',
-         properties: { simpleString: { type: 'string' } } }, { type: 'null' } ]
-         } }, required: [ 'nullableObject' ], additionalProperties: false
-         }
-         */
+      Resulted JSONSchema:
+      {
+        type: 'object',
+        properties: { 
+          nullableObject:{ 
+            anyOf: [
+              { type: 'object', properties: { simpleString: { type: 'string' } } }, 
+              { type: 'null' } 
+            ]
+          } 
+        required: [ 'nullableObject' ], additionalProperties: false
+      }
+      */
       const innerObject = z.object({
         simpleString: z.string().nullable(),
       });
@@ -485,21 +418,19 @@ describe('schema helper', () => {
         },
         required: ['nullableObject'],
       };
-      expect(responseSchemaFromZodType(true, objectNullable)).toEqual(expected);
-      expect(responseSchemaFromZodType(false, objectNullable)).toEqual(
-        expected,
-      );
+      expect(schemaFromZodType(objectNullable)).toEqual(expected);
     });
     it('should process union consist of only not-nullable primitive types without additional fields', () => {
       /*
-          Resulted JSONSchema:
-          {
-           type: 'object',
-           properties: { unionPrimitivesField: { type: [string, number, boolean]
-          }
-          }, required: [ 'unionPrimitivesField' ], additionalProperties: false
-          }
-          */
+      Resulted JSONSchema:
+      {
+        type: 'object',
+        properties: { 
+          unionPrimitivesField: { type: [string, number, boolean]}
+        }, 
+        required: [ 'unionPrimitivesField' ], additionalProperties: false
+      }
+      */
       const unionPrimitives = z.object({
         unionPrimitivesField: z.union([z.string(), z.number(), z.boolean()]),
       });
@@ -517,22 +448,20 @@ describe('schema helper', () => {
         },
         required: ['unionPrimitivesField'],
       };
-      expect(responseSchemaFromZodType(true, unionPrimitives)).toEqual(
-        expected,
-      );
-      expect(responseSchemaFromZodType(false, unionPrimitives)).toEqual(
-        expected,
-      );
+      expect(schemaFromZodType(unionPrimitives)).toEqual(expected);
     });
     it('should process union consist of only not-nullable primitive types without additional fields, one of the union type is null', () => {
       /*
-         Resulted JSONSchema:
-         {
-           type: 'object',
-           properties: { unionPrimitivesField: { type: [string, number, null] }
-         }, equired: [ 'unionPrimitivesField' ], additionalProperties: false
-         }
-         */
+      Resulted JSONSchema:
+      {
+        type: 'object',
+        properties: { 
+          unionPrimitivesField: { type: [string, number, null] }
+        }, 
+        required: [ 'unionPrimitivesField' ], 
+        additionalProperties: false
+      }
+     */
       const unionPrimitives = z.object({
         unionPrimitivesField: z.union([z.string(), z.number(), z.null()]),
       });
@@ -547,23 +476,24 @@ describe('schema helper', () => {
         },
         required: ['unionPrimitivesField'],
       };
-      expect(responseSchemaFromZodType(true, unionPrimitives)).toEqual(
-        expected,
-      );
-      expect(responseSchemaFromZodType(false, unionPrimitives)).toEqual(
-        expected,
-      );
+      expect(schemaFromZodType(unionPrimitives)).toEqual(expected);
     });
     it('should process union primitive types, one of the union type is nullable, and one of the union type is null', () => {
       /*
-          Resulted JSONSchema:
-         {
-         type: 'object',
-         properties: { unionPrimitivesField: { anyOf: [{ type: [string,
-         null]}, { type: 'number' }, { type: 'null' }] } }, required: [
-         'unionPrimitivesField' ], additionalProperties: false
-         }
-          */
+      Resulted JSONSchema:
+      {
+        type: 'object',
+         properties: { 
+          unionPrimitivesField: { 
+            anyOf: [
+              { type: [string, null]}, { type: 'number' }, { type: 'null' }
+            ] 
+          } 
+        }, 
+        required: [ 'unionPrimitivesField' ], 
+        additionalProperties: false
+      }
+      */
       const unionPrimitives = z.object({
         unionPrimitivesField: z.union([
           z.string().nullable(),
@@ -585,23 +515,22 @@ describe('schema helper', () => {
         },
         required: ['unionPrimitivesField'],
       };
-      expect(responseSchemaFromZodType(true, unionPrimitives)).toEqual(
-        expected,
-      );
-      expect(responseSchemaFromZodType(false, unionPrimitives)).toEqual(
-        expected,
-      );
+      expect(schemaFromZodType(unionPrimitives)).toEqual(expected);
     });
     it('should process union primitive types, when types in the union are primitives without any additional fields, one of them is nullable', () => {
       /*
-          Resulted JSONSchema:
-          {
-          type: 'object',
-          properties: { unionPrimitivesField: { anyOf: [{ type: [string,
-          null]}, { type: 'number' }] } }, required: [ 'unionPrimitivesField' ],
-          additionalProperties: false
-          }
-          */
+      Resulted JSONSchema:
+      {
+        type: 'object',
+        properties: { 
+          unionPrimitivesField: { 
+              anyOf: [{ type: [string, null]}, { type: 'number' }]
+          } 
+        }, 
+        required: [ 'unionPrimitivesField' ],
+        additionalProperties: false
+      }
+      */
       const unionPrimitives = z.object({
         unionPrimitivesField: z.union([z.string().nullable(), z.number()]),
       });
@@ -618,23 +547,23 @@ describe('schema helper', () => {
         },
         required: ['unionPrimitivesField'],
       };
-      expect(responseSchemaFromZodType(true, unionPrimitives)).toEqual(
-        expected,
-      );
-      expect(responseSchemaFromZodType(false, unionPrimitives)).toEqual(
-        expected,
-      );
+      expect(schemaFromZodType(unionPrimitives)).toEqual(expected);
+      expect(schemaFromZodType(unionPrimitives)).toEqual(expected);
     });
     it('should process union primitive types, when types in the union are primitives without any additional fields, both of them is nullable', () => {
       /*
-         Resulted JSONSchema:
-         {
-           type: 'object',
-           properties: { unionPrimitivesField: { anyOf: [{ type: [string,
-           null]}, { type: [number, null] }] } }, required: [
-           'unionPrimitivesField' ], additionalProperties: false
-         }
-         */
+       Resulted JSONSchema:
+        {
+          type: 'object',
+          properties: { 
+              unionPrimitivesField: { 
+                anyOf: [{ type: [string, null]}, { type: [number, null] }] 
+              } 
+          }, 
+          required: [ 'unionPrimitivesField' ], 
+          additionalProperties: false
+        }
+      */
       const unionPrimitives = z.object({
         unionPrimitivesField: z.union([
           z.string().nullable(),
@@ -654,23 +583,25 @@ describe('schema helper', () => {
         },
         required: ['unionPrimitivesField'],
       };
-      expect(responseSchemaFromZodType(true, unionPrimitives)).toEqual(
-        expected,
-      );
-      expect(responseSchemaFromZodType(false, unionPrimitives)).toEqual(
-        expected,
-      );
+      expect(schemaFromZodType(unionPrimitives)).toEqual(expected);
     });
     it('should process union primitive types, when types in the union are primitives with additional fields, not nullable', () => {
       /*
-               Resulted JSONSchema:
-               {
-                type: 'object',
-                properties: { unionPrimitivesField: { anyOf: [{type: 'string',
-               pattern: '^[a-zA-Z]{1,10}$'}, {type: 'number'}}] } }, required: [
-               'unionPrimitivesField' ], additionalProperties: false
-               }
-               */
+       Resulted JSONSchema:
+         {
+          type: 'object',
+          properties: 
+             { unionPrimitivesField: 
+                 { anyOf: [
+                    {type: 'string',pattern: '^[a-zA-Z]{1,10}$'}, 
+                    {type: 'number'}
+                   ] 
+                  } 
+              }, 
+          required: [ 'unionPrimitivesField' ], 
+          additionalProperties: false
+          }
+      */
       const unionPrimitives = z.object({
         unionPrimitivesField: z.union([
           z.string().regex(/^[a-zA-Z]{1,10}$/),
@@ -693,21 +624,18 @@ describe('schema helper', () => {
         },
         required: ['unionPrimitivesField'],
       };
-      expect(responseSchemaFromZodType(true, unionPrimitives)).toEqual(
-        expected,
-      );
-      expect(responseSchemaFromZodType(false, unionPrimitives)).toEqual(
-        expected,
-      );
+      expect(schemaFromZodType(unionPrimitives)).toEqual(expected);
     });
     it('should process union objects', () => {
       /*
       Resulted JSONSchema:
       {
-      type: 'object',
-      properties: { unionPrimitivesField: { anyOf: [Array] } },
-      required: [ 'unionPrimitivesField' ],
-      additionalProperties: false
+        type: 'object',
+        properties: { 
+          unionPrimitivesField: { anyOf: [Array] } 
+        },
+        required: [ 'unionPrimitivesField' ],
+        additionalProperties: false
       }
       */
       const innerObject = z.object({
@@ -742,21 +670,16 @@ describe('schema helper', () => {
         },
         required: ['unionPrimitivesObjectsField'],
       };
-      expect(
-        responseSchemaFromZodType(true, unionPrimitivesAndObjects),
-      ).toEqual(expected);
-      expect(
-        responseSchemaFromZodType(false, unionPrimitivesAndObjects),
-      ).toEqual(expected);
+      expect(schemaFromZodType(unionPrimitivesAndObjects)).toEqual(expected);
     });
     it('should process union array and objects', () => {
       /*
       Resulted JSONSchema:
       {
-      type: 'object',
-      properties: { uninonField: { anyOf: [Array, Object] } },
-      required: [ 'uninonField' ],
-      additionalProperties: false
+        type: 'object',
+        properties: { uninonField: { anyOf: [Array, Object] } },
+        required: [ 'uninonField' ],
+        additionalProperties: false
       }
       */
       const innerObject = z.object({
@@ -791,12 +714,7 @@ describe('schema helper', () => {
         },
         required: ['uninonField'],
       };
-      expect(responseSchemaFromZodType(true, uninonArrayAndObjects)).toEqual(
-        expected,
-      );
-      expect(responseSchemaFromZodType(false, uninonArrayAndObjects)).toEqual(
-        expected,
-      );
+      expect(schemaFromZodType(uninonArrayAndObjects)).toEqual(expected);
     });
   });
   describe('functionDeclarationFromZodFunction can convert zod function to FunctionDeclaration', () => {
@@ -815,15 +733,7 @@ describe('schema helper', () => {
         .describe('this is a setParameter function');
 
       expect(() => {
-        functionDeclarationFromZodFunction(true, {
-          name: 'setParameterFunction',
-          zodFunctionSchema: setParameterFunction,
-        });
-      }).toThrowError(
-        'Multiple positional parameters are not supported at the moment. Function parameters must be defined using a single object with named properties.',
-      );
-      expect(() => {
-        functionDeclarationFromZodFunction(false, {
+        functionDeclarationFromZodFunction({
           name: 'setParameterFunction',
           zodFunctionSchema: setParameterFunction,
         });
@@ -839,20 +749,20 @@ describe('schema helper', () => {
         .describe('this is a setParameter function');
 
       expect(() => {
-        functionDeclarationFromZodFunction(true, {
+        functionDeclarationFromZodFunction({
           name: 'setParameterFunction',
           zodFunctionSchema: setParameterFunction,
         });
       }).toThrowError(
-        'Function parameter is not object and not void, please check the parameter type.',
+        'Function parameter is not object and not void, please check the parameter type. Please wrap the parameter in an object with named properties.',
       );
       expect(() => {
-        functionDeclarationFromZodFunction(false, {
+        functionDeclarationFromZodFunction({
           name: 'setParameterFunction',
           zodFunctionSchema: setParameterFunction,
         });
       }).toThrowError(
-        'Function parameter is not object and not void, please check the parameter type.',
+        'Function parameter is not object and not void, please check the parameter type. Please wrap the parameter in an object with named properties.',
       );
     });
     it('should process function with object parameters and return value', () => {
@@ -920,13 +830,7 @@ describe('schema helper', () => {
         },
       };
       expect(
-        functionDeclarationFromZodFunction(true, {
-          name: 'setParameterFunction',
-          zodFunctionSchema: setParameterFunction,
-        }),
-      ).toEqual(expected);
-      expect(
-        functionDeclarationFromZodFunction(false, {
+        functionDeclarationFromZodFunction({
           name: 'setParameterFunction',
           zodFunctionSchema: setParameterFunction,
         }),
@@ -994,13 +898,7 @@ describe('schema helper', () => {
         },
       };
       expect(
-        functionDeclarationFromZodFunction(true, {
-          name: 'setParameterFunction',
-          zodFunctionSchema: setParameterFunction,
-        }),
-      ).toEqual(expected);
-      expect(
-        functionDeclarationFromZodFunction(false, {
+        functionDeclarationFromZodFunction({
           name: 'setParameterFunction',
           zodFunctionSchema: setParameterFunction,
         }),
@@ -1037,13 +935,7 @@ describe('schema helper', () => {
         },
       };
       expect(
-        functionDeclarationFromZodFunction(true, {
-          name: 'setParameterFunction',
-          zodFunctionSchema: setParameterFunction,
-        }),
-      ).toEqual(expected);
-      expect(
-        functionDeclarationFromZodFunction(false, {
+        functionDeclarationFromZodFunction({
           name: 'setParameterFunction',
           zodFunctionSchema: setParameterFunction,
         }),
@@ -1080,13 +972,7 @@ describe('schema helper', () => {
         },
       };
       expect(
-        functionDeclarationFromZodFunction(true, {
-          name: 'setParameterFunction',
-          zodFunctionSchema: setParameterFunction,
-        }),
-      ).toEqual(expected);
-      expect(
-        functionDeclarationFromZodFunction(false, {
+        functionDeclarationFromZodFunction({
           name: 'setParameterFunction',
           zodFunctionSchema: setParameterFunction,
         }),
@@ -1138,17 +1024,403 @@ describe('schema helper', () => {
         },
       };
       expect(
-        functionDeclarationFromZodFunction(true, {
+        functionDeclarationFromZodFunction({
           name: 'setParameterFunction',
           zodFunctionSchema: setParameterFunction,
         }),
       ).toEqual(expected);
+    });
+    it('should process function with parameters that have optional fields and return value to void', () => {
+      const setParameter = z.object({
+        numberField: z
+          .number()
+          .min(0)
+          .max(100)
+          .describe('this is a number field'),
+        stringEnumField: z
+          .enum(['daylight', 'cool', 'warm'])
+          .describe('this is a string enum field'),
+        booleanField: z.boolean().describe('this is a boolean field'),
+        optionalField: z
+          .string()
+          .optional()
+          .describe('this is an optional field'),
+      });
+
+      const setParameterFunction = z
+        .function()
+        .args(setParameter)
+        .returns(z.void())
+        .describe('this is a setParameter function');
+
+      const expected = {
+        description: 'this is a setParameter function',
+        name: 'setParameterFunction',
+        parameters: {
+          type: types.Type.OBJECT,
+          properties: {
+            numberField: {
+              type: types.Type.NUMBER,
+              minimum: 0,
+              maximum: 100,
+              description: 'this is a number field',
+            },
+            stringEnumField: {
+              type: types.Type.STRING,
+              enum: ['daylight', 'cool', 'warm'],
+              format: 'enum',
+              description: 'this is a string enum field',
+            },
+            booleanField: {
+              type: types.Type.BOOLEAN,
+              description: 'this is a boolean field',
+            },
+            optionalField: {
+              type: types.Type.STRING,
+              description: 'this is an optional field',
+            },
+          },
+          required: ['numberField', 'stringEnumField', 'booleanField'],
+        },
+      };
       expect(
-        functionDeclarationFromZodFunction(false, {
+        functionDeclarationFromZodFunction({
           name: 'setParameterFunction',
           zodFunctionSchema: setParameterFunction,
         }),
       ).toEqual(expected);
+    });
+    it('should process function with parameters that have optional fields and return value to void', () => {
+      const setParameter = z.object({
+        numberField: z
+          .number()
+          .min(0)
+          .max(100)
+          .describe('this is a number field'),
+        stringEnumField: z
+          .enum(['daylight', 'cool', 'warm'])
+          .describe('this is a string enum field'),
+        booleanField: z.boolean().describe('this is a boolean field'),
+        optionalField: z
+          .string()
+          .optional()
+          .describe('this is an optional field'),
+      });
+
+      const setParameterFunction = z
+        .function()
+        .args(setParameter)
+        .returns(z.void())
+        .describe('this is a setParameter function');
+
+      const expected = {
+        description: 'this is a setParameter function',
+        name: 'setParameterFunction',
+        parameters: {
+          type: types.Type.OBJECT,
+          properties: {
+            numberField: {
+              type: types.Type.NUMBER,
+              minimum: 0,
+              maximum: 100,
+              description: 'this is a number field',
+            },
+            stringEnumField: {
+              type: types.Type.STRING,
+              enum: ['daylight', 'cool', 'warm'],
+              format: 'enum',
+              description: 'this is a string enum field',
+            },
+            booleanField: {
+              type: types.Type.BOOLEAN,
+              description: 'this is a boolean field',
+            },
+            optionalField: {
+              type: types.Type.STRING,
+              description: 'this is an optional field',
+            },
+          },
+          required: ['numberField', 'stringEnumField', 'booleanField'],
+        },
+      };
+      expect(
+        functionDeclarationFromZodFunction({
+          name: 'setParameterFunction',
+          zodFunctionSchema: setParameterFunction,
+        }),
+      ).toEqual(expected);
+    });
+    it('should process function with parameters that only have optional fields and return value to void', () => {
+      const setParameter = z.object({
+        numberField: z
+          .number()
+          .min(0)
+          .max(100)
+          .optional()
+          .describe('this is a number field'),
+        stringEnumField: z
+          .enum(['daylight', 'cool', 'warm'])
+          .optional()
+          .describe('this is a string enum field'),
+        booleanField: z
+          .boolean()
+          .optional()
+          .describe('this is a boolean field'),
+        optionalField: z
+          .string()
+          .optional()
+          .describe('this is an optional field'),
+      });
+
+      const setParameterFunction = z
+        .function()
+        .args(setParameter)
+        .returns(z.void())
+        .describe('this is a setParameter function');
+
+      const expected = {
+        description: 'this is a setParameter function',
+        name: 'setParameterFunction',
+        parameters: {
+          type: types.Type.OBJECT,
+          properties: {
+            numberField: {
+              type: types.Type.NUMBER,
+              minimum: 0,
+              maximum: 100,
+              description: 'this is a number field',
+            },
+            stringEnumField: {
+              type: types.Type.STRING,
+              enum: ['daylight', 'cool', 'warm'],
+              format: 'enum',
+              description: 'this is a string enum field',
+            },
+            booleanField: {
+              type: types.Type.BOOLEAN,
+              description: 'this is a boolean field',
+            },
+            optionalField: {
+              type: types.Type.STRING,
+              description: 'this is an optional field',
+            },
+          },
+        },
+      };
+      expect(
+        functionDeclarationFromZodFunction({
+          name: 'setParameterFunction',
+          zodFunctionSchema: setParameterFunction,
+        }),
+      ).toEqual(expected);
+    });
+    it('should throw error when the parameter is zod optional', () => {
+      const setParameter = z
+        .object({
+          numberField: z
+            .number()
+            .min(0)
+            .max(100)
+            .describe('this is a number field'),
+          stringEnumField: z
+            .enum(['daylight', 'cool', 'warm'])
+            .describe('this is a string enum field'),
+          booleanField: z.boolean().describe('this is a boolean field'),
+          optionalField: z
+            .string()
+            .optional()
+            .describe('this is an optional field'),
+        })
+        .optional();
+      const setParameterFunction = z
+        .function()
+        .args(setParameter)
+        .returns(z.void())
+        .describe('this is a setParameter function');
+      expect(() => {
+        functionDeclarationFromZodFunction({
+          name: 'setParameterFunction',
+          zodFunctionSchema: setParameterFunction,
+        });
+      }).toThrowError(
+        'Supllying only optional parameter is not supported at the moment. You can make all the fields inside the parameter object as optional.',
+      );
+    });
+    it('should throw error when the parameter is more than one', () => {
+      const setParameter = z.object({
+        numberField: z
+          .number()
+          .min(0)
+          .max(100)
+          .describe('this is a number field'),
+        stringEnumField: z
+          .enum(['daylight', 'cool', 'warm'])
+          .describe('this is a string enum field'),
+        booleanField: z.boolean().describe('this is a boolean field'),
+        optionalField: z
+          .string()
+          .optional()
+          .describe('this is an optional field'),
+      });
+      const setParameterFunction = z
+        .function()
+        .args(setParameter, z.string())
+        .returns(z.void())
+        .describe('this is a setParameter function');
+      expect(() => {
+        functionDeclarationFromZodFunction({
+          name: 'setParameterFunction',
+          zodFunctionSchema: setParameterFunction,
+        });
+      }).toThrowError(
+        'Multiple positional parameters are not supported at the moment. Function parameters must be defined using a single object with named properties.',
+      );
+    });
+  });
+  describe('schemaFromJson can convert raw json schema to Schema', () => {
+    it('should process simple json schema', () => {
+      const rawJsonSchema = {
+        'type': 'string',
+        'pattern': '^[a-zA-Z]{1,10}$',
+      };
+      const expected = {
+        type: types.Type.STRING,
+        pattern: '^[a-zA-Z]{1,10}$',
+      };
+      expect(schemaFromJson(rawJsonSchema)).toEqual(expected);
+    });
+    it('should process simple object schema', () => {
+      const rawJsonSchema = {
+        type: 'object',
+        properties: {
+          unionPrimitivesField: {
+            anyOf: [
+              {type: 'string', pattern: '^[a-zA-Z]{1,10}$'},
+              {type: 'number'},
+            ],
+          },
+        },
+        required: ['unionPrimitivesField'],
+      };
+      const expected = {
+        type: types.Type.OBJECT,
+        properties: {
+          unionPrimitivesField: {
+            anyOf: [
+              {
+                type: types.Type.STRING,
+                pattern: '^[a-zA-Z]{1,10}$',
+              },
+              {
+                type: types.Type.NUMBER,
+              },
+            ],
+          },
+        },
+        required: ['unionPrimitivesField'],
+      };
+      expect(schemaFromJson(rawJsonSchema)).toEqual(expected);
+    });
+    it('should process type filed with array of types, and null type', () => {
+      const rawJsonSchema = {
+        type: 'object',
+        properties: {
+          unionPrimitivesField: {type: ['string', 'number', 'null']},
+        },
+        required: ['unionPrimitivesField'],
+        additionalProperties: false,
+      };
+      const expected = {
+        type: types.Type.OBJECT,
+        properties: {
+          unionPrimitivesField: {
+            anyOf: [
+              {
+                type: types.Type.STRING,
+              },
+              {
+                type: types.Type.NUMBER,
+              },
+            ],
+            nullable: true,
+          },
+        },
+        required: ['unionPrimitivesField'],
+      };
+      expect(schemaFromJson(rawJsonSchema)).toEqual(expected);
+    });
+  });
+  describe('schemaFromJson can convert raw json schema to Schema', () => {
+    it('should process simple json schema', () => {
+      const rawJsonSchema = {
+        'type': 'string',
+        'pattern': '^[a-zA-Z]{1,10}$',
+      };
+      const expected = {
+        type: types.Type.STRING,
+        pattern: '^[a-zA-Z]{1,10}$',
+      };
+      expect(schemaFromJson(rawJsonSchema)).toEqual(expected);
+    });
+    it('should process simple object schema', () => {
+      const rawJsonSchema = {
+        type: 'object',
+        properties: {
+          unionPrimitivesField: {
+            anyOf: [
+              {type: 'string', pattern: '^[a-zA-Z]{1,10}$'},
+              {type: 'number'},
+            ],
+          },
+        },
+        required: ['unionPrimitivesField'],
+      };
+      const expected = {
+        type: types.Type.OBJECT,
+        properties: {
+          unionPrimitivesField: {
+            anyOf: [
+              {
+                type: types.Type.STRING,
+                pattern: '^[a-zA-Z]{1,10}$',
+              },
+              {
+                type: types.Type.NUMBER,
+              },
+            ],
+          },
+        },
+        required: ['unionPrimitivesField'],
+      };
+      expect(schemaFromJson(rawJsonSchema)).toEqual(expected);
+    });
+    it('should process type filed with array of types, and null type', () => {
+      const rawJsonSchema = {
+        type: 'object',
+        properties: {
+          unionPrimitivesField: {type: ['string', 'number', 'null']},
+        },
+        required: ['unionPrimitivesField'],
+        additionalProperties: false,
+      };
+      const expected = {
+        type: types.Type.OBJECT,
+        properties: {
+          unionPrimitivesField: {
+            anyOf: [
+              {
+                type: types.Type.STRING,
+              },
+              {
+                type: types.Type.NUMBER,
+              },
+            ],
+            nullable: true,
+          },
+        },
+        required: ['unionPrimitivesField'],
+      };
+      expect(schemaFromJson(rawJsonSchema)).toEqual(expected);
     });
   });
 });

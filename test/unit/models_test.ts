@@ -3,7 +3,7 @@ import {z} from 'zod';
 import {GoogleGenAI} from '../../src/client';
 import {
   functionDeclarationFromZodFunction,
-  responseSchemaFromZodType,
+  schemaFromZodType,
 } from '../../src/schema_helper';
 import * as types from '../../src/types';
 
@@ -42,7 +42,7 @@ const mockGenerateContentResponse: types.GenerateContentResponse =
   );
 
 describe('generateContent', () => {
-  describe('can use the results from responseSchemaFromZodType in responseSchema field', () => {
+  describe('can use the results from schemaFromZodType in responseSchema field', () => {
     it('should process simple zod object', async () => {
       const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
       const zodSchema = z.object({
@@ -95,7 +95,7 @@ describe('generateContent', () => {
         model: 'gemini-1.5-flash-exp',
         contents: 'why is the sky blue?',
         config: {
-          responseSchema: responseSchemaFromZodType(client.vertexai, zodSchema),
+          responseSchema: schemaFromZodType(zodSchema),
         },
       });
       const parsedSchema = (
@@ -157,10 +157,7 @@ describe('generateContent', () => {
         model: 'gemini-1.5-flash-exp',
         contents: 'why is the sky blue?',
         config: {
-          responseSchema: responseSchemaFromZodType(
-            client.vertexai,
-            nestedSchema,
-          ),
+          responseSchema: schemaFromZodType(nestedSchema),
         },
       });
       const parsedSchema = (
@@ -212,7 +209,7 @@ describe('generateContent', () => {
           tools: [
             {
               functionDeclarations: [
-                functionDeclarationFromZodFunction(client.vertexai, {
+                functionDeclarationFromZodFunction({
                   name: 'setParameterFunction',
                   zodFunctionSchema: zodFunction,
                 }),

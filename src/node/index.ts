@@ -13,5 +13,12 @@ export * from '../live';
 export {Models} from '../models';
 export {Operations} from '../operations';
 export {PagedItem, Pager} from '../pagers';
+export {
+  JSONSchema,
+  ZodFunction,
+  functionDeclarationFromZodFunction,
+  schemaFromJson,
+  schemaFromZodType,
+} from '../schema_helper';
 export * from '../types';
 export * from './node_client';

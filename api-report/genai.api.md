@@ -5,6 +5,7 @@
 ```ts
 
 import { GoogleAuthOptions } from 'google-auth-library';
+import { z } from 'zod';
 
 // @public
 export interface ActivityEnd {
@@ -670,6 +671,9 @@ export interface FunctionDeclaration {
 }
 
 // @public
+export function functionDeclarationFromZodFunction(zodFunction: ZodFunction): FunctionDeclaration;
+
+// @public
 export class FunctionResponse {
     id?: string;
     name?: string;
@@ -1169,6 +1173,30 @@ export enum JobState {
     JOB_STATE_UNSPECIFIED = "JOB_STATE_UNSPECIFIED",
     // (undocumented)
     JOB_STATE_UPDATING = "JOB_STATE_UPDATING"
+}
+
+// @public
+export interface JSONSchema {
+    anyOf?: JSONSchema[];
+    default?: unknown;
+    description?: string;
+    enum?: unknown[];
+    format?: string;
+    items?: JSONSchema;
+    maximum?: number;
+    maxItems?: string;
+    maxLength?: string;
+    maxProperties?: string;
+    minimum?: number;
+    minItems?: string;
+    minLength?: string;
+    minProperties?: string;
+    pattern?: string;
+    properties?: Record<string, JSONSchema>;
+    required?: string[];
+    title?: string;
+    // Warning: (ae-forgotten-export) The symbol "JSONSchemaType" needs to be exported by the entry point index.d.ts
+    type?: JSONSchemaType | JSONSchemaType[];
 }
 
 // @public
@@ -1806,6 +1834,12 @@ export interface Schema {
     type?: Type;
 }
 
+// @public
+export function schemaFromJson(data: Record<string, unknown>): Schema;
+
+// @public
+export function schemaFromZodType(zodSchema: z.ZodType): Schema;
+
 // @public (undocumented)
 export type SchemaUnion = Schema;
 
@@ -2222,6 +2256,14 @@ export interface VideoMetadata {
 // @public
 export interface VoiceConfig {
     prebuiltVoiceConfig?: PrebuiltVoiceConfig;
+}
+
+// @public
+export interface ZodFunction {
+    // (undocumented)
+    name: string;
+    // (undocumented)
+    zodFunctionSchema: z.ZodFunction<z.ZodTuple<any, z.ZodTypeAny>, z.ZodTypeAny>;
 }
 
 // (No @packageDocumentation comment for this package)
