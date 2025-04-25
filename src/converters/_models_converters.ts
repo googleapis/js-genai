@@ -8,6 +8,7 @@
 
 import {ApiClient} from '../_api_client';
 import * as common from '../_common';
+import * as _internal_types from '../_internal_types';
 import * as t from '../_transformers';
 import * as types from '../types';
 
@@ -2425,6 +2426,516 @@ export function generateImagesParametersToVertex(
   return toObject;
 }
 
+export function imageToVertex(
+  apiClient: ApiClient,
+  fromObject: types.Image,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromGcsUri = common.getValueByPath(fromObject, ['gcsUri']);
+  if (fromGcsUri != null) {
+    common.setValueByPath(toObject, ['gcsUri'], fromGcsUri);
+  }
+
+  const fromImageBytes = common.getValueByPath(fromObject, ['imageBytes']);
+  if (fromImageBytes != null) {
+    common.setValueByPath(
+      toObject,
+      ['bytesBase64Encoded'],
+      t.tBytes(apiClient, fromImageBytes),
+    );
+  }
+
+  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+  if (fromMimeType != null) {
+    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+  }
+
+  return toObject;
+}
+
+export function maskReferenceConfigToVertex(
+  apiClient: ApiClient,
+  fromObject: types.MaskReferenceConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromMaskMode = common.getValueByPath(fromObject, ['maskMode']);
+  if (fromMaskMode != null) {
+    common.setValueByPath(toObject, ['maskMode'], fromMaskMode);
+  }
+
+  const fromSegmentationClasses = common.getValueByPath(fromObject, [
+    'segmentationClasses',
+  ]);
+  if (fromSegmentationClasses != null) {
+    common.setValueByPath(toObject, ['maskClasses'], fromSegmentationClasses);
+  }
+
+  const fromMaskDilation = common.getValueByPath(fromObject, ['maskDilation']);
+  if (fromMaskDilation != null) {
+    common.setValueByPath(toObject, ['dilation'], fromMaskDilation);
+  }
+
+  return toObject;
+}
+
+export function controlReferenceConfigToVertex(
+  apiClient: ApiClient,
+  fromObject: types.ControlReferenceConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromControlType = common.getValueByPath(fromObject, ['controlType']);
+  if (fromControlType != null) {
+    common.setValueByPath(toObject, ['controlType'], fromControlType);
+  }
+
+  const fromEnableControlImageComputation = common.getValueByPath(fromObject, [
+    'enableControlImageComputation',
+  ]);
+  if (fromEnableControlImageComputation != null) {
+    common.setValueByPath(
+      toObject,
+      ['computeControl'],
+      fromEnableControlImageComputation,
+    );
+  }
+
+  return toObject;
+}
+
+export function styleReferenceConfigToVertex(
+  apiClient: ApiClient,
+  fromObject: types.StyleReferenceConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromStyleDescription = common.getValueByPath(fromObject, [
+    'styleDescription',
+  ]);
+  if (fromStyleDescription != null) {
+    common.setValueByPath(toObject, ['styleDescription'], fromStyleDescription);
+  }
+
+  return toObject;
+}
+
+export function subjectReferenceConfigToVertex(
+  apiClient: ApiClient,
+  fromObject: types.SubjectReferenceConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromSubjectType = common.getValueByPath(fromObject, ['subjectType']);
+  if (fromSubjectType != null) {
+    common.setValueByPath(toObject, ['subjectType'], fromSubjectType);
+  }
+
+  const fromSubjectDescription = common.getValueByPath(fromObject, [
+    'subjectDescription',
+  ]);
+  if (fromSubjectDescription != null) {
+    common.setValueByPath(
+      toObject,
+      ['subjectDescription'],
+      fromSubjectDescription,
+    );
+  }
+
+  return toObject;
+}
+
+export function referenceImageAPIInternalToVertex(
+  apiClient: ApiClient,
+  fromObject: _internal_types.ReferenceImageAPIInternal,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromReferenceImage = common.getValueByPath(fromObject, [
+    'referenceImage',
+  ]);
+  if (fromReferenceImage != null) {
+    common.setValueByPath(
+      toObject,
+      ['referenceImage'],
+      imageToVertex(apiClient, fromReferenceImage),
+    );
+  }
+
+  const fromReferenceId = common.getValueByPath(fromObject, ['referenceId']);
+  if (fromReferenceId != null) {
+    common.setValueByPath(toObject, ['referenceId'], fromReferenceId);
+  }
+
+  const fromReferenceType = common.getValueByPath(fromObject, [
+    'referenceType',
+  ]);
+  if (fromReferenceType != null) {
+    common.setValueByPath(toObject, ['referenceType'], fromReferenceType);
+  }
+
+  const fromMaskImageConfig = common.getValueByPath(fromObject, [
+    'maskImageConfig',
+  ]);
+  if (fromMaskImageConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['maskImageConfig'],
+      maskReferenceConfigToVertex(apiClient, fromMaskImageConfig),
+    );
+  }
+
+  const fromControlImageConfig = common.getValueByPath(fromObject, [
+    'controlImageConfig',
+  ]);
+  if (fromControlImageConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['controlImageConfig'],
+      controlReferenceConfigToVertex(apiClient, fromControlImageConfig),
+    );
+  }
+
+  const fromStyleImageConfig = common.getValueByPath(fromObject, [
+    'styleImageConfig',
+  ]);
+  if (fromStyleImageConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['styleImageConfig'],
+      styleReferenceConfigToVertex(apiClient, fromStyleImageConfig),
+    );
+  }
+
+  const fromSubjectImageConfig = common.getValueByPath(fromObject, [
+    'subjectImageConfig',
+  ]);
+  if (fromSubjectImageConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['subjectImageConfig'],
+      subjectReferenceConfigToVertex(apiClient, fromSubjectImageConfig),
+    );
+  }
+
+  return toObject;
+}
+
+export function editImageConfigToVertex(
+  apiClient: ApiClient,
+  fromObject: types.EditImageConfig,
+  parentObject: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromOutputGcsUri = common.getValueByPath(fromObject, ['outputGcsUri']);
+  if (parentObject !== undefined && fromOutputGcsUri != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'storageUri'],
+      fromOutputGcsUri,
+    );
+  }
+
+  const fromNegativePrompt = common.getValueByPath(fromObject, [
+    'negativePrompt',
+  ]);
+  if (parentObject !== undefined && fromNegativePrompt != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'negativePrompt'],
+      fromNegativePrompt,
+    );
+  }
+
+  const fromNumberOfImages = common.getValueByPath(fromObject, [
+    'numberOfImages',
+  ]);
+  if (parentObject !== undefined && fromNumberOfImages != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'sampleCount'],
+      fromNumberOfImages,
+    );
+  }
+
+  const fromAspectRatio = common.getValueByPath(fromObject, ['aspectRatio']);
+  if (parentObject !== undefined && fromAspectRatio != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'aspectRatio'],
+      fromAspectRatio,
+    );
+  }
+
+  const fromGuidanceScale = common.getValueByPath(fromObject, [
+    'guidanceScale',
+  ]);
+  if (parentObject !== undefined && fromGuidanceScale != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'guidanceScale'],
+      fromGuidanceScale,
+    );
+  }
+
+  const fromSeed = common.getValueByPath(fromObject, ['seed']);
+  if (parentObject !== undefined && fromSeed != null) {
+    common.setValueByPath(parentObject, ['parameters', 'seed'], fromSeed);
+  }
+
+  const fromSafetyFilterLevel = common.getValueByPath(fromObject, [
+    'safetyFilterLevel',
+  ]);
+  if (parentObject !== undefined && fromSafetyFilterLevel != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'safetySetting'],
+      fromSafetyFilterLevel,
+    );
+  }
+
+  const fromPersonGeneration = common.getValueByPath(fromObject, [
+    'personGeneration',
+  ]);
+  if (parentObject !== undefined && fromPersonGeneration != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'personGeneration'],
+      fromPersonGeneration,
+    );
+  }
+
+  const fromIncludeSafetyAttributes = common.getValueByPath(fromObject, [
+    'includeSafetyAttributes',
+  ]);
+  if (parentObject !== undefined && fromIncludeSafetyAttributes != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'includeSafetyAttributes'],
+      fromIncludeSafetyAttributes,
+    );
+  }
+
+  const fromIncludeRaiReason = common.getValueByPath(fromObject, [
+    'includeRaiReason',
+  ]);
+  if (parentObject !== undefined && fromIncludeRaiReason != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'includeRaiReason'],
+      fromIncludeRaiReason,
+    );
+  }
+
+  const fromLanguage = common.getValueByPath(fromObject, ['language']);
+  if (parentObject !== undefined && fromLanguage != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'language'],
+      fromLanguage,
+    );
+  }
+
+  const fromOutputMimeType = common.getValueByPath(fromObject, [
+    'outputMimeType',
+  ]);
+  if (parentObject !== undefined && fromOutputMimeType != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'outputOptions', 'mimeType'],
+      fromOutputMimeType,
+    );
+  }
+
+  const fromOutputCompressionQuality = common.getValueByPath(fromObject, [
+    'outputCompressionQuality',
+  ]);
+  if (parentObject !== undefined && fromOutputCompressionQuality != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'outputOptions', 'compressionQuality'],
+      fromOutputCompressionQuality,
+    );
+  }
+
+  const fromEditMode = common.getValueByPath(fromObject, ['editMode']);
+  if (parentObject !== undefined && fromEditMode != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'editMode'],
+      fromEditMode,
+    );
+  }
+
+  const fromBaseSteps = common.getValueByPath(fromObject, ['baseSteps']);
+  if (parentObject !== undefined && fromBaseSteps != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'editConfig', 'baseSteps'],
+      fromBaseSteps,
+    );
+  }
+
+  return toObject;
+}
+
+export function editImageParametersInternalToVertex(
+  apiClient: ApiClient,
+  fromObject: _internal_types.EditImageParametersInternal,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromModel = common.getValueByPath(fromObject, ['model']);
+  if (fromModel != null) {
+    common.setValueByPath(
+      toObject,
+      ['_url', 'model'],
+      t.tModel(apiClient, fromModel),
+    );
+  }
+
+  const fromPrompt = common.getValueByPath(fromObject, ['prompt']);
+  if (fromPrompt != null) {
+    common.setValueByPath(toObject, ['instances[0]', 'prompt'], fromPrompt);
+  }
+
+  const fromReferenceImages = common.getValueByPath(fromObject, [
+    'referenceImages',
+  ]);
+  if (fromReferenceImages != null) {
+    let transformedList = fromReferenceImages;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return referenceImageAPIInternalToVertex(apiClient, item);
+      });
+    }
+    common.setValueByPath(
+      toObject,
+      ['instances[0]', 'referenceImages'],
+      transformedList,
+    );
+  }
+
+  const fromConfig = common.getValueByPath(fromObject, ['config']);
+  if (fromConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['config'],
+      editImageConfigToVertex(apiClient, fromConfig, toObject),
+    );
+  }
+
+  return toObject;
+}
+
+export function upscaleImageAPIConfigInternalToVertex(
+  apiClient: ApiClient,
+  fromObject: _internal_types.UpscaleImageAPIConfigInternal,
+  parentObject: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromIncludeRaiReason = common.getValueByPath(fromObject, [
+    'includeRaiReason',
+  ]);
+  if (parentObject !== undefined && fromIncludeRaiReason != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'includeRaiReason'],
+      fromIncludeRaiReason,
+    );
+  }
+
+  const fromOutputMimeType = common.getValueByPath(fromObject, [
+    'outputMimeType',
+  ]);
+  if (parentObject !== undefined && fromOutputMimeType != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'outputOptions', 'mimeType'],
+      fromOutputMimeType,
+    );
+  }
+
+  const fromOutputCompressionQuality = common.getValueByPath(fromObject, [
+    'outputCompressionQuality',
+  ]);
+  if (parentObject !== undefined && fromOutputCompressionQuality != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'outputOptions', 'compressionQuality'],
+      fromOutputCompressionQuality,
+    );
+  }
+
+  const fromNumberOfImages = common.getValueByPath(fromObject, [
+    'numberOfImages',
+  ]);
+  if (parentObject !== undefined && fromNumberOfImages != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'sampleCount'],
+      fromNumberOfImages,
+    );
+  }
+
+  const fromMode = common.getValueByPath(fromObject, ['mode']);
+  if (parentObject !== undefined && fromMode != null) {
+    common.setValueByPath(parentObject, ['parameters', 'mode'], fromMode);
+  }
+
+  return toObject;
+}
+
+export function upscaleImageAPIParametersInternalToVertex(
+  apiClient: ApiClient,
+  fromObject: _internal_types.UpscaleImageAPIParametersInternal,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromModel = common.getValueByPath(fromObject, ['model']);
+  if (fromModel != null) {
+    common.setValueByPath(
+      toObject,
+      ['_url', 'model'],
+      t.tModel(apiClient, fromModel),
+    );
+  }
+
+  const fromImage = common.getValueByPath(fromObject, ['image']);
+  if (fromImage != null) {
+    common.setValueByPath(
+      toObject,
+      ['instances[0]', 'image'],
+      imageToVertex(apiClient, fromImage),
+    );
+  }
+
+  const fromUpscaleFactor = common.getValueByPath(fromObject, [
+    'upscaleFactor',
+  ]);
+  if (fromUpscaleFactor != null) {
+    common.setValueByPath(
+      toObject,
+      ['parameters', 'upscaleConfig', 'upscaleFactor'],
+      fromUpscaleFactor,
+    );
+  }
+
+  const fromConfig = common.getValueByPath(fromObject, ['config']);
+  if (fromConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['config'],
+      upscaleImageAPIConfigInternalToVertex(apiClient, fromConfig, toObject),
+    );
+  }
+
+  return toObject;
+}
+
 export function getModelParametersToVertex(
   apiClient: ApiClient,
   fromObject: types.GetModelParameters,
@@ -2691,34 +3202,6 @@ export function computeTokensParametersToVertex(
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
     common.setValueByPath(toObject, ['config'], fromConfig);
-  }
-
-  return toObject;
-}
-
-export function imageToVertex(
-  apiClient: ApiClient,
-  fromObject: types.Image,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromGcsUri = common.getValueByPath(fromObject, ['gcsUri']);
-  if (fromGcsUri != null) {
-    common.setValueByPath(toObject, ['gcsUri'], fromGcsUri);
-  }
-
-  const fromImageBytes = common.getValueByPath(fromObject, ['imageBytes']);
-  if (fromImageBytes != null) {
-    common.setValueByPath(
-      toObject,
-      ['bytesBase64Encoded'],
-      t.tBytes(apiClient, fromImageBytes),
-    );
-  }
-
-  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
-  if (fromMimeType != null) {
-    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
   }
 
   return toObject;
@@ -4010,6 +4493,50 @@ export function generateImagesResponseFromVertex(
       ['positivePromptSafetyAttributes'],
       safetyAttributesFromVertex(apiClient, fromPositivePromptSafetyAttributes),
     );
+  }
+
+  return toObject;
+}
+
+export function editImageResponseFromVertex(
+  apiClient: ApiClient,
+  fromObject: types.EditImageResponse,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromGeneratedImages = common.getValueByPath(fromObject, [
+    'predictions',
+  ]);
+  if (fromGeneratedImages != null) {
+    let transformedList = fromGeneratedImages;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return generatedImageFromVertex(apiClient, item);
+      });
+    }
+    common.setValueByPath(toObject, ['generatedImages'], transformedList);
+  }
+
+  return toObject;
+}
+
+export function upscaleImageResponseFromVertex(
+  apiClient: ApiClient,
+  fromObject: types.UpscaleImageResponse,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromGeneratedImages = common.getValueByPath(fromObject, [
+    'predictions',
+  ]);
+  if (fromGeneratedImages != null) {
+    let transformedList = fromGeneratedImages;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return generatedImageFromVertex(apiClient, item);
+      });
+    }
+    common.setValueByPath(toObject, ['generatedImages'], transformedList);
   }
 
   return toObject;

@@ -287,11 +287,13 @@ export interface ControlReferenceConfig {
 }
 
 // @public
-export interface ControlReferenceImage {
+export class ControlReferenceImage {
     config?: ControlReferenceConfig;
     referenceId?: number;
     referenceImage?: Image_2;
     referenceType?: string;
+    // (undocumented)
+    toReferenceImageAPI(): any;
 }
 
 // @public
@@ -553,7 +555,61 @@ export enum DynamicRetrievalConfigMode {
     MODE_UNSPECIFIED = "MODE_UNSPECIFIED"
 }
 
-// @public (undocumented)
+// @public
+export interface EditImageConfig {
+    abortSignal?: AbortSignal;
+    aspectRatio?: string;
+    baseSteps?: number;
+    editMode?: EditMode;
+    guidanceScale?: number;
+    httpOptions?: HttpOptions;
+    includeRaiReason?: boolean;
+    includeSafetyAttributes?: boolean;
+    language?: ImagePromptLanguage;
+    negativePrompt?: string;
+    numberOfImages?: number;
+    outputCompressionQuality?: number;
+    outputGcsUri?: string;
+    outputMimeType?: string;
+    personGeneration?: PersonGeneration;
+    safetyFilterLevel?: SafetyFilterLevel;
+    seed?: number;
+}
+
+// @public
+export interface EditImageParameters {
+    config?: EditImageConfig;
+    model: string;
+    prompt: string;
+    referenceImages: ReferenceImage[];
+}
+
+// @public
+export class EditImageResponse {
+    generatedImages?: GeneratedImage[];
+}
+
+// @public
+export enum EditMode {
+    // (undocumented)
+    EDIT_MODE_BGSWAP = "EDIT_MODE_BGSWAP",
+    // (undocumented)
+    EDIT_MODE_CONTROLLED_EDITING = "EDIT_MODE_CONTROLLED_EDITING",
+    // (undocumented)
+    EDIT_MODE_DEFAULT = "EDIT_MODE_DEFAULT",
+    // (undocumented)
+    EDIT_MODE_INPAINT_INSERTION = "EDIT_MODE_INPAINT_INSERTION",
+    // (undocumented)
+    EDIT_MODE_INPAINT_REMOVAL = "EDIT_MODE_INPAINT_REMOVAL",
+    // (undocumented)
+    EDIT_MODE_OUTPAINT = "EDIT_MODE_OUTPAINT",
+    // (undocumented)
+    EDIT_MODE_PRODUCT_IMAGE = "EDIT_MODE_PRODUCT_IMAGE",
+    // (undocumented)
+    EDIT_MODE_STYLE = "EDIT_MODE_STYLE"
+}
+
+// @public
 export interface EmbedContentConfig {
     abortSignal?: AbortSignal;
     autoTruncate?: boolean;
@@ -1523,7 +1579,7 @@ export interface LiveServerSessionResumptionUpdate {
     resumable?: boolean;
 }
 
-// @public
+// @public (undocumented)
 export interface LiveServerSetupComplete {
 }
 
@@ -1563,11 +1619,13 @@ export interface MaskReferenceConfig {
 }
 
 // @public
-export interface MaskReferenceImage {
+export class MaskReferenceImage {
     config?: MaskReferenceConfig;
     referenceId?: number;
     referenceImage?: Image_2;
     referenceType?: string;
+    // (undocumented)
+    toReferenceImageAPI(): any;
 }
 
 // @public
@@ -1660,6 +1718,7 @@ export class Models extends BaseModule {
     computeTokens(params: types.ComputeTokensParameters): Promise<types.ComputeTokensResponse>;
     countTokens(params: types.CountTokensParameters): Promise<types.CountTokensResponse>;
     delete(params: types.DeleteModelParameters): Promise<types.DeleteModelResponse>;
+    editImage: (params: types.EditImageParameters) => Promise<types.EditImageResponse>;
     embedContent(params: types.EmbedContentParameters): Promise<types.EmbedContentResponse>;
     generateContent: (params: types.GenerateContentParameters) => Promise<types.GenerateContentResponse>;
     generateContentStream: (params: types.GenerateContentParameters) => Promise<AsyncGenerator<types.GenerateContentResponse>>;
@@ -1669,6 +1728,7 @@ export class Models extends BaseModule {
     // (undocumented)
     list: (params?: types.ListModelsParameters) => Promise<Pager<types.Model>>;
     update(params: types.UpdateModelParameters): Promise<types.Model>;
+    upscaleImage: (params: types.UpscaleImageParameters) => Promise<types.UpscaleImageResponse>;
 }
 
 // @public
@@ -1821,10 +1881,12 @@ export interface RagRetrievalConfigRankingRankService {
 }
 
 // @public
-export interface RawReferenceImage {
+export class RawReferenceImage {
     referenceId?: number;
     referenceImage?: Image_2;
     referenceType?: string;
+    // (undocumented)
+    toReferenceImageAPI(): any;
 }
 
 // @public
@@ -1833,6 +1895,9 @@ export interface RealtimeInputConfig {
     automaticActivityDetection?: AutomaticActivityDetection;
     turnCoverage?: TurnCoverage;
 }
+
+// @public (undocumented)
+export type ReferenceImage = RawReferenceImage | MaskReferenceImage | ControlReferenceImage | StyleReferenceImage | SubjectReferenceImage;
 
 // @public
 export interface ReplayFile {
@@ -2028,11 +2093,13 @@ export interface StyleReferenceConfig {
 }
 
 // @public
-export interface StyleReferenceImage {
+export class StyleReferenceImage {
     config?: StyleReferenceConfig;
     referenceId?: number;
     referenceImage?: Image_2;
     referenceType?: string;
+    // (undocumented)
+    toReferenceImageAPI(): any;
 }
 
 // @public
@@ -2042,11 +2109,13 @@ export interface SubjectReferenceConfig {
 }
 
 // @public
-export interface SubjectReferenceImage {
+export class SubjectReferenceImage {
     config?: SubjectReferenceConfig;
     referenceId?: number;
     referenceImage?: Image_2;
     referenceType?: string;
+    // (undocumented)
+    toReferenceImageAPI(): any;
 }
 
 // @public
@@ -2348,6 +2417,11 @@ export interface UpscaleImageParameters {
     image: Image_2;
     model: string;
     upscaleFactor: string;
+}
+
+// @public (undocumented)
+export class UpscaleImageResponse {
+    generatedImages?: GeneratedImage[];
 }
 
 // @public
