@@ -66,6 +66,7 @@ export interface BaseUrlParameters {
 // @public
 interface Blob_2 {
     data?: string;
+    displayName?: string;
     mimeType?: string;
 }
 export { Blob_2 as Blob }
@@ -514,6 +515,10 @@ export enum EndSensitivity {
 }
 
 // @public
+export interface EnterpriseWebSearch {
+}
+
+// @public
 export interface ExecutableCode {
     code?: string;
     language?: Language;
@@ -566,6 +571,7 @@ export { File_2 as File }
 
 // @public
 export interface FileData {
+    displayName?: string;
     fileUri?: string;
     mimeType?: string;
 }
@@ -851,9 +857,11 @@ export interface GenerationConfig {
     presencePenalty?: number;
     responseLogprobs?: boolean;
     responseMimeType?: string;
+    responseModalities?: Modality[];
     responseSchema?: Schema;
     routingConfig?: GenerationConfigRoutingConfig;
     seed?: number;
+    speechConfig?: SpeechConfig;
     stopSequences?: string[];
     temperature?: number;
     topK?: number;
@@ -995,6 +1003,12 @@ export interface GoogleTypeDate {
     day?: number;
     month?: number;
     year?: number;
+}
+
+// @public
+export interface GoogleTypeLatLng {
+    latitude?: number;
+    longitude?: number;
 }
 
 // @public
@@ -1740,6 +1754,12 @@ export interface Retrieval {
 }
 
 // @public
+export interface RetrievalConfig {
+    languageCode?: string;
+    latLng?: GoogleTypeLatLng;
+}
+
+// @public
 export interface RetrievalMetadata {
     googleSearchDynamicRetrievalScore?: number;
 }
@@ -2003,6 +2023,7 @@ export interface TokensInfo {
 // @public
 export interface Tool {
     codeExecution?: ToolCodeExecution;
+    enterpriseWebSearch?: EnterpriseWebSearch;
     functionDeclarations?: FunctionDeclaration[];
     googleSearch?: GoogleSearch;
     googleSearchRetrieval?: GoogleSearchRetrieval;
@@ -2016,6 +2037,7 @@ export interface ToolCodeExecution {
 // @public
 export interface ToolConfig {
     functionCallingConfig?: FunctionCallingConfig;
+    retrievalConfig?: RetrievalConfig;
 }
 
 // @public (undocumented)
