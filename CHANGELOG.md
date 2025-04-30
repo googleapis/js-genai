@@ -1,6 +1,13 @@
 # Changelog
 
 
+## [0.12.0](https://github.com/googleapis/js-genai/compare/v0.11.0...v0.12.0) (2025-04-30)
+
+
+### Features
+
+* add support for live grounding metadata ([f5ed429](https://github.com/googleapis/js-genai/commit/f5ed429add42b71a90a9c986ca7c818759866085))
+
 ## [0.11.0](https://github.com/googleapis/js-genai/compare/v0.10.0...v0.11.0) (2025-04-30)
 
 
