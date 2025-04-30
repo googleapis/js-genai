@@ -1,6 +1,26 @@
 # Changelog
 
 
+## [0.11.0](https://github.com/googleapis/js-genai/compare/v0.10.0...v0.11.0) (2025-04-30)
+
+
+### Features
+
+* add models.delete and models.update to manage tuned models ([0766718](https://github.com/googleapis/js-genai/commit/076671891bca70cbd33f01b18d2dbfc1d60c4c13))
+* Added support for Tuning operations ([d5a035f](https://github.com/googleapis/js-genai/commit/d5a035f9f5d682484821737c2b3fb5fda3b41256))
+* make min_property, max_property, min_length, max_length, example, patter fields available for Schema class when calling Gemini API ([5f91ee7](https://github.com/googleapis/js-genai/commit/5f91ee780e0af3022b847043f07ed06455609300))
+
+
+### Bug Fixes
+
+* Add the ./src/schema_helper.ts to our bundle and add samples. ([04ef24e](https://github.com/googleapis/js-genai/commit/04ef24ea378169cf897daacd2767b4543e4b2153))
+* Apply converters to list items when the API value isn't an array ([249769f](https://github.com/googleapis/js-genai/commit/249769ff17989aa3d3f037f342fc12c26194421c))
+* **chats:** Properly handle streaming errors to not throw an error that couldn't be caught, which might result in crash in web. Fixes [#487](https://github.com/googleapis/js-genai/issues/487) ([0b62e15](https://github.com/googleapis/js-genai/commit/0b62e15b0a0c1dff06c55b51df922bceb39bf58a))
+* **CI:** Fix docs generation for release event ([899969e](https://github.com/googleapis/js-genai/commit/899969e4acef0261d58351547c3292de67d3aee1))
+* Clean the CHANGELOG to remove the changes not included in the bundle. ([89b1d66](https://github.com/googleapis/js-genai/commit/89b1d668213a8f95d39ab55a1619aa4a89508605))
+* do not raise error for `default` field in Schema for Gemini API calls ([6f72396](https://github.com/googleapis/js-genai/commit/6f7239655caab724320b75ce29d733a9a4a9b667))
+* Don't transform lists twice ([249769f](https://github.com/googleapis/js-genai/commit/249769ff17989aa3d3f037f342fc12c26194421c))
+
 ## [0.10.0](https://github.com/googleapis/js-genai/compare/v0.9.0...v0.10.0) (2025-04-23)
 
 
