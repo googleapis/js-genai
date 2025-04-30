@@ -13,7 +13,6 @@
 
 ### Bug Fixes
 
-* Add the ./src/schema_helper.ts to our bundle and add samples. ([04ef24e](https://github.com/googleapis/js-genai/commit/04ef24ea378169cf897daacd2767b4543e4b2153))
 * Apply converters to list items when the API value isn't an array ([249769f](https://github.com/googleapis/js-genai/commit/249769ff17989aa3d3f037f342fc12c26194421c))
 * **chats:** Properly handle streaming errors to not throw an error that couldn't be caught, which might result in crash in web. Fixes [#487](https://github.com/googleapis/js-genai/issues/487) ([0b62e15](https://github.com/googleapis/js-genai/commit/0b62e15b0a0c1dff06c55b51df922bceb39bf58a))
 * **CI:** Fix docs generation for release event ([899969e](https://github.com/googleapis/js-genai/commit/899969e4acef0261d58351547c3292de67d3aee1))
