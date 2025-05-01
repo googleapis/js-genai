@@ -11,4 +11,4 @@
 **Live Site:** 
 
 * Documentation for latest release: https://googleapis.github.io/js-genai/
-* Documentation for main branch: https://googleapis.github.io/js-genai/main/
+* Documentation for main branch: https://googleapis.github.io/js-genai/main_docs/
