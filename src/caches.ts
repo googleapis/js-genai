@@ -102,14 +102,7 @@ export class Caches extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.CachedContent>;
 
-      return response.then((apiResponse) => {
-        const resp = converters.cachedContentFromVertex(
-          this.apiClient,
-          apiResponse,
-        );
-
-        return resp as types.CachedContent;
-      });
+      return response;
     } else {
       const body = converters.createCachedContentParametersToMldev(
         this.apiClient,
@@ -137,14 +130,7 @@ export class Caches extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.CachedContent>;
 
-      return response.then((apiResponse) => {
-        const resp = converters.cachedContentFromMldev(
-          this.apiClient,
-          apiResponse,
-        );
-
-        return resp as types.CachedContent;
-      });
+      return response;
     }
   }
 
@@ -192,14 +178,7 @@ export class Caches extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.CachedContent>;
 
-      return response.then((apiResponse) => {
-        const resp = converters.cachedContentFromVertex(
-          this.apiClient,
-          apiResponse,
-        );
-
-        return resp as types.CachedContent;
-      });
+      return response;
     } else {
       const body = converters.getCachedContentParametersToMldev(
         this.apiClient,
@@ -227,14 +206,7 @@ export class Caches extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.CachedContent>;
 
-      return response.then((apiResponse) => {
-        const resp = converters.cachedContentFromMldev(
-          this.apiClient,
-          apiResponse,
-        );
-
-        return resp as types.CachedContent;
-      });
+      return response;
     }
   }
 
@@ -282,12 +254,7 @@ export class Caches extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.DeleteCachedContentResponse>;
 
-      return response.then(() => {
-        const resp = converters.deleteCachedContentResponseFromVertex();
-        const typedResp = new types.DeleteCachedContentResponse();
-        Object.assign(typedResp, resp);
-        return typedResp;
-      });
+      return response;
     } else {
       const body = converters.deleteCachedContentParametersToMldev(
         this.apiClient,
@@ -315,12 +282,7 @@ export class Caches extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.DeleteCachedContentResponse>;
 
-      return response.then(() => {
-        const resp = converters.deleteCachedContentResponseFromMldev();
-        const typedResp = new types.DeleteCachedContentResponse();
-        Object.assign(typedResp, resp);
-        return typedResp;
-      });
+      return response;
     }
   }
 
@@ -371,14 +333,7 @@ export class Caches extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.CachedContent>;
 
-      return response.then((apiResponse) => {
-        const resp = converters.cachedContentFromVertex(
-          this.apiClient,
-          apiResponse,
-        );
-
-        return resp as types.CachedContent;
-      });
+      return response;
     } else {
       const body = converters.updateCachedContentParametersToMldev(
         this.apiClient,
@@ -406,14 +361,7 @@ export class Caches extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.CachedContent>;
 
-      return response.then((apiResponse) => {
-        const resp = converters.cachedContentFromMldev(
-          this.apiClient,
-          apiResponse,
-        );
-
-        return resp as types.CachedContent;
-      });
+      return response;
     }
   }
 

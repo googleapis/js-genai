@@ -330,11 +330,7 @@ export class Tunings extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.Operation>;
 
-      return response.then((apiResponse) => {
-        const resp = converters.operationFromMldev(this.apiClient, apiResponse);
-
-        return resp as types.Operation;
-      });
+      return response;
     }
   }
 }

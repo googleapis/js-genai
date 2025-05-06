@@ -74,72 +74,6 @@ export function partToMldev(
   return toObject;
 }
 
-export function partToVertex(
-  apiClient: ApiClient,
-  fromObject: types.Part,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromVideoMetadata = common.getValueByPath(fromObject, [
-    'videoMetadata',
-  ]);
-  if (fromVideoMetadata != null) {
-    common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
-  }
-
-  const fromThought = common.getValueByPath(fromObject, ['thought']);
-  if (fromThought != null) {
-    common.setValueByPath(toObject, ['thought'], fromThought);
-  }
-
-  const fromCodeExecutionResult = common.getValueByPath(fromObject, [
-    'codeExecutionResult',
-  ]);
-  if (fromCodeExecutionResult != null) {
-    common.setValueByPath(
-      toObject,
-      ['codeExecutionResult'],
-      fromCodeExecutionResult,
-    );
-  }
-
-  const fromExecutableCode = common.getValueByPath(fromObject, [
-    'executableCode',
-  ]);
-  if (fromExecutableCode != null) {
-    common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
-  }
-
-  const fromFileData = common.getValueByPath(fromObject, ['fileData']);
-  if (fromFileData != null) {
-    common.setValueByPath(toObject, ['fileData'], fromFileData);
-  }
-
-  const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
-  if (fromFunctionCall != null) {
-    common.setValueByPath(toObject, ['functionCall'], fromFunctionCall);
-  }
-
-  const fromFunctionResponse = common.getValueByPath(fromObject, [
-    'functionResponse',
-  ]);
-  if (fromFunctionResponse != null) {
-    common.setValueByPath(toObject, ['functionResponse'], fromFunctionResponse);
-  }
-
-  const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
-  if (fromInlineData != null) {
-    common.setValueByPath(toObject, ['inlineData'], fromInlineData);
-  }
-
-  const fromText = common.getValueByPath(fromObject, ['text']);
-  if (fromText != null) {
-    common.setValueByPath(toObject, ['text'], fromText);
-  }
-
-  return toObject;
-}
-
 export function contentToMldev(
   apiClient: ApiClient,
   fromObject: types.Content,
@@ -176,7 +110,7 @@ export function contentToVertex(
     let transformedList = fromParts;
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return partToVertex(apiClient, item);
+        return item;
       });
     }
     common.setValueByPath(toObject, ['parts'], transformedList);
@@ -185,60 +119,6 @@ export function contentToVertex(
   const fromRole = common.getValueByPath(fromObject, ['role']);
   if (fromRole != null) {
     common.setValueByPath(toObject, ['role'], fromRole);
-  }
-
-  return toObject;
-}
-
-export function googleSearchToMldev(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
-export function googleSearchToVertex(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
-export function dynamicRetrievalConfigToMldev(
-  apiClient: ApiClient,
-  fromObject: types.DynamicRetrievalConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromMode = common.getValueByPath(fromObject, ['mode']);
-  if (fromMode != null) {
-    common.setValueByPath(toObject, ['mode'], fromMode);
-  }
-
-  const fromDynamicThreshold = common.getValueByPath(fromObject, [
-    'dynamicThreshold',
-  ]);
-  if (fromDynamicThreshold != null) {
-    common.setValueByPath(toObject, ['dynamicThreshold'], fromDynamicThreshold);
-  }
-
-  return toObject;
-}
-
-export function dynamicRetrievalConfigToVertex(
-  apiClient: ApiClient,
-  fromObject: types.DynamicRetrievalConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromMode = common.getValueByPath(fromObject, ['mode']);
-  if (fromMode != null) {
-    common.setValueByPath(toObject, ['mode'], fromMode);
-  }
-
-  const fromDynamicThreshold = common.getValueByPath(fromObject, [
-    'dynamicThreshold',
-  ]);
-  if (fromDynamicThreshold != null) {
-    common.setValueByPath(toObject, ['dynamicThreshold'], fromDynamicThreshold);
   }
 
   return toObject;
@@ -257,7 +137,7 @@ export function googleSearchRetrievalToMldev(
     common.setValueByPath(
       toObject,
       ['dynamicRetrievalConfig'],
-      dynamicRetrievalConfigToMldev(apiClient, fromDynamicRetrievalConfig),
+      fromDynamicRetrievalConfig,
     );
   }
 
@@ -277,21 +157,9 @@ export function googleSearchRetrievalToVertex(
     common.setValueByPath(
       toObject,
       ['dynamicRetrievalConfig'],
-      dynamicRetrievalConfigToVertex(apiClient, fromDynamicRetrievalConfig),
+      fromDynamicRetrievalConfig,
     );
   }
-
-  return toObject;
-}
-
-export function enterpriseWebSearchToMldev(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
-export function enterpriseWebSearchToVertex(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
 
   return toObject;
 }
@@ -304,20 +172,6 @@ export function apiKeyConfigToMldev(
 
   if (common.getValueByPath(fromObject, ['apiKeyString']) !== undefined) {
     throw new Error('apiKeyString parameter is not supported in Gemini API.');
-  }
-
-  return toObject;
-}
-
-export function apiKeyConfigToVertex(
-  apiClient: ApiClient,
-  fromObject: types.ApiKeyConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromApiKeyString = common.getValueByPath(fromObject, ['apiKeyString']);
-  if (fromApiKeyString != null) {
-    common.setValueByPath(toObject, ['apiKeyString'], fromApiKeyString);
   }
 
   return toObject;
@@ -381,11 +235,7 @@ export function authConfigToVertex(
 
   const fromApiKeyConfig = common.getValueByPath(fromObject, ['apiKeyConfig']);
   if (fromApiKeyConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['apiKeyConfig'],
-      apiKeyConfigToVertex(apiClient, fromApiKeyConfig),
-    );
+    common.setValueByPath(toObject, ['apiKeyConfig'], fromApiKeyConfig);
   }
 
   const fromAuthType = common.getValueByPath(fromObject, ['authType']);
@@ -471,7 +321,7 @@ export function toolToMldev(
 
   const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
   if (fromGoogleSearch != null) {
-    common.setValueByPath(toObject, ['googleSearch'], googleSearchToMldev());
+    common.setValueByPath(toObject, ['googleSearch'], fromGoogleSearch);
   }
 
   const fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
@@ -531,7 +381,7 @@ export function toolToVertex(
 
   const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
   if (fromGoogleSearch != null) {
-    common.setValueByPath(toObject, ['googleSearch'], googleSearchToVertex());
+    common.setValueByPath(toObject, ['googleSearch'], fromGoogleSearch);
   }
 
   const fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
@@ -552,7 +402,7 @@ export function toolToVertex(
     common.setValueByPath(
       toObject,
       ['enterpriseWebSearch'],
-      enterpriseWebSearchToVertex(),
+      fromEnterpriseWebSearch,
     );
   }
 
@@ -604,145 +454,6 @@ export function sessionResumptionConfigToMldev(
   return toObject;
 }
 
-export function sessionResumptionConfigToVertex(
-  apiClient: ApiClient,
-  fromObject: types.SessionResumptionConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromHandle = common.getValueByPath(fromObject, ['handle']);
-  if (fromHandle != null) {
-    common.setValueByPath(toObject, ['handle'], fromHandle);
-  }
-
-  const fromTransparent = common.getValueByPath(fromObject, ['transparent']);
-  if (fromTransparent != null) {
-    common.setValueByPath(toObject, ['transparent'], fromTransparent);
-  }
-
-  return toObject;
-}
-
-export function audioTranscriptionConfigToMldev(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
-export function audioTranscriptionConfigToVertex(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
-export function automaticActivityDetectionToMldev(
-  apiClient: ApiClient,
-  fromObject: types.AutomaticActivityDetection,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromDisabled = common.getValueByPath(fromObject, ['disabled']);
-  if (fromDisabled != null) {
-    common.setValueByPath(toObject, ['disabled'], fromDisabled);
-  }
-
-  const fromStartOfSpeechSensitivity = common.getValueByPath(fromObject, [
-    'startOfSpeechSensitivity',
-  ]);
-  if (fromStartOfSpeechSensitivity != null) {
-    common.setValueByPath(
-      toObject,
-      ['startOfSpeechSensitivity'],
-      fromStartOfSpeechSensitivity,
-    );
-  }
-
-  const fromEndOfSpeechSensitivity = common.getValueByPath(fromObject, [
-    'endOfSpeechSensitivity',
-  ]);
-  if (fromEndOfSpeechSensitivity != null) {
-    common.setValueByPath(
-      toObject,
-      ['endOfSpeechSensitivity'],
-      fromEndOfSpeechSensitivity,
-    );
-  }
-
-  const fromPrefixPaddingMs = common.getValueByPath(fromObject, [
-    'prefixPaddingMs',
-  ]);
-  if (fromPrefixPaddingMs != null) {
-    common.setValueByPath(toObject, ['prefixPaddingMs'], fromPrefixPaddingMs);
-  }
-
-  const fromSilenceDurationMs = common.getValueByPath(fromObject, [
-    'silenceDurationMs',
-  ]);
-  if (fromSilenceDurationMs != null) {
-    common.setValueByPath(
-      toObject,
-      ['silenceDurationMs'],
-      fromSilenceDurationMs,
-    );
-  }
-
-  return toObject;
-}
-
-export function automaticActivityDetectionToVertex(
-  apiClient: ApiClient,
-  fromObject: types.AutomaticActivityDetection,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromDisabled = common.getValueByPath(fromObject, ['disabled']);
-  if (fromDisabled != null) {
-    common.setValueByPath(toObject, ['disabled'], fromDisabled);
-  }
-
-  const fromStartOfSpeechSensitivity = common.getValueByPath(fromObject, [
-    'startOfSpeechSensitivity',
-  ]);
-  if (fromStartOfSpeechSensitivity != null) {
-    common.setValueByPath(
-      toObject,
-      ['startOfSpeechSensitivity'],
-      fromStartOfSpeechSensitivity,
-    );
-  }
-
-  const fromEndOfSpeechSensitivity = common.getValueByPath(fromObject, [
-    'endOfSpeechSensitivity',
-  ]);
-  if (fromEndOfSpeechSensitivity != null) {
-    common.setValueByPath(
-      toObject,
-      ['endOfSpeechSensitivity'],
-      fromEndOfSpeechSensitivity,
-    );
-  }
-
-  const fromPrefixPaddingMs = common.getValueByPath(fromObject, [
-    'prefixPaddingMs',
-  ]);
-  if (fromPrefixPaddingMs != null) {
-    common.setValueByPath(toObject, ['prefixPaddingMs'], fromPrefixPaddingMs);
-  }
-
-  const fromSilenceDurationMs = common.getValueByPath(fromObject, [
-    'silenceDurationMs',
-  ]);
-  if (fromSilenceDurationMs != null) {
-    common.setValueByPath(
-      toObject,
-      ['silenceDurationMs'],
-      fromSilenceDurationMs,
-    );
-  }
-
-  return toObject;
-}
-
 export function realtimeInputConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.RealtimeInputConfig,
@@ -756,10 +467,7 @@ export function realtimeInputConfigToMldev(
     common.setValueByPath(
       toObject,
       ['automaticActivityDetection'],
-      automaticActivityDetectionToMldev(
-        apiClient,
-        fromAutomaticActivityDetection,
-      ),
+      fromAutomaticActivityDetection,
     );
   }
 
@@ -791,10 +499,7 @@ export function realtimeInputConfigToVertex(
     common.setValueByPath(
       toObject,
       ['automaticActivityDetection'],
-      automaticActivityDetectionToVertex(
-        apiClient,
-        fromAutomaticActivityDetection,
-      ),
+      fromAutomaticActivityDetection,
     );
   }
 
@@ -808,34 +513,6 @@ export function realtimeInputConfigToVertex(
   const fromTurnCoverage = common.getValueByPath(fromObject, ['turnCoverage']);
   if (fromTurnCoverage != null) {
     common.setValueByPath(toObject, ['turnCoverage'], fromTurnCoverage);
-  }
-
-  return toObject;
-}
-
-export function slidingWindowToMldev(
-  apiClient: ApiClient,
-  fromObject: types.SlidingWindow,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromTargetTokens = common.getValueByPath(fromObject, ['targetTokens']);
-  if (fromTargetTokens != null) {
-    common.setValueByPath(toObject, ['targetTokens'], fromTargetTokens);
-  }
-
-  return toObject;
-}
-
-export function slidingWindowToVertex(
-  apiClient: ApiClient,
-  fromObject: types.SlidingWindow,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromTargetTokens = common.getValueByPath(fromObject, ['targetTokens']);
-  if (fromTargetTokens != null) {
-    common.setValueByPath(toObject, ['targetTokens'], fromTargetTokens);
   }
 
   return toObject;
@@ -858,11 +535,7 @@ export function contextWindowCompressionConfigToMldev(
     'slidingWindow',
   ]);
   if (fromSlidingWindow != null) {
-    common.setValueByPath(
-      toObject,
-      ['slidingWindow'],
-      slidingWindowToMldev(apiClient, fromSlidingWindow),
-    );
+    common.setValueByPath(toObject, ['slidingWindow'], fromSlidingWindow);
   }
 
   return toObject;
@@ -885,11 +558,7 @@ export function contextWindowCompressionConfigToVertex(
     'slidingWindow',
   ]);
   if (fromSlidingWindow != null) {
-    common.setValueByPath(
-      toObject,
-      ['slidingWindow'],
-      slidingWindowToVertex(apiClient, fromSlidingWindow),
-    );
+    common.setValueByPath(toObject, ['slidingWindow'], fromSlidingWindow);
   }
 
   return toObject;
@@ -1031,7 +700,7 @@ export function liveConnectConfigToMldev(
     common.setValueByPath(
       parentObject,
       ['setup', 'inputAudioTranscription'],
-      audioTranscriptionConfigToMldev(),
+      fromInputAudioTranscription,
     );
   }
 
@@ -1042,7 +711,7 @@ export function liveConnectConfigToMldev(
     common.setValueByPath(
       parentObject,
       ['setup', 'outputAudioTranscription'],
-      audioTranscriptionConfigToMldev(),
+      fromOutputAudioTranscription,
     );
   }
 
@@ -1199,7 +868,7 @@ export function liveConnectConfigToVertex(
     common.setValueByPath(
       parentObject,
       ['setup', 'sessionResumption'],
-      sessionResumptionConfigToVertex(apiClient, fromSessionResumption),
+      fromSessionResumption,
     );
   }
 
@@ -1210,7 +879,7 @@ export function liveConnectConfigToVertex(
     common.setValueByPath(
       parentObject,
       ['setup', 'inputAudioTranscription'],
-      audioTranscriptionConfigToVertex(),
+      fromInputAudioTranscription,
     );
   }
 
@@ -1221,7 +890,7 @@ export function liveConnectConfigToVertex(
     common.setValueByPath(
       parentObject,
       ['setup', 'outputAudioTranscription'],
-      audioTranscriptionConfigToVertex(),
+      fromOutputAudioTranscription,
     );
   }
 
@@ -1307,30 +976,6 @@ export function liveConnectParametersToVertex(
   return toObject;
 }
 
-export function activityStartToMldev(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
-export function activityStartToVertex(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
-export function activityEndToMldev(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
-export function activityEndToVertex(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
 export function liveSendRealtimeInputParametersToMldev(
   apiClient: ApiClient,
   fromObject: types.LiveSendRealtimeInputParameters,
@@ -1380,12 +1025,12 @@ export function liveSendRealtimeInputParametersToMldev(
     'activityStart',
   ]);
   if (fromActivityStart != null) {
-    common.setValueByPath(toObject, ['activityStart'], activityStartToMldev());
+    common.setValueByPath(toObject, ['activityStart'], fromActivityStart);
   }
 
   const fromActivityEnd = common.getValueByPath(fromObject, ['activityEnd']);
   if (fromActivityEnd != null) {
-    common.setValueByPath(toObject, ['activityEnd'], activityEndToMldev());
+    common.setValueByPath(toObject, ['activityEnd'], fromActivityEnd);
   }
 
   return toObject;
@@ -1429,12 +1074,12 @@ export function liveSendRealtimeInputParametersToVertex(
     'activityStart',
   ]);
   if (fromActivityStart != null) {
-    common.setValueByPath(toObject, ['activityStart'], activityStartToVertex());
+    common.setValueByPath(toObject, ['activityStart'], fromActivityStart);
   }
 
   const fromActivityEnd = common.getValueByPath(fromObject, ['activityEnd']);
   if (fromActivityEnd != null) {
-    common.setValueByPath(toObject, ['activityEnd'], activityEndToVertex());
+    common.setValueByPath(toObject, ['activityEnd'], fromActivityEnd);
   }
 
   return toObject;
@@ -1523,7 +1168,7 @@ export function liveClientSetupToMldev(
     common.setValueByPath(
       toObject,
       ['inputAudioTranscription'],
-      audioTranscriptionConfigToMldev(),
+      fromInputAudioTranscription,
     );
   }
 
@@ -1534,7 +1179,7 @@ export function liveClientSetupToMldev(
     common.setValueByPath(
       toObject,
       ['outputAudioTranscription'],
-      audioTranscriptionConfigToMldev(),
+      fromOutputAudioTranscription,
     );
   }
 
@@ -1599,7 +1244,7 @@ export function liveClientSetupToVertex(
     common.setValueByPath(
       toObject,
       ['sessionResumption'],
-      sessionResumptionConfigToVertex(apiClient, fromSessionResumption),
+      fromSessionResumption,
     );
   }
 
@@ -1624,7 +1269,7 @@ export function liveClientSetupToVertex(
     common.setValueByPath(
       toObject,
       ['inputAudioTranscription'],
-      audioTranscriptionConfigToVertex(),
+      fromInputAudioTranscription,
     );
   }
 
@@ -1635,7 +1280,7 @@ export function liveClientSetupToVertex(
     common.setValueByPath(
       toObject,
       ['outputAudioTranscription'],
-      audioTranscriptionConfigToVertex(),
+      fromOutputAudioTranscription,
     );
   }
 
@@ -1729,12 +1374,12 @@ export function liveClientRealtimeInputToMldev(
     'activityStart',
   ]);
   if (fromActivityStart != null) {
-    common.setValueByPath(toObject, ['activityStart'], activityStartToMldev());
+    common.setValueByPath(toObject, ['activityStart'], fromActivityStart);
   }
 
   const fromActivityEnd = common.getValueByPath(fromObject, ['activityEnd']);
   if (fromActivityEnd != null) {
-    common.setValueByPath(toObject, ['activityEnd'], activityEndToMldev());
+    common.setValueByPath(toObject, ['activityEnd'], fromActivityEnd);
   }
 
   return toObject;
@@ -1771,36 +1416,12 @@ export function liveClientRealtimeInputToVertex(
     'activityStart',
   ]);
   if (fromActivityStart != null) {
-    common.setValueByPath(toObject, ['activityStart'], activityStartToVertex());
+    common.setValueByPath(toObject, ['activityStart'], fromActivityStart);
   }
 
   const fromActivityEnd = common.getValueByPath(fromObject, ['activityEnd']);
   if (fromActivityEnd != null) {
-    common.setValueByPath(toObject, ['activityEnd'], activityEndToVertex());
-  }
-
-  return toObject;
-}
-
-export function functionResponseToMldev(
-  apiClient: ApiClient,
-  fromObject: types.FunctionResponse,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromId = common.getValueByPath(fromObject, ['id']);
-  if (fromId != null) {
-    common.setValueByPath(toObject, ['id'], fromId);
-  }
-
-  const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName != null) {
-    common.setValueByPath(toObject, ['name'], fromName);
-  }
-
-  const fromResponse = common.getValueByPath(fromObject, ['response']);
-  if (fromResponse != null) {
-    common.setValueByPath(toObject, ['response'], fromResponse);
+    common.setValueByPath(toObject, ['activityEnd'], fromActivityEnd);
   }
 
   return toObject;
@@ -1842,7 +1463,7 @@ export function liveClientToolResponseToMldev(
     let transformedList = fromFunctionResponses;
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return functionResponseToMldev(apiClient, item);
+        return item;
       });
     }
     common.setValueByPath(toObject, ['functionResponses'], transformedList);
@@ -1971,143 +1592,6 @@ export function liveClientMessageToVertex(
   return toObject;
 }
 
-export function liveServerSetupCompleteFromMldev(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
-export function liveServerSetupCompleteFromVertex(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
-export function partFromMldev(
-  apiClient: ApiClient,
-  fromObject: types.Part,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromThought = common.getValueByPath(fromObject, ['thought']);
-  if (fromThought != null) {
-    common.setValueByPath(toObject, ['thought'], fromThought);
-  }
-
-  const fromCodeExecutionResult = common.getValueByPath(fromObject, [
-    'codeExecutionResult',
-  ]);
-  if (fromCodeExecutionResult != null) {
-    common.setValueByPath(
-      toObject,
-      ['codeExecutionResult'],
-      fromCodeExecutionResult,
-    );
-  }
-
-  const fromExecutableCode = common.getValueByPath(fromObject, [
-    'executableCode',
-  ]);
-  if (fromExecutableCode != null) {
-    common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
-  }
-
-  const fromFileData = common.getValueByPath(fromObject, ['fileData']);
-  if (fromFileData != null) {
-    common.setValueByPath(toObject, ['fileData'], fromFileData);
-  }
-
-  const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
-  if (fromFunctionCall != null) {
-    common.setValueByPath(toObject, ['functionCall'], fromFunctionCall);
-  }
-
-  const fromFunctionResponse = common.getValueByPath(fromObject, [
-    'functionResponse',
-  ]);
-  if (fromFunctionResponse != null) {
-    common.setValueByPath(toObject, ['functionResponse'], fromFunctionResponse);
-  }
-
-  const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
-  if (fromInlineData != null) {
-    common.setValueByPath(toObject, ['inlineData'], fromInlineData);
-  }
-
-  const fromText = common.getValueByPath(fromObject, ['text']);
-  if (fromText != null) {
-    common.setValueByPath(toObject, ['text'], fromText);
-  }
-
-  return toObject;
-}
-
-export function partFromVertex(
-  apiClient: ApiClient,
-  fromObject: types.Part,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromVideoMetadata = common.getValueByPath(fromObject, [
-    'videoMetadata',
-  ]);
-  if (fromVideoMetadata != null) {
-    common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
-  }
-
-  const fromThought = common.getValueByPath(fromObject, ['thought']);
-  if (fromThought != null) {
-    common.setValueByPath(toObject, ['thought'], fromThought);
-  }
-
-  const fromCodeExecutionResult = common.getValueByPath(fromObject, [
-    'codeExecutionResult',
-  ]);
-  if (fromCodeExecutionResult != null) {
-    common.setValueByPath(
-      toObject,
-      ['codeExecutionResult'],
-      fromCodeExecutionResult,
-    );
-  }
-
-  const fromExecutableCode = common.getValueByPath(fromObject, [
-    'executableCode',
-  ]);
-  if (fromExecutableCode != null) {
-    common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
-  }
-
-  const fromFileData = common.getValueByPath(fromObject, ['fileData']);
-  if (fromFileData != null) {
-    common.setValueByPath(toObject, ['fileData'], fromFileData);
-  }
-
-  const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
-  if (fromFunctionCall != null) {
-    common.setValueByPath(toObject, ['functionCall'], fromFunctionCall);
-  }
-
-  const fromFunctionResponse = common.getValueByPath(fromObject, [
-    'functionResponse',
-  ]);
-  if (fromFunctionResponse != null) {
-    common.setValueByPath(toObject, ['functionResponse'], fromFunctionResponse);
-  }
-
-  const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
-  if (fromInlineData != null) {
-    common.setValueByPath(toObject, ['inlineData'], fromInlineData);
-  }
-
-  const fromText = common.getValueByPath(fromObject, ['text']);
-  if (fromText != null) {
-    common.setValueByPath(toObject, ['text'], fromText);
-  }
-
-  return toObject;
-}
-
 export function contentFromMldev(
   apiClient: ApiClient,
   fromObject: types.Content,
@@ -2119,7 +1603,7 @@ export function contentFromMldev(
     let transformedList = fromParts;
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return partFromMldev(apiClient, item);
+        return item;
       });
     }
     common.setValueByPath(toObject, ['parts'], transformedList);
@@ -2144,7 +1628,7 @@ export function contentFromVertex(
     let transformedList = fromParts;
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return partFromVertex(apiClient, item);
+        return item;
       });
     }
     common.setValueByPath(toObject, ['parts'], transformedList);
@@ -2153,44 +1637,6 @@ export function contentFromVertex(
   const fromRole = common.getValueByPath(fromObject, ['role']);
   if (fromRole != null) {
     common.setValueByPath(toObject, ['role'], fromRole);
-  }
-
-  return toObject;
-}
-
-export function transcriptionFromMldev(
-  apiClient: ApiClient,
-  fromObject: types.Transcription,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromText = common.getValueByPath(fromObject, ['text']);
-  if (fromText != null) {
-    common.setValueByPath(toObject, ['text'], fromText);
-  }
-
-  const fromFinished = common.getValueByPath(fromObject, ['finished']);
-  if (fromFinished != null) {
-    common.setValueByPath(toObject, ['finished'], fromFinished);
-  }
-
-  return toObject;
-}
-
-export function transcriptionFromVertex(
-  apiClient: ApiClient,
-  fromObject: types.Transcription,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromText = common.getValueByPath(fromObject, ['text']);
-  if (fromText != null) {
-    common.setValueByPath(toObject, ['text'], fromText);
-  }
-
-  const fromFinished = common.getValueByPath(fromObject, ['finished']);
-  if (fromFinished != null) {
-    common.setValueByPath(toObject, ['finished'], fromFinished);
   }
 
   return toObject;
@@ -2250,7 +1696,7 @@ export function liveServerContentFromMldev(
     common.setValueByPath(
       toObject,
       ['inputTranscription'],
-      transcriptionFromMldev(apiClient, fromInputTranscription),
+      fromInputTranscription,
     );
   }
 
@@ -2261,7 +1707,7 @@ export function liveServerContentFromMldev(
     common.setValueByPath(
       toObject,
       ['outputTranscription'],
-      transcriptionFromMldev(apiClient, fromOutputTranscription),
+      fromOutputTranscription,
     );
   }
 
@@ -2322,7 +1768,7 @@ export function liveServerContentFromVertex(
     common.setValueByPath(
       toObject,
       ['inputTranscription'],
-      transcriptionFromVertex(apiClient, fromInputTranscription),
+      fromInputTranscription,
     );
   }
 
@@ -2333,51 +1779,8 @@ export function liveServerContentFromVertex(
     common.setValueByPath(
       toObject,
       ['outputTranscription'],
-      transcriptionFromVertex(apiClient, fromOutputTranscription),
+      fromOutputTranscription,
     );
-  }
-
-  return toObject;
-}
-
-export function functionCallFromMldev(
-  apiClient: ApiClient,
-  fromObject: types.FunctionCall,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromId = common.getValueByPath(fromObject, ['id']);
-  if (fromId != null) {
-    common.setValueByPath(toObject, ['id'], fromId);
-  }
-
-  const fromArgs = common.getValueByPath(fromObject, ['args']);
-  if (fromArgs != null) {
-    common.setValueByPath(toObject, ['args'], fromArgs);
-  }
-
-  const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName != null) {
-    common.setValueByPath(toObject, ['name'], fromName);
-  }
-
-  return toObject;
-}
-
-export function functionCallFromVertex(
-  apiClient: ApiClient,
-  fromObject: types.FunctionCall,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromArgs = common.getValueByPath(fromObject, ['args']);
-  if (fromArgs != null) {
-    common.setValueByPath(toObject, ['args'], fromArgs);
-  }
-
-  const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName != null) {
-    common.setValueByPath(toObject, ['name'], fromName);
   }
 
   return toObject;
@@ -2396,7 +1799,7 @@ export function liveServerToolCallFromMldev(
     let transformedList = fromFunctionCalls;
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return functionCallFromMldev(apiClient, item);
+        return item;
       });
     }
     common.setValueByPath(toObject, ['functionCalls'], transformedList);
@@ -2418,76 +1821,10 @@ export function liveServerToolCallFromVertex(
     let transformedList = fromFunctionCalls;
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return functionCallFromVertex(apiClient, item);
+        return item;
       });
     }
     common.setValueByPath(toObject, ['functionCalls'], transformedList);
-  }
-
-  return toObject;
-}
-
-export function liveServerToolCallCancellationFromMldev(
-  apiClient: ApiClient,
-  fromObject: types.LiveServerToolCallCancellation,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromIds = common.getValueByPath(fromObject, ['ids']);
-  if (fromIds != null) {
-    common.setValueByPath(toObject, ['ids'], fromIds);
-  }
-
-  return toObject;
-}
-
-export function liveServerToolCallCancellationFromVertex(
-  apiClient: ApiClient,
-  fromObject: types.LiveServerToolCallCancellation,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromIds = common.getValueByPath(fromObject, ['ids']);
-  if (fromIds != null) {
-    common.setValueByPath(toObject, ['ids'], fromIds);
-  }
-
-  return toObject;
-}
-
-export function modalityTokenCountFromMldev(
-  apiClient: ApiClient,
-  fromObject: types.ModalityTokenCount,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromModality = common.getValueByPath(fromObject, ['modality']);
-  if (fromModality != null) {
-    common.setValueByPath(toObject, ['modality'], fromModality);
-  }
-
-  const fromTokenCount = common.getValueByPath(fromObject, ['tokenCount']);
-  if (fromTokenCount != null) {
-    common.setValueByPath(toObject, ['tokenCount'], fromTokenCount);
-  }
-
-  return toObject;
-}
-
-export function modalityTokenCountFromVertex(
-  apiClient: ApiClient,
-  fromObject: types.ModalityTokenCount,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromModality = common.getValueByPath(fromObject, ['modality']);
-  if (fromModality != null) {
-    common.setValueByPath(toObject, ['modality'], fromModality);
-  }
-
-  const fromTokenCount = common.getValueByPath(fromObject, ['tokenCount']);
-  if (fromTokenCount != null) {
-    common.setValueByPath(toObject, ['tokenCount'], fromTokenCount);
   }
 
   return toObject;
@@ -2564,7 +1901,7 @@ export function usageMetadataFromMldev(
     let transformedList = fromPromptTokensDetails;
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return modalityTokenCountFromMldev(apiClient, item);
+        return item;
       });
     }
     common.setValueByPath(toObject, ['promptTokensDetails'], transformedList);
@@ -2577,7 +1914,7 @@ export function usageMetadataFromMldev(
     let transformedList = fromCacheTokensDetails;
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return modalityTokenCountFromMldev(apiClient, item);
+        return item;
       });
     }
     common.setValueByPath(toObject, ['cacheTokensDetails'], transformedList);
@@ -2590,7 +1927,7 @@ export function usageMetadataFromMldev(
     let transformedList = fromResponseTokensDetails;
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return modalityTokenCountFromMldev(apiClient, item);
+        return item;
       });
     }
     common.setValueByPath(toObject, ['responseTokensDetails'], transformedList);
@@ -2603,7 +1940,7 @@ export function usageMetadataFromMldev(
     let transformedList = fromToolUsePromptTokensDetails;
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return modalityTokenCountFromMldev(apiClient, item);
+        return item;
       });
     }
     common.setValueByPath(
@@ -2687,7 +2024,7 @@ export function usageMetadataFromVertex(
     let transformedList = fromPromptTokensDetails;
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return modalityTokenCountFromVertex(apiClient, item);
+        return item;
       });
     }
     common.setValueByPath(toObject, ['promptTokensDetails'], transformedList);
@@ -2700,7 +2037,7 @@ export function usageMetadataFromVertex(
     let transformedList = fromCacheTokensDetails;
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return modalityTokenCountFromVertex(apiClient, item);
+        return item;
       });
     }
     common.setValueByPath(toObject, ['cacheTokensDetails'], transformedList);
@@ -2713,7 +2050,7 @@ export function usageMetadataFromVertex(
     let transformedList = fromResponseTokensDetails;
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return modalityTokenCountFromVertex(apiClient, item);
+        return item;
       });
     }
     common.setValueByPath(toObject, ['responseTokensDetails'], transformedList);
@@ -2726,7 +2063,7 @@ export function usageMetadataFromVertex(
     let transformedList = fromToolUsePromptTokensDetails;
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return modalityTokenCountFromVertex(apiClient, item);
+        return item;
       });
     }
     common.setValueByPath(
@@ -2744,94 +2081,6 @@ export function usageMetadataFromVertex(
   return toObject;
 }
 
-export function liveServerGoAwayFromMldev(
-  apiClient: ApiClient,
-  fromObject: types.LiveServerGoAway,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromTimeLeft = common.getValueByPath(fromObject, ['timeLeft']);
-  if (fromTimeLeft != null) {
-    common.setValueByPath(toObject, ['timeLeft'], fromTimeLeft);
-  }
-
-  return toObject;
-}
-
-export function liveServerGoAwayFromVertex(
-  apiClient: ApiClient,
-  fromObject: types.LiveServerGoAway,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromTimeLeft = common.getValueByPath(fromObject, ['timeLeft']);
-  if (fromTimeLeft != null) {
-    common.setValueByPath(toObject, ['timeLeft'], fromTimeLeft);
-  }
-
-  return toObject;
-}
-
-export function liveServerSessionResumptionUpdateFromMldev(
-  apiClient: ApiClient,
-  fromObject: types.LiveServerSessionResumptionUpdate,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromNewHandle = common.getValueByPath(fromObject, ['newHandle']);
-  if (fromNewHandle != null) {
-    common.setValueByPath(toObject, ['newHandle'], fromNewHandle);
-  }
-
-  const fromResumable = common.getValueByPath(fromObject, ['resumable']);
-  if (fromResumable != null) {
-    common.setValueByPath(toObject, ['resumable'], fromResumable);
-  }
-
-  const fromLastConsumedClientMessageIndex = common.getValueByPath(fromObject, [
-    'lastConsumedClientMessageIndex',
-  ]);
-  if (fromLastConsumedClientMessageIndex != null) {
-    common.setValueByPath(
-      toObject,
-      ['lastConsumedClientMessageIndex'],
-      fromLastConsumedClientMessageIndex,
-    );
-  }
-
-  return toObject;
-}
-
-export function liveServerSessionResumptionUpdateFromVertex(
-  apiClient: ApiClient,
-  fromObject: types.LiveServerSessionResumptionUpdate,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromNewHandle = common.getValueByPath(fromObject, ['newHandle']);
-  if (fromNewHandle != null) {
-    common.setValueByPath(toObject, ['newHandle'], fromNewHandle);
-  }
-
-  const fromResumable = common.getValueByPath(fromObject, ['resumable']);
-  if (fromResumable != null) {
-    common.setValueByPath(toObject, ['resumable'], fromResumable);
-  }
-
-  const fromLastConsumedClientMessageIndex = common.getValueByPath(fromObject, [
-    'lastConsumedClientMessageIndex',
-  ]);
-  if (fromLastConsumedClientMessageIndex != null) {
-    common.setValueByPath(
-      toObject,
-      ['lastConsumedClientMessageIndex'],
-      fromLastConsumedClientMessageIndex,
-    );
-  }
-
-  return toObject;
-}
-
 export function liveServerMessageFromMldev(
   apiClient: ApiClient,
   fromObject: types.LiveServerMessage,
@@ -2842,11 +2091,7 @@ export function liveServerMessageFromMldev(
     'setupComplete',
   ]);
   if (fromSetupComplete != null) {
-    common.setValueByPath(
-      toObject,
-      ['setupComplete'],
-      liveServerSetupCompleteFromMldev(),
-    );
+    common.setValueByPath(toObject, ['setupComplete'], fromSetupComplete);
   }
 
   const fromServerContent = common.getValueByPath(fromObject, [
@@ -2876,10 +2121,7 @@ export function liveServerMessageFromMldev(
     common.setValueByPath(
       toObject,
       ['toolCallCancellation'],
-      liveServerToolCallCancellationFromMldev(
-        apiClient,
-        fromToolCallCancellation,
-      ),
+      fromToolCallCancellation,
     );
   }
 
@@ -2896,11 +2138,7 @@ export function liveServerMessageFromMldev(
 
   const fromGoAway = common.getValueByPath(fromObject, ['goAway']);
   if (fromGoAway != null) {
-    common.setValueByPath(
-      toObject,
-      ['goAway'],
-      liveServerGoAwayFromMldev(apiClient, fromGoAway),
-    );
+    common.setValueByPath(toObject, ['goAway'], fromGoAway);
   }
 
   const fromSessionResumptionUpdate = common.getValueByPath(fromObject, [
@@ -2910,10 +2148,7 @@ export function liveServerMessageFromMldev(
     common.setValueByPath(
       toObject,
       ['sessionResumptionUpdate'],
-      liveServerSessionResumptionUpdateFromMldev(
-        apiClient,
-        fromSessionResumptionUpdate,
-      ),
+      fromSessionResumptionUpdate,
     );
   }
 
@@ -2930,11 +2165,7 @@ export function liveServerMessageFromVertex(
     'setupComplete',
   ]);
   if (fromSetupComplete != null) {
-    common.setValueByPath(
-      toObject,
-      ['setupComplete'],
-      liveServerSetupCompleteFromVertex(),
-    );
+    common.setValueByPath(toObject, ['setupComplete'], fromSetupComplete);
   }
 
   const fromServerContent = common.getValueByPath(fromObject, [
@@ -2964,10 +2195,7 @@ export function liveServerMessageFromVertex(
     common.setValueByPath(
       toObject,
       ['toolCallCancellation'],
-      liveServerToolCallCancellationFromVertex(
-        apiClient,
-        fromToolCallCancellation,
-      ),
+      fromToolCallCancellation,
     );
   }
 
@@ -2984,11 +2212,7 @@ export function liveServerMessageFromVertex(
 
   const fromGoAway = common.getValueByPath(fromObject, ['goAway']);
   if (fromGoAway != null) {
-    common.setValueByPath(
-      toObject,
-      ['goAway'],
-      liveServerGoAwayFromVertex(apiClient, fromGoAway),
-    );
+    common.setValueByPath(toObject, ['goAway'], fromGoAway);
   }
 
   const fromSessionResumptionUpdate = common.getValueByPath(fromObject, [
@@ -2998,10 +2222,7 @@ export function liveServerMessageFromVertex(
     common.setValueByPath(
       toObject,
       ['sessionResumptionUpdate'],
-      liveServerSessionResumptionUpdateFromVertex(
-        apiClient,
-        fromSessionResumptionUpdate,
-      ),
+      fromSessionResumptionUpdate,
     );
   }
 

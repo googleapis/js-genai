@@ -73,25 +73,6 @@ export function listTuningJobsParametersToMldev(
   return toObject;
 }
 
-export function tuningExampleToMldev(
-  apiClient: ApiClient,
-  fromObject: types.TuningExample,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromTextInput = common.getValueByPath(fromObject, ['textInput']);
-  if (fromTextInput != null) {
-    common.setValueByPath(toObject, ['textInput'], fromTextInput);
-  }
-
-  const fromOutput = common.getValueByPath(fromObject, ['output']);
-  if (fromOutput != null) {
-    common.setValueByPath(toObject, ['output'], fromOutput);
-  }
-
-  return toObject;
-}
-
 export function tuningDatasetToMldev(
   apiClient: ApiClient,
   fromObject: types.TuningDataset,
@@ -107,7 +88,7 @@ export function tuningDatasetToMldev(
     let transformedList = fromExamples;
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return tuningExampleToMldev(apiClient, item);
+        return item;
       });
     }
     common.setValueByPath(toObject, ['examples', 'examples'], transformedList);
@@ -607,54 +588,6 @@ export function listTuningJobsResponseFromMldev(
   return toObject;
 }
 
-export function operationFromMldev(
-  apiClient: ApiClient,
-  fromObject: types.Operation,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName != null) {
-    common.setValueByPath(toObject, ['name'], fromName);
-  }
-
-  const fromMetadata = common.getValueByPath(fromObject, ['metadata']);
-  if (fromMetadata != null) {
-    common.setValueByPath(toObject, ['metadata'], fromMetadata);
-  }
-
-  const fromDone = common.getValueByPath(fromObject, ['done']);
-  if (fromDone != null) {
-    common.setValueByPath(toObject, ['done'], fromDone);
-  }
-
-  const fromError = common.getValueByPath(fromObject, ['error']);
-  if (fromError != null) {
-    common.setValueByPath(toObject, ['error'], fromError);
-  }
-
-  return toObject;
-}
-
-export function tunedModelFromVertex(
-  apiClient: ApiClient,
-  fromObject: types.TunedModel,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromModel = common.getValueByPath(fromObject, ['model']);
-  if (fromModel != null) {
-    common.setValueByPath(toObject, ['model'], fromModel);
-  }
-
-  const fromEndpoint = common.getValueByPath(fromObject, ['endpoint']);
-  if (fromEndpoint != null) {
-    common.setValueByPath(toObject, ['endpoint'], fromEndpoint);
-  }
-
-  return toObject;
-}
-
 export function tuningJobFromVertex(
   apiClient: ApiClient,
   fromObject: types.TuningJob,
@@ -712,11 +645,7 @@ export function tuningJobFromVertex(
 
   const fromTunedModel = common.getValueByPath(fromObject, ['tunedModel']);
   if (fromTunedModel != null) {
-    common.setValueByPath(
-      toObject,
-      ['tunedModel'],
-      tunedModelFromVertex(apiClient, fromTunedModel),
-    );
+    common.setValueByPath(toObject, ['tunedModel'], fromTunedModel);
   }
 
   const fromSupervisedTuningSpec = common.getValueByPath(fromObject, [

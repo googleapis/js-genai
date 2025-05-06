@@ -855,12 +855,7 @@ export class Models extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.DeleteModelResponse>;
 
-      return response.then(() => {
-        const resp = converters.deleteModelResponseFromVertex();
-        const typedResp = new types.DeleteModelResponse();
-        Object.assign(typedResp, resp);
-        return typedResp;
-      });
+      return response;
     } else {
       const body = converters.deleteModelParametersToMldev(
         this.apiClient,
@@ -888,12 +883,7 @@ export class Models extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.DeleteModelResponse>;
 
-      return response.then(() => {
-        const resp = converters.deleteModelResponseFromMldev();
-        const typedResp = new types.DeleteModelResponse();
-        Object.assign(typedResp, resp);
-        return typedResp;
-      });
+      return response;
     }
   }
 
@@ -946,15 +936,7 @@ export class Models extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.CountTokensResponse>;
 
-      return response.then((apiResponse) => {
-        const resp = converters.countTokensResponseFromVertex(
-          this.apiClient,
-          apiResponse,
-        );
-        const typedResp = new types.CountTokensResponse();
-        Object.assign(typedResp, resp);
-        return typedResp;
-      });
+      return response;
     } else {
       const body = converters.countTokensParametersToMldev(
         this.apiClient,
@@ -982,15 +964,7 @@ export class Models extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.CountTokensResponse>;
 
-      return response.then((apiResponse) => {
-        const resp = converters.countTokensResponseFromMldev(
-          this.apiClient,
-          apiResponse,
-        );
-        const typedResp = new types.CountTokensResponse();
-        Object.assign(typedResp, resp);
-        return typedResp;
-      });
+      return response;
     }
   }
 
@@ -1045,15 +1019,7 @@ export class Models extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.ComputeTokensResponse>;
 
-      return response.then((apiResponse) => {
-        const resp = converters.computeTokensResponseFromVertex(
-          this.apiClient,
-          apiResponse,
-        );
-        const typedResp = new types.ComputeTokensResponse();
-        Object.assign(typedResp, resp);
-        return typedResp;
-      });
+      return response;
     } else {
       throw new Error('This method is only supported by the Vertex AI.');
     }

@@ -49,30 +49,6 @@ export function listFilesParametersToMldev(
   return toObject;
 }
 
-export function fileStatusToMldev(
-  apiClient: ApiClient,
-  fromObject: types.FileStatus,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromDetails = common.getValueByPath(fromObject, ['details']);
-  if (fromDetails != null) {
-    common.setValueByPath(toObject, ['details'], fromDetails);
-  }
-
-  const fromMessage = common.getValueByPath(fromObject, ['message']);
-  if (fromMessage != null) {
-    common.setValueByPath(toObject, ['message'], fromMessage);
-  }
-
-  const fromCode = common.getValueByPath(fromObject, ['code']);
-  if (fromCode != null) {
-    common.setValueByPath(toObject, ['code'], fromCode);
-  }
-
-  return toObject;
-}
-
 export function fileToMldev(
   apiClient: ApiClient,
   fromObject: types.File,
@@ -150,11 +126,7 @@ export function fileToMldev(
 
   const fromError = common.getValueByPath(fromObject, ['error']);
   if (fromError != null) {
-    common.setValueByPath(
-      toObject,
-      ['error'],
-      fileStatusToMldev(apiClient, fromError),
-    );
+    common.setValueByPath(toObject, ['error'], fromError);
   }
 
   return toObject;
@@ -220,30 +192,6 @@ export function deleteFileParametersToMldev(
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
     common.setValueByPath(toObject, ['config'], fromConfig);
-  }
-
-  return toObject;
-}
-
-export function fileStatusFromMldev(
-  apiClient: ApiClient,
-  fromObject: types.FileStatus,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromDetails = common.getValueByPath(fromObject, ['details']);
-  if (fromDetails != null) {
-    common.setValueByPath(toObject, ['details'], fromDetails);
-  }
-
-  const fromMessage = common.getValueByPath(fromObject, ['message']);
-  if (fromMessage != null) {
-    common.setValueByPath(toObject, ['message'], fromMessage);
-  }
-
-  const fromCode = common.getValueByPath(fromObject, ['code']);
-  if (fromCode != null) {
-    common.setValueByPath(toObject, ['code'], fromCode);
   }
 
   return toObject;
@@ -326,11 +274,7 @@ export function fileFromMldev(
 
   const fromError = common.getValueByPath(fromObject, ['error']);
   if (fromError != null) {
-    common.setValueByPath(
-      toObject,
-      ['error'],
-      fileStatusFromMldev(apiClient, fromError),
-    );
+    common.setValueByPath(toObject, ['error'], fromError);
   }
 
   return toObject;
@@ -359,18 +303,6 @@ export function listFilesResponseFromMldev(
     }
     common.setValueByPath(toObject, ['files'], transformedList);
   }
-
-  return toObject;
-}
-
-export function createFileResponseFromMldev(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
-export function deleteFileResponseFromMldev(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
 
   return toObject;
 }

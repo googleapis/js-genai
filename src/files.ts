@@ -208,12 +208,7 @@ export class Files extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.CreateFileResponse>;
 
-      return response.then(() => {
-        const resp = converters.createFileResponseFromMldev();
-        const typedResp = new types.CreateFileResponse();
-        Object.assign(typedResp, resp);
-        return typedResp;
-      });
+      return response;
     }
   }
 
@@ -322,12 +317,7 @@ export class Files extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.DeleteFileResponse>;
 
-      return response.then(() => {
-        const resp = converters.deleteFileResponseFromMldev();
-        const typedResp = new types.DeleteFileResponse();
-        Object.assign(typedResp, resp);
-        return typedResp;
-      });
+      return response;
     }
   }
 }
