@@ -155,7 +155,7 @@ main();
 
 ### Function Calling
 
-To let Gemini to interact with external systems, you can provide provide
+To let Gemini to interact with external systems, you can provide
 `functionDeclaration` objects as `tools`. To use these tools it's a 4 step
 
 1. **Declare the function name, description, and parameters**
