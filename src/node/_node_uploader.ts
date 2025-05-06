@@ -8,8 +8,12 @@ import * as fs from 'fs/promises';
 import {ApiClient} from '../_api_client';
 import {FileStat, Uploader} from '../_uploader';
 import {
+  DELAY_MULTIPLIER,
+  INITIAL_RETRY_DELAY_MS,
   MAX_CHUNK_SIZE,
+  MAX_RETRY_COUNT,
   getBlobStat,
+  sleep,
   uploadBlob,
 } from '../cross/_cross_uploader';
 import {File, HttpResponse} from '../types';
@@ -174,20 +178,30 @@ export class NodeUploader implements Uploader {
         }
 
         const chunk = new Blob([buffer]);
-        response = await apiClient.request({
-          path: '',
-          body: chunk,
-          httpMethod: 'POST',
-          httpOptions: {
-            apiVersion: '',
-            baseUrl: uploadUrl,
-            headers: {
-              'X-Goog-Upload-Command': uploadCommand,
-              'X-Goog-Upload-Offset': String(offset),
-              'Content-Length': String(bytesRead),
+        let retryCount = 0;
+        let currentDelayMs = INITIAL_RETRY_DELAY_MS;
+        while (retryCount < MAX_RETRY_COUNT) {
+          response = await apiClient.request({
+            path: '',
+            body: chunk,
+            httpMethod: 'POST',
+            httpOptions: {
+              apiVersion: '',
+              baseUrl: uploadUrl,
+              headers: {
+                'X-Goog-Upload-Command': uploadCommand,
+                'X-Goog-Upload-Offset': String(offset),
+                'Content-Length': String(bytesRead),
+              },
             },
-          },
-        });
+          });
+          if (response?.headers?.['x-goog-upload-status']) {
+            break;
+          }
+          retryCount++;
+          await sleep(currentDelayMs);
+          currentDelayMs = currentDelayMs * DELAY_MULTIPLIER;
+        }
         offset += bytesRead;
         // The `x-goog-upload-status` header field can be `active`, `final` and
         //`cancelled` in resposne.

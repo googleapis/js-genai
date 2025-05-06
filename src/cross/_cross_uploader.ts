@@ -10,6 +10,10 @@ import {File, HttpResponse} from '../types';
 import {crossError} from './_cross_error';
 
 export const MAX_CHUNK_SIZE = 1024 * 1024 * 8; // bytes
+export const MAX_RETRY_COUNT = 3;
+export const INITIAL_RETRY_DELAY_MS = 1000;
+export const DELAY_MULTIPLIER = 2;
+
 export class CrossUploader implements Uploader {
   async upload(
     file: string | Blob,
@@ -48,20 +52,30 @@ export async function uploadBlob(
     if (offset + chunkSize >= fileSize) {
       uploadCommand += ', finalize';
     }
-    response = await apiClient.request({
-      path: '',
-      body: chunk,
-      httpMethod: 'POST',
-      httpOptions: {
-        apiVersion: '',
-        baseUrl: uploadUrl,
-        headers: {
-          'X-Goog-Upload-Command': uploadCommand,
-          'X-Goog-Upload-Offset': String(offset),
-          'Content-Length': String(chunkSize),
+    let retryCount = 0;
+    let currentDelayMs = INITIAL_RETRY_DELAY_MS;
+    while (retryCount < MAX_RETRY_COUNT) {
+      response = await apiClient.request({
+        path: '',
+        body: chunk,
+        httpMethod: 'POST',
+        httpOptions: {
+          apiVersion: '',
+          baseUrl: uploadUrl,
+          headers: {
+            'X-Goog-Upload-Command': uploadCommand,
+            'X-Goog-Upload-Offset': String(offset),
+            'Content-Length': String(chunkSize),
+          },
         },
-      },
-    });
+      });
+      if (response?.headers?.['x-goog-upload-status']) {
+        break;
+      }
+      retryCount++;
+      await sleep(currentDelayMs);
+      currentDelayMs = currentDelayMs * DELAY_MULTIPLIER;
+    }
     offset += chunkSize;
     // The `x-goog-upload-status` header field can be `active`, `final` and
     //`cancelled` in resposne.
@@ -89,4 +103,8 @@ export async function uploadBlob(
 export async function getBlobStat(file: Blob): Promise<FileStat> {
   const fileStat: FileStat = {size: file.size, type: file.type};
   return fileStat;
+}
+
+export function sleep(ms: number): Promise<void> {
+  return new Promise((resolvePromise) => setTimeout(resolvePromise, ms));
 }
