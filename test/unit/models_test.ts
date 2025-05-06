@@ -1,10 +1,7 @@
 import {z} from 'zod';
 
+import {zodToJsonSchema} from 'zod-to-json-schema';
 import {GoogleGenAI} from '../../src/client';
-import {
-  functionDeclarationFromZodFunction,
-  schemaFromZodType,
-} from '../../src/schema_helper';
 import * as types from '../../src/types';
 
 const fetchOkOptions = {
@@ -42,7 +39,7 @@ const mockGenerateContentResponse: types.GenerateContentResponse =
   );
 
 describe('generateContent', () => {
-  describe('can use the results from schemaFromZodType in responseSchema field', () => {
+  describe('can use the results from zodToJsonSchema in responseSchema field', () => {
     it('should process simple zod object', async () => {
       const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
       const zodSchema = z.object({
@@ -95,7 +92,7 @@ describe('generateContent', () => {
         model: 'gemini-1.5-flash-exp',
         contents: 'why is the sky blue?',
         config: {
-          responseSchema: schemaFromZodType(zodSchema),
+          responseSchema: zodToJsonSchema(zodSchema) as Record<string, unknown>,
         },
       });
       const parsedSchema = (
@@ -157,7 +154,10 @@ describe('generateContent', () => {
         model: 'gemini-1.5-flash-exp',
         contents: 'why is the sky blue?',
         config: {
-          responseSchema: schemaFromZodType(nestedSchema),
+          responseSchema: zodToJsonSchema(nestedSchema) as Record<
+            string,
+            unknown
+          >,
         },
       });
       const parsedSchema = (
@@ -170,14 +170,9 @@ describe('generateContent', () => {
       expect(parsedSchema).toEqual(expected);
     });
   });
-  describe('can use the results from functionDeclarationFromZodFunction in functionDeclarations field', () => {
+  describe('can use tSchema to help build the FunctionDeclaration', () => {
     it('should not throw error when wrapping zod function with the helper function', async () => {
       const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
-      const zodFunction = z
-        .function()
-        .args(z.object({numberField: z.number()}))
-        .returns(z.void())
-        .describe('this is a setParameter function');
 
       const expected: types.FunctionDeclaration = {
         description: 'this is a setParameter function',
@@ -209,10 +204,15 @@ describe('generateContent', () => {
           tools: [
             {
               functionDeclarations: [
-                functionDeclarationFromZodFunction({
+                {
                   name: 'setParameterFunction',
-                  zodFunctionSchema: zodFunction,
-                }),
+                  description: 'this is a setParameter function',
+                  parameters: zodToJsonSchema(
+                    z.object({
+                      numberField: z.number(),
+                    }),
+                  ) as Record<string, unknown>,
+                },
               ],
             },
           ],
