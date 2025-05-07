@@ -1,6 +1,24 @@
 # Changelog
 
 
+## [0.13.0](https://github.com/googleapis/js-genai/compare/v0.12.0...v0.13.0) (2025-05-07)
+
+
+### Features
+
+* Add `text` and `data` accessors to LiveServerMessage ([a3c4201](https://github.com/googleapis/js-genai/commit/a3c42011e8681d14e97f1b2b071789a814099c43))
+* Add `Tool.enterprise_web_search` field ([29b097d](https://github.com/googleapis/js-genai/commit/29b097d5cc864c66f7259fadb6c4fe3c03246192))
+* Add a models.list function to list available models. ([477d9ec](https://github.com/googleapis/js-genai/commit/477d9ecacfab28d30c8422e0eb38e27974422460))
+* Add Files.download method. ([8f44c99](https://github.com/googleapis/js-genai/commit/8f44c99bf5e2503474d77688f13b3d746d236795))
+* Add support for Grounding with Google Maps ([41f0cc2](https://github.com/googleapis/js-genai/commit/41f0cc29c949e05872051b5caef07d50caad86d4))
+* enable input transcription for Gemini API. ([767c5d5](https://github.com/googleapis/js-genai/commit/767c5d5696dd8ef30e65d409c0716b9b5bb42b1a))
+* Support global location (fixes [#502](https://github.com/googleapis/js-genai/issues/502)) ([ff906fb](https://github.com/googleapis/js-genai/commit/ff906fbc4c87b8fe8a842b5450e9b52f8025105d))
+
+
+### Bug Fixes
+
+* add retry logic for missing X-Goog-Upload-Status header for js ([8cf039e](https://github.com/googleapis/js-genai/commit/8cf039eef0e0bc031129e523f5032802ca8694dd))
+
 ## [0.12.0](https://github.com/googleapis/js-genai/compare/v0.11.0...v0.12.0) (2025-04-30)
 
 
