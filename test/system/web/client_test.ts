@@ -7,10 +7,7 @@
 import {fail} from 'assert';
 import {z} from 'zod';
 
-import {
-  functionDeclarationFromZodFunction,
-  schemaFromZodType,
-} from '../../../src/schema_helper';
+import {zodToJsonSchema} from 'zod-to-json-schema';
 import {
   FunctionCallingConfigMode,
   GenerateContentResponse,
@@ -96,7 +93,10 @@ describe('generateContent', () => {
       contents: 'populate the following object',
       config: {
         responseMimeType: 'application/json',
-        responseSchema: schemaFromZodType(nestedSchema),
+        responseSchema: zodToJsonSchema(nestedSchema) as Record<
+          string,
+          unknown
+        >,
       },
     });
     const parsedResponse = JSON.parse(
@@ -106,16 +106,11 @@ describe('generateContent', () => {
     const validationResult = nestedSchema.safeParse(parsedResponse);
     expect(validationResult.success).toEqual(true);
   });
-  it('ML Dev should generate function call with given zod function schema', async () => {
+  it('ML Dev should help build the FunctionDeclaration', async () => {
     const stringArgument = z.object({
       firstString: z.string(),
       secondString: z.string(),
     });
-    const concatStringFunction = z
-      .function()
-      .args(stringArgument)
-      .returns(z.void())
-      .describe('this is a concat string function');
     const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
     const response = await client.models.generateContent({
       model: 'gemini-1.5-flash',
@@ -124,10 +119,14 @@ describe('generateContent', () => {
         tools: [
           {
             functionDeclarations: [
-              functionDeclarationFromZodFunction({
+              {
                 name: 'concatStringFunction',
-                zodFunctionSchema: concatStringFunction,
-              }),
+                description: 'this is a concat string function',
+                parameters: zodToJsonSchema(stringArgument) as Record<
+                  string,
+                  unknown
+                >,
+              },
             ],
           },
         ],
