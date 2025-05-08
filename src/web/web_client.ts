@@ -15,6 +15,7 @@ import {Models} from '../models';
 import {Operations} from '../operations';
 import {Tunings} from '../tunings';
 
+import {BrowserDownloader} from './_browser_downloader';
 import {BrowserUploader} from './_browser_uploader';
 import {BrowserWebSocketFactory} from './_browser_websocket';
 import {WebAuth} from './_web_auth';
@@ -107,6 +108,7 @@ export class GoogleGenAI {
       httpOptions: options.httpOptions,
       userAgentExtra: LANGUAGE_LABEL_PREFIX + 'web',
       uploader: new BrowserUploader(),
+      downloader: new BrowserDownloader(),
     });
     this.models = new Models(this.apiClient);
     this.live = new Live(this.apiClient, auth, new BrowserWebSocketFactory());

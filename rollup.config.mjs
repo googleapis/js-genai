@@ -21,6 +21,8 @@ const externalDeps = [
   'google-auth-library',
   'ws',
   'fs/promises',
+  'fs',
+  'node:stream',
   'zod',
   'zod-to-json-schema',
 ];

@@ -18,6 +18,7 @@ import {
   tSpeechConfig,
   tTool,
 } from '../../src/_transformers';
+import {CrossDownloader} from '../../src/cross/_cross_downloader';
 import {CrossUploader} from '../../src/cross/_cross_uploader';
 import * as types from '../../src/types';
 import {FakeAuth} from '../_fake_auth';
@@ -26,7 +27,11 @@ describe('tModel', () => {
   it('empty string', () => {
     expect(() => {
       tModel(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         '',
       );
     }).toThrowError('model is required and must be a string');
@@ -34,7 +39,11 @@ describe('tModel', () => {
   it('returns model name for MLDev starting with models', () => {
     expect(
       tModel(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         'models/gemini-2.0-flash',
       ),
     ).toEqual('models/gemini-2.0-flash');
@@ -42,7 +51,11 @@ describe('tModel', () => {
   it('returns model name for MLDev starting with tunedModels', () => {
     expect(
       tModel(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         'tunedModels/gemini-2.0-flash',
       ),
     ).toEqual('tunedModels/gemini-2.0-flash');
@@ -50,7 +63,11 @@ describe('tModel', () => {
   it('returns model prefix for MLDev', () => {
     expect(
       tModel(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         'gemini-2.0-flash',
       ),
     ).toEqual('models/gemini-2.0-flash');
@@ -62,6 +79,7 @@ describe('tModel', () => {
           auth: new FakeAuth(),
           vertexai: true,
           uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
         }),
         'publishers/gemini-2.0-flash',
       ),
@@ -74,6 +92,7 @@ describe('tModel', () => {
           auth: new FakeAuth(),
           vertexai: true,
           uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
         }),
         'projects/gemini-2.0-flash',
       ),
@@ -86,6 +105,7 @@ describe('tModel', () => {
           auth: new FakeAuth(),
           vertexai: true,
           uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
         }),
         'models/gemini-2.0-flash',
       ),
@@ -98,6 +118,7 @@ describe('tModel', () => {
           auth: new FakeAuth(),
           vertexai: true,
           uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
         }),
         'google/gemini-2.0-flash',
       ),
@@ -110,6 +131,7 @@ describe('tModel', () => {
           auth: new FakeAuth(),
           vertexai: true,
           uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
         }),
         'gemini-2.0-flash',
       ),
@@ -123,6 +145,7 @@ describe('tModelsUrl', () => {
       auth: new FakeAuth(),
       vertexai: true,
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
     });
     expect(tModelsUrl(apiClient, true)).toBe('publishers/google/models');
   });
@@ -132,6 +155,7 @@ describe('tModelsUrl', () => {
       auth: new FakeAuth(),
       vertexai: false,
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
     });
     expect(tModelsUrl(apiClient, true)).toBe('models');
   });
@@ -141,6 +165,7 @@ describe('tModelsUrl', () => {
       auth: new FakeAuth(),
       vertexai: true,
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
     });
     expect(tModelsUrl(apiClient, false)).toBe('models');
   });
@@ -150,6 +175,7 @@ describe('tModelsUrl', () => {
       auth: new FakeAuth(),
       vertexai: false,
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
     });
     expect(tModelsUrl(apiClient, false)).toBe('tunedModels');
   });
@@ -160,6 +186,7 @@ describe('tExtractModels', () => {
     const apiClient = new ApiClient({
       auth: new FakeAuth(),
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
     });
     const response = {};
     expect(tExtractModels(apiClient, response)).toEqual([]);
@@ -169,6 +196,7 @@ describe('tExtractModels', () => {
     const apiClient = new ApiClient({
       auth: new FakeAuth(),
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
     });
     const models = [{name: 'model1'}, {name: 'model2'}];
     const response = {models};
@@ -179,6 +207,7 @@ describe('tExtractModels', () => {
     const apiClient = new ApiClient({
       auth: new FakeAuth(),
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
     });
     const tunedModels = [{name: 'tunedModel1'}, {name: 'tunedModel2'}];
     const response = {tunedModels};
@@ -189,6 +218,7 @@ describe('tExtractModels', () => {
     const apiClient = new ApiClient({
       auth: new FakeAuth(),
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
     });
     const publisherModels = [
       {name: 'publisherModel1'},
@@ -202,6 +232,7 @@ describe('tExtractModels', () => {
     const apiClient = new ApiClient({
       auth: new FakeAuth(),
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
     });
     const models = [{name: 'model1'}, {name: 'model2'}];
     const tunedModels = [{name: 'tunedModel1'}, {name: 'tunedModel2'}];
@@ -221,7 +252,11 @@ describe('tSpeechConfig', () => {
     };
     expect(
       tSpeechConfig(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         'voice-name',
       ),
     ).toEqual(speechConfig);
@@ -233,7 +268,11 @@ describe('tTool', () => {
     const tool = {functionDeclarations: [{name: 'function-name'}]};
     expect(
       tTool(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         tool,
       ),
     ).toEqual(tool);
@@ -252,6 +291,7 @@ describe('tSchema', () => {
           auth: new FakeAuth(),
           vertexai: true,
           uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
         }),
         schema,
       ),
@@ -262,6 +302,7 @@ describe('tSchema', () => {
           auth: new FakeAuth(),
           vertexai: false,
           uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
         }),
         schema,
       ),
@@ -278,6 +319,7 @@ describe('tSchema', () => {
           auth: new FakeAuth(),
           vertexai: true,
           uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
         }),
         schema,
       ),
@@ -288,6 +330,7 @@ describe('tSchema', () => {
           auth: new FakeAuth(),
           vertexai: false,
           uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
         }),
         schema,
       ),
@@ -311,6 +354,7 @@ describe('tSchema', () => {
           auth: new FakeAuth(),
           vertexai: true,
           uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
         }),
         schema,
       ),
@@ -321,6 +365,7 @@ describe('tSchema', () => {
           auth: new FakeAuth(),
           vertexai: false,
           uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
         }),
         schema,
       ),
@@ -341,6 +386,7 @@ describe('tSchema', () => {
           auth: new FakeAuth(),
           vertexai: true,
           uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
         }),
         schema,
       ),
@@ -351,6 +397,7 @@ describe('tSchema', () => {
           auth: new FakeAuth(),
           vertexai: false,
           uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
         }),
         schema,
       ),
@@ -362,7 +409,11 @@ describe('tPart', () => {
   it('null', () => {
     expect(() => {
       tPart(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         null,
       );
     }).toThrowError('PartUnion is required');
@@ -371,7 +422,11 @@ describe('tPart', () => {
   it('undefined', () => {
     expect(() => {
       tPart(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         undefined,
       );
     }).toThrowError('PartUnion is required');
@@ -380,7 +435,11 @@ describe('tPart', () => {
   it('string', () => {
     expect(
       tPart(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         'test string',
       ),
     ).toEqual({text: 'test string'});
@@ -389,7 +448,11 @@ describe('tPart', () => {
   it('part object', () => {
     expect(
       tPart(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         {text: 'test string'},
       ),
     ).toEqual({text: 'test string'});
@@ -398,7 +461,11 @@ describe('tPart', () => {
   it('int', () => {
     expect(() => {
       tPart(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         // @ts-expect-error: escaping to test unsupported type
         123,
       );
@@ -410,7 +477,11 @@ describe('tParts', () => {
   it('null', () => {
     expect(() => {
       tParts(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         null,
       );
     }).toThrowError('PartListUnion is required');
@@ -419,7 +490,11 @@ describe('tParts', () => {
   it('undefined', () => {
     expect(() => {
       tParts(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         undefined,
       );
     }).toThrowError('PartListUnion is required');
@@ -428,7 +503,11 @@ describe('tParts', () => {
   it('empty array', () => {
     expect(() => {
       tParts(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         [],
       );
     }).toThrowError('PartListUnion is required');
@@ -437,7 +516,11 @@ describe('tParts', () => {
   it('string array', () => {
     expect(
       tParts(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         ['test string 1', 'test string 2'],
       ),
     ).toEqual([{text: 'test string 1'}, {text: 'test string 2'}]);
@@ -446,7 +529,11 @@ describe('tParts', () => {
   it('string and part object', () => {
     expect(
       tParts(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         ['test string 1', {text: 'test string 2'}],
       ),
     ).toEqual([{text: 'test string 1'}, {text: 'test string 2'}]);
@@ -455,7 +542,11 @@ describe('tParts', () => {
   it('int', () => {
     expect(() => {
       tParts(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         // @ts-expect-error: escaping to test unsupported type
         123,
       );
@@ -465,7 +556,11 @@ describe('tParts', () => {
   it('int in array', () => {
     expect(() => {
       tParts(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         // @ts-expect-error: escaping to test unsupported type
         [123],
       );
@@ -477,7 +572,11 @@ describe('tContent', () => {
   it('null', () => {
     expect(() => {
       tContent(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         // @ts-expect-error: escaping to test unsupported type
         null,
       );
@@ -487,7 +586,11 @@ describe('tContent', () => {
   it('undefined', () => {
     expect(() => {
       tContent(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         undefined,
       );
     }).toThrowError('ContentUnion is required');
@@ -496,7 +599,11 @@ describe('tContent', () => {
   it('empty array', () => {
     expect(() => {
       tContent(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         [],
       );
     }).toThrowError('PartListUnion is required');
@@ -505,7 +612,11 @@ describe('tContent', () => {
   it('number', () => {
     expect(() => {
       tContent(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         // @ts-expect-error: escaping to test unsupported type
         123,
       );
@@ -515,7 +626,11 @@ describe('tContent', () => {
   it('text part', () => {
     expect(
       tContent(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         {text: 'test string'},
       ),
     ).toEqual({role: 'user', parts: [{text: 'test string'}]});
@@ -524,7 +639,11 @@ describe('tContent', () => {
   it('content', () => {
     expect(
       tContent(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         {
           role: 'user',
           parts: [{text: 'test string'}],
@@ -536,7 +655,11 @@ describe('tContent', () => {
   it('string', () => {
     expect(
       tContent(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         'test string',
       ),
     ).toEqual({role: 'user', parts: [{text: 'test string'}]});
@@ -547,7 +670,11 @@ describe('tContents', () => {
   it('null', () => {
     expect(() => {
       tContents(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         // @ts-expect-error: escaping to test error
         null,
       );
@@ -557,7 +684,11 @@ describe('tContents', () => {
   it('undefined', () => {
     expect(() => {
       tContents(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         undefined,
       );
     }).toThrowError('contents are required');
@@ -566,7 +697,11 @@ describe('tContents', () => {
   it('empty array', () => {
     expect(() => {
       tContents(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         [],
       );
     }).toThrowError('contents are required');
@@ -575,7 +710,11 @@ describe('tContents', () => {
   it('content', () => {
     expect(
       tContents(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         {
           role: 'user',
           parts: [{text: 'test string'}],
@@ -587,7 +726,11 @@ describe('tContents', () => {
   it('text part', () => {
     expect(
       tContents(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         {text: 'test string'},
       ),
     ).toEqual([{role: 'user', parts: [{text: 'test string'}]}]);
@@ -596,7 +739,11 @@ describe('tContents', () => {
   it('function call part', () => {
     expect(() => {
       tContents(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         {
           functionCall: {name: 'function-name', args: {arg1: 'arg1'}},
         },
@@ -609,7 +756,11 @@ describe('tContents', () => {
   it('function call part in array', () => {
     expect(() => {
       tContents(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         [
           {
             functionCall: {name: 'function-name', args: {arg1: 'arg1'}},
@@ -625,7 +776,11 @@ describe('tContents', () => {
   it('function response part', () => {
     expect(() => {
       tContents(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         {
           functionResponse: {
             name: 'name1',
@@ -641,7 +796,11 @@ describe('tContents', () => {
   it('function response part in array', () => {
     expect(() => {
       tContents(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         [
           {
             functionResponse: {
@@ -660,7 +819,11 @@ describe('tContents', () => {
   it('string', () => {
     expect(
       tContents(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         'test string',
       ),
     ).toEqual([{role: 'user', parts: [{text: 'test string'}]}]);
@@ -669,7 +832,11 @@ describe('tContents', () => {
   it('array of contents', () => {
     expect(
       tContents(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         [
           {role: 'user', parts: [{text: 'test string 1'}]},
           {role: 'model', parts: [{text: 'test string 2'}]},
@@ -684,7 +851,11 @@ describe('tContents', () => {
   it('array of text parts', () => {
     expect(
       tContents(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         [{text: 'test string 1'}, {text: 'test string 2'}],
       ),
     ).toEqual([
@@ -701,7 +872,11 @@ describe('tFileName', () => {
     const fileName = 'test file name';
     expect(
       tFileName(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         fileName,
       ),
     ).toEqual(fileName);
@@ -712,7 +887,11 @@ describe('tFileName', () => {
     const fileNameWithFilesPrefix = `files/${fileName}`;
     expect(
       tFileName(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         fileNameWithFilesPrefix,
       ),
     ).toEqual(fileName);
@@ -725,7 +904,11 @@ describe('tFileName', () => {
     }:download?alt=media`;
     expect(
       tFileName(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         {uri: fileUri},
       ),
     ).toEqual(fileName);
@@ -737,7 +920,11 @@ describe('tFileName', () => {
     }:download?alt=media`;
     expect(
       tFileName(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         {video: {uri: fileUri}},
       ),
     ).toEqual(fileName);
@@ -745,7 +932,11 @@ describe('tFileName', () => {
   it('generated video file with no uri', () => {
     expect(
       tFileName(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
         {video: {uri: undefined}},
       ),
     ).toEqual(undefined);

@@ -11,6 +11,7 @@ import {
   WebSocketFactory,
 } from '../../src/_websocket';
 import * as converters from '../../src/converters/_live_converters';
+import {CrossDownloader} from '../../src/cross/_cross_downloader';
 import {CrossUploader} from '../../src/cross/_cross_uploader';
 import {Live} from '../../src/live';
 import * as types from '../../src/types';
@@ -50,6 +51,7 @@ describe('live', () => {
       auth: new FakeAuth(),
       apiKey: 'test-api-key',
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
     });
     const websocketFactory = new FakeWebSocketFactory();
     const live = new Live(apiClient, new FakeAuth(), websocketFactory);
@@ -97,6 +99,7 @@ describe('live', () => {
       auth: new FakeAuth(),
       apiKey: 'test-api-key',
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
     });
     const websocketFactory = new FakeWebSocketFactory();
     const live = new Live(apiClient, new FakeAuth(), websocketFactory);
@@ -125,6 +128,7 @@ describe('live', () => {
       auth: new FakeAuth(),
       apiKey: 'test-api-key',
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
     });
     const websocketFactory = new FakeWebSocketFactory();
     const live = new Live(apiClient, new FakeAuth(), websocketFactory);
@@ -203,6 +207,7 @@ describe('live', () => {
       auth: new FakeAuth(),
       apiKey: 'test-api-key',
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
     });
     const websocketFactory = new FakeWebSocketFactory();
     const live = new Live(apiClient, new FakeAuth(), websocketFactory);
@@ -257,6 +262,7 @@ describe('live', () => {
       auth: new FakeAuth(),
       apiKey: 'test-api-key',
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
       vertexai: true,
       project: 'test-project',
       location: 'test-location',
@@ -314,6 +320,7 @@ describe('live', () => {
       auth: new FakeAuth(),
       apiKey: 'test-api-key',
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
       vertexai: true,
       project: 'test-project',
       location: 'test-location',
@@ -373,6 +380,7 @@ describe('live', () => {
       auth: new FakeAuth(),
       apiKey: 'test-api-key',
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
       vertexai: true,
       project: 'test-project',
       location: 'test-location',
@@ -435,6 +443,7 @@ describe('live', () => {
       auth: new FakeAuth(),
       apiKey: 'test-api-key',
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
       vertexai: true,
       project: 'test-project',
       location: 'test-location',
@@ -492,6 +501,7 @@ describe('live', () => {
       auth: new FakeAuth(),
       apiKey: 'test-api-key',
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
       vertexai: true,
       project: 'test-project',
       location: 'test-location',
@@ -553,6 +563,7 @@ describe('live', () => {
       auth: new FakeAuth(),
       apiKey: 'test-api-key',
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
     });
     const websocketFactory = new FakeWebSocketFactory();
     const live = new Live(apiClient, new FakeAuth(), websocketFactory);
@@ -587,6 +598,7 @@ describe('live', () => {
       auth: new FakeAuth(),
       apiKey: 'test-api-key',
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
       vertexai: true,
       project: 'test-project',
       location: 'test-location',
@@ -641,6 +653,7 @@ describe('live', () => {
       auth: new FakeAuth(),
       apiKey: 'test-api-key',
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
     });
     const websocketFactory = new FakeWebSocketFactory();
     const live = new Live(apiClient, new FakeAuth(), websocketFactory);
@@ -683,6 +696,7 @@ describe('live', () => {
       auth: new FakeAuth(),
       apiKey: 'test-api-key',
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
     });
 
     expect(() => {

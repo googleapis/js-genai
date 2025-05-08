@@ -104,6 +104,27 @@ export class Files extends BaseModule {
       });
   }
 
+  /**
+   * Downloads a remotely stored file asynchronously to a location specified in
+   * the `params` object. This method only works on Node environment, to
+   * download files in the browser, use a browser compliant method like an <a>
+   * tag.
+   *
+   * @param params - The parameters for the download request.
+   *
+   * @example
+   * The following code downloads an example file named "files/mehozpxf877d" as
+   * "file.txt".
+   *
+   * ```ts
+   * await ai.files.download({file: file.name, downloadPath: 'file.txt'});
+   * ```
+   */
+
+  async download(params: types.DownloadFileParameters): Promise<void> {
+    await this.apiClient.downloadFile(params);
+  }
+
   private async listInternal(
     params: types.ListFilesParameters,
   ): Promise<types.ListFilesResponse> {

@@ -30,9 +30,18 @@ async function generateContentFromMLDev() {
     operation = await ai.operations.getVideosOperation({operation: operation});
   }
 
-  const response = operation.response;
-  const fileName = response?.generatedVideos?.[0].video?.uri;
-  console.log(fileName);
+  const videos = operation.response?.generatedVideos;
+  if (videos === undefined || videos.length === 0) {
+    throw new Error('No videos generated');
+  }
+
+  videos.forEach((video, i) => {
+    ai.files.download({
+      file: video,
+      downloadPath: `video${i}.mp4`,
+    });
+    console.log('Downloaded video', `video${i}.mp4`);
+  });
 }
 
 async function generateContentFromVertexAI() {
@@ -52,9 +61,18 @@ async function generateContentFromVertexAI() {
     operation = await ai.operations.getVideosOperation({operation: operation});
   }
 
-  const response = operation.response;
-  const fileName = response?.generatedVideos?.[0].video?.uri;
-  console.log(fileName);
+  const videos = operation.response?.generatedVideos;
+  if (videos === undefined || videos.length === 0) {
+    throw new Error('No videos generated');
+  }
+
+  videos.forEach((video, i) => {
+    ai.files.download({
+      file: video,
+      downloadPath: `video${i}.mp4`,
+    });
+    console.log('Downloaded video', `video${i}.mp4`);
+  });
 }
 
 async function main() {

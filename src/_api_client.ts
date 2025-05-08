@@ -6,14 +6,21 @@
 
 import {Auth} from './_auth';
 import * as common from './_common';
+import {Downloader} from './_downloader';
 import {Uploader} from './_uploader';
-import {File, HttpOptions, HttpResponse, UploadFileConfig} from './types';
+import {
+  DownloadFileParameters,
+  File,
+  HttpOptions,
+  HttpResponse,
+  UploadFileConfig,
+} from './types';
 
 const CONTENT_TYPE_HEADER = 'Content-Type';
 const SERVER_TIMEOUT_HEADER = 'X-Server-Timeout';
 const USER_AGENT_HEADER = 'User-Agent';
 const GOOGLE_API_CLIENT_HEADER = 'x-goog-api-client';
-export const SDK_VERSION = '0.12.0'; // x-release-please-version
+export const SDK_VERSION = '0.13.0'; // x-release-please-version
 const LIBRARY_LABEL = `google-genai-sdk/${SDK_VERSION}`;
 const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
 const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';
@@ -64,6 +71,12 @@ export interface ApiClientInitOptions {
    * creating a client, will be set through the Node_client or Web_client.
    */
   uploader: Uploader;
+  /**
+   * Optional. The downloader to use for downloading files. This field is
+   * required for creating a client, will be set through the Node_client or
+   * Web_client.
+   */
+  downloader: Downloader;
   /**
    * Optional. The Google Cloud project ID for Vertex AI users.
    * It is not the numeric project name.
@@ -672,6 +685,17 @@ export class ApiClient {
 
     const uploadUrl = await this.fetchUploadUrl(fileToUpload, config);
     return uploader.upload(file, uploadUrl, this);
+  }
+
+  /**
+   * Downloads a file asynchronously to the specified path.
+   *
+   * @params params - The parameters for the download request, see {@link
+   * DownloadFileParameters}
+   */
+  async downloadFile(params: DownloadFileParameters): Promise<void> {
+    const downloader = this.clientOptions.downloader;
+    await downloader.download(params, this);
   }
 
   private async fetchUploadUrl(

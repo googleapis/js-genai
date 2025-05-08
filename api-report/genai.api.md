@@ -515,10 +515,20 @@ export interface DistillationSpec {
     validationDatasetUri?: string;
 }
 
+// @public (undocumented)
+export type DownloadableFileUnion = string | File_2 | GeneratedVideo | Video;
+
 // @public
 export interface DownloadFileConfig {
     abortSignal?: AbortSignal;
     httpOptions?: HttpOptions;
+}
+
+// @public
+export interface DownloadFileParameters {
+    config?: DownloadFileConfig;
+    downloadPath: string;
+    file: DownloadableFileUnion;
 }
 
 // @public
@@ -650,6 +660,7 @@ export interface FileData {
 export class Files extends BaseModule {
     constructor(apiClient: ApiClient);
     delete(params: types.DeleteFileParameters): Promise<types.DeleteFileResponse>;
+    download(params: types.DownloadFileParameters): Promise<void>;
     get(params: types.GetFileParameters): Promise<types.File>;
     list: (params?: types.ListFilesParameters) => Promise<Pager<types.File>>;
     upload(params: types.UploadFileParameters): Promise<types.File>;
@@ -1732,7 +1743,6 @@ export interface Part {
     inlineData?: Blob_2;
     text?: string;
     thought?: boolean;
-    thoughtSignature?: string;
     videoMetadata?: VideoMetadata;
 }
 

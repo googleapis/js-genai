@@ -9,6 +9,7 @@ import {GoogleAuthOptions} from 'google-auth-library';
 import {ApiClient} from './_api_client';
 import {Caches} from './caches';
 import {Chats} from './chats';
+import {CrossDownloader} from './cross/_cross_downloader';
 import {crossError} from './cross/_cross_error';
 import {CrossUploader} from './cross/_cross_uploader';
 import {CrossWebSocketFactory} from './cross/_cross_websocket';
@@ -147,6 +148,7 @@ export class GoogleGenAI {
       httpOptions: options.httpOptions,
       userAgentExtra: LANGUAGE_LABEL_PREFIX + 'cross',
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
     });
     this.models = new Models(this.apiClient);
     this.live = new Live(this.apiClient, auth, new CrossWebSocketFactory());

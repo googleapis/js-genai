@@ -15,6 +15,7 @@ import {Files} from '../files';
 import {Live} from '../live';
 import {Models} from '../models';
 import {NodeAuth} from '../node/_node_auth';
+import {NodeDownloader} from '../node/_node_downloader';
 import {NodeWebSocketFactory} from '../node/_node_websocket';
 import {Operations} from '../operations';
 import {Tunings} from '../tunings';
@@ -153,6 +154,7 @@ export class GoogleGenAI {
       httpOptions: options.httpOptions,
       userAgentExtra: LANGUAGE_LABEL_PREFIX + process.version,
       uploader: new NodeUploader(),
+      downloader: new NodeDownloader(),
     });
     this.models = new Models(this.apiClient);
     this.live = new Live(this.apiClient, auth, new NodeWebSocketFactory());
