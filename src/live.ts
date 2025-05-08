@@ -214,6 +214,12 @@ export class Live {
         liveConnectParameters,
       );
     }
+    if ((params as any).inputAudioTranscription != null) {
+      clientMessage['inputAudioTranscription'] = {};
+    }
+    if ((params as any).outputAudioTranscription != null) {
+      clientMessage['outputAudioTranscription'] = {};
+    }
     delete clientMessage['config'];
     conn.send(JSON.stringify(clientMessage));
     return new Session(conn, this.apiClient);
