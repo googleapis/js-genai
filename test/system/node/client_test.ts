@@ -24,8 +24,6 @@ const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000; // 30 seconds
-
 describe('generateContent', () => {
   it('ML Dev should generate content with specified parameters', async () => {
     const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
@@ -521,6 +519,12 @@ describe('generateContentStream', () => {
 });
 
 describe('generateImages', () => {
+  let originalTimeout: number;
+
+  beforeEach(function () {
+    originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000; // 10 seconds
+  });
   it('ML Dev should generate image with specified parameters', async () => {
     const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
     const response = await client.models.generateImages({
@@ -574,13 +578,14 @@ describe('generateImages', () => {
       'Expected positive prompt safety attributes to be non-empty',
     );
   });
+
+  afterEach(function () {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
+  });
 });
 
 describe('test async performance', () => {
-  beforeAll(function () {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 15000; // 15 seconds
-  });
-  it('generate content should complete in less than 10 seconds', async () => {
+  it('generate content should complete in less than 1 second', async () => {
     const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
     async function firstAsyncFunc() {
       client.models.generateContent({
@@ -590,7 +595,6 @@ describe('test async performance', () => {
           systemInstruction: 'I say high you say low.',
         },
       });
-      await new Promise((resolve) => setTimeout(resolve, 5000)); // artificially add 5 seconds delay
     }
     async function secondAsyncFunc() {
       client.models.generateContent({
@@ -600,7 +604,6 @@ describe('test async performance', () => {
           systemInstruction: 'I say high you say low.',
         },
       });
-      await new Promise((resolve) => setTimeout(resolve, 10000)); // artificially add 10 seconds timeout
     }
     const startTime = performance.now(); // Record start time
     try {
@@ -611,13 +614,12 @@ describe('test async performance', () => {
       const endTime = performance.now(); // Record end time
       const timeDelta = endTime - startTime;
       expect(timeDelta).toBeLessThanOrEqual(
-        10030,
-        'Expected timeDelta to be less than or equal to 10030, got ' +
-          timeDelta,
+        1050,
+        'Expected timeDelta to be less than or equal to 1050, got ' + timeDelta,
       );
     }
   });
-  it('stream generate content should complete in less than 10 seconds', async () => {
+  it('stream generate content should complete in less than 1 second', async () => {
     const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
     async function firstAsyncFunc() {
       client.models.generateContentStream({
@@ -627,7 +629,6 @@ describe('test async performance', () => {
           systemInstruction: 'I say high you say low.',
         },
       });
-      await new Promise((resolve) => setTimeout(resolve, 5000)); // artificially add 5 seconds delay
     }
     async function secondAsyncFunc() {
       client.models.generateContentStream({
@@ -637,7 +638,6 @@ describe('test async performance', () => {
           systemInstruction: 'I say high you say low.',
         },
       });
-      await new Promise((resolve) => setTimeout(resolve, 10000)); // artificially add 10 seconds timeout
     }
     const startTime = performance.now(); // Record start time
     try {
@@ -648,16 +648,15 @@ describe('test async performance', () => {
       const endTime = performance.now(); // Record end time
       const timeDelta = endTime - startTime;
       expect(timeDelta).toBeLessThanOrEqual(
-        10050,
-        'Expected timeDelta to be less than or equal to 10050, got ' +
-          timeDelta,
+        1050,
+        'Expected timeDelta to be less than or equal to 1050, got ' + timeDelta,
       );
     }
   });
 });
 
-describe('test forward compatibility', () => {
-  it('generate content should not return thought field', async () => {
+describe('test thinking', () => {
+  it('generate content should return thought field', async () => {
     const client = new GoogleGenAI({
       vertexai: false,
       apiKey: GOOGLE_API_KEY,
@@ -672,9 +671,9 @@ describe('test forward compatibility', () => {
         thinkingConfig: {includeThoughts: true},
       },
     });
-    expect(JSON.stringify(response)).not.toContain(
+    expect(JSON.stringify(response)).toContain(
       '"thought":true',
-      'Expected response to not contain field "thought',
+      'Expected response to contain field "thought',
     );
   });
 });
@@ -766,38 +765,45 @@ describe('computeTokens', () => {
 });
 
 describe('cachedContent', () => {
+  let originalTimeout: number;
+
+  beforeEach(function () {
+    originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+  });
   it('Vertex AI should cache content with specified parameters', async () => {
-    const client = new GoogleGenAI({
-      vertexai: true,
-      project: GOOGLE_CLOUD_PROJECT,
-      location: GOOGLE_CLOUD_LOCATION,
-    });
+    setTimeout(async function () {
+      const client = new GoogleGenAI({
+        vertexai: true,
+        project: GOOGLE_CLOUD_PROJECT,
+        location: GOOGLE_CLOUD_LOCATION,
+      });
 
-    const cachedContent1: Part = {
-      fileData: {
-        fileUri: 'gs://cloud-samples-data/generative-ai/pdf/2403.05530.pdf',
-        mimeType: 'application/pdf',
-      },
-    };
+      const cachedContent1: Part = {
+        fileData: {
+          fileUri: 'gs://cloud-samples-data/generative-ai/pdf/2403.05530.pdf',
+          mimeType: 'application/pdf',
+        },
+      };
 
-    const cachedContent2: Part = {
-      fileData: {
-        fileUri: 'gs://cloud-samples-data/generative-ai/pdf/2312.11805v3.pdf',
-        mimeType: 'application/pdf',
-      },
-    };
+      const cachedContent2: Part = {
+        fileData: {
+          fileUri: 'gs://cloud-samples-data/generative-ai/pdf/2312.11805v3.pdf',
+          mimeType: 'application/pdf',
+        },
+      };
 
-    const cache = await client.caches.create({
-      model: 'gemini-1.5-pro-002',
-      config: {contents: [cachedContent1, cachedContent2]},
-    });
-    expect(cache.name).toBeDefined();
+      const cache = await client.caches.create({
+        model: 'gemini-1.5-pro-002',
+        config: {contents: [cachedContent1, cachedContent2]},
+      });
+      expect(cache.name).toBeDefined();
 
-    const getResponse = await client.caches.get({name: cache.name ?? ''});
-    expect(getResponse.name).toBe(
-      cache.name,
-      'Expected getResponse to contain the created cache name.',
-    );
+      const getResponse = await client.caches.get({name: cache.name ?? ''});
+      expect(getResponse.name).toBe(
+        cache.name,
+        'Expected getResponse to contain the created cache name.',
+      );
+    }, 30000); // 30 seconds
   });
 
   it('Vertex AI should return list of caches', async () => {
@@ -824,6 +830,10 @@ describe('cachedContent', () => {
 
     expect(response.pageLength).toBeGreaterThan(0);
     expect(pager.pageLength).toBeGreaterThan(0);
+  });
+
+  afterEach(function () {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
   });
 });
 

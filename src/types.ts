@@ -3551,6 +3551,32 @@ The client can reopen the stream by sending an audio message.
   activityEnd?: ActivityEnd;
 }
 
+/** Parameters for sending realtime input to the live API. */
+export declare interface LiveSendRealtimeInputParameters {
+  /** Realtime input to send to the session. */
+  media?: BlobImageUnion;
+  /** The realtime audio input stream. */
+  audio?: Blob;
+  /** 
+Indicates that the audio stream has ended, e.g. because the microphone was
+turned off.
+
+This should only be sent when automatic activity detection is enabled
+(which is the default).
+
+The client can reopen the stream by sending an audio message.
+ */
+  audioStreamEnd?: boolean;
+  /** The realtime video input stream. */
+  video?: BlobImageUnion;
+  /** The realtime text input stream. */
+  text?: string;
+  /** Marks the start of user activity. */
+  activityStart?: ActivityStart;
+  /** Marks the end of user activity. */
+  activityEnd?: ActivityEnd;
+}
+
 /** Client generated response to a `ToolCall` received from the server.
 
   Individual `FunctionResponse` objects are matched to the respective
@@ -3715,32 +3741,6 @@ export declare interface LiveSendClientContentParameters {
   the currently accumulated prompt. Otherwise, the server will await
   additional messages before starting generation. */
   turnComplete?: boolean;
-}
-
-/** Parameters for sending realtime input to the live API. */
-export declare interface LiveSendRealtimeInputParameters {
-  /** Realtime input to send to the session. */
-  media?: BlobImageUnion;
-  /** The realtime audio input stream. */
-  audio?: Blob;
-  /** 
-Indicates that the audio stream has ended, e.g. because the microphone was
-turned off.
-
-This should only be sent when automatic activity detection is enabled
-(which is the default).
-
-The client can reopen the stream by sending an audio message.
- */
-  audioStreamEnd?: boolean;
-  /** The realtime video input stream. */
-  video?: BlobImageUnion;
-  /** The realtime text input stream. */
-  text?: string;
-  /** Marks the start of user activity. */
-  activityStart?: ActivityStart;
-  /** Marks the end of user activity. */
-  activityEnd?: ActivityEnd;
 }
 
 /** Parameters for sending tool responses to the live API. */
