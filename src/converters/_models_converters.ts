@@ -8,6 +8,7 @@
 
 import {ApiClient} from '../_api_client';
 import * as common from '../_common';
+import * as _internal_types from '../_internal_types';
 import * as t from '../_transformers';
 import * as types from '../types';
 
@@ -2425,6 +2426,140 @@ export function generateImagesParametersToVertex(
   return toObject;
 }
 
+export function imageToVertex(
+  apiClient: ApiClient,
+  fromObject: types.Image,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromGcsUri = common.getValueByPath(fromObject, ['gcsUri']);
+  if (fromGcsUri != null) {
+    common.setValueByPath(toObject, ['gcsUri'], fromGcsUri);
+  }
+
+  const fromImageBytes = common.getValueByPath(fromObject, ['imageBytes']);
+  if (fromImageBytes != null) {
+    common.setValueByPath(
+      toObject,
+      ['bytesBase64Encoded'],
+      t.tBytes(apiClient, fromImageBytes),
+    );
+  }
+
+  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+  if (fromMimeType != null) {
+    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+  }
+
+  return toObject;
+}
+
+export function upscaleImageAPIConfigInternalToVertex(
+  apiClient: ApiClient,
+  fromObject: _internal_types.UpscaleImageAPIConfigInternal,
+  parentObject: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromIncludeRaiReason = common.getValueByPath(fromObject, [
+    'includeRaiReason',
+  ]);
+  if (parentObject !== undefined && fromIncludeRaiReason != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'includeRaiReason'],
+      fromIncludeRaiReason,
+    );
+  }
+
+  const fromOutputMimeType = common.getValueByPath(fromObject, [
+    'outputMimeType',
+  ]);
+  if (parentObject !== undefined && fromOutputMimeType != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'outputOptions', 'mimeType'],
+      fromOutputMimeType,
+    );
+  }
+
+  const fromOutputCompressionQuality = common.getValueByPath(fromObject, [
+    'outputCompressionQuality',
+  ]);
+  if (parentObject !== undefined && fromOutputCompressionQuality != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'outputOptions', 'compressionQuality'],
+      fromOutputCompressionQuality,
+    );
+  }
+
+  const fromNumberOfImages = common.getValueByPath(fromObject, [
+    'numberOfImages',
+  ]);
+  if (parentObject !== undefined && fromNumberOfImages != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'sampleCount'],
+      fromNumberOfImages,
+    );
+  }
+
+  const fromMode = common.getValueByPath(fromObject, ['mode']);
+  if (parentObject !== undefined && fromMode != null) {
+    common.setValueByPath(parentObject, ['parameters', 'mode'], fromMode);
+  }
+
+  return toObject;
+}
+
+export function upscaleImageAPIParametersInternalToVertex(
+  apiClient: ApiClient,
+  fromObject: _internal_types.UpscaleImageAPIParametersInternal,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromModel = common.getValueByPath(fromObject, ['model']);
+  if (fromModel != null) {
+    common.setValueByPath(
+      toObject,
+      ['_url', 'model'],
+      t.tModel(apiClient, fromModel),
+    );
+  }
+
+  const fromImage = common.getValueByPath(fromObject, ['image']);
+  if (fromImage != null) {
+    common.setValueByPath(
+      toObject,
+      ['instances[0]', 'image'],
+      imageToVertex(apiClient, fromImage),
+    );
+  }
+
+  const fromUpscaleFactor = common.getValueByPath(fromObject, [
+    'upscaleFactor',
+  ]);
+  if (fromUpscaleFactor != null) {
+    common.setValueByPath(
+      toObject,
+      ['parameters', 'upscaleConfig', 'upscaleFactor'],
+      fromUpscaleFactor,
+    );
+  }
+
+  const fromConfig = common.getValueByPath(fromObject, ['config']);
+  if (fromConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['config'],
+      upscaleImageAPIConfigInternalToVertex(apiClient, fromConfig, toObject),
+    );
+  }
+
+  return toObject;
+}
+
 export function getModelParametersToVertex(
   apiClient: ApiClient,
   fromObject: types.GetModelParameters,
@@ -2691,34 +2826,6 @@ export function computeTokensParametersToVertex(
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
     common.setValueByPath(toObject, ['config'], fromConfig);
-  }
-
-  return toObject;
-}
-
-export function imageToVertex(
-  apiClient: ApiClient,
-  fromObject: types.Image,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromGcsUri = common.getValueByPath(fromObject, ['gcsUri']);
-  if (fromGcsUri != null) {
-    common.setValueByPath(toObject, ['gcsUri'], fromGcsUri);
-  }
-
-  const fromImageBytes = common.getValueByPath(fromObject, ['imageBytes']);
-  if (fromImageBytes != null) {
-    common.setValueByPath(
-      toObject,
-      ['bytesBase64Encoded'],
-      t.tBytes(apiClient, fromImageBytes),
-    );
-  }
-
-  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
-  if (fromMimeType != null) {
-    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
   }
 
   return toObject;
@@ -4010,6 +4117,28 @@ export function generateImagesResponseFromVertex(
       ['positivePromptSafetyAttributes'],
       safetyAttributesFromVertex(apiClient, fromPositivePromptSafetyAttributes),
     );
+  }
+
+  return toObject;
+}
+
+export function upscaleImageResponseFromVertex(
+  apiClient: ApiClient,
+  fromObject: types.UpscaleImageResponse,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromGeneratedImages = common.getValueByPath(fromObject, [
+    'predictions',
+  ]);
+  if (fromGeneratedImages != null) {
+    let transformedList = fromGeneratedImages;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return generatedImageFromVertex(apiClient, item);
+      });
+    }
+    common.setValueByPath(toObject, ['generatedImages'], transformedList);
   }
 
   return toObject;

@@ -1790,6 +1790,11 @@ export class GenerateImagesResponse {
   positivePromptSafetyAttributes?: SafetyAttributes;
 }
 
+export class UpscaleImageResponse {
+  /** Generated images. */
+  generatedImages?: GeneratedImage[];
+}
+
 /** Optional parameters for models.get method. */
 export declare interface GetModelConfig {
   /** Used to override HTTP request options. */
