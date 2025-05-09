@@ -489,6 +489,99 @@ describe('create chat with history', () => {
     expect(chat.getHistory()).toEqual(comprehensiveHistory);
     expect(chat.getHistory(true)).toEqual(comprehensiveHistory);
   });
+
+  it('independent user input is added to curated history', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const comprehensiveHistory = [
+      {role: 'user', parts: [{text: 'user content'}]},
+    ];
+    const chat = client.chats.create({
+      model: 'gemini-1.5-flash',
+      history: comprehensiveHistory,
+    });
+
+    expect(chat.getHistory()).toEqual(comprehensiveHistory);
+    expect(chat.getHistory(true)).toEqual(comprehensiveHistory);
+  });
+
+  it('consecutive user inputs are added to curated history', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const comprehensiveHistory = [
+      {role: 'user', parts: [{text: 'user content 1'}]},
+      {role: 'user', parts: [{text: 'user content 2'}]},
+    ];
+    const chat = client.chats.create({
+      model: 'gemini-1.5-flash',
+      history: comprehensiveHistory,
+    });
+
+    expect(chat.getHistory()).toEqual(comprehensiveHistory);
+    expect(chat.getHistory(true)).toEqual(comprehensiveHistory);
+  });
+
+  it('end with user input is added to curated history', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const comprehensiveHistory = [
+      {role: 'user', parts: [{text: 'user content 1'}]},
+      {role: 'model', parts: [{text: 'model content 2'}]},
+      {role: 'user', parts: [{text: 'user content 2'}]},
+    ];
+    const chat = client.chats.create({
+      model: 'gemini-1.5-flash',
+      history: comprehensiveHistory,
+    });
+
+    expect(chat.getHistory()).toEqual(comprehensiveHistory);
+    expect(chat.getHistory(true)).toEqual(comprehensiveHistory);
+  });
+
+  it('invalid user input is not added to curated history', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const comprehensiveHistory = [
+      {role: 'user', parts: [{text: ''}]}, // invalid content
+    ];
+    const chat = client.chats.create({
+      model: 'gemini-1.5-flash',
+      history: comprehensiveHistory,
+    });
+
+    expect(chat.getHistory()).toEqual(comprehensiveHistory);
+    expect(chat.getHistory(true)).toEqual([]);
+  });
+
+  it('user input with associated invalid model content is not added to curated history', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const comprehensiveHistory = [
+      {role: 'user', parts: [{text: 'user content 1'}]},
+      {role: 'user', parts: [{text: 'user content 2'}]},
+      {role: 'model', parts: [{text: ''}]}, // invalid content
+    ];
+    const chat = client.chats.create({
+      model: 'gemini-1.5-flash',
+      history: comprehensiveHistory,
+    });
+
+    expect(chat.getHistory()).toEqual(comprehensiveHistory);
+    expect(chat.getHistory(true)).toEqual([
+      {role: 'user', parts: [{text: 'user content 1'}]},
+    ]);
+  });
+
+  it('user input with associated valid model content are added to curated history', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const comprehensiveHistory = [
+      {role: 'user', parts: [{text: 'user content 1'}]},
+      {role: 'user', parts: [{text: 'user content 2'}]},
+      {role: 'model', parts: [{text: 'model content 1'}]},
+    ];
+    const chat = client.chats.create({
+      model: 'gemini-1.5-flash',
+      history: comprehensiveHistory,
+    });
+
+    expect(chat.getHistory()).toEqual(comprehensiveHistory);
+    expect(chat.getHistory(true)).toEqual(comprehensiveHistory);
+  });
 });
 
 describe('getHistory', () => {

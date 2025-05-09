@@ -82,6 +82,7 @@ function extractCuratedHistory(
   let i = 0;
   let userInput = comprehensiveHistory[0];
   while (i < length) {
+    let hasModelOutput = false;
     if (comprehensiveHistory[i].role === 'user') {
       userInput = comprehensiveHistory[i];
       i++;
@@ -89,6 +90,7 @@ function extractCuratedHistory(
       const modelOutput: types.Content[] = [];
       let isValid = true;
       while (i < length && comprehensiveHistory[i].role === 'model') {
+        hasModelOutput = true;
         modelOutput.push(comprehensiveHistory[i]);
         if (isValid && !isValidContent(comprehensiveHistory[i])) {
           isValid = false;
@@ -99,6 +101,15 @@ function extractCuratedHistory(
         curatedHistory.push(userInput);
         curatedHistory.push(...modelOutput);
       }
+    }
+    if (
+      !hasModelOutput &&
+      isValidContent(userInput) &&
+      // Append User input when it is the last turn or the next turn is also a
+      // user input.
+      (i === length || comprehensiveHistory[i].role === 'user')
+    ) {
+      curatedHistory.push(userInput);
     }
   }
   return curatedHistory;
