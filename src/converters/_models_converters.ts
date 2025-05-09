@@ -11,6 +11,29 @@ import * as common from '../_common';
 import * as t from '../_transformers';
 import * as types from '../types';
 
+export function blobToMldev(
+  apiClient: ApiClient,
+  fromObject: types.Blob,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
+    throw new Error('displayName parameter is not supported in Gemini API.');
+  }
+
+  const fromData = common.getValueByPath(fromObject, ['data']);
+  if (fromData != null) {
+    common.setValueByPath(toObject, ['data'], fromData);
+  }
+
+  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+  if (fromMimeType != null) {
+    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+  }
+
+  return toObject;
+}
+
 export function partToMldev(
   apiClient: ApiClient,
   fromObject: types.Part,
@@ -24,6 +47,15 @@ export function partToMldev(
   const fromThought = common.getValueByPath(fromObject, ['thought']);
   if (fromThought != null) {
     common.setValueByPath(toObject, ['thought'], fromThought);
+  }
+
+  const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
+  if (fromInlineData != null) {
+    common.setValueByPath(
+      toObject,
+      ['inlineData'],
+      blobToMldev(apiClient, fromInlineData),
+    );
   }
 
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
@@ -59,11 +91,6 @@ export function partToMldev(
   ]);
   if (fromFunctionResponse != null) {
     common.setValueByPath(toObject, ['functionResponse'], fromFunctionResponse);
-  }
-
-  const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
-  if (fromInlineData != null) {
-    common.setValueByPath(toObject, ['inlineData'], fromInlineData);
   }
 
   const fromText = common.getValueByPath(fromObject, ['text']);
@@ -1357,6 +1384,30 @@ export function generateVideosParametersToMldev(
   return toObject;
 }
 
+export function blobToVertex(
+  apiClient: ApiClient,
+  fromObject: types.Blob,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
+  if (fromDisplayName != null) {
+    common.setValueByPath(toObject, ['displayName'], fromDisplayName);
+  }
+
+  const fromData = common.getValueByPath(fromObject, ['data']);
+  if (fromData != null) {
+    common.setValueByPath(toObject, ['data'], fromData);
+  }
+
+  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+  if (fromMimeType != null) {
+    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+  }
+
+  return toObject;
+}
+
 export function partToVertex(
   apiClient: ApiClient,
   fromObject: types.Part,
@@ -1373,6 +1424,15 @@ export function partToVertex(
   const fromThought = common.getValueByPath(fromObject, ['thought']);
   if (fromThought != null) {
     common.setValueByPath(toObject, ['thought'], fromThought);
+  }
+
+  const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
+  if (fromInlineData != null) {
+    common.setValueByPath(
+      toObject,
+      ['inlineData'],
+      blobToVertex(apiClient, fromInlineData),
+    );
   }
 
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
@@ -1408,11 +1468,6 @@ export function partToVertex(
   ]);
   if (fromFunctionResponse != null) {
     common.setValueByPath(toObject, ['functionResponse'], fromFunctionResponse);
-  }
-
-  const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
-  if (fromInlineData != null) {
-    common.setValueByPath(toObject, ['inlineData'], fromInlineData);
   }
 
   const fromText = common.getValueByPath(fromObject, ['text']);
@@ -2854,6 +2909,25 @@ export function generateVideosParametersToVertex(
   return toObject;
 }
 
+export function blobFromMldev(
+  apiClient: ApiClient,
+  fromObject: types.Blob,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromData = common.getValueByPath(fromObject, ['data']);
+  if (fromData != null) {
+    common.setValueByPath(toObject, ['data'], fromData);
+  }
+
+  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+  if (fromMimeType != null) {
+    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+  }
+
+  return toObject;
+}
+
 export function partFromMldev(
   apiClient: ApiClient,
   fromObject: types.Part,
@@ -2863,6 +2937,15 @@ export function partFromMldev(
   const fromThought = common.getValueByPath(fromObject, ['thought']);
   if (fromThought != null) {
     common.setValueByPath(toObject, ['thought'], fromThought);
+  }
+
+  const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
+  if (fromInlineData != null) {
+    common.setValueByPath(
+      toObject,
+      ['inlineData'],
+      blobFromMldev(apiClient, fromInlineData),
+    );
   }
 
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
@@ -2898,11 +2981,6 @@ export function partFromMldev(
   ]);
   if (fromFunctionResponse != null) {
     common.setValueByPath(toObject, ['functionResponse'], fromFunctionResponse);
-  }
-
-  const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
-  if (fromInlineData != null) {
-    common.setValueByPath(toObject, ['inlineData'], fromInlineData);
   }
 
   const fromText = common.getValueByPath(fromObject, ['text']);
@@ -3527,6 +3605,30 @@ export function generateVideosOperationFromMldev(
   return toObject;
 }
 
+export function blobFromVertex(
+  apiClient: ApiClient,
+  fromObject: types.Blob,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
+  if (fromDisplayName != null) {
+    common.setValueByPath(toObject, ['displayName'], fromDisplayName);
+  }
+
+  const fromData = common.getValueByPath(fromObject, ['data']);
+  if (fromData != null) {
+    common.setValueByPath(toObject, ['data'], fromData);
+  }
+
+  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+  if (fromMimeType != null) {
+    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+  }
+
+  return toObject;
+}
+
 export function partFromVertex(
   apiClient: ApiClient,
   fromObject: types.Part,
@@ -3543,6 +3645,15 @@ export function partFromVertex(
   const fromThought = common.getValueByPath(fromObject, ['thought']);
   if (fromThought != null) {
     common.setValueByPath(toObject, ['thought'], fromThought);
+  }
+
+  const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
+  if (fromInlineData != null) {
+    common.setValueByPath(
+      toObject,
+      ['inlineData'],
+      blobFromVertex(apiClient, fromInlineData),
+    );
   }
 
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
@@ -3578,11 +3689,6 @@ export function partFromVertex(
   ]);
   if (fromFunctionResponse != null) {
     common.setValueByPath(toObject, ['functionResponse'], fromFunctionResponse);
-  }
-
-  const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
-  if (fromInlineData != null) {
-    common.setValueByPath(toObject, ['inlineData'], fromInlineData);
   }
 
   const fromText = common.getValueByPath(fromObject, ['text']);

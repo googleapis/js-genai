@@ -121,6 +121,7 @@ export interface BaseUrlParameters {
 // @public
 interface Blob_2 {
     data?: string;
+    displayName?: string;
     mimeType?: string;
 }
 export { Blob_2 as Blob }
