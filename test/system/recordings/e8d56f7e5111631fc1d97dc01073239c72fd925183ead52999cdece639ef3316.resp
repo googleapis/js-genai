@@ -1,0 +1,45 @@
+Status code: 200 
+Content-Type: application/json; charset=UTF-8
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Server: scaffolding on HTTPServer2
+Content-Length: 210
+Content-Encoding: gzip
+Date: Fri, 09 May 2025 22:52:28 GMT
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+
+{
+  "tokensInfo": [
+    {
+      "tokens": [
+        "VGhl",
+        "IHF1aWNr",
+        "IGJyb3du",
+        "IGZveA==",
+        "IGp1bXBz",
+        "IG92ZXI=",
+        "IHRoZQ==",
+        "IGxhenk=",
+        "IGRvZw==",
+        "Lg=="
+      ],
+      "tokenIds": [
+        "651",
+        "4320",
+        "8426",
+        "25341",
+        "36271",
+        "1163",
+        "573",
+        "27894",
+        "5929",
+        "235265"
+      ],
+      "role": "user"
+    }
+  ]
+}

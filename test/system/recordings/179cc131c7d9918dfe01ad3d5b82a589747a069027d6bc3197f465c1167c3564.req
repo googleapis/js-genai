@@ -1,0 +1,16 @@
+b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d
+Server Address: us-central1-aiplatform.googleapis.com
+Port: 443
+Protocol: https
+********************************************************************************
+GET /v1beta1/projects/REDACTED/locations/REDACTED/cachedContents HTTP/1.1
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: *
+Connection: keep-alive
+Content-Type: application/json
+Sec-Fetch-Mode: cors
+User-Agent: google-genai-sdk/0.13.0 gl-node/v22.12.0
+X-Goog-Api-Client: google-genai-sdk/0.13.0 gl-node/v22.12.0
+
+

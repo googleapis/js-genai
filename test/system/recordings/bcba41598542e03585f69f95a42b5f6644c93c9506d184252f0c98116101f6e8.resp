@@ -1,0 +1,29 @@
+Status code: 200 
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+Content-Type: application/json; charset=UTF-8
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Content-Encoding: gzip
+X-Content-Type-Options: nosniff
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Date: Fri, 09 May 2025 22:53:01 GMT
+Server: ESF
+Content-Length: 276
+
+{
+  "cachedContents": [
+    {
+      "name": "projects/964831358985/locations/REDACTED/cachedContents/5790451543845109760",
+      "model": "projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-1.5-pro-002",
+      "createTime": "2025-05-09T22:18:58.556098Z",
+      "updateTime": "2025-05-09T22:18:58.556098Z",
+      "expireTime": "2025-05-09T23:18:58.540253Z",
+      "usageMetadata": {
+        "totalTokenCount": 43087,
+        "imageCount": 167
+      }
+    }
+  ]
+}

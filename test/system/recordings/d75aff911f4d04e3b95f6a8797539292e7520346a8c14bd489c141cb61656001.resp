@@ -1,0 +1,41 @@
+Status code: 200 
+Content-Length: 446
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Content-Type: application/json; charset=UTF-8
+Content-Encoding: gzip
+Date: Fri, 09 May 2025 22:53:00 GMT
+Server: ESF
+X-Xss-Protection: 0
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+
+{
+  "cachedContents": [
+    {
+      "name": "projects/964831358985/locations/REDACTED/cachedContents/3462090536494563328",
+      "model": "projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-1.5-pro-002",
+      "createTime": "2025-05-09T22:22:06.068596Z",
+      "updateTime": "2025-05-09T22:22:06.068596Z",
+      "expireTime": "2025-05-09T23:22:06.061305Z",
+      "usageMetadata": {
+        "totalTokenCount": 43087,
+        "imageCount": 167
+      }
+    },
+    {
+      "name": "projects/964831358985/locations/REDACTED/cachedContents/926563946284974080",
+      "model": "projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-1.5-pro-002",
+      "createTime": "2025-05-09T22:20:00.888665Z",
+      "updateTime": "2025-05-09T22:20:00.888665Z",
+      "expireTime": "2025-05-09T23:20:00.878191Z",
+      "usageMetadata": {
+        "totalTokenCount": 43087,
+        "imageCount": 167
+      }
+    }
+  ],
+  "nextPageToken": "AMEw9yNCtdc630HuwtqMuYQ6IIG2nZ7B6xZnomuaLuXhEyiy4Yo-NpTnXR5_DioquyDc6coJVzvQ4m4jyaXBiiIuAFTd0_HIEMr_EgIMRSzVyeuIeEY="
+}

@@ -1,0 +1,49 @@
+Status code: 200 
+Server: scaffolding on HTTPServer2
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+Server-Timing: gfet4t7; dur=466
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Content-Type: application/json; charset=UTF-8
+Content-Encoding: gzip
+Content-Length: 284
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Date: Fri, 09 May 2025 22:52:29 GMT
+
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "low\n"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -4.2852392653003335e-05
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 8,
+    "candidatesTokenCount": 2,
+    "totalTokenCount": 10,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 8
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 2
+      }
+    ]
+  },
+  "modelVersion": "gemini-1.5-flash"
+}

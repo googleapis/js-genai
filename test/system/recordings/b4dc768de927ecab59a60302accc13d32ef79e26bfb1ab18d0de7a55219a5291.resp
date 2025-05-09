@@ -1,0 +1,49 @@
+Status code: 200 
+Content-Length: 868
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+Server-Timing: gfet4t7; dur=1435
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Content-Type: application/json; charset=UTF-8
+Content-Encoding: gzip
+Server: scaffolding on HTTPServer2
+X-Content-Type-Options: nosniff
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Date: Fri, 09 May 2025 22:52:28 GMT
+
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "",
+            "thought": true,
+            "thoughtSignature": "ADAxMjN5IUB/7C8owFDIXVIIQlvvlGBP0oZlfmgObDnZszi0PrxNsw1QvWUemVQI5la02l19YwXPQJtS2c3BuhGyQIn7AnNrzqXQruOEjMHnccDON/inHHuDTb00vT3g1rCIKFUn/cnBdegLrMQ="
+          },
+          {
+            "text": "**Breaking Down the Request**\n\nOkay, so the user wants me to distill this text into a first-person summary, pretending the thoughts are *mine*. And, they're expecting a \"fulsome summary,\" meaning I should elaborate.  The critical point here is that they're a domain expert – that tells me to assume a certain level of understanding and detail. So, the core task is to identify and summarize the user's thought process as if it were my own.\n\n1.  **First, the Goal:** I immediately pinpointed the key directive: the user is asking for the sum of natural numbers. This is the ultimate objective. All subsequent steps and considerations will revolve around achieving this goal. This sets the foundation. The rest of the information is the context for doing it.\n",
+            "thought": true
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "MAX_TOKENS",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 17,
+    "totalTokenCount": 37,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 17
+      }
+    ],
+    "thoughtsTokenCount": 20
+  },
+  "modelVersion": "gemini-2.0-flash-thinking-exp-01-21"
+}

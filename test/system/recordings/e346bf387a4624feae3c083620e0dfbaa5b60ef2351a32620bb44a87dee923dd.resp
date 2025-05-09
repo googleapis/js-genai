@@ -1,0 +1,51 @@
+Status code: 200 
+Date: Fri, 09 May 2025 22:52:59 GMT
+Server: scaffolding on HTTPServer2
+Content-Encoding: gzip
+Content-Length: 439
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Content-Type: application/json; charset=UTF-8
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+
+{
+  "candidates": [
+    {
+      "content": {
+        "role": "model",
+        "parts": [
+          {
+            "text": "The sky is blue due to a phenomenon called **Rayleigh scattering**.  Sunlight is made up of"
+          }
+        ]
+      },
+      "finishReason": "MAX_TOKENS",
+      "avgLogprobs": -0.0064941637217998506
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 6,
+    "candidatesTokenCount": 20,
+    "totalTokenCount": 26,
+    "trafficType": "ON_DEMAND",
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 6
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 20
+      }
+    ]
+  },
+  "modelVersion": "gemini-1.5-flash-002",
+  "createTime": "2025-05-09T22:52:58.977671Z",
+  "responseId": "SoceaIfWO_P-ld8P0bbEqAY"
+}
