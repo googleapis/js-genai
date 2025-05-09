@@ -38,7 +38,7 @@
     "prepare": "npm run build-prod",
     "build": "rollup -c && api-extractor run --local --verbose && api-extractor run -c api-extractor.node.json --local --verbose&& api-extractor run -c api-extractor.web.json --local --verbose",
     "build-prod": "rollup -c && api-extractor run --verbose && api-extractor run -c api-extractor.node.json --verbose && api-extractor run -c api-extractor.web.json --verbose",
-    "unit-test": "ts-node node_modules/jasmine/bin/jasmine test/unit/**/*_test.ts test/unit/*_test.ts",
+    "unit-test": "ts-node --experimentalSpecifierResolution=node node_modules/jasmine/bin/jasmine test/unit/**/*_test.ts test/unit/*_test.ts",
     "system-test": "ts-node node_modules/jasmine/bin/jasmine test/system/**/*_test.ts",
     "docs": "typedoc && ts-node scripts/add_docsite_license_headers.ts",
     "pages-main": "ts-node scripts/generate_pages.ts main",
