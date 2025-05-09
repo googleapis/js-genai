@@ -353,36 +353,6 @@ export function functionCallingConfigToMldev(
   return toObject;
 }
 
-export function latLngToMldev(
-  apiClient: ApiClient,
-  fromObject: types.LatLng,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (common.getValueByPath(fromObject, ['latitude']) !== undefined) {
-    throw new Error('latitude parameter is not supported in Gemini API.');
-  }
-
-  if (common.getValueByPath(fromObject, ['longitude']) !== undefined) {
-    throw new Error('longitude parameter is not supported in Gemini API.');
-  }
-
-  return toObject;
-}
-
-export function retrievalConfigToMldev(
-  apiClient: ApiClient,
-  fromObject: types.RetrievalConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (common.getValueByPath(fromObject, ['latLng']) !== undefined) {
-    throw new Error('latLng parameter is not supported in Gemini API.');
-  }
-
-  return toObject;
-}
-
 export function toolConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.ToolConfig,
@@ -400,10 +370,11 @@ export function toolConfigToMldev(
     );
   }
 
-  if (common.getValueByPath(fromObject, ['retrievalConfig']) !== undefined) {
-    throw new Error(
-      'retrievalConfig parameter is not supported in Gemini API.',
-    );
+  const fromRetrievalConfig = common.getValueByPath(fromObject, [
+    'retrievalConfig',
+  ]);
+  if (fromRetrievalConfig != null) {
+    common.setValueByPath(toObject, ['retrievalConfig'], fromRetrievalConfig);
   }
 
   return toObject;
@@ -1736,43 +1707,6 @@ export function functionCallingConfigToVertex(
   return toObject;
 }
 
-export function latLngToVertex(
-  apiClient: ApiClient,
-  fromObject: types.LatLng,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromLatitude = common.getValueByPath(fromObject, ['latitude']);
-  if (fromLatitude != null) {
-    common.setValueByPath(toObject, ['latitude'], fromLatitude);
-  }
-
-  const fromLongitude = common.getValueByPath(fromObject, ['longitude']);
-  if (fromLongitude != null) {
-    common.setValueByPath(toObject, ['longitude'], fromLongitude);
-  }
-
-  return toObject;
-}
-
-export function retrievalConfigToVertex(
-  apiClient: ApiClient,
-  fromObject: types.RetrievalConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromLatLng = common.getValueByPath(fromObject, ['latLng']);
-  if (fromLatLng != null) {
-    common.setValueByPath(
-      toObject,
-      ['latLng'],
-      latLngToVertex(apiClient, fromLatLng),
-    );
-  }
-
-  return toObject;
-}
-
 export function toolConfigToVertex(
   apiClient: ApiClient,
   fromObject: types.ToolConfig,
@@ -1794,11 +1728,7 @@ export function toolConfigToVertex(
     'retrievalConfig',
   ]);
   if (fromRetrievalConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['retrievalConfig'],
-      retrievalConfigToVertex(apiClient, fromRetrievalConfig),
-    );
+    common.setValueByPath(toObject, ['retrievalConfig'], fromRetrievalConfig);
   }
 
   return toObject;

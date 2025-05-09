@@ -829,25 +829,20 @@ export declare interface FunctionCallingConfig {
   allowedFunctionNames?: string[];
 }
 
-/** An object that represents a latitude/longitude pair.
-
-  This is expressed as a pair of doubles to represent degrees latitude and
-  degrees longitude. Unless specified otherwise, this object must conform to the
-  <a href="https://en.wikipedia.org/wiki/World_Geodetic_System#1984_version">
-  WGS84 standard</a>. Values must be within normalized ranges.
-   */
-export declare interface LatLng {
+/** An object that represents a latitude/longitude pair. This is expressed as a pair of doubles to represent degrees latitude and degrees longitude. Unless specified otherwise, this object must conform to the WGS84 standard. Values must be within normalized ranges. */
+export declare interface GoogleTypeLatLng {
   /** The latitude in degrees. It must be in the range [-90.0, +90.0]. */
   latitude?: number;
-  /** The longitude in degrees. It must be in the range [-180.0, +180.0] */
+  /** The longitude in degrees. It must be in the range [-180.0, +180.0]. */
   longitude?: number;
 }
 
-/** Retrieval config.
- */
+/** Retrieval config. */
 export declare interface RetrievalConfig {
-  /** Optional. The location of the user. */
-  latLng?: LatLng;
+  /** The language code of the user. */
+  languageCode?: string;
+  /** The location of the user. */
+  latLng?: GoogleTypeLatLng;
 }
 
 /** Tool config.
