@@ -9,6 +9,7 @@
 import {ApiClient} from './_api_client';
 import * as common from './_common';
 import {BaseModule} from './_common';
+import * as _internal_types from './_internal_types';
 import * as converters from './converters/_models_converters';
 import {PagedItem, Pager} from './pagers';
 import * as types from './types';
@@ -112,9 +113,7 @@ export class Models extends BaseModule {
   /**
    * Generates an image based on a text description and configuration.
    *
-   * @param model - The model to use.
-   * @param prompt - A text description of the image to generate.
-   * @param [config] - The config for image generation.
+   * @param params - The parameters for generating images.
    * @return The response from the API.
    *
    * @example
@@ -198,6 +197,86 @@ export class Models extends BaseModule {
       await this.listInternal(actualParams),
       actualParams,
     );
+  };
+
+  /**
+   * Edits an image based on a text description and configuration.
+   * TODO(@tangmatthew): Fix description.
+   *
+   * @param params - The parameters for generating images.
+   * @return The response from the API.
+   *
+   * @example
+   * ```ts
+   * const response = await client.models.generateImages({
+   *  model: 'imagen-3.0-generate-002',
+   *  prompt: 'Robot holding a red skateboard',
+   *  config: {
+   *    numberOfImages: 1,
+   *    includeRaiReason: true,
+   *  },
+   * });
+   * console.log(response?.generatedImages?.[0]?.image?.imageBytes);
+   * ```
+   */
+  editImage = async (
+    params: types.EditImageParameters,
+  ): Promise<types.EditImageResponse> => {
+    const paramsInternal: _internal_types.EditImageParametersInternal = {
+      model: params.model,
+      prompt: params.prompt,
+      referenceImages: [],
+      config: params.config,
+    };
+    if (params.referenceImages) {
+      for (let i = 0; i < params.referenceImages.length; i++) {
+        paramsInternal.referenceImages.push(
+          params.referenceImages[i].toReferenceImageAPI(),
+        );
+      }
+    }
+    return await this.editImageInternal(paramsInternal);
+  };
+
+  /**
+   * Upscales an image based on an image, upscale factor, and configuration.
+   * Only supported in Vertex AI currently.
+   *
+   * @param params - The parameters for upscaling an image.
+   * @return The response from the API.
+   *
+   * @example
+   * ```ts
+   * const response = await client.models.upscaleImage({
+   *  model: 'imagen-3.0-generate-002',
+   *  image: image,
+   *  upscaleFactor: 'x2',
+   *  config: {
+   *    includeRaiReason: true,
+   *  },
+   * });
+   * console.log(response?.generatedImages?.[0]?.image?.imageBytes);
+   * ```
+   */
+  upscaleImage = async (
+    params: types.UpscaleImageParameters,
+  ): Promise<types.UpscaleImageResponse> => {
+    let apiConfig: _internal_types.UpscaleImageAPIConfigInternal = {
+      numberOfImages: 1,
+      mode: 'upscale',
+    };
+
+    if (params.config) {
+      apiConfig = {...apiConfig, ...params.config};
+    }
+
+    const apiParams: _internal_types.UpscaleImageAPIParametersInternal = {
+      model: params.model,
+      image: params.image,
+      upscaleFactor: params.upscaleFactor,
+      config: apiConfig,
+    };
+    return await this.upscaleImageInternal(apiParams);
   };
 
   private async generateContentInternal(
@@ -563,6 +642,100 @@ export class Models extends BaseModule {
         Object.assign(typedResp, resp);
         return typedResp;
       });
+    }
+  }
+
+  private async editImageInternal(
+    params: _internal_types.EditImageParametersInternal,
+  ): Promise<types.EditImageResponse> {
+    let response: Promise<types.EditImageResponse>;
+    let path: string = '';
+    let queryParams: Record<string, string> = {};
+    if (this.apiClient.isVertexAI()) {
+      const body = converters.editImageParametersInternalToVertex(
+        this.apiClient,
+        params,
+      );
+      path = common.formatMap(
+        '{model}:predict',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
+      delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json();
+        }) as Promise<types.EditImageResponse>;
+
+      return response.then((apiResponse) => {
+        const resp = converters.editImageResponseFromVertex(
+          this.apiClient,
+          apiResponse,
+        );
+        const typedResp = new types.EditImageResponse();
+        Object.assign(typedResp, resp);
+        return typedResp;
+      });
+    } else {
+      throw new Error('This method is only supported by the Vertex AI.');
+    }
+  }
+
+  private async upscaleImageInternal(
+    params: _internal_types.UpscaleImageAPIParametersInternal,
+  ): Promise<types.UpscaleImageResponse> {
+    let response: Promise<types.UpscaleImageResponse>;
+    let path: string = '';
+    let queryParams: Record<string, string> = {};
+    if (this.apiClient.isVertexAI()) {
+      const body = converters.upscaleImageAPIParametersInternalToVertex(
+        this.apiClient,
+        params,
+      );
+      path = common.formatMap(
+        '{model}:predict',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
+      delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json();
+        }) as Promise<types.UpscaleImageResponse>;
+
+      return response.then((apiResponse) => {
+        const resp = converters.upscaleImageResponseFromVertex(
+          this.apiClient,
+          apiResponse,
+        );
+        const typedResp = new types.UpscaleImageResponse();
+        Object.assign(typedResp, resp);
+        return typedResp;
+      });
+    } else {
+      throw new Error('This method is only supported by the Vertex AI.');
     }
   }
 

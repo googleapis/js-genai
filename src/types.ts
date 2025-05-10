@@ -217,21 +217,6 @@ export enum ImagePromptLanguage {
   hi = 'hi',
 }
 
-/** State for the lifecycle of a File. */
-export enum FileState {
-  STATE_UNSPECIFIED = 'STATE_UNSPECIFIED',
-  PROCESSING = 'PROCESSING',
-  ACTIVE = 'ACTIVE',
-  FAILED = 'FAILED',
-}
-
-/** Source of the File. */
-export enum FileSource {
-  SOURCE_UNSPECIFIED = 'SOURCE_UNSPECIFIED',
-  UPLOADED = 'UPLOADED',
-  GENERATED = 'GENERATED',
-}
-
 /** Enum representing the mask mode of a mask reference image. */
 export enum MaskReferenceMode {
   MASK_MODE_DEFAULT = 'MASK_MODE_DEFAULT',
@@ -255,6 +240,33 @@ export enum SubjectReferenceType {
   SUBJECT_TYPE_PERSON = 'SUBJECT_TYPE_PERSON',
   SUBJECT_TYPE_ANIMAL = 'SUBJECT_TYPE_ANIMAL',
   SUBJECT_TYPE_PRODUCT = 'SUBJECT_TYPE_PRODUCT',
+}
+
+/** Enum representing the Imagen 3 Edit mode. */
+export enum EditMode {
+  EDIT_MODE_DEFAULT = 'EDIT_MODE_DEFAULT',
+  EDIT_MODE_INPAINT_REMOVAL = 'EDIT_MODE_INPAINT_REMOVAL',
+  EDIT_MODE_INPAINT_INSERTION = 'EDIT_MODE_INPAINT_INSERTION',
+  EDIT_MODE_OUTPAINT = 'EDIT_MODE_OUTPAINT',
+  EDIT_MODE_CONTROLLED_EDITING = 'EDIT_MODE_CONTROLLED_EDITING',
+  EDIT_MODE_STYLE = 'EDIT_MODE_STYLE',
+  EDIT_MODE_BGSWAP = 'EDIT_MODE_BGSWAP',
+  EDIT_MODE_PRODUCT_IMAGE = 'EDIT_MODE_PRODUCT_IMAGE',
+}
+
+/** State for the lifecycle of a File. */
+export enum FileState {
+  STATE_UNSPECIFIED = 'STATE_UNSPECIFIED',
+  PROCESSING = 'PROCESSING',
+  ACTIVE = 'ACTIVE',
+  FAILED = 'FAILED',
+}
+
+/** Source of the File. */
+export enum FileSource {
+  SOURCE_UNSPECIFIED = 'SOURCE_UNSPECIFIED',
+  UPLOADED = 'UPLOADED',
+  GENERATED = 'GENERATED',
 }
 
 /** Server content modalities. */
@@ -1568,8 +1580,27 @@ export class GenerateContentResponse {
   }
 }
 
-export /** Optional parameters for the embed_content method. */
-declare interface EmbedContentConfig {
+export type ReferenceImage =
+  | RawReferenceImage
+  | MaskReferenceImage
+  | ControlReferenceImage
+  | StyleReferenceImage
+  | SubjectReferenceImage;
+
+/** Parameters for the request to edit an image. */
+export declare interface EditImageParameters {
+  /** The model to use. */
+  model: string;
+  /** A text description of the edit to apply to the image. */
+  prompt: string;
+  /** The reference images for Imagen 3 editing. */
+  referenceImages: ReferenceImage[];
+  /** Configuration for editing. */
+  config?: EditImageConfig;
+}
+
+/** Optional parameters for the embed_content method. */
+export declare interface EmbedContentConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
   /** Abort signal which can be used to cancel the request.
@@ -1788,6 +1819,117 @@ export class GenerateImagesResponse {
       ``include_safety_attributes`` is set to True.
        */
   positivePromptSafetyAttributes?: SafetyAttributes;
+}
+
+/** Configuration for a Mask reference image. */
+export declare interface MaskReferenceConfig {
+  /** Prompts the model to generate a mask instead of you needing to
+      provide one (unless MASK_MODE_USER_PROVIDED is used). */
+  maskMode?: MaskReferenceMode;
+  /** A list of up to 5 class ids to use for semantic segmentation.
+      Automatically creates an image mask based on specific objects. */
+  segmentationClasses?: number[];
+  /** Dilation percentage of the mask provided.
+      Float between 0 and 1. */
+  maskDilation?: number;
+}
+
+/** Configuration for a Control reference image. */
+export declare interface ControlReferenceConfig {
+  /** The type of control reference image to use. */
+  controlType?: ControlReferenceType;
+  /** Defaults to False. When set to True, the control image will be
+      computed by the model based on the control type. When set to False,
+      the control image must be provided by the user. */
+  enableControlImageComputation?: boolean;
+}
+
+/** Configuration for a Style reference image. */
+export declare interface StyleReferenceConfig {
+  /** A text description of the style to use for the generated image. */
+  styleDescription?: string;
+}
+
+/** Configuration for a Subject reference image. */
+export declare interface SubjectReferenceConfig {
+  /** The subject type of a subject reference image. */
+  subjectType?: SubjectReferenceType;
+  /** Subject description for the image. */
+  subjectDescription?: string;
+}
+
+/** Configuration for editing an image. */
+export declare interface EditImageConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
+  /** Cloud Storage URI used to store the generated images.
+   */
+  outputGcsUri?: string;
+  /** Description of what to discourage in the generated images.
+   */
+  negativePrompt?: string;
+  /** Number of images to generate.
+   */
+  numberOfImages?: number;
+  /** Aspect ratio of the generated images.
+   */
+  aspectRatio?: string;
+  /** Controls how much the model adheres to the text prompt. Large
+      values increase output and prompt alignment, but may compromise image
+      quality.
+       */
+  guidanceScale?: number;
+  /** Random seed for image generation. This is not available when
+      ``add_watermark`` is set to true.
+       */
+  seed?: number;
+  /** Filter level for safety filtering.
+   */
+  safetyFilterLevel?: SafetyFilterLevel;
+  /** Allows generation of people by the model.
+   */
+  personGeneration?: PersonGeneration;
+  /** Whether to report the safety scores of each generated image and
+      the positive prompt in the response.
+       */
+  includeSafetyAttributes?: boolean;
+  /** Whether to include the Responsible AI filter reason if the image
+      is filtered out of the response.
+       */
+  includeRaiReason?: boolean;
+  /** Language of the text in the prompt.
+   */
+  language?: ImagePromptLanguage;
+  /** MIME type of the generated image.
+   */
+  outputMimeType?: string;
+  /** Compression quality of the generated image (for ``image/jpeg``
+      only).
+       */
+  outputCompressionQuality?: number;
+  /** Describes the editing mode for the request. */
+  editMode?: EditMode;
+  /** The number of sampling steps. A higher value has better image
+      quality, while a lower value has better latency. */
+  baseSteps?: number;
+}
+
+/** Response for the request to edit an image. */
+export class EditImageResponse {
+  /** Generated images. */
+  generatedImages?: GeneratedImage[];
+}
+
+export class UpscaleImageResponse {
+  /** Generated images. */
+  generatedImages?: GeneratedImage[];
 }
 
 /** Optional parameters for models.get method. */
@@ -3102,26 +3244,23 @@ export declare interface UpscaleImageParameters {
   It can optionally be provided in addition to a mask reference image or
   a style reference image.
    */
-export declare interface RawReferenceImage {
+export class RawReferenceImage {
   /** The reference image for the editing operation. */
   referenceImage?: Image;
   /** The id of the reference image. */
   referenceId?: number;
   /** The type of the reference image. Only set by the SDK. */
   referenceType?: string;
-}
-
-/** Configuration for a Mask reference image. */
-export declare interface MaskReferenceConfig {
-  /** Prompts the model to generate a mask instead of you needing to
-      provide one (unless MASK_MODE_USER_PROVIDED is used). */
-  maskMode?: MaskReferenceMode;
-  /** A list of up to 5 class ids to use for semantic segmentation.
-      Automatically creates an image mask based on specific objects. */
-  segmentationClasses?: number[];
-  /** Dilation percentage of the mask provided.
-      Float between 0 and 1. */
-  maskDilation?: number;
+  /* Internal method to convert to ReferenceImageAPIInternal. */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  toReferenceImageAPI(): any {
+    const referenceImageAPI = {
+      referenceType: 'REFERENCE_TYPE_RAW',
+      referenceImage: this.referenceImage,
+      referenceId: this.referenceId,
+    };
+    return referenceImageAPI;
+  }
 }
 
 /** A mask reference image.
@@ -3134,7 +3273,7 @@ export declare interface MaskReferenceConfig {
   image. If the user provides a mask image, the mask must be in the same
   dimensions as the raw image.
    */
-export declare interface MaskReferenceImage {
+export class MaskReferenceImage {
   /** The reference image for the editing operation. */
   referenceImage?: Image;
   /** The id of the reference image. */
@@ -3143,16 +3282,17 @@ export declare interface MaskReferenceImage {
   referenceType?: string;
   /** Configuration for the mask reference image. */
   config?: MaskReferenceConfig;
-}
-
-/** Configuration for a Control reference image. */
-export declare interface ControlReferenceConfig {
-  /** The type of control reference image to use. */
-  controlType?: ControlReferenceType;
-  /** Defaults to False. When set to True, the control image will be
-      computed by the model based on the control type. When set to False,
-      the control image must be provided by the user. */
-  enableControlImageComputation?: boolean;
+  /* Internal method to convert to ReferenceImageAPIInternal. */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  toReferenceImageAPI(): any {
+    const referenceImageAPI = {
+      referenceType: 'REFERENCE_TYPE_MASK',
+      referenceImage: this.referenceImage,
+      referenceId: this.referenceId,
+      maskImageConfig: this.config,
+    };
+    return referenceImageAPI;
+  }
 }
 
 /** A control reference image.
@@ -3165,7 +3305,7 @@ export declare interface ControlReferenceConfig {
   A control image is an image that represents a sketch image of areas for the
   model to fill in based on the prompt.
    */
-export declare interface ControlReferenceImage {
+export class ControlReferenceImage {
   /** The reference image for the editing operation. */
   referenceImage?: Image;
   /** The id of the reference image. */
@@ -3174,12 +3314,17 @@ export declare interface ControlReferenceImage {
   referenceType?: string;
   /** Configuration for the control reference image. */
   config?: ControlReferenceConfig;
-}
-
-/** Configuration for a Style reference image. */
-export declare interface StyleReferenceConfig {
-  /** A text description of the style to use for the generated image. */
-  styleDescription?: string;
+  /* Internal method to convert to ReferenceImageAPIInternal. */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  toReferenceImageAPI(): any {
+    const referenceImageAPI = {
+      referenceType: 'REFERENCE_TYPE_CONTROL',
+      referenceImage: this.referenceImage,
+      referenceId: this.referenceId,
+      controlImageConfig: this.config,
+    };
+    return referenceImageAPI;
+  }
 }
 
 /** A style reference image.
@@ -3190,7 +3335,7 @@ export declare interface StyleReferenceConfig {
   A raw reference image can also be provided as a destination for the style to
   be applied to.
    */
-export declare interface StyleReferenceImage {
+export class StyleReferenceImage {
   /** The reference image for the editing operation. */
   referenceImage?: Image;
   /** The id of the reference image. */
@@ -3199,14 +3344,17 @@ export declare interface StyleReferenceImage {
   referenceType?: string;
   /** Configuration for the style reference image. */
   config?: StyleReferenceConfig;
-}
-
-/** Configuration for a Subject reference image. */
-export declare interface SubjectReferenceConfig {
-  /** The subject type of a subject reference image. */
-  subjectType?: SubjectReferenceType;
-  /** Subject description for the image. */
-  subjectDescription?: string;
+  /* Internal method to convert to ReferenceImageAPIInternal. */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  toReferenceImageAPI(): any {
+    const referenceImageAPI = {
+      referenceType: 'REFERENCE_TYPE_STYLE',
+      referenceImage: this.referenceImage,
+      referenceId: this.referenceId,
+      styleImageConfig: this.config,
+    };
+    return referenceImageAPI;
+  }
 }
 
 /** A subject reference image.
@@ -3217,7 +3365,7 @@ export declare interface SubjectReferenceConfig {
   A raw reference image can also be provided as a destination for the subject to
   be applied to.
    */
-export declare interface SubjectReferenceImage {
+export class SubjectReferenceImage {
   /** The reference image for the editing operation. */
   referenceImage?: Image;
   /** The id of the reference image. */
@@ -3226,10 +3374,21 @@ export declare interface SubjectReferenceImage {
   referenceType?: string;
   /** Configuration for the subject reference image. */
   config?: SubjectReferenceConfig;
+  /* Internal method to convert to ReferenceImageAPIInternal. */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  toReferenceImageAPI(): any {
+    const referenceImageAPI = {
+      referenceType: 'REFERENCE_TYPE_SUBJECT',
+      referenceImage: this.referenceImage,
+      referenceId: this.referenceId,
+      subjectImageConfig: this.config,
+    };
+    return referenceImageAPI;
+  }
 }
 
-/** Sent in response to a `LiveGenerateContentSetup` message from the client. */
-export declare interface LiveServerSetupComplete {}
+export /** Sent in response to a `LiveGenerateContentSetup` message from the client. */
+declare interface LiveServerSetupComplete {}
 
 /** Audio transcription in Server Conent. */
 export declare interface Transcription {
