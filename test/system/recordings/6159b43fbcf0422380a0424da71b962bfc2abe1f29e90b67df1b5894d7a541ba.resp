@@ -1,0 +1,28 @@
+Status code: 200 
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Date: Fri, 09 May 2025 22:52:49 GMT
+Server: scaffolding on HTTPServer2
+X-Content-Type-Options: nosniff
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Content-Type: text/event-stream
+Content-Disposition: attachment
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+Server-Timing: gfet4t7; dur=387
+
+data: {"candidates": [{"content": {"parts": [{"text": "The"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-1.5-flash"}
+
+data: {"candidates": [{"content": {"parts": [{"text": " sky is blue due to a phenomenon called **Rayleigh scattering**.  Sunlight is"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-1.5-flash"}
+
+data: {"candidates": [{"content": {"parts": [{"text": " made up of all the colors of the rainbow.  When sunlight enters the Earth"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-1.5-flash"}
+
+data: {"candidates": [{"content": {"parts": [{"text": "'s atmosphere, it collides with tiny air molecules (mostly nitrogen and oxygen).  These molecules are much smaller than the wavelengths of visible light.\n\nRay"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-1.5-flash"}
+
+data: {"candidates": [{"content": {"parts": [{"text": "leigh scattering affects shorter wavelengths of light more strongly than longer wavelengths.  Blue and violet light have the shortest wavelengths, so they are scattered much more than the longer"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-1.5-flash"}
+
+data: {"candidates": [{"content": {"parts": [{"text": " wavelengths like red and orange.  This scattered blue light is what we see when we look at the sky.\n\nWhile violet light is scattered even more than blue, our eyes are less sensitive to violet, and the sun emits slightly less violet"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-1.5-flash"}
+
+data: {"candidates": [{"content": {"parts": [{"text": " light, resulting in a blue sky rather than a violet one.\n"}],"role": "model"},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 6,"candidatesTokenCount": 159,"totalTokenCount": 165,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 6}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 159}]},"modelVersion": "gemini-1.5-flash"}
+

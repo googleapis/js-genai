@@ -1,0 +1,33 @@
+Status code: 200 
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Content-Encoding: gzip
+Date: Fri, 09 May 2025 22:52:52 GMT
+X-Xss-Protection: 0
+X-Content-Type-Options: nosniff
+Content-Type: application/json; charset=UTF-8
+Server: scaffolding on HTTPServer2
+Content-Length: 159
+X-Frame-Options: SAMEORIGIN
+Server-Timing: gfet4t7; dur=63
+
+{
+  "totalTokens": 11,
+  "systemInstructionsTokens": {},
+  "contentTokens": [
+    {
+      "partTokens": [
+        10
+      ],
+      "roleTokens": 1
+    }
+  ],
+  "promptTokensDetails": [
+    {
+      "modality": "TEXT",
+      "tokenCount": 11
+    }
+  ]
+}

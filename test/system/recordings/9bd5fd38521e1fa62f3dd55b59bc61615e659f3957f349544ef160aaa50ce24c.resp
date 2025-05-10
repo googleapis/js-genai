@@ -1,0 +1,24 @@
+Status code: 200 
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Content-Encoding: gzip
+Server: scaffolding on HTTPServer2
+Content-Length: 129
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Content-Type: application/json; charset=UTF-8
+Date: Fri, 09 May 2025 22:52:52 GMT
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+
+{
+  "totalTokens": 10,
+  "totalBillableCharacters": 36,
+  "promptTokensDetails": [
+    {
+      "modality": "TEXT",
+      "tokenCount": 10
+    }
+  ]
+}
