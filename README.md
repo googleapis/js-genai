@@ -261,7 +261,6 @@ export class GeminiService {
   }
 }
 
-
 ```
 
 ### Generate Content
