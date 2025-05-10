@@ -1,6 +1,14 @@
 # Changelog
 
 
+## [0.14.0](https://github.com/googleapis/js-genai/compare/v0.13.0...v0.14.0) (2025-05-10)
+
+
+### Features
+
+* add support for audio, video, text and session resumption in java. ([e5542c6](https://github.com/googleapis/js-genai/commit/e5542c695d36059e7602b3f6c3ee398c33cfc4d9))
+* Support tuning checkpoints ([6bd9c9e](https://github.com/googleapis/js-genai/commit/6bd9c9e9a1b3d0b69b05ae78d226842dd94ff110))
+
 ## [0.13.0](https://github.com/googleapis/js-genai/compare/v0.12.0...v0.13.0) (2025-05-07)
 
 
