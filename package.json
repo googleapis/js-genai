@@ -40,6 +40,8 @@
     "build-prod": "rollup -c && api-extractor run --verbose && api-extractor run -c api-extractor.node.json --verbose && api-extractor run -c api-extractor.web.json --verbose",
     "unit-test": "ts-node node_modules/jasmine/bin/jasmine test/unit/**/*_test.ts test/unit/*_test.ts",
     "system-test": "ts-node node_modules/jasmine/bin/jasmine test/system/**/*_test.ts",
+    "test-server-tests": "GOOGLE_CLOUD_PROJECT=googcloudproj GOOGLE_CLOUD_LOCATION=googcloudloc ts-node node_modules/jasmine/bin/jasmine test/system/node/*_test.ts !test/system/node/live_test.ts",
+    "test-server-tests:record": "ts-node node_modules/jasmine/bin/jasmine --fail-fast test/system/node/*_test.ts !test/system/node/live_test.ts -- --record",
     "docs": "typedoc && ts-node scripts/add_docsite_license_headers.ts",
     "pages-main": "ts-node scripts/generate_pages.ts main",
     "pages-release": "ts-node scripts/generate_pages.ts release",
@@ -93,6 +95,7 @@
   },
   "dependencies": {
     "google-auth-library": "^9.14.2",
+    "test-server-sdk": "^0.2.1",
     "ws": "^8.18.0",
     "zod": "^3.22.4",
     "zod-to-json-schema": "^3.22.4"

@@ -1,0 +1,64 @@
+Status code: 200 
+X-Google-Service: genai-api-api-prod/gfespec_googleapis-generativelanguage_generativelanguage-url-map-global_generativelanguage-genai-api-api-prod
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Content-Length: 618
+X-Content-Type-Options: nosniff
+X-Google-Gfe-Request-Trace: acsfol10:443,/bns/rw/borg/rw/bns/genai-api/prod.genai-api/6,acsfol10:443
+X-Google-Dos-Service-Trace: main:genai-api-api-prod,main:GLOBAL_all_non_cloud
+X-Google-Esf-Cloud-Client-Params: backend_service_name: "generativelanguage.googleapis.com" backend_fully_qualified_method: "google.ai.generativelanguage.v1alpha.GenerativeService.GenerateContent"
+X-Google-Gfe-Service-Trace: genai-api-api-prod/gfespec_googleapis-generativelanguage_generativelanguage-url-map-global_generativelanguage-genai-api-api-prod
+X-Google-Gfe-Handshake-Trace: GFE: /bns/ncsfoa/borg/ncsfoa/bns/blue-layer1-gfe-prod-edge/prod.blue-layer1-gfe.sfo03s25/8,Mentat oracle: [2002:a05:6f30:228:b0:b:1b6a:4a0a]:9801
+X-Google-Shellfish-Status: CA0gBEBG
+Content-Encoding: gzip
+Server: scaffolding on HTTPServer2
+X-Google-Backends: unix:/tmp/esfbackend.1746896766.622424.280380,/bns/rw/borg/rw/bns/genai-api/prod.genai-api/6,/bns/ncsfoa/borg/ncsfoa/bns/blue-layer1-gfe-prod-edge/prod.blue-layer1-gfe.sfo03s25/8
+X-Google-Security-Signals: FRAMEWORK=ONE_PLATFORM,ENV=borg,ENV_DEBUG=borg_user:genai-api;borg_job:prod.genai-api
+X-Google-Security-Signals: FRAMEWORK=HTTPSERVER2,BUILD=GOOGLE3,BUILD_DEBUG=cl:756525062,ENV=borg,ENV_DEBUG=borg_user:genai-api;borg_job:prod.genai-api
+X-Xss-Protection: 0
+Server-Timing: gfet4t7; dur=787
+X-Google-Gfe-Response-Body-Transformations: chunked
+Date: Sun, 11 May 2025 02:58:17 GMT
+X-Frame-Options: SAMEORIGIN
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+X-Google-Netmon-Label: /bns/rw/borg/rw/bns/genai-api/prod.genai-api/6
+X-Google-Gfe-Response-Code-Details-Trace: response_code_set_by_backend
+X-Google-Gfe-Version: 2.928.1
+X-Google-Session-Info: GgQYECgLIAE6IxIhZ2VuZXJhdGl2ZWxhbmd1YWdlLmdvb2dsZWFwaXMuY29t
+Content-Type: application/json; charset=UTF-8
+
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "",
+            "thought": true,
+            "thoughtSignature": "ADAxMjMUdcuXDfP8kqCj31PnTDIKSCKjlWEhHd3T4NtfVGYrd/EOT1BpkrDSQwhKlkAIgwDG1Q015wsK1+WeN7SCJG0XLGjFW9KnUGBF7fUkxdsLRUTRjb1stlATR2NT7AZ2oLUPvy9bSUpR95I="
+          },
+          {
+            "text": "**Thinking Through the Calculation**\n\nOkay, so the task at hand is to find the sum of natural numbers.  That's the fundamental problem I need to address. This is a very basic, but important, mathematical task. It opens the door to several different approaches, given my expertise.\n",
+            "thought": true
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "MAX_TOKENS",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 17,
+    "totalTokenCount": 37,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 17
+      }
+    ],
+    "thoughtsTokenCount": 20
+  },
+  "modelVersion": "gemini-2.0-flash-thinking-exp-01-21"
+}
