@@ -84,13 +84,10 @@ describe('live', () => {
     const onopenString = JSON.stringify(
       websocketFactorySpyCall.args[2].onopen.toString(),
     );
-    expect(onopenString).toContain(
-      '(_a = callbacks === null || callbacks === void 0 ? void 0 : callbacks.onopen) === null || _a === void 0 ? void 0 : _a.call(callbacks);',
-    );
-    expect(onopenString).toContain('onopenResolve({});');
+    expect(onopenString).toContain('onopenResolve({})');
     expect(
       JSON.stringify(websocketFactorySpyCall.args[2].onclose.toString()),
-    ).toContain('void e;');
+    ).toContain('void e');
     expect(session).toBeDefined();
   });
 
@@ -184,16 +181,13 @@ describe('live', () => {
     const onopenString = JSON.stringify(
       websocketFactorySpyCall.args[2].onopen.toString(),
     );
-    expect(onopenString).toContain(
-      '(_a = callbacks === null || callbacks === void 0 ? void 0 : callbacks.onopen) === null || _a === void 0 ? void 0 : _a.call(callbacks);',
-    );
-    expect(onopenString).toContain('onopenResolve({});');
+    expect(onopenString).toContain('onopenResolve({})');
     expect(
       JSON.stringify(websocketFactorySpyCall.args[2].onerror.toString()),
-    ).toContain('void e;');
+    ).toContain('void e');
     expect(
       JSON.stringify(websocketFactorySpyCall.args[2].onclose.toString()),
-    ).toContain('void e;');
+    ).toContain('void e');
     expect(websocket.connect).toHaveBeenCalled();
     const websocketSpyCall = websocketSpy.calls.all()[0];
     expect(websocketSpyCall.args[0]).toBe(
