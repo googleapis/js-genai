@@ -1,6 +1,17 @@
 # Changelog
 
 
+## [0.14.0](https://github.com/googleapis/js-genai/compare/v0.13.0...v0.14.0) (2025-05-13)
+
+
+### Features
+
+* Add Imagen edit_image support in JS SDK ([6c99936](https://github.com/googleapis/js-genai/commit/6c999365c457ceed083862f6b572f551f3e1dc63))
+* Add Imagen upscale_image support for JS ([6fe1a68](https://github.com/googleapis/js-genai/commit/6fe1a687c4ff23b1df802b4fe88b1d24dabf3068))
+* add support for audio, video, text and session resumption in java. ([e5542c6](https://github.com/googleapis/js-genai/commit/e5542c695d36059e7602b3f6c3ee398c33cfc4d9))
+* support display_name for Blob class when calling Vertex AI ([fc35f51](https://github.com/googleapis/js-genai/commit/fc35f5178b576bdf6c134d7313fc6fd5e6c6ea93))
+* Support tuning checkpoints ([6bd9c9e](https://github.com/googleapis/js-genai/commit/6bd9c9e9a1b3d0b69b05ae78d226842dd94ff110))
+
 ## [0.13.0](https://github.com/googleapis/js-genai/compare/v0.12.0...v0.13.0) (2025-05-07)
 
 
