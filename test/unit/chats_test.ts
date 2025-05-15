@@ -138,6 +138,32 @@ describe('sendMessage valid response', () => {
   });
 });
 
+describe('sendMessage subsequent calls', () => {
+  it('sendMessage errors should not persist', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const chat = client.chats.create({model: 'gemini-1.5-flash'});
+
+    const successResponse = buildGenerateContentResponse({
+      role: 'model',
+      parts: [{text: 'valid response'}],
+    });
+
+    const modelsModule = client.models;
+    spyOn(modelsModule, 'generateContent').and.returnValues(
+      Promise.reject('test error'),
+      Promise.resolve(successResponse),
+    );
+
+    const message1 = chat.sendMessage({message: 'send message 1'});
+    await message1.catch(() => {});
+    const message2 = chat.sendMessage({message: 'send message 2'});
+    await message2.catch(() => {});
+
+    await expectAsync(message1).toBeRejectedWith('test error');
+    await expectAsync(message2).toBeResolvedTo(successResponse);
+  });
+});
+
 describe('GenerateContent response schema', () => {
   it('smoke test GenerateContent response schema with Array', async () => {
     const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});

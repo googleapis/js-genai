@@ -208,7 +208,10 @@ export class Chat {
       this.recordHistory(inputContent, modelOutput);
       return;
     })();
-    await this.sendPromise;
+    await this.sendPromise.catch(() => {
+      // Resets sendPromise to avoid subsequent calls failing
+      this.sendPromise = Promise.resolve();
+    });
     return responsePromise;
   }
 
