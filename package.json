@@ -87,6 +87,7 @@
     "prettier": "3.3.3",
     "prettier-plugin-organize-imports": "^4.1.0",
     "rollup-plugin-typescript2": "^0.36.0",
+    "test-server-sdk": "^0.2.1",
     "ts-node": "^10.9.2",
     "tslib": "^2.8.1",
     "typedoc": "^0.27.0",
@@ -95,7 +96,6 @@
   },
   "dependencies": {
     "google-auth-library": "^9.14.2",
-    "test-server-sdk": "^0.2.1",
     "ws": "^8.18.0",
     "zod": "^3.22.4",
     "zod-to-json-schema": "^3.22.4"
