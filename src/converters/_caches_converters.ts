@@ -345,12 +345,14 @@ export function latLngToMldev(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  if (common.getValueByPath(fromObject, ['latitude']) !== undefined) {
-    throw new Error('latitude parameter is not supported in Gemini API.');
+  const fromLatitude = common.getValueByPath(fromObject, ['latitude']);
+  if (fromLatitude != null) {
+    common.setValueByPath(toObject, ['latitude'], fromLatitude);
   }
 
-  if (common.getValueByPath(fromObject, ['longitude']) !== undefined) {
-    throw new Error('longitude parameter is not supported in Gemini API.');
+  const fromLongitude = common.getValueByPath(fromObject, ['longitude']);
+  if (fromLongitude != null) {
+    common.setValueByPath(toObject, ['longitude'], fromLongitude);
   }
 
   return toObject;
@@ -362,8 +364,13 @@ export function retrievalConfigToMldev(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  if (common.getValueByPath(fromObject, ['latLng']) !== undefined) {
-    throw new Error('latLng parameter is not supported in Gemini API.');
+  const fromLatLng = common.getValueByPath(fromObject, ['latLng']);
+  if (fromLatLng != null) {
+    common.setValueByPath(
+      toObject,
+      ['latLng'],
+      latLngToMldev(apiClient, fromLatLng),
+    );
   }
 
   return toObject;
@@ -386,9 +393,14 @@ export function toolConfigToMldev(
     );
   }
 
-  if (common.getValueByPath(fromObject, ['retrievalConfig']) !== undefined) {
-    throw new Error(
-      'retrievalConfig parameter is not supported in Gemini API.',
+  const fromRetrievalConfig = common.getValueByPath(fromObject, [
+    'retrievalConfig',
+  ]);
+  if (fromRetrievalConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['retrievalConfig'],
+      retrievalConfigToMldev(apiClient, fromRetrievalConfig),
     );
   }
 
