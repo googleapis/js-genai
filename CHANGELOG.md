@@ -1,6 +1,13 @@
 # Changelog
 
 
+## [0.14.1](https://github.com/googleapis/js-genai/compare/v0.14.0...v0.14.1) (2025-05-15)
+
+
+### Bug Fixes
+
+* Move test-server-sdk to devDependencies ([#574](https://github.com/googleapis/js-genai/issues/574)) ([5913e59](https://github.com/googleapis/js-genai/commit/5913e59c26f362147eafb1b883604b8be3641e09))
+
 ## [0.14.0](https://github.com/googleapis/js-genai/compare/v0.13.0...v0.14.0) (2025-05-13)
 
 
