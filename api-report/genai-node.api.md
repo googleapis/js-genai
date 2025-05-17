@@ -1496,8 +1496,10 @@ export class LiveClientToolResponse {
 
 // @public
 export interface LiveConnectConfig {
+    abortSignal?: AbortSignal;
     contextWindowCompression?: ContextWindowCompressionConfig;
     generationConfig?: GenerationConfig;
+    httpOptions?: HttpOptions;
     inputAudioTranscription?: AudioTranscriptionConfig;
     maxOutputTokens?: number;
     mediaResolution?: MediaResolution;
