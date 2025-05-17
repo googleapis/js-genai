@@ -167,7 +167,8 @@ export class GoogleGenAI {
 }
 
 function getEnv(env: string): string | undefined {
-  return process?.env?.[env]?.trim() ?? undefined;
+  const value = process?.env?.[env]?.trim();
+  return value === '' ? undefined : value;
 }
 
 function getBooleanEnv(env: string): boolean {
