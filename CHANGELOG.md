@@ -1,6 +1,35 @@
 # Changelog
 
 
+## [1.0.0](https://github.com/googleapis/js-genai/compare/v0.15.0...v1.0.0) (2025-05-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* Fix Lyria method name for JS, update parameters type
+
+### Features
+
+* Support ephemeral token creation in Python ([8e12730](https://github.com/googleapis/js-genai/commit/8e127309f071d243779acf6cc32b2e7e0d388679))
+* Support using ephemeral token in Live session connection in Python ([8e12730](https://github.com/googleapis/js-genai/commit/8e127309f071d243779acf6cc32b2e7e0d388679))
+
+
+### Bug Fixes
+
+* allow McpClient to be passed in with AFC disabled. ([b13f1f8](https://github.com/googleapis/js-genai/commit/b13f1f8d0a4a81140486a63e9e02ff2f7fcca17e))
+* Blob handling in realtime music ([f760755](https://github.com/googleapis/js-genai/commit/f760755c88e3915e61666408419136816d99acd5))
+* Prevent MCP label from being appended multiple times if they already exist ([c59ffe7](https://github.com/googleapis/js-genai/commit/c59ffe7cc04594d50557a697ad45b72d7cadc35b))
+
+
+### Documentation
+
+* No longer preview. ([5e137d4](https://github.com/googleapis/js-genai/commit/5e137d487a4230da40ee1218e5b8b9c2ac68e6bd))
+
+
+### Miscellaneous Chores
+
+* Fix Lyria method name for JS, update parameters type ([99dba6e](https://github.com/googleapis/js-genai/commit/99dba6e695ac7266d1bd469813466f22ec4174f6))
+
 ## [0.15.0](https://github.com/googleapis/js-genai/compare/v0.14.1...v0.15.0) (2025-05-19)
 
 
