@@ -39,7 +39,7 @@ const FUNCTION_RESPONSE_REQUIRES_ID =
  * @param onmessage The user-provided onmessage callback (if any).
  * @param event The MessageEvent from the WebSocket.
  */
-async function handleWebSocketMessage(
+export async function handleWebSocketMessage(
   apiClient: ApiClient,
   onmessage: (msg: types.LiveServerMessage) => void,
   event: MessageEvent,
@@ -74,7 +74,7 @@ export class Live {
   constructor(
     private readonly apiClient: ApiClient,
     private readonly auth: Auth,
-    private readonly webSocketFactory: WebSocketFactory,
+    readonly webSocketFactory: WebSocketFactory,
   ) {
     this.music = new LiveMusic(
       this.apiClient,
@@ -509,7 +509,7 @@ export class Session {
 // Converts an headers object to a "map" object as expected by the WebSocket
 // constructor. We use this as the Auth interface works with Headers objects
 // while the WebSocket constructor takes a map.
-function headersToMap(headers: Headers): Record<string, string> {
+export function headersToMap(headers: Headers): Record<string, string> {
   const headerMap: Record<string, string> = {};
   headers.forEach((value, key) => {
     headerMap[key] = value;
@@ -520,7 +520,7 @@ function headersToMap(headers: Headers): Record<string, string> {
 // Converts a "map" object to a headers object. We use this as the Auth
 // interface works with Headers objects while the API client default headers
 // returns a map.
-function mapToHeaders(map: Record<string, string>): Headers {
+export function mapToHeaders(map: Record<string, string>): Headers {
   const headers = new Headers();
   for (const [key, value] of Object.entries(map)) {
     headers.append(key, value);
