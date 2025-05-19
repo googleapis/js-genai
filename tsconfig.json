@@ -14,7 +14,7 @@
   "include": ["src/**/*.ts", "test/**/*.ts"],
   "ts-node": {
     "compilerOptions": {
-      "module": "commonjs"
+      "module": "ES2020"
     }
   }
 }
