@@ -1,0 +1,16 @@
+b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d
+Server Address: generativelanguage.googleapis.com
+Port: 443
+Protocol: https
+********************************************************************************
+POST /v1beta/models/gemini-2.0-flash:generateContent HTTP/1.1
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: *
+Connection: keep-alive
+Content-Length: 748
+Content-Type: application/json
+Sec-Fetch-Mode: cors
+
+
+{"contents":[{"parts":[{"text":"Tell me a story in 100 words?"}],"role":"user"},{"parts":[{"text":"Elara, a solitary lighthouse keeper, found a message in a bottle. Scrawled on parchment, it spoke of a hidden cove where starlight touched the sea. Intrigued, she set sail at dawn. The cove shimmered, just as described. But instead of treasure, she found an old woman, weaving moonlight into thread. \"The sea remembers everything, child,\" she whispered, offering Elara a single, luminous strand. Elara returned, the thread woven into her lamp, its beam now guiding lost ships to shore, a beacon of hope born from a forgotten message.\n"}],"role":"model"},{"parts":[{"text":"What is the title of the story?"}],"role":"user"}],"generationConfig":{}}

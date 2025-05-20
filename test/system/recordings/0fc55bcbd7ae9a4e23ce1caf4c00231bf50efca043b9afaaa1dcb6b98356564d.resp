@@ -1,0 +1,48 @@
+Status code: 200 
+Server: scaffolding on HTTPServer2
+Content-Length: 314
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+X-Xss-Protection: 0
+Server-Timing: gfet4t7; dur=595
+Content-Type: application/json; charset=UTF-8
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Content-Encoding: gzip
+Date: Fri, 16 May 2025 09:36:27 GMT
+
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "I've printed \"hello\" in blue and beeped.\n"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.070452332496643066
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 39,
+    "candidatesTokenCount": 14,
+    "totalTokenCount": 53,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 39
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 14
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash"
+}

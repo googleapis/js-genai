@@ -6,7 +6,7 @@
 
 import {GoogleAuth, GoogleAuthOptions} from 'google-auth-library';
 
-import {Auth} from '../_auth';
+import {Auth} from '../_auth.js';
 
 export const GOOGLE_API_KEY_HEADER = 'x-goog-api-key';
 const REQUIRED_VERTEX_AI_SCOPE =

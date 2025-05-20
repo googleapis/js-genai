@@ -6,21 +6,21 @@
 
 import {GoogleAuthOptions} from 'google-auth-library';
 
-import {ApiClient} from '../_api_client';
-import {getBaseUrl} from '../_base_url';
-import {Caches} from '../caches';
-import {Chats} from '../chats';
-import {GoogleGenAIOptions} from '../client';
-import {Files} from '../files';
-import {Live} from '../live';
-import {Models} from '../models';
-import {NodeAuth} from '../node/_node_auth';
-import {NodeDownloader} from '../node/_node_downloader';
-import {NodeWebSocketFactory} from '../node/_node_websocket';
-import {Operations} from '../operations';
-import {Tunings} from '../tunings';
+import {ApiClient} from '../_api_client.js';
+import {getBaseUrl} from '../_base_url.js';
+import {Caches} from '../caches.js';
+import {Chats} from '../chats.js';
+import {GoogleGenAIOptions} from '../client.js';
+import {Files} from '../files.js';
+import {Live} from '../live.js';
+import {Models} from '../models.js';
+import {NodeAuth} from '../node/_node_auth.js';
+import {NodeDownloader} from '../node/_node_downloader.js';
+import {NodeWebSocketFactory} from '../node/_node_websocket.js';
+import {Operations} from '../operations.js';
+import {Tunings} from '../tunings.js';
 
-import {NodeUploader} from './_node_uploader';
+import {NodeUploader} from './_node_uploader.js';
 
 const LANGUAGE_LABEL_PREFIX = 'gl-node/';
 

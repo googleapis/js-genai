@@ -6,7 +6,7 @@
 
 import {GoogleAuth, GoogleAuthOptions} from 'google-auth-library';
 
-import {GOOGLE_API_KEY_HEADER, NodeAuth} from '../../../src/node/_node_auth';
+import {GOOGLE_API_KEY_HEADER, NodeAuth} from '../../../src/node/_node_auth.js';
 
 const REQUIRED_VERTEX_AI_SCOPE =
   'https://www.googleapis.com/auth/cloud-platform';

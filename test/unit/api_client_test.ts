@@ -6,11 +6,11 @@
 
 import {Readable} from 'stream';
 
-import {ApiClient} from '../../src/_api_client';
-import {CrossDownloader} from '../../src/cross/_cross_downloader';
-import {CrossUploader} from '../../src/cross/_cross_uploader';
-import * as types from '../../src/types';
-import {FakeAuth} from '../_fake_auth';
+import {ApiClient} from '../../src/_api_client.js';
+import {CrossDownloader} from '../../src/cross/_cross_downloader.js';
+import {CrossUploader} from '../../src/cross/_cross_uploader.js';
+import * as types from '../../src/types.js';
+import {FakeAuth} from '../_fake_auth.js';
 
 const fetchOkOptions = {
   status: 200,

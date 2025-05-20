@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {setDefaultBaseUrls} from '../../../src/_base_url';
-import {NodeUploader} from '../../../src/node/_node_uploader';
-import {GoogleGenAI} from '../../../src/node/node_client';
+import {setDefaultBaseUrls} from '../../../src/_base_url.js';
+import {NodeUploader} from '../../../src/node/_node_uploader.js';
+import {GoogleGenAI} from '../../../src/node/node_client.js';
 
 describe('Client', () => {
   afterEach(() => {

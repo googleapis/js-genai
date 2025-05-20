@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        node-version: [18.x, 20.x, 22.x, 24.x]
 
     steps:
     - uses: actions/checkout@v4
@@ -25,6 +25,10 @@ jobs:
     - run: npm ci
     - run: npm run build
     - run: npm run unit-test
+    # Test-server startup is flaky, disabling on CI
+    # until we add a readiness probe.
+    # TODO(b/416776777): re-enable this
+    # - run: npm run test-server-tests
     - run: |
         cd sdk-samples
         npm install

@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {PagedItem, Pager} from '../../src/pagers';
-import {File, ListFilesParameters, ListFilesResponse} from '../../src/types';
+import {PagedItem, Pager} from '../../src/pagers.js';
+import {File, ListFilesParameters, ListFilesResponse} from '../../src/types.js';
 
 class FakeFiles {
   private responseIndex = 0;

@@ -1,0 +1,16 @@
+b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d
+Server Address: us-central1-aiplatform.googleapis.com
+Port: 443
+Protocol: https
+********************************************************************************
+POST /v1beta1/projects/REDACTED/locations/REDACTED/cachedContents HTTP/1.1
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: *
+Connection: keep-alive
+Content-Length: 363
+Content-Type: application/json
+Sec-Fetch-Mode: cors
+
+
+{"model":"projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-1.5-pro-002","contents":[{"parts":[{"fileData":{"fileUri":"gs://cloud-samples-data/generative-ai/pdf/2403.05530.pdf","mimeType":"application/pdf"}},{"fileData":{"fileUri":"gs://cloud-samples-data/generative-ai/pdf/2312.11805v3.pdf","mimeType":"application/pdf"}}],"role":"user"}]}

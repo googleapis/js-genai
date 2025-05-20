@@ -8,71 +8,179 @@
 
 /** Required. Outcome of the code execution. */
 export enum Outcome {
+  /**
+   * Unspecified status. This value should not be used.
+   */
   OUTCOME_UNSPECIFIED = 'OUTCOME_UNSPECIFIED',
+  /**
+   * Code execution completed successfully.
+   */
   OUTCOME_OK = 'OUTCOME_OK',
+  /**
+   * Code execution finished but with a failure. `stderr` should contain the reason.
+   */
   OUTCOME_FAILED = 'OUTCOME_FAILED',
+  /**
+   * Code execution ran for too long, and was cancelled. There may or may not be a partial output present.
+   */
   OUTCOME_DEADLINE_EXCEEDED = 'OUTCOME_DEADLINE_EXCEEDED',
 }
 
 /** Required. Programming language of the `code`. */
 export enum Language {
+  /**
+   * Unspecified language. This value should not be used.
+   */
   LANGUAGE_UNSPECIFIED = 'LANGUAGE_UNSPECIFIED',
+  /**
+   * Python >= 3.10, with numpy and simpy available.
+   */
   PYTHON = 'PYTHON',
 }
 
 /** Required. Harm category. */
 export enum HarmCategory {
+  /**
+   * The harm category is unspecified.
+   */
   HARM_CATEGORY_UNSPECIFIED = 'HARM_CATEGORY_UNSPECIFIED',
+  /**
+   * The harm category is hate speech.
+   */
   HARM_CATEGORY_HATE_SPEECH = 'HARM_CATEGORY_HATE_SPEECH',
+  /**
+   * The harm category is dangerous content.
+   */
   HARM_CATEGORY_DANGEROUS_CONTENT = 'HARM_CATEGORY_DANGEROUS_CONTENT',
+  /**
+   * The harm category is harassment.
+   */
   HARM_CATEGORY_HARASSMENT = 'HARM_CATEGORY_HARASSMENT',
+  /**
+   * The harm category is sexually explicit content.
+   */
   HARM_CATEGORY_SEXUALLY_EXPLICIT = 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
+  /**
+   * The harm category is civic integrity.
+   */
   HARM_CATEGORY_CIVIC_INTEGRITY = 'HARM_CATEGORY_CIVIC_INTEGRITY',
 }
 
 /** Optional. Specify if the threshold is used for probability or severity score. If not specified, the threshold is used for probability score. */
 export enum HarmBlockMethod {
+  /**
+   * The harm block method is unspecified.
+   */
   HARM_BLOCK_METHOD_UNSPECIFIED = 'HARM_BLOCK_METHOD_UNSPECIFIED',
+  /**
+   * The harm block method uses both probability and severity scores.
+   */
   SEVERITY = 'SEVERITY',
+  /**
+   * The harm block method uses the probability score.
+   */
   PROBABILITY = 'PROBABILITY',
 }
 
 /** Required. The harm block threshold. */
 export enum HarmBlockThreshold {
+  /**
+   * Unspecified harm block threshold.
+   */
   HARM_BLOCK_THRESHOLD_UNSPECIFIED = 'HARM_BLOCK_THRESHOLD_UNSPECIFIED',
+  /**
+   * Block low threshold and above (i.e. block more).
+   */
   BLOCK_LOW_AND_ABOVE = 'BLOCK_LOW_AND_ABOVE',
+  /**
+   * Block medium threshold and above.
+   */
   BLOCK_MEDIUM_AND_ABOVE = 'BLOCK_MEDIUM_AND_ABOVE',
+  /**
+   * Block only high threshold (i.e. block less).
+   */
   BLOCK_ONLY_HIGH = 'BLOCK_ONLY_HIGH',
+  /**
+   * Block none.
+   */
   BLOCK_NONE = 'BLOCK_NONE',
+  /**
+   * Turn off the safety filter.
+   */
   OFF = 'OFF',
+}
+
+/** Optional. The type of the data. */
+export enum Type {
+  /**
+   * Not specified, should not be used.
+   */
+  TYPE_UNSPECIFIED = 'TYPE_UNSPECIFIED',
+  /**
+   * OpenAPI string type
+   */
+  STRING = 'STRING',
+  /**
+   * OpenAPI number type
+   */
+  NUMBER = 'NUMBER',
+  /**
+   * OpenAPI integer type
+   */
+  INTEGER = 'INTEGER',
+  /**
+   * OpenAPI boolean type
+   */
+  BOOLEAN = 'BOOLEAN',
+  /**
+   * OpenAPI array type
+   */
+  ARRAY = 'ARRAY',
+  /**
+   * OpenAPI object type
+   */
+  OBJECT = 'OBJECT',
 }
 
 /** The mode of the predictor to be used in dynamic retrieval. */
 export enum Mode {
+  /**
+   * Always trigger retrieval.
+   */
   MODE_UNSPECIFIED = 'MODE_UNSPECIFIED',
+  /**
+   * Run retrieval only when system decides it is necessary.
+   */
   MODE_DYNAMIC = 'MODE_DYNAMIC',
 }
 
 /** Type of auth scheme. */
 export enum AuthType {
   AUTH_TYPE_UNSPECIFIED = 'AUTH_TYPE_UNSPECIFIED',
+  /**
+   * No Auth.
+   */
   NO_AUTH = 'NO_AUTH',
+  /**
+   * API Key Auth.
+   */
   API_KEY_AUTH = 'API_KEY_AUTH',
+  /**
+   * HTTP Basic Auth.
+   */
   HTTP_BASIC_AUTH = 'HTTP_BASIC_AUTH',
+  /**
+   * Google Service Account Auth.
+   */
   GOOGLE_SERVICE_ACCOUNT_AUTH = 'GOOGLE_SERVICE_ACCOUNT_AUTH',
+  /**
+   * OAuth auth.
+   */
   OAUTH = 'OAUTH',
+  /**
+   * OpenID Connect (OIDC) Auth.
+   */
   OIDC_AUTH = 'OIDC_AUTH',
-}
-
-/** Optional. The type of the data. */
-export enum Type {
-  TYPE_UNSPECIFIED = 'TYPE_UNSPECIFIED',
-  STRING = 'STRING',
-  NUMBER = 'NUMBER',
-  INTEGER = 'INTEGER',
-  BOOLEAN = 'BOOLEAN',
-  ARRAY = 'ARRAY',
-  OBJECT = 'OBJECT',
 }
 
 /** Output only. The reason why the model stopped generating tokens.
@@ -80,94 +188,265 @@ export enum Type {
   If empty, the model has not stopped generating the tokens.
    */
 export enum FinishReason {
+  /**
+   * The finish reason is unspecified.
+   */
   FINISH_REASON_UNSPECIFIED = 'FINISH_REASON_UNSPECIFIED',
+  /**
+   * Token generation reached a natural stopping point or a configured stop sequence.
+   */
   STOP = 'STOP',
+  /**
+   * Token generation reached the configured maximum output tokens.
+   */
   MAX_TOKENS = 'MAX_TOKENS',
+  /**
+   * Token generation stopped because the content potentially contains safety violations. NOTE: When streaming, [content][] is empty if content filters blocks the output.
+   */
   SAFETY = 'SAFETY',
+  /**
+   * The token generation stopped because of potential recitation.
+   */
   RECITATION = 'RECITATION',
+  /**
+   * The token generation stopped because of using an unsupported language.
+   */
   LANGUAGE = 'LANGUAGE',
+  /**
+   * All other reasons that stopped the token generation.
+   */
   OTHER = 'OTHER',
+  /**
+   * Token generation stopped because the content contains forbidden terms.
+   */
   BLOCKLIST = 'BLOCKLIST',
+  /**
+   * Token generation stopped for potentially containing prohibited content.
+   */
   PROHIBITED_CONTENT = 'PROHIBITED_CONTENT',
+  /**
+   * Token generation stopped because the content potentially contains Sensitive Personally Identifiable Information (SPII).
+   */
   SPII = 'SPII',
+  /**
+   * The function call generated by the model is invalid.
+   */
   MALFORMED_FUNCTION_CALL = 'MALFORMED_FUNCTION_CALL',
+  /**
+   * Token generation stopped because generated images have safety violations.
+   */
   IMAGE_SAFETY = 'IMAGE_SAFETY',
 }
 
 /** Output only. Harm probability levels in the content. */
 export enum HarmProbability {
+  /**
+   * Harm probability unspecified.
+   */
   HARM_PROBABILITY_UNSPECIFIED = 'HARM_PROBABILITY_UNSPECIFIED',
+  /**
+   * Negligible level of harm.
+   */
   NEGLIGIBLE = 'NEGLIGIBLE',
+  /**
+   * Low level of harm.
+   */
   LOW = 'LOW',
+  /**
+   * Medium level of harm.
+   */
   MEDIUM = 'MEDIUM',
+  /**
+   * High level of harm.
+   */
   HIGH = 'HIGH',
 }
 
 /** Output only. Harm severity levels in the content. */
 export enum HarmSeverity {
+  /**
+   * Harm severity unspecified.
+   */
   HARM_SEVERITY_UNSPECIFIED = 'HARM_SEVERITY_UNSPECIFIED',
+  /**
+   * Negligible level of harm severity.
+   */
   HARM_SEVERITY_NEGLIGIBLE = 'HARM_SEVERITY_NEGLIGIBLE',
+  /**
+   * Low level of harm severity.
+   */
   HARM_SEVERITY_LOW = 'HARM_SEVERITY_LOW',
+  /**
+   * Medium level of harm severity.
+   */
   HARM_SEVERITY_MEDIUM = 'HARM_SEVERITY_MEDIUM',
+  /**
+   * High level of harm severity.
+   */
   HARM_SEVERITY_HIGH = 'HARM_SEVERITY_HIGH',
 }
 
 /** Output only. Blocked reason. */
 export enum BlockedReason {
+  /**
+   * Unspecified blocked reason.
+   */
   BLOCKED_REASON_UNSPECIFIED = 'BLOCKED_REASON_UNSPECIFIED',
+  /**
+   * Candidates blocked due to safety.
+   */
   SAFETY = 'SAFETY',
+  /**
+   * Candidates blocked due to other reason.
+   */
   OTHER = 'OTHER',
+  /**
+   * Candidates blocked due to the terms which are included from the terminology blocklist.
+   */
   BLOCKLIST = 'BLOCKLIST',
+  /**
+   * Candidates blocked due to prohibited content.
+   */
   PROHIBITED_CONTENT = 'PROHIBITED_CONTENT',
 }
 
 /** Output only. Traffic type. This shows whether a request consumes Pay-As-You-Go or Provisioned Throughput quota. */
 export enum TrafficType {
+  /**
+   * Unspecified request traffic type.
+   */
   TRAFFIC_TYPE_UNSPECIFIED = 'TRAFFIC_TYPE_UNSPECIFIED',
+  /**
+   * Type for Pay-As-You-Go traffic.
+   */
   ON_DEMAND = 'ON_DEMAND',
+  /**
+   * Type for Provisioned Throughput traffic.
+   */
   PROVISIONED_THROUGHPUT = 'PROVISIONED_THROUGHPUT',
 }
 
 /** Server content modalities. */
 export enum Modality {
+  /**
+   * The modality is unspecified.
+   */
   MODALITY_UNSPECIFIED = 'MODALITY_UNSPECIFIED',
+  /**
+   * Indicates the model should return text
+   */
   TEXT = 'TEXT',
+  /**
+   * Indicates the model should return images.
+   */
   IMAGE = 'IMAGE',
+  /**
+   * Indicates the model should return images.
+   */
   AUDIO = 'AUDIO',
 }
 
 /** The media resolution to use. */
 export enum MediaResolution {
+  /**
+   * Media resolution has not been set
+   */
   MEDIA_RESOLUTION_UNSPECIFIED = 'MEDIA_RESOLUTION_UNSPECIFIED',
+  /**
+   * Media resolution set to low (64 tokens).
+   */
   MEDIA_RESOLUTION_LOW = 'MEDIA_RESOLUTION_LOW',
+  /**
+   * Media resolution set to medium (256 tokens).
+   */
   MEDIA_RESOLUTION_MEDIUM = 'MEDIA_RESOLUTION_MEDIUM',
+  /**
+   * Media resolution set to high (zoomed reframing with 256 tokens).
+   */
   MEDIA_RESOLUTION_HIGH = 'MEDIA_RESOLUTION_HIGH',
 }
 
 /** Output only. The detailed state of the job. */
 export enum JobState {
+  /**
+   * The job state is unspecified.
+   */
   JOB_STATE_UNSPECIFIED = 'JOB_STATE_UNSPECIFIED',
+  /**
+   * The job has been just created or resumed and processing has not yet begun.
+   */
   JOB_STATE_QUEUED = 'JOB_STATE_QUEUED',
+  /**
+   * The service is preparing to run the job.
+   */
   JOB_STATE_PENDING = 'JOB_STATE_PENDING',
+  /**
+   * The job is in progress.
+   */
   JOB_STATE_RUNNING = 'JOB_STATE_RUNNING',
+  /**
+   * The job completed successfully.
+   */
   JOB_STATE_SUCCEEDED = 'JOB_STATE_SUCCEEDED',
+  /**
+   * The job failed.
+   */
   JOB_STATE_FAILED = 'JOB_STATE_FAILED',
+  /**
+   * The job is being cancelled. From this state the job may only go to either `JOB_STATE_SUCCEEDED`, `JOB_STATE_FAILED` or `JOB_STATE_CANCELLED`.
+   */
   JOB_STATE_CANCELLING = 'JOB_STATE_CANCELLING',
+  /**
+   * The job has been cancelled.
+   */
   JOB_STATE_CANCELLED = 'JOB_STATE_CANCELLED',
+  /**
+   * The job has been stopped, and can be resumed.
+   */
   JOB_STATE_PAUSED = 'JOB_STATE_PAUSED',
+  /**
+   * The job has expired.
+   */
   JOB_STATE_EXPIRED = 'JOB_STATE_EXPIRED',
+  /**
+   * The job is being updated. Only jobs in the `RUNNING` state can be updated. After updating, the job goes back to the `RUNNING` state.
+   */
   JOB_STATE_UPDATING = 'JOB_STATE_UPDATING',
+  /**
+   * The job is partially succeeded, some results may be missing due to errors.
+   */
   JOB_STATE_PARTIALLY_SUCCEEDED = 'JOB_STATE_PARTIALLY_SUCCEEDED',
 }
 
 /** Optional. Adapter size for tuning. */
 export enum AdapterSize {
+  /**
+   * Adapter size is unspecified.
+   */
   ADAPTER_SIZE_UNSPECIFIED = 'ADAPTER_SIZE_UNSPECIFIED',
+  /**
+   * Adapter size 1.
+   */
   ADAPTER_SIZE_ONE = 'ADAPTER_SIZE_ONE',
+  /**
+   * Adapter size 2.
+   */
   ADAPTER_SIZE_TWO = 'ADAPTER_SIZE_TWO',
+  /**
+   * Adapter size 4.
+   */
   ADAPTER_SIZE_FOUR = 'ADAPTER_SIZE_FOUR',
+  /**
+   * Adapter size 8.
+   */
   ADAPTER_SIZE_EIGHT = 'ADAPTER_SIZE_EIGHT',
+  /**
+   * Adapter size 16.
+   */
   ADAPTER_SIZE_SIXTEEN = 'ADAPTER_SIZE_SIXTEEN',
+  /**
+   * Adapter size 32.
+   */
   ADAPTER_SIZE_THIRTY_TWO = 'ADAPTER_SIZE_THIRTY_TWO',
 }
 
@@ -179,18 +458,68 @@ export enum FeatureSelectionPreference {
   PRIORITIZE_COST = 'PRIORITIZE_COST',
 }
 
+/** Defines the function behavior. Defaults to `BLOCKING`. */
+export enum Behavior {
+  /**
+   * This value is unused.
+   */
+  UNSPECIFIED = 'UNSPECIFIED',
+  /**
+   * If set, the system will wait to receive the function response before continuing the conversation.
+   */
+  BLOCKING = 'BLOCKING',
+  /**
+   * If set, the system will not wait to receive the function response. Instead, it will attempt to handle function responses as they become available while maintaining the conversation between the user and the model.
+   */
+  NON_BLOCKING = 'NON_BLOCKING',
+}
+
 /** Config for the dynamic retrieval config mode. */
 export enum DynamicRetrievalConfigMode {
+  /**
+   * Always trigger retrieval.
+   */
   MODE_UNSPECIFIED = 'MODE_UNSPECIFIED',
+  /**
+   * Run retrieval only when system decides it is necessary.
+   */
   MODE_DYNAMIC = 'MODE_DYNAMIC',
 }
 
 /** Config for the function calling config mode. */
 export enum FunctionCallingConfigMode {
+  /**
+   * The function calling config mode is unspecified. Should not be used.
+   */
   MODE_UNSPECIFIED = 'MODE_UNSPECIFIED',
+  /**
+   * Default model behavior, model decides to predict either function calls or natural language response.
+   */
   AUTO = 'AUTO',
+  /**
+   * Model is constrained to always predicting function calls only. If "allowed_function_names" are set, the predicted function calls will be limited to any one of "allowed_function_names", else the predicted function calls will be any one of the provided "function_declarations".
+   */
   ANY = 'ANY',
+  /**
+   * Model will not predict any function calls. Model behavior is same as when not passing any function declarations.
+   */
   NONE = 'NONE',
+}
+
+/** Status of the url retrieval. */
+export enum UrlRetrievalStatus {
+  /**
+   * Default value. This value is unused
+   */
+  URL_RETRIEVAL_STATUS_UNSPECIFIED = 'URL_RETRIEVAL_STATUS_UNSPECIFIED',
+  /**
+   * Url retrieval is successful.
+   */
+  URL_RETRIEVAL_STATUS_SUCCESS = 'URL_RETRIEVAL_STATUS_SUCCESS',
+  /**
+   * Url retrieval is failed due to error.
+   */
+  URL_RETRIEVAL_STATUS_ERROR = 'URL_RETRIEVAL_STATUS_ERROR',
 }
 
 /** Enum that controls the safety filter level for objectionable content. */
@@ -215,21 +544,6 @@ export enum ImagePromptLanguage {
   ja = 'ja',
   ko = 'ko',
   hi = 'hi',
-}
-
-/** State for the lifecycle of a File. */
-export enum FileState {
-  STATE_UNSPECIFIED = 'STATE_UNSPECIFIED',
-  PROCESSING = 'PROCESSING',
-  ACTIVE = 'ACTIVE',
-  FAILED = 'FAILED',
-}
-
-/** Source of the File. */
-export enum FileSource {
-  SOURCE_UNSPECIFIED = 'SOURCE_UNSPECIFIED',
-  UPLOADED = 'UPLOADED',
-  GENERATED = 'GENERATED',
 }
 
 /** Enum representing the mask mode of a mask reference image. */
@@ -257,50 +571,264 @@ export enum SubjectReferenceType {
   SUBJECT_TYPE_PRODUCT = 'SUBJECT_TYPE_PRODUCT',
 }
 
+/** Enum representing the Imagen 3 Edit mode. */
+export enum EditMode {
+  EDIT_MODE_DEFAULT = 'EDIT_MODE_DEFAULT',
+  EDIT_MODE_INPAINT_REMOVAL = 'EDIT_MODE_INPAINT_REMOVAL',
+  EDIT_MODE_INPAINT_INSERTION = 'EDIT_MODE_INPAINT_INSERTION',
+  EDIT_MODE_OUTPAINT = 'EDIT_MODE_OUTPAINT',
+  EDIT_MODE_CONTROLLED_EDITING = 'EDIT_MODE_CONTROLLED_EDITING',
+  EDIT_MODE_STYLE = 'EDIT_MODE_STYLE',
+  EDIT_MODE_BGSWAP = 'EDIT_MODE_BGSWAP',
+  EDIT_MODE_PRODUCT_IMAGE = 'EDIT_MODE_PRODUCT_IMAGE',
+}
+
+/** State for the lifecycle of a File. */
+export enum FileState {
+  STATE_UNSPECIFIED = 'STATE_UNSPECIFIED',
+  PROCESSING = 'PROCESSING',
+  ACTIVE = 'ACTIVE',
+  FAILED = 'FAILED',
+}
+
+/** Source of the File. */
+export enum FileSource {
+  SOURCE_UNSPECIFIED = 'SOURCE_UNSPECIFIED',
+  UPLOADED = 'UPLOADED',
+  GENERATED = 'GENERATED',
+}
+
 /** Server content modalities. */
 export enum MediaModality {
+  /**
+   * The modality is unspecified.
+   */
   MODALITY_UNSPECIFIED = 'MODALITY_UNSPECIFIED',
+  /**
+   * Plain text.
+   */
   TEXT = 'TEXT',
+  /**
+   * Images.
+   */
   IMAGE = 'IMAGE',
+  /**
+   * Video.
+   */
   VIDEO = 'VIDEO',
+  /**
+   * Audio.
+   */
   AUDIO = 'AUDIO',
+  /**
+   * Document, e.g. PDF.
+   */
   DOCUMENT = 'DOCUMENT',
 }
 
 /** Start of speech sensitivity. */
 export enum StartSensitivity {
+  /**
+   * The default is START_SENSITIVITY_LOW.
+   */
   START_SENSITIVITY_UNSPECIFIED = 'START_SENSITIVITY_UNSPECIFIED',
+  /**
+   * Automatic detection will detect the start of speech more often.
+   */
   START_SENSITIVITY_HIGH = 'START_SENSITIVITY_HIGH',
+  /**
+   * Automatic detection will detect the start of speech less often.
+   */
   START_SENSITIVITY_LOW = 'START_SENSITIVITY_LOW',
 }
 
 /** End of speech sensitivity. */
 export enum EndSensitivity {
+  /**
+   * The default is END_SENSITIVITY_LOW.
+   */
   END_SENSITIVITY_UNSPECIFIED = 'END_SENSITIVITY_UNSPECIFIED',
+  /**
+   * Automatic detection ends speech more often.
+   */
   END_SENSITIVITY_HIGH = 'END_SENSITIVITY_HIGH',
+  /**
+   * Automatic detection ends speech less often.
+   */
   END_SENSITIVITY_LOW = 'END_SENSITIVITY_LOW',
 }
 
 /** The different ways of handling user activity. */
 export enum ActivityHandling {
+  /**
+   * If unspecified, the default behavior is `START_OF_ACTIVITY_INTERRUPTS`.
+   */
   ACTIVITY_HANDLING_UNSPECIFIED = 'ACTIVITY_HANDLING_UNSPECIFIED',
+  /**
+   * If true, start of activity will interrupt the model's response (also called "barge in"). The model's current response will be cut-off in the moment of the interruption. This is the default behavior.
+   */
   START_OF_ACTIVITY_INTERRUPTS = 'START_OF_ACTIVITY_INTERRUPTS',
+  /**
+   * The model's response will not be interrupted.
+   */
   NO_INTERRUPTION = 'NO_INTERRUPTION',
 }
 
 /** Options about which input is included in the user's turn. */
 export enum TurnCoverage {
+  /**
+   * If unspecified, the default behavior is `TURN_INCLUDES_ONLY_ACTIVITY`.
+   */
   TURN_COVERAGE_UNSPECIFIED = 'TURN_COVERAGE_UNSPECIFIED',
+  /**
+   * The users turn only includes activity since the last turn, excluding inactivity (e.g. silence on the audio stream). This is the default behavior.
+   */
   TURN_INCLUDES_ONLY_ACTIVITY = 'TURN_INCLUDES_ONLY_ACTIVITY',
+  /**
+   * The users turn includes all realtime input since the last turn, including inactivity (e.g. silence on the audio stream).
+   */
   TURN_INCLUDES_ALL_INPUT = 'TURN_INCLUDES_ALL_INPUT',
 }
 
-/** Metadata describes the input video content. */
+/** Specifies how the response should be scheduled in the conversation. */
+export enum FunctionResponseScheduling {
+  /**
+   * This value is unused.
+   */
+  SCHEDULING_UNSPECIFIED = 'SCHEDULING_UNSPECIFIED',
+  /**
+   * Only add the result to the conversation context, do not interrupt or trigger generation.
+   */
+  SILENT = 'SILENT',
+  /**
+   * Add the result to the conversation context, and prompt to generate output without interrupting ongoing generation.
+   */
+  WHEN_IDLE = 'WHEN_IDLE',
+  /**
+   * Add the result to the conversation context, interrupt ongoing generation and prompt to generate output.
+   */
+  INTERRUPT = 'INTERRUPT',
+}
+
+/** Scale of the generated music. */
+export enum Scale {
+  /**
+   * Default value. This value is unused.
+   */
+  SCALE_UNSPECIFIED = 'SCALE_UNSPECIFIED',
+  /**
+   * C major or A minor.
+   */
+  C_MAJOR_A_MINOR = 'C_MAJOR_A_MINOR',
+  /**
+   * Db major or Bb minor.
+   */
+  D_FLAT_MAJOR_B_FLAT_MINOR = 'D_FLAT_MAJOR_B_FLAT_MINOR',
+  /**
+   * D major or B minor.
+   */
+  D_MAJOR_B_MINOR = 'D_MAJOR_B_MINOR',
+  /**
+   * Eb major or C minor
+   */
+  E_FLAT_MAJOR_C_MINOR = 'E_FLAT_MAJOR_C_MINOR',
+  /**
+   * E major or Db minor.
+   */
+  E_MAJOR_D_FLAT_MINOR = 'E_MAJOR_D_FLAT_MINOR',
+  /**
+   * F major or D minor.
+   */
+  F_MAJOR_D_MINOR = 'F_MAJOR_D_MINOR',
+  /**
+   * Gb major or Eb minor.
+   */
+  G_FLAT_MAJOR_E_FLAT_MINOR = 'G_FLAT_MAJOR_E_FLAT_MINOR',
+  /**
+   * G major or E minor.
+   */
+  G_MAJOR_E_MINOR = 'G_MAJOR_E_MINOR',
+  /**
+   * Ab major or F minor.
+   */
+  A_FLAT_MAJOR_F_MINOR = 'A_FLAT_MAJOR_F_MINOR',
+  /**
+   * A major or Gb minor.
+   */
+  A_MAJOR_G_FLAT_MINOR = 'A_MAJOR_G_FLAT_MINOR',
+  /**
+   * Bb major or G minor.
+   */
+  B_FLAT_MAJOR_G_MINOR = 'B_FLAT_MAJOR_G_MINOR',
+  /**
+   * B major or Ab minor.
+   */
+  B_MAJOR_A_FLAT_MINOR = 'B_MAJOR_A_FLAT_MINOR',
+}
+
+/** The mode of music generation. */
+export enum MusicGenerationMode {
+  /**
+   * This value is unused.
+   */
+  MUSIC_GENERATION_MODE_UNSPECIFIED = 'MUSIC_GENERATION_MODE_UNSPECIFIED',
+  /**
+   * Steer text prompts to regions of latent space with higher quality
+      music.
+   */
+  QUALITY = 'QUALITY',
+  /**
+   * Steer text prompts to regions of latent space with a larger diversity
+      of music.
+   */
+  DIVERSITY = 'DIVERSITY',
+}
+
+/** The playback control signal to apply to the music generation. */
+export enum LiveMusicPlaybackControl {
+  /**
+   * This value is unused.
+   */
+  PLAYBACK_CONTROL_UNSPECIFIED = 'PLAYBACK_CONTROL_UNSPECIFIED',
+  /**
+   * Start generating the music.
+   */
+  PLAY = 'PLAY',
+  /**
+   * Hold the music generation. Use PLAY to resume from the current position.
+   */
+  PAUSE = 'PAUSE',
+  /**
+   * Stop the music generation and reset the context (prompts retained).
+      Use PLAY to restart the music generation.
+   */
+  STOP = 'STOP',
+  /**
+   * Reset the context of the music generation without stopping it.
+      Retains the current prompts and config.
+   */
+  RESET_CONTEXT = 'RESET_CONTEXT',
+}
+
+/** Describes how the video in the Part should be used by the model. */
 export declare interface VideoMetadata {
+  /** The frame rate of the video sent to the model. If not specified, the
+        default value will be 1.0. The fps range is (0.0, 24.0]. */
+  fps?: number;
   /** Optional. The end offset of the video. */
   endOffset?: string;
   /** Optional. The start offset of the video. */
   startOffset?: string;
+}
+
+/** Content blob. */
+export declare interface Blob {
+  /** Optional. Display name of the blob. Used to provide a label or filename to distinguish blobs. This field is not currently used in the Gemini GenerateContent calls. */
+  displayName?: string;
+  /** Required. Raw bytes. */
+  data?: string;
+  /** Required. The IANA standard MIME type of the source data. */
+  mimeType?: string;
 }
 
 /** Result of executing the [ExecutableCode]. Always follows a `part` containing the [ExecutableCode]. */
@@ -340,21 +868,16 @@ export declare interface FunctionCall {
 
 /** A function response. */
 export class FunctionResponse {
-  /** The id of the function call this response is for. Populated by the client
-   to match the corresponding function call `id`. */
+  /** Signals that function call continues, and more responses will be returned, turning the function call into a generator. Is only applicable to NON_BLOCKING function calls (see FunctionDeclaration.behavior for details), ignored otherwise. If false, the default, future responses will not be considered. Is only applicable to NON_BLOCKING function calls, is ignored otherwise. If set to false, future responses will not be considered. It is allowed to return empty `response` with `will_continue=False` to signal that the function call is finished. */
+  willContinue?: boolean;
+  /** Specifies how the response should be scheduled in the conversation. Only applicable to NON_BLOCKING function calls, is ignored otherwise. Defaults to WHEN_IDLE. */
+  scheduling?: FunctionResponseScheduling;
+  /** Optional. The id of the function call this response is for. Populated by the client to match the corresponding function call `id`. */
   id?: string;
   /** Required. The name of the function to call. Matches [FunctionDeclaration.name] and [FunctionCall.name]. */
   name?: string;
   /** Required. The function response in JSON object format. Use "output" key to specify function output and "error" key to specify error details (if any). If "output" and "error" keys are not specified, then whole "response" is treated as function output. */
   response?: Record<string, unknown>;
-}
-
-/** Content blob. */
-export declare interface Blob {
-  /** Required. Raw bytes. */
-  data?: string;
-  /** Required. The IANA standard MIME type of the source data. */
-  mimeType?: string;
 }
 
 /** A datatype containing media content.
@@ -368,6 +891,8 @@ export declare interface Part {
   videoMetadata?: VideoMetadata;
   /** Indicates if the part is thought from the model. */
   thought?: boolean;
+  /** Optional. Inlined bytes data. */
+  inlineData?: Blob;
   /** Optional. Result of executing the [ExecutableCode]. */
   codeExecutionResult?: CodeExecutionResult;
   /** Optional. Code generated by the model that is meant to be executed. */
@@ -378,8 +903,6 @@ export declare interface Part {
   functionCall?: FunctionCall;
   /** Optional. The result output of a [FunctionCall] that contains a string representing the [FunctionDeclaration.name] and a structured JSON object containing any output from the function call. It is used as context to the model. */
   functionResponse?: FunctionResponse;
-  /** Optional. Inlined bytes data. */
-  inlineData?: Blob;
   /** Optional. Text part (can be code). */
   text?: string;
 }
@@ -573,8 +1096,93 @@ export declare interface SafetySetting {
   threshold?: HarmBlockThreshold;
 }
 
+/** Schema is used to define the format of input/output data. Represents a select subset of an [OpenAPI 3.0 schema object](https://spec.openapis.org/oas/v3.0.3#schema-object). More fields may be added in the future as needed. */
+export declare interface Schema {
+  /** Optional. The value should be validated against any (one or more) of the subschemas in the list. */
+  anyOf?: Schema[];
+  /** Optional. Default value of the data. */
+  default?: unknown;
+  /** Optional. The description of the data. */
+  description?: string;
+  /** Optional. Possible values of the element of primitive type with enum format. Examples: 1. We can define direction as : {type:STRING, format:enum, enum:["EAST", NORTH", "SOUTH", "WEST"]} 2. We can define apartment number as : {type:INTEGER, format:enum, enum:["101", "201", "301"]} */
+  enum?: string[];
+  /** Optional. Example of the object. Will only populated when the object is the root. */
+  example?: unknown;
+  /** Optional. The format of the data. Supported formats: for NUMBER type: "float", "double" for INTEGER type: "int32", "int64" for STRING type: "email", "byte", etc */
+  format?: string;
+  /** Optional. SCHEMA FIELDS FOR TYPE ARRAY Schema of the elements of Type.ARRAY. */
+  items?: Schema;
+  /** Optional. Maximum number of the elements for Type.ARRAY. */
+  maxItems?: string;
+  /** Optional. Maximum length of the Type.STRING */
+  maxLength?: string;
+  /** Optional. Maximum number of the properties for Type.OBJECT. */
+  maxProperties?: string;
+  /** Optional. Maximum value of the Type.INTEGER and Type.NUMBER */
+  maximum?: number;
+  /** Optional. Minimum number of the elements for Type.ARRAY. */
+  minItems?: string;
+  /** Optional. SCHEMA FIELDS FOR TYPE STRING Minimum length of the Type.STRING */
+  minLength?: string;
+  /** Optional. Minimum number of the properties for Type.OBJECT. */
+  minProperties?: string;
+  /** Optional. SCHEMA FIELDS FOR TYPE INTEGER and NUMBER Minimum value of the Type.INTEGER and Type.NUMBER */
+  minimum?: number;
+  /** Optional. Indicates if the value may be null. */
+  nullable?: boolean;
+  /** Optional. Pattern of the Type.STRING to restrict a string to a regular expression. */
+  pattern?: string;
+  /** Optional. SCHEMA FIELDS FOR TYPE OBJECT Properties of Type.OBJECT. */
+  properties?: Record<string, Schema>;
+  /** Optional. The order of the properties. Not a standard field in open api spec. Only used to support the order of the properties. */
+  propertyOrdering?: string[];
+  /** Optional. Required properties of Type.OBJECT. */
+  required?: string[];
+  /** Optional. The title of the Schema. */
+  title?: string;
+  /** Optional. The type of the data. */
+  type?: Type;
+}
+
+/** Defines a function that the model can generate JSON inputs for.
+
+  The inputs are based on `OpenAPI 3.0 specifications
+  <https://spec.openapis.org/oas/v3.0.3>`_.
+   */
+export declare interface FunctionDeclaration {
+  /** Defines the function behavior. */
+  behavior?: Behavior;
+  /** Optional. Description and purpose of the function. Model uses it to decide how and whether to call the function. */
+  description?: string;
+  /** Required. The name of the function to call. Must start with a letter or an underscore. Must be a-z, A-Z, 0-9, or contain underscores, dots and dashes, with a maximum length of 64. */
+  name?: string;
+  /** Optional. Describes the parameters to this function in JSON Schema Object format. Reflects the Open API 3.03 Parameter Object. string Key: the name of the parameter. Parameter names are case sensitive. Schema Value: the Schema defining the type used for the parameter. For function with no parameters, this can be left unset. Parameter names must start with a letter or an underscore and must only contain chars a-z, A-Z, 0-9, or underscores with a maximum length of 64. Example with 1 required and 1 optional parameter: type: OBJECT properties: param1: type: STRING param2: type: INTEGER required: - param1 */
+  parameters?: Schema;
+  /** Optional. Describes the output from this function in JSON Schema format. Reflects the Open API 3.03 Response Object. The Schema defines the type used for the response value of the function. */
+  response?: Schema;
+}
+
+/** Represents a time interval, encoded as a start time (inclusive) and an end time (exclusive).
+
+  The start time must be less than or equal to the end time.
+  When the start equals the end time, the interval is an empty interval.
+  (matches no time)
+  When both start and end are unspecified, the interval matches any time.
+   */
+export declare interface Interval {
+  /** The start time of the interval. */
+  startTime?: string;
+  /** The end time of the interval. */
+  endTime?: string;
+}
+
 /** Tool to support Google Search in Model. Powered by Google. */
-export declare interface GoogleSearch {}
+export declare interface GoogleSearch {
+  /** Optional. Filter search results to a specific time range.
+      If customers set a start time, they must set an end time (and vice versa).
+       */
+  timeRangeFilter?: Interval;
+}
 
 /** Describes the options to customize dynamic retrieval. */
 export declare interface DynamicRetrievalConfig {
@@ -648,6 +1256,9 @@ export declare interface GoogleMaps {
   /** Optional. Auth config for the Google Maps tool. */
   authConfig?: AuthConfig;
 }
+
+/** Tool to support URL context retrieval. */
+export declare interface UrlContext {}
 
 /** Retrieve from Vertex AI Search datastore or engine for grounding. datastore and engine are mutually exclusive. See https://cloud.google.com/products/agent-builder */
 export declare interface VertexAISearch {
@@ -740,68 +1351,10 @@ export declare interface Retrieval {
 /** Tool that executes code generated by the model, and automatically returns the result to the model. See also [ExecutableCode]and [CodeExecutionResult] which are input and output to this tool. */
 export declare interface ToolCodeExecution {}
 
-/** Schema is used to define the format of input/output data. Represents a select subset of an [OpenAPI 3.0 schema object](https://spec.openapis.org/oas/v3.0.3#schema-object). More fields may be added in the future as needed. */
-export declare interface Schema {
-  /** Optional. The value should be validated against any (one or more) of the subschemas in the list. */
-  anyOf?: Schema[];
-  /** Optional. Default value of the data. */
-  default?: unknown;
-  /** Optional. The description of the data. */
-  description?: string;
-  /** Optional. Possible values of the element of primitive type with enum format. Examples: 1. We can define direction as : {type:STRING, format:enum, enum:["EAST", NORTH", "SOUTH", "WEST"]} 2. We can define apartment number as : {type:INTEGER, format:enum, enum:["101", "201", "301"]} */
-  enum?: string[];
-  /** Optional. Example of the object. Will only populated when the object is the root. */
-  example?: unknown;
-  /** Optional. The format of the data. Supported formats: for NUMBER type: "float", "double" for INTEGER type: "int32", "int64" for STRING type: "email", "byte", etc */
-  format?: string;
-  /** Optional. SCHEMA FIELDS FOR TYPE ARRAY Schema of the elements of Type.ARRAY. */
-  items?: Schema;
-  /** Optional. Maximum number of the elements for Type.ARRAY. */
-  maxItems?: string;
-  /** Optional. Maximum length of the Type.STRING */
-  maxLength?: string;
-  /** Optional. Maximum number of the properties for Type.OBJECT. */
-  maxProperties?: string;
-  /** Optional. Maximum value of the Type.INTEGER and Type.NUMBER */
-  maximum?: number;
-  /** Optional. Minimum number of the elements for Type.ARRAY. */
-  minItems?: string;
-  /** Optional. SCHEMA FIELDS FOR TYPE STRING Minimum length of the Type.STRING */
-  minLength?: string;
-  /** Optional. Minimum number of the properties for Type.OBJECT. */
-  minProperties?: string;
-  /** Optional. SCHEMA FIELDS FOR TYPE INTEGER and NUMBER Minimum value of the Type.INTEGER and Type.NUMBER */
-  minimum?: number;
-  /** Optional. Indicates if the value may be null. */
-  nullable?: boolean;
-  /** Optional. Pattern of the Type.STRING to restrict a string to a regular expression. */
-  pattern?: string;
-  /** Optional. SCHEMA FIELDS FOR TYPE OBJECT Properties of Type.OBJECT. */
-  properties?: Record<string, Schema>;
-  /** Optional. The order of the properties. Not a standard field in open api spec. Only used to support the order of the properties. */
-  propertyOrdering?: string[];
-  /** Optional. Required properties of Type.OBJECT. */
-  required?: string[];
-  /** Optional. The title of the Schema. */
-  title?: string;
-  /** Optional. The type of the data. */
-  type?: Type;
-}
-
-/** Structured representation of a function declaration as defined by the [OpenAPI 3.0 specification](https://spec.openapis.org/oas/v3.0.3). Included in this declaration are the function name, description, parameters and response type. This FunctionDeclaration is a representation of a block of code that can be used as a `Tool` by the model and executed by the client. */
-export declare interface FunctionDeclaration {
-  /** Optional. Description and purpose of the function. Model uses it to decide how and whether to call the function. */
-  description?: string;
-  /** Required. The name of the function to call. Must start with a letter or an underscore. Must be a-z, A-Z, 0-9, or contain underscores, dots and dashes, with a maximum length of 64. */
-  name?: string;
-  /** Optional. Describes the parameters to this function in JSON Schema Object format. Reflects the Open API 3.03 Parameter Object. string Key: the name of the parameter. Parameter names are case sensitive. Schema Value: the Schema defining the type used for the parameter. For function with no parameters, this can be left unset. Parameter names must start with a letter or an underscore and must only contain chars a-z, A-Z, 0-9, or underscores with a maximum length of 64. Example with 1 required and 1 optional parameter: type: OBJECT properties: param1: type: STRING param2: type: INTEGER required: - param1 */
-  parameters?: Schema;
-  /** Optional. Describes the output from this function in JSON Schema format. Reflects the Open API 3.03 Response Object. The Schema defines the type used for the response value of the function. */
-  response?: Schema;
-}
-
 /** Tool details of a tool that the model may use to generate a response. */
 export declare interface Tool {
+  /** List of function declarations that the tool supports. */
+  functionDeclarations?: FunctionDeclaration[];
   /** Optional. Retrieval tool type. System will always execute the provided retrieval tool(s) to get external knowledge to answer the prompt. Retrieval results are presented to the model for generation. */
   retrieval?: Retrieval;
   /** Optional. Google Search tool type. Specialized retrieval tool
@@ -815,10 +1368,10 @@ export declare interface Tool {
   /** Optional. Google Maps tool type. Specialized retrieval tool
       that is powered by Google Maps. */
   googleMaps?: GoogleMaps;
+  /** Optional. Tool to support URL context retrieval. */
+  urlContext?: UrlContext;
   /** Optional. CodeExecution tool type. Enables the model to execute code as part of generation. This field is only used by the Gemini Developer API services. */
   codeExecution?: ToolCodeExecution;
-  /** Optional. Function tool type. One or more function declarations to be passed to the model along with the current user query. Model may decide to call a subset of these functions by populating FunctionCall in the response. User should provide a FunctionResponse for each function call in the next turn. Based on the function responses, Model will generate the final response back to the user. Maximum 128 function declarations can be provided. */
-  functionDeclarations?: FunctionDeclaration[];
 }
 
 /** Function calling config. */
@@ -863,8 +1416,7 @@ export declare interface ToolConfig {
 
 /** The configuration for the prebuilt speaker to use. */
 export declare interface PrebuiltVoiceConfig {
-  /** The name of the prebuilt voice to use.
-   */
+  /** The name of the prebuilt voice to use. */
   voiceName?: string;
 }
 
@@ -875,15 +1427,56 @@ export declare interface VoiceConfig {
   prebuiltVoiceConfig?: PrebuiltVoiceConfig;
 }
 
+/** The configuration for the speaker to use. */
+export declare interface SpeakerVoiceConfig {
+  /** The name of the speaker to use. Should be the same as in the
+          prompt. */
+  speaker?: string;
+  /** The configuration for the voice to use. */
+  voiceConfig?: VoiceConfig;
+}
+
+/** The configuration for the multi-speaker setup. */
+export declare interface MultiSpeakerVoiceConfig {
+  /** The configuration for the speaker to use. */
+  speakerVoiceConfigs?: SpeakerVoiceConfig[];
+}
+
 /** The speech generation configuration. */
 export declare interface SpeechConfig {
   /** The configuration for the speaker to use.
    */
   voiceConfig?: VoiceConfig;
+  /** The configuration for the multi-speaker setup.
+          It is mutually exclusive with the voice_config field.
+           */
+  multiSpeakerVoiceConfig?: MultiSpeakerVoiceConfig;
   /** Language code (ISO 639. e.g. en-US) for the speech synthesization.
       Only available for Live API.
        */
   languageCode?: string;
+}
+
+/** The configuration for automatic function calling. */
+export declare interface AutomaticFunctionCallingConfig {
+  /** Whether to disable automatic function calling.
+      If not set or set to False, will enable automatic function calling.
+      If set to True, will disable automatic function calling.
+       */
+  disable?: boolean;
+  /** If automatic function calling is enabled,
+      maximum number of remote calls for automatic function calling.
+      This number should be a positive integer.
+      If not set, SDK will set maximum number of remote calls to 10.
+       */
+  maximumRemoteCalls?: number;
+  /** If automatic function calling is enabled,
+      whether to ignore call history to the response.
+      If not set, SDK will set ignore_call_history to false,
+      and will append the call history to
+      GenerateContentResponse.automatic_function_calling_history.
+       */
+  ignoreCallHistory?: boolean;
 }
 
 /** The thinking features configuration. */
@@ -991,11 +1584,22 @@ export declare interface GenerateContentConfig {
       random number is used.
        */
   seed?: number;
-  /** Output response media type of the generated candidate text.
-   */
+  /** Output response mimetype of the generated candidate text.
+      Supported mimetype:
+        - `text/plain`: (default) Text output.
+        - `application/json`: JSON response in the candidates.
+      The model needs to be prompted to output the appropriate response type,
+      otherwise the behavior is undefined.
+      This is a preview feature.
+       */
   responseMimeType?: string;
-  /** Schema that the generated candidate text must adhere to.
-   */
+  /** The `Schema` object allows the definition of input and output data types.
+      These types can be objects, but also primitives and arrays.
+      Represents a select subset of an [OpenAPI 3.0 schema
+      object](https://spec.openapis.org/oas/v3.0.3#schema).
+      If set, a compatible response_mime_type must also be set.
+      Compatible mimetypes: `application/json`: Schema for JSON response.
+       */
   responseSchema?: SchemaUnion;
   /** Configuration for model router requests.
    */
@@ -1034,6 +1638,9 @@ export declare interface GenerateContentConfig {
        model.
        */
   audioTimestamp?: boolean;
+  /** The configuration for automatic function calling.
+   */
+  automaticFunctionCalling?: AutomaticFunctionCallingConfig;
   /** The thinking features configuration.
    */
   thinkingConfig?: ThinkingConfig;
@@ -1085,6 +1692,20 @@ export declare interface CitationMetadata {
       repositories.
        */
   citations?: Citation[];
+}
+
+/** Context for a single url retrieval. */
+export declare interface UrlMetadata {
+  /** The URL retrieved by the tool. */
+  retrievedUrl?: string;
+  /** Status of the url retrieval. */
+  urlRetrievalStatus?: UrlRetrievalStatus;
+}
+
+/** Metadata related to url context retrieval tool. */
+export declare interface UrlContextMetadata {
+  /** List of url context. */
+  urlMetadata?: UrlMetadata[];
 }
 
 /** Chunk from context retrieved by the retrieval tools. */
@@ -1225,6 +1846,8 @@ export declare interface Candidate {
       If empty, the model has not stopped generating the tokens.
        */
   finishReason?: FinishReason;
+  /** Metadata related to url context retrieval tool. */
+  urlContextMetadata?: UrlContextMetadata;
   /** Output only. Average log probability score of the candidate. */
   avgLogprobs?: number;
   /** Output only. Metadata specifies sources used to ground generated content. */
@@ -1292,6 +1915,9 @@ export class GenerateContentResponse {
   /** Identifier for each response.
    */
   responseId?: string;
+  /** The history of automatic function calling.
+   */
+  automaticFunctionCallingHistory?: Content[];
   /** Output only. The model version used to generate the response. */
   modelVersion?: string;
   /** Output only. Content filter results for a prompt sent in the request. Note: Sent only in the first stream chunk. Only happens when no candidates were generated due to content violations. */
@@ -1557,8 +2183,27 @@ export class GenerateContentResponse {
   }
 }
 
-export /** Optional parameters for the embed_content method. */
-declare interface EmbedContentConfig {
+export type ReferenceImage =
+  | RawReferenceImage
+  | MaskReferenceImage
+  | ControlReferenceImage
+  | StyleReferenceImage
+  | SubjectReferenceImage;
+
+/** Parameters for the request to edit an image. */
+export declare interface EditImageParameters {
+  /** The model to use. */
+  model: string;
+  /** A text description of the edit to apply to the image. */
+  prompt: string;
+  /** The reference images for Imagen 3 editing. */
+  referenceImages: ReferenceImage[];
+  /** Configuration for editing. */
+  config?: EditImageConfig;
+}
+
+/** Optional parameters for the embed_content method. */
+export declare interface EmbedContentConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
   /** Abort signal which can be used to cancel the request.
@@ -1779,6 +2424,117 @@ export class GenerateImagesResponse {
   positivePromptSafetyAttributes?: SafetyAttributes;
 }
 
+/** Configuration for a Mask reference image. */
+export declare interface MaskReferenceConfig {
+  /** Prompts the model to generate a mask instead of you needing to
+      provide one (unless MASK_MODE_USER_PROVIDED is used). */
+  maskMode?: MaskReferenceMode;
+  /** A list of up to 5 class ids to use for semantic segmentation.
+      Automatically creates an image mask based on specific objects. */
+  segmentationClasses?: number[];
+  /** Dilation percentage of the mask provided.
+      Float between 0 and 1. */
+  maskDilation?: number;
+}
+
+/** Configuration for a Control reference image. */
+export declare interface ControlReferenceConfig {
+  /** The type of control reference image to use. */
+  controlType?: ControlReferenceType;
+  /** Defaults to False. When set to True, the control image will be
+      computed by the model based on the control type. When set to False,
+      the control image must be provided by the user. */
+  enableControlImageComputation?: boolean;
+}
+
+/** Configuration for a Style reference image. */
+export declare interface StyleReferenceConfig {
+  /** A text description of the style to use for the generated image. */
+  styleDescription?: string;
+}
+
+/** Configuration for a Subject reference image. */
+export declare interface SubjectReferenceConfig {
+  /** The subject type of a subject reference image. */
+  subjectType?: SubjectReferenceType;
+  /** Subject description for the image. */
+  subjectDescription?: string;
+}
+
+/** Configuration for editing an image. */
+export declare interface EditImageConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
+  /** Cloud Storage URI used to store the generated images.
+   */
+  outputGcsUri?: string;
+  /** Description of what to discourage in the generated images.
+   */
+  negativePrompt?: string;
+  /** Number of images to generate.
+   */
+  numberOfImages?: number;
+  /** Aspect ratio of the generated images.
+   */
+  aspectRatio?: string;
+  /** Controls how much the model adheres to the text prompt. Large
+      values increase output and prompt alignment, but may compromise image
+      quality.
+       */
+  guidanceScale?: number;
+  /** Random seed for image generation. This is not available when
+      ``add_watermark`` is set to true.
+       */
+  seed?: number;
+  /** Filter level for safety filtering.
+   */
+  safetyFilterLevel?: SafetyFilterLevel;
+  /** Allows generation of people by the model.
+   */
+  personGeneration?: PersonGeneration;
+  /** Whether to report the safety scores of each generated image and
+      the positive prompt in the response.
+       */
+  includeSafetyAttributes?: boolean;
+  /** Whether to include the Responsible AI filter reason if the image
+      is filtered out of the response.
+       */
+  includeRaiReason?: boolean;
+  /** Language of the text in the prompt.
+   */
+  language?: ImagePromptLanguage;
+  /** MIME type of the generated image.
+   */
+  outputMimeType?: string;
+  /** Compression quality of the generated image (for ``image/jpeg``
+      only).
+       */
+  outputCompressionQuality?: number;
+  /** Describes the editing mode for the request. */
+  editMode?: EditMode;
+  /** The number of sampling steps. A higher value has better image
+      quality, while a lower value has better latency. */
+  baseSteps?: number;
+}
+
+/** Response for the request to edit an image. */
+export class EditImageResponse {
+  /** Generated images. */
+  generatedImages?: GeneratedImage[];
+}
+
+export class UpscaleImageResponse {
+  /** Generated images. */
+  generatedImages?: GeneratedImage[];
+}
+
 /** Optional parameters for models.get method. */
 export declare interface GetModelConfig {
   /** Used to override HTTP request options. */
@@ -1816,6 +2572,19 @@ export declare interface TunedModelInfo {
   updateTime?: string;
 }
 
+/** Describes the machine learning model version checkpoint. */
+export declare interface Checkpoint {
+  /** The ID of the checkpoint.
+   */
+  checkpointId?: string;
+  /** The epoch of the checkpoint.
+   */
+  epoch?: string;
+  /** The step of the checkpoint.
+   */
+  step?: string;
+}
+
 /** A trained machine learning model. */
 export declare interface Model {
   /** Resource name of the model. */
@@ -1842,6 +2611,11 @@ export declare interface Model {
   outputTokenLimit?: number;
   /** List of actions that are supported by the model. */
   supportedActions?: string[];
+  /** The default checkpoint id of a model version.
+   */
+  defaultCheckpointId?: string;
+  /** The checkpoints of the model. */
+  checkpoints?: Checkpoint[];
 }
 
 export declare interface ListModelsConfig {
@@ -1883,6 +2657,7 @@ export declare interface UpdateModelConfig {
   abortSignal?: AbortSignal;
   displayName?: string;
   description?: string;
+  defaultCheckpointId?: string;
 }
 
 /** Configuration for updating a tuned model. */
@@ -2142,11 +2917,32 @@ export declare interface GetTuningJobParameters {
   config?: GetTuningJobConfig;
 }
 
+/** TunedModelCheckpoint for the Tuned Model of a Tuning Job. */
+export declare interface TunedModelCheckpoint {
+  /** The ID of the checkpoint.
+   */
+  checkpointId?: string;
+  /** The epoch of the checkpoint.
+   */
+  epoch?: string;
+  /** The step of the checkpoint.
+   */
+  step?: string;
+  /** The Endpoint resource name that the checkpoint is deployed to.
+      Format: `projects/{project}/locations/{location}/endpoints/{endpoint}`.
+       */
+  endpoint?: string;
+}
+
 export declare interface TunedModel {
   /** Output only. The resource name of the TunedModel. Format: `projects/{project}/locations/{location}/models/{model}`. */
   model?: string;
   /** Output only. A resource name of an Endpoint. Format: `projects/{project}/locations/{location}/endpoints/{endpoint}`. */
   endpoint?: string;
+  /** The checkpoints associated with this TunedModel.
+      This field is only populated for tuning jobs that enable intermediate
+      checkpoints. */
+  checkpoints?: TunedModelCheckpoint[];
 }
 
 /** The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors). */
@@ -2177,6 +2973,8 @@ export declare interface SupervisedTuningSpec {
   trainingDatasetUri?: string;
   /** Optional. Cloud Storage path to file containing validation dataset for tuning. The dataset must be formatted as a JSONL file. */
   validationDatasetUri?: string;
+  /** Optional. If set to true, disable intermediate checkpoints for SFT and only the last checkpoint will be exported. */
+  exportLastCheckpointOnly?: boolean;
 }
 
 /** Dataset bucket used to create a histogram for the distribution given a population of values. */
@@ -2457,6 +3255,8 @@ export declare interface CreateTuningJobConfig {
   epochCount?: number;
   /** Multiplier for adjusting the default learning rate. */
   learningRateMultiplier?: number;
+  /** If set to true, disable intermediate checkpoints for SFT and only the last checkpoint will be exported. Otherwise, enable intermediate checkpoints for SFT. */
+  exportLastCheckpointOnly?: boolean;
   /** Adapter size for tuning. */
   adapterSize?: AdapterSize;
   /** The batch size hyperparameter for tuning. If not set, a default of 4 or 16 will be used based on the number of training examples. */
@@ -2517,6 +3317,16 @@ export declare interface CreateCachedContentConfig {
   /** Configuration for the tools to use. This config is shared for all tools.
    */
   toolConfig?: ToolConfig;
+  /** The Cloud KMS resource identifier of the customer managed
+      encryption key used to protect a resource.
+      The key needs to be in the same region as where the compute resource is
+      created. See
+      https://cloud.google.com/vertex-ai/docs/general/cmek for more
+      details. If this is set, then all created CachedContent objects
+      will be encrypted with the provided encryption key.
+      Allowed formats: projects/{project}/locations/{location}/keyRings/{key_ring}/cryptoKeys/{crypto_key}
+       */
+  kmsKeyName?: string;
 }
 
 /** Parameters for caches.create method. */
@@ -2807,14 +3617,6 @@ export interface LiveCallbacks {
   onclose?: ((e: CloseEvent) => void) | null;
 }
 
-/** Parameters for the upload file method. */
-export interface UploadFileParameters {
-  /** The string path to the file to be uploaded or a Blob object. */
-  file: string | globalThis.Blob;
-  /** Configuration that contains optional parameters. */
-  config?: UploadFileConfig;
-}
-
 /** Response for the create file method. */
 export class CreateFileResponse {
   /** Used to retain the full HTTP response. */
@@ -3047,26 +3849,23 @@ export declare interface UpscaleImageParameters {
   It can optionally be provided in addition to a mask reference image or
   a style reference image.
    */
-export declare interface RawReferenceImage {
+export class RawReferenceImage {
   /** The reference image for the editing operation. */
   referenceImage?: Image;
   /** The id of the reference image. */
   referenceId?: number;
   /** The type of the reference image. Only set by the SDK. */
   referenceType?: string;
-}
-
-/** Configuration for a Mask reference image. */
-export declare interface MaskReferenceConfig {
-  /** Prompts the model to generate a mask instead of you needing to
-      provide one (unless MASK_MODE_USER_PROVIDED is used). */
-  maskMode?: MaskReferenceMode;
-  /** A list of up to 5 class ids to use for semantic segmentation.
-      Automatically creates an image mask based on specific objects. */
-  segmentationClasses?: number[];
-  /** Dilation percentage of the mask provided.
-      Float between 0 and 1. */
-  maskDilation?: number;
+  /** Internal method to convert to ReferenceImageAPIInternal. */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  toReferenceImageAPI(): any {
+    const referenceImageAPI = {
+      referenceType: 'REFERENCE_TYPE_RAW',
+      referenceImage: this.referenceImage,
+      referenceId: this.referenceId,
+    };
+    return referenceImageAPI;
+  }
 }
 
 /** A mask reference image.
@@ -3079,7 +3878,7 @@ export declare interface MaskReferenceConfig {
   image. If the user provides a mask image, the mask must be in the same
   dimensions as the raw image.
    */
-export declare interface MaskReferenceImage {
+export class MaskReferenceImage {
   /** The reference image for the editing operation. */
   referenceImage?: Image;
   /** The id of the reference image. */
@@ -3088,16 +3887,17 @@ export declare interface MaskReferenceImage {
   referenceType?: string;
   /** Configuration for the mask reference image. */
   config?: MaskReferenceConfig;
-}
-
-/** Configuration for a Control reference image. */
-export declare interface ControlReferenceConfig {
-  /** The type of control reference image to use. */
-  controlType?: ControlReferenceType;
-  /** Defaults to False. When set to True, the control image will be
-      computed by the model based on the control type. When set to False,
-      the control image must be provided by the user. */
-  enableControlImageComputation?: boolean;
+  /** Internal method to convert to ReferenceImageAPIInternal. */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  toReferenceImageAPI(): any {
+    const referenceImageAPI = {
+      referenceType: 'REFERENCE_TYPE_MASK',
+      referenceImage: this.referenceImage,
+      referenceId: this.referenceId,
+      maskImageConfig: this.config,
+    };
+    return referenceImageAPI;
+  }
 }
 
 /** A control reference image.
@@ -3110,7 +3910,7 @@ export declare interface ControlReferenceConfig {
   A control image is an image that represents a sketch image of areas for the
   model to fill in based on the prompt.
    */
-export declare interface ControlReferenceImage {
+export class ControlReferenceImage {
   /** The reference image for the editing operation. */
   referenceImage?: Image;
   /** The id of the reference image. */
@@ -3119,12 +3919,17 @@ export declare interface ControlReferenceImage {
   referenceType?: string;
   /** Configuration for the control reference image. */
   config?: ControlReferenceConfig;
-}
-
-/** Configuration for a Style reference image. */
-export declare interface StyleReferenceConfig {
-  /** A text description of the style to use for the generated image. */
-  styleDescription?: string;
+  /** Internal method to convert to ReferenceImageAPIInternal. */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  toReferenceImageAPI(): any {
+    const referenceImageAPI = {
+      referenceType: 'REFERENCE_TYPE_CONTROL',
+      referenceImage: this.referenceImage,
+      referenceId: this.referenceId,
+      controlImageConfig: this.config,
+    };
+    return referenceImageAPI;
+  }
 }
 
 /** A style reference image.
@@ -3135,7 +3940,7 @@ export declare interface StyleReferenceConfig {
   A raw reference image can also be provided as a destination for the style to
   be applied to.
    */
-export declare interface StyleReferenceImage {
+export class StyleReferenceImage {
   /** The reference image for the editing operation. */
   referenceImage?: Image;
   /** The id of the reference image. */
@@ -3144,14 +3949,17 @@ export declare interface StyleReferenceImage {
   referenceType?: string;
   /** Configuration for the style reference image. */
   config?: StyleReferenceConfig;
-}
-
-/** Configuration for a Subject reference image. */
-export declare interface SubjectReferenceConfig {
-  /** The subject type of a subject reference image. */
-  subjectType?: SubjectReferenceType;
-  /** Subject description for the image. */
-  subjectDescription?: string;
+  /** Internal method to convert to ReferenceImageAPIInternal. */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  toReferenceImageAPI(): any {
+    const referenceImageAPI = {
+      referenceType: 'REFERENCE_TYPE_STYLE',
+      referenceImage: this.referenceImage,
+      referenceId: this.referenceId,
+      styleImageConfig: this.config,
+    };
+    return referenceImageAPI;
+  }
 }
 
 /** A subject reference image.
@@ -3162,7 +3970,7 @@ export declare interface SubjectReferenceConfig {
   A raw reference image can also be provided as a destination for the subject to
   be applied to.
    */
-export declare interface SubjectReferenceImage {
+export class SubjectReferenceImage {
   /** The reference image for the editing operation. */
   referenceImage?: Image;
   /** The id of the reference image. */
@@ -3171,10 +3979,21 @@ export declare interface SubjectReferenceImage {
   referenceType?: string;
   /** Configuration for the subject reference image. */
   config?: SubjectReferenceConfig;
+  /* Internal method to convert to ReferenceImageAPIInternal. */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  toReferenceImageAPI(): any {
+    const referenceImageAPI = {
+      referenceType: 'REFERENCE_TYPE_SUBJECT',
+      referenceImage: this.referenceImage,
+      referenceId: this.referenceId,
+      subjectImageConfig: this.config,
+    };
+    return referenceImageAPI;
+  }
 }
 
-/** Sent in response to a `LiveGenerateContentSetup` message from the client. */
-export declare interface LiveServerSetupComplete {}
+export /** Sent in response to a `LiveGenerateContentSetup` message from the client. */
+declare interface LiveServerSetupComplete {}
 
 /** Audio transcription in Server Conent. */
 export declare interface Transcription {
@@ -3218,6 +4037,8 @@ export declare interface LiveServerContent {
       model turn.
        */
   outputTranscription?: Transcription;
+  /** Metadata related to url context retrieval tool. */
+  urlContextMetadata?: UrlContextMetadata;
 }
 
 /** Request for the client to execute the `function_calls` and return the responses with the matching `id`s. */
@@ -3436,6 +4257,14 @@ export declare interface ContextWindowCompressionConfig {
 /** The audio transcription configuration in Setup. */
 export declare interface AudioTranscriptionConfig {}
 
+/** Config for proactivity features. */
+export declare interface ProactivityConfig {
+  /** If enabled, the model can reject responding to the last prompt. For
+        example, this allows the model to ignore out of context speech or to stay
+        silent if the user did not make a request, yet. */
+  proactiveAudio?: boolean;
+}
+
 /** Message contains configuration that will apply for the duration of the streaming session. */
 export declare interface LiveClientSetup {
   /** 
@@ -3474,6 +4303,9 @@ export declare interface LiveClientSetup {
       specified for the output audio.
        */
   outputAudioTranscription?: AudioTranscriptionConfig;
+  /** Configures the proactivity of the model. This allows the model to respond proactively to
+    the input and to ignore irrelevant input. */
+  proactivity?: ProactivityConfig;
 }
 
 /** Incremental update of the current conversation delivered from the client.
@@ -3606,6 +4438,15 @@ export declare interface LiveClientMessage {
 
 /** Session config for the API connection. */
 export declare interface LiveConnectConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
   /** The generation configuration for the session. */
   generationConfig?: GenerationConfig;
   /** The requested modalities of the response. Represents the set of
@@ -3644,6 +4485,8 @@ export declare interface LiveConnectConfig {
   /** The speech generation configuration.
    */
   speechConfig?: SpeechConfig;
+  /** If enabled, the model will detect emotions and adapt its responses accordingly. */
+  enableAffectiveDialog?: boolean;
   /** The user provided system instructions for the model.
       Note: only text should be used in parts and content in each part will be
       in a separate paragraph. */
@@ -3671,6 +4514,9 @@ If included the server will send SessionResumptionUpdate messages. */
 
       If included, server will compress context window to fit into given length. */
   contextWindowCompression?: ContextWindowCompressionConfig;
+  /** Configures the proactivity of the model. This allows the model to respond proactively to
+    the input and to ignore irrelevant input. */
+  proactivity?: ProactivityConfig;
 }
 
 /** Parameters for connecting to the live API. */
@@ -3749,6 +4595,259 @@ export class LiveSendToolResponseParameters {
   functionResponses: FunctionResponse[] | FunctionResponse = [];
 }
 
+/** Message to be sent by the system when connecting to the API. */
+export declare interface LiveMusicClientSetup {
+  /** The model's resource name. Format: `models/{model}`. */
+  model?: string;
+}
+
+/** Maps a prompt to a relative weight to steer music generation. */
+export declare interface WeightedPrompt {
+  /** Text prompt. */
+  text?: string;
+  /** Weight of the prompt. The weight is used to control the relative
+      importance of the prompt. Higher weights are more important than lower
+      weights.
+
+      Weight must not be 0. Weights of all weighted_prompts in this
+      LiveMusicClientContent message will be normalized. */
+  weight?: number;
+}
+
+/** User input to start or steer the music. */
+export declare interface LiveMusicClientContent {
+  /** Weighted prompts as the model input. */
+  weightedPrompts?: WeightedPrompt[];
+}
+
+/** Configuration for music generation. */
+export declare interface LiveMusicGenerationConfig {
+  /** Controls the variance in audio generation. Higher values produce
+      higher variance. Range is [0.0, 3.0]. */
+  temperature?: number;
+  /** Controls how the model selects tokens for output. Samples the topK
+      tokens with the highest probabilities. Range is [1, 1000]. */
+  topK?: number;
+  /** Seeds audio generation. If not set, the request uses a randomly
+      generated seed. */
+  seed?: number;
+  /** Controls how closely the model follows prompts.
+      Higher guidance follows more closely, but will make transitions more
+      abrupt. Range is [0.0, 6.0]. */
+  guidance?: number;
+  /** Beats per minute. Range is [60, 200]. */
+  bpm?: number;
+  /** Density of sounds. Range is [0.0, 1.0]. */
+  density?: number;
+  /** Brightness of the music. Range is [0.0, 1.0]. */
+  brightness?: number;
+  /** Scale of the generated music. */
+  scale?: Scale;
+  /** Whether the audio output should contain bass. */
+  muteBass?: boolean;
+  /** Whether the audio output should contain drums. */
+  muteDrums?: boolean;
+  /** Whether the audio output should contain only bass and drums. */
+  onlyBassAndDrums?: boolean;
+  /** The mode of music generation. Default mode is QUALITY. */
+  musicGenerationMode?: MusicGenerationMode;
+}
+
+/** Messages sent by the client in the LiveMusicClientMessage call. */
+export declare interface LiveMusicClientMessage {
+  /** Message to be sent in the first (and only in the first) `LiveMusicClientMessage`.
+      Clients should wait for a `LiveMusicSetupComplete` message before
+      sending any additional messages. */
+  setup?: LiveMusicClientSetup;
+  /** User input to influence music generation. */
+  clientContent?: LiveMusicClientContent;
+  /** Configuration for music generation. */
+  musicGenerationConfig?: LiveMusicGenerationConfig;
+  /** Playback control signal for the music generation. */
+  playbackControl?: LiveMusicPlaybackControl;
+}
+
+/** Sent in response to a `LiveMusicClientSetup` message from the client. */
+export declare interface LiveMusicServerSetupComplete {}
+
+/** Prompts and config used for generating this audio chunk. */
+export declare interface LiveMusicSourceMetadata {
+  /** Weighted prompts for generating this audio chunk. */
+  clientContent?: LiveMusicClientContent;
+  /** Music generation config for generating this audio chunk. */
+  musicGenerationConfig?: LiveMusicGenerationConfig;
+}
+
+/** Representation of an audio chunk. */
+export declare interface AudioChunk {
+  /** Raw byets of audio data. */
+  data?: string;
+  /** MIME type of the audio chunk. */
+  mimeType?: string;
+  /** Prompts and config used for generating this audio chunk. */
+  sourceMetadata?: LiveMusicSourceMetadata;
+}
+
+/** Server update generated by the model in response to client messages.
+
+  Content is generated as quickly as possible, and not in real time.
+  Clients may choose to buffer and play it out in real time.
+   */
+export declare interface LiveMusicServerContent {
+  /** The audio chunks that the model has generated. */
+  audioChunks?: AudioChunk[];
+}
+
+/** A prompt that was filtered with the reason. */
+export declare interface LiveMusicFilteredPrompt {
+  /** The text prompt that was filtered. */
+  text?: string;
+  /** The reason the prompt was filtered. */
+  filteredReason?: string;
+}
+
+/** Response message for the LiveMusicClientMessage call. */
+export class LiveMusicServerMessage {
+  /** Message sent in response to a `LiveMusicClientSetup` message from the client.
+      Clients should wait for this message before sending any additional messages. */
+  setupComplete?: LiveMusicServerSetupComplete;
+  /** Content generated by the model in response to client messages. */
+  serverContent?: LiveMusicServerContent;
+  /** A prompt that was filtered with the reason. */
+  filteredPrompt?: LiveMusicFilteredPrompt;
+  /**
+   * Returns the first audio chunk from the server content, if present.
+   *
+   * @remarks
+   * If there are no audio chunks in the response, undefined will be returned.
+   */
+  get audioChunk(): AudioChunk | undefined {
+    if (
+      this.serverContent &&
+      this.serverContent.audioChunks &&
+      this.serverContent.audioChunks.length > 0
+    ) {
+      return this.serverContent.audioChunks[0];
+    }
+    return undefined;
+  }
+}
+
+/** Callbacks for the realtime music API. */
+export interface LiveMusicCallbacks {
+  /**
+   * Called when a message is received from the server.
+   */
+  onmessage: (e: LiveMusicServerMessage) => void;
+  /**
+   * Called when an error occurs.
+   */
+  onerror?: ((e: ErrorEvent) => void) | null;
+  /**
+   * Called when the websocket connection is closed.
+   */
+  onclose?: ((e: CloseEvent) => void) | null;
+}
+
+/** Parameters for the upload file method. */
+export interface UploadFileParameters {
+  /** The string path to the file to be uploaded or a Blob object. */
+  file: string | globalThis.Blob;
+  /** Configuration that contains optional parameters. */
+  config?: UploadFileConfig;
+}
+
+/**
+ * CallableTool is an invokable tool that can be executed with external
+ * application (e.g., via Model Context Protocol) or local functions with
+ * function calling.
+ */
+export interface CallableTool {
+  /**
+   * Returns tool that can be called by Gemini.
+   */
+  tool(): Promise<Tool>;
+  /**
+   * Executes the callable tool with the given function call arguments and
+   * returns the response parts from the tool execution.
+   */
+  callTool(functionCalls: FunctionCall[]): Promise<Part[]>;
+}
+
+/**
+ * CallableToolConfig is the configuration for a callable tool.
+ */
+export interface CallableToolConfig {
+  /**
+   * Specifies the model's behavior after invoking this tool.
+   */
+  behavior?: Behavior;
+}
+
+/** Parameters for connecting to the live API. */
+export declare interface LiveMusicConnectParameters {
+  /** The model's resource name. */
+  model: string;
+  /** Callbacks invoked on server events. */
+  callbacks: LiveMusicCallbacks;
+}
+
+/** Parameters for setting config for the live music API. */
+export declare interface LiveMusicSetConfigParameters {
+  /** Configuration for music generation. */
+  musicGenerationConfig: LiveMusicGenerationConfig;
+}
+
+/** Parameters for setting weighted prompts for the live music API. */
+export declare interface LiveMusicSetWeightedPromptsParameters {
+  /** A map of text prompts to weights to use for the generation request. */
+  weightedPrompts: WeightedPrompt[];
+}
+
+/** Config for LiveEphemeralParameters for Auth Token creation. */
+export declare interface LiveEphemeralParameters {
+  /** ID of the model to configure in the ephemeral token for Live API.
+      For a list of models, see `Gemini models
+      <https://ai.google.dev/gemini-api/docs/models>`. */
+  model?: string;
+  /** Configuration specific to Live API connections created using this token. */
+  config?: LiveConnectConfig;
+}
+
+/** Optional parameters. */
+export declare interface CreateAuthTokenConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
+  /** An optional time after which, when using the resulting token,
+      messages in Live API sessions will be rejected. (Gemini may
+      preemptively close the session after this time.)
+
+      If not set then this defaults to 30 minutes in the future. If set, this
+      value must be less than 20 hours in the future. */
+  expireTime?: string;
+  /** The time after which new Live API sessions using the token
+      resulting from this request will be rejected.
+
+      If not set this defaults to 60 seconds in the future. If set, this value
+      must be less than 20 hours in the future. */
+  newSessionExpireTime?: string;
+  /** The number of times the token can be used. If this value is zero
+      then no limit is applied. Default is 1. Resuming a Live API session does
+      not count as a use. */
+  uses?: number;
+  /** Configuration specific to Live API connections created using this token. */
+  liveEphemeralParameters?: LiveEphemeralParameters;
+  /** Additional fields to lock in the effective LiveConnectParameters. */
+  lockAdditionalFields?: string[];
+}
+
 /** Parameters for the get method of the operations module. */
 export declare interface OperationGetParameters {
   /** The operation to be retrieved. */
@@ -3767,10 +4866,12 @@ export type ContentUnion = Content | PartUnion[] | PartUnion;
 
 export type ContentListUnion = Content | Content[] | PartUnion | PartUnion[];
 
-export type SchemaUnion = Schema;
+export type SchemaUnion = Schema | unknown;
 
 export type SpeechConfigUnion = SpeechConfig | string;
 
-export type ToolListUnion = Tool[];
+export type ToolUnion = Tool | CallableTool;
+
+export type ToolListUnion = ToolUnion[];
 
 export type DownloadableFileUnion = string | File | GeneratedVideo | Video;

@@ -4,23 +4,23 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Auth} from './_auth';
-import * as common from './_common';
-import {Downloader} from './_downloader';
-import {Uploader} from './_uploader';
+import {Auth} from './_auth.js';
+import * as common from './_common.js';
+import {Downloader} from './_downloader.js';
+import {Uploader} from './_uploader.js';
 import {
   DownloadFileParameters,
   File,
   HttpOptions,
   HttpResponse,
   UploadFileConfig,
-} from './types';
+} from './types.js';
 
 const CONTENT_TYPE_HEADER = 'Content-Type';
 const SERVER_TIMEOUT_HEADER = 'X-Server-Timeout';
 const USER_AGENT_HEADER = 'User-Agent';
-const GOOGLE_API_CLIENT_HEADER = 'x-goog-api-client';
-export const SDK_VERSION = '0.13.0'; // x-release-please-version
+export const GOOGLE_API_CLIENT_HEADER = 'x-goog-api-client';
+export const SDK_VERSION = '1.0.0'; // x-release-please-version
 const LIBRARY_LABEL = `google-genai-sdk/${SDK_VERSION}`;
 const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
 const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';

@@ -6,20 +6,20 @@
 
 import {GoogleAuthOptions} from 'google-auth-library';
 
-import {ApiClient} from './_api_client';
-import {Caches} from './caches';
-import {Chats} from './chats';
-import {CrossDownloader} from './cross/_cross_downloader';
-import {crossError} from './cross/_cross_error';
-import {CrossUploader} from './cross/_cross_uploader';
-import {CrossWebSocketFactory} from './cross/_cross_websocket';
-import {Files} from './files';
-import {Live} from './live';
-import {Models} from './models';
-import {Operations} from './operations';
-import {Tunings} from './tunings';
-import {HttpOptions} from './types';
-import {WebAuth} from './web/_web_auth';
+import {ApiClient} from './_api_client.js';
+import {Caches} from './caches.js';
+import {Chats} from './chats.js';
+import {CrossDownloader} from './cross/_cross_downloader.js';
+import {crossError} from './cross/_cross_error.js';
+import {CrossUploader} from './cross/_cross_uploader.js';
+import {CrossWebSocketFactory} from './cross/_cross_websocket.js';
+import {Files} from './files.js';
+import {Live} from './live.js';
+import {Models} from './models.js';
+import {Operations} from './operations.js';
+import {Tunings} from './tunings.js';
+import {HttpOptions} from './types.js';
+import {WebAuth} from './web/_web_auth.js';
 
 const LANGUAGE_LABEL_PREFIX = 'gl-node/';
 

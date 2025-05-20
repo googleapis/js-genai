@@ -1,0 +1,50 @@
+Status code: 200 
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+Content-Type: application/json; charset=UTF-8
+Content-Encoding: gzip
+Server: scaffolding on HTTPServer2
+Content-Length: 563
+X-Content-Type-Options: nosniff
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Date: Wed, 14 May 2025 00:29:32 GMT
+
+{
+  "candidates": [
+    {
+      "content": {
+        "role": "model",
+        "parts": [
+          {
+            "text": "{\"arrayFiled\": [\"string\"], \"inner\": {\"innerNumber\": 1.23, \"innerString\": \"string\"}, \"integerInt64\": 123, \"nullableArrayField\": null, \"nullableField\": null, \"nullableObjectField\": null, \"numberWithMinMax\": 1.23, \"simpleBoolean\": true, \"simpleInteger\": 123, \"simpleNumber\": 1.23, \"stringDatetime\": \"2024-07-23T12:30:00Z\", \"stringWithEnum\": \"enumvalue1\", \"stringWithLength\": \"string\", \"unionField\": \"string\", \"simpleString\": \"simpleString\"}"
+          }
+        ]
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.055595977633607151
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 133,
+    "candidatesTokenCount": 153,
+    "totalTokenCount": 286,
+    "trafficType": "ON_DEMAND",
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 133
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 153
+      }
+    ]
+  },
+  "modelVersion": "gemini-1.5-flash-002",
+  "createTime": "2025-05-14T00:29:31.566863Z",
+  "responseId": "6-MjaM_MIvCt698P4LDk8Ao"
+}

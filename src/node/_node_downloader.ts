@@ -8,15 +8,15 @@ import {createWriteStream, writeFile} from 'fs';
 import {Readable} from 'node:stream';
 import type {ReadableStream} from 'node:stream/web';
 
-import {ApiClient} from '../_api_client';
-import {Downloader} from '../_downloader';
-import {isGeneratedVideo, isVideo, tFileName} from '../_transformers';
+import {ApiClient} from '../_api_client.js';
+import {Downloader} from '../_downloader.js';
+import {isGeneratedVideo, isVideo, tFileName} from '../_transformers.js';
 import {
   DownloadFileParameters,
   GeneratedVideo,
   HttpResponse,
   Video,
-} from '../types';
+} from '../types.js';
 
 export class NodeDownloader implements Downloader {
   async download(

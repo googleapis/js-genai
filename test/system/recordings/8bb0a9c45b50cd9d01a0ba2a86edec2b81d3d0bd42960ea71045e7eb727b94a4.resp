@@ -1,0 +1,48 @@
+Status code: 200 
+X-Content-Type-Options: nosniff
+Content-Type: application/json; charset=UTF-8
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Content-Encoding: gzip
+Date: Wed, 14 May 2025 18:07:45 GMT
+Server: scaffolding on HTTPServer2
+Content-Length: 331
+X-Frame-Options: SAMEORIGIN
+X-Xss-Protection: 0
+Server-Timing: gfet4t7; dur=651
+
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "The most fitting title for the story would be: **Star Cookies and Home.**\n"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.618200470419491
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 163,
+    "candidatesTokenCount": 17,
+    "totalTokenCount": 180,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 163
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 17
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash"
+}

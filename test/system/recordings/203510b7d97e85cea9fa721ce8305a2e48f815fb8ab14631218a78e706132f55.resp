@@ -1,0 +1,19 @@
+Status code: 200 
+X-Goog-Sherlog-Link: https://sherlog.corp.google.com/#workflow?config=Serving&dataid=aiplatform.googleapis.com/google.cloud.aiplatform.v1beta1.PredictionService.StreamGenerateContent&gaia=821332047332&reason=sharedLink&version=183f7753941ff508526a411ae7fa062c
+Content-Type: text/event-stream
+Content-Disposition: attachment
+Server: scaffolding on HTTPServer2
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Date: Wed, 14 May 2025 18:13:01 GMT
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": "The"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-05-14T18:13:01.343871Z","responseId": "Ld0kaL_-FKeemecPtN7wiQk"}
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " title of the"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-05-14T18:13:01.343871Z","responseId": "Ld0kaL_-FKeemecPtN7wiQk"}
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " story is \"Rain\".\n"}]},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 146,"candidatesTokenCount": 10,"totalTokenCount": 156,"trafficType": "ON_DEMAND","promptTokensDetails": [{"modality": "TEXT","tokenCount": 146}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 10}]},"modelVersion": "gemini-2.0-flash","createTime": "2025-05-14T18:13:01.343871Z","responseId": "Ld0kaL_-FKeemecPtN7wiQk"}
+

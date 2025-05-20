@@ -4,11 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {ApiClient} from '../_api_client';
-import {Downloader} from '../_downloader';
-import {DownloadFileParameters} from '../types';
+import {ApiClient} from '../_api_client.js';
+import {Downloader} from '../_downloader.js';
+import {DownloadFileParameters} from '../types.js';
 
-import {crossError} from './_cross_error';
+import {crossError} from './_cross_error.js';
 
 export class CrossDownloader implements Downloader {
   async download(

@@ -7,10 +7,10 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import {GoogleGenAIOptions} from '../../../src/client';
-import {Session} from '../../../src/live';
-import {GoogleGenAI} from '../../../src/node/node_client';
-import * as types from '../../../src/types';
+import {GoogleGenAIOptions} from '../../../src/client.js';
+import {Session} from '../../../src/live.js';
+import {GoogleGenAI} from '../../../src/node/node_client.js';
+import * as types from '../../../src/types.js';
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;

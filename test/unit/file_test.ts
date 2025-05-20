@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {GoogleGenAI} from '../../src/node';
-import {createZeroFilledTempFile} from '../_generate_test_file';
+import {GoogleGenAI} from '../../src/node/index.js';
+import {createZeroFilledTempFile} from '../_generate_test_file.js';
 
 describe('File', () => {
   let client: GoogleGenAI;

@@ -1,0 +1,59 @@
+Status code: 200 
+X-Frame-Options: SAMEORIGIN
+X-Goog-Sherlog-Link: https://sherlog.corp.google.com/#workflow?config=Serving&dataid=aiplatform.googleapis.com/google.cloud.aiplatform.v1beta1.PredictionService.GenerateContent&gaia=821332047332&reason=sharedLink&version=183f774f83fb45982f116b3430ddae9a
+Content-Type: application/json; charset=UTF-8
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Content-Encoding: gzip
+Date: Wed, 14 May 2025 18:12:45 GMT
+Content-Length: 1041
+X-Xss-Protection: 0
+Server: scaffolding on HTTPServer2
+X-Content-Type-Options: nosniff
+
+{
+  "candidates": [
+    {
+      "content": {
+        "role": "model",
+        "parts": [
+          {
+            "text": "The sky is blue due to a phenomenon called **Rayleigh scattering**. Here's the breakdown:\n\n*   **Sunlight and Colors:** Sunlight is actually made up of all the colors of the rainbow.\n\n*   **Entering the Atmosphere:** When sunlight enters the Earth's atmosphere, it collides with tiny air molecules (mostly nitrogen and oxygen).\n\n*   **Scattering:** This collision causes the sunlight to scatter in different directions.\n\n*   **Rayleigh Scattering and Wavelengths:** Rayleigh scattering is more effective at scattering shorter wavelengths of light. Blue and violet light have shorter wavelengths than other colors like red and orange.\n\n*   **Why Blue, Not Violet?** While violet is scattered even more than blue, there are a couple of reasons why we see a blue sky:\n    *   **Less Violet in Sunlight:** The sun emits slightly less violet light than blue light.\n    *   **Our Eyes:** Our eyes are more sensitive to blue light than violet light.\n\nIn essence, blue light is scattered more by the atmosphere, so it reaches our eyes from all directions, making the sky appear blue.\n\n**Think of it like this:** Imagine throwing a bunch of different sized balls (colors) at a group of small trees (air molecules). The smaller balls (blue and violet light) are more likely to bounce off the trees in all directions, while the larger balls (red and orange light) are more likely to go straight through.\n"
+          }
+        ]
+      },
+      "finishReason": "STOP",
+      "citationMetadata": {
+        "citations": [
+          {
+            "startIndex": 1010,
+            "endIndex": 1150
+          }
+        ]
+      },
+      "avgLogprobs": -0.18597528598452576
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 6,
+    "candidatesTokenCount": 298,
+    "totalTokenCount": 304,
+    "trafficType": "ON_DEMAND",
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 6
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 298
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "createTime": "2025-05-14T18:12:43.893244Z",
+  "responseId": "G90kaLzCNs2gmecPwsPMmQg"
+}

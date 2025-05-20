@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Auth} from '../_auth';
+import {Auth} from '../_auth.js';
 
 export const GOOGLE_API_KEY_HEADER = 'x-goog-api-key';
 // TODO(b/395122533): We need a secure client side authentication mechanism.

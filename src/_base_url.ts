@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {GoogleGenAIOptions} from './client';
+import {GoogleGenAIOptions} from './client.js';
 
 let _defaultBaseGeminiUrl: string | undefined = undefined;
 let _defaultBaseVertexUrl: string | undefined = undefined;

@@ -4,14 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {GoogleGenAI} from '../../src/client';
-import {Models} from '../../src/models';
+import {GoogleGenAI} from '../../src/client.js';
+import {Models} from '../../src/models.js';
 import {
   Content,
   FinishReason,
   GenerateContentResponse,
   Type,
-} from '../../src/types';
+} from '../../src/types.js';
 
 function buildGenerateContentResponse(
   content: Content,
@@ -453,15 +453,6 @@ describe('sendMessageStream valid response', () => {
 });
 
 describe('create chat with history', () => {
-  it('throws error if history not start with a user turn', async () => {
-    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
-    const history = [{role: 'model', parts: [{text: 'some model response'}]}];
-
-    expect(() =>
-      client.chats.create({model: 'gemini-1.5-flash', history}),
-    ).toThrowError('History must start with a user turn.');
-  });
-
   it('throws error if history contains invalid role', async () => {
     const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
     const history = [
@@ -514,6 +505,179 @@ describe('create chat with history', () => {
 
     expect(chat.getHistory()).toEqual(comprehensiveHistory);
     expect(chat.getHistory(true)).toEqual(comprehensiveHistory);
+  });
+
+  it('independent valid model output is added to curated history', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const comprehensiveHistory = [
+      {role: 'model', parts: [{text: 'model content'}]},
+    ];
+    const chat = client.chats.create({
+      model: 'gemini-1.5-flash',
+      history: comprehensiveHistory,
+    });
+
+    expect(chat.getHistory()).toEqual(comprehensiveHistory);
+    expect(chat.getHistory(true)).toEqual(comprehensiveHistory);
+  });
+
+  it('consecutive valid model outputs are added to curated history', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const comprehensiveHistory = [
+      {role: 'model', parts: [{text: 'model content 1'}]},
+      {role: 'model', parts: [{text: 'model content 2'}]},
+      {role: 'user', parts: [{text: 'user content 1'}]},
+      {role: 'model', parts: [{text: 'model content 3'}]},
+    ];
+    const chat = client.chats.create({
+      model: 'gemini-1.5-flash',
+      history: comprehensiveHistory,
+    });
+
+    expect(chat.getHistory()).toEqual(comprehensiveHistory);
+    expect(chat.getHistory(true)).toEqual(comprehensiveHistory);
+  });
+
+  it('consecutive model outputs with invalid content are not added to curated history', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const comprehensiveHistory = [
+      {role: 'model', parts: [{text: 'model content 1'}]},
+      {role: 'model', parts: [{text: ''}]}, // invalid content
+      {role: 'model', parts: [{text: 'model content 2'}]},
+    ];
+    const chat = client.chats.create({
+      model: 'gemini-1.5-flash',
+      history: comprehensiveHistory,
+    });
+
+    expect(chat.getHistory()).toEqual(comprehensiveHistory);
+    expect(chat.getHistory(true)).toEqual([]);
+  });
+
+  it('independent user input is added to curated history', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const comprehensiveHistory = [
+      {role: 'user', parts: [{text: 'user content'}]},
+    ];
+    const chat = client.chats.create({
+      model: 'gemini-1.5-flash',
+      history: comprehensiveHistory,
+    });
+
+    expect(chat.getHistory()).toEqual(comprehensiveHistory);
+    expect(chat.getHistory(true)).toEqual(comprehensiveHistory);
+  });
+
+  it('consecutive user inputs are added to curated history', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const comprehensiveHistory = [
+      {role: 'user', parts: [{text: 'user content 1'}]},
+      {role: 'user', parts: [{text: 'user content 2'}]},
+    ];
+    const chat = client.chats.create({
+      model: 'gemini-1.5-flash',
+      history: comprehensiveHistory,
+    });
+
+    expect(chat.getHistory()).toEqual(comprehensiveHistory);
+    expect(chat.getHistory(true)).toEqual(comprehensiveHistory);
+  });
+
+  it('end with user input is added to curated history', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const comprehensiveHistory = [
+      {role: 'user', parts: [{text: 'user content 1'}]},
+      {role: 'model', parts: [{text: 'model content 2'}]},
+      {role: 'user', parts: [{text: 'user content 2'}]},
+    ];
+    const chat = client.chats.create({
+      model: 'gemini-1.5-flash',
+      history: comprehensiveHistory,
+    });
+
+    expect(chat.getHistory()).toEqual(comprehensiveHistory);
+    expect(chat.getHistory(true)).toEqual(comprehensiveHistory);
+  });
+
+  it('user input with associated invalid model content is not added to curated history', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const comprehensiveHistory = [
+      {role: 'user', parts: [{text: 'user content 1'}]},
+      {role: 'user', parts: [{text: 'user content 2'}]},
+      {role: 'model', parts: [{text: ''}]}, // invalid content
+    ];
+    const chat = client.chats.create({
+      model: 'gemini-1.5-flash',
+      history: comprehensiveHistory,
+    });
+
+    expect(chat.getHistory()).toEqual(comprehensiveHistory);
+    expect(chat.getHistory(true)).toEqual([
+      {role: 'user', parts: [{text: 'user content 1'}]},
+    ]);
+  });
+
+  it('user input with associated valid model content are added to curated history', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const comprehensiveHistory = [
+      {role: 'user', parts: [{text: 'user content 1'}]},
+      {role: 'user', parts: [{text: 'user content 2'}]},
+      {role: 'model', parts: [{text: 'model content 1'}]},
+    ];
+    const chat = client.chats.create({
+      model: 'gemini-1.5-flash',
+      history: comprehensiveHistory,
+    });
+
+    expect(chat.getHistory()).toEqual(comprehensiveHistory);
+    expect(chat.getHistory(true)).toEqual(comprehensiveHistory);
+  });
+
+  it('mutate history outside of chat session does not affect the chat history', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const externalHistory = [
+      {role: 'user', parts: [{text: 'user content 1'}]},
+      {role: 'model', parts: [{text: 'model content 1'}]},
+    ];
+    const chat = client.chats.create({
+      model: 'gemini-1.5-flash',
+      history: externalHistory,
+    });
+    externalHistory.push(
+      {role: 'user', parts: [{text: 'user content 2'}]},
+      {role: 'model', parts: [{text: 'model content 2'}]},
+    );
+    const expectedHistory = [
+      {role: 'user', parts: [{text: 'user content 1'}]},
+      {role: 'model', parts: [{text: 'model content 1'}]},
+    ];
+
+    expect(chat.getHistory()).toEqual(expectedHistory);
+    expect(chat.getHistory(true)).toEqual(expectedHistory);
+  });
+
+  it('mutate history inside chat session does not affect the external history', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const modelsModule = client.models;
+    const modelResponse = buildGenerateContentResponse({
+      parts: [{text: 'model content 2'}],
+      role: 'model',
+    });
+    spyOn(modelsModule, 'generateContent').and.returnValue(
+      Promise.resolve(modelResponse),
+    );
+    const externalHistory = [
+      {role: 'user', parts: [{text: 'user content 1'}]},
+      {role: 'model', parts: [{text: 'model content 1'}]},
+    ];
+    const chat = client.chats.create({
+      model: 'gemini-1.5-flash',
+      history: externalHistory,
+    });
+    await chat.sendMessage({message: 'user content 2'});
+
+    expect(chat.getHistory().length).toEqual(4);
+    expect(externalHistory.length).toEqual(2);
   });
 });
 
@@ -638,5 +802,184 @@ describe('getHistory', () => {
     ];
     expect(chat.getHistory()).toEqual(expectedComprehensiveHistory);
     expect(chat.getHistory(true)).toEqual([]);
+  });
+
+  it('getHistory returns a copy of the history', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const modelsModule = client.models;
+    const mockResponse = buildGenerateContentResponse({
+      parts: [{text: 'new model response'}],
+      role: 'model',
+    });
+    spyOn(modelsModule, 'generateContent').and.returnValue(
+      Promise.resolve(mockResponse),
+    );
+    const chat = client.chats.create({
+      model: 'gemini-1.5-flash',
+      history: [existingInputContent, existingOutputContent],
+    });
+    const fetchedHistory1 = chat.getHistory();
+
+    await chat.sendMessage({message: 'new user content'});
+
+    const fetchedHistory2 = chat.getHistory();
+
+    expect(fetchedHistory1.length).toEqual(2);
+    expect(fetchedHistory2.length).toEqual(4);
+  });
+
+  it('modifying the getHistory does not modify the chat history', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const originalHistory = [
+      {role: 'user', parts: [{text: 'user content 1'}]},
+      {role: 'model', parts: [{text: 'model content 1'}]},
+    ];
+    const chat = client.chats.create({
+      model: 'gemini-1.5-flash',
+      history: originalHistory,
+    });
+
+    const fetchedHistory1 = chat.getHistory();
+    fetchedHistory1.push(
+      {role: 'user', parts: [{text: 'user content 2'}]},
+      {role: 'model', parts: [{text: 'model content 2'}]},
+    );
+
+    const fetchedHistory2 = chat.getHistory();
+
+    expect(fetchedHistory2).toEqual(originalHistory);
+  });
+
+  it('empty text thoughts are appended', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const modelsModule = client.models;
+    const mockResponse = buildGenerateContentResponse({
+      parts: [{text: '', thought: true}, {text: 'new model response'}],
+      role: 'model',
+    });
+    spyOn(modelsModule, 'generateContent').and.returnValue(
+      Promise.resolve(mockResponse),
+    );
+    const chat = client.chats.create({
+      model: 'gemini-2.0-flash',
+      history: [existingInputContent, existingOutputContent],
+    });
+
+    await chat.sendMessage({message: 'new user content'});
+
+    const expectedHistory = [
+      existingInputContent,
+      existingOutputContent,
+      {role: 'user', parts: [{text: 'new user content'}]},
+      {
+        role: 'model',
+        parts: [{text: '', thought: true}, {text: 'new model response'}],
+      },
+    ];
+    expect(chat.getHistory()).toEqual(expectedHistory);
+    expect(chat.getHistory(true)).toEqual(expectedHistory);
+  });
+  it('test chat history with no prior history and afc', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const sendMessageInputContent = {
+      role: 'user',
+      parts: [{text: 'user input will make model make function call'}],
+    };
+    const functionCall = {
+      role: 'model',
+      parts: [{functionCall: {name: 'foo', args: {'param': 'bar'}}}],
+    };
+    const functionResponse = {
+      role: 'user',
+      parts: [{functionResponse: {response: {'result': 'execution_result'}}}],
+    };
+    const modelFinalReturn = {
+      role: 'model',
+      parts: [{text: 'no momre functioncalls, model output'}],
+    };
+    // This is the response.automaticFunctionCallingHistory for the sendMessage,
+    // afc history will have everything prior to the last model output. This is
+    // tested in models_test.ts
+    const afcHistory = [
+      sendMessageInputContent,
+      functionCall,
+      functionResponse,
+    ];
+    const mockResponse = buildGenerateContentResponse(modelFinalReturn);
+    mockResponse.automaticFunctionCallingHistory = afcHistory;
+
+    spyOn(client.models, 'generateContent').and.returnValue(
+      Promise.resolve(mockResponse),
+    );
+    // The scenario is that the chat has no prior history and the sendMessage
+    // will invoke model to make function call and then return the model output.
+    const chat = client.chats.create({
+      model: 'gemini-2.0-flash',
+    });
+
+    await chat.sendMessage({message: sendMessageInputContent.parts[0].text});
+
+    const expectedHistory = [
+      sendMessageInputContent,
+      functionCall,
+      functionResponse,
+      modelFinalReturn,
+    ];
+
+    expect(chat.getHistory(true)).toEqual(expectedHistory);
+  });
+  it('test chat history with prior history and afc', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const sendMessageInputContent = {
+      role: 'user',
+      parts: [{text: 'user input will make model make function call'}],
+    };
+    const functionCall = {
+      role: 'model',
+      parts: [{functionCall: {name: 'foo', args: {'param': 'bar'}}}],
+    };
+    const functionResponse = {
+      role: 'user',
+      parts: [{functionResponse: {response: {'result': 'execution_result'}}}],
+    };
+    const modelFinalReturn = {
+      role: 'model',
+      parts: [{text: 'no momre functioncalls, model output'}],
+    };
+    // This is the response.automaticFunctionCallingHistory for the sendMessage,
+    // afc history will have everything prior to the last model output. This is
+    // tested in models_test.ts
+    const afcHistory = [
+      existingInputContent,
+      existingOutputContent,
+      sendMessageInputContent,
+      functionCall,
+      functionResponse,
+    ];
+    const mockResponse = buildGenerateContentResponse(modelFinalReturn);
+    mockResponse.automaticFunctionCallingHistory = afcHistory;
+
+    spyOn(client.models, 'generateContent').and.returnValue(
+      Promise.resolve(mockResponse),
+    );
+    // The scenario is that the chat has prior history and the sendMessage will
+    // invoke model to make function call and then return the model output.
+    const chat = client.chats.create({
+      model: 'gemini-2.0-flash',
+      history: [existingInputContent, existingOutputContent],
+    });
+
+    await chat.sendMessage({message: sendMessageInputContent.parts[0].text});
+
+    const expectedHistory = [
+      existingInputContent,
+      existingOutputContent,
+      sendMessageInputContent,
+      functionCall,
+      functionResponse,
+      modelFinalReturn,
+    ];
+
+    expect(chat.getHistory(true)).toEqual(expectedHistory);
   });
 });

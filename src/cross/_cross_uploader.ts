@@ -3,11 +3,11 @@
  * Copyright 2025 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
-import {ApiClient} from '../_api_client';
-import {FileStat, Uploader} from '../_uploader';
-import {File, HttpResponse} from '../types';
+import {ApiClient} from '../_api_client.js';
+import {FileStat, Uploader} from '../_uploader.js';
+import {File, HttpResponse} from '../types.js';
 
-import {crossError} from './_cross_error';
+import {crossError} from './_cross_error.js';
 
 export const MAX_CHUNK_SIZE = 1024 * 1024 * 8; // bytes
 export const MAX_RETRY_COUNT = 3;

@@ -1,0 +1,43 @@
+Status code: 200 
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+X-Google-Netmon-Label: /bns/rw/borg/rw/bns/genai-api/prod.genai-api/3
+Server-Timing: gfet4t7; dur=1036
+X-Google-Shellfish-Status: CA0gBEBG
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+X-Google-Dos-Service-Trace: main:genai-api-api-prod,main:GLOBAL_all_non_cloud
+X-Google-Gfe-Handshake-Trace: GFE: /bns/ncsfoa/borg/ncsfoa/bns/blue-layer1-gfe-prod-edge/prod.blue-layer1-gfe.sfo03s25/8,Mentat oracle: [2002:a05:6f30:228:b0:b:1b6a:4a0a]:9801
+X-Google-Esf-Cloud-Client-Params: backend_service_name: "generativelanguage.googleapis.com" backend_fully_qualified_method: "google.ai.generativelanguage.v1beta.GenerativeService.StreamGenerateContent"
+Server: scaffolding on HTTPServer2
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Content-Disposition: attachment
+X-Google-Service: genai-api-api-prod/gfespec_googleapis-generativelanguage_generativelanguage-url-map-global_generativelanguage-genai-api-api-prod
+Content-Type: text/event-stream
+X-Content-Type-Options: nosniff
+X-Google-Backends: unix:/tmp/esfbackend.1746921619.85161.524194,/bns/rw/borg/rw/bns/genai-api/prod.genai-api/3,/bns/ncsfoa/borg/ncsfoa/bns/blue-layer1-gfe-prod-edge/prod.blue-layer1-gfe.sfo03s25/8
+Date: Sun, 11 May 2025 02:58:19 GMT
+X-Google-Gfe-Service-Trace: genai-api-api-prod/gfespec_googleapis-generativelanguage_generativelanguage-url-map-global_generativelanguage-genai-api-api-prod
+X-Google-Gfe-Request-Trace: acsfol10:443,/bns/rw/borg/rw/bns/genai-api/prod.genai-api/3,acsfol10:443
+X-Google-Gfe-Version: 2.928.1
+X-Google-Session-Info: GgQYECgLIAE6IxIhZ2VuZXJhdGl2ZWxhbmd1YWdlLmdvb2dsZWFwaXMuY29t
+X-Google-Security-Signals: FRAMEWORK=ONE_PLATFORM,ENV=borg,ENV_DEBUG=borg_user:genai-api;borg_job:prod.genai-api
+X-Google-Security-Signals: FRAMEWORK=HTTPSERVER2,BUILD=GOOGLE3,BUILD_DEBUG=cl:756525062,ENV=borg,ENV_DEBUG=borg_user:genai-api;borg_job:prod.genai-api
+X-Google-Gfe-Response-Code-Details-Trace: response_code_set_by_backend
+X-Google-Gfe-Response-Body-Transformations: dechunked
+
+data: {"candidates": [{"content": {"parts": [{"text": "The"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-1.5-flash"}
+
+data: {"candidates": [{"content": {"parts": [{"text": " sky is blue due to a phenomenon called **Rayleigh scattering**.  Sunlight is"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-1.5-flash"}
+
+data: {"candidates": [{"content": {"parts": [{"text": " made up of all the colors of the rainbow.  When sunlight enters the Earth"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-1.5-flash"}
+
+data: {"candidates": [{"content": {"parts": [{"text": "'s atmosphere, it collides with tiny air molecules (mostly nitrogen and oxygen).  These molecules are much smaller than the wavelengths of visible light.\n\nRay"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-1.5-flash"}
+
+data: {"candidates": [{"content": {"parts": [{"text": "leigh scattering affects shorter wavelengths of light more strongly than longer wavelengths.  Blue and violet light have the shortest wavelengths, so they are scattered much more than other colors"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-1.5-flash"}
+
+data: {"candidates": [{"content": {"parts": [{"text": ".  This scattered blue light is what we see when we look at the sky.\n\nWhile violet light is scattered even more than blue light, our eyes are more sensitive to blue, and the sun emits slightly less violet light, resulting in"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-1.5-flash"}
+
+data: {"candidates": [{"content": {"parts": [{"text": " a blue sky rather than a violet one.\n"}],"role": "model"},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 6,"candidatesTokenCount": 155,"totalTokenCount": 161,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 6}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 155}]},"modelVersion": "gemini-1.5-flash"}
+

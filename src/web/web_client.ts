@@ -4,21 +4,21 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {ApiClient} from '../_api_client';
-import {getBaseUrl} from '../_base_url';
-import {Caches} from '../caches';
-import {Chats} from '../chats';
-import {GoogleGenAIOptions} from '../client';
-import {Files} from '../files';
-import {Live} from '../live';
-import {Models} from '../models';
-import {Operations} from '../operations';
-import {Tunings} from '../tunings';
+import {ApiClient} from '../_api_client.js';
+import {getBaseUrl} from '../_base_url.js';
+import {Caches} from '../caches.js';
+import {Chats} from '../chats.js';
+import {GoogleGenAIOptions} from '../client.js';
+import {Files} from '../files.js';
+import {Live} from '../live.js';
+import {Models} from '../models.js';
+import {Operations} from '../operations.js';
+import {Tunings} from '../tunings.js';
 
-import {BrowserDownloader} from './_browser_downloader';
-import {BrowserUploader} from './_browser_uploader';
-import {BrowserWebSocketFactory} from './_browser_websocket';
-import {WebAuth} from './_web_auth';
+import {BrowserDownloader} from './_browser_downloader.js';
+import {BrowserUploader} from './_browser_uploader.js';
+import {BrowserWebSocketFactory} from './_browser_websocket.js';
+import {WebAuth} from './_web_auth.js';
 
 const LANGUAGE_LABEL_PREFIX = 'gl-node/';
 

@@ -10,13 +10,18 @@
  * @experimental
  */
 
-import {ApiClient} from './_api_client';
-import {Auth} from './_auth';
-import * as t from './_transformers';
-import {WebSocket, WebSocketCallbacks, WebSocketFactory} from './_websocket';
-import * as converters from './converters/_live_converters';
-import {contentToMldev, contentToVertex} from './converters/_models_converters';
-import * as types from './types';
+import {ApiClient} from './_api_client.js';
+import {Auth} from './_auth.js';
+import * as t from './_transformers.js';
+import {WebSocket, WebSocketCallbacks, WebSocketFactory} from './_websocket.js';
+import * as converters from './converters/_live_converters.js';
+import {
+  contentToMldev,
+  contentToVertex,
+} from './converters/_models_converters.js';
+import {hasMcpToolUsage, setMcpUsageHeader} from './mcp/_mcp.js';
+import {LiveMusic} from './music.js';
+import * as types from './types.js';
 
 const FUNCTION_RESPONSE_REQUIRES_ID =
   'FunctionResponse request must have an `id` field from the response of a ToolCall.FunctionalCalls in Google AI.';
@@ -64,17 +69,26 @@ async function handleWebSocketMessage(
    @experimental
   */
 export class Live {
+  public readonly music: LiveMusic;
+
   constructor(
     private readonly apiClient: ApiClient,
     private readonly auth: Auth,
     private readonly webSocketFactory: WebSocketFactory,
-  ) {}
+  ) {
+    this.music = new LiveMusic(
+      this.apiClient,
+      this.auth,
+      this.webSocketFactory,
+    );
+  }
 
   /**
      Establishes a connection to the specified model with the given
      configuration and returns a Session object representing that connection.
 
-     @experimental
+     @experimental Built-in MCP support is an experimental feature, may change in
+     future versions.
 
      @remarks
 
@@ -115,7 +129,15 @@ export class Live {
     const websocketBaseUrl = this.apiClient.getWebsocketBaseUrl();
     const apiVersion = this.apiClient.getApiVersion();
     let url: string;
-    const headers = mapToHeaders(this.apiClient.getDefaultHeaders());
+    const defaultHeaders = this.apiClient.getDefaultHeaders();
+    if (
+      params.config &&
+      params.config.tools &&
+      hasMcpToolUsage(params.config.tools)
+    ) {
+      setMcpUsageHeader(defaultHeaders);
+    }
+    const headers = mapToHeaders(defaultHeaders);
     if (this.apiClient.isVertexAI()) {
       url = `${websocketBaseUrl}/ws/google.cloud.aiplatform.${
         apiVersion
@@ -198,6 +220,19 @@ export class Live {
         'Setting `LiveConnectConfig.generation_config` is deprecated, please set the fields on `LiveConnectConfig` directly. This will become an error in a future version (not before Q3 2025).',
       );
     }
+    const inputTools = params.config?.tools ?? [];
+    const convertedTools: types.Tool[] = [];
+    for (const tool of inputTools) {
+      if (this.isCallableTool(tool)) {
+        const callableTool = tool as types.CallableTool;
+        convertedTools.push(await callableTool.tool());
+      } else {
+        convertedTools.push(tool as types.Tool);
+      }
+    }
+    if (convertedTools.length > 0) {
+      params.config!.tools = convertedTools;
+    }
     const liveConnectParameters: types.LiveConnectParameters = {
       model: transformedModel,
       config: params.config,
@@ -217,6 +252,11 @@ export class Live {
     delete clientMessage['config'];
     conn.send(JSON.stringify(clientMessage));
     return new Session(conn, this.apiClient);
+  }
+
+  // TODO: b/416041229 - Abstract this method to a common place.
+  private isCallableTool(tool: types.ToolUnion): boolean {
+    return 'callTool' in tool && typeof tool.callTool === 'function';
   }
 }
 

@@ -1,0 +1,15 @@
+Status code: 200 
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+X-Goog-Sherlog-Link: https://sherlog.corp.google.com/#workflow?config=Serving&dataid=aiplatform.googleapis.com/google.cloud.aiplatform.v1beta1.PredictionService.StreamGenerateContent&gaia=821332047332&reason=sharedLink&version=183f774eee03ef74c225382d32e96de6
+Content-Type: text/event-stream
+Content-Disposition: attachment
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Date: Wed, 14 May 2025 18:12:41 GMT
+Server: scaffolding on HTTPServer2
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"functionCall": {"name": "customDivide","args": {"denominator": 2,"numerator": 50}}}]},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 38,"candidatesTokenCount": 6,"totalTokenCount": 44,"trafficType": "ON_DEMAND","promptTokensDetails": [{"modality": "TEXT","tokenCount": 38}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 6}]},"modelVersion": "gemini-2.0-flash","createTime": "2025-05-14T18:12:41.368106Z","responseId": "Gd0kaOq7FvWdmecPoaSp-Qo"}
+

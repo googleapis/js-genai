@@ -5,8 +5,8 @@
  */
 import * as fs from 'fs/promises';
 
-import {ApiClient} from '../_api_client';
-import {FileStat, Uploader} from '../_uploader';
+import {ApiClient} from '../_api_client.js';
+import {FileStat, Uploader} from '../_uploader.js';
 import {
   DELAY_MULTIPLIER,
   INITIAL_RETRY_DELAY_MS,
@@ -16,8 +16,8 @@ import {
   getBlobStat,
   sleep,
   uploadBlob,
-} from '../cross/_cross_uploader';
-import {File, HttpResponse} from '../types';
+} from '../cross/_cross_uploader.js';
+import {File, HttpResponse} from '../types.js';
 
 export class NodeUploader implements Uploader {
   async stat(file: string | Blob): Promise<FileStat> {
