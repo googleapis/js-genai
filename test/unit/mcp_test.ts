@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {Client as McpClient} from '@modelcontextprotocol/sdk/client/index.js';
 import {Tool as McpTool, ToolSchema} from '@modelcontextprotocol/sdk/types.js';
 
 import {
@@ -12,6 +13,7 @@ import {
 } from '../../src/_transformers.js';
 import {
   hasMcpToolUsage,
+  isMcpClient,
   mcpToTool,
   setMcpUsageHeader,
 } from '../../src/mcp/_mcp.js';
@@ -422,5 +424,19 @@ describe('mcpToTool', () => {
         'Duplicate function name print found in MCP tools. Please ensure function names are unique.',
       );
     }
+  });
+});
+
+describe('isMcpClient', () => {
+  it('detects McpClients', () => {
+    const client = new McpClient({
+      name: 'beeper',
+      version: '1.0.0',
+    });
+
+    expect(isMcpClient(client)).toBe(true);
+  });
+  it('rejects non McpClients', () => {
+    expect(isMcpClient({})).toBe(false);
   });
 });

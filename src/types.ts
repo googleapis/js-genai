@@ -8,6 +8,8 @@
 
 import type {ReferenceImageAPIInternal} from './_internal_types.js';
 
+import type {Client as McpClient} from '@modelcontextprotocol/sdk/client/index.js';
+
 /** Required. Outcome of the code execution. */
 export enum Outcome {
   /**
@@ -4922,7 +4924,7 @@ export type SchemaUnion = Schema | unknown;
 
 export type SpeechConfigUnion = SpeechConfig | string;
 
-export type ToolUnion = Tool | CallableTool;
+export type ToolUnion = Tool | CallableTool | McpClient;
 
 export type ToolListUnion = ToolUnion[];
 
