@@ -1,6 +1,17 @@
 # Changelog
 
 
+## [1.0.1](https://github.com/googleapis/js-genai/compare/v1.0.0...v1.0.1) (2025-05-22)
+
+> [!NOTE]
+> This version drops support for end-of-life Node.js v18.
+
+### Bug Fixes
+
+* After an error on sendMessage, all subsequent calls fail with the same error ([778abcc](https://github.com/googleapis/js-genai/commit/778abccceffb5148762ed35d53c7e957d3284aee))
+* Fixed sendMessage subsequent calls test to follow the arrange-act-assert pattern ([778abcc](https://github.com/googleapis/js-genai/commit/778abccceffb5148762ed35d53c7e957d3284aee))
+* Unbreak direct `require`s from node. ([023efd5](https://github.com/googleapis/js-genai/commit/023efd5a4c225451a494dcf6c7785bbdc40b83ea))
+
 ## [1.0.0](https://github.com/googleapis/js-genai/compare/v0.15.0...v1.0.0) (2025-05-19)
 
 
