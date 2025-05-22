@@ -82,6 +82,11 @@ export interface AuthConfigOidcConfig {
 }
 
 // @public
+export interface AuthToken {
+    name?: string;
+}
+
+// @public
 export enum AuthType {
     API_KEY_AUTH = "API_KEY_AUTH",
     // (undocumented)
@@ -352,6 +357,11 @@ export interface CreateAuthTokenConfig {
     lockAdditionalFields?: string[];
     newSessionExpireTime?: string;
     uses?: number;
+}
+
+// @public
+export interface CreateAuthTokenParameters {
+    config?: CreateAuthTokenConfig;
 }
 
 // @public
@@ -1112,6 +1122,8 @@ export class GoogleGenAI {
     // (undocumented)
     protected readonly apiClient: ApiClient;
     // (undocumented)
+    readonly authTokens: Tokens;
+    // (undocumented)
     readonly caches: Caches;
     // (undocumented)
     readonly chats: Chats;
@@ -1209,6 +1221,9 @@ export interface GroundingSupport {
 }
 
 // @public
+export function handleWebSocketMessage(apiClient: ApiClient, onmessage: (msg: types.LiveServerMessage) => void, event: MessageEvent): Promise<void>;
+
+// @public
 export enum HarmBlockMethod {
     HARM_BLOCK_METHOD_UNSPECIFIED = "HARM_BLOCK_METHOD_UNSPECIFIED",
     PROBABILITY = "PROBABILITY",
@@ -1252,6 +1267,9 @@ export enum HarmSeverity {
     HARM_SEVERITY_NEGLIGIBLE = "HARM_SEVERITY_NEGLIGIBLE",
     HARM_SEVERITY_UNSPECIFIED = "HARM_SEVERITY_UNSPECIFIED"
 }
+
+// @public (undocumented)
+export function headersToMap(headers: Headers): Record<string, string>;
 
 // @public
 export interface HttpOptions {
@@ -1423,13 +1441,16 @@ export class ListTuningJobsResponse {
 // @public
 export class Live {
     // Warning: (ae-forgotten-export) The symbol "Auth" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "WebSocketFactory" needs to be exported by the entry point index.d.ts
     constructor(apiClient: ApiClient, auth: Auth, webSocketFactory: WebSocketFactory);
     connect(params: types.LiveConnectParameters): Promise<Session>;
     // Warning: (ae-forgotten-export) The symbol "LiveMusic" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
     readonly music: LiveMusic;
+    // Warning: (ae-forgotten-export) The symbol "WebSocketFactory" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    readonly webSocketFactory: WebSocketFactory;
 }
 
 // @public
@@ -1513,6 +1534,17 @@ export interface LiveConnectParameters {
     callbacks: LiveCallbacks;
     config?: LiveConnectConfig;
     model: string;
+}
+
+// @public
+export function liveEphemeralConnect(params: types.LiveEphemeralConnectParameters): Promise<Session>;
+
+// @public
+export interface LiveEphemeralConnectParameters {
+    accessToken?: string;
+    callbacks: LiveCallbacks;
+    config?: LiveConnectConfig;
+    model?: string;
 }
 
 // @public
@@ -1722,6 +1754,9 @@ export interface LogprobsResultCandidate {
 export interface LogprobsResultTopCandidates {
     candidates?: LogprobsResultCandidate[];
 }
+
+// @public (undocumented)
+export function mapToHeaders(map: Record<string, string>): Headers;
 
 // @public
 export interface MaskReferenceConfig {
@@ -2336,6 +2371,12 @@ export interface TestTableItem {
 export interface ThinkingConfig {
     includeThoughts?: boolean;
     thinkingBudget?: number;
+}
+
+// @public (undocumented)
+export class Tokens extends BaseModule {
+    constructor(apiClient: ApiClient);
+    create(params: types.CreateAuthTokenParameters): Promise<types.AuthToken>;
 }
 
 // @public

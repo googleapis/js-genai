@@ -1877,6 +1877,50 @@ export function liveConnectParametersToVertex(
   return toObject;
 }
 
+export function liveEphemeralConnectParametersToMldev(
+  apiClient: ApiClient,
+  fromObject: types.LiveEphemeralConnectParameters,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromModel = common.getValueByPath(fromObject, ['model']);
+  if (fromModel != null) {
+    common.setValueByPath(
+      toObject,
+      ['setup', 'model'],
+      t.tModel(apiClient, fromModel),
+    );
+  }
+
+  const fromConfig = common.getValueByPath(fromObject, ['config']);
+  if (fromConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['config'],
+      liveConnectConfigToMldev(apiClient, fromConfig, toObject),
+    );
+  }
+
+  return toObject;
+}
+
+export function liveEphemeralConnectParametersToVertex(
+  apiClient: ApiClient,
+  fromObject: types.LiveEphemeralConnectParameters,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  if (common.getValueByPath(fromObject, ['model']) !== undefined) {
+    throw new Error('model parameter is not supported in Vertex AI.');
+  }
+
+  if (common.getValueByPath(fromObject, ['config']) !== undefined) {
+    throw new Error('config parameter is not supported in Vertex AI.');
+  }
+
+  return toObject;
+}
+
 export function activityStartToMldev(): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
