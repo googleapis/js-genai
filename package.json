@@ -17,10 +17,12 @@
       "node": {
         "types": "./dist/node/node.d.ts",
         "import": "./dist/node/index.mjs",
+        "require": "./dist/node/index.cjs",
         "default": "./dist/node/index.mjs"
       },
       "types": "./dist/genai.d.ts",
       "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs",
       "default": "./dist/index.mjs"
     },
     "./web": {
@@ -55,8 +57,10 @@
   "files": [
     "dist/genai.d.ts",
     "dist/index.mjs",
+    "dist/index.cjs",
     "dist/index.mjs.map",
     "dist/node/index.mjs",
+    "dist/node/index.cjs",
     "dist/node/index.mjs.map",
     "dist/node/node.d.ts",
     "dist/web/index.mjs",

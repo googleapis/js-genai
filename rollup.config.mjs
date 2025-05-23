@@ -30,12 +30,24 @@ const externalDeps = [
 ];
 
 export default [
-  // ES module (dist/index.mjs)
+  // Cross ES module (dist/index.mjs)
   {
     input: 'src/index.ts',
     output: {
       file: pkg.exports['.']['import'],
       format: 'es',
+      sourcemap: true,
+    },
+    plugins: rollupPlugins,
+    external: externalDeps,
+  },
+
+  // Cross CJS module (dist/index.cjs)
+  {
+    input: 'src/index.ts',
+    output: {
+      file: pkg.exports['.']['require'],
+      format: 'cjs',
       sourcemap: true,
     },
     plugins: rollupPlugins,
@@ -48,6 +60,18 @@ export default [
     output: {
       file: pkg.exports['./node']['import'],
       format: 'es',
+      sourcemap: true,
+    },
+    plugins: rollupPlugins,
+    external: externalDeps,
+  },
+
+  // The `node/` CJS module (dist/node/index.cjs)
+  {
+    input: 'src/node/index.ts',
+    output: {
+      file: pkg.exports['.']['node']['require'],
+      format: 'cjs',
       sourcemap: true,
     },
     plugins: rollupPlugins,
