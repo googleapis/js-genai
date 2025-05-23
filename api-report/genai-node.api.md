@@ -1576,7 +1576,6 @@ export interface LiveMusicGenerationConfig {
     brightness?: number;
     density?: number;
     guidance?: number;
-    musicGenerationMode?: MusicGenerationMode;
     muteBass?: boolean;
     muteDrums?: boolean;
     onlyBassAndDrums?: boolean;
@@ -1849,13 +1848,6 @@ export interface ModelSelectionConfig {
 // @public
 export interface MultiSpeakerVoiceConfig {
     speakerVoiceConfigs?: SpeakerVoiceConfig[];
-}
-
-// @public
-export enum MusicGenerationMode {
-    DIVERSITY = "DIVERSITY",
-    MUSIC_GENERATION_MODE_UNSPECIFIED = "MUSIC_GENERATION_MODE_UNSPECIFIED",
-    QUALITY = "QUALITY"
 }
 
 // @public
