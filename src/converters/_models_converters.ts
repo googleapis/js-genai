@@ -122,6 +122,13 @@ export function partToMldev(
     );
   }
 
+  const fromThoughtSignature = common.getValueByPath(fromObject, [
+    'thoughtSignature',
+  ]);
+  if (fromThoughtSignature != null) {
+    common.setValueByPath(toObject, ['thoughtSignature'], fromThoughtSignature);
+  }
+
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
     'codeExecutionResult',
   ]);
@@ -1846,6 +1853,13 @@ export function partToVertex(
       ['fileData'],
       fileDataToVertex(apiClient, fromFileData),
     );
+  }
+
+  const fromThoughtSignature = common.getValueByPath(fromObject, [
+    'thoughtSignature',
+  ]);
+  if (fromThoughtSignature != null) {
+    common.setValueByPath(toObject, ['thoughtSignature'], fromThoughtSignature);
   }
 
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
@@ -4166,6 +4180,13 @@ export function partFromMldev(
     );
   }
 
+  const fromThoughtSignature = common.getValueByPath(fromObject, [
+    'thoughtSignature',
+  ]);
+  if (fromThoughtSignature != null) {
+    common.setValueByPath(toObject, ['thoughtSignature'], fromThoughtSignature);
+  }
+
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
     'codeExecutionResult',
   ]);
@@ -4990,6 +5011,13 @@ export function partFromVertex(
       ['fileData'],
       fileDataFromVertex(apiClient, fromFileData),
     );
+  }
+
+  const fromThoughtSignature = common.getValueByPath(fromObject, [
+    'thoughtSignature',
+  ]);
+  if (fromThoughtSignature != null) {
+    common.setValueByPath(toObject, ['thoughtSignature'], fromThoughtSignature);
   }
 
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
