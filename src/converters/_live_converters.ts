@@ -2803,17 +2803,6 @@ export function liveMusicGenerationConfigToMldev(
     common.setValueByPath(toObject, ['onlyBassAndDrums'], fromOnlyBassAndDrums);
   }
 
-  const fromMusicGenerationMode = common.getValueByPath(fromObject, [
-    'musicGenerationMode',
-  ]);
-  if (fromMusicGenerationMode != null) {
-    common.setValueByPath(
-      toObject,
-      ['musicGenerationMode'],
-      fromMusicGenerationMode,
-    );
-  }
-
   return toObject;
 }
 
@@ -2866,14 +2855,6 @@ export function liveMusicGenerationConfigToVertex(
   if (common.getValueByPath(fromObject, ['onlyBassAndDrums']) !== undefined) {
     throw new Error(
       'onlyBassAndDrums parameter is not supported in Vertex AI.',
-    );
-  }
-
-  if (
-    common.getValueByPath(fromObject, ['musicGenerationMode']) !== undefined
-  ) {
-    throw new Error(
-      'musicGenerationMode parameter is not supported in Vertex AI.',
     );
   }
 
@@ -4490,17 +4471,6 @@ export function liveMusicGenerationConfigFromMldev(
   ]);
   if (fromOnlyBassAndDrums != null) {
     common.setValueByPath(toObject, ['onlyBassAndDrums'], fromOnlyBassAndDrums);
-  }
-
-  const fromMusicGenerationMode = common.getValueByPath(fromObject, [
-    'musicGenerationMode',
-  ]);
-  if (fromMusicGenerationMode != null) {
-    common.setValueByPath(
-      toObject,
-      ['musicGenerationMode'],
-      fromMusicGenerationMode,
-    );
   }
 
   return toObject;
