@@ -1931,6 +1931,7 @@ export interface Part {
     inlineData?: Blob_2;
     text?: string;
     thought?: boolean;
+    thoughtSignature?: string;
     videoMetadata?: VideoMetadata;
 }
 
