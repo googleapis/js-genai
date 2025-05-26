@@ -1,6 +1,14 @@
 # Changelog
 
 
+## [1.1.0](https://github.com/googleapis/js-genai/compare/v1.0.1...v1.1.0) (2025-05-26)
+
+
+### Features
+
+* Add CommonJS modules ([f40c47c](https://github.com/googleapis/js-genai/commit/f40c47c8b2fd275bd8536f889bef21f2ec1faf05))
+* support new fields in FileData, GenerationConfig, GroundingChunkRetrievedContext, RetrievalConfig, Schema, TuningJob, VertexAISearch, ([cd04548](https://github.com/googleapis/js-genai/commit/cd0454862b4a0251d2606eeca8500b3b76004944))
+
 ## [1.0.1](https://github.com/googleapis/js-genai/compare/v1.0.0...v1.0.1) (2025-05-22)
 
 > [!NOTE]
