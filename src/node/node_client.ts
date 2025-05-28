@@ -18,6 +18,7 @@ import {NodeAuth} from '../node/_node_auth.js';
 import {NodeDownloader} from '../node/_node_downloader.js';
 import {NodeWebSocketFactory} from '../node/_node_websocket.js';
 import {Operations} from '../operations.js';
+import {Tokens} from '../tokens.js';
 import {Tunings} from '../tunings.js';
 
 import {NodeUploader} from './_node_uploader.js';
@@ -78,6 +79,7 @@ export class GoogleGenAI {
   readonly caches: Caches;
   readonly files: Files;
   readonly operations: Operations;
+  readonly authTokens: Tokens;
   readonly tunings: Tunings;
 
   constructor(options: GoogleGenAIOptions) {
@@ -162,6 +164,7 @@ export class GoogleGenAI {
     this.caches = new Caches(this.apiClient);
     this.files = new Files(this.apiClient);
     this.operations = new Operations(this.apiClient);
+    this.authTokens = new Tokens(this.apiClient);
     this.tunings = new Tunings(this.apiClient);
   }
 }

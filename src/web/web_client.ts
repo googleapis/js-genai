@@ -13,6 +13,7 @@ import {Files} from '../files.js';
 import {Live} from '../live.js';
 import {Models} from '../models.js';
 import {Operations} from '../operations.js';
+import {Tokens} from '../tokens.js';
 import {Tunings} from '../tunings.js';
 
 import {BrowserDownloader} from './_browser_downloader.js';
@@ -69,6 +70,7 @@ export class GoogleGenAI {
   readonly caches: Caches;
   readonly files: Files;
   readonly operations: Operations;
+  readonly authTokens: Tokens;
   readonly tunings: Tunings;
 
   constructor(options: GoogleGenAIOptions) {
@@ -116,6 +118,7 @@ export class GoogleGenAI {
     this.caches = new Caches(this.apiClient);
     this.files = new Files(this.apiClient);
     this.operations = new Operations(this.apiClient);
+    this.authTokens = new Tokens(this.apiClient);
     this.tunings = new Tunings(this.apiClient);
   }
 }

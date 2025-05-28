@@ -15,5 +15,6 @@ export {Models} from '../models.js';
 export type {LiveMusicSession} from '../music.js';
 export {Operations} from '../operations.js';
 export {PagedItem, Pager} from '../pagers.js';
+export * from '../tokens.js';
 export * from '../types.js';
 export * from './node_client.js';

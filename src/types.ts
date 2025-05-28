@@ -4838,6 +4838,12 @@ export declare interface LiveMusicSetWeightedPromptsParameters {
   weightedPrompts: WeightedPrompt[];
 }
 
+/** Config for auth_tokens.create parameters. */
+export declare interface AuthToken {
+  /** The name of the auth token. */
+  name?: string;
+}
+
 /** Config for LiveEphemeralParameters for Auth Token creation. */
 export declare interface LiveEphemeralParameters {
   /** ID of the model to configure in the ephemeral token for Live API.
@@ -4880,6 +4886,12 @@ export declare interface CreateAuthTokenConfig {
   liveEphemeralParameters?: LiveEphemeralParameters;
   /** Additional fields to lock in the effective LiveConnectParameters. */
   lockAdditionalFields?: string[];
+}
+
+/** Config for auth_tokens.create parameters. */
+export declare interface CreateAuthTokenParameters {
+  /** Optional parameters for the request. */
+  config?: CreateAuthTokenConfig;
 }
 
 /** Parameters for the get method of the operations module. */

@@ -2016,20 +2016,47 @@ export function createAuthTokenConfigToVertex(
   return toObject;
 }
 
-export function createAuthTokenParametersToMldev(): Record<string, unknown> {
+export function createAuthTokenParametersToMldev(
+  apiClient: ApiClient,
+  fromObject: types.CreateAuthTokenParameters,
+): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
+
+  const fromConfig = common.getValueByPath(fromObject, ['config']);
+  if (fromConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['config'],
+      createAuthTokenConfigToMldev(apiClient, fromConfig, toObject),
+    );
+  }
 
   return toObject;
 }
 
-export function createAuthTokenParametersToVertex(): Record<string, unknown> {
+export function createAuthTokenParametersToVertex(
+  apiClient: ApiClient,
+  fromObject: types.CreateAuthTokenParameters,
+): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
+
+  if (common.getValueByPath(fromObject, ['config']) !== undefined) {
+    throw new Error('config parameter is not supported in Vertex AI.');
+  }
 
   return toObject;
 }
 
-export function authTokenFromMldev(): Record<string, unknown> {
+export function authTokenFromMldev(
+  apiClient: ApiClient,
+  fromObject: types.AuthToken,
+): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
+
+  const fromName = common.getValueByPath(fromObject, ['name']);
+  if (fromName != null) {
+    common.setValueByPath(toObject, ['name'], fromName);
+  }
 
   return toObject;
 }
