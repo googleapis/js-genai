@@ -1,6 +1,27 @@
 # Changelog
 
 
+## [1.2.0](https://github.com/googleapis/js-genai/compare/v1.1.0...v1.2.0) (2025-05-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* Remove unsupported Lyria enum for music generation mode
+
+### Features
+
+* Add generate_audio field for private testing of video generation ([37e14c5](https://github.com/googleapis/js-genai/commit/37e14c5bb29a26733601548acf109f8c0b25bbfb))
+
+
+### Documentation
+
+* fix README typo ([04259ad](https://github.com/googleapis/js-genai/commit/04259ad8ebb07663bd3935ee8142ffda3c9b1dff))
+
+
+### Miscellaneous Chores
+
+* Remove unsupported Lyria enum for music generation mode ([0b935cd](https://github.com/googleapis/js-genai/commit/0b935cdbe3ac10a1741619d946e865f352ba3333))
+
 ## [1.1.0](https://github.com/googleapis/js-genai/compare/v1.0.1...v1.1.0) (2025-05-26)
 
 
