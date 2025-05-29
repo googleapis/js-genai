@@ -90,13 +90,13 @@ export class GoogleGenAI {
 
     this.vertexai =
       options.vertexai ?? getBooleanEnv('GOOGLE_GENAI_USE_VERTEXAI') ?? false;
-    const envApiKey = getEnv('GOOGLE_API_KEY');
-    const envProject = getEnv('GOOGLE_CLOUD_PROJECT');
-    const envLocation = getEnv('GOOGLE_CLOUD_LOCATION');
+    const envApiKey = getEnv('GOOGLE_API_KEY') || undefined;
+    const envProject = getEnv('GOOGLE_CLOUD_PROJECT') || undefined;
+    const envLocation = getEnv('GOOGLE_CLOUD_LOCATION') || undefined;
 
-    this.apiKey = (options.apiKey ?? envApiKey) || undefined;
-    this.project = (options.project ?? envProject) || undefined;
-    this.location = (options.location ?? envLocation) || undefined;
+    this.apiKey = options.apiKey ?? envApiKey;
+    this.project = options.project ?? envProject;
+    this.location = options.location ?? envLocation;
 
     // Handle when to use Vertex AI in express mode (api key)
     if (options.vertexai) {
