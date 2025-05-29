@@ -241,6 +241,12 @@ export interface CitationMetadata {
 }
 
 // @public
+export class ClientError extends Error {
+    constructor(options: HttpErrorOptions);
+    status?: number;
+}
+
+// @public
 export interface CodeExecutionResult {
     outcome?: Outcome;
     output?: string;
@@ -1268,6 +1274,13 @@ export enum HarmSeverity {
 }
 
 // @public
+export interface HttpErrorOptions {
+    message: string;
+    stackTrace?: string;
+    status?: number;
+}
+
+// @public
 export interface HttpOptions {
     apiVersion?: string;
     baseUrl?: string;
@@ -2185,6 +2198,12 @@ export interface Segment {
 export interface SendMessageParameters {
     config?: GenerateContentConfig;
     message: PartListUnion;
+}
+
+// @public
+export class ServerError extends Error {
+    constructor(options: HttpErrorOptions);
+    status?: number;
 }
 
 // @public

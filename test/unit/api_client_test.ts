@@ -1235,6 +1235,7 @@ describe('ApiClient', () => {
         .catch((e) => {
           expect(e.name).toEqual('ServerError');
           expect(e.message).toContain('Internal Server Error');
+          expect(e.status).toEqual(500);
         });
     });
     it('should throw ClientError if response is 400', async () => {
@@ -1252,6 +1253,7 @@ describe('ApiClient', () => {
         .catch((e) => {
           expect(e.name).toEqual('ClientError');
           expect(e.message).toContain('Bad Request');
+          expect(e.status).toEqual(400);
         });
     });
     it('should yield data if response is ok', async () => {
