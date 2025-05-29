@@ -306,7 +306,8 @@ export class ControlReferenceImage {
     referenceId?: number;
     referenceImage?: Image_2;
     referenceType?: string;
-    toReferenceImageAPI(): any;
+    // Warning: (ae-forgotten-export) The symbol "ReferenceImageAPIInternal" needs to be exported by the entry point index.d.ts
+    toReferenceImageAPI(): ReferenceImageAPIInternal;
 }
 
 // @public
@@ -1748,7 +1749,7 @@ export class MaskReferenceImage {
     referenceId?: number;
     referenceImage?: Image_2;
     referenceType?: string;
-    toReferenceImageAPI(): any;
+    toReferenceImageAPI(): ReferenceImageAPIInternal;
 }
 
 // @public
@@ -2013,7 +2014,7 @@ export class RawReferenceImage {
     referenceId?: number;
     referenceImage?: Image_2;
     referenceType?: string;
-    toReferenceImageAPI(): any;
+    toReferenceImageAPI(): ReferenceImageAPIInternal;
 }
 
 // @public
@@ -2245,7 +2246,7 @@ export class StyleReferenceImage {
     referenceId?: number;
     referenceImage?: Image_2;
     referenceType?: string;
-    toReferenceImageAPI(): any;
+    toReferenceImageAPI(): ReferenceImageAPIInternal;
 }
 
 // @public
@@ -2261,7 +2262,7 @@ export class SubjectReferenceImage {
     referenceImage?: Image_2;
     referenceType?: string;
     // (undocumented)
-    toReferenceImageAPI(): any;
+    toReferenceImageAPI(): ReferenceImageAPIInternal;
 }
 
 // @public
