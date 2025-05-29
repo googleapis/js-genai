@@ -1,0 +1,16 @@
+b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d
+Server Address: generativelanguage.googleapis.com
+Port: 443
+Protocol: https
+********************************************************************************
+POST /v1beta/models/gemini-2.0-flash:streamGenerateContent?alt=sse HTTP/1.1
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: *
+Connection: keep-alive
+Content-Length: 903
+Content-Type: application/json
+Sec-Fetch-Mode: cors
+
+
+{"contents":[{"parts":[{"text":"Tell me a story in 100 words?"}],"role":"user"},{"parts":[{"text":"El"}],"role":"model"},{"parts":[{"text":"ara, a clockmaker's daughter, found a broken music box abandoned in the"}],"role":"model"},{"parts":[{"text":" attic. Its ballerina, frozen mid-pirouette, mirrored her own suppressed dreams of"}],"role":"model"},{"parts":[{"text":" dance. Working in secret, Elara repaired the intricate mechanism. As the music tinkled to life, the ballerina spun.\n\nInspired, Elara shed her fear,"}],"role":"model"},{"parts":[{"text":" auditioned for the traveling troupe, and danced with a newfound grace. The music box, a talisman of hope, accompanied her on her journey, a reminder that even broken"}],"role":"model"},{"parts":[{"text":" things can dance again.\n"}],"role":"model"},{"parts":[{"text":"What is the title of the story?"}],"role":"user"}],"generationConfig":{}}

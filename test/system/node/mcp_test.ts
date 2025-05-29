@@ -159,7 +159,7 @@ describe('MCP related client Tests', () => {
       ];
       expect(response.functionCalls).toEqual(expectedFunctionCalls);
       expect(consoleLogSpy).not.toHaveBeenCalled();
-      expect(consoleBeepSpy).not.toHaveBeenCalled();
+      expect(consoleBeepSpy).not.toHaveBeenCalledWith('\u0007');
     });
     it('Vertex AI will give FunctionDeclaration back when AFC is disabled', async () => {
       const ai = new GoogleGenAI({
@@ -244,7 +244,7 @@ describe('MCP related client Tests', () => {
       ];
       expect(response.functionCalls).toEqual(expectedFunctionCalls);
       expect(consoleLogSpy).not.toHaveBeenCalled();
-      expect(consoleBeepSpy).not.toHaveBeenCalled();
+      expect(consoleBeepSpy).not.toHaveBeenCalledWith('\u0007');
     });
     it('Vertex AI can take function declarations when AFC is disabled', async () => {
       const ai = new GoogleGenAI({

@@ -26,7 +26,7 @@ const testServerOptions: TestServerOptions = {
   configPath: path.join(packageRoot, 'test', 'system', 'test-server.yml'),
   recordingDir: path.join(packageRoot, 'test', 'system', 'recordings'),
   mode: 'cli-driven',
-  onStdOut: (data) => console.log(`[test-server STDOUT] ${data.trimEnd()}`),
+  onStdOut: (data) => console.debug(`[test-server STDOUT] ${data.trimEnd()}`),
   onStdErr: (data) => console.error(`[test-server STDERR] ${data.trimEnd()}`),
   onError: (err) =>
     console.error(
