@@ -4850,8 +4850,8 @@ export declare interface AuthToken {
   name?: string;
 }
 
-/** Config for LiveEphemeralParameters for Auth Token creation. */
-export declare interface LiveEphemeralParameters {
+/** Config for LiveConnectConstraints for Auth Token creation. */
+export declare interface LiveConnectConstraints {
   /** ID of the model to configure in the ephemeral token for Live API.
       For a list of models, see `Gemini models
       <https://ai.google.dev/gemini-api/docs/models>`. */
@@ -4889,7 +4889,7 @@ export declare interface CreateAuthTokenConfig {
       not count as a use. */
   uses?: number;
   /** Configuration specific to Live API connections created using this token. */
-  liveEphemeralParameters?: LiveEphemeralParameters;
+  liveConnectConstraints?: LiveConnectConstraints;
   /** Additional fields to lock in the effective LiveConnectParameters. */
   lockAdditionalFields?: string[];
 }

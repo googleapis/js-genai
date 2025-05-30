@@ -1892,9 +1892,9 @@ export function liveConnectConfigToVertex(
   return toObject;
 }
 
-export function liveEphemeralParametersToMldev(
+export function liveConnectConstraintsToMldev(
   apiClient: ApiClient,
-  fromObject: types.LiveEphemeralParameters,
+  fromObject: types.LiveConnectConstraints,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1919,9 +1919,9 @@ export function liveEphemeralParametersToMldev(
   return toObject;
 }
 
-export function liveEphemeralParametersToVertex(
+export function liveConnectConstraintsToVertex(
   apiClient: ApiClient,
-  fromObject: types.LiveEphemeralParameters,
+  fromObject: types.LiveConnectConstraints,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1964,14 +1964,14 @@ export function createAuthTokenConfigToMldev(
     common.setValueByPath(parentObject, ['uses'], fromUses);
   }
 
-  const fromLiveEphemeralParameters = common.getValueByPath(fromObject, [
-    'liveEphemeralParameters',
+  const fromLiveConnectConstraints = common.getValueByPath(fromObject, [
+    'liveConnectConstraints',
   ]);
-  if (parentObject !== undefined && fromLiveEphemeralParameters != null) {
+  if (parentObject !== undefined && fromLiveConnectConstraints != null) {
     common.setValueByPath(
       parentObject,
       ['bidiGenerateContentSetup'],
-      liveEphemeralParametersToMldev(apiClient, fromLiveEphemeralParameters),
+      liveConnectConstraintsToMldev(apiClient, fromLiveConnectConstraints),
     );
   }
 
@@ -2012,10 +2012,10 @@ export function createAuthTokenConfigToVertex(
   }
 
   if (
-    common.getValueByPath(fromObject, ['liveEphemeralParameters']) !== undefined
+    common.getValueByPath(fromObject, ['liveConnectConstraints']) !== undefined
   ) {
     throw new Error(
-      'liveEphemeralParameters parameter is not supported in Vertex AI.',
+      'liveConnectConstraints parameter is not supported in Vertex AI.',
     );
   }
 

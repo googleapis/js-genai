@@ -354,7 +354,7 @@ export interface CreateAuthTokenConfig {
     abortSignal?: AbortSignal;
     expireTime?: string;
     httpOptions?: HttpOptions;
-    liveEphemeralParameters?: LiveEphemeralParameters;
+    liveConnectConstraints?: LiveConnectConstraints;
     lockAdditionalFields?: string[];
     newSessionExpireTime?: string;
     uses?: number;
@@ -1536,16 +1536,16 @@ export interface LiveConnectConfig {
 }
 
 // @public
+export interface LiveConnectConstraints {
+    config?: LiveConnectConfig;
+    model?: string;
+}
+
+// @public
 export interface LiveConnectParameters {
     callbacks: LiveCallbacks;
     config?: LiveConnectConfig;
     model: string;
-}
-
-// @public
-export interface LiveEphemeralParameters {
-    config?: LiveConnectConfig;
-    model?: string;
 }
 
 // @public
