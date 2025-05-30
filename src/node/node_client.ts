@@ -92,9 +92,9 @@ export class GoogleGenAI {
 
     this.vertexai =
       options.vertexai ?? getBooleanEnv('GOOGLE_GENAI_USE_VERTEXAI') ?? false;
-    const envApiKey = getEnv('GOOGLE_API_KEY');
-    const envProject = getEnv('GOOGLE_CLOUD_PROJECT');
-    const envLocation = getEnv('GOOGLE_CLOUD_LOCATION');
+    const envApiKey = getEnv('GOOGLE_API_KEY') || undefined;
+    const envProject = getEnv('GOOGLE_CLOUD_PROJECT') || undefined;
+    const envLocation = getEnv('GOOGLE_CLOUD_LOCATION') || undefined;
 
     this.apiKey = options.apiKey ?? envApiKey;
     this.project = options.project ?? envProject;
