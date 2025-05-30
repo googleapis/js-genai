@@ -82,6 +82,28 @@ describe('Client', () => {
       'Project/location and API key are mutually exclusive in the client initializer.',
     );
   });
+  it('should prioritize credentials over implicit api key', () => {
+    process.env['GOOGLE_API_KEY'] = '';
+
+    const credentials = {
+      type: 'service_account',
+      auth_uri: 'https://accounts.google.com/o/oauth2/auth',
+      token_uri: 'https://oauth2.googleapis.com/token',
+    };
+    const client = new GoogleGenAI({
+      vertexai: true,
+      project: 'constructor_project',
+      location: 'constructor_location',
+      googleAuthOptions: {
+        credentials,
+      },
+    });
+
+    expect(client.vertexai).toBe(true);
+    expect(client['apiKey']).toBeUndefined();
+    expect(client['project']).toBe('constructor_project');
+    expect(client['location']).toBe('constructor_location');
+  });
   it('should prioritize explicit api key over implicit project/location', () => {
     process.env['GOOGLE_GENAI_USE_VERTEXAI'] = 'true';
     process.env['GOOGLE_CLOUD_PROJECT'] = 'env_project';

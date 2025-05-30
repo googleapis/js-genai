@@ -102,6 +102,14 @@ export class GoogleGenAI {
 
     // Handle when to use Vertex AI in express mode (api key)
     if (options.vertexai) {
+      if (options.googleAuthOptions?.credentials) {
+        // Explicit credentials take precedence over implicit api_key.
+        console.debug(
+          'The user provided Google Cloud credentials will take precedence' +
+            ' over the API key from the environment variable.',
+        );
+        this.apiKey = undefined;
+      }
       // Explicit api_key and explicit project/location already handled above.
       if ((envProject || envLocation) && options.apiKey) {
         // Explicit api_key takes precedence over implicit project/location.
