@@ -1,6 +1,21 @@
 # Changelog
 
 
+## [1.3.0](https://github.com/googleapis/js-genai/compare/v1.2.0...v1.3.0) (2025-05-30)
+
+
+### Features
+
+* Adding `thought_signature` field to the `Part` to store the signature for thoughts. ([20815b2](https://github.com/googleapis/js-genai/commit/20815b269a0154c52787d9b26e053a089154ca3c))
+* include UNEXPECTED_TOOL_CALL enum value to FinishReason for Vertex AI APIs. ([bd5a2bf](https://github.com/googleapis/js-genai/commit/bd5a2bf87d6d927b0286ff80871a8a2a85a09c0c))
+* Support ephemeral auth tokens as API keys for live connections in TS. ([507bfb5](https://github.com/googleapis/js-genai/commit/507bfb5a4a1d8cb3fbcb67c28d8b3dfcb5c35dcb))
+* Support ephemeral token creation in TS ([425cfe6](https://github.com/googleapis/js-genai/commit/425cfe62eea596fd6ac2463aef664d5163258c4e))
+
+
+### Bug Fixes
+
+* Rename LiveEphemeralParameters to LiveConnectConstraints. ([86e9652](https://github.com/googleapis/js-genai/commit/86e96524049e5576e240cf9cf22bd8af340e2e18))
+
 ## [1.2.0](https://github.com/googleapis/js-genai/compare/v1.1.0...v1.2.0) (2025-05-28)
 
 
