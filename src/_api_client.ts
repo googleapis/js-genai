@@ -8,6 +8,7 @@ import {Auth} from './_auth.js';
 import * as common from './_common.js';
 import {Downloader} from './_downloader.js';
 import {Uploader} from './_uploader.js';
+import {ClientError, ServerError} from './errors.js';
 import {
   DownloadFileParameters,
   File,
@@ -25,36 +26,6 @@ const LIBRARY_LABEL = `google-genai-sdk/${SDK_VERSION}`;
 const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
 const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';
 const responseLineRE = /^data: (.*)(?:\n\n|\r\r|\r\n\r\n)/;
-
-/**
- * Client errors raised by the GenAI API.
- */
-export class ClientError extends Error {
-  constructor(message: string, stackTrace?: string) {
-    if (stackTrace) {
-      super(message, {cause: stackTrace});
-    } else {
-      super(message, {cause: new Error().stack});
-    }
-    this.message = message;
-    this.name = 'ClientError';
-  }
-}
-
-/**
- * Server errors raised by the GenAI API.
- */
-export class ServerError extends Error {
-  constructor(message: string, stackTrace?: string) {
-    if (stackTrace) {
-      super(message, {cause: stackTrace});
-    } else {
-      super(message, {cause: new Error().stack});
-    }
-    this.message = message;
-    this.name = 'ServerError';
-  }
-}
 
 /**
  * Options for initializing the ApiClient. The ApiClient uses the parameters
@@ -566,10 +537,16 @@ export class ApiClient {
               chunkJson,
             )}`;
             if (code >= 400 && code < 500) {
-              const clientError = new ClientError(errorMessage);
+              const clientError = new ClientError({
+                message: errorMessage,
+                status: code,
+              });
               throw clientError;
             } else if (code >= 500 && code < 600) {
-              const serverError = new ServerError(errorMessage);
+              const serverError = new ServerError({
+                message: errorMessage,
+                status: code,
+              });
               throw serverError;
             }
           }
@@ -750,7 +727,7 @@ export class ApiClient {
 
 async function throwErrorIfNotOK(response: Response | undefined) {
   if (response === undefined) {
-    throw new ServerError('response is undefined');
+    throw new ServerError({message: 'response is undefined'});
   }
   if (!response.ok) {
     const status: number = response.status;
@@ -771,10 +748,16 @@ async function throwErrorIfNotOK(response: Response | undefined) {
       errorBody,
     )}`;
     if (status >= 400 && status < 500) {
-      const clientError = new ClientError(errorMessage);
+      const clientError = new ClientError({
+        message: errorMessage,
+        status: status,
+      });
       throw clientError;
     } else if (status >= 500 && status < 600) {
-      const serverError = new ServerError(errorMessage);
+      const serverError = new ServerError({
+        message: errorMessage,
+        status: status,
+      });
       throw serverError;
     }
     throw new Error(errorMessage);
