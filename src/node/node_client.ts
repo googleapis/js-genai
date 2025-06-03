@@ -92,7 +92,7 @@ export class GoogleGenAI {
 
     this.vertexai =
       options.vertexai ?? getBooleanEnv('GOOGLE_GENAI_USE_VERTEXAI') ?? false;
-    const envApiKey = getEnv('GOOGLE_API_KEY');
+    const envApiKey = getApiKeyFromEnv();
     const envProject = getEnv('GOOGLE_CLOUD_PROJECT');
     const envLocation = getEnv('GOOGLE_CLOUD_LOCATION');
 
@@ -182,4 +182,15 @@ function stringToBoolean(str?: string): boolean {
     return false;
   }
   return str.toLowerCase() === 'true';
+}
+
+function getApiKeyFromEnv(): string | undefined {
+  const envGoogleApiKey = getEnv('GOOGLE_API_KEY');
+  const envGeminiApiKey = getEnv('GEMINI_API_KEY');
+  if (envGoogleApiKey && envGeminiApiKey) {
+    console.warn(
+      'Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.',
+    );
+  }
+  return envGoogleApiKey || envGeminiApiKey;
 }

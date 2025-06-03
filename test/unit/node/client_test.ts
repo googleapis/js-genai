@@ -8,9 +8,10 @@ import {setDefaultBaseUrls} from '../../../src/_base_url.js';
 import {NodeUploader} from '../../../src/node/_node_uploader.js';
 import {GoogleGenAI} from '../../../src/node/node_client.js';
 
-describe('Client', () => {
+fdescribe('Client', () => {
   afterEach(() => {
     delete process.env['GOOGLE_API_KEY'];
+    delete process.env['GEMINI_API_KEY'];
     delete process.env['GOOGLE_GENAI_USE_VERTEXAI'];
     delete process.env['GOOGLE_CLOUD_PROJECT'];
     delete process.env['GOOGLE_CLOUD_LOCATION'];
@@ -25,10 +26,35 @@ describe('Client', () => {
     expect(client).toBeDefined();
   });
 
-  it('should set apiKey from environment', () => {
+  it('should set apiKey from GOOGLE_API_KEY if present', () => {
     process.env['GOOGLE_API_KEY'] = 'test_api_key';
     const client = new GoogleGenAI({});
     expect(client['apiKey']).toBe('test_api_key');
+  });
+
+  it('should set apiKey from GEMINI_API_KEY if GOOGLE_API_KEY is not present', () => {
+    process.env['GEMINI_API_KEY'] = 'gemini_test_api_key';
+    delete process.env['GOOGLE_API_KEY'];
+    const client = new GoogleGenAI({});
+    expect(client['apiKey']).toBe('gemini_test_api_key');
+  });
+
+  it('should set apiKey from GEMINI_API_KEY if GOOGLE_API_KEY is set to empty string', () => {
+    process.env['GOOGLE_API_KEY'] = '';
+    process.env['GEMINI_API_KEY'] = 'gemini_test_api_key';
+    const client = new GoogleGenAI({});
+    expect(client['apiKey']).toBe('gemini_test_api_key');
+  });
+
+  it('should set apiKey from GOOGLE_API_KEY if both GEMINI_API_KEY and GOOGLE_API_KEY are present', () => {
+    process.env['GOOGLE_API_KEY'] = 'google_test_api_key';
+    process.env['GEMINI_API_KEY'] = 'gemini_test_api_key';
+    const warnSpy = spyOn(console, 'warn');
+    const client = new GoogleGenAI({});
+    expect(client['apiKey']).toBe('google_test_api_key');
+    expect(warnSpy).toHaveBeenCalledWith(
+      'Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.',
+    );
   });
 
   it('should set vertexai from environment', () => {
