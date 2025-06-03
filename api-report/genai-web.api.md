@@ -989,6 +989,7 @@ export interface GenerateVideosConfig {
     fps?: number;
     generateAudio?: boolean;
     httpOptions?: HttpOptions;
+    lastFrame?: Image_2;
     negativePrompt?: string;
     numberOfVideos?: number;
     outputGcsUri?: string;
@@ -1013,6 +1014,7 @@ export interface GenerateVideosParameters {
     image?: Image_2;
     model: string;
     prompt?: string;
+    video?: Video;
 }
 
 // @public
