@@ -1,6 +1,22 @@
 # Changelog
 
 
+## [1.4.0](https://github.com/googleapis/js-genai/compare/v1.3.0...v1.4.0) (2025-06-04)
+
+
+### Features
+
+* Add enhance_prompt field for Gemini Developer API generate_videos ([ea3cc8e](https://github.com/googleapis/js-genai/commit/ea3cc8e8eae1df3dd1cc7fe0a897a12705c51a59))
+* Enable url_context for Vertex ([e377f58](https://github.com/googleapis/js-genai/commit/e377f583747d1546fbc9ea1412c9c51bdf11c977))
+* **js:** Support `GEMINI_API_KEY` as environment variable for setting API key. ([97850ad](https://github.com/googleapis/js-genai/commit/97850ada42304ef6877523a9c3006303abcfea2a))
+
+
+### Bug Fixes
+
+* defined Type becomes TYPE_UNSPECIFIED when obfuscation is enabled ([1ddf4f5](https://github.com/googleapis/js-genai/commit/1ddf4f5e19b774588d5d51fcc854c9cdad31bd61))
+* Update live SDK sample to address choppy audio quality ([319bcbb](https://github.com/googleapis/js-genai/commit/319bcbbec8164b84c1f5a052435dcf62713572d5))
+* use Enum's value instead of keys for obfuscation. ([132bd04](https://github.com/googleapis/js-genai/commit/132bd04913ccacbd317cd7273c318059b57e42fb))
+
 ## [1.3.0](https://github.com/googleapis/js-genai/compare/v1.2.0...v1.3.0) (2025-05-30)
 
 
