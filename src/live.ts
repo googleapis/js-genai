@@ -9,7 +9,7 @@
  *
  * @experimental
  */
-
+import type {Client as McpClient} from '@modelcontextprotocol/sdk/client/index.js';
 import {ApiClient} from './_api_client.js';
 import {Auth} from './_auth.js';
 import * as t from './_transformers.js';
@@ -19,7 +19,12 @@ import {
   contentToMldev,
   contentToVertex,
 } from './converters/_models_converters.js';
-import {hasMcpToolUsage, setMcpUsageHeader} from './mcp/_mcp.js';
+import {
+  McpCallableTool,
+  hasMcpToolUsage,
+  isMcpClient,
+  setMcpUsageHeader,
+} from './mcp/_mcp.js';
 import {LiveMusic} from './music.js';
 import * as types from './types.js';
 
@@ -130,6 +135,7 @@ export class Live {
     const apiVersion = this.apiClient.getApiVersion();
     let url: string;
     const defaultHeaders = this.apiClient.getDefaultHeaders();
+    this.processMcpClients(params);
     if (
       params.config &&
       params.config.tools &&
@@ -268,6 +274,27 @@ export class Live {
   // TODO: b/416041229 - Abstract this method to a common place.
   private isCallableTool(tool: types.ToolUnion): boolean {
     return 'callTool' in tool && typeof tool.callTool === 'function';
+  }
+
+  /**
+   * In place replaces the McpClients found in tools by a default McpCallableTool instance
+   */
+  private processMcpClients(params: types.LiveConnectParameters) {
+    const mcpClients = params?.config?.tools
+      ?.filter((tool) => isMcpClient(tool))
+      .map((tool) => tool as McpClient);
+    if (!mcpClients || mcpClients.length === 0) {
+      return;
+    }
+
+    const mcpWrapper = McpCallableTool.create(mcpClients, {});
+    const toolsWithoutMcpClients =
+      params?.config?.tools?.filter((tool) => !isMcpClient(tool)) ?? [];
+    toolsWithoutMcpClients.push(mcpWrapper);
+
+    if (params.config?.tools) {
+      params.config.tools = toolsWithoutMcpClients;
+    }
   }
 }
 
