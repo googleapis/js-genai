@@ -2851,6 +2851,16 @@ export class ComputeTokensResponse {
   tokensInfo?: TokensInfo[];
 }
 
+/** A generated video. */
+export declare interface Video {
+  /** Path to another storage. */
+  uri?: string;
+  /** Video bytes. */
+  videoBytes?: string;
+  /** Video encoding, for example "video/mp4". */
+  mimeType?: string;
+}
+
 /** Configuration for generating videos. */
 export declare interface GenerateVideosConfig {
   /** Used to override HTTP request options. */
@@ -2886,9 +2896,11 @@ export declare interface GenerateVideosConfig {
   enhancePrompt?: boolean;
   /** Whether to generate audio along with the video. */
   generateAudio?: boolean;
+  /** Image to use as the last frame of generated videos. Only supported for image to video use cases. */
+  lastFrame?: Image;
 }
 
-/** Class that represents the parameters for generating an image. */
+/** Class that represents the parameters for generating videos. */
 export declare interface GenerateVideosParameters {
   /** ID of the model to use. For a list of models, see `Google models
     <https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models>`_. */
@@ -2896,20 +2908,13 @@ export declare interface GenerateVideosParameters {
   /** The text prompt for generating the videos. Optional for image to video use cases. */
   prompt?: string;
   /** The input image for generating the videos.
-      Optional if prompt is provided. */
+      Optional if prompt or video is provided. */
   image?: Image;
+  /** The input video for video extension use cases.
+      Optional if prompt or image is provided. */
+  video?: Video;
   /** Configuration for generating videos. */
   config?: GenerateVideosConfig;
-}
-
-/** A generated video. */
-export declare interface Video {
-  /** Path to another storage. */
-  uri?: string;
-  /** Video bytes. */
-  videoBytes?: string;
-  /** Video encoding, for example "video/mp4". */
-  mimeType?: string;
 }
 
 /** A generated video. */

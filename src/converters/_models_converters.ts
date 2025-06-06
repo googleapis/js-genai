@@ -1615,6 +1615,34 @@ export function imageToMldev(
   return toObject;
 }
 
+export function videoToMldev(
+  apiClient: ApiClient,
+  fromObject: types.Video,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromUri = common.getValueByPath(fromObject, ['uri']);
+  if (fromUri != null) {
+    common.setValueByPath(toObject, ['video', 'uri'], fromUri);
+  }
+
+  const fromVideoBytes = common.getValueByPath(fromObject, ['videoBytes']);
+  if (fromVideoBytes != null) {
+    common.setValueByPath(
+      toObject,
+      ['video', 'encodedVideo'],
+      t.tBytes(apiClient, fromVideoBytes),
+    );
+  }
+
+  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+  if (fromMimeType != null) {
+    common.setValueByPath(toObject, ['encoding'], fromMimeType);
+  }
+
+  return toObject;
+}
+
 export function generateVideosConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.GenerateVideosConfig,
@@ -1710,6 +1738,10 @@ export function generateVideosConfigToMldev(
     throw new Error('generateAudio parameter is not supported in Gemini API.');
   }
 
+  if (common.getValueByPath(fromObject, ['lastFrame']) !== undefined) {
+    throw new Error('lastFrame parameter is not supported in Gemini API.');
+  }
+
   return toObject;
 }
 
@@ -1740,6 +1772,10 @@ export function generateVideosParametersToMldev(
       ['instances[0]', 'image'],
       imageToMldev(apiClient, fromImage),
     );
+  }
+
+  if (common.getValueByPath(fromObject, ['video']) !== undefined) {
+    throw new Error('video parameter is not supported in Gemini API.');
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
@@ -3938,6 +3974,34 @@ export function computeTokensParametersToVertex(
   return toObject;
 }
 
+export function videoToVertex(
+  apiClient: ApiClient,
+  fromObject: types.Video,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromUri = common.getValueByPath(fromObject, ['uri']);
+  if (fromUri != null) {
+    common.setValueByPath(toObject, ['gcsUri'], fromUri);
+  }
+
+  const fromVideoBytes = common.getValueByPath(fromObject, ['videoBytes']);
+  if (fromVideoBytes != null) {
+    common.setValueByPath(
+      toObject,
+      ['bytesBase64Encoded'],
+      t.tBytes(apiClient, fromVideoBytes),
+    );
+  }
+
+  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+  if (fromMimeType != null) {
+    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+  }
+
+  return toObject;
+}
+
 export function generateVideosConfigToVertex(
   apiClient: ApiClient,
   fromObject: types.GenerateVideosConfig,
@@ -4057,6 +4121,15 @@ export function generateVideosConfigToVertex(
     );
   }
 
+  const fromLastFrame = common.getValueByPath(fromObject, ['lastFrame']);
+  if (parentObject !== undefined && fromLastFrame != null) {
+    common.setValueByPath(
+      parentObject,
+      ['instances[0]', 'lastFrame'],
+      imageToVertex(apiClient, fromLastFrame),
+    );
+  }
+
   return toObject;
 }
 
@@ -4086,6 +4159,15 @@ export function generateVideosParametersToVertex(
       toObject,
       ['instances[0]', 'image'],
       imageToVertex(apiClient, fromImage),
+    );
+  }
+
+  const fromVideo = common.getValueByPath(fromObject, ['video']);
+  if (fromVideo != null) {
+    common.setValueByPath(
+      toObject,
+      ['instances[0]', 'video'],
+      videoToVertex(apiClient, fromVideo),
     );
   }
 
