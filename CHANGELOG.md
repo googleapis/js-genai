@@ -1,6 +1,19 @@
 # Changelog
 
 
+## [1.5.0](https://github.com/googleapis/js-genai/compare/v1.4.0...v1.5.0) (2025-06-06)
+
+
+### Features
+
+* Make the MCP SDK an optional peer dependency. ([2472fd3](https://github.com/googleapis/js-genai/commit/2472fd364a29ad3cf3e15bbb61a1f3ac00914d86))
+* RAG - Introducing context storing for Gemini Live API. ([bdc2355](https://github.com/googleapis/js-genai/commit/bdc2355f2f10b839aa95162216dc4d35c60cd58e))
+
+
+### Bug Fixes
+
+* Prioritize credentials over implicit api key (from env) for node client using Vertex AI ([d82aba2](https://github.com/googleapis/js-genai/commit/d82aba244bdb804b063ef8a983b2916c00b901d2)), closes [#616](https://github.com/googleapis/js-genai/issues/616)
+
 ## [1.4.0](https://github.com/googleapis/js-genai/compare/v1.3.0...v1.4.0) (2025-06-04)
 
 
