@@ -35,13 +35,13 @@ async function generateContentFromMLDev() {
     throw new Error('No videos generated');
   }
 
-  videos.forEach((video, i) => {
-    ai.files.download({
-      file: video,
+  await Promise.all(videos.map(async (item, i) => {
+    await ai.files.download({
+      file: item.video,
       downloadPath: `video${i}.mp4`,
     });
     console.log('Downloaded video', `video${i}.mp4`);
-  });
+  })); 
 }
 
 async function generateContentFromVertexAI() {
@@ -66,13 +66,13 @@ async function generateContentFromVertexAI() {
     throw new Error('No videos generated');
   }
 
-  videos.forEach((video, i) => {
-    ai.files.download({
-      file: video,
+  await Promise.all(videos.map(async (item, i) => {
+    await ai.files.download({
+      file: item.video,
       downloadPath: `video${i}.mp4`,
     });
     console.log('Downloaded video', `video${i}.mp4`);
-  });
+  })); 
 }
 
 async function main() {
