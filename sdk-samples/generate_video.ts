@@ -35,9 +35,9 @@ async function generateContentFromMLDev() {
     throw new Error('No videos generated');
   }
 
-  await Promise.all(videos.map(async (item, i) => {
+  await Promise.all(videos.map(async (video, i) => {
     await ai.files.download({
-      file: item.video,
+      file: video,
       downloadPath: `video${i}.mp4`,
     });
     console.log('Downloaded video', `video${i}.mp4`);
@@ -66,9 +66,9 @@ async function generateContentFromVertexAI() {
     throw new Error('No videos generated');
   }
 
-  await Promise.all(videos.map(async (item, i) => {
+  await Promise.all(videos.map(async (video, i) => {
     await ai.files.download({
-      file: item.video,
+      file: video,
       downloadPath: `video${i}.mp4`,
     });
     console.log('Downloaded video', `video${i}.mp4`);
