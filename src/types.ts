@@ -1339,6 +1339,8 @@ export declare interface VertexRagStore {
   ragRetrievalConfig?: RagRetrievalConfig;
   /** Optional. Number of top k results to return from the selected corpora. */
   similarityTopK?: number;
+  /** Optional. Currently only supported for Gemini Multimodal Live API. In Gemini Multimodal Live API, if `store_context` bool is specified, Gemini will leverage it to automatically memorize the interactions between the client and Gemini, and retrieve context when needed to augment the response generation for users' ongoing and future interactions. */
+  storeContext?: boolean;
   /** Optional. Only return results with vector distance smaller than the threshold. */
   vectorDistanceThreshold?: number;
 }
