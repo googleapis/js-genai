@@ -1220,7 +1220,7 @@ describe('ApiClient', () => {
     );
   });
   describe('requestStream', () => {
-    it('should throw ServerError if response is 500', async () => {
+    it('should throw ApiError if response is 500', async () => {
       const client = new ApiClient({
         auth: new FakeAuth('test-api-key'),
         apiKey: 'test-api-key',
@@ -1228,16 +1228,22 @@ describe('ApiClient', () => {
         downloader: new CrossDownloader(),
       });
       spyOn(global, 'fetch').and.returnValue(
-        Promise.resolve(new Response(JSON.stringify({}), fetch500Options)),
+        Promise.resolve(
+          new Response(
+            JSON.stringify({'error': 'Internal Server Error'}),
+            fetch500Options,
+          ),
+        ),
       );
       await client
         .requestStream({path: 'test-path', httpMethod: 'POST'})
         .catch((e) => {
-          expect(e.name).toEqual('ServerError');
+          expect(e.name).toEqual('ApiError');
           expect(e.message).toContain('Internal Server Error');
+          expect(e.status).toEqual(500);
         });
     });
-    it('should throw ClientError if response is 400', async () => {
+    it('should throw ApiError if response is 400', async () => {
       const client = new ApiClient({
         auth: new FakeAuth('test-api-key'),
         apiKey: 'test-api-key',
@@ -1245,13 +1251,19 @@ describe('ApiClient', () => {
         downloader: new CrossDownloader(),
       });
       spyOn(global, 'fetch').and.returnValue(
-        Promise.resolve(new Response(JSON.stringify({}), fetch400Options)),
+        Promise.resolve(
+          new Response(
+            JSON.stringify({'error': 'Bad Request'}),
+            fetch400Options,
+          ),
+        ),
       );
       await client
         .requestStream({path: 'test-path', httpMethod: 'POST'})
         .catch((e) => {
-          expect(e.name).toEqual('ClientError');
+          expect(e.name).toEqual('ApiError');
           expect(e.message).toContain('Bad Request');
+          expect(e.status).toEqual(400);
         });
     });
     it('should yield data if response is ok', async () => {

@@ -1284,6 +1284,18 @@ export enum HarmSeverity {
 }
 
 // @public
+export class ApiError extends Error {
+    constructor(options: ApiErrorInfo);
+    status: number;
+}
+
+// @public
+export interface ApiErrorInfo {
+    message: string;
+    status: number;
+}
+
+// @public
 export interface HttpOptions {
     apiVersion?: string;
     baseUrl?: string;
