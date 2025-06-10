@@ -4929,3 +4929,21 @@ export type ToolUnion = Tool | CallableTool;
 export type ToolListUnion = ToolUnion[];
 
 export type DownloadableFileUnion = string | File | GeneratedVideo | Video;
+
+export type ApiErrorResponse = {
+  error: {
+    code: number;
+    message: string;
+    status?: string;
+    details?: Array<{
+      "@type": string;
+      reason?: string;
+      domain?: string;
+      metadata?: {
+        service?: string;
+      };
+      locale?: string;
+      message?: string;
+    }>;
+  };
+}

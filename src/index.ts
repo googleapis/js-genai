@@ -17,3 +17,4 @@ export {Operations} from './operations';
 export {PagedItem, Pager} from './pagers';
 export {Tokens} from './tokens';
 export * from './types';
+export * from './errors'
