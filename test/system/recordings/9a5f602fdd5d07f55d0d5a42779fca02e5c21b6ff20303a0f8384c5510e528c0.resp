@@ -1,0 +1,19 @@
+Status code: 200 
+Date: Wed, 14 May 2025 18:12:59 GMT
+Server: scaffolding on HTTPServer2
+X-Xss-Protection: 0
+Content-Type: text/event-stream
+Content-Disposition: attachment
+X-Content-Type-Options: nosniff
+Server-Timing: gfet4t7; dur=534
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+X-Frame-Options: SAMEORIGIN
+
+data: {"candidates": [{"content": {"parts": [{"text": "The"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash"}
+
+data: {"candidates": [{"content": {"parts": [{"text": " sky is blue"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash"}
+
+data: {"candidates": [{"content": {"parts": [{"text": " due to a phenomenon called **Rayleigh scattering**. Here's a breakdown:"}],"role": "model"},"finishReason": "MAX_TOKENS"}],"usageMetadata": {"promptTokenCount": 6,"candidatesTokenCount": 20,"totalTokenCount": 26,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 6}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 20}]},"modelVersion": "gemini-2.0-flash"}
+

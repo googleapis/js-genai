@@ -1,0 +1,16 @@
+b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d
+Server Address: generativelanguage.googleapis.com
+Port: 443
+Protocol: https
+********************************************************************************
+POST /v1beta/models/gemini-2.0-flash:generateContent HTTP/1.1
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: *
+Connection: keep-alive
+Content-Length: 828
+Content-Type: application/json
+Sec-Fetch-Mode: cors
+
+
+{"contents":[{"parts":[{"text":"Tell me a story in 100 words?"}],"role":"user"},{"parts":[{"text":"The old lighthouse keeper, Silas, had seen it all. Decades of storms, shipwrecks, and the endless, unforgiving sea. But tonight, something was different. The fog was thicker than usual, a suffocating blanket muffling the foghorn's mournful cry. Then, a whisper on the wind. Not the howl of a gale, but a child's giggle. He strained his ears, peering into the swirling grey. Suddenly, a tiny, luminescent hand pressed against the glass, followed by a ghostly face, smiling. Silas, for the first time in years, felt a chilling sense of wonder, not fear. The sea held secrets, he knew, and tonight, it was sharing one.\n"}],"role":"model"},{"parts":[{"text":"What is the title of the story?"}],"role":"user"}],"generationConfig":{}}

@@ -1,0 +1,48 @@
+Status code: 200 
+X-Frame-Options: SAMEORIGIN
+Server-Timing: gfet4t7; dur=908
+Content-Type: application/json; charset=UTF-8
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Date: Wed, 14 May 2025 18:12:55 GMT
+Content-Length: 384
+Content-Encoding: gzip
+Server: scaffolding on HTTPServer2
+X-Xss-Protection: 0
+X-Content-Type-Options: nosniff
+
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "The story doesn't have a title, I made it up on the spot! If I were to give it a title, I'd call it \"The Weaver of Moonlight Cove\" or perhaps \"The Message in the Starlight\".\n"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.49543646971384686
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 138,
+    "candidatesTokenCount": 48,
+    "totalTokenCount": 186,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 138
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 48
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash"
+}

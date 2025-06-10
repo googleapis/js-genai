@@ -1,0 +1,49 @@
+Status code: 200 
+Content-Type: application/json; charset=UTF-8
+Content-Encoding: gzip
+Date: Wed, 28 May 2025 17:05:16 GMT
+Server: scaffolding on HTTPServer2
+X-Frame-Options: SAMEORIGIN
+Server-Timing: gfet4t7; dur=627
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Content-Length: 343
+X-Xss-Protection: 0
+X-Content-Type-Options: nosniff
+
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "I have printed \"hello\" in blue and beeped.\n"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.22498374718886155
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 39,
+    "candidatesTokenCount": 13,
+    "totalTokenCount": 52,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 39
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 13
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "TEI3aPT4BOWX7dcPgeeR-AI"
+}

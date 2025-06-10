@@ -1,8 +1,9 @@
 {
   "name": "@google/genai",
-  "version": "0.9.0",
+  "version": "1.4.0",
   "description": "",
-  "main": "dist/node/index.js",
+  "type": "module",
+  "main": "dist/node/index.mjs",
   "module": "dist/web/index.mjs",
   "browser": "dist/web/index.mjs",
   "typings": "dist/genai.d.ts",
@@ -15,13 +16,14 @@
       },
       "node": {
         "types": "./dist/node/node.d.ts",
-        "require": "./dist/node/index.js",
-        "default": "./dist/node/index.js"
+        "import": "./dist/node/index.mjs",
+        "require": "./dist/node/index.cjs",
+        "default": "./dist/node/index.mjs"
       },
       "types": "./dist/genai.d.ts",
-      "require": "./dist/index.js",
       "import": "./dist/index.mjs",
-      "default": "./dist/index.js"
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.mjs"
     },
     "./web": {
       "types": "./dist/web/web.d.ts",
@@ -30,39 +32,37 @@
     },
     "./node": {
       "types": "./dist/node/node.d.ts",
-      "require": "./dist/node/index.js",
-      "default": "./dist/node/index.js"
+      "import": "./dist/node/index.mjs",
+      "default": "./dist/node/index.mjs"
     }
   },
   "scripts": {
     "prepare": "npm run build-prod",
     "build": "rollup -c && api-extractor run --local --verbose && api-extractor run -c api-extractor.node.json --local --verbose&& api-extractor run -c api-extractor.web.json --local --verbose",
     "build-prod": "rollup -c && api-extractor run --verbose && api-extractor run -c api-extractor.node.json --verbose && api-extractor run -c api-extractor.web.json --verbose",
-    "unit-test": "ts-node node_modules/jasmine/bin/jasmine test/unit/**/*_test.ts test/unit/*_test.ts",
-    "system-test": "ts-node node_modules/jasmine/bin/jasmine test/system/**/*_test.ts",
+    "unit-test": "tsc && jasmine dist/test/unit/**/*_test.js dist/test/unit/*_test.js",
+    "system-test": "tsc && jasmine dist/test/system/**/*_test.js",
+    "test-server-tests": "tsc && GOOGLE_CLOUD_PROJECT=googcloudproj GOOGLE_CLOUD_LOCATION=googcloudloc jasmine dist/test/system/node/*_test.js !dist/test/system/node/live_test.js -- --test-server",
+    "test-server-tests:record": "tsc && jasmine --fail-fast dist/test/system/node/*_test.js !dist/test/system/node/live_test.js -- --test-server --record",
     "docs": "typedoc && ts-node scripts/add_docsite_license_headers.ts",
-    "pages-main": "ts-node scripts/generate_pages.ts main",
-    "pages-release": "ts-node scripts/generate_pages.ts release",
+    "pages-main": "node --loader ts-node/esm scripts/generate_pages.ts main",
+    "pages-release": "node --loader ts-node/esm scripts/generate_pages.ts release",
     "format": "prettier '**/*.ts' '**/*.mjs' '**/*.json' --write",
     "lint": "eslint '**/*.ts'",
     "lint-fix": "eslint --fix '**/*.ts'"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0"
   },
   "files": [
     "dist/genai.d.ts",
-    "dist/index.js",
-    "dist/index.js.map",
     "dist/index.mjs",
+    "dist/index.cjs",
     "dist/index.mjs.map",
-    "dist/node/index.js",
-    "dist/node/index.js.map",
     "dist/node/index.mjs",
+    "dist/node/index.cjs",
     "dist/node/index.mjs.map",
     "dist/node/node.d.ts",
-    "dist/web/index.js",
-    "dist/web/index.js.map",
     "dist/web/index.mjs",
     "dist/web/index.mjs.map",
     "dist/web/web.d.ts",
@@ -85,8 +85,10 @@
     "prettier": "3.3.3",
     "prettier-plugin-organize-imports": "^4.1.0",
     "rollup-plugin-typescript2": "^0.36.0",
+    "test-server-sdk": "^0.2.1",
     "ts-node": "^10.9.2",
     "tslib": "^2.8.1",
+    "tsx": "^4.19.4",
     "typedoc": "^0.27.0",
     "typescript": "~5.2.0",
     "typescript-eslint": "8.24.1"
@@ -96,6 +98,14 @@
     "ws": "^8.18.0",
     "zod": "^3.22.4",
     "zod-to-json-schema": "^3.22.4"
+  },
+  "peerDependencies": {
+    "@modelcontextprotocol/sdk": "^1.11.0"
+  },
+  "peerDependenciesMeta": {
+    "@modelcontextprotocol/sdk": {
+      "optional": true
+    }
   },
   "repository": {
     "type": "git",

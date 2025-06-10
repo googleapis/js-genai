@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {GOOGLE_API_KEY_HEADER, WebAuth} from '../../../src/web/_web_auth';
+import {GOOGLE_API_KEY_HEADER, WebAuth} from '../../../src/web/_web_auth.js';
 
 describe('WebAuth', () => {
   it('should add an x-goog-api-key header', async () => {

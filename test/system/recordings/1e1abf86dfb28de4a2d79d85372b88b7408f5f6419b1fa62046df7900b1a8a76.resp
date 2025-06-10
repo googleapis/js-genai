@@ -1,0 +1,49 @@
+Status code: 200 
+Content-Length: 346
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+Content-Type: application/json; charset=UTF-8
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Date: Wed, 28 May 2025 17:26:16 GMT
+Server: scaffolding on HTTPServer2
+Content-Encoding: gzip
+Server-Timing: gfet4t7; dur=451
+
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "OK. I've printed \"helloX1\" in green.\n"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.0065001159906387333
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 33,
+    "candidatesTokenCount": 15,
+    "totalTokenCount": 48,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 33
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 15
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "OEc3aIDCGeWX7dcPgeeR-AI"
+}

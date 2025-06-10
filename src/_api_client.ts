@@ -4,17 +4,25 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Auth} from './_auth';
-import * as common from './_common';
-import {Uploader} from './_uploader';
-import { ClientError, ServerError } from './errors';
-import {ApiErrorResponse, File, HttpOptions, HttpResponse, UploadFileConfig} from './types';
+import {Auth} from './_auth.js';
+import * as common from './_common.js';
+import {Downloader} from './_downloader.js';
+import {Uploader} from './_uploader.js';
+import {ClientError, ServerError} from './errors';
+import {
+  ApiErrorResponse,
+  DownloadFileParameters,
+  File,
+  HttpOptions,
+  HttpResponse,
+  UploadFileConfig,
+} from './types.js';
 
 const CONTENT_TYPE_HEADER = 'Content-Type';
 const SERVER_TIMEOUT_HEADER = 'X-Server-Timeout';
 const USER_AGENT_HEADER = 'User-Agent';
-const GOOGLE_API_CLIENT_HEADER = 'x-goog-api-client';
-export const SDK_VERSION = '0.9.0'; // x-release-please-version
+export const GOOGLE_API_CLIENT_HEADER = 'x-goog-api-client';
+export const SDK_VERSION = '1.4.0'; // x-release-please-version
 const LIBRARY_LABEL = `google-genai-sdk/${SDK_VERSION}`;
 const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
 const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';
@@ -35,6 +43,12 @@ export interface ApiClientInitOptions {
    * creating a client, will be set through the Node_client or Web_client.
    */
   uploader: Uploader;
+  /**
+   * Optional. The downloader to use for downloading files. This field is
+   * required for creating a client, will be set through the Node_client or
+   * Web_client.
+   */
+  downloader: Downloader;
   /**
    * Optional. The Google Cloud project ID for Vertex AI users.
    * It is not the numeric project name.
@@ -142,16 +156,10 @@ export class ApiClient {
     if (this.clientOptions.vertexai) {
       initHttpOptions.apiVersion =
         this.clientOptions.apiVersion ?? VERTEX_AI_API_DEFAULT_VERSION;
-      // Assume that proj/api key validation occurs before they are passed in.
-      if (this.getProject() || this.getLocation()) {
-        initHttpOptions.baseUrl = `https://${this.clientOptions.location}-aiplatform.googleapis.com/`;
-        this.clientOptions.apiKey = undefined; // unset API key.
-      } else {
-        initHttpOptions.baseUrl = `https://aiplatform.googleapis.com/`;
-        this.clientOptions.project = undefined; // unset project.
-        this.clientOptions.location = undefined; // unset location.
-      }
+      initHttpOptions.baseUrl = this.baseUrlFromProjectLocation();
+      this.normalizeAuthParameters();
     } else {
+      // Gemini API
       initHttpOptions.apiVersion =
         this.clientOptions.apiVersion ?? GOOGLE_AI_API_DEFAULT_VERSION;
       initHttpOptions.baseUrl = `https://generativelanguage.googleapis.com/`;
@@ -167,6 +175,43 @@ export class ApiClient {
         opts.httpOptions,
       );
     }
+  }
+
+  /**
+   * Determines the base URL for Vertex AI based on project and location.
+   * Uses the global endpoint if location is 'global' or if project/location
+   * are not specified (implying API key usage).
+   * @private
+   */
+  private baseUrlFromProjectLocation(): string {
+    if (
+      this.clientOptions.project &&
+      this.clientOptions.location &&
+      this.clientOptions.location !== 'global'
+    ) {
+      // Regional endpoint
+      return `https://${this.clientOptions.location}-aiplatform.googleapis.com/`;
+    }
+    // Global endpoint (covers 'global' location and API key usage)
+    return `https://aiplatform.googleapis.com/`;
+  }
+
+  /**
+   * Normalizes authentication parameters for Vertex AI.
+   * If project and location are provided, API key is cleared.
+   * If project and location are not provided (implying API key usage),
+   * project and location are cleared.
+   * @private
+   */
+  private normalizeAuthParameters(): void {
+    if (this.clientOptions.project && this.clientOptions.location) {
+      // Using project/location for auth, clear potential API key
+      this.clientOptions.apiKey = undefined;
+      return;
+    }
+    // Using API key for auth (or no auth provided yet), clear project/location
+    this.clientOptions.project = undefined;
+    this.clientOptions.location = undefined;
   }
 
   isVertexAI(): boolean {
@@ -606,6 +651,17 @@ export class ApiClient {
 
     const uploadUrl = await this.fetchUploadUrl(fileToUpload, config);
     return uploader.upload(file, uploadUrl, this);
+  }
+
+  /**
+   * Downloads a file asynchronously to the specified path.
+   *
+   * @params params - The parameters for the download request, see {@link
+   * DownloadFileParameters}
+   */
+  async downloadFile(params: DownloadFileParameters): Promise<void> {
+    const downloader = this.clientOptions.downloader;
+    await downloader.download(params, this);
   }
 
   private async fetchUploadUrl(

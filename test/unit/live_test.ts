@@ -4,45 +4,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {ApiClient, SDK_VERSION} from '../../src/_api_client';
-import {
-  WebSocket,
-  WebSocketCallbacks,
-  WebSocketFactory,
-} from '../../src/_websocket';
-import * as converters from '../../src/converters/_live_converters';
-import {CrossUploader} from '../../src/cross/_cross_uploader';
-import {Live} from '../../src/live';
-import * as types from '../../src/types';
-import {FakeAuth} from '../_fake_auth';
+import {ApiClient, SDK_VERSION} from '../../src/_api_client.js';
+import * as converters from '../../src/converters/_live_converters.js';
+import {CrossDownloader} from '../../src/cross/_cross_downloader.js';
+import {CrossUploader} from '../../src/cross/_cross_uploader.js';
+import {Live} from '../../src/live.js';
+import {mcpToTool} from '../../src/mcp/_mcp.js';
+import * as types from '../../src/types.js';
+import {FakeAuth} from '../_fake_auth.js';
+import {FakeWebSocket, FakeWebSocketFactory} from '../_fake_websocket.js';
 
-class FakeWebSocketFactory implements WebSocketFactory {
-  create(
-    url: string,
-    headers: Record<string, string>,
-    callbacks: WebSocketCallbacks,
-  ) {
-    return new FakeWebSocket(url, headers, callbacks);
-  }
-}
-
-class FakeWebSocket implements WebSocket {
-  constructor(
-    private readonly url: string,
-    private readonly headers: Record<string, string>,
-    private callbacks: WebSocketCallbacks,
-  ) {}
-
-  connect(): void {
-    this.callbacks.onopen();
-  }
-  send(message: string): void {
-    this.callbacks.onmessage({data: message});
-  }
-  close(): void {
-    this.callbacks.onclose('');
-  }
-}
+import {spinUpPrintingServer} from './test_mcp_server.js';
 
 describe('live', () => {
   it('connect uses default callbacks if not provided', async () => {
@@ -50,6 +22,7 @@ describe('live', () => {
       auth: new FakeAuth(),
       apiKey: 'test-api-key',
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
     });
     const websocketFactory = new FakeWebSocketFactory();
     const live = new Live(apiClient, new FakeAuth(), websocketFactory);
@@ -82,14 +55,72 @@ describe('live', () => {
     const onopenString = JSON.stringify(
       websocketFactorySpyCall.args[2].onopen.toString(),
     );
-    expect(onopenString).toContain(
-      '(_a = callbacks === null || callbacks === void 0 ? void 0 : callbacks.onopen) === null || _a === void 0 ? void 0 : _a.call(callbacks);',
-    );
-    expect(onopenString).toContain('onopenResolve({});');
+    expect(onopenString).toContain('onopen');
+    expect(onopenString).toContain('onopenResolve({})');
     expect(
       JSON.stringify(websocketFactorySpyCall.args[2].onclose.toString()),
-    ).toContain('void e;');
+    ).toContain('void e');
     expect(session).toBeDefined();
+  });
+
+  it('connect should use access_token and BidiGenerateContentConstrained when apiKey starts with auth_tokens/', async () => {
+    const apiClient = new ApiClient({
+      auth: new FakeAuth(),
+      apiKey: 'auth_tokens/test-access-token',
+      uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
+    });
+    const websocketFactory = new FakeWebSocketFactory();
+    const live = new Live(apiClient, new FakeAuth(), websocketFactory);
+
+    const websocketFactorySpy = spyOn(
+      websocketFactory,
+      'create',
+    ).and.callThrough();
+
+    await live.connect({
+      model: 'models/gemini-2.0-flash-live-001',
+      callbacks: {
+        onmessage: function (e: types.LiveServerMessage) {
+          void e;
+        },
+      },
+    });
+
+    const websocketFactorySpyCall = websocketFactorySpy.calls.all()[0];
+    expect(websocketFactorySpyCall.args[0]).toBe(
+      'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContentConstrained?access_token=auth_tokens/test-access-token',
+    );
+  });
+
+  it('connect should use key and BidiGenerateContent when apiKey does not start with auth_tokens/', async () => {
+    const apiClient = new ApiClient({
+      auth: new FakeAuth(),
+      apiKey: 'test-api-key',
+      uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
+    });
+    const websocketFactory = new FakeWebSocketFactory();
+    const live = new Live(apiClient, new FakeAuth(), websocketFactory);
+
+    const websocketFactorySpy = spyOn(
+      websocketFactory,
+      'create',
+    ).and.callThrough();
+
+    await live.connect({
+      model: 'models/gemini-2.0-flash-live-001',
+      callbacks: {
+        onmessage: function (e: types.LiveServerMessage) {
+          void e;
+        },
+      },
+    });
+
+    const websocketFactorySpyCall = websocketFactorySpy.calls.all()[0];
+    expect(websocketFactorySpyCall.args[0]).toBe(
+      'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=test-api-key',
+    );
   });
 
   it('connect should rely on provided callbacks', async () => {
@@ -97,6 +128,7 @@ describe('live', () => {
       auth: new FakeAuth(),
       apiKey: 'test-api-key',
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
     });
     const websocketFactory = new FakeWebSocketFactory();
     const live = new Live(apiClient, new FakeAuth(), websocketFactory);
@@ -125,6 +157,7 @@ describe('live', () => {
       auth: new FakeAuth(),
       apiKey: 'test-api-key',
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
     });
     const websocketFactory = new FakeWebSocketFactory();
     const live = new Live(apiClient, new FakeAuth(), websocketFactory);
@@ -180,16 +213,14 @@ describe('live', () => {
     const onopenString = JSON.stringify(
       websocketFactorySpyCall.args[2].onopen.toString(),
     );
-    expect(onopenString).toContain(
-      '(_a = callbacks === null || callbacks === void 0 ? void 0 : callbacks.onopen) === null || _a === void 0 ? void 0 : _a.call(callbacks);',
-    );
-    expect(onopenString).toContain('onopenResolve({});');
+    expect(onopenString).toContain('onopen');
+    expect(onopenString).toContain('onopenResolve({})');
     expect(
       JSON.stringify(websocketFactorySpyCall.args[2].onerror.toString()),
-    ).toContain('void e;');
+    ).toContain('void e');
     expect(
       JSON.stringify(websocketFactorySpyCall.args[2].onclose.toString()),
-    ).toContain('void e;');
+    ).toContain('void e');
     expect(websocket.connect).toHaveBeenCalled();
     const websocketSpyCall = websocketSpy.calls.all()[0];
     expect(websocketSpyCall.args[0]).toBe(
@@ -203,6 +234,7 @@ describe('live', () => {
       auth: new FakeAuth(),
       apiKey: 'test-api-key',
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
     });
     const websocketFactory = new FakeWebSocketFactory();
     const live = new Live(apiClient, new FakeAuth(), websocketFactory);
@@ -257,6 +289,7 @@ describe('live', () => {
       auth: new FakeAuth(),
       apiKey: 'test-api-key',
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
       vertexai: true,
       project: 'test-project',
       location: 'test-location',
@@ -314,6 +347,7 @@ describe('live', () => {
       auth: new FakeAuth(),
       apiKey: 'test-api-key',
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
       vertexai: true,
       project: 'test-project',
       location: 'test-location',
@@ -373,6 +407,7 @@ describe('live', () => {
       auth: new FakeAuth(),
       apiKey: 'test-api-key',
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
       vertexai: true,
       project: 'test-project',
       location: 'test-location',
@@ -435,6 +470,7 @@ describe('live', () => {
       auth: new FakeAuth(),
       apiKey: 'test-api-key',
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
       vertexai: true,
       project: 'test-project',
       location: 'test-location',
@@ -492,6 +528,7 @@ describe('live', () => {
       auth: new FakeAuth(),
       apiKey: 'test-api-key',
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
       vertexai: true,
       project: 'test-project',
       location: 'test-location',
@@ -548,11 +585,141 @@ describe('live', () => {
     expect(session).toBeDefined();
   });
 
+  it('connect should reject multi speaker speech config', async () => {
+    const apiClient = new ApiClient({
+      auth: new FakeAuth(),
+      apiKey: 'test-api-key',
+      uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
+      vertexai: true,
+      project: 'test-project',
+      location: 'test-location',
+    });
+    const websocketFactory = new FakeWebSocketFactory();
+    const live = new Live(apiClient, new FakeAuth(), websocketFactory);
+
+    let websocket = new FakeWebSocket(
+      '',
+      {},
+      {
+        onopen: function () {},
+        onmessage: function (_e: MessageEvent) {},
+        onerror: function (_e: ErrorEvent) {},
+        onclose: function (_e: CloseEvent) {},
+      },
+    );
+    spyOn(websocket, 'connect').and.callThrough();
+    spyOn(websocketFactory, 'create').and.callFake(
+      (url, headers, callbacks) => {
+        // Update the websocket spy instance with callbacks provided by
+        // the websocket factory.
+        websocket = new FakeWebSocket(url, headers, callbacks);
+        spyOn(websocket, 'connect').and.callThrough();
+        const _websocketSpy = spyOn(websocket, 'send').and.callThrough();
+        return websocket;
+      },
+    );
+
+    try {
+      const _ = await live.connect({
+        model: 'models/gemini-2.0-flash-live-001',
+        config: {
+          speechConfig: {
+            multiSpeakerVoiceConfig: {
+              speakerVoiceConfigs: [
+                {
+                  speaker: 'Alice',
+                  voiceConfig: {prebuiltVoiceConfig: {voiceName: 'leda'}},
+                },
+                {
+                  speaker: 'Bob',
+                  voiceConfig: {prebuiltVoiceConfig: {voiceName: 'kore'}},
+                },
+              ],
+            },
+          },
+        },
+        callbacks: {
+          onmessage: function (e: types.LiveServerMessage) {
+            void e;
+          },
+        },
+      });
+    } catch (e) {
+      if (e instanceof Error) {
+        expect(e.message).toBe(
+          'multiSpeakerVoiceConfig is not supported in the live API.',
+        );
+      }
+    }
+  });
+
+  it('connect should send setup message with MCP tools', async () => {
+    const apiClient = new ApiClient({
+      auth: new FakeAuth(),
+      apiKey: 'test-api-key',
+      uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
+      project: 'test-project',
+      location: 'test-location',
+    });
+    const websocketFactory = new FakeWebSocketFactory();
+    const live = new Live(apiClient, new FakeAuth(), websocketFactory);
+
+    let websocket = new FakeWebSocket(
+      '',
+      {},
+      {
+        onopen: function () {},
+        onmessage: function (_e: MessageEvent) {},
+        onerror: function (_e: ErrorEvent) {},
+        onclose: function (_e: CloseEvent) {},
+      },
+    );
+    spyOn(websocket, 'connect').and.callThrough();
+    let websocketSpy = spyOn(websocket, 'send').and.callThrough();
+    spyOn(websocketFactory, 'create').and.callFake(
+      (url, headers, callbacks) => {
+        expect(headers['x-goog-api-client']).toContain('mcp_used/');
+        expect(headers['x-goog-api-client']).toContain('google-genai-sdk/');
+        // Update the websocket spy instance with callbacks provided by
+        // the websocket factory.
+        websocket = new FakeWebSocket(url, headers, callbacks);
+        spyOn(websocket, 'connect').and.callThrough();
+        websocketSpy = spyOn(websocket, 'send').and.callThrough();
+        return websocket;
+      },
+    );
+
+    const callableTool = mcpToTool(await spinUpPrintingServer(), {
+      behavior: types.Behavior.NON_BLOCKING,
+    });
+
+    const session = await live.connect({
+      model: 'models/gemini-2.0-flash-live-001',
+      config: {
+        tools: [callableTool],
+      },
+      callbacks: {
+        onmessage: function (e: types.LiveServerMessage) {
+          void e;
+        },
+      },
+    });
+
+    const websocketSpyCall = websocketSpy.calls.all()[0];
+    expect(websocketSpyCall.args[0]).toBe(
+      '{"setup":{"model":"models/gemini-2.0-flash-live-001","tools":[{"functionDeclarations":[{"behavior":"NON_BLOCKING","name":"print","parameters":{"type":"OBJECT","properties":{"text":{"type":"STRING"},"color":{"type":"STRING","pattern":"red|blue|green|white"}},"required":["text","color"]}}]}]}}',
+    );
+    expect(session).toBeDefined();
+  });
+
   it('session should return goAway message', async () => {
     const apiClient = new ApiClient({
       auth: new FakeAuth(),
       apiKey: 'test-api-key',
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
     });
     const websocketFactory = new FakeWebSocketFactory();
     const live = new Live(apiClient, new FakeAuth(), websocketFactory);
@@ -587,6 +754,7 @@ describe('live', () => {
       auth: new FakeAuth(),
       apiKey: 'test-api-key',
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
       vertexai: true,
       project: 'test-project',
       location: 'test-location',
@@ -641,6 +809,7 @@ describe('live', () => {
       auth: new FakeAuth(),
       apiKey: 'test-api-key',
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
     });
     const websocketFactory = new FakeWebSocketFactory();
     const live = new Live(apiClient, new FakeAuth(), websocketFactory);
@@ -683,6 +852,7 @@ describe('live', () => {
       auth: new FakeAuth(),
       apiKey: 'test-api-key',
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
     });
 
     expect(() => {

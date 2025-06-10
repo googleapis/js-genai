@@ -1,0 +1,48 @@
+Status code: 200 
+X-Google-Backends: unix:/tmp/esfbackend.1746896629.645860.3629298,/bns/rw/borg/rw/bns/genai-api/prod.genai-api/7,/bns/ncsfoa/borg/ncsfoa/bns/blue-layer1-gfe-prod-edge/prod.blue-layer1-gfe.sfo03s25/8
+Content-Type: application/json; charset=UTF-8
+X-Xss-Protection: 0
+X-Google-Dos-Service-Trace: main:genai-api-api-prod,main:GLOBAL_all_non_cloud
+X-Google-Gfe-Handshake-Trace: GFE: /bns/ncsfoa/borg/ncsfoa/bns/blue-layer1-gfe-prod-edge/prod.blue-layer1-gfe.sfo03s25/8,Mentat oracle: [2002:a05:6f30:228:b0:b:1b6a:4a0a]:9801
+X-Google-Esf-Cloud-Client-Params: backend_service_name: "generativelanguage.googleapis.com" backend_fully_qualified_method: "google.ai.generativelanguage.v1beta.GenerativeService.CountTokens"
+Content-Encoding: gzip
+X-Google-Gfe-Response-Code-Details-Trace: response_code_set_by_backend
+X-Google-Session-Info: GgQYECgLIAE6IxIhZ2VuZXJhdGl2ZWxhbmd1YWdlLmdvb2dsZWFwaXMuY29t
+X-Content-Type-Options: nosniff
+Date: Sun, 11 May 2025 02:58:16 GMT
+Server: scaffolding on HTTPServer2
+X-Google-Gfe-Service-Trace: genai-api-api-prod/gfespec_googleapis-generativelanguage_generativelanguage-url-map-global_generativelanguage-genai-api-api-prod
+X-Google-Security-Signals: FRAMEWORK=ONE_PLATFORM,ENV=borg,ENV_DEBUG=borg_user:genai-api;borg_job:prod.genai-api
+X-Google-Security-Signals: FRAMEWORK=HTTPSERVER2,BUILD=GOOGLE3,BUILD_DEBUG=cl:756525062,ENV=borg,ENV_DEBUG=borg_user:genai-api;borg_job:prod.genai-api
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Content-Length: 159
+Server-Timing: gfet4t7; dur=82
+X-Google-Service: genai-api-api-prod/gfespec_googleapis-generativelanguage_generativelanguage-url-map-global_generativelanguage-genai-api-api-prod
+X-Google-Gfe-Response-Body-Transformations: chunked
+X-Google-Shellfish-Status: CA0gBEBG
+X-Google-Netmon-Label: /bns/rw/borg/rw/bns/genai-api/prod.genai-api/7
+X-Frame-Options: SAMEORIGIN
+X-Google-Gfe-Request-Trace: acsfol10:443,/bns/rw/borg/rw/bns/genai-api/prod.genai-api/7,acsfol10:443
+X-Google-Gfe-Version: 2.928.1
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+
+{
+  "totalTokens": 11,
+  "systemInstructionsTokens": {},
+  "contentTokens": [
+    {
+      "partTokens": [
+        10
+      ],
+      "roleTokens": 1
+    }
+  ],
+  "promptTokensDetails": [
+    {
+      "modality": "TEXT",
+      "tokenCount": 11
+    }
+  ]
+}

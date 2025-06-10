@@ -9,6 +9,8 @@ import {
   Content,
   GenerateContentResponse,
   Language,
+  LiveServerContent,
+  LiveServerMessage,
   Outcome,
   Part,
   createModelContent,
@@ -20,7 +22,7 @@ import {
   createPartFromText,
   createPartFromUri,
   createUserContent,
-} from '../../src/types';
+} from '../../src/types.js';
 
 describe('GenerateContentResponse.text', () => {
   it('should return undefined when candidates is undefined', () => {
@@ -612,5 +614,129 @@ describe('createModelContent', () => {
         },
       ],
     });
+  });
+});
+
+describe('LiveServerMessage.text', () => {
+  it('should return undefined when serverContent is undefined', () => {
+    const response = new LiveServerMessage();
+    expect(response.text).toBeUndefined();
+  });
+
+  it('should return undefined when modelTurn is undefined', () => {
+    const response = new LiveServerMessage();
+    response.serverContent = {} as LiveServerContent;
+    expect(response.text).toBeUndefined();
+  });
+
+  it('should return undefined when content.parts is undefined', () => {
+    const response = new LiveServerMessage();
+    response.serverContent = {modelTurn: {} as Content};
+    expect(response.text).toBeUndefined();
+  });
+
+  it('should return undefined when content.parts is empty array', () => {
+    const response = new LiveServerMessage();
+    response.serverContent = {modelTurn: {parts: [{} as Part]}};
+    expect(response.text).toBeUndefined();
+  });
+
+  it('should return concatenated text from valid text parts', () => {
+    const response = new LiveServerMessage();
+    response.serverContent = {
+      modelTurn: {
+        parts: [{text: 'Hello '}, {text: 'world!'}],
+      },
+    };
+    expect(response.text).toBe('Hello world!');
+  });
+
+  it('should log a warning when parts contain invalid fields', () => {
+    const response = new LiveServerMessage();
+    response.serverContent = {
+      modelTurn: {
+        parts: [
+          {text: 'Hello '},
+          {
+            inlineData: {
+              data: 'world!',
+              mimeType: 'text/plain',
+            },
+          },
+        ],
+      },
+    };
+    spyOn(console, 'warn');
+
+    expect(response.text).toEqual('Hello ');
+    expect(console.warn).toHaveBeenCalledWith(
+      'there are non-text parts inlineData in the response, returning concatenation of all text parts. Please refer to the non text parts for a full response from model.',
+    );
+  });
+});
+
+describe('LiveServerMessage.data', () => {
+  it('should return undefined when serverContent is undefined', () => {
+    const response = new LiveServerMessage();
+    expect(response.data).toBeUndefined();
+  });
+
+  it('should return undefined when modelTurn is undefined', () => {
+    const response = new LiveServerMessage();
+    response.serverContent = {} as LiveServerContent;
+    expect(response.data).toBeUndefined();
+  });
+
+  it('should return undefined when content.parts is undefined', () => {
+    const response = new LiveServerMessage();
+    response.serverContent = {modelTurn: {} as Content};
+    expect(response.data).toBeUndefined();
+  });
+
+  it('should return undefined when content.parts is empty array', () => {
+    const response = new LiveServerMessage();
+    response.serverContent = {modelTurn: {parts: [{} as Part]}};
+    expect(response.data).toBeUndefined();
+  });
+
+  it('should return concatenated inline data from valid text parts', () => {
+    const response = new LiveServerMessage();
+    response.serverContent = {
+      modelTurn: {
+        parts: [
+          {inlineData: {data: 'SGVsbG8gV29ybGQh', mimeType: 'text/plain'}},
+          {
+            inlineData: {
+              data: 'WW91IGFyZSBhd2Vzb21lIQ==',
+              mimeType: 'text/plain',
+            },
+          },
+        ],
+      },
+    };
+    expect(response.data).toBe('SGVsbG8gV29ybGQhWW91IGFyZSBhd2Vzb21lIQ==');
+  });
+
+  it('should log a warning when parts contain invalid fields', () => {
+    const response = new LiveServerMessage();
+    response.serverContent = {
+      modelTurn: {
+        parts: [
+          {text: 'Hello '},
+          {
+            inlineData: {
+              data: 'SGVsbG8gV29ybGQh',
+              mimeType: 'text/plain',
+            },
+          },
+        ],
+      },
+    };
+    spyOn(console, 'warn');
+
+    expect(response.data).toEqual('SGVsbG8gV29ybGQh');
+    expect(console.warn).toHaveBeenCalledWith(
+      'there are non-data parts text in the response, returning concatenation of all data parts. Please refer to the non data parts for a full response from model.',
+    );
   });
 });

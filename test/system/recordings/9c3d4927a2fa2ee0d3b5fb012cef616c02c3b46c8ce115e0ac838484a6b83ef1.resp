@@ -1,0 +1,48 @@
+Status code: 200 
+Content-Type: application/json; charset=UTF-8
+Content-Encoding: gzip
+Date: Wed, 14 May 2025 18:12:54 GMT
+Server: scaffolding on HTTPServer2
+Content-Length: 596
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+Server-Timing: gfet4t7; dur=1990
+
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "Elara, a solitary lighthouse keeper, found a message in a bottle. Scrawled on parchment, it spoke of a hidden cove where starlight touched the sea. Intrigued, she set sail at dawn. The cove shimmered, just as described. But instead of treasure, she found an old woman, weaving moonlight into thread. \"The sea remembers everything, child,\" she whispered, offering Elara a single, luminous strand. Elara returned, the thread woven into her lamp, its beam now guiding lost ships to shore, a beacon of hope born from a forgotten message.\n"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.70995029481519167
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 11,
+    "candidatesTokenCount": 119,
+    "totalTokenCount": 130,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 11
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 119
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash"
+}

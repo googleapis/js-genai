@@ -6,7 +6,11 @@
 
 import * as NodeWs from 'ws';
 
-import {WebSocket, WebSocketCallbacks, WebSocketFactory} from '../_websocket';
+import {
+  WebSocket,
+  WebSocketCallbacks,
+  WebSocketFactory,
+} from '../_websocket.js';
 
 export class NodeWebSocketFactory implements WebSocketFactory {
   create(

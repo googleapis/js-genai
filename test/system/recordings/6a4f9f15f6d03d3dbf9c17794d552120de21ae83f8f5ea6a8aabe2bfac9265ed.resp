@@ -1,0 +1,21 @@
+Status code: 200 
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+Server-Timing: gfet4t7; dur=512
+Content-Disposition: attachment
+Server: scaffolding on HTTPServer2
+Date: Wed, 14 May 2025 18:07:29 GMT
+Content-Type: text/event-stream
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+
+data: {"candidates": [{"content": {"parts": [{"text": "The"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 144,"totalTokenCount": 144,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 144}]},"modelVersion": "gemini-2.0-flash"}
+
+data: {"candidates": [{"content": {"parts": [{"text": " title of the story isn't explicitly stated, but based on the content, a"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 144,"totalTokenCount": 144,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 144}]},"modelVersion": "gemini-2.0-flash"}
+
+data: {"candidates": [{"content": {"parts": [{"text": " fitting title could be something like:\n\n*   **Eliza and the Robin**\n"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 144,"totalTokenCount": 144,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 144}]},"modelVersion": "gemini-2.0-flash"}
+
+data: {"candidates": [{"content": {"parts": [{"text": "*   **A Little Piece of Song**\n*   **The Healing Wing**\n*   **Beneath the Oak Tree**\n"}],"role": "model"},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 135,"candidatesTokenCount": 62,"totalTokenCount": 197,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 135}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 62}]},"modelVersion": "gemini-2.0-flash"}
+

@@ -6,19 +6,22 @@
 
 import {GoogleAuthOptions} from 'google-auth-library';
 
-import {ApiClient} from '../_api_client';
-import {getBaseUrl} from '../_base_url';
-import {Caches} from '../caches';
-import {Chats} from '../chats';
-import {GoogleGenAIOptions} from '../client';
-import {Files} from '../files';
-import {Live} from '../live';
-import {Models} from '../models';
-import {NodeAuth} from '../node/_node_auth';
-import {NodeWebSocketFactory} from '../node/_node_websocket';
-import {Operations} from '../operations';
+import {ApiClient} from '../_api_client.js';
+import {getBaseUrl} from '../_base_url.js';
+import {Caches} from '../caches.js';
+import {Chats} from '../chats.js';
+import {GoogleGenAIOptions} from '../client.js';
+import {Files} from '../files.js';
+import {Live} from '../live.js';
+import {Models} from '../models.js';
+import {NodeAuth} from '../node/_node_auth.js';
+import {NodeDownloader} from '../node/_node_downloader.js';
+import {NodeWebSocketFactory} from '../node/_node_websocket.js';
+import {Operations} from '../operations.js';
+import {Tokens} from '../tokens.js';
+import {Tunings} from '../tunings.js';
 
-import {NodeUploader} from './_node_uploader';
+import {NodeUploader} from './_node_uploader.js';
 
 const LANGUAGE_LABEL_PREFIX = 'gl-node/';
 
@@ -76,6 +79,8 @@ export class GoogleGenAI {
   readonly caches: Caches;
   readonly files: Files;
   readonly operations: Operations;
+  readonly authTokens: Tokens;
+  readonly tunings: Tunings;
 
   constructor(options: GoogleGenAIOptions) {
     // Validate explicitly set initializer values.
@@ -87,7 +92,7 @@ export class GoogleGenAI {
 
     this.vertexai =
       options.vertexai ?? getBooleanEnv('GOOGLE_GENAI_USE_VERTEXAI') ?? false;
-    const envApiKey = getEnv('GOOGLE_API_KEY');
+    const envApiKey = getApiKeyFromEnv();
     const envProject = getEnv('GOOGLE_CLOUD_PROJECT');
     const envLocation = getEnv('GOOGLE_CLOUD_LOCATION');
 
@@ -97,6 +102,14 @@ export class GoogleGenAI {
 
     // Handle when to use Vertex AI in express mode (api key)
     if (options.vertexai) {
+      if (options.googleAuthOptions?.credentials) {
+        // Explicit credentials take precedence over implicit api_key.
+        console.debug(
+          'The user provided Google Cloud credentials will take precedence' +
+            ' over the API key from the environment variable.',
+        );
+        this.apiKey = undefined;
+      }
       // Explicit api_key and explicit project/location already handled above.
       if ((envProject || envLocation) && options.apiKey) {
         // Explicit api_key takes precedence over implicit project/location.
@@ -151,6 +164,7 @@ export class GoogleGenAI {
       httpOptions: options.httpOptions,
       userAgentExtra: LANGUAGE_LABEL_PREFIX + process.version,
       uploader: new NodeUploader(),
+      downloader: new NodeDownloader(),
     });
     this.models = new Models(this.apiClient);
     this.live = new Live(this.apiClient, auth, new NodeWebSocketFactory());
@@ -158,6 +172,8 @@ export class GoogleGenAI {
     this.caches = new Caches(this.apiClient);
     this.files = new Files(this.apiClient);
     this.operations = new Operations(this.apiClient);
+    this.authTokens = new Tokens(this.apiClient);
+    this.tunings = new Tunings(this.apiClient);
   }
 }
 
@@ -174,4 +190,15 @@ function stringToBoolean(str?: string): boolean {
     return false;
   }
   return str.toLowerCase() === 'true';
+}
+
+function getApiKeyFromEnv(): string | undefined {
+  const envGoogleApiKey = getEnv('GOOGLE_API_KEY');
+  const envGeminiApiKey = getEnv('GEMINI_API_KEY');
+  if (envGoogleApiKey && envGeminiApiKey) {
+    console.warn(
+      'Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.',
+    );
+  }
+  return envGoogleApiKey || envGeminiApiKey;
 }

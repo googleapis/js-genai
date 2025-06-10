@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Auth} from '../src/_auth';
+import {Auth} from '../src/_auth.js';
 
 const GOOGLE_API_KEY_HEADER = 'x-goog-api-key';
 const AUTHORIZATION_HEADER = 'Authorization';

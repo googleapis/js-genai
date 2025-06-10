@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {GoogleGenAI} from '../../src/node';
-import {createZeroFilledTempFile} from '../_generate_test_file';
+import {GoogleGenAI} from '../../src/node/index.js';
+import {createZeroFilledTempFile} from '../_generate_test_file.js';
 
 describe('File', () => {
   let client: GoogleGenAI;
@@ -142,7 +142,73 @@ describe('File', () => {
         // make sure we have processed all the bytes.
         expect(byteProcessed).toBe(fileSize);
       });
+      it('It should retry upload the file from a string path if the response does not have x-goog-upload-status header.', async () => {
+        const filePath = await createZeroFilledTempFile(TEST_FILE_SIZE);
+        const numRequests = Math.ceil(TEST_FILE_SIZE / DEFAULT_CHUNK_SIZE);
+        const uploadMissingStatusOptions = {
+          status: 200,
+          statusText: 'OK',
+          ok: true,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          url: 'some-url',
+        };
 
+        // one initial request to get the upload url, and then the rest
+        // of the requests to upload the file.
+        const mockResponses = [
+          Promise.resolve(new Response('', createUrlOkoptions)),
+          Promise.resolve(new Response('', uploadMissingStatusOptions)),
+        ];
+
+        for (let i = 0; i < numRequests - 1; i++) {
+          mockResponses.push(Promise.resolve(mockResponse));
+        }
+        mockResponses.push(
+          Promise.resolve(
+            new Response(
+              JSON.stringify({
+                data: 'data12',
+              }),
+              lastCorrectFetchOkOptions,
+            ),
+          ),
+        );
+
+        const fetchSpy = spyOn(global, 'fetch').and.returnValues(
+          ...mockResponses,
+        );
+
+        await client.files.upload({file: filePath});
+        // 1 initial request to get the upload url, 1 response missing x-goog-upload-status header and then the rest
+        // of the requests to upload the file.
+        expect(fetchSpy).toHaveBeenCalledTimes(numRequests + 1 + 1);
+
+        const allArgs = fetchSpy.calls.allArgs();
+
+        // make sure we get the correct create url. mimeType and fileSize in
+        // the first request.
+        expect(allArgs[0][0]).toBe(TEST_CREATE_URL);
+        expect(allArgs[0][1]?.['body']).toContain(DEFAULT_TEST_MIMETYPE);
+        expect(allArgs[0][1]?.['body']).toContain(TEST_FILE_SIZE);
+
+        let byteProcessed = 0;
+        for (let i = 2; i < numRequests + 1 + 1; i++) {
+          // make sure we get the correct upload url in the first
+          // request.
+          expect(allArgs[i][0]).toBe(TEST_UPLOAD_URL);
+          expect(allArgs[i][1]?.['body']).toBeInstanceOf(Blob);
+          const body = allArgs[i][1]?.['body'] as Blob;
+          expect(
+            body?.size ==
+              Math.min(DEFAULT_CHUNK_SIZE, fileSize - byteProcessed),
+          ).toBeTrue();
+          byteProcessed += body?.size;
+        }
+        // make sure we have processed all the bytes.
+        expect(byteProcessed).toBe(fileSize);
+      });
       it('It should upload the file from a blob.', async () => {
         const testBlob = new Blob([new Uint8Array(fileSize)], {
           type: DEFAULT_TEST_MIMETYPE,
@@ -185,6 +251,72 @@ describe('File', () => {
         expect(allArgs[0][1]?.['body']).toContain(TEST_FILE_SIZE);
         let byteProcessed = 0;
         for (let i = 1; i < numRequests + 1; i++) {
+          // make sure we get the correct upload url in the first
+          // request.
+          expect(allArgs[i][0]).toBe(TEST_UPLOAD_URL);
+          expect(allArgs[i][1]?.['body']).toBeInstanceOf(Blob);
+          const body = allArgs[i][1]?.['body'] as Blob;
+          expect(
+            body?.size ==
+              Math.min(DEFAULT_CHUNK_SIZE, fileSize - byteProcessed),
+          ).toBeTrue();
+          byteProcessed += body?.size;
+        }
+        expect(byteProcessed).toBe(fileSize);
+      });
+      it('It should retry upload the file from a blob if the response does not have x-goog-upload-status header.', async () => {
+        const testBlob = new Blob([new Uint8Array(fileSize)], {
+          type: DEFAULT_TEST_MIMETYPE,
+        });
+        const numRequests = Math.ceil(TEST_FILE_SIZE / DEFAULT_CHUNK_SIZE);
+        const uploadMissingStatusOptions = {
+          status: 200,
+          statusText: 'OK',
+          ok: true,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          url: 'some-url',
+        };
+
+        // 1 initial request to get the upload url, 2 response missing x-goog-upload-status header and then the rest
+        // of the requests to upload the file.
+        const mockResponses = [
+          Promise.resolve(new Response('', createUrlOkoptions)),
+          Promise.resolve(new Response('', uploadMissingStatusOptions)),
+        ];
+
+        for (let i = 0; i < numRequests - 1; i++) {
+          mockResponses.push(Promise.resolve(mockResponse));
+        }
+        mockResponses.push(
+          Promise.resolve(
+            new Response(
+              JSON.stringify({
+                data: 'data12',
+              }),
+              lastCorrectFetchOkOptions,
+            ),
+          ),
+        );
+
+        const fetchSpy = spyOn(global, 'fetch').and.returnValues(
+          ...mockResponses,
+        );
+
+        await client.files.upload({file: testBlob});
+
+        // 1 initial request to get the upload url, 1 response missing x-goog-upload-status header and then the rest
+        expect(fetchSpy).toHaveBeenCalledTimes(numRequests + 1 + 1);
+        const allArgs = fetchSpy.calls.allArgs();
+
+        // make sure we get the correct create url. mimeType and fileSize in the
+        // first request.
+        expect(allArgs[0][0]).toBe(TEST_CREATE_URL);
+        expect(allArgs[0][1]?.['body']).toContain(DEFAULT_TEST_MIMETYPE);
+        expect(allArgs[0][1]?.['body']).toContain(TEST_FILE_SIZE);
+        let byteProcessed = 0;
+        for (let i = 2; i < numRequests + 1 + 1; i++) {
           // make sure we get the correct upload url in the first
           // request.
           expect(allArgs[i][0]).toBe(TEST_UPLOAD_URL);

@@ -1,0 +1,51 @@
+Status code: 200 
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Date: Wed, 14 May 2025 18:07:43 GMT
+Server: scaffolding on HTTPServer2
+Content-Length: 550
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+X-Goog-Sherlog-Link: https://sherlog.corp.google.com/#workflow?config=Serving&dataid=aiplatform.googleapis.com/google.cloud.aiplatform.v1beta1.PredictionService.GenerateContent&gaia=821332047332&reason=sharedLink&version=183f77095ebeb388b2e947313d76199b
+Content-Type: application/json; charset=UTF-8
+X-Content-Type-Options: nosniff
+Content-Encoding: gzip
+
+{
+  "candidates": [
+    {
+      "content": {
+        "role": "model",
+        "parts": [
+          {
+            "text": "Given the themes of compassion, unexpected kindness, and a shift in perspective, a suitable title for the story could be:\n\n**The Unpaid Loaf**\n\nThis title hints at the central conflict (the unpaid bread) but also implies that something more valuable than money might be exchanged.\n"
+          }
+        ]
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.49653618911217
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 168,
+    "candidatesTokenCount": 58,
+    "totalTokenCount": 226,
+    "trafficType": "ON_DEMAND",
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 168
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 58
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "createTime": "2025-05-14T18:07:42.607651Z",
+  "responseId": "7tskaKOLJeWcmecPwqig4Ag"
+}

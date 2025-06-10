@@ -1,0 +1,16 @@
+b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d
+Server Address: generativelanguage.googleapis.com
+Port: 443
+Protocol: https
+********************************************************************************
+POST /v1beta/models/gemini-2.0-flash:streamGenerateContent?alt=sse HTTP/1.1
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: *
+Connection: keep-alive
+Content-Length: 940
+Content-Type: application/json
+Sec-Fetch-Mode: cors
+
+
+{"contents":[{"parts":[{"text":"Tell me a story in 100 words?"}],"role":"user"},{"parts":[{"text":"El"}],"role":"model"},{"parts":[{"text":"iza found a robin, wing broken, shivering beneath her oak tree. Carefully, she scooped it"}],"role":"model"},{"parts":[{"text":" up, its tiny heart hammering against her palm. Days turned into weeks. Eliza nursed the"}],"role":"model"},{"parts":[{"text":" robin, feeding it crushed worms and whispering encouragements. Slowly, the wing healed. One bright morning, Eliza opened the window. The robin perched on her finger,"}],"role":"model"},{"parts":[{"text":" chirped once, a bright, joyful sound, then soared into the blue. Eliza smiled, a single tear tracing a path down her cheek, knowing she'd given"}],"role":"model"},{"parts":[{"text":" the world back a little piece of its song.\n"}],"role":"model"},{"parts":[{"text":"What is the title of the story?"}],"role":"user"}],"generationConfig":{}}

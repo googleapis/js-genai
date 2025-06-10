@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Tool, Type} from '../../../src/types';
-import {GoogleGenAI} from '../../../src/web/web_client';
+import {Tool, Type} from '../../../src/types.js';
+import {GoogleGenAI} from '../../../src/web/web_client.js';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 

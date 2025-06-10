@@ -21,12 +21,16 @@ const externalDeps = [
   'google-auth-library',
   'ws',
   'fs/promises',
+  'fs',
+  'node:stream',
   'zod',
   'zod-to-json-schema',
+  '@modelcontextprotocol/sdk',
+  '@modelcontextprotocol/sdk/client/index.js',
 ];
 
 export default [
-  // ES module (dist/index.mjs)
+  // Cross ES module (dist/index.mjs)
   {
     input: 'src/index.ts',
     output: {
@@ -38,7 +42,7 @@ export default [
     external: externalDeps,
   },
 
-  // CommonJS module (dist/index.js)
+  // Cross CJS module (dist/index.cjs)
   {
     input: 'src/index.ts',
     output: {
@@ -50,11 +54,23 @@ export default [
     external: externalDeps,
   },
 
-  // The `node/` module, commonjs only (dist/node/index.js)
+  // The `node/` ES module (dist/node/index.mjs)
   {
     input: 'src/node/index.ts',
     output: {
-      file: pkg.exports['./node']['require'],
+      file: pkg.exports['./node']['import'],
+      format: 'es',
+      sourcemap: true,
+    },
+    plugins: rollupPlugins,
+    external: externalDeps,
+  },
+
+  // The `node/` CJS module (dist/node/index.cjs)
+  {
+    input: 'src/node/index.ts',
+    output: {
+      file: pkg.exports['.']['node']['require'],
       format: 'cjs',
       sourcemap: true,
     },
