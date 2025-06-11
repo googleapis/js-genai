@@ -1073,6 +1073,8 @@ export declare interface HttpOptions {
   headers?: Record<string, string>;
   /** Timeout for the request in milliseconds. */
   timeout?: number;
+  /** Extra parameters to add to the request body. */
+  extraBody?: Record<string, unknown>;
 }
 
 /** Schema is used to define the format of input/output data.

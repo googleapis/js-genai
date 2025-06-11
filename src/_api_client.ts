@@ -484,6 +484,12 @@ export class ApiClient {
       }
       requestInit.signal = signal;
     }
+    if (httpOptions && httpOptions.extraBody !== null) {
+      includeExtraBodyToRequestInit(
+        requestInit,
+        httpOptions.extraBody as Record<string, unknown>,
+      );
+    }
     requestInit.headers = await this.getHeadersInternal(httpOptions);
     return requestInit;
   }
@@ -779,4 +785,105 @@ async function throwErrorIfNotOK(response: Response | undefined) {
     }
     throw new Error(errorMessage);
   }
+}
+
+/**
+ * Recursively updates the `requestInit.body` with values from an `extraBody` object.
+ *
+ * If `requestInit.body` is a string, it's assumed to be JSON and will be parsed.
+ * The `extraBody` is then deeply merged into this parsed object.
+ * If `requestInit.body` is a Blob, `extraBody` will be ignored, and a warning logged,
+ * as merging structured data into an opaque Blob is not supported.
+ *
+ * The function does not enforce that updated values from `extraBody` have the
+ * same type as existing values in `requestInit.body`. Type mismatches during
+ * the merge will result in a warning, but the value from `extraBody` will overwrite
+ * the original. `extraBody` users are responsible for ensuring `extraBody` has the correct structure.
+ *
+ * @param requestInit The RequestInit object whose body will be updated.
+ * @param extraBody The object containing updates to be merged into `requestInit.body`.
+ */
+export function includeExtraBodyToRequestInit(
+  requestInit: RequestInit,
+  extraBody: Record<string, unknown>,
+) {
+  if (!extraBody || Object.keys(extraBody).length === 0) {
+    return;
+  }
+
+  if (requestInit.body instanceof Blob) {
+    console.warn(
+      'includeExtraBodyToRequestInit: extraBody provided but current request body is a Blob. extraBody will be ignored as merging is not supported for Blob bodies.',
+    );
+    return;
+  }
+
+  let currentBodyObject: Record<string, unknown> = {};
+
+  // If adding new type to HttpRequest.body, please check the code below to
+  // see if we need to update the logic.
+  if (typeof requestInit.body === 'string' && requestInit.body.length > 0) {
+    try {
+      const parsedBody = JSON.parse(requestInit.body);
+      if (
+        typeof parsedBody === 'object' &&
+        parsedBody !== null &&
+        !Array.isArray(parsedBody)
+      ) {
+        currentBodyObject = parsedBody as Record<string, unknown>;
+      } else {
+        console.warn(
+          'IncludeExtraBodyToRequestInit: Original request body is valid JSON but not a non-array object. Skip applying extraBody to the request body.',
+        );
+        return;
+      }
+      /*  eslint-disable-next-line @typescript-eslint/no-unused-vars */
+    } catch (e) {
+      console.warn(
+        'IncludeExtraBodyToRequestInit: Original request body is not valid JSON. Skip applying extraBody to the request body.',
+      );
+      return;
+    }
+  }
+
+  function deepMerge(
+    target: Record<string, unknown>,
+    source: Record<string, unknown>,
+  ): Record<string, unknown> {
+    const output = {...target};
+    for (const key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        const sourceValue = source[key];
+        const targetValue = output[key];
+        if (
+          sourceValue &&
+          typeof sourceValue === 'object' &&
+          !Array.isArray(sourceValue) &&
+          targetValue &&
+          typeof targetValue === 'object' &&
+          !Array.isArray(targetValue)
+        ) {
+          output[key] = deepMerge(
+            targetValue as Record<string, unknown>,
+            sourceValue as Record<string, unknown>,
+          );
+        } else {
+          if (
+            targetValue &&
+            sourceValue &&
+            typeof targetValue !== typeof sourceValue
+          ) {
+            console.warn(
+              `IncludeExtraBodyToRequestInit:deepMerge: Type mismatch for key "${key}". Original type: ${typeof targetValue}, New type: ${typeof sourceValue}. Overwriting.`,
+            );
+          }
+          output[key] = sourceValue;
+        }
+      }
+    }
+    return output;
+  }
+
+  const mergedBody = deepMerge(currentBodyObject, extraBody);
+  requestInit.body = JSON.stringify(mergedBody);
 }
