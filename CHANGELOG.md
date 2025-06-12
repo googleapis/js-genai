@@ -1,6 +1,22 @@
 # Changelog
 
 
+## [1.5.0](https://github.com/googleapis/js-genai/compare/v1.4.0...v1.5.0) (2025-06-12)
+
+
+### Features
+
+* add a timeout parameter to CallableToolConfig ([06f31fd](https://github.com/googleapis/js-genai/commit/06f31fdbb8be612759385190c6a03ea03d103dcf))
+* Add datastore_spec field for VertexAISearch ([1b18a52](https://github.com/googleapis/js-genai/commit/1b18a527ab4b9526a8901ecdc0453795df0905bf))
+* Add support for Veo frame interpolation and video extension ([53f22e6](https://github.com/googleapis/js-genai/commit/53f22e6ce54dc0b226145e9bcba20b731ea4645f))
+* Make the MCP SDK an optional peer dependency. ([2472fd3](https://github.com/googleapis/js-genai/commit/2472fd364a29ad3cf3e15bbb61a1f3ac00914d86))
+* RAG - Introducing context storing for Gemini Live API. ([bdc2355](https://github.com/googleapis/js-genai/commit/bdc2355f2f10b839aa95162216dc4d35c60cd58e))
+
+
+### Bug Fixes
+
+* Prioritize credentials over implicit api key (from env) for node client using Vertex AI ([d82aba2](https://github.com/googleapis/js-genai/commit/d82aba244bdb804b063ef8a983b2916c00b901d2)), closes [#616](https://github.com/googleapis/js-genai/issues/616)
+
 ## [1.4.0](https://github.com/googleapis/js-genai/compare/v1.3.0...v1.4.0) (2025-06-04)
 
 
