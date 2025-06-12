@@ -8,6 +8,7 @@ import {Auth} from './_auth.js';
 import * as common from './_common.js';
 import {Downloader} from './_downloader.js';
 import {Uploader} from './_uploader.js';
+import {ApiError} from './errors.js';
 import {
   DownloadFileParameters,
   File,
@@ -25,36 +26,6 @@ const LIBRARY_LABEL = `google-genai-sdk/${SDK_VERSION}`;
 const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
 const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';
 const responseLineRE = /^data: (.*)(?:\n\n|\r\r|\r\n\r\n)/;
-
-/**
- * Client errors raised by the GenAI API.
- */
-export class ClientError extends Error {
-  constructor(message: string, stackTrace?: string) {
-    if (stackTrace) {
-      super(message, {cause: stackTrace});
-    } else {
-      super(message, {cause: new Error().stack});
-    }
-    this.message = message;
-    this.name = 'ClientError';
-  }
-}
-
-/**
- * Server errors raised by the GenAI API.
- */
-export class ServerError extends Error {
-  constructor(message: string, stackTrace?: string) {
-    if (stackTrace) {
-      super(message, {cause: stackTrace});
-    } else {
-      super(message, {cause: new Error().stack});
-    }
-    this.message = message;
-    this.name = 'ServerError';
-  }
-}
 
 /**
  * Options for initializing the ApiClient. The ApiClient uses the parameters
@@ -565,17 +536,17 @@ export class ApiClient {
             const errorMessage = `got status: ${status}. ${JSON.stringify(
               chunkJson,
             )}`;
-            if (code >= 400 && code < 500) {
-              const clientError = new ClientError(errorMessage);
-              throw clientError;
-            } else if (code >= 500 && code < 600) {
-              const serverError = new ServerError(errorMessage);
-              throw serverError;
+            if (code >= 400 && code < 600) {
+              const apiError = new ApiError({
+                message: errorMessage,
+                status: code,
+              });
+              throw apiError;
             }
           }
         } catch (e: unknown) {
           const error = e as Error;
-          if (error.name === 'ClientError' || error.name === 'ServerError') {
+          if (error.name === 'ApiError') {
             throw e;
           }
         }
@@ -750,11 +721,10 @@ export class ApiClient {
 
 async function throwErrorIfNotOK(response: Response | undefined) {
   if (response === undefined) {
-    throw new ServerError('response is undefined');
+    throw new Error('response is undefined');
   }
   if (!response.ok) {
     const status: number = response.status;
-    const statusText: string = response.statusText;
     let errorBody: Record<string, unknown>;
     if (response.headers.get('content-type')?.includes('application/json')) {
       errorBody = await response.json();
@@ -767,15 +737,13 @@ async function throwErrorIfNotOK(response: Response | undefined) {
         },
       };
     }
-    const errorMessage = `got status: ${status} ${statusText}. ${JSON.stringify(
-      errorBody,
-    )}`;
-    if (status >= 400 && status < 500) {
-      const clientError = new ClientError(errorMessage);
-      throw clientError;
-    } else if (status >= 500 && status < 600) {
-      const serverError = new ServerError(errorMessage);
-      throw serverError;
+    const errorMessage = JSON.stringify(errorBody);
+    if (status >= 400 && status < 600) {
+      const apiError = new ApiError({
+        message: errorMessage,
+        status: status,
+      });
+      throw apiError;
     }
     throw new Error(errorMessage);
   }
