@@ -31,7 +31,7 @@ export class NodeDownloader implements Downloader {
           response.responseInternal.body as ReadableStream<Uint8Array>,
         ).pipe(writer);
       } else {
-        writeFile(
+        await writeFile(
           params.downloadPath,
           response as string,
           {encoding: 'base64'},
