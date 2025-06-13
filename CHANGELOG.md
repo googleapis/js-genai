@@ -1,6 +1,13 @@
 # Changelog
 
 
+## [1.6.0](https://github.com/googleapis/js-genai/compare/v1.5.1...v1.6.0) (2025-06-13)
+
+
+### Features
+
+* enable json schema for controlled output and function declaration. ([7d53d57](https://github.com/googleapis/js-genai/commit/7d53d578ea8b6fa7a418312357a8a593d3c0122a))
+
 ## [1.5.1](https://github.com/googleapis/js-genai/compare/v1.5.0...v1.5.1) (2025-06-13)
 
 
