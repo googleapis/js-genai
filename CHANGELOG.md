@@ -1,6 +1,13 @@
 # Changelog
 
 
+## [1.5.1](https://github.com/googleapis/js-genai/compare/v1.5.0...v1.5.1) (2025-06-13)
+
+
+### Bug Fixes
+
+* Update MCP dependencies to be type-only ([648019b](https://github.com/googleapis/js-genai/commit/648019bebb5cff3e8b3bb6db72534934bd7c1357))
+
 ## [1.5.0](https://github.com/googleapis/js-genai/compare/v1.4.0...v1.5.0) (2025-06-11)
 
 
