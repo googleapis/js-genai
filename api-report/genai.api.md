@@ -2414,7 +2414,7 @@ export interface ToolConfig {
 export type ToolListUnion = ToolUnion[];
 
 // @public (undocumented)
-export type ToolUnion = Tool | CallableTool;
+export type ToolUnion = Tool | CallableTool | Client;
 
 // @public
 export enum TrafficType {

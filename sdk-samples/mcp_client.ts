@@ -3,7 +3,7 @@
  * Copyright 2025 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
-import {FunctionCallingConfigMode, GoogleGenAI, mcpToTool} from '@google/genai';
+import {FunctionCallingConfigMode, GoogleGenAI} from '@google/genai';
 import {Client} from '@modelcontextprotocol/sdk/client/index.js';
 import {InMemoryTransport} from '@modelcontextprotocol/sdk/inMemory.js';
 import {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js';
@@ -23,7 +23,7 @@ async function mcpSample(ai: GoogleGenAI) {
     contents:
       'Use the printer to print a simple math question in red and the answer in blue, and beep with the beeper, also tell me a joke. IMPORTANT DONT FORGET TO BEEP AT THE END',
     config: {
-      tools: [mcpToTool(printingClient, beepingClient)],
+      tools: [printingClient, beepingClient],
       toolConfig: {
         functionCallingConfig: {
           mode: FunctionCallingConfigMode.AUTO,

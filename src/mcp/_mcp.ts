@@ -192,7 +192,7 @@ export class McpCallableTool implements CallableTool {
   }
 }
 
-function isMcpClient(client: unknown): client is McpClient {
+export function isMcpClient(client: unknown): client is McpClient {
   return (
     client !== null &&
     typeof client === 'object' &&
