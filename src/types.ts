@@ -1682,6 +1682,52 @@ export declare interface GenerateContentParameters {
   config?: GenerateContentConfig;
 }
 
+/** A wrapper class for the http response. */
+export class HttpResponse {
+  /** Used to retain the processed HTTP headers in the response. */
+  headers?: Record<string, string>;
+  /**
+   * The original http response.
+   */
+  responseInternal: Response;
+
+  constructor(response: Response) {
+    // Process the headers.
+    const headers: Record<string, string> = {};
+    for (const pair of response.headers.entries()) {
+      headers[pair[0]] = pair[1];
+    }
+    this.headers = headers;
+
+    // Keep the original response.
+    this.responseInternal = response;
+  }
+
+  json(): Promise<unknown> {
+    return this.responseInternal.json();
+  }
+}
+
+/** Callbacks for the live API. */
+export interface LiveCallbacks {
+  /**
+   * Called when the websocket connection is established.
+   */
+  onopen?: (() => void) | null;
+  /**
+   * Called when a message is received from the server.
+   */
+  onmessage: (e: LiveServerMessage) => void;
+  /**
+   * Called when an error occurs.
+   */
+  onerror?: ((e: ErrorEvent) => void) | null;
+  /**
+   * Called when the websocket connection is closed.
+   */
+  onclose?: ((e: CloseEvent) => void) | null;
+}
+
 /** Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp */
 export declare interface GoogleTypeDate {
   /** Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn't significant. */
@@ -1947,6 +1993,8 @@ export class GenerateContentResponseUsageMetadata {
 
 /** Response message for PredictionService.GenerateContent. */
 export class GenerateContentResponse {
+  /** Used to retain the full HTTP response. */
+  sdkHttpResponse?: HttpResponse;
   /** Response variations returned by the model.
    */
   candidates?: Candidate[];
@@ -3639,52 +3687,6 @@ export declare interface CreateFileParameters {
   file: File;
   /** Used to override the default configuration. */
   config?: CreateFileConfig;
-}
-
-/** A wrapper class for the http response. */
-export class HttpResponse {
-  /** Used to retain the processed HTTP headers in the response. */
-  headers?: Record<string, string>;
-  /**
-   * The original http response.
-   */
-  responseInternal: Response;
-
-  constructor(response: Response) {
-    // Process the headers.
-    const headers: Record<string, string> = {};
-    for (const pair of response.headers.entries()) {
-      headers[pair[0]] = pair[1];
-    }
-    this.headers = headers;
-
-    // Keep the original response.
-    this.responseInternal = response;
-  }
-
-  json(): Promise<unknown> {
-    return this.responseInternal.json();
-  }
-}
-
-/** Callbacks for the live API. */
-export interface LiveCallbacks {
-  /**
-   * Called when the websocket connection is established.
-   */
-  onopen?: (() => void) | null;
-  /**
-   * Called when a message is received from the server.
-   */
-  onmessage: (e: LiveServerMessage) => void;
-  /**
-   * Called when an error occurs.
-   */
-  onerror?: ((e: ErrorEvent) => void) | null;
-  /**
-   * Called when the websocket connection is closed.
-   */
-  onclose?: ((e: CloseEvent) => void) | null;
 }
 
 /** Response for the create file method. */
