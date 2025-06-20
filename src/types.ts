@@ -3298,6 +3298,8 @@ export declare interface TuningExample {
 export declare interface TuningDataset {
   /** GCS URI of the file containing training dataset in JSONL format. */
   gcsUri?: string;
+  /** The resource name of the Vertex Multimodal Dataset that is used as training dataset. Example: 'projects/my-project-id-or-number/locations/my-location/datasets/my-dataset-id'. */
+  vertexDatasetResource?: string;
   /** Inline examples with simple input/output text. */
   examples?: TuningExample[];
 }
@@ -3305,6 +3307,8 @@ export declare interface TuningDataset {
 export declare interface TuningValidationDataset {
   /** GCS URI of the file containing validation dataset in JSONL format. */
   gcsUri?: string;
+  /** The resource name of the Vertex Multimodal Dataset that is used as training dataset. Example: 'projects/my-project-id-or-number/locations/my-location/datasets/my-dataset-id'. */
+  vertexDatasetResource?: string;
 }
 
 /** Supervised fine-tuning job creation request - optional fields. */
