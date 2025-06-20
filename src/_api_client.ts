@@ -27,6 +27,18 @@ const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
 const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';
 const responseLineRE = /^data: (.*)(?:\n\n|\r\r|\r\n\r\n)/;
 
+
+let overriddenHttpOptions: HttpOptions|undefined = undefined;
+
+/**
+ * Sets the default HTTP options for the SDK.
+ */
+export function overrideHttpOptions(
+    httpOptions: HttpOptions,
+) {
+  overriddenHttpOptions = httpOptions;
+}
+
 /**
  * Options for initializing the ApiClient. The ApiClient uses the parameters
  * for authentication purposes as well as to infer if SDK should send the
@@ -150,7 +162,7 @@ export class ApiClient {
       vertexai: opts.vertexai,
     };
 
-    const initHttpOptions: HttpOptions = {};
+    let initHttpOptions: HttpOptions = {};
 
     if (this.clientOptions.vertexai) {
       initHttpOptions.apiVersion =
@@ -167,6 +179,13 @@ export class ApiClient {
     initHttpOptions.headers = this.getDefaultHeaders();
 
     this.clientOptions.httpOptions = initHttpOptions;
+
+    if (overriddenHttpOptions) {
+      initHttpOptions = this.patchHttpOptions(
+          initHttpOptions,
+          overriddenHttpOptions,
+      );
+    }
 
     if (opts.httpOptions) {
       this.clientOptions.httpOptions = this.patchHttpOptions(
