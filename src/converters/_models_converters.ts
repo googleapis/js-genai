@@ -3580,6 +3580,28 @@ export function upscaleImageAPIConfigInternalToVertex(
     );
   }
 
+  const fromEnhanceInputImage = common.getValueByPath(fromObject, [
+    'enhanceInputImage',
+  ]);
+  if (parentObject !== undefined && fromEnhanceInputImage != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'upscaleConfig', 'enhanceInputImage'],
+      fromEnhanceInputImage,
+    );
+  }
+
+  const fromImagePreservationFactor = common.getValueByPath(fromObject, [
+    'imagePreservationFactor',
+  ]);
+  if (parentObject !== undefined && fromImagePreservationFactor != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'upscaleConfig', 'imagePreservationFactor'],
+      fromImagePreservationFactor,
+    );
+  }
+
   const fromNumberOfImages = common.getValueByPath(fromObject, [
     'numberOfImages',
   ]);

@@ -40,6 +40,8 @@ async function upscaleImageFromVertexAI() {
     config: {
       includeRaiReason: true,
       outputMimeType: 'image/jpeg',
+      enhanceInputImage: true,
+      imagePreservationFactor: 0.6,
     },
   });
 

@@ -34,6 +34,18 @@ export enum AdapterSize {
 }
 
 // @public
+export class ApiError extends Error {
+    constructor(options: ApiErrorInfo);
+    status: number;
+}
+
+// @public
+export interface ApiErrorInfo {
+    message: string;
+    status: number;
+}
+
+// @public
 export interface ApiKeyConfig {
     apiKeyString?: string;
 }
@@ -836,7 +848,9 @@ export interface FunctionDeclaration {
     description?: string;
     name?: string;
     parameters?: Schema;
+    parametersJsonSchema?: unknown;
     response?: Schema;
+    responseJsonSchema?: unknown;
 }
 
 // @public
@@ -1035,6 +1049,7 @@ export interface GenerationConfig {
     mediaResolution?: MediaResolution;
     modelSelectionConfig?: ModelSelectionConfig;
     presencePenalty?: number;
+    responseJsonSchema?: unknown;
     responseLogprobs?: boolean;
     responseMimeType?: string;
     responseModalities?: Modality[];
@@ -1284,21 +1299,10 @@ export enum HarmSeverity {
 }
 
 // @public
-export class ApiError extends Error {
-    constructor(options: ApiErrorInfo);
-    status: number;
-}
-
-// @public
-export interface ApiErrorInfo {
-    message: string;
-    status: number;
-}
-
-// @public
 export interface HttpOptions {
     apiVersion?: string;
     baseUrl?: string;
+    extraBody?: Record<string, unknown>;
     headers?: Record<string, string>;
     timeout?: number;
 }
@@ -2581,7 +2585,9 @@ export interface UploadFileParameters {
 // @public
 export interface UpscaleImageConfig {
     abortSignal?: AbortSignal;
+    enhanceInputImage?: boolean;
     httpOptions?: HttpOptions;
+    imagePreservationFactor?: number;
     includeRaiReason?: boolean;
     outputCompressionQuality?: number;
     outputMimeType?: string;
