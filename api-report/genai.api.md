@@ -2585,7 +2585,9 @@ export interface UploadFileParameters {
 // @public
 export interface UpscaleImageConfig {
     abortSignal?: AbortSignal;
+    enhanceInputImage?: boolean;
     httpOptions?: HttpOptions;
+    imagePreservationFactor?: number;
     includeRaiReason?: boolean;
     outputCompressionQuality?: number;
     outputMimeType?: string;

@@ -61,6 +61,15 @@ export declare interface UpscaleImageAPIConfigInternal {
   /** The level of compression if the ``output_mime_type`` is
       ``image/jpeg``. */
   outputCompressionQuality?: number;
+  /** Whether to add an image enhancing step before upscaling.
+      It is expected to suppress the noise and JPEG compression artifact from
+      the input image. */
+  enhanceInputImage?: boolean;
+  /** With a higher image preservation factor, the original image pixels
+      are more respected. With a lower image preservation factor, the output
+      image will have be more different from the input image, but maybe with
+      finer details and fewer noises. */
+  imagePreservationFactor?: number;
   numberOfImages?: number;
   mode?: string;
 }
