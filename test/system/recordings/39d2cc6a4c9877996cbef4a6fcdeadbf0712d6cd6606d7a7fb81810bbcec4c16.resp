@@ -1,0 +1,60 @@
+Status code: 200 
+Content-Type: application/json; charset=UTF-8
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Date: Wed, 14 May 2025 18:13:13 GMT
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+Content-Encoding: gzip
+Server: scaffolding on HTTPServer2
+Content-Length: 1310
+Server-Timing: gfet4t7; dur=3913
+
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "The sky is blue for a few key reasons related to how sunlight interacts with the Earth's atmosphere:\n\n*   **Sunlight:** Sunlight is actually made up of all the colors of the rainbow.\n*   **Atmosphere:** The Earth's atmosphere contains tiny particles like nitrogen and oxygen molecules.\n*   **Scattering:** When sunlight enters the atmosphere, it collides with these particles. This causes the light to scatter in different directions.\n*   **Rayleigh Scattering:** The amount of scattering depends on the wavelength (color) of the light. Shorter wavelengths, like blue and violet, are scattered much more strongly than longer wavelengths, like red and orange. This is known as Rayleigh scattering.\n*   **Why blue, not violet?** Violet light is scattered even more than blue light. However, the sun emits less violet light than blue light, and our eyes are also more sensitive to blue light. This is why we see a blue sky.\n\n**Can the sky appear in other colors?**\n\nYes, the sky can appear in other colors depending on the time of day and atmospheric conditions:\n\n*   **Sunrise and Sunset:** At sunrise and sunset, the sun is lower on the horizon. Sunlight has to travel through more of the atmosphere to reach our eyes. This means that most of the blue light is scattered away before it gets to us. The longer wavelengths, like red and orange, can pass through more easily, giving the sky those colors.\n*   **Pollution or Dust:** If there's a lot of pollution or dust in the atmosphere, it can scatter light differently. This can make the sky appear hazy or yellowish.\n*   **Volcanic Ash:** After a volcanic eruption, the sky can sometimes appear vibrant red or orange due to the way ash particles scatter light.\n*   **Other Planets:** On planets with different atmospheres, the sky can be different colors. For example, Mars has a thin atmosphere filled with dust, so the sky often appears yellowish-brown or butterscotch.\n*   **Twilight and Crepuscular Rays:** After sunset or before sunrise, the sky can take on a mix of colors, including pink, purple, and deep blue, due to the varying angles of sunlight and scattering.\n\nSo, while the sky is typically blue, it's a dynamic phenomenon, and different atmospheric conditions can create a stunning range of colors.\n"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "citationMetadata": {
+        "citationSources": [
+          {
+            "startIndex": 530,
+            "endIndex": 654
+          },
+          {
+            "startIndex": 1129,
+            "endIndex": 1275
+          }
+        ]
+      },
+      "avgLogprobs": -0.30878010734182887
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 14,
+    "candidatesTokenCount": 488,
+    "totalTokenCount": 502,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 14
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 488
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash"
+}

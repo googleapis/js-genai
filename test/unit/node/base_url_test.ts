@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {setDefaultBaseUrls} from '../../../src/_base_url';
-import {GoogleGenAI} from '../../../src/node/node_client';
+import {setDefaultBaseUrls} from '../../../src/_base_url.js';
+import {GoogleGenAI} from '../../../src/node/node_client.js';
 
 describe('setDefaultBaseUrls', () => {
   afterEach(() => {

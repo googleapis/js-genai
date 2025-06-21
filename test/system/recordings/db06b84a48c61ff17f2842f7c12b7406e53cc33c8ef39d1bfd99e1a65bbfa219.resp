@@ -1,0 +1,51 @@
+Status code: 200 
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+X-Goog-Sherlog-Link: https://sherlog.corp.google.com/#workflow?config=Serving&dataid=aiplatform.googleapis.com/google.cloud.aiplatform.v1beta1.PredictionService.GenerateContent&gaia=821332047332&reason=sharedLink&version=183f77522ee5a6f472102c64975d871c
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Content-Encoding: gzip
+Content-Length: 1385
+X-Xss-Protection: 0
+Content-Type: application/json; charset=UTF-8
+Date: Wed, 14 May 2025 18:12:58 GMT
+Server: scaffolding on HTTPServer2
+
+{
+  "candidates": [
+    {
+      "content": {
+        "role": "model",
+        "parts": [
+          {
+            "text": "The sky is blue due to a phenomenon called **Rayleigh scattering**. Here's a breakdown:\n\n*   **Sunlight and its colors:** Sunlight appears white to us, but it's actually made up of all the colors of the rainbow (red, orange, yellow, green, blue, indigo, and violet).\n*   **Entering the atmosphere:** When sunlight enters the Earth's atmosphere, it collides with tiny air molecules (mostly nitrogen and oxygen).\n*   **Scattering of light:** This collision causes the light to scatter in different directions.\n*   **Rayleigh scattering:** The amount of scattering depends on the wavelength of the light. Shorter wavelengths (blue and violet) are scattered much more effectively than longer wavelengths (red and orange). This is because shorter wavelengths match the size of the particles better and can be more easily absorbed and remitted.\n*   **Why blue, not violet?** Violet is scattered even *more* than blue, but the sun emits slightly less violet light than blue, and our eyes are also less sensitive to violet. Therefore, we perceive the sky as blue.\n\n**Can the sky appear in other colors?**\n\nYes! While blue is the most common color, the sky can appear in other colors, especially during sunrise and sunset:\n\n*   **Red and Orange:** At sunrise and sunset, the sunlight has to travel through much more of the atmosphere to reach our eyes. This means that almost all of the blue light is scattered away before it gets to us. The longer wavelengths like red and orange can penetrate the atmosphere better, so we see these colors dominating the sky.\n*   **White:** If there are a lot of particles in the air that are larger than the air molecules (like dust, pollution, or water droplets), the scattering is less dependent on wavelength. All colors are scattered roughly equally, making the sky appear white or hazy.\n*   **Grey:** Thick clouds can block sunlight and absorb or scatter light equally, causing the sky to look grey or overcast.\n*   **Black:** On the moon or in space, there is no atmosphere to scatter light, so the sky appears black, even when the sun is shining.\n\nIn summary, the sky is blue because of Rayleigh scattering of sunlight by air molecules. However, the color can change depending on the angle of the sun, the amount of particles in the air, and other atmospheric conditions.\n"
+          }
+        ]
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.32709066988241792
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 14,
+    "candidatesTokenCount": 495,
+    "totalTokenCount": 509,
+    "trafficType": "ON_DEMAND",
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 14
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 495
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "createTime": "2025-05-14T18:12:55.374668Z",
+  "responseId": "J90kaIzvFs2gmecPwsPMmQg"
+}

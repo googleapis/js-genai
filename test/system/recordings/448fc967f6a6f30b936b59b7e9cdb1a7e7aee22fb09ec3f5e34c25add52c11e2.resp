@@ -1,0 +1,48 @@
+Status code: 200 
+Content-Type: application/json; charset=UTF-8
+Content-Encoding: gzip
+Date: Wed, 14 May 2025 18:12:43 GMT
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+Server-Timing: gfet4t7; dur=727
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Server: scaffolding on HTTPServer2
+Content-Length: 352
+X-Content-Type-Options: nosniff
+
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "The sky is blue because of a phenomenon called **Rayleigh scattering**. Here's a breakdown of"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "MAX_TOKENS",
+      "avgLogprobs": -0.11088693141937256
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 6,
+    "candidatesTokenCount": 20,
+    "totalTokenCount": 26,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 6
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 20
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash"
+}

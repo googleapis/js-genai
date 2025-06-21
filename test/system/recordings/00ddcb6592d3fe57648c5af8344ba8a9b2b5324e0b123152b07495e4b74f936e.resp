@@ -1,0 +1,56 @@
+Status code: 200 
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Content-Encoding: gzip
+Content-Length: 414
+X-Xss-Protection: 0
+Content-Type: application/json; charset=UTF-8
+Date: Wed, 28 May 2025 17:09:28 GMT
+Server: scaffolding on HTTPServer2
+
+{
+  "candidates": [
+    {
+      "content": {
+        "role": "model",
+        "parts": [
+          {
+            "functionCall": {
+              "name": "print",
+              "args": {
+                "text": "hello",
+                "color": "blue"
+              }
+            }
+          }
+        ]
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.0015512049198150636
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 20,
+    "candidatesTokenCount": 5,
+    "totalTokenCount": 25,
+    "trafficType": "ON_DEMAND",
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 20
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 5
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "createTime": "2025-05-28T17:09:28.542047Z",
+  "responseId": "SEM3aN-KIYKZgLUP97W1wQg"
+}

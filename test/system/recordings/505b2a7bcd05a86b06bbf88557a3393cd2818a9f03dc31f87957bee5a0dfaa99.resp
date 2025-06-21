@@ -1,0 +1,17 @@
+Status code: 200 
+Content-Type: text/event-stream
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Server: scaffolding on HTTPServer2
+Server-Timing: gfet4t7; dur=535
+Content-Disposition: attachment
+Date: Wed, 14 May 2025 18:12:49 GMT
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+
+data: {"candidates": [{"content": {"parts": [{"text": "a"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 19,"totalTokenCount": 19,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 19}]},"modelVersion": "gemini-2.0-flash"}
+
+data: {"candidates": [{"content": {"parts": [{"text": " + b = 5 + 10 = 15\n"}],"role": "model"},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 16,"candidatesTokenCount": 15,"totalTokenCount": 31,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 16}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 15}]},"modelVersion": "gemini-2.0-flash"}
+

@@ -4,6 +4,7 @@
 
 ```ts
 
+import type { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { GoogleAuthOptions } from 'google-auth-library';
 
 // @public
@@ -12,11 +13,8 @@ export interface ActivityEnd {
 
 // @public
 export enum ActivityHandling {
-    // (undocumented)
     ACTIVITY_HANDLING_UNSPECIFIED = "ACTIVITY_HANDLING_UNSPECIFIED",
-    // (undocumented)
     NO_INTERRUPTION = "NO_INTERRUPTION",
-    // (undocumented)
     START_OF_ACTIVITY_INTERRUPTS = "START_OF_ACTIVITY_INTERRUPTS"
 }
 
@@ -26,25 +24,37 @@ export interface ActivityStart {
 
 // @public
 export enum AdapterSize {
-    // (undocumented)
     ADAPTER_SIZE_EIGHT = "ADAPTER_SIZE_EIGHT",
-    // (undocumented)
     ADAPTER_SIZE_FOUR = "ADAPTER_SIZE_FOUR",
-    // (undocumented)
     ADAPTER_SIZE_ONE = "ADAPTER_SIZE_ONE",
-    // (undocumented)
     ADAPTER_SIZE_SIXTEEN = "ADAPTER_SIZE_SIXTEEN",
-    // (undocumented)
     ADAPTER_SIZE_THIRTY_TWO = "ADAPTER_SIZE_THIRTY_TWO",
-    // (undocumented)
     ADAPTER_SIZE_TWO = "ADAPTER_SIZE_TWO",
-    // (undocumented)
     ADAPTER_SIZE_UNSPECIFIED = "ADAPTER_SIZE_UNSPECIFIED"
+}
+
+// @public
+export class ApiError extends Error {
+    constructor(options: ApiErrorInfo);
+    status: number;
+}
+
+// @public
+export interface ApiErrorInfo {
+    message: string;
+    status: number;
 }
 
 // @public
 export interface ApiKeyConfig {
     apiKeyString?: string;
+}
+
+// @public
+export interface AudioChunk {
+    data?: string;
+    mimeType?: string;
+    sourceMetadata?: LiveMusicSourceMetadata;
 }
 
 // @public
@@ -84,20 +94,19 @@ export interface AuthConfigOidcConfig {
 }
 
 // @public
+export interface AuthToken {
+    name?: string;
+}
+
+// @public
 export enum AuthType {
-    // (undocumented)
     API_KEY_AUTH = "API_KEY_AUTH",
     // (undocumented)
     AUTH_TYPE_UNSPECIFIED = "AUTH_TYPE_UNSPECIFIED",
-    // (undocumented)
     GOOGLE_SERVICE_ACCOUNT_AUTH = "GOOGLE_SERVICE_ACCOUNT_AUTH",
-    // (undocumented)
     HTTP_BASIC_AUTH = "HTTP_BASIC_AUTH",
-    // (undocumented)
     NO_AUTH = "NO_AUTH",
-    // (undocumented)
     OAUTH = "OAUTH",
-    // (undocumented)
     OIDC_AUTH = "OIDC_AUTH"
 }
 
@@ -111,6 +120,13 @@ export interface AutomaticActivityDetection {
 }
 
 // @public
+export interface AutomaticFunctionCallingConfig {
+    disable?: boolean;
+    ignoreCallHistory?: boolean;
+    maximumRemoteCalls?: number;
+}
+
+// @public
 export interface BaseUrlParameters {
     // (undocumented)
     geminiUrl?: string;
@@ -119,8 +135,16 @@ export interface BaseUrlParameters {
 }
 
 // @public
+export enum Behavior {
+    BLOCKING = "BLOCKING",
+    NON_BLOCKING = "NON_BLOCKING",
+    UNSPECIFIED = "UNSPECIFIED"
+}
+
+// @public
 interface Blob_2 {
     data?: string;
+    displayName?: string;
     mimeType?: string;
 }
 export { Blob_2 as Blob }
@@ -130,15 +154,10 @@ export type BlobImageUnion = Blob_2;
 
 // @public
 export enum BlockedReason {
-    // (undocumented)
     BLOCKED_REASON_UNSPECIFIED = "BLOCKED_REASON_UNSPECIFIED",
-    // (undocumented)
     BLOCKLIST = "BLOCKLIST",
-    // (undocumented)
     OTHER = "OTHER",
-    // (undocumented)
     PROHIBITED_CONTENT = "PROHIBITED_CONTENT",
-    // (undocumented)
     SAFETY = "SAFETY"
 }
 
@@ -177,6 +196,18 @@ export class Caches extends BaseModule {
 }
 
 // @public
+export interface CallableTool {
+    callTool(functionCalls: FunctionCall[]): Promise<Part[]>;
+    tool(): Promise<Tool>;
+}
+
+// @public
+export interface CallableToolConfig {
+    behavior?: Behavior;
+    timeout?: number;
+}
+
+// @public
 export interface Candidate {
     avgLogprobs?: number;
     citationMetadata?: CitationMetadata;
@@ -188,6 +219,7 @@ export interface Candidate {
     logprobsResult?: LogprobsResult;
     safetyRatings?: SafetyRating[];
     tokenCount?: number;
+    urlContextMetadata?: UrlContextMetadata;
 }
 
 // @public
@@ -202,6 +234,13 @@ export class Chat {
 export class Chats {
     constructor(modelsModule: Models, apiClient: ApiClient);
     create(params: types.CreateChatParameters): Chat;
+}
+
+// @public
+export interface Checkpoint {
+    checkpointId?: string;
+    epoch?: string;
+    step?: string;
 }
 
 // @public
@@ -280,11 +319,13 @@ export interface ControlReferenceConfig {
 }
 
 // @public
-export interface ControlReferenceImage {
+export class ControlReferenceImage {
     config?: ControlReferenceConfig;
     referenceId?: number;
     referenceImage?: Image_2;
     referenceType?: string;
+    // Warning: (ae-forgotten-export) The symbol "ReferenceImageAPIInternal" needs to be exported by the entry point index.d.ts
+    toReferenceImageAPI(): ReferenceImageAPIInternal;
 }
 
 // @public
@@ -322,12 +363,29 @@ export class CountTokensResponse {
 }
 
 // @public
+export interface CreateAuthTokenConfig {
+    abortSignal?: AbortSignal;
+    expireTime?: string;
+    httpOptions?: HttpOptions;
+    liveConnectConstraints?: LiveConnectConstraints;
+    lockAdditionalFields?: string[];
+    newSessionExpireTime?: string;
+    uses?: number;
+}
+
+// @public
+export interface CreateAuthTokenParameters {
+    config?: CreateAuthTokenConfig;
+}
+
+// @public
 export interface CreateCachedContentConfig {
     abortSignal?: AbortSignal;
     contents?: ContentListUnion;
     displayName?: string;
     expireTime?: string;
     httpOptions?: HttpOptions;
+    kmsKeyName?: string;
     systemInstruction?: ContentUnion;
     toolConfig?: ToolConfig;
     tools?: Tool[];
@@ -395,6 +453,7 @@ export interface CreateTuningJobConfig {
     batchSize?: number;
     description?: string;
     epochCount?: number;
+    exportLastCheckpointOnly?: boolean;
     httpOptions?: HttpOptions;
     learningRate?: number;
     learningRateMultiplier?: number;
@@ -539,13 +598,65 @@ export interface DynamicRetrievalConfig {
 
 // @public
 export enum DynamicRetrievalConfigMode {
-    // (undocumented)
     MODE_DYNAMIC = "MODE_DYNAMIC",
-    // (undocumented)
     MODE_UNSPECIFIED = "MODE_UNSPECIFIED"
 }
 
-// @public (undocumented)
+// @public
+export interface EditImageConfig {
+    abortSignal?: AbortSignal;
+    aspectRatio?: string;
+    baseSteps?: number;
+    editMode?: EditMode;
+    guidanceScale?: number;
+    httpOptions?: HttpOptions;
+    includeRaiReason?: boolean;
+    includeSafetyAttributes?: boolean;
+    language?: ImagePromptLanguage;
+    negativePrompt?: string;
+    numberOfImages?: number;
+    outputCompressionQuality?: number;
+    outputGcsUri?: string;
+    outputMimeType?: string;
+    personGeneration?: PersonGeneration;
+    safetyFilterLevel?: SafetyFilterLevel;
+    seed?: number;
+}
+
+// @public
+export interface EditImageParameters {
+    config?: EditImageConfig;
+    model: string;
+    prompt: string;
+    referenceImages: ReferenceImage[];
+}
+
+// @public
+export class EditImageResponse {
+    generatedImages?: GeneratedImage[];
+}
+
+// @public
+export enum EditMode {
+    // (undocumented)
+    EDIT_MODE_BGSWAP = "EDIT_MODE_BGSWAP",
+    // (undocumented)
+    EDIT_MODE_CONTROLLED_EDITING = "EDIT_MODE_CONTROLLED_EDITING",
+    // (undocumented)
+    EDIT_MODE_DEFAULT = "EDIT_MODE_DEFAULT",
+    // (undocumented)
+    EDIT_MODE_INPAINT_INSERTION = "EDIT_MODE_INPAINT_INSERTION",
+    // (undocumented)
+    EDIT_MODE_INPAINT_REMOVAL = "EDIT_MODE_INPAINT_REMOVAL",
+    // (undocumented)
+    EDIT_MODE_OUTPAINT = "EDIT_MODE_OUTPAINT",
+    // (undocumented)
+    EDIT_MODE_PRODUCT_IMAGE = "EDIT_MODE_PRODUCT_IMAGE",
+    // (undocumented)
+    EDIT_MODE_STYLE = "EDIT_MODE_STYLE"
+}
+
+// @public
 export interface EmbedContentConfig {
     abortSignal?: AbortSignal;
     autoTruncate?: boolean;
@@ -587,11 +698,8 @@ export interface Endpoint {
 
 // @public
 export enum EndSensitivity {
-    // (undocumented)
     END_SENSITIVITY_HIGH = "END_SENSITIVITY_HIGH",
-    // (undocumented)
     END_SENSITIVITY_LOW = "END_SENSITIVITY_LOW",
-    // (undocumented)
     END_SENSITIVITY_UNSPECIFIED = "END_SENSITIVITY_UNSPECIFIED"
 }
 
@@ -652,6 +760,7 @@ export { File_2 as File }
 
 // @public
 export interface FileData {
+    displayName?: string;
     fileUri?: string;
     mimeType?: string;
 }
@@ -697,30 +806,19 @@ export interface FileStatus {
 
 // @public
 export enum FinishReason {
-    // (undocumented)
     BLOCKLIST = "BLOCKLIST",
-    // (undocumented)
     FINISH_REASON_UNSPECIFIED = "FINISH_REASON_UNSPECIFIED",
-    // (undocumented)
     IMAGE_SAFETY = "IMAGE_SAFETY",
-    // (undocumented)
     LANGUAGE = "LANGUAGE",
-    // (undocumented)
     MALFORMED_FUNCTION_CALL = "MALFORMED_FUNCTION_CALL",
-    // (undocumented)
     MAX_TOKENS = "MAX_TOKENS",
-    // (undocumented)
     OTHER = "OTHER",
-    // (undocumented)
     PROHIBITED_CONTENT = "PROHIBITED_CONTENT",
-    // (undocumented)
     RECITATION = "RECITATION",
-    // (undocumented)
     SAFETY = "SAFETY",
-    // (undocumented)
     SPII = "SPII",
-    // (undocumented)
-    STOP = "STOP"
+    STOP = "STOP",
+    UNEXPECTED_TOOL_CALL = "UNEXPECTED_TOOL_CALL"
 }
 
 // @public
@@ -738,22 +836,21 @@ export interface FunctionCallingConfig {
 
 // @public
 export enum FunctionCallingConfigMode {
-    // (undocumented)
     ANY = "ANY",
-    // (undocumented)
     AUTO = "AUTO",
-    // (undocumented)
     MODE_UNSPECIFIED = "MODE_UNSPECIFIED",
-    // (undocumented)
     NONE = "NONE"
 }
 
 // @public
 export interface FunctionDeclaration {
+    behavior?: Behavior;
     description?: string;
     name?: string;
     parameters?: Schema;
+    parametersJsonSchema?: unknown;
     response?: Schema;
+    responseJsonSchema?: unknown;
 }
 
 // @public
@@ -761,12 +858,23 @@ export class FunctionResponse {
     id?: string;
     name?: string;
     response?: Record<string, unknown>;
+    scheduling?: FunctionResponseScheduling;
+    willContinue?: boolean;
+}
+
+// @public
+export enum FunctionResponseScheduling {
+    INTERRUPT = "INTERRUPT",
+    SCHEDULING_UNSPECIFIED = "SCHEDULING_UNSPECIFIED",
+    SILENT = "SILENT",
+    WHEN_IDLE = "WHEN_IDLE"
 }
 
 // @public
 export interface GenerateContentConfig {
     abortSignal?: AbortSignal;
     audioTimestamp?: boolean;
+    automaticFunctionCalling?: AutomaticFunctionCallingConfig;
     cachedContent?: string;
     candidateCount?: number;
     frequencyPenalty?: number;
@@ -804,6 +912,7 @@ export interface GenerateContentParameters {
 
 // @public
 export class GenerateContentResponse {
+    automaticFunctionCallingHistory?: Content[];
     candidates?: Candidate[];
     get codeExecutionResult(): string | undefined;
     createTime?: string;
@@ -893,7 +1002,9 @@ export interface GenerateVideosConfig {
     durationSeconds?: number;
     enhancePrompt?: boolean;
     fps?: number;
+    generateAudio?: boolean;
     httpOptions?: HttpOptions;
+    lastFrame?: Image_2;
     negativePrompt?: string;
     numberOfVideos?: number;
     outputGcsUri?: string;
@@ -918,6 +1029,7 @@ export interface GenerateVideosParameters {
     image?: Image_2;
     model: string;
     prompt?: string;
+    video?: Video;
 }
 
 // @public
@@ -935,14 +1047,19 @@ export interface GenerationConfig {
     logprobs?: number;
     maxOutputTokens?: number;
     mediaResolution?: MediaResolution;
+    modelSelectionConfig?: ModelSelectionConfig;
     presencePenalty?: number;
+    responseJsonSchema?: unknown;
     responseLogprobs?: boolean;
     responseMimeType?: string;
+    responseModalities?: Modality[];
     responseSchema?: Schema;
     routingConfig?: GenerationConfigRoutingConfig;
     seed?: number;
+    speechConfig?: SpeechConfig;
     stopSequences?: string[];
     temperature?: number;
+    thinkingConfig?: GenerationConfigThinkingConfig;
     topK?: number;
     topP?: number;
 }
@@ -961,6 +1078,12 @@ export interface GenerationConfigRoutingConfigAutoRoutingMode {
 // @public
 export interface GenerationConfigRoutingConfigManualRoutingMode {
     modelName?: string;
+}
+
+// @public
+export interface GenerationConfigThinkingConfig {
+    includeThoughts?: boolean;
+    thinkingBudget?: number;
 }
 
 // @public
@@ -1031,6 +1154,8 @@ export class GoogleGenAI {
     // (undocumented)
     protected readonly apiClient: ApiClient;
     // (undocumented)
+    readonly authTokens: Tokens;
+    // (undocumented)
     readonly caches: Caches;
     // (undocumented)
     readonly chats: Chats;
@@ -1075,6 +1200,7 @@ export interface GoogleRpcStatus {
 
 // @public
 export interface GoogleSearch {
+    timeRangeFilter?: Interval;
 }
 
 // @public
@@ -1097,6 +1223,7 @@ export interface GroundingChunk {
 
 // @public
 export interface GroundingChunkRetrievedContext {
+    ragChunk?: RagChunk;
     text?: string;
     title?: string;
     uri?: string;
@@ -1128,71 +1255,46 @@ export interface GroundingSupport {
 
 // @public
 export enum HarmBlockMethod {
-    // (undocumented)
     HARM_BLOCK_METHOD_UNSPECIFIED = "HARM_BLOCK_METHOD_UNSPECIFIED",
-    // (undocumented)
     PROBABILITY = "PROBABILITY",
-    // (undocumented)
     SEVERITY = "SEVERITY"
 }
 
 // @public
 export enum HarmBlockThreshold {
-    // (undocumented)
     BLOCK_LOW_AND_ABOVE = "BLOCK_LOW_AND_ABOVE",
-    // (undocumented)
     BLOCK_MEDIUM_AND_ABOVE = "BLOCK_MEDIUM_AND_ABOVE",
-    // (undocumented)
     BLOCK_NONE = "BLOCK_NONE",
-    // (undocumented)
     BLOCK_ONLY_HIGH = "BLOCK_ONLY_HIGH",
-    // (undocumented)
     HARM_BLOCK_THRESHOLD_UNSPECIFIED = "HARM_BLOCK_THRESHOLD_UNSPECIFIED",
-    // (undocumented)
     OFF = "OFF"
 }
 
 // @public
 export enum HarmCategory {
-    // (undocumented)
     HARM_CATEGORY_CIVIC_INTEGRITY = "HARM_CATEGORY_CIVIC_INTEGRITY",
-    // (undocumented)
     HARM_CATEGORY_DANGEROUS_CONTENT = "HARM_CATEGORY_DANGEROUS_CONTENT",
-    // (undocumented)
     HARM_CATEGORY_HARASSMENT = "HARM_CATEGORY_HARASSMENT",
-    // (undocumented)
     HARM_CATEGORY_HATE_SPEECH = "HARM_CATEGORY_HATE_SPEECH",
-    // (undocumented)
     HARM_CATEGORY_SEXUALLY_EXPLICIT = "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-    // (undocumented)
     HARM_CATEGORY_UNSPECIFIED = "HARM_CATEGORY_UNSPECIFIED"
 }
 
 // @public
 export enum HarmProbability {
-    // (undocumented)
     HARM_PROBABILITY_UNSPECIFIED = "HARM_PROBABILITY_UNSPECIFIED",
-    // (undocumented)
     HIGH = "HIGH",
-    // (undocumented)
     LOW = "LOW",
-    // (undocumented)
     MEDIUM = "MEDIUM",
-    // (undocumented)
     NEGLIGIBLE = "NEGLIGIBLE"
 }
 
 // @public
 export enum HarmSeverity {
-    // (undocumented)
     HARM_SEVERITY_HIGH = "HARM_SEVERITY_HIGH",
-    // (undocumented)
     HARM_SEVERITY_LOW = "HARM_SEVERITY_LOW",
-    // (undocumented)
     HARM_SEVERITY_MEDIUM = "HARM_SEVERITY_MEDIUM",
-    // (undocumented)
     HARM_SEVERITY_NEGLIGIBLE = "HARM_SEVERITY_NEGLIGIBLE",
-    // (undocumented)
     HARM_SEVERITY_UNSPECIFIED = "HARM_SEVERITY_UNSPECIFIED"
 }
 
@@ -1200,6 +1302,7 @@ export enum HarmSeverity {
 export interface HttpOptions {
     apiVersion?: string;
     baseUrl?: string;
+    extraBody?: Record<string, unknown>;
     headers?: Record<string, string>;
     timeout?: number;
 }
@@ -1236,38 +1339,30 @@ export enum ImagePromptLanguage {
 }
 
 // @public
+export interface Interval {
+    endTime?: string;
+    startTime?: string;
+}
+
+// @public
 export enum JobState {
-    // (undocumented)
     JOB_STATE_CANCELLED = "JOB_STATE_CANCELLED",
-    // (undocumented)
     JOB_STATE_CANCELLING = "JOB_STATE_CANCELLING",
-    // (undocumented)
     JOB_STATE_EXPIRED = "JOB_STATE_EXPIRED",
-    // (undocumented)
     JOB_STATE_FAILED = "JOB_STATE_FAILED",
-    // (undocumented)
     JOB_STATE_PARTIALLY_SUCCEEDED = "JOB_STATE_PARTIALLY_SUCCEEDED",
-    // (undocumented)
     JOB_STATE_PAUSED = "JOB_STATE_PAUSED",
-    // (undocumented)
     JOB_STATE_PENDING = "JOB_STATE_PENDING",
-    // (undocumented)
     JOB_STATE_QUEUED = "JOB_STATE_QUEUED",
-    // (undocumented)
     JOB_STATE_RUNNING = "JOB_STATE_RUNNING",
-    // (undocumented)
     JOB_STATE_SUCCEEDED = "JOB_STATE_SUCCEEDED",
-    // (undocumented)
     JOB_STATE_UNSPECIFIED = "JOB_STATE_UNSPECIFIED",
-    // (undocumented)
     JOB_STATE_UPDATING = "JOB_STATE_UPDATING"
 }
 
 // @public
 export enum Language {
-    // (undocumented)
     LANGUAGE_UNSPECIFIED = "LANGUAGE_UNSPECIFIED",
-    // (undocumented)
     PYTHON = "PYTHON"
 }
 
@@ -1377,6 +1472,10 @@ export class Live {
     // Warning: (ae-forgotten-export) The symbol "WebSocketFactory" needs to be exported by the entry point index.d.ts
     constructor(apiClient: ApiClient, auth: Auth, webSocketFactory: WebSocketFactory);
     connect(params: types.LiveConnectParameters): Promise<Session>;
+    // Warning: (ae-forgotten-export) The symbol "LiveMusic" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    readonly music: LiveMusic;
 }
 
 // @public
@@ -1419,6 +1518,7 @@ export interface LiveClientSetup {
     inputAudioTranscription?: AudioTranscriptionConfig;
     model?: string;
     outputAudioTranscription?: AudioTranscriptionConfig;
+    proactivity?: ProactivityConfig;
     realtimeInputConfig?: RealtimeInputConfig;
     sessionResumption?: SessionResumptionConfig;
     systemInstruction?: ContentUnion;
@@ -1432,12 +1532,16 @@ export class LiveClientToolResponse {
 
 // @public
 export interface LiveConnectConfig {
+    abortSignal?: AbortSignal;
     contextWindowCompression?: ContextWindowCompressionConfig;
+    enableAffectiveDialog?: boolean;
     generationConfig?: GenerationConfig;
+    httpOptions?: HttpOptions;
     inputAudioTranscription?: AudioTranscriptionConfig;
     maxOutputTokens?: number;
     mediaResolution?: MediaResolution;
     outputAudioTranscription?: AudioTranscriptionConfig;
+    proactivity?: ProactivityConfig;
     realtimeInputConfig?: RealtimeInputConfig;
     responseModalities?: Modality[];
     seed?: number;
@@ -1451,10 +1555,126 @@ export interface LiveConnectConfig {
 }
 
 // @public
+export interface LiveConnectConstraints {
+    config?: LiveConnectConfig;
+    model?: string;
+}
+
+// @public
 export interface LiveConnectParameters {
     callbacks: LiveCallbacks;
     config?: LiveConnectConfig;
     model: string;
+}
+
+// @public
+export interface LiveMusicCallbacks {
+    onclose?: ((e: CloseEvent) => void) | null;
+    onerror?: ((e: ErrorEvent) => void) | null;
+    onmessage: (e: LiveMusicServerMessage) => void;
+}
+
+// @public
+export interface LiveMusicClientContent {
+    weightedPrompts?: WeightedPrompt[];
+}
+
+// @public
+export interface LiveMusicClientMessage {
+    clientContent?: LiveMusicClientContent;
+    musicGenerationConfig?: LiveMusicGenerationConfig;
+    playbackControl?: LiveMusicPlaybackControl;
+    setup?: LiveMusicClientSetup;
+}
+
+// @public
+export interface LiveMusicClientSetup {
+    model?: string;
+}
+
+// @public
+export interface LiveMusicConnectParameters {
+    callbacks: LiveMusicCallbacks;
+    model: string;
+}
+
+// @public
+export interface LiveMusicFilteredPrompt {
+    filteredReason?: string;
+    text?: string;
+}
+
+// @public
+export interface LiveMusicGenerationConfig {
+    bpm?: number;
+    brightness?: number;
+    density?: number;
+    guidance?: number;
+    muteBass?: boolean;
+    muteDrums?: boolean;
+    onlyBassAndDrums?: boolean;
+    scale?: Scale;
+    seed?: number;
+    temperature?: number;
+    topK?: number;
+}
+
+// @public
+export enum LiveMusicPlaybackControl {
+    PAUSE = "PAUSE",
+    PLAY = "PLAY",
+    PLAYBACK_CONTROL_UNSPECIFIED = "PLAYBACK_CONTROL_UNSPECIFIED",
+    RESET_CONTEXT = "RESET_CONTEXT",
+    STOP = "STOP"
+}
+
+// @public
+export interface LiveMusicServerContent {
+    audioChunks?: AudioChunk[];
+}
+
+// @public
+export class LiveMusicServerMessage {
+    get audioChunk(): AudioChunk | undefined;
+    filteredPrompt?: LiveMusicFilteredPrompt;
+    serverContent?: LiveMusicServerContent;
+    setupComplete?: LiveMusicServerSetupComplete;
+}
+
+// @public
+export interface LiveMusicServerSetupComplete {
+}
+
+// @public
+export class LiveMusicSession {
+    constructor(conn: WebSocket_2, apiClient: ApiClient);
+    close(): void;
+    // Warning: (ae-forgotten-export) The symbol "WebSocket_2" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    readonly conn: WebSocket_2;
+    pause(): void;
+    play(): void;
+    resetContext(): void;
+    setMusicGenerationConfig(params: types.LiveMusicSetConfigParameters): Promise<void>;
+    setWeightedPrompts(params: types.LiveMusicSetWeightedPromptsParameters): Promise<void>;
+    stop(): void;
+}
+
+// @public
+export interface LiveMusicSetConfigParameters {
+    musicGenerationConfig: LiveMusicGenerationConfig;
+}
+
+// @public
+export interface LiveMusicSetWeightedPromptsParameters {
+    weightedPrompts: WeightedPrompt[];
+}
+
+// @public
+export interface LiveMusicSourceMetadata {
+    clientContent?: LiveMusicClientContent;
+    musicGenerationConfig?: LiveMusicGenerationConfig;
 }
 
 // @public
@@ -1488,6 +1708,7 @@ export interface LiveServerContent {
     modelTurn?: Content;
     outputTranscription?: Transcription;
     turnComplete?: boolean;
+    urlContextMetadata?: UrlContextMetadata;
 }
 
 // @public
@@ -1515,7 +1736,7 @@ export interface LiveServerSessionResumptionUpdate {
     resumable?: boolean;
 }
 
-// @public
+// @public (undocumented)
 export interface LiveServerSetupComplete {
 }
 
@@ -1555,11 +1776,12 @@ export interface MaskReferenceConfig {
 }
 
 // @public
-export interface MaskReferenceImage {
+export class MaskReferenceImage {
     config?: MaskReferenceConfig;
     referenceId?: number;
     referenceImage?: Image_2;
     referenceType?: string;
+    toReferenceImageAPI(): ReferenceImageAPIInternal;
 }
 
 // @public
@@ -1577,42 +1799,31 @@ export enum MaskReferenceMode {
 }
 
 // @public
+export function mcpToTool(...args: [...Client[], CallableToolConfig | Client]): CallableTool;
+
+// @public
 export enum MediaModality {
-    // (undocumented)
     AUDIO = "AUDIO",
-    // (undocumented)
     DOCUMENT = "DOCUMENT",
-    // (undocumented)
     IMAGE = "IMAGE",
-    // (undocumented)
     MODALITY_UNSPECIFIED = "MODALITY_UNSPECIFIED",
-    // (undocumented)
     TEXT = "TEXT",
-    // (undocumented)
     VIDEO = "VIDEO"
 }
 
 // @public
 export enum MediaResolution {
-    // (undocumented)
     MEDIA_RESOLUTION_HIGH = "MEDIA_RESOLUTION_HIGH",
-    // (undocumented)
     MEDIA_RESOLUTION_LOW = "MEDIA_RESOLUTION_LOW",
-    // (undocumented)
     MEDIA_RESOLUTION_MEDIUM = "MEDIA_RESOLUTION_MEDIUM",
-    // (undocumented)
     MEDIA_RESOLUTION_UNSPECIFIED = "MEDIA_RESOLUTION_UNSPECIFIED"
 }
 
 // @public
 export enum Modality {
-    // (undocumented)
     AUDIO = "AUDIO",
-    // (undocumented)
     IMAGE = "IMAGE",
-    // (undocumented)
     MODALITY_UNSPECIFIED = "MODALITY_UNSPECIFIED",
-    // (undocumented)
     TEXT = "TEXT"
 }
 
@@ -1624,14 +1835,14 @@ export interface ModalityTokenCount {
 
 // @public
 export enum Mode {
-    // (undocumented)
     MODE_DYNAMIC = "MODE_DYNAMIC",
-    // (undocumented)
     MODE_UNSPECIFIED = "MODE_UNSPECIFIED"
 }
 
 // @public
 export interface Model {
+    checkpoints?: Checkpoint[];
+    defaultCheckpointId?: string;
     description?: string;
     displayName?: string;
     endpoints?: Endpoint[];
@@ -1650,6 +1861,7 @@ export class Models extends BaseModule {
     computeTokens(params: types.ComputeTokensParameters): Promise<types.ComputeTokensResponse>;
     countTokens(params: types.CountTokensParameters): Promise<types.CountTokensResponse>;
     delete(params: types.DeleteModelParameters): Promise<types.DeleteModelResponse>;
+    editImage: (params: types.EditImageParameters) => Promise<types.EditImageResponse>;
     embedContent(params: types.EmbedContentParameters): Promise<types.EmbedContentResponse>;
     generateContent: (params: types.GenerateContentParameters) => Promise<types.GenerateContentResponse>;
     generateContentStream: (params: types.GenerateContentParameters) => Promise<AsyncGenerator<types.GenerateContentResponse>>;
@@ -1659,11 +1871,17 @@ export class Models extends BaseModule {
     // (undocumented)
     list: (params?: types.ListModelsParameters) => Promise<Pager<types.Model>>;
     update(params: types.UpdateModelParameters): Promise<types.Model>;
+    upscaleImage: (params: types.UpscaleImageParameters) => Promise<types.UpscaleImageResponse>;
 }
 
 // @public
 export interface ModelSelectionConfig {
     featureSelectionPreference?: FeatureSelectionPreference;
+}
+
+// @public
+export interface MultiSpeakerVoiceConfig {
+    speakerVoiceConfigs?: SpeakerVoiceConfig[];
 }
 
 // @public
@@ -1688,13 +1906,9 @@ export class Operations extends BaseModule {
 
 // @public
 export enum Outcome {
-    // (undocumented)
     OUTCOME_DEADLINE_EXCEEDED = "OUTCOME_DEADLINE_EXCEEDED",
-    // (undocumented)
     OUTCOME_FAILED = "OUTCOME_FAILED",
-    // (undocumented)
     OUTCOME_OK = "OUTCOME_OK",
-    // (undocumented)
     OUTCOME_UNSPECIFIED = "OUTCOME_UNSPECIFIED"
 }
 
@@ -1743,6 +1957,7 @@ export interface Part {
     inlineData?: Blob_2;
     text?: string;
     thought?: boolean;
+    thoughtSignature?: string;
     videoMetadata?: VideoMetadata;
 }
 
@@ -1772,6 +1987,23 @@ export enum PersonGeneration {
 // @public
 export interface PrebuiltVoiceConfig {
     voiceName?: string;
+}
+
+// @public
+export interface ProactivityConfig {
+    proactiveAudio?: boolean;
+}
+
+// @public
+export interface RagChunk {
+    pageSpan?: RagChunkPageSpan;
+    text?: string;
+}
+
+// @public
+export interface RagChunkPageSpan {
+    firstPage?: number;
+    lastPage?: number;
 }
 
 // @public
@@ -1811,10 +2043,11 @@ export interface RagRetrievalConfigRankingRankService {
 }
 
 // @public
-export interface RawReferenceImage {
+export class RawReferenceImage {
     referenceId?: number;
     referenceImage?: Image_2;
     referenceType?: string;
+    toReferenceImageAPI(): ReferenceImageAPIInternal;
 }
 
 // @public
@@ -1823,6 +2056,9 @@ export interface RealtimeInputConfig {
     automaticActivityDetection?: AutomaticActivityDetection;
     turnCoverage?: TurnCoverage;
 }
+
+// @public (undocumented)
+export type ReferenceImage = RawReferenceImage | MaskReferenceImage | ControlReferenceImage | StyleReferenceImage | SubjectReferenceImage;
 
 // @public
 export interface ReplayFile {
@@ -1873,6 +2109,7 @@ export interface Retrieval {
 
 // @public
 export interface RetrievalConfig {
+    languageCode?: string;
     latLng?: LatLng;
 }
 
@@ -1918,6 +2155,23 @@ export interface SafetySetting {
 }
 
 // @public
+export enum Scale {
+    A_FLAT_MAJOR_F_MINOR = "A_FLAT_MAJOR_F_MINOR",
+    A_MAJOR_G_FLAT_MINOR = "A_MAJOR_G_FLAT_MINOR",
+    B_FLAT_MAJOR_G_MINOR = "B_FLAT_MAJOR_G_MINOR",
+    B_MAJOR_A_FLAT_MINOR = "B_MAJOR_A_FLAT_MINOR",
+    C_MAJOR_A_MINOR = "C_MAJOR_A_MINOR",
+    D_FLAT_MAJOR_B_FLAT_MINOR = "D_FLAT_MAJOR_B_FLAT_MINOR",
+    D_MAJOR_B_MINOR = "D_MAJOR_B_MINOR",
+    E_FLAT_MAJOR_C_MINOR = "E_FLAT_MAJOR_C_MINOR",
+    E_MAJOR_D_FLAT_MINOR = "E_MAJOR_D_FLAT_MINOR",
+    F_MAJOR_D_MINOR = "F_MAJOR_D_MINOR",
+    G_FLAT_MAJOR_E_FLAT_MINOR = "G_FLAT_MAJOR_E_FLAT_MINOR",
+    G_MAJOR_E_MINOR = "G_MAJOR_E_MINOR",
+    SCALE_UNSPECIFIED = "SCALE_UNSPECIFIED"
+}
+
+// @public
 export interface Schema {
     anyOf?: Schema[];
     default?: unknown;
@@ -1944,7 +2198,7 @@ export interface Schema {
 }
 
 // @public (undocumented)
-export type SchemaUnion = Schema;
+export type SchemaUnion = Schema | unknown;
 
 // @public
 export interface SearchEntryPoint {
@@ -1970,8 +2224,6 @@ export interface SendMessageParameters {
 export class Session {
     constructor(conn: WebSocket_2, apiClient: ApiClient);
     close(): void;
-    // Warning: (ae-forgotten-export) The symbol "WebSocket_2" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     readonly conn: WebSocket_2;
     sendClientContent(params: types.LiveSendClientContentParameters): void;
@@ -1994,8 +2246,15 @@ export interface SlidingWindow {
 }
 
 // @public
+export interface SpeakerVoiceConfig {
+    speaker?: string;
+    voiceConfig?: VoiceConfig;
+}
+
+// @public
 export interface SpeechConfig {
     languageCode?: string;
+    multiSpeakerVoiceConfig?: MultiSpeakerVoiceConfig;
     voiceConfig?: VoiceConfig;
 }
 
@@ -2004,11 +2263,8 @@ export type SpeechConfigUnion = SpeechConfig | string;
 
 // @public
 export enum StartSensitivity {
-    // (undocumented)
     START_SENSITIVITY_HIGH = "START_SENSITIVITY_HIGH",
-    // (undocumented)
     START_SENSITIVITY_LOW = "START_SENSITIVITY_LOW",
-    // (undocumented)
     START_SENSITIVITY_UNSPECIFIED = "START_SENSITIVITY_UNSPECIFIED"
 }
 
@@ -2018,11 +2274,12 @@ export interface StyleReferenceConfig {
 }
 
 // @public
-export interface StyleReferenceImage {
+export class StyleReferenceImage {
     config?: StyleReferenceConfig;
     referenceId?: number;
     referenceImage?: Image_2;
     referenceType?: string;
+    toReferenceImageAPI(): ReferenceImageAPIInternal;
 }
 
 // @public
@@ -2032,11 +2289,13 @@ export interface SubjectReferenceConfig {
 }
 
 // @public
-export interface SubjectReferenceImage {
+export class SubjectReferenceImage {
     config?: SubjectReferenceConfig;
     referenceId?: number;
     referenceImage?: Image_2;
     referenceType?: string;
+    // (undocumented)
+    toReferenceImageAPI(): ReferenceImageAPIInternal;
 }
 
 // @public
@@ -2080,6 +2339,7 @@ export interface SupervisedTuningDatasetDistributionDatasetBucket {
 
 // @public
 export interface SupervisedTuningDataStats {
+    droppedExampleReasons?: string[];
     totalBillableCharacterCount?: string;
     totalBillableTokenCount?: string;
     totalTruncatedExampleCount?: string;
@@ -2095,6 +2355,7 @@ export interface SupervisedTuningDataStats {
 
 // @public
 export interface SupervisedTuningSpec {
+    exportLastCheckpointOnly?: boolean;
     hyperParameters?: SupervisedHyperParameters;
     trainingDatasetUri?: string;
     validationDatasetUri?: string;
@@ -2130,6 +2391,12 @@ export interface ThinkingConfig {
     thinkingBudget?: number;
 }
 
+// @public (undocumented)
+export class Tokens extends BaseModule {
+    constructor(apiClient: ApiClient);
+    create(params: types.CreateAuthTokenParameters): Promise<types.AuthToken>;
+}
+
 // @public
 export interface TokensInfo {
     role?: string;
@@ -2146,6 +2413,7 @@ export interface Tool {
     googleSearch?: GoogleSearch;
     googleSearchRetrieval?: GoogleSearchRetrieval;
     retrieval?: Retrieval;
+    urlContext?: UrlContext;
 }
 
 // @public
@@ -2159,15 +2427,15 @@ export interface ToolConfig {
 }
 
 // @public (undocumented)
-export type ToolListUnion = Tool[];
+export type ToolListUnion = ToolUnion[];
+
+// @public (undocumented)
+export type ToolUnion = Tool | CallableTool;
 
 // @public
 export enum TrafficType {
-    // (undocumented)
     ON_DEMAND = "ON_DEMAND",
-    // (undocumented)
     PROVISIONED_THROUGHPUT = "PROVISIONED_THROUGHPUT",
-    // (undocumented)
     TRAFFIC_TYPE_UNSPECIFIED = "TRAFFIC_TYPE_UNSPECIFIED"
 }
 
@@ -2179,8 +2447,17 @@ export interface Transcription {
 
 // @public (undocumented)
 export interface TunedModel {
+    checkpoints?: TunedModelCheckpoint[];
     endpoint?: string;
     model?: string;
+}
+
+// @public
+export interface TunedModelCheckpoint {
+    checkpointId?: string;
+    endpoint?: string;
+    epoch?: string;
+    step?: string;
 }
 
 // @public
@@ -2222,6 +2499,7 @@ export interface TuningJob {
     name?: string;
     partnerModelTuningSpec?: PartnerModelTuningSpec;
     pipelineJob?: string;
+    serviceAccount?: string;
     startTime?: string;
     state?: JobState;
     supervisedTuningSpec?: SupervisedTuningSpec;
@@ -2238,29 +2516,20 @@ export interface TuningValidationDataset {
 
 // @public
 export enum TurnCoverage {
-    // (undocumented)
     TURN_COVERAGE_UNSPECIFIED = "TURN_COVERAGE_UNSPECIFIED",
-    // (undocumented)
     TURN_INCLUDES_ALL_INPUT = "TURN_INCLUDES_ALL_INPUT",
-    // (undocumented)
     TURN_INCLUDES_ONLY_ACTIVITY = "TURN_INCLUDES_ONLY_ACTIVITY"
 }
 
 // @public
 export enum Type {
-    // (undocumented)
     ARRAY = "ARRAY",
-    // (undocumented)
     BOOLEAN = "BOOLEAN",
-    // (undocumented)
     INTEGER = "INTEGER",
-    // (undocumented)
+    NULL = "NULL",
     NUMBER = "NUMBER",
-    // (undocumented)
     OBJECT = "OBJECT",
-    // (undocumented)
     STRING = "STRING",
-    // (undocumented)
     TYPE_UNSPECIFIED = "TYPE_UNSPECIFIED"
 }
 
@@ -2281,6 +2550,8 @@ export interface UpdateCachedContentParameters {
 // @public
 export interface UpdateModelConfig {
     abortSignal?: AbortSignal;
+    // (undocumented)
+    defaultCheckpointId?: string;
     // (undocumented)
     description?: string;
     // (undocumented)
@@ -2328,6 +2599,33 @@ export interface UpscaleImageParameters {
     upscaleFactor: string;
 }
 
+// @public (undocumented)
+export class UpscaleImageResponse {
+    generatedImages?: GeneratedImage[];
+}
+
+// @public
+export interface UrlContext {
+}
+
+// @public
+export interface UrlContextMetadata {
+    urlMetadata?: UrlMetadata[];
+}
+
+// @public
+export interface UrlMetadata {
+    retrievedUrl?: string;
+    urlRetrievalStatus?: UrlRetrievalStatus;
+}
+
+// @public
+export enum UrlRetrievalStatus {
+    URL_RETRIEVAL_STATUS_ERROR = "URL_RETRIEVAL_STATUS_ERROR",
+    URL_RETRIEVAL_STATUS_SUCCESS = "URL_RETRIEVAL_STATUS_SUCCESS",
+    URL_RETRIEVAL_STATUS_UNSPECIFIED = "URL_RETRIEVAL_STATUS_UNSPECIFIED"
+}
+
 // @public
 export interface UsageMetadata {
     cachedContentTokenCount?: number;
@@ -2346,7 +2644,16 @@ export interface UsageMetadata {
 // @public
 export interface VertexAISearch {
     datastore?: string;
+    dataStoreSpecs?: VertexAISearchDataStoreSpec[];
     engine?: string;
+    filter?: string;
+    maxResults?: number;
+}
+
+// @public
+export interface VertexAISearchDataStoreSpec {
+    dataStore?: string;
+    filter?: string;
 }
 
 // @public
@@ -2355,6 +2662,7 @@ export interface VertexRagStore {
     ragResources?: VertexRagStoreRagResource[];
     ragRetrievalConfig?: RagRetrievalConfig;
     similarityTopK?: number;
+    storeContext?: boolean;
     vectorDistanceThreshold?: number;
 }
 
@@ -2374,12 +2682,19 @@ export interface Video {
 // @public
 export interface VideoMetadata {
     endOffset?: string;
+    fps?: number;
     startOffset?: string;
 }
 
 // @public
 export interface VoiceConfig {
     prebuiltVoiceConfig?: PrebuiltVoiceConfig;
+}
+
+// @public
+export interface WeightedPrompt {
+    text?: string;
+    weight?: number;
 }
 
 // (No @packageDocumentation comment for this package)

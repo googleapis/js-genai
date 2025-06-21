@@ -22,7 +22,7 @@ import {
   createPartFromText,
   createPartFromUri,
   createUserContent,
-} from '../../src/types';
+} from '../../src/types.js';
 
 describe('GenerateContentResponse.text', () => {
   it('should return undefined when candidates is undefined', () => {

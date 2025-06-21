@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {ApiClient} from '../_api_client';
-import {Downloader} from '../_downloader';
-import {DownloadFileParameters} from '../types';
+import {ApiClient} from '../_api_client.js';
+import {Downloader} from '../_downloader.js';
+import {DownloadFileParameters} from '../types.js';
 
 export class BrowserDownloader implements Downloader {
   async download(

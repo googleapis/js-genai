@@ -6,7 +6,7 @@
 
 import {GoogleAuth, GoogleAuthOptions} from 'google-auth-library';
 
-import {Auth} from '../_auth';
+import {Auth} from '../_auth.js';
 
 export const GOOGLE_API_KEY_HEADER = 'x-goog-api-key';
 const REQUIRED_VERTEX_AI_SCOPE =
@@ -41,6 +41,9 @@ export class NodeAuth implements Auth {
 
   async addAuthHeaders(headers: Headers): Promise<void> {
     if (this.apiKey !== undefined) {
+      if (this.apiKey.startsWith('auth_tokens/')) {
+        throw new Error('Ephemeral tokens are only supported by the live API.');
+      }
       this.addKeyHeader(headers);
       return;
     }

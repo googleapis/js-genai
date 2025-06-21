@@ -1,0 +1,48 @@
+Status code: 200 
+X-Content-Type-Options: nosniff
+Server-Timing: gfet4t7; dur=1441
+Content-Encoding: gzip
+Content-Length: 469
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+Content-Type: application/json; charset=UTF-8
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Date: Wed, 14 May 2025 00:29:30 GMT
+Server: scaffolding on HTTPServer2
+
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\"arrayFiled\": [\"string\"], \"inner\": {\"innerNumber\": 1.23, \"innerString\": \"string\"}, \"integerInt64\": 123, \"nullableArrayField\": null, \"nullableField\": null, \"nullableObjectField\": null, \"numberWithMinMax\": 1.23, \"simpleBoolean\": true, \"simpleInteger\": 123, \"simpleNumber\": 1.23, \"simpleString\": \"string\", \"stringDatatime\": \"2024-07-30T12:00:00Z\", \"stringWithEnum\": \"enumvalue1\", \"stringWithLength\": \"string\", \"unionField\": \"string\"}"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.00717820295321396
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 141,
+    "candidatesTokenCount": 153,
+    "totalTokenCount": 294,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 141
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 153
+      }
+    ]
+  },
+  "modelVersion": "gemini-1.5-flash"
+}

@@ -1,0 +1,51 @@
+Status code: 200 
+Content-Type: application/json; charset=UTF-8
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Content-Encoding: gzip
+Date: Wed, 14 May 2025 18:12:51 GMT
+X-Xss-Protection: 0
+X-Goog-Sherlog-Link: https://sherlog.corp.google.com/#workflow?config=Serving&dataid=aiplatform.googleapis.com/google.cloud.aiplatform.v1beta1.PredictionService.GenerateContent&gaia=821332047332&reason=sharedLink&version=183f77512d8b786aa3f9f1b04a35509f
+Content-Length: 447
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+Server: scaffolding on HTTPServer2
+
+{
+  "candidates": [
+    {
+      "content": {
+        "role": "model",
+        "parts": [
+          {
+            "text": "While I didn't explicitly give it a title, a fitting one could be:\n\n**The Lighthouse Keeper's Rose**\n"
+          }
+        ]
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.28180417308100947
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 146,
+    "candidatesTokenCount": 27,
+    "totalTokenCount": 173,
+    "trafficType": "ON_DEMAND",
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 146
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 27
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "createTime": "2025-05-14T18:12:51.038129Z",
+  "responseId": "I90kaPGpAt-pmecP0ZrsiQk"
+}

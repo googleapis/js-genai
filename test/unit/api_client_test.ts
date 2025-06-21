@@ -6,11 +6,14 @@
 
 import {Readable} from 'stream';
 
-import {ApiClient} from '../../src/_api_client';
-import {CrossDownloader} from '../../src/cross/_cross_downloader';
-import {CrossUploader} from '../../src/cross/_cross_uploader';
-import * as types from '../../src/types';
-import {FakeAuth} from '../_fake_auth';
+import {
+  ApiClient,
+  includeExtraBodyToRequestInit,
+} from '../../src/_api_client.js';
+import {CrossDownloader} from '../../src/cross/_cross_downloader.js';
+import {CrossUploader} from '../../src/cross/_cross_uploader.js';
+import * as types from '../../src/types.js';
+import {FakeAuth} from '../_fake_auth.js';
 
 const fetchOkOptions = {
   status: 200,
@@ -1105,6 +1108,73 @@ describe('ApiClient', () => {
       expect(postResponse.headers).toEqual(customHeaders);
       expect(postResponse.headers?.['x-custom-header']).toBe('custom-value');
     });
+
+    it('should merge clientOptions.httpOptions.extraBody into request body', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth('test-api-key'),
+        apiKey: 'test-api-key',
+        httpOptions: {
+          extraBody: {clientExtra: 'clientValue'},
+        },
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(
+            JSON.stringify(mockGenerateContentResponse),
+            fetchOkOptions,
+          ),
+        ),
+      );
+      await client.request({
+        path: 'test-path',
+        body: JSON.stringify({original: 'originalValue'}),
+        httpMethod: 'POST',
+      });
+      const fetchArgs = fetchSpy.calls.first().args;
+      const requestBody = JSON.parse(fetchArgs[1]?.body as string);
+      expect(requestBody).toEqual({
+        original: 'originalValue',
+        clientExtra: 'clientValue',
+      });
+    });
+
+    it('should merge request.httpOptions.extraBody and take precedence over clientOptions', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth('test-api-key'),
+        apiKey: 'test-api-key',
+        httpOptions: {
+          extraBody: {clientExtra: 'clientValue', commonKey: 'clientCommon'},
+        },
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(
+            JSON.stringify(mockGenerateContentResponse),
+            fetchOkOptions,
+          ),
+        ),
+      );
+      await client.request({
+        path: 'test-path',
+        body: JSON.stringify({original: 'originalValue'}),
+        httpMethod: 'POST',
+        httpOptions: {
+          extraBody: {requestExtra: 'requestValue', commonKey: 'requestCommon'},
+        },
+      });
+      const fetchArgs = fetchSpy.calls.first().args;
+      const requestBody = JSON.parse(fetchArgs[1]?.body as string);
+      expect(requestBody).toEqual({
+        original: 'originalValue',
+        clientExtra: 'clientValue', // This remains because request.httpOptions is merged with clientOptions
+        requestExtra: 'requestValue',
+        commonKey: 'requestCommon', // request commonKey overwrites client commonKey
+      });
+    });
   });
   it('should construct correct URL for public API calls', async () => {
     const client = new ApiClient({
@@ -1220,7 +1290,7 @@ describe('ApiClient', () => {
     );
   });
   describe('requestStream', () => {
-    it('should throw ServerError if response is 500', async () => {
+    it('should throw ApiError if response is 500', async () => {
       const client = new ApiClient({
         auth: new FakeAuth('test-api-key'),
         apiKey: 'test-api-key',
@@ -1228,16 +1298,22 @@ describe('ApiClient', () => {
         downloader: new CrossDownloader(),
       });
       spyOn(global, 'fetch').and.returnValue(
-        Promise.resolve(new Response(JSON.stringify({}), fetch500Options)),
+        Promise.resolve(
+          new Response(
+            JSON.stringify({'error': 'Internal Server Error'}),
+            fetch500Options,
+          ),
+        ),
       );
       await client
         .requestStream({path: 'test-path', httpMethod: 'POST'})
         .catch((e) => {
-          expect(e.name).toEqual('ServerError');
+          expect(e.name).toEqual('ApiError');
           expect(e.message).toContain('Internal Server Error');
+          expect(e.status).toEqual(500);
         });
     });
-    it('should throw ClientError if response is 400', async () => {
+    it('should throw ApiError if response is 400', async () => {
       const client = new ApiClient({
         auth: new FakeAuth('test-api-key'),
         apiKey: 'test-api-key',
@@ -1245,13 +1321,19 @@ describe('ApiClient', () => {
         downloader: new CrossDownloader(),
       });
       spyOn(global, 'fetch').and.returnValue(
-        Promise.resolve(new Response(JSON.stringify({}), fetch400Options)),
+        Promise.resolve(
+          new Response(
+            JSON.stringify({'error': 'Bad Request'}),
+            fetch400Options,
+          ),
+        ),
       );
       await client
         .requestStream({path: 'test-path', httpMethod: 'POST'})
         .catch((e) => {
-          expect(e.name).toEqual('ClientError');
+          expect(e.name).toEqual('ApiError');
           expect(e.message).toContain('Bad Request');
+          expect(e.status).toEqual(400);
         });
     });
     it('should yield data if response is ok', async () => {
@@ -1566,4 +1648,162 @@ describe('ApiClient', () => {
       );
     });
   });
+});
+
+const extraBodyTestCases = [
+  {
+    testName: 'should not modify requestInit.body if extraBody is null',
+    initialBody: JSON.stringify({a: 1}),
+    extraBody: null,
+    expectedBody: JSON.stringify({a: 1}),
+    expectedWarning: undefined,
+  },
+  {
+    testName: 'should not modify requestInit.body if extraBody is empty',
+    initialBody: JSON.stringify({a: 1}),
+    extraBody: {},
+    expectedBody: JSON.stringify({a: 1}),
+    expectedWarning: undefined,
+  },
+  {
+    testName: 'should not modify requestInit.body and warn if body is a Blob',
+    initialBody: new Blob(['test data']),
+    extraBody: {b: 2},
+    expectedBody: new Blob(['test data']),
+    expectedWarning:
+      'includeExtraBodyToRequestInit: extraBody provided but current request body is a Blob. extraBody will be ignored as merging is not supported for Blob bodies.',
+  },
+  {
+    testName:
+      'should set requestInit.body to extraBody if original body is empty string',
+    initialBody: '',
+    extraBody: {b: 2},
+    expectedBody: JSON.stringify({b: 2}),
+    expectedWarning: undefined,
+  },
+  {
+    testName:
+      'should set requestInit.body to extraBody if original body is undefined',
+    initialBody: undefined,
+    extraBody: {b: 2},
+    expectedBody: JSON.stringify({b: 2}),
+    expectedWarning: undefined,
+  },
+  {
+    testName: 'should merge extraBody into valid JSON string body',
+    initialBody: JSON.stringify({a: 1}),
+    extraBody: {b: 2, c: {d: 3}},
+    expectedBody: JSON.stringify({a: 1, b: 2, c: {d: 3}}),
+    expectedWarning: undefined,
+  },
+  {
+    testName: 'should overwrite existing keys in valid JSON string body',
+    initialBody: JSON.stringify({a: 1, b: 0}),
+    extraBody: {b: 2, c: 3},
+    expectedBody: JSON.stringify({a: 1, b: 2, c: 3}),
+    expectedWarning: undefined,
+  },
+  {
+    testName: 'should perform deep merge correctly',
+    initialBody: JSON.stringify({a: 1, c: {d: 3, e: 4}}),
+    extraBody: {b: 2, c: {d: 5, f: 6}},
+    expectedBody: JSON.stringify({a: 1, b: 2, c: {d: 5, e: 4, f: 6}}),
+    expectedWarning: undefined,
+  },
+  {
+    testName: 'should warn and overwrite on type mismatch during merge',
+    initialBody: JSON.stringify({a: 1}),
+    extraBody: {a: 'string'},
+    expectedBody: JSON.stringify({a: 'string'}),
+    expectedWarning:
+      'includeExtraBodyToRequestInit:deepMerge: Type mismatch for key "a". Original type: number, New type: string. Overwriting.',
+  },
+  {
+    testName: 'should not modify body and warn if original body is JSON array',
+    initialBody: JSON.stringify([1, 2]),
+    extraBody: {a: 1},
+    expectedBody: JSON.stringify([1, 2]),
+    expectedWarning:
+      'includeExtraBodyToRequestInit: Original request body is valid JSON but not a non-array object. Skip applying extraBody to the request body.',
+  },
+  {
+    testName:
+      'should not modify body and warn if original body is JSON primitive',
+    initialBody: JSON.stringify(123),
+    extraBody: {a: 1},
+    expectedBody: JSON.stringify(123),
+    expectedWarning:
+      'includeExtraBodyToRequestInit: Original request body is valid JSON but not a non-array object. Skip applying extraBody to the request body.',
+  },
+  {
+    testName:
+      'should not modify body and warn if original body is invalid JSON string',
+    initialBody: 'invalid json',
+    extraBody: {a: 1},
+    expectedBody: 'invalid json',
+    expectedWarning:
+      'includeExtraBodyToRequestInit: Original request body is not valid JSON. Skip applying extraBody to the request body.',
+  },
+  {
+    testName: 'should handle extraBody with null values',
+    initialBody: JSON.stringify({a: 1}),
+    extraBody: {b: null, c: {d: null}},
+    expectedBody: JSON.stringify({a: 1, b: null, c: {d: null}}),
+    expectedWarning: undefined,
+  },
+  {
+    testName: 'should handle extraBody overwriting with null values',
+    initialBody: JSON.stringify({a: 1, b: {c: 2}}),
+    extraBody: {b: 'b'},
+    expectedBody: JSON.stringify({a: 1, b: 'b'}),
+    expectedWarning:
+      'includeExtraBodyToRequestInit:deepMerge: Type mismatch for key "b". Original type: object, New type: string. Overwriting.',
+  },
+  {
+    testName:
+      'should handle extraBody with undefined values (which get stringified as absent)',
+    initialBody: JSON.stringify({a: 1}),
+    extraBody: {b: undefined, c: {d: undefined}},
+    expectedBody: JSON.stringify({a: 1, c: {}}), // undefined values are not included in JSON.stringify
+    expectedWarning: undefined,
+  },
+];
+
+describe('includeExtraBodyToRequestInit', () => {
+  let consoleWarnSpy: jasmine.Spy;
+
+  beforeEach(() => {
+    consoleWarnSpy = spyOn(console, 'warn').and.stub(); // or .and.callThrough(); if you want the original to execute
+  });
+
+  extraBodyTestCases.forEach(
+    ({testName, initialBody, extraBody, expectedBody, expectedWarning}) => {
+      it(testName, () => {
+        const requestInit: RequestInit = {body: initialBody};
+        includeExtraBodyToRequestInit(
+          requestInit,
+          extraBody as Record<string, unknown>,
+        );
+        if (
+          typeof expectedBody === 'string' &&
+          typeof requestInit.body === 'string'
+        ) {
+          if (expectedBody.startsWith('{') || expectedBody.startsWith('[')) {
+            expect(JSON.parse(requestInit.body as string)).toEqual(
+              JSON.parse(expectedBody),
+            );
+          } else {
+            expect(requestInit.body).toBe(expectedBody);
+          }
+        } else {
+          expect(requestInit.body).toEqual(expectedBody);
+        }
+        if (expectedWarning) {
+          expect(consoleWarnSpy).toHaveBeenCalledWith(expectedWarning);
+        } else {
+          expect(consoleWarnSpy).not.toHaveBeenCalled();
+        }
+      });
+    },
+  );
 });

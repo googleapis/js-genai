@@ -1,6 +1,203 @@
 # Changelog
 
 
+## [1.6.0](https://github.com/googleapis/js-genai/compare/v1.5.1...v1.6.0) (2025-06-21)
+
+
+### Features
+
+* allow users to access headers for generateContent method and generateContentStream ([f5f0e02](https://github.com/googleapis/js-genai/commit/f5f0e023805ca75be348b38ad6a9382d5707f97a))
+* enable json schema for controlled output and function declaration. ([7d53d57](https://github.com/googleapis/js-genai/commit/7d53d578ea8b6fa7a418312357a8a593d3c0122a))
+* Include status code and export HTTP errors ([bcabcb6](https://github.com/googleapis/js-genai/commit/bcabcb6fa2975ff8b0afbbf108748def39f1e9aa))
+* support extra_body in HttpOptions ([1d48b6e](https://github.com/googleapis/js-genai/commit/1d48b6eafaee0d39ea72f7bfc396e45ada6c69ae))
+
+
+### Bug Fixes
+
+* Fix build errors when the mcp package is not installed. ([5b7e695](https://github.com/googleapis/js-genai/commit/5b7e695552b6d5cd1e55056bbe6bc9349a479e18))
+
+## [1.5.1](https://github.com/googleapis/js-genai/compare/v1.5.0...v1.5.1) (2025-06-13)
+
+
+### Bug Fixes
+
+* Update MCP dependencies to be type-only ([648019b](https://github.com/googleapis/js-genai/commit/648019bebb5cff3e8b3bb6db72534934bd7c1357))
+
+## [1.5.0](https://github.com/googleapis/js-genai/compare/v1.4.0...v1.5.0) (2025-06-11)
+
+
+### Features
+
+* add a timeout parameter to CallableToolConfig ([06f31fd](https://github.com/googleapis/js-genai/commit/06f31fdbb8be612759385190c6a03ea03d103dcf))
+* Add datastore_spec field for VertexAISearch ([1b18a52](https://github.com/googleapis/js-genai/commit/1b18a527ab4b9526a8901ecdc0453795df0905bf))
+* Add support for Veo frame interpolation and video extension ([53f22e6](https://github.com/googleapis/js-genai/commit/53f22e6ce54dc0b226145e9bcba20b731ea4645f))
+* Make the MCP SDK an optional peer dependency. ([2472fd3](https://github.com/googleapis/js-genai/commit/2472fd364a29ad3cf3e15bbb61a1f3ac00914d86))
+* RAG - Introducing context storing for Gemini Live API. ([bdc2355](https://github.com/googleapis/js-genai/commit/bdc2355f2f10b839aa95162216dc4d35c60cd58e))
+
+
+### Bug Fixes
+
+* Prioritize credentials over implicit api key (from env) for node client using Vertex AI ([d82aba2](https://github.com/googleapis/js-genai/commit/d82aba244bdb804b063ef8a983b2916c00b901d2)), closes [#616](https://github.com/googleapis/js-genai/issues/616)
+
+## [1.4.0](https://github.com/googleapis/js-genai/compare/v1.3.0...v1.4.0) (2025-06-04)
+
+
+### Features
+
+* Add enhance_prompt field for Gemini Developer API generate_videos ([ea3cc8e](https://github.com/googleapis/js-genai/commit/ea3cc8e8eae1df3dd1cc7fe0a897a12705c51a59))
+* Enable url_context for Vertex ([e377f58](https://github.com/googleapis/js-genai/commit/e377f583747d1546fbc9ea1412c9c51bdf11c977))
+* **js:** Support `GEMINI_API_KEY` as environment variable for setting API key. ([97850ad](https://github.com/googleapis/js-genai/commit/97850ada42304ef6877523a9c3006303abcfea2a))
+
+
+### Bug Fixes
+
+* defined Type becomes TYPE_UNSPECIFIED when obfuscation is enabled ([1ddf4f5](https://github.com/googleapis/js-genai/commit/1ddf4f5e19b774588d5d51fcc854c9cdad31bd61))
+* Update live SDK sample to address choppy audio quality ([319bcbb](https://github.com/googleapis/js-genai/commit/319bcbbec8164b84c1f5a052435dcf62713572d5))
+* use Enum's value instead of keys for obfuscation. ([132bd04](https://github.com/googleapis/js-genai/commit/132bd04913ccacbd317cd7273c318059b57e42fb))
+
+## [1.3.0](https://github.com/googleapis/js-genai/compare/v1.2.0...v1.3.0) (2025-05-30)
+
+
+### Features
+
+* Adding `thought_signature` field to the `Part` to store the signature for thoughts. ([20815b2](https://github.com/googleapis/js-genai/commit/20815b269a0154c52787d9b26e053a089154ca3c))
+* include UNEXPECTED_TOOL_CALL enum value to FinishReason for Vertex AI APIs. ([bd5a2bf](https://github.com/googleapis/js-genai/commit/bd5a2bf87d6d927b0286ff80871a8a2a85a09c0c))
+* Support ephemeral auth tokens as API keys for live connections in TS. ([507bfb5](https://github.com/googleapis/js-genai/commit/507bfb5a4a1d8cb3fbcb67c28d8b3dfcb5c35dcb))
+* Support ephemeral token creation in TS ([425cfe6](https://github.com/googleapis/js-genai/commit/425cfe62eea596fd6ac2463aef664d5163258c4e))
+
+
+### Bug Fixes
+
+* Rename LiveEphemeralParameters to LiveConnectConstraints. ([86e9652](https://github.com/googleapis/js-genai/commit/86e96524049e5576e240cf9cf22bd8af340e2e18))
+
+## [1.2.0](https://github.com/googleapis/js-genai/compare/v1.1.0...v1.2.0) (2025-05-28)
+
+
+### ⚠ BREAKING CHANGES TO EXPERIMENTAL FEATURES
+
+* Remove unsupported Lyria enum for music generation mode
+
+### Features
+
+* Add generate_audio field for private testing of video generation ([37e14c5](https://github.com/googleapis/js-genai/commit/37e14c5bb29a26733601548acf109f8c0b25bbfb))
+
+
+### Documentation
+
+* fix README typo ([04259ad](https://github.com/googleapis/js-genai/commit/04259ad8ebb07663bd3935ee8142ffda3c9b1dff))
+
+
+### Miscellaneous Chores
+
+* Remove unsupported Lyria enum for music generation mode ([0b935cd](https://github.com/googleapis/js-genai/commit/0b935cdbe3ac10a1741619d946e865f352ba3333))
+
+## [1.1.0](https://github.com/googleapis/js-genai/compare/v1.0.1...v1.1.0) (2025-05-26)
+
+
+### Features
+
+* Add CommonJS modules ([f40c47c](https://github.com/googleapis/js-genai/commit/f40c47c8b2fd275bd8536f889bef21f2ec1faf05))
+* support new fields in FileData, GenerationConfig, GroundingChunkRetrievedContext, RetrievalConfig, Schema, TuningJob, VertexAISearch, ([cd04548](https://github.com/googleapis/js-genai/commit/cd0454862b4a0251d2606eeca8500b3b76004944))
+
+## [1.0.1](https://github.com/googleapis/js-genai/compare/v1.0.0...v1.0.1) (2025-05-22)
+
+> [!NOTE]
+> This version drops support for end-of-life Node.js v18.
+
+### Bug Fixes
+
+* After an error on sendMessage, all subsequent calls fail with the same error ([778abcc](https://github.com/googleapis/js-genai/commit/778abccceffb5148762ed35d53c7e957d3284aee))
+* Fixed sendMessage subsequent calls test to follow the arrange-act-assert pattern ([778abcc](https://github.com/googleapis/js-genai/commit/778abccceffb5148762ed35d53c7e957d3284aee))
+* Unbreak direct `require`s from node. ([023efd5](https://github.com/googleapis/js-genai/commit/023efd5a4c225451a494dcf6c7785bbdc40b83ea))
+
+## [1.0.0](https://github.com/googleapis/js-genai/compare/v0.15.0...v1.0.0) (2025-05-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* Fix Lyria method name for JS, update parameters type
+
+### Features
+
+* Support ephemeral token creation in Python ([8e12730](https://github.com/googleapis/js-genai/commit/8e127309f071d243779acf6cc32b2e7e0d388679))
+* Support using ephemeral token in Live session connection in Python ([8e12730](https://github.com/googleapis/js-genai/commit/8e127309f071d243779acf6cc32b2e7e0d388679))
+
+
+### Bug Fixes
+
+* allow McpClient to be passed in with AFC disabled. ([b13f1f8](https://github.com/googleapis/js-genai/commit/b13f1f8d0a4a81140486a63e9e02ff2f7fcca17e))
+* Blob handling in realtime music ([f760755](https://github.com/googleapis/js-genai/commit/f760755c88e3915e61666408419136816d99acd5))
+* Prevent MCP label from being appended multiple times if they already exist ([c59ffe7](https://github.com/googleapis/js-genai/commit/c59ffe7cc04594d50557a697ad45b72d7cadc35b))
+
+
+### Documentation
+
+* No longer preview. ([5e137d4](https://github.com/googleapis/js-genai/commit/5e137d487a4230da40ee1218e5b8b9c2ac68e6bd))
+
+
+### Miscellaneous Chores
+
+* Fix Lyria method name for JS, update parameters type ([99dba6e](https://github.com/googleapis/js-genai/commit/99dba6e695ac7266d1bd469813466f22ec4174f6))
+
+## [0.15.0](https://github.com/googleapis/js-genai/compare/v0.14.1...v0.15.0) (2025-05-19)
+
+
+### Features
+
+* add `time range filter` to Google Search Tool ([a938111](https://github.com/googleapis/js-genai/commit/a93811117f7346eb860c8848aef4f309a1b1ddf5))
+* Add basic support for async function calling. ([8e2f357](https://github.com/googleapis/js-genai/commit/8e2f3573f97ceb0468a2327751e76892c2979430))
+* Add CallableToolConfig to specify behavior for FunctionDeclarations ([c4148d0](https://github.com/googleapis/js-genai/commit/c4148d0c711d17840cf9e6b2397dbbb8d8aeb7c1))
+* add configurations for afc. ([ce7855b](https://github.com/googleapis/js-genai/commit/ce7855b96abdc098e52b388c6cc048a0c001f3ba))
+* add live proactivity_audio and enable_affective_dialog ([20e3892](https://github.com/googleapis/js-genai/commit/20e3892d8a4e1216cbdab626e6066941f654ff9f))
+* Add Lyria Realtime music generation support for JS ([aefcaa5](https://github.com/googleapis/js-genai/commit/aefcaa56c3198928892674f691ddbfa64d169197))
+* Add Lyria Realtime Music Types ([99255d8](https://github.com/googleapis/js-genai/commit/99255d8bdb01ca165c19086fbd6094c426c2050b))
+* Add MCP telemetry usage to TS SDK. ([09a83e9](https://github.com/googleapis/js-genai/commit/09a83e93f7289e9466aa0aca55369a1ea4576ffe))
+* add multi-speaker voice config ([6fe6074](https://github.com/googleapis/js-genai/commit/6fe60740f0e2c918d521edc9c3d82a965451c6ff))
+* Add support for lat/long in search. ([4cd79f6](https://github.com/googleapis/js-genai/commit/4cd79f6f68c75c8fcc3d28f3cc3a013b4818cf9e))
+* Add support for MCP in TS SDK. ([921a4be](https://github.com/googleapis/js-genai/commit/921a4be90ccc3cf5fb330050acfdef0ac8d415fb))
+* add support for propertyOrdering field. ([a77822b](https://github.com/googleapis/js-genai/commit/a77822bf8af27a8070c2a376b1561ec851a4b9a9))
+* Add Video FPS, and enable start/end_offset for MLDev ([19f20e9](https://github.com/googleapis/js-genai/commit/19f20e9f4eec6e5c0e8c89fd339486ccdd8a363c))
+* Enable AFC on Generate content stream ([ff2ce35](https://github.com/googleapis/js-genai/commit/ff2ce35746964dc8b32d97908c533618b962348f))
+* export the createJsonSchemaValidator methods to be available for other library. ([b3359a1](https://github.com/googleapis/js-genai/commit/b3359a17cf5db85d19131748731e0d843c473035))
+* List all mcp tools to max and mcpToTool taking a spread. ([44cd9c9](https://github.com/googleapis/js-genai/commit/44cd9c9fb1f78eee9351b1bac1ba5ba51ba08515))
+* **MCP:** Add a new interface for automatic function calling ([dc49ffc](https://github.com/googleapis/js-genai/commit/dc49ffc0f248da55d11e14a2e5e71988968afe87))
+* **MCP:** Add mcpToTool to pass MCP clients for automatic function calling ([825f385](https://github.com/googleapis/js-genai/commit/825f3858994af377f54c870df40f1a4e37d68a73))
+* Remove MCP Tool and MCP Client from ToolUnion ([d35e16d](https://github.com/googleapis/js-genai/commit/d35e16d1ac0c4491648f33838028a21386e76993))
+* support customer-managed encryption key in cached content ([3e7437a](https://github.com/googleapis/js-genai/commit/3e7437a70210f4075e904ce45f026bcf49d42297))
+* Support Url Context Retrieval tool ([aaaf9a9](https://github.com/googleapis/js-genai/commit/aaaf9a9e6e694341edd972f67e33ded13bcb4e0c))
+
+
+### Bug Fixes
+
+* Add an ES module for node environments. ([ff4bbd1](https://github.com/googleapis/js-genai/commit/ff4bbd11f5f1b6cfe2082862625a2a7f4d062c8e))
+* Add default headers to model calls when MCP is enabled ([9442eea](https://github.com/googleapis/js-genai/commit/9442eea9d1445b2f2a33ebbc1a65c64a011b8fd1))
+* Allow contents with no-text thoughts in chat history ([4112d1c](https://github.com/googleapis/js-genai/commit/4112d1c9379d5f111c1226878ded702aaa3b8ab8))
+* **chats:** Enforce internal management of chat history ([abe592f](https://github.com/googleapis/js-genai/commit/abe592f106fb33c79d1b3e5fcbcddb4d6572d853))
+* **chats:** Relax the constraint on chat turns ([68115a8](https://github.com/googleapis/js-genai/commit/68115a8c2ff5fba5c8fd79cace52a4f1abca130f))
+* make the system-test build. ([dd7154c](https://github.com/googleapis/js-genai/commit/dd7154ccde87e93753fbf61ec8aef132901c3bb0))
+* move test-server-sdk from dependencies to devDependencies ([233a909](https://github.com/googleapis/js-genai/commit/233a909cc8537ece29a54440731c59601dc721d0))
+* Move test-server-sdk to devDependencies ([#574](https://github.com/googleapis/js-genai/issues/574)) ([b64deeb](https://github.com/googleapis/js-genai/commit/b64deeb3a4e241fbf80e10b981c6ecc52e278863))
+* Run tests against Node 24 ([28a56ac](https://github.com/googleapis/js-genai/commit/28a56ac2e592d1647c46e391e9207ab919c27f0b))
+* Skip MCP tool call when function name not present in the tool ([9f3d360](https://github.com/googleapis/js-genai/commit/9f3d360a1d8dfdc740c0cabebfc74e6705183060))
+
+## [0.14.1](https://github.com/googleapis/js-genai/compare/v0.14.0...v0.14.1) (2025-05-15)
+
+
+### Bug Fixes
+
+* Move test-server-sdk to devDependencies ([#574](https://github.com/googleapis/js-genai/issues/574)) ([5913e59](https://github.com/googleapis/js-genai/commit/5913e59c26f362147eafb1b883604b8be3641e09))
+
+## [0.14.0](https://github.com/googleapis/js-genai/compare/v0.13.0...v0.14.0) (2025-05-13)
+
+
+### Features
+
+* Add Imagen edit_image support in JS SDK ([6c99936](https://github.com/googleapis/js-genai/commit/6c999365c457ceed083862f6b572f551f3e1dc63))
+* Add Imagen upscale_image support for JS ([6fe1a68](https://github.com/googleapis/js-genai/commit/6fe1a687c4ff23b1df802b4fe88b1d24dabf3068))
+* add support for audio, video, text and session resumption in java. ([e5542c6](https://github.com/googleapis/js-genai/commit/e5542c695d36059e7602b3f6c3ee398c33cfc4d9))
+* support display_name for Blob class when calling Vertex AI ([fc35f51](https://github.com/googleapis/js-genai/commit/fc35f5178b576bdf6c134d7313fc6fd5e6c6ea93))
+* Support tuning checkpoints ([6bd9c9e](https://github.com/googleapis/js-genai/commit/6bd9c9e9a1b3d0b69b05ae78d226842dd94ff110))
+
 ## [0.13.0](https://github.com/googleapis/js-genai/compare/v0.12.0...v0.13.0) (2025-05-07)
 
 

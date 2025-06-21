@@ -1,0 +1,25 @@
+Status code: 200 
+X-Goog-Sherlog-Link: https://sherlog.corp.google.com/#workflow?config=Serving&dataid=aiplatform.googleapis.com/google.cloud.aiplatform.v1beta1.PredictionService.StreamGenerateContent&gaia=821332047332&reason=sharedLink&version=183f7753493e55987f998f98bab82453
+Content-Disposition: attachment
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Server: scaffolding on HTTPServer2
+Content-Type: text/event-stream
+Date: Wed, 14 May 2025 18:13:00 GMT
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": "Rain"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-05-14T18:13:00.084902Z","responseId": "LN0kaKaXBbubm9IPk7npsAs"}
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " lashed against the window, mirroring the storm inside Elara. Her grandmother's old music"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-05-14T18:13:00.084902Z","responseId": "LN0kaKaXBbubm9IPk7npsAs"}
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " box sat on the table, its porcelain ballerina still. Tonight, Elara would"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-05-14T18:13:00.084902Z","responseId": "LN0kaKaXBbubm9IPk7npsAs"}
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " finally open it. Inside, not music, but a single, dried rose and a faded note. \"Find him at the willow by the creek.\"\n\nT"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-05-14T18:13:00.084902Z","responseId": "LN0kaKaXBbubm9IPk7npsAs"}
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": "ears streamed down Elara's face. Her grandfather, lost before she was born. He hadn't abandoned them, he'd just been waiting. Taking"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-05-14T18:13:00.084902Z","responseId": "LN0kaKaXBbubm9IPk7npsAs"}
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " a deep breath, Elara grabbed her coat and stepped out into the storm, ready to find the other half of her heart.\n"}]},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 11,"candidatesTokenCount": 127,"totalTokenCount": 138,"trafficType": "ON_DEMAND","promptTokensDetails": [{"modality": "TEXT","tokenCount": 11}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 127}]},"modelVersion": "gemini-2.0-flash","createTime": "2025-05-14T18:13:00.084902Z","responseId": "LN0kaKaXBbubm9IPk7npsAs"}
+
