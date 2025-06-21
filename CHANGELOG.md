@@ -1,6 +1,21 @@
 # Changelog
 
 
+## [1.6.0](https://github.com/googleapis/js-genai/compare/v1.5.1...v1.6.0) (2025-06-21)
+
+
+### Features
+
+* allow users to access headers for generateContent method and generateContentStream ([f5f0e02](https://github.com/googleapis/js-genai/commit/f5f0e023805ca75be348b38ad6a9382d5707f97a))
+* enable json schema for controlled output and function declaration. ([7d53d57](https://github.com/googleapis/js-genai/commit/7d53d578ea8b6fa7a418312357a8a593d3c0122a))
+* Include status code and export HTTP errors ([bcabcb6](https://github.com/googleapis/js-genai/commit/bcabcb6fa2975ff8b0afbbf108748def39f1e9aa))
+* support extra_body in HttpOptions ([1d48b6e](https://github.com/googleapis/js-genai/commit/1d48b6eafaee0d39ea72f7bfc396e45ada6c69ae))
+
+
+### Bug Fixes
+
+* Fix build errors when the mcp package is not installed. ([5b7e695](https://github.com/googleapis/js-genai/commit/5b7e695552b6d5cd1e55056bbe6bc9349a479e18))
+
 ## [1.5.1](https://github.com/googleapis/js-genai/compare/v1.5.0...v1.5.1) (2025-06-13)
 
 
