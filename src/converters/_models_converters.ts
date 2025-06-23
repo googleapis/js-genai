@@ -952,6 +952,17 @@ export function generateContentConfigToMldev(
     );
   }
 
+  const fromResponseJsonSchema = common.getValueByPath(fromObject, [
+    'responseJsonSchema',
+  ]);
+  if (fromResponseJsonSchema != null) {
+    common.setValueByPath(
+      toObject,
+      ['responseJsonSchema'],
+      fromResponseJsonSchema,
+    );
+  }
+
   if (common.getValueByPath(fromObject, ['routingConfig']) !== undefined) {
     throw new Error('routingConfig parameter is not supported in Gemini API.');
   }
@@ -2708,6 +2719,17 @@ export function generateContentConfigToVertex(
       toObject,
       ['responseSchema'],
       schemaToVertex(t.tSchema(fromResponseSchema)),
+    );
+  }
+
+  const fromResponseJsonSchema = common.getValueByPath(fromObject, [
+    'responseJsonSchema',
+  ]);
+  if (fromResponseJsonSchema != null) {
+    common.setValueByPath(
+      toObject,
+      ['responseJsonSchema'],
+      fromResponseJsonSchema,
     );
   }
 

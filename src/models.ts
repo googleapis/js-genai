@@ -16,7 +16,7 @@ import {ApiClient} from './_api_client.js';
 import * as common from './_common.js';
 import {BaseModule} from './_common.js';
 import * as _internal_types from './_internal_types.js';
-import {tContents} from './_transformers.js';
+import {isSchema, tContents} from './_transformers.js';
 import * as converters from './converters/_models_converters.js';
 import {
   hasMcpClientTools,
@@ -73,6 +73,8 @@ export class Models extends BaseModule {
   generateContent = async (
     params: types.GenerateContentParameters,
   ): Promise<types.GenerateContentResponse> => {
+    this.validateOneOfField(params);
+    this.updateParametersForOneOfField(params);
     const transformedParams = await this.processParamsForMcpUsage(params);
     if (!hasMcpClientTools(params) || shouldDisableAfc(params.config)) {
       return await this.generateContentInternal(transformedParams);
@@ -178,6 +180,8 @@ export class Models extends BaseModule {
   generateContentStream = async (
     params: types.GenerateContentParameters,
   ): Promise<AsyncGenerator<types.GenerateContentResponse>> => {
+    this.validateOneOfField(params);
+    this.updateParametersForOneOfField(params);
     if (shouldDisableAfc(params.config)) {
       const transformedParams = await this.processParamsForMcpUsage(params);
       return await this.generateContentStreamInternal(transformedParams);
@@ -235,6 +239,94 @@ export class Models extends BaseModule {
       };
     }
     return newParams;
+  }
+
+  /**
+   * Validates that only one of responseSchema and responseJsonSchema is set.
+   * Also validates that only one of parameters and parametersJsonSchema is set
+   * in each function declaration.
+   * Also validates that only one of response and responseJsonSchema is set in
+   * each function declaration.
+   * @param params - The parameters for generating content.
+   * @throws - If responseSchema and responseJsonSchema are both set.
+   * @throws - If parameters and parametersJsonSchema are both set in a
+   * function declaration.
+   * @throws - If response and responseJsonSchema are both set in a function
+   * declaration.
+   */
+  private validateOneOfField(params: types.GenerateContentParameters) {
+    if (
+      params.config?.responseSchema != null &&
+      params.config?.responseJsonSchema != null
+    ) {
+      throw new Error(
+        'Only one of responseSchema and responseJsonSchema can be set. Please set responseJsonSchema.',
+      );
+    }
+    for (const tool of params.config?.tools ?? []) {
+      if (isCallableTool(tool)) {
+        continue;
+      }
+      for (const declaration of (tool as types.Tool).functionDeclarations ??
+        []) {
+        if (
+          declaration.parameters != null &&
+          declaration.parametersJsonSchema != null
+        ) {
+          throw new Error(
+            `In function declaration ${declaration.name}, Only one of parameters and parametersJsonSchema can be set. Please set parametersJsonSchema.`,
+          );
+        }
+        if (
+          declaration.response != null &&
+          declaration.responseJsonSchema != null
+        ) {
+          throw new Error(
+            `In function declaration ${declaration.name}, Only one of response and responseJsonSchema can be set. Please set responseJsonSchema.`,
+          );
+        }
+      }
+    }
+  }
+
+  /**
+   * For fields that requires to be a schema, check if these fields are proveid
+   * and if the given data can be processed as a schema. If the fields are not
+   * schemas, move the given data to its JSON equivalent field. For example, if
+   * the parameters field is given, but it is not comformatted as a schema, the
+   * data will be moved to parametersJsonSchema.
+   * @remark This function should be called after validateOneOfField. Because
+   * this function will cover the original data on its JSON equivalent field.
+   */
+  private updateParametersForOneOfField(
+    params: types.GenerateContentParameters,
+  ) {
+    if (
+      params.config?.responseSchema != null &&
+      !isSchema(params.config.responseSchema)
+    ) {
+      params.config.responseJsonSchema = params.config.responseSchema;
+      params.config.responseSchema = undefined;
+    }
+    for (const tool of params.config?.tools ?? []) {
+      if (isCallableTool(tool)) {
+        continue;
+      }
+      for (const declaration of (tool as types.Tool).functionDeclarations ??
+        []) {
+        if (
+          declaration.parameters != null &&
+          !isSchema(declaration.parameters)
+        ) {
+          declaration.parametersJsonSchema = declaration.parameters;
+          declaration.parameters = undefined;
+        }
+        if (declaration.response != null && !isSchema(declaration.response)) {
+          declaration.responseJsonSchema = declaration.response;
+          declaration.response = undefined;
+        }
+      }
+    }
   }
 
   private async initAfcToolsMap(

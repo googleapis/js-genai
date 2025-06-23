@@ -65,12 +65,12 @@ async function generateContentFromVertexAI() {
               name: 'controlLight',
               description:
                 'Set the brightness and color temperature of a room light.',
-              parameters: zodToJsonSchema(
+              parametersJsonSchema: zodToJsonSchema(
                 z.object({
                   brightness: z.number(),
                   colorTemperature: z.string(),
                 }),
-              ) as Record<string, unknown>,
+              ),
             },
           ],
         },
