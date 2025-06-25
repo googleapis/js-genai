@@ -952,6 +952,17 @@ export function generateContentConfigToMldev(
     );
   }
 
+  const fromResponseJsonSchema = common.getValueByPath(fromObject, [
+    'responseJsonSchema',
+  ]);
+  if (fromResponseJsonSchema != null) {
+    common.setValueByPath(
+      toObject,
+      ['responseJsonSchema'],
+      fromResponseJsonSchema,
+    );
+  }
+
   if (common.getValueByPath(fromObject, ['routingConfig']) !== undefined) {
     throw new Error('routingConfig parameter is not supported in Gemini API.');
   }
@@ -1711,6 +1722,12 @@ export function generateVideosConfigToMldev(
 
   if (common.getValueByPath(fromObject, ['lastFrame']) !== undefined) {
     throw new Error('lastFrame parameter is not supported in Gemini API.');
+  }
+
+  if (common.getValueByPath(fromObject, ['compressionQuality']) !== undefined) {
+    throw new Error(
+      'compressionQuality parameter is not supported in Gemini API.',
+    );
   }
 
   return toObject;
@@ -2711,6 +2728,17 @@ export function generateContentConfigToVertex(
     );
   }
 
+  const fromResponseJsonSchema = common.getValueByPath(fromObject, [
+    'responseJsonSchema',
+  ]);
+  if (fromResponseJsonSchema != null) {
+    common.setValueByPath(
+      toObject,
+      ['responseJsonSchema'],
+      fromResponseJsonSchema,
+    );
+  }
+
   const fromRoutingConfig = common.getValueByPath(fromObject, [
     'routingConfig',
   ]);
@@ -3580,6 +3608,28 @@ export function upscaleImageAPIConfigInternalToVertex(
     );
   }
 
+  const fromEnhanceInputImage = common.getValueByPath(fromObject, [
+    'enhanceInputImage',
+  ]);
+  if (parentObject !== undefined && fromEnhanceInputImage != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'upscaleConfig', 'enhanceInputImage'],
+      fromEnhanceInputImage,
+    );
+  }
+
+  const fromImagePreservationFactor = common.getValueByPath(fromObject, [
+    'imagePreservationFactor',
+  ]);
+  if (parentObject !== undefined && fromImagePreservationFactor != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'upscaleConfig', 'imagePreservationFactor'],
+      fromImagePreservationFactor,
+    );
+  }
+
   const fromNumberOfImages = common.getValueByPath(fromObject, [
     'numberOfImages',
   ]);
@@ -4066,6 +4116,17 @@ export function generateVideosConfigToVertex(
       parentObject,
       ['instances[0]', 'lastFrame'],
       imageToVertex(fromLastFrame),
+    );
+  }
+
+  const fromCompressionQuality = common.getValueByPath(fromObject, [
+    'compressionQuality',
+  ]);
+  if (parentObject !== undefined && fromCompressionQuality != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'compressionQuality'],
+      fromCompressionQuality,
     );
   }
 

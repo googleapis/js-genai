@@ -885,6 +885,7 @@ export interface GenerateContentConfig {
     mediaResolution?: MediaResolution;
     modelSelectionConfig?: ModelSelectionConfig;
     presencePenalty?: number;
+    responseJsonSchema?: unknown;
     responseLogprobs?: boolean;
     responseMimeType?: string;
     responseModalities?: string[];
@@ -999,6 +1000,7 @@ export class GenerateImagesResponse {
 export interface GenerateVideosConfig {
     abortSignal?: AbortSignal;
     aspectRatio?: string;
+    compressionQuality?: VideoCompressionQuality;
     durationSeconds?: number;
     enhancePrompt?: boolean;
     fps?: number;
@@ -1976,11 +1978,8 @@ export type PartUnion = Part | string;
 
 // @public
 export enum PersonGeneration {
-    // (undocumented)
     ALLOW_ADULT = "ALLOW_ADULT",
-    // (undocumented)
     ALLOW_ALL = "ALLOW_ALL",
-    // (undocumented)
     DONT_ALLOW = "DONT_ALLOW"
 }
 
@@ -2585,7 +2584,9 @@ export interface UploadFileParameters {
 // @public
 export interface UpscaleImageConfig {
     abortSignal?: AbortSignal;
+    enhanceInputImage?: boolean;
     httpOptions?: HttpOptions;
+    imagePreservationFactor?: number;
     includeRaiReason?: boolean;
     outputCompressionQuality?: number;
     outputMimeType?: string;
@@ -2677,6 +2678,12 @@ export interface Video {
     mimeType?: string;
     uri?: string;
     videoBytes?: string;
+}
+
+// @public
+export enum VideoCompressionQuality {
+    LOSSLESS = "LOSSLESS",
+    OPTIMIZED = "OPTIMIZED"
 }
 
 // @public

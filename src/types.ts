@@ -542,8 +542,17 @@ export enum SafetyFilterLevel {
 
 /** Enum that controls the generation of people. */
 export enum PersonGeneration {
+  /**
+   * Block generation of images of people.
+   */
   DONT_ALLOW = 'DONT_ALLOW',
+  /**
+   * Generate images of adults, but not children.
+   */
   ALLOW_ADULT = 'ALLOW_ADULT',
+  /**
+   * Generate images that include adults and children.
+   */
   ALLOW_ALL = 'ALLOW_ALL',
 }
 
@@ -591,6 +600,20 @@ export enum EditMode {
   EDIT_MODE_STYLE = 'EDIT_MODE_STYLE',
   EDIT_MODE_BGSWAP = 'EDIT_MODE_BGSWAP',
   EDIT_MODE_PRODUCT_IMAGE = 'EDIT_MODE_PRODUCT_IMAGE',
+}
+
+/** Enum that controls the compression quality of the generated videos. */
+export enum VideoCompressionQuality {
+  /**
+   * Optimized video compression quality. This will produce videos
+      with a compressed, smaller file size.
+   */
+  OPTIMIZED = 'OPTIMIZED',
+  /**
+   * Lossless video compression quality. This will produce videos
+      with a larger file size.
+   */
+  LOSSLESS = 'LOSSLESS',
 }
 
 /** State for the lifecycle of a File. */
@@ -1627,6 +1650,22 @@ export declare interface GenerateContentConfig {
       Compatible mimetypes: `application/json`: Schema for JSON response.
        */
   responseSchema?: SchemaUnion;
+  /** Optional. Output schema of the generated response.
+      This is an alternative to `response_schema` that accepts [JSON
+      Schema](https://json-schema.org/). If set, `response_schema` must be
+      omitted, but `response_mime_type` is required. While the full JSON Schema
+      may be sent, not all features are supported. Specifically, only the
+      following properties are supported: - `$id` - `$defs` - `$ref` - `$anchor`
+      - `type` - `format` - `title` - `description` - `enum` (for strings and
+      numbers) - `items` - `prefixItems` - `minItems` - `maxItems` - `minimum` -
+      `maximum` - `anyOf` - `oneOf` (interpreted the same as `anyOf`) -
+      `properties` - `additionalProperties` - `required` The non-standard
+      `propertyOrdering` property may also be set. Cyclic references are
+      unrolled to a limited degree and, as such, may only be used within
+      non-required properties. (Nullable properties are not sufficient.) If
+      `$ref` is set on a sub-schema, no other properties, except for than those
+      starting as a `$`, may be set. */
+  responseJsonSchema?: unknown;
   /** Configuration for model router requests.
    */
   routingConfig?: GenerationConfigRoutingConfig;
@@ -2400,8 +2439,9 @@ export declare interface GenerateImagesConfig {
   /** Number of images to generate.
    */
   numberOfImages?: number;
-  /** Aspect ratio of the generated images.
-   */
+  /** Aspect ratio of the generated images. Supported values are
+      "1:1", "3:4", "4:3", "9:16", and "16:9".
+       */
   aspectRatio?: string;
   /** Controls how much the model adheres to the text prompt. Large
       values increase output and prompt alignment, but may compromise image
@@ -2571,8 +2611,9 @@ export declare interface EditImageConfig {
   /** Number of images to generate.
    */
   numberOfImages?: number;
-  /** Aspect ratio of the generated images.
-   */
+  /** Aspect ratio of the generated images. Supported values are
+      "1:1", "3:4", "4:3", "9:16", and "16:9".
+       */
   aspectRatio?: string;
   /** Controls how much the model adheres to the text prompt. Large
       values increase output and prompt alignment, but may compromise image
@@ -2963,6 +3004,8 @@ export declare interface GenerateVideosConfig {
   generateAudio?: boolean;
   /** Image to use as the last frame of generated videos. Only supported for image to video use cases. */
   lastFrame?: Image;
+  /** Compression quality of the generated videos. */
+  compressionQuality?: VideoCompressionQuality;
 }
 
 /** Class that represents the parameters for generating videos. */
@@ -3902,6 +3945,15 @@ export declare interface UpscaleImageConfig {
   /** The level of compression if the ``output_mime_type`` is
       ``image/jpeg``. */
   outputCompressionQuality?: number;
+  /** Whether to add an image enhancing step before upscaling.
+      It is expected to suppress the noise and JPEG compression artifacts
+      from the input image. */
+  enhanceInputImage?: boolean;
+  /** With a higher image preservation factor, the original image
+      pixels are more respected. With a lower image preservation factor, the
+      output image will have be more different from the input image, but
+      with finer details and less noise. */
+  imagePreservationFactor?: number;
 }
 
 /** User-facing config UpscaleImageParameters. */
