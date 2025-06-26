@@ -26,7 +26,11 @@ describe('live', () => {
       downloader: new CrossDownloader(),
     });
     const websocketFactory = new FakeWebSocketFactory();
-    const live = new Live(apiClient, new FakeAuth(), websocketFactory);
+    const live = new Live(
+      apiClient,
+      new FakeAuth('test-api-key'),
+      websocketFactory,
+    );
 
     const websocketFactorySpy = spyOn(
       websocketFactory,
@@ -45,10 +49,10 @@ describe('live', () => {
 
     const websocketFactorySpyCall = websocketFactorySpy.calls.all()[0];
     expect(websocketFactorySpyCall.args[0]).toBe(
-      'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=test-api-key',
+      'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent',
     );
     expect(JSON.stringify(websocketFactorySpyCall.args[1])).toBe(
-      `{"content-type":"application/json","user-agent":"google-genai-sdk/${SDK_VERSION} undefined","x-goog-api-client":"google-genai-sdk/${SDK_VERSION} undefined"}`,
+      `{"content-type":"application/json","user-agent":"google-genai-sdk/${SDK_VERSION} undefined","x-goog-api-client":"google-genai-sdk/${SDK_VERSION} undefined","x-goog-api-key":"test-api-key"}`,
     );
     // Check that the onopen callback is wrapped to call the provided callbacks
     // and then resolve the onopen promise. The string is not fully checked to
@@ -72,7 +76,11 @@ describe('live', () => {
       downloader: new CrossDownloader(),
     });
     const websocketFactory = new FakeWebSocketFactory();
-    const live = new Live(apiClient, new FakeAuth(), websocketFactory);
+    const live = new Live(
+      apiClient,
+      new FakeAuth('auth_tokens/test-access-token'),
+      websocketFactory,
+    );
 
     const websocketFactorySpy = spyOn(
       websocketFactory,
@@ -90,7 +98,10 @@ describe('live', () => {
 
     const websocketFactorySpyCall = websocketFactorySpy.calls.all()[0];
     expect(websocketFactorySpyCall.args[0]).toBe(
-      'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContentConstrained?access_token=auth_tokens/test-access-token',
+      'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContentConstrained',
+    );
+    expect(JSON.stringify(websocketFactorySpyCall.args[1])).toBe(
+      `{"authorization":"Token auth_tokens/test-access-token","content-type":"application/json","user-agent":"google-genai-sdk/${SDK_VERSION} undefined","x-goog-api-client":"google-genai-sdk/${SDK_VERSION} undefined"}`,
     );
   });
 
@@ -102,7 +113,11 @@ describe('live', () => {
       downloader: new CrossDownloader(),
     });
     const websocketFactory = new FakeWebSocketFactory();
-    const live = new Live(apiClient, new FakeAuth(), websocketFactory);
+    const live = new Live(
+      apiClient,
+      new FakeAuth('test-api-key'),
+      websocketFactory,
+    );
 
     const websocketFactorySpy = spyOn(
       websocketFactory,
@@ -120,7 +135,7 @@ describe('live', () => {
 
     const websocketFactorySpyCall = websocketFactorySpy.calls.all()[0];
     expect(websocketFactorySpyCall.args[0]).toBe(
-      'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=test-api-key',
+      'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent',
     );
   });
 
@@ -161,7 +176,11 @@ describe('live', () => {
       downloader: new CrossDownloader(),
     });
     const websocketFactory = new FakeWebSocketFactory();
-    const live = new Live(apiClient, new FakeAuth(), websocketFactory);
+    const live = new Live(
+      apiClient,
+      new FakeAuth('test-api-key'),
+      websocketFactory,
+    );
 
     let websocket = new FakeWebSocket(
       '',
@@ -203,10 +222,10 @@ describe('live', () => {
 
     const websocketFactorySpyCall = websocketFactorySpy.calls.all()[0];
     expect(websocketFactorySpyCall.args[0]).toBe(
-      'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=test-api-key',
+      'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent',
     );
     expect(JSON.stringify(websocketFactorySpyCall.args[1])).toBe(
-      `{"content-type":"application/json","user-agent":"google-genai-sdk/${SDK_VERSION} undefined","x-goog-api-client":"google-genai-sdk/${SDK_VERSION} undefined"}`,
+      `{"content-type":"application/json","user-agent":"google-genai-sdk/${SDK_VERSION} undefined","x-goog-api-client":"google-genai-sdk/${SDK_VERSION} undefined","x-goog-api-key":"test-api-key"}`,
     );
     // Check that the onopen callback is wrapped to call the provided callbacks
     // and then resolve the onopen promise. The string is not fully checked to

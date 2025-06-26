@@ -9,6 +9,7 @@ import {GoogleAuth, GoogleAuthOptions} from 'google-auth-library';
 import {Auth} from '../_auth.js';
 
 export const GOOGLE_API_KEY_HEADER = 'x-goog-api-key';
+export const AUTHORIZATION_HEADER = 'Authorization';
 const REQUIRED_VERTEX_AI_SCOPE =
   'https://www.googleapis.com/auth/cloud-platform';
 
@@ -42,16 +43,17 @@ export class NodeAuth implements Auth {
   async addAuthHeaders(headers: Headers): Promise<void> {
     if (this.apiKey !== undefined) {
       if (this.apiKey.startsWith('auth_tokens/')) {
-        throw new Error('Ephemeral tokens are only supported by the live API.');
+        this.addEphemeralKeyHeader(headers);
+      } else {
+        this.addApiKeyHeader(headers);
       }
-      this.addKeyHeader(headers);
       return;
     }
 
     return this.addGoogleAuthHeaders(headers);
   }
 
-  private addKeyHeader(headers: Headers) {
+  private addApiKeyHeader(headers: Headers) {
     if (headers.get(GOOGLE_API_KEY_HEADER) !== null) {
       return;
     }
@@ -61,6 +63,21 @@ export class NodeAuth implements Auth {
       throw new Error('Trying to set API key header but apiKey is not set');
     }
     headers.append(GOOGLE_API_KEY_HEADER, this.apiKey);
+  }
+
+  private addEphemeralKeyHeader(headers: Headers) {
+    if (headers.get(AUTHORIZATION_HEADER) !== null) {
+      return;
+    }
+    if (this.apiKey === undefined) {
+      // This should never happen, this method is only called
+      // when apiKey is set.
+      throw new Error(
+        'Trying to set ephemeral key header but apiKey is not set',
+      );
+    }
+    headers.append(AUTHORIZATION_HEADER, `Token ${this.apiKey}`);
+    console.log(`appending ephemeral key: Token ${this.apiKey}`);
   }
 
   private async addGoogleAuthHeaders(headers: Headers): Promise<void> {

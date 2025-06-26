@@ -147,24 +147,22 @@ export class Live {
       url = `${websocketBaseUrl}/ws/google.cloud.aiplatform.${
         apiVersion
       }.LlmBidiService/BidiGenerateContent`;
-      await this.auth.addAuthHeaders(headers);
     } else {
       const apiKey = this.apiClient.getApiKey();
 
       let method = 'BidiGenerateContent';
-      let keyName = 'key';
       if (apiKey?.startsWith('auth_tokens/')) {
         console.warn(
           'Warning: Ephemeral token support is experimental and may change in future versions.',
         );
         method = 'BidiGenerateContentConstrained';
-        keyName = 'access_token';
       }
 
       url = `${websocketBaseUrl}/ws/google.ai.generativelanguage.${
         apiVersion
-      }.GenerativeService.${method}?${keyName}=${apiKey}`;
+      }.GenerativeService.${method}`;
     }
+    await this.auth.addAuthHeaders(headers);
 
     let onopenResolve: (value: unknown) => void = () => {};
     const onopenPromise = new Promise((resolve: (value: unknown) => void) => {

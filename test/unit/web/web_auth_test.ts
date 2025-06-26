@@ -4,7 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {GOOGLE_API_KEY_HEADER, WebAuth} from '../../../src/web/_web_auth.js';
+import {
+  AUTHORIZATION_HEADER,
+  GOOGLE_API_KEY_HEADER,
+  WebAuth,
+} from '../../../src/web/_web_auth.js';
 
 describe('WebAuth', () => {
   it('should add an x-goog-api-key header', async () => {
@@ -26,5 +30,28 @@ describe('WebAuth', () => {
     await nodeAuth.addAuthHeaders(headers);
 
     expect(headers.get(GOOGLE_API_KEY_HEADER)).toBe('Existing Key');
+  });
+
+  it('should add an authorization header', async () => {
+    const apiKey = 'auth_tokens/ephemeral_key';
+    const nodeAuth = new WebAuth(apiKey);
+    const headers = new Headers();
+
+    await nodeAuth.addAuthHeaders(headers);
+
+    expect(headers.get(AUTHORIZATION_HEADER)).toBe(
+      'Token auth_tokens/ephemeral_key',
+    );
+  });
+
+  it('should not add an authorization header if it already exists', async () => {
+    const apiKey = 'auth_tokens/ephemeral_key';
+    const nodeAuth = new WebAuth(apiKey);
+    const headers = new Headers();
+    headers.append(AUTHORIZATION_HEADER, 'Existing Key');
+
+    await nodeAuth.addAuthHeaders(headers);
+
+    expect(headers.get(AUTHORIZATION_HEADER)).toBe('Existing Key');
   });
 });
