@@ -275,6 +275,57 @@ async function main() {
 main();
 ```
 
+### Nestjs Example:
+
+```typescript
+import { GoogleGenAI, Type } from '@google/genai';
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class GeminiService {
+  private model;
+
+  constructor() {
+    const ai = new GoogleGenAI({
+      vertexai: true,
+      project: 'your_project_id',
+      location: 'us-central1',
+    });
+
+    const yourFunction = {
+      name: 'rentMovie',
+      description: 'Rent a movie for a number of days',
+      parameters: {
+        type: Type.OBJECT, 
+        properties: {
+          movie: { type: Type.STRING }, 
+          days: { type: Type.INTEGER },  
+        },
+        required: ['movie', 'days'],
+      },
+    };
+
+    this.model = ai.chats.create({
+      model: 'gemini-2.5-flash-preview-04-17',
+      config: {
+        tools: [
+          {
+            functionDeclarations: [yourFunction],
+          },
+        ],
+      },
+    });
+  }
+
+  async chat(prompt: string): Promise<string> {
+    const chat = this.model.startChat();
+    const result = await chat.sendMessage({ content: prompt });
+    return result.response.text();
+  }
+}
+
+```
+
 ### Generate Content
 
 #### How to structure `contents` argument for `generateContent`
