@@ -2602,6 +2602,7 @@ export interface TunedModelInfo {
 export interface TuningDataset {
     examples?: TuningExample[];
     gcsUri?: string;
+    vertexDatasetResource?: string;
 }
 
 // @public
@@ -2643,6 +2644,7 @@ export interface TuningJob {
 // @public (undocumented)
 export interface TuningValidationDataset {
     gcsUri?: string;
+    vertexDatasetResource?: string;
 }
 
 // @public
