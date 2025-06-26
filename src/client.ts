@@ -7,6 +7,7 @@
 import {GoogleAuthOptions} from 'google-auth-library';
 
 import {ApiClient} from './_api_client.js';
+import {Batches} from './batches.js';
 import {Caches} from './caches.js';
 import {Chats} from './chats.js';
 import {CrossDownloader} from './cross/_cross_downloader.js';
@@ -125,6 +126,7 @@ export class GoogleGenAI {
   private readonly apiVersion?: string;
   readonly models: Models;
   readonly live: Live;
+  readonly batches: Batches;
   readonly chats: Chats;
   readonly caches: Caches;
   readonly files: Files;
@@ -155,6 +157,7 @@ export class GoogleGenAI {
     this.models = new Models(this.apiClient);
     this.live = new Live(this.apiClient, auth, new CrossWebSocketFactory());
     this.chats = new Chats(this.models, this.apiClient);
+    this.batches = new Batches(this.apiClient);
     this.caches = new Caches(this.apiClient);
     this.files = new Files(this.apiClient);
     this.operations = new Operations(this.apiClient);

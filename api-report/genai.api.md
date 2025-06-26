@@ -134,6 +134,55 @@ export interface BaseUrlParameters {
     vertexUrl?: string;
 }
 
+// Warning: (ae-forgotten-export) The symbol "BaseModule" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export class Batches extends BaseModule {
+    // Warning: (ae-forgotten-export) The symbol "ApiClient" needs to be exported by the entry point index.d.ts
+    constructor(apiClient: ApiClient);
+    cancel(params: types.CancelBatchJobParameters): Promise<void>;
+    // Warning: (ae-forgotten-export) The symbol "types" needs to be exported by the entry point index.d.ts
+    create: (params: types.CreateBatchJobParameters) => Promise<types.BatchJob>;
+    get(params: types.GetBatchJobParameters): Promise<types.BatchJob>;
+    list: (params?: types.ListBatchJobsParameters) => Promise<Pager<types.BatchJob>>;
+}
+
+// @public
+export interface BatchJob {
+    createTime?: string;
+    dest?: BatchJobDestination;
+    displayName?: string;
+    endTime?: string;
+    error?: JobError;
+    model?: string;
+    name?: string;
+    src?: BatchJobSource;
+    startTime?: string;
+    state?: JobState;
+    updateTime?: string;
+}
+
+// @public
+export interface BatchJobDestination {
+    bigqueryUri?: string;
+    fileName?: string;
+    format?: string;
+    gcsUri?: string;
+    inlinedResponses?: InlinedResponse[];
+}
+
+// @public
+export interface BatchJobSource {
+    bigqueryUri?: string;
+    fileName?: string;
+    format?: string;
+    gcsUri?: string[];
+    inlinedRequests?: InlinedRequest[];
+}
+
+// @public (undocumented)
+export type BatchJobSourceUnion = BatchJobSource | InlinedRequest[] | string;
+
 // @public
 export enum Behavior {
     BLOCKING = "BLOCKING",
@@ -181,16 +230,12 @@ export interface CachedContentUsageMetadata {
     videoDurationSeconds?: number;
 }
 
-// Warning: (ae-forgotten-export) The symbol "BaseModule" needs to be exported by the entry point index.d.ts
-//
 // @public (undocumented)
 export class Caches extends BaseModule {
-    // Warning: (ae-forgotten-export) The symbol "ApiClient" needs to be exported by the entry point index.d.ts
     constructor(apiClient: ApiClient);
     create(params: types.CreateCachedContentParameters): Promise<types.CachedContent>;
     delete(params: types.DeleteCachedContentParameters): Promise<types.DeleteCachedContentResponse>;
     get(params: types.GetCachedContentParameters): Promise<types.CachedContent>;
-    // Warning: (ae-forgotten-export) The symbol "types" needs to be exported by the entry point index.d.ts
     list: (params?: types.ListCachedContentsParameters) => Promise<Pager<types.CachedContent>>;
     update(params: types.UpdateCachedContentParameters): Promise<types.CachedContent>;
 }
@@ -205,6 +250,18 @@ export interface CallableTool {
 export interface CallableToolConfig {
     behavior?: Behavior;
     timeout?: number;
+}
+
+// @public
+export interface CancelBatchJobConfig {
+    abortSignal?: AbortSignal;
+    httpOptions?: HttpOptions;
+}
+
+// @public
+export interface CancelBatchJobParameters {
+    config?: CancelBatchJobConfig;
+    name: string;
 }
 
 // @public
@@ -376,6 +433,21 @@ export interface CreateAuthTokenConfig {
 // @public
 export interface CreateAuthTokenParameters {
     config?: CreateAuthTokenConfig;
+}
+
+// @public
+export interface CreateBatchJobConfig {
+    abortSignal?: AbortSignal;
+    dest?: string;
+    displayName?: string;
+    httpOptions?: HttpOptions;
+}
+
+// @public
+export interface CreateBatchJobParameters {
+    config?: CreateBatchJobConfig;
+    model?: string;
+    src: BatchJobSourceUnion;
 }
 
 // @public
@@ -1000,6 +1072,7 @@ export class GenerateImagesResponse {
 export interface GenerateVideosConfig {
     abortSignal?: AbortSignal;
     aspectRatio?: string;
+    compressionQuality?: VideoCompressionQuality;
     durationSeconds?: number;
     enhancePrompt?: boolean;
     fps?: number;
@@ -1088,6 +1161,18 @@ export interface GenerationConfigThinkingConfig {
 }
 
 // @public
+export interface GetBatchJobConfig {
+    abortSignal?: AbortSignal;
+    httpOptions?: HttpOptions;
+}
+
+// @public
+export interface GetBatchJobParameters {
+    config?: GetBatchJobConfig;
+    name: string;
+}
+
+// @public
 export interface GetCachedContentConfig {
     abortSignal?: AbortSignal;
     httpOptions?: HttpOptions;
@@ -1156,6 +1241,8 @@ export class GoogleGenAI {
     protected readonly apiClient: ApiClient;
     // (undocumented)
     readonly authTokens: Tokens;
+    // (undocumented)
+    readonly batches: Batches;
     // (undocumented)
     readonly caches: Caches;
     // (undocumented)
@@ -1340,9 +1427,29 @@ export enum ImagePromptLanguage {
 }
 
 // @public
+export interface InlinedRequest {
+    config?: GenerateContentConfig;
+    contents?: ContentListUnion;
+    model?: string;
+}
+
+// @public
+export class InlinedResponse {
+    error?: JobError;
+    response?: GenerateContentResponse;
+}
+
+// @public
 export interface Interval {
     endTime?: string;
     startTime?: string;
+}
+
+// @public
+export interface JobError {
+    code?: number;
+    details?: string[];
+    message?: string;
 }
 
 // @public
@@ -1371,6 +1478,32 @@ export enum Language {
 export interface LatLng {
     latitude?: number;
     longitude?: number;
+}
+
+// @public
+export interface ListBatchJobsConfig {
+    abortSignal?: AbortSignal;
+    // (undocumented)
+    filter?: string;
+    httpOptions?: HttpOptions;
+    // (undocumented)
+    pageSize?: number;
+    // (undocumented)
+    pageToken?: string;
+}
+
+// @public
+export interface ListBatchJobsParameters {
+    // (undocumented)
+    config?: ListBatchJobsConfig;
+}
+
+// @public
+export class ListBatchJobsResponse {
+    // (undocumented)
+    batchJobs?: BatchJob[];
+    // (undocumented)
+    nextPageToken?: string;
 }
 
 // @public
@@ -2677,6 +2810,12 @@ export interface Video {
     mimeType?: string;
     uri?: string;
     videoBytes?: string;
+}
+
+// @public
+export enum VideoCompressionQuality {
+    LOSSLESS = "LOSSLESS",
+    OPTIMIZED = "OPTIMIZED"
 }
 
 // @public

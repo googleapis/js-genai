@@ -1,6 +1,21 @@
 # Changelog
 
 
+## [1.7.0](https://github.com/googleapis/js-genai/compare/v1.6.0...v1.7.0) (2025-06-25)
+
+
+### Features
+
+* Add compressionQuality enum for generate_videos ([4325773](https://github.com/googleapis/js-genai/commit/432577312dedb474e6892963f83edba830d9ed6d))
+* Add enhance_input_image and image_preservation_factor fields for upscale_image ([13eedda](https://github.com/googleapis/js-genai/commit/13eedda4c7ba0b190481e5e7f43995542702ee25))
+* Batches support in TS ([dd7355e](https://github.com/googleapis/js-genai/commit/dd7355efdfec4a7323c204b8bad6e6b07d897557))
+* expose the responseJsonSchema in GenerateContentConfig ([db54a5f](https://github.com/googleapis/js-genai/commit/db54a5f0f3cfa1f4ec300c2ea115eaf239a01639))
+
+
+### Bug Fixes
+
+* **live:** support ArrayBuffer in WebSocket messages ([5a8aeac](https://github.com/googleapis/js-genai/commit/5a8aeac1ce69e098b12f50b1299dab19ef0bd23a)), closes [#714](https://github.com/googleapis/js-genai/issues/714)
+
 ## [1.6.0](https://github.com/googleapis/js-genai/compare/v1.5.1...v1.6.0) (2025-06-21)
 
 

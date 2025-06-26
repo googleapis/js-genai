@@ -1724,6 +1724,12 @@ export function generateVideosConfigToMldev(
     throw new Error('lastFrame parameter is not supported in Gemini API.');
   }
 
+  if (common.getValueByPath(fromObject, ['compressionQuality']) !== undefined) {
+    throw new Error(
+      'compressionQuality parameter is not supported in Gemini API.',
+    );
+  }
+
   return toObject;
 }
 
@@ -4110,6 +4116,17 @@ export function generateVideosConfigToVertex(
       parentObject,
       ['instances[0]', 'lastFrame'],
       imageToVertex(fromLastFrame),
+    );
+  }
+
+  const fromCompressionQuality = common.getValueByPath(fromObject, [
+    'compressionQuality',
+  ]);
+  if (parentObject !== undefined && fromCompressionQuality != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'compressionQuality'],
+      fromCompressionQuality,
     );
   }
 

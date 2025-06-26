@@ -73,6 +73,7 @@ export class Caches extends BaseModule {
     params: types.CreateCachedContentParameters,
   ): Promise<types.CachedContent> {
     let response: Promise<types.CachedContent>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -157,6 +158,7 @@ export class Caches extends BaseModule {
     params: types.GetCachedContentParameters,
   ): Promise<types.CachedContent> {
     let response: Promise<types.CachedContent>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -241,6 +243,7 @@ export class Caches extends BaseModule {
     params: types.DeleteCachedContentParameters,
   ): Promise<types.DeleteCachedContentResponse> {
     let response: Promise<types.DeleteCachedContentResponse>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -330,6 +333,7 @@ export class Caches extends BaseModule {
     params: types.UpdateCachedContentParameters,
   ): Promise<types.CachedContent> {
     let response: Promise<types.CachedContent>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -403,6 +407,7 @@ export class Caches extends BaseModule {
     params: types.ListCachedContentsParameters,
   ): Promise<types.ListCachedContentsResponse> {
     let response: Promise<types.ListCachedContentsResponse>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {

@@ -520,6 +520,7 @@ export class Models extends BaseModule {
     params: types.GenerateContentParameters,
   ): Promise<types.GenerateContentResponse> {
     let response: Promise<types.GenerateContentResponse>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -595,6 +596,7 @@ export class Models extends BaseModule {
     params: types.GenerateContentParameters,
   ): Promise<AsyncGenerator<types.GenerateContentResponse>> {
     let response: Promise<AsyncGenerator<types.HttpResponse>>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -697,6 +699,7 @@ export class Models extends BaseModule {
     params: types.EmbedContentParameters,
   ): Promise<types.EmbedContentResponse> {
     let response: Promise<types.EmbedContentResponse>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -791,6 +794,7 @@ export class Models extends BaseModule {
     params: types.GenerateImagesParameters,
   ): Promise<types.GenerateImagesResponse> {
     let response: Promise<types.GenerateImagesResponse>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -866,6 +870,7 @@ export class Models extends BaseModule {
     params: _internal_types.EditImageParametersInternal,
   ): Promise<types.EditImageResponse> {
     let response: Promise<types.EditImageResponse>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -910,6 +915,7 @@ export class Models extends BaseModule {
     params: _internal_types.UpscaleImageAPIParametersInternal,
   ): Promise<types.UpscaleImageResponse> {
     let response: Promise<types.UpscaleImageResponse>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -960,6 +966,7 @@ export class Models extends BaseModule {
    */
   async get(params: types.GetModelParameters): Promise<types.Model> {
     let response: Promise<types.Model>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -1030,6 +1037,7 @@ export class Models extends BaseModule {
     params: types.ListModelsParameters,
   ): Promise<types.ListModelsResponse> {
     let response: Promise<types.ListModelsResponse>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -1126,6 +1134,7 @@ export class Models extends BaseModule {
    */
   async update(params: types.UpdateModelParameters): Promise<types.Model> {
     let response: Promise<types.Model>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -1210,6 +1219,7 @@ export class Models extends BaseModule {
     params: types.DeleteModelParameters,
   ): Promise<types.DeleteModelResponse> {
     let response: Promise<types.DeleteModelResponse>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -1301,6 +1311,7 @@ export class Models extends BaseModule {
     params: types.CountTokensParameters,
   ): Promise<types.CountTokensResponse> {
     let response: Promise<types.CountTokensResponse>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -1394,6 +1405,7 @@ export class Models extends BaseModule {
     params: types.ComputeTokensParameters,
   ): Promise<types.ComputeTokensResponse> {
     let response: Promise<types.ComputeTokensResponse>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -1462,6 +1474,7 @@ export class Models extends BaseModule {
     params: types.GenerateVideosParameters,
   ): Promise<types.GenerateVideosOperation> {
     let response: Promise<types.GenerateVideosOperation>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {

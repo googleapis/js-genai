@@ -58,6 +58,7 @@ export class Operations extends BaseModule {
     params: types.GetOperationParameters,
   ): Promise<types.GenerateVideosOperation> {
     let response: Promise<types.GenerateVideosOperation>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -125,6 +126,7 @@ export class Operations extends BaseModule {
     params: types.FetchPredictOperationParameters,
   ): Promise<types.GenerateVideosOperation> {
     let response: Promise<types.GenerateVideosOperation>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {

@@ -376,7 +376,7 @@ export enum MediaResolution {
   MEDIA_RESOLUTION_HIGH = 'MEDIA_RESOLUTION_HIGH',
 }
 
-/** Output only. The detailed state of the job. */
+/** Job state. */
 export enum JobState {
   /**
    * The job state is unspecified.
@@ -419,7 +419,7 @@ export enum JobState {
    */
   JOB_STATE_EXPIRED = 'JOB_STATE_EXPIRED',
   /**
-   * The job is being updated. Only jobs in the `RUNNING` state can be updated. After updating, the job goes back to the `RUNNING` state.
+   * The job is being updated. Only jobs in the `JOB_STATE_RUNNING` state can be updated. After updating, the job goes back to the `JOB_STATE_RUNNING` state.
    */
   JOB_STATE_UPDATING = 'JOB_STATE_UPDATING',
   /**
@@ -600,6 +600,20 @@ export enum EditMode {
   EDIT_MODE_STYLE = 'EDIT_MODE_STYLE',
   EDIT_MODE_BGSWAP = 'EDIT_MODE_BGSWAP',
   EDIT_MODE_PRODUCT_IMAGE = 'EDIT_MODE_PRODUCT_IMAGE',
+}
+
+/** Enum that controls the compression quality of the generated videos. */
+export enum VideoCompressionQuality {
+  /**
+   * Optimized video compression quality. This will produce videos
+      with a compressed, smaller file size.
+   */
+  OPTIMIZED = 'OPTIMIZED',
+  /**
+   * Lossless video compression quality. This will produce videos
+      with a larger file size.
+   */
+  LOSSLESS = 'LOSSLESS',
 }
 
 /** State for the lifecycle of a File. */
@@ -826,7 +840,8 @@ export declare interface VideoMetadata {
 export declare interface Blob {
   /** Optional. Display name of the blob. Used to provide a label or filename to distinguish blobs. This field is not currently used in the Gemini GenerateContent calls. */
   displayName?: string;
-  /** Required. Raw bytes. */
+  /** Required. Raw bytes.
+   * @remarks Encoded as base64 string. */
   data?: string;
   /** Required. The IANA standard MIME type of the source data. */
   mimeType?: string;
@@ -898,7 +913,8 @@ export declare interface Part {
   inlineData?: Blob;
   /** Optional. URI based data. */
   fileData?: FileData;
-  /** An opaque signature for the thought so it can be reused in subsequent requests. */
+  /** An opaque signature for the thought so it can be reused in subsequent requests.
+   * @remarks Encoded as base64 string. */
   thoughtSignature?: string;
   /** Optional. Result of executing the [ExecutableCode]. */
   codeExecutionResult?: CodeExecutionResult;
@@ -1883,7 +1899,8 @@ export declare interface RetrievalMetadata {
 export declare interface SearchEntryPoint {
   /** Optional. Web content snippet that can be embedded in a web page or an app webview. */
   renderedContent?: string;
-  /** Optional. Base64 encoded JSON representing array of tuple. */
+  /** Optional. Base64 encoded JSON representing array of tuple.
+   * @remarks Encoded as base64 string. */
   sdkBlob?: string;
 }
 
@@ -2491,7 +2508,8 @@ export declare interface Image {
   gcsUri?: string;
   /** The image bytes data. ``Image`` can contain a value for this field
       or the ``gcs_uri`` field but not both.
-       */
+      
+  * @remarks Encoded as base64 string. */
   imageBytes?: string;
   /** The MIME type of the image. */
   mimeType?: string;
@@ -2933,7 +2951,8 @@ export declare interface TokensInfo {
   role?: string;
   /** A list of token ids from the input. */
   tokenIds?: string[];
-  /** A list of tokens from the input. */
+  /** A list of tokens from the input.
+   * @remarks Encoded as base64 string. */
   tokens?: string[];
 }
 
@@ -2947,7 +2966,8 @@ export class ComputeTokensResponse {
 export declare interface Video {
   /** Path to another storage. */
   uri?: string;
-  /** Video bytes. */
+  /** Video bytes.
+   * @remarks Encoded as base64 string. */
   videoBytes?: string;
   /** Video encoding, for example "video/mp4". */
   mimeType?: string;
@@ -2990,6 +3010,8 @@ export declare interface GenerateVideosConfig {
   generateAudio?: boolean;
   /** Image to use as the last frame of generated videos. Only supported for image to video use cases. */
   lastFrame?: Image;
+  /** Compression quality of the generated videos. */
+  compressionQuality?: VideoCompressionQuality;
 }
 
 /** Class that represents the parameters for generating videos. */
@@ -3767,6 +3789,230 @@ export declare interface DeleteFileParameters {
 
 /** Response for the delete file method. */
 export class DeleteFileResponse {}
+
+/** Config for inlined request. */
+export declare interface InlinedRequest {
+  /** ID of the model to use. For a list of models, see `Google models
+      <https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models>`_. */
+  model?: string;
+  /** Content of the request.
+   */
+  contents?: ContentListUnion;
+  /** Configuration that contains optional model parameters.
+   */
+  config?: GenerateContentConfig;
+}
+
+/** Config for `src` parameter. */
+export declare interface BatchJobSource {
+  /** Storage format of the input files. Must be one of:
+      'jsonl', 'bigquery'.
+       */
+  format?: string;
+  /** The Google Cloud Storage URIs to input files.
+   */
+  gcsUri?: string[];
+  /** The BigQuery URI to input table.
+   */
+  bigqueryUri?: string;
+  /** The Gemini Developer API's file resource name of the input data
+      (e.g. "files/12345").
+       */
+  fileName?: string;
+  /** The Gemini Developer API's inlined input data to run batch job.
+   */
+  inlinedRequests?: InlinedRequest[];
+}
+
+/** Job error. */
+export declare interface JobError {
+  /** A list of messages that carry the error details. There is a common set of message types for APIs to use. */
+  details?: string[];
+  /** The status code. */
+  code?: number;
+  /** A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the `details` field. */
+  message?: string;
+}
+
+/** Config for `inlined_responses` parameter. */
+export class InlinedResponse {
+  /** The response to the request.
+   */
+  response?: GenerateContentResponse;
+  /** The error encountered while processing the request.
+   */
+  error?: JobError;
+}
+
+/** Config for `des` parameter. */
+export declare interface BatchJobDestination {
+  /** Storage format of the output files. Must be one of:
+      'jsonl', 'bigquery'.
+       */
+  format?: string;
+  /** The Google Cloud Storage URI to the output file.
+   */
+  gcsUri?: string;
+  /** The BigQuery URI to the output table.
+   */
+  bigqueryUri?: string;
+  /** The Gemini Developer API's file resource name of the output data
+      (e.g. "files/12345"). The file will be a JSONL file with a single response
+      per line. The responses will be GenerateContentResponse messages formatted
+      as JSON. The responses will be written in the same order as the input
+      requests.
+       */
+  fileName?: string;
+  /** The responses to the requests in the batch. Returned when the batch was
+      built using inlined requests. The responses will be in the same order as
+      the input requests.
+       */
+  inlinedResponses?: InlinedResponse[];
+}
+
+/** Config for optional parameters. */
+export declare interface CreateBatchJobConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
+  /** The user-defined name of this BatchJob.
+   */
+  displayName?: string;
+  /** GCS or BigQuery URI prefix for the output predictions. Example:
+      "gs://path/to/output/data" or "bq://projectId.bqDatasetId.bqTableId".
+       */
+  dest?: string;
+}
+
+/** Config for batches.create parameters. */
+export declare interface CreateBatchJobParameters {
+  /** The name of the model to produces the predictions via the BatchJob.
+   */
+  model?: string;
+  /** GCS URI(-s) or BigQuery URI to your input data to run batch job.
+      Example: "gs://path/to/input/data" or "bq://projectId.bqDatasetId.bqTableId".
+       */
+  src: BatchJobSourceUnion;
+  /** Optional parameters for creating a BatchJob.
+   */
+  config?: CreateBatchJobConfig;
+}
+
+/** Config for batches.create return value. */
+export declare interface BatchJob {
+  /** The resource name of the BatchJob. Output only.".
+   */
+  name?: string;
+  /** The display name of the BatchJob.
+   */
+  displayName?: string;
+  /** The state of the BatchJob.
+   */
+  state?: JobState;
+  /** Output only. Only populated when the job's state is JOB_STATE_FAILED or JOB_STATE_CANCELLED. */
+  error?: JobError;
+  /** The time when the BatchJob was created.
+   */
+  createTime?: string;
+  /** Output only. Time when the Job for the first time entered the `JOB_STATE_RUNNING` state. */
+  startTime?: string;
+  /** The time when the BatchJob was completed.
+   */
+  endTime?: string;
+  /** The time when the BatchJob was last updated.
+   */
+  updateTime?: string;
+  /** The name of the model that produces the predictions via the BatchJob.
+   */
+  model?: string;
+  /** Configuration for the input data.
+   */
+  src?: BatchJobSource;
+  /** Configuration for the output data.
+   */
+  dest?: BatchJobDestination;
+}
+
+/** Optional parameters. */
+export declare interface GetBatchJobConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
+}
+
+/** Config for batches.get parameters. */
+export declare interface GetBatchJobParameters {
+  /** A fully-qualified BatchJob resource name or ID.
+    Example: "projects/.../locations/.../batchPredictionJobs/456"
+    or "456" when project and location are initialized in the client.
+     */
+  name: string;
+  /** Optional parameters for the request. */
+  config?: GetBatchJobConfig;
+}
+
+/** Optional parameters. */
+export declare interface CancelBatchJobConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
+}
+
+/** Config for batches.cancel parameters. */
+export declare interface CancelBatchJobParameters {
+  /** A fully-qualified BatchJob resource name or ID.
+    Example: "projects/.../locations/.../batchPredictionJobs/456"
+    or "456" when project and location are initialized in the client.
+     */
+  name: string;
+  /** Optional parameters for the request. */
+  config?: CancelBatchJobConfig;
+}
+
+/** Config for optional parameters. */
+export declare interface ListBatchJobsConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
+  pageSize?: number;
+  pageToken?: string;
+  filter?: string;
+}
+
+/** Config for batches.list parameters. */
+export declare interface ListBatchJobsParameters {
+  config?: ListBatchJobsConfig;
+}
+
+/** Config for batches.list return value. */
+export class ListBatchJobsResponse {
+  nextPageToken?: string;
+  batchJobs?: BatchJob[];
+}
 
 export declare interface GetOperationConfig {
   /** Used to override HTTP request options. */
@@ -4782,7 +5028,8 @@ export declare interface LiveMusicSourceMetadata {
 
 /** Representation of an audio chunk. */
 export declare interface AudioChunk {
-  /** Raw byets of audio data. */
+  /** Raw bytes of audio data.
+   * @remarks Encoded as base64 string. */
   data?: string;
   /** MIME type of the audio chunk. */
   mimeType?: string;
@@ -4993,3 +5240,5 @@ export type ToolUnion = Tool | CallableTool;
 export type ToolListUnion = ToolUnion[];
 
 export type DownloadableFileUnion = string | File | GeneratedVideo | Video;
+
+export type BatchJobSourceUnion = BatchJobSource | InlinedRequest[] | string;

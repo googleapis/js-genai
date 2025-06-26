@@ -45,12 +45,17 @@ async function handleWebSocketMessage(
   event: MessageEvent,
 ): Promise<void> {
   const serverMessage: types.LiveServerMessage = new types.LiveServerMessage();
-  let data: types.LiveServerMessage;
+  let jsonData: string;
   if (event.data instanceof Blob) {
-    data = JSON.parse(await event.data.text()) as types.LiveServerMessage;
+    jsonData = await event.data.text();
+  } else if (event.data instanceof ArrayBuffer) {
+    jsonData = new TextDecoder().decode(event.data);
   } else {
-    data = JSON.parse(event.data) as types.LiveServerMessage;
+    jsonData = event.data;
   }
+
+  const data = JSON.parse(jsonData) as types.LiveServerMessage;
+
   if (apiClient.isVertexAI()) {
     const resp = converters.liveServerMessageFromVertex(data);
     Object.assign(serverMessage, resp);

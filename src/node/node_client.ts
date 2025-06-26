@@ -8,6 +8,7 @@ import {GoogleAuthOptions} from 'google-auth-library';
 
 import {ApiClient} from '../_api_client.js';
 import {getBaseUrl} from '../_base_url.js';
+import {Batches} from '../batches.js';
 import {Caches} from '../caches.js';
 import {Chats} from '../chats.js';
 import {GoogleGenAIOptions} from '../client.js';
@@ -75,6 +76,7 @@ export class GoogleGenAI {
   private readonly apiVersion?: string;
   readonly models: Models;
   readonly live: Live;
+  readonly batches: Batches;
   readonly chats: Chats;
   readonly caches: Caches;
   readonly files: Files;
@@ -168,6 +170,7 @@ export class GoogleGenAI {
     });
     this.models = new Models(this.apiClient);
     this.live = new Live(this.apiClient, auth, new NodeWebSocketFactory());
+    this.batches = new Batches(this.apiClient);
     this.chats = new Chats(this.models, this.apiClient);
     this.caches = new Caches(this.apiClient);
     this.files = new Files(this.apiClient);

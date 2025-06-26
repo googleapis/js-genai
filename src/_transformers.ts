@@ -1099,3 +1099,108 @@ function filterToJsonSchema(
 
   return filteredSchema;
 }
+
+// Transforms a source input into a BatchJobSource object with validation.
+export function tBatchJobSource(
+  apiClient: ApiClient,
+  src: string | types.InlinedRequest[] | types.BatchJobSource,
+): types.BatchJobSource {
+  if (typeof src !== 'string' && !Array.isArray(src)) {
+    if (apiClient && apiClient.isVertexAI()) {
+      if (src.gcsUri && src.bigqueryUri) {
+        throw new Error('Only one of `gcsUri` or `bigqueryUri` can be set.');
+      } else if (!src.gcsUri && !src.bigqueryUri) {
+        throw new Error('One of `gcsUri` or `bigqueryUri` must be set.');
+      }
+    } else {
+      // Logic for non-Vertex AI client (inlined_requests, file_name)
+      if (src.inlinedRequests && src.fileName) {
+        throw new Error(
+          'Only one of `inlinedRequests` or `fileName` can be set.',
+        );
+      } else if (!src.inlinedRequests && !src.fileName) {
+        throw new Error('One of `inlinedRequests` or `fileName` must be set.');
+      }
+    }
+    return src;
+  }
+  // If src is an array (list in Python)
+  else if (Array.isArray(src)) {
+    return {inlinedRequests: src};
+  } else if (typeof src === 'string') {
+    if (src.startsWith('gs://')) {
+      return {
+        format: 'jsonl',
+        gcsUri: [src], // GCS URI is expected as an array
+      };
+    } else if (src.startsWith('bq://')) {
+      return {
+        format: 'bigquery',
+        bigqueryUri: src,
+      };
+    } else if (src.startsWith('files/')) {
+      return {
+        fileName: src,
+      };
+    }
+  }
+  throw new Error(`Unsupported source: ${src}`);
+}
+
+export function tBatchJobDestination(dest: unknown): types.BatchJobDestination {
+  const destString = dest as string;
+  if (destString.startsWith('gs://')) {
+    return {
+      format: 'jsonl',
+      gcsUri: destString,
+    };
+  } else if (destString.startsWith('bq://')) {
+    return {
+      format: 'bigquery',
+      bigqueryUri: destString,
+    };
+  } else {
+    throw new Error(`Unsupported destination: ${destString}`);
+  }
+}
+
+export function tBatchJobName(apiClient: ApiClient, name: unknown): string {
+  const nameString = name as string;
+  if (!apiClient.isVertexAI()) {
+    const mldevPattern = /batches\/[^/]+$/;
+
+    if (mldevPattern.test(nameString)) {
+      return nameString.split('/').pop() as string;
+    } else {
+      throw new Error(`Invalid batch job name: ${nameString}.`);
+    }
+  }
+
+  const vertexPattern =
+    /^projects\/[^/]+\/locations\/[^/]+\/batchPredictionJobs\/[^/]+$/;
+
+  if (vertexPattern.test(nameString)) {
+    return nameString.split('/').pop() as string;
+  } else if (/^\d+$/.test(nameString)) {
+    return nameString;
+  } else {
+    throw new Error(`Invalid batch job name: ${nameString}.`);
+  }
+}
+
+export function tJobState(state: unknown): string {
+  const stateString = state as string;
+  if (stateString === 'BATCH_STATE_UNSPECIFIED') {
+    return 'JOB_STATE_UNSPECIFIED';
+  } else if (stateString === 'BATCH_STATE_PENDING') {
+    return 'JOB_STATE_PENDING';
+  } else if (stateString === 'BATCH_STATE_SUCCEEDED') {
+    return 'JOB_STATE_SUCCEEDED';
+  } else if (stateString === 'BATCH_STATE_FAILED') {
+    return 'JOB_STATE_FAILED';
+  } else if (stateString === 'BATCH_STATE_CANCELLED') {
+    return 'JOB_STATE_CANCELLED';
+  } else {
+    return stateString;
+  }
+}
