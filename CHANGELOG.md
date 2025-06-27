@@ -1,6 +1,13 @@
 # Changelog
 
 
+## [1.8.0](https://github.com/googleapis/js-genai/compare/v1.7.0...v1.8.0) (2025-06-27)
+
+
+### Features
+
+* Enable Vertex Multimodal Dataset as input to supervised fine-tuning. ([055b435](https://github.com/googleapis/js-genai/commit/055b435ab57f6beb46fc0d0da757b4a24ff05e2d))
+
 ## [1.7.0](https://github.com/googleapis/js-genai/compare/v1.6.0...v1.7.0) (2025-06-25)
 
 
