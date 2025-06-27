@@ -4791,7 +4791,6 @@ export function modelFromMldev(
 }
 
 export function listModelsResponseFromMldev(
-  apiClient: ApiClient,
   fromObject: types.ListModelsResponse,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -5737,7 +5736,6 @@ export function modelFromVertex(
 }
 
 export function listModelsResponseFromVertex(
-  apiClient: ApiClient,
   fromObject: types.ListModelsResponse,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
