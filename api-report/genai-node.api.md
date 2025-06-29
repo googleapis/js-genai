@@ -34,6 +34,17 @@ export enum AdapterSize {
 }
 
 // @public
+export interface ApiAuth {
+    apiKeyConfig?: ApiAuthApiKeyConfig;
+}
+
+// @public
+export interface ApiAuthApiKeyConfig {
+    apiKeySecretVersion?: string;
+    apiKeyString?: string;
+}
+
+// @public
 export class ApiError extends Error {
     constructor(options: ApiErrorInfo);
     status: number;
@@ -48,6 +59,13 @@ export interface ApiErrorInfo {
 // @public
 export interface ApiKeyConfig {
     apiKeyString?: string;
+}
+
+// @public
+export enum ApiSpec {
+    API_SPEC_UNSPECIFIED = "API_SPEC_UNSPECIFIED",
+    ELASTIC_SEARCH = "ELASTIC_SEARCH",
+    SIMPLE_SEARCH = "SIMPLE_SEARCH"
 }
 
 // @public
@@ -205,6 +223,7 @@ export type BlobImageUnion = Blob_2;
 export enum BlockedReason {
     BLOCKED_REASON_UNSPECIFIED = "BLOCKED_REASON_UNSPECIFIED",
     BLOCKLIST = "BLOCKLIST",
+    IMAGE_SAFETY = "IMAGE_SAFETY",
     OTHER = "OTHER",
     PROHIBITED_CONTENT = "PROHIBITED_CONTENT",
     SAFETY = "SAFETY"
@@ -780,9 +799,36 @@ export interface EnterpriseWebSearch {
 }
 
 // @public
+export enum Environment {
+    ENVIRONMENT_BROWSER = "ENVIRONMENT_BROWSER",
+    ENVIRONMENT_UNSPECIFIED = "ENVIRONMENT_UNSPECIFIED"
+}
+
+// @public
 export interface ExecutableCode {
     code?: string;
     language?: Language;
+}
+
+// @public
+export interface ExternalApi {
+    apiAuth?: ApiAuth;
+    apiSpec?: ApiSpec;
+    authConfig?: AuthConfig;
+    elasticSearchParams?: ExternalApiElasticSearchParams;
+    endpoint?: string;
+    simpleSearchParams?: ExternalApiSimpleSearchParams;
+}
+
+// @public
+export interface ExternalApiElasticSearchParams {
+    index?: string;
+    numHits?: number;
+    searchTemplate?: string;
+}
+
+// @public
+export interface ExternalApiSimpleSearchParams {
 }
 
 // @public
@@ -1117,6 +1163,7 @@ export class GenerateVideosResponse {
 export interface GenerationConfig {
     audioTimestamp?: boolean;
     candidateCount?: number;
+    enableAffectiveDialog?: boolean;
     frequencyPenalty?: number;
     logprobs?: number;
     maxOutputTokens?: number;
@@ -1364,6 +1411,10 @@ export enum HarmCategory {
     HARM_CATEGORY_DANGEROUS_CONTENT = "HARM_CATEGORY_DANGEROUS_CONTENT",
     HARM_CATEGORY_HARASSMENT = "HARM_CATEGORY_HARASSMENT",
     HARM_CATEGORY_HATE_SPEECH = "HARM_CATEGORY_HATE_SPEECH",
+    HARM_CATEGORY_IMAGE_DANGEROUS_CONTENT = "HARM_CATEGORY_IMAGE_DANGEROUS_CONTENT",
+    HARM_CATEGORY_IMAGE_HARASSMENT = "HARM_CATEGORY_IMAGE_HARASSMENT",
+    HARM_CATEGORY_IMAGE_HATE = "HARM_CATEGORY_IMAGE_HATE",
+    HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT = "HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT",
     HARM_CATEGORY_SEXUALLY_EXPLICIT = "HARM_CATEGORY_SEXUALLY_EXPLICIT",
     HARM_CATEGORY_UNSPECIFIED = "HARM_CATEGORY_UNSPECIFIED"
 }
@@ -2234,6 +2285,7 @@ export class ReplayResponse {
 // @public
 export interface Retrieval {
     disableAttribution?: boolean;
+    externalApi?: ExternalApi;
     vertexAiSearch?: VertexAISearch;
     vertexRagStore?: VertexRagStore;
 }
@@ -2272,6 +2324,7 @@ export enum SafetyFilterLevel {
 export interface SafetyRating {
     blocked?: boolean;
     category?: HarmCategory;
+    overwrittenThreshold?: HarmBlockThreshold;
     probability?: HarmProbability;
     probabilityScore?: number;
     severity?: HarmSeverity;
@@ -2538,6 +2591,7 @@ export interface TokensInfo {
 // @public
 export interface Tool {
     codeExecution?: ToolCodeExecution;
+    computerUse?: ToolComputerUse;
     enterpriseWebSearch?: EnterpriseWebSearch;
     functionDeclarations?: FunctionDeclaration[];
     googleMaps?: GoogleMaps;
@@ -2549,6 +2603,11 @@ export interface Tool {
 
 // @public
 export interface ToolCodeExecution {
+}
+
+// @public
+export interface ToolComputerUse {
+    environment?: Environment;
 }
 
 // @public
@@ -2602,6 +2661,7 @@ export interface TunedModelInfo {
 export interface TuningDataset {
     examples?: TuningExample[];
     gcsUri?: string;
+    vertexDatasetResource?: string;
 }
 
 // @public
@@ -2630,6 +2690,8 @@ export interface TuningJob {
     name?: string;
     partnerModelTuningSpec?: PartnerModelTuningSpec;
     pipelineJob?: string;
+    satisfiesPzi?: boolean;
+    satisfiesPzs?: boolean;
     serviceAccount?: string;
     startTime?: string;
     state?: JobState;
@@ -2643,6 +2705,7 @@ export interface TuningJob {
 // @public (undocumented)
 export interface TuningValidationDataset {
     gcsUri?: string;
+    vertexDatasetResource?: string;
 }
 
 // @public
