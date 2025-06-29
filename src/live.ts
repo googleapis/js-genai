@@ -106,7 +106,7 @@ export class Live {
      if (GOOGLE_GENAI_USE_VERTEXAI) {
        model = 'gemini-2.0-flash-live-preview-04-09';
      } else {
-       model = 'gemini-2.0-flash-live-001';
+       model = 'gemini-live-2.5-flash-preview';
      }
      const session = await ai.live.connect({
        model: model,
@@ -498,7 +498,7 @@ export class Session {
      if (GOOGLE_GENAI_USE_VERTEXAI) {
        model = 'gemini-2.0-flash-live-preview-04-09';
      } else {
-       model = 'gemini-2.0-flash-live-001';
+       model = 'gemini-live-2.5-flash-preview';
      }
      const session = await ai.live.connect({
        model: model,

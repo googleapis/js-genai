@@ -52,7 +52,7 @@ async function main() {
       vertexai: false,
       apiKey: GOOGLE_API_KEY,
     };
-    model = 'gemini-2.0-flash-live-001';
+    model = 'gemini-live-2.5-flash-preview';
   }
   const ai = new GoogleGenAI(options);
   const session = await ai.live.connect({
