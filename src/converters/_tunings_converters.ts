@@ -608,6 +608,16 @@ export function tuningJobFromMldev(
     common.setValueByPath(toObject, ['pipelineJob'], fromPipelineJob);
   }
 
+  const fromSatisfiesPzi = common.getValueByPath(fromObject, ['satisfiesPzi']);
+  if (fromSatisfiesPzi != null) {
+    common.setValueByPath(toObject, ['satisfiesPzi'], fromSatisfiesPzi);
+  }
+
+  const fromSatisfiesPzs = common.getValueByPath(fromObject, ['satisfiesPzs']);
+  if (fromSatisfiesPzs != null) {
+    common.setValueByPath(toObject, ['satisfiesPzs'], fromSatisfiesPzs);
+  }
+
   const fromServiceAccount = common.getValueByPath(fromObject, [
     'serviceAccount',
   ]);
@@ -855,6 +865,16 @@ export function tuningJobFromVertex(
   const fromPipelineJob = common.getValueByPath(fromObject, ['pipelineJob']);
   if (fromPipelineJob != null) {
     common.setValueByPath(toObject, ['pipelineJob'], fromPipelineJob);
+  }
+
+  const fromSatisfiesPzi = common.getValueByPath(fromObject, ['satisfiesPzi']);
+  if (fromSatisfiesPzi != null) {
+    common.setValueByPath(toObject, ['satisfiesPzi'], fromSatisfiesPzi);
+  }
+
+  const fromSatisfiesPzs = common.getValueByPath(fromObject, ['satisfiesPzs']);
+  if (fromSatisfiesPzs != null) {
+    common.setValueByPath(toObject, ['satisfiesPzs'], fromSatisfiesPzs);
   }
 
   const fromServiceAccount = common.getValueByPath(fromObject, [
