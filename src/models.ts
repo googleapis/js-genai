@@ -1068,10 +1068,7 @@ export class Models extends BaseModule {
         }) as Promise<types.ListModelsResponse>;
 
       return response.then((apiResponse) => {
-        const resp = converters.listModelsResponseFromVertex(
-          this.apiClient,
-          apiResponse,
-        );
+        const resp = converters.listModelsResponseFromVertex(apiResponse);
         const typedResp = new types.ListModelsResponse();
         Object.assign(typedResp, resp);
         return typedResp;
@@ -1104,10 +1101,7 @@ export class Models extends BaseModule {
         }) as Promise<types.ListModelsResponse>;
 
       return response.then((apiResponse) => {
-        const resp = converters.listModelsResponseFromMldev(
-          this.apiClient,
-          apiResponse,
-        );
+        const resp = converters.listModelsResponseFromMldev(apiResponse);
         const typedResp = new types.ListModelsResponse();
         Object.assign(typedResp, resp);
         return typedResp;
