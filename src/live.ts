@@ -157,6 +157,11 @@ export class Live {
         console.warn(
           'Warning: Ephemeral token support is experimental and may change in future versions.',
         );
+        if (apiVersion !== 'v1alpha') {
+          console.warn(
+            "Warning: The SDK's ephemeral token support is in v1alpha only. Please use const ai = new GoogleGenAI({apiKey: token.name, httpOptions: { apiVersion: 'v1alpha' }}); before session connection.",
+          );
+        }
         method = 'BidiGenerateContentConstrained';
         keyName = 'access_token';
       }
