@@ -4497,6 +4497,13 @@ export function generateContentResponseFromMldev(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
+  const fromSdkHttpResponse = common.getValueByPath(fromObject, [
+    'sdkHttpResponse',
+  ]);
+  if (fromSdkHttpResponse != null) {
+    common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
+  }
+
   const fromCandidates = common.getValueByPath(fromObject, ['candidates']);
   if (fromCandidates != null) {
     let transformedList = fromCandidates;
@@ -5291,6 +5298,13 @@ export function generateContentResponseFromVertex(
   fromObject: types.GenerateContentResponse,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
+
+  const fromSdkHttpResponse = common.getValueByPath(fromObject, [
+    'sdkHttpResponse',
+  ]);
+  if (fromSdkHttpResponse != null) {
+    common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
+  }
 
   const fromCandidates = common.getValueByPath(fromObject, ['candidates']);
   if (fromCandidates != null) {
