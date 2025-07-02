@@ -141,6 +141,8 @@ export interface HttpRequest {
 export class ApiClient {
   readonly clientOptions: ApiClientInitOptions;
 
+  private timeoutHandle: ReturnType<typeof setTimeout> | undefined;
+
   constructor(opts: ApiClientInitOptions) {
     this.clientOptions = {
       ...opts,
@@ -445,8 +447,9 @@ export class ApiClient {
     if ((httpOptions && httpOptions.timeout) || abortSignal) {
       const abortController = new AbortController();
       const signal = abortController.signal;
-      if (httpOptions.timeout && httpOptions?.timeout > 0) {
-        setTimeout(() => abortController.abort(), httpOptions.timeout);
+      const timeout = httpOptions?.timeout;
+      if (timeout && timeout > 0) {
+        this.timeoutHandle = setTimeout(() => abortController.abort(), timeout);
       }
       if (abortSignal) {
         abortSignal.addEventListener('abort', () => {
@@ -584,9 +587,16 @@ export class ApiClient {
     url: string,
     requestInit: RequestInit,
   ): Promise<Response> {
-    return fetch(url, requestInit).catch((e) => {
-      throw new Error(`exception ${e} sending request`);
-    });
+    return fetch(url, requestInit)
+      .catch((e) => {
+        throw new Error(`exception ${e} sending request`);
+      })
+      .finally(() => {
+        if (this.timeoutHandle) {
+          clearTimeout(this.timeoutHandle);
+          this.timeoutHandle = undefined;
+        }
+      });
   }
 
   getDefaultHeaders(): Record<string, string> {
