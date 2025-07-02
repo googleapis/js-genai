@@ -606,11 +606,38 @@ export enum PersonGeneration {
 
 /** Enum that specifies the language of the text in the prompt. */
 export enum ImagePromptLanguage {
+  /**
+   * Auto-detect the language.
+   */
   auto = 'auto',
+  /**
+   * English
+   */
   en = 'en',
+  /**
+   * Japanese
+   */
   ja = 'ja',
+  /**
+   * Korean
+   */
   ko = 'ko',
+  /**
+   * Hindi
+   */
   hi = 'hi',
+  /**
+   * Chinese
+   */
+  zh = 'zh',
+  /**
+   * Portuguese
+   */
+  pt = 'pt',
+  /**
+   * Spanish
+   */
+  es = 'es',
 }
 
 /** Enum representing the mask mode of a mask reference image. */
