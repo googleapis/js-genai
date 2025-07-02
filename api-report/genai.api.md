@@ -2094,14 +2094,6 @@ export interface MultiSpeakerVoiceConfig {
 }
 
 // @public
-export interface Operation {
-    done?: boolean;
-    error?: Record<string, unknown>;
-    metadata?: Record<string, unknown>;
-    name?: string;
-}
-
-// @public
 export interface OperationGetParameters {
     config?: GetOperationConfig;
     operation: GenerateVideosOperation;
