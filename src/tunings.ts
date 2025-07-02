@@ -30,7 +30,11 @@ export class Tunings extends BaseModule {
   get = async (
     params: types.GetTuningJobParameters,
   ): Promise<types.TuningJob> => {
-    return await this.getInternal(params);
+    if (this.apiClient.isVertexAI()) {
+      return await this.getInternal(params);
+    } else {
+      throw new Error('todo err msg');
+    }
   };
 
   /**
@@ -45,12 +49,16 @@ export class Tunings extends BaseModule {
   list = async (
     params: types.ListTuningJobsParameters = {},
   ): Promise<Pager<types.TuningJob>> => {
-    return new Pager<types.TuningJob>(
-      PagedItem.PAGED_ITEM_TUNING_JOBS,
-      (x: types.ListTuningJobsParameters) => this.listInternal(x),
-      await this.listInternal(params),
-      params,
-    );
+    if (this.apiClient.isVertexAI()) {
+      return new Pager<types.TuningJob>(
+        PagedItem.PAGED_ITEM_TUNING_JOBS,
+        (x: types.ListTuningJobsParameters) => this.listInternal(x),
+        await this.listInternal(params),
+        params,
+      );
+    } else {
+      throw new Error('todo err msg');
+    }
   };
 
   /**
@@ -68,25 +76,7 @@ export class Tunings extends BaseModule {
     if (this.apiClient.isVertexAI()) {
       return await this.tuneInternal(params);
     } else {
-      const operation = await this.tuneMldevInternal(params);
-      let tunedModelName = '';
-      if (
-        operation['metadata'] !== undefined &&
-        operation['metadata']['tunedModel'] !== undefined
-      ) {
-        tunedModelName = operation['metadata']['tunedModel'] as string;
-      } else if (
-        operation['name'] !== undefined &&
-        operation['name'].includes('/operations/')
-      ) {
-        tunedModelName = operation['name'].split('/operations/')[0];
-      }
-      const tuningJob: types.TuningJob = {
-        name: tunedModelName,
-        state: types.JobState.JOB_STATE_QUEUED,
-      };
-
-      return tuningJob;
+      throw new Error('todo err msg');
     }
   };
 
@@ -127,34 +117,7 @@ export class Tunings extends BaseModule {
         return resp as types.TuningJob;
       });
     } else {
-      const body = converters.getTuningJobParametersToMldev(params);
-      path = common.formatMap(
-        '{name}',
-        body['_url'] as Record<string, unknown>,
-      );
-      queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
-      delete body['_url'];
-      delete body['_query'];
-
-      response = this.apiClient
-        .request({
-          path: path,
-          queryParams: queryParams,
-          body: JSON.stringify(body),
-          httpMethod: 'GET',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
-        })
-        .then((httpResponse) => {
-          return httpResponse.json();
-        }) as Promise<types.TuningJob>;
-
-      return response.then((apiResponse) => {
-        const resp = converters.tuningJobFromMldev(apiResponse);
-
-        return resp as types.TuningJob;
-      });
+      throw new Error('This method is only supported by the Vertex AI.');
     }
   }
 
@@ -196,35 +159,7 @@ export class Tunings extends BaseModule {
         return typedResp;
       });
     } else {
-      const body = converters.listTuningJobsParametersToMldev(params);
-      path = common.formatMap(
-        'tunedModels',
-        body['_url'] as Record<string, unknown>,
-      );
-      queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
-      delete body['_url'];
-      delete body['_query'];
-
-      response = this.apiClient
-        .request({
-          path: path,
-          queryParams: queryParams,
-          body: JSON.stringify(body),
-          httpMethod: 'GET',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
-        })
-        .then((httpResponse) => {
-          return httpResponse.json();
-        }) as Promise<types.ListTuningJobsResponse>;
-
-      return response.then((apiResponse) => {
-        const resp = converters.listTuningJobsResponseFromMldev(apiResponse);
-        const typedResp = new types.ListTuningJobsResponse();
-        Object.assign(typedResp, resp);
-        return typedResp;
-      });
+      throw new Error('This method is only supported by the Vertex AI.');
     }
   }
 
@@ -266,49 +201,6 @@ export class Tunings extends BaseModule {
       });
     } else {
       throw new Error('This method is only supported by the Vertex AI.');
-    }
-  }
-
-  private async tuneMldevInternal(
-    params: types.CreateTuningJobParameters,
-  ): Promise<types.Operation> {
-    let response: Promise<types.Operation>;
-
-    let path: string = '';
-    let queryParams: Record<string, string> = {};
-    if (this.apiClient.isVertexAI()) {
-      throw new Error(
-        'This method is only supported by the Gemini Developer API.',
-      );
-    } else {
-      const body = converters.createTuningJobParametersToMldev(params);
-      path = common.formatMap(
-        'tunedModels',
-        body['_url'] as Record<string, unknown>,
-      );
-      queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
-      delete body['_url'];
-      delete body['_query'];
-
-      response = this.apiClient
-        .request({
-          path: path,
-          queryParams: queryParams,
-          body: JSON.stringify(body),
-          httpMethod: 'POST',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
-        })
-        .then((httpResponse) => {
-          return httpResponse.json();
-        }) as Promise<types.Operation>;
-
-      return response.then((apiResponse) => {
-        const resp = converters.operationFromMldev(apiResponse);
-
-        return resp as types.Operation;
-      });
     }
   }
 }
