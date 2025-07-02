@@ -660,10 +660,10 @@ export function processJsonSchema(
         // beginning of this function.
         continue;
       }
-      genAISchema['type'] = Object.values(types.Type).includes(
+      genAISchema['type'] = fieldValue && typeof fieldValue === 'string' && Object.values(types.Type).includes(
         fieldValue.toUpperCase() as types.Type,
       )
-        ? fieldValue.toUpperCase()
+        ? (fieldValue.toUpperCase() as types.Type)
         : types.Type.TYPE_UNSPECIFIED;
     } else if (schemaFieldNames.includes(fieldName)) {
       (genAISchema as Record<string, unknown>)[fieldName] =
@@ -1084,7 +1084,9 @@ function filterToJsonSchema(
     } else if (dictSchemaFieldNames.has(fieldName)) {
       filteredSchema[fieldName] = filterDictSchemaField(fieldValue);
     } else if (fieldName === 'type') {
-      const typeValue = (fieldValue as string).toUpperCase();
+      const typeValue = fieldValue && typeof fieldValue === 'string' 
+        ? fieldValue.toUpperCase() 
+        : '';
       filteredSchema[fieldName] = Object.values(types.Type).includes(
         typeValue as types.Type,
       )
