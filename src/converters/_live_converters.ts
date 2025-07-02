@@ -1063,6 +1063,11 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
     common.setValueByPath(toObject, ['codeExecution'], fromCodeExecution);
   }
 
+  const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
+  if (fromComputerUse != null) {
+    common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
+  }
+
   return toObject;
 }
 
@@ -1137,6 +1142,11 @@ export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
   ]);
   if (fromCodeExecution != null) {
     common.setValueByPath(toObject, ['codeExecution'], fromCodeExecution);
+  }
+
+  const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
+  if (fromComputerUse != null) {
+    common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
   }
 
   return toObject;
@@ -1990,8 +2000,9 @@ export function liveSendRealtimeInputParametersToVertex(
     common.setValueByPath(toObject, ['mediaChunks'], t.tBlobs(fromMedia));
   }
 
-  if (common.getValueByPath(fromObject, ['audio']) !== undefined) {
-    throw new Error('audio parameter is not supported in Vertex AI.');
+  const fromAudio = common.getValueByPath(fromObject, ['audio']);
+  if (fromAudio != null) {
+    common.setValueByPath(toObject, ['audio'], t.tAudioBlob(fromAudio));
   }
 
   const fromAudioStreamEnd = common.getValueByPath(fromObject, [
@@ -2001,12 +2012,14 @@ export function liveSendRealtimeInputParametersToVertex(
     common.setValueByPath(toObject, ['audioStreamEnd'], fromAudioStreamEnd);
   }
 
-  if (common.getValueByPath(fromObject, ['video']) !== undefined) {
-    throw new Error('video parameter is not supported in Vertex AI.');
+  const fromVideo = common.getValueByPath(fromObject, ['video']);
+  if (fromVideo != null) {
+    common.setValueByPath(toObject, ['video'], t.tImageBlob(fromVideo));
   }
 
-  if (common.getValueByPath(fromObject, ['text']) !== undefined) {
-    throw new Error('text parameter is not supported in Vertex AI.');
+  const fromText = common.getValueByPath(fromObject, ['text']);
+  if (fromText != null) {
+    common.setValueByPath(toObject, ['text'], fromText);
   }
 
   const fromActivityStart = common.getValueByPath(fromObject, [
@@ -2341,20 +2354,23 @@ export function liveClientRealtimeInputToVertex(
     common.setValueByPath(toObject, ['mediaChunks'], fromMediaChunks);
   }
 
-  if (common.getValueByPath(fromObject, ['audio']) !== undefined) {
-    throw new Error('audio parameter is not supported in Vertex AI.');
+  const fromAudio = common.getValueByPath(fromObject, ['audio']);
+  if (fromAudio != null) {
+    common.setValueByPath(toObject, ['audio'], fromAudio);
   }
 
   if (common.getValueByPath(fromObject, ['audioStreamEnd']) !== undefined) {
     throw new Error('audioStreamEnd parameter is not supported in Vertex AI.');
   }
 
-  if (common.getValueByPath(fromObject, ['video']) !== undefined) {
-    throw new Error('video parameter is not supported in Vertex AI.');
+  const fromVideo = common.getValueByPath(fromObject, ['video']);
+  if (fromVideo != null) {
+    common.setValueByPath(toObject, ['video'], fromVideo);
   }
 
-  if (common.getValueByPath(fromObject, ['text']) !== undefined) {
-    throw new Error('text parameter is not supported in Vertex AI.');
+  const fromText = common.getValueByPath(fromObject, ['text']);
+  if (fromText != null) {
+    common.setValueByPath(toObject, ['text'], fromText);
   }
 
   const fromActivityStart = common.getValueByPath(fromObject, [
@@ -2967,8 +2983,15 @@ export function liveServerSetupCompleteFromMldev(): Record<string, unknown> {
   return toObject;
 }
 
-export function liveServerSetupCompleteFromVertex(): Record<string, unknown> {
+export function liveServerSetupCompleteFromVertex(
+  fromObject: types.LiveServerSetupComplete,
+): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
+
+  const fromSessionId = common.getValueByPath(fromObject, ['sessionId']);
+  if (fromSessionId != null) {
+    common.setValueByPath(toObject, ['sessionId'], fromSessionId);
+  }
 
   return toObject;
 }
@@ -4159,7 +4182,7 @@ export function liveServerMessageFromVertex(
     common.setValueByPath(
       toObject,
       ['setupComplete'],
-      liveServerSetupCompleteFromVertex(),
+      liveServerSetupCompleteFromVertex(fromSetupComplete),
     );
   }
 

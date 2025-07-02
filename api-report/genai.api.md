@@ -34,6 +34,17 @@ export enum AdapterSize {
 }
 
 // @public
+export interface ApiAuth {
+    apiKeyConfig?: ApiAuthApiKeyConfig;
+}
+
+// @public
+export interface ApiAuthApiKeyConfig {
+    apiKeySecretVersion?: string;
+    apiKeyString?: string;
+}
+
+// @public
 export class ApiError extends Error {
     constructor(options: ApiErrorInfo);
     status: number;
@@ -48,6 +59,13 @@ export interface ApiErrorInfo {
 // @public
 export interface ApiKeyConfig {
     apiKeyString?: string;
+}
+
+// @public
+export enum ApiSpec {
+    API_SPEC_UNSPECIFIED = "API_SPEC_UNSPECIFIED",
+    ELASTIC_SEARCH = "ELASTIC_SEARCH",
+    SIMPLE_SEARCH = "SIMPLE_SEARCH"
 }
 
 // @public
@@ -134,6 +152,56 @@ export interface BaseUrlParameters {
     vertexUrl?: string;
 }
 
+// Warning: (ae-forgotten-export) The symbol "BaseModule" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export class Batches extends BaseModule {
+    // Warning: (ae-forgotten-export) The symbol "ApiClient" needs to be exported by the entry point index.d.ts
+    constructor(apiClient: ApiClient);
+    cancel(params: types.CancelBatchJobParameters): Promise<void>;
+    // Warning: (ae-forgotten-export) The symbol "types" needs to be exported by the entry point index.d.ts
+    create: (params: types.CreateBatchJobParameters) => Promise<types.BatchJob>;
+    delete(params: types.DeleteBatchJobParameters): Promise<types.DeleteResourceJob>;
+    get(params: types.GetBatchJobParameters): Promise<types.BatchJob>;
+    list: (params?: types.ListBatchJobsParameters) => Promise<Pager<types.BatchJob>>;
+}
+
+// @public
+export interface BatchJob {
+    createTime?: string;
+    dest?: BatchJobDestination;
+    displayName?: string;
+    endTime?: string;
+    error?: JobError;
+    model?: string;
+    name?: string;
+    src?: BatchJobSource;
+    startTime?: string;
+    state?: JobState;
+    updateTime?: string;
+}
+
+// @public
+export interface BatchJobDestination {
+    bigqueryUri?: string;
+    fileName?: string;
+    format?: string;
+    gcsUri?: string;
+    inlinedResponses?: InlinedResponse[];
+}
+
+// @public
+export interface BatchJobSource {
+    bigqueryUri?: string;
+    fileName?: string;
+    format?: string;
+    gcsUri?: string[];
+    inlinedRequests?: InlinedRequest[];
+}
+
+// @public (undocumented)
+export type BatchJobSourceUnion = BatchJobSource | InlinedRequest[] | string;
+
 // @public
 export enum Behavior {
     BLOCKING = "BLOCKING",
@@ -156,6 +224,7 @@ export type BlobImageUnion = Blob_2;
 export enum BlockedReason {
     BLOCKED_REASON_UNSPECIFIED = "BLOCKED_REASON_UNSPECIFIED",
     BLOCKLIST = "BLOCKLIST",
+    IMAGE_SAFETY = "IMAGE_SAFETY",
     OTHER = "OTHER",
     PROHIBITED_CONTENT = "PROHIBITED_CONTENT",
     SAFETY = "SAFETY"
@@ -181,16 +250,12 @@ export interface CachedContentUsageMetadata {
     videoDurationSeconds?: number;
 }
 
-// Warning: (ae-forgotten-export) The symbol "BaseModule" needs to be exported by the entry point index.d.ts
-//
 // @public (undocumented)
 export class Caches extends BaseModule {
-    // Warning: (ae-forgotten-export) The symbol "ApiClient" needs to be exported by the entry point index.d.ts
     constructor(apiClient: ApiClient);
     create(params: types.CreateCachedContentParameters): Promise<types.CachedContent>;
     delete(params: types.DeleteCachedContentParameters): Promise<types.DeleteCachedContentResponse>;
     get(params: types.GetCachedContentParameters): Promise<types.CachedContent>;
-    // Warning: (ae-forgotten-export) The symbol "types" needs to be exported by the entry point index.d.ts
     list: (params?: types.ListCachedContentsParameters) => Promise<Pager<types.CachedContent>>;
     update(params: types.UpdateCachedContentParameters): Promise<types.CachedContent>;
 }
@@ -205,6 +270,18 @@ export interface CallableTool {
 export interface CallableToolConfig {
     behavior?: Behavior;
     timeout?: number;
+}
+
+// @public
+export interface CancelBatchJobConfig {
+    abortSignal?: AbortSignal;
+    httpOptions?: HttpOptions;
+}
+
+// @public
+export interface CancelBatchJobParameters {
+    config?: CancelBatchJobConfig;
+    name: string;
 }
 
 // @public
@@ -379,6 +456,21 @@ export interface CreateAuthTokenParameters {
 }
 
 // @public
+export interface CreateBatchJobConfig {
+    abortSignal?: AbortSignal;
+    dest?: string;
+    displayName?: string;
+    httpOptions?: HttpOptions;
+}
+
+// @public
+export interface CreateBatchJobParameters {
+    config?: CreateBatchJobConfig;
+    model?: string;
+    src: BatchJobSourceUnion;
+}
+
+// @public
 export interface CreateCachedContentConfig {
     abortSignal?: AbortSignal;
     contents?: ContentListUnion;
@@ -503,6 +595,18 @@ export interface DatasetStats {
 }
 
 // @public
+export interface DeleteBatchJobConfig {
+    abortSignal?: AbortSignal;
+    httpOptions?: HttpOptions;
+}
+
+// @public
+export interface DeleteBatchJobParameters {
+    config?: DeleteBatchJobConfig;
+    name: string;
+}
+
+// @public
 export interface DeleteCachedContentConfig {
     abortSignal?: AbortSignal;
     httpOptions?: HttpOptions;
@@ -549,6 +653,16 @@ export interface DeleteModelParameters {
 
 // @public (undocumented)
 export class DeleteModelResponse {
+}
+
+// @public
+export interface DeleteResourceJob {
+    // (undocumented)
+    done?: boolean;
+    // (undocumented)
+    error?: JobError;
+    // (undocumented)
+    name?: string;
 }
 
 // @public
@@ -708,9 +822,36 @@ export interface EnterpriseWebSearch {
 }
 
 // @public
+export enum Environment {
+    ENVIRONMENT_BROWSER = "ENVIRONMENT_BROWSER",
+    ENVIRONMENT_UNSPECIFIED = "ENVIRONMENT_UNSPECIFIED"
+}
+
+// @public
 export interface ExecutableCode {
     code?: string;
     language?: Language;
+}
+
+// @public
+export interface ExternalApi {
+    apiAuth?: ApiAuth;
+    apiSpec?: ApiSpec;
+    authConfig?: AuthConfig;
+    elasticSearchParams?: ExternalApiElasticSearchParams;
+    endpoint?: string;
+    simpleSearchParams?: ExternalApiSimpleSearchParams;
+}
+
+// @public
+export interface ExternalApiElasticSearchParams {
+    index?: string;
+    numHits?: number;
+    searchTemplate?: string;
+}
+
+// @public
+export interface ExternalApiSimpleSearchParams {
 }
 
 // @public
@@ -885,6 +1026,7 @@ export interface GenerateContentConfig {
     mediaResolution?: MediaResolution;
     modelSelectionConfig?: ModelSelectionConfig;
     presencePenalty?: number;
+    responseJsonSchema?: unknown;
     responseLogprobs?: boolean;
     responseMimeType?: string;
     responseModalities?: string[];
@@ -999,6 +1141,7 @@ export class GenerateImagesResponse {
 export interface GenerateVideosConfig {
     abortSignal?: AbortSignal;
     aspectRatio?: string;
+    compressionQuality?: VideoCompressionQuality;
     durationSeconds?: number;
     enhancePrompt?: boolean;
     fps?: number;
@@ -1043,6 +1186,7 @@ export class GenerateVideosResponse {
 export interface GenerationConfig {
     audioTimestamp?: boolean;
     candidateCount?: number;
+    enableAffectiveDialog?: boolean;
     frequencyPenalty?: number;
     logprobs?: number;
     maxOutputTokens?: number;
@@ -1084,6 +1228,18 @@ export interface GenerationConfigRoutingConfigManualRoutingMode {
 export interface GenerationConfigThinkingConfig {
     includeThoughts?: boolean;
     thinkingBudget?: number;
+}
+
+// @public
+export interface GetBatchJobConfig {
+    abortSignal?: AbortSignal;
+    httpOptions?: HttpOptions;
+}
+
+// @public
+export interface GetBatchJobParameters {
+    config?: GetBatchJobConfig;
+    name: string;
 }
 
 // @public
@@ -1155,6 +1311,8 @@ export class GoogleGenAI {
     protected readonly apiClient: ApiClient;
     // (undocumented)
     readonly authTokens: Tokens;
+    // (undocumented)
+    readonly batches: Batches;
     // (undocumented)
     readonly caches: Caches;
     // (undocumented)
@@ -1276,6 +1434,10 @@ export enum HarmCategory {
     HARM_CATEGORY_DANGEROUS_CONTENT = "HARM_CATEGORY_DANGEROUS_CONTENT",
     HARM_CATEGORY_HARASSMENT = "HARM_CATEGORY_HARASSMENT",
     HARM_CATEGORY_HATE_SPEECH = "HARM_CATEGORY_HATE_SPEECH",
+    HARM_CATEGORY_IMAGE_DANGEROUS_CONTENT = "HARM_CATEGORY_IMAGE_DANGEROUS_CONTENT",
+    HARM_CATEGORY_IMAGE_HARASSMENT = "HARM_CATEGORY_IMAGE_HARASSMENT",
+    HARM_CATEGORY_IMAGE_HATE = "HARM_CATEGORY_IMAGE_HATE",
+    HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT = "HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT",
     HARM_CATEGORY_SEXUALLY_EXPLICIT = "HARM_CATEGORY_SEXUALLY_EXPLICIT",
     HARM_CATEGORY_UNSPECIFIED = "HARM_CATEGORY_UNSPECIFIED"
 }
@@ -1339,9 +1501,29 @@ export enum ImagePromptLanguage {
 }
 
 // @public
+export interface InlinedRequest {
+    config?: GenerateContentConfig;
+    contents?: ContentListUnion;
+    model?: string;
+}
+
+// @public
+export class InlinedResponse {
+    error?: JobError;
+    response?: GenerateContentResponse;
+}
+
+// @public
 export interface Interval {
     endTime?: string;
     startTime?: string;
+}
+
+// @public
+export interface JobError {
+    code?: number;
+    details?: string[];
+    message?: string;
 }
 
 // @public
@@ -1370,6 +1552,32 @@ export enum Language {
 export interface LatLng {
     latitude?: number;
     longitude?: number;
+}
+
+// @public
+export interface ListBatchJobsConfig {
+    abortSignal?: AbortSignal;
+    // (undocumented)
+    filter?: string;
+    httpOptions?: HttpOptions;
+    // (undocumented)
+    pageSize?: number;
+    // (undocumented)
+    pageToken?: string;
+}
+
+// @public
+export interface ListBatchJobsParameters {
+    // (undocumented)
+    config?: ListBatchJobsConfig;
+}
+
+// @public
+export class ListBatchJobsResponse {
+    // (undocumented)
+    batchJobs?: BatchJob[];
+    // (undocumented)
+    nextPageToken?: string;
 }
 
 // @public
@@ -1738,6 +1946,7 @@ export interface LiveServerSessionResumptionUpdate {
 
 // @public (undocumented)
 export interface LiveServerSetupComplete {
+    sessionId?: string;
 }
 
 // @public
@@ -1976,11 +2185,8 @@ export type PartUnion = Part | string;
 
 // @public
 export enum PersonGeneration {
-    // (undocumented)
     ALLOW_ADULT = "ALLOW_ADULT",
-    // (undocumented)
     ALLOW_ALL = "ALLOW_ALL",
-    // (undocumented)
     DONT_ALLOW = "DONT_ALLOW"
 }
 
@@ -2103,6 +2309,7 @@ export class ReplayResponse {
 // @public
 export interface Retrieval {
     disableAttribution?: boolean;
+    externalApi?: ExternalApi;
     vertexAiSearch?: VertexAISearch;
     vertexRagStore?: VertexRagStore;
 }
@@ -2141,6 +2348,7 @@ export enum SafetyFilterLevel {
 export interface SafetyRating {
     blocked?: boolean;
     category?: HarmCategory;
+    overwrittenThreshold?: HarmBlockThreshold;
     probability?: HarmProbability;
     probabilityScore?: number;
     severity?: HarmSeverity;
@@ -2407,6 +2615,7 @@ export interface TokensInfo {
 // @public
 export interface Tool {
     codeExecution?: ToolCodeExecution;
+    computerUse?: ToolComputerUse;
     enterpriseWebSearch?: EnterpriseWebSearch;
     functionDeclarations?: FunctionDeclaration[];
     googleMaps?: GoogleMaps;
@@ -2418,6 +2627,11 @@ export interface Tool {
 
 // @public
 export interface ToolCodeExecution {
+}
+
+// @public
+export interface ToolComputerUse {
+    environment?: Environment;
 }
 
 // @public
@@ -2471,6 +2685,7 @@ export interface TunedModelInfo {
 export interface TuningDataset {
     examples?: TuningExample[];
     gcsUri?: string;
+    vertexDatasetResource?: string;
 }
 
 // @public
@@ -2499,6 +2714,8 @@ export interface TuningJob {
     name?: string;
     partnerModelTuningSpec?: PartnerModelTuningSpec;
     pipelineJob?: string;
+    satisfiesPzi?: boolean;
+    satisfiesPzs?: boolean;
     serviceAccount?: string;
     startTime?: string;
     state?: JobState;
@@ -2512,6 +2729,7 @@ export interface TuningJob {
 // @public (undocumented)
 export interface TuningValidationDataset {
     gcsUri?: string;
+    vertexDatasetResource?: string;
 }
 
 // @public
@@ -2585,7 +2803,9 @@ export interface UploadFileParameters {
 // @public
 export interface UpscaleImageConfig {
     abortSignal?: AbortSignal;
+    enhanceInputImage?: boolean;
     httpOptions?: HttpOptions;
+    imagePreservationFactor?: number;
     includeRaiReason?: boolean;
     outputCompressionQuality?: number;
     outputMimeType?: string;
@@ -2677,6 +2897,12 @@ export interface Video {
     mimeType?: string;
     uri?: string;
     videoBytes?: string;
+}
+
+// @public
+export enum VideoCompressionQuality {
+    LOSSLESS = "LOSSLESS",
+    OPTIMIZED = "OPTIMIZED"
 }
 
 // @public

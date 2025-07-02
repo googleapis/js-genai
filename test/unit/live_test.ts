@@ -5,6 +5,7 @@
  */
 
 import {ApiClient, SDK_VERSION} from '../../src/_api_client.js';
+import {WebSocketCallbacks} from '../../src/_websocket.js';
 import * as converters from '../../src/converters/_live_converters.js';
 import {CrossDownloader} from '../../src/cross/_cross_downloader.js';
 import {CrossUploader} from '../../src/cross/_cross_uploader.js';
@@ -227,6 +228,60 @@ describe('live', () => {
       '{"setup":{"model":"models/gemini-2.0-flash-live-001"}}',
     );
     expect(session).toBeDefined();
+  });
+
+  it('connect should handle ArrayBuffer message', async () => {
+    const apiClient = new ApiClient({
+      auth: new FakeAuth(),
+      apiKey: 'test-api-key',
+      uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
+    });
+    const websocketFactory = new FakeWebSocketFactory();
+    const live = new Live(apiClient, new FakeAuth(), websocketFactory);
+
+    let capturedCallbacks: WebSocketCallbacks | undefined;
+    const websocketFactorySpy = spyOn(websocketFactory, 'create').and.callFake(
+      (url, headers, callbacks) => {
+        capturedCallbacks = callbacks;
+        return new FakeWebSocket(url, headers, callbacks);
+      },
+    );
+
+    const onMessageSpy = jasmine.createSpy('onmessage');
+    await live.connect({
+      model: 'models/gemini-2.0-flash-live-001',
+      callbacks: {
+        onmessage: onMessageSpy,
+      },
+    });
+
+    // We expect the factory to have been called.
+    expect(websocketFactorySpy).toHaveBeenCalled();
+    if (!capturedCallbacks) {
+      throw new Error('WebSocket callbacks were not captured');
+    }
+
+    // The FakeWebSocket's send method calls onmessage, so we reset the spy
+    // to ignore the initial message exchange during connect().
+    onMessageSpy.calls.reset();
+
+    const testMessage = {setupComplete: {}};
+    const jsonString = JSON.stringify(testMessage);
+    const buffer = new TextEncoder().encode(jsonString);
+    const arrayBuffer = buffer.buffer;
+
+    // Manually trigger the onmessage with an ArrayBuffer using the captured callback
+    capturedCallbacks.onmessage({
+      data: arrayBuffer,
+    } as MessageEvent);
+
+    // Allow the async handleWebSocketMessage to complete
+    await new Promise(process.nextTick);
+
+    expect(onMessageSpy).toHaveBeenCalledTimes(1);
+    const receivedMessage = onMessageSpy.calls.argsFor(0)[0];
+    expect(receivedMessage.setupComplete).toBeDefined();
   });
 
   it('connect Gemini should fail with setup message using transparent', async () => {

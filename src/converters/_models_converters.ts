@@ -626,6 +626,11 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
     common.setValueByPath(toObject, ['codeExecution'], fromCodeExecution);
   }
 
+  const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
+  if (fromComputerUse != null) {
+    common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
+  }
+
   return toObject;
 }
 
@@ -949,6 +954,17 @@ export function generateContentConfigToMldev(
       toObject,
       ['responseSchema'],
       schemaToMldev(t.tSchema(fromResponseSchema)),
+    );
+  }
+
+  const fromResponseJsonSchema = common.getValueByPath(fromObject, [
+    'responseJsonSchema',
+  ]);
+  if (fromResponseJsonSchema != null) {
+    common.setValueByPath(
+      toObject,
+      ['responseJsonSchema'],
+      fromResponseJsonSchema,
     );
   }
 
@@ -1713,6 +1729,12 @@ export function generateVideosConfigToMldev(
     throw new Error('lastFrame parameter is not supported in Gemini API.');
   }
 
+  if (common.getValueByPath(fromObject, ['compressionQuality']) !== undefined) {
+    throw new Error(
+      'compressionQuality parameter is not supported in Gemini API.',
+    );
+  }
+
   return toObject;
 }
 
@@ -2399,6 +2421,11 @@ export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
     common.setValueByPath(toObject, ['codeExecution'], fromCodeExecution);
   }
 
+  const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
+  if (fromComputerUse != null) {
+    common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
+  }
+
   return toObject;
 }
 
@@ -2708,6 +2735,17 @@ export function generateContentConfigToVertex(
       toObject,
       ['responseSchema'],
       schemaToVertex(t.tSchema(fromResponseSchema)),
+    );
+  }
+
+  const fromResponseJsonSchema = common.getValueByPath(fromObject, [
+    'responseJsonSchema',
+  ]);
+  if (fromResponseJsonSchema != null) {
+    common.setValueByPath(
+      toObject,
+      ['responseJsonSchema'],
+      fromResponseJsonSchema,
     );
   }
 
@@ -3580,6 +3618,28 @@ export function upscaleImageAPIConfigInternalToVertex(
     );
   }
 
+  const fromEnhanceInputImage = common.getValueByPath(fromObject, [
+    'enhanceInputImage',
+  ]);
+  if (parentObject !== undefined && fromEnhanceInputImage != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'upscaleConfig', 'enhanceInputImage'],
+      fromEnhanceInputImage,
+    );
+  }
+
+  const fromImagePreservationFactor = common.getValueByPath(fromObject, [
+    'imagePreservationFactor',
+  ]);
+  if (parentObject !== undefined && fromImagePreservationFactor != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'upscaleConfig', 'imagePreservationFactor'],
+      fromImagePreservationFactor,
+    );
+  }
+
   const fromNumberOfImages = common.getValueByPath(fromObject, [
     'numberOfImages',
   ]);
@@ -4066,6 +4126,17 @@ export function generateVideosConfigToVertex(
       parentObject,
       ['instances[0]', 'lastFrame'],
       imageToVertex(fromLastFrame),
+    );
+  }
+
+  const fromCompressionQuality = common.getValueByPath(fromObject, [
+    'compressionQuality',
+  ]);
+  if (parentObject !== undefined && fromCompressionQuality != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'compressionQuality'],
+      fromCompressionQuality,
     );
   }
 
@@ -4720,7 +4791,6 @@ export function modelFromMldev(
 }
 
 export function listModelsResponseFromMldev(
-  apiClient: ApiClient,
   fromObject: types.ListModelsResponse,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -5666,7 +5736,6 @@ export function modelFromVertex(
 }
 
 export function listModelsResponseFromVertex(
-  apiClient: ApiClient,
   fromObject: types.ListModelsResponse,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};

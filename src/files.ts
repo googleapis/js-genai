@@ -129,6 +129,7 @@ export class Files extends BaseModule {
     params: types.ListFilesParameters,
   ): Promise<types.ListFilesResponse> {
     let response: Promise<types.ListFilesResponse>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -169,6 +170,7 @@ export class Files extends BaseModule {
     params: types.CreateFileParameters,
   ): Promise<types.CreateFileResponse> {
     let response: Promise<types.CreateFileResponse>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -225,6 +227,7 @@ export class Files extends BaseModule {
    */
   async get(params: types.GetFileParameters): Promise<types.File> {
     let response: Promise<types.File>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -280,6 +283,7 @@ export class Files extends BaseModule {
     params: types.DeleteFileParameters,
   ): Promise<types.DeleteFileResponse> {
     let response: Promise<types.DeleteFileResponse>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {

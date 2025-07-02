@@ -94,6 +94,7 @@ export class Tunings extends BaseModule {
     params: types.GetTuningJobParameters,
   ): Promise<types.TuningJob> {
     let response: Promise<types.TuningJob>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -161,6 +162,7 @@ export class Tunings extends BaseModule {
     params: types.ListTuningJobsParameters,
   ): Promise<types.ListTuningJobsResponse> {
     let response: Promise<types.ListTuningJobsResponse>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -230,6 +232,7 @@ export class Tunings extends BaseModule {
     params: types.CreateTuningJobParameters,
   ): Promise<types.TuningJob> {
     let response: Promise<types.TuningJob>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -270,6 +273,7 @@ export class Tunings extends BaseModule {
     params: types.CreateTuningJobParameters,
   ): Promise<types.Operation> {
     let response: Promise<types.Operation>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {

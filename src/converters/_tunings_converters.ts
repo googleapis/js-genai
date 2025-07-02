@@ -96,6 +96,14 @@ export function tuningDatasetToMldev(
     throw new Error('gcsUri parameter is not supported in Gemini API.');
   }
 
+  if (
+    common.getValueByPath(fromObject, ['vertexDatasetResource']) !== undefined
+  ) {
+    throw new Error(
+      'vertexDatasetResource parameter is not supported in Gemini API.',
+    );
+  }
+
   const fromExamples = common.getValueByPath(fromObject, ['examples']);
   if (fromExamples != null) {
     let transformedList = fromExamples;
@@ -117,6 +125,14 @@ export function tuningValidationDatasetToMldev(
 
   if (common.getValueByPath(fromObject, ['gcsUri']) !== undefined) {
     throw new Error('gcsUri parameter is not supported in Gemini API.');
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['vertexDatasetResource']) !== undefined
+  ) {
+    throw new Error(
+      'vertexDatasetResource parameter is not supported in Gemini API.',
+    );
   }
 
   return toObject;
@@ -326,6 +342,17 @@ export function tuningDatasetToVertex(
     );
   }
 
+  const fromVertexDatasetResource = common.getValueByPath(fromObject, [
+    'vertexDatasetResource',
+  ]);
+  if (parentObject !== undefined && fromVertexDatasetResource != null) {
+    common.setValueByPath(
+      parentObject,
+      ['supervisedTuningSpec', 'trainingDatasetUri'],
+      fromVertexDatasetResource,
+    );
+  }
+
   if (common.getValueByPath(fromObject, ['examples']) !== undefined) {
     throw new Error('examples parameter is not supported in Vertex AI.');
   }
@@ -335,12 +362,24 @@ export function tuningDatasetToVertex(
 
 export function tuningValidationDatasetToVertex(
   fromObject: types.TuningValidationDataset,
+  parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromGcsUri = common.getValueByPath(fromObject, ['gcsUri']);
   if (fromGcsUri != null) {
     common.setValueByPath(toObject, ['validationDatasetUri'], fromGcsUri);
+  }
+
+  const fromVertexDatasetResource = common.getValueByPath(fromObject, [
+    'vertexDatasetResource',
+  ]);
+  if (parentObject !== undefined && fromVertexDatasetResource != null) {
+    common.setValueByPath(
+      parentObject,
+      ['supervisedTuningSpec', 'trainingDatasetUri'],
+      fromVertexDatasetResource,
+    );
   }
 
   return toObject;
@@ -359,7 +398,7 @@ export function createTuningJobConfigToVertex(
     common.setValueByPath(
       parentObject,
       ['supervisedTuningSpec'],
-      tuningValidationDatasetToVertex(fromValidationDataset),
+      tuningValidationDatasetToVertex(fromValidationDataset, toObject),
     );
   }
 
@@ -567,6 +606,16 @@ export function tuningJobFromMldev(
   const fromPipelineJob = common.getValueByPath(fromObject, ['pipelineJob']);
   if (fromPipelineJob != null) {
     common.setValueByPath(toObject, ['pipelineJob'], fromPipelineJob);
+  }
+
+  const fromSatisfiesPzi = common.getValueByPath(fromObject, ['satisfiesPzi']);
+  if (fromSatisfiesPzi != null) {
+    common.setValueByPath(toObject, ['satisfiesPzi'], fromSatisfiesPzi);
+  }
+
+  const fromSatisfiesPzs = common.getValueByPath(fromObject, ['satisfiesPzs']);
+  if (fromSatisfiesPzs != null) {
+    common.setValueByPath(toObject, ['satisfiesPzs'], fromSatisfiesPzs);
   }
 
   const fromServiceAccount = common.getValueByPath(fromObject, [
@@ -816,6 +865,16 @@ export function tuningJobFromVertex(
   const fromPipelineJob = common.getValueByPath(fromObject, ['pipelineJob']);
   if (fromPipelineJob != null) {
     common.setValueByPath(toObject, ['pipelineJob'], fromPipelineJob);
+  }
+
+  const fromSatisfiesPzi = common.getValueByPath(fromObject, ['satisfiesPzi']);
+  if (fromSatisfiesPzi != null) {
+    common.setValueByPath(toObject, ['satisfiesPzi'], fromSatisfiesPzi);
+  }
+
+  const fromSatisfiesPzs = common.getValueByPath(fromObject, ['satisfiesPzs']);
+  if (fromSatisfiesPzs != null) {
+    common.setValueByPath(toObject, ['satisfiesPzs'], fromSatisfiesPzs);
   }
 
   const fromServiceAccount = common.getValueByPath(fromObject, [

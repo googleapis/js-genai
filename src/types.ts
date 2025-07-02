@@ -102,6 +102,22 @@ export enum HarmCategory {
    * Deprecated: Election filter is not longer supported. The harm category is civic integrity.
    */
   HARM_CATEGORY_CIVIC_INTEGRITY = 'HARM_CATEGORY_CIVIC_INTEGRITY',
+  /**
+   * The harm category is image hate.
+   */
+  HARM_CATEGORY_IMAGE_HATE = 'HARM_CATEGORY_IMAGE_HATE',
+  /**
+   * The harm category is image dangerous content.
+   */
+  HARM_CATEGORY_IMAGE_DANGEROUS_CONTENT = 'HARM_CATEGORY_IMAGE_DANGEROUS_CONTENT',
+  /**
+   * The harm category is image harassment.
+   */
+  HARM_CATEGORY_IMAGE_HARASSMENT = 'HARM_CATEGORY_IMAGE_HARASSMENT',
+  /**
+   * The harm category is image sexually explicit content.
+   */
+  HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT = 'HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT',
 }
 
 /** Optional. Specify if the threshold is used for probability or severity score. If not specified, the threshold is used for probability score. */
@@ -187,6 +203,50 @@ export enum AuthType {
    * OpenID Connect (OIDC) Auth.
    */
   OIDC_AUTH = 'OIDC_AUTH',
+}
+
+/** The API spec that the external API implements. */
+export enum ApiSpec {
+  /**
+   * Unspecified API spec. This value should not be used.
+   */
+  API_SPEC_UNSPECIFIED = 'API_SPEC_UNSPECIFIED',
+  /**
+   * Simple search API spec.
+   */
+  SIMPLE_SEARCH = 'SIMPLE_SEARCH',
+  /**
+   * Elastic search API spec.
+   */
+  ELASTIC_SEARCH = 'ELASTIC_SEARCH',
+}
+
+/** Required. The environment being operated. */
+export enum Environment {
+  /**
+   * Defaults to browser.
+   */
+  ENVIRONMENT_UNSPECIFIED = 'ENVIRONMENT_UNSPECIFIED',
+  /**
+   * Operates in a web browser.
+   */
+  ENVIRONMENT_BROWSER = 'ENVIRONMENT_BROWSER',
+}
+
+/** Status of the url retrieval. */
+export enum UrlRetrievalStatus {
+  /**
+   * Default value. This value is unused
+   */
+  URL_RETRIEVAL_STATUS_UNSPECIFIED = 'URL_RETRIEVAL_STATUS_UNSPECIFIED',
+  /**
+   * Url retrieval is successful.
+   */
+  URL_RETRIEVAL_STATUS_SUCCESS = 'URL_RETRIEVAL_STATUS_SUCCESS',
+  /**
+   * Url retrieval is failed due to error.
+   */
+  URL_RETRIEVAL_STATUS_ERROR = 'URL_RETRIEVAL_STATUS_ERROR',
 }
 
 /** Output only. The reason why the model stopped generating tokens.
@@ -318,6 +378,10 @@ export enum BlockedReason {
    * Candidates blocked due to prohibited content.
    */
   PROHIBITED_CONTENT = 'PROHIBITED_CONTENT',
+  /**
+   * Candidates blocked due to unsafe image generation content.
+   */
+  IMAGE_SAFETY = 'IMAGE_SAFETY',
 }
 
 /** Output only. Traffic type. This shows whether a request consumes Pay-As-You-Go or Provisioned Throughput quota. */
@@ -376,7 +440,7 @@ export enum MediaResolution {
   MEDIA_RESOLUTION_HIGH = 'MEDIA_RESOLUTION_HIGH',
 }
 
-/** Output only. The detailed state of the job. */
+/** Job state. */
 export enum JobState {
   /**
    * The job state is unspecified.
@@ -419,7 +483,7 @@ export enum JobState {
    */
   JOB_STATE_EXPIRED = 'JOB_STATE_EXPIRED',
   /**
-   * The job is being updated. Only jobs in the `RUNNING` state can be updated. After updating, the job goes back to the `RUNNING` state.
+   * The job is being updated. Only jobs in the `JOB_STATE_RUNNING` state can be updated. After updating, the job goes back to the `JOB_STATE_RUNNING` state.
    */
   JOB_STATE_UPDATING = 'JOB_STATE_UPDATING',
   /**
@@ -516,22 +580,6 @@ export enum FunctionCallingConfigMode {
   NONE = 'NONE',
 }
 
-/** Status of the url retrieval. */
-export enum UrlRetrievalStatus {
-  /**
-   * Default value. This value is unused
-   */
-  URL_RETRIEVAL_STATUS_UNSPECIFIED = 'URL_RETRIEVAL_STATUS_UNSPECIFIED',
-  /**
-   * Url retrieval is successful.
-   */
-  URL_RETRIEVAL_STATUS_SUCCESS = 'URL_RETRIEVAL_STATUS_SUCCESS',
-  /**
-   * Url retrieval is failed due to error.
-   */
-  URL_RETRIEVAL_STATUS_ERROR = 'URL_RETRIEVAL_STATUS_ERROR',
-}
-
 /** Enum that controls the safety filter level for objectionable content. */
 export enum SafetyFilterLevel {
   BLOCK_LOW_AND_ABOVE = 'BLOCK_LOW_AND_ABOVE',
@@ -542,8 +590,17 @@ export enum SafetyFilterLevel {
 
 /** Enum that controls the generation of people. */
 export enum PersonGeneration {
+  /**
+   * Block generation of images of people.
+   */
   DONT_ALLOW = 'DONT_ALLOW',
+  /**
+   * Generate images of adults, but not children.
+   */
   ALLOW_ADULT = 'ALLOW_ADULT',
+  /**
+   * Generate images that include adults and children.
+   */
   ALLOW_ALL = 'ALLOW_ALL',
 }
 
@@ -591,6 +648,20 @@ export enum EditMode {
   EDIT_MODE_STYLE = 'EDIT_MODE_STYLE',
   EDIT_MODE_BGSWAP = 'EDIT_MODE_BGSWAP',
   EDIT_MODE_PRODUCT_IMAGE = 'EDIT_MODE_PRODUCT_IMAGE',
+}
+
+/** Enum that controls the compression quality of the generated videos. */
+export enum VideoCompressionQuality {
+  /**
+   * Optimized video compression quality. This will produce videos
+      with a compressed, smaller file size.
+   */
+  OPTIMIZED = 'OPTIMIZED',
+  /**
+   * Lossless video compression quality. This will produce videos
+      with a larger file size.
+   */
+  LOSSLESS = 'LOSSLESS',
 }
 
 /** State for the lifecycle of a File. */
@@ -817,7 +888,8 @@ export declare interface VideoMetadata {
 export declare interface Blob {
   /** Optional. Display name of the blob. Used to provide a label or filename to distinguish blobs. This field is not currently used in the Gemini GenerateContent calls. */
   displayName?: string;
-  /** Required. Raw bytes. */
+  /** Required. Raw bytes.
+   * @remarks Encoded as base64 string. */
   data?: string;
   /** Required. The IANA standard MIME type of the source data. */
   mimeType?: string;
@@ -833,7 +905,7 @@ export declare interface FileData {
   mimeType?: string;
 }
 
-/** Result of executing the [ExecutableCode]. Always follows a `part` containing the [ExecutableCode]. */
+/** Result of executing the [ExecutableCode]. Only generated when using the [CodeExecution] tool, and always follows a `part` containing the [ExecutableCode]. */
 export declare interface CodeExecutionResult {
   /** Required. Outcome of the code execution. */
   outcome?: Outcome;
@@ -841,7 +913,7 @@ export declare interface CodeExecutionResult {
   output?: string;
 }
 
-/** Code generated by the model that is meant to be executed, and the result returned to the model. Generated when using the [FunctionDeclaration] tool and [FunctionCallingConfig] mode is set to [Mode.CODE]. */
+/** Code generated by the model that is meant to be executed, and the result returned to the model. Generated when using the [CodeExecution] tool, in which the code will be automatically executed, and a corresponding [CodeExecutionResult] will also be generated. */
 export declare interface ExecutableCode {
   /** Required. The code to be executed. */
   code?: string;
@@ -889,7 +961,8 @@ export declare interface Part {
   inlineData?: Blob;
   /** Optional. URI based data. */
   fileData?: FileData;
-  /** An opaque signature for the thought so it can be reused in subsequent requests. */
+  /** An opaque signature for the thought so it can be reused in subsequent requests.
+   * @remarks Encoded as base64 string. */
   thoughtSignature?: string;
   /** Optional. Result of executing the [ExecutableCode]. */
   codeExecutionResult?: CodeExecutionResult;
@@ -1268,6 +1341,49 @@ export declare interface GoogleMaps {
 /** Tool to support URL context retrieval. */
 export declare interface UrlContext {}
 
+/** The API secret. */
+export declare interface ApiAuthApiKeyConfig {
+  /** Required. The SecretManager secret version resource name storing API key. e.g. projects/{project}/secrets/{secret}/versions/{version} */
+  apiKeySecretVersion?: string;
+  /** The API key string. Either this or `api_key_secret_version` must be set. */
+  apiKeyString?: string;
+}
+
+/** The generic reusable api auth config. Deprecated. Please use AuthConfig (google/cloud/aiplatform/master/auth.proto) instead. */
+export declare interface ApiAuth {
+  /** The API secret. */
+  apiKeyConfig?: ApiAuthApiKeyConfig;
+}
+
+/** The search parameters to use for the ELASTIC_SEARCH spec. */
+export declare interface ExternalApiElasticSearchParams {
+  /** The ElasticSearch index to use. */
+  index?: string;
+  /** Optional. Number of hits (chunks) to request. When specified, it is passed to Elasticsearch as the `num_hits` param. */
+  numHits?: number;
+  /** The ElasticSearch search template to use. */
+  searchTemplate?: string;
+}
+
+/** The search parameters to use for SIMPLE_SEARCH spec. */
+export declare interface ExternalApiSimpleSearchParams {}
+
+/** Retrieve from data source powered by external API for grounding. The external API is not owned by Google, but need to follow the pre-defined API spec. */
+export declare interface ExternalApi {
+  /** The authentication config to access the API. Deprecated. Please use auth_config instead. */
+  apiAuth?: ApiAuth;
+  /** The API spec that the external API implements. */
+  apiSpec?: ApiSpec;
+  /** The authentication config to access the API. */
+  authConfig?: AuthConfig;
+  /** Parameters for the elastic search API. */
+  elasticSearchParams?: ExternalApiElasticSearchParams;
+  /** The endpoint of the external API. The system will call the API at this endpoint to retrieve the data for grounding. Example: https://acme.com:443/search */
+  endpoint?: string;
+  /** Parameters for the simple search API. */
+  simpleSearchParams?: ExternalApiSimpleSearchParams;
+}
+
 /** Define data stores within engine to filter on in a search call and configurations for those data stores. For more information, see https://cloud.google.com/generative-ai-app-builder/docs/reference/rpc/google.cloud.discoveryengine.v1#datastorespec */
 export declare interface VertexAISearchDataStoreSpec {
   /** Full resource name of DataStore, such as Format: `projects/{project}/locations/{location}/collections/{collection}/dataStores/{dataStore}` */
@@ -1366,6 +1482,8 @@ export declare interface VertexRagStore {
 export declare interface Retrieval {
   /** Optional. Deprecated. This option is no longer supported. */
   disableAttribution?: boolean;
+  /** Use data source powered by external API for grounding. */
+  externalApi?: ExternalApi;
   /** Set to use data source powered by Vertex AI Search. */
   vertexAiSearch?: VertexAISearch;
   /** Set to use data source powered by Vertex RAG store. User data is uploaded via the VertexRagDataService. */
@@ -1374,6 +1492,12 @@ export declare interface Retrieval {
 
 /** Tool that executes code generated by the model, and automatically returns the result to the model. See also [ExecutableCode]and [CodeExecutionResult] which are input and output to this tool. */
 export declare interface ToolCodeExecution {}
+
+/** Tool to support computer use. */
+export declare interface ToolComputerUse {
+  /** Required. The environment being operated. */
+  environment?: Environment;
+}
 
 /** Tool details of a tool that the model may use to generate a response. */
 export declare interface Tool {
@@ -1396,6 +1520,8 @@ export declare interface Tool {
   urlContext?: UrlContext;
   /** Optional. CodeExecution tool type. Enables the model to execute code as part of generation. */
   codeExecution?: ToolCodeExecution;
+  /** Optional. Tool to support the model interacting directly with the computer. If enabled, it automatically populates computer-use specific Function Declarations. */
+  computerUse?: ToolComputerUse;
 }
 
 /** Function calling config. */
@@ -1627,6 +1753,22 @@ export declare interface GenerateContentConfig {
       Compatible mimetypes: `application/json`: Schema for JSON response.
        */
   responseSchema?: SchemaUnion;
+  /** Optional. Output schema of the generated response.
+      This is an alternative to `response_schema` that accepts [JSON
+      Schema](https://json-schema.org/). If set, `response_schema` must be
+      omitted, but `response_mime_type` is required. While the full JSON Schema
+      may be sent, not all features are supported. Specifically, only the
+      following properties are supported: - `$id` - `$defs` - `$ref` - `$anchor`
+      - `type` - `format` - `title` - `description` - `enum` (for strings and
+      numbers) - `items` - `prefixItems` - `minItems` - `maxItems` - `minimum` -
+      `maximum` - `anyOf` - `oneOf` (interpreted the same as `anyOf`) -
+      `properties` - `additionalProperties` - `required` The non-standard
+      `propertyOrdering` property may also be set. Cyclic references are
+      unrolled to a limited degree and, as such, may only be used within
+      non-required properties. (Nullable properties are not sufficient.) If
+      `$ref` is set on a sub-schema, no other properties, except for than those
+      starting as a `$`, may be set. */
+  responseJsonSchema?: unknown;
   /** Configuration for model router requests.
    */
   routingConfig?: GenerationConfigRoutingConfig;
@@ -1840,7 +1982,7 @@ export declare interface Segment {
 
 /** Grounding support. */
 export declare interface GroundingSupport {
-  /** Confidence score of the support references. Ranges from 0 to 1. 1 is the most confident. This list must have the same size as the grounding_chunk_indices. */
+  /** Confidence score of the support references. Ranges from 0 to 1. 1 is the most confident. For Gemini 2.0 and before, this list must have the same size as the grounding_chunk_indices. For Gemini 2.5 and after, this list will be empty and should be ignored. */
   confidenceScores?: number[];
   /** A list of indices (into 'grounding_chunk') specifying the citations associated with the claim. For instance [1,3,4] means that grounding_chunk[1], grounding_chunk[3], grounding_chunk[4] are the retrieved content attributed to the claim. */
   groundingChunkIndices?: number[];
@@ -1858,7 +2000,8 @@ export declare interface RetrievalMetadata {
 export declare interface SearchEntryPoint {
   /** Optional. Web content snippet that can be embedded in a web page or an app webview. */
   renderedContent?: string;
-  /** Optional. Base64 encoded JSON representing array of tuple. */
+  /** Optional. Base64 encoded JSON representing array of tuple.
+   * @remarks Encoded as base64 string. */
   sdkBlob?: string;
 }
 
@@ -1908,6 +2051,8 @@ export declare interface SafetyRating {
   blocked?: boolean;
   /** Output only. Harm category. */
   category?: HarmCategory;
+  /** Output only. The overwritten threshold for the safety category of Gemini 2.0 image out. If minors are detected in the output image, the threshold of each safety category will be overwritten if user sets a lower threshold. */
+  overwrittenThreshold?: HarmBlockThreshold;
   /** Output only. Harm probability levels in the content. */
   probability?: HarmProbability;
   /** Output only. Harm probability score. */
@@ -2400,8 +2545,9 @@ export declare interface GenerateImagesConfig {
   /** Number of images to generate.
    */
   numberOfImages?: number;
-  /** Aspect ratio of the generated images.
-   */
+  /** Aspect ratio of the generated images. Supported values are
+      "1:1", "3:4", "4:3", "9:16", and "16:9".
+       */
   aspectRatio?: string;
   /** Controls how much the model adheres to the text prompt. Large
       values increase output and prompt alignment, but may compromise image
@@ -2465,7 +2611,8 @@ export declare interface Image {
   gcsUri?: string;
   /** The image bytes data. ``Image`` can contain a value for this field
       or the ``gcs_uri`` field but not both.
-       */
+      
+  * @remarks Encoded as base64 string. */
   imageBytes?: string;
   /** The MIME type of the image. */
   mimeType?: string;
@@ -2571,8 +2718,9 @@ export declare interface EditImageConfig {
   /** Number of images to generate.
    */
   numberOfImages?: number;
-  /** Aspect ratio of the generated images.
-   */
+  /** Aspect ratio of the generated images. Supported values are
+      "1:1", "3:4", "4:3", "9:16", and "16:9".
+       */
   aspectRatio?: string;
   /** Controls how much the model adheres to the text prompt. Large
       values increase output and prompt alignment, but may compromise image
@@ -2794,6 +2942,8 @@ export declare interface GenerationConfig {
   audioTimestamp?: boolean;
   /** Optional. Number of candidates to generate. */
   candidateCount?: number;
+  /** Optional. If enabled, the model will detect emotions and adapt its responses accordingly. */
+  enableAffectiveDialog?: boolean;
   /** Optional. Frequency penalties. */
   frequencyPenalty?: number;
   /** Optional. Logit probabilities. */
@@ -2804,6 +2954,8 @@ export declare interface GenerationConfig {
   mediaResolution?: MediaResolution;
   /** Optional. Positive penalties. */
   presencePenalty?: number;
+  /** Optional. Output schema of the generated response. This is an alternative to `response_schema` that accepts [JSON Schema](https://json-schema.org/). If set, `response_schema` must be omitted, but `response_mime_type` is required. While the full JSON Schema may be sent, not all features are supported. Specifically, only the following properties are supported: - `$id` - `$defs` - `$ref` - `$anchor` - `type` - `format` - `title` - `description` - `enum` (for strings and numbers) - `items` - `prefixItems` - `minItems` - `maxItems` - `minimum` - `maximum` - `anyOf` - `oneOf` (interpreted the same as `anyOf`) - `properties` - `additionalProperties` - `required` The non-standard `propertyOrdering` property may also be set. Cyclic references are unrolled to a limited degree and, as such, may only be used within non-required properties. (Nullable properties are not sufficient.) If `$ref` is set on a sub-schema, no other properties, except for than those starting as a `$`, may be set. */
+  responseJsonSchema?: unknown;
   /** Optional. If true, export the logprobs results in response. */
   responseLogprobs?: boolean;
   /** Optional. Output response mimetype of the generated candidate text. Supported mimetype: - `text/plain`: (default) Text output. - `application/json`: JSON response in the candidates. The model needs to be prompted to output the appropriate response type, otherwise the behavior is undefined. This is a preview feature. */
@@ -2812,8 +2964,6 @@ export declare interface GenerationConfig {
   responseModalities?: Modality[];
   /** Optional. The `Schema` object allows the definition of input and output data types. These types can be objects, but also primitives and arrays. Represents a select subset of an [OpenAPI 3.0 schema object](https://spec.openapis.org/oas/v3.0.3#schema). If set, a compatible response_mime_type must also be set. Compatible mimetypes: `application/json`: Schema for JSON response. */
   responseSchema?: Schema;
-  /** Optional. Output schema of the generated response. This is an alternative to `response_schema` that accepts [JSON Schema](https://json-schema.org/). If set, `response_schema` must be omitted, but `response_mime_type` is required. While the full JSON Schema may be sent, not all features are supported. Specifically, only the following properties are supported: - `$id` - `$defs` - `$ref` - `$anchor` - `type` - `format` - `title` - `description` - `enum` (for strings and numbers) - `items` - `prefixItems` - `minItems` - `maxItems` - `minimum` - `maximum` - `anyOf` - `oneOf` (interpreted the same as `anyOf`) - `properties` - `additionalProperties` - `required` The non-standard `propertyOrdering` property may also be set. Cyclic references are unrolled to a limited degree and, as such, may only be used within non-required properties. (Nullable properties are not sufficient.) If `$ref` is set on a sub-schema, no other properties, except for than those starting as a `$`, may be set. */
-  responseJsonSchema?: unknown;
   /** Optional. Routing configuration. */
   routingConfig?: GenerationConfigRoutingConfig;
   /** Optional. Seed. */
@@ -2906,7 +3056,8 @@ export declare interface TokensInfo {
   role?: string;
   /** A list of token ids from the input. */
   tokenIds?: string[];
-  /** A list of tokens from the input. */
+  /** A list of tokens from the input.
+   * @remarks Encoded as base64 string. */
   tokens?: string[];
 }
 
@@ -2920,7 +3071,8 @@ export class ComputeTokensResponse {
 export declare interface Video {
   /** Path to another storage. */
   uri?: string;
-  /** Video bytes. */
+  /** Video bytes.
+   * @remarks Encoded as base64 string. */
   videoBytes?: string;
   /** Video encoding, for example "video/mp4". */
   mimeType?: string;
@@ -2963,6 +3115,8 @@ export declare interface GenerateVideosConfig {
   generateAudio?: boolean;
   /** Image to use as the last frame of generated videos. Only supported for image to video use cases. */
   lastFrame?: Image;
+  /** Compression quality of the generated videos. */
+  compressionQuality?: VideoCompressionQuality;
 }
 
 /** Class that represents the parameters for generating videos. */
@@ -3076,7 +3230,7 @@ export declare interface SupervisedHyperParameters {
   adapterSize?: AdapterSize;
   /** Optional. Number of complete passes the model makes over the entire training dataset during training. */
   epochCount?: string;
-  /** Optional. Multiplier for adjusting the default learning rate. */
+  /** Optional. Multiplier for adjusting the default learning rate. Mutually exclusive with `learning_rate`. */
   learningRateMultiplier?: number;
 }
 
@@ -3086,9 +3240,9 @@ export declare interface SupervisedTuningSpec {
   exportLastCheckpointOnly?: boolean;
   /** Optional. Hyperparameters for SFT. */
   hyperParameters?: SupervisedHyperParameters;
-  /** Required. Cloud Storage path to file containing training dataset for tuning. The dataset must be formatted as a JSONL file. */
+  /** Required. Training dataset used for tuning. The dataset can be specified as either a Cloud Storage path to a JSONL file or as the resource name of a Vertex Multimodal Dataset. */
   trainingDatasetUri?: string;
-  /** Optional. Cloud Storage path to file containing validation dataset for tuning. The dataset must be formatted as a JSONL file. */
+  /** Optional. Validation dataset used for tuning. The dataset can be specified as either a Cloud Storage path to a JSONL file or as the resource name of a Vertex Multimodal Dataset. */
   validationDatasetUri?: string;
 }
 
@@ -3298,6 +3452,10 @@ export declare interface TuningJob {
   labels?: Record<string, string>;
   /** Output only. The resource name of the PipelineJob associated with the TuningJob. Format: `projects/{project}/locations/{location}/pipelineJobs/{pipeline_job}`. */
   pipelineJob?: string;
+  /** Output only. Reserved for future use. */
+  satisfiesPzi?: boolean;
+  /** Output only. Reserved for future use. */
+  satisfiesPzs?: boolean;
   /** The service account that the tuningJob workload runs as. If not specified, the Vertex AI Secure Fine-Tuned Service Agent in the project will be used. See https://cloud.google.com/iam/docs/service-agents#vertex-ai-secure-fine-tuning-service-agent Users starting the pipeline must have the `iam.serviceAccounts.actAs` permission on this service account. */
   serviceAccount?: string;
   /** Optional. The display name of the TunedModel. The name can be up to 128 characters long and can consist of any UTF-8 characters. */
@@ -3344,6 +3502,8 @@ export declare interface TuningExample {
 export declare interface TuningDataset {
   /** GCS URI of the file containing training dataset in JSONL format. */
   gcsUri?: string;
+  /** The resource name of the Vertex Multimodal Dataset that is used as training dataset. Example: 'projects/my-project-id-or-number/locations/my-location/datasets/my-dataset-id'. */
+  vertexDatasetResource?: string;
   /** Inline examples with simple input/output text. */
   examples?: TuningExample[];
 }
@@ -3351,6 +3511,8 @@ export declare interface TuningDataset {
 export declare interface TuningValidationDataset {
   /** GCS URI of the file containing validation dataset in JSONL format. */
   gcsUri?: string;
+  /** The resource name of the Vertex Multimodal Dataset that is used as training dataset. Example: 'projects/my-project-id-or-number/locations/my-location/datasets/my-dataset-id'. */
+  vertexDatasetResource?: string;
 }
 
 /** Supervised fine-tuning job creation request - optional fields. */
@@ -3741,6 +3903,261 @@ export declare interface DeleteFileParameters {
 /** Response for the delete file method. */
 export class DeleteFileResponse {}
 
+/** Config for inlined request. */
+export declare interface InlinedRequest {
+  /** ID of the model to use. For a list of models, see `Google models
+      <https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models>`_. */
+  model?: string;
+  /** Content of the request.
+   */
+  contents?: ContentListUnion;
+  /** Configuration that contains optional model parameters.
+   */
+  config?: GenerateContentConfig;
+}
+
+/** Config for `src` parameter. */
+export declare interface BatchJobSource {
+  /** Storage format of the input files. Must be one of:
+      'jsonl', 'bigquery'.
+       */
+  format?: string;
+  /** The Google Cloud Storage URIs to input files.
+   */
+  gcsUri?: string[];
+  /** The BigQuery URI to input table.
+   */
+  bigqueryUri?: string;
+  /** The Gemini Developer API's file resource name of the input data
+      (e.g. "files/12345").
+       */
+  fileName?: string;
+  /** The Gemini Developer API's inlined input data to run batch job.
+   */
+  inlinedRequests?: InlinedRequest[];
+}
+
+/** Job error. */
+export declare interface JobError {
+  /** A list of messages that carry the error details. There is a common set of message types for APIs to use. */
+  details?: string[];
+  /** The status code. */
+  code?: number;
+  /** A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the `details` field. */
+  message?: string;
+}
+
+/** Config for `inlined_responses` parameter. */
+export class InlinedResponse {
+  /** The response to the request.
+   */
+  response?: GenerateContentResponse;
+  /** The error encountered while processing the request.
+   */
+  error?: JobError;
+}
+
+/** Config for `des` parameter. */
+export declare interface BatchJobDestination {
+  /** Storage format of the output files. Must be one of:
+      'jsonl', 'bigquery'.
+       */
+  format?: string;
+  /** The Google Cloud Storage URI to the output file.
+   */
+  gcsUri?: string;
+  /** The BigQuery URI to the output table.
+   */
+  bigqueryUri?: string;
+  /** The Gemini Developer API's file resource name of the output data
+      (e.g. "files/12345"). The file will be a JSONL file with a single response
+      per line. The responses will be GenerateContentResponse messages formatted
+      as JSON. The responses will be written in the same order as the input
+      requests.
+       */
+  fileName?: string;
+  /** The responses to the requests in the batch. Returned when the batch was
+      built using inlined requests. The responses will be in the same order as
+      the input requests.
+       */
+  inlinedResponses?: InlinedResponse[];
+}
+
+/** Config for optional parameters. */
+export declare interface CreateBatchJobConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
+  /** The user-defined name of this BatchJob.
+   */
+  displayName?: string;
+  /** GCS or BigQuery URI prefix for the output predictions. Example:
+      "gs://path/to/output/data" or "bq://projectId.bqDatasetId.bqTableId".
+       */
+  dest?: string;
+}
+
+/** Config for batches.create parameters. */
+export declare interface CreateBatchJobParameters {
+  /** The name of the model to produces the predictions via the BatchJob.
+   */
+  model?: string;
+  /** GCS URI(-s) or BigQuery URI to your input data to run batch job.
+      Example: "gs://path/to/input/data" or "bq://projectId.bqDatasetId.bqTableId".
+       */
+  src: BatchJobSourceUnion;
+  /** Optional parameters for creating a BatchJob.
+   */
+  config?: CreateBatchJobConfig;
+}
+
+/** Config for batches.create return value. */
+export declare interface BatchJob {
+  /** The resource name of the BatchJob. Output only.".
+   */
+  name?: string;
+  /** The display name of the BatchJob.
+   */
+  displayName?: string;
+  /** The state of the BatchJob.
+   */
+  state?: JobState;
+  /** Output only. Only populated when the job's state is JOB_STATE_FAILED or JOB_STATE_CANCELLED. */
+  error?: JobError;
+  /** The time when the BatchJob was created.
+   */
+  createTime?: string;
+  /** Output only. Time when the Job for the first time entered the `JOB_STATE_RUNNING` state. */
+  startTime?: string;
+  /** The time when the BatchJob was completed.
+   */
+  endTime?: string;
+  /** The time when the BatchJob was last updated.
+   */
+  updateTime?: string;
+  /** The name of the model that produces the predictions via the BatchJob.
+   */
+  model?: string;
+  /** Configuration for the input data.
+   */
+  src?: BatchJobSource;
+  /** Configuration for the output data.
+   */
+  dest?: BatchJobDestination;
+}
+
+/** Optional parameters. */
+export declare interface GetBatchJobConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
+}
+
+/** Config for batches.get parameters. */
+export declare interface GetBatchJobParameters {
+  /** A fully-qualified BatchJob resource name or ID.
+    Example: "projects/.../locations/.../batchPredictionJobs/456"
+    or "456" when project and location are initialized in the client.
+     */
+  name: string;
+  /** Optional parameters for the request. */
+  config?: GetBatchJobConfig;
+}
+
+/** Optional parameters. */
+export declare interface CancelBatchJobConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
+}
+
+/** Config for batches.cancel parameters. */
+export declare interface CancelBatchJobParameters {
+  /** A fully-qualified BatchJob resource name or ID.
+    Example: "projects/.../locations/.../batchPredictionJobs/456"
+    or "456" when project and location are initialized in the client.
+     */
+  name: string;
+  /** Optional parameters for the request. */
+  config?: CancelBatchJobConfig;
+}
+
+/** Config for optional parameters. */
+export declare interface ListBatchJobsConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
+  pageSize?: number;
+  pageToken?: string;
+  filter?: string;
+}
+
+/** Config for batches.list parameters. */
+export declare interface ListBatchJobsParameters {
+  config?: ListBatchJobsConfig;
+}
+
+/** Config for batches.list return value. */
+export class ListBatchJobsResponse {
+  nextPageToken?: string;
+  batchJobs?: BatchJob[];
+}
+
+/** Optional parameters for models.get method. */
+export declare interface DeleteBatchJobConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
+}
+
+/** Config for batches.delete parameters. */
+export declare interface DeleteBatchJobParameters {
+  /** A fully-qualified BatchJob resource name or ID.
+    Example: "projects/.../locations/.../batchPredictionJobs/456"
+    or "456" when project and location are initialized in the client.
+     */
+  name: string;
+  /** Optional parameters for the request. */
+  config?: DeleteBatchJobConfig;
+}
+
+/** The return value of delete operation. */
+export declare interface DeleteResourceJob {
+  name?: string;
+  done?: boolean;
+  error?: JobError;
+}
+
 export declare interface GetOperationConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
@@ -3902,6 +4319,15 @@ export declare interface UpscaleImageConfig {
   /** The level of compression if the ``output_mime_type`` is
       ``image/jpeg``. */
   outputCompressionQuality?: number;
+  /** Whether to add an image enhancing step before upscaling.
+      It is expected to suppress the noise and JPEG compression artifacts
+      from the input image. */
+  enhanceInputImage?: boolean;
+  /** With a higher image preservation factor, the original image
+      pixels are more respected. With a lower image preservation factor, the
+      output image will have be more different from the input image, but
+      with finer details and less noise. */
+  imagePreservationFactor?: number;
 }
 
 /** User-facing config UpscaleImageParameters. */
@@ -4061,7 +4487,10 @@ export class SubjectReferenceImage {
 }
 
 export /** Sent in response to a `LiveGenerateContentSetup` message from the client. */
-declare interface LiveServerSetupComplete {}
+declare interface LiveServerSetupComplete {
+  /** The session id of the live session. */
+  sessionId?: string;
+}
 
 /** Audio transcription in Server Conent. */
 export declare interface Transcription {
@@ -4746,7 +5175,8 @@ export declare interface LiveMusicSourceMetadata {
 
 /** Representation of an audio chunk. */
 export declare interface AudioChunk {
-  /** Raw byets of audio data. */
+  /** Raw bytes of audio data.
+   * @remarks Encoded as base64 string. */
   data?: string;
   /** MIME type of the audio chunk. */
   mimeType?: string;
@@ -4957,3 +5387,5 @@ export type ToolUnion = Tool | CallableTool;
 export type ToolListUnion = ToolUnion[];
 
 export type DownloadableFileUnion = string | File | GeneratedVideo | Video;
+
+export type BatchJobSourceUnion = BatchJobSource | InlinedRequest[] | string;

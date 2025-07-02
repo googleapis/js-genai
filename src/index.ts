@@ -5,6 +5,7 @@
  */
 
 export {BaseUrlParameters, setDefaultBaseUrls} from './_base_url';
+export * from './batches';
 export * from './caches';
 export * from './chats';
 export {GoogleGenAI, GoogleGenAIOptions} from './client';

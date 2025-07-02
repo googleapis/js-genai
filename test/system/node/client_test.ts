@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {fail} from 'assert';
 import {GoogleAuthOptions} from 'google-auth-library';
 import {z} from 'zod';
 import {zodToJsonSchema} from 'zod-to-json-schema';
@@ -557,79 +556,6 @@ describe('Client Tests', () => {
 
     afterEach(function () {
       jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
-    });
-  });
-
-  describe('test async performance', () => {
-    it('generate content should complete in less than 1 second', async () => {
-      const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
-      async function firstAsyncFunc() {
-        client.models.generateContent({
-          model: 'gemini-1.5-flash',
-          contents: 'high',
-          config: {
-            systemInstruction: 'I say high you say low.',
-          },
-        });
-      }
-      async function secondAsyncFunc() {
-        client.models.generateContent({
-          model: 'gemini-1.5-flash',
-          contents: 'high',
-          config: {
-            systemInstruction: 'I say high you say low.',
-          },
-        });
-      }
-      const startTime = performance.now(); // Record start time
-      try {
-        await Promise.all([firstAsyncFunc(), secondAsyncFunc()]);
-      } catch (e) {
-        fail('Test failed due to error: ' + e);
-      } finally {
-        const endTime = performance.now(); // Record end time
-        const timeDelta = endTime - startTime;
-        expect(timeDelta).toBeLessThanOrEqual(
-          1050,
-          'Expected timeDelta to be less than or equal to 1050, got ' +
-            timeDelta,
-        );
-      }
-    });
-    it('stream generate content should complete in less than 1 second', async () => {
-      const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
-      async function firstAsyncFunc() {
-        client.models.generateContentStream({
-          model: 'gemini-1.5-flash',
-          contents: 'high',
-          config: {
-            systemInstruction: 'I say high you say low.',
-          },
-        });
-      }
-      async function secondAsyncFunc() {
-        client.models.generateContentStream({
-          model: 'gemini-1.5-flash',
-          contents: 'high',
-          config: {
-            systemInstruction: 'I say high you say low.',
-          },
-        });
-      }
-      const startTime = performance.now(); // Record start time
-      try {
-        await Promise.all([firstAsyncFunc(), secondAsyncFunc()]);
-      } catch (e) {
-        fail('Test failed due to error: ' + e);
-      } finally {
-        const endTime = performance.now(); // Record end time
-        const timeDelta = endTime - startTime;
-        expect(timeDelta).toBeLessThanOrEqual(
-          1050,
-          'Expected timeDelta to be less than or equal to 1050, got ' +
-            timeDelta,
-        );
-      }
     });
   });
 

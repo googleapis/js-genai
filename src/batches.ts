@@ -9,80 +9,109 @@
 import {ApiClient} from './_api_client.js';
 import * as common from './_common.js';
 import {BaseModule} from './_common.js';
-import * as converters from './converters/_caches_converters.js';
+import * as converters from './converters/_batches_converters.js';
 import {PagedItem, Pager} from './pagers.js';
 import * as types from './types.js';
 
-export class Caches extends BaseModule {
+export class Batches extends BaseModule {
   constructor(private readonly apiClient: ApiClient) {
     super();
   }
 
   /**
-   * Lists cached content configurations.
+   * Create batch job.
    *
-   * @param params - The parameters for the list request.
-   * @return The paginated results of the list of cached contents.
+   * @param params - The parameters for create batch job request.
+   * @return The created batch job.
    *
    * @example
    * ```ts
-   * const cachedContents = await ai.caches.list({config: {'pageSize': 2}});
-   * for await (const cachedContent of cachedContents) {
-   *   console.log(cachedContent);
+   * const response = await ai.batches.create({
+   *   model: 'gemini-2.0-flash',
+   *   src: {gcsUri: 'gs://bucket/path/to/file.jsonl', format: 'jsonl'},
+   *   config: {
+   *     dest: {gcsUri: 'gs://bucket/path/output/directory', format: 'jsonl'},
+   *   }
+   * });
+   * console.log(response);
+   * ```
+   */
+  create = async (
+    params: types.CreateBatchJobParameters,
+  ): Promise<types.BatchJob> => {
+    if (this.apiClient.isVertexAI()) {
+      const timestamp = Date.now();
+      const timestampStr = timestamp.toString();
+      if (Array.isArray(params.src)) {
+        throw new Error(
+          'InlinedRequest[] is not supported in Vertex AI. Please use ' +
+            'Google Cloud Storage URI or BigQuery URI instead.',
+        );
+      }
+      params.config = params.config || {};
+      if (params.config.displayName === undefined) {
+        params.config.displayName = 'genaiBatchJob_${timestampStr}';
+      }
+      if (params.config.dest === undefined && typeof params.src === 'string') {
+        if (params.src.startsWith('gs://') && params.src.endsWith('.jsonl')) {
+          params.config.dest = `${params.src.slice(0, -6)}/dest`;
+        } else if (params.src.startsWith('bq://')) {
+          params.config.dest =
+            `${params.src}_dest_${timestampStr}` as unknown as string;
+        } else {
+          throw new Error('Unsupported source:' + params.src);
+        }
+      }
+    }
+    return await this.createInternal(params);
+  };
+
+  /**
+   * Lists batch job configurations.
+   *
+   * @param params - The parameters for the list request.
+   * @return The paginated results of the list of batch jobs.
+   *
+   * @example
+   * ```ts
+   * const batchJobs = await ai.batches.list({config: {'pageSize': 2}});
+   * for await (const batchJob of batchJobs) {
+   *   console.log(batchJob);
    * }
    * ```
    */
   list = async (
-    params: types.ListCachedContentsParameters = {},
-  ): Promise<Pager<types.CachedContent>> => {
-    return new Pager<types.CachedContent>(
-      PagedItem.PAGED_ITEM_CACHED_CONTENTS,
-      (x: types.ListCachedContentsParameters) => this.listInternal(x),
+    params: types.ListBatchJobsParameters = {},
+  ): Promise<Pager<types.BatchJob>> => {
+    return new Pager<types.BatchJob>(
+      PagedItem.PAGED_ITEM_BATCH_JOBS,
+      (x: types.ListBatchJobsParameters) => this.listInternal(x),
       await this.listInternal(params),
       params,
     );
   };
 
   /**
-   * Creates a cached contents resource.
+   * Internal method to create batch job.
    *
-   * @remarks
-   * Context caching is only supported for specific models. See [Gemini
-   * Developer API reference](https://ai.google.dev/gemini-api/docs/caching?lang=node/context-cac)
-   * and [Vertex AI reference](https://cloud.google.com/vertex-ai/generative-ai/docs/context-cache/context-cache-overview#supported_models)
-   * for more information.
+   * @param params - The parameters for create batch job request.
+   * @return The created batch job.
    *
-   * @param params - The parameters for the create request.
-   * @return The created cached content.
-   *
-   * @example
-   * ```ts
-   * const contents = ...; // Initialize the content to cache.
-   * const response = await ai.caches.create({
-   *   model: 'gemini-2.0-flash-001',
-   *   config: {
-   *    'contents': contents,
-   *    'displayName': 'test cache',
-   *    'systemInstruction': 'What is the sum of the two pdfs?',
-   *    'ttl': '86400s',
-   *  }
-   * });
-   * ```
    */
-  async create(
-    params: types.CreateCachedContentParameters,
-  ): Promise<types.CachedContent> {
-    let response: Promise<types.CachedContent>;
+  private async createInternal(
+    params: types.CreateBatchJobParameters,
+  ): Promise<types.BatchJob> {
+    let response: Promise<types.BatchJob>;
 
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      const body = converters.createCachedContentParametersToVertex(
+      const body = converters.createBatchJobParametersToVertex(
         this.apiClient,
         params,
       );
       path = common.formatMap(
-        'cachedContents',
+        'batchPredictionJobs',
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
@@ -101,20 +130,20 @@ export class Caches extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        }) as Promise<types.CachedContent>;
+        }) as Promise<types.BatchJob>;
 
       return response.then((apiResponse) => {
-        const resp = converters.cachedContentFromVertex(apiResponse);
+        const resp = converters.batchJobFromVertex(apiResponse);
 
-        return resp as types.CachedContent;
+        return resp as types.BatchJob;
       });
     } else {
-      const body = converters.createCachedContentParametersToMldev(
+      const body = converters.createBatchJobParametersToMldev(
         this.apiClient,
         params,
       );
       path = common.formatMap(
-        'cachedContents',
+        '{model}:batchGenerateContent',
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
@@ -133,41 +162,39 @@ export class Caches extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        }) as Promise<types.CachedContent>;
+        }) as Promise<types.BatchJob>;
 
       return response.then((apiResponse) => {
-        const resp = converters.cachedContentFromMldev(apiResponse);
+        const resp = converters.batchJobFromMldev(apiResponse);
 
-        return resp as types.CachedContent;
+        return resp as types.BatchJob;
       });
     }
   }
 
   /**
-   * Gets cached content configurations.
+   * Gets batch job configurations.
    *
    * @param params - The parameters for the get request.
-   * @return The cached content.
+   * @return The batch job.
    *
    * @example
    * ```ts
-   * await ai.caches.get({name: '...'}); // The server-generated resource name.
+   * await ai.batches.get({name: '...'}); // The server-generated resource name.
    * ```
    */
-  async get(
-    params: types.GetCachedContentParameters,
-  ): Promise<types.CachedContent> {
-    let response: Promise<types.CachedContent>;
+  async get(params: types.GetBatchJobParameters): Promise<types.BatchJob> {
+    let response: Promise<types.BatchJob>;
 
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      const body = converters.getCachedContentParametersToVertex(
+      const body = converters.getBatchJobParametersToVertex(
         this.apiClient,
         params,
       );
       path = common.formatMap(
-        '{name}',
+        'batchPredictionJobs/{name}',
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
@@ -186,20 +213,20 @@ export class Caches extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        }) as Promise<types.CachedContent>;
+        }) as Promise<types.BatchJob>;
 
       return response.then((apiResponse) => {
-        const resp = converters.cachedContentFromVertex(apiResponse);
+        const resp = converters.batchJobFromVertex(apiResponse);
 
-        return resp as types.CachedContent;
+        return resp as types.BatchJob;
       });
     } else {
-      const body = converters.getCachedContentParametersToMldev(
+      const body = converters.getBatchJobParametersToMldev(
         this.apiClient,
         params,
       );
       path = common.formatMap(
-        '{name}',
+        'batches/{name}',
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
@@ -218,41 +245,172 @@ export class Caches extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        }) as Promise<types.CachedContent>;
+        }) as Promise<types.BatchJob>;
 
       return response.then((apiResponse) => {
-        const resp = converters.cachedContentFromMldev(apiResponse);
+        const resp = converters.batchJobFromMldev(apiResponse);
 
-        return resp as types.CachedContent;
+        return resp as types.BatchJob;
       });
     }
   }
 
   /**
-   * Deletes cached content.
+   * Cancels a batch job.
+   *
+   * @param params - The parameters for the cancel request.
+   * @return The empty response returned by the API.
+   *
+   * @example
+   * ```ts
+   * await ai.batches.cancel({name: '...'}); // The server-generated resource name.
+   * ```
+   */
+  async cancel(params: types.CancelBatchJobParameters): Promise<void> {
+    let path: string = '';
+    let queryParams: Record<string, string> = {};
+    if (this.apiClient.isVertexAI()) {
+      const body = converters.cancelBatchJobParametersToVertex(
+        this.apiClient,
+        params,
+      );
+      path = common.formatMap(
+        'batchPredictionJobs/{name}:cancel',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
+      delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
+      await this.apiClient.request({
+        path: path,
+        queryParams: queryParams,
+        body: JSON.stringify(body),
+        httpMethod: 'POST',
+        httpOptions: params.config?.httpOptions,
+        abortSignal: params.config?.abortSignal,
+      });
+    } else {
+      const body = converters.cancelBatchJobParametersToMldev(
+        this.apiClient,
+        params,
+      );
+      path = common.formatMap(
+        'batches/{name}:cancel',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
+      delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
+      await this.apiClient.request({
+        path: path,
+        queryParams: queryParams,
+        body: JSON.stringify(body),
+        httpMethod: 'POST',
+        httpOptions: params.config?.httpOptions,
+        abortSignal: params.config?.abortSignal,
+      });
+    }
+  }
+
+  private async listInternal(
+    params: types.ListBatchJobsParameters,
+  ): Promise<types.ListBatchJobsResponse> {
+    let response: Promise<types.ListBatchJobsResponse>;
+
+    let path: string = '';
+    let queryParams: Record<string, string> = {};
+    if (this.apiClient.isVertexAI()) {
+      const body = converters.listBatchJobsParametersToVertex(params);
+      path = common.formatMap(
+        'batchPredictionJobs',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
+      delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'GET',
+          httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json();
+        }) as Promise<types.ListBatchJobsResponse>;
+
+      return response.then((apiResponse) => {
+        const resp = converters.listBatchJobsResponseFromVertex(apiResponse);
+        const typedResp = new types.ListBatchJobsResponse();
+        Object.assign(typedResp, resp);
+        return typedResp;
+      });
+    } else {
+      const body = converters.listBatchJobsParametersToMldev(params);
+      path = common.formatMap(
+        'batches',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
+      delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'GET',
+          httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json();
+        }) as Promise<types.ListBatchJobsResponse>;
+
+      return response.then((apiResponse) => {
+        const resp = converters.listBatchJobsResponseFromMldev(apiResponse);
+        const typedResp = new types.ListBatchJobsResponse();
+        Object.assign(typedResp, resp);
+        return typedResp;
+      });
+    }
+  }
+
+  /**
+   * Deletes a batch job.
    *
    * @param params - The parameters for the delete request.
    * @return The empty response returned by the API.
    *
    * @example
    * ```ts
-   * await ai.caches.delete({name: '...'}); // The server-generated resource name.
+   * await ai.batches.delete({name: '...'}); // The server-generated resource name.
    * ```
    */
   async delete(
-    params: types.DeleteCachedContentParameters,
-  ): Promise<types.DeleteCachedContentResponse> {
-    let response: Promise<types.DeleteCachedContentResponse>;
+    params: types.DeleteBatchJobParameters,
+  ): Promise<types.DeleteResourceJob> {
+    let response: Promise<types.DeleteResourceJob>;
 
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      const body = converters.deleteCachedContentParametersToVertex(
+      const body = converters.deleteBatchJobParametersToVertex(
         this.apiClient,
         params,
       );
       path = common.formatMap(
-        '{name}',
+        'batchPredictionJobs/{name}',
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
@@ -271,21 +429,20 @@ export class Caches extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        }) as Promise<types.DeleteCachedContentResponse>;
+        }) as Promise<types.DeleteResourceJob>;
 
-      return response.then(() => {
-        const resp = converters.deleteCachedContentResponseFromVertex();
-        const typedResp = new types.DeleteCachedContentResponse();
-        Object.assign(typedResp, resp);
-        return typedResp;
+      return response.then((apiResponse) => {
+        const resp = converters.deleteResourceJobFromVertex(apiResponse);
+
+        return resp as types.DeleteResourceJob;
       });
     } else {
-      const body = converters.deleteCachedContentParametersToMldev(
+      const body = converters.deleteBatchJobParametersToMldev(
         this.apiClient,
         params,
       );
       path = common.formatMap(
-        '{name}',
+        'batches/{name}',
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
@@ -304,173 +461,12 @@ export class Caches extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        }) as Promise<types.DeleteCachedContentResponse>;
-
-      return response.then(() => {
-        const resp = converters.deleteCachedContentResponseFromMldev();
-        const typedResp = new types.DeleteCachedContentResponse();
-        Object.assign(typedResp, resp);
-        return typedResp;
-      });
-    }
-  }
-
-  /**
-   * Updates cached content configurations.
-   *
-   * @param params - The parameters for the update request.
-   * @return The updated cached content.
-   *
-   * @example
-   * ```ts
-   * const response = await ai.caches.update({
-   *   name: '...',  // The server-generated resource name.
-   *   config: {'ttl': '7600s'}
-   * });
-   * ```
-   */
-  async update(
-    params: types.UpdateCachedContentParameters,
-  ): Promise<types.CachedContent> {
-    let response: Promise<types.CachedContent>;
-
-    let path: string = '';
-    let queryParams: Record<string, string> = {};
-    if (this.apiClient.isVertexAI()) {
-      const body = converters.updateCachedContentParametersToVertex(
-        this.apiClient,
-        params,
-      );
-      path = common.formatMap(
-        '{name}',
-        body['_url'] as Record<string, unknown>,
-      );
-      queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
-      delete body['_url'];
-      delete body['_query'];
-
-      response = this.apiClient
-        .request({
-          path: path,
-          queryParams: queryParams,
-          body: JSON.stringify(body),
-          httpMethod: 'PATCH',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
-        })
-        .then((httpResponse) => {
-          return httpResponse.json();
-        }) as Promise<types.CachedContent>;
+        }) as Promise<types.DeleteResourceJob>;
 
       return response.then((apiResponse) => {
-        const resp = converters.cachedContentFromVertex(apiResponse);
+        const resp = converters.deleteResourceJobFromMldev(apiResponse);
 
-        return resp as types.CachedContent;
-      });
-    } else {
-      const body = converters.updateCachedContentParametersToMldev(
-        this.apiClient,
-        params,
-      );
-      path = common.formatMap(
-        '{name}',
-        body['_url'] as Record<string, unknown>,
-      );
-      queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
-      delete body['_url'];
-      delete body['_query'];
-
-      response = this.apiClient
-        .request({
-          path: path,
-          queryParams: queryParams,
-          body: JSON.stringify(body),
-          httpMethod: 'PATCH',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
-        })
-        .then((httpResponse) => {
-          return httpResponse.json();
-        }) as Promise<types.CachedContent>;
-
-      return response.then((apiResponse) => {
-        const resp = converters.cachedContentFromMldev(apiResponse);
-
-        return resp as types.CachedContent;
-      });
-    }
-  }
-
-  private async listInternal(
-    params: types.ListCachedContentsParameters,
-  ): Promise<types.ListCachedContentsResponse> {
-    let response: Promise<types.ListCachedContentsResponse>;
-
-    let path: string = '';
-    let queryParams: Record<string, string> = {};
-    if (this.apiClient.isVertexAI()) {
-      const body = converters.listCachedContentsParametersToVertex(params);
-      path = common.formatMap(
-        'cachedContents',
-        body['_url'] as Record<string, unknown>,
-      );
-      queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
-      delete body['_url'];
-      delete body['_query'];
-
-      response = this.apiClient
-        .request({
-          path: path,
-          queryParams: queryParams,
-          body: JSON.stringify(body),
-          httpMethod: 'GET',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
-        })
-        .then((httpResponse) => {
-          return httpResponse.json();
-        }) as Promise<types.ListCachedContentsResponse>;
-
-      return response.then((apiResponse) => {
-        const resp =
-          converters.listCachedContentsResponseFromVertex(apiResponse);
-        const typedResp = new types.ListCachedContentsResponse();
-        Object.assign(typedResp, resp);
-        return typedResp;
-      });
-    } else {
-      const body = converters.listCachedContentsParametersToMldev(params);
-      path = common.formatMap(
-        'cachedContents',
-        body['_url'] as Record<string, unknown>,
-      );
-      queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
-      delete body['_url'];
-      delete body['_query'];
-
-      response = this.apiClient
-        .request({
-          path: path,
-          queryParams: queryParams,
-          body: JSON.stringify(body),
-          httpMethod: 'GET',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
-        })
-        .then((httpResponse) => {
-          return httpResponse.json();
-        }) as Promise<types.ListCachedContentsResponse>;
-
-      return response.then((apiResponse) => {
-        const resp =
-          converters.listCachedContentsResponseFromMldev(apiResponse);
-        const typedResp = new types.ListCachedContentsResponse();
-        Object.assign(typedResp, resp);
-        return typedResp;
+        return resp as types.DeleteResourceJob;
       });
     }
   }
