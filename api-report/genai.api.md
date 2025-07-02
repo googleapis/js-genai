@@ -1488,16 +1488,14 @@ export { Image_2 as Image }
 
 // @public
 export enum ImagePromptLanguage {
-    // (undocumented)
     auto = "auto",
-    // (undocumented)
     en = "en",
-    // (undocumented)
+    es = "es",
     hi = "hi",
-    // (undocumented)
     ja = "ja",
-    // (undocumented)
-    ko = "ko"
+    ko = "ko",
+    pt = "pt",
+    zh = "zh"
 }
 
 // @public
