@@ -2716,22 +2716,6 @@ export function liveMusicConnectParametersToVertex(
   return toObject;
 }
 
-export function weightedPromptToVertex(
-  fromObject: types.WeightedPrompt,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (common.getValueByPath(fromObject, ['text']) !== undefined) {
-    throw new Error('text parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['weight']) !== undefined) {
-    throw new Error('weight parameter is not supported in Vertex AI.');
-  }
-
-  return toObject;
-}
-
 export function liveMusicSetWeightedPromptsParametersToVertex(
   fromObject: types.LiveMusicSetWeightedPromptsParameters,
 ): Record<string, unknown> {

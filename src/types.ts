@@ -4030,7 +4030,7 @@ export declare interface CreateBatchJobConfig {
   /** GCS or BigQuery URI prefix for the output predictions. Example:
       "gs://path/to/output/data" or "bq://projectId.bqDatasetId.bqTableId".
        */
-  dest?: string;
+  dest?: BatchJobDestinationUnion;
 }
 
 /** Config for batches.create parameters. */
@@ -5419,3 +5419,5 @@ export type ToolListUnion = ToolUnion[];
 export type DownloadableFileUnion = string | File | GeneratedVideo | Video;
 
 export type BatchJobSourceUnion = BatchJobSource | InlinedRequest[] | string;
+
+export type BatchJobDestinationUnion = BatchJobDestination | string;

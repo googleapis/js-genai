@@ -291,22 +291,6 @@ export function listTuningJobsParametersToVertex(
   return toObject;
 }
 
-export function tuningExampleToVertex(
-  fromObject: types.TuningExample,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (common.getValueByPath(fromObject, ['textInput']) !== undefined) {
-    throw new Error('textInput parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['output']) !== undefined) {
-    throw new Error('output parameter is not supported in Vertex AI.');
-  }
-
-  return toObject;
-}
-
 export function tuningDatasetToVertex(
   fromObject: types.TuningDataset,
   parentObject: Record<string, unknown>,
@@ -478,12 +462,6 @@ export function createTuningJobParametersToVertex(
       createTuningJobConfigToVertex(fromConfig, toObject),
     );
   }
-
-  return toObject;
-}
-
-export function tunedModelCheckpointFromMldev(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
 
   return toObject;
 }
