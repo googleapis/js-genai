@@ -302,53 +302,97 @@ describe('Client Tests', () => {
         secondString: 'world',
       });
     });
-  });
-  it('Vertex AI should be able to help build the FunctionDeclaration', async () => {
-    const stringArgument = z.object({
-      firstString: z.string(),
-      secondString: z.string(),
-    });
-    const client = new GoogleGenAI({
-      vertexai: true,
-      project: GOOGLE_CLOUD_PROJECT,
-      location: GOOGLE_CLOUD_LOCATION,
-    });
-    const response = await client.models.generateContent({
-      model: 'gemini-1.5-flash',
-      contents: 'put word: hello and word: world into a string',
-      config: {
-        tools: [
-          {
-            functionDeclarations: [
-              {
-                name: 'concatStringFunction',
-                description: 'this is a concat string function',
-                parameters: zodToJsonSchema(stringArgument) as Record<
-                  string,
-                  unknown
-                >,
-              },
-            ],
-          },
-        ],
-        toolConfig: {
-          functionCallingConfig: {
-            mode: FunctionCallingConfigMode.ANY,
-            allowedFunctionNames: ['concatStringFunction'],
+
+    it('Vertex AI should be able to help build the FunctionDeclaration', async () => {
+      const stringArgument = z.object({
+        firstString: z.string(),
+        secondString: z.string(),
+      });
+      const client = new GoogleGenAI({
+        vertexai: true,
+        project: GOOGLE_CLOUD_PROJECT,
+        location: GOOGLE_CLOUD_LOCATION,
+      });
+      const response = await client.models.generateContent({
+        model: 'gemini-1.5-flash',
+        contents: 'put word: hello and word: world into a string',
+        config: {
+          tools: [
+            {
+              functionDeclarations: [
+                {
+                  name: 'concatStringFunction',
+                  description: 'this is a concat string function',
+                  parameters: zodToJsonSchema(stringArgument) as Record<
+                    string,
+                    unknown
+                  >,
+                },
+              ],
+            },
+          ],
+          toolConfig: {
+            functionCallingConfig: {
+              mode: FunctionCallingConfigMode.ANY,
+              allowedFunctionNames: ['concatStringFunction'],
+            },
           },
         },
-      },
+      });
+      const functionCallResponse =
+        response.candidates![0].content!['parts']![0].functionCall;
+      expect(functionCallResponse!.name).toEqual('concatStringFunction');
+      const parsedArgument = stringArgument.safeParse(
+        functionCallResponse!.args!,
+      );
+      expect(parsedArgument.success).toEqual(true);
+      expect(parsedArgument.data).toEqual({
+        firstString: 'hello',
+        secondString: 'world',
+      });
     });
-    const functionCallResponse =
-      response.candidates![0].content!['parts']![0].functionCall;
-    expect(functionCallResponse!.name).toEqual('concatStringFunction');
-    const parsedArgument = stringArgument.safeParse(
-      functionCallResponse!.args!,
-    );
-    expect(parsedArgument.success).toEqual(true);
-    expect(parsedArgument.data).toEqual({
-      firstString: 'hello',
-      secondString: 'world',
+    it('ML Dev should return the headers in the sdkHttpResponse by default', async () => {
+      const client = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+      });
+      const response = await client.models.generateContent({
+        model: 'gemini-1.5-flash',
+        contents: 'why is the sky blue?',
+        config: {maxOutputTokens: 20, candidateCount: 1},
+      });
+      console.log('response', response);
+      expect(response.sdkHttpResponse?.headers).toEqual(
+        jasmine.objectContaining({
+          'content-type': 'application/json; charset=UTF-8',
+          'content-encoding': 'gzip',
+          'transfer-encoding': 'chunked',
+          'x-content-type-options': 'nosniff',
+          'x-xss-protection': '0',
+        }),
+      );
+    });
+
+    it('Vertex AI should return the headers in the sdkHttpResponse by default', async () => {
+      const client = new GoogleGenAI({
+        vertexai: true,
+        project: GOOGLE_CLOUD_PROJECT,
+        location: GOOGLE_CLOUD_LOCATION,
+      });
+      const response = await client.models.generateContent({
+        model: 'gemini-1.5-flash',
+        contents: 'why is the sky blue?',
+        config: {maxOutputTokens: 20, candidateCount: 1},
+      });
+      expect(response.sdkHttpResponse?.headers).toEqual(
+        jasmine.objectContaining({
+          'content-type': 'application/json; charset=UTF-8',
+          'content-encoding': 'gzip',
+          'transfer-encoding': 'chunked',
+          'x-content-type-options': 'nosniff',
+          'x-xss-protection': '0',
+        }),
+      );
     });
   });
 
@@ -490,6 +534,59 @@ describe('Client Tests', () => {
         'Expected candidatesTokenCount to be less than or equal to 250, got ' +
           finalChunk?.usageMetadata!.candidatesTokenCount,
       );
+    });
+    it('ML Dev should should return the headers in the sdkHttpResponse for each chunk', async () => {
+      const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+      const response = await client.models.generateContentStream({
+        model: 'gemini-1.5-flash',
+        contents: 'why is the sky blue?',
+        config: {candidateCount: 1, maxOutputTokens: 200},
+      });
+      let i = 1;
+      console.info(
+        'ML Dev should stream generate content with specified parameters',
+      );
+      for await (const chunk of response) {
+        console.info(`stream chunk ${i}`, chunk.sdkHttpResponse?.headers);
+        expect(chunk.sdkHttpResponse?.headers).toEqual(
+          jasmine.objectContaining({
+            'content-type': 'text/event-stream',
+            'transfer-encoding': 'chunked',
+            'x-content-type-options': 'nosniff',
+            'x-xss-protection': '0',
+          }),
+        );
+        i++;
+      }
+    });
+
+    it('Vertex AI should should return the headers in the sdkHttpResponse for each chunk', async () => {
+      const client = new GoogleGenAI({
+        vertexai: true,
+        project: GOOGLE_CLOUD_PROJECT,
+        location: GOOGLE_CLOUD_LOCATION,
+      });
+      const response = await client.models.generateContentStream({
+        model: 'gemini-1.5-flash',
+        contents: 'why is the sky blue?',
+        config: {candidateCount: 1, maxOutputTokens: 200},
+      });
+      let i = 1;
+      console.info(
+        'Vertex AI should stream generate content with specified parameters',
+      );
+      for await (const chunk of response) {
+        console.info(`stream chunk ${i}`, chunk.sdkHttpResponse?.headers);
+        expect(chunk.sdkHttpResponse?.headers).toEqual(
+          jasmine.objectContaining({
+            'content-type': 'text/event-stream',
+            'transfer-encoding': 'chunked',
+            'x-content-type-options': 'nosniff',
+            'x-xss-protection': '0',
+          }),
+        );
+        i++;
+      }
     });
   });
 

@@ -546,8 +546,13 @@ export class Models extends BaseModule {
           httpOptions: params.config?.httpOptions,
           abortSignal: params.config?.abortSignal,
         })
-        .then((httpResponse) => {
-          return httpResponse.json();
+        .then(async (httpResponse) => {
+          const response: types.GenerateContentResponse =
+            (await httpResponse.json()) as types.GenerateContentResponse;
+          response.sdkHttpResponse = {
+            headers: httpResponse.headers,
+          } as types.HttpResponse;
+          return response;
         }) as Promise<types.GenerateContentResponse>;
 
       return response.then((apiResponse) => {
@@ -579,8 +584,13 @@ export class Models extends BaseModule {
           httpOptions: params.config?.httpOptions,
           abortSignal: params.config?.abortSignal,
         })
-        .then((httpResponse) => {
-          return httpResponse.json();
+        .then(async (httpResponse) => {
+          const response: types.GenerateContentResponse =
+            (await httpResponse.json()) as types.GenerateContentResponse;
+          response.sdkHttpResponse = {
+            headers: httpResponse.headers,
+          } as types.HttpResponse;
+          return response;
         }) as Promise<types.GenerateContentResponse>;
 
       return response.then((apiResponse) => {
@@ -630,6 +640,11 @@ export class Models extends BaseModule {
           const resp = converters.generateContentResponseFromVertex(
             (await chunk.json()) as types.GenerateContentResponse,
           );
+
+          resp['sdkHttpResponse'] = {
+            headers: chunk.headers,
+          } as types.HttpResponse;
+
           const typedResp = new types.GenerateContentResponse();
           Object.assign(typedResp, resp);
           yield typedResp;
@@ -666,6 +681,11 @@ export class Models extends BaseModule {
           const resp = converters.generateContentResponseFromMldev(
             (await chunk.json()) as types.GenerateContentResponse,
           );
+
+          resp['sdkHttpResponse'] = {
+            headers: chunk.headers,
+          } as types.HttpResponse;
+
           const typedResp = new types.GenerateContentResponse();
           Object.assign(typedResp, resp);
           yield typedResp;
