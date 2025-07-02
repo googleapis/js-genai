@@ -61,6 +61,25 @@ describe('generateContent', () => {
       responseText,
     );
   });
+
+  it('ML Dev should generate content without system instruction when responseModalities contains image', async () => {
+     const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+     const response = await client.models.generateContent({
+       model: 'gemini-2.0-flash-exp',//image modality requires different model
+       contents: 'Create an image of a mountain',      
+       config: {responseModalities: ['text', 'image'], systemInstruction: 'I say high you say low'},
+     });
+     const responseText = response.text;
+     expect(responseText?.includes('mountain') ?? false).toBe(
+       true,
+       `Expected response to include "mountain", but got ${responseText}`,
+     );
+     console.info(
+       'ML Dev should generate content without system instruction\n',
+       responseText,
+     );
+   });
+  
   it('ML Dev should generate content with given zod schema', async () => {
     const innerObject = z.object({
       innerString: z.string(),
