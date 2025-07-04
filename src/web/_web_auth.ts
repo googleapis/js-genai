@@ -7,6 +7,7 @@
 import {Auth} from '../_auth.js';
 
 export const GOOGLE_API_KEY_HEADER = 'x-goog-api-key';
+export const AUTHORIZATION_HEADER = 'Authorization';
 // TODO(b/395122533): We need a secure client side authentication mechanism.
 export class WebAuth implements Auth {
   constructor(private readonly apiKey: string) {}
@@ -15,15 +16,19 @@ export class WebAuth implements Auth {
     if (headers.get(GOOGLE_API_KEY_HEADER) !== null) {
       return;
     }
-
-    if (this.apiKey.startsWith('auth_tokens/')) {
-      throw new Error('Ephemeral tokens are only supported by the live API.');
+    if (headers.get(AUTHORIZATION_HEADER) !== null) {
+      return;
     }
 
     // Check if API key is empty or null
     if (!this.apiKey) {
       throw new Error('API key is missing. Please provide a valid API key.');
     }
-    headers.append(GOOGLE_API_KEY_HEADER, this.apiKey);
+
+    if (this.apiKey.startsWith('auth_tokens/')) {
+      headers.append(AUTHORIZATION_HEADER, `Token ${this.apiKey}`);
+    } else {
+      headers.append(GOOGLE_API_KEY_HEADER, this.apiKey);
+    }
   }
 }

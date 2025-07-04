@@ -20,7 +20,11 @@ export class FakeAuth implements Auth {
       if (headers.get(GOOGLE_API_KEY_HEADER) !== null) {
         return;
       }
-      headers.append(GOOGLE_API_KEY_HEADER, this.apiKey);
+      if (this.apiKey.startsWith('auth_tokens/')) {
+        headers.append(AUTHORIZATION_HEADER, `Token ${this.apiKey}`);
+      } else {
+        headers.append(GOOGLE_API_KEY_HEADER, this.apiKey);
+      }
       return;
     }
 

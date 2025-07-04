@@ -83,6 +83,33 @@ describe('addAuthHeaders', () => {
     expect(headers.get(GOOGLE_API_KEY_HEADER)).toBe('Existing Key');
   });
 
+  it('should add an authorization header if ephemeral key is provided', async () => {
+    const apiKey = 'auth_tokens/ephemeral_key';
+    const nodeAuth = new NodeAuth({apiKey: apiKey});
+    (nodeAuth as unknown as NodeAuthWithGoogleAuth).googleAuth = googleAuthMock; // Inject the mock
+    googleAuthMock.getRequestHeaders.and.resolveTo({'foo': '1'});
+    const headers = new Headers();
+
+    await nodeAuth.addAuthHeaders(headers);
+
+    expect(headers.get(AUTHORIZATION_HEADER)).toBe(
+      'Token auth_tokens/ephemeral_key',
+    );
+  });
+
+  it('should not add an authorization header if it already exists', async () => {
+    const apiKey = 'auth_tokens/ephemeral_key';
+    const nodeAuth = new NodeAuth({apiKey: apiKey});
+    (nodeAuth as unknown as NodeAuthWithGoogleAuth).googleAuth = googleAuthMock; // Inject the mock
+    googleAuthMock.getRequestHeaders.and.resolveTo({'foo': '1'});
+    const headers = new Headers();
+    headers.append(AUTHORIZATION_HEADER, 'Existing key');
+
+    await nodeAuth.addAuthHeaders(headers);
+
+    expect(headers.get(AUTHORIZATION_HEADER)).toBe('Existing key');
+  });
+
   it('should not call googleAuth.getRequestHeaders if apiKey is provided', async () => {
     const apiKey = 'test-api-key';
     const nodeAuth = new NodeAuth({apiKey: apiKey});
