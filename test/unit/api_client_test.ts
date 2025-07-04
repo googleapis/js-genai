@@ -290,6 +290,60 @@ describe('processStreamResponse', () => {
     const result = await resultHttpResponse.value.json();
     expect(result).toEqual(expectedResponse);
   });
+
+  it('should yield valid json split into multiple chunk data at the middle of multi-byte character', async () => {
+    const encoder = new TextEncoder();
+    const fullData = new Uint8Array([
+      0xe3, 0x81, 0x93, 0xe3, 0x82, 0x93, 0xe3, 0x81, 0xab, 0xe3, 0x81, 0xa1,
+      0xe3, 0x81, 0xaf, 0xf0, 0x9f, 0x98, 0x8a,
+    ]);
+    const validChunkHead = encoder.encode(
+      'data: {"candidates": [{"content": {"parts": [{"text": "',
+    );
+    const validChunkTail = encoder.encode(
+      '"}],"role": "model"},"finishReason": "STOP","index": 0}],"usageMetadata": {"promptTokenCount": 8,"candidatesTokenCount": 1,"totalTokenCount": 9}}\n\n',
+    );
+    const validChunkHeadMultibytes = fullData.slice(0, 16);
+    const validChunkTailMultibytes = fullData.slice(16);
+
+    const stream = new Readable();
+    stream.push(Uint8Array.of(...validChunkHead, ...validChunkHeadMultibytes));
+    stream.push(Uint8Array.of(...validChunkTailMultibytes, ...validChunkTail));
+    stream.push(null); // signal end of stream
+    const readableStream = new ReadableStream({
+      start(controller) {
+        stream.on('data', (chunk) => controller.enqueue(chunk));
+        stream.on('end', () => controller.close());
+        stream.on('error', (err) => controller.error(err));
+      },
+    });
+    const response = new Response(readableStream);
+    const expectedResponse = {
+      candidates: [
+        {
+          content: {
+            parts: [
+              {
+                text: 'こんにちは😊',
+              },
+            ],
+            role: 'model',
+          },
+          finishReason: types.FinishReason.STOP,
+          index: 0,
+        },
+      ],
+      usageMetadata: {
+        promptTokenCount: 8,
+        candidatesTokenCount: 1,
+        totalTokenCount: 9,
+      },
+    };
+    const generator = apiClient.processStreamResponse(response);
+    const resultHttpResponse = await generator.next();
+    const result = await resultHttpResponse.value.json();
+    expect(result).toEqual(expectedResponse);
+  });
 });
 
 describe('ApiClient', () => {
