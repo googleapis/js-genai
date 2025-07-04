@@ -528,7 +528,7 @@ export class ApiClient {
           }
           break;
         }
-        const chunkString = decoder.decode(value);
+        const chunkString = decoder.decode(value, {stream: true});
 
         // Parse and throw an error if the chunk contains an error.
         try {
