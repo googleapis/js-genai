@@ -13,6 +13,7 @@ import {
 import {
   hasMcpToolUsage,
   mcpToTool,
+  setMcpToolUsageFromMcpToTool,
   setMcpUsageHeader,
 } from '../../src/mcp/_mcp.js';
 import * as types from '../../src/types.js';
@@ -186,6 +187,8 @@ describe('hasMcpToolUsage', () => {
   });
 
   it('should return false for Gemini tools', () => {
+    // Explicitly set the MCP usage to false.
+    setMcpToolUsageFromMcpToTool(false);
     const tools = [
       {
         functionDeclarations: [
@@ -209,6 +212,36 @@ describe('hasMcpToolUsage', () => {
       },
     ];
     expect(hasMcpToolUsage(tools)).toBeFalse();
+  });
+
+  it('should return true after calling mcpToTool', async () => {
+    // Explicitly set the MCP usage to false.
+    setMcpToolUsageFromMcpToTool(false);
+
+    const _mcpCallableTool = mcpToTool(await spinUpPrintingServer());
+    const tools = [
+      {
+        functionDeclarations: [
+          {
+            name: 'tool',
+            description: 'tool-description',
+            parameters: {
+              type: types.Type.OBJECT,
+              properties: {
+                property: {
+                  type: types.Type.OBJECT,
+                  items: {
+                    type: types.Type.STRING,
+                    description: 'item-description',
+                  },
+                },
+              },
+            },
+          },
+        ],
+      },
+    ];
+    expect(hasMcpToolUsage(tools)).toBeTrue();
   });
 });
 
