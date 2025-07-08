@@ -1510,6 +1510,12 @@ export function imageToMldev(fromObject: types.Image): Record<string, unknown> {
   return toObject;
 }
 
+export function generateVideosSourceToMldev(): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  return toObject;
+}
+
 export function generateVideosConfigToMldev(
   fromObject: types.GenerateVideosConfig,
   parentObject: Record<string, unknown>,
@@ -3854,6 +3860,12 @@ export function videoToVertex(
   if (fromMimeType != null) {
     common.setValueByPath(toObject, ['mimeType'], fromMimeType);
   }
+
+  return toObject;
+}
+
+export function generateVideosSourceToVertex(): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   return toObject;
 }
