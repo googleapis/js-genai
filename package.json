@@ -91,13 +91,13 @@
     "tsx": "^4.19.4",
     "typedoc": "^0.27.0",
     "typescript": "~5.2.0",
-    "typescript-eslint": "8.24.1"
+    "typescript-eslint": "8.24.1",
+    "zod-to-json-schema": "^3.22.4"
   },
   "dependencies": {
     "google-auth-library": "^9.14.2",
     "ws": "^8.18.0",
-    "zod": "^3.22.4",
-    "zod-to-json-schema": "^3.22.4"
+    "zod": "^3.22.4"
   },
   "peerDependencies": {
     "@modelcontextprotocol/sdk": "^1.11.0"
