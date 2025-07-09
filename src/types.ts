@@ -2913,6 +2913,8 @@ export declare interface ListModelsParameters {
 }
 
 export class ListModelsResponse {
+  /** Used to retain the full HTTP response. */
+  sdkHttpResponse?: HttpResponse;
   nextPageToken?: string;
   models?: Model[];
 }
@@ -3520,6 +3522,8 @@ export declare interface ListTuningJobsParameters {
 
 /** Response for the list tuning jobs method. */
 export class ListTuningJobsResponse {
+  /** Used to retain the full HTTP response. */
+  sdkHttpResponse?: HttpResponse;
   /** A token to retrieve the next page of results. Pass to ListTuningJobsRequest.page_token to obtain that page. */
   nextPageToken?: string;
   /** List of TuningJobs in the requested page. */
@@ -3784,6 +3788,8 @@ export declare interface ListCachedContentsParameters {
 }
 
 export class ListCachedContentsResponse {
+  /** Used to retain the full HTTP response. */
+  sdkHttpResponse?: HttpResponse;
   nextPageToken?: string;
   /** List of cached contents.
    */
@@ -3855,6 +3861,8 @@ export declare interface File {
 
 /** Response for the list files method. */
 export class ListFilesResponse {
+  /** Used to retain the full HTTP response. */
+  sdkHttpResponse?: HttpResponse;
   /** A token to retrieve next page of results. */
   nextPageToken?: string;
   /** The list of files. */
@@ -4158,6 +4166,8 @@ export declare interface ListBatchJobsParameters {
 
 /** Config for batches.list return value. */
 export class ListBatchJobsResponse {
+  /** Used to retain the full HTTP response. */
+  sdkHttpResponse?: HttpResponse;
   nextPageToken?: string;
   batchJobs?: BatchJob[];
 }
@@ -4188,6 +4198,8 @@ export declare interface DeleteBatchJobParameters {
 
 /** The return value of delete operation. */
 export declare interface DeleteResourceJob {
+  /** Used to retain the full HTTP response. */
+  sdkHttpResponse?: HttpResponse;
   name?: string;
   done?: boolean;
   error?: JobError;
