@@ -623,8 +623,8 @@ export function listTuningJobsResponseFromMldev(
   return toObject;
 }
 
-export function operationFromMldev(
-  fromObject: types.Operation,
+export function tuningOperationFromMldev(
+  fromObject: types.TuningOperation,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
