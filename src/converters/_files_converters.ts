@@ -332,8 +332,17 @@ export function listFilesResponseFromMldev(
   return toObject;
 }
 
-export function createFileResponseFromMldev(): Record<string, unknown> {
+export function createFileResponseFromMldev(
+  fromObject: types.CreateFileResponse,
+): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
+
+  const fromSdkHttpResponse = common.getValueByPath(fromObject, [
+    'sdkHttpResponse',
+  ]);
+  if (fromSdkHttpResponse != null) {
+    common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
+  }
 
   return toObject;
 }
