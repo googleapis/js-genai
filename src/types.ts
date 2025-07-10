@@ -2168,6 +2168,8 @@ export class GenerateContentResponseUsageMetadata {
 
 /** Response message for PredictionService.GenerateContent. */
 export class GenerateContentResponse {
+  /** Used to retain the full HTTP response. */
+  sdkHttpResponse?: HttpResponse;
   /** Response variations returned by the model.
    */
   candidates?: Candidate[];
