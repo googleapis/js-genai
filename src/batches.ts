@@ -62,6 +62,73 @@ export class Batches extends BaseModule {
           throw new Error('Unsupported source:' + params.src);
         }
       }
+    } else {
+      if (
+        Array.isArray(params.src) ||
+        (typeof params.src !== 'string' && params.src.inlinedRequests)
+      ) {
+        // Move system instruction to httpOptions extraBody.
+
+        let path: string = '';
+        let queryParams: Record<string, string> = {};
+        const body = converters.createBatchJobParametersToMldev(
+          this.apiClient,
+          params,
+        );
+        path = common.formatMap(
+          '{model}:batchGenerateContent',
+          body['_url'] as Record<string, unknown>,
+        );
+        queryParams = body['_query'] as Record<string, string>;
+        // Move system instruction to 'request':
+        // {'systemInstruction': system_instruction}
+        const batch = body['batch'] as {[key: string]: unknown};
+        const inputConfig = batch['inputConfig'] as {[key: string]: unknown};
+        const requestsWrapper = inputConfig['requests'] as {
+          [key: string]: unknown;
+        };
+        const requests = requestsWrapper['requests'] as Array<{
+          [key: string]: unknown;
+        }>;
+        const newRequests = [];
+        for (const request of requests) {
+          const requestDict = request as {[key: string]: unknown};
+          if (requestDict['systemInstruction']) {
+            const systemInstructionValue = requestDict['systemInstruction'];
+            delete requestDict['systemInstruction'];
+            const requestContent = requestDict['request'] as {
+              [key: string]: unknown;
+            };
+            requestContent['systemInstruction'] = systemInstructionValue;
+            requestDict['request'] = requestContent;
+          }
+          newRequests.push(requestDict);
+        }
+        requestsWrapper['requests'] = newRequests;
+
+        delete body['config'];
+        delete body['_url'];
+        delete body['_query'];
+
+        const response = this.apiClient
+          .request({
+            path: path,
+            queryParams: queryParams,
+            body: JSON.stringify(body),
+            httpMethod: 'POST',
+            httpOptions: params.config?.httpOptions,
+            abortSignal: params.config?.abortSignal,
+          })
+          .then((httpResponse) => {
+            return httpResponse.json();
+          }) as Promise<types.BatchJob>;
+
+        return response.then((apiResponse) => {
+          const resp = converters.batchJobFromMldev(apiResponse);
+
+          return resp as types.BatchJob;
+        });
+      }
     }
     return await this.createInternal(params);
   };
