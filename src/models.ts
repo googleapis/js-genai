@@ -539,6 +539,36 @@ export class Models extends BaseModule {
     return await this.upscaleImageInternal(apiParams);
   };
 
+  /**
+   *  Generates videos based on a text description and configuration.
+   *
+   * @param params - The parameters for generating videos.
+   * @return A Promise<GenerateVideosOperation> which allows you to track the progress and eventually retrieve the generated videos using the operations.get method.
+   *
+   * @example
+   * ```ts
+   * const operation = await ai.models.generateVideos({
+   *  model: 'veo-2.0-generate-001',
+   *  prompt: 'A neon hologram of a cat driving at top speed',
+   *  config: {
+   *    numberOfVideos: 1
+   * });
+   *
+   * while (!operation.done) {
+   *   await new Promise(resolve => setTimeout(resolve, 10000));
+   *   operation = await ai.operations.getVideosOperation({operation: operation});
+   * }
+   *
+   * console.log(operation.response?.generatedVideos?.[0]?.video?.uri);
+   * ```
+   */
+
+  async generateVideos(
+    params: types.GenerateVideosParameters,
+  ): Promise<types.GenerateVideosOperation> {
+    return await this.generateVideosInternal(params);
+  }
+
   private async generateContentInternal(
     params: types.GenerateContentParameters,
   ): Promise<types.GenerateContentResponse> {
@@ -1487,7 +1517,7 @@ export class Models extends BaseModule {
    * ```
    */
 
-  async generateVideos(
+  private async generateVideosInternal(
     params: types.GenerateVideosParameters,
   ): Promise<types.GenerateVideosOperation> {
     let response: Promise<types.GenerateVideosOperation>;
