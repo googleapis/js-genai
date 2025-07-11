@@ -271,8 +271,8 @@ export class Tunings extends BaseModule {
 
   private async tuneMldevInternal(
     params: types.CreateTuningJobParameters,
-  ): Promise<types.Operation> {
-    let response: Promise<types.Operation>;
+  ): Promise<types.TuningOperation> {
+    let response: Promise<types.TuningOperation>;
 
     let path: string = '';
     let queryParams: Record<string, string> = {};
@@ -302,12 +302,12 @@ export class Tunings extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        }) as Promise<types.Operation>;
+        }) as Promise<types.TuningOperation>;
 
       return response.then((apiResponse) => {
-        const resp = converters.operationFromMldev(apiResponse);
+        const resp = converters.tuningOperationFromMldev(apiResponse);
 
-        return resp as types.Operation;
+        return resp as types.TuningOperation;
       });
     }
   }
