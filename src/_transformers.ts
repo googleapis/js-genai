@@ -820,7 +820,12 @@ export function tBatchJobSource(
   throw new Error(`Unsupported source: ${src}`);
 }
 
-export function tBatchJobDestination(dest: unknown): types.BatchJobDestination {
+export function tBatchJobDestination(
+  dest: string | types.BatchJobDestination,
+): types.BatchJobDestination {
+  if (typeof dest !== 'string') {
+    return dest as types.BatchJobDestination;
+  }
   const destString = dest as string;
   if (destString.startsWith('gs://')) {
     return {

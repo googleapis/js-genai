@@ -4547,12 +4547,6 @@ export function generateImagesResponseFromMldev(
   return toObject;
 }
 
-export function endpointFromMldev(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
 export function tunedModelInfoFromMldev(
   fromObject: types.TunedModelInfo,
 ): Record<string, unknown> {
@@ -4572,12 +4566,6 @@ export function tunedModelInfoFromMldev(
   if (fromUpdateTime != null) {
     common.setValueByPath(toObject, ['updateTime'], fromUpdateTime);
   }
-
-  return toObject;
-}
-
-export function checkpointFromMldev(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
 
   return toObject;
 }

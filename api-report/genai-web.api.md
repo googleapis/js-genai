@@ -190,6 +190,9 @@ export interface BatchJobDestination {
     inlinedResponses?: InlinedResponse[];
 }
 
+// @public (undocumented)
+export type BatchJobDestinationUnion = BatchJobDestination | string;
+
 // @public
 export interface BatchJobSource {
     bigqueryUri?: string;
@@ -458,7 +461,7 @@ export interface CreateAuthTokenParameters {
 // @public
 export interface CreateBatchJobConfig {
     abortSignal?: AbortSignal;
-    dest?: string;
+    dest?: BatchJobDestinationUnion;
     displayName?: string;
     httpOptions?: HttpOptions;
 }
