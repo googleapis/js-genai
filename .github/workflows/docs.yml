@@ -1,0 +1,42 @@
+name: Check docs
+
+on:
+  push:
+    branches: [ 'main' ]
+  pull_request:
+    branches: [ 'main' ]
+
+jobs:
+  check-docs:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22.x
+        cache: 'npm'
+        cache-dependency-path: |
+          package-lock.json
+          sdk-samples/package-lock.json
+    - run: npm ci
+    - name: Generate docs
+      run: npm run docs
+    - name: Check for uncommitted docs changes
+      run: |
+        echo "Checking for uncommitted changes in docs/..."
+        git_status=$(git status --porcelain docs/)
+        new_files=$(git status --porcelain docs/ | grep "^A")
+        echo "git_status: $git_status"
+        echo "new_files: $new_files"
+        if [ -n "$git_status" ]; then
+          echo "::error::Detected changes in 'docs/' directory after running 'npm run docs'."
+          echo "Please run 'npm run docs' locally, commit the generated/modified files, and push again."
+          exit 1
+        else
+          echo "No changes detected in 'docs/' directory."
+        fi
+
+
