@@ -8,7 +8,7 @@
 
 import {ApiClient} from '../_api_client.js';
 import * as common from '../_common.js';
-import * as t from '../_transformers.js';
+import * as transformers from '../_transformers.js';
 import * as types from '../types.js';
 
 export function videoMetadataToMldev(
@@ -504,7 +504,7 @@ export function createCachedContentConfigToMldev(
 
   const fromContents = common.getValueByPath(fromObject, ['contents']);
   if (parentObject !== undefined && fromContents != null) {
-    let transformedList = t.tContents(fromContents);
+    let transformedList = transformers.tContents(fromContents);
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
         return contentToMldev(item);
@@ -520,7 +520,7 @@ export function createCachedContentConfigToMldev(
     common.setValueByPath(
       parentObject,
       ['systemInstruction'],
-      contentToMldev(t.tContent(fromSystemInstruction)),
+      contentToMldev(transformers.tContent(fromSystemInstruction)),
     );
   }
 
@@ -562,7 +562,7 @@ export function createCachedContentParametersToMldev(
     common.setValueByPath(
       toObject,
       ['model'],
-      t.tCachesModel(apiClient, fromModel),
+      transformers.tCachesModel(apiClient, fromModel),
     );
   }
 
@@ -589,7 +589,7 @@ export function getCachedContentParametersToMldev(
     common.setValueByPath(
       toObject,
       ['_url', 'name'],
-      t.tCachedContentName(apiClient, fromName),
+      transformers.tCachedContentName(apiClient, fromName),
     );
   }
 
@@ -612,7 +612,7 @@ export function deleteCachedContentParametersToMldev(
     common.setValueByPath(
       toObject,
       ['_url', 'name'],
-      t.tCachedContentName(apiClient, fromName),
+      transformers.tCachedContentName(apiClient, fromName),
     );
   }
 
@@ -654,7 +654,7 @@ export function updateCachedContentParametersToMldev(
     common.setValueByPath(
       toObject,
       ['_url', 'name'],
-      t.tCachedContentName(apiClient, fromName),
+      transformers.tCachedContentName(apiClient, fromName),
     );
   }
 
@@ -1299,7 +1299,7 @@ export function createCachedContentConfigToVertex(
 
   const fromContents = common.getValueByPath(fromObject, ['contents']);
   if (parentObject !== undefined && fromContents != null) {
-    let transformedList = t.tContents(fromContents);
+    let transformedList = transformers.tContents(fromContents);
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
         return contentToVertex(item);
@@ -1315,7 +1315,7 @@ export function createCachedContentConfigToVertex(
     common.setValueByPath(
       parentObject,
       ['systemInstruction'],
-      contentToVertex(t.tContent(fromSystemInstruction)),
+      contentToVertex(transformers.tContent(fromSystemInstruction)),
     );
   }
 
@@ -1362,7 +1362,7 @@ export function createCachedContentParametersToVertex(
     common.setValueByPath(
       toObject,
       ['model'],
-      t.tCachesModel(apiClient, fromModel),
+      transformers.tCachesModel(apiClient, fromModel),
     );
   }
 
@@ -1389,7 +1389,7 @@ export function getCachedContentParametersToVertex(
     common.setValueByPath(
       toObject,
       ['_url', 'name'],
-      t.tCachedContentName(apiClient, fromName),
+      transformers.tCachedContentName(apiClient, fromName),
     );
   }
 
@@ -1412,7 +1412,7 @@ export function deleteCachedContentParametersToVertex(
     common.setValueByPath(
       toObject,
       ['_url', 'name'],
-      t.tCachedContentName(apiClient, fromName),
+      transformers.tCachedContentName(apiClient, fromName),
     );
   }
 
@@ -1454,7 +1454,7 @@ export function updateCachedContentParametersToVertex(
     common.setValueByPath(
       toObject,
       ['_url', 'name'],
-      t.tCachedContentName(apiClient, fromName),
+      transformers.tCachedContentName(apiClient, fromName),
     );
   }
 

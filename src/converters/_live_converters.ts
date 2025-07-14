@@ -8,7 +8,7 @@
 
 import {ApiClient} from '../_api_client.js';
 import * as common from '../_common.js';
-import * as t from '../_transformers.js';
+import * as transformers from '../_transformers.js';
 import * as types from '../types.js';
 
 export function prebuiltVoiceConfigToMldev(
@@ -751,7 +751,7 @@ export function liveConnectConfigToMldev(
     common.setValueByPath(
       parentObject,
       ['setup', 'generationConfig', 'speechConfig'],
-      speechConfigToMldev(t.tLiveSpeechConfig(fromSpeechConfig)),
+      speechConfigToMldev(transformers.tLiveSpeechConfig(fromSpeechConfig)),
     );
   }
 
@@ -773,16 +773,16 @@ export function liveConnectConfigToMldev(
     common.setValueByPath(
       parentObject,
       ['setup', 'systemInstruction'],
-      contentToMldev(t.tContent(fromSystemInstruction)),
+      contentToMldev(transformers.tContent(fromSystemInstruction)),
     );
   }
 
   const fromTools = common.getValueByPath(fromObject, ['tools']);
   if (parentObject !== undefined && fromTools != null) {
-    let transformedList = t.tTools(fromTools);
+    let transformedList = transformers.tTools(fromTools);
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return toolToMldev(t.tTool(item));
+        return toolToMldev(transformers.tTool(item));
       });
     }
     common.setValueByPath(parentObject, ['setup', 'tools'], transformedList);
@@ -866,7 +866,7 @@ export function liveConnectParametersToMldev(
     common.setValueByPath(
       toObject,
       ['setup', 'model'],
-      t.tModel(apiClient, fromModel),
+      transformers.tModel(apiClient, fromModel),
     );
   }
 
@@ -901,12 +901,20 @@ export function liveSendRealtimeInputParametersToMldev(
 
   const fromMedia = common.getValueByPath(fromObject, ['media']);
   if (fromMedia != null) {
-    common.setValueByPath(toObject, ['mediaChunks'], t.tBlobs(fromMedia));
+    common.setValueByPath(
+      toObject,
+      ['mediaChunks'],
+      transformers.tBlobs(fromMedia),
+    );
   }
 
   const fromAudio = common.getValueByPath(fromObject, ['audio']);
   if (fromAudio != null) {
-    common.setValueByPath(toObject, ['audio'], t.tAudioBlob(fromAudio));
+    common.setValueByPath(
+      toObject,
+      ['audio'],
+      transformers.tAudioBlob(fromAudio),
+    );
   }
 
   const fromAudioStreamEnd = common.getValueByPath(fromObject, [
@@ -918,7 +926,11 @@ export function liveSendRealtimeInputParametersToMldev(
 
   const fromVideo = common.getValueByPath(fromObject, ['video']);
   if (fromVideo != null) {
-    common.setValueByPath(toObject, ['video'], t.tImageBlob(fromVideo));
+    common.setValueByPath(
+      toObject,
+      ['video'],
+      transformers.tImageBlob(fromVideo),
+    );
   }
 
   const fromText = common.getValueByPath(fromObject, ['text']);
@@ -965,16 +977,16 @@ export function liveClientSetupToMldev(
     common.setValueByPath(
       toObject,
       ['systemInstruction'],
-      contentToMldev(t.tContent(fromSystemInstruction)),
+      contentToMldev(transformers.tContent(fromSystemInstruction)),
     );
   }
 
   const fromTools = common.getValueByPath(fromObject, ['tools']);
   if (fromTools != null) {
-    let transformedList = t.tTools(fromTools);
+    let transformedList = transformers.tTools(fromTools);
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return toolToMldev(t.tTool(item));
+        return toolToMldev(transformers.tTool(item));
       });
     }
     common.setValueByPath(toObject, ['tools'], transformedList);
@@ -2236,7 +2248,7 @@ export function liveConnectConfigToVertex(
     common.setValueByPath(
       parentObject,
       ['setup', 'generationConfig', 'speechConfig'],
-      speechConfigToVertex(t.tLiveSpeechConfig(fromSpeechConfig)),
+      speechConfigToVertex(transformers.tLiveSpeechConfig(fromSpeechConfig)),
     );
   }
 
@@ -2258,16 +2270,16 @@ export function liveConnectConfigToVertex(
     common.setValueByPath(
       parentObject,
       ['setup', 'systemInstruction'],
-      contentToVertex(t.tContent(fromSystemInstruction)),
+      contentToVertex(transformers.tContent(fromSystemInstruction)),
     );
   }
 
   const fromTools = common.getValueByPath(fromObject, ['tools']);
   if (parentObject !== undefined && fromTools != null) {
-    let transformedList = t.tTools(fromTools);
+    let transformedList = transformers.tTools(fromTools);
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return toolToVertex(t.tTool(item));
+        return toolToVertex(transformers.tTool(item));
       });
     }
     common.setValueByPath(parentObject, ['setup', 'tools'], transformedList);
@@ -2351,7 +2363,7 @@ export function liveConnectParametersToVertex(
     common.setValueByPath(
       toObject,
       ['setup', 'model'],
-      t.tModel(apiClient, fromModel),
+      transformers.tModel(apiClient, fromModel),
     );
   }
 
@@ -2386,12 +2398,20 @@ export function liveSendRealtimeInputParametersToVertex(
 
   const fromMedia = common.getValueByPath(fromObject, ['media']);
   if (fromMedia != null) {
-    common.setValueByPath(toObject, ['mediaChunks'], t.tBlobs(fromMedia));
+    common.setValueByPath(
+      toObject,
+      ['mediaChunks'],
+      transformers.tBlobs(fromMedia),
+    );
   }
 
   const fromAudio = common.getValueByPath(fromObject, ['audio']);
   if (fromAudio != null) {
-    common.setValueByPath(toObject, ['audio'], t.tAudioBlob(fromAudio));
+    common.setValueByPath(
+      toObject,
+      ['audio'],
+      transformers.tAudioBlob(fromAudio),
+    );
   }
 
   const fromAudioStreamEnd = common.getValueByPath(fromObject, [
@@ -2403,7 +2423,11 @@ export function liveSendRealtimeInputParametersToVertex(
 
   const fromVideo = common.getValueByPath(fromObject, ['video']);
   if (fromVideo != null) {
-    common.setValueByPath(toObject, ['video'], t.tImageBlob(fromVideo));
+    common.setValueByPath(
+      toObject,
+      ['video'],
+      transformers.tImageBlob(fromVideo),
+    );
   }
 
   const fromText = common.getValueByPath(fromObject, ['text']);
@@ -2450,16 +2474,16 @@ export function liveClientSetupToVertex(
     common.setValueByPath(
       toObject,
       ['systemInstruction'],
-      contentToVertex(t.tContent(fromSystemInstruction)),
+      contentToVertex(transformers.tContent(fromSystemInstruction)),
     );
   }
 
   const fromTools = common.getValueByPath(fromObject, ['tools']);
   if (fromTools != null) {
-    let transformedList = t.tTools(fromTools);
+    let transformedList = transformers.tTools(fromTools);
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return toolToVertex(t.tTool(item));
+        return toolToVertex(transformers.tTool(item));
       });
     }
     common.setValueByPath(toObject, ['tools'], transformedList);
