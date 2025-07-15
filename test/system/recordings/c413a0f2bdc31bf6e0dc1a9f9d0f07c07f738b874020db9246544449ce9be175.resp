@@ -1,0 +1,17 @@
+Status code: 200 
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+Content-Type: text/event-stream
+Content-Disposition: attachment
+Date: Wed, 09 Jul 2025 03:57:20 GMT
+Server: scaffolding on HTTPServer2
+Server-Timing: gfet4t7; dur=311
+
+data: {"candidates": [{"content": {"parts": [{"text": "The"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 150,"totalTokenCount": 150,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 150}]},"modelVersion": "gemini-2.0-flash","responseId": "oOhtaNf3BOOUsbQPiKPP2Q8"}
+
+data: {"candidates": [{"content": {"parts": [{"text": " result is 2.\n"}],"role": "model"},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 52,"candidatesTokenCount": 7,"totalTokenCount": 59,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 52}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "oOhtaNf3BOOUsbQPiKPP2Q8"}
+

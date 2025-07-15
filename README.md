@@ -218,10 +218,10 @@ main();
 
 ### Function Calling
 
-To let Gemini to interact with external systems, you can provide provide
+To let Gemini to interact with external systems, you can provide
 `functionDeclaration` objects as `tools`. To use these tools it's a 4 step
 
-1. **Declare the function name, description, and parameters**
+1. **Declare the function name, description, and parametersJsonSchema**
 2. **Call `generateContent` with function calling enabled**
 3. **Use the returned `FunctionCall` parameters to call your actual function**
 3. **Send the result back to the model (with history, easier in `ai.chat`)
@@ -234,19 +234,14 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 async function main() {
   const controlLightDeclaration: FunctionDeclaration = {
     name: 'controlLight',
-    parameters: {
-      type: Type.OBJECT,
-      description: 'Set the brightness and color temperature of a room light.',
-      properties: {
+    parametersJsonSchema: {
+      type: 'object',
+      properties:{
         brightness: {
-          type: Type.NUMBER,
-          description:
-              'Light level from 0 to 100. Zero is off and 100 is full brightness.',
+          type:'number',
         },
         colorTemperature: {
-          type: Type.STRING,
-          description:
-              'Color temperature of the light fixture which can be `daylight`, `cool`, or `warm`.',
+          type:'string',
         },
       },
       required: ['brightness', 'colorTemperature'],
@@ -273,6 +268,49 @@ async function main() {
 }
 
 main();
+```
+
+#### Model Context Protocol (MCP) support (experimental)
+
+Built-in [MCP](https://modelcontextprotocol.io/introduction) support is an
+experimental feature. You can pass a local MCP server as a tool directly.
+
+```javascript
+import { GoogleGenAI, FunctionCallingConfigMode , mcpToTool} from '@google/genai';
+import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+
+// Create server parameters for stdio connection
+const serverParams = new StdioClientTransport({
+  command: "npx", // Executable
+  args: ["-y", "@philschmid/weather-mcp"] // MCP Server
+});
+
+const client = new Client(
+  {
+    name: "example-client",
+    version: "1.0.0"
+  }
+);
+
+// Configure the client
+const ai = new GoogleGenAI({});
+
+// Initialize the connection between client and server
+await client.connect(serverParams);
+
+// Send request to the model with MCP tools
+const response = await ai.models.generateContent({
+  model: "gemini-2.5-flash",
+  contents: `What is the weather in London in ${new Date().toLocaleDateString()}?`,
+  config: {
+    tools: [mcpToTool(client)],  // uses the session, will automatically call the tool using automatic function calling
+  },
+});
+console.log(response.text);
+
+// Close the connection
+await client.close();
 ```
 
 ### Generate Content

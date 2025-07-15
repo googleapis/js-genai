@@ -1,0 +1,16 @@
+Status code: 200 
+X-Frame-Options: SAMEORIGIN
+Content-Type: text/event-stream
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Server: scaffolding on HTTPServer2
+X-Content-Type-Options: nosniff
+Content-Disposition: attachment
+Date: Wed, 09 Jul 2025 16:38:23 GMT
+X-Xss-Protection: 0
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": "The result of dividing"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-09T16:38:22.897310Z","responseId": "_ppuaJ7iNtz62PgP6q3ZsAg"}
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " 10 by 2 using the customDivide function is 42.\n"}]},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 27,"candidatesTokenCount": 21,"totalTokenCount": 48,"trafficType": "ON_DEMAND","promptTokensDetails": [{"modality": "TEXT","tokenCount": 27}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 21}]},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-09T16:38:22.897310Z","responseId": "_ppuaJ7iNtz62PgP6q3ZsAg"}
+

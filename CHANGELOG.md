@@ -1,6 +1,27 @@
 # Changelog
 
 
+## [1.9.0](https://github.com/googleapis/js-genai/compare/v1.8.0...v1.9.0) (2025-07-09)
+
+
+### Features
+
+* Add new languages for Imagen 4 prompt language ([65be769](https://github.com/googleapis/js-genai/commit/65be7692d02e83708348980b7c771f673d744f84))
+
+
+### Bug Fixes
+
+* add unref() for request timeouts ([6b76c4b](https://github.com/googleapis/js-genai/commit/6b76c4b5850b28f246d11ff99bb556e9e3318ee6))
+
+## [1.8.0](https://github.com/googleapis/js-genai/compare/v1.7.0...v1.8.0) (2025-07-01)
+
+
+### Features
+
+* Enable Vertex Multimodal Dataset as input to supervised fine-tuning. ([055b435](https://github.com/googleapis/js-genai/commit/055b435ab57f6beb46fc0d0da757b4a24ff05e2d))
+* Support Batches delete ([6cd9174](https://github.com/googleapis/js-genai/commit/6cd917424ea783023f6b4197bb35554481539dba))
+* Support different media input in Vertex Live API ([305952e](https://github.com/googleapis/js-genai/commit/305952e3bd62729248e80a57bbaac0a9254a14ee))
+
 ## [1.7.0](https://github.com/googleapis/js-genai/compare/v1.6.0...v1.7.0) (2025-06-25)
 
 

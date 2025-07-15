@@ -84,7 +84,7 @@ async function main() {
       vertexai: false,
       apiKey: GEMINI_API_KEY,
     });
-    const model = 'gemini-2.0-flash-live-001';
+    const model = 'gemini-live-2.5-flash-preview';
     await live(client, model).catch((e) => console.error('got error', e));
   }
 }

@@ -54,7 +54,10 @@ describe('MCP related client Tests', () => {
 
   describe('generateContent', () => {
     it('ML Dev one CallableTool with MCPClients and conduct automated function calling', async () => {
-      const ai = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+      const ai = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+      });
       const mcpCallableTool = mcpToTool(
         await spinUpPrintingServer(),
         await spinUpBeepingServer(),
@@ -77,8 +80,67 @@ describe('MCP related client Tests', () => {
       expect(consoleLogSpy).toHaveBeenCalledWith('\x1b[34mhello');
       expect(consoleBeepSpy).toHaveBeenCalledWith('\u0007');
     });
-    it('ML Dev Multiple CallableTool with MCPClients and conduct automated function calling', async () => {
+    it('ML Dev test with greeter server (parameter as nullable union type)', async () => {
       const ai = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+      const mcpCallableTool = mcpToTool(await greetServer());
+      const consoleLogSpy = spyOn(console, 'log').and.callThrough();
+      await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents:
+          'call the greeter once with name: jone smith, and greeting: Hello',
+        config: {
+          tools: [mcpCallableTool],
+          toolConfig: {
+            functionCallingConfig: {
+              mode: FunctionCallingConfigMode.AUTO,
+            },
+          },
+          automaticFunctionCalling: {
+            maximumRemoteCalls: 1,
+          },
+        },
+      });
+      expect(consoleLogSpy).toHaveBeenCalledWith(
+        'user give name as a string: ',
+        'jone smith',
+        'Hello',
+      );
+    });
+    it('Vertex AI test with greeter server (parameter as nullable union type)', async () => {
+      const ai = new GoogleGenAI({
+        vertexai: true,
+        project: GOOGLE_CLOUD_PROJECT,
+        location: GOOGLE_CLOUD_LOCATION,
+      });
+      const mcpCallableTool = mcpToTool(await greetServer());
+      const consoleLogSpy = spyOn(console, 'log').and.callThrough();
+      await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents:
+          'call the greeter once with name: jone smith, and greeting: Hello',
+        config: {
+          tools: [mcpCallableTool],
+          toolConfig: {
+            functionCallingConfig: {
+              mode: FunctionCallingConfigMode.AUTO,
+            },
+          },
+          automaticFunctionCalling: {
+            maximumRemoteCalls: 1,
+          },
+        },
+      });
+      expect(consoleLogSpy).toHaveBeenCalledWith(
+        'user give name as a string: ',
+        'jone smith',
+        'Hello',
+      );
+    });
+    it('ML Dev Multiple CallableTool with MCPClients and conduct automated function calling', async () => {
+      const ai = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+      });
       const callableTool1 = mcpToTool(await spinUpPrintingServer());
       const callableTool2 = mcpToTool(await spinUpBeepingServer());
       const consoleLogSpy = spyOn(console, 'log').and.callThrough();
@@ -345,6 +407,42 @@ async function spinUpBeepingServer(): Promise<McpClient> {
 
   const client = new McpClient({
     name: 'beeper',
+    version: '1.0.0',
+  });
+  client.connect(transports[1]);
+
+  return client;
+}
+
+async function greetServer(): Promise<McpClient> {
+  const server = new McpServer({
+    name: 'greeter',
+    version: '1.0.0',
+  });
+
+  server.tool(
+    'greet',
+    {
+      name: z.union([z.string(), z.number(), z.null()]),
+      greeting: z.string(),
+    },
+    async ({name, greeting}) => {
+      if (typeof name === 'string') {
+        console.log('user give name as a string: ', name, greeting);
+      } else {
+        console.log('user give name as a number', name, greeting);
+      }
+      return {
+        content: [],
+      };
+    },
+  );
+
+  const transports = InMemoryTransport.createLinkedPair();
+  await server.connect(transports[0]);
+
+  const client = new McpClient({
+    name: 'greeter',
     version: '1.0.0',
   });
   client.connect(transports[1]);

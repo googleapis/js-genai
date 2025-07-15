@@ -74,6 +74,7 @@ export class Models extends BaseModule {
     params: types.GenerateContentParameters,
   ): Promise<types.GenerateContentResponse> => {
     const transformedParams = await this.processParamsForMcpUsage(params);
+    this.maybeMoveToResponseJsonSchem(params);
     if (!hasMcpClientTools(params) || shouldDisableAfc(params.config)) {
       return await this.generateContentInternal(transformedParams);
     }
@@ -135,6 +136,27 @@ export class Models extends BaseModule {
   };
 
   /**
+   * This logic is needed for GenerateContentConfig only.
+   * Previously we made GenerateContentConfig.responseSchema field to accept
+   * unknown. Since v1.9.0, we switch to use backend JSON schema support.
+   * To maintain backward compatibility, we move the data that was treated as
+   * JSON schema from the responseSchema field to the responseJsonSchema field.
+   */
+  private maybeMoveToResponseJsonSchem(
+    params: types.GenerateContentParameters,
+  ): void {
+    if (params.config && params.config.responseSchema) {
+      if (!params.config.responseJsonSchema) {
+        if (Object.keys(params.config.responseSchema).includes('$schema')) {
+          params.config.responseJsonSchema = params.config.responseSchema;
+          delete params.config.responseSchema;
+        }
+      }
+    }
+    return;
+  }
+
+  /**
    * Makes an API request to generate content with a given model and yields the
    * response in chunks.
    *
@@ -178,6 +200,7 @@ export class Models extends BaseModule {
   generateContentStream = async (
     params: types.GenerateContentParameters,
   ): Promise<AsyncGenerator<types.GenerateContentResponse>> => {
+    this.maybeMoveToResponseJsonSchem(params);
     if (shouldDisableAfc(params.config)) {
       const transformedParams = await this.processParamsForMcpUsage(params);
       return await this.generateContentStreamInternal(transformedParams);
@@ -1068,10 +1091,7 @@ export class Models extends BaseModule {
         }) as Promise<types.ListModelsResponse>;
 
       return response.then((apiResponse) => {
-        const resp = converters.listModelsResponseFromVertex(
-          this.apiClient,
-          apiResponse,
-        );
+        const resp = converters.listModelsResponseFromVertex(apiResponse);
         const typedResp = new types.ListModelsResponse();
         Object.assign(typedResp, resp);
         return typedResp;
@@ -1104,10 +1124,7 @@ export class Models extends BaseModule {
         }) as Promise<types.ListModelsResponse>;
 
       return response.then((apiResponse) => {
-        const resp = converters.listModelsResponseFromMldev(
-          this.apiClient,
-          apiResponse,
-        );
+        const resp = converters.listModelsResponseFromMldev(apiResponse);
         const typedResp = new types.ListModelsResponse();
         Object.assign(typedResp, resp);
         return typedResp;

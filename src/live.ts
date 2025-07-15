@@ -106,7 +106,7 @@ export class Live {
      if (GOOGLE_GENAI_USE_VERTEXAI) {
        model = 'gemini-2.0-flash-live-preview-04-09';
      } else {
-       model = 'gemini-2.0-flash-live-001';
+       model = 'gemini-live-2.5-flash-preview';
      }
      const session = await ai.live.connect({
        model: model,
@@ -131,6 +131,14 @@ export class Live {
      ```
     */
   async connect(params: types.LiveConnectParameters): Promise<Session> {
+    // TODO: b/404946746 - Support per request HTTP options.
+    if (params.config && params.config.httpOptions) {
+      throw new Error(
+        'The Live module does not support httpOptions at request-level in' +
+          ' LiveConnectConfig yet. Please use the client-level httpOptions' +
+          ' configuration instead.',
+      );
+    }
     const websocketBaseUrl = this.apiClient.getWebsocketBaseUrl();
     const apiVersion = this.apiClient.getApiVersion();
     let url: string;
@@ -157,6 +165,11 @@ export class Live {
         console.warn(
           'Warning: Ephemeral token support is experimental and may change in future versions.',
         );
+        if (apiVersion !== 'v1alpha') {
+          console.warn(
+            "Warning: The SDK's ephemeral token support is in v1alpha only. Please use const ai = new GoogleGenAI({apiKey: token.name, httpOptions: { apiVersion: 'v1alpha' }}); before session connection.",
+          );
+        }
         method = 'BidiGenerateContentConstrained';
         keyName = 'access_token';
       }
@@ -498,7 +511,7 @@ export class Session {
      if (GOOGLE_GENAI_USE_VERTEXAI) {
        model = 'gemini-2.0-flash-live-preview-04-09';
      } else {
-       model = 'gemini-2.0-flash-live-001';
+       model = 'gemini-live-2.5-flash-preview';
      }
      const session = await ai.live.connect({
        model: model,

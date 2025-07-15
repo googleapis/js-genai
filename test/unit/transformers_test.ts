@@ -9,7 +9,6 @@ import {zodToJsonSchema} from 'zod-to-json-schema';
 
 import {ApiClient} from '../../src/_api_client.js';
 import {
-  createJsonSchemaValidator,
   tContent,
   tContents,
   tExtractModels,
@@ -239,24 +238,143 @@ describe('tTool', () => {
     const tool = {functionDeclarations: [{name: 'function-name'}]};
     expect(tTool(tool)).toEqual(tool);
   });
-});
-
-describe('createJsonSchemaValidator', () => {
-  it('should not throw error when strict mode is disabled for additional properties', () => {
-    const setSchema = z.object({setField: z.set(z.string())});
-    const validator = createJsonSchemaValidator(false);
-    expect(() =>
-      validator.parse(zodToJsonSchema(setSchema) as Record<string, unknown>),
-    ).not.toThrowError();
+  it('should be no-op when used parametersJsonSchema and responseJsonSchema only', () => {
+    const tool: types.Tool = {
+      functionDeclarations: [
+        {
+          name: 'test-function',
+          parametersJsonSchema: {
+            type: types.Type.OBJECT,
+            properties: {
+              firstString: {type: 'string'},
+              secondString: {type: types.Type.STRING},
+            },
+            required: ['firstString', 'secondString'],
+            propertyOrdering: ['firstString', 'secondString'],
+          },
+          responseJsonSchema: {
+            type: types.Type.OBJECT,
+            properties: {
+              firstString: {type: 'string'},
+              secondString: {type: types.Type.STRING},
+            },
+            required: ['firstString', 'secondString'],
+            propertyOrdering: ['firstString', 'secondString'],
+          },
+        },
+      ],
+    };
+    const expectedTool: types.Tool = {
+      functionDeclarations: [
+        {
+          name: 'test-function',
+          parametersJsonSchema: {
+            type: types.Type.OBJECT,
+            properties: {
+              firstString: {type: 'string'},
+              secondString: {type: types.Type.STRING},
+            },
+            required: ['firstString', 'secondString'],
+            propertyOrdering: ['firstString', 'secondString'],
+          },
+          responseJsonSchema: {
+            type: types.Type.OBJECT,
+            properties: {
+              firstString: {type: 'string'},
+              secondString: {type: types.Type.STRING},
+            },
+            required: ['firstString', 'secondString'],
+            propertyOrdering: ['firstString', 'secondString'],
+          },
+        },
+      ],
+    };
+    expect(tTool(tool)).toEqual(expectedTool);
   });
-  it('should throw error when strict mode is disabled for additional properties', () => {
-    const setSchema = z.object({
-      setField: z.set(z.string()),
-    });
-    const validator = createJsonSchemaValidator();
-    expect(() =>
-      validator.parse(zodToJsonSchema(setSchema) as Record<string, unknown>),
-    ).toThrowError();
+  it('will send both parameters and parametersJsonSchema to the server without changing', () => {
+    const tool: types.Tool = {
+      functionDeclarations: [
+        {
+          name: 'concatStringFunction',
+          description: 'this is a concat string function',
+          parameters: {type: types.Type.OBJECT},
+          response: {type: types.Type.STRING},
+          parametersJsonSchema: {type: 'string'},
+          responseJsonSchema: {type: 'string'},
+        },
+      ],
+    };
+    const expectedTool: types.Tool = {
+      functionDeclarations: [
+        {
+          name: 'concatStringFunction',
+          description: 'this is a concat string function',
+          parameters: {type: types.Type.OBJECT},
+          response: {type: types.Type.STRING},
+          parametersJsonSchema: {type: 'string'},
+          responseJsonSchema: {type: 'string'},
+        },
+      ],
+    };
+    expect(tTool(tool)).toEqual(expectedTool);
+  });
+  it('will map parameters to parametersJsonSchema when $schema is present but parametersJsonSchema is not', () => {
+    const tool: types.Tool = {
+      functionDeclarations: [
+        {
+          name: 'concatStringFunction',
+          description: 'this is a concat string function',
+          parameters: {
+            type: 'string',
+            $schema: 'https://json-schema.org/draft/2020-12/schema',
+          } as Record<string, unknown>,
+          responseJsonSchema: {type: 'string'},
+        },
+      ],
+    };
+    const expectedTool: types.Tool = {
+      functionDeclarations: [
+        {
+          name: 'concatStringFunction',
+          description: 'this is a concat string function',
+          parametersJsonSchema: {
+            type: 'string',
+            $schema: 'https://json-schema.org/draft/2020-12/schema',
+          },
+          responseJsonSchema: {type: 'string'},
+        },
+      ],
+    };
+    expect(tTool(tool)).toEqual(expectedTool);
+  });
+  it('will map response to responseJsonSchema when $schema is present but responseJsonSchema is not present', () => {
+    const tool: types.Tool = {
+      functionDeclarations: [
+        {
+          name: 'concatStringFunction',
+          description: 'this is a concat string function',
+          parameters: {type: 'string'} as Record<string, unknown>,
+          response: {
+            type: 'string',
+            $schema: 'https://json-schema.org/draft/2020-12/schema',
+          } as Record<string, unknown>,
+        },
+      ],
+    };
+    const expectedTool: types.Tool = {
+      functionDeclarations: [
+        {
+          name: 'concatStringFunction',
+          description: 'this is a concat string function',
+          parameters: {type: 'STRING'} as Record<string, unknown>,
+          responseJsonSchema: {
+            type: 'string',
+            $schema: 'https://json-schema.org/draft/2020-12/schema',
+          },
+        },
+      ],
+    };
+    expect(tTool(tool)).toEqual(expectedTool);
   });
 });
 
@@ -292,13 +410,11 @@ describe('tSchema', () => {
       default: 'default',
     } as types.Schema;
     expect(tSchema(schema)).toEqual(schema);
-    expect(tSchema(schema)).toEqual(schema);
   });
   it('processes anyOf', () => {
     const schema = {
       anyOf: [{type: 'STRING'}, {type: 'NUMBER'}],
     } as types.Schema;
-    expect(tSchema(schema)).toEqual(schema);
     expect(tSchema(schema)).toEqual(schema);
   });
   it('processes items', () => {
@@ -314,7 +430,6 @@ describe('tSchema', () => {
       },
     } as types.Schema;
     expect(tSchema(schema)).toEqual(schema);
-    expect(tSchema(schema)).toEqual(schema);
   });
   it('process properties', () => {
     const schema = {
@@ -326,71 +441,9 @@ describe('tSchema', () => {
       },
     } as types.Schema;
     expect(tSchema(schema)).toEqual(schema);
-    expect(tSchema(schema)).toEqual(schema);
   });
-  it('should throw error for tuple schema due to item field data type mismatch', () => {
-    const tupleSchema = z.object({
-      tupleField: z.tuple([z.string(), z.number()]),
-    });
-    expect(() => tSchema(zodToJsonSchema(tupleSchema))).toThrowError();
-  });
-  it('should throw error for set schema due to unsupported type(set): uniqueItems', () => {
-    const setSchema = z.object({
-      setField: z.set(z.string()),
-    });
-    expect(() => tSchema(zodToJsonSchema(setSchema))).toThrowError();
-  });
-  it('should throw error for nested zod object referred twice due to unsupported property: $ref', () => {
-    /*
-       The following is the result of zodToJsonSchema(nestedSchema):
-       nestedSchema {
-         type: 'object',
-         properties: {
-           simpleString: { type: 'string', description: 'This is a simple
-       string' }, simpleInteger: { type: 'integer' }, inner: { type: 'object',
-             properties: [Object],
-             required: [Array],
-             additionalProperties: false
-           },
-           otherInner: { '$ref': '#/properties/inner' }
-         },
-         required: [ 'simpleString', 'simpleInteger', 'inner', 'otherInner' ],
-         additionalProperties: false,
-         '$schema': 'http://json-schema.org/draft-07/schema#'
-       }
-
-       If an object is referred twice, the $ref field will be added to the
-       schema, which is not supported by our backend.
-       */
-    const innerObject = z.object({
-      innerString: z.string(),
-      innerNumber: z.number(),
-    });
-    const nestedSchema = z.object({
-      simpleString: z.string().describe('This is a simple string'),
-      simpleInteger: z.number().int(),
-      inner: innerObject,
-      otherInner: innerObject,
-    });
-    expect(() => tSchema(zodToJsonSchema(nestedSchema))).toThrowError();
-  });
-  it('should process simple zod object, with optional fields', () => {
-    const zodSchema = z.object({
-      // required, properties, type: object
-      simpleString: z.string().describe('This is a simple string'), // description, type: string
-      stringWithRegex: z.string().regex(/^[a-zA-Z]{1,10}$/), // regex, type: string
-      stringDateTime: z.string().datetime(), // format: date-time, type: string
-      stringWithEnum: z.enum(['enumvalue1', 'enumvalue2', 'enumvalue3']), // enum, type: string
-      stringWithLength: z.string().min(1).max(10), // minLength, maxLength, type: string
-      optionalNumber: z.number().optional(), // optional,type: number
-      simpleNumber: z.number(), // type: number
-      simpleInteger: z.number().int(), // type: integer
-      integerInt64: z.bigint(), // format: int64, type: integer
-      numberWithMinMax: z.number().min(1).max(10), // minimum, maximum, type: number
-      simpleBoolean: z.boolean(), // type: boolean
-      optionalBoolean: z.boolean().optional(), // optional, type: boolean
-    });
-    const expected: types.Schema = {
+  it('should be a no-op on as types.Schema as types.Schema', () => {
+    const convertedSchema: types.Schema = {
       type: types.Type.OBJECT,
       properties: {
         simpleString: {
@@ -432,7 +485,223 @@ describe('tSchema', () => {
         'simpleBoolean',
       ],
     };
-    expect(tSchema(zodToJsonSchema(zodSchema))).toEqual(expected);
+    expect(tSchema(convertedSchema) as Record<string, unknown>).toEqual(
+      convertedSchema as Record<string, unknown>,
+    );
+  });
+  it('should be a no-op on conformed types.Schema as unknown', () => {
+    const convertedSchema: unknown = {
+      type: types.Type.OBJECT,
+      properties: {
+        simpleString: {
+          type: types.Type.STRING,
+          description: 'This is a simple string',
+        },
+        stringWithRegex: {
+          type: types.Type.STRING,
+          pattern: '^[a-zA-Z]{1,10}$',
+        },
+        stringDateTime: {type: types.Type.STRING, format: 'date-time'},
+        stringWithEnum: {
+          type: types.Type.STRING,
+          enum: ['enumvalue1', 'enumvalue2', 'enumvalue3'],
+        },
+        stringWithLength: {
+          type: types.Type.STRING,
+          minLength: '1',
+          maxLength: '10',
+        },
+        optionalNumber: {type: types.Type.NUMBER},
+        simpleNumber: {type: types.Type.NUMBER},
+        simpleInteger: {type: types.Type.INTEGER},
+        integerInt64: {type: types.Type.INTEGER, format: 'int64'},
+        numberWithMinMax: {type: types.Type.NUMBER, minimum: 1, maximum: 10},
+        simpleBoolean: {type: types.Type.BOOLEAN},
+        optionalBoolean: {type: types.Type.BOOLEAN},
+      },
+      required: [
+        'simpleString',
+        'stringWithRegex',
+        'stringDateTime',
+        'stringWithEnum',
+        'stringWithLength',
+        'simpleNumber',
+        'simpleInteger',
+        'integerInt64',
+        'numberWithMinMax',
+        'simpleBoolean',
+      ],
+    };
+    expect(tSchema(convertedSchema) as Record<string, unknown>).toEqual(
+      convertedSchema as Record<string, unknown>,
+    );
+  });
+  it('falttens array of types', () => {
+    const schema = {
+      type: 'OBJECT',
+      properties: {
+        arrayOfTypes: {type: ['STRING', 'NUMBER']},
+      },
+    };
+    const expected = {
+      type: 'OBJECT',
+      properties: {
+        arrayOfTypes: {
+          anyOf: [{type: 'STRING'}, {type: 'NUMBER'}],
+        },
+      },
+    };
+    expect(tSchema(schema) as Record<string, unknown>).toEqual(
+      expected as Record<string, unknown>,
+    );
+  });
+  it('will remove the value of additionalProperties fields', () => {
+    const schema = {
+      type: 'OBJECT',
+      properties: {
+        arrayOfTypes: {
+          type: 'STRING',
+        },
+      },
+      additionalProperties: false,
+    };
+    const expected = {
+      type: 'OBJECT',
+      properties: {
+        arrayOfTypes: {
+          type: 'STRING',
+        },
+      },
+    };
+    expect(tSchema(schema) as Record<string, unknown>).toEqual(
+      expected as Record<string, unknown>,
+    );
+  });
+  it('should ignore unknown fields', () => {
+    const stayNoChange: unknown = {
+      type: types.Type.OBJECT,
+      properties: {
+        simpleString: {
+          type: types.Type.STRING,
+          description: 'This is a simple string',
+        },
+        stringWithRegex: {
+          type: types.Type.STRING,
+          pattern: '^[a-zA-Z]{1,10}$',
+          unknownField: 'unknown',
+        },
+      },
+      required: ['simpleString', 'stringWithRegex'],
+    };
+    expect(tSchema(stayNoChange) as Record<string, unknown>).toEqual(
+      stayNoChange as Record<string, unknown>,
+    );
+  });
+  it('should process propertyOrdering', () => {
+    const objectWithPropertyOrdering = z.object({
+      simpleString: z.string(),
+      simpleObject: z.object({
+        innerString: z.string(),
+        anotherInnerString: z.string(),
+      }),
+    });
+    const jsonSchemaFromZod = zodToJsonSchema(
+      objectWithPropertyOrdering,
+    ) as Record<string, unknown>;
+
+    jsonSchemaFromZod['propertyOrdering'] = ['simpleObject', 'simpleString'];
+    delete jsonSchemaFromZod['$schema'];
+
+    const expected = {
+      type: types.Type.OBJECT,
+      properties: {
+        simpleString: {
+          type: types.Type.STRING,
+        },
+        simpleObject: {
+          type: types.Type.OBJECT,
+          properties: {
+            innerString: {
+              type: types.Type.STRING,
+            },
+            anotherInnerString: {
+              type: types.Type.STRING,
+            },
+          },
+          required: ['innerString', 'anotherInnerString'],
+        },
+      },
+      required: ['simpleString', 'simpleObject'],
+      propertyOrdering: ['simpleObject', 'simpleString'],
+    };
+    expect(tSchema(jsonSchemaFromZod)).toEqual(expected);
+  });
+  it('should process simple zod object converted json schema without $schema field, with optional fields', () => {
+    const zodSchema = z.object({
+      // required, properties, type: object
+      simpleString: z.string().describe('This is a simple string'), // description, type: string
+      stringWithRegex: z.string().regex(/^[a-zA-Z]{1,10}$/), // regex, type: string
+      stringDateTime: z.string().datetime(), // format: date-time, type: string
+      stringWithEnum: z.enum(['enumvalue1', 'enumvalue2', 'enumvalue3']), // enum, type: string
+      stringWithLength: z.string().min(1).max(10), // minLength, maxLength, type: string
+      optionalNumber: z.number().optional(), // optional,type: number
+      simpleNumber: z.number(), // type: number
+      simpleInteger: z.number().int(), // type: integer
+      integerInt64: z.bigint(), // format: int64, type: integer
+      numberWithMinMax: z.number().min(1).max(10), // minimum, maximum, type: number
+      simpleBoolean: z.boolean(), // type: boolean
+      optionalBoolean: z.boolean().optional(), // optional, type: boolean
+    });
+    const expected: unknown = {
+      type: types.Type.OBJECT,
+      properties: {
+        simpleString: {
+          type: types.Type.STRING,
+          description: 'This is a simple string',
+        },
+        stringWithRegex: {
+          type: types.Type.STRING,
+          pattern: '^[a-zA-Z]{1,10}$',
+        },
+        stringDateTime: {type: types.Type.STRING, format: 'date-time'},
+        stringWithEnum: {
+          type: types.Type.STRING,
+          enum: ['enumvalue1', 'enumvalue2', 'enumvalue3'],
+        },
+        stringWithLength: {
+          type: types.Type.STRING,
+          minLength: 1,
+          maxLength: 10,
+        },
+        optionalNumber: {type: types.Type.NUMBER},
+        simpleNumber: {type: types.Type.NUMBER},
+        simpleInteger: {type: types.Type.INTEGER},
+        integerInt64: {type: types.Type.INTEGER, format: 'int64'},
+        numberWithMinMax: {type: types.Type.NUMBER, minimum: 1, maximum: 10},
+        simpleBoolean: {type: types.Type.BOOLEAN},
+        optionalBoolean: {type: types.Type.BOOLEAN},
+      },
+      required: [
+        'simpleString',
+        'stringWithRegex',
+        'stringDateTime',
+        'stringWithEnum',
+        'stringWithLength',
+        'simpleNumber',
+        'simpleInteger',
+        'integerInt64',
+        'numberWithMinMax',
+        'simpleBoolean',
+      ],
+    };
+    const jsonSchemaFromZod = zodToJsonSchema(zodSchema) as Record<
+      string,
+      unknown
+    >;
+    delete jsonSchemaFromZod['$schema'];
+    expect(tSchema(jsonSchemaFromZod) as Record<string, unknown>).toEqual(
+      expected as Record<string, unknown>,
+    );
   });
   it('should process nested zod object if it was only referred once', () => {
     const innerObject = z.object({
@@ -466,45 +735,11 @@ describe('tSchema', () => {
       },
       required: ['simpleString', 'simpleInteger', 'inner'],
     };
-    expect(tSchema(zodToJsonSchema(nestedSchema))).toEqual(expected);
-  });
-  it('should process propertyOrdering', () => {
-    const objectWithPropertyOrdering = z.object({
-      simpleString: z.string(),
-      simpleObject: z.object({
-        innerString: z.string(),
-        anotherInnerString: z.string(),
-      }),
-    });
-    const jsonSchemaFromZod = zodToJsonSchema(
-      objectWithPropertyOrdering,
-    ) as Record<string, unknown>;
-
-    jsonSchemaFromZod['propertyOrdering'] = ['simpleObject', 'simpleString'];
-
-    const expected = {
-      type: types.Type.OBJECT,
-      properties: {
-        simpleString: {
-          type: types.Type.STRING,
-        },
-        simpleObject: {
-          type: types.Type.OBJECT,
-          properties: {
-            innerString: {
-              type: types.Type.STRING,
-            },
-            anotherInnerString: {
-              type: types.Type.STRING,
-            },
-          },
-          required: ['innerString', 'anotherInnerString'],
-        },
-      },
-      required: ['simpleString', 'simpleObject'],
-      propertyOrdering: ['simpleObject', 'simpleString'],
-    };
-
+    const jsonSchemaFromZod = zodToJsonSchema(nestedSchema) as Record<
+      string,
+      unknown
+    >;
+    delete jsonSchemaFromZod['$schema'];
     expect(tSchema(jsonSchemaFromZod)).toEqual(expected);
   });
   it('should process primitive types directly', () => {
@@ -524,14 +759,18 @@ describe('tSchema', () => {
 
     const expectedStringDirectly = {
       type: types.Type.STRING,
-      minLength: '1',
-      maxLength: '10',
+      minLength: 1,
+      maxLength: 10,
       pattern: '^[a-zA-Z]{1,10}$',
       description: 'This is a simple string',
     };
-    expect(tSchema(zodToJsonSchema(stringDirectly))).toEqual(
-      expectedStringDirectly,
-    );
+    const stringDirectlyJsonSchemaFromZod = zodToJsonSchema(
+      stringDirectly,
+    ) as Record<string, unknown>;
+    delete stringDirectlyJsonSchemaFromZod['$schema'];
+    expect(
+      tSchema(stringDirectlyJsonSchemaFromZod) as Record<string, unknown>,
+    ).toEqual(expectedStringDirectly as Record<string, unknown>);
 
     const expectedNumberDirectly = {
       type: types.Type.NUMBER,
@@ -539,15 +778,24 @@ describe('tSchema', () => {
       maximum: 10,
       description: 'This is a simple number',
     };
-    expect(tSchema(zodToJsonSchema(numberDirectly))).toEqual(
-      expectedNumberDirectly,
-    );
+    const numberDirectlyJsonSchemaFromZod = zodToJsonSchema(
+      numberDirectly,
+    ) as Record<string, unknown>;
+    delete numberDirectlyJsonSchemaFromZod['$schema'];
+    expect(
+      tSchema(numberDirectlyJsonSchemaFromZod) as Record<string, unknown>,
+    ).toEqual(expectedNumberDirectly as Record<string, unknown>);
+
     const expectedIntegerDirectly = {
       type: types.Type.INTEGER,
       format: 'int64',
       description: 'This is a simple integer',
     };
-    expect(tSchema(zodToJsonSchema(integerDirectly))).toEqual(
+    const integerDirectlyJsonSchemaFromZod = zodToJsonSchema(
+      integerDirectly,
+    ) as Record<string, unknown>;
+    delete integerDirectlyJsonSchemaFromZod['$schema'];
+    expect(tSchema(integerDirectlyJsonSchemaFromZod)).toEqual(
       expectedIntegerDirectly,
     );
 
@@ -555,7 +803,11 @@ describe('tSchema', () => {
       type: types.Type.BOOLEAN,
       description: 'This is a simple boolean',
     };
-    expect(tSchema(zodToJsonSchema(booleanDirectly))).toEqual(
+    const booleanDirectlyJsonSchemaFromZod = zodToJsonSchema(
+      booleanDirectly,
+    ) as Record<string, unknown>;
+    delete booleanDirectlyJsonSchemaFromZod['$schema'];
+    expect(tSchema(booleanDirectlyJsonSchemaFromZod)).toEqual(
       expectedBooleanDirectly,
     );
   });
@@ -571,16 +823,16 @@ describe('tSchema', () => {
       properties: {
         stringArray: {
           type: types.Type.ARRAY,
-          minItems: '1',
-          maxItems: '10',
+          minItems: 1,
+          maxItems: 10,
           items: {
             type: types.Type.STRING,
           },
         },
         numberArray: {
           type: types.Type.ARRAY,
-          minItems: '6',
-          maxItems: '15',
+          minItems: 6,
+          maxItems: 15,
           items: {
             type: types.Type.NUMBER,
           },
@@ -588,8 +840,14 @@ describe('tSchema', () => {
       },
       required: ['stringArray', 'numberArray'],
     };
-
-    expect(tSchema(zodToJsonSchema(zodSchema))).toEqual(expected);
+    const jsonSchemaFromZod = zodToJsonSchema(zodSchema) as Record<
+      string,
+      unknown
+    >;
+    delete jsonSchemaFromZod['$schema'];
+    expect(tSchema(jsonSchemaFromZod) as Record<string, unknown>).toEqual(
+      expected as Record<string, unknown>,
+    );
   });
   it('should process zod array of objects', () => {
     const innerObject = z.object({
@@ -621,7 +879,12 @@ describe('tSchema', () => {
       },
       required: ['arrayOfObjects'],
     };
-    expect(tSchema(zodToJsonSchema(objectArray))).toEqual(expected);
+    const jsonSchemaFromZod = zodToJsonSchema(objectArray) as Record<
+      string,
+      unknown
+    >;
+    delete jsonSchemaFromZod['$schema'];
+    expect(tSchema(jsonSchemaFromZod)).toEqual(expected);
   });
   it('should process default value', () => {
     const defaultObject = z.object({
@@ -636,7 +899,12 @@ describe('tSchema', () => {
         },
       },
     };
-    expect(tSchema(zodToJsonSchema(defaultObject))).toEqual(expected);
+    const jsonSchemaFromZod = zodToJsonSchema(defaultObject) as Record<
+      string,
+      unknown
+    >;
+    delete jsonSchemaFromZod['$schema'];
+    expect(tSchema(jsonSchemaFromZod)).toEqual(expected);
   });
   it('should process primitive nullables', () => {
     /*
@@ -662,27 +930,36 @@ describe('tSchema', () => {
       },
       required: ['nullablePrimitives'],
     };
-    expect(tSchema(zodToJsonSchema(objectNullable))).toEqual(expected);
+    const jsonSchemaFromZod = zodToJsonSchema(objectNullable) as Record<
+      string,
+      unknown
+    >;
+    delete jsonSchemaFromZod['$schema'];
+    expect(tSchema(jsonSchemaFromZod)).toEqual(expected);
   });
   it('should throw error when there is only null in the type', () => {
     const objectNullable = z.object({
       nullValue: z.null(),
     });
-
-    expect(() => tSchema(zodToJsonSchema(objectNullable))).toThrowError(
+    const jsonSchemaFromZod = zodToJsonSchema(objectNullable) as Record<
+      string,
+      unknown
+    >;
+    delete jsonSchemaFromZod['$schema'];
+    expect(() => tSchema(jsonSchemaFromZod)).toThrowError(
       'type: null can not be the only possible type for the field.',
     );
   });
   it('should process nullable array and remove anyOf field when necessary', () => {
     /*
-       Resulted JSONSchema:
-         { anyOf:
-           [
-             { type: 'array', items: {type: 'string'} },
-             { type: 'null' }
-           ]
-         }
-       */
+          Resulted JSONSchema:
+            { anyOf:
+              [
+                { type: 'array', items: {type: 'string'} },
+                { type: 'null' }
+              ]
+            }
+          */
     const nullableArray = z.array(z.string()).nullable();
     const expected = {
       type: types.Type.ARRAY,
@@ -691,23 +968,28 @@ describe('tSchema', () => {
       },
       nullable: true,
     };
-    expect(tSchema(zodToJsonSchema(nullableArray))).toEqual(expected);
+    const jsonSchemaFromZod = zodToJsonSchema(nullableArray) as Record<
+      string,
+      unknown
+    >;
+    delete jsonSchemaFromZod['$schema'];
+    expect(tSchema(jsonSchemaFromZod)).toEqual(expected);
   });
   it('should process nullable object and remove anyOf field when necessary', () => {
     /*
-          Resulted JSONSchema:
-          {
-            type: 'object',
-            properties: {
-              nullableObject:{
-                anyOf: [
-                  { type: 'object', properties: { simpleString: { type: 'string'
-          } } }, { type: 'null' }
-                ]
-              }
-            required: [ 'nullableObject' ], additionalProperties: false
-          }
-          */
+             Resulted JSONSchema:
+             {
+               type: 'object',
+               properties: {
+                 nullableObject:{
+                   anyOf: [
+                     { type: 'object', properties: { simpleString: { type:
+          'string' } } }, { type: 'null' }
+                   ]
+                 }
+               required: [ 'nullableObject' ], additionalProperties: false
+             }
+             */
     const innerObject = z.object({
       simpleString: z.string().nullable(),
     });
@@ -732,20 +1014,25 @@ describe('tSchema', () => {
       },
       required: ['nullableObject'],
     };
-    expect(tSchema(zodToJsonSchema(objectNullable))).toEqual(expected);
+    const jsonSchemaFromZod = zodToJsonSchema(objectNullable) as Record<
+      string,
+      unknown
+    >;
+    delete jsonSchemaFromZod['$schema'];
+    expect(tSchema(jsonSchemaFromZod)).toEqual(expected);
   });
   it('should process union consist of only not-nullable primitive types without additional fields', () => {
     /*
-       Resulted JSONSchema:
-       {
-         type: 'object',
-         properties: {
-           unionPrimitivesField: { type: [string, number, boolean]}
-         },
-         required: [ 'unionPrimitivesField' ],
-         additionalProperties: false
-       }
-       */
+          Resulted JSONSchema:
+          {
+            type: 'object',
+            properties: {
+              unionPrimitivesField: { type: [string, number, boolean]}
+            },
+            required: [ 'unionPrimitivesField' ],
+            additionalProperties: false
+          }
+          */
     const unionPrimitives = z.object({
       unionPrimitivesField: z.union([z.string(), z.number(), z.boolean()]),
     });
@@ -763,20 +1050,25 @@ describe('tSchema', () => {
       },
       required: ['unionPrimitivesField'],
     };
-    expect(tSchema(zodToJsonSchema(unionPrimitives))).toEqual(expected);
+    const jsonSchemaFromZod = zodToJsonSchema(unionPrimitives) as Record<
+      string,
+      unknown
+    >;
+    delete jsonSchemaFromZod['$schema'];
+    expect(tSchema(jsonSchemaFromZod)).toEqual(expected);
   });
   it('should process union consist of only not-nullable primitive types without additional fields, one of the union type is null', () => {
     /*
-       Resulted JSONSchema:
-       {
-         type: 'object',
-         properties: {
-           unionPrimitivesField: { type: [string, number, null] }
-         },
-         required: [ 'unionPrimitivesField' ],
-         additionalProperties: false
-       }
-      */
+          Resulted JSONSchema:
+          {
+            type: 'object',
+            properties: {
+              unionPrimitivesField: { type: [string, number, null] }
+            },
+            required: [ 'unionPrimitivesField' ],
+            additionalProperties: false
+          }
+         */
     const unionPrimitives = z.object({
       unionPrimitivesField: z.union([z.string(), z.number(), z.null()]),
     });
@@ -791,24 +1083,29 @@ describe('tSchema', () => {
       },
       required: ['unionPrimitivesField'],
     };
-    expect(tSchema(zodToJsonSchema(unionPrimitives))).toEqual(expected);
+    const jsonSchemaFromZod = zodToJsonSchema(unionPrimitives) as Record<
+      string,
+      unknown
+    >;
+    delete jsonSchemaFromZod['$schema'];
+    expect(tSchema(jsonSchemaFromZod)).toEqual(expected);
   });
   it('should process union primitive types, one of the union type is nullable, and one of the union type is null', () => {
     /*
-       Resulted JSONSchema:
-       {
-         type: 'object',
-          properties: {
-           unionPrimitivesField: {
-             anyOf: [
-               { type: [string, null]}, { type: 'number' }, { type: 'null' }
-             ]
-           }
-         },
-         required: [ 'unionPrimitivesField' ],
-         additionalProperties: false
-       }
-       */
+          Resulted JSONSchema:
+          {
+            type: 'object',
+             properties: {
+              unionPrimitivesField: {
+                anyOf: [
+                  { type: [string, null]}, { type: 'number' }, { type: 'null' }
+                ]
+              }
+            },
+            required: [ 'unionPrimitivesField' ],
+            additionalProperties: false
+          }
+          */
     const unionPrimitives = z.object({
       unionPrimitivesField: z.union([
         z.string().nullable(),
@@ -830,22 +1127,27 @@ describe('tSchema', () => {
       },
       required: ['unionPrimitivesField'],
     };
-    expect(tSchema(zodToJsonSchema(unionPrimitives))).toEqual(expected);
+    const jsonSchemaFromZod = zodToJsonSchema(unionPrimitives) as Record<
+      string,
+      unknown
+    >;
+    delete jsonSchemaFromZod['$schema'];
+    expect(tSchema(jsonSchemaFromZod)).toEqual(expected);
   });
   it('should process union primitive types, when types in the union are primitives without any additional fields, one of them is nullable', () => {
     /*
-       Resulted JSONSchema:
-       {
-         type: 'object',
-         properties: {
-           unionPrimitivesField: {
-               anyOf: [{ type: [string, null]}, { type: 'number' }]
-           }
-         },
-         required: [ 'unionPrimitivesField' ],
-         additionalProperties: false
-       }
-       */
+          Resulted JSONSchema:
+          {
+            type: 'object',
+            properties: {
+              unionPrimitivesField: {
+                  anyOf: [{ type: [string, null]}, { type: 'number' }]
+              }
+            },
+            required: [ 'unionPrimitivesField' ],
+            additionalProperties: false
+          }
+          */
     const unionPrimitives = z.object({
       unionPrimitivesField: z.union([z.string().nullable(), z.number()]),
     });
@@ -862,22 +1164,27 @@ describe('tSchema', () => {
       },
       required: ['unionPrimitivesField'],
     };
-    expect(tSchema(zodToJsonSchema(unionPrimitives))).toEqual(expected);
+    const jsonSchemaFromZod = zodToJsonSchema(unionPrimitives) as Record<
+      string,
+      unknown
+    >;
+    delete jsonSchemaFromZod['$schema'];
+    expect(tSchema(jsonSchemaFromZod)).toEqual(expected);
   });
   it('should process union primitive types, when types in the union are primitives without any additional fields, both of them is nullable', () => {
     /*
-        Resulted JSONSchema:
-         {
-           type: 'object',
-           properties: {
-               unionPrimitivesField: {
-                 anyOf: [{ type: [string, null]}, { type: [number, null] }]
-               }
-           },
-           required: [ 'unionPrimitivesField' ],
-           additionalProperties: false
-         }
-       */
+          Resulted JSONSchema:
+           {
+             type: 'object',
+             properties: {
+                 unionPrimitivesField: {
+                   anyOf: [{ type: [string, null]}, { type: [number, null] }]
+                 }
+             },
+             required: [ 'unionPrimitivesField' ],
+             additionalProperties: false
+           }
+         */
     const unionPrimitives = z.object({
       unionPrimitivesField: z.union([
         z.string().nullable(),
@@ -897,25 +1204,30 @@ describe('tSchema', () => {
       },
       required: ['unionPrimitivesField'],
     };
-    expect(tSchema(zodToJsonSchema(unionPrimitives))).toEqual(expected);
+    const jsonSchemaFromZod = zodToJsonSchema(unionPrimitives) as Record<
+      string,
+      unknown
+    >;
+    delete jsonSchemaFromZod['$schema'];
+    expect(tSchema(jsonSchemaFromZod)).toEqual(expected);
   });
   it('should process union primitive types, when types in the union are primitives with additional fields, not nullable', () => {
     /*
-        Resulted JSONSchema:
-          {
-           type: 'object',
-           properties:
-              { unionPrimitivesField:
-                  { anyOf: [
-                     {type: 'string',pattern: '^[a-zA-Z]{1,10}$'},
-                     {type: 'number'}
-                    ]
-                   }
-               },
-           required: [ 'unionPrimitivesField' ],
-           additionalProperties: false
-           }
-       */
+           Resulted JSONSchema:
+             {
+              type: 'object',
+              properties:
+                 { unionPrimitivesField:
+                     { anyOf: [
+                        {type: 'string',pattern: '^[a-zA-Z]{1,10}$'},
+                        {type: 'number'}
+                       ]
+                      }
+                  },
+              required: [ 'unionPrimitivesField' ],
+              additionalProperties: false
+              }
+          */
     const unionPrimitives = z.object({
       unionPrimitivesField: z.union([
         z.string().regex(/^[a-zA-Z]{1,10}$/),
@@ -938,7 +1250,12 @@ describe('tSchema', () => {
       },
       required: ['unionPrimitivesField'],
     };
-    expect(tSchema(zodToJsonSchema(unionPrimitives))).toEqual(expected);
+    const jsonSchemaFromZod = zodToJsonSchema(unionPrimitives) as Record<
+      string,
+      unknown
+    >;
+    delete jsonSchemaFromZod['$schema'];
+    expect(tSchema(jsonSchemaFromZod)).toEqual(expected);
   });
   it('should process union objects', () => {
     /*
@@ -984,53 +1301,11 @@ describe('tSchema', () => {
       },
       required: ['unionPrimitivesObjectsField'],
     };
-    expect(tSchema(zodToJsonSchema(unionPrimitivesAndObjects))).toEqual(
-      expected,
-    );
-  });
-  it('should process union array and objects', () => {
-    /*
-    Resulted JSONSchema:
-    {
-      type: 'object',
-      properties: { uninonField: { anyOf: [Array, Object] } },
-      required: [ 'uninonField' ],
-      additionalProperties: false
-    }
-    */
-    const innerObject = z.object({
-      simpleString: z.string(),
-    });
-    const uninonArrayAndObjects = z.object({
-      uninonField: z.union([z.array(z.string()), innerObject]),
-    });
-
-    const expected = {
-      type: types.Type.OBJECT,
-      properties: {
-        uninonField: {
-          anyOf: [
-            {
-              type: types.Type.ARRAY,
-              items: {
-                type: types.Type.STRING,
-              },
-            },
-            {
-              type: types.Type.OBJECT,
-              properties: {
-                simpleString: {
-                  type: types.Type.STRING,
-                },
-              },
-              required: ['simpleString'],
-            },
-          ],
-        },
-      },
-      required: ['uninonField'],
-    };
-    expect(tSchema(zodToJsonSchema(uninonArrayAndObjects))).toEqual(expected);
+    const jsonSchemaFromZod = zodToJsonSchema(
+      unionPrimitivesAndObjects,
+    ) as Record<string, unknown>;
+    delete jsonSchemaFromZod['$schema'];
+    expect(tSchema(jsonSchemaFromZod)).toEqual(expected);
   });
 });
 

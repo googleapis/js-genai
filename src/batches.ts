@@ -40,6 +40,8 @@ export class Batches extends BaseModule {
     params: types.CreateBatchJobParameters,
   ): Promise<types.BatchJob> => {
     if (this.apiClient.isVertexAI()) {
+      const timestamp = Date.now();
+      const timestampStr = timestamp.toString();
       if (Array.isArray(params.src)) {
         throw new Error(
           'InlinedRequest[] is not supported in Vertex AI. Please use ' +
@@ -48,13 +50,14 @@ export class Batches extends BaseModule {
       }
       params.config = params.config || {};
       if (params.config.displayName === undefined) {
-        params.config.displayName = 'genaiBatchJob_';
+        params.config.displayName = 'genaiBatchJob_${timestampStr}';
       }
       if (params.config.dest === undefined && typeof params.src === 'string') {
         if (params.src.startsWith('gs://') && params.src.endsWith('.jsonl')) {
           params.config.dest = `${params.src.slice(0, -6)}/dest`;
         } else if (params.src.startsWith('bq://')) {
-          params.config.dest = `${params.src}_dest_` as unknown as string;
+          params.config.dest =
+            `${params.src}_dest_${timestampStr}` as unknown as string;
         } else {
           throw new Error('Unsupported source:' + params.src);
         }
@@ -379,6 +382,91 @@ export class Batches extends BaseModule {
         const typedResp = new types.ListBatchJobsResponse();
         Object.assign(typedResp, resp);
         return typedResp;
+      });
+    }
+  }
+
+  /**
+   * Deletes a batch job.
+   *
+   * @param params - The parameters for the delete request.
+   * @return The empty response returned by the API.
+   *
+   * @example
+   * ```ts
+   * await ai.batches.delete({name: '...'}); // The server-generated resource name.
+   * ```
+   */
+  async delete(
+    params: types.DeleteBatchJobParameters,
+  ): Promise<types.DeleteResourceJob> {
+    let response: Promise<types.DeleteResourceJob>;
+
+    let path: string = '';
+    let queryParams: Record<string, string> = {};
+    if (this.apiClient.isVertexAI()) {
+      const body = converters.deleteBatchJobParametersToVertex(
+        this.apiClient,
+        params,
+      );
+      path = common.formatMap(
+        'batchPredictionJobs/{name}',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
+      delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'DELETE',
+          httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json();
+        }) as Promise<types.DeleteResourceJob>;
+
+      return response.then((apiResponse) => {
+        const resp = converters.deleteResourceJobFromVertex(apiResponse);
+
+        return resp as types.DeleteResourceJob;
+      });
+    } else {
+      const body = converters.deleteBatchJobParametersToMldev(
+        this.apiClient,
+        params,
+      );
+      path = common.formatMap(
+        'batches/{name}',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
+      delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'DELETE',
+          httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json();
+        }) as Promise<types.DeleteResourceJob>;
+
+      return response.then((apiResponse) => {
+        const resp = converters.deleteResourceJobFromMldev(apiResponse);
+
+        return resp as types.DeleteResourceJob;
       });
     }
   }

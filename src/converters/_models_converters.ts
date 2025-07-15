@@ -307,23 +307,6 @@ export function schemaToMldev(
   return toObject;
 }
 
-export function modelSelectionConfigToMldev(
-  fromObject: types.ModelSelectionConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (
-    common.getValueByPath(fromObject, ['featureSelectionPreference']) !==
-    undefined
-  ) {
-    throw new Error(
-      'featureSelectionPreference parameter is not supported in Gemini API.',
-    );
-  }
-
-  return toObject;
-}
-
 export function safetySettingToMldev(
   fromObject: types.SafetySetting,
 ): Record<string, unknown> {
@@ -477,85 +460,6 @@ export function googleSearchRetrievalToMldev(
   return toObject;
 }
 
-export function enterpriseWebSearchToMldev(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
-export function apiKeyConfigToMldev(
-  fromObject: types.ApiKeyConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (common.getValueByPath(fromObject, ['apiKeyString']) !== undefined) {
-    throw new Error('apiKeyString parameter is not supported in Gemini API.');
-  }
-
-  return toObject;
-}
-
-export function authConfigToMldev(
-  fromObject: types.AuthConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (common.getValueByPath(fromObject, ['apiKeyConfig']) !== undefined) {
-    throw new Error('apiKeyConfig parameter is not supported in Gemini API.');
-  }
-
-  const fromAuthType = common.getValueByPath(fromObject, ['authType']);
-  if (fromAuthType != null) {
-    common.setValueByPath(toObject, ['authType'], fromAuthType);
-  }
-
-  const fromGoogleServiceAccountConfig = common.getValueByPath(fromObject, [
-    'googleServiceAccountConfig',
-  ]);
-  if (fromGoogleServiceAccountConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['googleServiceAccountConfig'],
-      fromGoogleServiceAccountConfig,
-    );
-  }
-
-  const fromHttpBasicAuthConfig = common.getValueByPath(fromObject, [
-    'httpBasicAuthConfig',
-  ]);
-  if (fromHttpBasicAuthConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['httpBasicAuthConfig'],
-      fromHttpBasicAuthConfig,
-    );
-  }
-
-  const fromOauthConfig = common.getValueByPath(fromObject, ['oauthConfig']);
-  if (fromOauthConfig != null) {
-    common.setValueByPath(toObject, ['oauthConfig'], fromOauthConfig);
-  }
-
-  const fromOidcConfig = common.getValueByPath(fromObject, ['oidcConfig']);
-  if (fromOidcConfig != null) {
-    common.setValueByPath(toObject, ['oidcConfig'], fromOidcConfig);
-  }
-
-  return toObject;
-}
-
-export function googleMapsToMldev(
-  fromObject: types.GoogleMaps,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (common.getValueByPath(fromObject, ['authConfig']) !== undefined) {
-    throw new Error('authConfig parameter is not supported in Gemini API.');
-  }
-
-  return toObject;
-}
-
 export function urlContextToMldev(): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -624,6 +528,11 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
   ]);
   if (fromCodeExecution != null) {
     common.setValueByPath(toObject, ['codeExecution'], fromCodeExecution);
+  }
+
+  const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
+  if (fromComputerUse != null) {
+    common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
   }
 
   return toObject;
@@ -1601,31 +1510,6 @@ export function imageToMldev(fromObject: types.Image): Record<string, unknown> {
   return toObject;
 }
 
-export function videoToMldev(fromObject: types.Video): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromUri = common.getValueByPath(fromObject, ['uri']);
-  if (fromUri != null) {
-    common.setValueByPath(toObject, ['video', 'uri'], fromUri);
-  }
-
-  const fromVideoBytes = common.getValueByPath(fromObject, ['videoBytes']);
-  if (fromVideoBytes != null) {
-    common.setValueByPath(
-      toObject,
-      ['video', 'encodedVideo'],
-      t.tBytes(fromVideoBytes),
-    );
-  }
-
-  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
-  if (fromMimeType != null) {
-    common.setValueByPath(toObject, ['encoding'], fromMimeType);
-  }
-
-  return toObject;
-}
-
 export function generateVideosConfigToMldev(
   fromObject: types.GenerateVideosConfig,
   parentObject: Record<string, unknown>,
@@ -2416,6 +2300,11 @@ export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
     common.setValueByPath(toObject, ['codeExecution'], fromCodeExecution);
   }
 
+  const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
+  if (fromComputerUse != null) {
+    common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
+  }
+
   return toObject;
 }
 
@@ -2535,38 +2424,6 @@ export function voiceConfigToVertex(
       toObject,
       ['prebuiltVoiceConfig'],
       prebuiltVoiceConfigToVertex(fromPrebuiltVoiceConfig),
-    );
-  }
-
-  return toObject;
-}
-
-export function speakerVoiceConfigToVertex(
-  fromObject: types.SpeakerVoiceConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (common.getValueByPath(fromObject, ['speaker']) !== undefined) {
-    throw new Error('speaker parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['voiceConfig']) !== undefined) {
-    throw new Error('voiceConfig parameter is not supported in Vertex AI.');
-  }
-
-  return toObject;
-}
-
-export function multiSpeakerVoiceConfigToVertex(
-  fromObject: types.MultiSpeakerVoiceConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (
-    common.getValueByPath(fromObject, ['speakerVoiceConfigs']) !== undefined
-  ) {
-    throw new Error(
-      'speakerVoiceConfigs parameter is not supported in Vertex AI.',
     );
   }
 
@@ -3496,6 +3353,15 @@ export function editImageConfigToVertex(
       parentObject,
       ['parameters', 'outputOptions', 'compressionQuality'],
       fromOutputCompressionQuality,
+    );
+  }
+
+  const fromAddWatermark = common.getValueByPath(fromObject, ['addWatermark']);
+  if (parentObject !== undefined && fromAddWatermark != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'addWatermark'],
+      fromAddWatermark,
     );
   }
 
@@ -4520,12 +4386,6 @@ export function generateContentResponseFromMldev(
   return toObject;
 }
 
-export function contentEmbeddingStatisticsFromMldev(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
 export function contentEmbeddingFromMldev(
   fromObject: types.ContentEmbedding,
 ): Record<string, unknown> {
@@ -4687,12 +4547,6 @@ export function generateImagesResponseFromMldev(
   return toObject;
 }
 
-export function endpointFromMldev(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
 export function tunedModelInfoFromMldev(
   fromObject: types.TunedModelInfo,
 ): Record<string, unknown> {
@@ -4712,12 +4566,6 @@ export function tunedModelInfoFromMldev(
   if (fromUpdateTime != null) {
     common.setValueByPath(toObject, ['updateTime'], fromUpdateTime);
   }
-
-  return toObject;
-}
-
-export function checkpointFromMldev(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
 
   return toObject;
 }
@@ -4781,7 +4629,6 @@ export function modelFromMldev(
 }
 
 export function listModelsResponseFromMldev(
-  apiClient: ApiClient,
   fromObject: types.ListModelsResponse,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -5727,7 +5574,6 @@ export function modelFromVertex(
 }
 
 export function listModelsResponseFromVertex(
-  apiClient: ApiClient,
   fromObject: types.ListModelsResponse,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};

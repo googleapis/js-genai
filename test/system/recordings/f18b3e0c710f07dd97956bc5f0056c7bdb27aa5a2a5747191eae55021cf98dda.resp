@@ -1,0 +1,16 @@
+Status code: 200 
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Date: Wed, 09 Jul 2025 03:57:22 GMT
+Server: scaffolding on HTTPServer2
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+Content-Type: text/event-stream
+Content-Disposition: attachment
+X-Xss-Protection: 0
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": "The final result is"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-09T03:57:21.755336Z","responseId": "oehtaIiNLs-u3NoP5Iyb8QY"}
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " 2.\n"}]},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 52,"candidatesTokenCount": 8,"totalTokenCount": 60,"trafficType": "ON_DEMAND","promptTokensDetails": [{"modality": "TEXT","tokenCount": 52}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 8}]},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-09T03:57:21.755336Z","responseId": "oehtaIiNLs-u3NoP5Iyb8QY"}
+

@@ -1,0 +1,16 @@
+b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d
+Server Address: us-central1-aiplatform.googleapis.com
+Port: 443
+Protocol: https
+********************************************************************************
+POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-1.5-flash:generateContent HTTP/1.1
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: *
+Connection: keep-alive
+Content-Length: 583
+Content-Type: application/json
+Sec-Fetch-Mode: cors
+
+
+{"contents":[{"parts":[{"text":"put word: hello and word: world into a string"}],"role":"user"}],"tools":[{"functionDeclarations":[{"description":"this is a concat string function","name":"concatStringFunction","parametersJsonSchema":{"type":"object","properties":{"firstString":{"type":"string"},"secondString":{"type":"string"}},"required":["firstString","secondString"],"additionalProperties":false,"$schema":"http://json-schema.org/draft-07/schema#"}}]}],"toolConfig":{"functionCallingConfig":{"mode":"ANY","allowedFunctionNames":["concatStringFunction"]}},"generationConfig":{}}

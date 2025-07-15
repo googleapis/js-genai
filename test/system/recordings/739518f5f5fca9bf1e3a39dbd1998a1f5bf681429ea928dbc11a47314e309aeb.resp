@@ -1,0 +1,14 @@
+Status code: 200 
+Content-Type: text/event-stream
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Date: Wed, 09 Jul 2025 03:57:21 GMT
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+Content-Disposition: attachment
+Server: scaffolding on HTTPServer2
+X-Xss-Protection: 0
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"functionCall": {"name": "customDivide","args": {"denominator": 2,"numerator": 42}}}]},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 42,"candidatesTokenCount": 6,"totalTokenCount": 48,"trafficType": "ON_DEMAND","promptTokensDetails": [{"modality": "TEXT","tokenCount": 42}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 6}]},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-09T03:57:21.166795Z","responseId": "oehtaIuXCpX-2PgPgrfTMQ"}
+

@@ -1,0 +1,57 @@
+Status code: 200 
+Content-Type: application/json; charset=UTF-8
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Content-Encoding: gzip
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Date: Wed, 09 Jul 2025 19:29:48 GMT
+Server: scaffolding on HTTPServer2
+Content-Length: 421
+X-Xss-Protection: 0
+
+{
+  "candidates": [
+    {
+      "content": {
+        "role": "model",
+        "parts": [
+          {
+            "functionCall": {
+              "name": "greet",
+              "args": {
+                "greeting": "Hello",
+                "name": "jone smith"
+              }
+            }
+          }
+        ]
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -1.0651820727757044
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 17,
+    "candidatesTokenCount": 7,
+    "totalTokenCount": 85,
+    "trafficType": "ON_DEMAND",
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 17
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 7
+      }
+    ],
+    "thoughtsTokenCount": 61
+  },
+  "modelVersion": "gemini-2.5-flash",
+  "createTime": "2025-07-09T19:29:47.759080Z",
+  "responseId": "K8NuaKiqLqO3nvgP_o2PEA"
+}

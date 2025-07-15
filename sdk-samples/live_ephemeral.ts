@@ -132,7 +132,7 @@ async function main() {
     apiVersion: 'v1alpha',
   });
 
-  const model = 'gemini-2.0-flash-live-001';
+  const model = 'gemini-live-2.5-flash-preview';
   const token: AuthToken = await client.authTokens.create({
     config: {
       uses: 1, // The default

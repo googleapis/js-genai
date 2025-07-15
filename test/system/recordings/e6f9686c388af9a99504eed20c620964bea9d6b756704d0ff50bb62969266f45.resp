@@ -1,0 +1,17 @@
+Status code: 200 
+Content-Disposition: attachment
+Server: scaffolding on HTTPServer2
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+Content-Type: text/event-stream
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Date: Wed, 09 Jul 2025 16:38:25 GMT
+X-Content-Type-Options: nosniff
+Server-Timing: gfet4t7; dur=400
+
+data: {"candidates": [{"content": {"parts": [{"text": "You're welcome"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 137,"totalTokenCount": 137,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 137}]},"modelVersion": "gemini-2.0-flash","responseId": "AZtuaOD1BuOUsbQPsqzgyAg"}
+
+data: {"candidates": [{"content": {"parts": [{"text": "! Is there anything else I can help you with?\n"}],"role": "model"},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 59,"candidatesTokenCount": 16,"totalTokenCount": 75,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 59}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 16}]},"modelVersion": "gemini-2.0-flash","responseId": "AZtuaOD1BuOUsbQPsqzgyAg"}
+
