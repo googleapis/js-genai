@@ -9,20 +9,79 @@ import {getBaseUrl} from '../_base_url.js';
 import {Batches} from '../batches.js';
 import {Caches} from '../caches.js';
 import {Chats} from '../chats.js';
-import {GoogleGenAIOptions} from '../client.js';
 import {Files} from '../files.js';
 import {Live} from '../live.js';
 import {Models} from '../models.js';
 import {Operations} from '../operations.js';
 import {Tokens} from '../tokens.js';
 import {Tunings} from '../tunings.js';
+import {HttpOptions} from '../types.js';
 
-import {BrowserDownloader} from './_browser_downloader.js';
-import {BrowserUploader} from './_browser_uploader.js';
-import {BrowserWebSocketFactory} from './_browser_websocket.js';
-import {WebAuth} from './_web_auth.js';
+import {BrowserDownloader} from './_g3_browser_downloader.js';
+import {BrowserUploader} from './_g3_browser_uploader.js';
+import {BrowserWebSocketFactory} from './_g3_browser_websocket.js';
+import {WebAuth} from './_g3_web_auth.js';
 
 const LANGUAGE_LABEL_PREFIX = 'gl-node/';
+
+/**
+ * Google Gen AI SDK's configuration options.
+ *
+ * @remarks
+ * This interface is different from the {@link GoogleGenAIOptions} interface in
+ * the {@link client.ts} file notably because it does not have a
+ * `googleAuthOptions` property. This is because the g3_web client does not
+ * support the `google-auth-library` for internal use in Angular contexts.
+ *
+ * See {@link GoogleGenAI} for usage samples.
+ */
+export interface GoogleGenAIOptions {
+  /**
+   * Optional. Determines whether to use the Vertex AI or the Gemini API.
+   *
+   * @remarks
+   * When true, the {@link https://cloud.google.com/vertex-ai/docs/reference/rest | Vertex AI API} will used.
+   * When false, the {@link https://ai.google.dev/api | Gemini API} will be used.
+   *
+   * If unset, default SDK behavior is to use the Gemini API service.
+   */
+  vertexai?: boolean;
+  /**
+   * Optional. The Google Cloud project ID for Vertex AI clients.
+   *
+   * Find your project ID: https://cloud.google.com/resource-manager/docs/creating-managing-projects#identifying_projects
+   *
+   * @remarks
+   * Only supported on Node runtimes, ignored on browser runtimes.
+   */
+  project?: string;
+  /**
+   * Optional. The Google Cloud project {@link https://cloud.google.com/vertex-ai/generative-ai/docs/learn/locations | location} for Vertex AI clients.
+   *
+   * @remarks
+   * Only supported on Node runtimes, ignored on browser runtimes.
+   *
+   */
+  location?: string;
+  /**
+   * The API Key, required for Gemini API clients.
+   *
+   * @remarks
+   * Required on browser runtimes.
+   */
+  apiKey?: string;
+  /**
+   * Optional. The API version to use.
+   *
+   * @remarks
+   * If unset, the default API version will be used.
+   */
+  apiVersion?: string;
+  /**
+   * Optional. A set of customizable configuration for HTTP requests.
+   */
+  httpOptions?: HttpOptions;
+}
 
 /**
  * The Google GenAI SDK.
