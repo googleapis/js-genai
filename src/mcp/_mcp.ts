@@ -22,6 +22,10 @@ import {
 // TODO: b/416041229 - Determine how to retrieve the MCP package version.
 export const MCP_LABEL = 'mcp_used/unknown';
 
+// Whether MCP tool usage is detected from mcpToTool. This is used for
+// telemetry.
+let hasMcpToolUsageFromMcpToTool = false;
+
 // Checks whether the list of tools contains any MCP tools.
 export function hasMcpToolUsage(tools: ToolListUnion): boolean {
   for (const tool of tools) {
@@ -33,7 +37,7 @@ export function hasMcpToolUsage(tools: ToolListUnion): boolean {
     }
   }
 
-  return false;
+  return hasMcpToolUsageFromMcpToTool;
 }
 
 // Sets the MCP version label in the Google API client header.
@@ -214,6 +218,8 @@ function isMcpClient(client: unknown): client is McpClient {
 export function mcpToTool(
   ...args: [...McpClient[], CallableToolConfig | McpClient]
 ): CallableTool {
+  // Set MCP usage for telemetry.
+  hasMcpToolUsageFromMcpToTool = true;
   if (args.length === 0) {
     throw new Error('No MCP clients provided');
   }
@@ -225,4 +231,12 @@ export function mcpToTool(
     args.slice(0, args.length - 1) as McpClient[],
     maybeConfig,
   );
+}
+
+/**
+ * Sets the MCP tool usage flag from calling mcpToTool. This is used for
+ * telemetry.
+ */
+export function setMcpToolUsageFromMcpToTool(mcpToolUsage: boolean) {
+  hasMcpToolUsageFromMcpToTool = mcpToolUsage;
 }

@@ -606,11 +606,38 @@ export enum PersonGeneration {
 
 /** Enum that specifies the language of the text in the prompt. */
 export enum ImagePromptLanguage {
+  /**
+   * Auto-detect the language.
+   */
   auto = 'auto',
+  /**
+   * English
+   */
   en = 'en',
+  /**
+   * Japanese
+   */
   ja = 'ja',
+  /**
+   * Korean
+   */
   ko = 'ko',
+  /**
+   * Hindi
+   */
   hi = 'hi',
+  /**
+   * Chinese
+   */
+  zh = 'zh',
+  /**
+   * Portuguese
+   */
+  pt = 'pt',
+  /**
+   * Spanish
+   */
+  es = 'es',
 }
 
 /** Enum representing the mask mode of a mask reference image. */
@@ -2755,6 +2782,9 @@ export declare interface EditImageConfig {
       only).
        */
   outputCompressionQuality?: number;
+  /** Whether to add a watermark to the generated images.
+   */
+  addWatermark?: boolean;
   /** Describes the editing mode for the request. */
   editMode?: EditMode;
   /** The number of sampling steps. A higher value has better image
@@ -3101,7 +3131,7 @@ export declare interface GenerateVideosConfig {
   seed?: number;
   /** The aspect ratio for the generated video. 16:9 (landscape) and 9:16 (portrait) are supported. */
   aspectRatio?: string;
-  /** The resolution for the generated video. 1280x720, 1920x1080 are supported. */
+  /** The resolution for the generated video. 720p and 1080p are supported. */
   resolution?: string;
   /** Whether allow to generate person videos, and restrict to specific ages. Supported values are: dont_allow, allow_adult. */
   personGeneration?: string;
@@ -3557,7 +3587,7 @@ export declare interface CreateTuningJobParameters {
 }
 
 /** A long-running operation. */
-export declare interface Operation {
+export declare interface TuningOperation {
   /** The server-assigned name, which is only unique within the same service that originally returns it. If you use the default HTTP mapping, the `name` should be a resource name ending with `operations/{unique_id}`. */
   name?: string;
   /** Service-specific metadata associated with the operation. It typically contains progress information and common metadata such as create time. Some services might not provide such metadata.  Any method that returns a long-running operation should document the metadata type, if any. */
@@ -4000,7 +4030,7 @@ export declare interface CreateBatchJobConfig {
   /** GCS or BigQuery URI prefix for the output predictions. Example:
       "gs://path/to/output/data" or "bq://projectId.bqDatasetId.bqTableId".
        */
-  dest?: string;
+  dest?: BatchJobDestinationUnion;
 }
 
 /** Config for batches.create parameters. */
@@ -5389,3 +5419,5 @@ export type ToolListUnion = ToolUnion[];
 export type DownloadableFileUnion = string | File | GeneratedVideo | Video;
 
 export type BatchJobSourceUnion = BatchJobSource | InlinedRequest[] | string;
+
+export type BatchJobDestinationUnion = BatchJobDestination | string;

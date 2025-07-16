@@ -1,0 +1,50 @@
+Status code: 200 
+Content-Encoding: gzip
+Date: Wed, 09 Jul 2025 03:50:35 GMT
+Server: scaffolding on HTTPServer2
+Content-Length: 553
+X-Content-Type-Options: nosniff
+Content-Type: application/json; charset=UTF-8
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+
+{
+  "candidates": [
+    {
+      "content": {
+        "role": "model",
+        "parts": [
+          {
+            "text": "{\"arrayFiled\": [\"string\"], \"inner\": {\"innerNumber\": 1.23, \"innerString\": \"string\"}, \"integerInt64\": 123, \"nullableArrayField\": null, \"nullableField\": null, \"nullableObjectField\": null, \"numberWithMinMax\": 1.23, \"simpleBoolean\": true, \"simpleInteger\": 123, \"simpleNumber\": 1.23, \"stringDatetime\": \"2024-01-10T12:12:12Z\", \"stringWithEnum\": \"enumvalue1\", \"stringWithLength\": \"string\", \"unionField\": 1.23, \"simpleString\": \"string\"}"
+          }
+        ]
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.044415157072005731
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 4,
+    "candidatesTokenCount": 155,
+    "totalTokenCount": 159,
+    "trafficType": "ON_DEMAND",
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 4
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 155
+      }
+    ]
+  },
+  "modelVersion": "gemini-1.5-flash-002",
+  "createTime": "2025-07-09T03:50:33.989879Z",
+  "responseId": "CedtaLe1PN25nvgPgaXb2Ao"
+}

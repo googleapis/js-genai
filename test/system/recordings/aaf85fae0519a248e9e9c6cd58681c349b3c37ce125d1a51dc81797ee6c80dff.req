@@ -1,0 +1,16 @@
+b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d
+Server Address: us-central1-aiplatform.googleapis.com
+Port: 443
+Protocol: https
+********************************************************************************
+POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash:streamGenerateContent?alt=sse HTTP/1.1
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: *
+Connection: keep-alive
+Content-Length: 860
+Content-Type: application/json
+Sec-Fetch-Mode: cors
+
+
+{"contents":[{"parts":[{"text":"Divide 10 by 2 using the customDivide function, then divide the result by 2 again, then tell me the result"}],"role":"user"},{"parts":[{"functionCall":{"name":"customDivide","args":{"numerator":10,"denominator":2}}}],"role":"model"},{"parts":[{"functionResponse":{"name":"customDivide","response":{"result":42}}}],"role":"user"},{"parts":[{"functionCall":{"name":"customDivide","args":{"numerator":42,"denominator":2}}}],"role":"model"},{"parts":[{"functionResponse":{"name":"customDivide","response":{"result":2}}}],"role":"user"}],"tools":[{"functionDeclarations":[{"description":"Custom divide function","name":"customDivide","parametersJsonSchema":{"type":"object","properties":{"numerator":{"type":"number"},"denominator":{"type":"number"}}}}]}],"toolConfig":{"functionCallingConfig":{"mode":"AUTO"}},"generationConfig":{}}

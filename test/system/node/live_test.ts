@@ -17,7 +17,7 @@ const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
 
 const VERTEX_MODEL = 'gemini-2.0-flash-live-preview-04-09';
-const MLDEV_MODEL = 'gemini-2.0-flash-live-001';
+const MLDEV_MODEL = 'gemini-live-2.5-flash-preview';
 
 function loadFileAsBase64(filename: string): Promise<string> {
   return new Promise((resolve, reject) => {

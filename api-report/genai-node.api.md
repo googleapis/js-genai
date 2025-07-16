@@ -190,6 +190,9 @@ export interface BatchJobDestination {
     inlinedResponses?: InlinedResponse[];
 }
 
+// @public (undocumented)
+export type BatchJobDestinationUnion = BatchJobDestination | string;
+
 // @public
 export interface BatchJobSource {
     bigqueryUri?: string;
@@ -458,7 +461,7 @@ export interface CreateAuthTokenParameters {
 // @public
 export interface CreateBatchJobConfig {
     abortSignal?: AbortSignal;
-    dest?: string;
+    dest?: BatchJobDestinationUnion;
     displayName?: string;
     httpOptions?: HttpOptions;
 }
@@ -719,6 +722,7 @@ export enum DynamicRetrievalConfigMode {
 // @public
 export interface EditImageConfig {
     abortSignal?: AbortSignal;
+    addWatermark?: boolean;
     aspectRatio?: string;
     baseSteps?: number;
     editMode?: EditMode;
@@ -1488,16 +1492,14 @@ export { Image_2 as Image }
 
 // @public
 export enum ImagePromptLanguage {
-    // (undocumented)
     auto = "auto",
-    // (undocumented)
     en = "en",
-    // (undocumented)
+    es = "es",
     hi = "hi",
-    // (undocumented)
     ja = "ja",
-    // (undocumented)
-    ko = "ko"
+    ko = "ko",
+    pt = "pt",
+    zh = "zh"
 }
 
 // @public

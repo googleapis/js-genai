@@ -159,7 +159,7 @@ async function main() {
     return;
   }
 
-  const model = 'gemini-2.0-flash-live-001';
+  const model = 'gemini-live-2.5-flash-preview';
   let client = new GoogleGenAI({
     vertexai: false,
     apiKey: GEMINI_API_KEY,

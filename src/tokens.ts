@@ -178,14 +178,20 @@ export class Tokens extends BaseModule {
    * @experimental
    *
    * @remarks
-   * Ephermeral auth tokens is only supported in the Gemini Developer API.
+   * Ephemeral auth tokens is only supported in the Gemini Developer API.
    * It can be used for the session connection to the Live constrained API.
+   * Support in v1alpha only.
    *
    * @param params - The parameters for the create request.
    * @return The created auth token.
    *
    * @example
    * ```ts
+   * const ai = new GoogleGenAI({
+   *     apiKey: token.name,
+   *     httpOptions: { apiVersion: 'v1alpha' }  // Support in v1alpha only.
+   * });
+   *
    * // Case 1: If LiveEphemeralParameters is unset, unlock LiveConnectConfig
    * // when using the token in Live API sessions. Each session connection can
    * // use a different configuration.

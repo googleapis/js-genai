@@ -1,0 +1,49 @@
+Status code: 200 
+X-Content-Type-Options: nosniff
+Server-Timing: gfet4t7; dur=467
+Content-Type: application/json; charset=UTF-8
+Date: Wed, 09 Jul 2025 03:43:07 GMT
+Content-Length: 346
+X-Frame-Options: SAMEORIGIN
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Content-Encoding: gzip
+Server: scaffolding on HTTPServer2
+X-Xss-Protection: 0
+
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "OK. I've printed \"hellox2\" in blue.\n"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -1.5793678661187489e-06
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 63,
+    "candidatesTokenCount": 15,
+    "totalTokenCount": 78,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 63
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 15
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "SuVtaOr-Lp6i7dcPiKzO8AQ"
+}

@@ -1,0 +1,51 @@
+Status code: 200 
+Content-Length: 841
+X-Frame-Options: SAMEORIGIN
+Content-Type: application/json; charset=UTF-8
+Date: Wed, 09 Jul 2025 19:29:47 GMT
+Server: scaffolding on HTTPServer2
+X-Xss-Protection: 0
+X-Content-Type-Options: nosniff
+Server-Timing: gfet4t7; dur=1208
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Content-Encoding: gzip
+
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "functionCall": {
+              "name": "greet",
+              "args": {
+                "name": "jone smith",
+                "greeting": "Hello"
+              }
+            },
+            "thoughtSignature": "CrUDAVSoXO4EtkZSwoqHrm4sbu8KrpFGSR/jsBrZ30E7b9Vep8ALnkM4tI7vT0BTd8cJzrGtL8hhA7ouktdYvYnWaI3T48Eb60116xe5vsx0iBsN+ZniLalC6B6kQAsdnO0dYWY67Eg/1yFSDArJDpUrDIJD0F2Xx/aSQ0FhFHWzc5/0uJcxyGRa7RfDt6LlrEaotA8QCicTQdvHK8Uki5k3864RtlgNhIzc9dmwfn9DMNJTaPPKohVef8XDrn0zc6XkKQ7DRR3tdf5MCJbxxb8Hkt7/xDcmySQ7hqYLtk+9c78YytvC+BMdOnGJb6ZJ8lEQWJTba3MCn2CEtVpolAyFhFsBgpzAGnqVNPC/1NCveqh/aNLZvAfVDAs41DO1EwFpbaAQaaFtDccZ5qaaFDgmIUisvqjLrnm4DjKxO4HVPbKPTRY3cosnZXJ85+Gih5KWy8buYvNjAI/vu09Y7R+uz+HFhJ/ltmoQ+jVLm1cyTw/ZGsuRpKVeDwMTEYhvM0/99BMjvfw9UWakMxyo0TAQPW1NSXbzNIH9rI2xwm5cb6LcLiCFGAVswu0EnypgznXS6biA4wg="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 60,
+    "candidatesTokenCount": 20,
+    "totalTokenCount": 197,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 60
+      }
+    ],
+    "thoughtsTokenCount": 117
+  },
+  "modelVersion": "gemini-2.5-flash",
+  "responseId": "K8NuaKehCMf4jrEPxZLpYA"
+}

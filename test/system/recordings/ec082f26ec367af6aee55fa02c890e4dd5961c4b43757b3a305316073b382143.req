@@ -1,0 +1,16 @@
+b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d
+Server Address: generativelanguage.googleapis.com
+Port: 443
+Protocol: https
+********************************************************************************
+POST /v1beta/models/gemini-2.0-flash:generateContent HTTP/1.1
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: *
+Connection: keep-alive
+Content-Length: 595
+Content-Type: application/json
+Sec-Fetch-Mode: cors
+
+
+{"contents":[{"parts":[{"text":"Use the printer to print a simple word: hello in blue, and beep with the beeper"}],"role":"user"}],"tools":[{"functionDeclarations":[{"name":"print","parametersJsonSchema":{"type":"object","properties":{"text":{"type":"string"},"color":{"type":"string","pattern":"red|blue|green|white"}},"required":["text","color"],"additionalProperties":false,"$schema":"http://json-schema.org/draft-07/schema#"}}]},{"functionDeclarations":[{"name":"beep","parametersJsonSchema":{"type":"object"}}]}],"toolConfig":{"functionCallingConfig":{"mode":"AUTO"}},"generationConfig":{}}

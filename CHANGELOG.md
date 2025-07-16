@@ -1,6 +1,18 @@
 # Changelog
 
 
+## [1.9.0](https://github.com/googleapis/js-genai/compare/v1.8.0...v1.9.0) (2025-07-09)
+
+
+### Features
+
+* Add new languages for Imagen 4 prompt language ([65be769](https://github.com/googleapis/js-genai/commit/65be7692d02e83708348980b7c771f673d744f84))
+
+
+### Bug Fixes
+
+* add unref() for request timeouts ([6b76c4b](https://github.com/googleapis/js-genai/commit/6b76c4b5850b28f246d11ff99bb556e9e3318ee6))
+
 ## [1.8.0](https://github.com/googleapis/js-genai/compare/v1.7.0...v1.8.0) (2025-07-01)
 
 

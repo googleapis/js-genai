@@ -21,7 +21,7 @@ const CONTENT_TYPE_HEADER = 'Content-Type';
 const SERVER_TIMEOUT_HEADER = 'X-Server-Timeout';
 const USER_AGENT_HEADER = 'User-Agent';
 export const GOOGLE_API_CLIENT_HEADER = 'x-goog-api-client';
-export const SDK_VERSION = '1.8.0'; // x-release-please-version
+export const SDK_VERSION = '1.9.0'; // x-release-please-version
 const LIBRARY_LABEL = `google-genai-sdk/${SDK_VERSION}`;
 const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
 const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';
@@ -446,7 +446,19 @@ export class ApiClient {
       const abortController = new AbortController();
       const signal = abortController.signal;
       if (httpOptions.timeout && httpOptions?.timeout > 0) {
-        setTimeout(() => abortController.abort(), httpOptions.timeout);
+        const timeoutHandle = setTimeout(
+          () => abortController.abort(),
+          httpOptions.timeout,
+        );
+        if (
+          timeoutHandle &&
+          typeof (timeoutHandle as unknown as NodeJS.Timeout).unref ===
+            'function'
+        ) {
+          // call unref to prevent nodejs process from hanging, see
+          // https://nodejs.org/api/timers.html#timeoutunref
+          timeoutHandle.unref();
+        }
       }
       if (abortSignal) {
         abortSignal.addEventListener('abort', () => {
@@ -528,7 +540,7 @@ export class ApiClient {
           }
           break;
         }
-        const chunkString = decoder.decode(value);
+        const chunkString = decoder.decode(value, {stream: true});
 
         // Parse and throw an error if the chunk contains an error.
         try {

@@ -11,7 +11,6 @@ import {
   FunctionCallingConfigMode,
   GenerateContentResponse,
   Part,
-  Type,
 } from '../../../src/types.js';
 import {setupTestServer, shutdownTestServer} from '../test_server.js';
 
@@ -25,14 +24,14 @@ const customDivideCallableTool: CallableTool = {
         {
           description: 'Custom divide function',
           name: 'customDivide',
-          parameters: {
-            type: Type.OBJECT,
+          parametersJsonSchema: {
+            type: 'object',
             properties: {
               numerator: {
-                type: Type.NUMBER,
+                type: 'number',
               },
               denominator: {
-                type: Type.NUMBER,
+                type: 'number',
               },
             },
           },
@@ -70,7 +69,10 @@ describe('AFC Streaming Tests', () => {
     const testCases = [
       {
         name: 'Google AI AFC enabled',
-        clientParams: {vertexai: false, apiKey: GEMINI_API_KEY},
+        clientParams: {
+          vertexai: false,
+          apiKey: GEMINI_API_KEY,
+        },
         model: 'gemini-2.0-flash',
         config: {
           tools: [customDivideCallableTool],
@@ -126,7 +128,10 @@ describe('AFC Streaming Tests', () => {
     const testCases = [
       {
         name: 'Google AI AFC disabled',
-        clientParams: {vertexai: false, apiKey: GEMINI_API_KEY},
+        clientParams: {
+          vertexai: false,
+          apiKey: GEMINI_API_KEY,
+        },
         model: 'gemini-2.0-flash',
         config: {
           tools: [customDivideCallableTool],
@@ -184,7 +189,10 @@ describe('AFC Streaming Tests', () => {
     const testCases = [
       {
         name: 'Google AI chat stream',
-        clientParams: {vertexai: false, apiKey: GEMINI_API_KEY},
+        clientParams: {
+          vertexai: false,
+          apiKey: GEMINI_API_KEY,
+        },
         model: 'gemini-2.0-flash',
         config: {
           tools: [customDivideCallableTool],
@@ -243,7 +251,10 @@ describe('AFC Streaming Tests', () => {
       const testCases = [
         {
           name: 'Google AI can continue after max calls exceeded',
-          clientParams: {vertexai: false, apiKey: GEMINI_API_KEY},
+          clientParams: {
+            vertexai: false,
+            apiKey: GEMINI_API_KEY,
+          },
           model: 'gemini-2.0-flash',
           config: {
             tools: [customDivideCallableTool],

@@ -118,26 +118,6 @@ export function tuningDatasetToMldev(
   return toObject;
 }
 
-export function tuningValidationDatasetToMldev(
-  fromObject: types.TuningValidationDataset,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (common.getValueByPath(fromObject, ['gcsUri']) !== undefined) {
-    throw new Error('gcsUri parameter is not supported in Gemini API.');
-  }
-
-  if (
-    common.getValueByPath(fromObject, ['vertexDatasetResource']) !== undefined
-  ) {
-    throw new Error(
-      'vertexDatasetResource parameter is not supported in Gemini API.',
-    );
-  }
-
-  return toObject;
-}
-
 export function createTuningJobConfigToMldev(
   fromObject: types.CreateTuningJobConfig,
   parentObject: Record<string, unknown>,
@@ -306,22 +286,6 @@ export function listTuningJobsParametersToVertex(
       ['config'],
       listTuningJobsConfigToVertex(fromConfig, toObject),
     );
-  }
-
-  return toObject;
-}
-
-export function tuningExampleToVertex(
-  fromObject: types.TuningExample,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (common.getValueByPath(fromObject, ['textInput']) !== undefined) {
-    throw new Error('textInput parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['output']) !== undefined) {
-    throw new Error('output parameter is not supported in Vertex AI.');
   }
 
   return toObject;
@@ -502,12 +466,6 @@ export function createTuningJobParametersToVertex(
   return toObject;
 }
 
-export function tunedModelCheckpointFromMldev(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
 export function tunedModelFromMldev(
   fromObject: types.TunedModel,
 ): Record<string, unknown> {
@@ -665,8 +623,8 @@ export function listTuningJobsResponseFromMldev(
   return toObject;
 }
 
-export function operationFromMldev(
-  fromObject: types.Operation,
+export function tuningOperationFromMldev(
+  fromObject: types.TuningOperation,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
