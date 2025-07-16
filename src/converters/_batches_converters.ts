@@ -8,7 +8,7 @@
 
 import {ApiClient} from '../_api_client.js';
 import * as common from '../_common.js';
-import * as t from '../_transformers.js';
+import * as transformers from '../_transformers.js';
 import * as types from '../types.js';
 
 export function videoMetadataToMldev(
@@ -771,7 +771,7 @@ export function generateContentConfigToMldev(
     common.setValueByPath(
       parentObject,
       ['systemInstruction'],
-      contentToMldev(t.tContent(fromSystemInstruction)),
+      contentToMldev(transformers.tContent(fromSystemInstruction)),
     );
   }
 
@@ -856,7 +856,7 @@ export function generateContentConfigToMldev(
     common.setValueByPath(
       toObject,
       ['responseSchema'],
-      schemaToMldev(t.tSchema(fromResponseSchema)),
+      schemaToMldev(transformers.tSchema(fromResponseSchema)),
     );
   }
 
@@ -898,10 +898,10 @@ export function generateContentConfigToMldev(
 
   const fromTools = common.getValueByPath(fromObject, ['tools']);
   if (parentObject !== undefined && fromTools != null) {
-    let transformedList = t.tTools(fromTools);
+    let transformedList = transformers.tTools(fromTools);
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return toolToMldev(t.tTool(item));
+        return toolToMldev(transformers.tTool(item));
       });
     }
     common.setValueByPath(parentObject, ['tools'], transformedList);
@@ -927,7 +927,7 @@ export function generateContentConfigToMldev(
     common.setValueByPath(
       parentObject,
       ['cachedContent'],
-      t.tCachedContentName(apiClient, fromCachedContent),
+      transformers.tCachedContentName(apiClient, fromCachedContent),
     );
   }
 
@@ -954,7 +954,7 @@ export function generateContentConfigToMldev(
     common.setValueByPath(
       toObject,
       ['speechConfig'],
-      speechConfigToMldev(t.tSpeechConfig(fromSpeechConfig)),
+      speechConfigToMldev(transformers.tSpeechConfig(fromSpeechConfig)),
     );
   }
 
@@ -987,13 +987,13 @@ export function inlinedRequestToMldev(
     common.setValueByPath(
       toObject,
       ['request', 'model'],
-      t.tModel(apiClient, fromModel),
+      transformers.tModel(apiClient, fromModel),
     );
   }
 
   const fromContents = common.getValueByPath(fromObject, ['contents']);
   if (fromContents != null) {
-    let transformedList = t.tContents(fromContents);
+    let transformedList = transformers.tContents(fromContents);
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
         return contentToMldev(item);
@@ -1086,7 +1086,7 @@ export function createBatchJobParametersToMldev(
     common.setValueByPath(
       toObject,
       ['_url', 'model'],
-      t.tModel(apiClient, fromModel),
+      transformers.tModel(apiClient, fromModel),
     );
   }
 
@@ -1095,7 +1095,10 @@ export function createBatchJobParametersToMldev(
     common.setValueByPath(
       toObject,
       ['batch', 'inputConfig'],
-      batchJobSourceToMldev(apiClient, t.tBatchJobSource(apiClient, fromSrc)),
+      batchJobSourceToMldev(
+        apiClient,
+        transformers.tBatchJobSource(apiClient, fromSrc),
+      ),
     );
   }
 
@@ -1122,7 +1125,7 @@ export function getBatchJobParametersToMldev(
     common.setValueByPath(
       toObject,
       ['_url', 'name'],
-      t.tBatchJobName(apiClient, fromName),
+      transformers.tBatchJobName(apiClient, fromName),
     );
   }
 
@@ -1145,7 +1148,7 @@ export function cancelBatchJobParametersToMldev(
     common.setValueByPath(
       toObject,
       ['_url', 'name'],
-      t.tBatchJobName(apiClient, fromName),
+      transformers.tBatchJobName(apiClient, fromName),
     );
   }
 
@@ -1208,7 +1211,7 @@ export function deleteBatchJobParametersToMldev(
     common.setValueByPath(
       toObject,
       ['_url', 'name'],
-      t.tBatchJobName(apiClient, fromName),
+      transformers.tBatchJobName(apiClient, fromName),
     );
   }
 
@@ -1312,7 +1315,7 @@ export function createBatchJobConfigToVertex(
     common.setValueByPath(
       parentObject,
       ['outputConfig'],
-      batchJobDestinationToVertex(t.tBatchJobDestination(fromDest)),
+      batchJobDestinationToVertex(transformers.tBatchJobDestination(fromDest)),
     );
   }
 
@@ -1327,7 +1330,11 @@ export function createBatchJobParametersToVertex(
 
   const fromModel = common.getValueByPath(fromObject, ['model']);
   if (fromModel != null) {
-    common.setValueByPath(toObject, ['model'], t.tModel(apiClient, fromModel));
+    common.setValueByPath(
+      toObject,
+      ['model'],
+      transformers.tModel(apiClient, fromModel),
+    );
   }
 
   const fromSrc = common.getValueByPath(fromObject, ['src']);
@@ -1335,7 +1342,7 @@ export function createBatchJobParametersToVertex(
     common.setValueByPath(
       toObject,
       ['inputConfig'],
-      batchJobSourceToVertex(t.tBatchJobSource(apiClient, fromSrc)),
+      batchJobSourceToVertex(transformers.tBatchJobSource(apiClient, fromSrc)),
     );
   }
 
@@ -1362,7 +1369,7 @@ export function getBatchJobParametersToVertex(
     common.setValueByPath(
       toObject,
       ['_url', 'name'],
-      t.tBatchJobName(apiClient, fromName),
+      transformers.tBatchJobName(apiClient, fromName),
     );
   }
 
@@ -1385,7 +1392,7 @@ export function cancelBatchJobParametersToVertex(
     common.setValueByPath(
       toObject,
       ['_url', 'name'],
-      t.tBatchJobName(apiClient, fromName),
+      transformers.tBatchJobName(apiClient, fromName),
     );
   }
 
@@ -1449,7 +1456,7 @@ export function deleteBatchJobParametersToVertex(
     common.setValueByPath(
       toObject,
       ['_url', 'name'],
-      t.tBatchJobName(apiClient, fromName),
+      transformers.tBatchJobName(apiClient, fromName),
     );
   }
 
@@ -1892,7 +1899,11 @@ export function batchJobFromMldev(
 
   const fromState = common.getValueByPath(fromObject, ['metadata', 'state']);
   if (fromState != null) {
-    common.setValueByPath(toObject, ['state'], t.tJobState(fromState));
+    common.setValueByPath(
+      toObject,
+      ['state'],
+      transformers.tJobState(fromState),
+    );
   }
 
   const fromCreateTime = common.getValueByPath(fromObject, [
@@ -2080,7 +2091,11 @@ export function batchJobFromVertex(
 
   const fromState = common.getValueByPath(fromObject, ['state']);
   if (fromState != null) {
-    common.setValueByPath(toObject, ['state'], t.tJobState(fromState));
+    common.setValueByPath(
+      toObject,
+      ['state'],
+      transformers.tJobState(fromState),
+    );
   }
 
   const fromError = common.getValueByPath(fromObject, ['error']);

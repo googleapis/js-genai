@@ -1162,9 +1162,10 @@ export interface GenerateVideosConfig {
 }
 
 // @public
-export interface GenerateVideosOperation {
+export class GenerateVideosOperation implements Operation<GenerateVideosResponse> {
     done?: boolean;
     error?: Record<string, unknown>;
+    fromAPIResponse({ apiResponse, isVertexAI, }: OperationFromAPIResponseParameters): Operation<GenerateVideosResponse>;
     metadata?: Record<string, unknown>;
     name?: string;
     response?: GenerateVideosResponse;
@@ -2096,23 +2097,32 @@ export interface MultiSpeakerVoiceConfig {
 }
 
 // @public
-export interface Operation {
+export interface Operation<T> {
     done?: boolean;
     error?: Record<string, unknown>;
+    fromAPIResponse({ apiResponse, isVertexAI, }: OperationFromAPIResponseParameters): Operation<T>;
     metadata?: Record<string, unknown>;
     name?: string;
+    response?: T;
 }
 
 // @public
-export interface OperationGetParameters {
+export interface OperationFromAPIResponseParameters {
+    apiResponse: Record<string, unknown>;
+    isVertexAI: boolean;
+}
+
+// @public
+export interface OperationGetParameters<U, V extends Operation<U>> {
     config?: GetOperationConfig;
-    operation: GenerateVideosOperation;
+    operation: V;
 }
 
 // @public (undocumented)
 export class Operations extends BaseModule {
     constructor(apiClient: ApiClient);
-    getVideosOperation(parameters: types.OperationGetParameters): Promise<types.GenerateVideosOperation>;
+    get<T, U extends types.Operation<T>>(parameters: types.OperationGetParameters<T, U>): Promise<types.Operation<T>>;
+    getVideosOperation(parameters: types.OperationGetParameters<types.GenerateVideosResponse, types.GenerateVideosOperation>): Promise<types.GenerateVideosOperation>;
 }
 
 // @public
@@ -2726,6 +2736,14 @@ export interface TuningJob {
     tunedModelDisplayName?: string;
     tuningDataStats?: TuningDataStats;
     updateTime?: string;
+}
+
+// @public
+export interface TuningOperation {
+    done?: boolean;
+    error?: Record<string, unknown>;
+    metadata?: Record<string, unknown>;
+    name?: string;
 }
 
 // @public (undocumented)

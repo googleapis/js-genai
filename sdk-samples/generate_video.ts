@@ -27,7 +27,7 @@ async function generateContentFromMLDev() {
   while (!operation.done) {
     console.log('Waiting for completion');
     await delay(1000);
-    operation = await ai.operations.getVideosOperation({operation: operation});
+    operation = await ai.operations.get({operation: operation});
   }
 
   const videos = operation.response?.generatedVideos;
@@ -58,7 +58,7 @@ async function generateContentFromVertexAI() {
   while (!operation.done) {
     console.log('Waiting for completion');
     await delay(1000);
-    operation = await ai.operations.getVideosOperation({operation: operation});
+    operation = await ai.operations.get({operation: operation});
   }
 
   const videos = operation.response?.generatedVideos;

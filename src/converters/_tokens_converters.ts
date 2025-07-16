@@ -8,7 +8,7 @@
 
 import {ApiClient} from '../_api_client.js';
 import * as common from '../_common.js';
-import * as t from '../_transformers.js';
+import * as transformers from '../_transformers.js';
 import * as types from '../types.js';
 
 export function prebuiltVoiceConfigToMldev(
@@ -751,7 +751,7 @@ export function liveConnectConfigToMldev(
     common.setValueByPath(
       parentObject,
       ['setup', 'generationConfig', 'speechConfig'],
-      speechConfigToMldev(t.tLiveSpeechConfig(fromSpeechConfig)),
+      speechConfigToMldev(transformers.tLiveSpeechConfig(fromSpeechConfig)),
     );
   }
 
@@ -773,16 +773,16 @@ export function liveConnectConfigToMldev(
     common.setValueByPath(
       parentObject,
       ['setup', 'systemInstruction'],
-      contentToMldev(t.tContent(fromSystemInstruction)),
+      contentToMldev(transformers.tContent(fromSystemInstruction)),
     );
   }
 
   const fromTools = common.getValueByPath(fromObject, ['tools']);
   if (parentObject !== undefined && fromTools != null) {
-    let transformedList = t.tTools(fromTools);
+    let transformedList = transformers.tTools(fromTools);
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return toolToMldev(t.tTool(item));
+        return toolToMldev(transformers.tTool(item));
       });
     }
     common.setValueByPath(parentObject, ['setup', 'tools'], transformedList);
@@ -866,7 +866,7 @@ export function liveConnectConstraintsToMldev(
     common.setValueByPath(
       toObject,
       ['setup', 'model'],
-      t.tModel(apiClient, fromModel),
+      transformers.tModel(apiClient, fromModel),
     );
   }
 
