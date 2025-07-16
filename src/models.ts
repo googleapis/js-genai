@@ -1152,6 +1152,71 @@ export class Models extends BaseModule {
   }
 
   /**
+   * Segments an image, creating a mask of a specified area.
+   *
+   * @param params - The parameters for segmenting an image.
+   * @return The response from the API.
+   *
+   * @example
+   * ```ts
+   * const response = await ai.models.segmentImage({
+   *  model: 'image-segmentation-001',
+   *  source: {
+   *    image: image,
+   *  },
+   *  config: {
+   *    mode: 'foreground',
+   *  },
+   * });
+   * console.log(response?.generatedMasks?.[0]?.mask?.imageBytes);
+   * ```
+   */
+  async segmentImage(
+    params: types.SegmentImageParameters,
+  ): Promise<types.SegmentImageResponse> {
+    let response: Promise<types.SegmentImageResponse>;
+
+    let path: string = '';
+    let queryParams: Record<string, string> = {};
+    if (this.apiClient.isVertexAI()) {
+      const body = converters.segmentImageParametersToVertex(
+        this.apiClient,
+        params,
+      );
+      path = common.formatMap(
+        '{model}:predict',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
+      delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json();
+        }) as Promise<types.SegmentImageResponse>;
+
+      return response.then((apiResponse) => {
+        const resp = converters.segmentImageResponseFromVertex(apiResponse);
+        const typedResp = new types.SegmentImageResponse();
+        Object.assign(typedResp, resp);
+        return typedResp;
+      });
+    } else {
+      throw new Error('This method is only supported by the Vertex AI.');
+    }
+  }
+
+  /**
    * Fetches information about a model by name.
    *
    * @example
