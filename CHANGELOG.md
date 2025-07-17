@@ -1,6 +1,15 @@
 # Changelog
 
 
+## [1.11.0](https://github.com/googleapis/js-genai/compare/v1.10.0...v1.11.0) (2025-07-17)
+
+
+### Features
+
+* Add generateVideosFromSource in Go, refactor private generateVideos ([bda1fde](https://github.com/googleapis/js-genai/commit/bda1fded5ddefefcfa6b6d1c3069928de0360a03))
+* Add image_size field for Vertex Imagen 4 generation ([b6cc23e](https://github.com/googleapis/js-genai/commit/b6cc23ee90b576db1529f33ff5c209742baedab8))
+* Updates to codegen instructions to improve performance for TypeScript ([9c97ec6](https://github.com/googleapis/js-genai/commit/9c97ec645a7ab1e3a2e28319dac54a640e0eda57))
+
 ## [1.10.0](https://github.com/googleapis/js-genai/compare/v1.9.0...v1.10.0) (2025-07-17)
 
 
