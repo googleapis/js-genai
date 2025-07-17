@@ -1,0 +1,49 @@
+Status code: 200 
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Date: Thu, 17 Jul 2025 23:11:25 GMT
+Content-Length: 397
+X-Xss-Protection: 0
+Server-Timing: gfet4t7; dur=734
+Content-Type: application/json; charset=UTF-8
+Content-Encoding: gzip
+Server: scaffolding on HTTPServer2
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "I cannot fulfill this request exactly. The customDivide function does not return the correct result of 10 / 2. It returns 42.\n"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.13965429365634918
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 27,
+    "candidatesTokenCount": 32,
+    "totalTokenCount": 59,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 27
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 32
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "HIN5aN2XNfeCsbQP9diIoQg"
+}

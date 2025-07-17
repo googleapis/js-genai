@@ -9,6 +9,7 @@ import {
   CallableTool,
   FunctionCall,
   FunctionCallingConfigMode,
+  FunctionResponse,
   GenerateContentResponse,
   Part,
 } from '../../../src/types.js';
@@ -55,6 +56,307 @@ const customDivideCallableTool: CallableTool = {
     }
   },
 };
+
+const expectedFunctionCall: FunctionCall = {
+  name: 'customDivide',
+  args: {
+    denominator: 2,
+    numerator: 10,
+  },
+};
+const expectedFunctionResponse: FunctionResponse = {
+  name: 'customDivide',
+  response: {
+    result: 42,
+  },
+};
+
+describe('AFC non-streaming Tests', () => {
+  beforeAll(async () => {
+    await setupTestServer();
+  });
+
+  afterAll(async () => {
+    await shutdownTestServer();
+  });
+
+  describe('generateContent afc enabled', () => {
+    const testCases = [
+      {
+        name: 'Google AI AFC enabled',
+        clientParams: {
+          vertexai: false,
+          apiKey: GEMINI_API_KEY,
+        },
+        model: 'gemini-2.0-flash',
+        config: {
+          tools: [customDivideCallableTool],
+          toolConfig: {
+            functionCallingConfig: {
+              mode: FunctionCallingConfigMode.AUTO,
+            },
+          },
+        },
+        messages: ['Divide 10 by 2 using the customDivide function'],
+      },
+      {
+        name: 'Vertex AI AFC enabled',
+        clientParams: {vertexai: true, project: GOOGLE_CLOUD_PROJECT},
+        model: 'gemini-2.0-flash',
+        config: {
+          tools: [customDivideCallableTool],
+          toolConfig: {
+            functionCallingConfig: {
+              mode: FunctionCallingConfigMode.AUTO,
+            },
+          },
+        },
+        messages: ['Divide 10 by 2 using the customDivide function'],
+      },
+    ];
+    for (const testCase of testCases) {
+      it(testCase.name, async () => {
+        const client = new GoogleGenAI(testCase.clientParams);
+        const response = await client.models.generateContent({
+          model: testCase.model,
+          contents: testCase.messages,
+          config: testCase.config,
+        });
+        expect(
+          response.automaticFunctionCallingHistory![1].parts![0].functionCall!
+            .name,
+        ).toBe('customDivide');
+      });
+    }
+  });
+  describe('generateContent afc disabled', () => {
+    const testCases = [
+      {
+        name: 'Google AI AFC disabled',
+        clientParams: {
+          vertexai: false,
+          apiKey: GEMINI_API_KEY,
+        },
+        model: 'gemini-2.0-flash',
+        config: {
+          tools: [customDivideCallableTool],
+          toolConfig: {
+            functionCallingConfig: {
+              mode: FunctionCallingConfigMode.AUTO,
+            },
+          },
+          automaticFunctionCalling: {
+            disable: true,
+          },
+        },
+        messages: ['Divide 10 by 2 using the customDivide function'],
+      },
+      {
+        name: 'Vertex AI AFC disabled',
+        clientParams: {vertexai: true, project: GOOGLE_CLOUD_PROJECT},
+        model: 'gemini-2.0-flash',
+        config: {
+          tools: [customDivideCallableTool],
+          toolConfig: {
+            functionCallingConfig: {
+              mode: FunctionCallingConfigMode.AUTO,
+            },
+          },
+          automaticFunctionCalling: {
+            disable: true,
+          },
+        },
+        messages: ['Divide 10 by 2 using the customDivide function'],
+      },
+    ];
+
+    for (const testCase of testCases) {
+      it(testCase.name, async () => {
+        const client = new GoogleGenAI(testCase.clientParams);
+        const response = await client.models.generateContent({
+          model: testCase.model,
+          contents: testCase.messages,
+          config: testCase.config,
+        });
+        expect(
+          response.candidates![0].content!.parts![0].functionCall!.name,
+        ).toBe('customDivide');
+      });
+    }
+  });
+  describe('chat AFC enabled', () => {
+    describe('chat AFC enabled with default max calls', () => {
+      const testCases = [
+        {
+          name: 'Google AI chat stream',
+          clientParams: {
+            vertexai: false,
+            apiKey: GEMINI_API_KEY,
+          },
+          model: 'gemini-2.0-flash',
+          config: {
+            tools: [customDivideCallableTool],
+            toolConfig: {
+              functionCallingConfig: {
+                mode: FunctionCallingConfigMode.AUTO,
+              },
+            },
+          },
+          messages: [
+            'Divide 10 by 2 using the customDivide function',
+            'Thanks!',
+          ],
+        },
+        {
+          name: 'Vertex AI chat stream',
+          clientParams: {vertexai: true, project: GOOGLE_CLOUD_PROJECT},
+          model: 'gemini-2.0-flash',
+          config: {
+            tools: [customDivideCallableTool],
+            toolConfig: {
+              functionCallingConfig: {
+                mode: FunctionCallingConfigMode.AUTO,
+              },
+            },
+          },
+          messages: [
+            'Divide 10 by 2 using the customDivide function',
+            'Thanks!',
+          ],
+        },
+      ];
+      testCases.forEach((testCase) => {
+        it(testCase.name, async () => {
+          const client = new GoogleGenAI(testCase.clientParams);
+          const chat = client.chats.create({
+            model: testCase.model,
+            config: testCase.config,
+          });
+          for (const message of testCase.messages) {
+            await chat.sendMessage({
+              message,
+            });
+          }
+          const history = chat.getHistory();
+          expect(history[0].parts![0].text).toEqual(
+            'Divide 10 by 2 using the customDivide function',
+          );
+          expect(history[1].parts![0].functionCall).toEqual(
+            expectedFunctionCall,
+          );
+          expect(history[2].parts![0].functionResponse).toEqual(
+            expectedFunctionResponse,
+          );
+        });
+      });
+    });
+
+    describe('AFC max calls exceeded', () => {
+      const testCases = [
+        {
+          name: 'Google AI can continue after max calls exceeded',
+          clientParams: {
+            vertexai: false,
+            apiKey: GEMINI_API_KEY,
+          },
+          model: 'gemini-2.0-flash',
+          config: {
+            tools: [customDivideCallableTool],
+            toolConfig: {
+              functionCallingConfig: {
+                mode: FunctionCallingConfigMode.AUTO,
+              },
+            },
+            automaticFunctionCalling: {
+              maximumRemoteCalls: 1,
+            },
+          },
+          messages: [
+            'Divide 10 by 2 using the customDivide function, then divide the result by 2 use the customDivide function again, then tell me the result',
+            'Thanks!',
+          ],
+        },
+        {
+          name: 'Vertex AI can continue after max calls exceeded',
+          clientParams: {vertexai: true, project: GOOGLE_CLOUD_PROJECT},
+          model: 'gemini-2.0-flash',
+          config: {
+            tools: [customDivideCallableTool],
+            toolConfig: {
+              functionCallingConfig: {
+                mode: FunctionCallingConfigMode.AUTO,
+              },
+            },
+            automaticFunctionCalling: {
+              maximumRemoteCalls: 1,
+            },
+          },
+          messages: [
+            'Divide 10 by 2 using the customDivide function, then divide the result by 2 use the customDivide function again, then tell me the result',
+            'Thanks!',
+          ],
+        },
+      ];
+
+      testCases.forEach((testCase) => {
+        it(testCase.name, async () => {
+          const client = new GoogleGenAI(testCase.clientParams);
+          const chat = client.chats.create({
+            model: testCase.model,
+            config: testCase.config,
+          });
+          const initialResponse = await chat.sendMessage({
+            message: testCase.messages[0],
+          });
+          expect(
+            initialResponse.candidates![0].content!.parts![0].functionCall!
+              .name,
+          ).toEqual('customDivide');
+          const expectAutomaticFunctionCallingHistory = [
+            {
+              role: 'user',
+              parts: [
+                {
+                  text: 'Divide 10 by 2 using the customDivide function, then divide the result by 2 use the customDivide function again, then tell me the result',
+                },
+              ],
+            },
+            {
+              role: 'model',
+              parts: [
+                {
+                  functionCall: {
+                    name: 'customDivide',
+                    args: {
+                      numerator: 10,
+                      denominator: 2,
+                    },
+                  },
+                },
+              ],
+            },
+            {
+              role: 'user',
+              parts: [
+                {
+                  functionResponse: {
+                    name: 'customDivide',
+                    response: {
+                      result: 42,
+                    },
+                  },
+                },
+              ],
+            },
+          ];
+          expect(initialResponse.automaticFunctionCallingHistory).toEqual(
+            expectAutomaticFunctionCallingHistory,
+          );
+        });
+      });
+    });
+  });
+});
 
 describe('AFC Streaming Tests', () => {
   beforeAll(async () => {
