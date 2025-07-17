@@ -8,7 +8,6 @@
 
 * Add `addWatermark` parameter to the edit image configuration. ([16bca99](https://github.com/googleapis/js-genai/commit/16bca999fe432eabd69c78988e2e6e4bc099342d))
 * Adding codegen instructions to guide LLMs to generate code with the Google GenAI SDK ([7f74175](https://github.com/googleapis/js-genai/commit/7f741751ba7a7a15e29469c6debf25b6605252ed))
-* Migrate Go file.create method to use the sdk_http_response field and remove http_headers ([c6dce45](https://github.com/googleapis/js-genai/commit/c6dce458d26ae6437c43fd6537e6196ae4c52b1a))
 * Update `hasMcpToolUsage` to set the MCP tool usage when it is detected by calling `mcpToTool` ([a70f9c4](https://github.com/googleapis/js-genai/commit/a70f9c4d76d6b6d05f831fedeb1bc166f5226ef1))
 
 
