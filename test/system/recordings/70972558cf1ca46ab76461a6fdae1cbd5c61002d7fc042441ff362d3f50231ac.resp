@@ -1,0 +1,49 @@
+Status code: 200 
+Content-Encoding: gzip
+Server: scaffolding on HTTPServer2
+Server-Timing: gfet4t7; dur=487
+Content-Type: application/json; charset=UTF-8
+Date: Thu, 17 Jul 2025 23:11:28 GMT
+Content-Length: 329
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "You're welcome!\n"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -2.6590811709562939e-05
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 53,
+    "candidatesTokenCount": 6,
+    "totalTokenCount": 59,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 53
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 6
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "IIN5aMP9DLW3mNAP3Pv2wA4"
+}

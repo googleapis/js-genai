@@ -13,7 +13,6 @@ import {
   CallableTool,
   CallableToolConfig,
   FunctionCall,
-  GenerateContentParameters,
   Part,
   Tool,
   ToolListUnion,
@@ -46,20 +45,6 @@ export function setMcpUsageHeader(headers: Record<string, string>) {
   headers[GOOGLE_API_CLIENT_HEADER] = (
     existingHeader + ` ${MCP_LABEL}`
   ).trimStart();
-}
-
-// Checks whether the list of tools contains any MCP clients. Will return true
-// if there is at least one MCP client.
-export function hasMcpClientTools(params: GenerateContentParameters): boolean {
-  return params.config?.tools?.some((tool) => isMcpCallableTool(tool)) ?? false;
-}
-
-// Checks whether the list of tools contains any non-MCP tools. Will return true
-// if there is at least one non-MCP tool.
-export function hasNonMcpTools(params: GenerateContentParameters): boolean {
-  return (
-    params.config?.tools?.some((tool) => !isMcpCallableTool(tool)) ?? false
-  );
 }
 
 // Returns true if the object is a MCP CallableTool, otherwise false.
