@@ -139,7 +139,8 @@ export class GoogleGenAI {
     }
 
     const baseUrl = getBaseUrl(
-      options,
+      options.httpOptions,
+      options.vertexai,
       getEnv('GOOGLE_VERTEX_BASE_URL'),
       getEnv('GOOGLE_GEMINI_BASE_URL'),
     );

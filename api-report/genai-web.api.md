@@ -2079,7 +2079,7 @@ export class Models extends BaseModule {
     generateContent: (params: types.GenerateContentParameters) => Promise<types.GenerateContentResponse>;
     generateContentStream: (params: types.GenerateContentParameters) => Promise<AsyncGenerator<types.GenerateContentResponse>>;
     generateImages: (params: types.GenerateImagesParameters) => Promise<types.GenerateImagesResponse>;
-    generateVideos(params: types.GenerateVideosParameters): Promise<types.GenerateVideosOperation>;
+    generateVideos: (params: types.GenerateVideosParameters) => Promise<types.GenerateVideosOperation>;
     get(params: types.GetModelParameters): Promise<types.Model>;
     // (undocumented)
     list: (params?: types.ListModelsParameters) => Promise<Pager<types.Model>>;
