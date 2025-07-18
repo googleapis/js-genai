@@ -154,7 +154,13 @@ export class Files extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.ListFilesResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.ListFilesResponse>;
 
       return response.then((apiResponse) => {

@@ -1139,7 +1139,13 @@ export class Models extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.ListModelsResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.ListModelsResponse>;
 
       return response.then((apiResponse) => {
@@ -1172,7 +1178,13 @@ export class Models extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.ListModelsResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.ListModelsResponse>;
 
       return response.then((apiResponse) => {
