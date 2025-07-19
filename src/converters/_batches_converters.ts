@@ -1948,6 +1948,13 @@ export function listBatchJobsResponseFromMldev(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
+  const fromSdkHttpResponse = common.getValueByPath(fromObject, [
+    'sdkHttpResponse',
+  ]);
+  if (fromSdkHttpResponse != null) {
+    common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
+  }
+
   const fromNextPageToken = common.getValueByPath(fromObject, [
     'nextPageToken',
   ]);
@@ -2141,6 +2148,13 @@ export function listBatchJobsResponseFromVertex(
   fromObject: types.ListBatchJobsResponse,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
+
+  const fromSdkHttpResponse = common.getValueByPath(fromObject, [
+    'sdkHttpResponse',
+  ]);
+  if (fromSdkHttpResponse != null) {
+    common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
+  }
 
   const fromNextPageToken = common.getValueByPath(fromObject, [
     'nextPageToken',
