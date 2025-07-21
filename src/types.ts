@@ -1174,7 +1174,10 @@ export declare interface HttpOptions {
   headers?: Record<string, string>;
   /** Timeout for the request in milliseconds. */
   timeout?: number;
-  /** Extra parameters to add to the request body. */
+  /** Extra parameters to add to the request body.
+      The structure must match the backend API's request structure.
+      - VertexAI backend API docs: https://cloud.google.com/vertex-ai/docs/reference/rest
+      - GeminiAPI backend API docs: https://ai.google.dev/api/rest */
   extraBody?: Record<string, unknown>;
 }
 
@@ -2168,6 +2171,8 @@ export class GenerateContentResponseUsageMetadata {
 
 /** Response message for PredictionService.GenerateContent. */
 export class GenerateContentResponse {
+  /** Used to retain the full HTTP response. */
+  sdkHttpResponse?: HttpResponse;
   /** Response variations returned by the model.
    */
   candidates?: Candidate[];
@@ -2612,6 +2617,10 @@ export declare interface GenerateImagesConfig {
   /** Whether to add a watermark to the generated images.
    */
   addWatermark?: boolean;
+  /** The size of the largest dimension of the generated image.
+      Supported sizes are 1K and 2K (not supported for Imagen 3 models).
+       */
+  imageSize?: string;
   /** Whether to use the prompt rewriting logic.
    */
   enhancePrompt?: boolean;

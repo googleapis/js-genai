@@ -1,32 +1,16 @@
 Status code: 200 
-Content-Encoding: gzip
-Server: scaffolding on HTTPServer2
-X-Xss-Protection: 0
-X-Google-Backends: unix:/tmp/esfbackend.1746797381.911749.2834158,/bns/rw/borg/rw/bns/genai-api/prod.genai-api/0,/bns/ncsfoa/borg/ncsfoa/bns/blue-layer1-gfe-prod-edge/prod.blue-layer1-gfe.sfo03s25/8
-X-Frame-Options: SAMEORIGIN
-Server-Timing: gfet4t7; dur=407
-X-Google-Gfe-Request-Trace: acsfol10:443,/bns/rw/borg/rw/bns/genai-api/prod.genai-api/0,acsfol10:443
-X-Google-Gfe-Handshake-Trace: GFE: /bns/ncsfoa/borg/ncsfoa/bns/blue-layer1-gfe-prod-edge/prod.blue-layer1-gfe.sfo03s25/8,Mentat oracle: [2002:a05:6f30:228:b0:b:1b6a:4a0a]:9801
-X-Google-Gfe-Response-Body-Transformations: chunked
-Content-Type: application/json; charset=UTF-8
 Vary: Origin
 Vary: X-Origin
 Vary: Referer
-X-Google-Netmon-Label: /bns/rw/borg/rw/bns/genai-api/prod.genai-api/0
-Content-Length: 348
-X-Google-Dos-Service-Trace: main:genai-api-api-prod,main:GLOBAL_all_non_cloud
-Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-X-Google-Session-Info: GgQYECgLIAE6IxIhZ2VuZXJhdGl2ZWxhbmd1YWdlLmdvb2dsZWFwaXMuY29t
-X-Google-Security-Signals: FRAMEWORK=ONE_PLATFORM,ENV=borg,ENV_DEBUG=borg_user:genai-api;borg_job:prod.genai-api
-X-Google-Security-Signals: FRAMEWORK=HTTPSERVER2,BUILD=GOOGLE3,BUILD_DEBUG=cl:756525062,ENV=borg,ENV_DEBUG=borg_user:genai-api;borg_job:prod.genai-api
+Content-Encoding: gzip
+Server: scaffolding on HTTPServer2
+Content-Length: 380
+Server-Timing: gfet4t7; dur=535
+Content-Type: application/json; charset=UTF-8
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
 X-Content-Type-Options: nosniff
-X-Google-Service: genai-api-api-prod/gfespec_googleapis-generativelanguage_generativelanguage-url-map-global_generativelanguage-genai-api-api-prod
-X-Google-Shellfish-Status: CA0gBEBG
-X-Google-Esf-Cloud-Client-Params: backend_service_name: "generativelanguage.googleapis.com" backend_fully_qualified_method: "google.ai.generativelanguage.v1beta.GenerativeService.GenerateContent"
-X-Google-Gfe-Service-Trace: genai-api-api-prod/gfespec_googleapis-generativelanguage_generativelanguage-url-map-global_generativelanguage-genai-api-api-prod
-Date: Sun, 11 May 2025 02:58:11 GMT
-X-Google-Gfe-Response-Code-Details-Trace: response_code_set_by_backend
-X-Google-Gfe-Version: 2.928.1
+Date: Mon, 07 Jul 2025 21:46:56 GMT
 
 {
   "candidates": [
@@ -40,7 +24,7 @@ X-Google-Gfe-Version: 2.928.1
         "role": "model"
       },
       "finishReason": "MAX_TOKENS",
-      "avgLogprobs": -0.0049654208123683929
+      "avgLogprobs": -0.0060311570763587948
     }
   ],
   "usageMetadata": {
@@ -60,5 +44,6 @@ X-Google-Gfe-Version: 2.928.1
       }
     ]
   },
-  "modelVersion": "gemini-1.5-flash"
+  "modelVersion": "gemini-1.5-flash",
+  "responseId": "UEBsaPLlJOiLqsMPncKdiAY"
 }

@@ -1230,6 +1230,10 @@ export function generateImagesConfigToMldev(
     throw new Error('addWatermark parameter is not supported in Gemini API.');
   }
 
+  if (common.getValueByPath(fromObject, ['imageSize']) !== undefined) {
+    throw new Error('imageSize parameter is not supported in Gemini API.');
+  }
+
   if (common.getValueByPath(fromObject, ['enhancePrompt']) !== undefined) {
     throw new Error('enhancePrompt parameter is not supported in Gemini API.');
   }
@@ -1506,6 +1510,12 @@ export function imageToMldev(fromObject: types.Image): Record<string, unknown> {
   if (fromMimeType != null) {
     common.setValueByPath(toObject, ['mimeType'], fromMimeType);
   }
+
+  return toObject;
+}
+
+export function generateVideosSourceToMldev(): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   return toObject;
 }
@@ -2983,6 +2993,15 @@ export function generateImagesConfigToVertex(
     );
   }
 
+  const fromImageSize = common.getValueByPath(fromObject, ['imageSize']);
+  if (parentObject !== undefined && fromImageSize != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'sampleImageSize'],
+      fromImageSize,
+    );
+  }
+
   const fromEnhancePrompt = common.getValueByPath(fromObject, [
     'enhancePrompt',
   ]);
@@ -3858,6 +3877,12 @@ export function videoToVertex(
   return toObject;
 }
 
+export function generateVideosSourceToVertex(): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  return toObject;
+}
+
 export function generateVideosConfigToVertex(
   fromObject: types.GenerateVideosConfig,
   parentObject: Record<string, unknown>,
@@ -4352,6 +4377,13 @@ export function generateContentResponseFromMldev(
   fromObject: types.GenerateContentResponse,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
+
+  const fromSdkHttpResponse = common.getValueByPath(fromObject, [
+    'sdkHttpResponse',
+  ]);
+  if (fromSdkHttpResponse != null) {
+    common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
+  }
 
   const fromCandidates = common.getValueByPath(fromObject, ['candidates']);
   if (fromCandidates != null) {
@@ -5129,6 +5161,13 @@ export function generateContentResponseFromVertex(
   fromObject: types.GenerateContentResponse,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
+
+  const fromSdkHttpResponse = common.getValueByPath(fromObject, [
+    'sdkHttpResponse',
+  ]);
+  if (fromSdkHttpResponse != null) {
+    common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
+  }
 
   const fromCandidates = common.getValueByPath(fromObject, ['candidates']);
   if (fromCandidates != null) {

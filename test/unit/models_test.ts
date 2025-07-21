@@ -21,7 +21,17 @@ const fetchOkOptions = {
   status: 200,
   statusText: 'OK',
   ok: true,
-  headers: {'Content-Type': 'application/json'},
+  headers: {
+    'content-type': 'application/json; charset=UTF-8',
+    'vary': 'Origin, X-Origin, Referer',
+    'content-encoding': 'gzip',
+    'date': 'Tue, 24 Jun 2025 18:56:29 GMT',
+    'server': 'scaffolding on HTTPServer2',
+    'x-xss-protection': '0',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-content-type-options': 'nosniff',
+    'transfer-encoding': 'chunked',
+  },
   url: 'some-url',
 };
 
@@ -149,7 +159,6 @@ const mockGenerateContentResponseWithAnotherFunctionCall: types.GenerateContentR
 
 function createMockReadableStream(chunk: string): ReadableStream<Uint8Array> {
   const encoder = new TextEncoder();
-
   return new ReadableStream({
     start(controller) {
       function pushChunk() {
@@ -1308,3 +1317,26 @@ function getFunctionDeclarationFromArgs(
   }
   return {};
 }
+
+describe('generateContentStream', () => {
+  it('should always return the headers in the sdkHttpResponse', async () => {
+    const client = new GoogleGenAI({vertexai: true, apiKey: 'fake-api-key'});
+    const mockStreamingGenerateContentResponse = createMockReadableStream(
+      JSON.stringify(mockGenerateContentResponse),
+    );
+    const mockResponses = [
+      Promise.resolve(
+        new Response(mockStreamingGenerateContentResponse, fetchOkOptions),
+      ),
+    ];
+    spyOn(global, 'fetch').and.returnValues(...mockResponses);
+    const response = await client.models.generateContentStream({
+      model: 'gemini-1.5-flash-exp',
+      contents: 'Do anything.',
+    });
+
+    for await (const _chunk of response) {
+      expect(_chunk.sdkHttpResponse?.headers).toEqual(fetchOkOptions.headers);
+    }
+  });
+});

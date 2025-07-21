@@ -1,6 +1,6 @@
 {
   "name": "@google/genai",
-  "version": "1.9.0",
+  "version": "1.10.0",
   "description": "",
   "type": "module",
   "main": "dist/node/index.mjs",
@@ -44,7 +44,7 @@
     "system-test": "tsc && jasmine dist/test/system/**/*_test.js",
     "test-server-tests": "tsc && GOOGLE_CLOUD_PROJECT=googcloudproj GOOGLE_CLOUD_LOCATION=googcloudloc jasmine dist/test/system/node/*_test.js !dist/test/system/node/live_test.js -- --test-server",
     "test-server-tests:record": "tsc && jasmine --fail-fast dist/test/system/node/*_test.js !dist/test/system/node/live_test.js -- --test-server --record",
-    "docs": "typedoc && ts-node scripts/add_docsite_license_headers.ts",
+    "docs": "typedoc && node --loader ts-node/esm scripts/add_docsite_license_headers.ts",
     "pages-main": "node --loader ts-node/esm scripts/generate_pages.ts main",
     "pages-release": "node --loader ts-node/esm scripts/generate_pages.ts release",
     "format": "prettier '**/*.ts' '**/*.mjs' '**/*.json' --write",

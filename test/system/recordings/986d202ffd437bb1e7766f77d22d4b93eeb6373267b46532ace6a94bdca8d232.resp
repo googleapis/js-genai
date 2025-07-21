@@ -1,31 +1,15 @@
 Status code: 200 
-X-Xss-Protection: 0
-X-Google-Gfe-Response-Body-Transformations: chunked
-X-Google-Gfe-Version: 2.928.1
-X-Google-Session-Info: GgQYECgLIAE6GxIZYWlwbGF0Zm9ybS5nb29nbGVhcGlzLmNvbQ
-X-Google-Security-Signals: FRAMEWORK=ONE_PLATFORM,ENV=borg,ENV_DEBUG=borg_user:cloud-ml-aiplatform-dataplane-prediction;borg_job:prod-genai-us-central1.aiplatform-dataplane-prediction
-X-Google-Security-Signals: FRAMEWORK=HTTPSERVER2,BUILD=GOOGLE3,BUILD_DEBUG=cl:750943495,ENV=borg,ENV_DEBUG=borg_user:cloud-ml-aiplatform-dataplane-prediction;borg_job:prod-genai-us-central1.aiplatform-dataplane-prediction
-Server: scaffolding on HTTPServer2
-X-Content-Type-Options: nosniff
-X-Google-Backends: unix:/tmp/aiplatform-prediction.sandbox.googleapis.com,/bns/ib/borg/ib/bns/cloud-ml-aiplatform-dataplane-prediction/prod-genai-us-central1.aiplatform-dataplane-prediction/3.esf,/bns/ncsfoa/borg/ncsfoa/bns/blue-layer1-gfe-prod-edge/prod.blue-layer1-gfe.nuq04s42/15
 Vary: Origin
 Vary: X-Origin
 Vary: Referer
-Date: Sun, 11 May 2025 02:58:11 GMT
-X-Google-Gfe-Request-Trace: acsfoj13:443,/bns/ib/borg/ib/bns/cloud-ml-aiplatform-dataplane-prediction/prod-genai-us-central1.aiplatform-dataplane-prediction/3.esf,acsfoj13:443
-X-Google-Shellfish-Status: CA0gBEBG
-Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-X-Google-Esf-Cloud-Client-Params: backend_service_name: "aiplatform.googleapis.com" backend_fully_qualified_method: "google.cloud.aiplatform.v1beta1.PredictionService.GenerateContent"
-X-Google-Netmon-Label: /bns/ib/borg/ib/bns/cloud-ml-aiplatform-dataplane-prediction/prod-genai-us-central1.aiplatform-dataplane-prediction/3:esf
-X-Google-Service: cloud-ml-aiplatform-dataplane-prediction-api-prod-genai-us-central1
-Content-Length: 441
+Server: scaffolding on HTTPServer2
+Content-Length: 442
+X-Xss-Protection: 0
 X-Frame-Options: SAMEORIGIN
-X-Google-Gfe-Response-Code-Details-Trace: response_code_set_by_backend
-Content-Encoding: gzip
 Content-Type: application/json; charset=UTF-8
-X-Google-Gfe-Service-Trace: cloud-ml-aiplatform-dataplane-prediction-api-prod-genai-us-central1
-X-Google-Dos-Service-Trace: main:cloud-ml-aiplatform-dataplane-prediction-api-prod-genai-us-central1,main:GLOBAL_all_non_cloud
-X-Google-Gfe-Handshake-Trace: GFE: /bns/ncsfoa/borg/ncsfoa/bns/blue-layer1-gfe-prod-edge/prod.blue-layer1-gfe.nuq04s42/15,Mentat oracle: [2002:a05:635e:ce:b0:197:ae57:e037]:9801
+Content-Encoding: gzip
+Date: Mon, 07 Jul 2025 21:46:57 GMT
+X-Content-Type-Options: nosniff
 
 {
   "candidates": [
@@ -39,7 +23,7 @@ X-Google-Gfe-Handshake-Trace: GFE: /bns/ncsfoa/borg/ncsfoa/bns/blue-layer1-gfe-p
         ]
       },
       "finishReason": "MAX_TOKENS",
-      "avgLogprobs": -0.0049654208123683929
+      "avgLogprobs": -0.0059767637401819231
     }
   ],
   "usageMetadata": {
@@ -61,6 +45,6 @@ X-Google-Gfe-Handshake-Trace: GFE: /bns/ncsfoa/borg/ncsfoa/bns/blue-layer1-gfe-p
     ]
   },
   "modelVersion": "gemini-1.5-flash-002",
-  "createTime": "2025-05-11T02:58:10.783568Z",
-  "responseId": "QhIgaNDpL8W2ld8PgO-QmQc"
+  "createTime": "2025-07-07T21:46:57.604300Z",
+  "responseId": "UUBsaIzxJKW8nvgP2IrW4As"
 }

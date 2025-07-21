@@ -1,6 +1,21 @@
 # Changelog
 
 
+## [1.10.0](https://github.com/googleapis/js-genai/compare/v1.9.0...v1.10.0) (2025-07-17)
+
+
+### Features
+
+* Add `addWatermark` parameter to the edit image configuration. ([16bca99](https://github.com/googleapis/js-genai/commit/16bca999fe432eabd69c78988e2e6e4bc099342d))
+* Adding codegen instructions to guide LLMs to generate code with the Google GenAI SDK ([7f74175](https://github.com/googleapis/js-genai/commit/7f741751ba7a7a15e29469c6debf25b6605252ed))
+* Update `hasMcpToolUsage` to set the MCP tool usage when it is detected by calling `mcpToTool` ([a70f9c4](https://github.com/googleapis/js-genai/commit/a70f9c4d76d6b6d05f831fedeb1bc166f5226ef1))
+
+
+### Bug Fixes
+
+* **live:** enhance security by moving api key from query parameters to header ([f183b7d](https://github.com/googleapis/js-genai/commit/f183b7d7fa33f4f66bef4b7d49ab0c4848cca2e4))
+* **live:** Rollback commit f183b7d, breaks live in web env ([be24e86](https://github.com/googleapis/js-genai/commit/be24e86e572c35d5b39313a9b154a04f7717340f))
+
 ## [1.9.0](https://github.com/googleapis/js-genai/compare/v1.8.0...v1.9.0) (2025-07-09)
 
 

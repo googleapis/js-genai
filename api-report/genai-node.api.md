@@ -1068,6 +1068,7 @@ export class GenerateContentResponse {
     modelVersion?: string;
     promptFeedback?: GenerateContentResponsePromptFeedback;
     responseId?: string;
+    sdkHttpResponse?: HttpResponse;
     get text(): string | undefined;
     usageMetadata?: GenerateContentResponseUsageMetadata;
 }
@@ -1115,6 +1116,7 @@ export interface GenerateImagesConfig {
     enhancePrompt?: boolean;
     guidanceScale?: number;
     httpOptions?: HttpOptions;
+    imageSize?: string;
     includeRaiReason?: boolean;
     includeSafetyAttributes?: boolean;
     language?: ImagePromptLanguage;
@@ -2096,14 +2098,6 @@ export interface MultiSpeakerVoiceConfig {
 }
 
 // @public
-export interface Operation {
-    done?: boolean;
-    error?: Record<string, unknown>;
-    metadata?: Record<string, unknown>;
-    name?: string;
-}
-
-// @public
 export interface OperationGetParameters {
     config?: GetOperationConfig;
     operation: GenerateVideosOperation;
@@ -2726,6 +2720,14 @@ export interface TuningJob {
     tunedModelDisplayName?: string;
     tuningDataStats?: TuningDataStats;
     updateTime?: string;
+}
+
+// @public
+export interface TuningOperation {
+    done?: boolean;
+    error?: Record<string, unknown>;
+    metadata?: Record<string, unknown>;
+    name?: string;
 }
 
 // @public (undocumented)

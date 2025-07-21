@@ -1,42 +1,26 @@
 Status code: 200 
-X-Google-Session-Info: GgQYECgLIAE6GxIZYWlwbGF0Zm9ybS5nb29nbGVhcGlzLmNvbQ
-X-Google-Security-Signals: FRAMEWORK=ONE_PLATFORM,ENV=borg,ENV_DEBUG=borg_user:cloud-ml-aiplatform-dataplane-prediction;borg_job:prod-genai-us-central1.aiplatform-dataplane-prediction
-X-Google-Security-Signals: FRAMEWORK=HTTPSERVER2,BUILD=GOOGLE3,BUILD_DEBUG=cl:750943495,ENV=borg,ENV_DEBUG=borg_user:cloud-ml-aiplatform-dataplane-prediction;borg_job:prod-genai-us-central1.aiplatform-dataplane-prediction
-Content-Disposition: attachment
-X-Xss-Protection: 0
+Date: Mon, 07 Jul 2025 21:47:00 GMT
 X-Frame-Options: SAMEORIGIN
-X-Google-Gfe-Service-Trace: cloud-ml-aiplatform-dataplane-prediction-api-prod-genai-us-central1
-X-Google-Gfe-Version: 2.928.1
-Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Date: Sun, 11 May 2025 02:58:20 GMT
-Server: scaffolding on HTTPServer2
-X-Content-Type-Options: nosniff
+Content-Type: text/event-stream
+Content-Disposition: attachment
 Vary: Origin
 Vary: X-Origin
 Vary: Referer
-X-Google-Backends: unix:/tmp/aiplatform-prediction.sandbox.googleapis.com,/bns/ib/borg/ib/bns/cloud-ml-aiplatform-dataplane-prediction/prod-genai-us-central1.aiplatform-dataplane-prediction/1.esf,/bns/ncsfoa/borg/ncsfoa/bns/blue-layer1-gfe-prod-edge/prod.blue-layer1-gfe.nuq04s42/15
-X-Google-Dos-Service-Trace: main:cloud-ml-aiplatform-dataplane-prediction-api-prod-genai-us-central1,main:GLOBAL_all_non_cloud
-X-Google-Gfe-Handshake-Trace: GFE: /bns/ncsfoa/borg/ncsfoa/bns/blue-layer1-gfe-prod-edge/prod.blue-layer1-gfe.nuq04s42/15,Mentat oracle: [2002:a05:635e:ce:b0:197:ae57:e037]:9801
-X-Google-Gfe-Response-Code-Details-Trace: response_code_set_by_backend
-X-Google-Esf-Cloud-Client-Params: backend_service_name: "aiplatform.googleapis.com" backend_fully_qualified_method: "google.cloud.aiplatform.v1beta1.PredictionService.StreamGenerateContent"
-Content-Type: text/event-stream
-X-Google-Netmon-Label: /bns/ib/borg/ib/bns/cloud-ml-aiplatform-dataplane-prediction/prod-genai-us-central1.aiplatform-dataplane-prediction/1:esf
-X-Google-Gfe-Request-Trace: acsfoj13:443,/bns/ib/borg/ib/bns/cloud-ml-aiplatform-dataplane-prediction/prod-genai-us-central1.aiplatform-dataplane-prediction/1.esf,acsfoj13:443
-X-Google-Service: cloud-ml-aiplatform-dataplane-prediction-api-prod-genai-us-central1
-X-Google-Gfe-Response-Body-Transformations: dechunked
-X-Google-Shellfish-Status: CA0gBEBG
+Server: scaffolding on HTTPServer2
+X-Xss-Protection: 0
+X-Content-Type-Options: nosniff
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": "The"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-1.5-flash-002","createTime": "2025-05-11T02:58:20.413049Z","responseId": "TBIgaPmaGfP-ld8P0bbEqAY"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": "The"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-1.5-flash-002","createTime": "2025-07-07T21:46:59.873007Z","responseId": "U0BsaK-kNfG5nvgP3Mrf8AU"}
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": " sky is blue due to a phenomenon called **Rayleigh scattering**.  Sunlight is"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-1.5-flash-002","createTime": "2025-05-11T02:58:20.413049Z","responseId": "TBIgaPmaGfP-ld8P0bbEqAY"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " sky is blue due to a phenomenon called **Rayleigh scattering**.  Sunlight is"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-1.5-flash-002","createTime": "2025-07-07T21:46:59.873007Z","responseId": "U0BsaK-kNfG5nvgP3Mrf8AU"}
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": " made up of all the colors of the rainbow.  When sunlight enters the Earth"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-1.5-flash-002","createTime": "2025-05-11T02:58:20.413049Z","responseId": "TBIgaPmaGfP-ld8P0bbEqAY"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " made up of all the colors of the rainbow.  When sunlight enters the Earth"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-1.5-flash-002","createTime": "2025-07-07T21:46:59.873007Z","responseId": "U0BsaK-kNfG5nvgP3Mrf8AU"}
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": "'s atmosphere, it collides with tiny air molecules (mostly nitrogen and oxygen).  These molecules are much smaller than the wavelengths of visible light.\n\nRay"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-1.5-flash-002","createTime": "2025-05-11T02:58:20.413049Z","responseId": "TBIgaPmaGfP-ld8P0bbEqAY"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": "'s atmosphere, it collides with tiny air molecules (mostly nitrogen and oxygen).  These molecules are much smaller than the wavelengths of visible light.\n\nRay"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-1.5-flash-002","createTime": "2025-07-07T21:46:59.873007Z","responseId": "U0BsaK-kNfG5nvgP3Mrf8AU"}
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": "leigh scattering affects shorter wavelengths of light more strongly than longer wavelengths.  Blue and violet light have the shortest wavelengths, so they are scattered much more than other colors"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-1.5-flash-002","createTime": "2025-05-11T02:58:20.413049Z","responseId": "TBIgaPmaGfP-ld8P0bbEqAY"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": "leigh scattering affects shorter wavelengths of light more strongly than longer wavelengths.  Blue and violet light have the shortest wavelengths, so they are scattered much more than the other"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-1.5-flash-002","createTime": "2025-07-07T21:46:59.873007Z","responseId": "U0BsaK-kNfG5nvgP3Mrf8AU"}
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": ".  This scattered blue light is what we see when we look at the sky.\n\nWhile violet light is scattered even more than blue, our eyes are more sensitive to blue, and the sun emits slightly less violet light, resulting in a"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-1.5-flash-002","createTime": "2025-05-11T02:58:20.413049Z","responseId": "TBIgaPmaGfP-ld8P0bbEqAY"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " colors.  This scattered blue light is what we see when we look at the sky.\n\nWhile violet light is scattered even more than blue, our eyes are less sensitive to violet, and the sun emits slightly less violet light, resulting in"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-1.5-flash-002","createTime": "2025-07-07T21:46:59.873007Z","responseId": "U0BsaK-kNfG5nvgP3Mrf8AU"}
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": " blue sky rather than a violet one.\n"}]},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 6,"candidatesTokenCount": 154,"totalTokenCount": 160,"trafficType": "ON_DEMAND","promptTokensDetails": [{"modality": "TEXT","tokenCount": 6}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 154}]},"modelVersion": "gemini-1.5-flash-002","createTime": "2025-05-11T02:58:20.413049Z","responseId": "TBIgaPmaGfP-ld8P0bbEqAY"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " a blue sky rather than a violet one.\n"}]},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 6,"candidatesTokenCount": 155,"totalTokenCount": 161,"trafficType": "ON_DEMAND","promptTokensDetails": [{"modality": "TEXT","tokenCount": 6}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 155}]},"modelVersion": "gemini-1.5-flash-002","createTime": "2025-07-07T21:46:59.873007Z","responseId": "U0BsaK-kNfG5nvgP3Mrf8AU"}
 
