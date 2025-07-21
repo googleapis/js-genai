@@ -16,36 +16,42 @@ Test-Name: Chats Tests sendMessage Vertex AI with text stream
 
 
 {"contents":[{"parts":[{"text":"why is the sky blue?"}],"role":"user"}],"generationConfig":{}}
-077fa2375eb5aa36aa66d86a2f21e036ef867dada988cd50d06291f2ce850ffa.resp 4401
+077fa2375eb5aa36aa66d86a2f21e036ef867dada988cd50d06291f2ce850ffa.resp 5878
 Status code: 200 
+Content-Type: text/event-stream
 Vary: Origin
 Vary: X-Origin
 Vary: Referer
-X-Xss-Protection: 0
-X-Frame-Options: SAMEORIGIN
-Content-Type: text/event-stream
-Content-Disposition: attachment
-Date: Thu, 24 Jul 2025 03:03:57 GMT
 Server: scaffolding on HTTPServer2
+X-Xss-Protection: 0
+Content-Disposition: attachment
+Date: Mon, 28 Jul 2025 17:23:27 GMT
+X-Frame-Options: SAMEORIGIN
 X-Content-Type-Options: nosniff
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": "The"}]}}],"usageMetadata": {"billablePromptUsage": {"textCount": 16},"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-24T03:03:57.621356Z","responseId": "naKBaKz2Ja27ld8PkdK68Aw"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": "The"}]}}],"usageMetadata": {"billablePromptUsage": {"textCount": 16},"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:27.294358Z","responseId": "D7KHaNb7Ec2eld8Pgs7B0Ak"}
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": " sky appears blue"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-24T03:03:57.621356Z","responseId": "naKBaKz2Ja27ld8PkdK68Aw"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " sky is blue"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:27.294358Z","responseId": "D7KHaNb7Ec2eld8Pgs7B0Ak"}
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": " due to a phenomenon called **Rayleigh scattering**. Here's a breakdown:"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-24T03:03:57.621356Z","responseId": "naKBaKz2Ja27ld8PkdK68Aw"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " because of a phenomenon called **Rayleigh scattering**. Here's a breakdown:"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:27.294358Z","responseId": "D7KHaNb7Ec2eld8Pgs7B0Ak"}
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": "\n\n*   **Sunlight and Colors:** Sunlight is made up of all the"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-24T03:03:57.621356Z","responseId": "naKBaKz2Ja27ld8PkdK68Aw"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": "\n\n*   **Sunlight is White:** Sunlight appears white to us, but it'"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:27.294358Z","responseId": "D7KHaNb7Ec2eld8Pgs7B0Ak"}
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": " colors of the rainbow.\n\n*   **Entering the Atmosphere:** When sunlight enters the Earth's atmosphere, it collides with tiny air molecules (mostly nitrogen"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-24T03:03:57.621356Z","responseId": "naKBaKz2Ja27ld8PkdK68Aw"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": "s actually made up of all the colors of the rainbow (red, orange, yellow, green, blue, indigo, violet).\n\n*   **Entering the Atmosphere:** When"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:27.294358Z","responseId": "D7KHaNb7Ec2eld8Pgs7B0Ak"}
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": " and oxygen).\n\n*   **Scattering of Light:** This collision causes the sunlight to scatter in different directions. The amount of scattering depends on the wavelength ("}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-24T03:03:57.621356Z","responseId": "naKBaKz2Ja27ld8PkdK68Aw"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " sunlight enters the Earth's atmosphere, it collides with tiny air molecules (mostly nitrogen and oxygen).\n\n*   **Scattering of Light:** This collision"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:27.294358Z","responseId": "D7KHaNb7Ec2eld8Pgs7B0Ak"}
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": "color) of the light.\n\n*   **Rayleigh Scattering Favors Blue and Violet:** Rayleigh scattering is much more effective at scattering shorter wavelengths of light, which are blue and violet.\n\n*   **Why Not Violet?** While violet"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-24T03:03:57.621356Z","responseId": "naKBaKz2Ja27ld8PkdK68Aw"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " causes the sunlight to scatter in different directions.\n\n*   **Rayleigh Scattering is Color-Dependent:** Rayleigh scattering is more effective at scattering shorter wavelengths of light.  Blue and violet light have shorter wavelengths than red and orange light.\n\n*   "}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:27.294358Z","responseId": "D7KHaNb7Ec2eld8Pgs7B0Ak"}
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": " light is scattered even more than blue light, there are a couple of reasons why the sky appears predominantly blue:\n    *   **Sun's Output:** The sun emits less violet light than blue light.\n    *   **Atmospheric Absorption"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-24T03:03:57.621356Z","responseId": "naKBaKz2Ja27ld8PkdK68Aw"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": "**Why Not Violet?** While violet light is scattered even more than blue light, there are a couple of reasons why we see a blue sky:\n    *   The sun emits less violet light than blue light.\n    *   "}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:27.294358Z","responseId": "D7KHaNb7Ec2eld8Pgs7B0Ak"}
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": ":** Some violet light is absorbed by the upper atmosphere.\n    *   **Our Eyes:** Our eyes are also slightly more sensitive to blue than violet.\n\n*   **The Result:** Because blue light is scattered more effectively and is also more abundant in sunlight, it's scattered across the sky, giving it its blue color."}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-24T03:03:57.621356Z","responseId": "naKBaKz2Ja27ld8PkdK68Aw"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": "Our eyes are more sensitive to blue light than violet light.\n    *   As violet light scatters, it can be further absorbed by the upper atmosphere.\n\n*   **The Result:** As a result of all of this, blue light is scattered around much more than the other colors. When we look up at the"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:27.294358Z","responseId": "D7KHaNb7Ec2eld8Pgs7B0Ak"}
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": "\n\nIn summary, the sky is blue because **blue light is scattered more efficiently by the Earth's atmosphere than other colors of light.**\n"}]},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 6,"candidatesTokenCount": 293,"totalTokenCount": 299,"trafficType": "ON_DEMAND","promptTokensDetails": [{"modality": "TEXT","tokenCount": 6}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 293}]},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-24T03:03:57.621356Z","responseId": "naKBaKz2Ja27ld8PkdK68Aw"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " sky, we see all of this scattered blue light coming from different directions, which makes the sky appear blue.\n\n**In simpler terms:**\n\nImagine you have a jar of marbles of different sizes. You shake the jar. The smaller marbles (blue light) bounce around and scatter all over the place, while the bigger"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:27.294358Z","responseId": "D7KHaNb7Ec2eld8Pgs7B0Ak"}
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " marbles (red light) mostly keep going in the same direction. When you look into the jar, you see a lot of scattered small marbles (blue light).\n\n**Why Sunsets are Red/Orange:**\n\nAt sunset, the sunlight has to travel through much more of the atmosphere to reach our eyes. This means that almost"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:27.294358Z","responseId": "D7KHaNb7Ec2eld8Pgs7B0Ak"}
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " all of the blue light has been scattered away before it gets to us. The remaining light is mostly red and orange, which is why sunsets appear in those colors.\n\nSo, the simple answer is: **The sky is blue because blue light from the sun is scattered more than other colors by the Earth's atmosphere.**"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:27.294358Z","responseId": "D7KHaNb7Ec2eld8Pgs7B0Ak"}
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": "\n"}]},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 6,"candidatesTokenCount": 463,"totalTokenCount": 469,"trafficType": "ON_DEMAND","promptTokensDetails": [{"modality": "TEXT","tokenCount": 6}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 463}]},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:27.294358Z","responseId": "D7KHaNb7Ec2eld8Pgs7B0Ak"}
 

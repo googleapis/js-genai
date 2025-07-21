@@ -16,33 +16,33 @@ Test-Name: Chats Tests sendMessage Google AI multiple messages stream
 
 
 {"contents":[{"parts":[{"text":"Tell me a story in 100 words?"}],"role":"user"}],"generationConfig":{}}
-e1b62cdb6f94b67c7b1f11617552213fecc5260c180d52a44809d1ee089a411f.resp 2663
+e1b62cdb6f94b67c7b1f11617552213fecc5260c180d52a44809d1ee089a411f.resp 2725
 Status code: 200 
-Content-Type: text/event-stream
-Content-Disposition: attachment
 Vary: Origin
 Vary: X-Origin
 Vary: Referer
+Date: Mon, 28 Jul 2025 17:23:35 GMT
 X-Xss-Protection: 0
-X-Content-Type-Options: nosniff
-Server-Timing: gfet4t7; dur=750
-Date: Thu, 24 Jul 2025 03:03:31 GMT
-Server: scaffolding on HTTPServer2
 X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+Server-Timing: gfet4t7; dur=500
+Content-Type: text/event-stream
+Content-Disposition: attachment
+Server: scaffolding on HTTPServer2
 
-data: {"candidates": [{"content": {"parts": [{"text": "El"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 12,"totalTokenCount": 12,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 12}]},"modelVersion": "gemini-2.0-flash","responseId": "g6KBaN6KJdOigLUP15XM6Qk"}
+data: {"candidates": [{"content": {"parts": [{"text": "Rain"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 12,"totalTokenCount": 12,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 12}]},"modelVersion": "gemini-2.0-flash","responseId": "F7KHaK6WCZaCsbQP-6yPQQ"}
 
-data: {"candidates": [{"content": {"parts": [{"text": "iza found the locket half-buried in the sand, a tarnished silver heart."}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 12,"totalTokenCount": 12,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 12}]},"modelVersion": "gemini-2.0-flash","responseId": "g6KBaN6KJdOigLUP15XM6Qk"}
+data: {"candidates": [{"content": {"parts": [{"text": " lashed against the lighthouse as old Silas squinted at the churning sea. Tonight, the"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 12,"totalTokenCount": 12,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 12}]},"modelVersion": "gemini-2.0-flash","responseId": "F7KHaK6WCZaCsbQP-6yPQQ"}
 
-data: {"candidates": [{"content": {"parts": [{"text": " Inside, a faded photograph: a young woman with laughing eyes. Eliza felt a tug"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 12,"totalTokenCount": 12,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 12}]},"modelVersion": "gemini-2.0-flash","responseId": "g6KBaN6KJdOigLUP15XM6Qk"}
+data: {"candidates": [{"content": {"parts": [{"text": " light sputtered, a sickly cough in the storm's roar. He climbed the spiral"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 12,"totalTokenCount": 12,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 12}]},"modelVersion": "gemini-2.0-flash","responseId": "F7KHaK6WCZaCsbQP-6yPQQ"}
 
-data: {"candidates": [{"content": {"parts": [{"text": ", a connection she couldn't explain. She wore the locket, and suddenly, memories flooded her mind. Not her own, but the woman in the photo -"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 12,"totalTokenCount": 12,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 12}]},"modelVersion": "gemini-2.0-flash","responseId": "g6KBaN6KJdOigLUP15XM6Qk"}
+data: {"candidates": [{"content": {"parts": [{"text": " stairs, his bones aching, fear tightening his chest. Years he'd kept the beam strong, guided ships home. Now, the gears were jammed. Des"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 12,"totalTokenCount": 12,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 12}]},"modelVersion": "gemini-2.0-flash","responseId": "F7KHaK6WCZaCsbQP-6yPQQ"}
 
-data: {"candidates": [{"content": {"parts": [{"text": " vibrant dances, stolen kisses under a moonlit sky. Eliza wasn't just wearing a locket; she was wearing a life. The woman's joy"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 12,"totalTokenCount": 12,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 12}]},"modelVersion": "gemini-2.0-flash","responseId": "g6KBaN6KJdOigLUP15XM6Qk"}
+data: {"candidates": [{"content": {"parts": [{"text": "pair threatened, but he remembered his grandfather’s words: “A keeper keeps.” He grabbed the heavy wrench, its cold metal a promise. With a grunt"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 12,"totalTokenCount": 12,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 12}]},"modelVersion": "gemini-2.0-flash","responseId": "F7KHaK6WCZaCsbQP-6yPQQ"}
 
-data: {"candidates": [{"content": {"parts": [{"text": ", her sorrow, her love.  A secret she now carried, whispering stories from a past she was never meant to know.\n"}],"role": "model"},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 11,"candidatesTokenCount": 126,"totalTokenCount": 137,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 11}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 126}]},"modelVersion": "gemini-2.0-flash","responseId": "g6KBaN6KJdOigLUP15XM6Qk"}
+data: {"candidates": [{"content": {"parts": [{"text": " and a heave, the gears shifted. The beam blazed, a beacon piercing the darkness. Silas smiled, the storm no longer a threat, but a test passed.\n"}],"role": "model"},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 11,"candidatesTokenCount": 134,"totalTokenCount": 145,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 11}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 134}]},"modelVersion": "gemini-2.0-flash","responseId": "F7KHaK6WCZaCsbQP-6yPQQ"}
 
-aba9af6bafa45c885b3c6b749967441f05758caf35d96b49d23819692d2fc4f5.req 1464
+4491ea0c01bd0e545fbb1a813fa1fa0d960f321155e2482f8166a919dd214503.req 1533
 e1b62cdb6f94b67c7b1f11617552213fecc5260c180d52a44809d1ee089a411f
 Server Address: generativelanguage.googleapis.com
 Port: 443
@@ -53,28 +53,30 @@ Accept: */*
 Accept-Encoding: gzip, deflate
 Accept-Language: *
 Connection: keep-alive
-Content-Length: 937
+Content-Length: 1005
 Content-Type: application/json
 Sec-Fetch-Mode: cors
 Test-Name: Chats Tests sendMessage Google AI multiple messages stream
 
 
-{"contents":[{"parts":[{"text":"Tell me a story in 100 words?"}],"role":"user"},{"parts":[{"text":"El"}],"role":"model"},{"parts":[{"text":"iza found the locket half-buried in the sand, a tarnished silver heart."}],"role":"model"},{"parts":[{"text":" Inside, a faded photograph: a young woman with laughing eyes. Eliza felt a tug"}],"role":"model"},{"parts":[{"text":", a connection she couldn't explain. She wore the locket, and suddenly, memories flooded her mind. Not her own, but the woman in the photo -"}],"role":"model"},{"parts":[{"text":" vibrant dances, stolen kisses under a moonlit sky. Eliza wasn't just wearing a locket; she was wearing a life. The woman's joy"}],"role":"model"},{"parts":[{"text":", her sorrow, her love.  A secret she now carried, whispering stories from a past she was never meant to know.\n"}],"role":"model"},{"parts":[{"text":"What is the title of the story?"}],"role":"user"}],"generationConfig":{}}
-aba9af6bafa45c885b3c6b749967441f05758caf35d96b49d23819692d2fc4f5.resp 1019
+{"contents":[{"parts":[{"text":"Tell me a story in 100 words?"}],"role":"user"},{"parts":[{"text":"Rain"}],"role":"model"},{"parts":[{"text":" lashed against the lighthouse as old Silas squinted at the churning sea. Tonight, the"}],"role":"model"},{"parts":[{"text":" light sputtered, a sickly cough in the storm's roar. He climbed the spiral"}],"role":"model"},{"parts":[{"text":" stairs, his bones aching, fear tightening his chest. Years he'd kept the beam strong, guided ships home. Now, the gears were jammed. Des"}],"role":"model"},{"parts":[{"text":"pair threatened, but he remembered his grandfather’s words: “A keeper keeps.” He grabbed the heavy wrench, its cold metal a promise. With a grunt"}],"role":"model"},{"parts":[{"text":" and a heave, the gears shifted. The beam blazed, a beacon piercing the darkness. Silas smiled, the storm no longer a threat, but a test passed.\n"}],"role":"model"},{"parts":[{"text":"What is the title of the story?"}],"role":"user"}],"generationConfig":{}}
+4491ea0c01bd0e545fbb1a813fa1fa0d960f321155e2482f8166a919dd214503.resp 1323
 Status code: 200 
+Date: Mon, 28 Jul 2025 17:23:37 GMT
+Server: scaffolding on HTTPServer2
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+Content-Type: text/event-stream
+Content-Disposition: attachment
+X-Content-Type-Options: nosniff
+Server-Timing: gfet4t7; dur=449
 Vary: Origin
 Vary: X-Origin
 Vary: Referer
-Date: Thu, 24 Jul 2025 03:03:33 GMT
-Server: scaffolding on HTTPServer2
-X-Xss-Protection: 0
-X-Content-Type-Options: nosniff
-Server-Timing: gfet4t7; dur=545
-Content-Type: text/event-stream
-Content-Disposition: attachment
-X-Frame-Options: SAMEORIGIN
 
-data: {"candidates": [{"content": {"parts": [{"text": "The"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 156,"totalTokenCount": 156,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 156}]},"modelVersion": "gemini-2.0-flash","responseId": "haKBaOLsFbKU1dkP7PW48Qk"}
+data: {"candidates": [{"content": {"parts": [{"text": "The"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 161,"totalTokenCount": 161,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 161}]},"modelVersion": "gemini-2.0-flash","responseId": "GLKHaISsPNOVhMIPkuG6iA8"}
 
-data: {"candidates": [{"content": {"parts": [{"text": " Locket's Whisper\n"}],"role": "model"},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 145,"candidatesTokenCount": 7,"totalTokenCount": 152,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 145}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "haKBaOLsFbKU1dkP7PW48Qk"}
+data: {"candidates": [{"content": {"parts": [{"text": " title"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 161,"totalTokenCount": 161,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 161}]},"modelVersion": "gemini-2.0-flash","responseId": "GLKHaISsPNOVhMIPkuG6iA8"}
+
+data: {"candidates": [{"content": {"parts": [{"text": " of the story is \"Rain\".\n"}],"role": "model"},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 153,"candidatesTokenCount": 10,"totalTokenCount": 163,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 153}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 10}]},"modelVersion": "gemini-2.0-flash","responseId": "GLKHaISsPNOVhMIPkuG6iA8"}
 

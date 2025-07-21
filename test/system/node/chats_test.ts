@@ -156,6 +156,28 @@ describe('Chats Tests', () => {
         messages: ['what is the value of a+b?'],
       },
       {
+        name: 'Google AI with empty text',
+        clientParams: {vertexai: false, apiKey: GEMINI_API_KEY},
+        model: 'gemini-2.0-flash',
+        config: {},
+        history: [
+          {parts: [{text: 'a=5'}], role: 'user'},
+          {parts: [{text: ''}], role: 'model'},
+        ],
+        messages: ['what is the value of a+10?'],
+      },
+      {
+        name: 'Vertex AI with empty text',
+        clientParams: {vertexai: true, project: GOOGLE_CLOUD_PROJECT},
+        model: 'gemini-2.0-flash',
+        config: {},
+        history: [
+          {parts: [{text: 'a=5'}], role: 'user'},
+          {parts: [{text: ''}], role: 'model'},
+        ],
+        messages: ['what is the value of a+10?'],
+      },
+      {
         name: 'Google AI multiple messages',
         clientParams: {vertexai: false, apiKey: GEMINI_API_KEY},
         model: 'gemini-2.0-flash',

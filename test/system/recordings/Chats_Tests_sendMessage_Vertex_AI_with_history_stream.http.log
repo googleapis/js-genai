@@ -18,20 +18,20 @@ Test-Name: Chats Tests sendMessage Vertex AI with history stream
 {"contents":[{"parts":[{"text":"a=5"}],"role":"user"},{"parts":[{"text":"b=10"}],"role":"user"},{"parts":[{"text":"what is the value of a+b?"}],"role":"user"}],"generationConfig":{}}
 6c440a2362ff95a93d2e5fd91f33dba784b71b83134748a7b73a396aa7670603.resp 1304
 Status code: 200 
-Server: scaffolding on HTTPServer2
-X-Xss-Protection: 0
-Content-Type: text/event-stream
-Content-Disposition: attachment
 Vary: Origin
 Vary: X-Origin
 Vary: Referer
-Date: Thu, 24 Jul 2025 03:03:23 GMT
 X-Frame-Options: SAMEORIGIN
+Content-Disposition: attachment
+Date: Mon, 28 Jul 2025 17:23:33 GMT
+Server: scaffolding on HTTPServer2
+X-Xss-Protection: 0
 X-Content-Type-Options: nosniff
+Content-Type: text/event-stream
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": "a"}]}}],"usageMetadata": {"billablePromptUsage": {"textCount": 27},"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-24T03:03:23.103288Z","responseId": "e6KBaPimBv6hm9IPv_C7uAM"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": "a"}]}}],"usageMetadata": {"billablePromptUsage": {"textCount": 27},"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:33.177282Z","responseId": "FbKHaILpCtCgmecPv9KiyQI"}
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": " +"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-24T03:03:23.103288Z","responseId": "e6KBaPimBv6hm9IPv_C7uAM"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " + b ="}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:33.177282Z","responseId": "FbKHaILpCtCgmecPv9KiyQI"}
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": " b = 5 + 10 = 15\n"}]},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 16,"candidatesTokenCount": 15,"totalTokenCount": 31,"trafficType": "ON_DEMAND","promptTokensDetails": [{"modality": "TEXT","tokenCount": 16}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 15}]},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-24T03:03:23.103288Z","responseId": "e6KBaPimBv6hm9IPv_C7uAM"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " 5 + 10 = 15\n"}]},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 16,"candidatesTokenCount": 15,"totalTokenCount": 31,"trafficType": "ON_DEMAND","promptTokensDetails": [{"modality": "TEXT","tokenCount": 16}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 15}]},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:33.177282Z","responseId": "FbKHaILpCtCgmecPv9KiyQI"}
 

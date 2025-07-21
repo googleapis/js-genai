@@ -16,20 +16,20 @@ Test-Name: Chats Tests sendMessage Google AI with text
 
 
 {"contents":[{"parts":[{"text":"why is the sky blue?"}],"role":"user"}],"generationConfig":{}}
-d9d1663956d2772645fa9c90c3657ffd7d90ee3332c6d6c9c8dfc7445997eca1.resp 3091
+d9d1663956d2772645fa9c90c3657ffd7d90ee3332c6d6c9c8dfc7445997eca1.resp 2982
 Status code: 200 
-X-Xss-Protection: 0
-Content-Type: application/json; charset=UTF-8
+Content-Length: 1184
+Server-Timing: gfet4t7; dur=3810
 Vary: Origin
 Vary: X-Origin
 Vary: Referer
+Date: Mon, 28 Jul 2025 17:23:09 GMT
 Server: scaffolding on HTTPServer2
-Content-Length: 1216
+X-Xss-Protection: 0
 X-Frame-Options: SAMEORIGIN
 X-Content-Type-Options: nosniff
-Server-Timing: gfet4t7; dur=3343
+Content-Type: application/json; charset=UTF-8
 Content-Encoding: gzip
-Date: Thu, 24 Jul 2025 03:03:27 GMT
 
 {
   "candidates": [
@@ -37,19 +37,19 @@ Date: Thu, 24 Jul 2025 03:03:27 GMT
       "content": {
         "parts": [
           {
-            "text": "The sky is blue because of a phenomenon called **Rayleigh scattering**. Here's a simplified explanation:\n\n*   **Sunlight and its colors:** Sunlight appears white, but it's actually made up of all the colors of the rainbow. Each color has a different wavelength (distance between the peaks of a wave). Blue and violet have shorter wavelengths, while red and orange have longer wavelengths.\n\n*   **The atmosphere:** The Earth's atmosphere is full of tiny air molecules (mostly nitrogen and oxygen).\n\n*   **Scattering:** When sunlight enters the atmosphere, it collides with these air molecules. This collision causes the light to scatter in different directions.\n\n*   **Rayleigh scattering and wavelength:** Rayleigh scattering is more effective at scattering shorter wavelengths. This means blue and violet light are scattered much more strongly than red and orange light.\n\n*   **Why blue, not violet?** While violet light is scattered even more than blue light, there are a couple of reasons why we see the sky as blue:\n    *   Sunlight contains slightly less violet light than blue light.\n    *   Our eyes are more sensitive to blue than violet.\n\n*   **The result:** Because blue light is scattered more, it's spread all over the sky. When we look up, we see this scattered blue light from all directions. That's why the sky appears blue.\n\n**In simpler terms:** Imagine throwing different sized balls (representing different colors of light) at a bunch of small objects (air molecules). The smaller balls (blue light) will bounce around more wildly than the bigger balls (red light). Since the blue balls are bouncing all over the place, that's the color we see when we look at the \"ball pit\" (the sky).\n\n**Why are sunsets red?**\n\nAs the sun sets, the sunlight has to travel through a greater distance of atmosphere to reach our eyes. During this longer path, most of the blue light is scattered away. The red and orange light, with their longer wavelengths, are less likely to be scattered and can pass through the atmosphere to reach us. That's why sunsets often appear red or orange.\n"
+            "text": "The sky is blue due to a phenomenon called **Rayleigh scattering**. Here's a breakdown of why:\n\n*   **Sunlight and the Atmosphere:** Sunlight is actually made up of all the colors of the rainbow. When sunlight enters the Earth's atmosphere, it collides with tiny air molecules (mostly nitrogen and oxygen).\n\n*   **Scattering of Light:** This collision causes the light to scatter in different directions.\n\n*   **Rayleigh Scattering and Wavelength:** Rayleigh scattering is more effective at scattering shorter wavelengths of light (blue and violet) than longer wavelengths (red and orange). The amount of scattering is inversely proportional to the fourth power of the wavelength. This means that blue light is scattered about ten times more strongly than red light.\n\n*   **Why Blue, Not Violet?:** Violet light is scattered even *more* than blue light. However, the sun emits less violet light than blue light, and our eyes are also less sensitive to violet. As a result, we see the sky as blue.\n\nIn simpler terms:\n\nImagine you're throwing a bunch of different sized balls (colors of light) at a bunch of small obstacles (air molecules). The smaller balls (blue light) are going to bounce off in all directions much more easily than the bigger balls (red light). That's why we see blue light coming from all directions in the sky.\n\n**Think of it like this:**\n\n*   **Sunlight = White light (mixture of all colors)**\n*   **Atmosphere = Tiny air molecules**\n*   **Blue light gets scattered the most**\n*   **Our eyes see the scattered blue light from all directions**\n\n**Why sunsets are red/orange:**\n\nWhen the sun is low on the horizon (during sunrise and sunset), sunlight has to travel through a much greater distance of the atmosphere. This means that most of the blue light is scattered away before it reaches our eyes. The longer wavelengths, like red and orange, are able to penetrate through the atmosphere and reach our eyes, giving us those beautiful red/orange sunsets."
           }
         ],
         "role": "model"
       },
       "finishReason": "STOP",
-      "avgLogprobs": -0.264850127830934
+      "avgLogprobs": -0.27180870543134972
     }
   ],
   "usageMetadata": {
     "promptTokenCount": 6,
-    "candidatesTokenCount": 445,
-    "totalTokenCount": 451,
+    "candidatesTokenCount": 423,
+    "totalTokenCount": 429,
     "promptTokensDetails": [
       {
         "modality": "TEXT",
@@ -59,10 +59,10 @@ Date: Thu, 24 Jul 2025 03:03:27 GMT
     "candidatesTokensDetails": [
       {
         "modality": "TEXT",
-        "tokenCount": 445
+        "tokenCount": 423
       }
     ]
   },
   "modelVersion": "gemini-2.0-flash",
-  "responseId": "fKKBaNC2FI6MmNAPxYqk6QU"
+  "responseId": "-rGHaJ2sJoCPmNAPtpCLkAI"
 }

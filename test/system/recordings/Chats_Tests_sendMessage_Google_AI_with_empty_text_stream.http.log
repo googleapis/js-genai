@@ -1,0 +1,42 @@
+6fd9efd1db76cced584e22e645ad5a1d0e90662979650a14b75d37f31e65c4d6.req 705
+b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d
+Server Address: generativelanguage.googleapis.com
+Port: 443
+Protocol: https
+********************************************************************************
+POST /v1beta/models/gemini-2.0-flash:streamGenerateContent?alt=sse HTTP/1.1
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: *
+Connection: keep-alive
+Content-Length: 180
+Content-Type: application/json
+Sec-Fetch-Mode: cors
+Test-Name: Chats Tests sendMessage Google AI with empty text stream
+
+
+{"contents":[{"parts":[{"text":"a=5"}],"role":"user"},{"parts":[{"text":""}],"role":"model"},{"parts":[{"text":"what is the value of a+10?"}],"role":"user"}],"generationConfig":{}}
+6fd9efd1db76cced584e22e645ad5a1d0e90662979650a14b75d37f31e65c4d6.resp 1928
+Status code: 200 
+Content-Disposition: attachment
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Date: Mon, 28 Jul 2025 17:23:34 GMT
+Server-Timing: gfet4t7; dur=568
+Server: scaffolding on HTTPServer2
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+Content-Type: text/event-stream
+
+data: {"candidates": [{"content": {"parts": [{"text": "Since"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 16,"totalTokenCount": 16,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 16}]},"modelVersion": "gemini-2.0-flash","responseId": "FbKHaNC1LKitmNAPjeDp0QU"}
+
+data: {"candidates": [{"content": {"parts": [{"text": " a = "}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 16,"totalTokenCount": 16,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 16}]},"modelVersion": "gemini-2.0-flash","responseId": "FbKHaNC1LKitmNAPjeDp0QU"}
+
+data: {"candidates": [{"content": {"parts": [{"text": "5, then a + 10 = 5 + 10 ="}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 16,"totalTokenCount": 16,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 16}]},"modelVersion": "gemini-2.0-flash","responseId": "FbKHaNC1LKitmNAPjeDp0QU"}
+
+data: {"candidates": [{"content": {"parts": [{"text": " 15.\n\nSo the value of a+10 is $\\boxed{15"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 16,"totalTokenCount": 16,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 16}]},"modelVersion": "gemini-2.0-flash","responseId": "FbKHaNC1LKitmNAPjeDp0QU"}
+
+data: {"candidates": [{"content": {"parts": [{"text": "}$.\n"}],"role": "model"},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 13,"candidatesTokenCount": 41,"totalTokenCount": 54,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 13}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 41}]},"modelVersion": "gemini-2.0-flash","responseId": "FbKHaNC1LKitmNAPjeDp0QU"}
+
