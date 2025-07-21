@@ -1,16 +1,16 @@
 Status code: 200 
+Date: Mon, 21 Jul 2025 21:47:23 GMT
+Server: scaffolding on HTTPServer2
+Content-Length: 1068
+X-Xss-Protection: 0
+Server-Timing: gfet4t7; dur=2931
+Content-Type: application/json; charset=UTF-8
+Content-Encoding: gzip
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
 Vary: Origin
 Vary: X-Origin
 Vary: Referer
-Content-Encoding: gzip
-Server: scaffolding on HTTPServer2
-Content-Length: 798
-X-Frame-Options: SAMEORIGIN
-Content-Type: application/json; charset=UTF-8
-Date: Wed, 14 May 2025 18:13:09 GMT
-X-Xss-Protection: 0
-X-Content-Type-Options: nosniff
-Server-Timing: gfet4t7; dur=1979
 
 {
   "candidates": [
@@ -18,19 +18,19 @@ Server-Timing: gfet4t7; dur=1979
       "content": {
         "parts": [
           {
-            "text": "The sky appears blue due to a phenomenon called **Rayleigh scattering**. Here's a breakdown:\n\n*   **Sunlight is made of all colors:** White sunlight is actually composed of all the colors of the rainbow.\n\n*   **Entering the Atmosphere:** When sunlight enters the Earth's atmosphere, it collides with tiny air molecules (mostly nitrogen and oxygen).\n\n*   **Scattering:** This collision causes the light to scatter in different directions.\n\n*   **Shorter wavelengths scatter more:** Rayleigh scattering is more effective at shorter wavelengths of light. Blue and violet light have the shortest wavelengths in the visible spectrum.\n\n*   **Blue dominates:** Because blue light is scattered more strongly than other colors, it's scattered all over the sky. This is why we see a blue sky.\n\n*   **Why not violet?** While violet light is scattered even more than blue, the sun emits less violet light, and our eyes are also less sensitive to violet. Therefore, blue is the predominant color we perceive.\n\n**In short:** Blue light from the sun is scattered more than other colors by the air molecules in the Earth's atmosphere, making the sky appear blue."
+            "text": "The sky is blue because of a phenomenon called **Rayleigh scattering**. Here's the breakdown:\n\n*   **Sunlight and Colors:** Sunlight is actually made up of all the colors of the rainbow.\n\n*   **Entering the Atmosphere:** When sunlight enters the Earth's atmosphere, it collides with tiny air molecules (mostly nitrogen and oxygen).\n\n*   **Scattering:** This collision causes the sunlight to scatter in different directions.\n\n*   **Rayleigh Scattering and Wavelength:** Rayleigh scattering is more effective at shorter wavelengths of light. Blue and violet light have shorter wavelengths compared to colors like red and orange.\n\n*   **Why Blue More Than Violet?** Violet light is scattered even more than blue light, but the Sun emits less violet light than blue light, and our eyes are also less sensitive to violet. As a result, we see the sky as blue.\n\n**In simple terms:** Think of the atmosphere as a giant playground filled with tiny obstacles. When sunlight runs through the playground, the blue and violet light are like bouncy balls that get knocked around more easily and spread everywhere. That's why we see the sky as blue.\n\n**Why Not Green, Yellow, or Red?** These colors have longer wavelengths and aren't scattered as effectively by the air molecules. They travel more directly through the atmosphere.\n\n**Sunsets and Sunrises:** At sunset and sunrise, the sunlight has to travel through much more of the atmosphere to reach our eyes. This means that most of the blue light has already been scattered away before it gets to us. The longer-wavelength colors like red and orange are able to penetrate the atmosphere more easily, resulting in the beautiful reds and oranges we see during sunsets and sunrises."
           }
         ],
         "role": "model"
       },
       "finishReason": "STOP",
-      "avgLogprobs": -0.22167036444319729
+      "avgLogprobs": -0.31925461509011011
     }
   ],
   "usageMetadata": {
     "promptTokenCount": 6,
-    "candidatesTokenCount": 241,
-    "totalTokenCount": 247,
+    "candidatesTokenCount": 352,
+    "totalTokenCount": 358,
     "promptTokensDetails": [
       {
         "modality": "TEXT",
@@ -40,9 +40,10 @@ Server-Timing: gfet4t7; dur=1979
     "candidatesTokensDetails": [
       {
         "modality": "TEXT",
-        "tokenCount": 241
+        "tokenCount": 352
       }
     ]
   },
-  "modelVersion": "gemini-2.0-flash"
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "abV-aIKvG9mTmNAPiqm4kAU"
 }

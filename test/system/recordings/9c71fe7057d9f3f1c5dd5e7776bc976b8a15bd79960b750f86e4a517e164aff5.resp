@@ -1,16 +1,15 @@
 Status code: 200 
-Content-Type: application/json; charset=UTF-8
-Date: Wed, 14 May 2025 18:12:42 GMT
-Server: scaffolding on HTTPServer2
-Content-Length: 437
-X-Goog-Sherlog-Link: https://sherlog.corp.google.com/#workflow?config=Serving&dataid=aiplatform.googleapis.com/google.cloud.aiplatform.v1beta1.PredictionService.GenerateContent&gaia=821332047332&reason=sharedLink&version=183f774f35fbd6c4159b112fba222d26
-Content-Encoding: gzip
-X-Xss-Protection: 0
-X-Frame-Options: SAMEORIGIN
-X-Content-Type-Options: nosniff
 Vary: Origin
 Vary: X-Origin
 Vary: Referer
+Content-Encoding: gzip
+Date: Mon, 21 Jul 2025 21:47:32 GMT
+Server: scaffolding on HTTPServer2
+Content-Length: 440
+X-Content-Type-Options: nosniff
+Content-Type: application/json; charset=UTF-8
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
 
 {
   "candidates": [
@@ -19,12 +18,12 @@ Vary: Referer
         "role": "model",
         "parts": [
           {
-            "text": "The sky is blue due to a phenomenon called **Rayleigh scattering**. Here's a breakdown:"
+            "text": "The sky is blue because of a phenomenon called **Rayleigh scattering**. Here's a breakdown:"
           }
         ]
       },
       "finishReason": "MAX_TOKENS",
-      "avgLogprobs": -0.10325567722320557
+      "avgLogprobs": -0.13047349452972412
     }
   ],
   "usageMetadata": {
@@ -46,6 +45,6 @@ Vary: Referer
     ]
   },
   "modelVersion": "gemini-2.0-flash",
-  "createTime": "2025-05-14T18:12:42.588087Z",
-  "responseId": "Gt0kaLfyI9iam9IPoNnjiQk"
+  "createTime": "2025-07-21T21:47:32.282144Z",
+  "responseId": "dLV-aKCcEaq3nvgPu5H8iAc"
 }

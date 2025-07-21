@@ -1,0 +1,50 @@
+Status code: 200 
+Content-Length: 558
+X-Content-Type-Options: nosniff
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Content-Encoding: gzip
+Date: Mon, 21 Jul 2025 21:47:26 GMT
+Server: scaffolding on HTTPServer2
+Content-Type: application/json; charset=UTF-8
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+
+{
+  "candidates": [
+    {
+      "content": {
+        "role": "model",
+        "parts": [
+          {
+            "text": "The story doesn't have an explicit title. However, suitable titles could be:\n\n*   Beacon Rock\n*   Keeping the Light\n*   Silas and the Storm\n*   A Light in the Dark\n*   Lost at Sea\n\nI would personally choose **Beacon Rock**, as it highlights the importance of the lighthouse as a place of safety and guidance.\n"
+          }
+        ]
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.35843033539621455
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 151,
+    "candidatesTokenCount": 76,
+    "totalTokenCount": 227,
+    "trafficType": "ON_DEMAND",
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 151
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 76
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "createTime": "2025-07-21T21:47:25.419720Z",
+  "responseId": "bbV-aIjPGdOvnvgPwL-yoQ4"
+}

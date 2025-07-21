@@ -1,0 +1,16 @@
+b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d
+Server Address: us-central1-aiplatform.googleapis.com
+Port: 443
+Protocol: https
+********************************************************************************
+POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash:streamGenerateContent?alt=sse HTTP/1.1
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: *
+Connection: keep-alive
+Content-Length: 929
+Content-Type: application/json
+Sec-Fetch-Mode: cors
+
+
+{"contents":[{"parts":[{"text":"Tell me a story in 100 words?"}],"role":"user"},{"parts":[{"text":"The"}],"role":"model"},{"parts":[{"text":" old lighthouse keeper"}],"role":"model"},{"parts":[{"text":", Silas, had seen it all: storms, shipwrecks, and the lonely"}],"role":"model"},{"parts":[{"text":" dance of waves. But tonight was different. The beam faltered, flickered, then died"}],"role":"model"},{"parts":[{"text":". Panic clawed at him. The radio crackled, silent. Outside, the foghorn blared, a mournful cry lost in the swirling mist. Silas"}],"role":"model"},{"parts":[{"text":" grabbed his lantern, a tiny beacon against the encroaching darkness. He had one last duty. He climbed the spiral stairs, his heart a frantic drum, knowing"}],"role":"model"},{"parts":[{"text":" that tonight, he was the light.\n"}],"role":"model"},{"parts":[{"text":"What is the title of the story?"}],"role":"user"}],"generationConfig":{}}

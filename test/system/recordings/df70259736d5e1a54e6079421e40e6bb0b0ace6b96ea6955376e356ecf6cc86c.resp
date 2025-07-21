@@ -1,16 +1,16 @@
 Status code: 200 
+Content-Encoding: gzip
+Content-Length: 326
+Content-Type: application/json; charset=UTF-8
 Vary: Origin
 Vary: X-Origin
 Vary: Referer
-Content-Encoding: gzip
-Date: Mon, 21 Jul 2025 21:46:53 GMT
+Date: Mon, 21 Jul 2025 21:47:19 GMT
 Server: scaffolding on HTTPServer2
-Content-Length: 330
-Content-Type: application/json; charset=UTF-8
 X-Xss-Protection: 0
 X-Frame-Options: SAMEORIGIN
 X-Content-Type-Options: nosniff
-Server-Timing: gfet4t7; dur=1434
+Server-Timing: gfet4t7; dur=484
 
 {
   "candidates": [
@@ -18,32 +18,32 @@ Server-Timing: gfet4t7; dur=1434
       "content": {
         "parts": [
           {
-            "text": "a + b = 5 + 10 = 15\n"
+            "text": "A Guiding Light\n"
           }
         ],
         "role": "model"
       },
       "finishReason": "STOP",
-      "avgLogprobs": -0.047699014345804848
+      "avgLogprobs": -0.62106037139892578
     }
   ],
   "usageMetadata": {
-    "promptTokenCount": 16,
-    "candidatesTokenCount": 15,
-    "totalTokenCount": 31,
+    "promptTokenCount": 134,
+    "candidatesTokenCount": 4,
+    "totalTokenCount": 138,
     "promptTokensDetails": [
       {
         "modality": "TEXT",
-        "tokenCount": 16
+        "tokenCount": 134
       }
     ],
     "candidatesTokensDetails": [
       {
         "modality": "TEXT",
-        "tokenCount": 15
+        "tokenCount": 4
       }
     ]
   },
   "modelVersion": "gemini-2.0-flash",
-  "responseId": "TbV-aIHoDb2QmNAPnpXf-QU"
+  "responseId": "Z7V-aJjtDu6TsbQPj8rJwQI"
 }

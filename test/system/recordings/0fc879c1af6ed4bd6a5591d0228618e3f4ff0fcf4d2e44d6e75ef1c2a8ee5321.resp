@@ -1,0 +1,17 @@
+Status code: 200 
+Content-Disposition: attachment
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Server: scaffolding on HTTPServer2
+X-Frame-Options: SAMEORIGIN
+Content-Type: text/event-stream
+Date: Mon, 21 Jul 2025 21:47:15 GMT
+X-Xss-Protection: 0
+X-Content-Type-Options: nosniff
+Server-Timing: gfet4t7; dur=481
+
+data: {"candidates": [{"content": {"parts": [{"text": "Rain"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 144,"totalTokenCount": 144,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 144}]},"modelVersion": "gemini-2.0-flash","responseId": "Y7V-aI7zDdmTmNAPiqm4kAU"}
+
+data: {"candidates": [{"content": {"parts": [{"text": "\n"}],"role": "model"},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 135,"candidatesTokenCount": 2,"totalTokenCount": 137,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 135}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 2}]},"modelVersion": "gemini-2.0-flash","responseId": "Y7V-aI7zDdmTmNAPiqm4kAU"}
+

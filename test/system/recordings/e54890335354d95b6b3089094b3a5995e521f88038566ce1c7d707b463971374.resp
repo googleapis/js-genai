@@ -1,35 +1,33 @@
 Status code: 200 
-Content-Disposition: attachment
-Date: Wed, 14 May 2025 18:12:46 GMT
-X-Content-Type-Options: nosniff
-Server-Timing: gfet4t7; dur=614
+Server-Timing: gfet4t7; dur=551
 Content-Type: text/event-stream
+Content-Disposition: attachment
 Vary: Origin
 Vary: X-Origin
 Vary: Referer
+Date: Mon, 21 Jul 2025 21:47:30 GMT
 Server: scaffolding on HTTPServer2
 X-Xss-Protection: 0
 X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
 
-data: {"candidates": [{"content": {"parts": [{"text": "The"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash"}
+data: {"candidates": [{"content": {"parts": [{"text": "The"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "crV-aJfkC9mTmNAPiqm4kAU"}
 
-data: {"candidates": [{"content": {"parts": [{"text": " sky is blue"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash"}
+data: {"candidates": [{"content": {"parts": [{"text": " sky appears blue"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "crV-aJfkC9mTmNAPiqm4kAU"}
 
-data: {"candidates": [{"content": {"parts": [{"text": " due to a phenomenon called **Rayleigh scattering**. Here's a breakdown:"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash"}
+data: {"candidates": [{"content": {"parts": [{"text": " due to a phenomenon called **Rayleigh scattering**. Here's a breakdown:"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "crV-aJfkC9mTmNAPiqm4kAU"}
 
-data: {"candidates": [{"content": {"parts": [{"text": "\n\n*   **Sunlight is white light:** Although it looks yellow, sunlight is actually made"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash"}
+data: {"candidates": [{"content": {"parts": [{"text": "\n\n*   **Sunlight is White Light:** Sunlight actually contains all the colors of the"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "crV-aJfkC9mTmNAPiqm4kAU"}
 
-data: {"candidates": [{"content": {"parts": [{"text": " up of all the colors of the rainbow.\n\n*   **Light travels in waves:** Each color of light has a different wavelength. Blue and violet light have shorter"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash"}
+data: {"candidates": [{"content": {"parts": [{"text": " rainbow.\n\n*   **Entering the Atmosphere:** When sunlight enters the Earth's atmosphere, it collides with tiny air molecules (mostly nitrogen and oxygen).\n\n"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "crV-aJfkC9mTmNAPiqm4kAU"}
 
-data: {"candidates": [{"content": {"parts": [{"text": " wavelengths, while red and orange light have longer wavelengths.\n\n*   **Atmospheric particles:** The Earth's atmosphere is filled with tiny particles of gas (mostly"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash"}
+data: {"candidates": [{"content": {"parts": [{"text": "*   **Scattering of Light:** These collisions cause the light to scatter in different directions.\n\n*   **Rayleigh Scattering and Wavelength:**  Rayleigh scattering is"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "crV-aJfkC9mTmNAPiqm4kAU"}
 
-data: {"candidates": [{"content": {"parts": [{"text": " nitrogen and oxygen), dust, and water vapor.\n\n*   **Scattering:** When sunlight enters the atmosphere, it collides with these particles. This collision causes the light to scatter in different directions.\n\n*   **Rayleigh scattering favors"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash"}
+data: {"candidates": [{"content": {"parts": [{"text": " much more effective at scattering shorter wavelengths of light (blue and violet) than longer wavelengths (red and orange).\n\n*   **Why Blue, Not Violet?:** Violet light is scattered even more than blue, but:\n    *   "}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "crV-aJfkC9mTmNAPiqm4kAU"}
 
-data: {"candidates": [{"content": {"parts": [{"text": " shorter wavelengths:** Rayleigh scattering is more effective at scattering shorter wavelengths of light (blue and violet) than longer wavelengths (red and orange). The amount of scattering is inversely proportional to the fourth power of the wavelength. This means blue light is scattered about"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash"}
+data: {"candidates": [{"content": {"parts": [{"text": "Sunlight contains less violet light to begin with.\n    *   Our eyes are more sensitive to blue light than violet.\n    *   The atmosphere absorbs some of the violet light.\n\n*   **Result:** Because blue light is"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "crV-aJfkC9mTmNAPiqm4kAU"}
 
-data: {"candidates": [{"content": {"parts": [{"text": " 10 times more than red light.\n\n*   **Why not violet?** Violet light is scattered even more than blue light, but our eyes are less sensitive to violet, and the sun emits slightly less violet light. Therefore, we see the sky as blue.\n\n**In summary:** The sky appears blue because blue"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash"}
+data: {"candidates": [{"content": {"parts": [{"text": " scattered more effectively, it bounces around the atmosphere more and reaches our eyes from all directions. This is why we perceive the sky as blue.\n\n**In simple terms:** Think of it like this: Imagine throwing different-sized balls (colors of light) at a bunch of small obstacles (air molecules). The smaller balls (blue and"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "crV-aJfkC9mTmNAPiqm4kAU"}
 
-data: {"candidates": [{"content": {"parts": [{"text": " light from the sun is scattered more by the tiny particles in the Earth's atmosphere than other colors.\n\n**Why sunsets are red:**\n\nAs the sun sets, the light has to travel through a much greater distance of atmosphere to reach our eyes. During this long journey, most of the blue light is scattered away, leaving"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash"}
-
-data: {"candidates": [{"content": {"parts": [{"text": " the longer wavelengths like red and orange to dominate. This is why sunsets appear reddish or orange.\n"}],"role": "model"},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 6,"candidatesTokenCount": 353,"totalTokenCount": 359,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 6}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 353}]},"modelVersion": "gemini-2.0-flash"}
+data: {"candidates": [{"content": {"parts": [{"text": " violet) will bounce around more wildly than the larger balls (red and orange).  We see the \"wildly bouncing\" colors.\n"}],"role": "model"},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 6,"candidatesTokenCount": 294,"totalTokenCount": 300,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 6}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 294}]},"modelVersion": "gemini-2.0-flash","responseId": "crV-aJfkC9mTmNAPiqm4kAU"}
 

@@ -1,0 +1,49 @@
+Status code: 200 
+Date: Mon, 21 Jul 2025 21:38:38 GMT
+Server: scaffolding on HTTPServer2
+Content-Length: 430
+X-Frame-Options: SAMEORIGIN
+Server-Timing: gfet4t7; dur=847
+Content-Type: application/json; charset=UTF-8
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Content-Encoding: gzip
+X-Xss-Protection: 0
+X-Content-Type-Options: nosniff
+
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "While the story doesn't explicitly state a title, a fitting title could be:\n\n*   **Beacon in the Tempest**\n*   **Silas and the Storm**\n*   **The Lighthouse Keeper's Watch**\n*   **Hope's Light**"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.21832517215183803
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 137,
+    "candidatesTokenCount": 56,
+    "totalTokenCount": 193,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 137
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 56
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "XbN-aKGRGPitgLUPze3v6Ao"
+}

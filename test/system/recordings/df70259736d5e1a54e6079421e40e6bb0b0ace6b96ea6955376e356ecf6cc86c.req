@@ -1,0 +1,16 @@
+b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d
+Server Address: generativelanguage.googleapis.com
+Port: 443
+Protocol: https
+********************************************************************************
+POST /v1beta/models/gemini-2.0-flash:generateContent HTTP/1.1
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: *
+Connection: keep-alive
+Content-Length: 740
+Content-Type: application/json
+Sec-Fetch-Mode: cors
+
+
+{"contents":[{"parts":[{"text":"Tell me a story in 100 words?"}],"role":"user"},{"parts":[{"text":"The old lighthouse keeper, Silas, had seen countless storms. But this one, a howling beast of wind and water, felt different. He clung to the railing, the beam slicing through the raging night. A glint of metal caught his eye - a small boat, tossed mercilessly. He adjusted the beam, focusing it on the struggling vessel. Hours crawled by. Finally, as dawn broke, the storm subsided, and the boat limped towards the harbor. Silas, exhausted but relieved, watched them go, knowing his small light had made a world of difference.\n"}],"role":"model"},{"parts":[{"text":"What is the title of the story?"}],"role":"user"}],"generationConfig":{}}
