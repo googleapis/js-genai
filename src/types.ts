@@ -5553,7 +5553,11 @@ export type BatchJobSourceUnion = BatchJobSource | InlinedRequest[] | string;
 export type BatchJobDestinationUnion = BatchJobDestination | string;
 
 
-// Shared aspect ratio types
+// Common aspect ratios supported across all media generation APIs
 export type CommonAspectRatio = "9:16" | "16:9";
+
+// Aspect ratios for image generation and editing
 export type ImageAspectRatio = CommonAspectRatio | "1:1" | "3:4" | "4:3";
+
+// Aspect ratios for video generation  
 export type VideoAspectRatio = CommonAspectRatio;
