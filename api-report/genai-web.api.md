@@ -554,6 +554,7 @@ export interface CreateTuningJobConfig {
     httpOptions?: HttpOptions;
     learningRate?: number;
     learningRateMultiplier?: number;
+    preTunedModelCheckpointId?: string;
     tunedModelDisplayName?: string;
     validationDataset?: TuningValidationDataset;
 }
@@ -562,6 +563,14 @@ export interface CreateTuningJobConfig {
 export interface CreateTuningJobParameters {
     baseModel: string;
     config?: CreateTuningJobConfig;
+    trainingDataset: TuningDataset;
+}
+
+// @public
+export interface CreateTuningJobParametersPrivate {
+    baseModel?: string;
+    config?: CreateTuningJobConfig;
+    preTunedModel?: PreTunedModel;
     trainingDataset: TuningDataset;
 }
 
@@ -2235,6 +2244,13 @@ export interface PrebuiltVoiceConfig {
 }
 
 // @public
+export interface PreTunedModel {
+    baseModel?: string;
+    checkpointId?: string;
+    tunedModelName?: string;
+}
+
+// @public
 export interface ProactivityConfig {
     proactiveAudio?: boolean;
 }
@@ -2792,6 +2808,7 @@ export interface TuningJob {
     name?: string;
     partnerModelTuningSpec?: PartnerModelTuningSpec;
     pipelineJob?: string;
+    preTunedModel?: PreTunedModel;
     satisfiesPzi?: boolean;
     satisfiesPzs?: boolean;
     sdkHttpResponse?: HttpResponse;
