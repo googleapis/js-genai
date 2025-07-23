@@ -1,6 +1,18 @@
 # Changelog
 
 
+## [1.11.0](https://github.com/googleapis/js-genai/compare/v1.10.0...v1.11.0) (2025-07-23)
+
+
+### Features
+
+* Add generateVideosFromSource in Go, refactor private generateVideos ([bda1fde](https://github.com/googleapis/js-genai/commit/bda1fded5ddefefcfa6b6d1c3069928de0360a03))
+* Add image_size field for Vertex Imagen 4 generation ([b6cc23e](https://github.com/googleapis/js-genai/commit/b6cc23ee90b576db1529f33ff5c209742baedab8))
+* enable function calling for Callable Tool besides McpClient in generateContent. ([90565bd](https://github.com/googleapis/js-genai/commit/90565bda219f4a72bbbe72497c72c34f6ead83b5))
+* Introduced Operations.get() which is a generic function to handle all Operation types. ([a6f85c1](https://github.com/googleapis/js-genai/commit/a6f85c1d5848f03b63b7038a0af6567caca295cf))
+* return headers for list method in all modules. ([e8591a3](https://github.com/googleapis/js-genai/commit/e8591a3adf024e4667f55610d2069edb52be8f8d))
+* Updates to codegen instructions to improve performance for TypeScript ([9c97ec6](https://github.com/googleapis/js-genai/commit/9c97ec645a7ab1e3a2e28319dac54a640e0eda57))
+
 ## [1.10.0](https://github.com/googleapis/js-genai/compare/v1.9.0...v1.10.0) (2025-07-17)
 
 
