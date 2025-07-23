@@ -6,7 +6,6 @@
 
 ### Features
 
-* Add generateVideosFromSource in Go, refactor private generateVideos ([bda1fde](https://github.com/googleapis/js-genai/commit/bda1fded5ddefefcfa6b6d1c3069928de0360a03))
 * Add image_size field for Vertex Imagen 4 generation ([b6cc23e](https://github.com/googleapis/js-genai/commit/b6cc23ee90b576db1529f33ff5c209742baedab8))
 * enable function calling for Callable Tool besides McpClient in generateContent. ([90565bd](https://github.com/googleapis/js-genai/commit/90565bda219f4a72bbbe72497c72c34f6ead83b5))
 * Introduced Operations.get() which is a generic function to handle all Operation types. ([a6f85c1](https://github.com/googleapis/js-genai/commit/a6f85c1d5848f03b63b7038a0af6567caca295cf))
