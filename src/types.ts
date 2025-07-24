@@ -4189,6 +4189,8 @@ export declare interface DeleteBatchJobParameters {
 
 /** The return value of delete operation. */
 export declare interface DeleteResourceJob {
+  /** Used to retain the full HTTP response. */
+  sdkHttpResponse?: HttpResponse;
   name?: string;
   done?: boolean;
   error?: JobError;
