@@ -1,0 +1,16 @@
+b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d
+Server Address: us-central1-aiplatform.googleapis.com
+Port: 443
+Protocol: https
+********************************************************************************
+POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash:streamGenerateContent?alt=sse HTTP/1.1
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: *
+Connection: keep-alive
+Content-Length: 963
+Content-Type: application/json
+Sec-Fetch-Mode: cors
+
+
+{"contents":[{"parts":[{"text":"Tell me a story in 100 words?"}],"role":"user"},{"parts":[{"text":"Old"}],"role":"model"},{"parts":[{"text":" Man"}],"role":"model"},{"parts":[{"text":" Silas loved the sea. Every morning, he'd sit on the same weathered bench"}],"role":"model"},{"parts":[{"text":", watching the waves. One day, a storm raged, swallowing a small fishing boat. Silas"}],"role":"model"},{"parts":[{"text":" held his breath, fear etching lines deeper onto his face.\n\nThe storm subsided. Among the wreckage, a small, wooden bird, no bigger than his thumb"}],"role":"model"},{"parts":[{"text":", bobbed to shore. He picked it up, its paint chipped and worn. Holding it tight, Silas felt a pang of hope. Maybe, just maybe,"}],"role":"model"},{"parts":[{"text":" someone would return too. The sea, for all its fury, occasionally gave back.\n"}],"role":"model"},{"parts":[{"text":"What is the title of the story?"}],"role":"user"}],"generationConfig":{}}

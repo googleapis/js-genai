@@ -1,0 +1,50 @@
+Status code: 200 
+Date: Mon, 21 Jul 2025 21:38:44 GMT
+Content-Length: 483
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+Content-Encoding: gzip
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Server: scaffolding on HTTPServer2
+X-Content-Type-Options: nosniff
+Content-Type: application/json; charset=UTF-8
+
+{
+  "candidates": [
+    {
+      "content": {
+        "role": "model",
+        "parts": [
+          {
+            "text": "The title of the story could be:\n\n*   **The Gnome's Secret**\n*   **Whiskers and the Birdhouse**\n*   **The Lost Collar**\n*   **Elara's Hope**\n\nAny of those would fit the narrative.\n"
+          }
+        ]
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.28693508279734642
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 137,
+    "candidatesTokenCount": 58,
+    "totalTokenCount": 195,
+    "trafficType": "ON_DEMAND",
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 137
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 58
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "createTime": "2025-07-21T21:38:44.004884Z",
+  "responseId": "ZLN-aJQm0rae-A-jw-fIAg"
+}

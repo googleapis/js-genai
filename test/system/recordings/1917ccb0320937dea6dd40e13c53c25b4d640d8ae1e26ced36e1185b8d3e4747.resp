@@ -1,0 +1,20 @@
+Status code: 200 
+Content-Disposition: attachment
+Date: Mon, 21 Jul 2025 21:47:13 GMT
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+Content-Type: text/event-stream
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Server: scaffolding on HTTPServer2
+X-Content-Type-Options: nosniff
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": "Since"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-21T21:47:13.236552Z","responseId": "YbV-aIi4DtOvnvgPwL-yoQ4"}
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " a = 5, then a + 10 = 5 + "}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-21T21:47:13.236552Z","responseId": "YbV-aIi4DtOvnvgPwL-yoQ4"}
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": "10 = 15.\n\nSo, a + 10 ="}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-21T21:47:13.236552Z","responseId": "YbV-aIi4DtOvnvgPwL-yoQ4"}
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " **15**\n"}]},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 13,"candidatesTokenCount": 38,"totalTokenCount": 51,"trafficType": "ON_DEMAND","promptTokensDetails": [{"modality": "TEXT","tokenCount": 13}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 38}]},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-21T21:47:13.236552Z","responseId": "YbV-aIi4DtOvnvgPwL-yoQ4"}
+

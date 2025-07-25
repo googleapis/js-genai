@@ -1,19 +1,18 @@
 Status code: 200 
-Server: scaffolding on HTTPServer2
-X-Xss-Protection: 0
-X-Frame-Options: SAMEORIGIN
-X-Content-Type-Options: nosniff
-X-Goog-Sherlog-Link: https://sherlog.corp.google.com/#workflow?config=Serving&dataid=aiplatform.googleapis.com/google.cloud.aiplatform.v1beta1.PredictionService.StreamGenerateContent&gaia=821332047332&reason=sharedLink&version=183f775154e0db3dbc65dbb2f4a4819a
+Content-Type: text/event-stream
 Content-Disposition: attachment
 Vary: Origin
 Vary: X-Origin
 Vary: Referer
-Content-Type: text/event-stream
-Date: Wed, 14 May 2025 18:12:51 GMT
+Date: Mon, 21 Jul 2025 21:47:17 GMT
+X-Xss-Protection: 0
+Server: scaffolding on HTTPServer2
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": "The"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-05-14T18:12:51.676647Z","responseId": "I90kaKemKbOWmecPu9DEiAk"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": "The"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-21T21:47:17.450002Z","responseId": "ZbV-aNK7G5jNnvgPo6bSqA8"}
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": " sky is blue"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-05-14T18:12:51.676647Z","responseId": "I90kaKemKbOWmecPu9DEiAk"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " sky is blue"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-21T21:47:17.450002Z","responseId": "ZbV-aNK7G5jNnvgPo6bSqA8"}
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": " due to a phenomenon called **Rayleigh scattering**. Here's a breakdown:"}]},"finishReason": "MAX_TOKENS"}],"usageMetadata": {"promptTokenCount": 6,"candidatesTokenCount": 20,"totalTokenCount": 26,"trafficType": "ON_DEMAND","promptTokensDetails": [{"modality": "TEXT","tokenCount": 6}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 20}]},"modelVersion": "gemini-2.0-flash","createTime": "2025-05-14T18:12:51.676647Z","responseId": "I90kaKemKbOWmecPu9DEiAk"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " due to a phenomenon called **Rayleigh scattering**. Here's a breakdown:"}]},"finishReason": "MAX_TOKENS"}],"usageMetadata": {"promptTokenCount": 6,"candidatesTokenCount": 20,"totalTokenCount": 26,"trafficType": "ON_DEMAND","promptTokensDetails": [{"modality": "TEXT","tokenCount": 6}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 20}]},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-21T21:47:17.450002Z","responseId": "ZbV-aNK7G5jNnvgPo6bSqA8"}
 

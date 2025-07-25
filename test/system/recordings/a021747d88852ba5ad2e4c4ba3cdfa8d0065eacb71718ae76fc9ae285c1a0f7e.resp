@@ -1,15 +1,15 @@
 Status code: 404 
-X-Content-Type-Options: nosniff
-Server-Timing: gfet4t7; dur=197
 Content-Type: text/event-stream
 Server: scaffolding on HTTPServer2
+Content-Length: 858
 X-Xss-Protection: 0
-X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
 Vary: Origin
 Vary: X-Origin
 Vary: Referer
-Date: Wed, 14 May 2025 18:12:52 GMT
-Content-Length: 858
+X-Frame-Options: SAMEORIGIN
+Server-Timing: gfet4t7; dur=178
+Date: Mon, 21 Jul 2025 21:47:20 GMT
 
 {
   "error": {

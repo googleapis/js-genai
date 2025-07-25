@@ -1,0 +1,16 @@
+b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d
+Server Address: us-central1-aiplatform.googleapis.com
+Port: 443
+Protocol: https
+********************************************************************************
+POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash:generateContent HTTP/1.1
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: *
+Connection: keep-alive
+Content-Length: 758
+Content-Type: application/json
+Sec-Fetch-Mode: cors
+
+
+{"contents":[{"parts":[{"text":"Tell me a story in 100 words?"}],"role":"user"},{"parts":[{"text":"Elara found the lost cat collar nestled in the garden gnome's beard. It was a vibrant, hand-stitched design, identical to the one her beloved Whiskers had worn before disappearing a month ago. A jolt of hope surged through her. She followed a trail of overturned flower pots leading towards the woods, her heart pounding. A faint meow echoed through the trees. Elara pushed past a thicket of bushes and there he was, Whiskers, sporting a brand-new, but noticeably crooked, birdhouse roof. He purred, rubbing against the surprisingly adept gnome.\n"}],"role":"model"},{"parts":[{"text":"What is the title of the story?"}],"role":"user"}],"generationConfig":{}}

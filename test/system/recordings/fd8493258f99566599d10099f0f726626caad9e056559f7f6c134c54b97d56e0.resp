@@ -1,0 +1,23 @@
+Status code: 200 
+Date: Mon, 21 Jul 2025 21:38:40 GMT
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+Server-Timing: gfet4t7; dur=1262
+Content-Type: text/event-stream
+Content-Disposition: attachment
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Server: scaffolding on HTTPServer2
+X-Content-Type-Options: nosniff
+
+data: {"candidates": [{"content": {"parts": [{"text": "The"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 136,"totalTokenCount": 136,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 136}]},"modelVersion": "gemini-2.0-flash","responseId": "YLN-aKL4G6CBn9kPv5CQqA8"}
+
+data: {"candidates": [{"content": {"parts": [{"text": " story doesn't have a title explicitly stated. You could title it something like:\n\n*"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 136,"totalTokenCount": 136,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 136}]},"modelVersion": "gemini-2.0-flash","responseId": "YLN-aKL4G6CBn9kPv5CQqA8"}
+
+data: {"candidates": [{"content": {"parts": [{"text": "   **The Lighthouse Keeper**\n*   **SOS in the Storm**\n"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 136,"totalTokenCount": 136,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 136}]},"modelVersion": "gemini-2.0-flash","responseId": "YLN-aKL4G6CBn9kPv5CQqA8"}
+
+data: {"candidates": [{"content": {"parts": [{"text": "*   **Silas's Vigil**\n*   **Beacon of Hope**\n*   **Rain** (since that was the original one-word prompt)"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 136,"totalTokenCount": 136,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 136}]},"modelVersion": "gemini-2.0-flash","responseId": "YLN-aKL4G6CBn9kPv5CQqA8"}
+
+data: {"candidates": [{"content": {"parts": [{"text": "\n"}],"role": "model"},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 127,"candidatesTokenCount": 71,"totalTokenCount": 198,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 127}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 71}]},"modelVersion": "gemini-2.0-flash","responseId": "YLN-aKL4G6CBn9kPv5CQqA8"}
+

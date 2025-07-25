@@ -1,0 +1,20 @@
+Status code: 200 
+Content-Type: text/event-stream
+Content-Disposition: attachment
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Date: Mon, 21 Jul 2025 21:46:56 GMT
+Server: scaffolding on HTTPServer2
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": "The"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-21T21:46:56.202199Z","responseId": "ULV-aNerDNK2nvgPo8PnyAI"}
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " story doesn't have a title. I just wrote a short story as requested. You"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-21T21:46:56.202199Z","responseId": "ULV-aNerDNK2nvgPo8PnyAI"}
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " could give it a title, though! Something like \"Silas and the Sea Bird"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-21T21:46:56.202199Z","responseId": "ULV-aNerDNK2nvgPo8PnyAI"}
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": "\" or \"The Gift of the Storm\" might fit.\n"}]},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 140,"candidatesTokenCount": 49,"totalTokenCount": 189,"trafficType": "ON_DEMAND","promptTokensDetails": [{"modality": "TEXT","tokenCount": 140}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 49}]},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-21T21:46:56.202199Z","responseId": "ULV-aNerDNK2nvgPo8PnyAI"}
+

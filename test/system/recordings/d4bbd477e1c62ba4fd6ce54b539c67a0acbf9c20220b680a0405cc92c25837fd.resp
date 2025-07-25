@@ -1,0 +1,18 @@
+Status code: 200 
+Content-Disposition: attachment
+Date: Mon, 21 Jul 2025 21:38:30 GMT
+X-Content-Type-Options: nosniff
+Content-Type: text/event-stream
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Server: scaffolding on HTTPServer2
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": "The"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-21T21:38:29.895337Z","responseId": "VbN-aOnSNo_B2PgP5PbTyQw"}
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " last"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-21T21:38:29.895337Z","responseId": "VbN-aOnSNo_B2PgP5PbTyQw"}
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " duty.\n"}]},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 132,"candidatesTokenCount": 5,"totalTokenCount": 137,"trafficType": "ON_DEMAND","promptTokensDetails": [{"modality": "TEXT","tokenCount": 132}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 5}]},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-21T21:38:29.895337Z","responseId": "VbN-aOnSNo_B2PgP5PbTyQw"}
+

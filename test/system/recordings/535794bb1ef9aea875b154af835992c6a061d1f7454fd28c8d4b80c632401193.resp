@@ -1,16 +1,15 @@
 Status code: 200 
-Date: Wed, 14 May 2025 18:12:50 GMT
-Content-Length: 725
-X-Content-Type-Options: nosniff
-Content-Type: application/json; charset=UTF-8
 Vary: Origin
 Vary: X-Origin
 Vary: Referer
 Content-Encoding: gzip
+Date: Mon, 21 Jul 2025 21:47:25 GMT
 Server: scaffolding on HTTPServer2
-X-Xss-Protection: 0
+Content-Length: 705
 X-Frame-Options: SAMEORIGIN
-X-Goog-Sherlog-Link: https://sherlog.corp.google.com/#workflow?config=Serving&dataid=aiplatform.googleapis.com/google.cloud.aiplatform.v1beta1.PredictionService.GenerateContent&gaia=821332047332&reason=sharedLink&version=183f7750de9ae60a8e08f28f6a695cac
+Content-Type: application/json; charset=UTF-8
+X-Xss-Protection: 0
+X-Content-Type-Options: nosniff
 
 {
   "candidates": [
@@ -19,18 +18,18 @@ X-Goog-Sherlog-Link: https://sherlog.corp.google.com/#workflow?config=Serving&da
         "role": "model",
         "parts": [
           {
-            "text": "The old lighthouse keeper, Silas, squinted at the storm-tossed sea. For fifty years, he’d kept the beacon burning, a steadfast guide in the darkness. Tonight, the wind howled like a banshee, threatening to extinguish the flame. He fought the gale, securing the lamp, his weathered hands trembling. Suddenly, a faint SOS crackled over the radio. A small fishing boat, lost and battered. Silas adjusted the beam, focusing its unwavering light on the struggling vessel. Hours later, silence. The storm subsided. In the morning, a grateful fisherman arrived, carrying a single, perfect rose.\n"
+            "text": "The old lighthouse keeper, Silas, squinted at the churning sea. He'd seen a thousand storms, but this one felt different. A frantic blip on the radar. A small fishing boat, lost.\n\nSilas gripped the microphone, his voice cracking, \"This is Beacon Rock, do you read?\" Static. He repeated the call, louder this time. Finally, a weak response.\n\nGuided by Silas's beam, the boat limped into the harbor as dawn broke. Exhausted, but alive. Later, the captain thanked him, tears in his eyes. Silas simply smiled. Just another night keeping the light burning bright.\n"
           }
         ]
       },
       "finishReason": "STOP",
-      "avgLogprobs": -0.59970861720287894
+      "avgLogprobs": -0.68577529444839014
     }
   ],
   "usageMetadata": {
     "promptTokenCount": 11,
-    "candidatesTokenCount": 127,
-    "totalTokenCount": 138,
+    "candidatesTokenCount": 132,
+    "totalTokenCount": 143,
     "trafficType": "ON_DEMAND",
     "promptTokensDetails": [
       {
@@ -41,11 +40,11 @@ X-Goog-Sherlog-Link: https://sherlog.corp.google.com/#workflow?config=Serving&da
     "candidatesTokensDetails": [
       {
         "modality": "TEXT",
-        "tokenCount": 127
+        "tokenCount": 132
       }
     ]
   },
   "modelVersion": "gemini-2.0-flash",
-  "createTime": "2025-05-14T18:12:49.691266Z",
-  "responseId": "Id0kaMKYKviKmecPs63QmAk"
+  "createTime": "2025-07-21T21:47:23.786621Z",
+  "responseId": "a7V-aL2BMNK2nvgPo8PnyAI"
 }

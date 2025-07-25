@@ -1,0 +1,16 @@
+b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d
+Server Address: generativelanguage.googleapis.com
+Port: 443
+Protocol: https
+********************************************************************************
+POST /v1beta/models/gemini-2.0-flash:streamGenerateContent?alt=sse HTTP/1.1
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: *
+Connection: keep-alive
+Content-Length: 922
+Content-Type: application/json
+Sec-Fetch-Mode: cors
+
+
+{"contents":[{"parts":[{"text":"Tell me a story in 100 words?"}],"role":"user"},{"parts":[{"text":"Rain"}],"role":"model"},{"parts":[{"text":" lashed against the bakery window. Inside, old Mrs. Higgins kneaded dough,"}],"role":"model"},{"parts":[{"text":" her wrinkled hands strong despite their age. A young girl, soaked to the bone, timid"}],"role":"model"},{"parts":[{"text":"ly entered. \"Lost my mitten,\" she mumbled, tears mixing with the rain. Mrs. Higgins smiled, her eyes crinkling at the corners. She pulled"}],"role":"model"},{"parts":[{"text":" a warm, knitted mitten from a forgotten drawer. \"Found it,\" she chuckled, handing it to the girl. The girl’s face lit up, her smile"}],"role":"model"},{"parts":[{"text":" chasing away the gloom. Sometimes, the smallest kindnesses are the warmest.\n"}],"role":"model"},{"parts":[{"text":"What is the title of the story?"}],"role":"user"}],"generationConfig":{}}

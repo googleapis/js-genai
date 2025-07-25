@@ -1,0 +1,16 @@
+b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d
+Server Address: us-central1-aiplatform.googleapis.com
+Port: 443
+Protocol: https
+********************************************************************************
+POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash:generateContent HTTP/1.1
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: *
+Connection: keep-alive
+Content-Length: 777
+Content-Type: application/json
+Sec-Fetch-Mode: cors
+
+
+{"contents":[{"parts":[{"text":"Tell me a story in 100 words?"}],"role":"user"},{"parts":[{"text":"The old lighthouse keeper, Silas, squinted at the churning sea. He'd seen a thousand storms, but this one felt different. A frantic blip on the radar. A small fishing boat, lost.\n\nSilas gripped the microphone, his voice cracking, \"This is Beacon Rock, do you read?\" Static. He repeated the call, louder this time. Finally, a weak response.\n\nGuided by Silas's beam, the boat limped into the harbor as dawn broke. Exhausted, but alive. Later, the captain thanked him, tears in his eyes. Silas simply smiled. Just another night keeping the light burning bright.\n"}],"role":"model"},{"parts":[{"text":"What is the title of the story?"}],"role":"user"}],"generationConfig":{}}

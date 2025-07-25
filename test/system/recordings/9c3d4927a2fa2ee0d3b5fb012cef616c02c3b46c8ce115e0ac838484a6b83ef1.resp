@@ -1,16 +1,16 @@
 Status code: 200 
+Content-Length: 617
 Content-Type: application/json; charset=UTF-8
-Content-Encoding: gzip
-Date: Wed, 14 May 2025 18:12:54 GMT
-Server: scaffolding on HTTPServer2
-Content-Length: 596
 Vary: Origin
 Vary: X-Origin
 Vary: Referer
-X-Xss-Protection: 0
+Server: scaffolding on HTTPServer2
 X-Frame-Options: SAMEORIGIN
 X-Content-Type-Options: nosniff
-Server-Timing: gfet4t7; dur=1990
+Server-Timing: gfet4t7; dur=1176
+Content-Encoding: gzip
+Date: Mon, 21 Jul 2025 21:47:19 GMT
+X-Xss-Protection: 0
 
 {
   "candidates": [
@@ -18,19 +18,19 @@ Server-Timing: gfet4t7; dur=1990
       "content": {
         "parts": [
           {
-            "text": "Elara, a solitary lighthouse keeper, found a message in a bottle. Scrawled on parchment, it spoke of a hidden cove where starlight touched the sea. Intrigued, she set sail at dawn. The cove shimmered, just as described. But instead of treasure, she found an old woman, weaving moonlight into thread. \"The sea remembers everything, child,\" she whispered, offering Elara a single, luminous strand. Elara returned, the thread woven into her lamp, its beam now guiding lost ships to shore, a beacon of hope born from a forgotten message.\n"
+            "text": "The old lighthouse keeper, Silas, had seen countless storms. But this one, a howling beast of wind and water, felt different. He clung to the railing, the beam slicing through the raging night. A glint of metal caught his eye - a small boat, tossed mercilessly. He adjusted the beam, focusing it on the struggling vessel. Hours crawled by. Finally, as dawn broke, the storm subsided, and the boat limped towards the harbor. Silas, exhausted but relieved, watched them go, knowing his small light had made a world of difference.\n"
           }
         ],
         "role": "model"
       },
       "finishReason": "STOP",
-      "avgLogprobs": -0.70995029481519167
+      "avgLogprobs": -0.53884698619013249
     }
   ],
   "usageMetadata": {
     "promptTokenCount": 11,
-    "candidatesTokenCount": 119,
-    "totalTokenCount": 130,
+    "candidatesTokenCount": 115,
+    "totalTokenCount": 126,
     "promptTokensDetails": [
       {
         "modality": "TEXT",
@@ -40,9 +40,10 @@ Server-Timing: gfet4t7; dur=1990
     "candidatesTokensDetails": [
       {
         "modality": "TEXT",
-        "tokenCount": 119
+        "tokenCount": 115
       }
     ]
   },
-  "modelVersion": "gemini-2.0-flash"
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "ZrV-aMfKA4-ehMIPkrHfkQQ"
 }

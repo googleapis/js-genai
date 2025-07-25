@@ -1,16 +1,16 @@
 Status code: 200 
-Content-Type: application/json; charset=UTF-8
-Content-Encoding: gzip
-Date: Wed, 14 May 2025 18:12:43 GMT
+X-Content-Type-Options: nosniff
 X-Xss-Protection: 0
-X-Frame-Options: SAMEORIGIN
-Server-Timing: gfet4t7; dur=727
 Vary: Origin
 Vary: X-Origin
 Vary: Referer
+Content-Encoding: gzip
+Date: Mon, 21 Jul 2025 21:47:12 GMT
 Server: scaffolding on HTTPServer2
-Content-Length: 352
-X-Content-Type-Options: nosniff
+Content-Length: 385
+X-Frame-Options: SAMEORIGIN
+Server-Timing: gfet4t7; dur=683
+Content-Type: application/json; charset=UTF-8
 
 {
   "candidates": [
@@ -24,7 +24,7 @@ X-Content-Type-Options: nosniff
         "role": "model"
       },
       "finishReason": "MAX_TOKENS",
-      "avgLogprobs": -0.11088693141937256
+      "avgLogprobs": -0.11919728517532349
     }
   ],
   "usageMetadata": {
@@ -44,5 +44,6 @@ X-Content-Type-Options: nosniff
       }
     ]
   },
-  "modelVersion": "gemini-2.0-flash"
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "YLV-aOjsJr2QmNAPnpXf-QU"
 }

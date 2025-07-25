@@ -1,0 +1,50 @@
+Status code: 200 
+Content-Type: application/json; charset=UTF-8
+Date: Mon, 21 Jul 2025 21:38:46 GMT
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Content-Encoding: gzip
+Server: scaffolding on HTTPServer2
+Content-Length: 608
+
+{
+  "candidates": [
+    {
+      "content": {
+        "role": "model",
+        "parts": [
+          {
+            "text": "I need more information to answer that question. I don't know what 'a' and 'b' are. Please provide me with more context or an equation involving 'a' and 'b' so I can determine their values and calculate a + b.\n\nFor example, you could tell me:\n\n*   \"a = 5 and b = 3\"\n*   \"a + b = 10 and a - b = 2\"\n*   \"a and b are the roots of the equation x^2 - 5x + 6 = 0\"\n\nOnce you give me some information, I can help you!\n"
+          }
+        ]
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.27726815728580251
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 10,
+    "candidatesTokenCount": 136,
+    "totalTokenCount": 146,
+    "trafficType": "ON_DEMAND",
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 10
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 136
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "createTime": "2025-07-21T21:38:45.842164Z",
+  "responseId": "ZbN-aLSzM8SnnvgP_fKoyAI"
+}
