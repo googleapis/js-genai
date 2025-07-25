@@ -118,7 +118,13 @@ export class Tunings extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.TuningJob;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.TuningJob>;
 
       return response.then((apiResponse) => {
@@ -147,7 +153,13 @@ export class Tunings extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.TuningJob;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.TuningJob>;
 
       return response.then((apiResponse) => {
