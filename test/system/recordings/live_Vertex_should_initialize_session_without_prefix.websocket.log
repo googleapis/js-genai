@@ -1,0 +1,7 @@
+>172 {"setup":{"model":"projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash-live-preview-04-09","generationConfig":{"responseModalities":["AUDIO"]}}}
+<86 {
+  "setupComplete": {
+    "sessionId": "26770cdc-23ea-4ada-a9ef-9590d58408fc"
+  }
+}
+
