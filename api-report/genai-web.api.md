@@ -359,6 +359,7 @@ export interface ComputeTokensParameters {
 
 // @public
 export class ComputeTokensResponse {
+    sdkHttpResponse?: HttpResponse;
     tokensInfo?: TokensInfo[];
 }
 
@@ -439,6 +440,7 @@ export interface CountTokensParameters {
 // @public
 export class CountTokensResponse {
     cachedContentTokenCount?: number;
+    sdkHttpResponse?: HttpResponse;
     totalTokens?: number;
 }
 
@@ -752,6 +754,7 @@ export interface EditImageParameters {
 // @public
 export class EditImageResponse {
     generatedImages?: GeneratedImage[];
+    sdkHttpResponse?: HttpResponse;
 }
 
 // @public
@@ -801,6 +804,7 @@ export interface EmbedContentParameters {
 export class EmbedContentResponse {
     embeddings?: ContentEmbedding[];
     metadata?: EmbedContentMetadata;
+    sdkHttpResponse?: HttpResponse;
 }
 
 // @public
@@ -1141,6 +1145,7 @@ export interface GenerateImagesParameters {
 export class GenerateImagesResponse {
     generatedImages?: GeneratedImage[];
     positivePromptSafetyAttributes?: SafetyAttributes;
+    sdkHttpResponse?: HttpResponse;
 }
 
 // @public
@@ -1172,6 +1177,7 @@ export class GenerateVideosOperation implements Operation<GenerateVideosResponse
     metadata?: Record<string, unknown>;
     name?: string;
     response?: GenerateVideosResponse;
+    sdkHttpResponse?: HttpResponse;
 }
 
 // @public
@@ -2738,6 +2744,7 @@ export interface TuningJob {
     pipelineJob?: string;
     satisfiesPzi?: boolean;
     satisfiesPzs?: boolean;
+    sdkHttpResponse?: HttpResponse;
     serviceAccount?: string;
     startTime?: string;
     state?: JobState;
@@ -2754,6 +2761,7 @@ export interface TuningOperation {
     error?: Record<string, unknown>;
     metadata?: Record<string, unknown>;
     name?: string;
+    sdkHttpResponse?: HttpResponse;
 }
 
 // @public (undocumented)
@@ -2852,6 +2860,7 @@ export interface UpscaleImageParameters {
 // @public (undocumented)
 export class UpscaleImageResponse {
     generatedImages?: GeneratedImage[];
+    sdkHttpResponse?: HttpResponse;
 }
 
 // @public
