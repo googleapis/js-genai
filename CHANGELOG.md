@@ -1,6 +1,19 @@
 # Changelog
 
 
+## [1.12.0](https://github.com/googleapis/js-genai/compare/v1.11.0...v1.12.0) (2025-07-30)
+
+
+### Features
+
+* allow methods in models to return headers in sdk_http_response by default. ([efdcb8a](https://github.com/googleapis/js-genai/commit/efdcb8a844155127cc58b05cfcb3f4f676613c1a))
+* allow methods in tuning to return headers in sdk_http_response by default ([f81c16a](https://github.com/googleapis/js-genai/commit/f81c16a4723c0696e100c5926fe5416263621b8b))
+
+
+### Bug Fixes
+
+* Correctly populated the Rai filter reasons on Video Generation ([316cdb0](https://github.com/googleapis/js-genai/commit/316cdb05d0bf87a03e463812e48f7c0c8fe5296a))
+
 ## [1.11.0](https://github.com/googleapis/js-genai/compare/v1.10.0...v1.11.0) (2025-07-23)
 
 
