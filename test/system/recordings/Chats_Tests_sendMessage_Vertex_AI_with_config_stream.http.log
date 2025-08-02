@@ -16,22 +16,22 @@ Test-Name: Chats Tests sendMessage Vertex AI with config stream
 
 
 {"contents":[{"parts":[{"text":"why is the sky blue?"}],"role":"user"}],"generationConfig":{"temperature":0.5,"maxOutputTokens":20}}
-e1410b548fe4e8b2523f4e2d9c2511256c6ca1b58b7fc82b1e64419878249b66.resp 1380
+e1410b548fe4e8b2523f4e2d9c2511256c6ca1b58b7fc82b1e64419878249b66.resp 1374
 Status code: 200 
+Content-Disposition: attachment
+Date: Mon, 28 Jul 2025 17:23:32 GMT
+X-Content-Type-Options: nosniff
+Content-Type: text/event-stream
 Vary: Origin
 Vary: X-Origin
 Vary: Referer
-Date: Thu, 24 Jul 2025 03:03:52 GMT
-X-Xss-Protection: 0
-Content-Type: text/event-stream
-Content-Disposition: attachment
 Server: scaffolding on HTTPServer2
+X-Xss-Protection: 0
 X-Frame-Options: SAMEORIGIN
-X-Content-Type-Options: nosniff
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": "The"}]}}],"usageMetadata": {"billablePromptUsage": {"textCount": 16},"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-24T03:03:52.083776Z","responseId": "mKKBaMCOBf-am9IPz9C6uQU"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": "The"}]}}],"usageMetadata": {"billablePromptUsage": {"textCount": 16},"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:31.815232Z","responseId": "E7KHaIDhMcOrmecPsain0A0"}
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": " sky is blue"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-24T03:03:52.083776Z","responseId": "mKKBaMCOBf-am9IPz9C6uQU"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " sky is blue"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:31.815232Z","responseId": "E7KHaIDhMcOrmecPsain0A0"}
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": " because of a phenomenon called **Rayleigh scattering**. Here's a breakdown of"}]},"finishReason": "MAX_TOKENS"}],"usageMetadata": {"promptTokenCount": 6,"candidatesTokenCount": 20,"totalTokenCount": 26,"trafficType": "ON_DEMAND","promptTokensDetails": [{"modality": "TEXT","tokenCount": 6}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 20}]},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-24T03:03:52.083776Z","responseId": "mKKBaMCOBf-am9IPz9C6uQU"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " due to a phenomenon called **Rayleigh scattering**. Here's a breakdown:"}]},"finishReason": "MAX_TOKENS"}],"usageMetadata": {"promptTokenCount": 6,"candidatesTokenCount": 20,"totalTokenCount": 26,"trafficType": "ON_DEMAND","promptTokensDetails": [{"modality": "TEXT","tokenCount": 6}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 20}]},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:31.815232Z","responseId": "E7KHaIDhMcOrmecPsain0A0"}
 

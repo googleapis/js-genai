@@ -16,19 +16,19 @@ Test-Name: Chats Tests sendMessage Vertex AI multilple messages
 
 
 {"contents":[{"parts":[{"text":"Tell me a story in 100 words?"}],"role":"user"}],"generationConfig":{}}
-a2599e11d3b74d741497018daf8e06b1523b07e1d75355eda6669722e5e648c6.resp 1663
+a2599e11d3b74d741497018daf8e06b1523b07e1d75355eda6669722e5e648c6.resp 1654
 Status code: 200 
-Content-Length: 733
-X-Xss-Protection: 0
 Content-Type: application/json; charset=UTF-8
 Vary: Origin
 Vary: X-Origin
 Vary: Referer
-Content-Encoding: gzip
-Date: Thu, 24 Jul 2025 03:03:48 GMT
+Content-Length: 730
 X-Frame-Options: SAMEORIGIN
-X-Content-Type-Options: nosniff
+Content-Encoding: gzip
+Date: Mon, 28 Jul 2025 17:23:22 GMT
 Server: scaffolding on HTTPServer2
+X-Xss-Protection: 0
+X-Content-Type-Options: nosniff
 
 {
   "candidates": [
@@ -37,19 +37,19 @@ Server: scaffolding on HTTPServer2
         "role": "model",
         "parts": [
           {
-            "text": "The old lighthouse keeper, Silas, had seen countless storms. This one was different. The foghorn sputtered, then died. Silence swallowed the island as monstrous waves crashed against the base. He gripped his lucky compass, a gift from his late wife. He’d sworn to keep the light burning, no matter what.  Climbing to the lamp room, a rogue wave struck, plunging him into darkness. He awoke, drenched, the foghorn blasting, the lamp blazing. Had he dreamed it?  He smiled, clutching the compass. The sea always tested. He always survived.\n"
+            "text": "Elara loved the old lighthouse. Its beam, a nightly embrace, guided her soul. One storm-tossed evening, the light flickered, then died. Panic clawed at her. Ships relied on it! Braving the gale, she raced inside. The bulb was shattered. Frantically, she searched for a replacement, finding only a small, antique lantern. It was a feeble light, but all she had. She lit it, placing it high in the tower. A single, unwavering beacon in the storm. In the morning, a grateful ship captain radioed, \"Your little light saved us all.\"\n"
           }
         ]
       },
       "finishReason": "STOP",
-      "score": -103.98725891113281,
-      "avgLogprobs": -0.8738425118582589
+      "score": -99.268669128417969,
+      "avgLogprobs": -0.78784658038426958
     }
   ],
   "usageMetadata": {
     "promptTokenCount": 11,
-    "candidatesTokenCount": 119,
-    "totalTokenCount": 130,
+    "candidatesTokenCount": 126,
+    "totalTokenCount": 137,
     "billablePromptUsage": {
       "textCount": 23
     },
@@ -63,15 +63,15 @@ Server: scaffolding on HTTPServer2
     "candidatesTokensDetails": [
       {
         "modality": "TEXT",
-        "tokenCount": 119
+        "tokenCount": 126
       }
     ]
   },
   "modelVersion": "gemini-2.0-flash",
-  "createTime": "2025-07-24T03:03:47.117572Z",
-  "responseId": "k6KBaMSWB_CKmecPtPO6oAQ"
+  "createTime": "2025-07-28T17:23:21.331675Z",
+  "responseId": "CbKHaJufFL2Bm9IP_4Cy4QU"
 }
-e17ca8f2d5f72ccb341d158037a610564a8fedbeb84e1dc9e03229aef55eae59.req 1319
+58f74fbb6de4f839cb1bebf2d09a6464ec57935ac13aef6efe375de7ef2e67bb.req 1309
 a2599e11d3b74d741497018daf8e06b1523b07e1d75355eda6669722e5e648c6
 Server Address: us-central1-aiplatform.googleapis.com
 Port: 443
@@ -82,26 +82,26 @@ Accept: */*
 Accept-Encoding: gzip, deflate
 Accept-Language: *
 Connection: keep-alive
-Content-Length: 752
+Content-Length: 742
 Content-Type: application/json
 Sec-Fetch-Mode: cors
 Test-Name: Chats Tests sendMessage Vertex AI multilple messages
 
 
-{"contents":[{"parts":[{"text":"Tell me a story in 100 words?"}],"role":"user"},{"parts":[{"text":"The old lighthouse keeper, Silas, had seen countless storms. This one was different. The foghorn sputtered, then died. Silence swallowed the island as monstrous waves crashed against the base. He gripped his lucky compass, a gift from his late wife. He’d sworn to keep the light burning, no matter what.  Climbing to the lamp room, a rogue wave struck, plunging him into darkness. He awoke, drenched, the foghorn blasting, the lamp blazing. Had he dreamed it?  He smiled, clutching the compass. The sea always tested. He always survived.\n"}],"role":"model"},{"parts":[{"text":"What is the title of the story?"}],"role":"user"}],"generationConfig":{}}
-e17ca8f2d5f72ccb341d158037a610564a8fedbeb84e1dc9e03229aef55eae59.resp 1222
+{"contents":[{"parts":[{"text":"Tell me a story in 100 words?"}],"role":"user"},{"parts":[{"text":"Elara loved the old lighthouse. Its beam, a nightly embrace, guided her soul. One storm-tossed evening, the light flickered, then died. Panic clawed at her. Ships relied on it! Braving the gale, she raced inside. The bulb was shattered. Frantically, she searched for a replacement, finding only a small, antique lantern. It was a feeble light, but all she had. She lit it, placing it high in the tower. A single, unwavering beacon in the storm. In the morning, a grateful ship captain radioed, \"Your little light saved us all.\"\n"}],"role":"model"},{"parts":[{"text":"What is the title of the story?"}],"role":"user"}],"generationConfig":{}}
+58f74fbb6de4f839cb1bebf2d09a6464ec57935ac13aef6efe375de7ef2e67bb.resp 1316
 Status code: 200 
-X-Xss-Protection: 0
-X-Frame-Options: SAMEORIGIN
+Date: Mon, 28 Jul 2025 17:23:24 GMT
 Content-Type: application/json; charset=UTF-8
 Vary: Origin
 Vary: X-Origin
 Vary: Referer
-Content-Encoding: gzip
-X-Content-Type-Options: nosniff
-Date: Thu, 24 Jul 2025 03:03:49 GMT
 Server: scaffolding on HTTPServer2
-Content-Length: 489
+Content-Length: 531
+X-Xss-Protection: 0
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+Content-Encoding: gzip
 
 {
   "candidates": [
@@ -110,37 +110,37 @@ Content-Length: 489
         "role": "model",
         "parts": [
           {
-            "text": "While the story doesn't explicitly have a title, a fitting one could be **\"The Keeper's Test\"**.\n"
+            "text": "The title of the story could be something like:\n\n*   **Elara's Light**\n*   **The Little Lighthouse Keeper**\n*   **A Beacon in the Storm**\n*   **The Feeble Flame**\n*   **Saved by a Spark**"
           }
         ]
       },
       "finishReason": "STOP",
-      "score": -10.1986665725708,
-      "avgLogprobs": -0.39225640663733852
+      "score": -12.927204132080078,
+      "avgLogprobs": -0.2267930549487733
     }
   ],
   "usageMetadata": {
-    "promptTokenCount": 138,
-    "candidatesTokenCount": 26,
-    "totalTokenCount": 164,
+    "promptTokenCount": 145,
+    "candidatesTokenCount": 57,
+    "totalTokenCount": 202,
     "billablePromptUsage": {
-      "textCount": 496
+      "textCount": 486
     },
     "trafficType": "ON_DEMAND",
     "promptTokensDetails": [
       {
         "modality": "TEXT",
-        "tokenCount": 138
+        "tokenCount": 145
       }
     ],
     "candidatesTokensDetails": [
       {
         "modality": "TEXT",
-        "tokenCount": 26
+        "tokenCount": 57
       }
     ]
   },
   "modelVersion": "gemini-2.0-flash",
-  "createTime": "2025-07-24T03:03:48.609969Z",
-  "responseId": "lKKBaLGdJb6dmecPlbCEqA4"
+  "createTime": "2025-07-28T17:23:23.038284Z",
+  "responseId": "C7KHaIyrAr75ld8PzImqwQY"
 }

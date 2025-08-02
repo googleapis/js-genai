@@ -1,0 +1,39 @@
+57d069170731e0ac49a7ecfd7617ad7a7667383268507bc7051b147fc7438c15.req 765
+b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d
+Server Address: us-central1-aiplatform.googleapis.com
+Port: 443
+Protocol: https
+********************************************************************************
+POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash:streamGenerateContent?alt=sse HTTP/1.1
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: *
+Connection: keep-alive
+Content-Length: 180
+Content-Type: application/json
+Sec-Fetch-Mode: cors
+Test-Name: Chats Tests sendMessage Vertex AI with empty text stream
+
+
+{"contents":[{"parts":[{"text":"a=5"}],"role":"user"},{"parts":[{"text":""}],"role":"model"},{"parts":[{"text":"what is the value of a+10?"}],"role":"user"}],"generationConfig":{}}
+57d069170731e0ac49a7ecfd7617ad7a7667383268507bc7051b147fc7438c15.resp 1615
+Status code: 200 
+Server: scaffolding on HTTPServer2
+X-Xss-Protection: 0
+Content-Type: text/event-stream
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+Date: Mon, 28 Jul 2025 17:23:34 GMT
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+Content-Disposition: attachment
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": "Since"}]}}],"usageMetadata": {"billablePromptUsage": {"textCount": 24},"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:34.441113Z","responseId": "FrKHaJn2Gs2eld8Pgs7B0Ak"}
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " a = 5, then a + 10 = 5 + "}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:34.441113Z","responseId": "FrKHaJn2Gs2eld8Pgs7B0Ak"}
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": "10 = 15.\n\nSo the value of a + 1"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:34.441113Z","responseId": "FrKHaJn2Gs2eld8Pgs7B0Ak"}
+
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": "0 is $\\boxed{15}$.\n"}]},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 13,"candidatesTokenCount": 42,"totalTokenCount": 55,"trafficType": "ON_DEMAND","promptTokensDetails": [{"modality": "TEXT","tokenCount": 13}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 42}]},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:34.441113Z","responseId": "FrKHaJn2Gs2eld8Pgs7B0Ak"}
+

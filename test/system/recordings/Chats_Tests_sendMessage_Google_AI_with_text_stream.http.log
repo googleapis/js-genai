@@ -16,37 +16,41 @@ Test-Name: Chats Tests sendMessage Google AI with text stream
 
 
 {"contents":[{"parts":[{"text":"why is the sky blue?"}],"role":"user"}],"generationConfig":{}}
-0a69d38752929d45f2bdc07e55dce72949467dfc39dad93b7a8c2cd7a6a7e880.resp 4621
+0a69d38752929d45f2bdc07e55dce72949467dfc39dad93b7a8c2cd7a6a7e880.resp 5804
 Status code: 200 
 X-Xss-Protection: 0
-X-Frame-Options: SAMEORIGIN
-X-Content-Type-Options: nosniff
-Date: Thu, 24 Jul 2025 03:03:39 GMT
-Server: scaffolding on HTTPServer2
-Server-Timing: gfet4t7; dur=516
+Server-Timing: gfet4t7; dur=492
 Content-Type: text/event-stream
-Content-Disposition: attachment
 Vary: Origin
 Vary: X-Origin
 Vary: Referer
+Date: Mon, 28 Jul 2025 17:23:24 GMT
+Server: scaffolding on HTTPServer2
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+Content-Disposition: attachment
 
-data: {"candidates": [{"content": {"parts": [{"text": "The"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "i6KBaLjoE966xfcPr4WWmAs"}
+data: {"candidates": [{"content": {"parts": [{"text": "The"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "DLKHaPeGEoCPmNAPtpCLkAI"}
 
-data: {"candidates": [{"content": {"parts": [{"text": " sky is blue"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "i6KBaLjoE966xfcPr4WWmAs"}
+data: {"candidates": [{"content": {"parts": [{"text": " sky is blue"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "DLKHaPeGEoCPmNAPtpCLkAI"}
 
-data: {"candidates": [{"content": {"parts": [{"text": " due to a phenomenon called **Rayleigh scattering**. Here's the breakdown:\n\n*"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "i6KBaLjoE966xfcPr4WWmAs"}
+data: {"candidates": [{"content": {"parts": [{"text": " due to a phenomenon called **Rayleigh scattering**. Here's a breakdown:"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "DLKHaPeGEoCPmNAPtpCLkAI"}
 
-data: {"candidates": [{"content": {"parts": [{"text": "   **Sunlight and Colors:** Sunlight is actually made up of all the colors"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "i6KBaLjoE966xfcPr4WWmAs"}
+data: {"candidates": [{"content": {"parts": [{"text": "\n\n* **Sunlight and its Colors:** Sunlight appears white to our eyes, but it'"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "DLKHaPeGEoCPmNAPtpCLkAI"}
 
-data: {"candidates": [{"content": {"parts": [{"text": " of the rainbow.\n\n*   **Entering the Atmosphere:** When sunlight enters the Earth's atmosphere, it collides with tiny air molecules (mostly nitrogen and oxygen"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "i6KBaLjoE966xfcPr4WWmAs"}
+data: {"candidates": [{"content": {"parts": [{"text": "s actually made up of all the colors of the rainbow. Each color has a different wavelength. Blue and violet have the shortest wavelengths, while red has the longest.\n\n"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "DLKHaPeGEoCPmNAPtpCLkAI"}
 
-data: {"candidates": [{"content": {"parts": [{"text": ").\n\n*   **Scattering:** This collision causes the sunlight to scatter in different directions.\n\n*   **Rayleigh Scattering and Wavelength:** Rayleigh scattering"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "i6KBaLjoE966xfcPr4WWmAs"}
+data: {"candidates": [{"content": {"parts": [{"text": "* **Entering the Atmosphere:** When sunlight enters the Earth's atmosphere, it collides with tiny air molecules (mostly nitrogen and oxygen).\n\n* **Scattering"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "DLKHaPeGEoCPmNAPtpCLkAI"}
 
-data: {"candidates": [{"content": {"parts": [{"text": " is much more effective at scattering shorter wavelengths of light. Blue and violet light have shorter wavelengths than other colors like red, orange, and yellow.\n\n*   **Why Blue Dominates:** Violet light is scattered even more than blue, but our"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "i6KBaLjoE966xfcPr4WWmAs"}
+data: {"candidates": [{"content": {"parts": [{"text": ", Not Reflection:**  The air molecules don't reflect the light like a mirror. Instead, they *scatter* the light in different directions.\n\n* **Rayleigh Scattering in Action:** Rayleigh scattering is more effective at scattering shorter wavelengths of"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "DLKHaPeGEoCPmNAPtpCLkAI"}
 
-data: {"candidates": [{"content": {"parts": [{"text": " eyes are more sensitive to blue. Also, the sun emits slightly less violet light. So, blue light is scattered more effectively and is what we perceive as the color of the sky.\n\n*   **Sunsets and Sunrises:**"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "i6KBaLjoE966xfcPr4WWmAs"}
+data: {"candidates": [{"content": {"parts": [{"text": " light.  This means blue and violet light are scattered much more strongly than red and orange light.\n\n* **Why Blue, Not Violet?** While violet light has an even shorter wavelength than blue and is scattered even *more* effectively,"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "DLKHaPeGEoCPmNAPtpCLkAI"}
 
-data: {"candidates": [{"content": {"parts": [{"text": " At sunset and sunrise, the sun's light has to travel through more of the atmosphere to reach our eyes. This means that most of the blue light has already been scattered away, leaving the longer wavelengths like red and orange to dominate. That's why sunsets and sunrises often appear red, orange, or pink"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "i6KBaLjoE966xfcPr4WWmAs"}
+data: {"candidates": [{"content": {"parts": [{"text": " there are a couple of reasons we see blue instead:\n    * **Sunlight Composition:** The sun emits slightly less violet light than blue light.\n    * **Our Eyes:** Our eyes are also slightly more sensitive to blue than violet.\n\n* **What We See:** Because blue light is scattered so much more"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "DLKHaPeGEoCPmNAPtpCLkAI"}
 
-data: {"candidates": [{"content": {"parts": [{"text": ".\n\n**In summary:** The sky is blue because air molecules scatter blue light from the sun more than they scatter other colors.\n"}],"role": "model"},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 6,"candidatesTokenCount": 288,"totalTokenCount": 294,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 6}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 288}]},"modelVersion": "gemini-2.0-flash","responseId": "i6KBaLjoE966xfcPr4WWmAs"}
+data: {"candidates": [{"content": {"parts": [{"text": ", it spreads across the sky in all directions.  This scattered blue light reaches our eyes from all angles, making the sky appear blue.\n\n**In summary:**  The sky is blue because air molecules scatter blue light from the sun much more effectively than other colors.\n\n**What about sunsets?**\n\nWhen the sun is low"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "DLKHaPeGEoCPmNAPtpCLkAI"}
+
+data: {"candidates": [{"content": {"parts": [{"text": " on the horizon (during sunrise or sunset), sunlight has to travel through much more of the atmosphere to reach our eyes. During this longer journey:\n\n*  Most of the blue and violet light has already been scattered away.\n* The remaining light that reaches us is predominantly orange and red, which are scattered less and can"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "DLKHaPeGEoCPmNAPtpCLkAI"}
+
+data: {"candidates": [{"content": {"parts": [{"text": " travel farther through the atmosphere. This is why sunsets often appear orange or red.\n"}],"role": "model"},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 6,"candidatesTokenCount": 415,"totalTokenCount": 421,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 6}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 415}]},"modelVersion": "gemini-2.0-flash","responseId": "DLKHaPeGEoCPmNAPtpCLkAI"}
 

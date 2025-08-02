@@ -1,4 +1,4 @@
-fa922a72d3f8181048eec32d2b8caec7bcf679ac31bf3da3338fd840aeeda49f.req 683
+7d157adfe5f0f0d1eed02f5b7f995f59687f0984b50ed128c9db57f609643eca.req 684
 b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d
 Server Address: generativelanguage.googleapis.com
 Port: 443
@@ -9,27 +9,27 @@ Accept: */*
 Accept-Encoding: gzip, deflate
 Accept-Language: *
 Connection: keep-alive
-Content-Length: 182
+Content-Length: 180
 Content-Type: application/json
 Sec-Fetch-Mode: cors
-Test-Name: Chats Tests sendMessage Google AI with history
+Test-Name: Chats Tests sendMessage Google AI with empty text
 
 
-{"contents":[{"parts":[{"text":"a=5"}],"role":"user"},{"parts":[{"text":"b=10"}],"role":"user"},{"parts":[{"text":"what is the value of a+b?"}],"role":"user"}],"generationConfig":{}}
-fa922a72d3f8181048eec32d2b8caec7bcf679ac31bf3da3338fd840aeeda49f.resp 1001
+{"contents":[{"parts":[{"text":"a=5"}],"role":"user"},{"parts":[{"text":""}],"role":"model"},{"parts":[{"text":"what is the value of a+10?"}],"role":"user"}],"generationConfig":{}}
+7d157adfe5f0f0d1eed02f5b7f995f59687f0984b50ed128c9db57f609643eca.resp 1059
 Status code: 200 
-Server-Timing: gfet4t7; dur=551
-Content-Type: application/json; charset=UTF-8
+X-Content-Type-Options: nosniff
+Server-Timing: gfet4t7; dur=682
 Content-Encoding: gzip
+Date: Mon, 28 Jul 2025 17:23:18 GMT
 Server: scaffolding on HTTPServer2
 X-Xss-Protection: 0
 X-Frame-Options: SAMEORIGIN
+Content-Type: application/json; charset=UTF-8
 Vary: Origin
 Vary: X-Origin
 Vary: Referer
-Date: Mon, 28 Jul 2025 17:23:16 GMT
-Content-Length: 330
-X-Content-Type-Options: nosniff
+Content-Length: 368
 
 {
   "candidates": [
@@ -37,32 +37,32 @@ X-Content-Type-Options: nosniff
       "content": {
         "parts": [
           {
-            "text": "a + b = 5 + 10 = 15\n"
+            "text": "Given that a = 5, then a + 10 = 5 + 10 = 15.\n\nSo the answer is $\\boxed{15}$\n"
           }
         ],
         "role": "model"
       },
       "finishReason": "STOP",
-      "avgLogprobs": -0.027988727887471518
+      "avgLogprobs": -0.12683274294878985
     }
   ],
   "usageMetadata": {
-    "promptTokenCount": 16,
-    "candidatesTokenCount": 15,
-    "totalTokenCount": 31,
+    "promptTokenCount": 13,
+    "candidatesTokenCount": 37,
+    "totalTokenCount": 50,
     "promptTokensDetails": [
       {
         "modality": "TEXT",
-        "tokenCount": 16
+        "tokenCount": 13
       }
     ],
     "candidatesTokensDetails": [
       {
         "modality": "TEXT",
-        "tokenCount": 15
+        "tokenCount": 37
       }
     ]
   },
   "modelVersion": "gemini-2.0-flash",
-  "responseId": "BLKHaPXvE5uAn9kPnrKQ-Qg"
+  "responseId": "BbKHaI7-KJ2Bn9kPlI2r-Q8"
 }
