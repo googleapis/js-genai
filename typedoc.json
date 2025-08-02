@@ -5,7 +5,8 @@
     "src/index.ts",
     "src/web/**",
     "src/node/**",
-    "src/g3_node/**"
+    "src/g3_node/**",
+    "src/scripts/**"
   ],
   "excludePrivate": true,
   "excludeProtected": true,
