@@ -10,7 +10,6 @@
 * Add Lyria enum for music generation mode for vocalization ([b05821f](https://github.com/googleapis/js-genai/commit/b05821f5279ba0a579312fb66deafc79bf56fda5))
 * allow methods in batch to return headers in sdk_http_response by default ([55a2be4](https://github.com/googleapis/js-genai/commit/55a2be418f132788e5be6266c05ba42bf96c4aa1))
 * enable responseId for Gemini Developer API ([40e3a58](https://github.com/googleapis/js-genai/commit/40e3a58e31d09f77eb600c4e472965646ad7dd63))
-* parallelize api-extractor for ~3x speedup using npm-run-all, the build logic for all commands remains identical. ([da51a7f](https://github.com/googleapis/js-genai/commit/da51a7f0c3df87c27ad1fae4dda4d7fd84c2b222))
 * Support image recontext on Vertex ([e417867](https://github.com/googleapis/js-genai/commit/e417867f181ca3a577ed6089233d18110b5a6558))
 * Support new enum types for UrlRetrievalStatus ([88b47e6](https://github.com/googleapis/js-genai/commit/88b47e6f4bebea188bf7baec437a948e16d703bb))
 
