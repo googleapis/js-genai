@@ -1,6 +1,23 @@
 # Changelog
 
 
+## [1.13.0](https://github.com/googleapis/js-genai/compare/v1.12.0...v1.13.0) (2025-08-06)
+
+
+### Features
+
+* Add a new GitHub action to compute code coverage ([024dc47](https://github.com/googleapis/js-genai/commit/024dc47846e2ef886e664dd8b0ecb56aa3fc2634))
+* Add c8 dependency and 'coverage-report' script to report on code coverage ([aafa82e](https://github.com/googleapis/js-genai/commit/aafa82eaca655b41882c36e3bcb9133144d813f0))
+* Add image_size field for Gemini Developer API Imagen 4 generation ([9841ecb](https://github.com/googleapis/js-genai/commit/9841ecb359d57648e284271fdf3a477ca3c5d6f1))
+* Add Lyria enum for music generation mode for vocalization ([b05821f](https://github.com/googleapis/js-genai/commit/b05821f5279ba0a579312fb66deafc79bf56fda5))
+* allow methods in batch to return headers in sdk_http_response by default ([55a2be4](https://github.com/googleapis/js-genai/commit/55a2be418f132788e5be6266c05ba42bf96c4aa1))
+* enable responseId for Gemini Developer API ([40e3a58](https://github.com/googleapis/js-genai/commit/40e3a58e31d09f77eb600c4e472965646ad7dd63))
+* parallelize api-extractor for ~3x speedup using npm-run-all, the build logic for all commands remains identical. ([da51a7f](https://github.com/googleapis/js-genai/commit/da51a7f0c3df87c27ad1fae4dda4d7fd84c2b222))
+* Remove redundant calls to api-extractor, speeds up the TS SDK testing further by a factor of 2. ([2c17e45](https://github.com/googleapis/js-genai/commit/2c17e45002dc26e055964ff49568e1471b7711c0))
+* Remove redundant calls to api-extractor, speeds up the TS SDK testing further by a factor of 2. ([5929bd4](https://github.com/googleapis/js-genai/commit/5929bd4412b04fd7f3e50e351840b008b2ab3467))
+* Support image recontext on Vertex ([e417867](https://github.com/googleapis/js-genai/commit/e417867f181ca3a577ed6089233d18110b5a6558))
+* Support new enum types for UrlRetrievalStatus ([88b47e6](https://github.com/googleapis/js-genai/commit/88b47e6f4bebea188bf7baec437a948e16d703bb))
+
 ## [1.12.0](https://github.com/googleapis/js-genai/compare/v1.11.0...v1.12.0) (2025-07-30)
 
 
