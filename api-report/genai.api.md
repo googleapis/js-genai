@@ -983,7 +983,8 @@ export enum FunctionCallingConfigMode {
     ANY = "ANY",
     AUTO = "AUTO",
     MODE_UNSPECIFIED = "MODE_UNSPECIFIED",
-    NONE = "NONE"
+    NONE = "NONE",
+    VALIDATED = "VALIDATED"
 }
 
 // @public
