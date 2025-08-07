@@ -19,7 +19,7 @@ async function mcpSample(ai: GoogleGenAI) {
   const beepingClient = await spinUpBeepingServer();
 
   const response = await ai.models.generateContentStream({
-    model: 'gemini-2.5-flash-preview-04-17',
+    model: 'gemini-2.5-flash',
     contents:
       'Use the printer to print a simple math question in red and the answer in blue, and beep with the beeper, also tell me a joke. IMPORTANT DONT FORGET TO BEEP AT THE END',
     config: {

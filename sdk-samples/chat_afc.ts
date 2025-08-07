@@ -19,7 +19,7 @@ async function chatAutofcSample(ai: GoogleGenAI) {
   const multiplyClient = await spinUpMultiplyServer();
 
   const chat = await ai.chats.create({
-    model: 'gemini-2.5-flash-preview-04-17',
+    model: 'gemini-2.5-flash',
     config: {
       tools: [mcpToTool(weatherClient, multiplyClient)],
       toolConfig: {
