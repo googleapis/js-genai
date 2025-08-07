@@ -686,6 +686,15 @@ export enum EditMode {
   EDIT_MODE_PRODUCT_IMAGE = 'EDIT_MODE_PRODUCT_IMAGE',
 }
 
+/** Enum that represents the segmentation mode. */
+export enum SegmentMode {
+  foreground = 'foreground',
+  background = 'background',
+  prompt = 'prompt',
+  semantic = 'semantic',
+  interactive = 'interactive',
+}
+
 /** Enum that controls the compression quality of the generated videos. */
 export enum VideoCompressionQuality {
   /**
@@ -2918,6 +2927,88 @@ export declare interface RecontextImageParameters {
 export class RecontextImageResponse {
   /** List of generated images. */
   generatedImages?: GeneratedImage[];
+}
+
+/** An image mask representing a brush scribble. */
+export declare interface ScribbleImage {
+  /** The brush scribble to guide segmentation. Valid for the interactive mode. */
+  image?: Image;
+}
+
+/** A set of source input(s) for image segmentation. */
+export declare interface SegmentImageSource {
+  /** A text prompt for guiding the model during image segmentation.
+      Required for prompt mode and semantic mode, disallowed for other modes. */
+  prompt?: string;
+  /** The image to be segmented. */
+  image?: Image;
+  /** The brush scribble to guide segmentation.
+      Required for the interactive mode, disallowed for other modes. */
+  scribbleImage?: ScribbleImage;
+}
+
+/** Configuration for segmenting an image. */
+export declare interface SegmentImageConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
+  /** The segmentation mode to use. */
+  mode?: SegmentMode;
+  /** The maximum number of predictions to return up to, by top
+      confidence score. */
+  maxPredictions?: number;
+  /** The confidence score threshold for the detections as a decimal
+      value. Only predictions with a confidence score higher than this
+      threshold will be returned. */
+  confidenceThreshold?: number;
+  /** A decimal value representing how much dilation to apply to the
+      masks. 0 for no dilation. 1.0 means the masked area covers the whole
+      image. */
+  maskDilation?: number;
+  /** The binary color threshold to apply to the masks. The threshold
+      can be set to a decimal value between 0 and 255 non-inclusive.
+      Set to -1 for no binary color thresholding. */
+  binaryColorThreshold?: number;
+}
+
+/** The parameters for segmenting an image. */
+export declare interface SegmentImageParameters {
+  /** ID of the model to use. For a list of models, see `Google models
+    <https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models>`_. */
+  model: string;
+  /** A set of source input(s) for image segmentation. */
+  source: SegmentImageSource;
+  /** Configuration for image segmentation. */
+  config?: SegmentImageConfig;
+}
+
+/** An entity representing the segmented area. */
+export declare interface EntityLabel {
+  /** The label of the segmented entity. */
+  label?: string;
+  /** The confidence score of the detected label. */
+  score?: number;
+}
+
+/** A generated image mask. */
+export declare interface GeneratedImageMask {
+  /** The generated image mask. */
+  mask?: Image;
+  /** The detected entities on the segmented area. */
+  labels?: EntityLabel[];
+}
+
+/** The output images response. */
+export class SegmentImageResponse {
+  /** List of generated image masks.
+   */
+  generatedMasks?: GeneratedImageMask[];
 }
 
 /** Optional parameters for models.get method. */

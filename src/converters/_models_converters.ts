@@ -3773,6 +3773,145 @@ export function recontextImageParametersToVertex(
   return toObject;
 }
 
+export function scribbleImageToVertex(
+  fromObject: types.ScribbleImage,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromImage = common.getValueByPath(fromObject, ['image']);
+  if (fromImage != null) {
+    common.setValueByPath(toObject, ['image'], imageToVertex(fromImage));
+  }
+
+  return toObject;
+}
+
+export function segmentImageSourceToVertex(
+  fromObject: types.SegmentImageSource,
+  parentObject: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromPrompt = common.getValueByPath(fromObject, ['prompt']);
+  if (parentObject !== undefined && fromPrompt != null) {
+    common.setValueByPath(parentObject, ['instances[0]', 'prompt'], fromPrompt);
+  }
+
+  const fromImage = common.getValueByPath(fromObject, ['image']);
+  if (parentObject !== undefined && fromImage != null) {
+    common.setValueByPath(
+      parentObject,
+      ['instances[0]', 'image'],
+      imageToVertex(fromImage),
+    );
+  }
+
+  const fromScribbleImage = common.getValueByPath(fromObject, [
+    'scribbleImage',
+  ]);
+  if (parentObject !== undefined && fromScribbleImage != null) {
+    common.setValueByPath(
+      parentObject,
+      ['instances[0]', 'scribble'],
+      scribbleImageToVertex(fromScribbleImage),
+    );
+  }
+
+  return toObject;
+}
+
+export function segmentImageConfigToVertex(
+  fromObject: types.SegmentImageConfig,
+  parentObject: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromMode = common.getValueByPath(fromObject, ['mode']);
+  if (parentObject !== undefined && fromMode != null) {
+    common.setValueByPath(parentObject, ['parameters', 'mode'], fromMode);
+  }
+
+  const fromMaxPredictions = common.getValueByPath(fromObject, [
+    'maxPredictions',
+  ]);
+  if (parentObject !== undefined && fromMaxPredictions != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'maxPredictions'],
+      fromMaxPredictions,
+    );
+  }
+
+  const fromConfidenceThreshold = common.getValueByPath(fromObject, [
+    'confidenceThreshold',
+  ]);
+  if (parentObject !== undefined && fromConfidenceThreshold != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'confidenceThreshold'],
+      fromConfidenceThreshold,
+    );
+  }
+
+  const fromMaskDilation = common.getValueByPath(fromObject, ['maskDilation']);
+  if (parentObject !== undefined && fromMaskDilation != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'maskDilation'],
+      fromMaskDilation,
+    );
+  }
+
+  const fromBinaryColorThreshold = common.getValueByPath(fromObject, [
+    'binaryColorThreshold',
+  ]);
+  if (parentObject !== undefined && fromBinaryColorThreshold != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'binaryColorThreshold'],
+      fromBinaryColorThreshold,
+    );
+  }
+
+  return toObject;
+}
+
+export function segmentImageParametersToVertex(
+  apiClient: ApiClient,
+  fromObject: types.SegmentImageParameters,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromModel = common.getValueByPath(fromObject, ['model']);
+  if (fromModel != null) {
+    common.setValueByPath(
+      toObject,
+      ['_url', 'model'],
+      t.tModel(apiClient, fromModel),
+    );
+  }
+
+  const fromSource = common.getValueByPath(fromObject, ['source']);
+  if (fromSource != null) {
+    common.setValueByPath(
+      toObject,
+      ['config'],
+      segmentImageSourceToVertex(fromSource, toObject),
+    );
+  }
+
+  const fromConfig = common.getValueByPath(fromObject, ['config']);
+  if (fromConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['config'],
+      segmentImageConfigToVertex(fromConfig, toObject),
+    );
+  }
+
+  return toObject;
+}
+
 export function getModelParametersToVertex(
   apiClient: ApiClient,
   fromObject: types.GetModelParameters,
@@ -5737,6 +5876,67 @@ export function recontextImageResponseFromVertex(
       });
     }
     common.setValueByPath(toObject, ['generatedImages'], transformedList);
+  }
+
+  return toObject;
+}
+
+export function entityLabelFromVertex(
+  fromObject: types.EntityLabel,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromLabel = common.getValueByPath(fromObject, ['label']);
+  if (fromLabel != null) {
+    common.setValueByPath(toObject, ['label'], fromLabel);
+  }
+
+  const fromScore = common.getValueByPath(fromObject, ['score']);
+  if (fromScore != null) {
+    common.setValueByPath(toObject, ['score'], fromScore);
+  }
+
+  return toObject;
+}
+
+export function generatedImageMaskFromVertex(
+  fromObject: types.GeneratedImageMask,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromMask = common.getValueByPath(fromObject, ['_self']);
+  if (fromMask != null) {
+    common.setValueByPath(toObject, ['mask'], imageFromVertex(fromMask));
+  }
+
+  const fromLabels = common.getValueByPath(fromObject, ['labels']);
+  if (fromLabels != null) {
+    let transformedList = fromLabels;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return entityLabelFromVertex(item);
+      });
+    }
+    common.setValueByPath(toObject, ['labels'], transformedList);
+  }
+
+  return toObject;
+}
+
+export function segmentImageResponseFromVertex(
+  fromObject: types.SegmentImageResponse,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromGeneratedMasks = common.getValueByPath(fromObject, ['predictions']);
+  if (fromGeneratedMasks != null) {
+    let transformedList = fromGeneratedMasks;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return generatedImageMaskFromVertex(item);
+      });
+    }
+    common.setValueByPath(toObject, ['generatedMasks'], transformedList);
   }
 
   return toObject;
