@@ -29,7 +29,7 @@ const responseLineRE = /^data: (.*)(?:\n\n|\r\r|\r\n\r\n)/;
 
 /**
  * Options for initializing the ApiClient. The ApiClient uses the parameters
- * for authentication purposes as well as to infer if SDK should send the
+ * for authentication purposes as well as to infer ifx SDK should send the
  * request to Vertex AI or Gemini API.
  */
 export interface ApiClientInitOptions {
