@@ -3343,7 +3343,7 @@ export declare interface TunedModelCheckpoint {
 }
 
 export declare interface TunedModel {
-  /** Output only. The resource name of the TunedModel. Format: `projects/{project}/locations/{location}/models/{model}`. */
+  /** Output only. The resource name of the TunedModel. Format: `projects/{project}/locations/{location}/models/{model}@{version_id}` When tuning from a base model, the version_id will be 1. For continuous tuning, the version id will be incremented by 1 from the last version id in the parent model. E.g., `projects/{project}/locations/{location}/models/{model}@{last_version_id + 1}` */
   model?: string;
   /** Output only. A resource name of an Endpoint. Format: `projects/{project}/locations/{location}/endpoints/{endpoint}`. */
   endpoint?: string;
@@ -3361,6 +3361,16 @@ export declare interface GoogleRpcStatus {
   details?: Record<string, unknown>[];
   /** A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the google.rpc.Status.details field, or localized by the client. */
   message?: string;
+}
+
+/** A pre-tuned model for continuous tuning. */
+export declare interface PreTunedModel {
+  /** The resource name of the Model. E.g., a model resource name with a specified version id or alias: `projects/{project}/locations/{location}/models/{model}@{version_id}` `projects/{project}/locations/{location}/models/{model}@{alias}` Or, omit the version id to use the default version: `projects/{project}/locations/{location}/models/{model}` */
+  tunedModelName?: string;
+  /** Optional. The source checkpoint id. If not specified, the default checkpoint will be used. */
+  checkpointId?: string;
+  /** Output only. The name of the base model this PreTunedModel was tuned from. */
+  baseModel?: string;
 }
 
 /** Hyperparameters for SFT. */
@@ -3577,6 +3587,8 @@ export declare interface TuningJob {
   baseModel?: string;
   /** Output only. The tuned model resources associated with this TuningJob. */
   tunedModel?: TunedModel;
+  /** The pre-tuned model for continuous tuning. */
+  preTunedModel?: PreTunedModel;
   /** Tuning Spec for Supervised Fine Tuning. */
   supervisedTuningSpec?: SupervisedTuningSpec;
   /** Output only. The tuning data statistics associated with this TuningJob. */
@@ -3681,6 +3693,8 @@ export declare interface CreateTuningJobConfig {
   learningRateMultiplier?: number;
   /** If set to true, disable intermediate checkpoints for SFT and only the last checkpoint will be exported. Otherwise, enable intermediate checkpoints for SFT. */
   exportLastCheckpointOnly?: boolean;
+  /** The optional checkpoint id of the pre-tuned model to use for tuning, if applicable. */
+  preTunedModelCheckpointId?: string;
   /** Adapter size for tuning. */
   adapterSize?: AdapterSize;
   /** The batch size hyperparameter for tuning. If not set, a default of 4 or 16 will be used based on the number of training examples. */
@@ -3690,9 +3704,11 @@ export declare interface CreateTuningJobConfig {
 }
 
 /** Supervised fine-tuning job creation parameters - optional fields. */
-export declare interface CreateTuningJobParameters {
-  /** The base model that is being tuned, e.g., "gemini-1.0-pro-002". */
-  baseModel: string;
+export declare interface CreateTuningJobParametersPrivate {
+  /** The base model that is being tuned, e.g., "gemini-2.5-flash". */
+  baseModel?: string;
+  /** The PreTunedModel that is being tuned. */
+  preTunedModel?: PreTunedModel;
   /** Cloud Storage path to file containing training dataset for tuning. The dataset must be formatted as a JSONL file. */
   trainingDataset: TuningDataset;
   /** Configuration for the tuning job. */
@@ -4984,6 +5000,16 @@ export class GenerateVideosOperation
     }
     return operation;
   }
+}
+
+/** Supervised fine-tuning job creation parameters - optional fields. */
+export declare interface CreateTuningJobParameters {
+  /** The base model that is being tuned, e.g., "gemini-2.5-flash". */
+  baseModel: string;
+  /** Cloud Storage path to file containing training dataset for tuning. The dataset must be formatted as a JSONL file. */
+  trainingDataset: TuningDataset;
+  /** Configuration for the tuning job. */
+  config?: CreateTuningJobConfig;
 }
 
 /** Configures automatic detection of activity. */

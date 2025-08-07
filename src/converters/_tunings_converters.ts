@@ -174,6 +174,15 @@ export function createTuningJobConfigToMldev(
     );
   }
 
+  if (
+    common.getValueByPath(fromObject, ['preTunedModelCheckpointId']) !==
+    undefined
+  ) {
+    throw new Error(
+      'preTunedModelCheckpointId parameter is not supported in Gemini API.',
+    );
+  }
+
   if (common.getValueByPath(fromObject, ['adapterSize']) !== undefined) {
     throw new Error('adapterSize parameter is not supported in Gemini API.');
   }
@@ -199,14 +208,21 @@ export function createTuningJobConfigToMldev(
   return toObject;
 }
 
-export function createTuningJobParametersToMldev(
-  fromObject: types.CreateTuningJobParameters,
+export function createTuningJobParametersPrivateToMldev(
+  fromObject: types.CreateTuningJobParametersPrivate,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromBaseModel = common.getValueByPath(fromObject, ['baseModel']);
   if (fromBaseModel != null) {
     common.setValueByPath(toObject, ['baseModel'], fromBaseModel);
+  }
+
+  const fromPreTunedModel = common.getValueByPath(fromObject, [
+    'preTunedModel',
+  ]);
+  if (fromPreTunedModel != null) {
+    common.setValueByPath(toObject, ['preTunedModel'], fromPreTunedModel);
   }
 
   const fromTrainingDataset = common.getValueByPath(fromObject, [
@@ -413,6 +429,17 @@ export function createTuningJobConfigToVertex(
     );
   }
 
+  const fromPreTunedModelCheckpointId = common.getValueByPath(fromObject, [
+    'preTunedModelCheckpointId',
+  ]);
+  if (fromPreTunedModelCheckpointId != null) {
+    common.setValueByPath(
+      toObject,
+      ['preTunedModel', 'checkpointId'],
+      fromPreTunedModelCheckpointId,
+    );
+  }
+
   const fromAdapterSize = common.getValueByPath(fromObject, ['adapterSize']);
   if (parentObject !== undefined && fromAdapterSize != null) {
     common.setValueByPath(
@@ -433,14 +460,21 @@ export function createTuningJobConfigToVertex(
   return toObject;
 }
 
-export function createTuningJobParametersToVertex(
-  fromObject: types.CreateTuningJobParameters,
+export function createTuningJobParametersPrivateToVertex(
+  fromObject: types.CreateTuningJobParametersPrivate,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromBaseModel = common.getValueByPath(fromObject, ['baseModel']);
   if (fromBaseModel != null) {
     common.setValueByPath(toObject, ['baseModel'], fromBaseModel);
+  }
+
+  const fromPreTunedModel = common.getValueByPath(fromObject, [
+    'preTunedModel',
+  ]);
+  if (fromPreTunedModel != null) {
+    common.setValueByPath(toObject, ['preTunedModel'], fromPreTunedModel);
   }
 
   const fromTrainingDataset = common.getValueByPath(fromObject, [
@@ -793,6 +827,13 @@ export function tuningJobFromVertex(
       ['tunedModel'],
       tunedModelFromVertex(fromTunedModel),
     );
+  }
+
+  const fromPreTunedModel = common.getValueByPath(fromObject, [
+    'preTunedModel',
+  ]);
+  if (fromPreTunedModel != null) {
+    common.setValueByPath(toObject, ['preTunedModel'], fromPreTunedModel);
   }
 
   const fromSupervisedTuningSpec = common.getValueByPath(fromObject, [

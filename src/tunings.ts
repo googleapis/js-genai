@@ -66,9 +66,27 @@ export class Tunings extends BaseModule {
     params: types.CreateTuningJobParameters,
   ): Promise<types.TuningJob> => {
     if (this.apiClient.isVertexAI()) {
-      return await this.tuneInternal(params);
+      if (params.baseModel.startsWith('projects/')) {
+        const preTunedModel: types.PreTunedModel = {
+          tunedModelName: params.baseModel,
+        };
+        const paramsPrivate: types.CreateTuningJobParametersPrivate = {
+          ...params,
+          preTunedModel: preTunedModel,
+        };
+        paramsPrivate.baseModel = undefined;
+        return await this.tuneInternal(paramsPrivate);
+      } else {
+        const paramsPrivate: types.CreateTuningJobParametersPrivate = {
+          ...params,
+        };
+        return await this.tuneInternal(paramsPrivate);
+      }
     } else {
-      const operation = await this.tuneMldevInternal(params);
+      const paramsPrivate: types.CreateTuningJobParametersPrivate = {
+        ...params,
+      };
+      const operation = await this.tuneMldevInternal(paramsPrivate);
       let tunedModelName = '';
       if (
         operation['metadata'] !== undefined &&
@@ -253,14 +271,14 @@ export class Tunings extends BaseModule {
   }
 
   private async tuneInternal(
-    params: types.CreateTuningJobParameters,
+    params: types.CreateTuningJobParametersPrivate,
   ): Promise<types.TuningJob> {
     let response: Promise<types.TuningJob>;
 
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      const body = converters.createTuningJobParametersToVertex(params);
+      const body = converters.createTuningJobParametersPrivateToVertex(params);
       path = common.formatMap(
         'tuningJobs',
         body['_url'] as Record<string, unknown>,
@@ -300,7 +318,7 @@ export class Tunings extends BaseModule {
   }
 
   private async tuneMldevInternal(
-    params: types.CreateTuningJobParameters,
+    params: types.CreateTuningJobParametersPrivate,
   ): Promise<types.TuningOperation> {
     let response: Promise<types.TuningOperation>;
 
@@ -311,7 +329,7 @@ export class Tunings extends BaseModule {
         'This method is only supported by the Gemini Developer API.',
       );
     } else {
-      const body = converters.createTuningJobParametersToMldev(params);
+      const body = converters.createTuningJobParametersPrivateToMldev(params);
       path = common.formatMap(
         'tunedModels',
         body['_url'] as Record<string, unknown>,
