@@ -69,24 +69,6 @@ export function listTuningJobsParametersToMldev(
   return toObject;
 }
 
-export function tuningExampleToMldev(
-  fromObject: types.TuningExample,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromTextInput = common.getValueByPath(fromObject, ['textInput']);
-  if (fromTextInput != null) {
-    common.setValueByPath(toObject, ['textInput'], fromTextInput);
-  }
-
-  const fromOutput = common.getValueByPath(fromObject, ['output']);
-  if (fromOutput != null) {
-    common.setValueByPath(toObject, ['output'], fromOutput);
-  }
-
-  return toObject;
-}
-
 export function tuningDatasetToMldev(
   fromObject: types.TuningDataset,
 ): Record<string, unknown> {
@@ -102,17 +84,6 @@ export function tuningDatasetToMldev(
     throw new Error(
       'vertexDatasetResource parameter is not supported in Gemini API.',
     );
-  }
-
-  const fromExamples = common.getValueByPath(fromObject, ['examples']);
-  if (fromExamples != null) {
-    let transformedList = fromExamples;
-    if (Array.isArray(transformedList)) {
-      transformedList = transformedList.map((item) => {
-        return tuningExampleToMldev(item);
-      });
-    }
-    common.setValueByPath(toObject, ['examples', 'examples'], transformedList);
   }
 
   return toObject;
@@ -176,24 +147,6 @@ export function createTuningJobConfigToMldev(
 
   if (common.getValueByPath(fromObject, ['adapterSize']) !== undefined) {
     throw new Error('adapterSize parameter is not supported in Gemini API.');
-  }
-
-  const fromBatchSize = common.getValueByPath(fromObject, ['batchSize']);
-  if (parentObject !== undefined && fromBatchSize != null) {
-    common.setValueByPath(
-      parentObject,
-      ['tuningTask', 'hyperparameters', 'batchSize'],
-      fromBatchSize,
-    );
-  }
-
-  const fromLearningRate = common.getValueByPath(fromObject, ['learningRate']);
-  if (parentObject !== undefined && fromLearningRate != null) {
-    common.setValueByPath(
-      parentObject,
-      ['tuningTask', 'hyperparameters', 'learningRate'],
-      fromLearningRate,
-    );
   }
 
   return toObject;
@@ -317,10 +270,6 @@ export function tuningDatasetToVertex(
     );
   }
 
-  if (common.getValueByPath(fromObject, ['examples']) !== undefined) {
-    throw new Error('examples parameter is not supported in Vertex AI.');
-  }
-
   return toObject;
 }
 
@@ -420,14 +369,6 @@ export function createTuningJobConfigToVertex(
       ['supervisedTuningSpec', 'hyperParameters', 'adapterSize'],
       fromAdapterSize,
     );
-  }
-
-  if (common.getValueByPath(fromObject, ['batchSize']) !== undefined) {
-    throw new Error('batchSize parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['learningRate']) !== undefined) {
-    throw new Error('learningRate parameter is not supported in Vertex AI.');
   }
 
   return toObject;
