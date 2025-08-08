@@ -339,6 +339,30 @@ if you are specifying those, you need to explicitly provide the full
 `Content[]` structure making it explicit which Parts are 'spoken' by the model,
 or the user. The SDK will throw an exception if you try this.
 
+## Error Handling
+
+To handle errors raised by the API, the SDK provides this [ApiError](https://github.com/googleapis/js-genai/blob/main/src/errors.ts) class.
+
+```typescript
+import {GoogleGenAI} from '@google/genai';
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+
+const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
+
+async function main() {
+  await ai.models.generateContent({
+    model: 'non-existent-model',
+    contents: 'Write a 100-word poem.',
+  }).catch((e) => {
+    console.error('error name: ', e.name);
+    console.error('error message: ', e.message);
+    console.error('error status: ', e.status);
+  });
+}
+
+main();
+```
+
 ## How is this different from the other Google AI SDKs
 This SDK (`@google/genai`) is Google Deepmind’s "vanilla" SDK for its generative
 AI offerings, and is where Google Deepmind adds new AI features.
