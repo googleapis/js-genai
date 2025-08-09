@@ -57,13 +57,6 @@ describe('sendMessage invalid response', () => {
       name: 'GenerateContent returns default part',
       response: buildGenerateContentResponse({parts: [{}], role: 'model'}),
     },
-    {
-      name: 'GenerateContent returns part with empty text',
-      response: buildGenerateContentResponse({
-        parts: [{text: ''}],
-        role: 'model',
-      }),
-    },
   ];
 
   testCases.forEach(async (testCase) => {
@@ -105,6 +98,9 @@ describe('sendMessage valid response', () => {
                 {
                   text: 'valid response 1',
                 },
+                {
+                  text: '',
+                },
               ],
             },
           },
@@ -130,7 +126,7 @@ describe('sendMessage valid response', () => {
       model: 'gemini-1.5-flash',
       contents: [
         {role: 'user', parts: [{text: 'send message 1'}]},
-        {role: 'model', parts: [{text: 'valid response 1'}]},
+        {role: 'model', parts: [{text: 'valid response 1'}, {text: ''}]},
         {role: 'user', parts: [{text: 'send message 2'}]},
       ],
       config: {},
@@ -542,7 +538,7 @@ describe('create chat with history', () => {
     const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
     const comprehensiveHistory = [
       {role: 'model', parts: [{text: 'model content 1'}]},
-      {role: 'model', parts: [{text: ''}]}, // invalid content
+      {role: 'model', parts: [{}]}, // invalid content
       {role: 'model', parts: [{text: 'model content 2'}]},
     ];
     const chat = client.chats.create({
@@ -604,7 +600,7 @@ describe('create chat with history', () => {
     const comprehensiveHistory = [
       {role: 'user', parts: [{text: 'user content 1'}]},
       {role: 'user', parts: [{text: 'user content 2'}]},
-      {role: 'model', parts: [{text: ''}]}, // invalid content
+      {role: 'model', parts: [{}]}, // invalid content
     ];
     const chat = client.chats.create({
       model: 'gemini-1.5-flash',
@@ -765,7 +761,7 @@ describe('getHistory', () => {
   it('invalid model response is not added to curated history', async () => {
     const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
     const modelsModule = client.models;
-    const invalidContent = {parts: [{text: ''}], role: 'model'};
+    const invalidContent = {parts: [{}], role: 'model'};
     const mockResponse = buildGenerateContentResponse(invalidContent);
     spyOn(modelsModule, 'generateContent').and.returnValue(
       Promise.resolve(mockResponse),

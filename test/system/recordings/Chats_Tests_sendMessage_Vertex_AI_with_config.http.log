@@ -16,19 +16,19 @@ Test-Name: Chats Tests sendMessage Vertex AI with config
 
 
 {"contents":[{"parts":[{"text":"why is the sky blue?"}],"role":"user"}],"generationConfig":{"temperature":0.5,"maxOutputTokens":20}}
-d852ec8aa2ec8edf10ccc0e86162fee0bd7c8dd19976cf5da0f6a068e8135148.resp 1212
+d852ec8aa2ec8edf10ccc0e86162fee0bd7c8dd19976cf5da0f6a068e8135148.resp 1216
 Status code: 200 
-X-Xss-Protection: 0
 X-Frame-Options: SAMEORIGIN
-Content-Encoding: gzip
-Server: scaffolding on HTTPServer2
-Content-Length: 479
-X-Content-Type-Options: nosniff
-Content-Type: application/json; charset=UTF-8
 Vary: Origin
 Vary: X-Origin
 Vary: Referer
-Date: Thu, 24 Jul 2025 03:03:24 GMT
+Content-Encoding: gzip
+Date: Mon, 28 Jul 2025 17:23:16 GMT
+Content-Length: 484
+X-Xss-Protection: 0
+X-Content-Type-Options: nosniff
+Content-Type: application/json; charset=UTF-8
+Server: scaffolding on HTTPServer2
 
 {
   "candidates": [
@@ -37,13 +37,13 @@ Date: Thu, 24 Jul 2025 03:03:24 GMT
         "role": "model",
         "parts": [
           {
-            "text": "The sky is blue due to a phenomenon called **Rayleigh scattering**. Here's a breakdown of"
+            "text": "The sky is blue because of a phenomenon called **Rayleigh scattering**. Here's a breakdown:"
           }
         ]
       },
       "finishReason": "MAX_TOKENS",
-      "score": -2.538928747177124,
-      "avgLogprobs": -0.12694643735885619
+      "score": -1.6825833320617676,
+      "avgLogprobs": -0.084129166603088376
     }
   ],
   "usageMetadata": {
@@ -68,6 +68,6 @@ Date: Thu, 24 Jul 2025 03:03:24 GMT
     ]
   },
   "modelVersion": "gemini-2.0-flash",
-  "createTime": "2025-07-24T03:03:23.736615Z",
-  "responseId": "e6KBaOf6LLOVmecPjvaTyA0"
+  "createTime": "2025-07-28T17:23:15.630725Z",
+  "responseId": "A7KHaMW_Jv2gm9IPidTS6QM"
 }

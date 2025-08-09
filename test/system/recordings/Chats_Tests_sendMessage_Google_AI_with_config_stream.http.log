@@ -16,23 +16,23 @@ Test-Name: Chats Tests sendMessage Google AI with config stream
 
 
 {"contents":[{"parts":[{"text":"why is the sky blue?"}],"role":"user"}],"generationConfig":{"temperature":0.5,"maxOutputTokens":20}}
-c41bf8d14651b86bd5b9cf7bcb7cb11b7662458c20bbf4f252138250f27f65ed.resp 1374
+c41bf8d14651b86bd5b9cf7bcb7cb11b7662458c20bbf4f252138250f27f65ed.resp 1364
 Status code: 200 
-Content-Disposition: attachment
-Server: scaffolding on HTTPServer2
-Content-Type: text/event-stream
 Vary: Origin
 Vary: X-Origin
 Vary: Referer
-Date: Thu, 24 Jul 2025 03:03:51 GMT
-X-Xss-Protection: 0
+Date: Mon, 28 Jul 2025 17:23:31 GMT
+Server: scaffolding on HTTPServer2
 X-Frame-Options: SAMEORIGIN
 X-Content-Type-Options: nosniff
-Server-Timing: gfet4t7; dur=521
+Server-Timing: gfet4t7; dur=486
+Content-Type: text/event-stream
+Content-Disposition: attachment
+X-Xss-Protection: 0
 
-data: {"candidates": [{"content": {"parts": [{"text": "The"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "l6KBaPfqGI6MmNAPxYqk6QU"}
+data: {"candidates": [{"content": {"parts": [{"text": "The"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "E7KHaIf_DaOTmNAP-v3W0Q4"}
 
-data: {"candidates": [{"content": {"parts": [{"text": " sky is blue"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "l6KBaPfqGI6MmNAPxYqk6QU"}
+data: {"candidates": [{"content": {"parts": [{"text": " sky is blue"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 7,"totalTokenCount": 7,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 7}]},"modelVersion": "gemini-2.0-flash","responseId": "E7KHaIf_DaOTmNAP-v3W0Q4"}
 
-data: {"candidates": [{"content": {"parts": [{"text": " due to a phenomenon called **Rayleigh scattering**. Here's a simplified explanation"}],"role": "model"},"finishReason": "MAX_TOKENS"}],"usageMetadata": {"promptTokenCount": 6,"candidatesTokenCount": 20,"totalTokenCount": 26,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 6}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 20}]},"modelVersion": "gemini-2.0-flash","responseId": "l6KBaPfqGI6MmNAPxYqk6QU"}
+data: {"candidates": [{"content": {"parts": [{"text": " due to a phenomenon called **Rayleigh scattering**. Here's the breakdown:"}],"role": "model"},"finishReason": "MAX_TOKENS"}],"usageMetadata": {"promptTokenCount": 6,"candidatesTokenCount": 20,"totalTokenCount": 26,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 6}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 20}]},"modelVersion": "gemini-2.0-flash","responseId": "E7KHaIf_DaOTmNAP-v3W0Q4"}
 

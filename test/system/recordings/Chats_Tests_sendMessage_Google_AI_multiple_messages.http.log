@@ -16,20 +16,20 @@ Test-Name: Chats Tests sendMessage Google AI multiple messages
 
 
 {"contents":[{"parts":[{"text":"Tell me a story in 100 words?"}],"role":"user"}],"generationConfig":{}}
-3b552190d305db6690777b23ae53a02d2a6c5701936d9c49845b6816e15df237.resp 1448
+3b552190d305db6690777b23ae53a02d2a6c5701936d9c49845b6816e15df237.resp 1531
 Status code: 200 
-Content-Type: application/json; charset=UTF-8
 Vary: Origin
 Vary: X-Origin
 Vary: Referer
-Content-Encoding: gzip
-Date: Thu, 24 Jul 2025 03:03:42 GMT
-X-Xss-Protection: 0
-X-Content-Type-Options: nosniff
-Server-Timing: gfet4t7; dur=1245
 Server: scaffolding on HTTPServer2
-Content-Length: 579
+Content-Length: 626
+X-Xss-Protection: 0
 X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+Content-Encoding: gzip
+Date: Mon, 28 Jul 2025 17:23:20 GMT
+Server-Timing: gfet4t7; dur=1498
+Content-Type: application/json; charset=UTF-8
 
 {
   "candidates": [
@@ -37,19 +37,19 @@ X-Frame-Options: SAMEORIGIN
       "content": {
         "parts": [
           {
-            "text": "The lighthouse keeper, Silas, found a message in a bottle washed ashore. It read, \"Turn back. The sea remembers.\" He chuckled, dismissing it as a prank. That night, a monstrous wave slammed against the tower, shaking it to its core. The light flickered, died. Silas, thrown against the wall, saw the face in the crashing water – a face of rage, of deep, ancient hurt. The sea had remembered. Silas, regretting his dismissal, braced himself for the inevitable.\n"
+            "text": "The lighthouse keeper, Silas, loved storms. He'd watch the waves crash, a comforting fury. One night, a smaller vessel, a fishing trawler, faltered in the gale. Its lights flickered, then died. Silas, ignoring protocol, roared the foghorn, its mournful cry cutting through the tempest. He kept it bellowing, a beacon of hope. Finally, hours later, a weak radio signal crackled through: \"Heard the horn... made it to shore... thank you.\" Silas smiled, the lighthouse beam cutting through the darkness. He wasn't just a keeper; he was a lifeline.\n"
           }
         ],
         "role": "model"
       },
       "finishReason": "STOP",
-      "avgLogprobs": -0.86216024252084589
+      "avgLogprobs": -0.87061135599932338
     }
   ],
   "usageMetadata": {
     "promptTokenCount": 11,
-    "candidatesTokenCount": 104,
-    "totalTokenCount": 115,
+    "candidatesTokenCount": 127,
+    "totalTokenCount": 138,
     "promptTokensDetails": [
       {
         "modality": "TEXT",
@@ -59,14 +59,14 @@ X-Frame-Options: SAMEORIGIN
     "candidatesTokensDetails": [
       {
         "modality": "TEXT",
-        "tokenCount": 104
+        "tokenCount": 127
       }
     ]
   },
   "modelVersion": "gemini-2.0-flash",
-  "responseId": "jaKBaKjZJdzzgLUPhZ_uoQU"
+  "responseId": "B7KHaOruDLqYhMIP4Zu7yAE"
 }
-6c7fa64e686dab6b2810ae8606a933604bbcea4c02507648366db7ceeb01cd33.req 1182
+c73b7586a948f30a463577ad63baf618e94f7ed1ddcf4572cbdffbf1d658691b.req 1265
 3b552190d305db6690777b23ae53a02d2a6c5701936d9c49845b6816e15df237
 Server Address: generativelanguage.googleapis.com
 Port: 443
@@ -77,26 +77,26 @@ Accept: */*
 Accept-Encoding: gzip, deflate
 Accept-Language: *
 Connection: keep-alive
-Content-Length: 676
+Content-Length: 759
 Content-Type: application/json
 Sec-Fetch-Mode: cors
 Test-Name: Chats Tests sendMessage Google AI multiple messages
 
 
-{"contents":[{"parts":[{"text":"Tell me a story in 100 words?"}],"role":"user"},{"parts":[{"text":"The lighthouse keeper, Silas, found a message in a bottle washed ashore. It read, \"Turn back. The sea remembers.\" He chuckled, dismissing it as a prank. That night, a monstrous wave slammed against the tower, shaking it to its core. The light flickered, died. Silas, thrown against the wall, saw the face in the crashing water – a face of rage, of deep, ancient hurt. The sea had remembered. Silas, regretting his dismissal, braced himself for the inevitable.\n"}],"role":"model"},{"parts":[{"text":"What is the title of the story?"}],"role":"user"}],"generationConfig":{}}
-6c7fa64e686dab6b2810ae8606a933604bbcea4c02507648366db7ceeb01cd33.resp 1095
+{"contents":[{"parts":[{"text":"Tell me a story in 100 words?"}],"role":"user"},{"parts":[{"text":"The lighthouse keeper, Silas, loved storms. He'd watch the waves crash, a comforting fury. One night, a smaller vessel, a fishing trawler, faltered in the gale. Its lights flickered, then died. Silas, ignoring protocol, roared the foghorn, its mournful cry cutting through the tempest. He kept it bellowing, a beacon of hope. Finally, hours later, a weak radio signal crackled through: \"Heard the horn... made it to shore... thank you.\" Silas smiled, the lighthouse beam cutting through the darkness. He wasn't just a keeper; he was a lifeline.\n"}],"role":"model"},{"parts":[{"text":"What is the title of the story?"}],"role":"user"}],"generationConfig":{}}
+c73b7586a948f30a463577ad63baf618e94f7ed1ddcf4572cbdffbf1d658691b.resp 1005
 Status code: 200 
-Server-Timing: gfet4t7; dur=665
+Server-Timing: gfet4t7; dur=530
+Content-Type: application/json; charset=UTF-8
+Date: Mon, 28 Jul 2025 17:23:21 GMT
+Content-Length: 329
 Vary: Origin
 Vary: X-Origin
 Vary: Referer
 Content-Encoding: gzip
-Content-Length: 391
+Server: scaffolding on HTTPServer2
 X-Xss-Protection: 0
 X-Frame-Options: SAMEORIGIN
-Content-Type: application/json; charset=UTF-8
-Date: Thu, 24 Jul 2025 03:03:43 GMT
-Server: scaffolding on HTTPServer2
 X-Content-Type-Options: nosniff
 
 {
@@ -105,32 +105,32 @@ X-Content-Type-Options: nosniff
       "content": {
         "parts": [
           {
-            "text": "The story does not have a specific title. A fitting title could be \"The Sea Remembers\" or \"Silas's Regret.\"\n"
+            "text": "A Lifeline in the Storm\n"
           }
         ],
         "role": "model"
       },
       "finishReason": "STOP",
-      "avgLogprobs": -0.54413022666141908
+      "avgLogprobs": -0.25732638438542682
     }
   ],
   "usageMetadata": {
-    "promptTokenCount": 123,
-    "candidatesTokenCount": 29,
+    "promptTokenCount": 146,
+    "candidatesTokenCount": 6,
     "totalTokenCount": 152,
     "promptTokensDetails": [
       {
         "modality": "TEXT",
-        "tokenCount": 123
+        "tokenCount": 146
       }
     ],
     "candidatesTokensDetails": [
       {
         "modality": "TEXT",
-        "tokenCount": 29
+        "tokenCount": 6
       }
     ]
   },
   "modelVersion": "gemini-2.0-flash",
-  "responseId": "jqKBaP-rNbKU1dkP7PW48Qk"
+  "responseId": "CLKHaNr2LoCPmNAPtpCLkAI"
 }

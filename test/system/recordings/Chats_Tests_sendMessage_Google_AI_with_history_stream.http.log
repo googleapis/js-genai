@@ -16,23 +16,23 @@ Test-Name: Chats Tests sendMessage Google AI with history stream
 
 
 {"contents":[{"parts":[{"text":"a=5"}],"role":"user"},{"parts":[{"text":"b=10"}],"role":"user"},{"parts":[{"text":"what is the value of a+b?"}],"role":"user"}],"generationConfig":{}}
-d86282b2dcf93c1bf043ed8d00c87abd370321f3c1c4d796eac72bfc71b2adbf.resp 1298
+d86282b2dcf93c1bf043ed8d00c87abd370321f3c1c4d796eac72bfc71b2adbf.resp 1346
 Status code: 200 
-X-Content-Type-Options: nosniff
-Server-Timing: gfet4t7; dur=513
 Vary: Origin
 Vary: X-Origin
 Vary: Referer
-Date: Thu, 24 Jul 2025 03:03:49 GMT
+Date: Mon, 28 Jul 2025 17:23:32 GMT
 X-Xss-Protection: 0
 X-Frame-Options: SAMEORIGIN
 Content-Type: text/event-stream
 Content-Disposition: attachment
 Server: scaffolding on HTTPServer2
+X-Content-Type-Options: nosniff
+Server-Timing: gfet4t7; dur=531
 
-data: {"candidates": [{"content": {"parts": [{"text": "a"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 19,"totalTokenCount": 19,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 19}]},"modelVersion": "gemini-2.0-flash","responseId": "laKBaMTZHY6MmNAPxYqk6QU"}
+data: {"candidates": [{"content": {"parts": [{"text": "```"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 19,"totalTokenCount": 19,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 19}]},"modelVersion": "gemini-2.0-flash","responseId": "FLKHaLP9G6itmNAPjeDp0QU"}
 
-data: {"candidates": [{"content": {"parts": [{"text": " + b ="}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 19,"totalTokenCount": 19,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 19}]},"modelVersion": "gemini-2.0-flash","responseId": "laKBaMTZHY6MmNAPxYqk6QU"}
+data: {"candidates": [{"content": {"parts": [{"text": "\na + b = 5 + 10 = 15\n```"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 19,"totalTokenCount": 19,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 19}]},"modelVersion": "gemini-2.0-flash","responseId": "FLKHaLP9G6itmNAPjeDp0QU"}
 
-data: {"candidates": [{"content": {"parts": [{"text": " 5 + 10 = 15\n"}],"role": "model"},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 16,"candidatesTokenCount": 15,"totalTokenCount": 31,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 16}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 15}]},"modelVersion": "gemini-2.0-flash","responseId": "laKBaMTZHY6MmNAPxYqk6QU"}
+data: {"candidates": [{"content": {"parts": [{"text": "\n\nTherefore, the value of a+b is 15.\n"}],"role": "model"},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 16,"candidatesTokenCount": 33,"totalTokenCount": 49,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 16}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 33}]},"modelVersion": "gemini-2.0-flash","responseId": "FLKHaLP9G6itmNAPjeDp0QU"}
 

@@ -16,34 +16,34 @@ Test-Name: Chats Tests sendMessage Vertex AI multilple messages stream
 
 
 {"contents":[{"parts":[{"text":"Tell me a story in 100 words?"}],"role":"user"}],"generationConfig":{}}
-7a88fe391313904eb7a909d0e2dfc0cf9de6c2e4f23d73ea724907ee171deab4.resp 2863
+7a88fe391313904eb7a909d0e2dfc0cf9de6c2e4f23d73ea724907ee171deab4.resp 2756
 Status code: 200 
 Content-Type: text/event-stream
-Server: scaffolding on HTTPServer2
-X-Content-Type-Options: nosniff
-Content-Disposition: attachment
 Vary: Origin
 Vary: X-Origin
 Vary: Referer
-Date: Thu, 24 Jul 2025 03:03:27 GMT
+Date: Mon, 28 Jul 2025 17:23:37 GMT
+Server: scaffolding on HTTPServer2
 X-Xss-Protection: 0
 X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+Content-Disposition: attachment
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": "El"}]}}],"usageMetadata": {"billablePromptUsage": {"textCount": 23},"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-24T03:03:27.701128Z","responseId": "f6KBaMjlKr75ld8Pk-iLqQY"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": "The"}]}}],"usageMetadata": {"billablePromptUsage": {"textCount": 23},"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:37.550400Z","responseId": "GbKHaIDMIc-dmecPwOGD6Q0"}
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": "iza cl"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-24T03:03:27.701128Z","responseId": "f6KBaMjlKr75ld8Pk-iLqQY"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " lighthouse keeper,"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:37.550400Z","responseId": "GbKHaIDMIc-dmecPwOGD6Q0"}
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": "utched the worn teddy bear, its button eye hanging precariously. She remembered"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-24T03:03:27.701128Z","responseId": "f6KBaMjlKr75ld8Pk-iLqQY"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " Silas, had only the gulls for company. He tended the lamp, its"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:37.550400Z","responseId": "GbKHaIDMIc-dmecPwOGD6Q0"}
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": " her grandfather, his booming laugh echoing as he'd sewn it on, humming"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-24T03:03:27.701128Z","responseId": "f6KBaMjlKr75ld8Pk-iLqQY"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " beam a lonely finger pointing through the fog. One night, a fierce storm raged. The"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:37.550400Z","responseId": "GbKHaIDMIc-dmecPwOGD6Q0"}
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": " a silly tune. Now, the house was silent, filled only with the ghosts of his presence. Today was moving day.\n\nTears welled as she placed"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-24T03:03:27.701128Z","responseId": "f6KBaMjlKr75ld8Pk-iLqQY"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " lamp flickered, threatened by the relentless waves. Silas, a man weathered by years of solitude, fought to keep it alive. As dawn broke, the storm subsided"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:37.550400Z","responseId": "GbKHaIDMIc-dmecPwOGD6Q0"}
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": " Teddy in the last box. A small, handwritten note slipped out, \"For my brave Eliza, always remember to roar.\" She smiled, wiping her eyes. Maybe"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-24T03:03:27.701128Z","responseId": "f6KBaMjlKr75ld8Pk-iLqQY"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": ". Silas, exhausted but triumphant, saw a small ship safely navigate the calmed waters. He smiled. He wasn't just keeping a lamp; he was keeping hope"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:37.550400Z","responseId": "GbKHaIDMIc-dmecPwOGD6Q0"}
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": ", just maybe, a new house could hold new roars, even without Grandpa's booming laughter. The bear felt a little heavier now, filled with courage.\n"}]},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 11,"candidatesTokenCount": 133,"totalTokenCount": 144,"trafficType": "ON_DEMAND","promptTokensDetails": [{"modality": "TEXT","tokenCount": 11}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 133}]},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-24T03:03:27.701128Z","responseId": "f6KBaMjlKr75ld8Pk-iLqQY"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " alive.\n"}]},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 11,"candidatesTokenCount": 106,"totalTokenCount": 117,"trafficType": "ON_DEMAND","promptTokensDetails": [{"modality": "TEXT","tokenCount": 11}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 106}]},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:37.550400Z","responseId": "GbKHaIDMIc-dmecPwOGD6Q0"}
 
-9d58febfad43c45722f2827d058d1348a6bbb1e999d7c207614b59aa50f59dbe.req 1623
+ddb68fa301894cf32d9d3c5d79d49e2ce24dd94c3f83d0e9d96686c6c14e988b.req 1515
 7a88fe391313904eb7a909d0e2dfc0cf9de6c2e4f23d73ea724907ee171deab4
 Server Address: us-central1-aiplatform.googleapis.com
 Port: 443
@@ -54,31 +54,29 @@ Accept: */*
 Accept-Encoding: gzip, deflate
 Accept-Language: *
 Connection: keep-alive
-Content-Length: 1034
+Content-Length: 927
 Content-Type: application/json
 Sec-Fetch-Mode: cors
 Test-Name: Chats Tests sendMessage Vertex AI multilple messages stream
 
 
-{"contents":[{"parts":[{"text":"Tell me a story in 100 words?"}],"role":"user"},{"parts":[{"text":"El"}],"role":"model"},{"parts":[{"text":"iza cl"}],"role":"model"},{"parts":[{"text":"utched the worn teddy bear, its button eye hanging precariously. She remembered"}],"role":"model"},{"parts":[{"text":" her grandfather, his booming laugh echoing as he'd sewn it on, humming"}],"role":"model"},{"parts":[{"text":" a silly tune. Now, the house was silent, filled only with the ghosts of his presence. Today was moving day.\n\nTears welled as she placed"}],"role":"model"},{"parts":[{"text":" Teddy in the last box. A small, handwritten note slipped out, \"For my brave Eliza, always remember to roar.\" She smiled, wiping her eyes. Maybe"}],"role":"model"},{"parts":[{"text":", just maybe, a new house could hold new roars, even without Grandpa's booming laughter. The bear felt a little heavier now, filled with courage.\n"}],"role":"model"},{"parts":[{"text":"What is the title of the story?"}],"role":"user"}],"generationConfig":{}}
-9d58febfad43c45722f2827d058d1348a6bbb1e999d7c207614b59aa50f59dbe.resp 1704
+{"contents":[{"parts":[{"text":"Tell me a story in 100 words?"}],"role":"user"},{"parts":[{"text":"The"}],"role":"model"},{"parts":[{"text":" lighthouse keeper,"}],"role":"model"},{"parts":[{"text":" Silas, had only the gulls for company. He tended the lamp, its"}],"role":"model"},{"parts":[{"text":" beam a lonely finger pointing through the fog. One night, a fierce storm raged. The"}],"role":"model"},{"parts":[{"text":" lamp flickered, threatened by the relentless waves. Silas, a man weathered by years of solitude, fought to keep it alive. As dawn broke, the storm subsided"}],"role":"model"},{"parts":[{"text":". Silas, exhausted but triumphant, saw a small ship safely navigate the calmed waters. He smiled. He wasn't just keeping a lamp; he was keeping hope"}],"role":"model"},{"parts":[{"text":" alive.\n"}],"role":"model"},{"parts":[{"text":"What is the title of the story?"}],"role":"user"}],"generationConfig":{}}
+ddb68fa301894cf32d9d3c5d79d49e2ce24dd94c3f83d0e9d96686c6c14e988b.resp 1418
 Status code: 200 
-Content-Type: text/event-stream
-Content-Disposition: attachment
-Date: Thu, 24 Jul 2025 03:03:30 GMT
+Date: Mon, 28 Jul 2025 17:23:39 GMT
 Server: scaffolding on HTTPServer2
 X-Frame-Options: SAMEORIGIN
+Content-Disposition: attachment
+X-Xss-Protection: 0
+X-Content-Type-Options: nosniff
+Content-Type: text/event-stream
 Vary: Origin
 Vary: X-Origin
 Vary: Referer
-X-Xss-Protection: 0
-X-Content-Type-Options: nosniff
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": "While"}]}}],"usageMetadata": {"billablePromptUsage": {"textCount": 532},"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-24T03:03:29.866611Z","responseId": "gaKBaLPyNNujmecPv6mqqAI"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": "While"}]}}],"usageMetadata": {"billablePromptUsage": {"textCount": 447},"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:38.866355Z","responseId": "GrKHaLPwNLermecP9bfB2AQ"}
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": " the story doesn't have an explicit title, a fitting title could be:\n\n*"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-24T03:03:29.866611Z","responseId": "gaKBaLPyNNujmecPv6mqqAI"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": " the story doesn't explicitly have a title, a fitting one could be **\""}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:38.866355Z","responseId": "GrKHaLPwNLermecP9bfB2AQ"}
 
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": "   **Eliza's Roar**\n*   **The Last Box"}]}}],"usageMetadata": {"trafficType": "ON_DEMAND"},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-24T03:03:29.866611Z","responseId": "gaKBaLPyNNujmecPv6mqqAI"}
-
-data: {"candidates": [{"content": {"role": "model","parts": [{"text": "**\n*   **Teddy's Courage**\n*   **Remember to Roar**"}]},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 152,"candidatesTokenCount": 51,"totalTokenCount": 203,"trafficType": "ON_DEMAND","promptTokensDetails": [{"modality": "TEXT","tokenCount": 152}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 51}]},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-24T03:03:29.866611Z","responseId": "gaKBaLPyNNujmecPv6mqqAI"}
+data: {"candidates": [{"content": {"role": "model","parts": [{"text": "Silas and the Lamp\"** or **\"The Keeper of Hope.\"**\n"}]},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 125,"candidatesTokenCount": 35,"totalTokenCount": 160,"trafficType": "ON_DEMAND","promptTokensDetails": [{"modality": "TEXT","tokenCount": 125}],"candidatesTokensDetails": [{"modality": "TEXT","tokenCount": 35}]},"modelVersion": "gemini-2.0-flash","createTime": "2025-07-28T17:23:38.866355Z","responseId": "GrKHaLPwNLermecP9bfB2AQ"}
 
