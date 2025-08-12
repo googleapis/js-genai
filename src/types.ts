@@ -1227,7 +1227,6 @@ export function createModelContent(
     parts: _toParts(partOrString),
   };
 }
-
 /** HTTP options to be used in each of the requests. */
 export declare interface HttpOptions {
   /** The base URL for the AI platform service endpoint. */
