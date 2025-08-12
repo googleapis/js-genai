@@ -685,24 +685,6 @@ export interface DistillationDataStats {
     trainingDatasetStats?: DatasetStats;
 }
 
-// @public
-export interface DistillationHyperParameters {
-    adapterSize?: AdapterSize;
-    epochCount?: string;
-    learningRateMultiplier?: number;
-}
-
-// @public
-export interface DistillationSpec {
-    baseTeacherModel?: string;
-    hyperParameters?: DistillationHyperParameters;
-    pipelineRootDirectory?: string;
-    studentModel?: string;
-    trainingDatasetUri?: string;
-    tunedTeacherModelSource?: string;
-    validationDatasetUri?: string;
-}
-
 // @public (undocumented)
 export type DownloadableFileUnion = string | File_2 | GeneratedVideo | Video;
 
@@ -2304,21 +2286,6 @@ export interface PreferenceOptimizationDataStats {
 }
 
 // @public
-export interface PreferenceOptimizationHyperParameters {
-    adapterSize?: AdapterSize;
-    beta?: number;
-    epochCount?: string;
-    learningRateMultiplier?: number;
-}
-
-// @public
-export interface PreferenceOptimizationSpec {
-    hyperParameters?: PreferenceOptimizationHyperParameters;
-    trainingDatasetUri?: string;
-    validationDatasetUri?: string;
-}
-
-// @public
 export interface PreTunedModel {
     baseModel?: string;
     checkpointId?: string;
@@ -2879,7 +2846,6 @@ export interface TuningJob {
     createTime?: string;
     customBaseModel?: string;
     description?: string;
-    distillationSpec?: DistillationSpec;
     encryptionSpec?: EncryptionSpec;
     endTime?: string;
     error?: GoogleRpcStatus;
@@ -2889,10 +2855,7 @@ export interface TuningJob {
     outputUri?: string;
     partnerModelTuningSpec?: PartnerModelTuningSpec;
     pipelineJob?: string;
-    preferenceOptimizationSpec?: PreferenceOptimizationSpec;
     preTunedModel?: PreTunedModel;
-    satisfiesPzi?: boolean;
-    satisfiesPzs?: boolean;
     sdkHttpResponse?: HttpResponse;
     serviceAccount?: string;
     startTime?: string;
@@ -2902,7 +2865,6 @@ export interface TuningJob {
     tunedModelDisplayName?: string;
     tuningDataStats?: TuningDataStats;
     updateTime?: string;
-    veoTuningSpec?: VeoTuningSpec;
 }
 
 // @public
@@ -2919,13 +2881,6 @@ export interface TuningOperation {
     metadata?: Record<string, unknown>;
     name?: string;
     sdkHttpResponse?: HttpResponse;
-}
-
-// @public
-export enum TuningTask {
-    TUNING_TASK_I2V = "TUNING_TASK_I2V",
-    TUNING_TASK_T2V = "TUNING_TASK_T2V",
-    TUNING_TASK_UNSPECIFIED = "TUNING_TASK_UNSPECIFIED"
 }
 
 // @public (undocumented)
@@ -3064,20 +3019,6 @@ export interface UsageMetadata {
     toolUsePromptTokensDetails?: ModalityTokenCount[];
     totalTokenCount?: number;
     trafficType?: TrafficType;
-}
-
-// @public
-export interface VeoHyperParameters {
-    epochCount?: string;
-    learningRateMultiplier?: number;
-    tuningTask?: TuningTask;
-}
-
-// @public
-export interface VeoTuningSpec {
-    hyperParameters?: VeoHyperParameters;
-    trainingDatasetUri?: string;
-    validationDatasetUri?: string;
 }
 
 // @public

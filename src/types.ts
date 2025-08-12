@@ -537,22 +537,6 @@ export enum AdapterSize {
   ADAPTER_SIZE_THIRTY_TWO = 'ADAPTER_SIZE_THIRTY_TWO',
 }
 
-/** Optional. The tuning task. Either I2V or T2V. */
-export enum TuningTask {
-  /**
-   * Default value. This value is unused.
-   */
-  TUNING_TASK_UNSPECIFIED = 'TUNING_TASK_UNSPECIFIED',
-  /**
-   * Tuning task for image to video.
-   */
-  TUNING_TASK_I2V = 'TUNING_TASK_I2V',
-  /**
-   * Tuning task for text to video.
-   */
-  TUNING_TASK_T2V = 'TUNING_TASK_T2V',
-}
-
 /** Options for feature selection preference. */
 export enum FeatureSelectionPreference {
   FEATURE_SELECTION_PREFERENCE_UNSPECIFIED = 'FEATURE_SELECTION_PREFERENCE_UNSPECIFIED',
@@ -3671,76 +3655,6 @@ export declare interface PartnerModelTuningSpec {
   validationDatasetUri?: string;
 }
 
-/** Hyperparameters for Distillation. */
-export declare interface DistillationHyperParameters {
-  /** Optional. Adapter size for distillation. */
-  adapterSize?: AdapterSize;
-  /** Optional. Number of complete passes the model makes over the entire training dataset during training. */
-  epochCount?: string;
-  /** Optional. Multiplier for adjusting the default learning rate. */
-  learningRateMultiplier?: number;
-}
-
-/** Tuning Spec for Distillation. */
-export declare interface DistillationSpec {
-  /** The base teacher model that is being distilled. See [Supported models](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/tuning#supported_models). */
-  baseTeacherModel?: string;
-  /** Optional. Hyperparameters for Distillation. */
-  hyperParameters?: DistillationHyperParameters;
-  /** Deprecated. A path in a Cloud Storage bucket, which will be treated as the root output directory of the distillation pipeline. It is used by the system to generate the paths of output artifacts. */
-  pipelineRootDirectory?: string;
-  /** The student model that is being tuned, e.g., "google/gemma-2b-1.1-it". Deprecated. Use base_model instead. */
-  studentModel?: string;
-  /** Deprecated. Cloud Storage path to file containing training dataset for tuning. The dataset must be formatted as a JSONL file. */
-  trainingDatasetUri?: string;
-  /** The resource name of the Tuned teacher model. Format: `projects/{project}/locations/{location}/models/{model}`. */
-  tunedTeacherModelSource?: string;
-  /** Optional. Cloud Storage path to file containing validation dataset for tuning. The dataset must be formatted as a JSONL file. */
-  validationDatasetUri?: string;
-}
-
-/** Hyperparameters for Preference Optimization. */
-export declare interface PreferenceOptimizationHyperParameters {
-  /** Optional. Adapter size for preference optimization. */
-  adapterSize?: AdapterSize;
-  /** Optional. Weight for KL Divergence regularization. */
-  beta?: number;
-  /** Optional. Number of complete passes the model makes over the entire training dataset during training. */
-  epochCount?: string;
-  /** Optional. Multiplier for adjusting the default learning rate. */
-  learningRateMultiplier?: number;
-}
-
-/** Tuning Spec for Preference Optimization. */
-export declare interface PreferenceOptimizationSpec {
-  /** Optional. Hyperparameters for Preference Optimization. */
-  hyperParameters?: PreferenceOptimizationHyperParameters;
-  /** Required. Cloud Storage path to file containing training dataset for preference optimization tuning. The dataset must be formatted as a JSONL file. */
-  trainingDatasetUri?: string;
-  /** Optional. Cloud Storage path to file containing validation dataset for preference optimization tuning. The dataset must be formatted as a JSONL file. */
-  validationDatasetUri?: string;
-}
-
-/** Hyperparameters for Veo. */
-export declare interface VeoHyperParameters {
-  /** Optional. Number of complete passes the model makes over the entire training dataset during training. */
-  epochCount?: string;
-  /** Optional. Multiplier for adjusting the default learning rate. */
-  learningRateMultiplier?: number;
-  /** Optional. The tuning task. Either I2V or T2V. */
-  tuningTask?: TuningTask;
-}
-
-/** Tuning Spec for Veo Model Tuning. */
-export declare interface VeoTuningSpec {
-  /** Optional. Hyperparameters for Veo. */
-  hyperParameters?: VeoHyperParameters;
-  /** Required. Training dataset used for tuning. The dataset can be specified as either a Cloud Storage path to a JSONL file or as the resource name of a Vertex Multimodal Dataset. */
-  trainingDatasetUri?: string;
-  /** Optional. Validation dataset used for tuning. The dataset can be specified as either a Cloud Storage path to a JSONL file or as the resource name of a Vertex Multimodal Dataset. */
-  validationDatasetUri?: string;
-}
-
 /** A tuning job. */
 export declare interface TuningJob {
   /** Used to retain the full HTTP response. */
@@ -3777,8 +3691,6 @@ export declare interface TuningJob {
   partnerModelTuningSpec?: PartnerModelTuningSpec;
   /** Optional. The user-provided path to custom model weights. Set this field to tune a custom model. The path must be a Cloud Storage directory that contains the model weights in .safetensors format along with associated model metadata files. If this field is set, the base_model field must still be set to indicate which base model the custom model is derived from. This feature is only available for open source models. */
   customBaseModel?: string;
-  /** Tuning Spec for Distillation. */
-  distillationSpec?: DistillationSpec;
   /** Output only. The Experiment associated with this TuningJob. */
   experiment?: string;
   /** Optional. The labels with user-defined metadata to organize TuningJob and generated resources such as Model and Endpoint. Label keys and values can be no longer than 64 characters (Unicode codepoints), can only contain lowercase letters, numeric characters, underscores and dashes. International characters are allowed. See https://goo.gl/xmQnxf for more information and examples of labels. */
@@ -3787,18 +3699,10 @@ export declare interface TuningJob {
   outputUri?: string;
   /** Output only. The resource name of the PipelineJob associated with the TuningJob. Format: `projects/{project}/locations/{location}/pipelineJobs/{pipeline_job}`. */
   pipelineJob?: string;
-  /** Tuning Spec for Preference Optimization. */
-  preferenceOptimizationSpec?: PreferenceOptimizationSpec;
-  /** Output only. Reserved for future use. */
-  satisfiesPzi?: boolean;
-  /** Output only. Reserved for future use. */
-  satisfiesPzs?: boolean;
   /** The service account that the tuningJob workload runs as. If not specified, the Vertex AI Secure Fine-Tuned Service Agent in the project will be used. See https://cloud.google.com/iam/docs/service-agents#vertex-ai-secure-fine-tuning-service-agent Users starting the pipeline must have the `iam.serviceAccounts.actAs` permission on this service account. */
   serviceAccount?: string;
   /** Optional. The display name of the TunedModel. The name can be up to 128 characters long and can consist of any UTF-8 characters. */
   tunedModelDisplayName?: string;
-  /** Tuning Spec for Veo Tuning. */
-  veoTuningSpec?: VeoTuningSpec;
 }
 
 /** Configuration for the list tuning jobs method. */
