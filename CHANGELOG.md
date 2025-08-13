@@ -1,6 +1,22 @@
 # Changelog
 
 
+## [1.14.0](https://github.com/googleapis/js-genai/compare/v1.13.0...v1.14.0) (2025-08-13)
+
+
+### Features
+
+* add an _exclude_fields characteristic in the config for unused values to avoid unnecessary and unused code in converter and type generation. ([15a4504](https://github.com/googleapis/js-genai/commit/15a4504ac3455044bb3ef51440ccbf420168104e))
+* Add evaluation support to Vertex tuning ([b53c468](https://github.com/googleapis/js-genai/commit/b53c4685c98aaa2d17ef30c9e97309afb36f2703))
+* enable continuous fine-tuning on a pre-tuned model in the SDK. ([027f09d](https://github.com/googleapis/js-genai/commit/027f09db662ce6b30f737b10b4d2efcb4282a9b6))
+* support document name in grounding metadata ([b801236](https://github.com/googleapis/js-genai/commit/b8012365f7ec7917576ca048bbaa37ac9d011795))
+* Support exclude_domains in Google Search and Enterprise Web Search ([8ed49f1](https://github.com/googleapis/js-genai/commit/8ed49f171e2a1bf2cfb187869e4682ed2f8bd2fb))
+
+
+### Bug Fixes
+
+* Replace `gemini-2.5-flash-preview-04-17` with `gemini-2.5-flash`. ([d7f1c30](https://github.com/googleapis/js-genai/commit/d7f1c304554c045cdd8bf710d11178a1d07b2983))
+
 ## [1.13.0](https://github.com/googleapis/js-genai/compare/v1.12.0...v1.13.0) (2025-08-06)
 
 
