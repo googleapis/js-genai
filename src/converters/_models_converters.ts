@@ -8,12 +8,10 @@
 
 import {ApiClient} from '../_api_client.js';
 import * as common from '../_common.js';
-import * as _internal_types from '../_internal_types.js';
 import * as t from '../_transformers.js';
-import * as types from '../types.js';
 
 export function videoMetadataToMldev(
-  fromObject: types.VideoMetadata,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -35,7 +33,7 @@ export function videoMetadataToMldev(
   return toObject;
 }
 
-export function blobToMldev(fromObject: types.Blob): Record<string, unknown> {
+export function blobToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
@@ -55,9 +53,7 @@ export function blobToMldev(fromObject: types.Blob): Record<string, unknown> {
   return toObject;
 }
 
-export function fileDataToMldev(
-  fromObject: types.FileData,
-): Record<string, unknown> {
+export function fileDataToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
@@ -77,7 +73,7 @@ export function fileDataToMldev(
   return toObject;
 }
 
-export function partToMldev(fromObject: types.Part): Record<string, unknown> {
+export function partToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromVideoMetadata = common.getValueByPath(fromObject, [
@@ -159,9 +155,7 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
   return toObject;
 }
 
-export function contentToMldev(
-  fromObject: types.Content,
-): Record<string, unknown> {
+export function contentToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromParts = common.getValueByPath(fromObject, ['parts']);
@@ -183,9 +177,7 @@ export function contentToMldev(
   return toObject;
 }
 
-export function schemaToMldev(
-  fromObject: types.Schema,
-): Record<string, unknown> {
+export function schemaToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromAnyOf = common.getValueByPath(fromObject, ['anyOf']);
@@ -308,7 +300,7 @@ export function schemaToMldev(
 }
 
 export function safetySettingToMldev(
-  fromObject: types.SafetySetting,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -330,7 +322,7 @@ export function safetySettingToMldev(
 }
 
 export function functionDeclarationToMldev(
-  fromObject: types.FunctionDeclaration,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -384,9 +376,7 @@ export function functionDeclarationToMldev(
   return toObject;
 }
 
-export function intervalToMldev(
-  fromObject: types.Interval,
-): Record<string, unknown> {
+export function intervalToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromStartTime = common.getValueByPath(fromObject, ['startTime']);
@@ -403,7 +393,7 @@ export function intervalToMldev(
 }
 
 export function googleSearchToMldev(
-  fromObject: types.GoogleSearch,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -426,7 +416,7 @@ export function googleSearchToMldev(
 }
 
 export function dynamicRetrievalConfigToMldev(
-  fromObject: types.DynamicRetrievalConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -446,7 +436,7 @@ export function dynamicRetrievalConfigToMldev(
 }
 
 export function googleSearchRetrievalToMldev(
-  fromObject: types.GoogleSearchRetrieval,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -471,7 +461,7 @@ export function urlContextToMldev(): Record<string, unknown> {
 }
 
 export function toolComputerUseToMldev(
-  fromObject: types.ToolComputerUse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -483,7 +473,7 @@ export function toolComputerUseToMldev(
   return toObject;
 }
 
-export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
+export function toolToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromFunctionDeclarations = common.getValueByPath(fromObject, [
@@ -560,7 +550,7 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
 }
 
 export function functionCallingConfigToMldev(
-  fromObject: types.FunctionCallingConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -583,9 +573,7 @@ export function functionCallingConfigToMldev(
   return toObject;
 }
 
-export function latLngToMldev(
-  fromObject: types.LatLng,
-): Record<string, unknown> {
+export function latLngToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromLatitude = common.getValueByPath(fromObject, ['latitude']);
@@ -602,7 +590,7 @@ export function latLngToMldev(
 }
 
 export function retrievalConfigToMldev(
-  fromObject: types.RetrievalConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -620,7 +608,7 @@ export function retrievalConfigToMldev(
 }
 
 export function toolConfigToMldev(
-  fromObject: types.ToolConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -650,7 +638,7 @@ export function toolConfigToMldev(
 }
 
 export function prebuiltVoiceConfigToMldev(
-  fromObject: types.PrebuiltVoiceConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -663,7 +651,7 @@ export function prebuiltVoiceConfigToMldev(
 }
 
 export function voiceConfigToMldev(
-  fromObject: types.VoiceConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -682,7 +670,7 @@ export function voiceConfigToMldev(
 }
 
 export function speakerVoiceConfigToMldev(
-  fromObject: types.SpeakerVoiceConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -704,7 +692,7 @@ export function speakerVoiceConfigToMldev(
 }
 
 export function multiSpeakerVoiceConfigToMldev(
-  fromObject: types.MultiSpeakerVoiceConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -725,7 +713,7 @@ export function multiSpeakerVoiceConfigToMldev(
 }
 
 export function speechConfigToMldev(
-  fromObject: types.SpeechConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -758,7 +746,7 @@ export function speechConfigToMldev(
 }
 
 export function thinkingConfigToMldev(
-  fromObject: types.ThinkingConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -781,7 +769,7 @@ export function thinkingConfigToMldev(
 
 export function generateContentConfigToMldev(
   apiClient: ApiClient,
-  fromObject: types.GenerateContentConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -1000,7 +988,7 @@ export function generateContentConfigToMldev(
 
 export function generateContentParametersToMldev(
   apiClient: ApiClient,
-  fromObject: types.GenerateContentParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1037,7 +1025,7 @@ export function generateContentParametersToMldev(
 }
 
 export function embedContentConfigToMldev(
-  fromObject: types.EmbedContentConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -1080,7 +1068,7 @@ export function embedContentConfigToMldev(
 
 export function embedContentParametersToMldev(
   apiClient: ApiClient,
-  fromObject: types.EmbedContentParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1124,7 +1112,7 @@ export function embedContentParametersToMldev(
 }
 
 export function generateImagesConfigToMldev(
-  fromObject: types.GenerateImagesConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -1269,7 +1257,7 @@ export function generateImagesConfigToMldev(
 
 export function generateImagesParametersToMldev(
   apiClient: ApiClient,
-  fromObject: types.GenerateImagesParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1301,7 +1289,7 @@ export function generateImagesParametersToMldev(
 
 export function getModelParametersToMldev(
   apiClient: ApiClient,
-  fromObject: types.GetModelParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1324,7 +1312,7 @@ export function getModelParametersToMldev(
 
 export function listModelsConfigToMldev(
   apiClient: ApiClient,
-  fromObject: types.ListModelsConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -1358,7 +1346,7 @@ export function listModelsConfigToMldev(
 
 export function listModelsParametersToMldev(
   apiClient: ApiClient,
-  fromObject: types.ListModelsParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1375,7 +1363,7 @@ export function listModelsParametersToMldev(
 }
 
 export function updateModelConfigToMldev(
-  fromObject: types.UpdateModelConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -1406,7 +1394,7 @@ export function updateModelConfigToMldev(
 
 export function updateModelParametersToMldev(
   apiClient: ApiClient,
-  fromObject: types.UpdateModelParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1433,7 +1421,7 @@ export function updateModelParametersToMldev(
 
 export function deleteModelParametersToMldev(
   apiClient: ApiClient,
-  fromObject: types.DeleteModelParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1455,7 +1443,7 @@ export function deleteModelParametersToMldev(
 }
 
 export function countTokensConfigToMldev(
-  fromObject: types.CountTokensConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1480,7 +1468,7 @@ export function countTokensConfigToMldev(
 
 export function countTokensParametersToMldev(
   apiClient: ApiClient,
-  fromObject: types.CountTokensParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1516,7 +1504,7 @@ export function countTokensParametersToMldev(
   return toObject;
 }
 
-export function imageToMldev(fromObject: types.Image): Record<string, unknown> {
+export function imageToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   if (common.getValueByPath(fromObject, ['gcsUri']) !== undefined) {
@@ -1541,7 +1529,7 @@ export function imageToMldev(fromObject: types.Image): Record<string, unknown> {
 }
 
 export function generateVideosConfigToMldev(
-  fromObject: types.GenerateVideosConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -1649,7 +1637,7 @@ export function generateVideosConfigToMldev(
 
 export function generateVideosParametersToMldev(
   apiClient: ApiClient,
-  fromObject: types.GenerateVideosParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1693,7 +1681,7 @@ export function generateVideosParametersToMldev(
 }
 
 export function videoMetadataToVertex(
-  fromObject: types.VideoMetadata,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1715,7 +1703,7 @@ export function videoMetadataToVertex(
   return toObject;
 }
 
-export function blobToVertex(fromObject: types.Blob): Record<string, unknown> {
+export function blobToVertex(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
@@ -1736,9 +1724,7 @@ export function blobToVertex(fromObject: types.Blob): Record<string, unknown> {
   return toObject;
 }
 
-export function fileDataToVertex(
-  fromObject: types.FileData,
-): Record<string, unknown> {
+export function fileDataToVertex(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
@@ -1759,7 +1745,7 @@ export function fileDataToVertex(
   return toObject;
 }
 
-export function partToVertex(fromObject: types.Part): Record<string, unknown> {
+export function partToVertex(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromVideoMetadata = common.getValueByPath(fromObject, [
@@ -1841,9 +1827,7 @@ export function partToVertex(fromObject: types.Part): Record<string, unknown> {
   return toObject;
 }
 
-export function contentToVertex(
-  fromObject: types.Content,
-): Record<string, unknown> {
+export function contentToVertex(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromParts = common.getValueByPath(fromObject, ['parts']);
@@ -1865,9 +1849,7 @@ export function contentToVertex(
   return toObject;
 }
 
-export function schemaToVertex(
-  fromObject: types.Schema,
-): Record<string, unknown> {
+export function schemaToVertex(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromAnyOf = common.getValueByPath(fromObject, ['anyOf']);
@@ -1990,7 +1972,7 @@ export function schemaToVertex(
 }
 
 export function modelSelectionConfigToVertex(
-  fromObject: types.ModelSelectionConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2009,7 +1991,7 @@ export function modelSelectionConfigToVertex(
 }
 
 export function safetySettingToVertex(
-  fromObject: types.SafetySetting,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2032,7 +2014,7 @@ export function safetySettingToVertex(
 }
 
 export function functionDeclarationToVertex(
-  fromObject: types.FunctionDeclaration,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2085,9 +2067,7 @@ export function functionDeclarationToVertex(
   return toObject;
 }
 
-export function intervalToVertex(
-  fromObject: types.Interval,
-): Record<string, unknown> {
+export function intervalToVertex(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromStartTime = common.getValueByPath(fromObject, ['startTime']);
@@ -2104,7 +2084,7 @@ export function intervalToVertex(
 }
 
 export function googleSearchToVertex(
-  fromObject: types.GoogleSearch,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2130,7 +2110,7 @@ export function googleSearchToVertex(
 }
 
 export function dynamicRetrievalConfigToVertex(
-  fromObject: types.DynamicRetrievalConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2150,7 +2130,7 @@ export function dynamicRetrievalConfigToVertex(
 }
 
 export function googleSearchRetrievalToVertex(
-  fromObject: types.GoogleSearchRetrieval,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2169,7 +2149,7 @@ export function googleSearchRetrievalToVertex(
 }
 
 export function enterpriseWebSearchToVertex(
-  fromObject: types.EnterpriseWebSearch,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2184,7 +2164,7 @@ export function enterpriseWebSearchToVertex(
 }
 
 export function apiKeyConfigToVertex(
-  fromObject: types.ApiKeyConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2197,7 +2177,7 @@ export function apiKeyConfigToVertex(
 }
 
 export function authConfigToVertex(
-  fromObject: types.AuthConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2251,7 +2231,7 @@ export function authConfigToVertex(
 }
 
 export function googleMapsToVertex(
-  fromObject: types.GoogleMaps,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2274,7 +2254,7 @@ export function urlContextToVertex(): Record<string, unknown> {
 }
 
 export function toolComputerUseToVertex(
-  fromObject: types.ToolComputerUse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2286,7 +2266,7 @@ export function toolComputerUseToVertex(
   return toObject;
 }
 
-export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
+export function toolToVertex(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromFunctionDeclarations = common.getValueByPath(fromObject, [
@@ -2372,7 +2352,7 @@ export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
 }
 
 export function functionCallingConfigToVertex(
-  fromObject: types.FunctionCallingConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2395,9 +2375,7 @@ export function functionCallingConfigToVertex(
   return toObject;
 }
 
-export function latLngToVertex(
-  fromObject: types.LatLng,
-): Record<string, unknown> {
+export function latLngToVertex(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromLatitude = common.getValueByPath(fromObject, ['latitude']);
@@ -2414,7 +2392,7 @@ export function latLngToVertex(
 }
 
 export function retrievalConfigToVertex(
-  fromObject: types.RetrievalConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2432,7 +2410,7 @@ export function retrievalConfigToVertex(
 }
 
 export function toolConfigToVertex(
-  fromObject: types.ToolConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2462,7 +2440,7 @@ export function toolConfigToVertex(
 }
 
 export function prebuiltVoiceConfigToVertex(
-  fromObject: types.PrebuiltVoiceConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2475,7 +2453,7 @@ export function prebuiltVoiceConfigToVertex(
 }
 
 export function voiceConfigToVertex(
-  fromObject: types.VoiceConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2494,7 +2472,7 @@ export function voiceConfigToVertex(
 }
 
 export function speechConfigToVertex(
-  fromObject: types.SpeechConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2524,7 +2502,7 @@ export function speechConfigToVertex(
 }
 
 export function thinkingConfigToVertex(
-  fromObject: types.ThinkingConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2547,7 +2525,7 @@ export function thinkingConfigToVertex(
 
 export function generateContentConfigToVertex(
   apiClient: ApiClient,
-  fromObject: types.GenerateContentConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -2776,7 +2754,7 @@ export function generateContentConfigToVertex(
 
 export function generateContentParametersToVertex(
   apiClient: ApiClient,
-  fromObject: types.GenerateContentParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2813,7 +2791,7 @@ export function generateContentParametersToVertex(
 }
 
 export function embedContentConfigToVertex(
-  fromObject: types.EmbedContentConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -2866,7 +2844,7 @@ export function embedContentConfigToVertex(
 
 export function embedContentParametersToVertex(
   apiClient: ApiClient,
-  fromObject: types.EmbedContentParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2901,7 +2879,7 @@ export function embedContentParametersToVertex(
 }
 
 export function generateImagesConfigToVertex(
-  fromObject: types.GenerateImagesConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -3071,7 +3049,7 @@ export function generateImagesConfigToVertex(
 
 export function generateImagesParametersToVertex(
   apiClient: ApiClient,
-  fromObject: types.GenerateImagesParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3101,9 +3079,7 @@ export function generateImagesParametersToVertex(
   return toObject;
 }
 
-export function imageToVertex(
-  fromObject: types.Image,
-): Record<string, unknown> {
+export function imageToVertex(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromGcsUri = common.getValueByPath(fromObject, ['gcsUri']);
@@ -3129,7 +3105,7 @@ export function imageToVertex(
 }
 
 export function maskReferenceConfigToVertex(
-  fromObject: types.MaskReferenceConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3154,7 +3130,7 @@ export function maskReferenceConfigToVertex(
 }
 
 export function controlReferenceConfigToVertex(
-  fromObject: types.ControlReferenceConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3178,7 +3154,7 @@ export function controlReferenceConfigToVertex(
 }
 
 export function styleReferenceConfigToVertex(
-  fromObject: types.StyleReferenceConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3193,7 +3169,7 @@ export function styleReferenceConfigToVertex(
 }
 
 export function subjectReferenceConfigToVertex(
-  fromObject: types.SubjectReferenceConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3217,7 +3193,7 @@ export function subjectReferenceConfigToVertex(
 }
 
 export function referenceImageAPIInternalToVertex(
-  fromObject: _internal_types.ReferenceImageAPIInternal,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3292,7 +3268,7 @@ export function referenceImageAPIInternalToVertex(
 }
 
 export function editImageConfigToVertex(
-  fromObject: types.EditImageConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -3460,7 +3436,7 @@ export function editImageConfigToVertex(
 
 export function editImageParametersInternalToVertex(
   apiClient: ApiClient,
-  fromObject: _internal_types.EditImageParametersInternal,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3508,7 +3484,7 @@ export function editImageParametersInternalToVertex(
 }
 
 export function upscaleImageAPIConfigInternalToVertex(
-  fromObject: _internal_types.UpscaleImageAPIConfigInternal,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -3589,7 +3565,7 @@ export function upscaleImageAPIConfigInternalToVertex(
 
 export function upscaleImageAPIParametersInternalToVertex(
   apiClient: ApiClient,
-  fromObject: _internal_types.UpscaleImageAPIParametersInternal,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3635,7 +3611,7 @@ export function upscaleImageAPIParametersInternalToVertex(
 }
 
 export function productImageToVertex(
-  fromObject: types.ProductImage,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3648,7 +3624,7 @@ export function productImageToVertex(
 }
 
 export function recontextImageSourceToVertex(
-  fromObject: types.RecontextImageSource,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -3688,7 +3664,7 @@ export function recontextImageSourceToVertex(
 }
 
 export function recontextImageConfigToVertex(
-  fromObject: types.RecontextImageConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -3787,7 +3763,7 @@ export function recontextImageConfigToVertex(
 
 export function recontextImageParametersToVertex(
   apiClient: ApiClient,
-  fromObject: types.RecontextImageParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3823,7 +3799,7 @@ export function recontextImageParametersToVertex(
 
 export function getModelParametersToVertex(
   apiClient: ApiClient,
-  fromObject: types.GetModelParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3846,7 +3822,7 @@ export function getModelParametersToVertex(
 
 export function listModelsConfigToVertex(
   apiClient: ApiClient,
-  fromObject: types.ListModelsConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -3880,7 +3856,7 @@ export function listModelsConfigToVertex(
 
 export function listModelsParametersToVertex(
   apiClient: ApiClient,
-  fromObject: types.ListModelsParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3897,7 +3873,7 @@ export function listModelsParametersToVertex(
 }
 
 export function updateModelConfigToVertex(
-  fromObject: types.UpdateModelConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -3928,7 +3904,7 @@ export function updateModelConfigToVertex(
 
 export function updateModelParametersToVertex(
   apiClient: ApiClient,
-  fromObject: types.UpdateModelParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3955,7 +3931,7 @@ export function updateModelParametersToVertex(
 
 export function deleteModelParametersToVertex(
   apiClient: ApiClient,
-  fromObject: types.DeleteModelParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3977,7 +3953,7 @@ export function deleteModelParametersToVertex(
 }
 
 export function countTokensConfigToVertex(
-  fromObject: types.CountTokensConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -4020,7 +3996,7 @@ export function countTokensConfigToVertex(
 
 export function countTokensParametersToVertex(
   apiClient: ApiClient,
-  fromObject: types.CountTokensParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -4058,7 +4034,7 @@ export function countTokensParametersToVertex(
 
 export function computeTokensParametersToVertex(
   apiClient: ApiClient,
-  fromObject: types.ComputeTokensParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -4090,9 +4066,7 @@ export function computeTokensParametersToVertex(
   return toObject;
 }
 
-export function videoToVertex(
-  fromObject: types.Video,
-): Record<string, unknown> {
+export function videoToVertex(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromUri = common.getValueByPath(fromObject, ['uri']);
@@ -4118,7 +4092,7 @@ export function videoToVertex(
 }
 
 export function generateVideosConfigToVertex(
-  fromObject: types.GenerateVideosConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -4260,7 +4234,7 @@ export function generateVideosConfigToVertex(
 
 export function generateVideosParametersToVertex(
   apiClient: ApiClient,
-  fromObject: types.GenerateVideosParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -4309,7 +4283,7 @@ export function generateVideosParametersToVertex(
 }
 
 export function videoMetadataFromMldev(
-  fromObject: types.VideoMetadata,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -4331,7 +4305,7 @@ export function videoMetadataFromMldev(
   return toObject;
 }
 
-export function blobFromMldev(fromObject: types.Blob): Record<string, unknown> {
+export function blobFromMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromData = common.getValueByPath(fromObject, ['data']);
@@ -4348,7 +4322,7 @@ export function blobFromMldev(fromObject: types.Blob): Record<string, unknown> {
 }
 
 export function fileDataFromMldev(
-  fromObject: types.FileData,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -4365,7 +4339,7 @@ export function fileDataFromMldev(
   return toObject;
 }
 
-export function partFromMldev(fromObject: types.Part): Record<string, unknown> {
+export function partFromMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromVideoMetadata = common.getValueByPath(fromObject, [
@@ -4447,9 +4421,7 @@ export function partFromMldev(fromObject: types.Part): Record<string, unknown> {
   return toObject;
 }
 
-export function contentFromMldev(
-  fromObject: types.Content,
-): Record<string, unknown> {
+export function contentFromMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromParts = common.getValueByPath(fromObject, ['parts']);
@@ -4472,7 +4444,7 @@ export function contentFromMldev(
 }
 
 export function citationMetadataFromMldev(
-  fromObject: types.CitationMetadata,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -4485,7 +4457,7 @@ export function citationMetadataFromMldev(
 }
 
 export function urlMetadataFromMldev(
-  fromObject: types.UrlMetadata,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -4509,7 +4481,7 @@ export function urlMetadataFromMldev(
 }
 
 export function urlContextMetadataFromMldev(
-  fromObject: types.UrlContextMetadata,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -4528,7 +4500,7 @@ export function urlContextMetadataFromMldev(
 }
 
 export function candidateFromMldev(
-  fromObject: types.Candidate,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -4608,7 +4580,7 @@ export function candidateFromMldev(
 }
 
 export function generateContentResponseFromMldev(
-  fromObject: types.GenerateContentResponse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -4658,7 +4630,7 @@ export function generateContentResponseFromMldev(
 }
 
 export function contentEmbeddingFromMldev(
-  fromObject: types.ContentEmbedding,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -4677,7 +4649,7 @@ export function embedContentMetadataFromMldev(): Record<string, unknown> {
 }
 
 export function embedContentResponseFromMldev(
-  fromObject: types.EmbedContentResponse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -4711,9 +4683,7 @@ export function embedContentResponseFromMldev(
   return toObject;
 }
 
-export function imageFromMldev(
-  fromObject: types.Image,
-): Record<string, unknown> {
+export function imageFromMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromImageBytes = common.getValueByPath(fromObject, [
@@ -4732,7 +4702,7 @@ export function imageFromMldev(
 }
 
 export function safetyAttributesFromMldev(
-  fromObject: types.SafetyAttributes,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -4761,7 +4731,7 @@ export function safetyAttributesFromMldev(
 }
 
 export function generatedImageFromMldev(
-  fromObject: types.GeneratedImage,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -4794,7 +4764,7 @@ export function generatedImageFromMldev(
 }
 
 export function generateImagesResponseFromMldev(
-  fromObject: types.GenerateImagesResponse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -4833,7 +4803,7 @@ export function generateImagesResponseFromMldev(
 }
 
 export function tunedModelInfoFromMldev(
-  fromObject: types.TunedModelInfo,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -4855,9 +4825,7 @@ export function tunedModelInfoFromMldev(
   return toObject;
 }
 
-export function modelFromMldev(
-  fromObject: types.Model,
-): Record<string, unknown> {
+export function modelFromMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromName = common.getValueByPath(fromObject, ['name']);
@@ -4914,7 +4882,7 @@ export function modelFromMldev(
 }
 
 export function listModelsResponseFromMldev(
-  fromObject: types.ListModelsResponse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -4953,7 +4921,7 @@ export function deleteModelResponseFromMldev(): Record<string, unknown> {
 }
 
 export function countTokensResponseFromMldev(
-  fromObject: types.CountTokensResponse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -4983,9 +4951,7 @@ export function countTokensResponseFromMldev(
   return toObject;
 }
 
-export function videoFromMldev(
-  fromObject: types.Video,
-): Record<string, unknown> {
+export function videoFromMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromUri = common.getValueByPath(fromObject, ['video', 'uri']);
@@ -5010,7 +4976,7 @@ export function videoFromMldev(
 }
 
 export function generatedVideoFromMldev(
-  fromObject: types.GeneratedVideo,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -5023,7 +4989,7 @@ export function generatedVideoFromMldev(
 }
 
 export function generateVideosResponseFromMldev(
-  fromObject: types.GenerateVideosResponse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -5066,7 +5032,7 @@ export function generateVideosResponseFromMldev(
 }
 
 export function generateVideosOperationFromMldev(
-  fromObject: types.GenerateVideosOperation,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -5106,7 +5072,7 @@ export function generateVideosOperationFromMldev(
 }
 
 export function videoMetadataFromVertex(
-  fromObject: types.VideoMetadata,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -5128,9 +5094,7 @@ export function videoMetadataFromVertex(
   return toObject;
 }
 
-export function blobFromVertex(
-  fromObject: types.Blob,
-): Record<string, unknown> {
+export function blobFromVertex(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
@@ -5152,7 +5116,7 @@ export function blobFromVertex(
 }
 
 export function fileDataFromVertex(
-  fromObject: types.FileData,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -5174,9 +5138,7 @@ export function fileDataFromVertex(
   return toObject;
 }
 
-export function partFromVertex(
-  fromObject: types.Part,
-): Record<string, unknown> {
+export function partFromVertex(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromVideoMetadata = common.getValueByPath(fromObject, [
@@ -5259,7 +5221,7 @@ export function partFromVertex(
 }
 
 export function contentFromVertex(
-  fromObject: types.Content,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -5283,7 +5245,7 @@ export function contentFromVertex(
 }
 
 export function citationMetadataFromVertex(
-  fromObject: types.CitationMetadata,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -5296,7 +5258,7 @@ export function citationMetadataFromVertex(
 }
 
 export function urlMetadataFromVertex(
-  fromObject: types.UrlMetadata,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -5320,7 +5282,7 @@ export function urlMetadataFromVertex(
 }
 
 export function urlContextMetadataFromVertex(
-  fromObject: types.UrlContextMetadata,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -5339,7 +5301,7 @@ export function urlContextMetadataFromVertex(
 }
 
 export function candidateFromVertex(
-  fromObject: types.Candidate,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -5425,7 +5387,7 @@ export function candidateFromVertex(
 }
 
 export function generateContentResponseFromVertex(
-  fromObject: types.GenerateContentResponse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -5480,7 +5442,7 @@ export function generateContentResponseFromVertex(
 }
 
 export function contentEmbeddingStatisticsFromVertex(
-  fromObject: types.ContentEmbeddingStatistics,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -5498,7 +5460,7 @@ export function contentEmbeddingStatisticsFromVertex(
 }
 
 export function contentEmbeddingFromVertex(
-  fromObject: types.ContentEmbedding,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -5520,7 +5482,7 @@ export function contentEmbeddingFromVertex(
 }
 
 export function embedContentMetadataFromVertex(
-  fromObject: types.EmbedContentMetadata,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -5539,7 +5501,7 @@ export function embedContentMetadataFromVertex(
 }
 
 export function embedContentResponseFromVertex(
-  fromObject: types.EmbedContentResponse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -5576,9 +5538,7 @@ export function embedContentResponseFromVertex(
   return toObject;
 }
 
-export function imageFromVertex(
-  fromObject: types.Image,
-): Record<string, unknown> {
+export function imageFromVertex(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromGcsUri = common.getValueByPath(fromObject, ['gcsUri']);
@@ -5602,7 +5562,7 @@ export function imageFromVertex(
 }
 
 export function safetyAttributesFromVertex(
-  fromObject: types.SafetyAttributes,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -5631,7 +5591,7 @@ export function safetyAttributesFromVertex(
 }
 
 export function generatedImageFromVertex(
-  fromObject: types.GeneratedImage,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -5669,7 +5629,7 @@ export function generatedImageFromVertex(
 }
 
 export function generateImagesResponseFromVertex(
-  fromObject: types.GenerateImagesResponse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -5708,7 +5668,7 @@ export function generateImagesResponseFromVertex(
 }
 
 export function editImageResponseFromVertex(
-  fromObject: types.EditImageResponse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -5736,7 +5696,7 @@ export function editImageResponseFromVertex(
 }
 
 export function upscaleImageResponseFromVertex(
-  fromObject: types.UpscaleImageResponse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -5764,7 +5724,7 @@ export function upscaleImageResponseFromVertex(
 }
 
 export function recontextImageResponseFromVertex(
-  fromObject: types.RecontextImageResponse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -5785,7 +5745,7 @@ export function recontextImageResponseFromVertex(
 }
 
 export function endpointFromVertex(
-  fromObject: types.Endpoint,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -5805,7 +5765,7 @@ export function endpointFromVertex(
 }
 
 export function tunedModelInfoFromVertex(
-  fromObject: types.TunedModelInfo,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -5831,7 +5791,7 @@ export function tunedModelInfoFromVertex(
 }
 
 export function checkpointFromVertex(
-  fromObject: types.Checkpoint,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -5853,9 +5813,7 @@ export function checkpointFromVertex(
   return toObject;
 }
 
-export function modelFromVertex(
-  fromObject: types.Model,
-): Record<string, unknown> {
+export function modelFromVertex(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromName = common.getValueByPath(fromObject, ['name']);
@@ -5929,7 +5887,7 @@ export function modelFromVertex(
 }
 
 export function listModelsResponseFromVertex(
-  fromObject: types.ListModelsResponse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -5968,7 +5926,7 @@ export function deleteModelResponseFromVertex(): Record<string, unknown> {
 }
 
 export function countTokensResponseFromVertex(
-  fromObject: types.CountTokensResponse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -5988,7 +5946,7 @@ export function countTokensResponseFromVertex(
 }
 
 export function computeTokensResponseFromVertex(
-  fromObject: types.ComputeTokensResponse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -6007,9 +5965,7 @@ export function computeTokensResponseFromVertex(
   return toObject;
 }
 
-export function videoFromVertex(
-  fromObject: types.Video,
-): Record<string, unknown> {
+export function videoFromVertex(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromUri = common.getValueByPath(fromObject, ['gcsUri']);
@@ -6033,7 +5989,7 @@ export function videoFromVertex(
 }
 
 export function generatedVideoFromVertex(
-  fromObject: types.GeneratedVideo,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -6046,7 +6002,7 @@ export function generatedVideoFromVertex(
 }
 
 export function generateVideosResponseFromVertex(
-  fromObject: types.GenerateVideosResponse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -6087,7 +6043,7 @@ export function generateVideosResponseFromVertex(
 }
 
 export function generateVideosOperationFromVertex(
-  fromObject: types.GenerateVideosOperation,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
