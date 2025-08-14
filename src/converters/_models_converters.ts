@@ -3749,6 +3749,15 @@ export function recontextImageConfigToVertex(
     );
   }
 
+  const fromAddWatermark = common.getValueByPath(fromObject, ['addWatermark']);
+  if (parentObject !== undefined && fromAddWatermark != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'addWatermark'],
+      fromAddWatermark,
+    );
+  }
+
   const fromOutputMimeType = common.getValueByPath(fromObject, [
     'outputMimeType',
   ]);

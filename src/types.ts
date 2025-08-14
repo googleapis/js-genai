@@ -2979,6 +2979,8 @@ export declare interface RecontextImageConfig {
   /** Whether allow to generate person images, and restrict to specific
       ages. */
   personGeneration?: PersonGeneration;
+  /** Whether to add a SynthID watermark to the generated images. */
+  addWatermark?: boolean;
   /** MIME type of the generated image. */
   outputMimeType?: string;
   /** Compression quality of the generated image (for ``image/jpeg``
