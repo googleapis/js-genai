@@ -7,7 +7,6 @@
 ### Features
 
 * add an _exclude_fields characteristic in the config for unused values to avoid unnecessary and unused code in converter and type generation. ([15a4504](https://github.com/googleapis/js-genai/commit/15a4504ac3455044bb3ef51440ccbf420168104e))
-* Add evaluation support to Vertex tuning ([b53c468](https://github.com/googleapis/js-genai/commit/b53c4685c98aaa2d17ef30c9e97309afb36f2703))
 * enable continuous fine-tuning on a pre-tuned model in the SDK. ([027f09d](https://github.com/googleapis/js-genai/commit/027f09db662ce6b30f737b10b4d2efcb4282a9b6))
 * support document name in grounding metadata ([b801236](https://github.com/googleapis/js-genai/commit/b8012365f7ec7917576ca048bbaa37ac9d011795))
 * Support exclude_domains in Google Search and Enterprise Web Search ([8ed49f1](https://github.com/googleapis/js-genai/commit/8ed49f171e2a1bf2cfb187869e4682ed2f8bd2fb))
