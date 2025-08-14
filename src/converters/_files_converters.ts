@@ -8,10 +8,9 @@
 
 import * as common from '../_common.js';
 import * as t from '../_transformers.js';
-import * as types from '../types.js';
 
 export function listFilesConfigToMldev(
-  fromObject: types.ListFilesConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -30,7 +29,7 @@ export function listFilesConfigToMldev(
 }
 
 export function listFilesParametersToMldev(
-  fromObject: types.ListFilesParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -47,7 +46,7 @@ export function listFilesParametersToMldev(
 }
 
 export function fileStatusToMldev(
-  fromObject: types.FileStatus,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -69,7 +68,7 @@ export function fileStatusToMldev(
   return toObject;
 }
 
-export function fileToMldev(fromObject: types.File): Record<string, unknown> {
+export function fileToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromName = common.getValueByPath(fromObject, ['name']);
@@ -150,7 +149,7 @@ export function fileToMldev(fromObject: types.File): Record<string, unknown> {
 }
 
 export function createFileParametersToMldev(
-  fromObject: types.CreateFileParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -168,7 +167,7 @@ export function createFileParametersToMldev(
 }
 
 export function getFileParametersToMldev(
-  fromObject: types.GetFileParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -186,7 +185,7 @@ export function getFileParametersToMldev(
 }
 
 export function deleteFileParametersToMldev(
-  fromObject: types.DeleteFileParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -204,7 +203,7 @@ export function deleteFileParametersToMldev(
 }
 
 export function fileStatusFromMldev(
-  fromObject: types.FileStatus,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -226,7 +225,7 @@ export function fileStatusFromMldev(
   return toObject;
 }
 
-export function fileFromMldev(fromObject: types.File): Record<string, unknown> {
+export function fileFromMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromName = common.getValueByPath(fromObject, ['name']);
@@ -307,7 +306,7 @@ export function fileFromMldev(fromObject: types.File): Record<string, unknown> {
 }
 
 export function listFilesResponseFromMldev(
-  fromObject: types.ListFilesResponse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -340,7 +339,7 @@ export function listFilesResponseFromMldev(
 }
 
 export function createFileResponseFromMldev(
-  fromObject: types.CreateFileResponse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 

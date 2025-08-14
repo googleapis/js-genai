@@ -9,10 +9,9 @@
 import {ApiClient} from '../_api_client.js';
 import * as common from '../_common.js';
 import * as t from '../_transformers.js';
-import * as types from '../types.js';
 
 export function prebuiltVoiceConfigToMldev(
-  fromObject: types.PrebuiltVoiceConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -25,7 +24,7 @@ export function prebuiltVoiceConfigToMldev(
 }
 
 export function voiceConfigToMldev(
-  fromObject: types.VoiceConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -44,7 +43,7 @@ export function voiceConfigToMldev(
 }
 
 export function speakerVoiceConfigToMldev(
-  fromObject: types.SpeakerVoiceConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -66,7 +65,7 @@ export function speakerVoiceConfigToMldev(
 }
 
 export function multiSpeakerVoiceConfigToMldev(
-  fromObject: types.MultiSpeakerVoiceConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -87,7 +86,7 @@ export function multiSpeakerVoiceConfigToMldev(
 }
 
 export function speechConfigToMldev(
-  fromObject: types.SpeechConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -120,7 +119,7 @@ export function speechConfigToMldev(
 }
 
 export function videoMetadataToMldev(
-  fromObject: types.VideoMetadata,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -142,7 +141,7 @@ export function videoMetadataToMldev(
   return toObject;
 }
 
-export function blobToMldev(fromObject: types.Blob): Record<string, unknown> {
+export function blobToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
@@ -162,9 +161,7 @@ export function blobToMldev(fromObject: types.Blob): Record<string, unknown> {
   return toObject;
 }
 
-export function fileDataToMldev(
-  fromObject: types.FileData,
-): Record<string, unknown> {
+export function fileDataToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
@@ -184,7 +181,7 @@ export function fileDataToMldev(
   return toObject;
 }
 
-export function partToMldev(fromObject: types.Part): Record<string, unknown> {
+export function partToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromVideoMetadata = common.getValueByPath(fromObject, [
@@ -266,9 +263,7 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
   return toObject;
 }
 
-export function contentToMldev(
-  fromObject: types.Content,
-): Record<string, unknown> {
+export function contentToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromParts = common.getValueByPath(fromObject, ['parts']);
@@ -291,7 +286,7 @@ export function contentToMldev(
 }
 
 export function functionDeclarationToMldev(
-  fromObject: types.FunctionDeclaration,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -345,9 +340,7 @@ export function functionDeclarationToMldev(
   return toObject;
 }
 
-export function intervalToMldev(
-  fromObject: types.Interval,
-): Record<string, unknown> {
+export function intervalToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromStartTime = common.getValueByPath(fromObject, ['startTime']);
@@ -364,7 +357,7 @@ export function intervalToMldev(
 }
 
 export function googleSearchToMldev(
-  fromObject: types.GoogleSearch,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -387,7 +380,7 @@ export function googleSearchToMldev(
 }
 
 export function dynamicRetrievalConfigToMldev(
-  fromObject: types.DynamicRetrievalConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -407,7 +400,7 @@ export function dynamicRetrievalConfigToMldev(
 }
 
 export function googleSearchRetrievalToMldev(
-  fromObject: types.GoogleSearchRetrieval,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -432,7 +425,7 @@ export function urlContextToMldev(): Record<string, unknown> {
 }
 
 export function toolComputerUseToMldev(
-  fromObject: types.ToolComputerUse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -444,7 +437,7 @@ export function toolComputerUseToMldev(
   return toObject;
 }
 
-export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
+export function toolToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromFunctionDeclarations = common.getValueByPath(fromObject, [
@@ -521,7 +514,7 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
 }
 
 export function sessionResumptionConfigToMldev(
-  fromObject: types.SessionResumptionConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -544,7 +537,7 @@ export function audioTranscriptionConfigToMldev(): Record<string, unknown> {
 }
 
 export function automaticActivityDetectionToMldev(
-  fromObject: types.AutomaticActivityDetection,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -597,7 +590,7 @@ export function automaticActivityDetectionToMldev(
 }
 
 export function realtimeInputConfigToMldev(
-  fromObject: types.RealtimeInputConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -628,7 +621,7 @@ export function realtimeInputConfigToMldev(
 }
 
 export function slidingWindowToMldev(
-  fromObject: types.SlidingWindow,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -641,7 +634,7 @@ export function slidingWindowToMldev(
 }
 
 export function contextWindowCompressionConfigToMldev(
-  fromObject: types.ContextWindowCompressionConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -667,7 +660,7 @@ export function contextWindowCompressionConfigToMldev(
 }
 
 export function proactivityConfigToMldev(
-  fromObject: types.ProactivityConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -682,7 +675,7 @@ export function proactivityConfigToMldev(
 }
 
 export function liveConnectConfigToMldev(
-  fromObject: types.LiveConnectConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -878,7 +871,7 @@ export function liveConnectConfigToMldev(
 
 export function liveConnectConstraintsToMldev(
   apiClient: ApiClient,
-  fromObject: types.LiveConnectConstraints,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -905,7 +898,7 @@ export function liveConnectConstraintsToMldev(
 
 export function createAuthTokenConfigToMldev(
   apiClient: ApiClient,
-  fromObject: types.CreateAuthTokenConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -958,7 +951,7 @@ export function createAuthTokenConfigToMldev(
 
 export function createAuthTokenParametersToMldev(
   apiClient: ApiClient,
-  fromObject: types.CreateAuthTokenParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -975,7 +968,7 @@ export function createAuthTokenParametersToMldev(
 }
 
 export function createAuthTokenParametersToVertex(
-  fromObject: types.CreateAuthTokenParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -987,7 +980,7 @@ export function createAuthTokenParametersToVertex(
 }
 
 export function authTokenFromMldev(
-  fromObject: types.AuthToken,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
