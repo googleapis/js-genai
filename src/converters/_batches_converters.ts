@@ -9,10 +9,9 @@
 import {ApiClient} from '../_api_client.js';
 import * as common from '../_common.js';
 import * as t from '../_transformers.js';
-import * as types from '../types.js';
 
 export function videoMetadataToMldev(
-  fromObject: types.VideoMetadata,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -34,7 +33,7 @@ export function videoMetadataToMldev(
   return toObject;
 }
 
-export function blobToMldev(fromObject: types.Blob): Record<string, unknown> {
+export function blobToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
@@ -54,9 +53,7 @@ export function blobToMldev(fromObject: types.Blob): Record<string, unknown> {
   return toObject;
 }
 
-export function fileDataToMldev(
-  fromObject: types.FileData,
-): Record<string, unknown> {
+export function fileDataToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
@@ -76,7 +73,7 @@ export function fileDataToMldev(
   return toObject;
 }
 
-export function partToMldev(fromObject: types.Part): Record<string, unknown> {
+export function partToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromVideoMetadata = common.getValueByPath(fromObject, [
@@ -158,9 +155,7 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
   return toObject;
 }
 
-export function contentToMldev(
-  fromObject: types.Content,
-): Record<string, unknown> {
+export function contentToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromParts = common.getValueByPath(fromObject, ['parts']);
@@ -182,9 +177,7 @@ export function contentToMldev(
   return toObject;
 }
 
-export function schemaToMldev(
-  fromObject: types.Schema,
-): Record<string, unknown> {
+export function schemaToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromAnyOf = common.getValueByPath(fromObject, ['anyOf']);
@@ -307,7 +300,7 @@ export function schemaToMldev(
 }
 
 export function safetySettingToMldev(
-  fromObject: types.SafetySetting,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -329,7 +322,7 @@ export function safetySettingToMldev(
 }
 
 export function functionDeclarationToMldev(
-  fromObject: types.FunctionDeclaration,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -383,9 +376,7 @@ export function functionDeclarationToMldev(
   return toObject;
 }
 
-export function intervalToMldev(
-  fromObject: types.Interval,
-): Record<string, unknown> {
+export function intervalToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromStartTime = common.getValueByPath(fromObject, ['startTime']);
@@ -402,7 +393,7 @@ export function intervalToMldev(
 }
 
 export function googleSearchToMldev(
-  fromObject: types.GoogleSearch,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -425,7 +416,7 @@ export function googleSearchToMldev(
 }
 
 export function dynamicRetrievalConfigToMldev(
-  fromObject: types.DynamicRetrievalConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -445,7 +436,7 @@ export function dynamicRetrievalConfigToMldev(
 }
 
 export function googleSearchRetrievalToMldev(
-  fromObject: types.GoogleSearchRetrieval,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -470,7 +461,7 @@ export function urlContextToMldev(): Record<string, unknown> {
 }
 
 export function toolComputerUseToMldev(
-  fromObject: types.ToolComputerUse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -482,7 +473,7 @@ export function toolComputerUseToMldev(
   return toObject;
 }
 
-export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
+export function toolToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromFunctionDeclarations = common.getValueByPath(fromObject, [
@@ -559,7 +550,7 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
 }
 
 export function functionCallingConfigToMldev(
-  fromObject: types.FunctionCallingConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -582,9 +573,7 @@ export function functionCallingConfigToMldev(
   return toObject;
 }
 
-export function latLngToMldev(
-  fromObject: types.LatLng,
-): Record<string, unknown> {
+export function latLngToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromLatitude = common.getValueByPath(fromObject, ['latitude']);
@@ -601,7 +590,7 @@ export function latLngToMldev(
 }
 
 export function retrievalConfigToMldev(
-  fromObject: types.RetrievalConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -619,7 +608,7 @@ export function retrievalConfigToMldev(
 }
 
 export function toolConfigToMldev(
-  fromObject: types.ToolConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -649,7 +638,7 @@ export function toolConfigToMldev(
 }
 
 export function prebuiltVoiceConfigToMldev(
-  fromObject: types.PrebuiltVoiceConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -662,7 +651,7 @@ export function prebuiltVoiceConfigToMldev(
 }
 
 export function voiceConfigToMldev(
-  fromObject: types.VoiceConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -681,7 +670,7 @@ export function voiceConfigToMldev(
 }
 
 export function speakerVoiceConfigToMldev(
-  fromObject: types.SpeakerVoiceConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -703,7 +692,7 @@ export function speakerVoiceConfigToMldev(
 }
 
 export function multiSpeakerVoiceConfigToMldev(
-  fromObject: types.MultiSpeakerVoiceConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -724,7 +713,7 @@ export function multiSpeakerVoiceConfigToMldev(
 }
 
 export function speechConfigToMldev(
-  fromObject: types.SpeechConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -757,7 +746,7 @@ export function speechConfigToMldev(
 }
 
 export function thinkingConfigToMldev(
-  fromObject: types.ThinkingConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -780,7 +769,7 @@ export function thinkingConfigToMldev(
 
 export function generateContentConfigToMldev(
   apiClient: ApiClient,
-  fromObject: types.GenerateContentConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -999,7 +988,7 @@ export function generateContentConfigToMldev(
 
 export function inlinedRequestToMldev(
   apiClient: ApiClient,
-  fromObject: types.InlinedRequest,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1037,7 +1026,7 @@ export function inlinedRequestToMldev(
 
 export function batchJobSourceToMldev(
   apiClient: ApiClient,
-  fromObject: types.BatchJobSource,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1075,7 +1064,7 @@ export function batchJobSourceToMldev(
 }
 
 export function createBatchJobConfigToMldev(
-  fromObject: types.CreateBatchJobConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -1098,7 +1087,7 @@ export function createBatchJobConfigToMldev(
 
 export function createBatchJobParametersToMldev(
   apiClient: ApiClient,
-  fromObject: types.CreateBatchJobParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1134,7 +1123,7 @@ export function createBatchJobParametersToMldev(
 
 export function getBatchJobParametersToMldev(
   apiClient: ApiClient,
-  fromObject: types.GetBatchJobParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1157,7 +1146,7 @@ export function getBatchJobParametersToMldev(
 
 export function cancelBatchJobParametersToMldev(
   apiClient: ApiClient,
-  fromObject: types.CancelBatchJobParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1179,7 +1168,7 @@ export function cancelBatchJobParametersToMldev(
 }
 
 export function listBatchJobsConfigToMldev(
-  fromObject: types.ListBatchJobsConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -1202,7 +1191,7 @@ export function listBatchJobsConfigToMldev(
 }
 
 export function listBatchJobsParametersToMldev(
-  fromObject: types.ListBatchJobsParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1220,7 +1209,7 @@ export function listBatchJobsParametersToMldev(
 
 export function deleteBatchJobParametersToMldev(
   apiClient: ApiClient,
-  fromObject: types.DeleteBatchJobParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1242,7 +1231,7 @@ export function deleteBatchJobParametersToMldev(
 }
 
 export function batchJobSourceToVertex(
-  fromObject: types.BatchJobSource,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1277,7 +1266,7 @@ export function batchJobSourceToVertex(
 }
 
 export function batchJobDestinationToVertex(
-  fromObject: types.BatchJobDestination,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1318,7 +1307,7 @@ export function batchJobDestinationToVertex(
 }
 
 export function createBatchJobConfigToVertex(
-  fromObject: types.CreateBatchJobConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -1342,7 +1331,7 @@ export function createBatchJobConfigToVertex(
 
 export function createBatchJobParametersToVertex(
   apiClient: ApiClient,
-  fromObject: types.CreateBatchJobParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1374,7 +1363,7 @@ export function createBatchJobParametersToVertex(
 
 export function getBatchJobParametersToVertex(
   apiClient: ApiClient,
-  fromObject: types.GetBatchJobParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1397,7 +1386,7 @@ export function getBatchJobParametersToVertex(
 
 export function cancelBatchJobParametersToVertex(
   apiClient: ApiClient,
-  fromObject: types.CancelBatchJobParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1419,7 +1408,7 @@ export function cancelBatchJobParametersToVertex(
 }
 
 export function listBatchJobsConfigToVertex(
-  fromObject: types.ListBatchJobsConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -1443,7 +1432,7 @@ export function listBatchJobsConfigToVertex(
 }
 
 export function listBatchJobsParametersToVertex(
-  fromObject: types.ListBatchJobsParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1461,7 +1450,7 @@ export function listBatchJobsParametersToVertex(
 
 export function deleteBatchJobParametersToVertex(
   apiClient: ApiClient,
-  fromObject: types.DeleteBatchJobParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1483,7 +1472,7 @@ export function deleteBatchJobParametersToVertex(
 }
 
 export function videoMetadataFromMldev(
-  fromObject: types.VideoMetadata,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1505,7 +1494,7 @@ export function videoMetadataFromMldev(
   return toObject;
 }
 
-export function blobFromMldev(fromObject: types.Blob): Record<string, unknown> {
+export function blobFromMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromData = common.getValueByPath(fromObject, ['data']);
@@ -1522,7 +1511,7 @@ export function blobFromMldev(fromObject: types.Blob): Record<string, unknown> {
 }
 
 export function fileDataFromMldev(
-  fromObject: types.FileData,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1539,7 +1528,7 @@ export function fileDataFromMldev(
   return toObject;
 }
 
-export function partFromMldev(fromObject: types.Part): Record<string, unknown> {
+export function partFromMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromVideoMetadata = common.getValueByPath(fromObject, [
@@ -1621,9 +1610,7 @@ export function partFromMldev(fromObject: types.Part): Record<string, unknown> {
   return toObject;
 }
 
-export function contentFromMldev(
-  fromObject: types.Content,
-): Record<string, unknown> {
+export function contentFromMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromParts = common.getValueByPath(fromObject, ['parts']);
@@ -1646,7 +1633,7 @@ export function contentFromMldev(
 }
 
 export function citationMetadataFromMldev(
-  fromObject: types.CitationMetadata,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1659,7 +1646,7 @@ export function citationMetadataFromMldev(
 }
 
 export function urlMetadataFromMldev(
-  fromObject: types.UrlMetadata,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1683,7 +1670,7 @@ export function urlMetadataFromMldev(
 }
 
 export function urlContextMetadataFromMldev(
-  fromObject: types.UrlContextMetadata,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1702,7 +1689,7 @@ export function urlContextMetadataFromMldev(
 }
 
 export function candidateFromMldev(
-  fromObject: types.Candidate,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1782,7 +1769,7 @@ export function candidateFromMldev(
 }
 
 export function generateContentResponseFromMldev(
-  fromObject: types.GenerateContentResponse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1832,7 +1819,7 @@ export function generateContentResponseFromMldev(
 }
 
 export function jobErrorFromMldev(
-  fromObject: types.JobError,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1855,7 +1842,7 @@ export function jobErrorFromMldev(
 }
 
 export function inlinedResponseFromMldev(
-  fromObject: types.InlinedResponse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1864,9 +1851,7 @@ export function inlinedResponseFromMldev(
     common.setValueByPath(
       toObject,
       ['response'],
-      generateContentResponseFromMldev(
-        fromResponse as types.GenerateContentResponse,
-      ),
+      generateContentResponseFromMldev(fromResponse),
     );
   }
 
@@ -1879,7 +1864,7 @@ export function inlinedResponseFromMldev(
 }
 
 export function batchJobDestinationFromMldev(
-  fromObject: types.BatchJobDestination,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1906,7 +1891,7 @@ export function batchJobDestinationFromMldev(
 }
 
 export function batchJobFromMldev(
-  fromObject: types.BatchJob,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1970,7 +1955,7 @@ export function batchJobFromMldev(
 }
 
 export function listBatchJobsResponseFromMldev(
-  fromObject: types.ListBatchJobsResponse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2003,7 +1988,7 @@ export function listBatchJobsResponseFromMldev(
 }
 
 export function deleteResourceJobFromMldev(
-  fromObject: types.DeleteResourceJob,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2033,7 +2018,7 @@ export function deleteResourceJobFromMldev(
 }
 
 export function jobErrorFromVertex(
-  fromObject: types.JobError,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2056,7 +2041,7 @@ export function jobErrorFromVertex(
 }
 
 export function batchJobSourceFromVertex(
-  fromObject: types.BatchJobSource,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2082,7 +2067,7 @@ export function batchJobSourceFromVertex(
 }
 
 export function batchJobDestinationFromVertex(
-  fromObject: types.BatchJobDestination,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2111,7 +2096,7 @@ export function batchJobDestinationFromVertex(
 }
 
 export function batchJobFromVertex(
-  fromObject: types.BatchJob,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2178,7 +2163,7 @@ export function batchJobFromVertex(
 }
 
 export function listBatchJobsResponseFromVertex(
-  fromObject: types.ListBatchJobsResponse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2213,7 +2198,7 @@ export function listBatchJobsResponseFromVertex(
 }
 
 export function deleteResourceJobFromVertex(
-  fromObject: types.DeleteResourceJob,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
