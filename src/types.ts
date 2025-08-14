@@ -1220,7 +1220,6 @@ export function createModelContent(
     parts: _toParts(partOrString),
   };
 }
-
 /** HTTP options to be used in each of the requests. */
 export declare interface HttpOptions {
   /** The base URL for the AI platform service endpoint. */
@@ -3472,8 +3471,135 @@ export class GenerateVideosResponse {
   raiMediaFilteredReasons?: string[];
 }
 
-/** Optional parameters for tunings.get method. */
-export declare interface GetTuningJobConfig {
+/** A long-running operation. */
+export declare interface Operation<T> {
+  /** The server-assigned name, which is only unique within the same service that originally returns it. If you use the default HTTP mapping, the `name` should be a resource name ending with `operations/{unique_id}`. */
+  name?: string;
+  /** Service-specific metadata associated with the operation. It typically contains progress information and common metadata such as create time. Some services might not provide such metadata.  Any method that returns a long-running operation should document the metadata type, if any. */
+  metadata?: Record<string, unknown>;
+  /** If the value is `false`, it means the operation is still in progress. If `true`, the operation is completed, and either `error` or `response` is available. */
+  done?: boolean;
+  /** The error result of the operation in case of failure or cancellation. */
+  error?: Record<string, unknown>;
+  /** The response if the operation is successful. */
+  response?: T;
+  /**
+   * Instantiates an Operation of the same type as the one being called with the fields set from the API response.
+   * @internal
+   */
+  _fromAPIResponse({
+    apiResponse,
+    isVertexAI,
+  }: OperationFromAPIResponseParameters): Operation<T>;
+}
+
+/** A video generation operation. */
+export class GenerateVideosOperation
+  implements Operation<GenerateVideosResponse>
+{
+  /** The server-assigned name, which is only unique within the same service that originally returns it. If you use the default HTTP mapping, the `name` should be a resource name ending with `operations/{unique_id}`. */
+  name?: string;
+  /** Service-specific metadata associated with the operation. It typically contains progress information and common metadata such as create time. Some services might not provide such metadata.  Any method that returns a long-running operation should document the metadata type, if any. */
+  metadata?: Record<string, unknown>;
+  /** If the value is `false`, it means the operation is still in progress. If `true`, the operation is completed, and either `error` or `response` is available. */
+  done?: boolean;
+  /** The error result of the operation in case of failure or cancellation. */
+  error?: Record<string, unknown>;
+  /** The generated videos. */
+  response?: GenerateVideosResponse;
+  /** The full HTTP response. */
+  sdkHttpResponse?: HttpResponse;
+  /**
+   * Instantiates an Operation of the same type as the one being called with the fields set from the API response.
+   * @internal
+   */
+  _fromAPIResponse({
+    apiResponse,
+    isVertexAI,
+  }: OperationFromAPIResponseParameters): Operation<GenerateVideosResponse> {
+    const operation = new GenerateVideosOperation();
+    operation.name = apiResponse['name'] as string | undefined;
+    operation.metadata = apiResponse['metadata'] as
+      | Record<string, unknown>
+      | undefined;
+    operation.done = apiResponse['done'] as boolean | undefined;
+    operation.error = apiResponse['error'] as
+      | Record<string, unknown>
+      | undefined;
+
+    if (isVertexAI) {
+      const response = apiResponse['response'] as
+        | Record<string, unknown>
+        | undefined;
+      if (response) {
+        const operationResponse = new GenerateVideosResponse();
+        const responseVideos = response['videos'] as
+          | Array<Record<string, unknown>>
+          | undefined;
+        operationResponse.generatedVideos = responseVideos?.map(
+          (generatedVideo) => {
+            return {
+              video: {
+                uri: generatedVideo['gcsUri'] as string | undefined,
+                videoBytes: generatedVideo['bytesBase64Encoded']
+                  ? tBytes(generatedVideo['bytesBase64Encoded'] as string)
+                  : undefined,
+                mimeType: generatedVideo['mimeType'] as string | undefined,
+              } as Video,
+            } as GeneratedVideo;
+          },
+        );
+        operationResponse.raiMediaFilteredCount = response[
+          'raiMediaFilteredCount'
+        ] as number | undefined;
+        operationResponse.raiMediaFilteredReasons = response[
+          'raiMediaFilteredReasons'
+        ] as string[] | undefined;
+        operation.response = operationResponse;
+      }
+    } else {
+      const response = apiResponse['response'] as
+        | Record<string, unknown>
+        | undefined;
+      if (response) {
+        const operationResponse = new GenerateVideosResponse();
+        const generatedVideoResponse = response['generateVideoResponse'] as
+          | Record<string, unknown>
+          | undefined;
+        const responseVideos = generatedVideoResponse?.['generatedSamples'] as
+          | Array<Record<string, unknown>>
+          | undefined;
+        operationResponse.generatedVideos = responseVideos?.map(
+          (generatedVideo) => {
+            const video = generatedVideo['video'] as
+              | Record<string, unknown>
+              | undefined;
+            return {
+              video: {
+                uri: video?.['uri'] as string | undefined,
+                videoBytes: video?.['encodedVideo']
+                  ? tBytes(video?.['encodedVideo'] as string)
+                  : undefined,
+                mimeType: generatedVideo['encoding'] as string | undefined,
+              } as Video,
+            } as GeneratedVideo;
+          },
+        );
+        operationResponse.raiMediaFilteredCount = generatedVideoResponse?.[
+          'raiMediaFilteredCount'
+        ] as number | undefined;
+        operationResponse.raiMediaFilteredReasons = generatedVideoResponse?.[
+          'raiMediaFilteredReasons'
+        ] as string[] | undefined;
+        operation.response = operationResponse;
+      }
+    }
+    return operation;
+  }
+}
+
+export /** Optional parameters for tunings.get method. */
+declare interface GetTuningJobConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
   /** Abort signal which can be used to cancel the request.
@@ -4836,8 +4962,8 @@ export class SubjectReferenceImage {
   }
 }
 
-export /** Sent in response to a `LiveGenerateContentSetup` message from the client. */
-declare interface LiveServerSetupComplete {
+/** Sent in response to a `LiveGenerateContentSetup` message from the client. */
+export declare interface LiveServerSetupComplete {
   /** The session id of the live session. */
   sessionId?: string;
 }
@@ -5039,148 +5165,12 @@ export class LiveServerMessage {
   }
 }
 
-/** Parameters for the get method of the operations module. */
-export declare interface OperationGetParameters<T, U extends Operation<T>> {
-  /** The operation to be retrieved. */
-  operation: U;
-  /** Used to override the default configuration. */
-  config?: GetOperationConfig;
-}
-
 /** Parameters of the fromAPIResponse method of the Operation class. */
 export declare interface OperationFromAPIResponseParameters {
   /** The API response to be converted to an Operation. */
   apiResponse: Record<string, unknown>;
   /** Whether the API response is from Vertex AI. */
   isVertexAI: boolean;
-}
-
-/** A long-running operation. */
-export declare interface Operation<T> {
-  /** The server-assigned name, which is only unique within the same service that originally returns it. If you use the default HTTP mapping, the `name` should be a resource name ending with `operations/{unique_id}`. */
-  name?: string;
-  /** Service-specific metadata associated with the operation. It typically contains progress information and common metadata such as create time. Some services might not provide such metadata.  Any method that returns a long-running operation should document the metadata type, if any. */
-  metadata?: Record<string, unknown>;
-  /** If the value is `false`, it means the operation is still in progress. If `true`, the operation is completed, and either `error` or `response` is available. */
-  done?: boolean;
-  /** The error result of the operation in case of failure or cancellation. */
-  error?: Record<string, unknown>;
-  /** The response if the operation is successful. */
-  response?: T;
-  /**
-   * Instantiates an Operation of the same type as the one being called with the fields set from the API response.
-   * @internal
-   */
-  _fromAPIResponse({
-    apiResponse,
-    isVertexAI,
-  }: OperationFromAPIResponseParameters): Operation<T>;
-}
-
-/** A video generation long-running operation. */
-export class GenerateVideosOperation
-  implements Operation<GenerateVideosResponse>
-{
-  /** The server-assigned name, which is only unique within the same service that originally returns it. If you use the default HTTP mapping, the `name` should be a resource name ending with `operations/{unique_id}`. */
-  name?: string;
-  /** Service-specific metadata associated with the operation. It typically contains progress information and common metadata such as create time. Some services might not provide such metadata.  Any method that returns a long-running operation should document the metadata type, if any. */
-  metadata?: Record<string, unknown>;
-  /** If the value is `false`, it means the operation is still in progress. If `true`, the operation is completed, and either `error` or `response` is available. */
-  done?: boolean;
-  /** The error result of the operation in case of failure or cancellation. */
-  error?: Record<string, unknown>;
-  /** The response if the operation is successful. */
-  response?: GenerateVideosResponse;
-  /** The full HTTP response. */
-  sdkHttpResponse?: HttpResponse;
-
-  /**
-   * Instantiates an Operation of the same type as the one being called with the fields set from the API response.
-   * @internal
-   */
-  _fromAPIResponse({
-    apiResponse,
-    isVertexAI,
-  }: OperationFromAPIResponseParameters): Operation<GenerateVideosResponse> {
-    const operation = new GenerateVideosOperation();
-    operation.name = apiResponse['name'] as string | undefined;
-    operation.metadata = apiResponse['metadata'] as
-      | Record<string, unknown>
-      | undefined;
-    operation.done = apiResponse['done'] as boolean | undefined;
-    operation.error = apiResponse['error'] as
-      | Record<string, unknown>
-      | undefined;
-
-    if (isVertexAI) {
-      const response = apiResponse['response'] as
-        | Record<string, unknown>
-        | undefined;
-      if (response) {
-        const operationResponse = new GenerateVideosResponse();
-        const responseVideos = response['videos'] as
-          | Array<Record<string, unknown>>
-          | undefined;
-        operationResponse.generatedVideos = responseVideos?.map(
-          (generatedVideo) => {
-            return {
-              video: {
-                uri: generatedVideo['gcsUri'] as string | undefined,
-                videoBytes: generatedVideo['bytesBase64Encoded']
-                  ? tBytes(generatedVideo['bytesBase64Encoded'] as string)
-                  : undefined,
-                mimeType: generatedVideo['mimeType'] as string | undefined,
-              } as Video,
-            } as GeneratedVideo;
-          },
-        );
-        operationResponse.raiMediaFilteredCount = response[
-          'raiMediaFilteredCount'
-        ] as number | undefined;
-        operationResponse.raiMediaFilteredReasons = response[
-          'raiMediaFilteredReasons'
-        ] as string[] | undefined;
-        operation.response = operationResponse;
-      }
-    } else {
-      const response = apiResponse['response'] as
-        | Record<string, unknown>
-        | undefined;
-      if (response) {
-        const operationResponse = new GenerateVideosResponse();
-        const generatedVideoResponse = response['generateVideoResponse'] as
-          | Record<string, unknown>
-          | undefined;
-        const responseVideos = generatedVideoResponse?.['generatedSamples'] as
-          | Array<Record<string, unknown>>
-          | undefined;
-        operationResponse.generatedVideos = responseVideos?.map(
-          (generatedVideo) => {
-            const video = generatedVideo['video'] as
-              | Record<string, unknown>
-              | undefined;
-            return {
-              video: {
-                uri: video?.['uri'] as string | undefined,
-                videoBytes: video?.['encodedVideo']
-                  ? tBytes(video?.['encodedVideo'] as string)
-                  : undefined,
-                mimeType: generatedVideo['encoding'] as string | undefined,
-              } as Video,
-            } as GeneratedVideo;
-          },
-        );
-        operationResponse.raiMediaFilteredCount = generatedVideoResponse?.[
-          'raiMediaFilteredCount'
-        ] as number | undefined;
-        operationResponse.raiMediaFilteredReasons = generatedVideoResponse?.[
-          'raiMediaFilteredReasons'
-        ] as string[] | undefined;
-        operation.response = operationResponse;
-      }
-    }
-    return operation;
-  }
 }
 
 /** Configures automatic detection of activity. */
@@ -5854,6 +5844,14 @@ export declare interface CreateAuthTokenConfig {
 export declare interface CreateAuthTokenParameters {
   /** Optional parameters for the request. */
   config?: CreateAuthTokenConfig;
+}
+
+/** Parameters for the get method of the operations module. */
+export declare interface OperationGetParameters<T, U extends Operation<T>> {
+  /** Used to override the default configuration. */
+  config?: GetOperationConfig;
+  /** The operation to be retrieved. */
+  operation: U;
 }
 
 /** Supervised fine-tuning job creation parameters - optional fields. */
