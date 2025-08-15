@@ -353,34 +353,6 @@ export enum HarmSeverity {
   HARM_SEVERITY_HIGH = 'HARM_SEVERITY_HIGH',
 }
 
-/** Output only. Blocked reason. */
-export enum BlockedReason {
-  /**
-   * Unspecified blocked reason.
-   */
-  BLOCKED_REASON_UNSPECIFIED = 'BLOCKED_REASON_UNSPECIFIED',
-  /**
-   * Candidates blocked due to safety.
-   */
-  SAFETY = 'SAFETY',
-  /**
-   * Candidates blocked due to other reason.
-   */
-  OTHER = 'OTHER',
-  /**
-   * Candidates blocked due to the terms which are included from the terminology blocklist.
-   */
-  BLOCKLIST = 'BLOCKLIST',
-  /**
-   * Candidates blocked due to prohibited content.
-   */
-  PROHIBITED_CONTENT = 'PROHIBITED_CONTENT',
-  /**
-   * Candidates blocked due to unsafe image generation content.
-   */
-  IMAGE_SAFETY = 'IMAGE_SAFETY',
-}
-
 /** Output only. Traffic type. This shows whether a request consumes Pay-As-You-Go or Provisioned Throughput quota. */
 export enum TrafficType {
   /**
@@ -415,6 +387,34 @@ export enum Modality {
    * Indicates the model should return audio.
    */
   AUDIO = 'AUDIO',
+}
+
+/** Output only. Blocked reason. */
+export enum BlockedReason {
+  /**
+   * Unspecified blocked reason.
+   */
+  BLOCKED_REASON_UNSPECIFIED = 'BLOCKED_REASON_UNSPECIFIED',
+  /**
+   * Candidates blocked due to safety.
+   */
+  SAFETY = 'SAFETY',
+  /**
+   * Candidates blocked due to other reason.
+   */
+  OTHER = 'OTHER',
+  /**
+   * Candidates blocked due to the terms which are included from the terminology blocklist.
+   */
+  BLOCKLIST = 'BLOCKLIST',
+  /**
+   * Candidates blocked due to prohibited content.
+   */
+  PROHIBITED_CONTENT = 'PROHIBITED_CONTENT',
+  /**
+   * Candidates blocked due to unsafe image generation content.
+   */
+  IMAGE_SAFETY = 'IMAGE_SAFETY',
 }
 
 /** The media resolution to use. */
@@ -2242,16 +2242,6 @@ export declare interface Candidate {
   safetyRatings?: SafetyRating[];
 }
 
-/** Content filter results for a prompt sent in the request. */
-export class GenerateContentResponsePromptFeedback {
-  /** Output only. Blocked reason. */
-  blockReason?: BlockedReason;
-  /** Output only. A readable block reason message. */
-  blockReasonMessage?: string;
-  /** Output only. Safety ratings. */
-  safetyRatings?: SafetyRating[];
-}
-
 /** Represents token counting info for a single modality. */
 export declare interface ModalityTokenCount {
   /** The modality associated with this token count. */
@@ -2286,6 +2276,16 @@ export class GenerateContentResponseUsageMetadata {
   trafficType?: TrafficType;
 }
 
+/** Content filter results for a prompt sent in the request. */
+export class GenerateContentResponsePromptFeedback {
+  /** Output only. Blocked reason. */
+  blockReason?: BlockedReason;
+  /** Output only. A readable block reason message. */
+  blockReasonMessage?: string;
+  /** Output only. Safety ratings. */
+  safetyRatings?: SafetyRating[];
+}
+
 /** Response message for PredictionService.GenerateContent. */
 export class GenerateContentResponse {
   /** Used to retain the full HTTP response. */
@@ -2299,14 +2299,14 @@ export class GenerateContentResponse {
   /** The history of automatic function calling.
    */
   automaticFunctionCallingHistory?: Content[];
+  /** Usage metadata about the response(s). */
+  usageMetadata?: GenerateContentResponseUsageMetadata;
   /** Output only. The model version used to generate the response. */
   modelVersion?: string;
   /** Output only. Content filter results for a prompt sent in the request. Note: Sent only in the first stream chunk. Only happens when no candidates were generated due to content violations. */
   promptFeedback?: GenerateContentResponsePromptFeedback;
   /** Output only. response_id is used to identify each response. It is the encoding of the event_id. */
   responseId?: string;
-  /** Usage metadata about the response(s). */
-  usageMetadata?: GenerateContentResponseUsageMetadata;
   /**
    * Returns the concatenation of all text parts from the first candidate in the response.
    *
