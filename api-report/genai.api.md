@@ -1322,7 +1322,7 @@ export interface GetOperationParameters {
     operationName: string;
 }
 
-// @public
+// @public (undocumented)
 export interface GetTuningJobConfig {
     abortSignal?: AbortSignal;
     httpOptions?: HttpOptions;
@@ -2014,7 +2014,7 @@ export interface LiveServerSessionResumptionUpdate {
     resumable?: boolean;
 }
 
-// @public (undocumented)
+// @public
 export interface LiveServerSetupComplete {
     sessionId?: string;
 }
