@@ -4746,6 +4746,116 @@ export function candidateFromMldev(
   return toObject;
 }
 
+export function generateContentResponseUsageMetadataFromMldev(
+  fromObject: types.GenerateContentResponseUsageMetadata,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromCacheTokensDetails = common.getValueByPath(fromObject, [
+    'cacheTokensDetails',
+  ]);
+  if (fromCacheTokensDetails != null) {
+    common.setValueByPath(
+      toObject,
+      ['cacheTokensDetails'],
+      fromCacheTokensDetails,
+    );
+  }
+
+  const fromCachedContentTokenCount = common.getValueByPath(fromObject, [
+    'cachedContentTokenCount',
+  ]);
+  if (fromCachedContentTokenCount != null) {
+    common.setValueByPath(
+      toObject,
+      ['cachedContentTokenCount'],
+      fromCachedContentTokenCount,
+    );
+  }
+
+  const fromCandidatesTokenCount = common.getValueByPath(fromObject, [
+    'candidatesTokenCount',
+  ]);
+  if (fromCandidatesTokenCount != null) {
+    common.setValueByPath(
+      toObject,
+      ['candidatesTokenCount'],
+      fromCandidatesTokenCount,
+    );
+  }
+
+  const fromCandidatesTokensDetails = common.getValueByPath(fromObject, [
+    'candidatesTokensDetails',
+  ]);
+  if (fromCandidatesTokensDetails != null) {
+    common.setValueByPath(
+      toObject,
+      ['candidatesTokensDetails'],
+      fromCandidatesTokensDetails,
+    );
+  }
+
+  const fromPromptTokenCount = common.getValueByPath(fromObject, [
+    'promptTokenCount',
+  ]);
+  if (fromPromptTokenCount != null) {
+    common.setValueByPath(toObject, ['promptTokenCount'], fromPromptTokenCount);
+  }
+
+  const fromPromptTokensDetails = common.getValueByPath(fromObject, [
+    'promptTokensDetails',
+  ]);
+  if (fromPromptTokensDetails != null) {
+    common.setValueByPath(
+      toObject,
+      ['promptTokensDetails'],
+      fromPromptTokensDetails,
+    );
+  }
+
+  const fromThoughtsTokenCount = common.getValueByPath(fromObject, [
+    'thoughtsTokenCount',
+  ]);
+  if (fromThoughtsTokenCount != null) {
+    common.setValueByPath(
+      toObject,
+      ['thoughtsTokenCount'],
+      fromThoughtsTokenCount,
+    );
+  }
+
+  const fromToolUsePromptTokenCount = common.getValueByPath(fromObject, [
+    'toolUsePromptTokenCount',
+  ]);
+  if (fromToolUsePromptTokenCount != null) {
+    common.setValueByPath(
+      toObject,
+      ['toolUsePromptTokenCount'],
+      fromToolUsePromptTokenCount,
+    );
+  }
+
+  const fromToolUsePromptTokensDetails = common.getValueByPath(fromObject, [
+    'toolUsePromptTokensDetails',
+  ]);
+  if (fromToolUsePromptTokensDetails != null) {
+    common.setValueByPath(
+      toObject,
+      ['toolUsePromptTokensDetails'],
+      fromToolUsePromptTokensDetails,
+    );
+  }
+
+  const fromTotalTokenCount = common.getValueByPath(fromObject, [
+    'totalTokenCount',
+  ]);
+  if (fromTotalTokenCount != null) {
+    common.setValueByPath(toObject, ['totalTokenCount'], fromTotalTokenCount);
+  }
+
+  return toObject;
+}
+
 export function generateContentResponseFromMldev(
   fromObject: types.GenerateContentResponse,
 ): Record<string, unknown> {
@@ -4769,6 +4879,17 @@ export function generateContentResponseFromMldev(
     common.setValueByPath(toObject, ['candidates'], transformedList);
   }
 
+  const fromUsageMetadata = common.getValueByPath(fromObject, [
+    'usageMetadata',
+  ]);
+  if (fromUsageMetadata != null) {
+    common.setValueByPath(
+      toObject,
+      ['usageMetadata'],
+      generateContentResponseUsageMetadataFromMldev(fromUsageMetadata),
+    );
+  }
+
   const fromModelVersion = common.getValueByPath(fromObject, ['modelVersion']);
   if (fromModelVersion != null) {
     common.setValueByPath(toObject, ['modelVersion'], fromModelVersion);
@@ -4784,13 +4905,6 @@ export function generateContentResponseFromMldev(
   const fromResponseId = common.getValueByPath(fromObject, ['responseId']);
   if (fromResponseId != null) {
     common.setValueByPath(toObject, ['responseId'], fromResponseId);
-  }
-
-  const fromUsageMetadata = common.getValueByPath(fromObject, [
-    'usageMetadata',
-  ]);
-  if (fromUsageMetadata != null) {
-    common.setValueByPath(toObject, ['usageMetadata'], fromUsageMetadata);
   }
 
   return toObject;
@@ -5563,6 +5677,121 @@ export function candidateFromVertex(
   return toObject;
 }
 
+export function generateContentResponseUsageMetadataFromVertex(
+  fromObject: types.GenerateContentResponseUsageMetadata,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromCacheTokensDetails = common.getValueByPath(fromObject, [
+    'cacheTokensDetails',
+  ]);
+  if (fromCacheTokensDetails != null) {
+    common.setValueByPath(
+      toObject,
+      ['cacheTokensDetails'],
+      fromCacheTokensDetails,
+    );
+  }
+
+  const fromCachedContentTokenCount = common.getValueByPath(fromObject, [
+    'cachedContentTokenCount',
+  ]);
+  if (fromCachedContentTokenCount != null) {
+    common.setValueByPath(
+      toObject,
+      ['cachedContentTokenCount'],
+      fromCachedContentTokenCount,
+    );
+  }
+
+  const fromCandidatesTokenCount = common.getValueByPath(fromObject, [
+    'candidatesTokenCount',
+  ]);
+  if (fromCandidatesTokenCount != null) {
+    common.setValueByPath(
+      toObject,
+      ['candidatesTokenCount'],
+      fromCandidatesTokenCount,
+    );
+  }
+
+  const fromCandidatesTokensDetails = common.getValueByPath(fromObject, [
+    'candidatesTokensDetails',
+  ]);
+  if (fromCandidatesTokensDetails != null) {
+    common.setValueByPath(
+      toObject,
+      ['candidatesTokensDetails'],
+      fromCandidatesTokensDetails,
+    );
+  }
+
+  const fromPromptTokenCount = common.getValueByPath(fromObject, [
+    'promptTokenCount',
+  ]);
+  if (fromPromptTokenCount != null) {
+    common.setValueByPath(toObject, ['promptTokenCount'], fromPromptTokenCount);
+  }
+
+  const fromPromptTokensDetails = common.getValueByPath(fromObject, [
+    'promptTokensDetails',
+  ]);
+  if (fromPromptTokensDetails != null) {
+    common.setValueByPath(
+      toObject,
+      ['promptTokensDetails'],
+      fromPromptTokensDetails,
+    );
+  }
+
+  const fromThoughtsTokenCount = common.getValueByPath(fromObject, [
+    'thoughtsTokenCount',
+  ]);
+  if (fromThoughtsTokenCount != null) {
+    common.setValueByPath(
+      toObject,
+      ['thoughtsTokenCount'],
+      fromThoughtsTokenCount,
+    );
+  }
+
+  const fromToolUsePromptTokenCount = common.getValueByPath(fromObject, [
+    'toolUsePromptTokenCount',
+  ]);
+  if (fromToolUsePromptTokenCount != null) {
+    common.setValueByPath(
+      toObject,
+      ['toolUsePromptTokenCount'],
+      fromToolUsePromptTokenCount,
+    );
+  }
+
+  const fromToolUsePromptTokensDetails = common.getValueByPath(fromObject, [
+    'toolUsePromptTokensDetails',
+  ]);
+  if (fromToolUsePromptTokensDetails != null) {
+    common.setValueByPath(
+      toObject,
+      ['toolUsePromptTokensDetails'],
+      fromToolUsePromptTokensDetails,
+    );
+  }
+
+  const fromTotalTokenCount = common.getValueByPath(fromObject, [
+    'totalTokenCount',
+  ]);
+  if (fromTotalTokenCount != null) {
+    common.setValueByPath(toObject, ['totalTokenCount'], fromTotalTokenCount);
+  }
+
+  const fromTrafficType = common.getValueByPath(fromObject, ['trafficType']);
+  if (fromTrafficType != null) {
+    common.setValueByPath(toObject, ['trafficType'], fromTrafficType);
+  }
+
+  return toObject;
+}
+
 export function generateContentResponseFromVertex(
   fromObject: types.GenerateContentResponse,
 ): Record<string, unknown> {
@@ -5591,6 +5820,17 @@ export function generateContentResponseFromVertex(
     common.setValueByPath(toObject, ['createTime'], fromCreateTime);
   }
 
+  const fromUsageMetadata = common.getValueByPath(fromObject, [
+    'usageMetadata',
+  ]);
+  if (fromUsageMetadata != null) {
+    common.setValueByPath(
+      toObject,
+      ['usageMetadata'],
+      generateContentResponseUsageMetadataFromVertex(fromUsageMetadata),
+    );
+  }
+
   const fromModelVersion = common.getValueByPath(fromObject, ['modelVersion']);
   if (fromModelVersion != null) {
     common.setValueByPath(toObject, ['modelVersion'], fromModelVersion);
@@ -5606,13 +5846,6 @@ export function generateContentResponseFromVertex(
   const fromResponseId = common.getValueByPath(fromObject, ['responseId']);
   if (fromResponseId != null) {
     common.setValueByPath(toObject, ['responseId'], fromResponseId);
-  }
-
-  const fromUsageMetadata = common.getValueByPath(fromObject, [
-    'usageMetadata',
-  ]);
-  if (fromUsageMetadata != null) {
-    common.setValueByPath(toObject, ['usageMetadata'], fromUsageMetadata);
   }
 
   return toObject;
