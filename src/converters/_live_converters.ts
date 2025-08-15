@@ -9,10 +9,9 @@
 import {ApiClient} from '../_api_client.js';
 import * as common from '../_common.js';
 import * as t from '../_transformers.js';
-import * as types from '../types.js';
 
 export function prebuiltVoiceConfigToMldev(
-  fromObject: types.PrebuiltVoiceConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -25,7 +24,7 @@ export function prebuiltVoiceConfigToMldev(
 }
 
 export function voiceConfigToMldev(
-  fromObject: types.VoiceConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -44,7 +43,7 @@ export function voiceConfigToMldev(
 }
 
 export function speakerVoiceConfigToMldev(
-  fromObject: types.SpeakerVoiceConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -66,7 +65,7 @@ export function speakerVoiceConfigToMldev(
 }
 
 export function multiSpeakerVoiceConfigToMldev(
-  fromObject: types.MultiSpeakerVoiceConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -87,7 +86,7 @@ export function multiSpeakerVoiceConfigToMldev(
 }
 
 export function speechConfigToMldev(
-  fromObject: types.SpeechConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -120,7 +119,7 @@ export function speechConfigToMldev(
 }
 
 export function videoMetadataToMldev(
-  fromObject: types.VideoMetadata,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -142,7 +141,7 @@ export function videoMetadataToMldev(
   return toObject;
 }
 
-export function blobToMldev(fromObject: types.Blob): Record<string, unknown> {
+export function blobToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
@@ -162,9 +161,7 @@ export function blobToMldev(fromObject: types.Blob): Record<string, unknown> {
   return toObject;
 }
 
-export function fileDataToMldev(
-  fromObject: types.FileData,
-): Record<string, unknown> {
+export function fileDataToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
@@ -184,7 +181,7 @@ export function fileDataToMldev(
   return toObject;
 }
 
-export function partToMldev(fromObject: types.Part): Record<string, unknown> {
+export function partToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromVideoMetadata = common.getValueByPath(fromObject, [
@@ -266,9 +263,7 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
   return toObject;
 }
 
-export function contentToMldev(
-  fromObject: types.Content,
-): Record<string, unknown> {
+export function contentToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromParts = common.getValueByPath(fromObject, ['parts']);
@@ -291,7 +286,7 @@ export function contentToMldev(
 }
 
 export function functionDeclarationToMldev(
-  fromObject: types.FunctionDeclaration,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -345,9 +340,7 @@ export function functionDeclarationToMldev(
   return toObject;
 }
 
-export function intervalToMldev(
-  fromObject: types.Interval,
-): Record<string, unknown> {
+export function intervalToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromStartTime = common.getValueByPath(fromObject, ['startTime']);
@@ -364,7 +357,7 @@ export function intervalToMldev(
 }
 
 export function googleSearchToMldev(
-  fromObject: types.GoogleSearch,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -387,7 +380,7 @@ export function googleSearchToMldev(
 }
 
 export function dynamicRetrievalConfigToMldev(
-  fromObject: types.DynamicRetrievalConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -407,7 +400,7 @@ export function dynamicRetrievalConfigToMldev(
 }
 
 export function googleSearchRetrievalToMldev(
-  fromObject: types.GoogleSearchRetrieval,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -432,7 +425,7 @@ export function urlContextToMldev(): Record<string, unknown> {
 }
 
 export function toolComputerUseToMldev(
-  fromObject: types.ToolComputerUse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -444,7 +437,7 @@ export function toolComputerUseToMldev(
   return toObject;
 }
 
-export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
+export function toolToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromFunctionDeclarations = common.getValueByPath(fromObject, [
@@ -521,7 +514,7 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
 }
 
 export function sessionResumptionConfigToMldev(
-  fromObject: types.SessionResumptionConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -544,7 +537,7 @@ export function audioTranscriptionConfigToMldev(): Record<string, unknown> {
 }
 
 export function automaticActivityDetectionToMldev(
-  fromObject: types.AutomaticActivityDetection,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -597,7 +590,7 @@ export function automaticActivityDetectionToMldev(
 }
 
 export function realtimeInputConfigToMldev(
-  fromObject: types.RealtimeInputConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -628,7 +621,7 @@ export function realtimeInputConfigToMldev(
 }
 
 export function slidingWindowToMldev(
-  fromObject: types.SlidingWindow,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -641,7 +634,7 @@ export function slidingWindowToMldev(
 }
 
 export function contextWindowCompressionConfigToMldev(
-  fromObject: types.ContextWindowCompressionConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -667,7 +660,7 @@ export function contextWindowCompressionConfigToMldev(
 }
 
 export function proactivityConfigToMldev(
-  fromObject: types.ProactivityConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -682,7 +675,7 @@ export function proactivityConfigToMldev(
 }
 
 export function liveConnectConfigToMldev(
-  fromObject: types.LiveConnectConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -878,7 +871,7 @@ export function liveConnectConfigToMldev(
 
 export function liveConnectParametersToMldev(
   apiClient: ApiClient,
-  fromObject: types.LiveConnectParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -916,7 +909,7 @@ export function activityEndToMldev(): Record<string, unknown> {
 }
 
 export function liveSendRealtimeInputParametersToMldev(
-  fromObject: types.LiveSendRealtimeInputParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -963,7 +956,7 @@ export function liveSendRealtimeInputParametersToMldev(
 }
 
 export function liveClientSetupToMldev(
-  fromObject: types.LiveClientSetup,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1069,7 +1062,7 @@ export function liveClientSetupToMldev(
 }
 
 export function liveClientContentToMldev(
-  fromObject: types.LiveClientContent,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1093,7 +1086,7 @@ export function liveClientContentToMldev(
 }
 
 export function liveClientRealtimeInputToMldev(
-  fromObject: types.LiveClientRealtimeInput,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1140,7 +1133,7 @@ export function liveClientRealtimeInputToMldev(
 }
 
 export function functionResponseToMldev(
-  fromObject: types.FunctionResponse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1173,7 +1166,7 @@ export function functionResponseToMldev(
 }
 
 export function liveClientToolResponseToMldev(
-  fromObject: types.LiveClientToolResponse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1194,7 +1187,7 @@ export function liveClientToolResponseToMldev(
 }
 
 export function liveClientMessageToMldev(
-  fromObject: types.LiveClientMessage,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1242,7 +1235,7 @@ export function liveClientMessageToMldev(
 }
 
 export function liveMusicConnectParametersToMldev(
-  fromObject: types.LiveMusicConnectParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1260,7 +1253,7 @@ export function liveMusicConnectParametersToMldev(
 }
 
 export function weightedPromptToMldev(
-  fromObject: types.WeightedPrompt,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1278,7 +1271,7 @@ export function weightedPromptToMldev(
 }
 
 export function liveMusicSetWeightedPromptsParametersToMldev(
-  fromObject: types.LiveMusicSetWeightedPromptsParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1299,7 +1292,7 @@ export function liveMusicSetWeightedPromptsParametersToMldev(
 }
 
 export function liveMusicGenerationConfigToMldev(
-  fromObject: types.LiveMusicGenerationConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1375,7 +1368,7 @@ export function liveMusicGenerationConfigToMldev(
 }
 
 export function liveMusicSetConfigParametersToMldev(
-  fromObject: types.LiveMusicSetConfigParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1394,7 +1387,7 @@ export function liveMusicSetConfigParametersToMldev(
 }
 
 export function liveMusicClientSetupToMldev(
-  fromObject: types.LiveMusicClientSetup,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1407,7 +1400,7 @@ export function liveMusicClientSetupToMldev(
 }
 
 export function liveMusicClientContentToMldev(
-  fromObject: types.LiveMusicClientContent,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1428,7 +1421,7 @@ export function liveMusicClientContentToMldev(
 }
 
 export function liveMusicClientMessageToMldev(
-  fromObject: types.LiveMusicClientMessage,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1474,7 +1467,7 @@ export function liveMusicClientMessageToMldev(
 }
 
 export function prebuiltVoiceConfigToVertex(
-  fromObject: types.PrebuiltVoiceConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1487,7 +1480,7 @@ export function prebuiltVoiceConfigToVertex(
 }
 
 export function voiceConfigToVertex(
-  fromObject: types.VoiceConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1506,7 +1499,7 @@ export function voiceConfigToVertex(
 }
 
 export function speechConfigToVertex(
-  fromObject: types.SpeechConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1536,7 +1529,7 @@ export function speechConfigToVertex(
 }
 
 export function videoMetadataToVertex(
-  fromObject: types.VideoMetadata,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1558,7 +1551,7 @@ export function videoMetadataToVertex(
   return toObject;
 }
 
-export function blobToVertex(fromObject: types.Blob): Record<string, unknown> {
+export function blobToVertex(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
@@ -1579,9 +1572,7 @@ export function blobToVertex(fromObject: types.Blob): Record<string, unknown> {
   return toObject;
 }
 
-export function fileDataToVertex(
-  fromObject: types.FileData,
-): Record<string, unknown> {
+export function fileDataToVertex(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
@@ -1602,7 +1593,7 @@ export function fileDataToVertex(
   return toObject;
 }
 
-export function partToVertex(fromObject: types.Part): Record<string, unknown> {
+export function partToVertex(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromVideoMetadata = common.getValueByPath(fromObject, [
@@ -1684,9 +1675,7 @@ export function partToVertex(fromObject: types.Part): Record<string, unknown> {
   return toObject;
 }
 
-export function contentToVertex(
-  fromObject: types.Content,
-): Record<string, unknown> {
+export function contentToVertex(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromParts = common.getValueByPath(fromObject, ['parts']);
@@ -1709,7 +1698,7 @@ export function contentToVertex(
 }
 
 export function functionDeclarationToVertex(
-  fromObject: types.FunctionDeclaration,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1762,9 +1751,7 @@ export function functionDeclarationToVertex(
   return toObject;
 }
 
-export function intervalToVertex(
-  fromObject: types.Interval,
-): Record<string, unknown> {
+export function intervalToVertex(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromStartTime = common.getValueByPath(fromObject, ['startTime']);
@@ -1781,7 +1768,7 @@ export function intervalToVertex(
 }
 
 export function googleSearchToVertex(
-  fromObject: types.GoogleSearch,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1807,7 +1794,7 @@ export function googleSearchToVertex(
 }
 
 export function dynamicRetrievalConfigToVertex(
-  fromObject: types.DynamicRetrievalConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1827,7 +1814,7 @@ export function dynamicRetrievalConfigToVertex(
 }
 
 export function googleSearchRetrievalToVertex(
-  fromObject: types.GoogleSearchRetrieval,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1846,7 +1833,7 @@ export function googleSearchRetrievalToVertex(
 }
 
 export function enterpriseWebSearchToVertex(
-  fromObject: types.EnterpriseWebSearch,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1861,7 +1848,7 @@ export function enterpriseWebSearchToVertex(
 }
 
 export function apiKeyConfigToVertex(
-  fromObject: types.ApiKeyConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1874,7 +1861,7 @@ export function apiKeyConfigToVertex(
 }
 
 export function authConfigToVertex(
-  fromObject: types.AuthConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1928,7 +1915,7 @@ export function authConfigToVertex(
 }
 
 export function googleMapsToVertex(
-  fromObject: types.GoogleMaps,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1951,7 +1938,7 @@ export function urlContextToVertex(): Record<string, unknown> {
 }
 
 export function toolComputerUseToVertex(
-  fromObject: types.ToolComputerUse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1963,7 +1950,7 @@ export function toolComputerUseToVertex(
   return toObject;
 }
 
-export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
+export function toolToVertex(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromFunctionDeclarations = common.getValueByPath(fromObject, [
@@ -2049,7 +2036,7 @@ export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
 }
 
 export function sessionResumptionConfigToVertex(
-  fromObject: types.SessionResumptionConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2073,7 +2060,7 @@ export function audioTranscriptionConfigToVertex(): Record<string, unknown> {
 }
 
 export function automaticActivityDetectionToVertex(
-  fromObject: types.AutomaticActivityDetection,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2126,7 +2113,7 @@ export function automaticActivityDetectionToVertex(
 }
 
 export function realtimeInputConfigToVertex(
-  fromObject: types.RealtimeInputConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2157,7 +2144,7 @@ export function realtimeInputConfigToVertex(
 }
 
 export function slidingWindowToVertex(
-  fromObject: types.SlidingWindow,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2170,7 +2157,7 @@ export function slidingWindowToVertex(
 }
 
 export function contextWindowCompressionConfigToVertex(
-  fromObject: types.ContextWindowCompressionConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2196,7 +2183,7 @@ export function contextWindowCompressionConfigToVertex(
 }
 
 export function proactivityConfigToVertex(
-  fromObject: types.ProactivityConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2211,7 +2198,7 @@ export function proactivityConfigToVertex(
 }
 
 export function liveConnectConfigToVertex(
-  fromObject: types.LiveConnectConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -2407,7 +2394,7 @@ export function liveConnectConfigToVertex(
 
 export function liveConnectParametersToVertex(
   apiClient: ApiClient,
-  fromObject: types.LiveConnectParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2445,7 +2432,7 @@ export function activityEndToVertex(): Record<string, unknown> {
 }
 
 export function liveSendRealtimeInputParametersToVertex(
-  fromObject: types.LiveSendRealtimeInputParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2492,7 +2479,7 @@ export function liveSendRealtimeInputParametersToVertex(
 }
 
 export function liveClientSetupToVertex(
-  fromObject: types.LiveClientSetup,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2598,7 +2585,7 @@ export function liveClientSetupToVertex(
 }
 
 export function liveClientContentToVertex(
-  fromObject: types.LiveClientContent,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2622,7 +2609,7 @@ export function liveClientContentToVertex(
 }
 
 export function liveClientRealtimeInputToVertex(
-  fromObject: types.LiveClientRealtimeInput,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2666,7 +2653,7 @@ export function liveClientRealtimeInputToVertex(
 }
 
 export function functionResponseToVertex(
-  fromObject: types.FunctionResponse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2697,7 +2684,7 @@ export function functionResponseToVertex(
 }
 
 export function liveClientToolResponseToVertex(
-  fromObject: types.LiveClientToolResponse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2718,7 +2705,7 @@ export function liveClientToolResponseToVertex(
 }
 
 export function liveClientMessageToVertex(
-  fromObject: types.LiveClientMessage,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2766,7 +2753,7 @@ export function liveClientMessageToVertex(
 }
 
 export function liveMusicConnectParametersToVertex(
-  fromObject: types.LiveMusicConnectParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2782,7 +2769,7 @@ export function liveMusicConnectParametersToVertex(
 }
 
 export function liveMusicSetWeightedPromptsParametersToVertex(
-  fromObject: types.LiveMusicSetWeightedPromptsParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2794,7 +2781,7 @@ export function liveMusicSetWeightedPromptsParametersToVertex(
 }
 
 export function liveMusicSetConfigParametersToVertex(
-  fromObject: types.LiveMusicSetConfigParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2810,7 +2797,7 @@ export function liveMusicSetConfigParametersToVertex(
 }
 
 export function liveMusicClientMessageToVertex(
-  fromObject: types.LiveMusicClientMessage,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2844,7 +2831,7 @@ export function liveServerSetupCompleteFromMldev(): Record<string, unknown> {
 }
 
 export function videoMetadataFromMldev(
-  fromObject: types.VideoMetadata,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2866,7 +2853,7 @@ export function videoMetadataFromMldev(
   return toObject;
 }
 
-export function blobFromMldev(fromObject: types.Blob): Record<string, unknown> {
+export function blobFromMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromData = common.getValueByPath(fromObject, ['data']);
@@ -2883,7 +2870,7 @@ export function blobFromMldev(fromObject: types.Blob): Record<string, unknown> {
 }
 
 export function fileDataFromMldev(
-  fromObject: types.FileData,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2900,7 +2887,7 @@ export function fileDataFromMldev(
   return toObject;
 }
 
-export function partFromMldev(fromObject: types.Part): Record<string, unknown> {
+export function partFromMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromVideoMetadata = common.getValueByPath(fromObject, [
@@ -2982,9 +2969,7 @@ export function partFromMldev(fromObject: types.Part): Record<string, unknown> {
   return toObject;
 }
 
-export function contentFromMldev(
-  fromObject: types.Content,
-): Record<string, unknown> {
+export function contentFromMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromParts = common.getValueByPath(fromObject, ['parts']);
@@ -3007,7 +2992,7 @@ export function contentFromMldev(
 }
 
 export function transcriptionFromMldev(
-  fromObject: types.Transcription,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3025,7 +3010,7 @@ export function transcriptionFromMldev(
 }
 
 export function urlMetadataFromMldev(
-  fromObject: types.UrlMetadata,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3049,7 +3034,7 @@ export function urlMetadataFromMldev(
 }
 
 export function urlContextMetadataFromMldev(
-  fromObject: types.UrlContextMetadata,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3068,7 +3053,7 @@ export function urlContextMetadataFromMldev(
 }
 
 export function liveServerContentFromMldev(
-  fromObject: types.LiveServerContent,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3150,7 +3135,7 @@ export function liveServerContentFromMldev(
 }
 
 export function functionCallFromMldev(
-  fromObject: types.FunctionCall,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3173,7 +3158,7 @@ export function functionCallFromMldev(
 }
 
 export function liveServerToolCallFromMldev(
-  fromObject: types.LiveServerToolCall,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3194,7 +3179,7 @@ export function liveServerToolCallFromMldev(
 }
 
 export function liveServerToolCallCancellationFromMldev(
-  fromObject: types.LiveServerToolCallCancellation,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3207,7 +3192,7 @@ export function liveServerToolCallCancellationFromMldev(
 }
 
 export function modalityTokenCountFromMldev(
-  fromObject: types.ModalityTokenCount,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3225,7 +3210,7 @@ export function modalityTokenCountFromMldev(
 }
 
 export function usageMetadataFromMldev(
-  fromObject: types.UsageMetadata,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3347,7 +3332,7 @@ export function usageMetadataFromMldev(
 }
 
 export function liveServerGoAwayFromMldev(
-  fromObject: types.LiveServerGoAway,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3360,7 +3345,7 @@ export function liveServerGoAwayFromMldev(
 }
 
 export function liveServerSessionResumptionUpdateFromMldev(
-  fromObject: types.LiveServerSessionResumptionUpdate,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3389,7 +3374,7 @@ export function liveServerSessionResumptionUpdateFromMldev(
 }
 
 export function liveServerMessageFromMldev(
-  fromObject: types.LiveServerMessage,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3479,7 +3464,7 @@ export function liveMusicServerSetupCompleteFromMldev(): Record<
 }
 
 export function weightedPromptFromMldev(
-  fromObject: types.WeightedPrompt,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3497,7 +3482,7 @@ export function weightedPromptFromMldev(
 }
 
 export function liveMusicClientContentFromMldev(
-  fromObject: types.LiveMusicClientContent,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3518,7 +3503,7 @@ export function liveMusicClientContentFromMldev(
 }
 
 export function liveMusicGenerationConfigFromMldev(
-  fromObject: types.LiveMusicGenerationConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3594,7 +3579,7 @@ export function liveMusicGenerationConfigFromMldev(
 }
 
 export function liveMusicSourceMetadataFromMldev(
-  fromObject: types.LiveMusicSourceMetadata,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3624,7 +3609,7 @@ export function liveMusicSourceMetadataFromMldev(
 }
 
 export function audioChunkFromMldev(
-  fromObject: types.AudioChunk,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3653,7 +3638,7 @@ export function audioChunkFromMldev(
 }
 
 export function liveMusicServerContentFromMldev(
-  fromObject: types.LiveMusicServerContent,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3672,7 +3657,7 @@ export function liveMusicServerContentFromMldev(
 }
 
 export function liveMusicFilteredPromptFromMldev(
-  fromObject: types.LiveMusicFilteredPrompt,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3692,7 +3677,7 @@ export function liveMusicFilteredPromptFromMldev(
 }
 
 export function liveMusicServerMessageFromMldev(
-  fromObject: types.LiveMusicServerMessage,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3733,7 +3718,7 @@ export function liveMusicServerMessageFromMldev(
 }
 
 export function liveServerSetupCompleteFromVertex(
-  fromObject: types.LiveServerSetupComplete,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3746,7 +3731,7 @@ export function liveServerSetupCompleteFromVertex(
 }
 
 export function videoMetadataFromVertex(
-  fromObject: types.VideoMetadata,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3768,9 +3753,7 @@ export function videoMetadataFromVertex(
   return toObject;
 }
 
-export function blobFromVertex(
-  fromObject: types.Blob,
-): Record<string, unknown> {
+export function blobFromVertex(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
@@ -3792,7 +3775,7 @@ export function blobFromVertex(
 }
 
 export function fileDataFromVertex(
-  fromObject: types.FileData,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3814,9 +3797,7 @@ export function fileDataFromVertex(
   return toObject;
 }
 
-export function partFromVertex(
-  fromObject: types.Part,
-): Record<string, unknown> {
+export function partFromVertex(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromVideoMetadata = common.getValueByPath(fromObject, [
@@ -3899,7 +3880,7 @@ export function partFromVertex(
 }
 
 export function contentFromVertex(
-  fromObject: types.Content,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3923,7 +3904,7 @@ export function contentFromVertex(
 }
 
 export function transcriptionFromVertex(
-  fromObject: types.Transcription,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3941,7 +3922,7 @@ export function transcriptionFromVertex(
 }
 
 export function liveServerContentFromVertex(
-  fromObject: types.LiveServerContent,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -4012,7 +3993,7 @@ export function liveServerContentFromVertex(
 }
 
 export function functionCallFromVertex(
-  fromObject: types.FunctionCall,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -4030,7 +4011,7 @@ export function functionCallFromVertex(
 }
 
 export function liveServerToolCallFromVertex(
-  fromObject: types.LiveServerToolCall,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -4051,7 +4032,7 @@ export function liveServerToolCallFromVertex(
 }
 
 export function liveServerToolCallCancellationFromVertex(
-  fromObject: types.LiveServerToolCallCancellation,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -4064,7 +4045,7 @@ export function liveServerToolCallCancellationFromVertex(
 }
 
 export function modalityTokenCountFromVertex(
-  fromObject: types.ModalityTokenCount,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -4082,7 +4063,7 @@ export function modalityTokenCountFromVertex(
 }
 
 export function usageMetadataFromVertex(
-  fromObject: types.UsageMetadata,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -4209,7 +4190,7 @@ export function usageMetadataFromVertex(
 }
 
 export function liveServerGoAwayFromVertex(
-  fromObject: types.LiveServerGoAway,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -4222,7 +4203,7 @@ export function liveServerGoAwayFromVertex(
 }
 
 export function liveServerSessionResumptionUpdateFromVertex(
-  fromObject: types.LiveServerSessionResumptionUpdate,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -4251,7 +4232,7 @@ export function liveServerSessionResumptionUpdateFromVertex(
 }
 
 export function liveServerMessageFromVertex(
-  fromObject: types.LiveServerMessage,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
