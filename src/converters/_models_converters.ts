@@ -1638,6 +1638,12 @@ export function generateVideosConfigToMldev(
     throw new Error('lastFrame parameter is not supported in Gemini API.');
   }
 
+  if (common.getValueByPath(fromObject, ['referenceImages']) !== undefined) {
+    throw new Error(
+      'referenceImages parameter is not supported in Gemini API.',
+    );
+  }
+
   if (common.getValueByPath(fromObject, ['compressionQuality']) !== undefined) {
     throw new Error(
       'compressionQuality parameter is not supported in Gemini API.',
@@ -4256,6 +4262,26 @@ export function videoToVertex(
   return toObject;
 }
 
+export function videoGenerationReferenceImageToVertex(
+  fromObject: types.VideoGenerationReferenceImage,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromImage = common.getValueByPath(fromObject, ['image']);
+  if (fromImage != null) {
+    common.setValueByPath(toObject, ['image'], imageToVertex(fromImage));
+  }
+
+  const fromReferenceType = common.getValueByPath(fromObject, [
+    'referenceType',
+  ]);
+  if (fromReferenceType != null) {
+    common.setValueByPath(toObject, ['referenceType'], fromReferenceType);
+  }
+
+  return toObject;
+}
+
 export function generateVideosConfigToVertex(
   fromObject: types.GenerateVideosConfig,
   parentObject: Record<string, unknown>,
@@ -4380,6 +4406,23 @@ export function generateVideosConfigToVertex(
       parentObject,
       ['instances[0]', 'lastFrame'],
       imageToVertex(fromLastFrame),
+    );
+  }
+
+  const fromReferenceImages = common.getValueByPath(fromObject, [
+    'referenceImages',
+  ]);
+  if (parentObject !== undefined && fromReferenceImages != null) {
+    let transformedList = fromReferenceImages;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return videoGenerationReferenceImageToVertex(item);
+      });
+    }
+    common.setValueByPath(
+      parentObject,
+      ['instances[0]', 'referenceImages'],
+      transformedList,
     );
   }
 

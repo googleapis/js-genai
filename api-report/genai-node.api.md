@@ -1181,6 +1181,7 @@ export interface GenerateVideosConfig {
     outputGcsUri?: string;
     personGeneration?: string;
     pubsubTopic?: string;
+    referenceImages?: VideoGenerationReferenceImage[];
     resolution?: string;
     seed?: number;
 }
@@ -3125,6 +3126,12 @@ export interface Video {
 export enum VideoCompressionQuality {
     LOSSLESS = "LOSSLESS",
     OPTIMIZED = "OPTIMIZED"
+}
+
+// @public
+export interface VideoGenerationReferenceImage {
+    image?: Image_2;
+    referenceType?: string;
 }
 
 // @public

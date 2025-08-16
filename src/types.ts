@@ -3398,6 +3398,17 @@ export declare interface Video {
   mimeType?: string;
 }
 
+/** A reference image for video generation. */
+export declare interface VideoGenerationReferenceImage {
+  /** The reference image.
+   */
+  image?: Image;
+  /** The type of the reference image, which defines how the reference
+      image will be used to generate the video. Supported values are 'asset'
+      or 'style'. */
+  referenceType?: string;
+}
+
 /** Configuration for generating videos. */
 export declare interface GenerateVideosConfig {
   /** Used to override HTTP request options. */
@@ -3435,6 +3446,12 @@ export declare interface GenerateVideosConfig {
   generateAudio?: boolean;
   /** Image to use as the last frame of generated videos. Only supported for image to video use cases. */
   lastFrame?: Image;
+  /** The images to use as the references to generate the videos.
+      If this field is provided, the text prompt field must also be provided.
+      The image, video, or last_frame field are not supported. Each image must
+      be associated with a type. Veo 2 supports up to 3 asset images *or* 1
+      style image. */
+  referenceImages?: VideoGenerationReferenceImage[];
   /** Compression quality of the generated videos. */
   compressionQuality?: VideoCompressionQuality;
 }
