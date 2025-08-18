@@ -1,6 +1,20 @@
 # Changelog
 
 
+## [1.15.0](https://github.com/googleapis/js-genai/compare/v1.14.0...v1.15.0) (2025-08-18)
+
+
+### Features
+
+* Support Imagen image segmentation on Vertex ([6b86bae](https://github.com/googleapis/js-genai/commit/6b86baecc425197c2db1b734e93a4a5dcb9a10a4))
+* Support Veo 2 Reference Images to Video Generation on Vertex ([6bca6ad](https://github.com/googleapis/js-genai/commit/6bca6ad37edd4ebda024b2eaf617d4ad213a791f))
+
+
+### Bug Fixes
+
+* **chats:** Drop the validation on part with empty text ([d2602d2](https://github.com/googleapis/js-genai/commit/d2602d2ec47402d567f095c6c621b258432ff896))
+* Fix the bug to support Gemini Batch inlined requests system instruction ([843c774](https://github.com/googleapis/js-genai/commit/843c7746edc9497499b8af277f4f3901f31dce9a))
+
 ## [1.14.0](https://github.com/googleapis/js-genai/compare/v1.13.0...v1.14.0) (2025-08-13)
 
 
