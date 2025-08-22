@@ -8,10 +8,9 @@
 
 import * as common from '../_common.js';
 import * as t from '../_transformers.js';
-import * as types from '../types.js';
 
 export function getTuningJobParametersToMldev(
-  fromObject: types.GetTuningJobParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -29,7 +28,7 @@ export function getTuningJobParametersToMldev(
 }
 
 export function listTuningJobsConfigToMldev(
-  fromObject: types.ListTuningJobsConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -53,7 +52,7 @@ export function listTuningJobsConfigToMldev(
 }
 
 export function listTuningJobsParametersToMldev(
-  fromObject: types.ListTuningJobsParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -70,7 +69,7 @@ export function listTuningJobsParametersToMldev(
 }
 
 export function tuningExampleToMldev(
-  fromObject: types.TuningExample,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -88,7 +87,7 @@ export function tuningExampleToMldev(
 }
 
 export function tuningDatasetToMldev(
-  fromObject: types.TuningDataset,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -119,7 +118,7 @@ export function tuningDatasetToMldev(
 }
 
 export function createTuningJobConfigToMldev(
-  fromObject: types.CreateTuningJobConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -209,7 +208,7 @@ export function createTuningJobConfigToMldev(
 }
 
 export function createTuningJobParametersPrivateToMldev(
-  fromObject: types.CreateTuningJobParametersPrivate,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -249,7 +248,7 @@ export function createTuningJobParametersPrivateToMldev(
 }
 
 export function getTuningJobParametersToVertex(
-  fromObject: types.GetTuningJobParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -267,7 +266,7 @@ export function getTuningJobParametersToVertex(
 }
 
 export function listTuningJobsConfigToVertex(
-  fromObject: types.ListTuningJobsConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -291,7 +290,7 @@ export function listTuningJobsConfigToVertex(
 }
 
 export function listTuningJobsParametersToVertex(
-  fromObject: types.ListTuningJobsParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -308,7 +307,7 @@ export function listTuningJobsParametersToVertex(
 }
 
 export function tuningDatasetToVertex(
-  fromObject: types.TuningDataset,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -341,7 +340,7 @@ export function tuningDatasetToVertex(
 }
 
 export function tuningValidationDatasetToVertex(
-  fromObject: types.TuningValidationDataset,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -366,7 +365,7 @@ export function tuningValidationDatasetToVertex(
 }
 
 export function createTuningJobConfigToVertex(
-  fromObject: types.CreateTuningJobConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -461,7 +460,7 @@ export function createTuningJobConfigToVertex(
 }
 
 export function createTuningJobParametersPrivateToVertex(
-  fromObject: types.CreateTuningJobParametersPrivate,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -501,7 +500,7 @@ export function createTuningJobParametersPrivateToVertex(
 }
 
 export function tunedModelFromMldev(
-  fromObject: types.TunedModel,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -519,7 +518,7 @@ export function tunedModelFromMldev(
 }
 
 export function tuningJobFromMldev(
-  fromObject: types.TuningJob,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -634,7 +633,7 @@ export function tuningJobFromMldev(
 }
 
 export function listTuningJobsResponseFromMldev(
-  fromObject: types.ListTuningJobsResponse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -667,7 +666,7 @@ export function listTuningJobsResponseFromMldev(
 }
 
 export function tuningOperationFromMldev(
-  fromObject: types.TuningOperation,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -702,7 +701,7 @@ export function tuningOperationFromMldev(
 }
 
 export function tunedModelCheckpointFromVertex(
-  fromObject: types.TunedModelCheckpoint,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -730,7 +729,7 @@ export function tunedModelCheckpointFromVertex(
 }
 
 export function tunedModelFromVertex(
-  fromObject: types.TunedModel,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -759,7 +758,7 @@ export function tunedModelFromVertex(
 }
 
 export function tuningJobFromVertex(
-  fromObject: types.TuningJob,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -916,7 +915,7 @@ export function tuningJobFromVertex(
 }
 
 export function listTuningJobsResponseFromVertex(
-  fromObject: types.ListTuningJobsResponse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 

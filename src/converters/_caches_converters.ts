@@ -9,10 +9,9 @@
 import {ApiClient} from '../_api_client.js';
 import * as common from '../_common.js';
 import * as t from '../_transformers.js';
-import * as types from '../types.js';
 
 export function videoMetadataToMldev(
-  fromObject: types.VideoMetadata,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -34,7 +33,7 @@ export function videoMetadataToMldev(
   return toObject;
 }
 
-export function blobToMldev(fromObject: types.Blob): Record<string, unknown> {
+export function blobToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
@@ -54,9 +53,7 @@ export function blobToMldev(fromObject: types.Blob): Record<string, unknown> {
   return toObject;
 }
 
-export function fileDataToMldev(
-  fromObject: types.FileData,
-): Record<string, unknown> {
+export function fileDataToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
@@ -76,7 +73,7 @@ export function fileDataToMldev(
   return toObject;
 }
 
-export function partToMldev(fromObject: types.Part): Record<string, unknown> {
+export function partToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromVideoMetadata = common.getValueByPath(fromObject, [
@@ -158,9 +155,7 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
   return toObject;
 }
 
-export function contentToMldev(
-  fromObject: types.Content,
-): Record<string, unknown> {
+export function contentToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromParts = common.getValueByPath(fromObject, ['parts']);
@@ -183,7 +178,7 @@ export function contentToMldev(
 }
 
 export function functionDeclarationToMldev(
-  fromObject: types.FunctionDeclaration,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -237,9 +232,7 @@ export function functionDeclarationToMldev(
   return toObject;
 }
 
-export function intervalToMldev(
-  fromObject: types.Interval,
-): Record<string, unknown> {
+export function intervalToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromStartTime = common.getValueByPath(fromObject, ['startTime']);
@@ -256,7 +249,7 @@ export function intervalToMldev(
 }
 
 export function googleSearchToMldev(
-  fromObject: types.GoogleSearch,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -279,7 +272,7 @@ export function googleSearchToMldev(
 }
 
 export function dynamicRetrievalConfigToMldev(
-  fromObject: types.DynamicRetrievalConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -299,7 +292,7 @@ export function dynamicRetrievalConfigToMldev(
 }
 
 export function googleSearchRetrievalToMldev(
-  fromObject: types.GoogleSearchRetrieval,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -324,7 +317,7 @@ export function urlContextToMldev(): Record<string, unknown> {
 }
 
 export function toolComputerUseToMldev(
-  fromObject: types.ToolComputerUse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -336,7 +329,7 @@ export function toolComputerUseToMldev(
   return toObject;
 }
 
-export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
+export function toolToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromFunctionDeclarations = common.getValueByPath(fromObject, [
@@ -413,7 +406,7 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
 }
 
 export function functionCallingConfigToMldev(
-  fromObject: types.FunctionCallingConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -436,9 +429,7 @@ export function functionCallingConfigToMldev(
   return toObject;
 }
 
-export function latLngToMldev(
-  fromObject: types.LatLng,
-): Record<string, unknown> {
+export function latLngToMldev(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromLatitude = common.getValueByPath(fromObject, ['latitude']);
@@ -455,7 +446,7 @@ export function latLngToMldev(
 }
 
 export function retrievalConfigToMldev(
-  fromObject: types.RetrievalConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -473,7 +464,7 @@ export function retrievalConfigToMldev(
 }
 
 export function toolConfigToMldev(
-  fromObject: types.ToolConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -503,7 +494,7 @@ export function toolConfigToMldev(
 }
 
 export function createCachedContentConfigToMldev(
-  fromObject: types.CreateCachedContentConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -574,7 +565,7 @@ export function createCachedContentConfigToMldev(
 
 export function createCachedContentParametersToMldev(
   apiClient: ApiClient,
-  fromObject: types.CreateCachedContentParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -601,7 +592,7 @@ export function createCachedContentParametersToMldev(
 
 export function getCachedContentParametersToMldev(
   apiClient: ApiClient,
-  fromObject: types.GetCachedContentParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -624,7 +615,7 @@ export function getCachedContentParametersToMldev(
 
 export function deleteCachedContentParametersToMldev(
   apiClient: ApiClient,
-  fromObject: types.DeleteCachedContentParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -646,7 +637,7 @@ export function deleteCachedContentParametersToMldev(
 }
 
 export function updateCachedContentConfigToMldev(
-  fromObject: types.UpdateCachedContentConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -666,7 +657,7 @@ export function updateCachedContentConfigToMldev(
 
 export function updateCachedContentParametersToMldev(
   apiClient: ApiClient,
-  fromObject: types.UpdateCachedContentParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -692,7 +683,7 @@ export function updateCachedContentParametersToMldev(
 }
 
 export function listCachedContentsConfigToMldev(
-  fromObject: types.ListCachedContentsConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -711,7 +702,7 @@ export function listCachedContentsConfigToMldev(
 }
 
 export function listCachedContentsParametersToMldev(
-  fromObject: types.ListCachedContentsParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -728,7 +719,7 @@ export function listCachedContentsParametersToMldev(
 }
 
 export function videoMetadataToVertex(
-  fromObject: types.VideoMetadata,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -750,7 +741,7 @@ export function videoMetadataToVertex(
   return toObject;
 }
 
-export function blobToVertex(fromObject: types.Blob): Record<string, unknown> {
+export function blobToVertex(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
@@ -771,9 +762,7 @@ export function blobToVertex(fromObject: types.Blob): Record<string, unknown> {
   return toObject;
 }
 
-export function fileDataToVertex(
-  fromObject: types.FileData,
-): Record<string, unknown> {
+export function fileDataToVertex(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
@@ -794,7 +783,7 @@ export function fileDataToVertex(
   return toObject;
 }
 
-export function partToVertex(fromObject: types.Part): Record<string, unknown> {
+export function partToVertex(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromVideoMetadata = common.getValueByPath(fromObject, [
@@ -876,9 +865,7 @@ export function partToVertex(fromObject: types.Part): Record<string, unknown> {
   return toObject;
 }
 
-export function contentToVertex(
-  fromObject: types.Content,
-): Record<string, unknown> {
+export function contentToVertex(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromParts = common.getValueByPath(fromObject, ['parts']);
@@ -901,7 +888,7 @@ export function contentToVertex(
 }
 
 export function functionDeclarationToVertex(
-  fromObject: types.FunctionDeclaration,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -954,9 +941,7 @@ export function functionDeclarationToVertex(
   return toObject;
 }
 
-export function intervalToVertex(
-  fromObject: types.Interval,
-): Record<string, unknown> {
+export function intervalToVertex(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromStartTime = common.getValueByPath(fromObject, ['startTime']);
@@ -973,7 +958,7 @@ export function intervalToVertex(
 }
 
 export function googleSearchToVertex(
-  fromObject: types.GoogleSearch,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -999,7 +984,7 @@ export function googleSearchToVertex(
 }
 
 export function dynamicRetrievalConfigToVertex(
-  fromObject: types.DynamicRetrievalConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1019,7 +1004,7 @@ export function dynamicRetrievalConfigToVertex(
 }
 
 export function googleSearchRetrievalToVertex(
-  fromObject: types.GoogleSearchRetrieval,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1038,7 +1023,7 @@ export function googleSearchRetrievalToVertex(
 }
 
 export function enterpriseWebSearchToVertex(
-  fromObject: types.EnterpriseWebSearch,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1053,7 +1038,7 @@ export function enterpriseWebSearchToVertex(
 }
 
 export function apiKeyConfigToVertex(
-  fromObject: types.ApiKeyConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1066,7 +1051,7 @@ export function apiKeyConfigToVertex(
 }
 
 export function authConfigToVertex(
-  fromObject: types.AuthConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1120,7 +1105,7 @@ export function authConfigToVertex(
 }
 
 export function googleMapsToVertex(
-  fromObject: types.GoogleMaps,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1143,7 +1128,7 @@ export function urlContextToVertex(): Record<string, unknown> {
 }
 
 export function toolComputerUseToVertex(
-  fromObject: types.ToolComputerUse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1155,7 +1140,7 @@ export function toolComputerUseToVertex(
   return toObject;
 }
 
-export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
+export function toolToVertex(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromFunctionDeclarations = common.getValueByPath(fromObject, [
@@ -1241,7 +1226,7 @@ export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
 }
 
 export function functionCallingConfigToVertex(
-  fromObject: types.FunctionCallingConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1264,9 +1249,7 @@ export function functionCallingConfigToVertex(
   return toObject;
 }
 
-export function latLngToVertex(
-  fromObject: types.LatLng,
-): Record<string, unknown> {
+export function latLngToVertex(fromObject: unknown): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromLatitude = common.getValueByPath(fromObject, ['latitude']);
@@ -1283,7 +1266,7 @@ export function latLngToVertex(
 }
 
 export function retrievalConfigToVertex(
-  fromObject: types.RetrievalConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1301,7 +1284,7 @@ export function retrievalConfigToVertex(
 }
 
 export function toolConfigToVertex(
-  fromObject: types.ToolConfig,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1331,7 +1314,7 @@ export function toolConfigToVertex(
 }
 
 export function createCachedContentConfigToVertex(
-  fromObject: types.CreateCachedContentConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -1407,7 +1390,7 @@ export function createCachedContentConfigToVertex(
 
 export function createCachedContentParametersToVertex(
   apiClient: ApiClient,
-  fromObject: types.CreateCachedContentParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1434,7 +1417,7 @@ export function createCachedContentParametersToVertex(
 
 export function getCachedContentParametersToVertex(
   apiClient: ApiClient,
-  fromObject: types.GetCachedContentParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1457,7 +1440,7 @@ export function getCachedContentParametersToVertex(
 
 export function deleteCachedContentParametersToVertex(
   apiClient: ApiClient,
-  fromObject: types.DeleteCachedContentParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1479,7 +1462,7 @@ export function deleteCachedContentParametersToVertex(
 }
 
 export function updateCachedContentConfigToVertex(
-  fromObject: types.UpdateCachedContentConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -1499,7 +1482,7 @@ export function updateCachedContentConfigToVertex(
 
 export function updateCachedContentParametersToVertex(
   apiClient: ApiClient,
-  fromObject: types.UpdateCachedContentParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1525,7 +1508,7 @@ export function updateCachedContentParametersToVertex(
 }
 
 export function listCachedContentsConfigToVertex(
-  fromObject: types.ListCachedContentsConfig,
+  fromObject: unknown,
   parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -1544,7 +1527,7 @@ export function listCachedContentsConfigToVertex(
 }
 
 export function listCachedContentsParametersToVertex(
-  fromObject: types.ListCachedContentsParameters,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1561,7 +1544,7 @@ export function listCachedContentsParametersToVertex(
 }
 
 export function cachedContentFromMldev(
-  fromObject: types.CachedContent,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1615,7 +1598,7 @@ export function deleteCachedContentResponseFromMldev(): Record<
 }
 
 export function listCachedContentsResponseFromMldev(
-  fromObject: types.ListCachedContentsResponse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1650,7 +1633,7 @@ export function listCachedContentsResponseFromMldev(
 }
 
 export function cachedContentFromVertex(
-  fromObject: types.CachedContent,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1704,7 +1687,7 @@ export function deleteCachedContentResponseFromVertex(): Record<
 }
 
 export function listCachedContentsResponseFromVertex(
-  fromObject: types.ListCachedContentsResponse,
+  fromObject: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
