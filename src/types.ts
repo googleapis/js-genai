@@ -3972,21 +3972,12 @@ export class ListTuningJobsResponse {
   tuningJobs?: TuningJob[];
 }
 
-export declare interface TuningExample {
-  /** Text model input. */
-  textInput?: string;
-  /** The expected model output. */
-  output?: string;
-}
-
 /** Supervised fine-tuning training dataset. */
 export declare interface TuningDataset {
   /** GCS URI of the file containing training dataset in JSONL format. */
   gcsUri?: string;
   /** The resource name of the Vertex Multimodal Dataset that is used as training dataset. Example: 'projects/my-project-id-or-number/locations/my-location/datasets/my-dataset-id'. */
   vertexDatasetResource?: string;
-  /** Inline examples with simple input/output text. */
-  examples?: TuningExample[];
 }
 
 export declare interface TuningValidationDataset {
@@ -4023,10 +4014,6 @@ export declare interface CreateTuningJobConfig {
   preTunedModelCheckpointId?: string;
   /** Adapter size for tuning. */
   adapterSize?: AdapterSize;
-  /** The batch size hyperparameter for tuning. If not set, a default of 4 or 16 will be used based on the number of training examples. */
-  batchSize?: number;
-  /** The learning rate hyperparameter for tuning. If not set, a default of 0.001 or 0.0002 will be calculated based on the number of training examples. */
-  learningRate?: number;
 }
 
 /** Supervised fine-tuning job creation parameters - optional fields. */
