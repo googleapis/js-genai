@@ -7,6 +7,7 @@
 import {createWriteStream, writeFile} from 'fs';
 import {Readable} from 'node:stream';
 import type {ReadableStream} from 'node:stream/web';
+import {pipeline} from 'stream/promises';
 
 import {ApiClient} from '../_api_client.js';
 import {Downloader} from '../_downloader.js';
@@ -27,9 +28,10 @@ export class NodeDownloader implements Downloader {
       const response = await downloadFile(params, apiClient);
       if (response instanceof HttpResponse) {
         const writer = createWriteStream(params.downloadPath);
-        Readable.fromWeb(
+        const readable = Readable.fromWeb(
           response.responseInternal.body as ReadableStream<Uint8Array>,
-        ).pipe(writer);
+        );
+        await pipeline(readable, writer)
       } else {
         writeFile(
           params.downloadPath,
