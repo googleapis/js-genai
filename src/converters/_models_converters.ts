@@ -786,10 +786,26 @@ export function generateContentConfigToMldev(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
+  let responseModalitiesContainsImage: boolean = false;
+  const fromResponseModalities = common.getValueByPath(fromObject, [
+    'responseModalities',
+  ]);
+  if (fromResponseModalities != null)  {    
+    common.setValueByPath(
+      toObject,
+      ['responseModalities'],
+      fromResponseModalities,
+    );
+    if (fromResponseModalities !== null && Array.isArray(fromResponseModalities)) {
+      responseModalitiesContainsImage = 
+        fromResponseModalities.filter(modality => modality.toLowerCase() === "image").length > 0;
+    }
+  }
+
   const fromSystemInstruction = common.getValueByPath(fromObject, [
     'systemInstruction',
   ]);
-  if (parentObject !== undefined && fromSystemInstruction != null) {
+  if (parentObject !== undefined && fromSystemInstruction != null && responseModalitiesContainsImage === false) {
     common.setValueByPath(
       parentObject,
       ['systemInstruction'],
@@ -950,17 +966,6 @@ export function generateContentConfigToMldev(
       parentObject,
       ['cachedContent'],
       t.tCachedContentName(apiClient, fromCachedContent),
-    );
-  }
-
-  const fromResponseModalities = common.getValueByPath(fromObject, [
-    'responseModalities',
-  ]);
-  if (fromResponseModalities != null) {
-    common.setValueByPath(
-      toObject,
-      ['responseModalities'],
-      fromResponseModalities,
     );
   }
 
@@ -2594,10 +2599,27 @@ export function generateContentConfigToVertex(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
+  let responseModalitiesContainsImage: boolean = false;
+  const fromResponseModalities = common.getValueByPath(fromObject, [
+    'responseModalities',
+  ]);
+  if (fromResponseModalities != null)  {    
+    common.setValueByPath(
+      toObject,
+      ['responseModalities'],
+      fromResponseModalities,
+    );
+    if (fromResponseModalities !== null && Array.isArray(fromResponseModalities)) {
+      responseModalitiesContainsImage = 
+        fromResponseModalities.filter(modality => modality.toLowerCase() === "image").length > 0;
+    }
+  }
+
+
   const fromSystemInstruction = common.getValueByPath(fromObject, [
     'systemInstruction',
   ]);
-  if (parentObject !== undefined && fromSystemInstruction != null) {
+  if (parentObject !== undefined && fromSystemInstruction != null && responseModalitiesContainsImage === false) {
     common.setValueByPath(
       parentObject,
       ['systemInstruction'],
@@ -2766,18 +2788,7 @@ export function generateContentConfigToVertex(
       ['cachedContent'],
       t.tCachedContentName(apiClient, fromCachedContent),
     );
-  }
-
-  const fromResponseModalities = common.getValueByPath(fromObject, [
-    'responseModalities',
-  ]);
-  if (fromResponseModalities != null) {
-    common.setValueByPath(
-      toObject,
-      ['responseModalities'],
-      fromResponseModalities,
-    );
-  }
+  }  
 
   const fromMediaResolution = common.getValueByPath(fromObject, [
     'mediaResolution',
