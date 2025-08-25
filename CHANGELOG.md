@@ -1,6 +1,16 @@
 # Changelog
 
 
+## [1.16.0](https://github.com/googleapis/js-genai/compare/v1.15.0...v1.16.0) (2025-08-25)
+
+
+### Features
+
+* add `sdkHttpResponse.headers` to *Delete responses. ([397c602](https://github.com/googleapis/js-genai/commit/397c6022864adfd5113da58977ee036d186e81a2))
+* Add add_watermark field for recontext_image (Virtual Try-On, Product Recontext) ([e182fe8](https://github.com/googleapis/js-genai/commit/e182fe89deebf2c0bbe0310c689e444a56351896))
+* Support GenerateVideosSource for Veo GenerateVideos ([2241749](https://github.com/googleapis/js-genai/commit/2241749382f760eb942bf84318f64b2e9c535694))
+* Update server test recordings to JSON. ([dd0a033](https://github.com/googleapis/js-genai/commit/dd0a0334375f373964acf9c7d6b4d2b8905226a1))
+
 ## [1.15.0](https://github.com/googleapis/js-genai/compare/v1.14.0...v1.15.0) (2025-08-18)
 
 
