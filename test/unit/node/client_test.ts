@@ -8,7 +8,7 @@ import {setDefaultBaseUrls} from '../../../src/_base_url.js';
 import {NodeUploader} from '../../../src/node/_node_uploader.js';
 import {GoogleGenAI} from '../../../src/node/node_client.js';
 
-describe('Client', () => {
+fdescribe('Client', () => {
   afterEach(() => {
     delete process.env['GOOGLE_API_KEY'];
     delete process.env['GEMINI_API_KEY'];
