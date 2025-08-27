@@ -57,6 +57,13 @@ describe('Client', () => {
     );
   });
 
+  it('should not set apiKey if both GEMINI_API_KEY and GOOGLE_API_KEY are set to empty string', () => {
+    process.env['GOOGLE_API_KEY'] = '';
+    process.env['GEMINI_API_KEY'] = '';
+    const client = new GoogleGenAI({});
+    expect(client['apiKey']).toBe(undefined);
+  });
+
   it('should set vertexai from environment', () => {
     process.env['GOOGLE_GENAI_USE_VERTEXAI'] = 'false';
     let client = new GoogleGenAI({});
@@ -73,10 +80,22 @@ describe('Client', () => {
     expect(client['project']).toBe('test_project');
   });
 
+  it('should not set project if GOOGLE_CLOUD_PROJECT is set to an empty string', () => {
+    process.env['GOOGLE_CLOUD_PROJECT'] = '';
+    const client = new GoogleGenAI({});
+    expect(client['project']).toBe(undefined);
+  });
+
   it('should set location from environment', () => {
     process.env['GOOGLE_CLOUD_LOCATION'] = 'test_location';
     const client = new GoogleGenAI({});
     expect(client['location']).toBe('test_location');
+  });
+
+  it('should not set location if GOOGLE_CLOUD_LOCATION is set to an empty string', () => {
+    process.env['GOOGLE_CLOUD_LOCATION'] = '';
+    const client = new GoogleGenAI({});
+    expect(client['location']).toBe(undefined);
   });
 
   it('should prioritize constructor options over environment variables', () => {
