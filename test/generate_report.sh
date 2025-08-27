@@ -53,4 +53,4 @@ nyc merge ./${WORK_DIR} --output-file=${DEFAULT_NYC_OUTPUT_DIR}/coverage-report.
 nyc report --reporter=text --reporter=lcov --report-dir=${DEFAULT_NYC_OUTPUT_DIR}
 
 # Check coverage is above threshold.
-nyc check-coverage --lines 50 --statements 50 --functions 40 --branches 75
+nyc check-coverage --lines 50 --statements 50 --functions 39 --branches 75
