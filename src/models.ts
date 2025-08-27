@@ -1757,11 +1757,12 @@ export class Models extends BaseModule {
    *
    * @example
    * ```ts
-   * const operation = await ai.models.generateVideos({
+   * let operation = await ai.models.generateVideos({
    *  model: 'veo-2.0-generate-001',
    *  prompt: 'A neon hologram of a cat driving at top speed',
    *  config: {
    *    numberOfVideos: 1
+   *  }
    * });
    *
    * while (!operation.done) {
