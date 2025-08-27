@@ -1,6 +1,26 @@
 # Changelog
 
 
+## [1.16.0](https://github.com/googleapis/js-genai/compare/v1.15.0...v1.16.0) (2025-08-27)
+
+
+### Features
+
+* add `sdkHttpResponse.headers` to *Delete responses. ([397c602](https://github.com/googleapis/js-genai/commit/397c6022864adfd5113da58977ee036d186e81a2))
+* Add add_watermark field for recontext_image (Virtual Try-On, Product Recontext) ([e182fe8](https://github.com/googleapis/js-genai/commit/e182fe89deebf2c0bbe0310c689e444a56351896))
+* Add output_gcs_uri to Imagen upscale_image ([8db102a](https://github.com/googleapis/js-genai/commit/8db102a976c6dadcf6596bdd2b378f982da1261b))
+* add outputSchema support for MCP ([e2d4e50](https://github.com/googleapis/js-genai/commit/e2d4e507513009ba1bff79f193459772673ac42d))
+* Add VALIDATED mode into FunctionCallingConfigMode ([af410e7](https://github.com/googleapis/js-genai/commit/af410e74f540411e809725f809caab40a624ba6f))
+* Add VideoGenerationReferenceType enum for generate_videos ([eb17013](https://github.com/googleapis/js-genai/commit/eb170130c2c81b7f149f1d824b813fb3c44db36d))
+* Support GenerateVideosSource for Veo GenerateVideos ([2241749](https://github.com/googleapis/js-genai/commit/2241749382f760eb942bf84318f64b2e9c535694))
+* support tunings.cancel in the genai SDK for Python, Java, JS, and Go ([2d67d25](https://github.com/googleapis/js-genai/commit/2d67d25d4b7cbdeb6b04caf15cb6b8b3b1033e68))
+* Update server test recordings to JSON. ([dd0a033](https://github.com/googleapis/js-genai/commit/dd0a0334375f373964acf9c7d6b4d2b8905226a1))
+
+
+### Bug Fixes
+
+* **js:** empty env vars should be treated as undefined. ([16a80c0](https://github.com/googleapis/js-genai/commit/16a80c04f0b8353a6c4e64a7d29c171e0c241ae3))
+
 ## [1.15.0](https://github.com/googleapis/js-genai/compare/v1.14.0...v1.15.0) (2025-08-18)
 
 
