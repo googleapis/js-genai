@@ -2783,7 +2783,7 @@ export declare interface Image {
   gcsUri?: string;
   /** The image bytes data. ``Image`` can contain a value for this field
       or the ``gcs_uri`` field but not both.
-      
+
   * @remarks Encoded as base64 string. */
   imageBytes?: string;
   /** The MIME type of the image. */
@@ -3275,6 +3275,8 @@ export declare interface GenerationConfigThinkingConfig {
 
 /** Generation config. */
 export declare interface GenerationConfig {
+  /** If enabled, the model will detect emotions and adapt its responses accordingly. */
+  enableAffectiveDialog?: boolean;
   /** Optional. Config for model selection. */
   modelSelectionConfig?: ModelSelectionConfig;
   /** Optional. If enabled, audio timestamp will be included in the request to the model. */
@@ -5332,7 +5334,7 @@ export declare interface ProactivityConfig {
 
 /** Message contains configuration that will apply for the duration of the streaming session. */
 export declare interface LiveClientSetup {
-  /** 
+  /**
       The fully qualified name of the publisher model or tuned model endpoint to
       use.
        */
@@ -5428,7 +5430,7 @@ export declare interface LiveClientRealtimeInput {
   mediaChunks?: Blob[];
   /** The realtime audio input stream. */
   audio?: Blob;
-  /** 
+  /**
 Indicates that the audio stream has ended, e.g. because the microphone was
 turned off.
 
@@ -5469,7 +5471,7 @@ export declare interface LiveSendRealtimeInputParameters {
   media?: BlobImageUnion;
   /** The realtime audio input stream. */
   audio?: Blob;
-  /** 
+  /**
 Indicates that the audio stream has ended, e.g. because the microphone was
 turned off.
 
