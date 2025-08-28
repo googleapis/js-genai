@@ -1192,6 +1192,7 @@ export interface GenerateVideosConfig {
     generateAudio?: boolean;
     httpOptions?: HttpOptions;
     lastFrame?: Image_2;
+    mask?: VideoGenerationMask;
     negativePrompt?: string;
     numberOfVideos?: number;
     outputGcsUri?: string;
@@ -3152,6 +3153,12 @@ export interface Video {
 export enum VideoCompressionQuality {
     LOSSLESS = "LOSSLESS",
     OPTIMIZED = "OPTIMIZED"
+}
+
+// @public
+export interface VideoGenerationMask {
+    image?: Image_2;
+    maskMode?: string;
 }
 
 // @public
