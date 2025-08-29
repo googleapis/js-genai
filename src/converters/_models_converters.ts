@@ -1616,8 +1616,13 @@ export function generateVideosConfigToMldev(
     );
   }
 
-  if (common.getValueByPath(fromObject, ['resolution']) !== undefined) {
-    throw new Error('resolution parameter is not supported in Gemini API.');
+  const fromResolution = common.getValueByPath(fromObject, ['resolution']);
+  if (parentObject !== undefined && fromResolution != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'resolution'],
+      fromResolution,
+    );
   }
 
   const fromPersonGeneration = common.getValueByPath(fromObject, [
