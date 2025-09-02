@@ -1,6 +1,13 @@
 # Changelog
 
 
+## [1.17.0](https://github.com/googleapis/js-genai/compare/v1.16.0...v1.17.0) (2025-09-02)
+
+
+### Features
+
+* Add resolution field for Gemini Developer API Veo 3 generation ([5ce467b](https://github.com/googleapis/js-genai/commit/5ce467b754b82f1a2ba18e75f27962c0764db091))
+
 ## [1.16.0](https://github.com/googleapis/js-genai/compare/v1.15.0...v1.16.0) (2025-08-27)
 
 
