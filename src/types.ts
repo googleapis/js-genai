@@ -3402,6 +3402,16 @@ export declare interface VideoGenerationReferenceImage {
   referenceType?: VideoGenerationReferenceType;
 }
 
+/** A mask for video generation. */
+export declare interface VideoGenerationMask {
+  /** The image mask to use for generating videos. */
+  image?: Image;
+  /** Describes how the mask will be used. Inpainting masks must match
+      the aspect ratio of the input video. Outpainting masks can be either 9:16
+      or 16:9. */
+  maskMode?: string;
+}
+
 /** Configuration for generating videos. */
 export declare interface GenerateVideosConfig {
   /** Used to override HTTP request options. */
@@ -3454,6 +3464,8 @@ export declare interface GenerateVideosConfig {
       be associated with a type. Veo 2 supports up to 3 asset images *or* 1
       style image. */
   referenceImages?: VideoGenerationReferenceImage[];
+  /** The mask to use for generating videos. */
+  mask?: VideoGenerationMask;
   /** Compression quality of the generated videos. */
   compressionQuality?: VideoCompressionQuality;
 }

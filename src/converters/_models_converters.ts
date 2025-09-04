@@ -1676,6 +1676,10 @@ export function generateVideosConfigToMldev(
     );
   }
 
+  if (common.getValueByPath(fromObject, ['mask']) !== undefined) {
+    throw new Error('mask parameter is not supported in Gemini API.');
+  }
+
   if (common.getValueByPath(fromObject, ['compressionQuality']) !== undefined) {
     throw new Error(
       'compressionQuality parameter is not supported in Gemini API.',
@@ -4373,6 +4377,24 @@ export function videoGenerationReferenceImageToVertex(
   return toObject;
 }
 
+export function videoGenerationMaskToVertex(
+  fromObject: types.VideoGenerationMask,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromImage = common.getValueByPath(fromObject, ['image']);
+  if (fromImage != null) {
+    common.setValueByPath(toObject, ['_self'], imageToVertex(fromImage));
+  }
+
+  const fromMaskMode = common.getValueByPath(fromObject, ['maskMode']);
+  if (fromMaskMode != null) {
+    common.setValueByPath(toObject, ['maskMode'], fromMaskMode);
+  }
+
+  return toObject;
+}
+
 export function generateVideosConfigToVertex(
   fromObject: types.GenerateVideosConfig,
   parentObject: Record<string, unknown>,
@@ -4514,6 +4536,15 @@ export function generateVideosConfigToVertex(
       parentObject,
       ['instances[0]', 'referenceImages'],
       transformedList,
+    );
+  }
+
+  const fromMask = common.getValueByPath(fromObject, ['mask']);
+  if (parentObject !== undefined && fromMask != null) {
+    common.setValueByPath(
+      parentObject,
+      ['instances[0]', 'mask'],
+      videoGenerationMaskToVertex(fromMask),
     );
   }
 
