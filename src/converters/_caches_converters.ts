@@ -76,6 +76,29 @@ export function fileDataToMldev(
   return toObject;
 }
 
+export function functionCallToMldev(
+  fromObject: types.FunctionCall,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromId = common.getValueByPath(fromObject, ['id']);
+  if (fromId != null) {
+    common.setValueByPath(toObject, ['id'], fromId);
+  }
+
+  const fromArgs = common.getValueByPath(fromObject, ['args']);
+  if (fromArgs != null) {
+    common.setValueByPath(toObject, ['args'], fromArgs);
+  }
+
+  const fromName = common.getValueByPath(fromObject, ['name']);
+  if (fromName != null) {
+    common.setValueByPath(toObject, ['name'], fromName);
+  }
+
+  return toObject;
+}
+
 export function partToMldev(fromObject: types.Part): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -120,6 +143,15 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
     common.setValueByPath(toObject, ['thoughtSignature'], fromThoughtSignature);
   }
 
+  const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
+  if (fromFunctionCall != null) {
+    common.setValueByPath(
+      toObject,
+      ['functionCall'],
+      functionCallToMldev(fromFunctionCall),
+    );
+  }
+
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
     'codeExecutionResult',
   ]);
@@ -136,11 +168,6 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
   ]);
   if (fromExecutableCode != null) {
     common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
-  }
-
-  const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
-  if (fromFunctionCall != null) {
-    common.setValueByPath(toObject, ['functionCall'], fromFunctionCall);
   }
 
   const fromFunctionResponse = common.getValueByPath(fromObject, [
@@ -794,6 +821,28 @@ export function fileDataToVertex(
   return toObject;
 }
 
+export function functionCallToVertex(
+  fromObject: types.FunctionCall,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  if (common.getValueByPath(fromObject, ['id']) !== undefined) {
+    throw new Error('id parameter is not supported in Vertex AI.');
+  }
+
+  const fromArgs = common.getValueByPath(fromObject, ['args']);
+  if (fromArgs != null) {
+    common.setValueByPath(toObject, ['args'], fromArgs);
+  }
+
+  const fromName = common.getValueByPath(fromObject, ['name']);
+  if (fromName != null) {
+    common.setValueByPath(toObject, ['name'], fromName);
+  }
+
+  return toObject;
+}
+
 export function partToVertex(fromObject: types.Part): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -838,6 +887,15 @@ export function partToVertex(fromObject: types.Part): Record<string, unknown> {
     common.setValueByPath(toObject, ['thoughtSignature'], fromThoughtSignature);
   }
 
+  const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
+  if (fromFunctionCall != null) {
+    common.setValueByPath(
+      toObject,
+      ['functionCall'],
+      functionCallToVertex(fromFunctionCall),
+    );
+  }
+
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
     'codeExecutionResult',
   ]);
@@ -854,11 +912,6 @@ export function partToVertex(fromObject: types.Part): Record<string, unknown> {
   ]);
   if (fromExecutableCode != null) {
     common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
-  }
-
-  const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
-  if (fromFunctionCall != null) {
-    common.setValueByPath(toObject, ['functionCall'], fromFunctionCall);
   }
 
   const fromFunctionResponse = common.getValueByPath(fromObject, [
