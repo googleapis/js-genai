@@ -3226,6 +3226,13 @@ export function liveServerContentFromMldev(
     );
   }
 
+  const fromWaitingForInput = common.getValueByPath(fromObject, [
+    'waitingForInput',
+  ]);
+  if (fromWaitingForInput != null) {
+    common.setValueByPath(toObject, ['waitingForInput'], fromWaitingForInput);
+  }
+
   return toObject;
 }
 
@@ -4085,6 +4092,13 @@ export function liveServerContentFromVertex(
       ['outputTranscription'],
       transcriptionFromVertex(fromOutputTranscription),
     );
+  }
+
+  const fromWaitingForInput = common.getValueByPath(fromObject, [
+    'waitingForInput',
+  ]);
+  if (fromWaitingForInput != null) {
+    common.setValueByPath(toObject, ['waitingForInput'], fromWaitingForInput);
   }
 
   return toObject;
