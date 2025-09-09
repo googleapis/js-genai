@@ -1,6 +1,19 @@
 # Changelog
 
 
+## [1.19.0](https://github.com/googleapis/js-genai/compare/v1.18.0...v1.19.0) (2025-09-09)
+
+
+### Features
+
+* Add labels to create tuning job config ([220c4d6](https://github.com/googleapis/js-genai/commit/220c4d6c925d8ebfa3cfccff5ed964df1b775a62))
+* Support Veo 2 Editing on Vertex ([6e34fd0](https://github.com/googleapis/js-genai/commit/6e34fd057cc88c300942f231f43e1c120f3a6fe6))
+
+
+### Bug Fixes
+
+* Enable `id` field in `FunctionCall` for Vertex AI. ([7c6e047](https://github.com/googleapis/js-genai/commit/7c6e047037103a0cc60c799a12dcc3ace3a5ba2f))
+
 ## [1.18.0](https://github.com/googleapis/js-genai/compare/v1.17.0...v1.18.0) (2025-09-09)
 
 
