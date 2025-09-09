@@ -87,3 +87,4 @@ export declare interface UpscaleImageAPIParametersInternal {
   /** Configuration for upscaling. */
   config?: UpscaleImageAPIConfigInternal;
 }
+
