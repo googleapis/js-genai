@@ -1,6 +1,15 @@
 # Changelog
 
 
+## [1.18.0](https://github.com/googleapis/js-genai/compare/v1.17.0...v1.18.0) (2025-09-09)
+
+
+### Features
+
+* [Python] Implement async embedding batches for MLDev. ([5940aec](https://github.com/googleapis/js-genai/commit/5940aec99d58112c3cf5494ff4a94c28f2af16f3))
+* generate the function_call class's converters ([e57a7bc](https://github.com/googleapis/js-genai/commit/e57a7bcc4e30e0f9ddef036bbe50680ebc476e83))
+* Implement embed content batches. ([9cb8613](https://github.com/googleapis/js-genai/commit/9cb8613ef7646be0d6392f4da4da3eb6b0e6d5f6))
+
 ## [1.17.0](https://github.com/googleapis/js-genai/compare/v1.16.0...v1.17.0) (2025-09-02)
 
 
