@@ -400,11 +400,6 @@ export function computeTokensParametersToVertex(
     common.setValueByPath(toObject, ['contents'], transformedList);
   }
 
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
-  }
-
   return toObject;
 }
 
@@ -695,11 +690,7 @@ export function countTokensParametersToMldev(
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      countTokensConfigToMldev(fromConfig),
-    );
+    countTokensConfigToMldev(fromConfig);
   }
 
   return toObject;
@@ -733,11 +724,7 @@ export function countTokensParametersToVertex(
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      countTokensConfigToVertex(fromConfig, toObject),
-    );
+    countTokensConfigToVertex(fromConfig, toObject);
   }
 
   return toObject;
@@ -809,11 +796,6 @@ export function deleteModelParametersToMldev(
     );
   }
 
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
-  }
-
   return toObject;
 }
 
@@ -830,11 +812,6 @@ export function deleteModelParametersToVertex(
       ['_url', 'name'],
       t.tModel(apiClient, fromModel),
     );
-  }
-
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
   }
 
   return toObject;
@@ -1116,11 +1093,7 @@ export function editImageParametersInternalToVertex(
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      editImageConfigToVertex(fromConfig, toObject),
-    );
+    editImageConfigToVertex(fromConfig, toObject);
   }
 
   return toObject;
@@ -1299,11 +1272,7 @@ export function embedContentParametersToMldev(
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      embedContentConfigToMldev(fromConfig, toObject),
-    );
+    embedContentConfigToMldev(fromConfig, toObject);
   }
 
   const fromModelForEmbedContent = common.getValueByPath(fromObject, ['model']);
@@ -1344,11 +1313,7 @@ export function embedContentParametersToVertex(
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      embedContentConfigToVertex(fromConfig, toObject),
-    );
+    embedContentConfigToVertex(fromConfig, toObject);
   }
 
   return toObject;
@@ -2779,11 +2744,7 @@ export function generateImagesParametersToMldev(
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      generateImagesConfigToMldev(fromConfig, toObject),
-    );
+    generateImagesConfigToMldev(fromConfig, toObject);
   }
 
   return toObject;
@@ -2811,11 +2772,7 @@ export function generateImagesParametersToVertex(
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      generateImagesConfigToVertex(fromConfig, toObject),
-    );
+    generateImagesConfigToVertex(fromConfig, toObject);
   }
 
   return toObject;
@@ -3300,20 +3257,12 @@ export function generateVideosParametersToMldev(
 
   const fromSource = common.getValueByPath(fromObject, ['source']);
   if (fromSource != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      generateVideosSourceToMldev(fromSource, toObject),
-    );
+    generateVideosSourceToMldev(fromSource, toObject);
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      generateVideosConfigToMldev(fromConfig, toObject),
-    );
+    generateVideosConfigToMldev(fromConfig, toObject);
   }
 
   return toObject;
@@ -3359,20 +3308,12 @@ export function generateVideosParametersToVertex(
 
   const fromSource = common.getValueByPath(fromObject, ['source']);
   if (fromSource != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      generateVideosSourceToVertex(fromSource, toObject),
-    );
+    generateVideosSourceToVertex(fromSource, toObject);
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      generateVideosConfigToVertex(fromConfig, toObject),
-    );
+    generateVideosConfigToVertex(fromConfig, toObject);
   }
 
   return toObject;
@@ -3657,11 +3598,6 @@ export function getModelParametersToMldev(
     );
   }
 
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
-  }
-
   return toObject;
 }
 
@@ -3678,11 +3614,6 @@ export function getModelParametersToVertex(
       ['_url', 'name'],
       t.tModel(apiClient, fromModel),
     );
-  }
-
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
   }
 
   return toObject;
@@ -4036,11 +3967,7 @@ export function listModelsParametersToMldev(
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      listModelsConfigToMldev(apiClient, fromConfig, toObject),
-    );
+    listModelsConfigToMldev(apiClient, fromConfig, toObject);
   }
 
   return toObject;
@@ -4054,11 +3981,7 @@ export function listModelsParametersToVertex(
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      listModelsConfigToVertex(apiClient, fromConfig, toObject),
-    );
+    listModelsConfigToVertex(apiClient, fromConfig, toObject);
   }
 
   return toObject;
@@ -4837,20 +4760,12 @@ export function recontextImageParametersToVertex(
 
   const fromSource = common.getValueByPath(fromObject, ['source']);
   if (fromSource != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      recontextImageSourceToVertex(fromSource, toObject),
-    );
+    recontextImageSourceToVertex(fromSource, toObject);
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      recontextImageConfigToVertex(fromConfig, toObject),
-    );
+    recontextImageConfigToVertex(fromConfig, toObject);
   }
 
   return toObject;
@@ -5465,20 +5380,12 @@ export function segmentImageParametersToVertex(
 
   const fromSource = common.getValueByPath(fromObject, ['source']);
   if (fromSource != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      segmentImageSourceToVertex(fromSource, toObject),
-    );
+    segmentImageSourceToVertex(fromSource, toObject);
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      segmentImageConfigToVertex(fromConfig, toObject),
-    );
+    segmentImageConfigToVertex(fromConfig, toObject);
   }
 
   return toObject;
@@ -6078,11 +5985,7 @@ export function updateModelParametersToMldev(
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      updateModelConfigToMldev(fromConfig, toObject),
-    );
+    updateModelConfigToMldev(fromConfig, toObject);
   }
 
   return toObject;
@@ -6105,11 +6008,7 @@ export function updateModelParametersToVertex(
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      updateModelConfigToVertex(fromConfig, toObject),
-    );
+    updateModelConfigToVertex(fromConfig, toObject);
   }
 
   return toObject;
@@ -6241,11 +6140,7 @@ export function upscaleImageAPIParametersInternalToVertex(
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      upscaleImageAPIConfigInternalToVertex(fromConfig, toObject),
-    );
+    upscaleImageAPIConfigInternalToVertex(fromConfig, toObject);
   }
 
   return toObject;

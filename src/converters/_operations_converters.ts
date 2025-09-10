@@ -47,11 +47,6 @@ export function fetchPredictOperationParametersToVertex(
     common.setValueByPath(toObject, ['_url', 'resourceName'], fromResourceName);
   }
 
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
-  }
-
   return toObject;
 }
 
@@ -258,11 +253,6 @@ export function getOperationParametersToMldev(
     );
   }
 
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
-  }
-
   return toObject;
 }
 
@@ -280,11 +270,6 @@ export function getOperationParametersToVertex(
       ['_url', 'operationName'],
       fromOperationName,
     );
-  }
-
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
   }
 
   return toObject;

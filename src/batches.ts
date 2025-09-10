@@ -349,7 +349,6 @@ export class Batches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -381,7 +380,6 @@ export class Batches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -434,7 +432,6 @@ export class Batches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -485,7 +482,6 @@ export class Batches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -517,7 +513,6 @@ export class Batches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -566,7 +561,6 @@ export class Batches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -588,7 +582,6 @@ export class Batches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -617,7 +610,6 @@ export class Batches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -653,7 +645,6 @@ export class Batches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -713,7 +704,6 @@ export class Batches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -751,7 +741,6 @@ export class Batches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 

@@ -417,11 +417,6 @@ export function cancelBatchJobParametersToMldev(
     );
   }
 
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
-  }
-
   return toObject;
 }
 
@@ -438,11 +433,6 @@ export function cancelBatchJobParametersToVertex(
       ['_url', 'name'],
       t.tBatchJobName(apiClient, fromName),
     );
-  }
-
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
   }
 
   return toObject;
@@ -673,11 +663,7 @@ export function createBatchJobParametersToMldev(
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      createBatchJobConfigToMldev(fromConfig, toObject),
-    );
+    createBatchJobConfigToMldev(fromConfig, toObject);
   }
 
   return toObject;
@@ -705,11 +691,7 @@ export function createBatchJobParametersToVertex(
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      createBatchJobConfigToVertex(fromConfig, toObject),
-    );
+    createBatchJobConfigToVertex(fromConfig, toObject);
   }
 
   return toObject;
@@ -759,11 +741,7 @@ export function createEmbeddingsBatchJobParametersToMldev(
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      createEmbeddingsBatchJobConfigToMldev(fromConfig, toObject),
-    );
+    createEmbeddingsBatchJobConfigToMldev(fromConfig, toObject);
   }
 
   return toObject;
@@ -784,11 +762,6 @@ export function deleteBatchJobParametersToMldev(
     );
   }
 
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
-  }
-
   return toObject;
 }
 
@@ -805,11 +778,6 @@ export function deleteBatchJobParametersToVertex(
       ['_url', 'name'],
       t.tBatchJobName(apiClient, fromName),
     );
-  }
-
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
   }
 
   return toObject;
@@ -1438,11 +1406,6 @@ export function getBatchJobParametersToMldev(
     );
   }
 
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
-  }
-
   return toObject;
 }
 
@@ -1459,11 +1422,6 @@ export function getBatchJobParametersToVertex(
       ['_url', 'name'],
       t.tBatchJobName(apiClient, fromName),
     );
-  }
-
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
   }
 
   return toObject;
@@ -1731,11 +1689,7 @@ export function listBatchJobsParametersToMldev(
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      listBatchJobsConfigToMldev(fromConfig, toObject),
-    );
+    listBatchJobsConfigToMldev(fromConfig, toObject);
   }
 
   return toObject;
@@ -1748,11 +1702,7 @@ export function listBatchJobsParametersToVertex(
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      listBatchJobsConfigToVertex(fromConfig, toObject),
-    );
+    listBatchJobsConfigToVertex(fromConfig, toObject);
   }
 
   return toObject;

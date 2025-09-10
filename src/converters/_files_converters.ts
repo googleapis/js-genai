@@ -20,11 +20,6 @@ export function createFileParametersToMldev(
     common.setValueByPath(toObject, ['file'], fileToMldev(fromFile));
   }
 
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
-  }
-
   return toObject;
 }
 
@@ -51,11 +46,6 @@ export function deleteFileParametersToMldev(
   const fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName != null) {
     common.setValueByPath(toObject, ['_url', 'file'], t.tFileName(fromName));
-  }
-
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
   }
 
   return toObject;
@@ -292,11 +282,6 @@ export function getFileParametersToMldev(
     common.setValueByPath(toObject, ['_url', 'file'], t.tFileName(fromName));
   }
 
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
-  }
-
   return toObject;
 }
 
@@ -326,11 +311,7 @@ export function listFilesParametersToMldev(
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      listFilesConfigToMldev(fromConfig, toObject),
-    );
+    listFilesConfigToMldev(fromConfig, toObject);
   }
 
   return toObject;

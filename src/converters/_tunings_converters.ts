@@ -20,11 +20,6 @@ export function cancelTuningJobParametersToMldev(
     common.setValueByPath(toObject, ['_url', 'name'], fromName);
   }
 
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
-  }
-
   return toObject;
 }
 
@@ -36,11 +31,6 @@ export function cancelTuningJobParametersToVertex(
   const fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName != null) {
     common.setValueByPath(toObject, ['_url', 'name'], fromName);
-  }
-
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
   }
 
   return toObject;
@@ -270,11 +260,7 @@ export function createTuningJobParametersPrivateToMldev(
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      createTuningJobConfigToMldev(fromConfig, toObject),
-    );
+    createTuningJobConfigToMldev(fromConfig, toObject);
   }
 
   return toObject;
@@ -310,11 +296,7 @@ export function createTuningJobParametersPrivateToVertex(
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      createTuningJobConfigToVertex(fromConfig, toObject),
-    );
+    createTuningJobConfigToVertex(fromConfig, toObject);
   }
 
   return toObject;
@@ -330,11 +312,6 @@ export function getTuningJobParametersToMldev(
     common.setValueByPath(toObject, ['_url', 'name'], fromName);
   }
 
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
-  }
-
   return toObject;
 }
 
@@ -346,11 +323,6 @@ export function getTuningJobParametersToVertex(
   const fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName != null) {
     common.setValueByPath(toObject, ['_url', 'name'], fromName);
-  }
-
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
   }
 
   return toObject;
@@ -411,11 +383,7 @@ export function listTuningJobsParametersToMldev(
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      listTuningJobsConfigToMldev(fromConfig, toObject),
-    );
+    listTuningJobsConfigToMldev(fromConfig, toObject);
   }
 
   return toObject;
@@ -428,11 +396,7 @@ export function listTuningJobsParametersToVertex(
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      listTuningJobsConfigToVertex(fromConfig, toObject),
-    );
+    listTuningJobsConfigToVertex(fromConfig, toObject);
   }
 
   return toObject;
