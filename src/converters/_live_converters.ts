@@ -949,7 +949,13 @@ export function liveSendRealtimeInputParametersToMldev(
 
   const fromMedia = common.getValueByPath(fromObject, ['media']);
   if (fromMedia != null) {
-    common.setValueByPath(toObject, ['mediaChunks'], t.tBlobs(fromMedia));
+    let transformedList = t.tBlobs(fromMedia);
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return item;
+      });
+    }
+    common.setValueByPath(toObject, ['mediaChunks'], transformedList);
   }
 
   const fromAudio = common.getValueByPath(fromObject, ['audio']);
@@ -2505,7 +2511,13 @@ export function liveSendRealtimeInputParametersToVertex(
 
   const fromMedia = common.getValueByPath(fromObject, ['media']);
   if (fromMedia != null) {
-    common.setValueByPath(toObject, ['mediaChunks'], t.tBlobs(fromMedia));
+    let transformedList = t.tBlobs(fromMedia);
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return item;
+      });
+    }
+    common.setValueByPath(toObject, ['mediaChunks'], transformedList);
   }
 
   const fromAudio = common.getValueByPath(fromObject, ['audio']);
