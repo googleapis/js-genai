@@ -32,7 +32,7 @@ export declare interface EditImageParametersInternal {
   model: string;
   /** A text description of the edit to apply to the image. */
   prompt: string;
-  /** The reference images for Imagen 3 editing. */
+  /** The reference images for editing. */
   referenceImages: ReferenceImageAPIInternal[];
   /** Configuration for editing. */
   config?: types.EditImageConfig;
