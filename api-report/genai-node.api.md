@@ -2048,6 +2048,7 @@ export interface LiveServerContent {
     outputTranscription?: Transcription;
     turnComplete?: boolean;
     urlContextMetadata?: UrlContextMetadata;
+    waitingForInput?: boolean;
 }
 
 // @public

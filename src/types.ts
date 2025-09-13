@@ -5117,6 +5117,10 @@ export declare interface LiveServerContent {
   outputTranscription?: Transcription;
   /** Metadata related to url context retrieval tool. */
   urlContextMetadata?: UrlContextMetadata;
+  /** If true, indicates that the model is not generating content because
+      it is waiting for more input from the user, e.g. because it expects the
+      user to continue talking. */
+  waitingForInput?: boolean;
 }
 
 /** Request for the client to execute the `function_calls` and return the responses with the matching `id`s. */
