@@ -60,7 +60,8 @@ async function generateContentFromFileUploadMLDev() {
 
 async function main() {
   if (GOOGLE_GENAI_USE_VERTEXAI) {
-    throw new Error('Vertex AI is not supported for this sample.');
+    console.log('Vertex AI is not supported for this sample.');
+    return;
   } else {
     await generateContentFromFileUploadMLDev().catch((e) =>
       console.error('got error', e),
