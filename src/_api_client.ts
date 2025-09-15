@@ -25,7 +25,7 @@ export const SDK_VERSION = '1.19.0'; // x-release-please-version
 const LIBRARY_LABEL = `google-genai-sdk/${SDK_VERSION}`;
 const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
 const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';
-const responseLineRE = /^data: (.*)(?:\n\n|\r\r|\r\n\r\n)/;
+const responseLineRE = /^\s*data: (.*)(?:\n\n|\r\r|\r\n\r\n)/;
 
 /**
  * Options for initializing the ApiClient. The ApiClient uses the parameters
