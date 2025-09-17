@@ -207,6 +207,39 @@ export function functionCallToMldev(
   return toObject;
 }
 
+export function functionResponseToMldev(
+  fromObject: types.FunctionResponse,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromWillContinue = common.getValueByPath(fromObject, ['willContinue']);
+  if (fromWillContinue != null) {
+    common.setValueByPath(toObject, ['willContinue'], fromWillContinue);
+  }
+
+  const fromScheduling = common.getValueByPath(fromObject, ['scheduling']);
+  if (fromScheduling != null) {
+    common.setValueByPath(toObject, ['scheduling'], fromScheduling);
+  }
+
+  const fromId = common.getValueByPath(fromObject, ['id']);
+  if (fromId != null) {
+    common.setValueByPath(toObject, ['id'], fromId);
+  }
+
+  const fromName = common.getValueByPath(fromObject, ['name']);
+  if (fromName != null) {
+    common.setValueByPath(toObject, ['name'], fromName);
+  }
+
+  const fromResponse = common.getValueByPath(fromObject, ['response']);
+  if (fromResponse != null) {
+    common.setValueByPath(toObject, ['response'], fromResponse);
+  }
+
+  return toObject;
+}
+
 export function partToMldev(fromObject: types.Part): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -260,6 +293,17 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
     );
   }
 
+  const fromFunctionResponse = common.getValueByPath(fromObject, [
+    'functionResponse',
+  ]);
+  if (fromFunctionResponse != null) {
+    common.setValueByPath(
+      toObject,
+      ['functionResponse'],
+      functionResponseToMldev(fromFunctionResponse),
+    );
+  }
+
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
     'codeExecutionResult',
   ]);
@@ -276,13 +320,6 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
   ]);
   if (fromExecutableCode != null) {
     common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
-  }
-
-  const fromFunctionResponse = common.getValueByPath(fromObject, [
-    'functionResponse',
-  ]);
-  if (fromFunctionResponse != null) {
-    common.setValueByPath(toObject, ['functionResponse'], fromFunctionResponse);
   }
 
   const fromText = common.getValueByPath(fromObject, ['text']);

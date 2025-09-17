@@ -540,6 +540,26 @@ export enum AdapterSize {
   ADAPTER_SIZE_THIRTY_TWO = 'ADAPTER_SIZE_THIRTY_TWO',
 }
 
+/** Specifies how the response should be scheduled in the conversation. */
+export enum FunctionResponseScheduling {
+  /**
+   * This value is unused.
+   */
+  SCHEDULING_UNSPECIFIED = 'SCHEDULING_UNSPECIFIED',
+  /**
+   * Only add the result to the conversation context, do not interrupt or trigger generation.
+   */
+  SILENT = 'SILENT',
+  /**
+   * Add the result to the conversation context, and prompt to generate output without interrupting ongoing generation.
+   */
+  WHEN_IDLE = 'WHEN_IDLE',
+  /**
+   * Add the result to the conversation context, interrupt ongoing generation and prompt to generate output.
+   */
+  INTERRUPT = 'INTERRUPT',
+}
+
 /** Options for feature selection preference. */
 export enum FeatureSelectionPreference {
   FEATURE_SELECTION_PREFERENCE_UNSPECIFIED = 'FEATURE_SELECTION_PREFERENCE_UNSPECIFIED',
@@ -901,26 +921,6 @@ export enum TurnCoverage {
   TURN_INCLUDES_ALL_INPUT = 'TURN_INCLUDES_ALL_INPUT',
 }
 
-/** Specifies how the response should be scheduled in the conversation. */
-export enum FunctionResponseScheduling {
-  /**
-   * This value is unused.
-   */
-  SCHEDULING_UNSPECIFIED = 'SCHEDULING_UNSPECIFIED',
-  /**
-   * Only add the result to the conversation context, do not interrupt or trigger generation.
-   */
-  SILENT = 'SILENT',
-  /**
-   * Add the result to the conversation context, and prompt to generate output without interrupting ongoing generation.
-   */
-  WHEN_IDLE = 'WHEN_IDLE',
-  /**
-   * Add the result to the conversation context, interrupt ongoing generation and prompt to generate output.
-   */
-  INTERRUPT = 'INTERRUPT',
-}
-
 /** Scale of the generated music. */
 export enum Scale {
   /**
@@ -1069,6 +1069,20 @@ export declare interface FunctionCall {
   name?: string;
 }
 
+/** A function response. */
+export class FunctionResponse {
+  /** Signals that function call continues, and more responses will be returned, turning the function call into a generator. Is only applicable to NON_BLOCKING function calls (see FunctionDeclaration.behavior for details), ignored otherwise. If false, the default, future responses will not be considered. Is only applicable to NON_BLOCKING function calls, is ignored otherwise. If set to false, future responses will not be considered. It is allowed to return empty `response` with `will_continue=False` to signal that the function call is finished. */
+  willContinue?: boolean;
+  /** Specifies how the response should be scheduled in the conversation. Only applicable to NON_BLOCKING function calls, is ignored otherwise. Defaults to WHEN_IDLE. */
+  scheduling?: FunctionResponseScheduling;
+  /** Optional. The id of the function call this response is for. Populated by the client to match the corresponding function call `id`. */
+  id?: string;
+  /** Required. The name of the function to call. Matches [FunctionDeclaration.name] and [FunctionCall.name]. */
+  name?: string;
+  /** Required. The function response in JSON object format. Use "output" key to specify function output and "error" key to specify error details (if any). If "output" and "error" keys are not specified, then whole "response" is treated as function output. */
+  response?: Record<string, unknown>;
+}
+
 /** Result of executing the [ExecutableCode]. Only generated when using the [CodeExecution] tool, and always follows a `part` containing the [ExecutableCode]. */
 export declare interface CodeExecutionResult {
   /** Required. Outcome of the code execution. */
@@ -1083,20 +1097,6 @@ export declare interface ExecutableCode {
   code?: string;
   /** Required. Programming language of the `code`. */
   language?: Language;
-}
-
-/** A function response. */
-export class FunctionResponse {
-  /** Signals that function call continues, and more responses will be returned, turning the function call into a generator. Is only applicable to NON_BLOCKING function calls (see FunctionDeclaration.behavior for details), ignored otherwise. If false, the default, future responses will not be considered. Is only applicable to NON_BLOCKING function calls, is ignored otherwise. If set to false, future responses will not be considered. It is allowed to return empty `response` with `will_continue=False` to signal that the function call is finished. */
-  willContinue?: boolean;
-  /** Specifies how the response should be scheduled in the conversation. Only applicable to NON_BLOCKING function calls, is ignored otherwise. Defaults to WHEN_IDLE. */
-  scheduling?: FunctionResponseScheduling;
-  /** Optional. The id of the function call this response is for. Populated by the client to match the corresponding function call `id`. */
-  id?: string;
-  /** Required. The name of the function to call. Matches [FunctionDeclaration.name] and [FunctionCall.name]. */
-  name?: string;
-  /** Required. The function response in JSON object format. Use "output" key to specify function output and "error" key to specify error details (if any). If "output" and "error" keys are not specified, then whole "response" is treated as function output. */
-  response?: Record<string, unknown>;
 }
 
 /** A datatype containing media content.
@@ -1121,12 +1121,12 @@ export declare interface Part {
       representing the [FunctionDeclaration.name] and a structured JSON object
       containing the parameters and their values. */
   functionCall?: FunctionCall;
+  /** Optional. The result output of a [FunctionCall] that contains a string representing the [FunctionDeclaration.name] and a structured JSON object containing any output from the function call. It is used as context to the model. */
+  functionResponse?: FunctionResponse;
   /** Optional. Result of executing the [ExecutableCode]. */
   codeExecutionResult?: CodeExecutionResult;
   /** Optional. Code generated by the model that is meant to be executed. */
   executableCode?: ExecutableCode;
-  /** Optional. The result output of a [FunctionCall] that contains a string representing the [FunctionDeclaration.name] and a structured JSON object containing any output from the function call. It is used as context to the model. */
-  functionResponse?: FunctionResponse;
   /** Optional. Text part (can be code). */
   text?: string;
 }
