@@ -2047,7 +2047,9 @@ export interface LiveServerContent {
     modelTurn?: Content;
     outputTranscription?: Transcription;
     turnComplete?: boolean;
+    turnCompleteReason?: TurnCompleteReason;
     urlContextMetadata?: UrlContextMetadata;
+    waitingForInput?: boolean;
 }
 
 // @public
@@ -3017,6 +3019,14 @@ export interface TuningOperation {
 export interface TuningValidationDataset {
     gcsUri?: string;
     vertexDatasetResource?: string;
+}
+
+// @public
+export enum TurnCompleteReason {
+    MALFORMED_FUNCTION_CALL = "MALFORMED_FUNCTION_CALL",
+    NEED_MORE_INPUT = "NEED_MORE_INPUT",
+    RESPONSE_REJECTED = "RESPONSE_REJECTED",
+    TURN_COMPLETE_REASON_UNSPECIFIED = "TURN_COMPLETE_REASON_UNSPECIFIED"
 }
 
 // @public

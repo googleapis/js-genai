@@ -3227,6 +3227,24 @@ export function liveServerContentFromMldev(
     );
   }
 
+  const fromTurnCompleteReason = common.getValueByPath(fromObject, [
+    'turnCompleteReason',
+  ]);
+  if (fromTurnCompleteReason != null) {
+    common.setValueByPath(
+      toObject,
+      ['turnCompleteReason'],
+      fromTurnCompleteReason,
+    );
+  }
+
+  const fromWaitingForInput = common.getValueByPath(fromObject, [
+    'waitingForInput',
+  ]);
+  if (fromWaitingForInput != null) {
+    common.setValueByPath(toObject, ['waitingForInput'], fromWaitingForInput);
+  }
+
   return toObject;
 }
 
@@ -4091,6 +4109,24 @@ export function liveServerContentFromVertex(
       ['outputTranscription'],
       transcriptionFromVertex(fromOutputTranscription),
     );
+  }
+
+  const fromTurnCompleteReason = common.getValueByPath(fromObject, [
+    'turnCompleteReason',
+  ]);
+  if (fromTurnCompleteReason != null) {
+    common.setValueByPath(
+      toObject,
+      ['turnCompleteReason'],
+      fromTurnCompleteReason,
+    );
+  }
+
+  const fromWaitingForInput = common.getValueByPath(fromObject, [
+    'waitingForInput',
+  ]);
+  if (fromWaitingForInput != null) {
+    common.setValueByPath(toObject, ['waitingForInput'], fromWaitingForInput);
   }
 
   return toObject;
