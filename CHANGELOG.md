@@ -1,6 +1,14 @@
 # Changelog
 
 
+## [1.20.0](https://github.com/googleapis/js-genai/compare/v1.19.0...v1.20.0) (2025-09-16)
+
+
+### Features
+
+* Add 'turn_complete_reason' and 'waiting_for_input' fields. ([cb54332](https://github.com/googleapis/js-genai/commit/cb543326e805cf1fc4f9167b1a8af797dc8a11ca))
+* Add `VideoGenerationMaskMode` enum for Veo 2 Editing ([3e850fd](https://github.com/googleapis/js-genai/commit/3e850fdad8b5252608b8287b2e537fb9b0a2f35e))
+
 ## [1.19.0](https://github.com/googleapis/js-genai/compare/v1.18.0...v1.19.0) (2025-09-09)
 
 

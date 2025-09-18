@@ -3,7 +3,7 @@
  * Copyright 2025 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
-import {GoogleGenAI} from '@google/genai';
+import {GoogleGenAI, VideoGenerationMaskMode} from '@google/genai';
 
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
@@ -35,7 +35,7 @@ async function generateVideosEditOutpaintFromVertexAI() {
           gcsUri: 'gs://genai-sdk-tests/inputs/videos/video_outpaint_mask.png',
           mimeType: 'image/png',
         },
-        maskMode: 'OUTPAINT',
+        maskMode: VideoGenerationMaskMode.OUTPAINT,
       },
     },
   });

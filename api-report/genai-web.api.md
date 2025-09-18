@@ -2047,7 +2047,9 @@ export interface LiveServerContent {
     modelTurn?: Content;
     outputTranscription?: Transcription;
     turnComplete?: boolean;
+    turnCompleteReason?: TurnCompleteReason;
     urlContextMetadata?: UrlContextMetadata;
+    waitingForInput?: boolean;
 }
 
 // @public
@@ -3020,6 +3022,14 @@ export interface TuningValidationDataset {
 }
 
 // @public
+export enum TurnCompleteReason {
+    MALFORMED_FUNCTION_CALL = "MALFORMED_FUNCTION_CALL",
+    NEED_MORE_INPUT = "NEED_MORE_INPUT",
+    RESPONSE_REJECTED = "RESPONSE_REJECTED",
+    TURN_COMPLETE_REASON_UNSPECIFIED = "TURN_COMPLETE_REASON_UNSPECIFIED"
+}
+
+// @public
 export enum TurnCoverage {
     TURN_COVERAGE_UNSPECIFIED = "TURN_COVERAGE_UNSPECIFIED",
     TURN_INCLUDES_ALL_INPUT = "TURN_INCLUDES_ALL_INPUT",
@@ -3199,7 +3209,15 @@ export enum VideoCompressionQuality {
 // @public
 export interface VideoGenerationMask {
     image?: Image_2;
-    maskMode?: string;
+    maskMode?: VideoGenerationMaskMode;
+}
+
+// @public
+export enum VideoGenerationMaskMode {
+    INSERT = "INSERT",
+    OUTPAINT = "OUTPAINT",
+    REMOVE = "REMOVE",
+    REMOVE_STATIC = "REMOVE_STATIC"
 }
 
 // @public
