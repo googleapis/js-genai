@@ -6,12 +6,10 @@
 
 // tslint:disable:no-default-export
 
-import {GoogleGenAI} from '@google/genai';
+import {GoogleGenAI, JobState} from '@google/genai';
 import * as fs from 'fs/promises';
 import {tmpdir} from 'os';
 import * as path from 'path';
-
-import {JobState} from '../src/types.js';
 
 // Get your API key from  https://aistudio.google.com/app/apikey
 // and set it as the GEMINI_API_KEY environment variable.
@@ -26,6 +24,13 @@ const client = new GoogleGenAI({
 const EMBEDDING_MODEL = 'models/gemini-embedding-001';
 
 async function batchEmbedFile() {
+  // This is need to allow easy smoke testing of the sample.
+  if (process.env.GOOGLE_GENAI_USE_VERTEXAI) {
+    console.log(
+      'Currently using Vertex AI, Vertex AI does not support batches.createEmbeddings.',
+    );
+    return;
+  }
   console.log('--- Batch Embedding with File Input ---');
 
   // 1. Prepare the input file content (JSONL)

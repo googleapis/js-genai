@@ -6,9 +6,7 @@
 
 // tslint:disable:no-default-export
 
-import {GoogleGenAI} from '@google/genai';
-
-import {JobState} from '../src/types.js';
+import {GoogleGenAI, JobState} from '@google/genai';
 
 // Get your API key from  https://aistudio.google.com/app/apikey
 // and set it as the GEMINI_API_KEY environment variable.
@@ -23,6 +21,13 @@ const client = new GoogleGenAI({
 const EMBEDDING_MODEL = 'models/gemini-embedding-001';
 
 async function batchEmbedInline() {
+  // This is need to allow easy smoke testing of the sample.
+  if (process.env.GOOGLE_GENAI_USE_VERTEXAI) {
+    console.log(
+      'Currently using Vertex AI, Vertex AI does not support batches.createEmbeddings.',
+    );
+    return;
+  }
   console.log('--- Batch Embedding with Inline Requests ---');
 
   // 1. Define the inline requests for embedding
