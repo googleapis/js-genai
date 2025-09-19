@@ -247,6 +247,42 @@ describe('processStreamResponse', () => {
     expect(count).toEqual(3);
   });
 
+  it('should yield all expected chunks with leading whitespace', async () => {
+    const chunk1 =
+      '\n\ndata: {"candidates": [{"content": {"parts": [{"text": "One"}],"role": "model"},"finishReason": "STOP","index": 0}],"usageMetadata": {"promptTokenCount": 8,"candidatesTokenCount": 1,"totalTokenCount": 9}}\n\n';
+    const chunk2 =
+      '\r\rdata: {"candidates": [{"content": {"parts": [{"text": "Two"}],"role": "model"},"finishReason": "STOP","index": 0}],"usageMetadata": {"promptTokenCount": 8,"candidatesTokenCount": 1,"totalTokenCount": 9}}\r\r';
+    const chunk3 =
+      '\r\n\r\ndata: {"candidates": [{"content": {"parts": [{"text": "Three"}],"role": "model"},"finishReason": "STOP","index": 0}],"usageMetadata": {"promptTokenCount": 8,"candidatesTokenCount": 1,"totalTokenCount": 9}}\r\n\r\n';
+    const chunks = [chunk1, chunk2, chunk3];
+    const stream = new Readable();
+    for (const chunk of chunks) {
+      stream.push(chunk);
+    }
+    stream.push(null); // signal end of stream
+    const readableStream = new ReadableStream({
+      start(controller) {
+        stream.on('data', (chunk) => controller.enqueue(chunk));
+        stream.on('end', () => controller.close());
+        stream.on('error', (err) => controller.error(err));
+      },
+    });
+    const response = new Response(readableStream);
+
+    const streamResponse = await apiClient.processStreamResponse(response);
+
+    let count = 0;
+    const expectedText = ['One', 'Two', 'Three'];
+    for await (const jsonChunk of streamResponse) {
+      const typedChunk = new types.GenerateContentResponse();
+      const jsonChunkData = await jsonChunk.json();
+      Object.assign(typedChunk, jsonChunkData);
+      expect(typedChunk.text).toEqual(expectedText[count]);
+      count++;
+    }
+    expect(count).toEqual(3);
+  });
+
   it('should yield valid json split into multiple chunk data', async () => {
     const validChunk1 =
       'data: {"candidates": [{"content": {"parts": [{"text": "The"}],"role": "model"},"finishReason": "STOP","index": 0}],';
