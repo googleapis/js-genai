@@ -1,6 +1,13 @@
 # Changelog
 
 
+## [1.21.0](https://github.com/googleapis/js-genai/compare/v1.20.0...v1.21.0) (2025-09-19)
+
+
+### Features
+
+* Support Imagen 4 Ingredients on Vertex ([56cccfc](https://github.com/googleapis/js-genai/commit/56cccfca02b668ed3bfacc7e757eb821e827e35b))
+
 ## [1.20.0](https://github.com/googleapis/js-genai/compare/v1.19.0...v1.20.0) (2025-09-16)
 
 
