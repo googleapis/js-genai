@@ -419,11 +419,7 @@ export function createCachedContentParametersToMldev(
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      createCachedContentConfigToMldev(fromConfig, toObject),
-    );
+    createCachedContentConfigToMldev(fromConfig, toObject);
   }
 
   return toObject;
@@ -446,11 +442,7 @@ export function createCachedContentParametersToVertex(
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      createCachedContentConfigToVertex(fromConfig, toObject),
-    );
+    createCachedContentConfigToVertex(fromConfig, toObject);
   }
 
   return toObject;
@@ -471,11 +463,6 @@ export function deleteCachedContentParametersToMldev(
     );
   }
 
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
-  }
-
   return toObject;
 }
 
@@ -492,11 +479,6 @@ export function deleteCachedContentParametersToVertex(
       ['_url', 'name'],
       t.tCachedContentName(apiClient, fromName),
     );
-  }
-
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
   }
 
   return toObject;
@@ -850,11 +832,6 @@ export function getCachedContentParametersToMldev(
     );
   }
 
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
-  }
-
   return toObject;
 }
 
@@ -871,11 +848,6 @@ export function getCachedContentParametersToVertex(
       ['_url', 'name'],
       t.tCachedContentName(apiClient, fromName),
     );
-  }
-
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
   }
 
   return toObject;
@@ -1102,11 +1074,7 @@ export function listCachedContentsParametersToMldev(
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      listCachedContentsConfigToMldev(fromConfig, toObject),
-    );
+    listCachedContentsConfigToMldev(fromConfig, toObject);
   }
 
   return toObject;
@@ -1119,11 +1087,7 @@ export function listCachedContentsParametersToVertex(
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      listCachedContentsConfigToVertex(fromConfig, toObject),
-    );
+    listCachedContentsConfigToVertex(fromConfig, toObject);
   }
 
   return toObject;
@@ -1709,11 +1673,7 @@ export function updateCachedContentParametersToMldev(
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      updateCachedContentConfigToMldev(fromConfig, toObject),
-    );
+    updateCachedContentConfigToMldev(fromConfig, toObject);
   }
 
   return toObject;
@@ -1736,11 +1696,7 @@ export function updateCachedContentParametersToVertex(
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      updateCachedContentConfigToVertex(fromConfig, toObject),
-    );
+    updateCachedContentConfigToVertex(fromConfig, toObject);
   }
 
   return toObject;
