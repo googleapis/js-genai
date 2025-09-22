@@ -6,18 +6,22 @@
 
 import {GoogleAuthOptions} from 'google-auth-library';
 
-import {ApiClient} from './_api_client';
-import {Caches} from './caches';
-import {Chats} from './chats';
-import {crossError} from './cross/_cross_error';
-import {CrossUploader} from './cross/_cross_uploader';
-import {CrossWebSocketFactory} from './cross/_cross_websocket';
-import {Files} from './files';
-import {Live} from './live';
-import {Models} from './models';
-import {Operations} from './operations';
-import {HttpOptions} from './types';
-import {WebAuth} from './web/_web_auth';
+import {ApiClient} from './_api_client.js';
+import {Batches} from './batches.js';
+import {Caches} from './caches.js';
+import {Chats} from './chats.js';
+import {CrossDownloader} from './cross/_cross_downloader.js';
+import {crossError} from './cross/_cross_error.js';
+import {CrossUploader} from './cross/_cross_uploader.js';
+import {CrossWebSocketFactory} from './cross/_cross_websocket.js';
+import {Files} from './files.js';
+import {Live} from './live.js';
+import {Models} from './models.js';
+import {Operations} from './operations.js';
+import {Tokens} from './tokens.js';
+import {Tunings} from './tunings.js';
+import {HttpOptions} from './types.js';
+import {WebAuth} from './web/_web_auth.js';
 
 const LANGUAGE_LABEL_PREFIX = 'gl-node/';
 
@@ -32,7 +36,7 @@ export interface GoogleGenAIOptions {
    *
    * @remarks
    * When true, the {@link https://cloud.google.com/vertex-ai/docs/reference/rest | Vertex AI API} will used.
-   * When false, the {@link https://cloud.google.com/vertex-ai/docs/reference/rest | Gemini API} will be used.
+   * When false, the {@link https://ai.google.dev/api | Gemini API} will be used.
    *
    * If unset, default SDK behavior is to use the Gemini API service.
    */
@@ -40,12 +44,14 @@ export interface GoogleGenAIOptions {
   /**
    * Optional. The Google Cloud project ID for Vertex AI clients.
    *
+   * Find your project ID: https://cloud.google.com/resource-manager/docs/creating-managing-projects#identifying_projects
+   *
    * @remarks
    * Only supported on Node runtimes, ignored on browser runtimes.
    */
   project?: string;
   /**
-   * Optional. The Google Cloud project region for Vertex AI clients.
+   * Optional. The Google Cloud project {@link https://cloud.google.com/vertex-ai/generative-ai/docs/learn/locations | location} for Vertex AI clients.
    *
    * @remarks
    * Only supported on Node runtimes, ignored on browser runtimes.
@@ -120,10 +126,13 @@ export class GoogleGenAI {
   private readonly apiVersion?: string;
   readonly models: Models;
   readonly live: Live;
+  readonly batches: Batches;
   readonly chats: Chats;
   readonly caches: Caches;
   readonly files: Files;
   readonly operations: Operations;
+  readonly authTokens: Tokens;
+  readonly tunings: Tunings;
 
   constructor(options: GoogleGenAIOptions) {
     if (options.apiKey == null) {
@@ -143,12 +152,16 @@ export class GoogleGenAI {
       httpOptions: options.httpOptions,
       userAgentExtra: LANGUAGE_LABEL_PREFIX + 'cross',
       uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
     });
     this.models = new Models(this.apiClient);
     this.live = new Live(this.apiClient, auth, new CrossWebSocketFactory());
     this.chats = new Chats(this.models, this.apiClient);
+    this.batches = new Batches(this.apiClient);
     this.caches = new Caches(this.apiClient);
     this.files = new Files(this.apiClient);
     this.operations = new Operations(this.apiClient);
+    this.authTokens = new Tokens(this.apiClient);
+    this.tunings = new Tunings(this.apiClient);
   }
 }

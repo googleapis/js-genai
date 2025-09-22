@@ -1,0 +1,128 @@
+{
+  "recordID": "AFC_Streaming_Tests_generateContentStream_afc_disabled_Vertex_AI_AFC_disabled",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash:streamGenerateContent?alt=sse",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash:streamGenerateContent?alt=sse HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "393",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "AFC Streaming Tests generateContentStream afc disabled Vertex AI AFC disabled"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "Divide 10 by 2 using the customDivide function"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {},
+            "toolConfig": {
+              "functionCallingConfig": {
+                "mode": "AUTO"
+              }
+            },
+            "tools": [
+              {
+                "functionDeclarations": [
+                  {
+                    "description": "Custom divide function",
+                    "name": "customDivide",
+                    "parametersJsonSchema": {
+                      "properties": {
+                        "denominator": {
+                          "type": "number"
+                        },
+                        "numerator": {
+                          "type": "number"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "us-central1-aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "dab82b91c88c7c8049ee939839820e900e6c526c1cb2f4385b4c82cd5a1c103a",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Disposition": "attachment",
+          "Content-Type": "text/event-stream",
+          "Date": "Sat, 16 Aug 2025 00:44:26 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "args": {
+                          "denominator": 2,
+                          "numerator": 10
+                        },
+                        "name": "customDivide"
+                      }
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP"
+              }
+            ],
+            "createTime": "2025-08-16T00:44:25.936241Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "adSfaLGSOfqAm9IPucqbqA4",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 131
+              },
+              "candidatesTokenCount": 6,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 6
+                }
+              ],
+              "promptTokenCount": 17,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 17
+                }
+              ],
+              "totalTokenCount": 23,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

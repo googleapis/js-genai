@@ -5,10 +5,15 @@
  */
 
 import {fail} from 'assert';
+import {z} from 'zod';
+import {zodToJsonSchema} from 'zod-to-json-schema';
 
-import {GenerateContentResponse} from '../../../src/types';
-import {GoogleGenAI} from '../../../src/web/web_client';
-import {createZeroFilledTempFile} from '../../_generate_test_file';
+import {
+  FunctionCallingConfigMode,
+  GenerateContentResponse,
+} from '../../../src/types.js';
+import {GoogleGenAI} from '../../../src/web/web_client.js';
+import {createZeroFilledTempFile} from '../../_generate_test_file.js';
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
@@ -55,6 +60,92 @@ describe('generateContent', () => {
       'ML Dev should generate content with system instruction\n',
       responseText,
     );
+  });
+  it('ML Dev should generate content with given zod schema', async () => {
+    const innerObject = z.object({
+      innerString: z.string(),
+      innerNumber: z.number(),
+    });
+    const nullableInnerObject = z.object({
+      innerString: z.string(),
+      innerNumber: z.number(),
+    });
+    const nestedSchema = z.object({
+      simpleString: z.string().describe('This is a simple string'),
+      stringDatatime: z.string().datetime(),
+      stringWithEnum: z.enum(['enumvalue1', 'enumvalue2', 'enumvalue3']),
+      stringWithLength: z.string().min(1).max(10),
+      simpleNumber: z.number(),
+      simpleInteger: z.number().int(),
+      integerInt64: z.number().int(),
+      numberWithMinMax: z.number().min(1).max(10),
+      simpleBoolean: z.boolean(),
+      arrayFiled: z.array(z.string()),
+      unionField: z.union([z.string(), z.number()]),
+      nullableField: z.string().nullable(),
+      nullableArrayField: z.array(z.string()).nullable(),
+      nullableObjectField: nullableInnerObject.nullable(),
+      inner: innerObject,
+    });
+    const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+    const response = await client.models.generateContent({
+      model: 'gemini-1.5-flash',
+      contents: 'populate the following object',
+      config: {
+        responseMimeType: 'application/json',
+        responseSchema: zodToJsonSchema(nestedSchema),
+      },
+    });
+    const parsedResponse = JSON.parse(
+      response.candidates![0].content!['parts']![0].text as string,
+    );
+    console.log('mldev response', parsedResponse);
+    const validationResult = nestedSchema.safeParse(parsedResponse);
+    expect(validationResult.success).toEqual(true);
+  });
+  it('ML Dev should help build the FunctionDeclaration', async () => {
+    const stringArgument = z.object({
+      firstString: z.string(),
+      secondString: z.string(),
+    });
+    const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+    const response = await client.models.generateContent({
+      model: 'gemini-1.5-flash',
+      contents: 'put word: hello and word: world into a string',
+      config: {
+        tools: [
+          {
+            functionDeclarations: [
+              {
+                name: 'concatStringFunction',
+                description: 'this is a concat string function',
+                parameters: zodToJsonSchema(stringArgument) as Record<
+                  string,
+                  unknown
+                >,
+              },
+            ],
+          },
+        ],
+        toolConfig: {
+          functionCallingConfig: {
+            mode: FunctionCallingConfigMode.ANY,
+            allowedFunctionNames: ['concatStringFunction'],
+          },
+        },
+      },
+    });
+    const functionCallResponse =
+      response.candidates![0].content!['parts']![0].functionCall;
+    expect(functionCallResponse!.name).toEqual('concatStringFunction');
+    const parsedArgument = stringArgument.safeParse(
+      functionCallResponse!.args!,
+    );
+    expect(parsedArgument.success).toEqual(true);
+    expect(parsedArgument.data).toEqual({
+      firstString: 'hello',
+      secondString: 'world',
+    });
   });
 });
 

@@ -1,0 +1,443 @@
+{
+  "recordID": "Chats_Tests_sendMessage_Google_AI_multiple_messages_stream",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta/models/gemini-2.0-flash:streamGenerateContent?alt=sse",
+        "request": "POST /v1beta/models/gemini-2.0-flash:streamGenerateContent?alt=sse HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "103",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Chats Tests sendMessage Google AI multiple messages stream"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "Tell me a story in 100 words?"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {}
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "generativelanguage.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "d3fe9204af50cfa88bd1f0050c4a52d4cb4a2055eebe0448acd3dc73494f9486",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Disposition": "attachment",
+          "Content-Type": "text/event-stream",
+          "Date": "Sat, 16 Aug 2025 00:45:23 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Server-Timing": "gfet4t7; dur=357",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "Rain"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "otSfaMfSOu3xn9kP5pnMyQ4",
+            "usageMetadata": {
+              "promptTokenCount": 12,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 12
+                }
+              ],
+              "totalTokenCount": 12
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " lashed against the bakery window. Inside, Mrs. Higgins kneaded dough, her"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "otSfaMfSOu3xn9kP5pnMyQ4",
+            "usageMetadata": {
+              "promptTokenCount": 12,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 12
+                }
+              ],
+              "totalTokenCount": 12
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " face etched with worry. The town was flooded, no customers in sight. Suddenly"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "otSfaMfSOu3xn9kP5pnMyQ4",
+            "usageMetadata": {
+              "promptTokenCount": 12,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 12
+                }
+              ],
+              "totalTokenCount": 12
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": ", a drenched figure stumbled in, eyes wide with fear. \"My baby,\" he croaked, \"stranded upstairs.\"\n\nWithout a word, Mrs. Higgins grabbed a rope"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "otSfaMfSOu3xn9kP5pnMyQ4",
+            "usageMetadata": {
+              "promptTokenCount": 12,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 12
+                }
+              ],
+              "totalTokenCount": 12
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " and her sturdiest loaf. \"He'll need this later,\" she muttered, handing it to him. Then, facing the storm, she secured"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "otSfaMfSOu3xn9kP5pnMyQ4",
+            "usageMetadata": {
+              "promptTokenCount": 12,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 12
+                }
+              ],
+              "totalTokenCount": 12
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " the rope, urging him to follow her. One by one, they pulled themselves towards the house, the smell of warm bread a beacon in the tempest.\n"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP"
+              }
+            ],
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "otSfaMfSOu3xn9kP5pnMyQ4",
+            "usageMetadata": {
+              "candidatesTokenCount": 132,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 132
+                }
+              ],
+              "promptTokenCount": 11,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 11
+                }
+              ],
+              "totalTokenCount": 143
+            }
+          }
+        ]
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta/models/gemini-2.0-flash:streamGenerateContent?alt=sse",
+        "request": "POST /v1beta/models/gemini-2.0-flash:streamGenerateContent?alt=sse HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "971",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Chats Tests sendMessage Google AI multiple messages stream"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "Tell me a story in 100 words?"
+                  }
+                ],
+                "role": "user"
+              },
+              {
+                "parts": [
+                  {
+                    "text": "Rain"
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "text": " lashed against the bakery window. Inside, Mrs. Higgins kneaded dough, her"
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "text": " face etched with worry. The town was flooded, no customers in sight. Suddenly"
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "text": ", a drenched figure stumbled in, eyes wide with fear. \"My baby,\" he croaked, \"stranded upstairs.\"\n\nWithout a word, Mrs. Higgins grabbed a rope"
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "text": " and her sturdiest loaf. \"He'll need this later,\" she muttered, handing it to him. Then, facing the storm, she secured"
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "text": " the rope, urging him to follow her. One by one, they pulled themselves towards the house, the smell of warm bread a beacon in the tempest.\n"
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "text": "What is the title of the story?"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {}
+          }
+        ],
+        "previousRequest": "d3fe9204af50cfa88bd1f0050c4a52d4cb4a2055eebe0448acd3dc73494f9486",
+        "serverAddress": "generativelanguage.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "b0037172b0335f6db7fec684d04d1116456f947f149cf104cbb54bead168e1c6",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Disposition": "attachment",
+          "Content-Type": "text/event-stream",
+          "Date": "Sat, 16 Aug 2025 00:45:24 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Server-Timing": "gfet4t7; dur=252",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "The"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "pNSfaKXnDvKonvgPm4qiIQ",
+            "usageMetadata": {
+              "promptTokenCount": 159,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 159
+                }
+              ],
+              "totalTokenCount": 159
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " story doesn't have an explicit title. However, based on the story's focus and"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "pNSfaKXnDvKonvgPm4qiIQ",
+            "usageMetadata": {
+              "promptTokenCount": 159,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 159
+                }
+              ],
+              "totalTokenCount": 159
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " atmosphere, suitable titles could be:\n\n*   **The Baker and the Storm**\n"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "pNSfaKXnDvKonvgPm4qiIQ",
+            "usageMetadata": {
+              "promptTokenCount": 159,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 159
+                }
+              ],
+              "totalTokenCount": 159
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "*   **A Loaf of Hope**\n*   **Weathering the Flood**\n*   **Rain**\n"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP"
+              }
+            ],
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "pNSfaKXnDvKonvgPm4qiIQ",
+            "usageMetadata": {
+              "candidatesTokenCount": 62,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 62
+                }
+              ],
+              "promptTokenCount": 151,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 151
+                }
+              ],
+              "totalTokenCount": 213
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

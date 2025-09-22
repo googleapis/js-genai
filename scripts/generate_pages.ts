@@ -114,13 +114,13 @@ function main() {
 
   switch (versionArg) {
     case 'main': {
-      generateDocs('pages/main', 'main');
+      generateDocs('main_docs', 'main');
       break;
     }
     case 'release': {
       const releaseVersion = getReleaseVersion();
       console.log(`Current release version: ${releaseVersion}`);
-      generateDocs('pages/release', `v${releaseVersion}`);
+      generateDocs('release_docs', `v${releaseVersion}`);
       break;
     }
     default: {

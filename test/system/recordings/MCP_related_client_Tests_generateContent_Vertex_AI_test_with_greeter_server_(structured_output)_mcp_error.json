@@ -1,0 +1,153 @@
+{
+  "recordID": "MCP_related_client_Tests_generateContent_Vertex_AI_test_with_greeter_server_(structured_output)_mcp_error",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:generateContent",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:generateContent HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "788",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "MCP related client Tests generateContent Vertex AI test with greeter server (structured output) mcp error"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "call the greeter once with name: jone smith, and greeting: noNeedToPassMessage"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {},
+            "toolConfig": {
+              "functionCallingConfig": {
+                "mode": "AUTO"
+              }
+            },
+            "tools": [
+              {
+                "functionDeclarations": [
+                  {
+                    "description": "Greet the user",
+                    "name": "greet",
+                    "parametersJsonSchema": {
+                      "$schema": "http://json-schema.org/draft-07/schema#",
+                      "additionalProperties": false,
+                      "properties": {
+                        "greeting": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["name", "greeting"],
+                      "type": "object"
+                    },
+                    "responseJsonSchema": {
+                      "$schema": "http://json-schema.org/draft-07/schema#",
+                      "additionalProperties": false,
+                      "properties": {
+                        "completeMessage": {
+                          "type": "string"
+                        },
+                        "greeting": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["name", "greeting", "completeMessage"],
+                      "type": "object"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "us-central1-aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "34857c22f87025bfbc2448c22a214416724151c642faa0748dbe7612179d9299",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Encoding": "gzip",
+          "Content-Length": "740",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Mon, 25 Aug 2025 20:08:03 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "avgLogprobs": -0.6590153087269176,
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "args": {
+                          "greeting": "noNeedToPassMessage",
+                          "name": "jone smith"
+                        },
+                        "name": "greet"
+                      },
+                      "thoughtSignature": "CtQBAcu98PCg8XNawJoRAdeMCbt9M5Xt0ymxsKURf/r7W08BKewn/HKAP4LFK6uZxlbLx3huEcchspOx4HNNA6CCCUkO/YuOR6WpeY62TlX+NRt898X+3+Wja5rua265EB532d2ldn5EC9muTFssVeQ6qYxkneE4A/Je1ItPR2ELCHycANzzmEN2BbZo/LP5Rrrug17OUl/mYS5R3rU03DQTzuQAxShtplcZRL3+tAwp+iFGHD0uXNEttO6sdipdnRvOr0efXx6plGzwva9bZOciGPVZjNQ="
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "score": -7.249168395996094
+              }
+            ],
+            "createTime": "2025-08-25T20:08:02.709890Z",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "osKsaIKqK9iWmecP3JK06Qc",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 411
+              },
+              "candidatesTokenCount": 11,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 11
+                }
+              ],
+              "promptTokenCount": 24,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 24
+                }
+              ],
+              "thoughtsTokenCount": 50,
+              "totalTokenCount": 85,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

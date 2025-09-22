@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {ApiClient} from './_api_client';
-import * as t from './_transformers';
-import {Models} from './models';
-import * as types from './types';
+import {ApiClient} from './_api_client.js';
+import * as t from './_transformers.js';
+import {Models} from './models.js';
+import * as types from './types.js';
 
 /**
  * Returns true if the response is valid, false otherwise.
@@ -31,19 +31,12 @@ function isValidContent(content: types.Content): boolean {
     if (part === undefined || Object.keys(part).length === 0) {
       return false;
     }
-    if (part.text !== undefined && part.text === '') {
-      return false;
-    }
   }
   return true;
 }
 
 /**
  * Validates the history contains the correct roles.
- *
- * @remarks
- * Expects the history to start with a user turn and then alternate between
- * user and model turns.
  *
  * @throws Error if the history does not start with a user turn.
  * @throws Error if the history contains an invalid role.
@@ -52,9 +45,6 @@ function validateHistory(history: types.Content[]) {
   // Empty history is valid.
   if (history.length === 0) {
     return;
-  }
-  if (history[0].role !== 'user') {
-    throw new Error('History must start with a user turn.');
   }
   for (const content of history) {
     if (content.role !== 'user' && content.role !== 'model') {
@@ -80,10 +70,9 @@ function extractCuratedHistory(
   const curatedHistory: types.Content[] = [];
   const length = comprehensiveHistory.length;
   let i = 0;
-  let userInput = comprehensiveHistory[0];
   while (i < length) {
     if (comprehensiveHistory[i].role === 'user') {
-      userInput = comprehensiveHistory[i];
+      curatedHistory.push(comprehensiveHistory[i]);
       i++;
     } else {
       const modelOutput: types.Content[] = [];
@@ -96,8 +85,10 @@ function extractCuratedHistory(
         i++;
       }
       if (isValid) {
-        curatedHistory.push(userInput);
         curatedHistory.push(...modelOutput);
+      } else {
+        // Remove the last user input when model content is invalid.
+        curatedHistory.pop();
       }
     }
   }
@@ -144,7 +135,9 @@ export class Chats {
       this.modelsModule,
       params.model,
       params.config,
-      params.history,
+      // Deep copy the history to avoid mutating the history outside of the
+      // chat session.
+      structuredClone(params.history),
     );
   }
 }
@@ -195,7 +188,7 @@ export class Chat {
     params: types.SendMessageParameters,
   ): Promise<types.GenerateContentResponse> {
     await this.sendPromise;
-    const inputContent = t.tContent(this.apiClient, params.message);
+    const inputContent = t.tContent(params.message);
     const responsePromise = this.modelsModule.generateContent({
       model: this.model,
       contents: this.getHistory(true).concat(inputContent),
@@ -204,11 +197,32 @@ export class Chat {
     this.sendPromise = (async () => {
       const response = await responsePromise;
       const outputContent = response.candidates?.[0]?.content;
+
+      // Because the AFC input contains the entire curated chat history in
+      // addition to the new user input, we need to truncate the AFC history
+      // to deduplicate the existing chat history.
+      const fullAutomaticFunctionCallingHistory =
+        response.automaticFunctionCallingHistory;
+      const index = this.getHistory(true).length;
+
+      let automaticFunctionCallingHistory: types.Content[] = [];
+      if (fullAutomaticFunctionCallingHistory != null) {
+        automaticFunctionCallingHistory =
+          fullAutomaticFunctionCallingHistory.slice(index) ?? [];
+      }
+
       const modelOutput = outputContent ? [outputContent] : [];
-      this.recordHistory(inputContent, modelOutput);
+      this.recordHistory(
+        inputContent,
+        modelOutput,
+        automaticFunctionCallingHistory,
+      );
       return;
     })();
-    await this.sendPromise;
+    await this.sendPromise.catch(() => {
+      // Resets sendPromise to avoid subsequent calls failing
+      this.sendPromise = Promise.resolve();
+    });
     return responsePromise;
   }
 
@@ -238,13 +252,18 @@ export class Chat {
     params: types.SendMessageParameters,
   ): Promise<AsyncGenerator<types.GenerateContentResponse>> {
     await this.sendPromise;
-    const inputContent = t.tContent(this.apiClient, params.message);
+    const inputContent = t.tContent(params.message);
     const streamResponse = this.modelsModule.generateContentStream({
       model: this.model,
       contents: this.getHistory(true).concat(inputContent),
       config: params.config ?? this.config,
     });
-    this.sendPromise = streamResponse.then(() => undefined);
+    // Resolve the internal tracking of send completion promise - `sendPromise`
+    // for both success and failure response. The actual failure is still
+    // propagated by the `await streamResponse`.
+    this.sendPromise = streamResponse
+      .then(() => undefined)
+      .catch(() => undefined);
     const response = await streamResponse;
     const result = this.processStreamResponse(response, inputContent);
     return result;
@@ -274,7 +293,12 @@ export class Chat {
    *     chat session.
    */
   getHistory(curated: boolean = false): types.Content[] {
-    return curated ? extractCuratedHistory(this.history) : this.history;
+    const history = curated
+      ? extractCuratedHistory(this.history)
+      : this.history;
+    // Deep copy the history to avoid mutating the history outside of the
+    // chat session.
+    return structuredClone(history);
   }
 
   private async *processStreamResponse(
@@ -297,11 +321,12 @@ export class Chat {
   private recordHistory(
     userInput: types.Content,
     modelOutput: types.Content[],
+    automaticFunctionCallingHistory?: types.Content[],
   ) {
     let outputContents: types.Content[] = [];
     if (
       modelOutput.length > 0 &&
-      modelOutput.every((content) => content.role === 'model')
+      modelOutput.every((content) => content.role !== undefined)
     ) {
       outputContents = modelOutput;
     } else {
@@ -312,7 +337,16 @@ export class Chat {
         parts: [],
       } as types.Content);
     }
-    this.history.push(userInput);
+    if (
+      automaticFunctionCallingHistory &&
+      automaticFunctionCallingHistory.length > 0
+    ) {
+      this.history.push(
+        ...extractCuratedHistory(automaticFunctionCallingHistory!),
+      );
+    } else {
+      this.history.push(userInput);
+    }
     this.history.push(...outputContents);
   }
 }

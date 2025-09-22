@@ -3,10 +3,10 @@
  * Copyright 2025 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
-import {ApiClient} from '../_api_client';
-import {FileStat, Uploader} from '../_uploader';
-import {getBlobStat, uploadBlob} from '../cross/_cross_uploader';
-import {File} from '../types';
+import {ApiClient} from '../_api_client.js';
+import {FileStat, Uploader} from '../_uploader.js';
+import {getBlobStat, uploadBlob} from '../cross/_cross_uploader.js';
+import {File} from '../types.js';
 
 export class BrowserUploader implements Uploader {
   async upload(

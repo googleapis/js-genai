@@ -1,0 +1,135 @@
+{
+  "recordID": "Client_Tests_Vertex_AI_can_use_JSON_schema_in_parametersJsonSchema_to_build_FunctionDeclaration",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-1.5-flash:generateContent",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-1.5-flash:generateContent HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "583",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Client Tests Vertex AI can use JSON schema in parametersJsonSchema to build FunctionDeclaration"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "put word: hello and word: world into a string"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {},
+            "toolConfig": {
+              "functionCallingConfig": {
+                "allowedFunctionNames": ["concatStringFunction"],
+                "mode": "ANY"
+              }
+            },
+            "tools": [
+              {
+                "functionDeclarations": [
+                  {
+                    "description": "this is a concat string function",
+                    "name": "concatStringFunction",
+                    "parametersJsonSchema": {
+                      "$schema": "http://json-schema.org/draft-07/schema#",
+                      "additionalProperties": false,
+                      "properties": {
+                        "firstString": {
+                          "type": "string"
+                        },
+                        "secondString": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["firstString", "secondString"],
+                      "type": "object"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "us-central1-aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "646df1a2c146cd5bc630aa8d35d5a75b7b8e52de7d831da81f16cc666fac2199",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Encoding": "gzip",
+          "Content-Length": "480",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sat, 16 Aug 2025 00:43:16 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "avgLogprobs": -0.00003863465260817773,
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "args": {
+                          "firstString": "hello",
+                          "secondString": "world"
+                        },
+                        "name": "concatStringFunction"
+                      }
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "score": -0.00034771187347359955
+              }
+            ],
+            "createTime": "2025-08-16T00:43:15.762935Z",
+            "modelVersion": "gemini-1.5-flash-002",
+            "responseId": "I9SfaLfILseSmecP8YP84Ao",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 249
+              },
+              "candidatesTokenCount": 9,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 9
+                }
+              ],
+              "promptTokenCount": 20,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 20
+                }
+              ],
+              "totalTokenCount": 29,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

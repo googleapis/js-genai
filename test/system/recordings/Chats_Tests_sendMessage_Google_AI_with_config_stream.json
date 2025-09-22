@@ -1,0 +1,147 @@
+{
+  "recordID": "Chats_Tests_sendMessage_Google_AI_with_config_stream",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta/models/gemini-2.0-flash:streamGenerateContent?alt=sse",
+        "request": "POST /v1beta/models/gemini-2.0-flash:streamGenerateContent?alt=sse HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "132",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Chats Tests sendMessage Google AI with config stream"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "why is the sky blue?"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {
+              "maxOutputTokens": 20,
+              "temperature": 0.5
+            }
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "generativelanguage.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "4f4c3d9ddeed44bb482b4561263e17f182cb006e0edfc0b58932b1e046fc1537",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Disposition": "attachment",
+          "Content-Type": "text/event-stream",
+          "Date": "Sat, 16 Aug 2025 00:45:28 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Server-Timing": "gfet4t7; dur=304",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "The"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "qNSfaN6BAtWknvgPjZf02AQ",
+            "usageMetadata": {
+              "promptTokenCount": 7,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 7
+                }
+              ],
+              "totalTokenCount": 7
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " sky is blue"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "qNSfaN6BAtWknvgPjZf02AQ",
+            "usageMetadata": {
+              "promptTokenCount": 7,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 7
+                }
+              ],
+              "totalTokenCount": 7
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " because of a phenomenon called **Rayleigh scattering**. Here's a breakdown:"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "MAX_TOKENS"
+              }
+            ],
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "qNSfaN6BAtWknvgPjZf02AQ",
+            "usageMetadata": {
+              "candidatesTokenCount": 20,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 20
+                }
+              ],
+              "promptTokenCount": 6,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 6
+                }
+              ],
+              "totalTokenCount": 26
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

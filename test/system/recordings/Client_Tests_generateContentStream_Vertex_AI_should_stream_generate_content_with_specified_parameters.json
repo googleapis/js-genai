@@ -1,0 +1,219 @@
+{
+  "recordID": "Client_Tests_generateContentStream_Vertex_AI_should_stream_generate_content_with_specified_parameters",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-1.5-flash:streamGenerateContent?alt=sse",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-1.5-flash:streamGenerateContent?alt=sse HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "134",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Client Tests generateContentStream Vertex AI should stream generate content with specified parameters"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "why is the sky blue?"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {
+              "candidateCount": 1,
+              "maxOutputTokens": 200
+            }
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "us-central1-aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "82ce731d8873e42b95560e75ad7132f3220238012848eee473e20220713c6e41",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Disposition": "attachment",
+          "Content-Type": "text/event-stream",
+          "Date": "Sat, 16 Aug 2025 00:43:02 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "The"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-08-16T00:43:01.939660Z",
+            "modelVersion": "gemini-1.5-flash-002",
+            "responseId": "FdSfaIytOeKMm9IPzITjqQc",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 16
+              },
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " sky is blue due to a phenomenon called **Rayleigh scattering**.  Sunlight is"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-08-16T00:43:01.939660Z",
+            "modelVersion": "gemini-1.5-flash-002",
+            "responseId": "FdSfaIytOeKMm9IPzITjqQc",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " made up of all the colors of the rainbow.  When sunlight enters the Earth"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-08-16T00:43:01.939660Z",
+            "modelVersion": "gemini-1.5-flash-002",
+            "responseId": "FdSfaIytOeKMm9IPzITjqQc",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "'s atmosphere, it collides with tiny air molecules (mostly nitrogen and oxygen).  These molecules are much smaller than the wavelengths of visible light.\n\nRay"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-08-16T00:43:01.939660Z",
+            "modelVersion": "gemini-1.5-flash-002",
+            "responseId": "FdSfaIytOeKMm9IPzITjqQc",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "leigh scattering affects shorter wavelengths of light more strongly than longer wavelengths.  Blue and violet light have the shortest wavelengths, so they are scattered much more than the longer"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-08-16T00:43:01.939660Z",
+            "modelVersion": "gemini-1.5-flash-002",
+            "responseId": "FdSfaIytOeKMm9IPzITjqQc",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " wavelengths like red and orange.  This scattered blue light is what we see when we look at the sky.\n\nWhile violet light is scattered even more than blue light, our eyes are less sensitive to violet, and the sun emits slightly less"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-08-16T00:43:01.939660Z",
+            "modelVersion": "gemini-1.5-flash-002",
+            "responseId": "FdSfaIytOeKMm9IPzITjqQc",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " violet light, resulting in a sky that appears blue rather than violet.\n"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP"
+              }
+            ],
+            "createTime": "2025-08-16T00:43:01.939660Z",
+            "modelVersion": "gemini-1.5-flash-002",
+            "responseId": "FdSfaIytOeKMm9IPzITjqQc",
+            "usageMetadata": {
+              "candidatesTokenCount": 160,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 160
+                }
+              ],
+              "promptTokenCount": 6,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 6
+                }
+              ],
+              "totalTokenCount": 166,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

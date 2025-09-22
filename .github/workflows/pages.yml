@@ -30,9 +30,9 @@ jobs:
       - name: Generate pages
         id: generate_pages
         run: |
-          GITHUB_EVENT="${{ github.event_type }}"
+          GITHUB_EVENT="${{ github.event_name }}"
           echo "Generating pages from $GITHUB_EVENT"
-          if [[ "$GITHUB_EVENT" == 'ReleaseEvent' ]]; then
+          if [[ "$GITHUB_EVENT" == 'release' ]]; then
             echo "is_release_event=true" >> $GITHUB_OUTPUT
             npm run pages-release
           else
@@ -42,7 +42,7 @@ jobs:
       - name: Check for documentation changes
         id: check_changes
         run: |
-          if [[ $(git diff --shortstat origin/pages-only -- pages/main/ pages/release/) ]]; then
+          if [[ $(git diff --shortstat origin/pages-only -- main_docs/ release_docs/) ]]; then
             echo "Documentation changes detected."
             echo "has_changes=true" >> $GITHUB_OUTPUT
           else
@@ -55,16 +55,24 @@ jobs:
         with:
           ref: pages-only
           path: pages-deploy
-      - name: Clear old pages content on target branch checkout
+      - name: Replace docs
         if: steps.check_changes.outputs.has_changes == 'true'
-        run: rm -rf ./pages-deploy/pages/* || true
-      - name: Copy generated pages content to target branch checkout
-        if: steps.check_changes.outputs.has_changes == 'true'
-        run: |
-          mkdir -p ./pages-deploy/pages
-          cp -a ./pages/. ./pages-deploy/pages/
+        env:
+          IS_RELEASE_EVENT: ${{ steps.generate_pages.outputs.is_release_event }}
+        run:  |
+          if [[ "$IS_RELEASE_EVENT" == 'true' ]]; then
+            echo "Updating release_docs"
+            rm -rf ./pages-deploy/release_docs || true
+            cp -a ./release_docs/. ./pages-deploy/release_docs/
+          else
+            echo "Updating main_docs"
+            rm -rf ./pages-deploy/main_docs || true
+            cp -a ./main_docs/. ./pages-deploy/main_docs/
+          fi
       - name: Commit and push changes to pages-only branch
         if: steps.check_changes.outputs.has_changes == 'true'
+        env:
+          IS_RELEASE_EVENT: ${{ steps.generate_pages.outputs.is_release_event }}
         working-directory: ./pages-deploy
         run: |
           git config user.email "genai-sdk-bot@google.com"
@@ -75,18 +83,18 @@ jobs:
              exit 0
           fi
 
-          if steps.generate_pages.outputs.is_release_event == 'true'; then
-            echo "Staging changes in pages/release/..."
-            git add pages/release/
+          if [[ "$IS_RELEASE_EVENT" == 'true' ]]; then
+            echo "Staging changes in release_docs/..."
+            git add release_docs/
             COMMIT_MESSAGE="Update release pages from release-please commit: ${{ github.sha }}"
           else
-            echo "Staging changes in pages/main/..."
-            git add pages/main/
+            echo "Staging changes in main_docs/..."
+            git add main_docs/
             COMMIT_MESSAGE="Update main pages from main branch commit: ${{ github.sha }}"
           fi
 
           if git diff --staged --quiet; then
-            echo "No relevant changes detected in 'pages/' to commit."
+            echo "No relevant changes detected to commit."
             exit 0
           fi
           echo "Committing message: $COMMIT_MESSAGE"

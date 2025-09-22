@@ -1,0 +1,186 @@
+{
+  "recordID": "Chats_Tests_sendMessage_Google_AI_with_empty_text_stream",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta/models/gemini-2.0-flash:streamGenerateContent?alt=sse",
+        "request": "POST /v1beta/models/gemini-2.0-flash:streamGenerateContent?alt=sse HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "180",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Chats Tests sendMessage Google AI with empty text stream"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "a=5"
+                  }
+                ],
+                "role": "user"
+              },
+              {
+                "parts": [
+                  {
+                    "text": ""
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "text": "what is the value of a+10?"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {}
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "generativelanguage.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "7ffea42e0d9f84f398a06e4d21e440dd3b7b7a8beeeb3dc557153a8155178529",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Disposition": "attachment",
+          "Content-Type": "text/event-stream",
+          "Date": "Sat, 16 Aug 2025 00:45:50 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Server-Timing": "gfet4t7; dur=376",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "Since"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "vtSfaNaQBvP0n9kPrJGHuQ4",
+            "usageMetadata": {
+              "promptTokenCount": 16,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 16
+                }
+              ],
+              "totalTokenCount": 16
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " `"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "vtSfaNaQBvP0n9kPrJGHuQ4",
+            "usageMetadata": {
+              "promptTokenCount": 16,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 16
+                }
+              ],
+              "totalTokenCount": 16
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "a = 5`, then `a + 10 = 5 +"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "vtSfaNaQBvP0n9kPrJGHuQ4",
+            "usageMetadata": {
+              "promptTokenCount": 16,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 16
+                }
+              ],
+              "totalTokenCount": 16
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " 10 = 15`.\n\nSo the answer is **15**.\n"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP"
+              }
+            ],
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "vtSfaNaQBvP0n9kPrJGHuQ4",
+            "usageMetadata": {
+              "candidatesTokenCount": 36,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 36
+                }
+              ],
+              "promptTokenCount": 13,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 13
+                }
+              ],
+              "totalTokenCount": 49
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

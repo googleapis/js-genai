@@ -1,0 +1,269 @@
+{
+  "recordID": "Chats_Tests_chats_function_calling_Vertex_AI_with_function_calling",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash:generateContent",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash:generateContent HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "309",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Chats Tests chats function calling Vertex AI with function calling"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "what is the result of 100/2"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {},
+            "tools": [
+              {
+                "functionDeclarations": [
+                  {
+                    "description": "Custom divide function",
+                    "name": "customDivide",
+                    "parameters": {
+                      "properties": {
+                        "denominator": {
+                          "type": "NUMBER"
+                        },
+                        "numerator": {
+                          "type": "NUMBER"
+                        }
+                      },
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "us-central1-aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "ab392d5420b8a797cba66d69ed5f01d8e978fcb3850c613e4eb84a994102ff5a",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Encoding": "gzip",
+          "Content-Length": "466",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sat, 16 Aug 2025 00:45:57 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "avgLogprobs": -0.0008811576602359613,
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "args": {
+                          "denominator": 2,
+                          "numerator": 100
+                        },
+                        "name": "customDivide"
+                      }
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "score": -0.005286945961415768
+              }
+            ],
+            "createTime": "2025-08-16T00:45:56.984555Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "xNSfaOuLPMeSmecP8YP84Ao",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 74
+              },
+              "candidatesTokenCount": 6,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 6
+                }
+              ],
+              "promptTokenCount": 21,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 21
+                }
+              ],
+              "totalTokenCount": 27,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash:generateContent",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash:generateContent HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "483",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Chats Tests chats function calling Vertex AI with function calling"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "what is the result of 100/2"
+                  }
+                ],
+                "role": "user"
+              },
+              {
+                "parts": [
+                  {
+                    "functionCall": {
+                      "args": {
+                        "denominator": 2,
+                        "numerator": 100
+                      },
+                      "name": "customDivide"
+                    }
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "text": "what is the result of 50/2?"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {},
+            "tools": [
+              {
+                "functionDeclarations": [
+                  {
+                    "description": "Custom divide function",
+                    "name": "customDivide",
+                    "parameters": {
+                      "properties": {
+                        "denominator": {
+                          "type": "NUMBER"
+                        },
+                        "numerator": {
+                          "type": "NUMBER"
+                        }
+                      },
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "previousRequest": "ab392d5420b8a797cba66d69ed5f01d8e978fcb3850c613e4eb84a994102ff5a",
+        "serverAddress": "us-central1-aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "68ac1adc09bccaaaef7e0400869dc20f33d0afa0fcaa2ae33f91c39d779d9bd6",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Encoding": "gzip",
+          "Content-Length": "468",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sat, 16 Aug 2025 00:45:57 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "avgLogprobs": -0.03311624377965927,
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "args": {
+                          "denominator": 2,
+                          "numerator": 50
+                        },
+                        "name": "customDivide"
+                      }
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "score": -0.19869746267795563
+              }
+            ],
+            "createTime": "2025-08-16T00:45:57.479909Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "xdSfaKWlHeKMm9IPzITjqQc",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 142
+              },
+              "candidatesTokenCount": 6,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 6
+                }
+              ],
+              "promptTokenCount": 38,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 38
+                }
+              ],
+              "totalTokenCount": 44,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

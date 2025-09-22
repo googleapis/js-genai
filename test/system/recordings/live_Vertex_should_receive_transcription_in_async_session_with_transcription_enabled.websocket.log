@@ -1,0 +1,30 @@
+>202 {"setup":{"model":"projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash-live-preview-04-09","generationConfig":{"responseModalities":["AUDIO"]},"outputAudioTranscription":{}}}
+>120 {"clientContent":{"turns":[{"parts":[{"text":"Hello what should we talk about?"}],"role":"user"}],"turnComplete":true}}
+<86 {
+  "setupComplete": {
+    "sessionId": "01f92a6e-997c-4ec6-8cb7-988de6a86469"
+  }
+}
+
+<60 {
+  "serverContent": {
+    "outputTranscription": {}
+  }
+}
+
+<84 {
+  "serverContent": {
+    "outputTranscription": {
+      "text": "We"
+    }
+  }
+}
+
+<143 {
+  "serverContent": {
+    "outputTranscription": {
+      "text": " can talk about anything you like. What's on your mind today?"
+    }
+  }
+}
+

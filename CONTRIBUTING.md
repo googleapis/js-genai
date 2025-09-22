@@ -1,3 +1,3 @@
 # Contributing
 
-The Google Gen AI SDK is will accept contributions in the future.
+The Google Gen AI SDK will accept contributions in the future.

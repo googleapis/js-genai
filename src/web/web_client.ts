@@ -4,18 +4,23 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {ApiClient} from '../_api_client';
-import {Caches} from '../caches';
-import {Chats} from '../chats';
-import {GoogleGenAIOptions} from '../client';
-import {Files} from '../files';
-import {Live} from '../live';
-import {Models} from '../models';
-import {Operations} from '../operations';
+import {ApiClient} from '../_api_client.js';
+import {getBaseUrl} from '../_base_url.js';
+import {Batches} from '../batches.js';
+import {Caches} from '../caches.js';
+import {Chats} from '../chats.js';
+import {GoogleGenAIOptions} from '../client.js';
+import {Files} from '../files.js';
+import {Live} from '../live.js';
+import {Models} from '../models.js';
+import {Operations} from '../operations.js';
+import {Tokens} from '../tokens.js';
+import {Tunings} from '../tunings.js';
 
-import {BrowserUploader} from './_browser_uploader';
-import {BrowserWebSocketFactory} from './_browser_websocket';
-import {WebAuth} from './_web_auth';
+import {BrowserDownloader} from './_browser_downloader.js';
+import {BrowserUploader} from './_browser_uploader.js';
+import {BrowserWebSocketFactory} from './_browser_websocket.js';
+import {WebAuth} from './_web_auth.js';
 
 const LANGUAGE_LABEL_PREFIX = 'gl-node/';
 
@@ -62,10 +67,13 @@ export class GoogleGenAI {
   private readonly apiVersion?: string;
   readonly models: Models;
   readonly live: Live;
+  readonly batches: Batches;
   readonly chats: Chats;
   readonly caches: Caches;
   readonly files: Files;
   readonly operations: Operations;
+  readonly authTokens: Tokens;
+  readonly tunings: Tunings;
 
   constructor(options: GoogleGenAIOptions) {
     if (options.apiKey == null) {
@@ -80,6 +88,21 @@ export class GoogleGenAI {
     this.vertexai = options.vertexai ?? false;
 
     this.apiKey = options.apiKey;
+
+    const baseUrl = getBaseUrl(
+      options.httpOptions,
+      options.vertexai,
+      /*vertexBaseUrlFromEnv*/ undefined,
+      /*geminiBaseUrlFromEnv*/ undefined,
+    );
+    if (baseUrl) {
+      if (options.httpOptions) {
+        options.httpOptions.baseUrl = baseUrl;
+      } else {
+        options.httpOptions = {baseUrl: baseUrl};
+      }
+    }
+
     this.apiVersion = options.apiVersion;
     const auth = new WebAuth(this.apiKey);
     this.apiClient = new ApiClient({
@@ -90,12 +113,16 @@ export class GoogleGenAI {
       httpOptions: options.httpOptions,
       userAgentExtra: LANGUAGE_LABEL_PREFIX + 'web',
       uploader: new BrowserUploader(),
+      downloader: new BrowserDownloader(),
     });
     this.models = new Models(this.apiClient);
     this.live = new Live(this.apiClient, auth, new BrowserWebSocketFactory());
+    this.batches = new Batches(this.apiClient);
     this.chats = new Chats(this.models, this.apiClient);
     this.caches = new Caches(this.apiClient);
     this.files = new Files(this.apiClient);
     this.operations = new Operations(this.apiClient);
+    this.authTokens = new Tokens(this.apiClient);
+    this.tunings = new Tunings(this.apiClient);
   }
 }

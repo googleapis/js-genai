@@ -110,7 +110,18 @@ export function setValueByPath(
       throw new Error(`Cannot set value for an existing key. Key: ${keyToSet}`);
     }
   } else {
-    data[keyToSet] = value;
+    if (
+      keyToSet === '_self' &&
+      typeof value === 'object' &&
+      value !== null &&
+      !Array.isArray(value)
+    ) {
+      const valueAsRecord = value as Record<string, unknown>;
+
+      Object.assign(data, valueAsRecord);
+    } else {
+      data[keyToSet] = value;
+    }
   }
 }
 

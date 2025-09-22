@@ -1,0 +1,102 @@
+{
+  "recordID": "Chats_Tests_sendMessage_Vertex_AI_with_config",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash:generateContent",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash:generateContent HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "132",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Chats Tests sendMessage Vertex AI with config"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "why is the sky blue?"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {
+              "maxOutputTokens": 20,
+              "temperature": 0.5
+            }
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "us-central1-aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "8687c0251ca6628f26c855bd07834786ad90e3d114a2d251ccbee5aeed543769",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Encoding": "gzip",
+          "Content-Length": "485",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sat, 16 Aug 2025 00:45:21 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "avgLogprobs": -0.13236199617385863,
+                "content": {
+                  "parts": [
+                    {
+                      "text": "The sky is blue because of a phenomenon called **Rayleigh scattering**. Here's a breakdown:"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "MAX_TOKENS",
+                "score": -2.647239923477173
+              }
+            ],
+            "createTime": "2025-08-16T00:45:21.508481Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "odSfaMGEH4ibm9IP-c-U6Qw",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 16
+              },
+              "candidatesTokenCount": 20,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 20
+                }
+              ],
+              "promptTokenCount": 6,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 6
+                }
+              ],
+              "totalTokenCount": 26,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

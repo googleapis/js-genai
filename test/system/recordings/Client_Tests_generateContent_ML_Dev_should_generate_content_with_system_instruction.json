@@ -1,0 +1,102 @@
+{
+  "recordID": "Client_Tests_generateContent_ML_Dev_should_generate_content_with_system_instruction",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta/models/gemini-1.5-flash:generateContent",
+        "request": "POST /v1beta/models/gemini-1.5-flash:generateContent HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "158",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Client Tests generateContent ML Dev should generate content with system instruction"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "high"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {},
+            "systemInstruction": {
+              "parts": [
+                {
+                  "text": "I say high you say low"
+                }
+              ],
+              "role": "user"
+            }
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "generativelanguage.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "3893003fe2d128dd1f7f59bfaedbfa734bc1f20860a3120d25607edd37b76a08",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Encoding": "gzip",
+          "Content-Length": "316",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sat, 16 Aug 2025 00:43:12 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Server-Timing": "gfet4t7; dur=401",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "avgLogprobs": -0.00003236792690586299,
+                "content": {
+                  "parts": [
+                    {
+                      "text": "low\n"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP"
+              }
+            ],
+            "modelVersion": "gemini-1.5-flash",
+            "responseId": "INSfaL3WGP6Hm9IPnr2N2QY",
+            "usageMetadata": {
+              "candidatesTokenCount": 2,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 2
+                }
+              ],
+              "promptTokenCount": 7,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 7
+                }
+              ],
+              "totalTokenCount": 9
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

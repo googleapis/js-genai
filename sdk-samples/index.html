@@ -20,6 +20,8 @@
       let isRecording = false;
       let source;
       let mediaStream;
+      let audioCtx;
+      let nextStartTime = 0;
 
       const form = document.querySelector("form");
       const input = document.getElementById("input");
@@ -69,11 +71,14 @@
 
       async function playAudioData() {
         queueProcessing = true;
+
+        if (!audioCtx || audioCtx.state === "closed") {
+          audioCtx = new AudioContext();
+          nextStartTime = audioCtx.currentTime;
+        }
+
         while (messageQueue.length > 0) {
           const audioChunks = messageQueue.shift();
-
-          // Create an AudioContext
-          const audioCtx = new AudioContext();
 
           // Create an AudioBuffer (Assuming 1 channel and 24k sample rate)
           const audioBuffer = audioCtx.createBuffer(1, audioChunks.length, 24000);
@@ -86,11 +91,14 @@
           // Connect the source to the destination (speakers)
           source.connect(audioCtx.destination);
 
-          // Play the audio
-          source.start(0);
+          // Schedule the audio to play
+          if (nextStartTime < audioCtx.currentTime) {
+            nextStartTime = audioCtx.currentTime;
+          }
+          source.start(nextStartTime);
 
-          // Introduce the delay
-          await new Promise((resolve) => setTimeout(resolve, 250)); // 250ms delay
+          // Advance the next start time by the duration of the current buffer
+          nextStartTime += audioBuffer.duration;
         }
         queueProcessing = false;
       }

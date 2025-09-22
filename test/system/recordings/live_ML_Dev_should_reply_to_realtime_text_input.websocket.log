@@ -1,0 +1,30 @@
+>110 {"setup":{"model":"models/gemini-live-2.5-flash-preview","generationConfig":{"responseModalities":["TEXT"]}}}
+>51 {"realtimeInput":{"text":"Are you there Gemini?"}}
+<27 {
+  "setupComplete": {}
+}
+
+<130 {
+  "serverContent": {
+    "modelTurn": {
+      "parts": [
+        {
+          "text": "Yes, I am"
+        }
+      ]
+    }
+  }
+}
+
+<153 {
+  "serverContent": {
+    "modelTurn": {
+      "parts": [
+        {
+          "text": " here. How can I help you today?"
+        }
+      ]
+    }
+  }
+}
+

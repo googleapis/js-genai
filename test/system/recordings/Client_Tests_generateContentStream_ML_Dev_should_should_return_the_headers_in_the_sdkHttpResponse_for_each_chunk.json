@@ -1,0 +1,251 @@
+{
+  "recordID": "Client_Tests_generateContentStream_ML_Dev_should_should_return_the_headers_in_the_sdkHttpResponse_for_each_chunk",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta/models/gemini-1.5-flash:streamGenerateContent?alt=sse",
+        "request": "POST /v1beta/models/gemini-1.5-flash:streamGenerateContent?alt=sse HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "134",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Client Tests generateContentStream ML Dev should should return the headers in the sdkHttpResponse for each chunk"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "why is the sky blue?"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {
+              "candidateCount": 1,
+              "maxOutputTokens": 200
+            }
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "generativelanguage.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "a38f89448a582babaa7f5b0221c92116d4f837119259d5b5d5b5d4a781f537a9",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Disposition": "attachment",
+          "Content-Type": "text/event-stream",
+          "Date": "Sat, 16 Aug 2025 00:42:56 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Server-Timing": "gfet4t7; dur=351",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "The"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "modelVersion": "gemini-1.5-flash",
+            "responseId": "ENSfaPbtC5bzgLUPsqX4yAo",
+            "usageMetadata": {
+              "promptTokenCount": 7,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 7
+                }
+              ],
+              "totalTokenCount": 7
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " sky is blue due to a phenomenon called **Rayleigh scattering**.  Sunlight is"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "modelVersion": "gemini-1.5-flash",
+            "responseId": "ENSfaPbtC5bzgLUPsqX4yAo",
+            "usageMetadata": {
+              "promptTokenCount": 7,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 7
+                }
+              ],
+              "totalTokenCount": 7
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " made up of all the colors of the rainbow.  When sunlight enters the Earth"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "modelVersion": "gemini-1.5-flash",
+            "responseId": "ENSfaPbtC5bzgLUPsqX4yAo",
+            "usageMetadata": {
+              "promptTokenCount": 7,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 7
+                }
+              ],
+              "totalTokenCount": 7
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "'s atmosphere, it collides with tiny air molecules (mostly nitrogen and oxygen).  These molecules are much smaller than the wavelengths of visible light.\n\nRay"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "modelVersion": "gemini-1.5-flash",
+            "responseId": "ENSfaPbtC5bzgLUPsqX4yAo",
+            "usageMetadata": {
+              "promptTokenCount": 7,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 7
+                }
+              ],
+              "totalTokenCount": 7
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "leigh scattering affects shorter wavelengths of light more strongly than longer wavelengths.  Blue and violet light have the shortest wavelengths, so they are scattered much more than other colors"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "modelVersion": "gemini-1.5-flash",
+            "responseId": "ENSfaPbtC5bzgLUPsqX4yAo",
+            "usageMetadata": {
+              "promptTokenCount": 7,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 7
+                }
+              ],
+              "totalTokenCount": 7
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": ". This scattered blue light is what we see when we look at the sky.\n\nWhile violet light is scattered even more than blue light, our eyes are less sensitive to violet, and the sun emits slightly less violet light, resulting in a"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "modelVersion": "gemini-1.5-flash",
+            "responseId": "ENSfaPbtC5bzgLUPsqX4yAo",
+            "usageMetadata": {
+              "promptTokenCount": 7,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 7
+                }
+              ],
+              "totalTokenCount": 7
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " blue sky rather than a violet one.\n"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP"
+              }
+            ],
+            "modelVersion": "gemini-1.5-flash",
+            "responseId": "ENSfaPbtC5bzgLUPsqX4yAo",
+            "usageMetadata": {
+              "candidatesTokenCount": 154,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 154
+                }
+              ],
+              "promptTokenCount": 6,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 6
+                }
+              ],
+              "totalTokenCount": 160
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

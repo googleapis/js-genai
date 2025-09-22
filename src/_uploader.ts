@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {ApiClient} from './_api_client';
-import {File} from './types';
+import {ApiClient} from './_api_client.js';
+import {File} from './types.js';
 
 /**
  * Represents the size and mimeType of a file. The information is used to

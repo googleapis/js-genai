@@ -12,9 +12,10 @@
     "lib": ["es2022", "dom", "dom.iterable"]
   },
   "include": ["src/**/*.ts", "test/**/*.ts"],
+  "exclude": ["test/packaging/**/*"],
   "ts-node": {
     "compilerOptions": {
-      "module": "commonjs"
+      "module": "ES2020"
     }
   }
 }

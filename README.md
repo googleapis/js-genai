@@ -15,17 +15,27 @@ and [Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/over
 
 The Google Gen AI SDK is designed to work with Gemini 2.0 features.
 
-> [!NOTE]
-> **SDK Preview:**
-> See: [Preview Launch](#preview-launch).
-
 > [!CAUTION]
 > **API Key Security:** Avoid exposing API keys in client-side code.
 > Use server-side implementations in production environments.
 
 ## Prerequisites
 
-* Node.js version 18 or later
+1. Node.js version 20 or later
+
+### The following are required for Vertex AI users (excluding Vertex AI Studio)
+1.  [Select](https://console.cloud.google.com/project) or [create](https://cloud.google.com/resource-manager/docs/creating-managing-projects#creating_a_project) a Google Cloud project.
+1.  [Enable billing for your project](https://cloud.google.com/billing/docs/how-to/modify-project).
+1.  [Enable the Vertex AI API](https://console.cloud.google.com/flows/enableapi?apiid=aiplatform.googleapis.com).
+1.  [Configure authentication](https://cloud.google.com/docs/authentication) for your project.
+    *   [Install the gcloud CLI](https://cloud.google.com/sdk/docs/install).
+    *   [Initialize the gcloud CLI](https://cloud.google.com/sdk/docs/initializing).
+    *   Create local authentication credentials for your user account:
+
+    ```sh
+    gcloud auth application-default login
+    ```
+A list of accepted authentication options are listed in [GoogleAuthOptions](https://github.com/googleapis/google-auth-library-nodejs/blob/3ae120d0a45c95e36c59c9ac8286483938781f30/src/auth/googleauth.ts#L87) interface of google-auth-library-node.js GitHub repo.
 
 ## Installation
 
@@ -37,7 +47,7 @@ npm install @google/genai
 
 ## Quickstart
 
-The simplest way to get started is to using an API key from
+The simplest way to get started is to use an API key from
 [Google AI Studio](https://aistudio.google.com/apikey):
 
 ```typescript
@@ -102,24 +112,78 @@ const ai = new GoogleGenAI({
 });
 ```
 
+### (Optional) (NodeJS only) Using environment variables:
+
+For NodeJS environments, you can create a client by configuring the necessary
+environment variables. Configuration setup instructions depends on whether
+you're using the Gemini Developer API or the Gemini API in Vertex AI.
+
+**Gemini Developer API:** Set `GOOGLE_API_KEY` as shown below:
+
+```bash
+export GOOGLE_API_KEY='your-api-key'
+```
+
+**Gemini API on Vertex AI:** Set `GOOGLE_GENAI_USE_VERTEXAI`,
+`GOOGLE_CLOUD_PROJECT` and `GOOGLE_CLOUD_LOCATION`, as shown below:
+
+```bash
+export GOOGLE_GENAI_USE_VERTEXAI=true
+export GOOGLE_CLOUD_PROJECT='your-project-id'
+export GOOGLE_CLOUD_LOCATION='us-central1'
+```
+
+```typescript
+import {GoogleGenAI} from '@google/genai';
+
+const ai = new GoogleGenAI();
+```
+
+## API Selection
+
+By default, the SDK uses the beta API endpoints provided by Google to support
+preview features in the APIs. The stable API endpoints can be selected by
+setting the API version to `v1`.
+
+To set the API version use `apiVersion`. For example, to set the API version to
+`v1` for Vertex AI:
+
+```typescript
+const ai = new GoogleGenAI({
+    vertexai: true,
+    project: 'your_project',
+    location: 'your_location',
+    apiVersion: 'v1'
+});
+```
+
+To set the API version to `v1alpha` for the Gemini Developer API:
+
+```typescript
+const ai = new GoogleGenAI({
+    apiKey: 'GEMINI_API_KEY',
+    apiVersion: 'v1alpha'
+});
+```
+
 ## GoogleGenAI overview
 
 All API features are accessed through an instance of the `GoogleGenAI` classes.
 The submodules bundle together related API methods:
 
-- [`ai.models`](https://googleapis.github.io/js-genai/classes/models.Models.html):
+- [`ai.models`](https://googleapis.github.io/js-genai/release_docs/classes/models.Models.html):
   Use `models` to query models (`generateContent`, `generateImages`, ...), or
   examine their metadata.
-- [`ai.caches`](https://googleapis.github.io/js-genai/classes/caches.Caches.html):
+- [`ai.caches`](https://googleapis.github.io/js-genai/release_docs/classes/caches.Caches.html):
   Create and manage `caches` to reduce costs when repeatedly using the same
   large prompt prefix.
-- [`ai.chats`](https://googleapis.github.io/js-genai/classes/chats.Chats.html):
+- [`ai.chats`](https://googleapis.github.io/js-genai/release_docs/classes/chats.Chats.html):
   Create local stateful `chat` objects to simplify multi turn interactions.
-- [`ai.files`](https://googleapis.github.io/js-genai/classes/files.Files.html):
+- [`ai.files`](https://googleapis.github.io/js-genai/release_docs/classes/files.Files.html):
   Upload `files` to the API and reference them in your prompts.
   This reduces bandwidth if you use a file many times, and handles files too
   large to fit inline with your prompt.
-- [`ai.live`](https://googleapis.github.io/js-genai/classes/live.Live.html):
+- [`ai.live`](https://googleapis.github.io/js-genai/release_docs/classes/live.Live.html):
   Start a `live` session for real time interaction, allows text + audio + video
   input, and text or audio output.
 
@@ -127,7 +191,6 @@ The submodules bundle together related API methods:
 
 More samples can be found in the
 [github samples directory](https://github.com/googleapis/js-genai/tree/main/sdk-samples).
-
 
 ### Streaming
 
@@ -155,10 +218,10 @@ main();
 
 ### Function Calling
 
-To let Gemini to interact with external systems, you can provide provide
+To let Gemini to interact with external systems, you can provide
 `functionDeclaration` objects as `tools`. To use these tools it's a 4 step
 
-1. **Declare the function name, description, and parameters**
+1. **Declare the function name, description, and parametersJsonSchema**
 2. **Call `generateContent` with function calling enabled**
 3. **Use the returned `FunctionCall` parameters to call your actual function**
 3. **Send the result back to the model (with history, easier in `ai.chat`)
@@ -171,19 +234,14 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 async function main() {
   const controlLightDeclaration: FunctionDeclaration = {
     name: 'controlLight',
-    parameters: {
-      type: Type.OBJECT,
-      description: 'Set the brightness and color temperature of a room light.',
-      properties: {
+    parametersJsonSchema: {
+      type: 'object',
+      properties:{
         brightness: {
-          type: Type.NUMBER,
-          description:
-              'Light level from 0 to 100. Zero is off and 100 is full brightness.',
+          type:'number',
         },
         colorTemperature: {
-          type: Type.STRING,
-          description:
-              'Color temperature of the light fixture which can be `daylight`, `cool`, or `warm`.',
+          type:'string',
         },
       },
       required: ['brightness', 'colorTemperature'],
@@ -212,19 +270,108 @@ async function main() {
 main();
 ```
 
+#### Model Context Protocol (MCP) support (experimental)
 
-## Preview Launch
+Built-in [MCP](https://modelcontextprotocol.io/introduction) support is an
+experimental feature. You can pass a local MCP server as a tool directly.
 
-The SDK is curently in a preview launch stage, per [Google's launch stages](https://cloud.google.com/products?hl=en#section-22) this means:
+```javascript
+import { GoogleGenAI, FunctionCallingConfigMode , mcpToTool} from '@google/genai';
+import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 
-> At Preview, products or features are ready for testing by customers. Preview offerings are often publicly announced, but are not necessarily feature-complete, and no SLAs or technical support commitments are provided for these. Unless stated otherwise by Google, Preview offerings are intended for use in test environments only. The average Preview stage lasts about six months.
+// Create server parameters for stdio connection
+const serverParams = new StdioClientTransport({
+  command: "npx", // Executable
+  args: ["-y", "@philschmid/weather-mcp"] // MCP Server
+});
+
+const client = new Client(
+  {
+    name: "example-client",
+    version: "1.0.0"
+  }
+);
+
+// Configure the client
+const ai = new GoogleGenAI({});
+
+// Initialize the connection between client and server
+await client.connect(serverParams);
+
+// Send request to the model with MCP tools
+const response = await ai.models.generateContent({
+  model: "gemini-2.5-flash",
+  contents: `What is the weather in London in ${new Date().toLocaleDateString()}?`,
+  config: {
+    tools: [mcpToTool(client)],  // uses the session, will automatically call the tool using automatic function calling
+  },
+});
+console.log(response.text);
+
+// Close the connection
+await client.close();
+```
+
+### Generate Content
+
+#### How to structure `contents` argument for `generateContent`
+
+The SDK allows you to specify the following types in the `contents` parameter:
+
+#### Content
+
+- `Content`: The SDK will wrap the singular `Content` instance in an array which
+contains only the given content instance
+- `Content[]`: No transformation happens
+
+#### Part
+
+Parts will be aggregated on a singular Content, with role 'user'.
+
+- `Part | string`: The SDK will wrap the `string` or `Part` in a `Content`
+instance with role 'user'.
+- `Part[] | string[]`: The SDK will wrap the full provided list into a single
+`Content` with role 'user'.
+
+**_NOTE:_** This doesn't apply to `FunctionCall` and `FunctionResponse` parts,
+if you are specifying those, you need to explicitly provide the full
+`Content[]` structure making it explicit which Parts are 'spoken' by the model,
+or the user. The SDK will throw an exception if you try this.
+
+## Error Handling
+
+To handle errors raised by the API, the SDK provides this [ApiError](https://github.com/googleapis/js-genai/blob/main/src/errors.ts) class.
+
+```typescript
+import {GoogleGenAI} from '@google/genai';
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+
+const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
+
+async function main() {
+  await ai.models.generateContent({
+    model: 'non-existent-model',
+    contents: 'Write a 100-word poem.',
+  }).catch((e) => {
+    console.error('error name: ', e.name);
+    console.error('error message: ', e.message);
+    console.error('error status: ', e.status);
+  });
+}
+
+main();
+```
 
 ## How is this different from the other Google AI SDKs
-This SDK (`@google/genai`) is Google Deepmind’s "vanilla" SDK for its generative AI offerings, and is where Google Deepmind adds new AI features.
+This SDK (`@google/genai`) is Google Deepmind’s "vanilla" SDK for its generative
+AI offerings, and is where Google Deepmind adds new AI features.
 
 Models hosted either on the [Vertex AI platform](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/overview) or the [Gemini Developer platform](https://ai.google.dev/gemini-api/docs) are accessible through this SDK.
 
-Other SDKs may be offering additional AI frameworks on top of this SDK, or may be targeting specific project environments (like Firebase).
+Other SDKs may be offering additional AI frameworks on top of this SDK, or may
+be targeting specific project environments (like Firebase).
 
-The `@google/generative_language` and `@google-cloud/vertexai` SDKs are previous iterations of this SDK and are no longer receiving new Gemini 2.0+ features.
+The `@google/generative_language` and `@google-cloud/vertexai` SDKs are previous
+iterations of this SDK and are no longer receiving new Gemini 2.0+ features.
 

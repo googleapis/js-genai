@@ -1,0 +1,259 @@
+{
+  "recordID": "Client_Tests_generateContentStream_ML_Dev_should_stream_generate_content_with_system_instruction",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta/models/gemini-1.5-flash:streamGenerateContent?alt=sse",
+        "request": "POST /v1beta/models/gemini-1.5-flash:streamGenerateContent?alt=sse HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "237",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Client Tests generateContentStream ML Dev should stream generate content with system instruction"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "high"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {
+              "candidateCount": 1,
+              "maxOutputTokens": 200
+            },
+            "systemInstruction": {
+              "parts": [
+                {
+                  "text": "I say high you say low, and then tell me why is the sky blue."
+                }
+              ],
+              "role": "user"
+            }
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "generativelanguage.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "e63ca050b3f1660af2158aa9583436a8acd67e7280494d9d47fcbe415531bb78",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Disposition": "attachment",
+          "Content-Type": "text/event-stream",
+          "Date": "Sat, 16 Aug 2025 00:42:58 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Server-Timing": "gfet4t7; dur=619",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "low"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "modelVersion": "gemini-1.5-flash",
+            "responseId": "EdSfaJXFIK3hgLUP59n1oQo",
+            "usageMetadata": {
+              "promptTokenCount": 20,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 20
+                }
+              ],
+              "totalTokenCount": 20
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "\n\nThe sky is blue because of a phenomenon called Rayleigh scattering.  Sunlight is"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "modelVersion": "gemini-1.5-flash",
+            "responseId": "EdSfaJXFIK3hgLUP59n1oQo",
+            "usageMetadata": {
+              "promptTokenCount": 20,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 20
+                }
+              ],
+              "totalTokenCount": 20
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " made up of all the colors of the rainbow.  As sunlight enters the Earth"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "modelVersion": "gemini-1.5-flash",
+            "responseId": "EdSfaJXFIK3hgLUP59n1oQo",
+            "usageMetadata": {
+              "promptTokenCount": 20,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 20
+                }
+              ],
+              "totalTokenCount": 20
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "'s atmosphere, it collides with tiny air molecules (mostly nitrogen and oxygen).  These molecules are much smaller than the wavelengths of visible light.  Ray"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "modelVersion": "gemini-1.5-flash",
+            "responseId": "EdSfaJXFIK3hgLUP59n1oQo",
+            "usageMetadata": {
+              "promptTokenCount": 20,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 20
+                }
+              ],
+              "totalTokenCount": 20
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "leigh scattering affects shorter wavelengths of light more strongly than longer wavelengths.  Blue and violet light have the shortest wavelengths, so they are scattered more than other colors."
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "modelVersion": "gemini-1.5-flash",
+            "responseId": "EdSfaJXFIK3hgLUP59n1oQo",
+            "usageMetadata": {
+              "promptTokenCount": 20,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 20
+                }
+              ],
+              "totalTokenCount": 20
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "  This scattered blue light is what we see when we look at the sky.  Violet light is scattered even more than blue, but our eyes are less sensitive to violet, and the sun emits slightly less violet light, so the sky appears"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "modelVersion": "gemini-1.5-flash",
+            "responseId": "EdSfaJXFIK3hgLUP59n1oQo",
+            "usageMetadata": {
+              "promptTokenCount": 20,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 20
+                }
+              ],
+              "totalTokenCount": 20
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " blue rather than violet.\n"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP"
+              }
+            ],
+            "modelVersion": "gemini-1.5-flash",
+            "responseId": "EdSfaJXFIK3hgLUP59n1oQo",
+            "usageMetadata": {
+              "candidatesTokenCount": 151,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 151
+                }
+              ],
+              "promptTokenCount": 18,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 18
+                }
+              ],
+              "totalTokenCount": 169
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

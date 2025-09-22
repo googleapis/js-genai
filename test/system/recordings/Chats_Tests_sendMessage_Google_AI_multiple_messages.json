@@ -1,0 +1,199 @@
+{
+  "recordID": "Chats_Tests_sendMessage_Google_AI_multiple_messages",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta/models/gemini-2.0-flash:generateContent",
+        "request": "POST /v1beta/models/gemini-2.0-flash:generateContent HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "103",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Chats Tests sendMessage Google AI multiple messages"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "Tell me a story in 100 words?"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {}
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "generativelanguage.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "ff3870c20528bf47fedfd715a9317814dd082e161447e2782ab165dd6c02e5f8",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Encoding": "gzip",
+          "Content-Length": "623",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sat, 16 Aug 2025 00:45:29 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Server-Timing": "gfet4t7; dur=1161",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "avgLogprobs": -0.8377578372047061,
+                "content": {
+                  "parts": [
+                    {
+                      "text": "Flora, a retired clockmaker, lived amongst ticking empires. Each chime was a memory. But silence haunted her. Years ago, she'd stopped the hands of her grandfather's cuckoo clock after his passing. Today, she dusted it, a tear tracing a line through the grime.\n\nTaking a breath, Flora wound the mechanism. A hesitant click. Then, a whirring, followed by a triumphant \"Cuckoo!\" The sound, raspy and old, filled the room. It wasn't her grandfather's voice, but it was a start. Maybe, just maybe, time could heal after all.\n"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP"
+              }
+            ],
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "qNSfaIjgOMeSmecP8YP84Ao",
+            "usageMetadata": {
+              "candidatesTokenCount": 126,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 126
+                }
+              ],
+              "promptTokenCount": 11,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 11
+                }
+              ],
+              "totalTokenCount": 137
+            }
+          }
+        ]
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta/models/gemini-2.0-flash:generateContent",
+        "request": "POST /v1beta/models/gemini-2.0-flash:generateContent HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "737",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Chats Tests sendMessage Google AI multiple messages"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "Tell me a story in 100 words?"
+                  }
+                ],
+                "role": "user"
+              },
+              {
+                "parts": [
+                  {
+                    "text": "Flora, a retired clockmaker, lived amongst ticking empires. Each chime was a memory. But silence haunted her. Years ago, she'd stopped the hands of her grandfather's cuckoo clock after his passing. Today, she dusted it, a tear tracing a line through the grime.\n\nTaking a breath, Flora wound the mechanism. A hesitant click. Then, a whirring, followed by a triumphant \"Cuckoo!\" The sound, raspy and old, filled the room. It wasn't her grandfather's voice, but it was a start. Maybe, just maybe, time could heal after all.\n"
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "text": "What is the title of the story?"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {}
+          }
+        ],
+        "previousRequest": "ff3870c20528bf47fedfd715a9317814dd082e161447e2782ab165dd6c02e5f8",
+        "serverAddress": "generativelanguage.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "4ffb0d12937d383f4d06c69b1a911831ce4e2f617d448371effa43b7b43386be",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Encoding": "gzip",
+          "Content-Length": "390",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sat, 16 Aug 2025 00:45:30 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Server-Timing": "gfet4t7; dur=525",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "avgLogprobs": -0.18299749162462023,
+                "content": {
+                  "parts": [
+                    {
+                      "text": "While the story doesn't explicitly have a title, a fitting title could be:\n\n**The Clockmaker's Silence**\n"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP"
+              }
+            ],
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "qtSfaKjsCcmagbUPt96I0QI",
+            "usageMetadata": {
+              "candidatesTokenCount": 27,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 27
+                }
+              ],
+              "promptTokenCount": 145,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 145
+                }
+              ],
+              "totalTokenCount": 172
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

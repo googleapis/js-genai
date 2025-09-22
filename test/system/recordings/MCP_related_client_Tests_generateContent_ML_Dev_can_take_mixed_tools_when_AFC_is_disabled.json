@@ -1,0 +1,177 @@
+{
+  "recordID": "MCP_related_client_Tests_generateContent_ML_Dev_can_take_mixed_tools_when_AFC_is_disabled",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta/models/gemini-2.0-flash:generateContent",
+        "request": "POST /v1beta/models/gemini-2.0-flash:generateContent HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "1112",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "MCP related client Tests generateContent ML Dev can take mixed tools when AFC is disabled"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "Use the printer to print a simple word: hello in blue, and beep with the beeper, then control the light to warm, 50"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {},
+            "toolConfig": {
+              "functionCallingConfig": {
+                "mode": "AUTO"
+              }
+            },
+            "tools": [
+              {
+                "functionDeclarations": [
+                  {
+                    "name": "print",
+                    "parametersJsonSchema": {
+                      "$schema": "http://json-schema.org/draft-07/schema#",
+                      "additionalProperties": false,
+                      "properties": {
+                        "color": {
+                          "pattern": "red|blue|green|white",
+                          "type": "string"
+                        },
+                        "text": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["text", "color"],
+                      "type": "object"
+                    }
+                  }
+                ]
+              },
+              {
+                "functionDeclarations": [
+                  {
+                    "name": "beep",
+                    "parametersJsonSchema": {
+                      "properties": {},
+                      "type": "object"
+                    }
+                  }
+                ]
+              },
+              {
+                "functionDeclarations": [
+                  {
+                    "name": "controlLight",
+                    "parameters": {
+                      "description": "Set the brightness and color temperature of a room light.",
+                      "properties": {
+                        "brightness": {
+                          "description": "Light level from 0 to 100. Zero is off and 100 is full brightness.",
+                          "type": "NUMBER"
+                        },
+                        "colorTemperature": {
+                          "description": "Color temperature of the light fixture which can be `daylight`, `cool` or `warm`.",
+                          "type": "STRING"
+                        }
+                      },
+                      "required": ["brightness", "colorTemperature"],
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "generativelanguage.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "7be33435698959cd9401e70fa4cd95e4a0b4f6e8284e5707a6c36f8827a7a8d4",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Encoding": "gzip",
+          "Content-Length": "415",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Tue, 26 Aug 2025 03:57:23 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Server-Timing": "gfet4t7; dur=755",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "avgLogprobs": -0.04113555871523344,
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "args": {
+                          "color": "blue",
+                          "text": "hello"
+                        },
+                        "name": "print"
+                      }
+                    },
+                    {
+                      "functionCall": {
+                        "args": {},
+                        "name": "beep"
+                      }
+                    },
+                    {
+                      "functionCall": {
+                        "args": {
+                          "brightness": 50,
+                          "colorTemperature": "warm"
+                        },
+                        "name": "controlLight"
+                      }
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP"
+              }
+            ],
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "ojCtaMv-M-H9jrEP_aiggAo",
+            "usageMetadata": {
+              "candidatesTokenCount": 13,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 13
+                }
+              ],
+              "promptTokenCount": 96,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 96
+                }
+              ],
+              "totalTokenCount": 109
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
