@@ -43,8 +43,7 @@ async function handleWebSocketMessage(
   } else {
     data = JSON.parse(event.data) as types.LiveMusicServerMessage;
   }
-  const response = converters.liveMusicServerMessageFromMldev(data);
-  Object.assign(serverMessage, response);
+  Object.assign(serverMessage, data);
   onmessage(serverMessage);
 }
 
@@ -148,10 +147,8 @@ export class LiveMusic {
     await onopenPromise;
 
     const model = t.tModel(this.apiClient, params.model);
-    const setup = converters.liveMusicClientSetupToMldev({
-      model,
-    });
-    const clientMessage = converters.liveMusicClientMessageToMldev({setup});
+    const setup = {model};
+    const clientMessage = {setup};
     conn.send(JSON.stringify(clientMessage));
 
     return new LiveMusicSession(conn, this.apiClient);
@@ -191,11 +188,8 @@ export class LiveMusicSession {
         'Weighted prompts must be set and contain at least one entry.',
       );
     }
-    const setWeightedPromptsParameters =
+    const clientContent =
       converters.liveMusicSetWeightedPromptsParametersToMldev(params);
-    const clientContent = converters.liveMusicClientContentToMldev(
-      setWeightedPromptsParameters,
-    );
     this.conn.send(JSON.stringify({clientContent}));
   }
 
@@ -216,15 +210,11 @@ export class LiveMusicSession {
     }
     const setConfigParameters =
       converters.liveMusicSetConfigParametersToMldev(params);
-    const clientMessage =
-      converters.liveMusicClientMessageToMldev(setConfigParameters);
-    this.conn.send(JSON.stringify(clientMessage));
+    this.conn.send(JSON.stringify(setConfigParameters));
   }
 
   private sendPlaybackControl(playbackControl: types.LiveMusicPlaybackControl) {
-    const clientMessage = converters.liveMusicClientMessageToMldev({
-      playbackControl,
-    });
+    const clientMessage = {playbackControl};
     this.conn.send(JSON.stringify(clientMessage));
   }
 
