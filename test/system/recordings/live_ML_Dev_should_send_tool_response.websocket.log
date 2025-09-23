@@ -1,4 +1,4 @@
->402 {"setup":{"model":"models/gemini-live-2.5-flash-preview","tools":[{"functionDeclarations":[{"description":"Get the current weather in a given location","name":"get_current_weather","parameters":{"type":"OBJECT","properties":{"location":{"type":"STRING","description":"The city and state, e.g. San Francisco, CA"},"unit":{"type":"STRING","enum":["celsius","fahrenheit"]}},"required":["location"]}}]}]}}
+>402 {"setup":{"model":"models/gemini-live-2.5-flash-preview","tools":[{"functionDeclarations":[{"name":"get_current_weather","description":"Get the current weather in a given location","parameters":{"type":"OBJECT","properties":{"location":{"type":"STRING","description":"The city and state, e.g. San Francisco, CA"},"unit":{"type":"STRING","enum":["celsius","fahrenheit"]}},"required":["location"]}}]}]}}
 >129 {"clientContent":{"turns":[{"parts":[{"text":"what is the weather in Redmond Washington"}],"role":"user"}],"turnComplete":true}}
 <27 {
   "setupComplete": {}
