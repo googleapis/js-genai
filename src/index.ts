@@ -8,6 +8,7 @@ export {BaseUrlParameters, setDefaultBaseUrls} from './_base_url';
 export * from './batches';
 export * from './caches';
 export * from './chats';
+export {overrideHttpOptions} from './_api_client';
 export {GoogleGenAI, GoogleGenAIOptions} from './client';
 export * from './errors';
 export {Files} from './files';
