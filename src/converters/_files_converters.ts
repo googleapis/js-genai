@@ -10,37 +10,160 @@ import * as common from '../_common.js';
 import * as t from '../_transformers.js';
 import type * as types from '../types.js';
 
-export function listFilesConfigToMldev(
-  fromObject: types.ListFilesConfig,
-  parentObject: Record<string, unknown>,
+export function createFileParametersToMldev(
+  fromObject: types.CreateFileParameters,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
-  if (parentObject !== undefined && fromPageSize != null) {
-    common.setValueByPath(parentObject, ['_query', 'pageSize'], fromPageSize);
-  }
-
-  const fromPageToken = common.getValueByPath(fromObject, ['pageToken']);
-  if (parentObject !== undefined && fromPageToken != null) {
-    common.setValueByPath(parentObject, ['_query', 'pageToken'], fromPageToken);
+  const fromFile = common.getValueByPath(fromObject, ['file']);
+  if (fromFile != null) {
+    common.setValueByPath(toObject, ['file'], fileToMldev(fromFile));
   }
 
   return toObject;
 }
 
-export function listFilesParametersToMldev(
-  fromObject: types.ListFilesParameters,
+export function createFileResponseFromMldev(
+  fromObject: types.CreateFileResponse,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      listFilesConfigToMldev(fromConfig, toObject),
-    );
+  const fromSdkHttpResponse = common.getValueByPath(fromObject, [
+    'sdkHttpResponse',
+  ]);
+  if (fromSdkHttpResponse != null) {
+    common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
+  }
+
+  return toObject;
+}
+
+export function deleteFileParametersToMldev(
+  fromObject: types.DeleteFileParameters,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromName = common.getValueByPath(fromObject, ['name']);
+  if (fromName != null) {
+    common.setValueByPath(toObject, ['_url', 'file'], t.tFileName(fromName));
+  }
+
+  return toObject;
+}
+
+export function deleteFileResponseFromMldev(
+  fromObject: types.DeleteFileResponse,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromSdkHttpResponse = common.getValueByPath(fromObject, [
+    'sdkHttpResponse',
+  ]);
+  if (fromSdkHttpResponse != null) {
+    common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
+  }
+
+  return toObject;
+}
+
+export function fileFromMldev(fromObject: types.File): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromName = common.getValueByPath(fromObject, ['name']);
+  if (fromName != null) {
+    common.setValueByPath(toObject, ['name'], fromName);
+  }
+
+  const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
+  if (fromDisplayName != null) {
+    common.setValueByPath(toObject, ['displayName'], fromDisplayName);
+  }
+
+  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+  if (fromMimeType != null) {
+    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+  }
+
+  const fromSizeBytes = common.getValueByPath(fromObject, ['sizeBytes']);
+  if (fromSizeBytes != null) {
+    common.setValueByPath(toObject, ['sizeBytes'], fromSizeBytes);
+  }
+
+  const fromCreateTime = common.getValueByPath(fromObject, ['createTime']);
+  if (fromCreateTime != null) {
+    common.setValueByPath(toObject, ['createTime'], fromCreateTime);
+  }
+
+  const fromExpirationTime = common.getValueByPath(fromObject, [
+    'expirationTime',
+  ]);
+  if (fromExpirationTime != null) {
+    common.setValueByPath(toObject, ['expirationTime'], fromExpirationTime);
+  }
+
+  const fromUpdateTime = common.getValueByPath(fromObject, ['updateTime']);
+  if (fromUpdateTime != null) {
+    common.setValueByPath(toObject, ['updateTime'], fromUpdateTime);
+  }
+
+  const fromSha256Hash = common.getValueByPath(fromObject, ['sha256Hash']);
+  if (fromSha256Hash != null) {
+    common.setValueByPath(toObject, ['sha256Hash'], fromSha256Hash);
+  }
+
+  const fromUri = common.getValueByPath(fromObject, ['uri']);
+  if (fromUri != null) {
+    common.setValueByPath(toObject, ['uri'], fromUri);
+  }
+
+  const fromDownloadUri = common.getValueByPath(fromObject, ['downloadUri']);
+  if (fromDownloadUri != null) {
+    common.setValueByPath(toObject, ['downloadUri'], fromDownloadUri);
+  }
+
+  const fromState = common.getValueByPath(fromObject, ['state']);
+  if (fromState != null) {
+    common.setValueByPath(toObject, ['state'], fromState);
+  }
+
+  const fromSource = common.getValueByPath(fromObject, ['source']);
+  if (fromSource != null) {
+    common.setValueByPath(toObject, ['source'], fromSource);
+  }
+
+  const fromVideoMetadata = common.getValueByPath(fromObject, [
+    'videoMetadata',
+  ]);
+  if (fromVideoMetadata != null) {
+    common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
+  }
+
+  const fromError = common.getValueByPath(fromObject, ['error']);
+  if (fromError != null) {
+    common.setValueByPath(toObject, ['error'], fileStatusFromMldev(fromError));
+  }
+
+  return toObject;
+}
+
+export function fileStatusFromMldev(
+  fromObject: types.FileStatus,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromDetails = common.getValueByPath(fromObject, ['details']);
+  if (fromDetails != null) {
+    common.setValueByPath(toObject, ['details'], fromDetails);
+  }
+
+  const fromMessage = common.getValueByPath(fromObject, ['message']);
+  if (fromMessage != null) {
+    common.setValueByPath(toObject, ['message'], fromMessage);
+  }
+
+  const fromCode = common.getValueByPath(fromObject, ['code']);
+  if (fromCode != null) {
+    common.setValueByPath(toObject, ['code'], fromCode);
   }
 
   return toObject;
@@ -149,24 +272,6 @@ export function fileToMldev(fromObject: types.File): Record<string, unknown> {
   return toObject;
 }
 
-export function createFileParametersToMldev(
-  fromObject: types.CreateFileParameters,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromFile = common.getValueByPath(fromObject, ['file']);
-  if (fromFile != null) {
-    common.setValueByPath(toObject, ['file'], fileToMldev(fromFile));
-  }
-
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
-  }
-
-  return toObject;
-}
-
 export function getFileParametersToMldev(
   fromObject: types.GetFileParameters,
 ): Record<string, unknown> {
@@ -177,130 +282,36 @@ export function getFileParametersToMldev(
     common.setValueByPath(toObject, ['_url', 'file'], t.tFileName(fromName));
   }
 
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
-  }
-
   return toObject;
 }
 
-export function deleteFileParametersToMldev(
-  fromObject: types.DeleteFileParameters,
+export function listFilesConfigToMldev(
+  fromObject: types.ListFilesConfig,
+  parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName != null) {
-    common.setValueByPath(toObject, ['_url', 'file'], t.tFileName(fromName));
+  const fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
+  if (parentObject !== undefined && fromPageSize != null) {
+    common.setValueByPath(parentObject, ['_query', 'pageSize'], fromPageSize);
   }
 
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
+  const fromPageToken = common.getValueByPath(fromObject, ['pageToken']);
+  if (parentObject !== undefined && fromPageToken != null) {
+    common.setValueByPath(parentObject, ['_query', 'pageToken'], fromPageToken);
   }
 
   return toObject;
 }
 
-export function fileStatusFromMldev(
-  fromObject: types.FileStatus,
+export function listFilesParametersToMldev(
+  fromObject: types.ListFilesParameters,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromDetails = common.getValueByPath(fromObject, ['details']);
-  if (fromDetails != null) {
-    common.setValueByPath(toObject, ['details'], fromDetails);
-  }
-
-  const fromMessage = common.getValueByPath(fromObject, ['message']);
-  if (fromMessage != null) {
-    common.setValueByPath(toObject, ['message'], fromMessage);
-  }
-
-  const fromCode = common.getValueByPath(fromObject, ['code']);
-  if (fromCode != null) {
-    common.setValueByPath(toObject, ['code'], fromCode);
-  }
-
-  return toObject;
-}
-
-export function fileFromMldev(fromObject: types.File): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName != null) {
-    common.setValueByPath(toObject, ['name'], fromName);
-  }
-
-  const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
-  if (fromDisplayName != null) {
-    common.setValueByPath(toObject, ['displayName'], fromDisplayName);
-  }
-
-  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
-  if (fromMimeType != null) {
-    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
-  }
-
-  const fromSizeBytes = common.getValueByPath(fromObject, ['sizeBytes']);
-  if (fromSizeBytes != null) {
-    common.setValueByPath(toObject, ['sizeBytes'], fromSizeBytes);
-  }
-
-  const fromCreateTime = common.getValueByPath(fromObject, ['createTime']);
-  if (fromCreateTime != null) {
-    common.setValueByPath(toObject, ['createTime'], fromCreateTime);
-  }
-
-  const fromExpirationTime = common.getValueByPath(fromObject, [
-    'expirationTime',
-  ]);
-  if (fromExpirationTime != null) {
-    common.setValueByPath(toObject, ['expirationTime'], fromExpirationTime);
-  }
-
-  const fromUpdateTime = common.getValueByPath(fromObject, ['updateTime']);
-  if (fromUpdateTime != null) {
-    common.setValueByPath(toObject, ['updateTime'], fromUpdateTime);
-  }
-
-  const fromSha256Hash = common.getValueByPath(fromObject, ['sha256Hash']);
-  if (fromSha256Hash != null) {
-    common.setValueByPath(toObject, ['sha256Hash'], fromSha256Hash);
-  }
-
-  const fromUri = common.getValueByPath(fromObject, ['uri']);
-  if (fromUri != null) {
-    common.setValueByPath(toObject, ['uri'], fromUri);
-  }
-
-  const fromDownloadUri = common.getValueByPath(fromObject, ['downloadUri']);
-  if (fromDownloadUri != null) {
-    common.setValueByPath(toObject, ['downloadUri'], fromDownloadUri);
-  }
-
-  const fromState = common.getValueByPath(fromObject, ['state']);
-  if (fromState != null) {
-    common.setValueByPath(toObject, ['state'], fromState);
-  }
-
-  const fromSource = common.getValueByPath(fromObject, ['source']);
-  if (fromSource != null) {
-    common.setValueByPath(toObject, ['source'], fromSource);
-  }
-
-  const fromVideoMetadata = common.getValueByPath(fromObject, [
-    'videoMetadata',
-  ]);
-  if (fromVideoMetadata != null) {
-    common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
-  }
-
-  const fromError = common.getValueByPath(fromObject, ['error']);
-  if (fromError != null) {
-    common.setValueByPath(toObject, ['error'], fileStatusFromMldev(fromError));
+  const fromConfig = common.getValueByPath(fromObject, ['config']);
+  if (fromConfig != null) {
+    listFilesConfigToMldev(fromConfig, toObject);
   }
 
   return toObject;
@@ -334,36 +345,6 @@ export function listFilesResponseFromMldev(
       });
     }
     common.setValueByPath(toObject, ['files'], transformedList);
-  }
-
-  return toObject;
-}
-
-export function createFileResponseFromMldev(
-  fromObject: types.CreateFileResponse,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromSdkHttpResponse = common.getValueByPath(fromObject, [
-    'sdkHttpResponse',
-  ]);
-  if (fromSdkHttpResponse != null) {
-    common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
-  }
-
-  return toObject;
-}
-
-export function deleteFileResponseFromMldev(
-  fromObject: types.DeleteFileResponse,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromSdkHttpResponse = common.getValueByPath(fromObject, [
-    'sdkHttpResponse',
-  ]);
-  if (fromSdkHttpResponse != null) {
-    common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
   }
 
   return toObject;

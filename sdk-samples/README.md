@@ -24,5 +24,21 @@ export GOOGLE_CLOUD_LOCATION=<GCP_REGION>
 Now you can run the compiled samples, e.g:
 
 ```sh
-node build/generate_content_with_text.js
+node build/sdk-samples/generate_content_with_text.js
 ```
+
+
+## Test Run all samples
+
+To test run all samples, first build them following the instructions above,
+then run the script:
+
+```
+bash run_samples.sh
+```
+
+On the first run it will write the list of samples to `js_files_to_run.txt`.
+It executes the examples listed in the file top to bottom, exiting if a sample
+fails.
+
+To skip a sample on subsequent runs, remove it from the file.

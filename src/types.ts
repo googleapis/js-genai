@@ -2641,7 +2641,8 @@ export type ReferenceImage =
   | MaskReferenceImage
   | ControlReferenceImage
   | StyleReferenceImage
-  | SubjectReferenceImage;
+  | SubjectReferenceImage
+  | ContentReferenceImage;
 
 /** Parameters for the request to edit an image. */
 export declare interface EditImageParameters {
@@ -5082,6 +5083,30 @@ export class SubjectReferenceImage {
       referenceImage: this.referenceImage,
       referenceId: this.referenceId,
       subjectImageConfig: this.config,
+    };
+    return referenceImageAPI;
+  }
+}
+
+/** A content reference image.
+
+  A content reference image represents a subject to reference (ex. person,
+  product, animal) provided by the user. It can optionally be provided in
+  addition to a style reference image (ex. background, style reference).
+   */
+export class ContentReferenceImage {
+  /** The reference image for the editing operation. */
+  referenceImage?: Image;
+  /** The id of the reference image. */
+  referenceId?: number;
+  /** The type of the reference image. Only set by the SDK. */
+  referenceType?: string;
+  /** Internal method to convert to ReferenceImageAPIInternal. */
+  toReferenceImageAPI(): ReferenceImageAPIInternal {
+    const referenceImageAPI = {
+      referenceType: 'REFERENCE_TYPE_CONTENT',
+      referenceImage: this.referenceImage,
+      referenceId: this.referenceId,
     };
     return referenceImageAPI;
   }

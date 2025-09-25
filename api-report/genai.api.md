@@ -398,6 +398,15 @@ export interface ContentEmbeddingStatistics {
 // @public (undocumented)
 export type ContentListUnion = Content | Content[] | PartUnion | PartUnion[];
 
+// @public
+export class ContentReferenceImage {
+    referenceId?: number;
+    referenceImage?: Image_2;
+    referenceType?: string;
+    // Warning: (ae-forgotten-export) The symbol "ReferenceImageAPIInternal" needs to be exported by the entry point index.d.ts
+    toReferenceImageAPI(): ReferenceImageAPIInternal;
+}
+
 // @public (undocumented)
 export type ContentUnion = Content | PartUnion[] | PartUnion;
 
@@ -419,7 +428,6 @@ export class ControlReferenceImage {
     referenceId?: number;
     referenceImage?: Image_2;
     referenceType?: string;
-    // Warning: (ae-forgotten-export) The symbol "ReferenceImageAPIInternal" needs to be exported by the entry point index.d.ts
     toReferenceImageAPI(): ReferenceImageAPIInternal;
 }
 
@@ -2477,7 +2485,7 @@ export interface RecontextImageSource {
 }
 
 // @public (undocumented)
-export type ReferenceImage = RawReferenceImage | MaskReferenceImage | ControlReferenceImage | StyleReferenceImage | SubjectReferenceImage;
+export type ReferenceImage = RawReferenceImage | MaskReferenceImage | ControlReferenceImage | StyleReferenceImage | SubjectReferenceImage | ContentReferenceImage;
 
 // @public
 export interface ReplayFile {

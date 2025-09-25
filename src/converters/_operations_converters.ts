@@ -30,30 +30,6 @@ export function fetchPredictOperationParametersToMldev(
   return toObject;
 }
 
-export function getOperationParametersToMldev(
-  fromObject: types.GetOperationParameters,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromOperationName = common.getValueByPath(fromObject, [
-    'operationName',
-  ]);
-  if (fromOperationName != null) {
-    common.setValueByPath(
-      toObject,
-      ['_url', 'operationName'],
-      fromOperationName,
-    );
-  }
-
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
-  }
-
-  return toObject;
-}
-
 export function fetchPredictOperationParametersToVertex(
   fromObject: types.FetchPredictOperationParameters,
 ): Record<string, unknown> {
@@ -71,72 +47,81 @@ export function fetchPredictOperationParametersToVertex(
     common.setValueByPath(toObject, ['_url', 'resourceName'], fromResourceName);
   }
 
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
-  }
-
   return toObject;
 }
 
-export function getOperationParametersToVertex(
-  fromObject: types.GetOperationParameters,
+export function generateVideosOperationFromMldev(
+  fromObject: types.GenerateVideosOperation,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromOperationName = common.getValueByPath(fromObject, [
-    'operationName',
+  const fromName = common.getValueByPath(fromObject, ['name']);
+  if (fromName != null) {
+    common.setValueByPath(toObject, ['name'], fromName);
+  }
+
+  const fromMetadata = common.getValueByPath(fromObject, ['metadata']);
+  if (fromMetadata != null) {
+    common.setValueByPath(toObject, ['metadata'], fromMetadata);
+  }
+
+  const fromDone = common.getValueByPath(fromObject, ['done']);
+  if (fromDone != null) {
+    common.setValueByPath(toObject, ['done'], fromDone);
+  }
+
+  const fromError = common.getValueByPath(fromObject, ['error']);
+  if (fromError != null) {
+    common.setValueByPath(toObject, ['error'], fromError);
+  }
+
+  const fromResponse = common.getValueByPath(fromObject, [
+    'response',
+    'generateVideoResponse',
   ]);
-  if (fromOperationName != null) {
+  if (fromResponse != null) {
     common.setValueByPath(
       toObject,
-      ['_url', 'operationName'],
-      fromOperationName,
+      ['response'],
+      generateVideosResponseFromMldev(fromResponse),
     );
   }
 
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    common.setValueByPath(toObject, ['config'], fromConfig);
-  }
-
   return toObject;
 }
 
-export function videoFromMldev(
-  fromObject: types.Video,
+export function generateVideosOperationFromVertex(
+  fromObject: types.GenerateVideosOperation,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromUri = common.getValueByPath(fromObject, ['video', 'uri']);
-  if (fromUri != null) {
-    common.setValueByPath(toObject, ['uri'], fromUri);
+  const fromName = common.getValueByPath(fromObject, ['name']);
+  if (fromName != null) {
+    common.setValueByPath(toObject, ['name'], fromName);
   }
 
-  const fromVideoBytes = common.getValueByPath(fromObject, [
-    'video',
-    'encodedVideo',
-  ]);
-  if (fromVideoBytes != null) {
-    common.setValueByPath(toObject, ['videoBytes'], t.tBytes(fromVideoBytes));
+  const fromMetadata = common.getValueByPath(fromObject, ['metadata']);
+  if (fromMetadata != null) {
+    common.setValueByPath(toObject, ['metadata'], fromMetadata);
   }
 
-  const fromMimeType = common.getValueByPath(fromObject, ['encoding']);
-  if (fromMimeType != null) {
-    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+  const fromDone = common.getValueByPath(fromObject, ['done']);
+  if (fromDone != null) {
+    common.setValueByPath(toObject, ['done'], fromDone);
   }
 
-  return toObject;
-}
+  const fromError = common.getValueByPath(fromObject, ['error']);
+  if (fromError != null) {
+    common.setValueByPath(toObject, ['error'], fromError);
+  }
 
-export function generatedVideoFromMldev(
-  fromObject: types.GeneratedVideo,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromVideo = common.getValueByPath(fromObject, ['_self']);
-  if (fromVideo != null) {
-    common.setValueByPath(toObject, ['video'], videoFromMldev(fromVideo));
+  const fromResponse = common.getValueByPath(fromObject, ['response']);
+  if (fromResponse != null) {
+    common.setValueByPath(
+      toObject,
+      ['response'],
+      generateVideosResponseFromVertex(fromResponse),
+    );
   }
 
   return toObject;
@@ -185,84 +170,6 @@ export function generateVideosResponseFromMldev(
   return toObject;
 }
 
-export function generateVideosOperationFromMldev(
-  fromObject: types.GenerateVideosOperation,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName != null) {
-    common.setValueByPath(toObject, ['name'], fromName);
-  }
-
-  const fromMetadata = common.getValueByPath(fromObject, ['metadata']);
-  if (fromMetadata != null) {
-    common.setValueByPath(toObject, ['metadata'], fromMetadata);
-  }
-
-  const fromDone = common.getValueByPath(fromObject, ['done']);
-  if (fromDone != null) {
-    common.setValueByPath(toObject, ['done'], fromDone);
-  }
-
-  const fromError = common.getValueByPath(fromObject, ['error']);
-  if (fromError != null) {
-    common.setValueByPath(toObject, ['error'], fromError);
-  }
-
-  const fromResponse = common.getValueByPath(fromObject, [
-    'response',
-    'generateVideoResponse',
-  ]);
-  if (fromResponse != null) {
-    common.setValueByPath(
-      toObject,
-      ['response'],
-      generateVideosResponseFromMldev(fromResponse),
-    );
-  }
-
-  return toObject;
-}
-
-export function videoFromVertex(
-  fromObject: types.Video,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromUri = common.getValueByPath(fromObject, ['gcsUri']);
-  if (fromUri != null) {
-    common.setValueByPath(toObject, ['uri'], fromUri);
-  }
-
-  const fromVideoBytes = common.getValueByPath(fromObject, [
-    'bytesBase64Encoded',
-  ]);
-  if (fromVideoBytes != null) {
-    common.setValueByPath(toObject, ['videoBytes'], t.tBytes(fromVideoBytes));
-  }
-
-  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
-  if (fromMimeType != null) {
-    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
-  }
-
-  return toObject;
-}
-
-export function generatedVideoFromVertex(
-  fromObject: types.GeneratedVideo,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromVideo = common.getValueByPath(fromObject, ['_self']);
-  if (fromVideo != null) {
-    common.setValueByPath(toObject, ['video'], videoFromVertex(fromVideo));
-  }
-
-  return toObject;
-}
-
 export function generateVideosResponseFromVertex(
   fromObject: types.GenerateVideosResponse,
 ): Record<string, unknown> {
@@ -304,38 +211,116 @@ export function generateVideosResponseFromVertex(
   return toObject;
 }
 
-export function generateVideosOperationFromVertex(
-  fromObject: types.GenerateVideosOperation,
+export function generatedVideoFromMldev(
+  fromObject: types.GeneratedVideo,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName != null) {
-    common.setValueByPath(toObject, ['name'], fromName);
+  const fromVideo = common.getValueByPath(fromObject, ['_self']);
+  if (fromVideo != null) {
+    common.setValueByPath(toObject, ['video'], videoFromMldev(fromVideo));
   }
 
-  const fromMetadata = common.getValueByPath(fromObject, ['metadata']);
-  if (fromMetadata != null) {
-    common.setValueByPath(toObject, ['metadata'], fromMetadata);
+  return toObject;
+}
+
+export function generatedVideoFromVertex(
+  fromObject: types.GeneratedVideo,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromVideo = common.getValueByPath(fromObject, ['_self']);
+  if (fromVideo != null) {
+    common.setValueByPath(toObject, ['video'], videoFromVertex(fromVideo));
   }
 
-  const fromDone = common.getValueByPath(fromObject, ['done']);
-  if (fromDone != null) {
-    common.setValueByPath(toObject, ['done'], fromDone);
-  }
+  return toObject;
+}
 
-  const fromError = common.getValueByPath(fromObject, ['error']);
-  if (fromError != null) {
-    common.setValueByPath(toObject, ['error'], fromError);
-  }
+export function getOperationParametersToMldev(
+  fromObject: types.GetOperationParameters,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
-  const fromResponse = common.getValueByPath(fromObject, ['response']);
-  if (fromResponse != null) {
+  const fromOperationName = common.getValueByPath(fromObject, [
+    'operationName',
+  ]);
+  if (fromOperationName != null) {
     common.setValueByPath(
       toObject,
-      ['response'],
-      generateVideosResponseFromVertex(fromResponse),
+      ['_url', 'operationName'],
+      fromOperationName,
     );
+  }
+
+  return toObject;
+}
+
+export function getOperationParametersToVertex(
+  fromObject: types.GetOperationParameters,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromOperationName = common.getValueByPath(fromObject, [
+    'operationName',
+  ]);
+  if (fromOperationName != null) {
+    common.setValueByPath(
+      toObject,
+      ['_url', 'operationName'],
+      fromOperationName,
+    );
+  }
+
+  return toObject;
+}
+
+export function videoFromMldev(
+  fromObject: types.Video,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromUri = common.getValueByPath(fromObject, ['video', 'uri']);
+  if (fromUri != null) {
+    common.setValueByPath(toObject, ['uri'], fromUri);
+  }
+
+  const fromVideoBytes = common.getValueByPath(fromObject, [
+    'video',
+    'encodedVideo',
+  ]);
+  if (fromVideoBytes != null) {
+    common.setValueByPath(toObject, ['videoBytes'], t.tBytes(fromVideoBytes));
+  }
+
+  const fromMimeType = common.getValueByPath(fromObject, ['encoding']);
+  if (fromMimeType != null) {
+    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+  }
+
+  return toObject;
+}
+
+export function videoFromVertex(
+  fromObject: types.Video,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromUri = common.getValueByPath(fromObject, ['gcsUri']);
+  if (fromUri != null) {
+    common.setValueByPath(toObject, ['uri'], fromUri);
+  }
+
+  const fromVideoBytes = common.getValueByPath(fromObject, [
+    'bytesBase64Encoded',
+  ]);
+  if (fromVideoBytes != null) {
+    common.setValueByPath(toObject, ['videoBytes'], t.tBytes(fromVideoBytes));
+  }
+
+  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+  if (fromMimeType != null) {
+    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
   }
 
   return toObject;
