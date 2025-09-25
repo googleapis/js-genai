@@ -1,6 +1,6 @@
 {
   "name": "@google/genai",
-  "version": "1.20.0",
+  "version": "1.21.0",
   "description": "",
   "type": "module",
   "main": "dist/node/index.mjs",

@@ -1,6 +1,25 @@
 # Changelog
 
 
+## [1.21.0](https://github.com/googleapis/js-genai/compare/v1.20.0...v1.21.0) (2025-09-25)
+
+
+### Features
+
+* Add FunctionResponsePart & ToolComputerUse.excludedPredefinedFunctions ([61620f6](https://github.com/googleapis/js-genai/commit/61620f64cc8ca6997e958bda6f61ed52faff71c8))
+* Add FunctionResponsePart & ToolComputerUse.excludedPredefinedFunctions ([b2cff7e](https://github.com/googleapis/js-genai/commit/b2cff7e1a167cbd5a5785914178c2c4ae16372b1))
+* Add FunctionResponsePart & ToolComputerUse.excludedPredefinedFunctions ([dc64d96](https://github.com/googleapis/js-genai/commit/dc64d962edea885066d32b215b03558f6e3c284b))
+* Add FunctionResponsePart & ToolComputerUse.excludedPredefinedFunctions ([e0a1bf5](https://github.com/googleapis/js-genai/commit/e0a1bf5231ae35eb3cb34ffecc454871d42fef09))
+* Add FunctionResponsePart & ToolComputerUse.excludedPredefinedFunctions ([601b73a](https://github.com/googleapis/js-genai/commit/601b73ae9a755c8be41f6482c10496261abd1e29))
+* Support Imagen 4 Ingredients on Vertex ([56cccfc](https://github.com/googleapis/js-genai/commit/56cccfca02b668ed3bfacc7e757eb821e827e35b))
+
+
+### Bug Fixes
+
+* [#963](https://github.com/googleapis/js-genai/issues/963) allow leading whitespace before data chunks ([24f4153](https://github.com/googleapis/js-genai/commit/24f4153ea652709e4093dd4f543c2fbebd693dc2))
+* Expose `JOB_STATE_RUNNING` and `JOB_STATE_EXPIRED` for Gemini Batches states ([b513c69](https://github.com/googleapis/js-genai/commit/b513c69d2102b94733d2e436d8d1b8a47dd1bbf4))
+* initialization of `pre_tuned_model_checkpoint_id` from tuning config. ([2e10e7f](https://github.com/googleapis/js-genai/commit/2e10e7f8d666fb8f0f332834266d9fd0a5d13c34))
+
 ## [1.20.0](https://github.com/googleapis/js-genai/compare/v1.19.0...v1.20.0) (2025-09-16)
 
 
