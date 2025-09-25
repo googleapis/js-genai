@@ -7,10 +7,6 @@
 ### Features
 
 * Add FunctionResponsePart & ToolComputerUse.excludedPredefinedFunctions ([61620f6](https://github.com/googleapis/js-genai/commit/61620f64cc8ca6997e958bda6f61ed52faff71c8))
-* Add FunctionResponsePart & ToolComputerUse.excludedPredefinedFunctions ([b2cff7e](https://github.com/googleapis/js-genai/commit/b2cff7e1a167cbd5a5785914178c2c4ae16372b1))
-* Add FunctionResponsePart & ToolComputerUse.excludedPredefinedFunctions ([dc64d96](https://github.com/googleapis/js-genai/commit/dc64d962edea885066d32b215b03558f6e3c284b))
-* Add FunctionResponsePart & ToolComputerUse.excludedPredefinedFunctions ([e0a1bf5](https://github.com/googleapis/js-genai/commit/e0a1bf5231ae35eb3cb34ffecc454871d42fef09))
-* Add FunctionResponsePart & ToolComputerUse.excludedPredefinedFunctions ([601b73a](https://github.com/googleapis/js-genai/commit/601b73ae9a755c8be41f6482c10496261abd1e29))
 * Support Imagen 4 Ingredients on Vertex ([56cccfc](https://github.com/googleapis/js-genai/commit/56cccfca02b668ed3bfacc7e757eb821e827e35b))
 
 
