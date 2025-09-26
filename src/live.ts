@@ -15,10 +15,7 @@ import {Auth} from './_auth.js';
 import * as t from './_transformers.js';
 import {WebSocket, WebSocketCallbacks, WebSocketFactory} from './_websocket.js';
 import * as converters from './converters/_live_converters.js';
-import {
-  contentToMldev,
-  contentToVertex,
-} from './converters/_models_converters.js';
+import {contentToMldev} from './converters/_models_converters.js';
 import {hasMcpToolUsage, setMcpUsageHeader} from './mcp/_mcp.js';
 import {LiveMusic} from './music.js';
 import * as types from './types.js';
@@ -60,7 +57,7 @@ async function handleWebSocketMessage(
     const resp = converters.liveServerMessageFromVertex(data);
     Object.assign(serverMessage, resp);
   } else {
-    const resp = converters.liveServerMessageFromMldev(data);
+    const resp = data;
     Object.assign(serverMessage, resp);
   }
 
@@ -313,9 +310,7 @@ export class Session {
       let contents: types.Content[] = [];
       try {
         contents = t.tContents(params.turns as types.ContentListUnion);
-        if (apiClient.isVertexAI()) {
-          contents = contents.map((item) => contentToVertex(item));
-        } else {
+        if (!apiClient.isVertexAI()) {
           contents = contents.map((item) => contentToMldev(item));
         }
       } catch {
