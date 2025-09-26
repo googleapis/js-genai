@@ -40,9 +40,8 @@ export declare interface EditImageParametersInternal {
 
 /** Internal API config for UpscaleImage.
 
-  These fields require default values sent to the API which are not intended
-  to be modifiable or exposed to users in the SDK method.
-   */
+These fields require default values sent to the API which are not intended
+to be modifiable or exposed to users in the SDK method. */
 export declare interface UpscaleImageAPIConfigInternal {
   /** Used to override HTTP request options. */
   httpOptions?: types.HttpOptions;
