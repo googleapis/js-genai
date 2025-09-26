@@ -296,9 +296,7 @@ export class Tokens extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.AuthToken>;
 
-      return response.then((apiResponse) => {
-        const resp = converters.authTokenFromMldev(apiResponse);
-
+      return response.then((resp) => {
         return resp as types.AuthToken;
       });
     }
