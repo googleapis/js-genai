@@ -457,34 +457,6 @@ export function listTuningJobsResponseFromVertex(
   return toObject;
 }
 
-export function tunedModelCheckpointFromVertex(
-  fromObject: types.TunedModelCheckpoint,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromCheckpointId = common.getValueByPath(fromObject, ['checkpointId']);
-  if (fromCheckpointId != null) {
-    common.setValueByPath(toObject, ['checkpointId'], fromCheckpointId);
-  }
-
-  const fromEpoch = common.getValueByPath(fromObject, ['epoch']);
-  if (fromEpoch != null) {
-    common.setValueByPath(toObject, ['epoch'], fromEpoch);
-  }
-
-  const fromStep = common.getValueByPath(fromObject, ['step']);
-  if (fromStep != null) {
-    common.setValueByPath(toObject, ['step'], fromStep);
-  }
-
-  const fromEndpoint = common.getValueByPath(fromObject, ['endpoint']);
-  if (fromEndpoint != null) {
-    common.setValueByPath(toObject, ['endpoint'], fromEndpoint);
-  }
-
-  return toObject;
-}
-
 export function tunedModelFromMldev(
   fromObject: types.TunedModel,
 ): Record<string, unknown> {
@@ -498,35 +470,6 @@ export function tunedModelFromMldev(
   const fromEndpoint = common.getValueByPath(fromObject, ['name']);
   if (fromEndpoint != null) {
     common.setValueByPath(toObject, ['endpoint'], fromEndpoint);
-  }
-
-  return toObject;
-}
-
-export function tunedModelFromVertex(
-  fromObject: types.TunedModel,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromModel = common.getValueByPath(fromObject, ['model']);
-  if (fromModel != null) {
-    common.setValueByPath(toObject, ['model'], fromModel);
-  }
-
-  const fromEndpoint = common.getValueByPath(fromObject, ['endpoint']);
-  if (fromEndpoint != null) {
-    common.setValueByPath(toObject, ['endpoint'], fromEndpoint);
-  }
-
-  const fromCheckpoints = common.getValueByPath(fromObject, ['checkpoints']);
-  if (fromCheckpoints != null) {
-    let transformedList = fromCheckpoints;
-    if (Array.isArray(transformedList)) {
-      transformedList = transformedList.map((item) => {
-        return tunedModelCheckpointFromVertex(item);
-      });
-    }
-    common.setValueByPath(toObject, ['checkpoints'], transformedList);
   }
 
   return toObject;
@@ -554,7 +497,7 @@ export function tuningDatasetToMldev(
     let transformedList = fromExamples;
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return tuningExampleToMldev(item);
+        return item;
       });
     }
     common.setValueByPath(toObject, ['examples', 'examples'], transformedList);
@@ -591,24 +534,6 @@ export function tuningDatasetToVertex(
 
   if (common.getValueByPath(fromObject, ['examples']) !== undefined) {
     throw new Error('examples parameter is not supported in Vertex AI.');
-  }
-
-  return toObject;
-}
-
-export function tuningExampleToMldev(
-  fromObject: types.TuningExample,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromTextInput = common.getValueByPath(fromObject, ['textInput']);
-  if (fromTextInput != null) {
-    common.setValueByPath(toObject, ['textInput'], fromTextInput);
-  }
-
-  const fromOutput = common.getValueByPath(fromObject, ['output']);
-  if (fromOutput != null) {
-    common.setValueByPath(toObject, ['output'], fromOutput);
   }
 
   return toObject;
@@ -788,11 +713,7 @@ export function tuningJobFromVertex(
 
   const fromTunedModel = common.getValueByPath(fromObject, ['tunedModel']);
   if (fromTunedModel != null) {
-    common.setValueByPath(
-      toObject,
-      ['tunedModel'],
-      tunedModelFromVertex(fromTunedModel),
-    );
+    common.setValueByPath(toObject, ['tunedModel'], fromTunedModel);
   }
 
   const fromPreTunedModel = common.getValueByPath(fromObject, [
