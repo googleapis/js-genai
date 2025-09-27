@@ -53,12 +53,31 @@ export function hasCallableTools(
   return params.config?.tools?.some((tool) => isCallableTool(tool)) ?? false;
 }
 
-// Checks whether the list of tools contains any non-callable tools. Will return
-// true if there is at least one non-Callable tool.
-export function hasNonCallableTools(
-  params: types.GenerateContentParameters,
-): boolean {
-  return params.config?.tools?.some((tool) => !isCallableTool(tool)) ?? false;
+/**
+ * Returns the indexes of the tools that are not compatible with AFC.
+ */
+export function findAfcIncompatibleToolIndexes(
+  params?: types.GenerateContentParameters,
+): number[] {
+  // Use number[] for an array of numbers in TypeScript
+  const afcIncompatibleToolIndexes: number[] = [];
+  if (!params?.config?.tools) {
+    return afcIncompatibleToolIndexes;
+  }
+  params.config.tools.forEach((tool, index) => {
+    if (isCallableTool(tool)) {
+      return;
+    }
+    const geminiTool = tool as types.Tool;
+    if (
+      geminiTool.functionDeclarations &&
+      geminiTool.functionDeclarations.length > 0
+    ) {
+      afcIncompatibleToolIndexes.push(index);
+    }
+  });
+
+  return afcIncompatibleToolIndexes;
 }
 
 /**
