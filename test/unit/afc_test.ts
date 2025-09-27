@@ -3,7 +3,11 @@
  * Copyright 2025 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
-import {shouldAppendAfcHistory, shouldDisableAfc} from '../../src/_afc.js';
+import {
+  findAfcIncompatibleToolIndexes,
+  shouldAppendAfcHistory,
+  shouldDisableAfc,
+} from '../../src/_afc.js';
 import * as types from '../../src/types.js';
 
 const callableTool: types.CallableTool = {
@@ -153,5 +157,191 @@ describe('afc_test', () => {
       },
     };
     expect(shouldAppendAfcHistory(config)).toBeFalse();
+  });
+});
+
+describe('findAfcIncompatibleToolIndexes', () => {
+  it('should return empty list when there is no config', () => {
+    expect(findAfcIncompatibleToolIndexes(undefined)).toEqual([]);
+  });
+  it('should return empty list when there is no tools', () => {
+    const params: types.GenerateContentParameters = {
+      model: 'gemini-2.0-flash',
+      contents: 'why is the sky blue?',
+      config: {},
+    };
+    expect(findAfcIncompatibleToolIndexes(params)).toEqual([]);
+  });
+  it('should return empty list when there are no function declarations', () => {
+    const params: types.GenerateContentParameters = {
+      model: 'gemini-2.0-flash',
+      contents: 'why is the sky blue?',
+      config: {
+        tools: [{} as types.Tool],
+      },
+    };
+    expect(findAfcIncompatibleToolIndexes(params)).toEqual([]);
+  });
+  it('should return empty list when there are no function declarations', () => {
+    const params: types.GenerateContentParameters = {
+      model: 'gemini-2.0-flash',
+      contents: 'why is the sky blue?',
+      config: {
+        tools: [{functionDeclarations: []} as types.Tool],
+      },
+    };
+    expect(findAfcIncompatibleToolIndexes(params)).toEqual([]);
+  });
+  it('should return empty list when there function declarations is undefined', () => {
+    const params: types.GenerateContentParameters = {
+      model: 'gemini-2.0-flash',
+      contents: 'why is the sky blue?',
+      config: {
+        tools: [{functionDeclarations: undefined} as types.Tool],
+      },
+    };
+    expect(findAfcIncompatibleToolIndexes(params)).toEqual([]);
+  });
+  it('should return empty list when there are no incompatible tools', () => {
+    const params: types.GenerateContentParameters = {
+      model: 'gemini-2.0-flash',
+      contents: 'why is the sky blue?',
+      config: {
+        tools: [
+          callableTool,
+          {
+            retrieval: {
+              disableAttribution: true,
+            },
+          },
+          {
+            googleSearch: {},
+          },
+          {
+            googleSearchRetrieval: {},
+          },
+          {
+            enterpriseWebSearch: {},
+          },
+          {
+            googleMaps: {},
+          },
+          {
+            urlContext: {},
+          },
+          {
+            computerUse: {},
+          },
+          {
+            codeExecution: {},
+          },
+        ],
+      },
+    };
+    expect(findAfcIncompatibleToolIndexes(params)).toEqual([]);
+  });
+  it('should return correct indexes when there are incompatible tools', () => {
+    const params: types.GenerateContentParameters = {
+      model: 'gemini-2.0-flash',
+      contents: 'why is the sky blue?',
+      config: {
+        tools: [
+          callableTool,
+          {
+            retrieval: {
+              disableAttribution: true,
+            },
+          },
+          {
+            googleSearch: {},
+          },
+          {
+            googleSearchRetrieval: {},
+          },
+          {
+            functionDeclarations: [
+              {
+                name: 'test_function_1',
+              },
+            ],
+          },
+          {
+            enterpriseWebSearch: {},
+          },
+          {
+            googleMaps: {},
+          },
+          {
+            urlContext: {},
+          },
+          {
+            computerUse: {},
+          },
+          {
+            codeExecution: {},
+          },
+        ],
+      },
+    };
+    expect(findAfcIncompatibleToolIndexes(params)).toEqual([4]);
+  });
+  it('should return correct indexes when there are incompatible tools', () => {
+    const params: types.GenerateContentParameters = {
+      model: 'gemini-2.0-flash',
+      contents: 'why is the sky blue?',
+      config: {
+        tools: [
+          callableTool,
+          {
+            retrieval: {
+              disableAttribution: true,
+            },
+          },
+          {
+            googleSearch: {},
+          },
+          {
+            googleSearchRetrieval: {},
+          },
+          {
+            functionDeclarations: [
+              {
+                name: 'test_function_1',
+              },
+            ],
+          },
+          {
+            enterpriseWebSearch: {},
+          },
+          {
+            googleMaps: {},
+          },
+          {
+            urlContext: {},
+          },
+          {
+            computerUse: {},
+          },
+          {
+            codeExecution: {},
+          },
+          {
+            functionDeclarations: [
+              {
+                name: 'test_function_2',
+              },
+            ],
+          },
+          {
+            functionDeclarations: [
+              {
+                name: 'test_function_3',
+              },
+            ],
+          },
+        ],
+      },
+    };
+    expect(findAfcIncompatibleToolIndexes(params)).toEqual([4, 10, 11]);
   });
 });
