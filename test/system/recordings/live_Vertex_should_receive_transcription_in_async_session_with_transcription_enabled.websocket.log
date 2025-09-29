@@ -1,5 +1,5 @@
 >202 {"setup":{"model":"projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash-live-preview-04-09","generationConfig":{"responseModalities":["AUDIO"]},"outputAudioTranscription":{}}}
->120 {"clientContent":{"turns":[{"parts":[{"text":"Hello what should we talk about?"}],"role":"user"}],"turnComplete":true}}
+>120 {"clientContent":{"turns":[{"role":"user","parts":[{"text":"Hello what should we talk about?"}]}],"turnComplete":true}}
 <86 {
   "setupComplete": {
     "sessionId": "01f92a6e-997c-4ec6-8cb7-988de6a86469"
