@@ -68,6 +68,18 @@ describe('mcpToolsToGeminiTool', () => {
         },
       },
     },
+    outputSchema: {
+      type: 'object',
+      properties: {
+        property: {
+          type: 'object',
+          items: {
+            type: 'string',
+            description: 'item-description-output',
+          },
+        },
+      },
+    },
   };
   const mcpTool2: McpTool = {
     name: 'tool-2',
@@ -80,6 +92,18 @@ describe('mcpToolsToGeminiTool', () => {
           items: {
             type: 'string',
             description: 'item-description',
+          },
+        },
+      },
+    },
+    outputSchema: {
+      type: 'object',
+      properties: {
+        property: {
+          type: 'object',
+          items: {
+            type: 'string',
+            description: 'item-description-output',
           },
         },
       },
@@ -110,6 +134,18 @@ describe('mcpToolsToGeminiTool', () => {
               },
             },
           },
+          responseJsonSchema: {
+            type: 'object',
+            properties: {
+              property: {
+                type: 'object',
+                items: {
+                  type: 'string',
+                  description: 'item-description-output',
+                },
+              },
+            },
+          },
         },
         {
           name: 'tool-2',
@@ -122,6 +158,18 @@ describe('mcpToolsToGeminiTool', () => {
                 items: {
                   type: 'string',
                   description: 'item-description',
+                },
+              },
+            },
+          },
+          responseJsonSchema: {
+            type: 'object',
+            properties: {
+              property: {
+                type: 'object',
+                items: {
+                  type: 'string',
+                  description: 'item-description-output',
                 },
               },
             },
@@ -155,6 +203,18 @@ describe('mcpToolsToGeminiTool', () => {
               },
             },
           },
+          responseJsonSchema: {
+            type: 'object',
+            properties: {
+              property: {
+                type: 'object',
+                items: {
+                  type: 'string',
+                  description: 'item-description-output',
+                },
+              },
+            },
+          },
           behavior: types.Behavior.NON_BLOCKING,
         },
         {
@@ -168,6 +228,18 @@ describe('mcpToolsToGeminiTool', () => {
                 items: {
                   type: 'string',
                   description: 'item-description',
+                },
+              },
+            },
+          },
+          responseJsonSchema: {
+            type: 'object',
+            properties: {
+              property: {
+                type: 'object',
+                items: {
+                  type: 'string',
+                  description: 'item-description-output',
                 },
               },
             },
@@ -203,6 +275,18 @@ describe('hasMcpToolUsage', () => {
                   items: {
                     type: 'string',
                     description: 'item-description',
+                  },
+                },
+              },
+            },
+            responseJsonSchema: {
+              type: 'object',
+              properties: {
+                property: {
+                  type: 'object',
+                  items: {
+                    type: 'string',
+                    description: 'item-description-output',
                   },
                 },
               },

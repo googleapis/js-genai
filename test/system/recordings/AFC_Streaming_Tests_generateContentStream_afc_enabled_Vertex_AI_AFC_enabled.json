@@ -1,0 +1,312 @@
+{
+  "recordID": "AFC_Streaming_Tests_generateContentStream_afc_enabled_Vertex_AI_AFC_enabled",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash:streamGenerateContent?alt=sse",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash:streamGenerateContent?alt=sse HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "393",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "AFC Streaming Tests generateContentStream afc enabled Vertex AI AFC enabled"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "Divide 10 by 2 using the customDivide function"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {},
+            "toolConfig": {
+              "functionCallingConfig": {
+                "mode": "AUTO"
+              }
+            },
+            "tools": [
+              {
+                "functionDeclarations": [
+                  {
+                    "description": "Custom divide function",
+                    "name": "customDivide",
+                    "parametersJsonSchema": {
+                      "properties": {
+                        "denominator": {
+                          "type": "number"
+                        },
+                        "numerator": {
+                          "type": "number"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "us-central1-aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "77bf9feb145e3b192ede6bf2a7281ea833984d2c894c45052bcd56dbd6ea7971",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Disposition": "attachment",
+          "Content-Type": "text/event-stream",
+          "Date": "Sat, 16 Aug 2025 00:44:26 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "args": {
+                          "denominator": 2,
+                          "numerator": 10
+                        },
+                        "name": "customDivide"
+                      }
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP"
+              }
+            ],
+            "createTime": "2025-08-16T00:44:26.459936Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "atSfaKCJHKOrmecPu6_k0Qs",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 131
+              },
+              "candidatesTokenCount": 6,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 6
+                }
+              ],
+              "promptTokenCount": 17,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 17
+                }
+              ],
+              "totalTokenCount": 23,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash:streamGenerateContent?alt=sse",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash:streamGenerateContent?alt=sse HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "597",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "AFC Streaming Tests generateContentStream afc enabled Vertex AI AFC enabled"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "Divide 10 by 2 using the customDivide function"
+                  }
+                ],
+                "role": "user"
+              },
+              {
+                "parts": [
+                  {
+                    "functionCall": {
+                      "args": {
+                        "denominator": 2,
+                        "numerator": 10
+                      },
+                      "name": "customDivide"
+                    }
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "functionResponse": {
+                      "name": "customDivide",
+                      "response": {
+                        "output": 42
+                      }
+                    }
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {},
+            "toolConfig": {
+              "functionCallingConfig": {
+                "mode": "AUTO"
+              }
+            },
+            "tools": [
+              {
+                "functionDeclarations": [
+                  {
+                    "description": "Custom divide function",
+                    "name": "customDivide",
+                    "parametersJsonSchema": {
+                      "properties": {
+                        "denominator": {
+                          "type": "number"
+                        },
+                        "numerator": {
+                          "type": "number"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "previousRequest": "77bf9feb145e3b192ede6bf2a7281ea833984d2c894c45052bcd56dbd6ea7971",
+        "serverAddress": "us-central1-aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "b33db0831fabdaf56fe26f40e96de83dd31bf89d44c3c04af0b06d4b1a8c6e28",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Disposition": "attachment",
+          "Content-Type": "text/event-stream",
+          "Date": "Sat, 16 Aug 2025 00:44:27 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "I"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-08-16T00:44:26.891837Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "atSfaL23NoqTmecP7tramAk",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 203
+              },
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " cannot provide the correct response. The output of the function is not the division of"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-08-16T00:44:26.891837Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "atSfaL23NoqTmecP7tramAk",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " the numerator by the denominator.\n"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP"
+              }
+            ],
+            "createTime": "2025-08-16T00:44:26.891837Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "atSfaL23NoqTmecP7tramAk",
+            "usageMetadata": {
+              "candidatesTokenCount": 24,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 24
+                }
+              ],
+              "promptTokenCount": 27,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 27
+                }
+              ],
+              "totalTokenCount": 51,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

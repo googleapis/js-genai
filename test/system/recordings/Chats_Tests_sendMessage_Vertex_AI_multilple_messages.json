@@ -1,0 +1,209 @@
+{
+  "recordID": "Chats_Tests_sendMessage_Vertex_AI_multilple_messages",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash:generateContent",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash:generateContent HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "103",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Chats Tests sendMessage Vertex AI multilple messages"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "Tell me a story in 100 words?"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {}
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "us-central1-aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "7c1f1fabd59e2d38da23009723b707f1dc706fcedd199d26307186528e209aa3",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Encoding": "gzip",
+          "Content-Length": "754",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sat, 16 Aug 2025 00:45:48 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "avgLogprobs": -0.7302371433803013,
+                "content": {
+                  "parts": [
+                    {
+                      "text": "The old lighthouse keeper, Silas, squinted at the storm. For fifty years, he'd weathered countless tempests, but this one felt different, angry. Then, the foghorn sputtered and died. Panic seized him. He tried everything, his seasoned hands trembling. The generator was dead. He grabbed his lantern, its beam a feeble defiance against the raging sea. He climbed the spiral staircase, his old knees protesting, reaching the lamp room. There, he swung the lantern, a desperate plea against the storm, a fragile beacon of hope in the unforgiving night. A distant ship's horn answered.\n"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "score": -92.00988006591797
+              }
+            ],
+            "createTime": "2025-08-16T00:45:47.434113Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "u9SfaMG_GqyWmecPoa-TkQM",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 23
+              },
+              "candidatesTokenCount": 126,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 126
+                }
+              ],
+              "promptTokenCount": 11,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 11
+                }
+              ],
+              "totalTokenCount": 137,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash:generateContent",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash:generateContent HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "794",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Chats Tests sendMessage Vertex AI multilple messages"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "Tell me a story in 100 words?"
+                  }
+                ],
+                "role": "user"
+              },
+              {
+                "parts": [
+                  {
+                    "text": "The old lighthouse keeper, Silas, squinted at the storm. For fifty years, he'd weathered countless tempests, but this one felt different, angry. Then, the foghorn sputtered and died. Panic seized him. He tried everything, his seasoned hands trembling. The generator was dead. He grabbed his lantern, its beam a feeble defiance against the raging sea. He climbed the spiral staircase, his old knees protesting, reaching the lamp room. There, he swung the lantern, a desperate plea against the storm, a fragile beacon of hope in the unforgiving night. A distant ship's horn answered.\n"
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "text": "What is the title of the story?"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {}
+          }
+        ],
+        "previousRequest": "7c1f1fabd59e2d38da23009723b707f1dc706fcedd199d26307186528e209aa3",
+        "serverAddress": "us-central1-aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "e673623ff41c7322aee3c844ef742970c2227031747da16799c4bc8c702b2576",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Encoding": "gzip",
+          "Content-Length": "492",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sat, 16 Aug 2025 00:45:48 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "avgLogprobs": -0.48142658869425453,
+                "content": {
+                  "parts": [
+                    {
+                      "text": "The story doesn't have a title, but a fitting title could be \"Silas's Lantern\" or \"Beacon in the Storm\".\n"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "score": -14.442797660827637
+              }
+            ],
+            "createTime": "2025-08-16T00:45:48.466051Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "vNSfaIO5HIqTmecP7tramAk",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 537
+              },
+              "candidatesTokenCount": 30,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 30
+                }
+              ],
+              "promptTokenCount": 145,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 145
+                }
+              ],
+              "totalTokenCount": 175,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

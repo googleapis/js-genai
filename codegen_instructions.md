@@ -28,7 +28,11 @@ If you'd like to reduce context window consumption, you can experiment with
 removing sections on this file. You can let us know how it works at our
 [community forums](https://discuss.ai.google.dev/c/gemini-api).
 
-Note: These instructions are for the [Gemini API](https://ai.google.dev/gemini-api/docs). Vertex AI developers should note that while the APIs are similar, there may be minor differences, and the [official Vertex AI documentation](https://cloud.google.com/vertex-ai/docs) should be used for definitive guidance
+Note: These instructions are for the [Gemini
+API](https://ai.google.dev/gemini-api/docs). Vertex AI developers should note
+that while the APIs are similar, there may be minor differences, and the
+[official Vertex AI documentation](https://cloud.google.com/vertex-ai/docs)
+should be used for definitive guidance
 
 ## Contributions
 
@@ -103,7 +107,7 @@ API calls.
 import { GoogleGenAI } from '@google/genai';
 
 // Uses the GEMINI_API_KEY environment variable if apiKey not specified
-const ai = new GoogleGenAI({}); 
+const ai = new GoogleGenAI({});
 
 // Or pass the API key directly
 // const ai = new GoogleGenAI({apiKey: process.env.GEMINI_API_KEY});
@@ -111,11 +115,14 @@ const ai = new GoogleGenAI({});
 
 ## Models
 
--   By default, use the following models when using `@google/genai`:
+-   By default, use the following models when using `google-genai`:
     -   **General Text & Multimodal Tasks:** `gemini-2.5-flash`
     -   **Coding and Complex Reasoning Tasks:** `gemini-2.5-pro`
-    -   **Image Generation Tasks:** `imagen-3.0-generate-002`
-    -   **Video Generation Tasks:** `veo-2.0-generate-001`
+    -   **Image Generation Tasks:** `imagen-4.0-fast-generate-001`,
+        `imagen-4.0-generate-001` or `imagen-4.0-ultra-generate-001`
+    -   **Image Editing Tasks:** `gemini-2.5-flash-image-preview`
+    -   **Video Generation Tasks:** `veo-3.0-fast-generate-preview` or
+        `veo-3.0-generate-preview`.
 
 -   It is also acceptable to use the following model if explicitly requested by
     the user:
@@ -156,7 +163,7 @@ import * as fs from 'fs';
 
 const ai = new GoogleGenAI({});
 
-// Converts local file information to a Part object.  
+// Converts local file information to a Part object.
 function fileToGenerativePart(path, mimeType): Part {
   return {
     inlineData: {
@@ -179,7 +186,9 @@ async function run() {
 
 run();
 ```
-You can use this approach to pass a variety of data types (images, audio, video, pdf). For PDF, use `application/pdf` as `mimeType`.
+
+You can use this approach to pass a variety of data types (images, audio, video,
+pdf). For PDF, use `application/pdf` as `mimeType`.
 
 For larger files, use `ai.files.upload`:
 
@@ -373,8 +382,7 @@ async function run() {
     }
 }
 run();
-```
-It is also possible to use streaming with Chat:
+``` It is also possible to use streaming with Chat:
 
 ```javascript
     const chat = ai.chats.create({model: "gemini-2.5-flash"});
@@ -385,8 +393,8 @@ It is also possible to use streaming with Chat:
     }
 ```
 
-Note: ai.chats.create({model}) returns `Chat` under `@google/genai` which tracks the session. 
-
+Note: ai.chats.create({model}) returns `Chat` under `@google/genai` which tracks
+the session.
 
 ### Structured outputs
 
@@ -394,7 +402,9 @@ Ask the model to return a response in JSON format.
 
 The recommended way is to configure a `responseSchema` for the expected output.
 
-See the available types below that can be used in the `responseSchema`. ```
+See the available types below that can be used in the `responseSchema`.
+
+```javascript
 export enum Type {
   /**
    *   Not specified, should not be used.
@@ -431,7 +441,7 @@ export enum Type {
 }
 ```
 
-Type.OBJECT cannot be empty; it must contain other properties.
+`Type.OBJECT` cannot be empty; it must contain other properties.
 
 ```javascript
 import { GoogleGenAI, Type } from "@google/genai";
@@ -468,7 +478,9 @@ const response = await ai.models.generateContent({
 let jsonStr = response.text.trim();
 ```
 
-The `jsonStr` might look like this: ```
+The `jsonStr` might look like this:
+
+```javascript
 [
   {
     "recipeName": "Chocolate Chip Cookies",
@@ -538,10 +550,10 @@ const ai = new GoogleGenAI({});
 
 async function run() {
     const response = await ai.models.generateImages({
-        model: 'imagen-3.0-generate-002',
+        model: 'imagen-4.0-fast-generate-001',
         prompt: 'A friendly robot holding a red skateboard, minimalist vector art',
         config: {
-          numberOfImages: 1,
+          numberOfImages: 1, // 1 to 4 (always 1 for the ultra model)
           outputMimeType: 'image/jpeg',
           aspectRatio: '1:1', // "1:1", "3:4", "4:3", "9:16", or "16:9"
         },
@@ -557,6 +569,28 @@ run();
 
 Note: Do not include negativePrompts in config, it's not supported.
 
+### Edit Images
+
+Editing images is better done using the Gemini native image generation model.
+Configs are not supported in this model (except modality).
+
+```javascript
+import { GoogleGenAI } from '@google/genai';
+
+const ai = new GoogleGenAI({});
+
+const response = await ai.models.generateContent({
+  model: 'gemini-2.5-flash-image-preview',
+  contents: [imagePart, 'koala eating a nano banana']
+});
+for (const part of response.candidates[0].content.parts) {
+  if (part.inlineData) {
+    const base64ImageBytes: string = part.inlineData.data;
+    const imageUrl = `data:image/png;base64,${base64ImageBytes}`;
+  }
+}
+```
+
 ### Generate Videos
 
 Here's how to generate videos using the Veo models. Usage of Veo can be costly,
@@ -571,7 +605,7 @@ const ai = new GoogleGenAI({});
 
 async function main() {
   let operation = await ai.models.generateVideos({
-    model: "veo-2.0-generate-001",
+    model: "veo-3.0-fast-generate-preview",
     prompt: "Panning wide shot of a calico kitten sleeping in the sunshine",
     config: {
       personGeneration: "dont_allow",
@@ -669,14 +703,15 @@ run();
 ```
 
 ## API Errors
-`ApiError` from `@google/genai` extends from EcmaScript `Error` and has `message`, `name` fields in addition to `status` (HTTP Code). 
+
+`ApiError` from `@google/genai` extends from EcmaScript `Error` and has
+`message`, `name` fields in addition to `status` (HTTP Code).
 
 ## Other APIs
 
 The list of APIs and capabilities above are not comprehensive. If users ask you
 to generate code for a capability not provided above, refer them to
 https://googleapis.github.io/js-genai/.
-
 
 ## Useful Links
 

@@ -987,9 +987,73 @@ describe('generateContent', () => {
       // The significant of the 2nd call is, this call's content contains
       // the tool error result and send it back to the model.
       const actual2ndCall = JSON.parse(allArgs[1][1]?.['body'] as string);
-      const expected2ndCall = JSON.parse(
-        '{"contents":[{"parts":[{"text":"Call the throwing tool."}],"role":"user"},{"parts":[{"functionCall":{"name":"throwError","args":{}}}],"role":"model"},{"parts":[{"functionResponse":{"name":"throwError","response":{"error":{"content":[{"type":"text","text":"Error from throwing tool"}],"isError":true}}}}],"role":"user"}],"tools":[{"functionDeclarations":[{"parametersJsonSchema":{"type":"object"},"name":"throwError"}]}],"toolConfig":{"functionCallingConfig":{"mode":"ANY","allowedFunctionNames":["throwError"]}},"generationConfig":{}}',
-      );
+      const jsonString = `{
+                            "contents": [
+                              {
+                                "parts": [
+                                  {
+                                    "text": "Call the throwing tool."
+                                  }
+                                ],
+                                "role": "user"
+                              },
+                              {
+                                "parts": [
+                                  {
+                                    "functionCall": {
+                                      "name": "throwError",
+                                      "args": {}
+                                    }
+                                  }
+                                ],
+                                "role": "model"
+                              },
+                              {
+                                "parts": [
+                                  {
+                                    "functionResponse": {
+                                      "name": "throwError",
+                                      "response": {
+                                        "error": {
+                                          "content": [
+                                            {
+                                              "type": "text",
+                                              "text": "Error from throwing tool"
+                                            }
+                                          ],
+                                          "isError": true
+                                        }
+                                      }
+                                    }
+                                  }
+                                ],
+                                "role": "user"
+                              }
+                            ],
+                            "tools": [
+                              {
+                                "functionDeclarations": [
+                                  {
+                                    "parametersJsonSchema": {
+                                      "type": "object",
+                                      "properties": {}
+                                    },
+                                    "name": "throwError"
+                                  }
+                                ]
+                              }
+                            ],
+                            "toolConfig": {
+                              "functionCallingConfig": {
+                                "mode": "ANY",
+                                "allowedFunctionNames": [
+                                  "throwError"
+                                ]
+                              }
+                            },
+                            "generationConfig": {}
+                          }`;
+      const expected2ndCall = JSON.parse(jsonString);
       expect(actual2ndCall).toEqual(expected2ndCall);
     });
     it('should not conduct AFC when afc is disabled', async () => {

@@ -6,11 +6,13 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import {fileURLToPath} from 'url';
 
 import {GoogleGenAIOptions} from '../../../src/client.js';
 import {Session} from '../../../src/live.js';
 import {GoogleGenAI} from '../../../src/node/node_client.js';
 import * as types from '../../../src/types.js';
+import {setupTestServer, shutdownTestServer} from '../test_server.js';
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
@@ -19,10 +21,23 @@ const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
 const VERTEX_MODEL = 'gemini-2.0-flash-live-preview-04-09';
 const MLDEV_MODEL = 'gemini-live-2.5-flash-preview';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 function loadFileAsBase64(filename: string): Promise<string> {
   return new Promise((resolve, reject) => {
-    // Construct the full path to the file
-    const filePath = path.join(__dirname, filename);
+    // Construct the full path to the file, the test file is in dist/, while the test asset is in test/
+    const filePath = path.join(
+      __dirname,
+      '..',
+      '..',
+      '..',
+      '..',
+      'test',
+      'system',
+      'node',
+      filename,
+    );
 
     fs.readFile(filePath, (err, data) => {
       if (err) {
@@ -125,9 +140,30 @@ async function make_session_with_queue(
   return session;
 }
 
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 10 * 1000; // 10 seconds
+
 describe('live', () => {
+  let testName: string = '';
+  let httpOptions: types.HttpOptions;
+  beforeAll(async () => {
+    await setupTestServer();
+    jasmine.getEnv().addReporter({
+      specStarted: function (result) {
+        testName = result.fullName;
+      },
+    });
+  });
+
+  afterAll(async () => {
+    await shutdownTestServer();
+  });
+
+  beforeEach(() => {
+    httpOptions = {headers: {'Test-Name': testName}};
+  });
+
   it('ML Dev should initialize from environment variables', async () => {
-    const client = new GoogleGenAI({vertexai: false});
+    const client = new GoogleGenAI({vertexai: false, httpOptions});
     expect(client.live).not.toBeNull();
   });
 
@@ -135,6 +171,7 @@ describe('live', () => {
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
       apiKey: GOOGLE_API_KEY,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
     const session = await make_session_with_queue(client, MLDEV_MODEL);
@@ -159,6 +196,7 @@ describe('live', () => {
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
     const session = await make_session_with_queue(client, VERTEX_MODEL);
@@ -181,6 +219,7 @@ describe('live', () => {
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
       apiKey: GOOGLE_API_KEY,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
     const session = await make_session_with_queue(client, MLDEV_MODEL);
@@ -205,6 +244,7 @@ describe('live', () => {
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
     const session = await make_session_with_queue(client, VERTEX_MODEL);
@@ -228,6 +268,7 @@ describe('live', () => {
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
       apiKey: GOOGLE_API_KEY,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
     const config: types.LiveConnectConfig = {
@@ -261,6 +302,7 @@ describe('live', () => {
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
     const config: types.LiveConnectConfig = {
@@ -292,6 +334,7 @@ describe('live', () => {
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
       apiKey: GOOGLE_API_KEY,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
     const session = await make_session_with_queue(client, MLDEV_MODEL);
@@ -313,6 +356,7 @@ describe('live', () => {
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
     const session = await make_session_with_queue(client, VERTEX_MODEL);
@@ -335,6 +379,7 @@ describe('live', () => {
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
     const session = await make_session_with_queue(
@@ -352,6 +397,7 @@ describe('live', () => {
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
     const session = await make_session_with_queue(client, VERTEX_MODEL);
@@ -365,6 +411,7 @@ describe('live', () => {
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
       apiKey: GOOGLE_API_KEY,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
     const session = await make_session_with_queue(client, MLDEV_MODEL, {
@@ -417,6 +464,7 @@ describe('live', () => {
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
     const session = await make_session_with_queue(client, VERTEX_MODEL, {
@@ -468,6 +516,7 @@ describe('live', () => {
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
       apiKey: GOOGLE_API_KEY,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
     const session = await make_session_with_queue(client, MLDEV_MODEL);
@@ -491,6 +540,7 @@ describe('live', () => {
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
     const session = await make_session_with_queue(client, VERTEX_MODEL);
@@ -517,6 +567,7 @@ describe('live', () => {
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
     const session = await make_session_with_queue(client, VERTEX_MODEL, {
@@ -538,12 +589,13 @@ describe('live', () => {
     session.close();
   });
 
-  it('MLDev should respond to realtime media-audio input', async () => {
-    const audioBase64 = await loadFileAsBase64('hello_are_you_there.wav');
+  it('ML Dev should respond to realtime media-audio input', async () => {
+    const audioBase64 = await loadFileAsBase64('hello_are_you_there.pcm');
 
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
       apiKey: GOOGLE_API_KEY,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
     const session = await make_session_with_queue(client, MLDEV_MODEL, {
@@ -565,11 +617,12 @@ describe('live', () => {
     session.close();
   });
 
-  it('MLDev should reply to realtime audio input', async () => {
-    const audioBase64 = await loadFileAsBase64('hello_are_you_there.wav');
+  it('ML Dev should reply to realtime audio input', async () => {
+    const audioBase64 = await loadFileAsBase64('hello_are_you_there.pcm');
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
       apiKey: GOOGLE_API_KEY,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
     const session = await make_session_with_queue(client, MLDEV_MODEL, {
@@ -591,10 +644,11 @@ describe('live', () => {
     session.close();
   });
 
-  it('MLDev should reply to realtime text input', async () => {
+  it('ML Dev should reply to realtime text input', async () => {
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
       apiKey: GOOGLE_API_KEY,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
     const session = await make_session_with_queue(client, MLDEV_MODEL, {
@@ -613,12 +667,13 @@ describe('live', () => {
     session.close();
   });
 
-  it('MLDev handle activity start and end', async () => {
-    const audioBase64 = await loadFileAsBase64('hello_are_you_there.wav');
+  it('ML Dev handle activity start and end', async () => {
+    const audioBase64 = await loadFileAsBase64('hello_are_you_there.pcm');
 
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
       apiKey: GOOGLE_API_KEY,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
     const session = await make_session_with_queue(client, MLDEV_MODEL, {

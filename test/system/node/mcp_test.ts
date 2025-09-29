@@ -14,6 +14,7 @@ import {GoogleGenAI} from '../../../src/node/node_client.js';
 import {
   FunctionCallingConfigMode,
   FunctionDeclaration,
+  HttpOptions,
   Type,
 } from '../../../src/types.js';
 import {setupTestServer, shutdownTestServer} from '../test_server.js';
@@ -44,12 +45,23 @@ const controlLightFunctionDeclaration: FunctionDeclaration = {
 };
 
 describe('MCP related client Tests', () => {
+  let testName: string = '';
+  let httpOptions: HttpOptions;
   beforeAll(async () => {
     await setupTestServer();
+    jasmine.getEnv().addReporter({
+      specStarted: function (result) {
+        testName = result.fullName;
+      },
+    });
   });
 
   afterAll(async () => {
     await shutdownTestServer();
+  });
+
+  beforeEach(() => {
+    httpOptions = {headers: {'Test-Name': testName}};
   });
 
   describe('generateContent', () => {
@@ -57,15 +69,14 @@ describe('MCP related client Tests', () => {
       const ai = new GoogleGenAI({
         vertexai: false,
         apiKey: GOOGLE_API_KEY,
+        httpOptions,
       });
       const mcpCallableTool = mcpToTool(
         await spinUpPrintingServer(),
         await spinUpBeepingServer(),
       );
-      const consoleLogSpy = spyOn(console, 'log').and.callThrough();
-      const consoleBeepSpy = spyOn(process.stdout, 'write').and.callThrough();
-      await ai.models.generateContent({
-        model: 'gemini-2.0-flash',
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
         contents:
           'Use the printer to print a simple word: hello in blue, and beep with the beeper',
         config: {
@@ -77,14 +88,49 @@ describe('MCP related client Tests', () => {
           },
         },
       });
-      expect(consoleLogSpy).toHaveBeenCalledWith('\x1b[34mhello');
-      expect(consoleBeepSpy).toHaveBeenCalledWith('\u0007');
+      const expectedFunctionResponse = {
+        role: 'user',
+        parts: [
+          {
+            functionResponse: {
+              name: 'print',
+              response: {
+                content: [
+                  {
+                    type: 'text',
+                    text: '\u001b[34mhello\u001b[0m',
+                  },
+                ],
+              },
+            },
+          },
+          {
+            functionResponse: {
+              name: 'beep',
+              response: {
+                content: [
+                  {
+                    type: 'text',
+                    text: 'beep',
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      };
+      expect(response.automaticFunctionCallingHistory![2]).toEqual(
+        expectedFunctionResponse,
+      );
     });
     it('ML Dev test with greeter server (parameter as nullable union type)', async () => {
-      const ai = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+      const ai = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+        httpOptions,
+      });
       const mcpCallableTool = mcpToTool(await greetServer());
-      const consoleLogSpy = spyOn(console, 'log').and.callThrough();
-      await ai.models.generateContent({
+      const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash',
         contents:
           'call the greeter once with name: jone smith, and greeting: Hello',
@@ -100,10 +146,26 @@ describe('MCP related client Tests', () => {
           },
         },
       });
-      expect(consoleLogSpy).toHaveBeenCalledWith(
-        'user give name as a string: ',
-        'jone smith',
-        'Hello',
+      const expectedFunctionResponse = {
+        role: 'user',
+        parts: [
+          {
+            functionResponse: {
+              name: 'greet',
+              response: {
+                content: [
+                  {
+                    type: 'text',
+                    text: 'User give name as a string: Hello jone smith: Hello',
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      };
+      expect(response.automaticFunctionCallingHistory![2]).toEqual(
+        expectedFunctionResponse,
       );
     });
     it('Vertex AI test with greeter server (parameter as nullable union type)', async () => {
@@ -111,10 +173,10 @@ describe('MCP related client Tests', () => {
         vertexai: true,
         project: GOOGLE_CLOUD_PROJECT,
         location: GOOGLE_CLOUD_LOCATION,
+        httpOptions,
       });
       const mcpCallableTool = mcpToTool(await greetServer());
-      const consoleLogSpy = spyOn(console, 'log').and.callThrough();
-      await ai.models.generateContent({
+      const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash',
         contents:
           'call the greeter once with name: jone smith, and greeting: Hello',
@@ -130,25 +192,40 @@ describe('MCP related client Tests', () => {
           },
         },
       });
-      expect(consoleLogSpy).toHaveBeenCalledWith(
-        'user give name as a string: ',
-        'jone smith',
-        'Hello',
+      const expectedFunctionResponse = {
+        role: 'user',
+        parts: [
+          {
+            functionResponse: {
+              name: 'greet',
+              response: {
+                content: [
+                  {
+                    type: 'text',
+                    text: 'User give name as a string: Hello jone smith: Hello',
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      };
+      expect(response.automaticFunctionCallingHistory![2]).toEqual(
+        expectedFunctionResponse,
       );
     });
     it('ML Dev Multiple CallableTool with MCPClients and conduct automated function calling', async () => {
       const ai = new GoogleGenAI({
         vertexai: false,
         apiKey: GOOGLE_API_KEY,
+        httpOptions,
       });
       const callableTool1 = mcpToTool(await spinUpPrintingServer());
       const callableTool2 = mcpToTool(await spinUpBeepingServer());
-      const consoleLogSpy = spyOn(console, 'log').and.callThrough();
-      const consoleBeepSpy = spyOn(process.stdout, 'write').and.callThrough();
-      await ai.models.generateContent({
+      const response = await ai.models.generateContent({
         model: 'gemini-2.0-flash',
         contents:
-          'Use the printer to print a simple word: hello in blue, and beep with the beeper',
+          'Use the printer to print a simple word: hello in blue, and beep with the beeper, make sure you beep',
         config: {
           tools: [callableTool1, callableTool2],
           toolConfig: {
@@ -158,19 +235,51 @@ describe('MCP related client Tests', () => {
           },
         },
       });
-      expect(consoleLogSpy).toHaveBeenCalledWith('\x1b[34mhello');
-      expect(consoleBeepSpy).toHaveBeenCalledWith('\u0007');
+      const expectedFunctionResponse = {
+        role: 'user',
+        parts: [
+          {
+            functionResponse: {
+              name: 'print',
+              response: {
+                content: [
+                  {
+                    type: 'text',
+                    text: '\u001b[34mhello\u001b[0m',
+                  },
+                ],
+              },
+            },
+          },
+          {
+            functionResponse: {
+              name: 'beep',
+              response: {
+                content: [
+                  {
+                    type: 'text',
+                    text: 'beep',
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      };
+      expect(response.automaticFunctionCallingHistory![2]).toEqual(
+        expectedFunctionResponse,
+      );
     });
     it('Vertex AI should take a list of MCPClients and conduct automated function calling', async () => {
       const ai = new GoogleGenAI({
         vertexai: true,
         project: GOOGLE_CLOUD_PROJECT,
         location: GOOGLE_CLOUD_LOCATION,
+        httpOptions,
       });
       const mcpCallableTool = mcpToTool(await spinUpPrintingServer());
-      const consoleLogSpy = spyOn(console, 'log').and.callThrough();
-      await ai.models.generateContent({
-        model: 'gemini-2.0-flash',
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
         contents: 'Use the printer to print a simple word: hello in red',
         config: {
           tools: [mcpCallableTool],
@@ -182,14 +291,341 @@ describe('MCP related client Tests', () => {
           },
         },
       });
-      expect(consoleLogSpy).toHaveBeenCalledWith('\x1b[31mhello');
+      const expectedFunctionResponse = {
+        role: 'user',
+        parts: [
+          {
+            functionResponse: {
+              name: 'print',
+              response: {
+                content: [
+                  {
+                    type: 'text',
+                    text: '\u001b[31mhello\u001b[0m',
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      };
+      expect(response.automaticFunctionCallingHistory![2]).toEqual(
+        expectedFunctionResponse,
+      );
+    });
+    it('ML Dev test with greeter server (structured output) happy path', async () => {
+      const ai = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+        httpOptions,
+      });
+      const mcpCallableTool = mcpToTool(await greetServerStructuredOutput());
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents:
+          'call the greeter once with name: jone smith, and greeting: Hello',
+        config: {
+          tools: [mcpCallableTool],
+          toolConfig: {
+            functionCallingConfig: {
+              mode: FunctionCallingConfigMode.AUTO,
+            },
+          },
+          automaticFunctionCalling: {
+            maximumRemoteCalls: 1,
+          },
+        },
+      });
+      const automaticFunctionCallingHistory =
+        response.automaticFunctionCallingHistory;
+      expect(automaticFunctionCallingHistory!.length).toBe(3);
+      // User message
+      expect(automaticFunctionCallingHistory![0]).toEqual({
+        role: 'user',
+        parts: [
+          {
+            text: 'call the greeter once with name: jone smith, and greeting: Hello',
+          },
+        ],
+      });
+      // Function call from model
+      expect(automaticFunctionCallingHistory![1].role).toEqual('model');
+      expect(
+        automaticFunctionCallingHistory![1].parts![0].functionCall,
+      ).toEqual({
+        name: 'greet',
+        args: {
+          name: 'jone smith',
+          greeting: 'Hello',
+        },
+      });
+      // Function response from user
+      expect(automaticFunctionCallingHistory![2]).toEqual({
+        role: 'user',
+        parts: [
+          {
+            functionResponse: {
+              name: 'greet',
+              response: {
+                content: [
+                  {
+                    type: 'text',
+                    text: 'passed the message: Hello jone smith, some secret person ask me to pass you a message: Hello',
+                  },
+                ],
+                structuredContent: {
+                  name: 'jone smith',
+                  greeting: 'Hello',
+                  completeMessage:
+                    'Hello jone smith, some secret person ask me to pass you a message: Hello',
+                },
+              },
+            },
+          },
+        ],
+      });
+    });
+    it('Vertex AI test with greeter server (structured output) happy path', async () => {
+      const ai = new GoogleGenAI({
+        vertexai: true,
+        project: GOOGLE_CLOUD_PROJECT,
+        location: GOOGLE_CLOUD_LOCATION,
+        httpOptions,
+      });
+      const mcpCallableTool = mcpToTool(await greetServerStructuredOutput());
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents:
+          'call the greeter once with name: jone smith, and greeting: Hello',
+        config: {
+          tools: [mcpCallableTool],
+          toolConfig: {
+            functionCallingConfig: {
+              mode: FunctionCallingConfigMode.AUTO,
+            },
+          },
+          automaticFunctionCalling: {
+            maximumRemoteCalls: 1,
+          },
+        },
+      });
+      const automaticFunctionCallingHistory =
+        response.automaticFunctionCallingHistory;
+      expect(automaticFunctionCallingHistory!.length).toBe(3);
+      // User message
+      expect(automaticFunctionCallingHistory![0]).toEqual({
+        role: 'user',
+        parts: [
+          {
+            text: 'call the greeter once with name: jone smith, and greeting: Hello',
+          },
+        ],
+      });
+      // Function call from model
+      expect(automaticFunctionCallingHistory![1].role).toEqual('model');
+      expect(
+        automaticFunctionCallingHistory![1].parts![0].functionCall,
+      ).toEqual({
+        name: 'greet',
+        args: {
+          name: 'jone smith',
+          greeting: 'Hello',
+        },
+      });
+      // Function response from user
+      expect(automaticFunctionCallingHistory![2]).toEqual({
+        role: 'user',
+        parts: [
+          {
+            functionResponse: {
+              name: 'greet',
+              response: {
+                content: [
+                  {
+                    type: 'text',
+                    text: 'passed the message: Hello jone smith, some secret person ask me to pass you a message: Hello',
+                  },
+                ],
+                structuredContent: {
+                  name: 'jone smith',
+                  greeting: 'Hello',
+                  completeMessage:
+                    'Hello jone smith, some secret person ask me to pass you a message: Hello',
+                },
+              },
+            },
+          },
+        ],
+      });
+    });
+    it('ML Dev test with greeter server (structured output) error thrown by tool', async () => {
+      const ai = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+        httpOptions,
+      });
+      const mcpCallableTool = mcpToTool(await greetServerStructuredOutput());
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents:
+          'call the greeter once with name: jone smith, and greeting: abc',
+        config: {
+          tools: [mcpCallableTool],
+          toolConfig: {
+            functionCallingConfig: {
+              mode: FunctionCallingConfigMode.AUTO,
+            },
+          },
+          automaticFunctionCalling: {
+            maximumRemoteCalls: 1,
+          },
+        },
+      });
+      const automaticFunctionCallingHistory =
+        response.automaticFunctionCallingHistory;
+      expect(automaticFunctionCallingHistory!.length).toBe(3);
+      expect(automaticFunctionCallingHistory![2]).toEqual({
+        role: 'user',
+        parts: [
+          {
+            functionResponse: {
+              name: 'greet',
+              response: {
+                error: {
+                  content: [
+                    {
+                      type: 'text',
+                      text: 'Unsupported greeting: abc',
+                    },
+                  ],
+                  isError: true,
+                },
+              },
+            },
+          },
+        ],
+      });
+    });
+    it('Vertex AI test with greeter server (structured output) error thrown by tool', async () => {
+      const ai = new GoogleGenAI({
+        vertexai: true,
+        project: GOOGLE_CLOUD_PROJECT,
+        location: GOOGLE_CLOUD_LOCATION,
+        httpOptions,
+      });
+      const mcpCallableTool = mcpToTool(await greetServerStructuredOutput());
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents:
+          'call the greeter once with name: jone smith, and greeting: abc',
+        config: {
+          tools: [mcpCallableTool],
+          toolConfig: {
+            functionCallingConfig: {
+              mode: FunctionCallingConfigMode.AUTO,
+            },
+          },
+          automaticFunctionCalling: {
+            maximumRemoteCalls: 1,
+          },
+        },
+      });
+      const automaticFunctionCallingHistory =
+        response.automaticFunctionCallingHistory;
+      expect(automaticFunctionCallingHistory!.length).toBe(3);
+      expect(automaticFunctionCallingHistory![2]).toEqual({
+        role: 'user',
+        parts: [
+          {
+            functionResponse: {
+              name: 'greet',
+              response: {
+                error: {
+                  content: [
+                    {
+                      type: 'text',
+                      text: 'Unsupported greeting: abc',
+                    },
+                  ],
+                  isError: true,
+                },
+              },
+            },
+          },
+        ],
+      });
+    });
+    it('ML Dev test with greeter server (structured output) mcp error', async () => {
+      const ai = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+        httpOptions,
+      });
+      const mcpCallableTool = mcpToTool(await greetServerStructuredOutput());
+      try {
+        await ai.models.generateContent({
+          model: 'gemini-2.5-flash',
+          contents:
+            'call the greeter once with name: jone smith, and greeting: noNeedToPassMessage',
+          config: {
+            tools: [mcpCallableTool],
+            toolConfig: {
+              functionCallingConfig: {
+                mode: FunctionCallingConfigMode.AUTO,
+              },
+            },
+            automaticFunctionCalling: {
+              maximumRemoteCalls: 1,
+            },
+          },
+        });
+      } catch (e) {
+        expect(e).toBeInstanceOf(Error);
+        expect((e as Error).message).toContain(
+          'MCP error -32602: MCP error -32602: Tool greet has an output schema but no structured content was provided',
+        );
+      }
+    });
+    it('Vertex AI test with greeter server (structured output) mcp error', async () => {
+      const ai = new GoogleGenAI({
+        vertexai: true,
+        project: GOOGLE_CLOUD_PROJECT,
+        location: GOOGLE_CLOUD_LOCATION,
+        httpOptions,
+      });
+      const mcpCallableTool = mcpToTool(await greetServerStructuredOutput());
+      try {
+        await ai.models.generateContent({
+          model: 'gemini-2.5-flash',
+          contents:
+            'call the greeter once with name: jone smith, and greeting: noNeedToPassMessage',
+          config: {
+            tools: [mcpCallableTool],
+            toolConfig: {
+              functionCallingConfig: {
+                mode: FunctionCallingConfigMode.AUTO,
+              },
+            },
+            automaticFunctionCalling: {
+              maximumRemoteCalls: 1,
+            },
+          },
+        });
+      } catch (e) {
+        expect(e).toBeInstanceOf(Error);
+        expect((e as Error).message).toContain(
+          'MCP error -32602: MCP error -32602: Tool greet has an output schema but no structured content was provided',
+        );
+      }
     });
     it('ML Dev will give FunctionDeclaration back when AFC is disabled', async () => {
-      const ai = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+      const ai = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+        httpOptions,
+      });
       const callableTool1 = mcpToTool(await spinUpPrintingServer());
       const callableTool2 = mcpToTool(await spinUpBeepingServer());
-      const consoleLogSpy = spyOn(console, 'log').and.callThrough();
-      const consoleBeepSpy = spyOn(process.stdout, 'write').and.callThrough();
       const response = await ai.models.generateContent({
         model: 'gemini-2.0-flash',
         contents:
@@ -220,19 +656,17 @@ describe('MCP related client Tests', () => {
         },
       ];
       expect(response.functionCalls).toEqual(expectedFunctionCalls);
-      expect(consoleLogSpy).not.toHaveBeenCalled();
-      expect(consoleBeepSpy).not.toHaveBeenCalledWith('\u0007');
     });
     it('Vertex AI will give FunctionDeclaration back when AFC is disabled', async () => {
       const ai = new GoogleGenAI({
         vertexai: true,
         project: GOOGLE_CLOUD_PROJECT,
         location: GOOGLE_CLOUD_LOCATION,
+        httpOptions,
       });
       const mcpCallableTool = mcpToTool(await spinUpPrintingServer());
-      const consoleLogSpy = spyOn(console, 'log').and.callThrough();
       const response = await ai.models.generateContent({
-        model: 'gemini-2.0-flash',
+        model: 'gemini-2.5-flash',
         contents: 'Use the printer to print a simple word: hello in blue',
         config: {
           tools: [mcpCallableTool],
@@ -256,10 +690,13 @@ describe('MCP related client Tests', () => {
         },
       ];
       expect(response.functionCalls).toEqual(expectedFunctionCalls);
-      expect(consoleLogSpy).not.toHaveBeenCalled();
     });
     it('ML Dev can take mixed tools when AFC is disabled', async () => {
-      const ai = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+      const ai = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+        httpOptions,
+      });
       const callableTool1 = mcpToTool(await spinUpPrintingServer());
       const callableTool2 = mcpToTool(await spinUpBeepingServer());
       const consoleLogSpy = spyOn(console, 'log').and.callThrough();
@@ -313,9 +750,10 @@ describe('MCP related client Tests', () => {
         vertexai: true,
         project: GOOGLE_CLOUD_PROJECT,
         location: GOOGLE_CLOUD_LOCATION,
+        httpOptions,
       });
       const response = await ai.models.generateContent({
-        model: 'gemini-2.0-flash',
+        model: 'gemini-2.5-flash',
         contents: 'control the light to warm, 50',
         config: {
           tools: [{functionDeclarations: [controlLightFunctionDeclaration]}],
@@ -372,7 +810,12 @@ async function spinUpPrintingServer(): Promise<McpClient> {
       }
 
       return {
-        content: [],
+        content: [
+          {
+            type: 'text',
+            text: colorMap[color] + text + colorMap.reset,
+          },
+        ],
       };
     },
   );
@@ -398,7 +841,12 @@ async function spinUpBeepingServer(): Promise<McpClient> {
   server.tool('beep', async () => {
     process.stdout.write('\u0007');
     return {
-      content: [],
+      content: [
+        {
+          type: 'text',
+          text: 'beep',
+        },
+      ],
     };
   });
 
@@ -407,6 +855,75 @@ async function spinUpBeepingServer(): Promise<McpClient> {
 
   const client = new McpClient({
     name: 'beeper',
+    version: '1.0.0',
+  });
+  client.connect(transports[1]);
+
+  return client;
+}
+
+// This is a MCP server with a tool that have specified the output schema.
+async function greetServerStructuredOutput(): Promise<McpClient> {
+  const server = new McpServer({
+    name: 'greeter',
+    version: '1.0.0',
+  });
+
+  server.registerTool(
+    'greet',
+    {
+      description: 'Greet the user',
+      inputSchema: {
+        name: z.string(),
+        greeting: z.string(),
+      },
+      outputSchema: {
+        name: z.string(),
+        greeting: z.string(),
+        completeMessage: z.string(),
+      },
+    },
+    async ({name, greeting}) => {
+      const notSupportedGreeting: string[] = ['abc', 'cde', 'fgh'];
+      const structuredOutput: Record<string, unknown> = {};
+
+      structuredOutput['name'] = name;
+      if (notSupportedGreeting.includes(greeting)) {
+        throw new Error(`Unsupported greeting: ${greeting}`);
+      }
+      if (greeting === 'noNeedToPassMessage') {
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `Got no need to pass message`,
+            },
+          ],
+        };
+      }
+      structuredOutput['greeting'] = greeting;
+      structuredOutput['completeMessage'] =
+        `Hello ${name}, some secret person ask me to pass you a message: ${
+          greeting
+        }`;
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `passed the message: ${structuredOutput['completeMessage']}`,
+          },
+        ],
+        structuredContent: structuredOutput,
+      };
+    },
+  );
+
+  const transports = InMemoryTransport.createLinkedPair();
+  await server.connect(transports[0]);
+
+  const client = new McpClient({
+    name: 'greeter',
     version: '1.0.0',
   });
   client.connect(transports[1]);
@@ -427,13 +944,19 @@ async function greetServer(): Promise<McpClient> {
       greeting: z.string(),
     },
     async ({name, greeting}) => {
+      let greetMessage = '';
       if (typeof name === 'string') {
-        console.log('user give name as a string: ', name, greeting);
+        greetMessage = `User give name as a string: Hello ${name}: ${greeting}`;
       } else {
-        console.log('user give name as a number', name, greeting);
+        greetMessage = `User give name as a number: Hello ${name}: ${greeting}`;
       }
       return {
-        content: [],
+        content: [
+          {
+            type: 'text',
+            text: greetMessage,
+          },
+        ],
       };
     },
   );

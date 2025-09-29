@@ -40,30 +40,114 @@ export class Batches extends BaseModule {
     params: types.CreateBatchJobParameters,
   ): Promise<types.BatchJob> => {
     if (this.apiClient.isVertexAI()) {
-      const timestamp = Date.now();
-      const timestampStr = timestamp.toString();
-      if (Array.isArray(params.src)) {
-        throw new Error(
-          'InlinedRequest[] is not supported in Vertex AI. Please use ' +
-            'Google Cloud Storage URI or BigQuery URI instead.',
-        );
-      }
-      params.config = params.config || {};
-      if (params.config.displayName === undefined) {
-        params.config.displayName = 'genaiBatchJob_${timestampStr}';
-      }
-      if (params.config.dest === undefined && typeof params.src === 'string') {
-        if (params.src.startsWith('gs://') && params.src.endsWith('.jsonl')) {
-          params.config.dest = `${params.src.slice(0, -6)}/dest`;
-        } else if (params.src.startsWith('bq://')) {
-          params.config.dest =
-            `${params.src}_dest_${timestampStr}` as unknown as string;
-        } else {
-          throw new Error('Unsupported source:' + params.src);
-        }
-      }
+      // Format destination if not provided
+      // Cast params.src as Vertex AI path does not handle InlinedRequest[]
+      params.config = this.formatDestination(
+        params.src as string | types.BatchJobSource,
+        params.config,
+      );
+
+      return this.createInternal(params);
     }
-    return await this.createInternal(params);
+
+    // MLDEV
+    const src = params.src as types.BatchJobSource;
+    const is_inlined =
+      Array.isArray(params.src) || src.inlinedRequests !== undefined;
+
+    if (!is_inlined) {
+      return this.createInternal(params);
+    }
+
+    // Inlined generate content requests handling
+    const result = this.createInlinedGenerateContentRequest(params);
+    const path = result.path;
+    const requestBody = result.body;
+    const queryParams =
+      (converters.createBatchJobParametersToMldev(this.apiClient, params)[
+        '_query'
+      ] as Record<string, string>) || {};
+
+    const response = this.apiClient
+      .request({
+        path: path,
+        queryParams: queryParams,
+        body: JSON.stringify(requestBody),
+        httpMethod: 'POST',
+        httpOptions: params.config?.httpOptions,
+        abortSignal: params.config?.abortSignal,
+      })
+      .then((httpResponse) => {
+        return httpResponse.json();
+      }) as Promise<types.BatchJob>;
+
+    return response.then((apiResponse) => {
+      const resp = converters.batchJobFromMldev(apiResponse);
+      return resp as types.BatchJob;
+    });
+  };
+
+  /**
+   * **Experimental** Creates an embedding batch job.
+   *
+   * @param params - The parameters for create embedding batch job request.
+   * @return The created batch job.
+   *
+   * @example
+   * ```ts
+   * const response = await ai.batches.createEmbeddings({
+   *   model: 'text-embedding-004',
+   *   src: {fileName: 'files/my_embedding_input'},
+   * });
+   * console.log(response);
+   * ```
+   */
+  createEmbeddings = async (
+    params: types.CreateEmbeddingsBatchJobParameters,
+  ): Promise<types.BatchJob> => {
+    console.warn(
+      'batches.createEmbeddings() is experimental and may change without notice.',
+    );
+
+    if (this.apiClient.isVertexAI()) {
+      throw new Error('Vertex AI does not support batches.createEmbeddings.');
+    }
+
+    // MLDEV
+    const src = params.src as types.EmbeddingsBatchJobSource;
+    const is_inlined = src.inlinedRequests !== undefined;
+
+    if (!is_inlined) {
+      return this.createEmbeddingsInternal(params); // Fixed typo here
+    }
+
+    // Inlined embed content requests handling
+    const result = this.createInlinedEmbedContentRequest(params);
+    const path = result.path;
+    const requestBody = result.body;
+    const queryParams =
+      (converters.createEmbeddingsBatchJobParametersToMldev(
+        this.apiClient,
+        params,
+      )['_query'] as Record<string, string>) || {};
+
+    const response = this.apiClient
+      .request({
+        path: path,
+        queryParams: queryParams,
+        body: JSON.stringify(requestBody),
+        httpMethod: 'POST',
+        httpOptions: params.config?.httpOptions,
+        abortSignal: params.config?.abortSignal,
+      })
+      .then((httpResponse) => {
+        return httpResponse.json();
+      }) as Promise<types.BatchJob>;
+
+    return response.then((apiResponse) => {
+      const resp = converters.batchJobFromMldev(apiResponse);
+      return resp as types.BatchJob;
+    });
   };
 
   /**
@@ -91,6 +175,156 @@ export class Batches extends BaseModule {
     );
   };
 
+  // Helper function to handle inlined generate content requests
+  private createInlinedGenerateContentRequest(
+    params: types.CreateBatchJobParameters,
+  ): {path: string; body: Record<string, unknown>} {
+    const body = converters.createBatchJobParametersToMldev(
+      this.apiClient, // Use instance apiClient
+      params,
+    );
+
+    const urlParams = body['_url'] as Record<string, unknown>;
+    const path = common.formatMap('{model}:batchGenerateContent', urlParams);
+
+    const batch = body['batch'] as {[key: string]: unknown};
+    const inputConfig = batch['inputConfig'] as {[key: string]: unknown};
+    const requestsWrapper = inputConfig['requests'] as {
+      [key: string]: unknown;
+    };
+    const requests = requestsWrapper['requests'] as Array<{
+      [key: string]: unknown;
+    }>;
+    const newRequests = [];
+
+    for (const request of requests) {
+      const requestDict = {...request}; // Clone
+      if (requestDict['systemInstruction']) {
+        const systemInstructionValue = requestDict['systemInstruction'];
+        delete requestDict['systemInstruction'];
+        const requestContent = requestDict['request'] as {
+          [key: string]: unknown;
+        };
+        requestContent['systemInstruction'] = systemInstructionValue;
+        requestDict['request'] = requestContent;
+      }
+      newRequests.push(requestDict);
+    }
+    requestsWrapper['requests'] = newRequests;
+
+    delete body['config'];
+    delete body['_url'];
+    delete body['_query'];
+
+    return {path, body};
+  }
+
+  // Helper function to handle inlined embedding requests
+  private createInlinedEmbedContentRequest(
+    params: types.CreateEmbeddingsBatchJobParameters,
+  ): {path: string; body: Record<string, unknown>} {
+    const body = converters.createEmbeddingsBatchJobParametersToMldev(
+      this.apiClient, // Use instance apiClient
+      params,
+    );
+
+    const urlParams = body['_url'] as Record<string, unknown>;
+    const path = common.formatMap('{model}:asyncBatchEmbedContent', urlParams);
+
+    const batch = body['batch'] as {[key: string]: unknown};
+    const inputConfig = batch['inputConfig'] as {[key: string]: unknown};
+    const requestsWrapper = inputConfig['requests'] as {
+      [key: string]: unknown;
+    };
+    const requests = requestsWrapper['requests'] as Array<{
+      [key: string]: unknown;
+    }>;
+    const newRequests = [];
+
+    delete requestsWrapper['config']; // Remove top-level config
+
+    for (const request of requests) {
+      const requestDict = {...request}; // Clone
+      const innerRequest = requestDict['request'] as {
+        [key: string]: unknown;
+      };
+      for (const key in requestDict) {
+        if (key !== 'request') {
+          innerRequest[key] = requestDict[key];
+          delete requestDict[key];
+        }
+      }
+      newRequests.push(requestDict);
+    }
+    requestsWrapper['requests'] = newRequests;
+
+    delete body['config'];
+    delete body['_url'];
+    delete body['_query'];
+
+    return {path, body};
+  }
+
+  // Helper function to get the first GCS URI
+  private getGcsUri(src: string | types.BatchJobSource): string | undefined {
+    if (typeof src === 'string') {
+      return src.startsWith('gs://') ? src : undefined;
+    }
+    if (!Array.isArray(src) && src.gcsUri && src.gcsUri.length > 0) {
+      return src.gcsUri[0];
+    }
+    return undefined;
+  }
+
+  // Helper function to get the BigQuery URI
+  private getBigqueryUri(
+    src: string | types.BatchJobSource,
+  ): string | undefined {
+    if (typeof src === 'string') {
+      return src.startsWith('bq://') ? src : undefined;
+    }
+    if (!Array.isArray(src)) {
+      return src.bigqueryUri;
+    }
+    return undefined;
+  }
+
+  // Function to format the destination configuration for Vertex AI
+  private formatDestination(
+    src: string | types.BatchJobSource,
+    config?: types.CreateBatchJobConfig,
+  ): types.CreateBatchJobConfig {
+    const newConfig = config ? {...config} : {};
+
+    const timestampStr = Date.now().toString();
+
+    if (!newConfig.displayName) {
+      newConfig.displayName = `genaiBatchJob_${timestampStr}`;
+    }
+
+    if (newConfig.dest === undefined) {
+      const gcsUri = this.getGcsUri(src);
+      const bigqueryUri = this.getBigqueryUri(src);
+
+      if (gcsUri) {
+        if (gcsUri.endsWith('.jsonl')) {
+          // For .jsonl files, remove suffix and add /dest
+          newConfig.dest = `${gcsUri.slice(0, -6)}/dest`;
+        } else {
+          // Fallback for other GCS URIs
+          newConfig.dest = `${gcsUri}_dest_${timestampStr}`;
+        }
+      } else if (bigqueryUri) {
+        newConfig.dest = `${bigqueryUri}_dest_${timestampStr}`;
+      } else {
+        throw new Error(
+          'Unsupported source for Vertex AI: No GCS or BigQuery URI found.',
+        );
+      }
+    }
+    return newConfig;
+  }
+
   /**
    * Internal method to create batch job.
    *
@@ -115,7 +349,6 @@ export class Batches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -147,7 +380,58 @@ export class Batches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json();
+        }) as Promise<types.BatchJob>;
+
+      return response.then((apiResponse) => {
+        const resp = converters.batchJobFromMldev(apiResponse);
+
+        return resp as types.BatchJob;
+      });
+    }
+  }
+
+  /**
+   * Internal method to create batch job.
+   *
+   * @param params - The parameters for create batch job request.
+   * @return The created batch job.
+   *
+   */
+  private async createEmbeddingsInternal(
+    params: types.CreateEmbeddingsBatchJobParameters,
+  ): Promise<types.BatchJob> {
+    let response: Promise<types.BatchJob>;
+
+    let path: string = '';
+    let queryParams: Record<string, string> = {};
+    if (this.apiClient.isVertexAI()) {
+      throw new Error(
+        'This method is only supported by the Gemini Developer API.',
+      );
+    } else {
+      const body = converters.createEmbeddingsBatchJobParametersToMldev(
+        this.apiClient,
+        params,
+      );
+      path = common.formatMap(
+        '{model}:asyncBatchEmbedContent',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
       delete body['_url'];
       delete body['_query'];
 
@@ -198,7 +482,6 @@ export class Batches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -230,7 +513,6 @@ export class Batches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -279,7 +561,6 @@ export class Batches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -301,7 +582,6 @@ export class Batches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -330,7 +610,6 @@ export class Batches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -344,7 +623,13 @@ export class Batches extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.ListBatchJobsResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.ListBatchJobsResponse>;
 
       return response.then((apiResponse) => {
@@ -360,7 +645,6 @@ export class Batches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -374,7 +658,13 @@ export class Batches extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.ListBatchJobsResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.ListBatchJobsResponse>;
 
       return response.then((apiResponse) => {
@@ -414,7 +704,6 @@ export class Batches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -428,7 +717,13 @@ export class Batches extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.DeleteResourceJob;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.DeleteResourceJob>;
 
       return response.then((apiResponse) => {
@@ -446,7 +741,6 @@ export class Batches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -460,7 +754,13 @@ export class Batches extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.DeleteResourceJob;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.DeleteResourceJob>;
 
       return response.then((apiResponse) => {

@@ -1,0 +1,292 @@
+{
+  "recordID": "MCP_related_client_Tests_generateContent_Vertex_AI_should_take_a_list_of_MCPClients_and_conduct_automated_function_calling",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:generateContent",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:generateContent HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "484",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "MCP related client Tests generateContent Vertex AI should take a list of MCPClients and conduct automated function calling"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "Use the printer to print a simple word: hello in red"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {},
+            "toolConfig": {
+              "functionCallingConfig": {
+                "mode": "AUTO"
+              }
+            },
+            "tools": [
+              {
+                "functionDeclarations": [
+                  {
+                    "name": "print",
+                    "parametersJsonSchema": {
+                      "$schema": "http://json-schema.org/draft-07/schema#",
+                      "additionalProperties": false,
+                      "properties": {
+                        "color": {
+                          "pattern": "red|blue|green|white",
+                          "type": "string"
+                        },
+                        "text": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["text", "color"],
+                      "type": "object"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "us-central1-aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "41a405c90e2b37aeccfc5dab38397be45916d115817dc14659866e2ccc8e30a6",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Encoding": "gzip",
+          "Content-Length": "749",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Tue, 26 Aug 2025 01:08:20 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "avgLogprobs": -1.08555908203125,
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "args": {
+                          "color": "red",
+                          "text": "hello"
+                        },
+                        "name": "print"
+                      },
+                      "thoughtSignature": "CusBAcu98PAc4JdBDjEVH0IPFd8TYmY9vH+BLdvNdmWwsKsoa5pB5AJdzzi6/Gkd9JmeTcKHTMMmJ426HoJXpHnTYtnJyEC7qqbgDT4krxQQ7XcuJwhIXNz+dHA+AW3XVdMypSFvFgKdhwMo6yJDeHnUhqInDjH84CnQVTTtMs3akJugqxc6itaxVxUVJ2HM3ZS/P2/lg/pkNh55TOystgi7bLJWgs0qkW+UuwDXArDjq+yprKPK4QUDfWNbCloY3poWYnE6NE6chsj6wWAJlx6K2Oi7p/Cv8ML0NKoCUjyWKJTRgLvTeAjGfIioHQ=="
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "score": -5.42779541015625
+              }
+            ],
+            "createTime": "2025-08-26T01:08:19.747464Z",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "AwmtaMjPLdinnvgPt7rbsQU",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 211
+              },
+              "candidatesTokenCount": 5,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 5
+                }
+              ],
+              "promptTokenCount": 13,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 13
+                }
+              ],
+              "thoughtsTokenCount": 55,
+              "totalTokenCount": 73,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:generateContent",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:generateContent HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "1064",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "MCP related client Tests generateContent Vertex AI should take a list of MCPClients and conduct automated function calling"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "Use the printer to print a simple word: hello in red"
+                  }
+                ],
+                "role": "user"
+              },
+              {
+                "parts": [
+                  {
+                    "functionCall": {
+                      "args": {
+                        "color": "red",
+                        "text": "hello"
+                      },
+                      "name": "print"
+                    },
+                    "thoughtSignature": "CusBAcu98PAc4JdBDjEVH0IPFd8TYmY9vH+BLdvNdmWwsKsoa5pB5AJdzzi6/Gkd9JmeTcKHTMMmJ426HoJXpHnTYtnJyEC7qqbgDT4krxQQ7XcuJwhIXNz+dHA+AW3XVdMypSFvFgKdhwMo6yJDeHnUhqInDjH84CnQVTTtMs3akJugqxc6itaxVxUVJ2HM3ZS/P2/lg/pkNh55TOystgi7bLJWgs0qkW+UuwDXArDjq+yprKPK4QUDfWNbCloY3poWYnE6NE6chsj6wWAJlx6K2Oi7p/Cv8ML0NKoCUjyWKJTRgLvTeAjGfIioHQ=="
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "functionResponse": {
+                      "name": "print",
+                      "response": {
+                        "content": [
+                          {
+                            "text": "\u001b[31mhello\u001b[0m",
+                            "type": "text"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {},
+            "toolConfig": {
+              "functionCallingConfig": {
+                "mode": "AUTO"
+              }
+            },
+            "tools": [
+              {
+                "functionDeclarations": [
+                  {
+                    "name": "print",
+                    "parametersJsonSchema": {
+                      "$schema": "http://json-schema.org/draft-07/schema#",
+                      "additionalProperties": false,
+                      "properties": {
+                        "color": {
+                          "pattern": "red|blue|green|white",
+                          "type": "string"
+                        },
+                        "text": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["text", "color"],
+                      "type": "object"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "previousRequest": "41a405c90e2b37aeccfc5dab38397be45916d115817dc14659866e2ccc8e30a6",
+        "serverAddress": "us-central1-aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "3f306c32ed50ba583a2d8c5110acc7654f91213ed42a06ffece13d256952456b",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Encoding": "gzip",
+          "Content-Length": "447",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Tue, 26 Aug 2025 01:08:20 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "avgLogprobs": -0.047058181329206986,
+                "content": {
+                  "parts": [
+                    {
+                      "text": "The word \"hello\" has been printed in red."
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "score": -0.5176399946212769
+              }
+            ],
+            "createTime": "2025-08-26T01:08:20.470412Z",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "BAmtaIzbHJPMnvgPrpiD-QQ",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 271
+              },
+              "candidatesTokenCount": 11,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 11
+                }
+              ],
+              "promptTokenCount": 33,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 33
+                }
+              ],
+              "totalTokenCount": 44,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

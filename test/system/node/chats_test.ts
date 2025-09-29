@@ -4,9 +4,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {GoogleGenAIOptions} from '../../../src/client.js';
 import {mcpToTool} from '../../../src/mcp/_mcp.js';
 import {GoogleGenAI} from '../../../src/node/node_client.js';
-import {FunctionCallingConfigMode, Tool, Type} from '../../../src/types.js';
+import {
+  FunctionCallingConfigMode,
+  HttpOptions,
+  Tool,
+  Type,
+} from '../../../src/types.js';
 import {
   spinUpBeepingServer,
   spinUpPrintingServer,
@@ -37,12 +43,23 @@ const function_calling: Tool = {
 };
 
 describe('Chats Tests', () => {
+  let testName: string = '';
+  let httpOptions: HttpOptions;
   beforeAll(async () => {
     await setupTestServer();
+    jasmine.getEnv().addReporter({
+      specStarted: function (result) {
+        testName = result.fullName;
+      },
+    });
   });
 
   afterAll(async () => {
     await shutdownTestServer();
+  });
+
+  beforeEach(() => {
+    httpOptions = {headers: {'Test-Name': testName}};
   });
 
   describe('chat automatic function calling', () => {
@@ -50,7 +67,11 @@ describe('Chats Tests', () => {
       const mcpTools = [
         mcpToTool(await spinUpPrintingServer(), await spinUpBeepingServer()),
       ];
-      const client = new GoogleGenAI({vertexai: false, apiKey: GEMINI_API_KEY});
+      const client = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GEMINI_API_KEY,
+        httpOptions,
+      });
       const consoleLogSpy = spyOn(console, 'log').and.callThrough();
       const chat = client.chats.create({
         model: 'gemini-2.0-flash',
@@ -135,6 +156,28 @@ describe('Chats Tests', () => {
         messages: ['what is the value of a+b?'],
       },
       {
+        name: 'Google AI with empty text',
+        clientParams: {vertexai: false, apiKey: GEMINI_API_KEY},
+        model: 'gemini-2.0-flash',
+        config: {},
+        history: [
+          {parts: [{text: 'a=5'}], role: 'user'},
+          {parts: [{text: ''}], role: 'model'},
+        ],
+        messages: ['what is the value of a+10?'],
+      },
+      {
+        name: 'Vertex AI with empty text',
+        clientParams: {vertexai: true, project: GOOGLE_CLOUD_PROJECT},
+        model: 'gemini-2.0-flash',
+        config: {},
+        history: [
+          {parts: [{text: 'a=5'}], role: 'user'},
+          {parts: [{text: ''}], role: 'model'},
+        ],
+        messages: ['what is the value of a+10?'],
+      },
+      {
         name: 'Google AI multiple messages',
         clientParams: {vertexai: false, apiKey: GEMINI_API_KEY},
         model: 'gemini-2.0-flash',
@@ -160,7 +203,9 @@ describe('Chats Tests', () => {
 
     testCases.forEach(async (testCase) => {
       it(testCase.name, async () => {
-        const client = new GoogleGenAI(testCase.clientParams);
+        const clientParams: GoogleGenAIOptions = testCase.clientParams;
+        clientParams.httpOptions = httpOptions;
+        const client = new GoogleGenAI(clientParams);
         const chat = client.chats.create({
           model: testCase.model,
           config: testCase.config,
@@ -180,7 +225,9 @@ describe('Chats Tests', () => {
 
     testCases.forEach(async (testCase) => {
       it(testCase.name + ' stream', async () => {
-        const client = new GoogleGenAI(testCase.clientParams);
+        const clientParams: GoogleGenAIOptions = testCase.clientParams;
+        clientParams.httpOptions = httpOptions;
+        const client = new GoogleGenAI(clientParams);
         const chat = client.chats.create({
           model: testCase.model,
           config: testCase.config,
@@ -201,7 +248,11 @@ describe('Chats Tests', () => {
     });
 
     it('Google AI array of strings', async () => {
-      const client = new GoogleGenAI({vertexai: false, apiKey: GEMINI_API_KEY});
+      const client = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GEMINI_API_KEY,
+        httpOptions,
+      });
       const chat = client.chats.create({model: 'gemini-2.0-flash'});
       const response = await chat.sendMessage({
         message: [
@@ -216,6 +267,7 @@ describe('Chats Tests', () => {
       const client = new GoogleGenAI({
         vertexai: true,
         project: GOOGLE_CLOUD_PROJECT,
+        httpOptions,
       });
       const chat = client.chats.create({model: 'gemini-2.0-flash'});
       const response = await chat.sendMessage({
@@ -228,7 +280,11 @@ describe('Chats Tests', () => {
     });
 
     it('Send message stream with error', async () => {
-      const client = new GoogleGenAI({vertexai: false, apiKey: GEMINI_API_KEY});
+      const client = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GEMINI_API_KEY,
+        httpOptions,
+      });
       const chat = client.chats.create({model: 'custom-gemini-2.0-flash'});
       try {
         const response = await chat.sendMessageStream({
@@ -273,7 +329,9 @@ describe('Chats Tests', () => {
 
     testCases.forEach(async (testCase) => {
       it(testCase.name, async () => {
-        const client = new GoogleGenAI(testCase.clientParams);
+        const clientParams: GoogleGenAIOptions = testCase.clientParams;
+        clientParams.httpOptions = httpOptions;
+        const client = new GoogleGenAI(clientParams);
         const chat = client.chats.create({
           model: testCase.model,
           config: testCase.config,
@@ -292,7 +350,9 @@ describe('Chats Tests', () => {
 
     testCases.forEach(async (testCase) => {
       it(testCase.name + ' stream', async () => {
-        const client = new GoogleGenAI(testCase.clientParams);
+        const clientParams: GoogleGenAIOptions = testCase.clientParams;
+        clientParams.httpOptions = httpOptions;
+        const client = new GoogleGenAI(clientParams);
         const chat = client.chats.create({
           model: testCase.model,
           config: testCase.config,

@@ -32,7 +32,7 @@ export declare interface EditImageParametersInternal {
   model: string;
   /** A text description of the edit to apply to the image. */
   prompt: string;
-  /** The reference images for Imagen 3 editing. */
+  /** The reference images for editing. */
   referenceImages: ReferenceImageAPIInternal[];
   /** Configuration for editing. */
   config?: types.EditImageConfig;
@@ -53,13 +53,15 @@ export declare interface UpscaleImageAPIConfigInternal {
   be charged usage for any applicable operations.
        */
   abortSignal?: AbortSignal;
+  /** Cloud Storage URI used to store the generated images. */
+  outputGcsUri?: string;
   /** Whether to include a reason for filtered-out images in the
       response. */
   includeRaiReason?: boolean;
   /** The image format that the output should be saved as. */
   outputMimeType?: string;
-  /** The level of compression if the ``output_mime_type`` is
-      ``image/jpeg``. */
+  /** The level of compression. Only applicable if the
+      ``output_mime_type`` is ``image/jpeg``. */
   outputCompressionQuality?: number;
   /** Whether to add an image enhancing step before upscaling.
       It is expected to suppress the noise and JPEG compression artifacts

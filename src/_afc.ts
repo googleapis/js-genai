@@ -45,6 +45,22 @@ export function isCallableTool(tool: types.ToolUnion): boolean {
   return 'callTool' in tool && typeof tool.callTool === 'function';
 }
 
+// Checks whether the list of tools contains any CallableTools. Will return true
+// if there is at least one CallableTool.
+export function hasCallableTools(
+  params: types.GenerateContentParameters,
+): boolean {
+  return params.config?.tools?.some((tool) => isCallableTool(tool)) ?? false;
+}
+
+// Checks whether the list of tools contains any non-callable tools. Will return
+// true if there is at least one non-Callable tool.
+export function hasNonCallableTools(
+  params: types.GenerateContentParameters,
+): boolean {
+  return params.config?.tools?.some((tool) => !isCallableTool(tool)) ?? false;
+}
+
 /**
  * Returns whether to append automatic function calling history to the
  * response.

@@ -204,5 +204,5 @@ function getApiKeyFromEnv(): string | undefined {
       'Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.',
     );
   }
-  return envGoogleApiKey || envGeminiApiKey;
+  return envGoogleApiKey || envGeminiApiKey || undefined;
 }

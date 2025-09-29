@@ -341,6 +341,7 @@ describe('LiveMusic', () => {
           muteBass: true,
           muteDrums: true,
           onlyBassAndDrums: true,
+          musicGenerationMode: types.MusicGenerationMode.QUALITY,
         };
         await session.setMusicGenerationConfig({musicGenerationConfig: config});
 

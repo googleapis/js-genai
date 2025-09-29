@@ -728,6 +728,9 @@ export function mcpToGeminiTool(
     description: mcpToolSchema['description'],
     parametersJsonSchema: mcpToolSchema['inputSchema'],
   };
+  if (mcpToolSchema['outputSchema']) {
+    functionDeclaration['responseJsonSchema'] = mcpToolSchema['outputSchema'];
+  }
   if (config.behavior) {
     functionDeclaration['behavior'] = config.behavior;
   }
@@ -772,49 +775,86 @@ export function mcpToolsToGeminiTool(
 
 // Transforms a source input into a BatchJobSource object with validation.
 export function tBatchJobSource(
-  apiClient: ApiClient,
+  client: ApiClient,
   src: string | types.InlinedRequest[] | types.BatchJobSource,
 ): types.BatchJobSource {
-  if (typeof src !== 'string' && !Array.isArray(src)) {
-    if (apiClient && apiClient.isVertexAI()) {
-      if (src.gcsUri && src.bigqueryUri) {
-        throw new Error('Only one of `gcsUri` or `bigqueryUri` can be set.');
-      } else if (!src.gcsUri && !src.bigqueryUri) {
-        throw new Error('One of `gcsUri` or `bigqueryUri` must be set.');
+  let sourceObj: types.BatchJobSource;
+
+  if (typeof src === 'string') {
+    if (client.isVertexAI()) {
+      if (src.startsWith('gs://')) {
+        sourceObj = {format: 'jsonl', gcsUri: [src]};
+      } else if (src.startsWith('bq://')) {
+        sourceObj = {format: 'bigquery', bigqueryUri: src};
+      } else {
+        throw new Error(`Unsupported string source for Vertex AI: ${src}`);
       }
     } else {
-      // Logic for non-Vertex AI client (inlined_requests, file_name)
-      if (src.inlinedRequests && src.fileName) {
-        throw new Error(
-          'Only one of `inlinedRequests` or `fileName` can be set.',
-        );
-      } else if (!src.inlinedRequests && !src.fileName) {
-        throw new Error('One of `inlinedRequests` or `fileName` must be set.');
+      // MLDEV
+      if (src.startsWith('files/')) {
+        sourceObj = {fileName: src}; // Default to fileName for string input
+      } else {
+        throw new Error(`Unsupported string source for Gemini API: ${src}`);
       }
     }
-    return src;
+  } else if (Array.isArray(src)) {
+    if (client.isVertexAI()) {
+      throw new Error('InlinedRequest[] is not supported in Vertex AI.');
+    }
+    sourceObj = {inlinedRequests: src};
+  } else {
+    // It's already a BatchJobSource object
+    sourceObj = src;
   }
-  // If src is an array (list in Python)
-  else if (Array.isArray(src)) {
-    return {inlinedRequests: src};
-  } else if (typeof src === 'string') {
-    if (src.startsWith('gs://')) {
-      return {
-        format: 'jsonl',
-        gcsUri: [src], // GCS URI is expected as an array
-      };
-    } else if (src.startsWith('bq://')) {
-      return {
-        format: 'bigquery',
-        bigqueryUri: src,
-      };
-    } else if (src.startsWith('files/')) {
-      return {
-        fileName: src,
-      };
+
+  // Validation logic
+  const vertexSourcesCount = [sourceObj.gcsUri, sourceObj.bigqueryUri].filter(
+    Boolean,
+  ).length;
+
+  const mldevSourcesCount = [
+    sourceObj.inlinedRequests,
+    sourceObj.fileName,
+  ].filter(Boolean).length;
+
+  if (client.isVertexAI()) {
+    if (mldevSourcesCount > 0 || vertexSourcesCount !== 1) {
+      throw new Error(
+        'Exactly one of `gcsUri` or `bigqueryUri` must be set for Vertex AI.',
+      );
+    }
+  } else {
+    // MLDEV
+    if (vertexSourcesCount > 0 || mldevSourcesCount !== 1) {
+      throw new Error(
+        'Exactly one of `inlinedRequests`, `fileName`, ' +
+          'must be set for Gemini API.',
+      );
     }
   }
-  throw new Error(`Unsupported source: ${src}`);
+
+  return sourceObj;
+}
+
+export function tEmbeddingBatchJobSource(
+  client: ApiClient,
+  src: types.EmbeddingsBatchJobSource,
+): types.EmbeddingsBatchJobSource {
+  if (client.isVertexAI()) {
+    throw new Error('Embedding batch jobs are not supported in Vertex AI.');
+  }
+
+  const sourceObj: types.EmbeddingsBatchJobSource = {...src};
+
+  const mldevSources =
+    Number(!!sourceObj.inlinedRequests) + Number(!!sourceObj.fileName);
+
+  if (mldevSources !== 1) {
+    throw new Error(
+      'Exactly one of `inlinedRequests` or `fileName` must be set for Embedding Batch Jobs in the Gemini API.',
+    );
+  }
+  return sourceObj;
 }
 
 export function tBatchJobDestination(
@@ -837,6 +877,63 @@ export function tBatchJobDestination(
   } else {
     throw new Error(`Unsupported destination: ${destString}`);
   }
+}
+
+export function tRecvBatchJobDestination(
+  dest: unknown,
+): types.BatchJobDestination {
+  // Ensure dest is a non-null object before proceeding.
+  if (typeof dest !== 'object' || dest === null) {
+    // If the input is not an object, it cannot be a valid BatchJobDestination
+    // based on the operations performed. Return it cast, or handle as an error.
+    // Casting an empty object might be a safe default.
+    return {} as types.BatchJobDestination;
+  }
+
+  // Cast to Record<string, unknown> to allow string property access.
+  const obj = dest as Record<string, unknown>;
+
+  // Safely access nested properties.
+  const inlineResponsesVal = obj['inlinedResponses'];
+  if (typeof inlineResponsesVal !== 'object' || inlineResponsesVal === null) {
+    return dest as types.BatchJobDestination;
+  }
+  const inlineResponsesObj = inlineResponsesVal as Record<string, unknown>;
+
+  const responsesArray = inlineResponsesObj['inlinedResponses'];
+  if (!Array.isArray(responsesArray) || responsesArray.length === 0) {
+    return dest as types.BatchJobDestination;
+  }
+
+  // Check if any response has the 'embedding' property.
+  let hasEmbedding = false;
+  for (const responseItem of responsesArray) {
+    if (typeof responseItem !== 'object' || responseItem === null) {
+      continue;
+    }
+    const responseItemObj = responseItem as Record<string, unknown>;
+
+    const responseVal = responseItemObj['response'];
+    if (typeof responseVal !== 'object' || responseVal === null) {
+      continue;
+    }
+    const responseObj = responseVal as Record<string, unknown>;
+
+    // Check for the existence of the 'embedding' key.
+    if (responseObj['embedding'] !== undefined) {
+      hasEmbedding = true;
+      break;
+    }
+  }
+
+  // Perform the transformation if an embedding was found.
+  if (hasEmbedding) {
+    obj['inlinedEmbedContentResponses'] = obj['inlinedResponses'];
+    delete obj['inlinedResponses'];
+  }
+
+  // Cast the (potentially) modified object to the target type.
+  return dest as types.BatchJobDestination;
 }
 
 export function tBatchJobName(apiClient: ApiClient, name: unknown): string {
@@ -869,12 +966,16 @@ export function tJobState(state: unknown): string {
     return 'JOB_STATE_UNSPECIFIED';
   } else if (stateString === 'BATCH_STATE_PENDING') {
     return 'JOB_STATE_PENDING';
+  } else if (stateString === 'BATCH_STATE_RUNNING') {
+    return 'JOB_STATE_RUNNING';
   } else if (stateString === 'BATCH_STATE_SUCCEEDED') {
     return 'JOB_STATE_SUCCEEDED';
   } else if (stateString === 'BATCH_STATE_FAILED') {
     return 'JOB_STATE_FAILED';
   } else if (stateString === 'BATCH_STATE_CANCELLED') {
     return 'JOB_STATE_CANCELLED';
+  } else if (stateString === 'BATCH_STATE_EXPIRED') {
+    return 'JOB_STATE_EXPIRED';
   } else {
     return stateString;
   }

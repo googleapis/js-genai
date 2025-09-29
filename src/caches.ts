@@ -86,7 +86,6 @@ export class Caches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -118,7 +117,6 @@ export class Caches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -171,7 +169,6 @@ export class Caches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -203,7 +200,6 @@ export class Caches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -256,7 +252,6 @@ export class Caches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -270,11 +265,18 @@ export class Caches extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.DeleteCachedContentResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.DeleteCachedContentResponse>;
 
-      return response.then(() => {
-        const resp = converters.deleteCachedContentResponseFromVertex();
+      return response.then((apiResponse) => {
+        const resp =
+          converters.deleteCachedContentResponseFromVertex(apiResponse);
         const typedResp = new types.DeleteCachedContentResponse();
         Object.assign(typedResp, resp);
         return typedResp;
@@ -289,7 +291,6 @@ export class Caches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -303,11 +304,18 @@ export class Caches extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.DeleteCachedContentResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.DeleteCachedContentResponse>;
 
-      return response.then(() => {
-        const resp = converters.deleteCachedContentResponseFromMldev();
+      return response.then((apiResponse) => {
+        const resp =
+          converters.deleteCachedContentResponseFromMldev(apiResponse);
         const typedResp = new types.DeleteCachedContentResponse();
         Object.assign(typedResp, resp);
         return typedResp;
@@ -346,7 +354,6 @@ export class Caches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -378,7 +385,6 @@ export class Caches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -417,7 +423,6 @@ export class Caches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -431,7 +436,13 @@ export class Caches extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.ListCachedContentsResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.ListCachedContentsResponse>;
 
       return response.then((apiResponse) => {
@@ -448,7 +459,6 @@ export class Caches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -462,7 +472,13 @@ export class Caches extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.ListCachedContentsResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.ListCachedContentsResponse>;
 
       return response.then((apiResponse) => {

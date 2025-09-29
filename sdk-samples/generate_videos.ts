@@ -14,7 +14,7 @@ async function delay(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function generateContentFromMLDev() {
+async function generateVideosFromMLDev() {
   const ai = new GoogleGenAI({vertexai: false, apiKey: GEMINI_API_KEY});
   let operation = await ai.models.generateVideos({
     model: 'veo-2.0-generate-001',
@@ -44,7 +44,7 @@ async function generateContentFromMLDev() {
   });
 }
 
-async function generateContentFromVertexAI() {
+async function generateVideosFromVertexAI() {
   const ai = new GoogleGenAI({
     vertexai: true,
     project: GOOGLE_CLOUD_PROJECT,
@@ -52,7 +52,7 @@ async function generateContentFromVertexAI() {
   });
   let operation = await ai.models.generateVideos({
     model: 'veo-2.0-generate-001',
-    prompt: 'Man with a dog',
+    source: {prompt: 'Man with a dog'},
   });
 
   while (!operation.done) {
@@ -77,13 +77,11 @@ async function generateContentFromVertexAI() {
 
 async function main() {
   if (GOOGLE_GENAI_USE_VERTEXAI) {
-    await generateContentFromVertexAI().catch((e) =>
+    await generateVideosFromVertexAI().catch((e) =>
       console.error('got error', e),
     );
   } else {
-    await generateContentFromMLDev().catch((e) =>
-      console.error('got error', e),
-    );
+    await generateVideosFromMLDev().catch((e) => console.error('got error', e));
   }
 }
 

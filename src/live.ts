@@ -142,15 +142,15 @@ export class Live {
     const websocketBaseUrl = this.apiClient.getWebsocketBaseUrl();
     const apiVersion = this.apiClient.getApiVersion();
     let url: string;
-    const defaultHeaders = this.apiClient.getDefaultHeaders();
+    const clientHeaders = this.apiClient.getHeaders();
     if (
       params.config &&
       params.config.tools &&
       hasMcpToolUsage(params.config.tools)
     ) {
-      setMcpUsageHeader(defaultHeaders);
+      setMcpUsageHeader(clientHeaders);
     }
-    const headers = mapToHeaders(defaultHeaders);
+    const headers = mapToHeaders(clientHeaders);
     if (this.apiClient.isVertexAI()) {
       url = `${websocketBaseUrl}/ws/google.cloud.aiplatform.${
         apiVersion

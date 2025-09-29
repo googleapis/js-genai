@@ -161,6 +161,7 @@ export class Batches extends BaseModule {
     cancel(params: types.CancelBatchJobParameters): Promise<void>;
     // Warning: (ae-forgotten-export) The symbol "types" needs to be exported by the entry point index.d.ts
     create: (params: types.CreateBatchJobParameters) => Promise<types.BatchJob>;
+    createEmbeddings: (params: types.CreateEmbeddingsBatchJobParameters) => Promise<types.BatchJob>;
     delete(params: types.DeleteBatchJobParameters): Promise<types.DeleteResourceJob>;
     get(params: types.GetBatchJobParameters): Promise<types.BatchJob>;
     list: (params?: types.ListBatchJobsParameters) => Promise<Pager<types.BatchJob>>;
@@ -187,6 +188,7 @@ export interface BatchJobDestination {
     fileName?: string;
     format?: string;
     gcsUri?: string;
+    inlinedEmbedContentResponses?: InlinedEmbedContentResponse[];
     inlinedResponses?: InlinedResponse[];
 }
 
@@ -288,6 +290,18 @@ export interface CancelBatchJobParameters {
 }
 
 // @public
+export interface CancelTuningJobConfig {
+    abortSignal?: AbortSignal;
+    httpOptions?: HttpOptions;
+}
+
+// @public
+export interface CancelTuningJobParameters {
+    config?: CancelTuningJobConfig;
+    name: string;
+}
+
+// @public
 export interface Candidate {
     avgLogprobs?: number;
     citationMetadata?: CitationMetadata;
@@ -359,6 +373,7 @@ export interface ComputeTokensParameters {
 
 // @public
 export class ComputeTokensResponse {
+    sdkHttpResponse?: HttpResponse;
     tokensInfo?: TokensInfo[];
 }
 
@@ -383,6 +398,15 @@ export interface ContentEmbeddingStatistics {
 // @public (undocumented)
 export type ContentListUnion = Content | Content[] | PartUnion | PartUnion[];
 
+// @public
+export class ContentReferenceImage {
+    referenceId?: number;
+    referenceImage?: Image_2;
+    referenceType?: string;
+    // Warning: (ae-forgotten-export) The symbol "ReferenceImageAPIInternal" needs to be exported by the entry point index.d.ts
+    toReferenceImageAPI(): ReferenceImageAPIInternal;
+}
+
 // @public (undocumented)
 export type ContentUnion = Content | PartUnion[] | PartUnion;
 
@@ -404,7 +428,6 @@ export class ControlReferenceImage {
     referenceId?: number;
     referenceImage?: Image_2;
     referenceType?: string;
-    // Warning: (ae-forgotten-export) The symbol "ReferenceImageAPIInternal" needs to be exported by the entry point index.d.ts
     toReferenceImageAPI(): ReferenceImageAPIInternal;
 }
 
@@ -439,6 +462,7 @@ export interface CountTokensParameters {
 // @public
 export class CountTokensResponse {
     cachedContentTokenCount?: number;
+    sdkHttpResponse?: HttpResponse;
     totalTokens?: number;
 }
 
@@ -501,6 +525,20 @@ export interface CreateChatParameters {
 }
 
 // @public
+export interface CreateEmbeddingsBatchJobConfig {
+    abortSignal?: AbortSignal;
+    displayName?: string;
+    httpOptions?: HttpOptions;
+}
+
+// @public
+export interface CreateEmbeddingsBatchJobParameters {
+    config?: CreateEmbeddingsBatchJobConfig;
+    model?: string;
+    src: EmbeddingsBatchJobSource;
+}
+
+// @public
 export interface CreateFileConfig {
     abortSignal?: AbortSignal;
     httpOptions?: HttpOptions;
@@ -550,8 +588,10 @@ export interface CreateTuningJobConfig {
     epochCount?: number;
     exportLastCheckpointOnly?: boolean;
     httpOptions?: HttpOptions;
+    labels?: Record<string, string>;
     learningRate?: number;
     learningRateMultiplier?: number;
+    preTunedModelCheckpointId?: string;
     tunedModelDisplayName?: string;
     validationDataset?: TuningValidationDataset;
 }
@@ -560,6 +600,14 @@ export interface CreateTuningJobConfig {
 export interface CreateTuningJobParameters {
     baseModel: string;
     config?: CreateTuningJobConfig;
+    trainingDataset: TuningDataset;
+}
+
+// @public
+export interface CreateTuningJobParametersPrivate {
+    baseModel?: string;
+    config?: CreateTuningJobConfig;
+    preTunedModel?: PreTunedModel;
     trainingDataset: TuningDataset;
 }
 
@@ -623,6 +671,7 @@ export interface DeleteCachedContentParameters {
 
 // @public
 export class DeleteCachedContentResponse {
+    sdkHttpResponse?: HttpResponse;
 }
 
 // @public
@@ -639,6 +688,7 @@ export interface DeleteFileParameters {
 
 // @public
 export class DeleteFileResponse {
+    sdkHttpResponse?: HttpResponse;
 }
 
 // @public
@@ -656,6 +706,7 @@ export interface DeleteModelParameters {
 
 // @public (undocumented)
 export class DeleteModelResponse {
+    sdkHttpResponse?: HttpResponse;
 }
 
 // @public
@@ -666,29 +717,12 @@ export interface DeleteResourceJob {
     error?: JobError;
     // (undocumented)
     name?: string;
+    sdkHttpResponse?: HttpResponse;
 }
 
 // @public
 export interface DistillationDataStats {
     trainingDatasetStats?: DatasetStats;
-}
-
-// @public
-export interface DistillationHyperParameters {
-    adapterSize?: AdapterSize;
-    epochCount?: string;
-    learningRateMultiplier?: number;
-}
-
-// @public
-export interface DistillationSpec {
-    baseTeacherModel?: string;
-    hyperParameters?: DistillationHyperParameters;
-    pipelineRootDirectory?: string;
-    studentModel?: string;
-    trainingDatasetUri?: string;
-    tunedTeacherModelSource?: string;
-    validationDatasetUri?: string;
 }
 
 // @public (undocumented)
@@ -752,6 +786,7 @@ export interface EditImageParameters {
 // @public
 export class EditImageResponse {
     generatedImages?: GeneratedImage[];
+    sdkHttpResponse?: HttpResponse;
 }
 
 // @public
@@ -772,6 +807,12 @@ export enum EditMode {
     EDIT_MODE_PRODUCT_IMAGE = "EDIT_MODE_PRODUCT_IMAGE",
     // (undocumented)
     EDIT_MODE_STYLE = "EDIT_MODE_STYLE"
+}
+
+// @public
+export interface EmbedContentBatch {
+    config?: EmbedContentConfig;
+    contents?: ContentListUnion;
 }
 
 // @public
@@ -801,6 +842,13 @@ export interface EmbedContentParameters {
 export class EmbedContentResponse {
     embeddings?: ContentEmbedding[];
     metadata?: EmbedContentMetadata;
+    sdkHttpResponse?: HttpResponse;
+}
+
+// @public (undocumented)
+export interface EmbeddingsBatchJobSource {
+    fileName?: string;
+    inlinedRequests?: EmbedContentBatch;
 }
 
 // @public
@@ -823,6 +871,13 @@ export enum EndSensitivity {
 
 // @public
 export interface EnterpriseWebSearch {
+    excludeDomains?: string[];
+}
+
+// @public
+export interface EntityLabel {
+    label?: string;
+    score?: number;
 }
 
 // @public
@@ -984,7 +1039,8 @@ export enum FunctionCallingConfigMode {
     ANY = "ANY",
     AUTO = "AUTO",
     MODE_UNSPECIFIED = "MODE_UNSPECIFIED",
-    NONE = "NONE"
+    NONE = "NONE",
+    VALIDATED = "VALIDATED"
 }
 
 // @public
@@ -1002,9 +1058,28 @@ export interface FunctionDeclaration {
 export class FunctionResponse {
     id?: string;
     name?: string;
+    parts?: FunctionResponsePart[];
     response?: Record<string, unknown>;
     scheduling?: FunctionResponseScheduling;
     willContinue?: boolean;
+}
+
+// @public
+export class FunctionResponseBlob {
+    data?: string;
+    mimeType?: string;
+}
+
+// @public
+export class FunctionResponseFileData {
+    fileUri?: string;
+    mimeType?: string;
+}
+
+// @public
+export class FunctionResponsePart {
+    fileData?: FunctionResponseFileData;
+    inlineData?: FunctionResponseBlob;
 }
 
 // @public
@@ -1013,6 +1088,18 @@ export enum FunctionResponseScheduling {
     SCHEDULING_UNSPECIFIED = "SCHEDULING_UNSPECIFIED",
     SILENT = "SILENT",
     WHEN_IDLE = "WHEN_IDLE"
+}
+
+// @public
+export interface GeminiPreferenceExample {
+    completions?: GeminiPreferenceExampleCompletion[];
+    contents?: Content[];
+}
+
+// @public
+export interface GeminiPreferenceExampleCompletion {
+    completion?: Content;
+    score?: number;
 }
 
 // @public
@@ -1104,6 +1191,12 @@ export interface GeneratedImage {
 }
 
 // @public
+export interface GeneratedImageMask {
+    labels?: EntityLabel[];
+    mask?: Image_2;
+}
+
+// @public
 export interface GeneratedVideo {
     video?: Video;
 }
@@ -1141,6 +1234,7 @@ export interface GenerateImagesParameters {
 export class GenerateImagesResponse {
     generatedImages?: GeneratedImage[];
     positivePromptSafetyAttributes?: SafetyAttributes;
+    sdkHttpResponse?: HttpResponse;
 }
 
 // @public
@@ -1154,11 +1248,13 @@ export interface GenerateVideosConfig {
     generateAudio?: boolean;
     httpOptions?: HttpOptions;
     lastFrame?: Image_2;
+    mask?: VideoGenerationMask;
     negativePrompt?: string;
     numberOfVideos?: number;
     outputGcsUri?: string;
     personGeneration?: string;
     pubsubTopic?: string;
+    referenceImages?: VideoGenerationReferenceImage[];
     resolution?: string;
     seed?: number;
 }
@@ -1172,6 +1268,7 @@ export class GenerateVideosOperation implements Operation<GenerateVideosResponse
     metadata?: Record<string, unknown>;
     name?: string;
     response?: GenerateVideosResponse;
+    sdkHttpResponse?: HttpResponse;
 }
 
 // @public
@@ -1180,6 +1277,7 @@ export interface GenerateVideosParameters {
     image?: Image_2;
     model: string;
     prompt?: string;
+    source?: GenerateVideosSource;
     video?: Video;
 }
 
@@ -1188,6 +1286,13 @@ export class GenerateVideosResponse {
     generatedVideos?: GeneratedVideo[];
     raiMediaFilteredCount?: number;
     raiMediaFilteredReasons?: string[];
+}
+
+// @public
+export interface GenerateVideosSource {
+    image?: Image_2;
+    prompt?: string;
+    video?: Video;
 }
 
 // @public
@@ -1299,7 +1404,7 @@ export interface GetOperationParameters {
     operationName: string;
 }
 
-// @public
+// @public (undocumented)
 export interface GetTuningJobConfig {
     abortSignal?: AbortSignal;
     httpOptions?: HttpOptions;
@@ -1366,6 +1471,7 @@ export interface GoogleRpcStatus {
 
 // @public
 export interface GoogleSearch {
+    excludeDomains?: string[];
     timeRangeFilter?: Interval;
 }
 
@@ -1383,12 +1489,45 @@ export interface GoogleTypeDate {
 
 // @public
 export interface GroundingChunk {
+    maps?: GroundingChunkMaps;
     retrievedContext?: GroundingChunkRetrievedContext;
     web?: GroundingChunkWeb;
 }
 
 // @public
+export interface GroundingChunkMaps {
+    placeAnswerSources?: GroundingChunkMapsPlaceAnswerSources;
+    placeId?: string;
+    text?: string;
+    title?: string;
+    uri?: string;
+}
+
+// @public
+export interface GroundingChunkMapsPlaceAnswerSources {
+    flagContentUri?: string;
+    reviewSnippets?: GroundingChunkMapsPlaceAnswerSourcesReviewSnippet[];
+}
+
+// @public
+export interface GroundingChunkMapsPlaceAnswerSourcesAuthorAttribution {
+    displayName?: string;
+    photoUri?: string;
+    uri?: string;
+}
+
+// @public
+export interface GroundingChunkMapsPlaceAnswerSourcesReviewSnippet {
+    authorAttribution?: GroundingChunkMapsPlaceAnswerSourcesAuthorAttribution;
+    flagContentUri?: string;
+    googleMapsUri?: string;
+    relativePublishTimeDescription?: string;
+    review?: string;
+}
+
+// @public
 export interface GroundingChunkRetrievedContext {
+    documentName?: string;
     ragChunk?: RagChunk;
     text?: string;
     title?: string;
@@ -1404,6 +1543,7 @@ export interface GroundingChunkWeb {
 
 // @public
 export interface GroundingMetadata {
+    googleMapsWidgetContextToken?: string;
     groundingChunks?: GroundingChunk[];
     groundingSupports?: GroundingSupport[];
     retrievalMetadata?: RetrievalMetadata;
@@ -1507,6 +1647,12 @@ export enum ImagePromptLanguage {
 }
 
 // @public
+export class InlinedEmbedContentResponse {
+    error?: JobError;
+    response?: SingleEmbedContentResponse;
+}
+
+// @public
 export interface InlinedRequest {
     config?: GenerateContentConfig;
     contents?: ContentListUnion;
@@ -1584,6 +1730,7 @@ export class ListBatchJobsResponse {
     batchJobs?: BatchJob[];
     // (undocumented)
     nextPageToken?: string;
+    sdkHttpResponse?: HttpResponse;
 }
 
 // @public
@@ -1606,6 +1753,7 @@ export class ListCachedContentsResponse {
     cachedContents?: CachedContent[];
     // (undocumented)
     nextPageToken?: string;
+    sdkHttpResponse?: HttpResponse;
 }
 
 // @public
@@ -1627,6 +1775,7 @@ export interface ListFilesParameters {
 export class ListFilesResponse {
     files?: File_2[];
     nextPageToken?: string;
+    sdkHttpResponse?: HttpResponse;
 }
 
 // @public (undocumented)
@@ -1654,6 +1803,7 @@ export class ListModelsResponse {
     models?: Model[];
     // (undocumented)
     nextPageToken?: string;
+    sdkHttpResponse?: HttpResponse;
 }
 
 // @public
@@ -1677,6 +1827,7 @@ export interface ListTuningJobsParameters {
 // @public
 export class ListTuningJobsResponse {
     nextPageToken?: string;
+    sdkHttpResponse?: HttpResponse;
     tuningJobs?: TuningJob[];
 }
 
@@ -1824,6 +1975,7 @@ export interface LiveMusicGenerationConfig {
     brightness?: number;
     density?: number;
     guidance?: number;
+    musicGenerationMode?: MusicGenerationMode;
     muteBass?: boolean;
     muteDrums?: boolean;
     onlyBassAndDrums?: boolean;
@@ -1922,7 +2074,9 @@ export interface LiveServerContent {
     modelTurn?: Content;
     outputTranscription?: Transcription;
     turnComplete?: boolean;
+    turnCompleteReason?: TurnCompleteReason;
     urlContextMetadata?: UrlContextMetadata;
+    waitingForInput?: boolean;
 }
 
 // @public
@@ -1950,7 +2104,7 @@ export interface LiveServerSessionResumptionUpdate {
     resumable?: boolean;
 }
 
-// @public (undocumented)
+// @public
 export interface LiveServerSetupComplete {
     sessionId?: string;
 }
@@ -2085,6 +2239,8 @@ export class Models extends BaseModule {
     get(params: types.GetModelParameters): Promise<types.Model>;
     // (undocumented)
     list: (params?: types.ListModelsParameters) => Promise<Pager<types.Model>>;
+    recontextImage(params: types.RecontextImageParameters): Promise<types.RecontextImageResponse>;
+    segmentImage(params: types.SegmentImageParameters): Promise<types.SegmentImageResponse>;
     update(params: types.UpdateModelParameters): Promise<types.Model>;
     upscaleImage: (params: types.UpscaleImageParameters) => Promise<types.UpscaleImageResponse>;
 }
@@ -2097,6 +2253,14 @@ export interface ModelSelectionConfig {
 // @public
 export interface MultiSpeakerVoiceConfig {
     speakerVoiceConfigs?: SpeakerVoiceConfig[];
+}
+
+// @public
+export enum MusicGenerationMode {
+    DIVERSITY = "DIVERSITY",
+    MUSIC_GENERATION_MODE_UNSPECIFIED = "MUSIC_GENERATION_MODE_UNSPECIFIED",
+    QUALITY = "QUALITY",
+    VOCALIZATION = "VOCALIZATION"
 }
 
 // @public
@@ -2137,7 +2301,7 @@ export enum Outcome {
     OUTCOME_UNSPECIFIED = "OUTCOME_UNSPECIFIED"
 }
 
-// @public
+// @public (undocumented)
 export enum PagedItem {
     // (undocumented)
     PAGED_ITEM_BATCH_JOBS = "batchJobs",
@@ -2170,6 +2334,7 @@ export class Pager<T> implements AsyncIterable<T> {
     //
     // (undocumented)
     protected requestInternal: (params: PagedItemConfig) => Promise<PagedItemResponse<T>>;
+    get sdkHttpResponse(): types.HttpResponse | undefined;
 }
 
 // @public
@@ -2212,8 +2377,32 @@ export interface PrebuiltVoiceConfig {
 }
 
 // @public
+export interface PreferenceOptimizationDataStats {
+    scoresDistribution?: DatasetDistribution;
+    scoreVariancePerExampleDistribution?: DatasetDistribution;
+    totalBillableTokenCount?: string;
+    tuningDatasetExampleCount?: string;
+    tuningStepCount?: string;
+    userDatasetExamples?: GeminiPreferenceExample[];
+    userInputTokenDistribution?: DatasetDistribution;
+    userOutputTokenDistribution?: DatasetDistribution;
+}
+
+// @public
+export interface PreTunedModel {
+    baseModel?: string;
+    checkpointId?: string;
+    tunedModelName?: string;
+}
+
+// @public
 export interface ProactivityConfig {
     proactiveAudio?: boolean;
+}
+
+// @public
+export interface ProductImage {
+    productImage?: Image_2;
 }
 
 // @public
@@ -2279,8 +2468,43 @@ export interface RealtimeInputConfig {
     turnCoverage?: TurnCoverage;
 }
 
+// @public
+export interface RecontextImageConfig {
+    abortSignal?: AbortSignal;
+    addWatermark?: boolean;
+    baseSteps?: number;
+    enhancePrompt?: boolean;
+    httpOptions?: HttpOptions;
+    numberOfImages?: number;
+    outputCompressionQuality?: number;
+    outputGcsUri?: string;
+    outputMimeType?: string;
+    personGeneration?: PersonGeneration;
+    safetyFilterLevel?: SafetyFilterLevel;
+    seed?: number;
+}
+
+// @public
+export interface RecontextImageParameters {
+    config?: RecontextImageConfig;
+    model: string;
+    source: RecontextImageSource;
+}
+
+// @public
+export class RecontextImageResponse {
+    generatedImages?: GeneratedImage[];
+}
+
+// @public
+export interface RecontextImageSource {
+    personImage?: Image_2;
+    productImages?: ProductImage[];
+    prompt?: string;
+}
+
 // @public (undocumented)
-export type ReferenceImage = RawReferenceImage | MaskReferenceImage | ControlReferenceImage | StyleReferenceImage | SubjectReferenceImage;
+export type ReferenceImage = RawReferenceImage | MaskReferenceImage | ControlReferenceImage | StyleReferenceImage | SubjectReferenceImage | ContentReferenceImage;
 
 // @public
 export interface ReplayFile {
@@ -2425,6 +2649,11 @@ export interface Schema {
 export type SchemaUnion = Schema | unknown;
 
 // @public
+export interface ScribbleImage {
+    image?: Image_2;
+}
+
+// @public
 export interface SearchEntryPoint {
     renderedContent?: string;
     sdkBlob?: string;
@@ -2436,6 +2665,50 @@ export interface Segment {
     partIndex?: number;
     startIndex?: number;
     text?: string;
+}
+
+// @public
+export interface SegmentImageConfig {
+    abortSignal?: AbortSignal;
+    binaryColorThreshold?: number;
+    confidenceThreshold?: number;
+    httpOptions?: HttpOptions;
+    maskDilation?: number;
+    maxPredictions?: number;
+    mode?: SegmentMode;
+}
+
+// @public
+export interface SegmentImageParameters {
+    config?: SegmentImageConfig;
+    model: string;
+    source: SegmentImageSource;
+}
+
+// @public
+export class SegmentImageResponse {
+    generatedMasks?: GeneratedImageMask[];
+}
+
+// @public
+export interface SegmentImageSource {
+    image?: Image_2;
+    prompt?: string;
+    scribbleImage?: ScribbleImage;
+}
+
+// @public
+export enum SegmentMode {
+    // (undocumented)
+    BACKGROUND = "BACKGROUND",
+    // (undocumented)
+    FOREGROUND = "FOREGROUND",
+    // (undocumented)
+    INTERACTIVE = "INTERACTIVE",
+    // (undocumented)
+    PROMPT = "PROMPT",
+    // (undocumented)
+    SEMANTIC = "SEMANTIC"
 }
 
 // @public
@@ -2463,6 +2736,12 @@ export interface SessionResumptionConfig {
 
 // @public
 export function setDefaultBaseUrls(baseUrlParams: BaseUrlParameters): void;
+
+// @public
+export class SingleEmbedContentResponse {
+    embedding?: ContentEmbedding;
+    tokenCount?: string;
+}
 
 // @public
 export interface SlidingWindow {
@@ -2537,7 +2816,9 @@ export enum SubjectReferenceType {
 // @public
 export interface SupervisedHyperParameters {
     adapterSize?: AdapterSize;
+    batchSize?: string;
     epochCount?: string;
+    learningRate?: number;
     learningRateMultiplier?: number;
 }
 
@@ -2582,6 +2863,7 @@ export interface SupervisedTuningSpec {
     exportLastCheckpointOnly?: boolean;
     hyperParameters?: SupervisedHyperParameters;
     trainingDatasetUri?: string;
+    tuningMode?: TuningMode;
     validationDatasetUri?: string;
 }
 
@@ -2648,6 +2930,7 @@ export interface ToolCodeExecution {
 // @public
 export interface ToolComputerUse {
     environment?: Environment;
+    excludedPredefinedFunctions?: string[];
 }
 
 // @public
@@ -2707,6 +2990,7 @@ export interface TuningDataset {
 // @public
 export interface TuningDataStats {
     distillationDataStats?: DistillationDataStats;
+    preferenceOptimizationDataStats?: PreferenceOptimizationDataStats;
     supervisedTuningDataStats?: SupervisedTuningDataStats;
 }
 
@@ -2720,18 +3004,19 @@ export interface TuningExample {
 export interface TuningJob {
     baseModel?: string;
     createTime?: string;
+    customBaseModel?: string;
     description?: string;
-    distillationSpec?: DistillationSpec;
     encryptionSpec?: EncryptionSpec;
     endTime?: string;
     error?: GoogleRpcStatus;
     experiment?: string;
     labels?: Record<string, string>;
     name?: string;
+    outputUri?: string;
     partnerModelTuningSpec?: PartnerModelTuningSpec;
     pipelineJob?: string;
-    satisfiesPzi?: boolean;
-    satisfiesPzs?: boolean;
+    preTunedModel?: PreTunedModel;
+    sdkHttpResponse?: HttpResponse;
     serviceAccount?: string;
     startTime?: string;
     state?: JobState;
@@ -2743,17 +3028,33 @@ export interface TuningJob {
 }
 
 // @public
+export enum TuningMode {
+    TUNING_MODE_FULL = "TUNING_MODE_FULL",
+    TUNING_MODE_PEFT_ADAPTER = "TUNING_MODE_PEFT_ADAPTER",
+    TUNING_MODE_UNSPECIFIED = "TUNING_MODE_UNSPECIFIED"
+}
+
+// @public
 export interface TuningOperation {
     done?: boolean;
     error?: Record<string, unknown>;
     metadata?: Record<string, unknown>;
     name?: string;
+    sdkHttpResponse?: HttpResponse;
 }
 
 // @public (undocumented)
 export interface TuningValidationDataset {
     gcsUri?: string;
     vertexDatasetResource?: string;
+}
+
+// @public
+export enum TurnCompleteReason {
+    MALFORMED_FUNCTION_CALL = "MALFORMED_FUNCTION_CALL",
+    NEED_MORE_INPUT = "NEED_MORE_INPUT",
+    RESPONSE_REJECTED = "RESPONSE_REJECTED",
+    TURN_COMPLETE_REASON_UNSPECIFIED = "TURN_COMPLETE_REASON_UNSPECIFIED"
 }
 
 // @public
@@ -2832,6 +3133,7 @@ export interface UpscaleImageConfig {
     imagePreservationFactor?: number;
     includeRaiReason?: boolean;
     outputCompressionQuality?: number;
+    outputGcsUri?: string;
     outputMimeType?: string;
 }
 
@@ -2846,6 +3148,7 @@ export interface UpscaleImageParameters {
 // @public (undocumented)
 export class UpscaleImageResponse {
     generatedImages?: GeneratedImage[];
+    sdkHttpResponse?: HttpResponse;
 }
 
 // @public
@@ -2866,7 +3169,9 @@ export interface UrlMetadata {
 // @public
 export enum UrlRetrievalStatus {
     URL_RETRIEVAL_STATUS_ERROR = "URL_RETRIEVAL_STATUS_ERROR",
+    URL_RETRIEVAL_STATUS_PAYWALL = "URL_RETRIEVAL_STATUS_PAYWALL",
     URL_RETRIEVAL_STATUS_SUCCESS = "URL_RETRIEVAL_STATUS_SUCCESS",
+    URL_RETRIEVAL_STATUS_UNSAFE = "URL_RETRIEVAL_STATUS_UNSAFE",
     URL_RETRIEVAL_STATUS_UNSPECIFIED = "URL_RETRIEVAL_STATUS_UNSPECIFIED"
 }
 
@@ -2927,6 +3232,32 @@ export interface Video {
 export enum VideoCompressionQuality {
     LOSSLESS = "LOSSLESS",
     OPTIMIZED = "OPTIMIZED"
+}
+
+// @public
+export interface VideoGenerationMask {
+    image?: Image_2;
+    maskMode?: VideoGenerationMaskMode;
+}
+
+// @public
+export enum VideoGenerationMaskMode {
+    INSERT = "INSERT",
+    OUTPAINT = "OUTPAINT",
+    REMOVE = "REMOVE",
+    REMOVE_STATIC = "REMOVE_STATIC"
+}
+
+// @public
+export interface VideoGenerationReferenceImage {
+    image?: Image_2;
+    referenceType?: VideoGenerationReferenceType;
+}
+
+// @public
+export enum VideoGenerationReferenceType {
+    ASSET = "ASSET",
+    STYLE = "STYLE"
 }
 
 // @public

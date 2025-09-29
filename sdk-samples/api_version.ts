@@ -14,7 +14,7 @@ async function setApiVersionForMLDev() {
   const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY, apiVersion: 'v1alpha'});
   const response = await ai.models.generateContent({
     model: 'gemini-2.0-flash',
-    contents: 'Tell me a stroy in 300 words?',
+    contents: 'Tell me a story in 300 words?',
   });
   console.log('text response: ', response.text);
 }
@@ -28,7 +28,7 @@ async function setApiVersionForVertexAI() {
   });
   const response = await ai.models.generateContent({
     model: 'gemini-2.0-flash',
-    contents: 'Tell me a stroy in 300 words?',
+    contents: 'Tell me a story in 300 words?',
   });
 
   console.log('text response: ', response.text);

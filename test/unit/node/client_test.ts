@@ -57,6 +57,13 @@ describe('Client', () => {
     );
   });
 
+  it('should not set apiKey if both GEMINI_API_KEY and GOOGLE_API_KEY are set to empty string', () => {
+    process.env['GOOGLE_API_KEY'] = '';
+    process.env['GEMINI_API_KEY'] = '';
+    const client = new GoogleGenAI({});
+    expect(client['apiKey']).toBe(undefined);
+  });
+
   it('should set vertexai from environment', () => {
     process.env['GOOGLE_GENAI_USE_VERTEXAI'] = 'false';
     let client = new GoogleGenAI({});

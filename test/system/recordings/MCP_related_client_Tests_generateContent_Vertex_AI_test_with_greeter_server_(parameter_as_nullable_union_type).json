@@ -1,0 +1,135 @@
+{
+  "recordID": "MCP_related_client_Tests_generateContent_Vertex_AI_test_with_greeter_server_(parameter_as_nullable_union_type)",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:generateContent",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:generateContent HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "487",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "MCP related client Tests generateContent Vertex AI test with greeter server (parameter as nullable union type)"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "call the greeter once with name: jone smith, and greeting: Hello"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {},
+            "toolConfig": {
+              "functionCallingConfig": {
+                "mode": "AUTO"
+              }
+            },
+            "tools": [
+              {
+                "functionDeclarations": [
+                  {
+                    "name": "greet",
+                    "parametersJsonSchema": {
+                      "$schema": "http://json-schema.org/draft-07/schema#",
+                      "additionalProperties": false,
+                      "properties": {
+                        "greeting": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": ["string", "number", "null"]
+                        }
+                      },
+                      "required": ["name", "greeting"],
+                      "type": "object"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "us-central1-aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "701f5e2c264d2a115ec1115b6127bb79a4707a0414208482d15e94096ad0023d",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Encoding": "gzip",
+          "Content-Length": "764",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Mon, 25 Aug 2025 22:45:42 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "avgLogprobs": -1.7723428181239538,
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "args": {
+                          "greeting": "Hello",
+                          "name": "jone smith"
+                        },
+                        "name": "greet"
+                      },
+                      "thoughtSignature": "CvUBAcu98PA/L/KIAVj/F4PPUqI4aW50HJGOc1XCw6kwfx7bJtx0h58u7/uVjyoR064D0+8nRtTw1hsAE4rT6HT0VM8Ms7QML1xwbTT0NDFGrqZjOcxY1D9wgLchEGCgdvjXCOXaEHINaDANlM469eCj7oqzjumcMVILHeoTmSJCPlwh7HZCSq4tf6pMUTrjc7CuUbz+qfUoJMZgu4EmGHEwiFoa5RAn4aCTzZMcETtDoFBf7diWiPTpoY8pUcuVOJkn/FbU9ALTLA/HVO0vfqnQFV60Avp5KRKvOpCBQjx+eWVRreXvl4pV9V3+4YO4ldCV4L7dgFo="
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "score": -12.406399726867676
+              }
+            ],
+            "createTime": "2025-08-25T22:45:42.348329Z",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "luesaKmhFZGOm9IP2MHq2QY",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 212
+              },
+              "candidatesTokenCount": 7,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 7
+                }
+              ],
+              "promptTokenCount": 17,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 17
+                }
+              ],
+              "thoughtsTokenCount": 57,
+              "totalTokenCount": 81,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

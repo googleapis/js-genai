@@ -1,0 +1,88 @@
+{
+  "recordID": "Client_Tests_computeTokens_Vertex_AI_should_compute_tokens_with_specified_parameters",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-1.5-flash:computeTokens",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-1.5-flash:computeTokens HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "96",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Client Tests computeTokens Vertex AI should compute tokens with specified parameters"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "The quick brown fox jumps over the lazy dog."
+                  }
+                ],
+                "role": "user"
+              }
+            ]
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "us-central1-aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "0d78b9231856a9b37f4b0f78e9c13703c9b2c302511c13b7ae0dd196add5a62c",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Encoding": "gzip",
+          "Content-Length": "210",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sat, 16 Aug 2025 00:43:15 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "tokensInfo": [
+              {
+                "role": "user",
+                "tokenIds": [
+                  "651",
+                  "4320",
+                  "8426",
+                  "25341",
+                  "36271",
+                  "1163",
+                  "573",
+                  "27894",
+                  "5929",
+                  "235265"
+                ],
+                "tokens": [
+                  "VGhl",
+                  "IHF1aWNr",
+                  "IGJyb3du",
+                  "IGZveA==",
+                  "IGp1bXBz",
+                  "IG92ZXI=",
+                  "IHRoZQ==",
+                  "IGxhenk=",
+                  "IGRvZw==",
+                  "Lg=="
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

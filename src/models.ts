@@ -8,6 +8,8 @@
 
 import {
   DEFAULT_MAX_REMOTE_CALLS,
+  hasCallableTools,
+  hasNonCallableTools,
   isCallableTool,
   shouldAppendAfcHistory,
   shouldDisableAfc,
@@ -18,12 +20,7 @@ import {BaseModule} from './_common.js';
 import * as _internal_types from './_internal_types.js';
 import {tContents} from './_transformers.js';
 import * as converters from './converters/_models_converters.js';
-import {
-  hasMcpClientTools,
-  hasMcpToolUsage,
-  hasNonMcpTools,
-  setMcpUsageHeader,
-} from './mcp/_mcp.js';
+import {hasMcpToolUsage, setMcpUsageHeader} from './mcp/_mcp.js';
 import {PagedItem, Pager} from './pagers.js';
 import * as types from './types.js';
 
@@ -73,13 +70,13 @@ export class Models extends BaseModule {
   generateContent = async (
     params: types.GenerateContentParameters,
   ): Promise<types.GenerateContentResponse> => {
-    const transformedParams = await this.processParamsForMcpUsage(params);
+    const transformedParams = await this.processParamsMaybeAddMcpUsage(params);
     this.maybeMoveToResponseJsonSchem(params);
-    if (!hasMcpClientTools(params) || shouldDisableAfc(params.config)) {
+    if (!hasCallableTools(params) || shouldDisableAfc(params.config)) {
       return await this.generateContentInternal(transformedParams);
     }
 
-    if (hasNonMcpTools(params)) {
+    if (hasNonCallableTools(params)) {
       throw new Error(
         'Automatic function calling with CallableTools and Tools is not yet supported.',
       );
@@ -202,7 +199,8 @@ export class Models extends BaseModule {
   ): Promise<AsyncGenerator<types.GenerateContentResponse>> => {
     this.maybeMoveToResponseJsonSchem(params);
     if (shouldDisableAfc(params.config)) {
-      const transformedParams = await this.processParamsForMcpUsage(params);
+      const transformedParams =
+        await this.processParamsMaybeAddMcpUsage(params);
       return await this.generateContentStreamInternal(transformedParams);
     } else {
       return await this.processAfcStream(params);
@@ -215,7 +213,7 @@ export class Models extends BaseModule {
    * modify the original params. Also sets the MCP usage header if there are
    * MCP tools in the parameters.
    */
-  private async processParamsForMcpUsage(
+  private async processParamsMaybeAddMcpUsage(
     params: types.GenerateContentParameters,
   ): Promise<types.GenerateContentParameters> {
     const tools = params.config?.tools;
@@ -303,7 +301,8 @@ export class Models extends BaseModule {
           remoteCallCount++;
           wereFunctionsCalled = false;
         }
-        const transformedParams = await models.processParamsForMcpUsage(params);
+        const transformedParams =
+          await models.processParamsMaybeAddMcpUsage(params);
         const response =
           await models.generateContentStreamInternal(transformedParams);
 
@@ -415,10 +414,12 @@ export class Models extends BaseModule {
         response = {
           generatedImages: generatedImages,
           positivePromptSafetyAttributes: positivePromptSafetyAttributes,
+          sdkHttpResponse: apiResponse.sdkHttpResponse,
         };
       } else {
         response = {
           generatedImages: generatedImages,
+          sdkHttpResponse: apiResponse.sdkHttpResponse,
         };
       }
       return response;
@@ -549,7 +550,9 @@ export class Models extends BaseModule {
    * ```ts
    * const operation = await ai.models.generateVideos({
    *  model: 'veo-2.0-generate-001',
-   *  prompt: 'A neon hologram of a cat driving at top speed',
+   *  source: {
+   *    prompt: 'A neon hologram of a cat driving at top speed',
+   *  },
    *  config: {
    *    numberOfVideos: 1
    * });
@@ -566,6 +569,11 @@ export class Models extends BaseModule {
   generateVideos = async (
     params: types.GenerateVideosParameters,
   ): Promise<types.GenerateVideosOperation> => {
+    if ((params.prompt || params.image || params.video) && params.source) {
+      throw new Error(
+        'Source and prompt/image/video are mutually exclusive. Please only use source.',
+      );
+    }
     return await this.generateVideosInternal(params);
   };
 
@@ -586,7 +594,6 @@ export class Models extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -625,7 +632,6 @@ export class Models extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -674,7 +680,6 @@ export class Models extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -715,7 +720,6 @@ export class Models extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -787,7 +791,6 @@ export class Models extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -801,7 +804,13 @@ export class Models extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.EmbedContentResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.EmbedContentResponse>;
 
       return response.then((apiResponse) => {
@@ -820,7 +829,6 @@ export class Models extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -834,7 +842,13 @@ export class Models extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.EmbedContentResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.EmbedContentResponse>;
 
       return response.then((apiResponse) => {
@@ -847,23 +861,7 @@ export class Models extends BaseModule {
   }
 
   /**
-   * Generates an image based on a text description and configuration.
-   *
-   * @param params - The parameters for generating images.
-   * @return The response from the API.
-   *
-   * @example
-   * ```ts
-   * const response = await ai.models.generateImages({
-   *  model: 'imagen-3.0-generate-002',
-   *  prompt: 'Robot holding a red skateboard',
-   *  config: {
-   *    numberOfImages: 1,
-   *    includeRaiReason: true,
-   *  },
-   * });
-   * console.log(response?.generatedImages?.[0]?.image?.imageBytes);
-   * ```
+   * Private method for generating images.
    */
   private async generateImagesInternal(
     params: types.GenerateImagesParameters,
@@ -882,7 +880,6 @@ export class Models extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -896,7 +893,13 @@ export class Models extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.GenerateImagesResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.GenerateImagesResponse>;
 
       return response.then((apiResponse) => {
@@ -915,7 +918,6 @@ export class Models extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -929,7 +931,13 @@ export class Models extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.GenerateImagesResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.GenerateImagesResponse>;
 
       return response.then((apiResponse) => {
@@ -941,6 +949,9 @@ export class Models extends BaseModule {
     }
   }
 
+  /**
+   * Private method for editing an image.
+   */
   private async editImageInternal(
     params: _internal_types.EditImageParametersInternal,
   ): Promise<types.EditImageResponse> {
@@ -958,7 +969,6 @@ export class Models extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -972,7 +982,13 @@ export class Models extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.EditImageResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.EditImageResponse>;
 
       return response.then((apiResponse) => {
@@ -986,6 +1002,9 @@ export class Models extends BaseModule {
     }
   }
 
+  /**
+   * Private method for upscaling an image.
+   */
   private async upscaleImageInternal(
     params: _internal_types.UpscaleImageAPIParametersInternal,
   ): Promise<types.UpscaleImageResponse> {
@@ -1003,7 +1022,94 @@ export class Models extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.UpscaleImageResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
+        }) as Promise<types.UpscaleImageResponse>;
+
+      return response.then((apiResponse) => {
+        const resp = converters.upscaleImageResponseFromVertex(apiResponse);
+        const typedResp = new types.UpscaleImageResponse();
+        Object.assign(typedResp, resp);
+        return typedResp;
+      });
+    } else {
+      throw new Error('This method is only supported by the Vertex AI.');
+    }
+  }
+
+  /**
+   * Recontextualizes an image.
+   *
+   * There are two types of recontextualization currently supported:
+   * 1) Imagen Product Recontext - Generate images of products in new scenes
+   *    and contexts.
+   * 2) Virtual Try-On: Generate images of persons modeling fashion products.
+   *
+   * @param params - The parameters for recontextualizing an image.
+   * @return The response from the API.
+   *
+   * @example
+   * ```ts
+   * const response1 = await ai.models.recontextImage({
+   *  model: 'imagen-product-recontext-preview-06-30',
+   *  source: {
+   *    prompt: 'In a modern kitchen setting.',
+   *    productImages: [productImage],
+   *  },
+   *  config: {
+   *    numberOfImages: 1,
+   *  },
+   * });
+   * console.log(response1?.generatedImages?.[0]?.image?.imageBytes);
+   *
+   * const response2 = await ai.models.recontextImage({
+   *  model: 'virtual-try-on-preview-08-04',
+   *  source: {
+   *    personImage: personImage,
+   *    productImages: [productImage],
+   *  },
+   *  config: {
+   *    numberOfImages: 1,
+   *  },
+   * });
+   * console.log(response2?.generatedImages?.[0]?.image?.imageBytes);
+   * ```
+   */
+  async recontextImage(
+    params: types.RecontextImageParameters,
+  ): Promise<types.RecontextImageResponse> {
+    let response: Promise<types.RecontextImageResponse>;
+
+    let path: string = '';
+    let queryParams: Record<string, string> = {};
+    if (this.apiClient.isVertexAI()) {
+      const body = converters.recontextImageParametersToVertex(
+        this.apiClient,
+        params,
+      );
+      path = common.formatMap(
+        '{model}:predict',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
       delete body['_url'];
       delete body['_query'];
 
@@ -1018,11 +1124,75 @@ export class Models extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        }) as Promise<types.UpscaleImageResponse>;
+        }) as Promise<types.RecontextImageResponse>;
 
       return response.then((apiResponse) => {
-        const resp = converters.upscaleImageResponseFromVertex(apiResponse);
-        const typedResp = new types.UpscaleImageResponse();
+        const resp = converters.recontextImageResponseFromVertex(apiResponse);
+        const typedResp = new types.RecontextImageResponse();
+        Object.assign(typedResp, resp);
+        return typedResp;
+      });
+    } else {
+      throw new Error('This method is only supported by the Vertex AI.');
+    }
+  }
+
+  /**
+   * Segments an image, creating a mask of a specified area.
+   *
+   * @param params - The parameters for segmenting an image.
+   * @return The response from the API.
+   *
+   * @example
+   * ```ts
+   * const response = await ai.models.segmentImage({
+   *  model: 'image-segmentation-001',
+   *  source: {
+   *    image: image,
+   *  },
+   *  config: {
+   *    mode: 'foreground',
+   *  },
+   * });
+   * console.log(response?.generatedMasks?.[0]?.mask?.imageBytes);
+   * ```
+   */
+  async segmentImage(
+    params: types.SegmentImageParameters,
+  ): Promise<types.SegmentImageResponse> {
+    let response: Promise<types.SegmentImageResponse>;
+
+    let path: string = '';
+    let queryParams: Record<string, string> = {};
+    if (this.apiClient.isVertexAI()) {
+      const body = converters.segmentImageParametersToVertex(
+        this.apiClient,
+        params,
+      );
+      path = common.formatMap(
+        '{model}:predict',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
+      delete body['_url'];
+      delete body['_query'];
+
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json();
+        }) as Promise<types.SegmentImageResponse>;
+
+      return response.then((apiResponse) => {
+        const resp = converters.segmentImageResponseFromVertex(apiResponse);
+        const typedResp = new types.SegmentImageResponse();
         Object.assign(typedResp, resp);
         return typedResp;
       });
@@ -1054,7 +1224,6 @@ export class Models extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -1083,7 +1252,6 @@ export class Models extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -1125,7 +1293,6 @@ export class Models extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -1139,7 +1306,13 @@ export class Models extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.ListModelsResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.ListModelsResponse>;
 
       return response.then((apiResponse) => {
@@ -1158,7 +1331,6 @@ export class Models extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -1172,7 +1344,13 @@ export class Models extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.ListModelsResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.ListModelsResponse>;
 
       return response.then((apiResponse) => {
@@ -1216,7 +1394,6 @@ export class Models extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -1248,7 +1425,6 @@ export class Models extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -1301,7 +1477,6 @@ export class Models extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -1315,11 +1490,17 @@ export class Models extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.DeleteModelResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.DeleteModelResponse>;
 
-      return response.then(() => {
-        const resp = converters.deleteModelResponseFromVertex();
+      return response.then((apiResponse) => {
+        const resp = converters.deleteModelResponseFromVertex(apiResponse);
         const typedResp = new types.DeleteModelResponse();
         Object.assign(typedResp, resp);
         return typedResp;
@@ -1334,7 +1515,6 @@ export class Models extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -1348,11 +1528,17 @@ export class Models extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.DeleteModelResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.DeleteModelResponse>;
 
-      return response.then(() => {
-        const resp = converters.deleteModelResponseFromMldev();
+      return response.then((apiResponse) => {
+        const resp = converters.deleteModelResponseFromMldev(apiResponse);
         const typedResp = new types.DeleteModelResponse();
         Object.assign(typedResp, resp);
         return typedResp;
@@ -1393,7 +1579,6 @@ export class Models extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -1407,7 +1592,13 @@ export class Models extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.CountTokensResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.CountTokensResponse>;
 
       return response.then((apiResponse) => {
@@ -1426,7 +1617,6 @@ export class Models extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -1440,7 +1630,13 @@ export class Models extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.CountTokensResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.CountTokensResponse>;
 
       return response.then((apiResponse) => {
@@ -1487,7 +1683,6 @@ export class Models extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -1501,7 +1696,13 @@ export class Models extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.ComputeTokensResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.ComputeTokensResponse>;
 
       return response.then((apiResponse) => {
@@ -1516,29 +1717,8 @@ export class Models extends BaseModule {
   }
 
   /**
-   *  Generates videos based on a text description and configuration.
-   *
-   * @param params - The parameters for generating videos.
-   * @return A Promise<GenerateVideosOperation> which allows you to track the progress and eventually retrieve the generated videos using the operations.get method.
-   *
-   * @example
-   * ```ts
-   * const operation = await ai.models.generateVideos({
-   *  model: 'veo-2.0-generate-001',
-   *  prompt: 'A neon hologram of a cat driving at top speed',
-   *  config: {
-   *    numberOfVideos: 1
-   * });
-   *
-   * while (!operation.done) {
-   *   await new Promise(resolve => setTimeout(resolve, 10000));
-   *   operation = await ai.operations.getVideosOperation({operation: operation});
-   * }
-   *
-   * console.log(operation.response?.generatedVideos?.[0]?.video?.uri);
-   * ```
+   * Private method for generating videos.
    */
-
   private async generateVideosInternal(
     params: types.GenerateVideosParameters,
   ): Promise<types.GenerateVideosOperation> {
@@ -1556,7 +1736,6 @@ export class Models extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -1589,7 +1768,6 @@ export class Models extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 

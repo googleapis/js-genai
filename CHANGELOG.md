@@ -1,6 +1,142 @@
 # Changelog
 
 
+## [1.21.0](https://github.com/googleapis/js-genai/compare/v1.20.0...v1.21.0) (2025-09-25)
+
+
+### Features
+
+* Add FunctionResponsePart & ToolComputerUse.excludedPredefinedFunctions ([61620f6](https://github.com/googleapis/js-genai/commit/61620f64cc8ca6997e958bda6f61ed52faff71c8))
+* Support Imagen 4 Ingredients on Vertex ([56cccfc](https://github.com/googleapis/js-genai/commit/56cccfca02b668ed3bfacc7e757eb821e827e35b))
+
+
+### Bug Fixes
+
+* [#963](https://github.com/googleapis/js-genai/issues/963) allow leading whitespace before data chunks ([24f4153](https://github.com/googleapis/js-genai/commit/24f4153ea652709e4093dd4f543c2fbebd693dc2))
+* Expose `JOB_STATE_RUNNING` and `JOB_STATE_EXPIRED` for Gemini Batches states ([b513c69](https://github.com/googleapis/js-genai/commit/b513c69d2102b94733d2e436d8d1b8a47dd1bbf4))
+* initialization of `pre_tuned_model_checkpoint_id` from tuning config. ([2e10e7f](https://github.com/googleapis/js-genai/commit/2e10e7f8d666fb8f0f332834266d9fd0a5d13c34))
+
+## [1.20.0](https://github.com/googleapis/js-genai/compare/v1.19.0...v1.20.0) (2025-09-16)
+
+
+### Features
+
+* Add 'turn_complete_reason' and 'waiting_for_input' fields. ([cb54332](https://github.com/googleapis/js-genai/commit/cb543326e805cf1fc4f9167b1a8af797dc8a11ca))
+* Add `VideoGenerationMaskMode` enum for Veo 2 Editing ([3e850fd](https://github.com/googleapis/js-genai/commit/3e850fdad8b5252608b8287b2e537fb9b0a2f35e))
+
+## [1.19.0](https://github.com/googleapis/js-genai/compare/v1.18.0...v1.19.0) (2025-09-09)
+
+
+### Features
+
+* Add labels to create tuning job config ([220c4d6](https://github.com/googleapis/js-genai/commit/220c4d6c925d8ebfa3cfccff5ed964df1b775a62))
+* Support Veo 2 Editing on Vertex ([6e34fd0](https://github.com/googleapis/js-genai/commit/6e34fd057cc88c300942f231f43e1c120f3a6fe6))
+
+
+### Bug Fixes
+
+* Enable `id` field in `FunctionCall` for Vertex AI. ([7c6e047](https://github.com/googleapis/js-genai/commit/7c6e047037103a0cc60c799a12dcc3ace3a5ba2f))
+
+## [1.18.0](https://github.com/googleapis/js-genai/compare/v1.17.0...v1.18.0) (2025-09-09)
+
+
+### Features
+
+* generate the function_call class's converters ([e57a7bc](https://github.com/googleapis/js-genai/commit/e57a7bcc4e30e0f9ddef036bbe50680ebc476e83))
+* Implement embed content batches. ([9cb8613](https://github.com/googleapis/js-genai/commit/9cb8613ef7646be0d6392f4da4da3eb6b0e6d5f6))
+
+## [1.17.0](https://github.com/googleapis/js-genai/compare/v1.16.0...v1.17.0) (2025-09-02)
+
+
+### Features
+
+* Add resolution field for Gemini Developer API Veo 3 generation ([5ce467b](https://github.com/googleapis/js-genai/commit/5ce467b754b82f1a2ba18e75f27962c0764db091))
+
+## [1.16.0](https://github.com/googleapis/js-genai/compare/v1.15.0...v1.16.0) (2025-08-27)
+
+
+### Features
+
+* add `sdkHttpResponse.headers` to *Delete responses. ([397c602](https://github.com/googleapis/js-genai/commit/397c6022864adfd5113da58977ee036d186e81a2))
+* Add add_watermark field for recontext_image (Virtual Try-On, Product Recontext) ([e182fe8](https://github.com/googleapis/js-genai/commit/e182fe89deebf2c0bbe0310c689e444a56351896))
+* Add output_gcs_uri to Imagen upscale_image ([8db102a](https://github.com/googleapis/js-genai/commit/8db102a976c6dadcf6596bdd2b378f982da1261b))
+* add outputSchema support for MCP ([e2d4e50](https://github.com/googleapis/js-genai/commit/e2d4e507513009ba1bff79f193459772673ac42d))
+* Add VALIDATED mode into FunctionCallingConfigMode ([af410e7](https://github.com/googleapis/js-genai/commit/af410e74f540411e809725f809caab40a624ba6f))
+* Add VideoGenerationReferenceType enum for generate_videos ([eb17013](https://github.com/googleapis/js-genai/commit/eb170130c2c81b7f149f1d824b813fb3c44db36d))
+* Support GenerateVideosSource for Veo GenerateVideos ([2241749](https://github.com/googleapis/js-genai/commit/2241749382f760eb942bf84318f64b2e9c535694))
+* support tunings.cancel in the genai SDK for Python, Java, JS, and Go ([2d67d25](https://github.com/googleapis/js-genai/commit/2d67d25d4b7cbdeb6b04caf15cb6b8b3b1033e68))
+* Update server test recordings to JSON. ([dd0a033](https://github.com/googleapis/js-genai/commit/dd0a0334375f373964acf9c7d6b4d2b8905226a1))
+
+
+### Bug Fixes
+
+* **js:** empty env vars should be treated as undefined. ([16a80c0](https://github.com/googleapis/js-genai/commit/16a80c04f0b8353a6c4e64a7d29c171e0c241ae3))
+
+## [1.15.0](https://github.com/googleapis/js-genai/compare/v1.14.0...v1.15.0) (2025-08-18)
+
+
+### Features
+
+* Support Imagen image segmentation on Vertex ([6b86bae](https://github.com/googleapis/js-genai/commit/6b86baecc425197c2db1b734e93a4a5dcb9a10a4))
+* Support Veo 2 Reference Images to Video Generation on Vertex ([6bca6ad](https://github.com/googleapis/js-genai/commit/6bca6ad37edd4ebda024b2eaf617d4ad213a791f))
+
+
+### Bug Fixes
+
+* **chats:** Drop the validation on part with empty text ([d2602d2](https://github.com/googleapis/js-genai/commit/d2602d2ec47402d567f095c6c621b258432ff896))
+* Fix the bug to support Gemini Batch inlined requests system instruction ([843c774](https://github.com/googleapis/js-genai/commit/843c7746edc9497499b8af277f4f3901f31dce9a))
+
+## [1.14.0](https://github.com/googleapis/js-genai/compare/v1.13.0...v1.14.0) (2025-08-13)
+
+
+### Features
+
+* add an _exclude_fields characteristic in the config for unused values to avoid unnecessary and unused code in converter and type generation. ([15a4504](https://github.com/googleapis/js-genai/commit/15a4504ac3455044bb3ef51440ccbf420168104e))
+* enable continuous fine-tuning on a pre-tuned model in the SDK. ([027f09d](https://github.com/googleapis/js-genai/commit/027f09db662ce6b30f737b10b4d2efcb4282a9b6))
+* support document name in grounding metadata ([b801236](https://github.com/googleapis/js-genai/commit/b8012365f7ec7917576ca048bbaa37ac9d011795))
+* Support exclude_domains in Google Search and Enterprise Web Search ([8ed49f1](https://github.com/googleapis/js-genai/commit/8ed49f171e2a1bf2cfb187869e4682ed2f8bd2fb))
+
+
+### Bug Fixes
+
+* Replace `gemini-2.5-flash-preview-04-17` with `gemini-2.5-flash`. ([d7f1c30](https://github.com/googleapis/js-genai/commit/d7f1c304554c045cdd8bf710d11178a1d07b2983))
+
+## [1.13.0](https://github.com/googleapis/js-genai/compare/v1.12.0...v1.13.0) (2025-08-06)
+
+
+### Features
+
+* Add image_size field for Gemini Developer API Imagen 4 generation ([9841ecb](https://github.com/googleapis/js-genai/commit/9841ecb359d57648e284271fdf3a477ca3c5d6f1))
+* Add Lyria enum for music generation mode for vocalization ([b05821f](https://github.com/googleapis/js-genai/commit/b05821f5279ba0a579312fb66deafc79bf56fda5))
+* allow methods in batch to return headers in sdk_http_response by default ([55a2be4](https://github.com/googleapis/js-genai/commit/55a2be418f132788e5be6266c05ba42bf96c4aa1))
+* enable responseId for Gemini Developer API ([40e3a58](https://github.com/googleapis/js-genai/commit/40e3a58e31d09f77eb600c4e472965646ad7dd63))
+* Support image recontext on Vertex ([e417867](https://github.com/googleapis/js-genai/commit/e417867f181ca3a577ed6089233d18110b5a6558))
+* Support new enum types for UrlRetrievalStatus ([88b47e6](https://github.com/googleapis/js-genai/commit/88b47e6f4bebea188bf7baec437a948e16d703bb))
+
+## [1.12.0](https://github.com/googleapis/js-genai/compare/v1.11.0...v1.12.0) (2025-07-30)
+
+
+### Features
+
+* allow methods in models to return headers in sdk_http_response by default. ([efdcb8a](https://github.com/googleapis/js-genai/commit/efdcb8a844155127cc58b05cfcb3f4f676613c1a))
+* allow methods in tuning to return headers in sdk_http_response by default ([f81c16a](https://github.com/googleapis/js-genai/commit/f81c16a4723c0696e100c5926fe5416263621b8b))
+
+
+### Bug Fixes
+
+* Correctly populated the Rai filter reasons on Video Generation ([316cdb0](https://github.com/googleapis/js-genai/commit/316cdb05d0bf87a03e463812e48f7c0c8fe5296a))
+
+## [1.11.0](https://github.com/googleapis/js-genai/compare/v1.10.0...v1.11.0) (2025-07-23)
+
+
+### Features
+
+* Add image_size field for Vertex Imagen 4 generation ([b6cc23e](https://github.com/googleapis/js-genai/commit/b6cc23ee90b576db1529f33ff5c209742baedab8))
+* enable function calling for Callable Tool besides McpClient in generateContent. ([90565bd](https://github.com/googleapis/js-genai/commit/90565bda219f4a72bbbe72497c72c34f6ead83b5))
+* Introduced Operations.get() which is a generic function to handle all Operation types. ([a6f85c1](https://github.com/googleapis/js-genai/commit/a6f85c1d5848f03b63b7038a0af6567caca295cf))
+* return headers for list method in all modules. ([e8591a3](https://github.com/googleapis/js-genai/commit/e8591a3adf024e4667f55610d2069edb52be8f8d))
+* Updates to codegen instructions to improve performance for TypeScript ([9c97ec6](https://github.com/googleapis/js-genai/commit/9c97ec645a7ab1e3a2e28319dac54a640e0eda57))
+
 ## [1.10.0](https://github.com/googleapis/js-genai/compare/v1.9.0...v1.10.0) (2025-07-17)
 
 

@@ -140,7 +140,6 @@ export class Files extends BaseModule {
       const body = converters.listFilesParametersToMldev(params);
       path = common.formatMap('files', body['_url'] as Record<string, unknown>);
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -154,7 +153,13 @@ export class Files extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.ListFilesResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.ListFilesResponse>;
 
       return response.then((apiResponse) => {
@@ -184,7 +189,6 @@ export class Files extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -241,7 +245,6 @@ export class Files extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -297,7 +300,6 @@ export class Files extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -311,11 +313,17 @@ export class Files extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.DeleteFileResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.DeleteFileResponse>;
 
-      return response.then(() => {
-        const resp = converters.deleteFileResponseFromMldev();
+      return response.then((apiResponse) => {
+        const resp = converters.deleteFileResponseFromMldev(apiResponse);
         const typedResp = new types.DeleteFileResponse();
         Object.assign(typedResp, resp);
         return typedResp;
