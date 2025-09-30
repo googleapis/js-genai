@@ -359,6 +359,12 @@ export interface CodeExecutionResult {
 }
 
 // @public
+export interface ComputerUse {
+    environment?: Environment;
+    excludedPredefinedFunctions?: string[];
+}
+
+// @public
 export interface ComputeTokensConfig {
     abortSignal?: AbortSignal;
     httpOptions?: HttpOptions;
@@ -2913,7 +2919,7 @@ export interface TokensInfo {
 // @public
 export interface Tool {
     codeExecution?: ToolCodeExecution;
-    computerUse?: ToolComputerUse;
+    computerUse?: ComputerUse;
     enterpriseWebSearch?: EnterpriseWebSearch;
     functionDeclarations?: FunctionDeclaration[];
     googleMaps?: GoogleMaps;
@@ -2925,12 +2931,6 @@ export interface Tool {
 
 // @public
 export interface ToolCodeExecution {
-}
-
-// @public
-export interface ToolComputerUse {
-    environment?: Environment;
-    excludedPredefinedFunctions?: string[];
 }
 
 // @public

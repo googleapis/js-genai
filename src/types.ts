@@ -1546,7 +1546,7 @@ export declare interface GoogleMaps {
 export declare interface UrlContext {}
 
 /** Tool to support computer use. */
-export declare interface ToolComputerUse {
+export declare interface ComputerUse {
   /** Required. The environment being operated. */
   environment?: Environment;
   /** By default, predefined functions are included in the final model call.
@@ -1731,7 +1731,7 @@ export declare interface Tool {
   /** Optional. Tool to support the model interacting directly with the
       computer. If enabled, it automatically populates computer-use specific
       Function Declarations. */
-  computerUse?: ToolComputerUse;
+  computerUse?: ComputerUse;
   /** Optional. CodeExecution tool type. Enables the model to execute code as part of generation. */
   codeExecution?: ToolCodeExecution;
 }
