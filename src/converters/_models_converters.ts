@@ -2044,6 +2044,15 @@ export function generateContentConfigToMldev(
     );
   }
 
+  const fromImageConfig = common.getValueByPath(fromObject, ['imageConfig']);
+  if (fromImageConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['imageConfig'],
+      imageConfigToMldev(fromImageConfig),
+    );
+  }
+
   return toObject;
 }
 
@@ -2270,6 +2279,15 @@ export function generateContentConfigToVertex(
       toObject,
       ['thinkingConfig'],
       thinkingConfigToVertex(fromThinkingConfig),
+    );
+  }
+
+  const fromImageConfig = common.getValueByPath(fromObject, ['imageConfig']);
+  if (fromImageConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['imageConfig'],
+      imageConfigToVertex(fromImageConfig),
     );
   }
 
@@ -3766,6 +3784,32 @@ export function googleSearchToVertex(
   ]);
   if (fromExcludeDomains != null) {
     common.setValueByPath(toObject, ['excludeDomains'], fromExcludeDomains);
+  }
+
+  return toObject;
+}
+
+export function imageConfigToMldev(
+  fromObject: types.ImageConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromAspectRatio = common.getValueByPath(fromObject, ['aspectRatio']);
+  if (fromAspectRatio != null) {
+    common.setValueByPath(toObject, ['aspectRatio'], fromAspectRatio);
+  }
+
+  return toObject;
+}
+
+export function imageConfigToVertex(
+  fromObject: types.ImageConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromAspectRatio = common.getValueByPath(fromObject, ['aspectRatio']);
+  if (fromAspectRatio != null) {
+    common.setValueByPath(toObject, ['aspectRatio'], fromAspectRatio);
   }
 
   return toObject;

@@ -1014,6 +1014,7 @@ export interface FileStatus {
 export enum FinishReason {
     BLOCKLIST = "BLOCKLIST",
     FINISH_REASON_UNSPECIFIED = "FINISH_REASON_UNSPECIFIED",
+    IMAGE_PROHIBITED_CONTENT = "IMAGE_PROHIBITED_CONTENT",
     IMAGE_SAFETY = "IMAGE_SAFETY",
     LANGUAGE = "LANGUAGE",
     MALFORMED_FUNCTION_CALL = "MALFORMED_FUNCTION_CALL",
@@ -1117,6 +1118,7 @@ export interface GenerateContentConfig {
     candidateCount?: number;
     frequencyPenalty?: number;
     httpOptions?: HttpOptions;
+    imageConfig?: ImageConfig;
     labels?: Record<string, string>;
     logprobs?: number;
     maxOutputTokens?: number;
@@ -1639,6 +1641,11 @@ interface Image_2 {
     mimeType?: string;
 }
 export { Image_2 as Image }
+
+// @public
+export interface ImageConfig {
+    aspectRatio?: string;
+}
 
 // @public
 export enum ImagePromptLanguage {

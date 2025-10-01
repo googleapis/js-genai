@@ -1362,6 +1362,15 @@ export function generateContentConfigToMldev(
     );
   }
 
+  const fromImageConfig = common.getValueByPath(fromObject, ['imageConfig']);
+  if (fromImageConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['imageConfig'],
+      imageConfigToMldev(fromImageConfig),
+    );
+  }
+
   return toObject;
 }
 
@@ -1488,6 +1497,19 @@ export function googleSearchToMldev(
 
   if (common.getValueByPath(fromObject, ['excludeDomains']) !== undefined) {
     throw new Error('excludeDomains parameter is not supported in Gemini API.');
+  }
+
+  return toObject;
+}
+
+export function imageConfigToMldev(
+  fromObject: types.ImageConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromAspectRatio = common.getValueByPath(fromObject, ['aspectRatio']);
+  if (fromAspectRatio != null) {
+    common.setValueByPath(toObject, ['aspectRatio'], fromAspectRatio);
   }
 
   return toObject;
