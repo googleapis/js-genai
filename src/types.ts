@@ -310,6 +310,10 @@ export enum FinishReason {
    * Image generation stopped because the generated images have prohibited content.
    */
   IMAGE_PROHIBITED_CONTENT = 'IMAGE_PROHIBITED_CONTENT',
+  /**
+   * The model was expected to generate an image, but none was generated.
+   */
+  NO_IMAGE = 'NO_IMAGE',
 }
 
 /** Output only. Harm probability levels in the content. */
