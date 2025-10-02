@@ -544,6 +544,22 @@ export enum AdapterSize {
   ADAPTER_SIZE_THIRTY_TWO = 'ADAPTER_SIZE_THIRTY_TWO',
 }
 
+/** Optional. The tuning task. Either I2V or T2V. */
+export enum TuningTask {
+  /**
+   * Default value. This value is unused.
+   */
+  TUNING_TASK_UNSPECIFIED = 'TUNING_TASK_UNSPECIFIED',
+  /**
+   * Tuning task for image to video.
+   */
+  TUNING_TASK_I2V = 'TUNING_TASK_I2V',
+  /**
+   * Tuning task for text to video.
+   */
+  TUNING_TASK_T2V = 'TUNING_TASK_T2V',
+}
+
 /** Options for feature selection preference. */
 export enum FeatureSelectionPreference {
   FEATURE_SELECTION_PREFERENCE_UNSPECIFIED = 'FEATURE_SELECTION_PREFERENCE_UNSPECIFIED',
@@ -3954,6 +3970,26 @@ export declare interface PartnerModelTuningSpec {
   validationDatasetUri?: string;
 }
 
+/** Hyperparameters for Veo. */
+export declare interface VeoHyperParameters {
+  /** Optional. Number of complete passes the model makes over the entire training dataset during training. */
+  epochCount?: string;
+  /** Optional. Multiplier for adjusting the default learning rate. */
+  learningRateMultiplier?: number;
+  /** Optional. The tuning task. Either I2V or T2V. */
+  tuningTask?: TuningTask;
+}
+
+/** Tuning Spec for Veo Model Tuning. */
+export declare interface VeoTuningSpec {
+  /** Optional. Hyperparameters for Veo. */
+  hyperParameters?: VeoHyperParameters;
+  /** Required. Training dataset used for tuning. The dataset can be specified as either a Cloud Storage path to a JSONL file or as the resource name of a Vertex Multimodal Dataset. */
+  trainingDatasetUri?: string;
+  /** Optional. Validation dataset used for tuning. The dataset can be specified as either a Cloud Storage path to a JSONL file or as the resource name of a Vertex Multimodal Dataset. */
+  validationDatasetUri?: string;
+}
+
 /** A tuning job. */
 export declare interface TuningJob {
   /** Used to retain the full HTTP response. */
@@ -4002,6 +4038,8 @@ export declare interface TuningJob {
   serviceAccount?: string;
   /** Optional. The display name of the TunedModel. The name can be up to 128 characters long and can consist of any UTF-8 characters. */
   tunedModelDisplayName?: string;
+  /** Tuning Spec for Veo Tuning. */
+  veoTuningSpec?: VeoTuningSpec;
 }
 
 /** Configuration for the list tuning jobs method. */

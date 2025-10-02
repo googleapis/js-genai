@@ -726,6 +726,13 @@ export function tuningJobFromMldev(
     );
   }
 
+  const fromVeoTuningSpec = common.getValueByPath(fromObject, [
+    'veoTuningSpec',
+  ]);
+  if (fromVeoTuningSpec != null) {
+    common.setValueByPath(toObject, ['veoTuningSpec'], fromVeoTuningSpec);
+  }
+
   return toObject;
 }
 
@@ -881,6 +888,13 @@ export function tuningJobFromVertex(
       ['tunedModelDisplayName'],
       fromTunedModelDisplayName,
     );
+  }
+
+  const fromVeoTuningSpec = common.getValueByPath(fromObject, [
+    'veoTuningSpec',
+  ]);
+  if (fromVeoTuningSpec != null) {
+    common.setValueByPath(toObject, ['veoTuningSpec'], fromVeoTuningSpec);
   }
 
   return toObject;
