@@ -1,15 +1,6 @@
 # Changelog
 
 
-## [1.22.0](https://github.com/googleapis/js-genai/compare/v1.21.0...v1.22.0) (2025-10-02)
-
-
-### Features
-
-* Add `ImageConfig` to `GenerateContentConfig` ([c137172](https://github.com/googleapis/js-genai/commit/c137172ddeb253341ce7aab5a1a84f172e63977a))
-* Add thinking_config for live ([decc090](https://github.com/googleapis/js-genai/commit/decc090411c950c1fcc358ff0a04a2f67ae05100))
-* rename ComputerUse tool (early access) ([e4345f9](https://github.com/googleapis/js-genai/commit/e4345f9175bcc729cd40d61905ad52ca6c3eba0d))
-
 ## [1.21.0](https://github.com/googleapis/js-genai/compare/v1.20.0...v1.21.0) (2025-09-25)
 
 
