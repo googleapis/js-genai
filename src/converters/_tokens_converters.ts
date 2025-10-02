@@ -11,84 +11,6 @@ import * as common from '../_common.js';
 import * as t from '../_transformers.js';
 import type * as types from '../types.js';
 
-export function audioTranscriptionConfigToMldev(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
-export function authTokenFromMldev(
-  fromObject: types.AuthToken,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName != null) {
-    common.setValueByPath(toObject, ['name'], fromName);
-  }
-
-  return toObject;
-}
-
-export function authTokenFromVertex(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
-export function automaticActivityDetectionToMldev(
-  fromObject: types.AutomaticActivityDetection,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromDisabled = common.getValueByPath(fromObject, ['disabled']);
-  if (fromDisabled != null) {
-    common.setValueByPath(toObject, ['disabled'], fromDisabled);
-  }
-
-  const fromStartOfSpeechSensitivity = common.getValueByPath(fromObject, [
-    'startOfSpeechSensitivity',
-  ]);
-  if (fromStartOfSpeechSensitivity != null) {
-    common.setValueByPath(
-      toObject,
-      ['startOfSpeechSensitivity'],
-      fromStartOfSpeechSensitivity,
-    );
-  }
-
-  const fromEndOfSpeechSensitivity = common.getValueByPath(fromObject, [
-    'endOfSpeechSensitivity',
-  ]);
-  if (fromEndOfSpeechSensitivity != null) {
-    common.setValueByPath(
-      toObject,
-      ['endOfSpeechSensitivity'],
-      fromEndOfSpeechSensitivity,
-    );
-  }
-
-  const fromPrefixPaddingMs = common.getValueByPath(fromObject, [
-    'prefixPaddingMs',
-  ]);
-  if (fromPrefixPaddingMs != null) {
-    common.setValueByPath(toObject, ['prefixPaddingMs'], fromPrefixPaddingMs);
-  }
-
-  const fromSilenceDurationMs = common.getValueByPath(fromObject, [
-    'silenceDurationMs',
-  ]);
-  if (fromSilenceDurationMs != null) {
-    common.setValueByPath(
-      toObject,
-      ['silenceDurationMs'],
-      fromSilenceDurationMs,
-    );
-  }
-
-  return toObject;
-}
-
 export function blobToMldev(fromObject: types.Blob): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -104,30 +26,6 @@ export function blobToMldev(fromObject: types.Blob): Record<string, unknown> {
   const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
   if (fromMimeType != null) {
     common.setValueByPath(toObject, ['mimeType'], fromMimeType);
-  }
-
-  return toObject;
-}
-
-export function computerUseToMldev(
-  fromObject: types.ComputerUse,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromEnvironment = common.getValueByPath(fromObject, ['environment']);
-  if (fromEnvironment != null) {
-    common.setValueByPath(toObject, ['environment'], fromEnvironment);
-  }
-
-  const fromExcludedPredefinedFunctions = common.getValueByPath(fromObject, [
-    'excludedPredefinedFunctions',
-  ]);
-  if (fromExcludedPredefinedFunctions != null) {
-    common.setValueByPath(
-      toObject,
-      ['excludedPredefinedFunctions'],
-      fromExcludedPredefinedFunctions,
-    );
   }
 
   return toObject;
@@ -152,32 +50,6 @@ export function contentToMldev(
   const fromRole = common.getValueByPath(fromObject, ['role']);
   if (fromRole != null) {
     common.setValueByPath(toObject, ['role'], fromRole);
-  }
-
-  return toObject;
-}
-
-export function contextWindowCompressionConfigToMldev(
-  fromObject: types.ContextWindowCompressionConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromTriggerTokens = common.getValueByPath(fromObject, [
-    'triggerTokens',
-  ]);
-  if (fromTriggerTokens != null) {
-    common.setValueByPath(toObject, ['triggerTokens'], fromTriggerTokens);
-  }
-
-  const fromSlidingWindow = common.getValueByPath(fromObject, [
-    'slidingWindow',
-  ]);
-  if (fromSlidingWindow != null) {
-    common.setValueByPath(
-      toObject,
-      ['slidingWindow'],
-      slidingWindowToMldev(fromSlidingWindow),
-    );
   }
 
   return toObject;
@@ -266,26 +138,6 @@ export function createAuthTokenParametersToVertex(
   return toObject;
 }
 
-export function dynamicRetrievalConfigToMldev(
-  fromObject: types.DynamicRetrievalConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromMode = common.getValueByPath(fromObject, ['mode']);
-  if (fromMode != null) {
-    common.setValueByPath(toObject, ['mode'], fromMode);
-  }
-
-  const fromDynamicThreshold = common.getValueByPath(fromObject, [
-    'dynamicThreshold',
-  ]);
-  if (fromDynamicThreshold != null) {
-    common.setValueByPath(toObject, ['dynamicThreshold'], fromDynamicThreshold);
-  }
-
-  return toObject;
-}
-
 export function fileDataToMldev(
   fromObject: types.FileData,
 ): Record<string, unknown> {
@@ -308,103 +160,6 @@ export function fileDataToMldev(
   return toObject;
 }
 
-export function functionCallToMldev(
-  fromObject: types.FunctionCall,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromId = common.getValueByPath(fromObject, ['id']);
-  if (fromId != null) {
-    common.setValueByPath(toObject, ['id'], fromId);
-  }
-
-  const fromArgs = common.getValueByPath(fromObject, ['args']);
-  if (fromArgs != null) {
-    common.setValueByPath(toObject, ['args'], fromArgs);
-  }
-
-  const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName != null) {
-    common.setValueByPath(toObject, ['name'], fromName);
-  }
-
-  return toObject;
-}
-
-export function functionDeclarationToMldev(
-  fromObject: types.FunctionDeclaration,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromBehavior = common.getValueByPath(fromObject, ['behavior']);
-  if (fromBehavior != null) {
-    common.setValueByPath(toObject, ['behavior'], fromBehavior);
-  }
-
-  const fromDescription = common.getValueByPath(fromObject, ['description']);
-  if (fromDescription != null) {
-    common.setValueByPath(toObject, ['description'], fromDescription);
-  }
-
-  const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName != null) {
-    common.setValueByPath(toObject, ['name'], fromName);
-  }
-
-  const fromParameters = common.getValueByPath(fromObject, ['parameters']);
-  if (fromParameters != null) {
-    common.setValueByPath(toObject, ['parameters'], fromParameters);
-  }
-
-  const fromParametersJsonSchema = common.getValueByPath(fromObject, [
-    'parametersJsonSchema',
-  ]);
-  if (fromParametersJsonSchema != null) {
-    common.setValueByPath(
-      toObject,
-      ['parametersJsonSchema'],
-      fromParametersJsonSchema,
-    );
-  }
-
-  const fromResponse = common.getValueByPath(fromObject, ['response']);
-  if (fromResponse != null) {
-    common.setValueByPath(toObject, ['response'], fromResponse);
-  }
-
-  const fromResponseJsonSchema = common.getValueByPath(fromObject, [
-    'responseJsonSchema',
-  ]);
-  if (fromResponseJsonSchema != null) {
-    common.setValueByPath(
-      toObject,
-      ['responseJsonSchema'],
-      fromResponseJsonSchema,
-    );
-  }
-
-  return toObject;
-}
-
-export function googleSearchRetrievalToMldev(
-  fromObject: types.GoogleSearchRetrieval,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromDynamicRetrievalConfig = common.getValueByPath(fromObject, [
-    'dynamicRetrievalConfig',
-  ]);
-  if (fromDynamicRetrievalConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['dynamicRetrievalConfig'],
-      dynamicRetrievalConfigToMldev(fromDynamicRetrievalConfig),
-    );
-  }
-
-  return toObject;
-}
-
 export function googleSearchToMldev(
   fromObject: types.GoogleSearch,
 ): Record<string, unknown> {
@@ -414,33 +169,11 @@ export function googleSearchToMldev(
     'timeRangeFilter',
   ]);
   if (fromTimeRangeFilter != null) {
-    common.setValueByPath(
-      toObject,
-      ['timeRangeFilter'],
-      intervalToMldev(fromTimeRangeFilter),
-    );
+    common.setValueByPath(toObject, ['timeRangeFilter'], fromTimeRangeFilter);
   }
 
   if (common.getValueByPath(fromObject, ['excludeDomains']) !== undefined) {
     throw new Error('excludeDomains parameter is not supported in Gemini API.');
-  }
-
-  return toObject;
-}
-
-export function intervalToMldev(
-  fromObject: types.Interval,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromStartTime = common.getValueByPath(fromObject, ['startTime']);
-  if (fromStartTime != null) {
-    common.setValueByPath(toObject, ['startTime'], fromStartTime);
-  }
-
-  const fromEndTime = common.getValueByPath(fromObject, ['endTime']);
-  if (fromEndTime != null) {
-    common.setValueByPath(toObject, ['endTime'], fromEndTime);
   }
 
   return toObject;
@@ -537,7 +270,7 @@ export function liveConnectConfigToMldev(
     common.setValueByPath(
       parentObject,
       ['setup', 'generationConfig', 'speechConfig'],
-      speechConfigToMldev(t.tLiveSpeechConfig(fromSpeechConfig)),
+      t.tLiveSpeechConfig(fromSpeechConfig),
     );
   }
 
@@ -548,7 +281,7 @@ export function liveConnectConfigToMldev(
     common.setValueByPath(
       parentObject,
       ['setup', 'generationConfig', 'thinkingConfig'],
-      thinkingConfigToMldev(fromThinkingConfig),
+      fromThinkingConfig,
     );
   }
 
@@ -603,7 +336,7 @@ export function liveConnectConfigToMldev(
     common.setValueByPath(
       parentObject,
       ['setup', 'inputAudioTranscription'],
-      audioTranscriptionConfigToMldev(),
+      fromInputAudioTranscription,
     );
   }
 
@@ -614,7 +347,7 @@ export function liveConnectConfigToMldev(
     common.setValueByPath(
       parentObject,
       ['setup', 'outputAudioTranscription'],
-      audioTranscriptionConfigToMldev(),
+      fromOutputAudioTranscription,
     );
   }
 
@@ -625,7 +358,7 @@ export function liveConnectConfigToMldev(
     common.setValueByPath(
       parentObject,
       ['setup', 'realtimeInputConfig'],
-      realtimeInputConfigToMldev(fromRealtimeInputConfig),
+      fromRealtimeInputConfig,
     );
   }
 
@@ -636,7 +369,7 @@ export function liveConnectConfigToMldev(
     common.setValueByPath(
       parentObject,
       ['setup', 'contextWindowCompression'],
-      contextWindowCompressionConfigToMldev(fromContextWindowCompression),
+      fromContextWindowCompression,
     );
   }
 
@@ -645,7 +378,7 @@ export function liveConnectConfigToMldev(
     common.setValueByPath(
       parentObject,
       ['setup', 'proactivity'],
-      proactivityConfigToMldev(fromProactivity),
+      fromProactivity,
     );
   }
 
@@ -679,27 +412,6 @@ export function liveConnectConstraintsToMldev(
   return toObject;
 }
 
-export function multiSpeakerVoiceConfigToMldev(
-  fromObject: types.MultiSpeakerVoiceConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromSpeakerVoiceConfigs = common.getValueByPath(fromObject, [
-    'speakerVoiceConfigs',
-  ]);
-  if (fromSpeakerVoiceConfigs != null) {
-    let transformedList = fromSpeakerVoiceConfigs;
-    if (Array.isArray(transformedList)) {
-      transformedList = transformedList.map((item) => {
-        return speakerVoiceConfigToMldev(item);
-      });
-    }
-    common.setValueByPath(toObject, ['speakerVoiceConfigs'], transformedList);
-  }
-
-  return toObject;
-}
-
 export function partToMldev(fromObject: types.Part): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -707,11 +419,7 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
     'videoMetadata',
   ]);
   if (fromVideoMetadata != null) {
-    common.setValueByPath(
-      toObject,
-      ['videoMetadata'],
-      videoMetadataToMldev(fromVideoMetadata),
-    );
+    common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
   }
 
   const fromThought = common.getValueByPath(fromObject, ['thought']);
@@ -746,11 +454,7 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
 
   const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
   if (fromFunctionCall != null) {
-    common.setValueByPath(
-      toObject,
-      ['functionCall'],
-      functionCallToMldev(fromFunctionCall),
-    );
+    common.setValueByPath(toObject, ['functionCall'], fromFunctionCall);
   }
 
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
@@ -786,65 +490,6 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
   return toObject;
 }
 
-export function prebuiltVoiceConfigToMldev(
-  fromObject: types.PrebuiltVoiceConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromVoiceName = common.getValueByPath(fromObject, ['voiceName']);
-  if (fromVoiceName != null) {
-    common.setValueByPath(toObject, ['voiceName'], fromVoiceName);
-  }
-
-  return toObject;
-}
-
-export function proactivityConfigToMldev(
-  fromObject: types.ProactivityConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromProactiveAudio = common.getValueByPath(fromObject, [
-    'proactiveAudio',
-  ]);
-  if (fromProactiveAudio != null) {
-    common.setValueByPath(toObject, ['proactiveAudio'], fromProactiveAudio);
-  }
-
-  return toObject;
-}
-
-export function realtimeInputConfigToMldev(
-  fromObject: types.RealtimeInputConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromAutomaticActivityDetection = common.getValueByPath(fromObject, [
-    'automaticActivityDetection',
-  ]);
-  if (fromAutomaticActivityDetection != null) {
-    common.setValueByPath(
-      toObject,
-      ['automaticActivityDetection'],
-      automaticActivityDetectionToMldev(fromAutomaticActivityDetection),
-    );
-  }
-
-  const fromActivityHandling = common.getValueByPath(fromObject, [
-    'activityHandling',
-  ]);
-  if (fromActivityHandling != null) {
-    common.setValueByPath(toObject, ['activityHandling'], fromActivityHandling);
-  }
-
-  const fromTurnCoverage = common.getValueByPath(fromObject, ['turnCoverage']);
-  if (fromTurnCoverage != null) {
-    common.setValueByPath(toObject, ['turnCoverage'], fromTurnCoverage);
-  }
-
-  return toObject;
-}
-
 export function sessionResumptionConfigToMldev(
   fromObject: types.SessionResumptionConfig,
 ): Record<string, unknown> {
@@ -862,96 +507,6 @@ export function sessionResumptionConfigToMldev(
   return toObject;
 }
 
-export function slidingWindowToMldev(
-  fromObject: types.SlidingWindow,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromTargetTokens = common.getValueByPath(fromObject, ['targetTokens']);
-  if (fromTargetTokens != null) {
-    common.setValueByPath(toObject, ['targetTokens'], fromTargetTokens);
-  }
-
-  return toObject;
-}
-
-export function speakerVoiceConfigToMldev(
-  fromObject: types.SpeakerVoiceConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromSpeaker = common.getValueByPath(fromObject, ['speaker']);
-  if (fromSpeaker != null) {
-    common.setValueByPath(toObject, ['speaker'], fromSpeaker);
-  }
-
-  const fromVoiceConfig = common.getValueByPath(fromObject, ['voiceConfig']);
-  if (fromVoiceConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['voiceConfig'],
-      voiceConfigToMldev(fromVoiceConfig),
-    );
-  }
-
-  return toObject;
-}
-
-export function speechConfigToMldev(
-  fromObject: types.SpeechConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromVoiceConfig = common.getValueByPath(fromObject, ['voiceConfig']);
-  if (fromVoiceConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['voiceConfig'],
-      voiceConfigToMldev(fromVoiceConfig),
-    );
-  }
-
-  const fromMultiSpeakerVoiceConfig = common.getValueByPath(fromObject, [
-    'multiSpeakerVoiceConfig',
-  ]);
-  if (fromMultiSpeakerVoiceConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['multiSpeakerVoiceConfig'],
-      multiSpeakerVoiceConfigToMldev(fromMultiSpeakerVoiceConfig),
-    );
-  }
-
-  const fromLanguageCode = common.getValueByPath(fromObject, ['languageCode']);
-  if (fromLanguageCode != null) {
-    common.setValueByPath(toObject, ['languageCode'], fromLanguageCode);
-  }
-
-  return toObject;
-}
-
-export function thinkingConfigToMldev(
-  fromObject: types.ThinkingConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromIncludeThoughts = common.getValueByPath(fromObject, [
-    'includeThoughts',
-  ]);
-  if (fromIncludeThoughts != null) {
-    common.setValueByPath(toObject, ['includeThoughts'], fromIncludeThoughts);
-  }
-
-  const fromThinkingBudget = common.getValueByPath(fromObject, [
-    'thinkingBudget',
-  ]);
-  if (fromThinkingBudget != null) {
-    common.setValueByPath(toObject, ['thinkingBudget'], fromThinkingBudget);
-  }
-
-  return toObject;
-}
-
 export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -962,7 +517,7 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
     let transformedList = fromFunctionDeclarations;
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return functionDeclarationToMldev(item);
+        return item;
       });
     }
     common.setValueByPath(toObject, ['functionDeclarations'], transformedList);
@@ -988,7 +543,7 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
     common.setValueByPath(
       toObject,
       ['googleSearchRetrieval'],
-      googleSearchRetrievalToMldev(fromGoogleSearchRetrieval),
+      fromGoogleSearchRetrieval,
     );
   }
 
@@ -1006,16 +561,12 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
 
   const fromUrlContext = common.getValueByPath(fromObject, ['urlContext']);
   if (fromUrlContext != null) {
-    common.setValueByPath(toObject, ['urlContext'], urlContextToMldev());
+    common.setValueByPath(toObject, ['urlContext'], fromUrlContext);
   }
 
   const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
   if (fromComputerUse != null) {
-    common.setValueByPath(
-      toObject,
-      ['computerUse'],
-      computerUseToMldev(fromComputerUse),
-    );
+    common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
   }
 
   const fromCodeExecution = common.getValueByPath(fromObject, [
@@ -1023,54 +574,6 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
   ]);
   if (fromCodeExecution != null) {
     common.setValueByPath(toObject, ['codeExecution'], fromCodeExecution);
-  }
-
-  return toObject;
-}
-
-export function urlContextToMldev(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
-export function videoMetadataToMldev(
-  fromObject: types.VideoMetadata,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromFps = common.getValueByPath(fromObject, ['fps']);
-  if (fromFps != null) {
-    common.setValueByPath(toObject, ['fps'], fromFps);
-  }
-
-  const fromEndOffset = common.getValueByPath(fromObject, ['endOffset']);
-  if (fromEndOffset != null) {
-    common.setValueByPath(toObject, ['endOffset'], fromEndOffset);
-  }
-
-  const fromStartOffset = common.getValueByPath(fromObject, ['startOffset']);
-  if (fromStartOffset != null) {
-    common.setValueByPath(toObject, ['startOffset'], fromStartOffset);
-  }
-
-  return toObject;
-}
-
-export function voiceConfigToMldev(
-  fromObject: types.VoiceConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromPrebuiltVoiceConfig = common.getValueByPath(fromObject, [
-    'prebuiltVoiceConfig',
-  ]);
-  if (fromPrebuiltVoiceConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['prebuiltVoiceConfig'],
-      prebuiltVoiceConfigToMldev(fromPrebuiltVoiceConfig),
-    );
   }
 
   return toObject;

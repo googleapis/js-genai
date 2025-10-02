@@ -11,73 +11,6 @@ import * as common from '../_common.js';
 import * as t from '../_transformers.js';
 import type * as types from '../types.js';
 
-export function apiKeyConfigToVertex(
-  fromObject: types.ApiKeyConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromApiKeyString = common.getValueByPath(fromObject, ['apiKeyString']);
-  if (fromApiKeyString != null) {
-    common.setValueByPath(toObject, ['apiKeyString'], fromApiKeyString);
-  }
-
-  return toObject;
-}
-
-export function authConfigToVertex(
-  fromObject: types.AuthConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromApiKeyConfig = common.getValueByPath(fromObject, ['apiKeyConfig']);
-  if (fromApiKeyConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['apiKeyConfig'],
-      apiKeyConfigToVertex(fromApiKeyConfig),
-    );
-  }
-
-  const fromAuthType = common.getValueByPath(fromObject, ['authType']);
-  if (fromAuthType != null) {
-    common.setValueByPath(toObject, ['authType'], fromAuthType);
-  }
-
-  const fromGoogleServiceAccountConfig = common.getValueByPath(fromObject, [
-    'googleServiceAccountConfig',
-  ]);
-  if (fromGoogleServiceAccountConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['googleServiceAccountConfig'],
-      fromGoogleServiceAccountConfig,
-    );
-  }
-
-  const fromHttpBasicAuthConfig = common.getValueByPath(fromObject, [
-    'httpBasicAuthConfig',
-  ]);
-  if (fromHttpBasicAuthConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['httpBasicAuthConfig'],
-      fromHttpBasicAuthConfig,
-    );
-  }
-
-  const fromOauthConfig = common.getValueByPath(fromObject, ['oauthConfig']);
-  if (fromOauthConfig != null) {
-    common.setValueByPath(toObject, ['oauthConfig'], fromOauthConfig);
-  }
-
-  const fromOidcConfig = common.getValueByPath(fromObject, ['oidcConfig']);
-  if (fromOidcConfig != null) {
-    common.setValueByPath(toObject, ['oidcConfig'], fromOidcConfig);
-  }
-
-  return toObject;
-}
-
 export function blobToMldev(fromObject: types.Blob): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -98,165 +31,6 @@ export function blobToMldev(fromObject: types.Blob): Record<string, unknown> {
   return toObject;
 }
 
-export function blobToVertex(fromObject: types.Blob): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
-  if (fromDisplayName != null) {
-    common.setValueByPath(toObject, ['displayName'], fromDisplayName);
-  }
-
-  const fromData = common.getValueByPath(fromObject, ['data']);
-  if (fromData != null) {
-    common.setValueByPath(toObject, ['data'], fromData);
-  }
-
-  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
-  if (fromMimeType != null) {
-    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
-  }
-
-  return toObject;
-}
-
-export function cachedContentFromMldev(
-  fromObject: types.CachedContent,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName != null) {
-    common.setValueByPath(toObject, ['name'], fromName);
-  }
-
-  const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
-  if (fromDisplayName != null) {
-    common.setValueByPath(toObject, ['displayName'], fromDisplayName);
-  }
-
-  const fromModel = common.getValueByPath(fromObject, ['model']);
-  if (fromModel != null) {
-    common.setValueByPath(toObject, ['model'], fromModel);
-  }
-
-  const fromCreateTime = common.getValueByPath(fromObject, ['createTime']);
-  if (fromCreateTime != null) {
-    common.setValueByPath(toObject, ['createTime'], fromCreateTime);
-  }
-
-  const fromUpdateTime = common.getValueByPath(fromObject, ['updateTime']);
-  if (fromUpdateTime != null) {
-    common.setValueByPath(toObject, ['updateTime'], fromUpdateTime);
-  }
-
-  const fromExpireTime = common.getValueByPath(fromObject, ['expireTime']);
-  if (fromExpireTime != null) {
-    common.setValueByPath(toObject, ['expireTime'], fromExpireTime);
-  }
-
-  const fromUsageMetadata = common.getValueByPath(fromObject, [
-    'usageMetadata',
-  ]);
-  if (fromUsageMetadata != null) {
-    common.setValueByPath(toObject, ['usageMetadata'], fromUsageMetadata);
-  }
-
-  return toObject;
-}
-
-export function cachedContentFromVertex(
-  fromObject: types.CachedContent,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName != null) {
-    common.setValueByPath(toObject, ['name'], fromName);
-  }
-
-  const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
-  if (fromDisplayName != null) {
-    common.setValueByPath(toObject, ['displayName'], fromDisplayName);
-  }
-
-  const fromModel = common.getValueByPath(fromObject, ['model']);
-  if (fromModel != null) {
-    common.setValueByPath(toObject, ['model'], fromModel);
-  }
-
-  const fromCreateTime = common.getValueByPath(fromObject, ['createTime']);
-  if (fromCreateTime != null) {
-    common.setValueByPath(toObject, ['createTime'], fromCreateTime);
-  }
-
-  const fromUpdateTime = common.getValueByPath(fromObject, ['updateTime']);
-  if (fromUpdateTime != null) {
-    common.setValueByPath(toObject, ['updateTime'], fromUpdateTime);
-  }
-
-  const fromExpireTime = common.getValueByPath(fromObject, ['expireTime']);
-  if (fromExpireTime != null) {
-    common.setValueByPath(toObject, ['expireTime'], fromExpireTime);
-  }
-
-  const fromUsageMetadata = common.getValueByPath(fromObject, [
-    'usageMetadata',
-  ]);
-  if (fromUsageMetadata != null) {
-    common.setValueByPath(toObject, ['usageMetadata'], fromUsageMetadata);
-  }
-
-  return toObject;
-}
-
-export function computerUseToMldev(
-  fromObject: types.ComputerUse,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromEnvironment = common.getValueByPath(fromObject, ['environment']);
-  if (fromEnvironment != null) {
-    common.setValueByPath(toObject, ['environment'], fromEnvironment);
-  }
-
-  const fromExcludedPredefinedFunctions = common.getValueByPath(fromObject, [
-    'excludedPredefinedFunctions',
-  ]);
-  if (fromExcludedPredefinedFunctions != null) {
-    common.setValueByPath(
-      toObject,
-      ['excludedPredefinedFunctions'],
-      fromExcludedPredefinedFunctions,
-    );
-  }
-
-  return toObject;
-}
-
-export function computerUseToVertex(
-  fromObject: types.ComputerUse,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromEnvironment = common.getValueByPath(fromObject, ['environment']);
-  if (fromEnvironment != null) {
-    common.setValueByPath(toObject, ['environment'], fromEnvironment);
-  }
-
-  const fromExcludedPredefinedFunctions = common.getValueByPath(fromObject, [
-    'excludedPredefinedFunctions',
-  ]);
-  if (fromExcludedPredefinedFunctions != null) {
-    common.setValueByPath(
-      toObject,
-      ['excludedPredefinedFunctions'],
-      fromExcludedPredefinedFunctions,
-    );
-  }
-
-  return toObject;
-}
-
 export function contentToMldev(
   fromObject: types.Content,
 ): Record<string, unknown> {
@@ -268,30 +42,6 @@ export function contentToMldev(
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
         return partToMldev(item);
-      });
-    }
-    common.setValueByPath(toObject, ['parts'], transformedList);
-  }
-
-  const fromRole = common.getValueByPath(fromObject, ['role']);
-  if (fromRole != null) {
-    common.setValueByPath(toObject, ['role'], fromRole);
-  }
-
-  return toObject;
-}
-
-export function contentToVertex(
-  fromObject: types.Content,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromParts = common.getValueByPath(fromObject, ['parts']);
-  if (fromParts != null) {
-    let transformedList = fromParts;
-    if (Array.isArray(transformedList)) {
-      transformedList = transformedList.map((item) => {
-        return partToVertex(item);
       });
     }
     common.setValueByPath(toObject, ['parts'], transformedList);
@@ -361,11 +111,7 @@ export function createCachedContentConfigToMldev(
 
   const fromToolConfig = common.getValueByPath(fromObject, ['toolConfig']);
   if (parentObject !== undefined && fromToolConfig != null) {
-    common.setValueByPath(
-      parentObject,
-      ['toolConfig'],
-      toolConfigToMldev(fromToolConfig),
-    );
+    common.setValueByPath(parentObject, ['toolConfig'], fromToolConfig);
   }
 
   if (common.getValueByPath(fromObject, ['kmsKeyName']) !== undefined) {
@@ -401,7 +147,7 @@ export function createCachedContentConfigToVertex(
     let transformedList = t.tContents(fromContents);
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return contentToVertex(item);
+        return item;
       });
     }
     common.setValueByPath(parentObject, ['contents'], transformedList);
@@ -414,7 +160,7 @@ export function createCachedContentConfigToVertex(
     common.setValueByPath(
       parentObject,
       ['systemInstruction'],
-      contentToVertex(t.tContent(fromSystemInstruction)),
+      t.tContent(fromSystemInstruction),
     );
   }
 
@@ -431,11 +177,7 @@ export function createCachedContentConfigToVertex(
 
   const fromToolConfig = common.getValueByPath(fromObject, ['toolConfig']);
   if (parentObject !== undefined && fromToolConfig != null) {
-    common.setValueByPath(
-      parentObject,
-      ['toolConfig'],
-      toolConfigToVertex(fromToolConfig),
-    );
+    common.setValueByPath(parentObject, ['toolConfig'], fromToolConfig);
   }
 
   const fromKmsKeyName = common.getValueByPath(fromObject, ['kmsKeyName']);
@@ -562,61 +304,6 @@ export function deleteCachedContentResponseFromVertex(
   return toObject;
 }
 
-export function dynamicRetrievalConfigToMldev(
-  fromObject: types.DynamicRetrievalConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromMode = common.getValueByPath(fromObject, ['mode']);
-  if (fromMode != null) {
-    common.setValueByPath(toObject, ['mode'], fromMode);
-  }
-
-  const fromDynamicThreshold = common.getValueByPath(fromObject, [
-    'dynamicThreshold',
-  ]);
-  if (fromDynamicThreshold != null) {
-    common.setValueByPath(toObject, ['dynamicThreshold'], fromDynamicThreshold);
-  }
-
-  return toObject;
-}
-
-export function dynamicRetrievalConfigToVertex(
-  fromObject: types.DynamicRetrievalConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromMode = common.getValueByPath(fromObject, ['mode']);
-  if (fromMode != null) {
-    common.setValueByPath(toObject, ['mode'], fromMode);
-  }
-
-  const fromDynamicThreshold = common.getValueByPath(fromObject, [
-    'dynamicThreshold',
-  ]);
-  if (fromDynamicThreshold != null) {
-    common.setValueByPath(toObject, ['dynamicThreshold'], fromDynamicThreshold);
-  }
-
-  return toObject;
-}
-
-export function enterpriseWebSearchToVertex(
-  fromObject: types.EnterpriseWebSearch,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromExcludeDomains = common.getValueByPath(fromObject, [
-    'excludeDomains',
-  ]);
-  if (fromExcludeDomains != null) {
-    common.setValueByPath(toObject, ['excludeDomains'], fromExcludeDomains);
-  }
-
-  return toObject;
-}
-
 export function fileDataToMldev(
   fromObject: types.FileData,
 ): Record<string, unknown> {
@@ -634,178 +321,6 @@ export function fileDataToMldev(
   const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
   if (fromMimeType != null) {
     common.setValueByPath(toObject, ['mimeType'], fromMimeType);
-  }
-
-  return toObject;
-}
-
-export function fileDataToVertex(
-  fromObject: types.FileData,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
-  if (fromDisplayName != null) {
-    common.setValueByPath(toObject, ['displayName'], fromDisplayName);
-  }
-
-  const fromFileUri = common.getValueByPath(fromObject, ['fileUri']);
-  if (fromFileUri != null) {
-    common.setValueByPath(toObject, ['fileUri'], fromFileUri);
-  }
-
-  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
-  if (fromMimeType != null) {
-    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
-  }
-
-  return toObject;
-}
-
-export function functionCallToMldev(
-  fromObject: types.FunctionCall,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromId = common.getValueByPath(fromObject, ['id']);
-  if (fromId != null) {
-    common.setValueByPath(toObject, ['id'], fromId);
-  }
-
-  const fromArgs = common.getValueByPath(fromObject, ['args']);
-  if (fromArgs != null) {
-    common.setValueByPath(toObject, ['args'], fromArgs);
-  }
-
-  const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName != null) {
-    common.setValueByPath(toObject, ['name'], fromName);
-  }
-
-  return toObject;
-}
-
-export function functionCallToVertex(
-  fromObject: types.FunctionCall,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromId = common.getValueByPath(fromObject, ['id']);
-  if (fromId != null) {
-    common.setValueByPath(toObject, ['id'], fromId);
-  }
-
-  const fromArgs = common.getValueByPath(fromObject, ['args']);
-  if (fromArgs != null) {
-    common.setValueByPath(toObject, ['args'], fromArgs);
-  }
-
-  const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName != null) {
-    common.setValueByPath(toObject, ['name'], fromName);
-  }
-
-  return toObject;
-}
-
-export function functionCallingConfigToMldev(
-  fromObject: types.FunctionCallingConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromMode = common.getValueByPath(fromObject, ['mode']);
-  if (fromMode != null) {
-    common.setValueByPath(toObject, ['mode'], fromMode);
-  }
-
-  const fromAllowedFunctionNames = common.getValueByPath(fromObject, [
-    'allowedFunctionNames',
-  ]);
-  if (fromAllowedFunctionNames != null) {
-    common.setValueByPath(
-      toObject,
-      ['allowedFunctionNames'],
-      fromAllowedFunctionNames,
-    );
-  }
-
-  return toObject;
-}
-
-export function functionCallingConfigToVertex(
-  fromObject: types.FunctionCallingConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromMode = common.getValueByPath(fromObject, ['mode']);
-  if (fromMode != null) {
-    common.setValueByPath(toObject, ['mode'], fromMode);
-  }
-
-  const fromAllowedFunctionNames = common.getValueByPath(fromObject, [
-    'allowedFunctionNames',
-  ]);
-  if (fromAllowedFunctionNames != null) {
-    common.setValueByPath(
-      toObject,
-      ['allowedFunctionNames'],
-      fromAllowedFunctionNames,
-    );
-  }
-
-  return toObject;
-}
-
-export function functionDeclarationToMldev(
-  fromObject: types.FunctionDeclaration,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromBehavior = common.getValueByPath(fromObject, ['behavior']);
-  if (fromBehavior != null) {
-    common.setValueByPath(toObject, ['behavior'], fromBehavior);
-  }
-
-  const fromDescription = common.getValueByPath(fromObject, ['description']);
-  if (fromDescription != null) {
-    common.setValueByPath(toObject, ['description'], fromDescription);
-  }
-
-  const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName != null) {
-    common.setValueByPath(toObject, ['name'], fromName);
-  }
-
-  const fromParameters = common.getValueByPath(fromObject, ['parameters']);
-  if (fromParameters != null) {
-    common.setValueByPath(toObject, ['parameters'], fromParameters);
-  }
-
-  const fromParametersJsonSchema = common.getValueByPath(fromObject, [
-    'parametersJsonSchema',
-  ]);
-  if (fromParametersJsonSchema != null) {
-    common.setValueByPath(
-      toObject,
-      ['parametersJsonSchema'],
-      fromParametersJsonSchema,
-    );
-  }
-
-  const fromResponse = common.getValueByPath(fromObject, ['response']);
-  if (fromResponse != null) {
-    common.setValueByPath(toObject, ['response'], fromResponse);
-  }
-
-  const fromResponseJsonSchema = common.getValueByPath(fromObject, [
-    'responseJsonSchema',
-  ]);
-  if (fromResponseJsonSchema != null) {
-    common.setValueByPath(
-      toObject,
-      ['responseJsonSchema'],
-      fromResponseJsonSchema,
-    );
   }
 
   return toObject;
@@ -901,61 +416,6 @@ export function getCachedContentParametersToVertex(
   return toObject;
 }
 
-export function googleMapsToVertex(
-  fromObject: types.GoogleMaps,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromAuthConfig = common.getValueByPath(fromObject, ['authConfig']);
-  if (fromAuthConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['authConfig'],
-      authConfigToVertex(fromAuthConfig),
-    );
-  }
-
-  return toObject;
-}
-
-export function googleSearchRetrievalToMldev(
-  fromObject: types.GoogleSearchRetrieval,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromDynamicRetrievalConfig = common.getValueByPath(fromObject, [
-    'dynamicRetrievalConfig',
-  ]);
-  if (fromDynamicRetrievalConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['dynamicRetrievalConfig'],
-      dynamicRetrievalConfigToMldev(fromDynamicRetrievalConfig),
-    );
-  }
-
-  return toObject;
-}
-
-export function googleSearchRetrievalToVertex(
-  fromObject: types.GoogleSearchRetrieval,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromDynamicRetrievalConfig = common.getValueByPath(fromObject, [
-    'dynamicRetrievalConfig',
-  ]);
-  if (fromDynamicRetrievalConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['dynamicRetrievalConfig'],
-      dynamicRetrievalConfigToVertex(fromDynamicRetrievalConfig),
-    );
-  }
-
-  return toObject;
-}
-
 export function googleSearchToMldev(
   fromObject: types.GoogleSearch,
 ): Record<string, unknown> {
@@ -965,113 +425,11 @@ export function googleSearchToMldev(
     'timeRangeFilter',
   ]);
   if (fromTimeRangeFilter != null) {
-    common.setValueByPath(
-      toObject,
-      ['timeRangeFilter'],
-      intervalToMldev(fromTimeRangeFilter),
-    );
+    common.setValueByPath(toObject, ['timeRangeFilter'], fromTimeRangeFilter);
   }
 
   if (common.getValueByPath(fromObject, ['excludeDomains']) !== undefined) {
     throw new Error('excludeDomains parameter is not supported in Gemini API.');
-  }
-
-  return toObject;
-}
-
-export function googleSearchToVertex(
-  fromObject: types.GoogleSearch,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromTimeRangeFilter = common.getValueByPath(fromObject, [
-    'timeRangeFilter',
-  ]);
-  if (fromTimeRangeFilter != null) {
-    common.setValueByPath(
-      toObject,
-      ['timeRangeFilter'],
-      intervalToVertex(fromTimeRangeFilter),
-    );
-  }
-
-  const fromExcludeDomains = common.getValueByPath(fromObject, [
-    'excludeDomains',
-  ]);
-  if (fromExcludeDomains != null) {
-    common.setValueByPath(toObject, ['excludeDomains'], fromExcludeDomains);
-  }
-
-  return toObject;
-}
-
-export function intervalToMldev(
-  fromObject: types.Interval,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromStartTime = common.getValueByPath(fromObject, ['startTime']);
-  if (fromStartTime != null) {
-    common.setValueByPath(toObject, ['startTime'], fromStartTime);
-  }
-
-  const fromEndTime = common.getValueByPath(fromObject, ['endTime']);
-  if (fromEndTime != null) {
-    common.setValueByPath(toObject, ['endTime'], fromEndTime);
-  }
-
-  return toObject;
-}
-
-export function intervalToVertex(
-  fromObject: types.Interval,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromStartTime = common.getValueByPath(fromObject, ['startTime']);
-  if (fromStartTime != null) {
-    common.setValueByPath(toObject, ['startTime'], fromStartTime);
-  }
-
-  const fromEndTime = common.getValueByPath(fromObject, ['endTime']);
-  if (fromEndTime != null) {
-    common.setValueByPath(toObject, ['endTime'], fromEndTime);
-  }
-
-  return toObject;
-}
-
-export function latLngToMldev(
-  fromObject: types.LatLng,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromLatitude = common.getValueByPath(fromObject, ['latitude']);
-  if (fromLatitude != null) {
-    common.setValueByPath(toObject, ['latitude'], fromLatitude);
-  }
-
-  const fromLongitude = common.getValueByPath(fromObject, ['longitude']);
-  if (fromLongitude != null) {
-    common.setValueByPath(toObject, ['longitude'], fromLongitude);
-  }
-
-  return toObject;
-}
-
-export function latLngToVertex(
-  fromObject: types.LatLng,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromLatitude = common.getValueByPath(fromObject, ['latitude']);
-  if (fromLatitude != null) {
-    common.setValueByPath(toObject, ['latitude'], fromLatitude);
-  }
-
-  const fromLongitude = common.getValueByPath(fromObject, ['longitude']);
-  if (fromLongitude != null) {
-    common.setValueByPath(toObject, ['longitude'], fromLongitude);
   }
 
   return toObject;
@@ -1167,7 +525,7 @@ export function listCachedContentsResponseFromMldev(
     let transformedList = fromCachedContents;
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return cachedContentFromMldev(item);
+        return item;
       });
     }
     common.setValueByPath(toObject, ['cachedContents'], transformedList);
@@ -1202,7 +560,7 @@ export function listCachedContentsResponseFromVertex(
     let transformedList = fromCachedContents;
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return cachedContentFromVertex(item);
+        return item;
       });
     }
     common.setValueByPath(toObject, ['cachedContents'], transformedList);
@@ -1218,11 +576,7 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
     'videoMetadata',
   ]);
   if (fromVideoMetadata != null) {
-    common.setValueByPath(
-      toObject,
-      ['videoMetadata'],
-      videoMetadataToMldev(fromVideoMetadata),
-    );
+    common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
   }
 
   const fromThought = common.getValueByPath(fromObject, ['thought']);
@@ -1257,11 +611,7 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
 
   const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
   if (fromFunctionCall != null) {
-    common.setValueByPath(
-      toObject,
-      ['functionCall'],
-      functionCallToMldev(fromFunctionCall),
-    );
+    common.setValueByPath(toObject, ['functionCall'], fromFunctionCall);
   }
 
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
@@ -1292,188 +642,6 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
   const fromText = common.getValueByPath(fromObject, ['text']);
   if (fromText != null) {
     common.setValueByPath(toObject, ['text'], fromText);
-  }
-
-  return toObject;
-}
-
-export function partToVertex(fromObject: types.Part): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromVideoMetadata = common.getValueByPath(fromObject, [
-    'videoMetadata',
-  ]);
-  if (fromVideoMetadata != null) {
-    common.setValueByPath(
-      toObject,
-      ['videoMetadata'],
-      videoMetadataToVertex(fromVideoMetadata),
-    );
-  }
-
-  const fromThought = common.getValueByPath(fromObject, ['thought']);
-  if (fromThought != null) {
-    common.setValueByPath(toObject, ['thought'], fromThought);
-  }
-
-  const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
-  if (fromInlineData != null) {
-    common.setValueByPath(
-      toObject,
-      ['inlineData'],
-      blobToVertex(fromInlineData),
-    );
-  }
-
-  const fromFileData = common.getValueByPath(fromObject, ['fileData']);
-  if (fromFileData != null) {
-    common.setValueByPath(
-      toObject,
-      ['fileData'],
-      fileDataToVertex(fromFileData),
-    );
-  }
-
-  const fromThoughtSignature = common.getValueByPath(fromObject, [
-    'thoughtSignature',
-  ]);
-  if (fromThoughtSignature != null) {
-    common.setValueByPath(toObject, ['thoughtSignature'], fromThoughtSignature);
-  }
-
-  const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
-  if (fromFunctionCall != null) {
-    common.setValueByPath(
-      toObject,
-      ['functionCall'],
-      functionCallToVertex(fromFunctionCall),
-    );
-  }
-
-  const fromCodeExecutionResult = common.getValueByPath(fromObject, [
-    'codeExecutionResult',
-  ]);
-  if (fromCodeExecutionResult != null) {
-    common.setValueByPath(
-      toObject,
-      ['codeExecutionResult'],
-      fromCodeExecutionResult,
-    );
-  }
-
-  const fromExecutableCode = common.getValueByPath(fromObject, [
-    'executableCode',
-  ]);
-  if (fromExecutableCode != null) {
-    common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
-  }
-
-  const fromFunctionResponse = common.getValueByPath(fromObject, [
-    'functionResponse',
-  ]);
-  if (fromFunctionResponse != null) {
-    common.setValueByPath(toObject, ['functionResponse'], fromFunctionResponse);
-  }
-
-  const fromText = common.getValueByPath(fromObject, ['text']);
-  if (fromText != null) {
-    common.setValueByPath(toObject, ['text'], fromText);
-  }
-
-  return toObject;
-}
-
-export function retrievalConfigToMldev(
-  fromObject: types.RetrievalConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromLatLng = common.getValueByPath(fromObject, ['latLng']);
-  if (fromLatLng != null) {
-    common.setValueByPath(toObject, ['latLng'], latLngToMldev(fromLatLng));
-  }
-
-  const fromLanguageCode = common.getValueByPath(fromObject, ['languageCode']);
-  if (fromLanguageCode != null) {
-    common.setValueByPath(toObject, ['languageCode'], fromLanguageCode);
-  }
-
-  return toObject;
-}
-
-export function retrievalConfigToVertex(
-  fromObject: types.RetrievalConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromLatLng = common.getValueByPath(fromObject, ['latLng']);
-  if (fromLatLng != null) {
-    common.setValueByPath(toObject, ['latLng'], latLngToVertex(fromLatLng));
-  }
-
-  const fromLanguageCode = common.getValueByPath(fromObject, ['languageCode']);
-  if (fromLanguageCode != null) {
-    common.setValueByPath(toObject, ['languageCode'], fromLanguageCode);
-  }
-
-  return toObject;
-}
-
-export function toolConfigToMldev(
-  fromObject: types.ToolConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromFunctionCallingConfig = common.getValueByPath(fromObject, [
-    'functionCallingConfig',
-  ]);
-  if (fromFunctionCallingConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['functionCallingConfig'],
-      functionCallingConfigToMldev(fromFunctionCallingConfig),
-    );
-  }
-
-  const fromRetrievalConfig = common.getValueByPath(fromObject, [
-    'retrievalConfig',
-  ]);
-  if (fromRetrievalConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['retrievalConfig'],
-      retrievalConfigToMldev(fromRetrievalConfig),
-    );
-  }
-
-  return toObject;
-}
-
-export function toolConfigToVertex(
-  fromObject: types.ToolConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromFunctionCallingConfig = common.getValueByPath(fromObject, [
-    'functionCallingConfig',
-  ]);
-  if (fromFunctionCallingConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['functionCallingConfig'],
-      functionCallingConfigToVertex(fromFunctionCallingConfig),
-    );
-  }
-
-  const fromRetrievalConfig = common.getValueByPath(fromObject, [
-    'retrievalConfig',
-  ]);
-  if (fromRetrievalConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['retrievalConfig'],
-      retrievalConfigToVertex(fromRetrievalConfig),
-    );
   }
 
   return toObject;
@@ -1489,7 +657,7 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
     let transformedList = fromFunctionDeclarations;
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return functionDeclarationToMldev(item);
+        return item;
       });
     }
     common.setValueByPath(toObject, ['functionDeclarations'], transformedList);
@@ -1515,7 +683,7 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
     common.setValueByPath(
       toObject,
       ['googleSearchRetrieval'],
-      googleSearchRetrievalToMldev(fromGoogleSearchRetrieval),
+      fromGoogleSearchRetrieval,
     );
   }
 
@@ -1533,16 +701,12 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
 
   const fromUrlContext = common.getValueByPath(fromObject, ['urlContext']);
   if (fromUrlContext != null) {
-    common.setValueByPath(toObject, ['urlContext'], urlContextToMldev());
+    common.setValueByPath(toObject, ['urlContext'], fromUrlContext);
   }
 
   const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
   if (fromComputerUse != null) {
-    common.setValueByPath(
-      toObject,
-      ['computerUse'],
-      computerUseToMldev(fromComputerUse),
-    );
+    common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
   }
 
   const fromCodeExecution = common.getValueByPath(fromObject, [
@@ -1578,11 +742,7 @@ export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
 
   const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
   if (fromGoogleSearch != null) {
-    common.setValueByPath(
-      toObject,
-      ['googleSearch'],
-      googleSearchToVertex(fromGoogleSearch),
-    );
+    common.setValueByPath(toObject, ['googleSearch'], fromGoogleSearch);
   }
 
   const fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
@@ -1592,7 +752,7 @@ export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
     common.setValueByPath(
       toObject,
       ['googleSearchRetrieval'],
-      googleSearchRetrievalToVertex(fromGoogleSearchRetrieval),
+      fromGoogleSearchRetrieval,
     );
   }
 
@@ -1603,31 +763,23 @@ export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
     common.setValueByPath(
       toObject,
       ['enterpriseWebSearch'],
-      enterpriseWebSearchToVertex(fromEnterpriseWebSearch),
+      fromEnterpriseWebSearch,
     );
   }
 
   const fromGoogleMaps = common.getValueByPath(fromObject, ['googleMaps']);
   if (fromGoogleMaps != null) {
-    common.setValueByPath(
-      toObject,
-      ['googleMaps'],
-      googleMapsToVertex(fromGoogleMaps),
-    );
+    common.setValueByPath(toObject, ['googleMaps'], fromGoogleMaps);
   }
 
   const fromUrlContext = common.getValueByPath(fromObject, ['urlContext']);
   if (fromUrlContext != null) {
-    common.setValueByPath(toObject, ['urlContext'], urlContextToVertex());
+    common.setValueByPath(toObject, ['urlContext'], fromUrlContext);
   }
 
   const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
   if (fromComputerUse != null) {
-    common.setValueByPath(
-      toObject,
-      ['computerUse'],
-      computerUseToVertex(fromComputerUse),
-    );
+    common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
   }
 
   const fromCodeExecution = common.getValueByPath(fromObject, [
@@ -1719,64 +871,6 @@ export function updateCachedContentParametersToVertex(
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
     updateCachedContentConfigToVertex(fromConfig, toObject);
-  }
-
-  return toObject;
-}
-
-export function urlContextToMldev(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
-export function urlContextToVertex(): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  return toObject;
-}
-
-export function videoMetadataToMldev(
-  fromObject: types.VideoMetadata,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromFps = common.getValueByPath(fromObject, ['fps']);
-  if (fromFps != null) {
-    common.setValueByPath(toObject, ['fps'], fromFps);
-  }
-
-  const fromEndOffset = common.getValueByPath(fromObject, ['endOffset']);
-  if (fromEndOffset != null) {
-    common.setValueByPath(toObject, ['endOffset'], fromEndOffset);
-  }
-
-  const fromStartOffset = common.getValueByPath(fromObject, ['startOffset']);
-  if (fromStartOffset != null) {
-    common.setValueByPath(toObject, ['startOffset'], fromStartOffset);
-  }
-
-  return toObject;
-}
-
-export function videoMetadataToVertex(
-  fromObject: types.VideoMetadata,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromFps = common.getValueByPath(fromObject, ['fps']);
-  if (fromFps != null) {
-    common.setValueByPath(toObject, ['fps'], fromFps);
-  }
-
-  const fromEndOffset = common.getValueByPath(fromObject, ['endOffset']);
-  if (fromEndOffset != null) {
-    common.setValueByPath(toObject, ['endOffset'], fromEndOffset);
-  }
-
-  const fromStartOffset = common.getValueByPath(fromObject, ['startOffset']);
-  if (fromStartOffset != null) {
-    common.setValueByPath(toObject, ['startOffset'], fromStartOffset);
   }
 
   return toObject;
