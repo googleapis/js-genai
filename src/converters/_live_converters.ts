@@ -1801,6 +1801,17 @@ export function liveConnectConfigToMldev(
     );
   }
 
+  const fromThinkingConfig = common.getValueByPath(fromObject, [
+    'thinkingConfig',
+  ]);
+  if (parentObject !== undefined && fromThinkingConfig != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'generationConfig', 'thinkingConfig'],
+      thinkingConfigToMldev(fromThinkingConfig),
+    );
+  }
+
   const fromEnableAffectiveDialog = common.getValueByPath(fromObject, [
     'enableAffectiveDialog',
   ]);
@@ -1993,6 +2004,17 @@ export function liveConnectConfigToVertex(
       parentObject,
       ['setup', 'generationConfig', 'speechConfig'],
       speechConfigToVertex(t.tLiveSpeechConfig(fromSpeechConfig)),
+    );
+  }
+
+  const fromThinkingConfig = common.getValueByPath(fromObject, [
+    'thinkingConfig',
+  ]);
+  if (parentObject !== undefined && fromThinkingConfig != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'generationConfig', 'thinkingConfig'],
+      thinkingConfigToVertex(fromThinkingConfig),
     );
   }
 
@@ -3948,6 +3970,50 @@ export function speechConfigToVertex(
   const fromLanguageCode = common.getValueByPath(fromObject, ['languageCode']);
   if (fromLanguageCode != null) {
     common.setValueByPath(toObject, ['languageCode'], fromLanguageCode);
+  }
+
+  return toObject;
+}
+
+export function thinkingConfigToMldev(
+  fromObject: types.ThinkingConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromIncludeThoughts = common.getValueByPath(fromObject, [
+    'includeThoughts',
+  ]);
+  if (fromIncludeThoughts != null) {
+    common.setValueByPath(toObject, ['includeThoughts'], fromIncludeThoughts);
+  }
+
+  const fromThinkingBudget = common.getValueByPath(fromObject, [
+    'thinkingBudget',
+  ]);
+  if (fromThinkingBudget != null) {
+    common.setValueByPath(toObject, ['thinkingBudget'], fromThinkingBudget);
+  }
+
+  return toObject;
+}
+
+export function thinkingConfigToVertex(
+  fromObject: types.ThinkingConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromIncludeThoughts = common.getValueByPath(fromObject, [
+    'includeThoughts',
+  ]);
+  if (fromIncludeThoughts != null) {
+    common.setValueByPath(toObject, ['includeThoughts'], fromIncludeThoughts);
+  }
+
+  const fromThinkingBudget = common.getValueByPath(fromObject, [
+    'thinkingBudget',
+  ]);
+  if (fromThinkingBudget != null) {
+    common.setValueByPath(toObject, ['thinkingBudget'], fromThinkingBudget);
   }
 
   return toObject;

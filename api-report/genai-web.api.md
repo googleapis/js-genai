@@ -1927,6 +1927,7 @@ export interface LiveConnectConfig {
     speechConfig?: SpeechConfig;
     systemInstruction?: ContentUnion;
     temperature?: number;
+    thinkingConfig?: ThinkingConfig;
     tools?: ToolListUnion;
     topK?: number;
     topP?: number;

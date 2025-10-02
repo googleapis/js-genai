@@ -5721,6 +5721,11 @@ export declare interface LiveConnectConfig {
   /** The speech generation configuration.
    */
   speechConfig?: SpeechConfig;
+  /** Config for thinking features.
+      An error will be returned if this field is set for models that don't
+      support thinking.
+       */
+  thinkingConfig?: ThinkingConfig;
   /** If enabled, the model will detect emotions and adapt its responses accordingly. */
   enableAffectiveDialog?: boolean;
   /** The user provided system instructions for the model.
