@@ -1,6 +1,13 @@
 # Changelog
 
 
+## [1.23.0](https://github.com/googleapis/js-genai/compare/v1.22.0...v1.23.0) (2025-10-03)
+
+
+### Features
+
+* Add `NO_IMAGE` enum value to `FinishReason` ([5305334](https://github.com/googleapis/js-genai/commit/5305334d7c295b56bcfd0efe2bf8a1a7a5ba230a))
+
 ## [1.22.0](https://github.com/googleapis/js-genai/compare/v1.21.0...v1.22.0) (2025-10-02)
 
 
