@@ -102,9 +102,7 @@ export class Caches extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.CachedContent>;
 
-      return response.then((apiResponse) => {
-        const resp = converters.cachedContentFromVertex(apiResponse);
-
+      return response.then((resp) => {
         return resp as types.CachedContent;
       });
     } else {
@@ -133,9 +131,7 @@ export class Caches extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.CachedContent>;
 
-      return response.then((apiResponse) => {
-        const resp = converters.cachedContentFromMldev(apiResponse);
-
+      return response.then((resp) => {
         return resp as types.CachedContent;
       });
     }
@@ -185,9 +181,7 @@ export class Caches extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.CachedContent>;
 
-      return response.then((apiResponse) => {
-        const resp = converters.cachedContentFromVertex(apiResponse);
-
+      return response.then((resp) => {
         return resp as types.CachedContent;
       });
     } else {
@@ -216,9 +210,7 @@ export class Caches extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.CachedContent>;
 
-      return response.then((apiResponse) => {
-        const resp = converters.cachedContentFromMldev(apiResponse);
-
+      return response.then((resp) => {
         return resp as types.CachedContent;
       });
     }
@@ -370,9 +362,7 @@ export class Caches extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.CachedContent>;
 
-      return response.then((apiResponse) => {
-        const resp = converters.cachedContentFromVertex(apiResponse);
-
+      return response.then((resp) => {
         return resp as types.CachedContent;
       });
     } else {
@@ -401,9 +391,7 @@ export class Caches extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.CachedContent>;
 
-      return response.then((apiResponse) => {
-        const resp = converters.cachedContentFromMldev(apiResponse);
-
+      return response.then((resp) => {
         return resp as types.CachedContent;
       });
     }

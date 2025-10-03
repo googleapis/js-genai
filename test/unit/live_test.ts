@@ -764,7 +764,7 @@ describe('live', () => {
 
     const websocketSpyCall = websocketSpy.calls.all()[0];
     expect(websocketSpyCall.args[0]).toBe(
-      '{"setup":{"model":"models/gemini-live-2.5-flash-preview","tools":[{"functionDeclarations":[{"behavior":"NON_BLOCKING","name":"print","parametersJsonSchema":{"type":"object","properties":{"text":{"type":"string"},"color":{"type":"string","pattern":"red|blue|green|white"}},"required":["text","color"],"additionalProperties":false,"$schema":"http://json-schema.org/draft-07/schema#"}}]}]}}',
+      '{"setup":{"model":"models/gemini-live-2.5-flash-preview","tools":[{"functionDeclarations":[{"name":"print","parametersJsonSchema":{"type":"object","properties":{"text":{"type":"string"},"color":{"type":"string","pattern":"red|blue|green|white"}},"required":["text","color"],"additionalProperties":false,"$schema":"http://json-schema.org/draft-07/schema#"},"behavior":"NON_BLOCKING"}]}]}}',
     );
     expect(session).toBeDefined();
   });

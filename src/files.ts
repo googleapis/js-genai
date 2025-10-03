@@ -98,9 +98,8 @@ export class Files extends BaseModule {
 
     return this.apiClient
       .uploadFile(params.file, params.config)
-      .then((response) => {
-        const file = converters.fileFromMldev(response);
-        return file as types.File;
+      .then((resp) => {
+        return resp as types.File;
       });
   }
 
@@ -261,9 +260,7 @@ export class Files extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.File>;
 
-      return response.then((apiResponse) => {
-        const resp = converters.fileFromMldev(apiResponse);
-
+      return response.then((resp) => {
         return resp as types.File;
       });
     }
