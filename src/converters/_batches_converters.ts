@@ -827,7 +827,7 @@ export function embedContentBatchToMldev(
   if (fromConfig != null) {
     common.setValueByPath(
       toObject,
-      ['config'],
+      ['_self'],
       embedContentConfigToMldev(fromConfig, toObject),
     );
   }
