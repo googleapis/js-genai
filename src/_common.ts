@@ -125,7 +125,11 @@ export function setValueByPath(
   }
 }
 
-export function getValueByPath(data: unknown, keys: string[]): unknown {
+export function getValueByPath(
+  data: unknown,
+  keys: string[],
+  defaultValue: unknown = undefined,
+): unknown {
   try {
     if (keys.length === 1 && keys[0] === '_self') {
       return data;
@@ -133,7 +137,7 @@ export function getValueByPath(data: unknown, keys: string[]): unknown {
 
     for (let i = 0; i < keys.length; i++) {
       if (typeof data !== 'object' || data === null) {
-        return undefined;
+        return defaultValue;
       }
 
       const key = keys[i];
@@ -142,11 +146,13 @@ export function getValueByPath(data: unknown, keys: string[]): unknown {
         if (keyName in data) {
           const arrayData = (data as Record<string, unknown>)[keyName];
           if (!Array.isArray(arrayData)) {
-            return undefined;
+            return defaultValue;
           }
-          return arrayData.map((d) => getValueByPath(d, keys.slice(i + 1)));
+          return arrayData.map((d) =>
+            getValueByPath(d, keys.slice(i + 1), defaultValue),
+          );
         } else {
-          return undefined;
+          return defaultValue;
         }
       } else {
         data = (data as Record<string, unknown>)[key];
@@ -156,7 +162,7 @@ export function getValueByPath(data: unknown, keys: string[]): unknown {
     return data;
   } catch (error) {
     if (error instanceof TypeError) {
-      return undefined;
+      return defaultValue;
     }
     throw error;
   }

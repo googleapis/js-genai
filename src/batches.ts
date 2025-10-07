@@ -46,45 +46,8 @@ export class Batches extends BaseModule {
         params.src as string | types.BatchJobSource,
         params.config,
       );
-
-      return this.createInternal(params);
     }
-
-    // MLDEV
-    const src = params.src as types.BatchJobSource;
-    const is_inlined =
-      Array.isArray(params.src) || src.inlinedRequests !== undefined;
-
-    if (!is_inlined) {
-      return this.createInternal(params);
-    }
-
-    // Inlined generate content requests handling
-    const result = this.createInlinedGenerateContentRequest(params);
-    const path = result.path;
-    const requestBody = result.body;
-    const queryParams =
-      (converters.createBatchJobParametersToMldev(this.apiClient, params)[
-        '_query'
-      ] as Record<string, string>) || {};
-
-    const response = this.apiClient
-      .request({
-        path: path,
-        queryParams: queryParams,
-        body: JSON.stringify(requestBody),
-        httpMethod: 'POST',
-        httpOptions: params.config?.httpOptions,
-        abortSignal: params.config?.abortSignal,
-      })
-      .then((httpResponse) => {
-        return httpResponse.json();
-      }) as Promise<types.BatchJob>;
-
-    return response.then((apiResponse) => {
-      const resp = converters.batchJobFromMldev(apiResponse);
-      return resp as types.BatchJob;
-    });
+    return this.createInternal(params);
   };
 
   /**

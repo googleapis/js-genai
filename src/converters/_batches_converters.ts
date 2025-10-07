@@ -1276,7 +1276,14 @@ export function inlinedRequestToMldev(
     common.setValueByPath(
       toObject,
       ['request', 'generationConfig'],
-      generateContentConfigToMldev(apiClient, fromConfig, toObject),
+      generateContentConfigToMldev(
+        apiClient,
+        fromConfig,
+        common.getValueByPath(toObject, ['request'], {}) as Record<
+          string,
+          unknown
+        >,
+      ),
     );
   }
 
