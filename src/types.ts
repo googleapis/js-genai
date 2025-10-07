@@ -2873,6 +2873,8 @@ export declare interface GenerateImagesConfig {
   outputCompressionQuality?: number;
   /** Whether to add a watermark to the generated images. */
   addWatermark?: boolean;
+  /** User specified labels to track billing usage. */
+  labels?: Record<string, string>;
   /** The size of the largest dimension of the generated image.
       Supported sizes are 1K and 2K (not supported for Imagen 3 models). */
   imageSize?: string;
@@ -3025,6 +3027,8 @@ export declare interface EditImageConfig {
   outputCompressionQuality?: number;
   /** Whether to add a watermark to the generated images. */
   addWatermark?: boolean;
+  /** User specified labels to track billing usage. */
+  labels?: Record<string, string>;
   /** Describes the editing mode for the request. */
   editMode?: EditMode;
   /** The number of sampling steps. A higher value has better image
@@ -3099,6 +3103,8 @@ export declare interface RecontextImageConfig {
   outputCompressionQuality?: number;
   /** Whether to use the prompt rewriting logic. */
   enhancePrompt?: boolean;
+  /** User specified labels to track billing usage. */
+  labels?: Record<string, string>;
 }
 
 /** The parameters for recontextualizing an image. */
@@ -3164,6 +3170,8 @@ export declare interface SegmentImageConfig {
       can be set to a decimal value between 0 and 255 non-inclusive.
       Set to -1 for no binary color thresholding. */
   binaryColorThreshold?: number;
+  /** User specified labels to track billing usage. */
+  labels?: Record<string, string>;
 }
 
 /** The parameters for segmenting an image. */
@@ -5033,6 +5041,8 @@ export declare interface UpscaleImageConfig {
       output image will have be more different from the input image, but
       with finer details and less noise. */
   imagePreservationFactor?: number;
+  /** User specified labels to track billing usage. */
+  labels?: Record<string, string>;
 }
 
 /** User-facing config UpscaleImageParameters. */

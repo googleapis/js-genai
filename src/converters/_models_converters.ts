@@ -677,6 +677,11 @@ export function editImageConfigToVertex(
     );
   }
 
+  const fromLabels = common.getValueByPath(fromObject, ['labels']);
+  if (parentObject !== undefined && fromLabels != null) {
+    common.setValueByPath(parentObject, ['labels'], fromLabels);
+  }
+
   const fromEditMode = common.getValueByPath(fromObject, ['editMode']);
   if (parentObject !== undefined && fromEditMode != null) {
     common.setValueByPath(
@@ -1854,6 +1859,10 @@ export function generateImagesConfigToMldev(
     throw new Error('addWatermark parameter is not supported in Gemini API.');
   }
 
+  if (common.getValueByPath(fromObject, ['labels']) !== undefined) {
+    throw new Error('labels parameter is not supported in Gemini API.');
+  }
+
   const fromImageSize = common.getValueByPath(fromObject, ['imageSize']);
   if (parentObject !== undefined && fromImageSize != null) {
     common.setValueByPath(
@@ -2014,6 +2023,11 @@ export function generateImagesConfigToVertex(
       ['parameters', 'addWatermark'],
       fromAddWatermark,
     );
+  }
+
+  const fromLabels = common.getValueByPath(fromObject, ['labels']);
+  if (parentObject !== undefined && fromLabels != null) {
+    common.setValueByPath(parentObject, ['labels'], fromLabels);
   }
 
   const fromImageSize = common.getValueByPath(fromObject, ['imageSize']);
@@ -3758,6 +3772,11 @@ export function recontextImageConfigToVertex(
     );
   }
 
+  const fromLabels = common.getValueByPath(fromObject, ['labels']);
+  if (parentObject !== undefined && fromLabels != null) {
+    common.setValueByPath(parentObject, ['labels'], fromLabels);
+  }
+
   return toObject;
 }
 
@@ -4065,6 +4084,11 @@ export function segmentImageConfigToVertex(
       ['parameters', 'binaryColorThreshold'],
       fromBinaryColorThreshold,
     );
+  }
+
+  const fromLabels = common.getValueByPath(fromObject, ['labels']);
+  if (parentObject !== undefined && fromLabels != null) {
+    common.setValueByPath(parentObject, ['labels'], fromLabels);
   }
 
   return toObject;
@@ -4545,6 +4569,11 @@ export function upscaleImageAPIConfigInternalToVertex(
       ['parameters', 'upscaleConfig', 'imagePreservationFactor'],
       fromImagePreservationFactor,
     );
+  }
+
+  const fromLabels = common.getValueByPath(fromObject, ['labels']);
+  if (parentObject !== undefined && fromLabels != null) {
+    common.setValueByPath(parentObject, ['labels'], fromLabels);
   }
 
   const fromNumberOfImages = common.getValueByPath(fromObject, [

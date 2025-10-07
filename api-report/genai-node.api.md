@@ -770,6 +770,7 @@ export interface EditImageConfig {
     httpOptions?: HttpOptions;
     includeRaiReason?: boolean;
     includeSafetyAttributes?: boolean;
+    labels?: Record<string, string>;
     language?: ImagePromptLanguage;
     negativePrompt?: string;
     numberOfImages?: number;
@@ -1221,6 +1222,7 @@ export interface GenerateImagesConfig {
     imageSize?: string;
     includeRaiReason?: boolean;
     includeSafetyAttributes?: boolean;
+    labels?: Record<string, string>;
     language?: ImagePromptLanguage;
     negativePrompt?: string;
     numberOfImages?: number;
@@ -2490,6 +2492,7 @@ export interface RecontextImageConfig {
     baseSteps?: number;
     enhancePrompt?: boolean;
     httpOptions?: HttpOptions;
+    labels?: Record<string, string>;
     numberOfImages?: number;
     outputCompressionQuality?: number;
     outputGcsUri?: string;
@@ -2688,6 +2691,7 @@ export interface SegmentImageConfig {
     binaryColorThreshold?: number;
     confidenceThreshold?: number;
     httpOptions?: HttpOptions;
+    labels?: Record<string, string>;
     maskDilation?: number;
     maxPredictions?: number;
     mode?: SegmentMode;
@@ -3149,6 +3153,7 @@ export interface UpscaleImageConfig {
     httpOptions?: HttpOptions;
     imagePreservationFactor?: number;
     includeRaiReason?: boolean;
+    labels?: Record<string, string>;
     outputCompressionQuality?: number;
     outputGcsUri?: string;
     outputMimeType?: string;

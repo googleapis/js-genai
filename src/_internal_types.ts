@@ -72,6 +72,8 @@ export declare interface UpscaleImageAPIConfigInternal {
       output image will have be more different from the input image, but
       with finer details and less noise. */
   imagePreservationFactor?: number;
+  /** User specified labels to track billing usage. */
+  labels?: Record<string, string>;
   numberOfImages?: number;
   mode?: string;
 }
