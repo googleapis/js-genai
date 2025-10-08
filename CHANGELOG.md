@@ -9,7 +9,7 @@
 * Add `NO_IMAGE` enum value to `FinishReason` ([5305334](https://github.com/googleapis/js-genai/commit/5305334d7c295b56bcfd0efe2bf8a1a7a5ba230a))
 * Add labels field to Imagen configs ([1e9e96c](https://github.com/googleapis/js-genai/commit/1e9e96ca06520cde31a0506a7cf72bed635df45e))
 * Add utility methods for creating `FunctionResponsePart` and creating FunctionResponse `Part` with `FunctionResponseParts` ([5a0ce38](https://github.com/googleapis/js-genai/commit/5a0ce383efbf09b3b9e4b14c720417879664c4a1))
-* Enable R2V and Advanced Controls for Veo on Gemini Developer API ([d5bd0c1](https://github.com/googleapis/js-genai/commit/d5bd0c1b8147711f604049069f433539544d4829))
+* Enable Ingredients to Video and Advanced Controls for Veo on Gemini Developer API (Early Access Program) ([d5bd0c1](https://github.com/googleapis/js-genai/commit/d5bd0c1b8147711f604049069f433539544d4829))
 
 
 ### Bug Fixes
