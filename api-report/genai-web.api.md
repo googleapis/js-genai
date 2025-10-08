@@ -562,6 +562,12 @@ export class CreateFileResponse {
 }
 
 // @public
+export function createFunctionResponsePartFromBase64(data: string, mimeType: string): FunctionResponsePart;
+
+// @public
+export function createFunctionResponsePartFromUri(uri: string, mimeType: string): FunctionResponsePart;
+
+// @public
 export function createModelContent(partOrString: PartListUnion | string): Content;
 
 // @public
@@ -577,7 +583,7 @@ export function createPartFromExecutableCode(code: string, language: Language): 
 export function createPartFromFunctionCall(name: string, args: Record<string, unknown>): Part;
 
 // @public
-export function createPartFromFunctionResponse(id: string, name: string, response: Record<string, unknown>): Part;
+export function createPartFromFunctionResponse(id: string, name: string, response: Record<string, unknown>, parts?: FunctionResponsePart[]): Part;
 
 // @public
 export function createPartFromText(text: string): Part;

@@ -1146,6 +1146,34 @@ export class FunctionResponsePart {
   /** Optional. URI based data. */
   fileData?: FunctionResponseFileData;
 }
+/**
+ * Creates a `FunctionResponsePart` object from a `base64` encoded `string`.
+ */
+export function createFunctionResponsePartFromBase64(
+  data: string,
+  mimeType: string,
+): FunctionResponsePart {
+  return {
+    inlineData: {
+      data: data,
+      mimeType: mimeType,
+    },
+  };
+}
+/**
+ * Creates a `FunctionResponsePart` object from a `URI` string.
+ */
+export function createFunctionResponsePartFromUri(
+  uri: string,
+  mimeType: string,
+): FunctionResponsePart {
+  return {
+    fileData: {
+      fileUri: uri,
+      mimeType: mimeType,
+    },
+  };
+}
 
 /** A function response. */
 export class FunctionResponse {
@@ -1235,12 +1263,14 @@ export function createPartFromFunctionResponse(
   id: string,
   name: string,
   response: Record<string, unknown>,
+  parts: FunctionResponsePart[] = [],
 ): Part {
   return {
     functionResponse: {
       id: id,
       name: name,
       response: response,
+      ...(parts.length > 0 && {parts}),
     },
   };
 }
