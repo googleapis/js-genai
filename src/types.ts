@@ -251,8 +251,7 @@ export enum UrlRetrievalStatus {
 
 /** Output only. The reason why the model stopped generating tokens.
 
-  If empty, the model has not stopped generating the tokens.
-   */
+If empty, the model has not stopped generating the tokens. */
 export enum FinishReason {
   /**
    * The finish reason is unspecified.
@@ -1111,9 +1110,8 @@ export declare interface ExecutableCode {
 
 /** Raw media bytes for function response.
 
-  Text should not be sent as raw bytes, use the FunctionResponse.response
-  field.
-   */
+Text should not be sent as raw bytes, use the FunctionResponse.response
+field. */
 export class FunctionResponseBlob {
   /** Required. The IANA standard MIME type of the source data. */
   mimeType?: string;
@@ -1132,14 +1130,13 @@ export class FunctionResponseFileData {
 
 /** A datatype containing media that is part of a `FunctionResponse` message.
 
-  A `FunctionResponsePart` consists of data which has an associated datatype. A
-  `FunctionResponsePart` can only contain one of the accepted types in
-  `FunctionResponsePart.data`.
+A `FunctionResponsePart` consists of data which has an associated datatype. A
+`FunctionResponsePart` can only contain one of the accepted types in
+`FunctionResponsePart.data`.
 
-  A `FunctionResponsePart` must have a fixed IANA MIME type identifying the
-  type and subtype of the media if the `inline_data` field is filled with raw
-  bytes.
-   */
+A `FunctionResponsePart` must have a fixed IANA MIME type identifying the
+type and subtype of the media if the `inline_data` field is filled with raw
+bytes. */
 export class FunctionResponsePart {
   /** Optional. Inline media bytes. */
   inlineData?: FunctionResponseBlob;
@@ -1194,10 +1191,9 @@ export class FunctionResponse {
 
 /** A datatype containing media content.
 
-  Exactly one field within a Part should be set, representing the specific type
-  of content being conveyed. Using multiple fields within the same `Part`
-  instance is considered invalid.
-   */
+Exactly one field within a Part should be set, representing the specific type
+of content being conveyed. Using multiple fields within the same `Part`
+instance is considered invalid. */
 export declare interface Part {
   /** Metadata for a given video. */
   videoMetadata?: VideoMetadata;
@@ -1405,10 +1401,9 @@ export declare interface HttpOptions {
 
 /** Schema is used to define the format of input/output data.
 
-  Represents a select subset of an [OpenAPI 3.0 schema
-  object](https://spec.openapis.org/oas/v3.0.3#schema-object). More fields may
-  be added in the future as needed.
-   */
+Represents a select subset of an [OpenAPI 3.0 schema
+object](https://spec.openapis.org/oas/v3.0.3#schema-object). More fields may
+be added in the future as needed. */
 export declare interface Schema {
   /** Optional. The value should be validated against any (one or more) of the subschemas in the list. */
   anyOf?: Schema[];
@@ -1475,9 +1470,8 @@ export declare interface SafetySetting {
 
 /** Defines a function that the model can generate JSON inputs for.
 
-  The inputs are based on `OpenAPI 3.0 specifications
-  <https://spec.openapis.org/oas/v3.0.3>`_.
-   */
+The inputs are based on `OpenAPI 3.0 specifications
+<https://spec.openapis.org/oas/v3.0.3>`_. */
 export declare interface FunctionDeclaration {
   /** Defines the function behavior. */
   behavior?: Behavior;
@@ -1497,11 +1491,10 @@ export declare interface FunctionDeclaration {
 
 /** Represents a time interval, encoded as a start time (inclusive) and an end time (exclusive).
 
-  The start time must be less than or equal to the end time.
-  When the start equals the end time, the interval is an empty interval.
-  (matches no time)
-  When both start and end are unspecified, the interval matches any time.
-   */
+The start time must be less than or equal to the end time.
+When the start equals the end time, the interval is an empty interval.
+(matches no time)
+When both start and end are unspecified, the interval matches any time. */
 export declare interface Interval {
   /** The start time of the interval. */
   startTime?: string;
@@ -1800,11 +1793,10 @@ export declare interface FunctionCallingConfig {
 
 /** An object that represents a latitude/longitude pair.
 
-  This is expressed as a pair of doubles to represent degrees latitude and
-  degrees longitude. Unless specified otherwise, this object must conform to the
-  <a href="https://en.wikipedia.org/wiki/World_Geodetic_System#1984_version">
-  WGS84 standard</a>. Values must be within normalized ranges.
-   */
+This is expressed as a pair of doubles to represent degrees latitude and
+degrees longitude. Unless specified otherwise, this object must conform to the
+<a href="https://en.wikipedia.org/wiki/World_Geodetic_System#1984_version">
+WGS84 standard</a>. Values must be within normalized ranges. */
 export declare interface LatLng {
   /** The latitude in degrees. It must be in the range [-90.0, +90.0]. */
   latitude?: number;
@@ -1823,8 +1815,7 @@ export declare interface RetrievalConfig {
 
 /** Tool config.
 
-  This config is shared for all tools provided in the request.
-   */
+This config is shared for all tools provided in the request. */
 export declare interface ToolConfig {
   /** Optional. Function calling config. */
   functionCallingConfig?: FunctionCallingConfig;
@@ -1940,9 +1931,8 @@ export declare interface GenerationConfigRoutingConfig {
 
 /** Optional model configuration parameters.
 
-  For more information, see `Content generation parameters
-  <https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/content-generation-parameters>`_.
-   */
+For more information, see `Content generation parameters
+<https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/content-generation-parameters>`_. */
 export declare interface GenerateContentConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
@@ -5038,10 +5028,9 @@ export declare interface DownloadFileParameters {
 
 /** Configuration for upscaling an image.
 
-  For more information on this configuration, refer to
-  the `Imagen API reference documentation
-  <https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/imagen-api>`_.
-   */
+For more information on this configuration, refer to
+the `Imagen API reference documentation
+<https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/imagen-api>`_. */
 export declare interface UpscaleImageConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
@@ -5089,10 +5078,9 @@ export declare interface UpscaleImageParameters {
 
 /** A raw reference image.
 
-  A raw reference image represents the base image to edit, provided by the user.
-  It can optionally be provided in addition to a mask reference image or
-  a style reference image.
-   */
+A raw reference image represents the base image to edit, provided by the user.
+It can optionally be provided in addition to a mask reference image or
+a style reference image. */
 export class RawReferenceImage {
   /** The reference image for the editing operation. */
   referenceImage?: Image;
@@ -5113,14 +5101,13 @@ export class RawReferenceImage {
 
 /** A mask reference image.
 
-  This encapsulates either a mask image provided by the user and configs for
-  the user provided mask, or only config parameters for the model to generate
-  a mask.
+This encapsulates either a mask image provided by the user and configs for
+the user provided mask, or only config parameters for the model to generate
+a mask.
 
-  A mask image is an image whose non-zero values indicate where to edit the base
-  image. If the user provides a mask image, the mask must be in the same
-  dimensions as the raw image.
-   */
+A mask image is an image whose non-zero values indicate where to edit the base
+image. If the user provides a mask image, the mask must be in the same
+dimensions as the raw image. */
 export class MaskReferenceImage {
   /** The reference image for the editing operation. */
   referenceImage?: Image;
@@ -5144,14 +5131,13 @@ export class MaskReferenceImage {
 
 /** A control reference image.
 
-  The image of the control reference image is either a control image provided
-  by the user, or a regular image which the backend will use to generate a
-  control image of. In the case of the latter, the
-  enable_control_image_computation field in the config should be set to True.
+The image of the control reference image is either a control image provided
+by the user, or a regular image which the backend will use to generate a
+control image of. In the case of the latter, the
+enable_control_image_computation field in the config should be set to True.
 
-  A control image is an image that represents a sketch image of areas for the
-  model to fill in based on the prompt.
-   */
+A control image is an image that represents a sketch image of areas for the
+model to fill in based on the prompt. */
 export class ControlReferenceImage {
   /** The reference image for the editing operation. */
   referenceImage?: Image;
@@ -5175,12 +5161,11 @@ export class ControlReferenceImage {
 
 /** A style reference image.
 
-  This encapsulates a style reference image provided by the user, and
-  additionally optional config parameters for the style reference image.
+This encapsulates a style reference image provided by the user, and
+additionally optional config parameters for the style reference image.
 
-  A raw reference image can also be provided as a destination for the style to
-  be applied to.
-   */
+A raw reference image can also be provided as a destination for the style to
+be applied to. */
 export class StyleReferenceImage {
   /** The reference image for the editing operation. */
   referenceImage?: Image;
@@ -5204,12 +5189,11 @@ export class StyleReferenceImage {
 
 /** A subject reference image.
 
-  This encapsulates a subject reference image provided by the user, and
-  additionally optional config parameters for the subject reference image.
+This encapsulates a subject reference image provided by the user, and
+additionally optional config parameters for the subject reference image.
 
-  A raw reference image can also be provided as a destination for the subject to
-  be applied to.
-   */
+A raw reference image can also be provided as a destination for the subject to
+be applied to. */
 export class SubjectReferenceImage {
   /** The reference image for the editing operation. */
   referenceImage?: Image;
@@ -5233,10 +5217,9 @@ export class SubjectReferenceImage {
 
 /** A content reference image.
 
-  A content reference image represents a subject to reference (ex. person,
-  product, animal) provided by the user. It can optionally be provided in
-  addition to a style reference image (ex. background, style reference).
-   */
+A content reference image represents a subject to reference (ex. person,
+product, animal) provided by the user. It can optionally be provided in
+addition to a style reference image (ex. background, style reference). */
 export class ContentReferenceImage {
   /** The reference image for the editing operation. */
   referenceImage?: Image;
@@ -5273,9 +5256,8 @@ export declare interface Transcription {
 
 /** Incremental server update generated by the model in response to client messages.
 
-  Content is generated as quickly as possible, and not in real time. Clients
-  may choose to buffer and play it out in real time.
-   */
+Content is generated as quickly as possible, and not in real time. Clients
+may choose to buffer and play it out in real time. */
 export declare interface LiveServerContent {
   /** The content that the model has generated as part of the current conversation with the user. */
   modelTurn?: Content;
@@ -5321,10 +5303,9 @@ export declare interface LiveServerToolCall {
 
 /** Notification for the client that a previously issued `ToolCallMessage` with the specified `id`s should have been not executed and should be cancelled.
 
-  If there were side-effects to those tool calls, clients may attempt to undo
-  the tool calls. This message occurs only in cases where the clients interrupt
-  server turns.
-   */
+If there were side-effects to those tool calls, clients may attempt to undo
+the tool calls. This message occurs only in cases where the clients interrupt
+server turns. */
 export declare interface LiveServerToolCallCancellation {
   /** The ids of the tool calls to be cancelled. */
   ids?: string[];
@@ -5365,8 +5346,7 @@ export declare interface LiveServerGoAway {
 
 /** Update of the session resumption state.
 
-  Only sent if `session_resumption` was set in the connection config.
-   */
+Only sent if `session_resumption` was set in the connection config. */
 export declare interface LiveServerSessionResumptionUpdate {
   /** New handle that represents state that can be resumed. Empty if `resumable`=false. */
   newHandle?: string;
@@ -5488,9 +5468,8 @@ export declare interface AutomaticActivityDetection {
 
 /** Marks the end of user activity.
 
-  This can only be sent if automatic (i.e. server-side) activity detection is
-  disabled.
-   */
+This can only be sent if automatic (i.e. server-side) activity detection is
+disabled. */
 export declare interface RealtimeInputConfig {
   /** If not set, automatic activity detection is enabled by default. If automatic voice detection is disabled, the client must send activity signals. */
   automaticActivityDetection?: AutomaticActivityDetection;
@@ -5502,9 +5481,8 @@ export declare interface RealtimeInputConfig {
 
 /** Configuration of session resumption mechanism.
 
-  Included in `LiveConnectConfig.session_resumption`. If included server
-  will send `LiveServerSessionResumptionUpdate` messages.
-   */
+Included in `LiveConnectConfig.session_resumption`. If included server
+will send `LiveServerSessionResumptionUpdate` messages. */
 export declare interface SessionResumptionConfig {
   /** Session resumption handle of previous session (session to restore).
 
@@ -5516,11 +5494,10 @@ If not present new session will be started. */
 
 /** Context window will be truncated by keeping only suffix of it.
 
-  Context window will always be cut at start of USER role turn. System
-  instructions and `BidiGenerateContentSetup.prefix_turns` will not be
-  subject to the sliding window mechanism, they will always stay at the
-  beginning of context window.
-   */
+Context window will always be cut at start of USER role turn. System
+instructions and `BidiGenerateContentSetup.prefix_turns` will not be
+subject to the sliding window mechanism, they will always stay at the
+beginning of context window. */
 export declare interface SlidingWindow {
   /** Session reduction target -- how many tokens we should keep. Window shortening operation has some latency costs, so we should avoid running it on every turn. Should be < trigger_tokens. If not set, trigger_tokens/2 is assumed. */
   targetTokens?: string;
@@ -5590,11 +5567,10 @@ export declare interface LiveClientSetup {
 
 /** Incremental update of the current conversation delivered from the client.
 
-  All the content here will unconditionally be appended to the conversation
-  history and used as part of the prompt to the model to generate content.
+All the content here will unconditionally be appended to the conversation
+history and used as part of the prompt to the model to generate content.
 
-  A message here will interrupt any current model generation.
-   */
+A message here will interrupt any current model generation. */
 export declare interface LiveClientContent {
   /** The content appended to the current conversation with the model.
 
@@ -5611,33 +5587,30 @@ export declare interface LiveClientContent {
 
 /** Marks the start of user activity.
 
-  This can only be sent if automatic (i.e. server-side) activity detection is
-  disabled.
-   */
+This can only be sent if automatic (i.e. server-side) activity detection is
+disabled. */
 export declare interface ActivityStart {}
 
 /** Marks the end of user activity.
 
-  This can only be sent if automatic (i.e. server-side) activity detection is
-  disabled.
-   */
+This can only be sent if automatic (i.e. server-side) activity detection is
+disabled. */
 export declare interface ActivityEnd {}
 
 /** User input that is sent in real time.
 
-  This is different from `LiveClientContent` in a few ways:
+This is different from `LiveClientContent` in a few ways:
 
-    - Can be sent continuously without interruption to model generation.
-    - If there is a need to mix data interleaved across the
-      `LiveClientContent` and the `LiveClientRealtimeInput`, server attempts to
-      optimize for best response, but there are no guarantees.
-    - End of turn is not explicitly specified, but is rather derived from user
-      activity (for example, end of speech).
-    - Even before the end of turn, the data is processed incrementally
-      to optimize for a fast start of the response from the model.
-    - Is always assumed to be the user's input (cannot be used to populate
-      conversation history).
-   */
+  - Can be sent continuously without interruption to model generation.
+  - If there is a need to mix data interleaved across the
+    `LiveClientContent` and the `LiveClientRealtimeInput`, server attempts to
+    optimize for best response, but there are no guarantees.
+  - End of turn is not explicitly specified, but is rather derived from user
+    activity (for example, end of speech).
+  - Even before the end of turn, the data is processed incrementally
+    to optimize for a fast start of the response from the model.
+  - Is always assumed to be the user's input (cannot be used to populate
+    conversation history). */
 export declare interface LiveClientRealtimeInput {
   /** Inlined bytes data for media input. */
   mediaChunks?: Blob[];
@@ -5665,14 +5638,13 @@ The client can reopen the stream by sending an audio message.
 
 /** Client generated response to a `ToolCall` received from the server.
 
-  Individual `FunctionResponse` objects are matched to the respective
-  `FunctionCall` objects by the `id` field.
+Individual `FunctionResponse` objects are matched to the respective
+`FunctionCall` objects by the `id` field.
 
-  Note that in the unary and server-streaming GenerateContent APIs function
-  calling happens by exchanging the `Content` parts, while in the bidi
-  GenerateContent APIs function calling happens over this dedicated set of
-  messages.
-   */
+Note that in the unary and server-streaming GenerateContent APIs function
+calling happens by exchanging the `Content` parts, while in the bidi
+GenerateContent APIs function calling happens over this dedicated set of
+messages. */
 export class LiveClientToolResponse {
   /** The response to the function calls. */
   functionResponses?: FunctionResponse[];
@@ -5818,9 +5790,8 @@ export declare interface LiveConnectParameters {
 
 /** Parameters for initializing a new chat session.
 
-  These parameters are used when creating a chat session with the
-  `chats.create()` method.
-   */
+These parameters are used when creating a chat session with the
+`chats.create()` method. */
 export declare interface CreateChatParameters {
   /** The name of the model to use for the chat session.
 
@@ -5845,8 +5816,7 @@ export declare interface CreateChatParameters {
 
 /** Parameters for sending a message within a chat session.
 
-  These parameters are used with the `chat.sendMessage()` method.
-   */
+These parameters are used with the `chat.sendMessage()` method. */
 export declare interface SendMessageParameters {
   /** The message to send to the model.
 
@@ -5976,9 +5946,8 @@ export declare interface AudioChunk {
 
 /** Server update generated by the model in response to client messages.
 
-  Content is generated as quickly as possible, and not in real time.
-  Clients may choose to buffer and play it out in real time.
-   */
+Content is generated as quickly as possible, and not in real time.
+Clients may choose to buffer and play it out in real time. */
 export declare interface LiveMusicServerContent {
   /** The audio chunks that the model has generated. */
   audioChunks?: AudioChunk[];
