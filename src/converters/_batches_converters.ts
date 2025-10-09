@@ -830,6 +830,7 @@ export function embedContentBatchToMldev(
       ['_self'],
       embedContentConfigToMldev(fromConfig, toObject),
     );
+    common.moveValueByPath(toObject, {'requests[].*': 'requests[].request.*'});
   }
 
   return toObject;
