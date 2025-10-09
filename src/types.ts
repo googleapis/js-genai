@@ -3716,6 +3716,7 @@ export class GenerateVideosOperation
     const operation = new GenerateVideosOperation();
     let response;
     const op = apiResponse as unknown as GenerateVideosOperation;
+
     if (isVertexAI) {
       response = generateVideosOperationFromVertex(op);
     } else {
