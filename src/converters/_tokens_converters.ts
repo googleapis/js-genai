@@ -169,6 +169,11 @@ export function googleMapsToMldev(
     throw new Error('authConfig parameter is not supported in Gemini API.');
   }
 
+  const fromEnableWidget = common.getValueByPath(fromObject, ['enableWidget']);
+  if (fromEnableWidget != null) {
+    common.setValueByPath(toObject, ['enableWidget'], fromEnableWidget);
+  }
+
   return toObject;
 }
 

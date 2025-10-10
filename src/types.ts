@@ -1587,6 +1587,8 @@ export declare interface AuthConfig {
 export declare interface GoogleMaps {
   /** Optional. Auth config for the Google Maps tool. */
   authConfig?: AuthConfig;
+  /** Optional. If true, include the widget context token in the response. */
+  enableWidget?: boolean;
 }
 
 /** Tool to support URL context retrieval. */
@@ -2210,6 +2212,10 @@ export declare interface GroundingChunkMapsPlaceAnswerSourcesReviewSnippet {
   relativePublishTimeDescription?: string;
   /** A reference representing this place review which may be used to look up this place review again. */
   review?: string;
+  /** Id of the review referencing the place. */
+  reviewId?: string;
+  /** Title of the review. */
+  title?: string;
 }
 
 /** Sources used to generate the place answer. */
@@ -2321,6 +2327,14 @@ export declare interface SearchEntryPoint {
   sdkBlob?: string;
 }
 
+/** Source content flagging uri for a place or review. This is currently populated only for Google Maps grounding. */
+export declare interface GroundingMetadataSourceFlaggingUri {
+  /** A link where users can flag a problem with the source (place or review). */
+  flagContentUri?: string;
+  /** Id of the place or review. */
+  sourceId?: string;
+}
+
 /** Metadata returned to client when grounding is enabled. */
 export declare interface GroundingMetadata {
   /** Optional. Output only. Resource name of the Google Maps widget context token to be used with the PlacesContextElement widget to render contextual data. This is populated only for Google Maps grounding. */
@@ -2335,6 +2349,8 @@ export declare interface GroundingMetadata {
   retrievalQueries?: string[];
   /** Optional. Google search entry for the following-up web searches. */
   searchEntryPoint?: SearchEntryPoint;
+  /** Optional. Output only. List of source flagging uris. This is currently populated only for Google Maps grounding. */
+  sourceFlaggingUris?: GroundingMetadataSourceFlaggingUri[];
   /** Optional. Web search queries for the following-up web search. */
   webSearchQueries?: string[];
 }

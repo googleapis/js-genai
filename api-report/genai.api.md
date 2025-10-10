@@ -1477,6 +1477,7 @@ export interface GoogleGenAIOptions {
 // @public
 export interface GoogleMaps {
     authConfig?: AuthConfig;
+    enableWidget?: boolean;
 }
 
 // @public
@@ -1540,6 +1541,8 @@ export interface GroundingChunkMapsPlaceAnswerSourcesReviewSnippet {
     googleMapsUri?: string;
     relativePublishTimeDescription?: string;
     review?: string;
+    reviewId?: string;
+    title?: string;
 }
 
 // @public
@@ -1566,7 +1569,14 @@ export interface GroundingMetadata {
     retrievalMetadata?: RetrievalMetadata;
     retrievalQueries?: string[];
     searchEntryPoint?: SearchEntryPoint;
+    sourceFlaggingUris?: GroundingMetadataSourceFlaggingUri[];
     webSearchQueries?: string[];
+}
+
+// @public
+export interface GroundingMetadataSourceFlaggingUri {
+    flagContentUri?: string;
+    sourceId?: string;
 }
 
 // @public
