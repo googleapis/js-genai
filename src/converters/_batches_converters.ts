@@ -1288,6 +1288,11 @@ export function inlinedRequestToMldev(
     common.setValueByPath(toObject, ['request', 'contents'], transformedList);
   }
 
+  const fromMetadata = common.getValueByPath(fromObject, ['metadata']);
+  if (fromMetadata != null) {
+    common.setValueByPath(toObject, ['metadata'], fromMetadata);
+  }
+
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
     common.setValueByPath(

@@ -4581,6 +4581,8 @@ export declare interface InlinedRequest {
   /** Content of the request.
    */
   contents?: ContentListUnion;
+  /** The metadata to be associated with the request. */
+  metadata?: Record<string, string>;
   /** Configuration that contains optional model parameters.
    */
   config?: GenerateContentConfig;

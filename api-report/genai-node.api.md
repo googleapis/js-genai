@@ -1688,6 +1688,7 @@ export class InlinedEmbedContentResponse {
 export interface InlinedRequest {
     config?: GenerateContentConfig;
     contents?: ContentListUnion;
+    metadata?: Record<string, string>;
     model?: string;
 }
 
