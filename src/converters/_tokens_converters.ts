@@ -160,6 +160,18 @@ export function fileDataToMldev(
   return toObject;
 }
 
+export function googleMapsToMldev(
+  fromObject: types.GoogleMaps,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  if (common.getValueByPath(fromObject, ['authConfig']) !== undefined) {
+    throw new Error('authConfig parameter is not supported in Gemini API.');
+  }
+
+  return toObject;
+}
+
 export function googleSearchToMldev(
   fromObject: types.GoogleSearch,
 ): Record<string, unknown> {
@@ -555,8 +567,13 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
     );
   }
 
-  if (common.getValueByPath(fromObject, ['googleMaps']) !== undefined) {
-    throw new Error('googleMaps parameter is not supported in Gemini API.');
+  const fromGoogleMaps = common.getValueByPath(fromObject, ['googleMaps']);
+  if (fromGoogleMaps != null) {
+    common.setValueByPath(
+      toObject,
+      ['googleMaps'],
+      googleMapsToMldev(fromGoogleMaps),
+    );
   }
 
   const fromUrlContext = common.getValueByPath(fromObject, ['urlContext']);
