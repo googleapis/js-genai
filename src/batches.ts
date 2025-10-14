@@ -76,41 +76,7 @@ export class Batches extends BaseModule {
       throw new Error('Vertex AI does not support batches.createEmbeddings.');
     }
 
-    // MLDEV
-    const src = params.src as types.EmbeddingsBatchJobSource;
-    const is_inlined = src.inlinedRequests !== undefined;
-
-    if (!is_inlined) {
-      return this.createEmbeddingsInternal(params); // Fixed typo here
-    }
-
-    // Inlined embed content requests handling
-    const result = this.createInlinedEmbedContentRequest(params);
-    const path = result.path;
-    const requestBody = result.body;
-    const queryParams =
-      (converters.createEmbeddingsBatchJobParametersToMldev(
-        this.apiClient,
-        params,
-      )['_query'] as Record<string, string>) || {};
-
-    const response = this.apiClient
-      .request({
-        path: path,
-        queryParams: queryParams,
-        body: JSON.stringify(requestBody),
-        httpMethod: 'POST',
-        httpOptions: params.config?.httpOptions,
-        abortSignal: params.config?.abortSignal,
-      })
-      .then((httpResponse) => {
-        return httpResponse.json();
-      }) as Promise<types.BatchJob>;
-
-    return response.then((apiResponse) => {
-      const resp = converters.batchJobFromMldev(apiResponse);
-      return resp as types.BatchJob;
-    });
+    return this.createEmbeddingsInternal(params);
   };
 
   /**
@@ -170,52 +136,6 @@ export class Batches extends BaseModule {
         };
         requestContent['systemInstruction'] = systemInstructionValue;
         requestDict['request'] = requestContent;
-      }
-      newRequests.push(requestDict);
-    }
-    requestsWrapper['requests'] = newRequests;
-
-    delete body['config'];
-    delete body['_url'];
-    delete body['_query'];
-
-    return {path, body};
-  }
-
-  // Helper function to handle inlined embedding requests
-  private createInlinedEmbedContentRequest(
-    params: types.CreateEmbeddingsBatchJobParameters,
-  ): {path: string; body: Record<string, unknown>} {
-    const body = converters.createEmbeddingsBatchJobParametersToMldev(
-      this.apiClient, // Use instance apiClient
-      params,
-    );
-
-    const urlParams = body['_url'] as Record<string, unknown>;
-    const path = common.formatMap('{model}:asyncBatchEmbedContent', urlParams);
-
-    const batch = body['batch'] as {[key: string]: unknown};
-    const inputConfig = batch['inputConfig'] as {[key: string]: unknown};
-    const requestsWrapper = inputConfig['requests'] as {
-      [key: string]: unknown;
-    };
-    const requests = requestsWrapper['requests'] as Array<{
-      [key: string]: unknown;
-    }>;
-    const newRequests = [];
-
-    delete requestsWrapper['config']; // Remove top-level config
-
-    for (const request of requests) {
-      const requestDict = {...request}; // Clone
-      const innerRequest = requestDict['request'] as {
-        [key: string]: unknown;
-      };
-      for (const key in requestDict) {
-        if (key !== 'request') {
-          innerRequest[key] = requestDict[key];
-          delete requestDict[key];
-        }
       }
       newRequests.push(requestDict);
     }
