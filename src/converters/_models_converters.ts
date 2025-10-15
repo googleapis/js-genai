@@ -2919,7 +2919,7 @@ export function generatedVideoFromMldev(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromVideo = common.getValueByPath(fromObject, ['_self']);
+  const fromVideo = common.getValueByPath(fromObject, ['video']);
   if (fromVideo != null) {
     common.setValueByPath(toObject, ['video'], videoFromMldev(fromVideo));
   }
@@ -4693,15 +4693,12 @@ export function videoFromMldev(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromUri = common.getValueByPath(fromObject, ['video', 'uri']);
+  const fromUri = common.getValueByPath(fromObject, ['uri']);
   if (fromUri != null) {
     common.setValueByPath(toObject, ['uri'], fromUri);
   }
 
-  const fromVideoBytes = common.getValueByPath(fromObject, [
-    'video',
-    'encodedVideo',
-  ]);
+  const fromVideoBytes = common.getValueByPath(fromObject, ['encodedVideo']);
   if (fromVideoBytes != null) {
     common.setValueByPath(toObject, ['videoBytes'], t.tBytes(fromVideoBytes));
   }
@@ -4802,16 +4799,12 @@ export function videoToMldev(fromObject: types.Video): Record<string, unknown> {
 
   const fromUri = common.getValueByPath(fromObject, ['uri']);
   if (fromUri != null) {
-    common.setValueByPath(toObject, ['video', 'uri'], fromUri);
+    common.setValueByPath(toObject, ['uri'], fromUri);
   }
 
   const fromVideoBytes = common.getValueByPath(fromObject, ['videoBytes']);
   if (fromVideoBytes != null) {
-    common.setValueByPath(
-      toObject,
-      ['video', 'encodedVideo'],
-      t.tBytes(fromVideoBytes),
-    );
+    common.setValueByPath(toObject, ['encodedVideo'], t.tBytes(fromVideoBytes));
   }
 
   const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);

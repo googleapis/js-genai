@@ -574,6 +574,23 @@ export class Models extends BaseModule {
         'Source and prompt/image/video are mutually exclusive. Please only use source.',
       );
     }
+    // Gemini API does not support video bytes.
+    if (!this.apiClient.isVertexAI()) {
+      if (params.video?.uri && params.video?.videoBytes) {
+        params.video = {
+          uri: params.video.uri,
+          mimeType: params.video.mimeType,
+        };
+      } else if (
+        params.source?.video?.uri &&
+        params.source?.video?.videoBytes
+      ) {
+        params.source.video = {
+          uri: params.source.video.uri,
+          mimeType: params.source.video.mimeType,
+        };
+      }
+    }
     return await this.generateVideosInternal(params);
   };
 
