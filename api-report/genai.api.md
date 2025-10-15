@@ -3174,6 +3174,8 @@ export interface UpscaleImageConfig {
     outputCompressionQuality?: number;
     outputGcsUri?: string;
     outputMimeType?: string;
+    personGeneration?: PersonGeneration;
+    safetyFilterLevel?: SafetyFilterLevel;
 }
 
 // @public
