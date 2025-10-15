@@ -77,7 +77,7 @@ export class NodeAuth implements Auth {
       if (headers.get(key) !== null) {
         continue;
       }
-      headers.append(key, authHeaders[key]);
+      headers.append(key, authHeaders.get(key)|| '{}');
     }
   }
 }
