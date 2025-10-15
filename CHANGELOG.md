@@ -1,13 +1,6 @@
 # Changelog
 
 
-## [1.25.0](https://github.com/googleapis/js-genai/compare/v1.24.0...v1.25.0) (2025-10-15)
-
-
-### Features
-
-* Support video extension for Veo on Gemini Developer API ([5d11d81](https://github.com/googleapis/js-genai/commit/5d11d810e2d8873be9197a3ae852f5b1df31e342))
-
 ## [1.24.0](https://github.com/googleapis/js-genai/compare/v1.23.0...v1.24.0) (2025-10-10)
 
 
