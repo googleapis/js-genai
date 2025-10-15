@@ -4547,6 +4547,28 @@ export function upscaleImageAPIConfigInternalToVertex(
     );
   }
 
+  const fromSafetyFilterLevel = common.getValueByPath(fromObject, [
+    'safetyFilterLevel',
+  ]);
+  if (parentObject !== undefined && fromSafetyFilterLevel != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'safetySetting'],
+      fromSafetyFilterLevel,
+    );
+  }
+
+  const fromPersonGeneration = common.getValueByPath(fromObject, [
+    'personGeneration',
+  ]);
+  if (parentObject !== undefined && fromPersonGeneration != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'personGeneration'],
+      fromPersonGeneration,
+    );
+  }
+
   const fromIncludeRaiReason = common.getValueByPath(fromObject, [
     'includeRaiReason',
   ]);
