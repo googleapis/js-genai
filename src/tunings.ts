@@ -119,7 +119,7 @@ export class Tunings extends BaseModule {
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      const body = converters.getTuningJobParametersToVertex(params);
+      const body = converters.getTuningJobParametersToVertex(params, params);
       path = common.formatMap(
         '{name}',
         body['_url'] as Record<string, unknown>,
@@ -153,7 +153,7 @@ export class Tunings extends BaseModule {
         return resp as types.TuningJob;
       });
     } else {
-      const body = converters.getTuningJobParametersToMldev(params);
+      const body = converters.getTuningJobParametersToMldev(params, params);
       path = common.formatMap(
         '{name}',
         body['_url'] as Record<string, unknown>,
@@ -197,7 +197,7 @@ export class Tunings extends BaseModule {
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      const body = converters.listTuningJobsParametersToVertex(params);
+      const body = converters.listTuningJobsParametersToVertex(params, params);
       path = common.formatMap(
         'tuningJobs',
         body['_url'] as Record<string, unknown>,
@@ -232,7 +232,7 @@ export class Tunings extends BaseModule {
         return typedResp;
       });
     } else {
-      const body = converters.listTuningJobsParametersToMldev(params);
+      const body = converters.listTuningJobsParametersToMldev(params, params);
       path = common.formatMap(
         'tunedModels',
         body['_url'] as Record<string, unknown>,
@@ -284,7 +284,7 @@ export class Tunings extends BaseModule {
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      const body = converters.cancelTuningJobParametersToVertex(params);
+      const body = converters.cancelTuningJobParametersToVertex(params, params);
       path = common.formatMap(
         '{name}:cancel',
         body['_url'] as Record<string, unknown>,
@@ -302,7 +302,7 @@ export class Tunings extends BaseModule {
         abortSignal: params.config?.abortSignal,
       });
     } else {
-      const body = converters.cancelTuningJobParametersToMldev(params);
+      const body = converters.cancelTuningJobParametersToMldev(params, params);
       path = common.formatMap(
         '{name}:cancel',
         body['_url'] as Record<string, unknown>,
@@ -330,7 +330,10 @@ export class Tunings extends BaseModule {
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      const body = converters.createTuningJobParametersPrivateToVertex(params);
+      const body = converters.createTuningJobParametersPrivateToVertex(
+        params,
+        params,
+      );
       path = common.formatMap(
         'tuningJobs',
         body['_url'] as Record<string, unknown>,
@@ -380,7 +383,10 @@ export class Tunings extends BaseModule {
         'This method is only supported by the Gemini Developer API.',
       );
     } else {
-      const body = converters.createTuningJobParametersPrivateToMldev(params);
+      const body = converters.createTuningJobParametersPrivateToMldev(
+        params,
+        params,
+      );
       path = common.formatMap(
         'tunedModels',
         body['_url'] as Record<string, unknown>,
