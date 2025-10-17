@@ -37,7 +37,12 @@ describe('addAuthHeaders', () => {
   it('should add an auth request headers if it does not already exist', async () => {
     const nodeAuth = new NodeAuth({});
     (nodeAuth as unknown as NodeAuthWithGoogleAuth).googleAuth = googleAuthMock; // Inject the mock
-    googleAuthMock.getRequestHeaders.and.resolveTo({'foo': '1', 'bar': '2'});
+    // google-auth-library types say it returns Headers, but it actually returns a plain object
+    googleAuthMock.getRequestHeaders.and.resolveTo({
+      'foo': '1',
+      'bar': '2',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
     const headers = new Headers();
 
     await nodeAuth.addAuthHeaders(headers);
@@ -50,6 +55,9 @@ describe('addAuthHeaders', () => {
   it('should not add an Authorization header if it already exists', async () => {
     const nodeAuth = new NodeAuth({});
     (nodeAuth as unknown as NodeAuthWithGoogleAuth).googleAuth = googleAuthMock; // Inject the mock
+    // google-auth-library types say it returns Headers, but it actually returns a plain object
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    googleAuthMock.getRequestHeaders.and.resolveTo({} as any);
     const headers = new Headers();
     headers.append(AUTHORIZATION_HEADER, 'Existing Token');
 
@@ -62,7 +70,9 @@ describe('addAuthHeaders', () => {
     const apiKey = 'test-api-key';
     const nodeAuth = new NodeAuth({apiKey: apiKey});
     (nodeAuth as unknown as NodeAuthWithGoogleAuth).googleAuth = googleAuthMock; // Inject the mock
-    googleAuthMock.getRequestHeaders.and.resolveTo({'foo': '1'});
+    // google-auth-library types say it returns Headers, but it actually returns a plain object
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    googleAuthMock.getRequestHeaders.and.resolveTo({'foo': '1'} as any);
     const headers = new Headers();
 
     await nodeAuth.addAuthHeaders(headers);
@@ -74,7 +84,9 @@ describe('addAuthHeaders', () => {
     const apiKey = 'test-api-key';
     const nodeAuth = new NodeAuth({apiKey: apiKey});
     (nodeAuth as unknown as NodeAuthWithGoogleAuth).googleAuth = googleAuthMock; // Inject the mock
-    googleAuthMock.getRequestHeaders.and.resolveTo({'foo': '1'});
+    // google-auth-library types say it returns Headers, but it actually returns a plain object
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    googleAuthMock.getRequestHeaders.and.resolveTo({'foo': '1'} as any);
     const headers = new Headers();
     headers.append(GOOGLE_API_KEY_HEADER, 'Existing Key');
 

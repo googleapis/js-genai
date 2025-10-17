@@ -6,3 +6,5 @@ src/tunings.ts
 src/types.ts
 # Ignore built files:
 dist/**
+# Ignore interactions files:
+src/interactions/**

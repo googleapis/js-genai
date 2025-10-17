@@ -73,11 +73,11 @@ export class NodeAuth implements Auth {
       );
     }
     const authHeaders = await this.googleAuth.getRequestHeaders();
-    for (const key in authHeaders) {
+    for (const [key, value] of Object.entries(authHeaders)) {
       if (headers.get(key) !== null) {
         continue;
       }
-      headers.append(key, authHeaders[key]);
+      headers.append(key, value);
     }
   }
 }
