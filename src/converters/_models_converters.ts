@@ -3103,6 +3103,15 @@ export function generationConfigToVertex(
     common.setValueByPath(toObject, ['topP'], fromTopP);
   }
 
+  if (
+    common.getValueByPath(fromObject, ['enableEnhancedCivicAnswers']) !==
+    undefined
+  ) {
+    throw new Error(
+      'enableEnhancedCivicAnswers parameter is not supported in Vertex AI.',
+    );
+  }
+
   return toObject;
 }
 
