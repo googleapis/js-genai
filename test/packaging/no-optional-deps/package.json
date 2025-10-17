@@ -1,6 +1,7 @@
 {
   "name": "no-optional-deps",
   "version": "1.0.0",
+  "type": "module",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc"

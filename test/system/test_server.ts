@@ -49,7 +49,7 @@ export async function setupTestServer() {
   });
   if (!process.argv.includes('--record')) {
     GoogleAuth.prototype.getRequestHeaders = async function (_: string) {
-      return {};
+      return new Headers();
     };
     isPatched = true;
   }
