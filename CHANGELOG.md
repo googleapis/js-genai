@@ -1,6 +1,13 @@
 # Changelog
 
 
+## [1.26.0](https://github.com/googleapis/js-genai/compare/v1.25.0...v1.26.0) (2025-10-17)
+
+
+### Features
+
+* Add enable_enhanced_civic_answers in GenerationConfig ([0e95d72](https://github.com/googleapis/js-genai/commit/0e95d7244cccaeee3427a46d8843e9ba2fa38930))
+
 ## [1.25.0](https://github.com/googleapis/js-genai/compare/v1.24.0...v1.25.0) (2025-10-15)
 
 
