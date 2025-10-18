@@ -1317,6 +1317,7 @@ export interface GenerationConfig {
     audioTimestamp?: boolean;
     candidateCount?: number;
     enableAffectiveDialog?: boolean;
+    enableEnhancedCivicAnswers?: boolean;
     frequencyPenalty?: number;
     logprobs?: number;
     maxOutputTokens?: number;
@@ -1333,7 +1334,7 @@ export interface GenerationConfig {
     speechConfig?: SpeechConfig;
     stopSequences?: string[];
     temperature?: number;
-    thinkingConfig?: GenerationConfigThinkingConfig;
+    thinkingConfig?: ThinkingConfig;
     topK?: number;
     topP?: number;
 }
@@ -1354,10 +1355,8 @@ export interface GenerationConfigRoutingConfigManualRoutingMode {
     modelName?: string;
 }
 
-// @public
-export interface GenerationConfigThinkingConfig {
-    includeThoughts?: boolean;
-    thinkingBudget?: number;
+// @public @deprecated
+export interface GenerationConfigThinkingConfig extends ThinkingConfig {
 }
 
 // @public
@@ -2988,7 +2987,7 @@ export interface Transcription {
     text?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface TunedModel {
     checkpoints?: TunedModelCheckpoint[];
     endpoint?: string;
@@ -3024,7 +3023,7 @@ export interface TuningDataStats {
     supervisedTuningDataStats?: SupervisedTuningDataStats;
 }
 
-// @public (undocumented)
+// @public
 export interface TuningExample {
     output?: string;
     textInput?: string;

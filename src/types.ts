@@ -44,6 +44,26 @@ export enum Language {
   PYTHON = 'PYTHON',
 }
 
+/** Specifies how the response should be scheduled in the conversation. */
+export enum FunctionResponseScheduling {
+  /**
+   * This value is unused.
+   */
+  SCHEDULING_UNSPECIFIED = 'SCHEDULING_UNSPECIFIED',
+  /**
+   * Only add the result to the conversation context, do not interrupt or trigger generation.
+   */
+  SILENT = 'SILENT',
+  /**
+   * Add the result to the conversation context, and prompt to generate output without interrupting ongoing generation.
+   */
+  WHEN_IDLE = 'WHEN_IDLE',
+  /**
+   * Add the result to the conversation context, interrupt ongoing generation and prompt to generate output.
+   */
+  INTERRUPT = 'INTERRUPT',
+}
+
 /** Optional. The type of the data. */
 export enum Type {
   /**
@@ -87,21 +107,21 @@ export enum HarmCategory {
    */
   HARM_CATEGORY_UNSPECIFIED = 'HARM_CATEGORY_UNSPECIFIED',
   /**
-   * The harm category is hate speech.
-   */
-  HARM_CATEGORY_HATE_SPEECH = 'HARM_CATEGORY_HATE_SPEECH',
-  /**
-   * The harm category is dangerous content.
-   */
-  HARM_CATEGORY_DANGEROUS_CONTENT = 'HARM_CATEGORY_DANGEROUS_CONTENT',
-  /**
    * The harm category is harassment.
    */
   HARM_CATEGORY_HARASSMENT = 'HARM_CATEGORY_HARASSMENT',
   /**
+   * The harm category is hate speech.
+   */
+  HARM_CATEGORY_HATE_SPEECH = 'HARM_CATEGORY_HATE_SPEECH',
+  /**
    * The harm category is sexually explicit content.
    */
   HARM_CATEGORY_SEXUALLY_EXPLICIT = 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
+  /**
+   * The harm category is dangerous content.
+   */
+  HARM_CATEGORY_DANGEROUS_CONTENT = 'HARM_CATEGORY_DANGEROUS_CONTENT',
   /**
    * Deprecated: Election filter is not longer supported. The harm category is civic integrity.
    */
@@ -924,26 +944,6 @@ export enum TurnCoverage {
   TURN_INCLUDES_ALL_INPUT = 'TURN_INCLUDES_ALL_INPUT',
 }
 
-/** Specifies how the response should be scheduled in the conversation. */
-export enum FunctionResponseScheduling {
-  /**
-   * This value is unused.
-   */
-  SCHEDULING_UNSPECIFIED = 'SCHEDULING_UNSPECIFIED',
-  /**
-   * Only add the result to the conversation context, do not interrupt or trigger generation.
-   */
-  SILENT = 'SILENT',
-  /**
-   * Add the result to the conversation context, and prompt to generate output without interrupting ongoing generation.
-   */
-  WHEN_IDLE = 'WHEN_IDLE',
-  /**
-   * Add the result to the conversation context, interrupt ongoing generation and prompt to generate output.
-   */
-  INTERRUPT = 'INTERRUPT',
-}
-
 /** Scale of the generated music. */
 export enum Scale {
   /**
@@ -1508,8 +1508,7 @@ export declare interface GoogleSearch {
       If customers set a start time, they must set an end time (and vice versa).
        */
   timeRangeFilter?: Interval;
-  /** Optional. List of domains to be excluded from the search results.
-      The default limit is 2000 domains. */
+  /** Optional. List of domains to be excluded from the search results. The default limit is 2000 domains. Example: ["amazon.com", "facebook.com"]. */
   excludeDomains?: string[];
 }
 
@@ -3402,14 +3401,6 @@ export class DeleteModelResponse {
   sdkHttpResponse?: HttpResponse;
 }
 
-/** Config for thinking features. */
-export declare interface GenerationConfigThinkingConfig {
-  /** Optional. Indicates whether to include thoughts in the response. If true, thoughts are returned only when available. */
-  includeThoughts?: boolean;
-  /** Optional. Indicates the thinking budget in tokens. */
-  thinkingBudget?: number;
-}
-
 /** Generation config. */
 export declare interface GenerationConfig {
   /** Optional. Config for model selection. */
@@ -3451,11 +3442,13 @@ export declare interface GenerationConfig {
   /** Optional. Controls the randomness of predictions. */
   temperature?: number;
   /** Optional. Config for thinking features. An error will be returned if this field is set for models that don't support thinking. */
-  thinkingConfig?: GenerationConfigThinkingConfig;
+  thinkingConfig?: ThinkingConfig;
   /** Optional. If specified, top-k sampling will be used. */
   topK?: number;
   /** Optional. If specified, nucleus sampling will be used. */
   topP?: number;
+  /** Optional. Enables enhanced civic answers. It may not be available for all models. */
+  enableEnhancedCivicAnswers?: boolean;
 }
 
 /** Config for the count_tokens method. */
@@ -3782,10 +3775,18 @@ export declare interface TunedModelCheckpoint {
   endpoint?: string;
 }
 
+/** TunedModel for the Tuned Model of a Tuning Job. */
 export declare interface TunedModel {
-  /** Output only. The resource name of the TunedModel. Format: `projects/{project}/locations/{location}/models/{model}@{version_id}` When tuning from a base model, the version_id will be 1. For continuous tuning, the version id will be incremented by 1 from the last version id in the parent model. E.g., `projects/{project}/locations/{location}/models/{model}@{last_version_id + 1}` */
+  /** Output only. The resource name of the TunedModel.
+      Format: `projects/{project}/locations/{location}/models/{model}@{version_id}`
+      When tuning from a base model, the version_id will be 1.
+      For continuous tuning, the version id will be incremented by 1 from the
+      last version id in the parent model. E.g., `projects/{project}/locations/{location}/models/{model}@{last_version_id + 1}`
+       */
   model?: string;
-  /** Output only. A resource name of an Endpoint. Format: `projects/{project}/locations/{location}/endpoints/{endpoint}`. */
+  /** Output only. A resource name of an Endpoint.
+      Format: `projects/{project}/locations/{location}/endpoints/{endpoint}`.
+       */
   endpoint?: string;
   /** The checkpoints associated with this TunedModel.
       This field is only populated for tuning jobs that enable intermediate
@@ -4143,11 +4144,12 @@ export declare interface CancelTuningJobParameters {
   config?: CancelTuningJobConfig;
 }
 
+/** A single example for tuning. */
 export declare interface TuningExample {
-  /** Text model input. */
-  textInput?: string;
-  /** The expected model output. */
+  /** Required. The expected model output. */
   output?: string;
+  /** Optional. Text model input. */
+  textInput?: string;
 }
 
 /** Supervised fine-tuning training dataset. */
@@ -4487,9 +4489,9 @@ export declare interface File {
 export class ListFilesResponse {
   /** Used to retain the full HTTP response. */
   sdkHttpResponse?: HttpResponse;
-  /** A token to retrieve next page of results. */
+  /** A token that can be sent as a `page_token` into a subsequent `ListFiles` call. */
   nextPageToken?: string;
-  /** The list of files. */
+  /** The list of `File`s. */
   files?: File[];
 }
 
@@ -5470,6 +5472,14 @@ export declare interface OperationFromAPIResponseParameters {
   /** Whether the API response is from Vertex AI. */
   isVertexAI: boolean;
 }
+
+/**
+ * Config for thinking feature.
+ *
+ * @deprecated This interface will be deprecated. Please use `ThinkingConfig` instead.
+ */
+export declare interface GenerationConfigThinkingConfig
+  extends ThinkingConfig {}
 
 /** Configures automatic detection of activity. */
 export declare interface AutomaticActivityDetection {

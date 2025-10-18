@@ -606,58 +606,6 @@ export function tuningJobFromMldev(
     );
   }
 
-  const fromCustomBaseModel = common.getValueByPath(fromObject, [
-    'customBaseModel',
-  ]);
-  if (fromCustomBaseModel != null) {
-    common.setValueByPath(toObject, ['customBaseModel'], fromCustomBaseModel);
-  }
-
-  const fromExperiment = common.getValueByPath(fromObject, ['experiment']);
-  if (fromExperiment != null) {
-    common.setValueByPath(toObject, ['experiment'], fromExperiment);
-  }
-
-  const fromLabels = common.getValueByPath(fromObject, ['labels']);
-  if (fromLabels != null) {
-    common.setValueByPath(toObject, ['labels'], fromLabels);
-  }
-
-  const fromOutputUri = common.getValueByPath(fromObject, ['outputUri']);
-  if (fromOutputUri != null) {
-    common.setValueByPath(toObject, ['outputUri'], fromOutputUri);
-  }
-
-  const fromPipelineJob = common.getValueByPath(fromObject, ['pipelineJob']);
-  if (fromPipelineJob != null) {
-    common.setValueByPath(toObject, ['pipelineJob'], fromPipelineJob);
-  }
-
-  const fromServiceAccount = common.getValueByPath(fromObject, [
-    'serviceAccount',
-  ]);
-  if (fromServiceAccount != null) {
-    common.setValueByPath(toObject, ['serviceAccount'], fromServiceAccount);
-  }
-
-  const fromTunedModelDisplayName = common.getValueByPath(fromObject, [
-    'tunedModelDisplayName',
-  ]);
-  if (fromTunedModelDisplayName != null) {
-    common.setValueByPath(
-      toObject,
-      ['tunedModelDisplayName'],
-      fromTunedModelDisplayName,
-    );
-  }
-
-  const fromVeoTuningSpec = common.getValueByPath(fromObject, [
-    'veoTuningSpec',
-  ]);
-  if (fromVeoTuningSpec != null) {
-    common.setValueByPath(toObject, ['veoTuningSpec'], fromVeoTuningSpec);
-  }
-
   return toObject;
 }
 
