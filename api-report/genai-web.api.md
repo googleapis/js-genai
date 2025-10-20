@@ -145,6 +145,11 @@ export interface AutomaticFunctionCallingConfig {
 }
 
 // @public
+export interface AutoraterConfig {
+    generationConfig?: GenerationConfig;
+}
+
+// @public
 export interface BaseUrlParameters {
     // (undocumented)
     geminiUrl?: string;
@@ -2453,6 +2458,7 @@ export interface PreferenceOptimizationHyperParameters {
 
 // @public
 export interface PreferenceOptimizationSpec {
+    exportLastCheckpointOnly?: boolean;
     hyperParameters?: PreferenceOptimizationHyperParameters;
     trainingDatasetUri?: string;
     validationDatasetUri?: string;
@@ -3120,6 +3126,7 @@ export interface TuningOperation {
 // @public
 export enum TuningTask {
     TUNING_TASK_I2V = "TUNING_TASK_I2V",
+    TUNING_TASK_R2V = "TUNING_TASK_R2V",
     TUNING_TASK_T2V = "TUNING_TASK_T2V",
     TUNING_TASK_UNSPECIFIED = "TUNING_TASK_UNSPECIFIED"
 }
