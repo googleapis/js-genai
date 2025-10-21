@@ -276,11 +276,7 @@ export function createTuningJobParametersPrivateToVertex(
     'trainingDataset',
   ]);
   if (fromTrainingDataset != null) {
-    common.setValueByPath(
-      toObject,
-      ['supervisedTuningSpec', 'trainingDatasetUri'],
-      tuningDatasetToVertex(fromTrainingDataset, toObject),
-    );
+    tuningDatasetToVertex(fromTrainingDataset, toObject);
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
