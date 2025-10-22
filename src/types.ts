@@ -142,6 +142,10 @@ export enum HarmCategory {
    * The harm category is image sexually explicit content.
    */
   HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT = 'HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT',
+  /**
+   * The harm category is for jailbreak prompts.
+   */
+  HARM_CATEGORY_JAILBREAK = 'HARM_CATEGORY_JAILBREAK',
 }
 
 /** Optional. Specify if the threshold is used for probability or severity score. If not specified, the threshold is used for probability score. */
@@ -383,32 +387,40 @@ export enum HarmSeverity {
   HARM_SEVERITY_HIGH = 'HARM_SEVERITY_HIGH',
 }
 
-/** Output only. Blocked reason. */
+/** Output only. The reason why the prompt was blocked. */
 export enum BlockedReason {
   /**
-   * Unspecified blocked reason.
+   * The blocked reason is unspecified.
    */
   BLOCKED_REASON_UNSPECIFIED = 'BLOCKED_REASON_UNSPECIFIED',
   /**
-   * Candidates blocked due to safety.
+   * The prompt was blocked for safety reasons.
    */
   SAFETY = 'SAFETY',
   /**
-   * Candidates blocked due to other reason.
+   * The prompt was blocked for other reasons. For example, it may be due to the prompt's language, or because it contains other harmful content.
    */
   OTHER = 'OTHER',
   /**
-   * Candidates blocked due to the terms which are included from the terminology blocklist.
+   * The prompt was blocked because it contains a term from the terminology blocklist.
    */
   BLOCKLIST = 'BLOCKLIST',
   /**
-   * Candidates blocked due to prohibited content.
+   * The prompt was blocked because it contains prohibited content.
    */
   PROHIBITED_CONTENT = 'PROHIBITED_CONTENT',
   /**
-   * Candidates blocked due to unsafe image generation content.
+   * The prompt was blocked because it contains content that is unsafe for image generation.
    */
   IMAGE_SAFETY = 'IMAGE_SAFETY',
+  /**
+   * The prompt was blocked by Model Armor.
+   */
+  MODEL_ARMOR = 'MODEL_ARMOR',
+  /**
+   * The prompt was blocked as a jailbreak attempt.
+   */
+  JAILBREAK = 'JAILBREAK',
 }
 
 /** Output only. Traffic type. This shows whether a request consumes Pay-As-You-Go or Provisioned Throughput quota. */
@@ -2428,13 +2440,13 @@ export declare interface Candidate {
   safetyRatings?: SafetyRating[];
 }
 
-/** Content filter results for a prompt sent in the request. */
+/** Content filter results for a prompt sent in the request. Note: This is sent only in the first stream chunk and only if no candidates were generated due to content violations. */
 export class GenerateContentResponsePromptFeedback {
-  /** Output only. Blocked reason. */
+  /** Output only. The reason why the prompt was blocked. */
   blockReason?: BlockedReason;
-  /** Output only. A readable block reason message. */
+  /** Output only. A readable message that explains the reason why the prompt was blocked. */
   blockReasonMessage?: string;
-  /** Output only. Safety ratings. */
+  /** Output only. A list of safety ratings for the prompt. There is one rating per category. */
   safetyRatings?: SafetyRating[];
 }
 
@@ -4165,7 +4177,7 @@ export declare interface TuningDataset {
 export declare interface TuningValidationDataset {
   /** GCS URI of the file containing validation dataset in JSONL format. */
   gcsUri?: string;
-  /** The resource name of the Vertex Multimodal Dataset that is used as training dataset. Example: 'projects/my-project-id-or-number/locations/my-location/datasets/my-dataset-id'. */
+  /** The resource name of the Vertex Multimodal Dataset that is used as validation dataset. Example: 'projects/my-project-id-or-number/locations/my-location/datasets/my-dataset-id'. */
   vertexDatasetResource?: string;
 }
 
@@ -4180,7 +4192,7 @@ export declare interface CreateTuningJobConfig {
   be charged usage for any applicable operations.
        */
   abortSignal?: AbortSignal;
-  /** Cloud Storage path to file containing training dataset for tuning. The dataset must be formatted as a JSONL file. */
+  /** Validation dataset for tuning. The dataset must be formatted as a JSONL file. */
   validationDataset?: TuningValidationDataset;
   /** The display name of the tuned Model. The name can be up to 128 characters long and can consist of any UTF-8 characters. */
   tunedModelDisplayName?: string;
