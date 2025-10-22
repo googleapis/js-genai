@@ -12,6 +12,7 @@ import type * as types from '../types.js';
 
 export function cancelTuningJobParametersToMldev(
   fromObject: types.CancelTuningJobParameters,
+  _rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -25,6 +26,7 @@ export function cancelTuningJobParametersToMldev(
 
 export function cancelTuningJobParametersToVertex(
   fromObject: types.CancelTuningJobParameters,
+  _rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -39,6 +41,7 @@ export function cancelTuningJobParametersToVertex(
 export function createTuningJobConfigToMldev(
   fromObject: types.CreateTuningJobConfig,
   parentObject: Record<string, unknown>,
+  _rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -133,6 +136,7 @@ export function createTuningJobConfigToMldev(
 export function createTuningJobConfigToVertex(
   fromObject: types.CreateTuningJobConfig,
   parentObject: Record<string, unknown>,
+  rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -143,7 +147,7 @@ export function createTuningJobConfigToVertex(
     common.setValueByPath(
       parentObject,
       ['supervisedTuningSpec'],
-      tuningValidationDatasetToVertex(fromValidationDataset),
+      tuningValidationDatasetToVertex(fromValidationDataset, rootObject),
     );
   }
 
@@ -221,6 +225,7 @@ export function createTuningJobConfigToVertex(
 
 export function createTuningJobParametersPrivateToMldev(
   fromObject: types.CreateTuningJobParametersPrivate,
+  rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -243,13 +248,13 @@ export function createTuningJobParametersPrivateToMldev(
     common.setValueByPath(
       toObject,
       ['tuningTask', 'trainingData'],
-      tuningDatasetToMldev(fromTrainingDataset),
+      tuningDatasetToMldev(fromTrainingDataset, rootObject),
     );
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    createTuningJobConfigToMldev(fromConfig, toObject);
+    createTuningJobConfigToMldev(fromConfig, toObject, rootObject);
   }
 
   return toObject;
@@ -257,6 +262,7 @@ export function createTuningJobParametersPrivateToMldev(
 
 export function createTuningJobParametersPrivateToVertex(
   fromObject: types.CreateTuningJobParametersPrivate,
+  rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -279,13 +285,13 @@ export function createTuningJobParametersPrivateToVertex(
     common.setValueByPath(
       toObject,
       ['supervisedTuningSpec', 'trainingDatasetUri'],
-      tuningDatasetToVertex(fromTrainingDataset, toObject),
+      tuningDatasetToVertex(fromTrainingDataset, toObject, rootObject),
     );
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    createTuningJobConfigToVertex(fromConfig, toObject);
+    createTuningJobConfigToVertex(fromConfig, toObject, rootObject);
   }
 
   return toObject;
@@ -293,6 +299,7 @@ export function createTuningJobParametersPrivateToVertex(
 
 export function getTuningJobParametersToMldev(
   fromObject: types.GetTuningJobParameters,
+  _rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -306,6 +313,7 @@ export function getTuningJobParametersToMldev(
 
 export function getTuningJobParametersToVertex(
   fromObject: types.GetTuningJobParameters,
+  _rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -320,6 +328,7 @@ export function getTuningJobParametersToVertex(
 export function listTuningJobsConfigToMldev(
   fromObject: types.ListTuningJobsConfig,
   parentObject: Record<string, unknown>,
+  _rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -344,6 +353,7 @@ export function listTuningJobsConfigToMldev(
 export function listTuningJobsConfigToVertex(
   fromObject: types.ListTuningJobsConfig,
   parentObject: Record<string, unknown>,
+  _rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -367,12 +377,13 @@ export function listTuningJobsConfigToVertex(
 
 export function listTuningJobsParametersToMldev(
   fromObject: types.ListTuningJobsParameters,
+  rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    listTuningJobsConfigToMldev(fromConfig, toObject);
+    listTuningJobsConfigToMldev(fromConfig, toObject, rootObject);
   }
 
   return toObject;
@@ -380,12 +391,13 @@ export function listTuningJobsParametersToMldev(
 
 export function listTuningJobsParametersToVertex(
   fromObject: types.ListTuningJobsParameters,
+  rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    listTuningJobsConfigToVertex(fromConfig, toObject);
+    listTuningJobsConfigToVertex(fromConfig, toObject, rootObject);
   }
 
   return toObject;
@@ -393,6 +405,7 @@ export function listTuningJobsParametersToVertex(
 
 export function listTuningJobsResponseFromMldev(
   fromObject: types.ListTuningJobsResponse,
+  rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -415,7 +428,7 @@ export function listTuningJobsResponseFromMldev(
     let transformedList = fromTuningJobs;
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return tuningJobFromMldev(item);
+        return tuningJobFromMldev(item, rootObject);
       });
     }
     common.setValueByPath(toObject, ['tuningJobs'], transformedList);
@@ -426,6 +439,7 @@ export function listTuningJobsResponseFromMldev(
 
 export function listTuningJobsResponseFromVertex(
   fromObject: types.ListTuningJobsResponse,
+  rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -448,7 +462,7 @@ export function listTuningJobsResponseFromVertex(
     let transformedList = fromTuningJobs;
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return tuningJobFromVertex(item);
+        return tuningJobFromVertex(item, rootObject);
       });
     }
     common.setValueByPath(toObject, ['tuningJobs'], transformedList);
@@ -459,6 +473,7 @@ export function listTuningJobsResponseFromVertex(
 
 export function tunedModelFromMldev(
   fromObject: types.TunedModel,
+  _rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -477,6 +492,7 @@ export function tunedModelFromMldev(
 
 export function tuningDatasetToMldev(
   fromObject: types.TuningDataset,
+  _rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -509,6 +525,7 @@ export function tuningDatasetToMldev(
 export function tuningDatasetToVertex(
   fromObject: types.TuningDataset,
   parentObject: Record<string, unknown>,
+  _rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -541,6 +558,7 @@ export function tuningDatasetToVertex(
 
 export function tuningJobFromMldev(
   fromObject: types.TuningJob,
+  rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -602,7 +620,7 @@ export function tuningJobFromMldev(
     common.setValueByPath(
       toObject,
       ['tunedModel'],
-      tunedModelFromMldev(fromTunedModel),
+      tunedModelFromMldev(fromTunedModel, rootObject),
     );
   }
 
@@ -611,6 +629,7 @@ export function tuningJobFromMldev(
 
 export function tuningJobFromVertex(
   fromObject: types.TuningJob,
+  _rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -771,6 +790,7 @@ export function tuningJobFromVertex(
 
 export function tuningOperationFromMldev(
   fromObject: types.TuningOperation,
+  _rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -806,6 +826,7 @@ export function tuningOperationFromMldev(
 
 export function tuningValidationDatasetToVertex(
   fromObject: types.TuningValidationDataset,
+  _rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
