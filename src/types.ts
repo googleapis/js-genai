@@ -4177,7 +4177,7 @@ export declare interface TuningDataset {
 export declare interface TuningValidationDataset {
   /** GCS URI of the file containing validation dataset in JSONL format. */
   gcsUri?: string;
-  /** The resource name of the Vertex Multimodal Dataset that is used as training dataset. Example: 'projects/my-project-id-or-number/locations/my-location/datasets/my-dataset-id'. */
+  /** The resource name of the Vertex Multimodal Dataset that is used as validation dataset. Example: 'projects/my-project-id-or-number/locations/my-location/datasets/my-dataset-id'. */
   vertexDatasetResource?: string;
 }
 
@@ -4192,7 +4192,7 @@ export declare interface CreateTuningJobConfig {
   be charged usage for any applicable operations.
        */
   abortSignal?: AbortSignal;
-  /** Cloud Storage path to file containing training dataset for tuning. The dataset must be formatted as a JSONL file. */
+  /** Validation dataset for tuning. The dataset must be formatted as a JSONL file. */
   validationDataset?: TuningValidationDataset;
   /** The display name of the tuned Model. The name can be up to 128 characters long and can consist of any UTF-8 characters. */
   tunedModelDisplayName?: string;

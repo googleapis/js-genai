@@ -143,7 +143,7 @@ export function createTuningJobConfigToVertex(
     common.setValueByPath(
       parentObject,
       ['supervisedTuningSpec'],
-      tuningValidationDatasetToVertex(fromValidationDataset, toObject),
+      tuningValidationDatasetToVertex(fromValidationDataset),
     );
   }
 
@@ -806,7 +806,6 @@ export function tuningOperationFromMldev(
 
 export function tuningValidationDatasetToVertex(
   fromObject: types.TuningValidationDataset,
-  parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -818,10 +817,10 @@ export function tuningValidationDatasetToVertex(
   const fromVertexDatasetResource = common.getValueByPath(fromObject, [
     'vertexDatasetResource',
   ]);
-  if (parentObject !== undefined && fromVertexDatasetResource != null) {
+  if (fromVertexDatasetResource != null) {
     common.setValueByPath(
-      parentObject,
-      ['supervisedTuningSpec', 'trainingDatasetUri'],
+      toObject,
+      ['validationDatasetUri'],
       fromVertexDatasetResource,
     );
   }
