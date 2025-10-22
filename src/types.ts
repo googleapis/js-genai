@@ -127,23 +127,23 @@ export enum HarmCategory {
    */
   HARM_CATEGORY_CIVIC_INTEGRITY = 'HARM_CATEGORY_CIVIC_INTEGRITY',
   /**
-   * The harm category is image hate.
+   * The harm category is image hate. This enum value is not supported in Gemini API.
    */
   HARM_CATEGORY_IMAGE_HATE = 'HARM_CATEGORY_IMAGE_HATE',
   /**
-   * The harm category is image dangerous content.
+   * The harm category is image dangerous content. This enum value is not supported in Gemini API.
    */
   HARM_CATEGORY_IMAGE_DANGEROUS_CONTENT = 'HARM_CATEGORY_IMAGE_DANGEROUS_CONTENT',
   /**
-   * The harm category is image harassment.
+   * The harm category is image harassment. This enum value is not supported in Gemini API.
    */
   HARM_CATEGORY_IMAGE_HARASSMENT = 'HARM_CATEGORY_IMAGE_HARASSMENT',
   /**
-   * The harm category is image sexually explicit content.
+   * The harm category is image sexually explicit content. This enum value is not supported in Gemini API.
    */
   HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT = 'HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT',
   /**
-   * The harm category is for jailbreak prompts.
+   * The harm category is for jailbreak prompts. This enum value is not supported in Gemini API.
    */
   HARM_CATEGORY_JAILBREAK = 'HARM_CATEGORY_JAILBREAK',
 }
@@ -414,11 +414,11 @@ export enum BlockedReason {
    */
   IMAGE_SAFETY = 'IMAGE_SAFETY',
   /**
-   * The prompt was blocked by Model Armor.
+   * The prompt was blocked by Model Armor. This enum value is not supported in Gemini API.
    */
   MODEL_ARMOR = 'MODEL_ARMOR',
   /**
-   * The prompt was blocked as a jailbreak attempt.
+   * The prompt was blocked as a jailbreak attempt. This enum value is not supported in Gemini API.
    */
   JAILBREAK = 'JAILBREAK',
 }
@@ -1520,7 +1520,7 @@ export declare interface GoogleSearch {
       If customers set a start time, they must set an end time (and vice versa).
        */
   timeRangeFilter?: Interval;
-  /** Optional. List of domains to be excluded from the search results. The default limit is 2000 domains. Example: ["amazon.com", "facebook.com"]. */
+  /** Optional. List of domains to be excluded from the search results. The default limit is 2000 domains. Example: ["amazon.com", "facebook.com"]. This field is not supported in Gemini API. */
   excludeDomains?: string[];
 }
 
@@ -1550,19 +1550,19 @@ export declare interface ApiKeyConfig {
   apiKeyString?: string;
 }
 
-/** Config for Google Service Account Authentication. */
+/** Config for Google Service Account Authentication. This data type is not supported in Gemini API. */
 export declare interface AuthConfigGoogleServiceAccountConfig {
   /** Optional. The service account that the extension execution service runs as. - If the service account is specified, the `iam.serviceAccounts.getAccessToken` permission should be granted to Vertex AI Extension Service Agent (https://cloud.google.com/vertex-ai/docs/general/access-control#service-agents) on the specified service account. - If not specified, the Vertex AI Extension Service Agent will be used to execute the Extension. */
   serviceAccount?: string;
 }
 
-/** Config for HTTP Basic Authentication. */
+/** Config for HTTP Basic Authentication. This data type is not supported in Gemini API. */
 export declare interface AuthConfigHttpBasicAuthConfig {
   /** Required. The name of the SecretManager secret version resource storing the base64 encoded credentials. Format: `projects/{project}/secrets/{secrete}/versions/{version}` - If specified, the `secretmanager.versions.access` permission should be granted to Vertex AI Extension Service Agent (https://cloud.google.com/vertex-ai/docs/general/access-control#service-agents) on the specified resource. */
   credentialSecret?: string;
 }
 
-/** Config for user oauth. */
+/** Config for user oauth. This data type is not supported in Gemini API. */
 export declare interface AuthConfigOauthConfig {
   /** Access token for extension endpoint. Only used to propagate token from [[ExecuteExtensionRequest.runtime_auth_config]] at request time. */
   accessToken?: string;
@@ -1570,7 +1570,7 @@ export declare interface AuthConfigOauthConfig {
   serviceAccount?: string;
 }
 
-/** Config for user OIDC auth. */
+/** Config for user OIDC auth. This data type is not supported in Gemini API. */
 export declare interface AuthConfigOidcConfig {
   /** OpenID Connect formatted ID token for extension endpoint. Only used to propagate token from [[ExecuteExtensionRequest.runtime_auth_config]] at request time. */
   idToken?: string;
@@ -1617,7 +1617,7 @@ export declare interface ComputerUse {
   excludedPredefinedFunctions?: string[];
 }
 
-/** The API secret. */
+/** The API secret. This data type is not supported in Gemini API. */
 export declare interface ApiAuthApiKeyConfig {
   /** Required. The SecretManager secret version resource name storing API key. e.g. projects/{project}/secrets/{secret}/versions/{version} */
   apiKeySecretVersion?: string;
@@ -1625,13 +1625,13 @@ export declare interface ApiAuthApiKeyConfig {
   apiKeyString?: string;
 }
 
-/** The generic reusable api auth config. Deprecated. Please use AuthConfig (google/cloud/aiplatform/master/auth.proto) instead. */
+/** The generic reusable api auth config. Deprecated. Please use AuthConfig (google/cloud/aiplatform/master/auth.proto) instead. This data type is not supported in Gemini API. */
 export declare interface ApiAuth {
   /** The API secret. */
   apiKeyConfig?: ApiAuthApiKeyConfig;
 }
 
-/** The search parameters to use for the ELASTIC_SEARCH spec. */
+/** The search parameters to use for the ELASTIC_SEARCH spec. This data type is not supported in Gemini API. */
 export declare interface ExternalApiElasticSearchParams {
   /** The ElasticSearch index to use. */
   index?: string;
@@ -1641,10 +1641,10 @@ export declare interface ExternalApiElasticSearchParams {
   searchTemplate?: string;
 }
 
-/** The search parameters to use for SIMPLE_SEARCH spec. */
+/** The search parameters to use for SIMPLE_SEARCH spec. This data type is not supported in Gemini API. */
 export declare interface ExternalApiSimpleSearchParams {}
 
-/** Retrieve from data source powered by external API for grounding. The external API is not owned by Google, but need to follow the pre-defined API spec. */
+/** Retrieve from data source powered by external API for grounding. The external API is not owned by Google, but need to follow the pre-defined API spec. This data type is not supported in Gemini API. */
 export declare interface ExternalApi {
   /** The authentication config to access the API. Deprecated. Please use auth_config instead. */
   apiAuth?: ApiAuth;
@@ -1660,7 +1660,7 @@ export declare interface ExternalApi {
   simpleSearchParams?: ExternalApiSimpleSearchParams;
 }
 
-/** Define data stores within engine to filter on in a search call and configurations for those data stores. For more information, see https://cloud.google.com/generative-ai-app-builder/docs/reference/rpc/google.cloud.discoveryengine.v1#datastorespec */
+/** Define data stores within engine to filter on in a search call and configurations for those data stores. For more information, see https://cloud.google.com/generative-ai-app-builder/docs/reference/rpc/google.cloud.discoveryengine.v1#datastorespec. This data type is not supported in Gemini API. */
 export declare interface VertexAISearchDataStoreSpec {
   /** Full resource name of DataStore, such as Format: `projects/{project}/locations/{location}/collections/{collection}/dataStores/{dataStore}` */
   dataStore?: string;
@@ -1668,7 +1668,7 @@ export declare interface VertexAISearchDataStoreSpec {
   filter?: string;
 }
 
-/** Retrieve from Vertex AI Search datastore or engine for grounding. datastore and engine are mutually exclusive. See https://cloud.google.com/products/agent-builder */
+/** Retrieve from Vertex AI Search datastore or engine for grounding. datastore and engine are mutually exclusive. See https://cloud.google.com/products/agent-builder. This data type is not supported in Gemini API. */
 export declare interface VertexAISearch {
   /** Specifications that define the specific DataStores to be searched, along with configurations for those data stores. This is only considered for Engines with multiple data stores. It should only be set if engine is used. */
   dataStoreSpecs?: VertexAISearchDataStoreSpec[];
@@ -1682,7 +1682,7 @@ export declare interface VertexAISearch {
   maxResults?: number;
 }
 
-/** The definition of the Rag resource. */
+/** The definition of the Rag resource. This data type is not supported in Gemini API. */
 export declare interface VertexRagStoreRagResource {
   /** Optional. RagCorpora resource name. Format: `projects/{project}/locations/{location}/ragCorpora/{rag_corpus}` */
   ragCorpus?: string;
@@ -1690,7 +1690,7 @@ export declare interface VertexRagStoreRagResource {
   ragFileIds?: string[];
 }
 
-/** Config for filters. */
+/** Config for filters. This data type is not supported in Gemini API. */
 export declare interface RagRetrievalConfigFilter {
   /** Optional. String for metadata filtering. */
   metadataFilter?: string;
@@ -1700,25 +1700,25 @@ export declare interface RagRetrievalConfigFilter {
   vectorSimilarityThreshold?: number;
 }
 
-/** Config for Hybrid Search. */
+/** Config for Hybrid Search. This data type is not supported in Gemini API. */
 export declare interface RagRetrievalConfigHybridSearch {
   /** Optional. Alpha value controls the weight between dense and sparse vector search results. The range is [0, 1], while 0 means sparse vector search only and 1 means dense vector search only. The default value is 0.5 which balances sparse and dense vector search equally. */
   alpha?: number;
 }
 
-/** Config for LlmRanker. */
+/** Config for LlmRanker. This data type is not supported in Gemini API. */
 export declare interface RagRetrievalConfigRankingLlmRanker {
   /** Optional. The model name used for ranking. See [Supported models](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference#supported-models). */
   modelName?: string;
 }
 
-/** Config for Rank Service. */
+/** Config for Rank Service. This data type is not supported in Gemini API. */
 export declare interface RagRetrievalConfigRankingRankService {
   /** Optional. The model name of the rank service. Format: `semantic-ranker-512@latest` */
   modelName?: string;
 }
 
-/** Config for ranking and reranking. */
+/** Config for ranking and reranking. This data type is not supported in Gemini API. */
 export declare interface RagRetrievalConfigRanking {
   /** Optional. Config for LlmRanker. */
   llmRanker?: RagRetrievalConfigRankingLlmRanker;
@@ -1726,7 +1726,7 @@ export declare interface RagRetrievalConfigRanking {
   rankService?: RagRetrievalConfigRankingRankService;
 }
 
-/** Specifies the context retrieval config. */
+/** Specifies the context retrieval config. This data type is not supported in Gemini API. */
 export declare interface RagRetrievalConfig {
   /** Optional. Config for filters. */
   filter?: RagRetrievalConfigFilter;
@@ -1738,7 +1738,7 @@ export declare interface RagRetrievalConfig {
   topK?: number;
 }
 
-/** Retrieve from Vertex RAG Store for grounding. */
+/** Retrieve from Vertex RAG Store for grounding. This data type is not supported in Gemini API. */
 export declare interface VertexRagStore {
   /** Optional. Deprecated. Please use rag_resources instead. */
   ragCorpora?: string[];
@@ -1754,7 +1754,7 @@ export declare interface VertexRagStore {
   vectorDistanceThreshold?: number;
 }
 
-/** Defines a retrieval tool that model can call to access external knowledge. */
+/** Defines a retrieval tool that model can call to access external knowledge. This data type is not supported in Gemini API. */
 export declare interface Retrieval {
   /** Optional. Deprecated. This option is no longer supported. */
   disableAttribution?: boolean;
@@ -1766,14 +1766,14 @@ export declare interface Retrieval {
   vertexRagStore?: VertexRagStore;
 }
 
-/** Tool that executes code generated by the model, and automatically returns the result to the model. See also [ExecutableCode]and [CodeExecutionResult] which are input and output to this tool. */
+/** Tool that executes code generated by the model, and automatically returns the result to the model. See also [ExecutableCode]and [CodeExecutionResult] which are input and output to this tool. This data type is not supported in Gemini API. */
 export declare interface ToolCodeExecution {}
 
 /** Tool details of a tool that the model may use to generate a response. */
 export declare interface Tool {
   /** List of function declarations that the tool supports. */
   functionDeclarations?: FunctionDeclaration[];
-  /** Optional. Retrieval tool type. System will always execute the provided retrieval tool(s) to get external knowledge to answer the prompt. Retrieval results are presented to the model for generation. */
+  /** Optional. Retrieval tool type. System will always execute the provided retrieval tool(s) to get external knowledge to answer the prompt. Retrieval results are presented to the model for generation. This field is not supported in Gemini API. */
   retrieval?: Retrieval;
   /** Optional. Google Search tool type. Specialized retrieval tool
       that is powered by Google Search. */
@@ -1918,7 +1918,7 @@ export declare interface ImageConfig {
   aspectRatio?: string;
 }
 
-/** When automated routing is specified, the routing will be determined by the pretrained routing model and customer provided model routing preference. */
+/** When automated routing is specified, the routing will be determined by the pretrained routing model and customer provided model routing preference. This data type is not supported in Gemini API. */
 export declare interface GenerationConfigRoutingConfigAutoRoutingMode {
   /** The model routing preference. */
   modelRoutingPreference?:
@@ -1928,13 +1928,13 @@ export declare interface GenerationConfigRoutingConfigAutoRoutingMode {
     | 'PRIORITIZE_COST';
 }
 
-/** When manual routing is set, the specified model will be used directly. */
+/** When manual routing is set, the specified model will be used directly. This data type is not supported in Gemini API. */
 export declare interface GenerationConfigRoutingConfigManualRoutingMode {
   /** The model name to use. Only the public LLM models are accepted. See [Supported models](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference#supported-models). */
   modelName?: string;
 }
 
-/** The configuration for routing the request to a specific model. */
+/** The configuration for routing the request to a specific model. This data type is not supported in Gemini API. */
 export declare interface GenerationConfigRoutingConfig {
   /** Automated routing. */
   autoMode?: GenerationConfigRoutingConfigAutoRoutingMode;
@@ -2152,7 +2152,7 @@ export interface LiveCallbacks {
   onclose?: ((e: CloseEvent) => void) | null;
 }
 
-/** Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp */
+/** Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp. This data type is not supported in Gemini API. */
 export declare interface GoogleTypeDate {
   /** Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn't significant. */
   day?: number;
@@ -2162,7 +2162,7 @@ export declare interface GoogleTypeDate {
   year?: number;
 }
 
-/** Source attributions for content. */
+/** Source attributions for content. This data type is not supported in Gemini API. */
 export declare interface Citation {
   /** Output only. End index into the content. */
   endIndex?: number;
@@ -2201,7 +2201,7 @@ export declare interface UrlContextMetadata {
   urlMetadata?: UrlMetadata[];
 }
 
-/** Author attribution for a photo or review. */
+/** Author attribution for a photo or review. This data type is not supported in Gemini API. */
 export declare interface GroundingChunkMapsPlaceAnswerSourcesAuthorAttribution {
   /** Name of the author of the Photo or Review. */
   displayName?: string;
@@ -2211,7 +2211,7 @@ export declare interface GroundingChunkMapsPlaceAnswerSourcesAuthorAttribution {
   uri?: string;
 }
 
-/** Encapsulates a review snippet. */
+/** Encapsulates a review snippet. This data type is not supported in Gemini API. */
 export declare interface GroundingChunkMapsPlaceAnswerSourcesReviewSnippet {
   /** This review's author. */
   authorAttribution?: GroundingChunkMapsPlaceAnswerSourcesAuthorAttribution;
@@ -2229,7 +2229,7 @@ export declare interface GroundingChunkMapsPlaceAnswerSourcesReviewSnippet {
   title?: string;
 }
 
-/** Sources used to generate the place answer. */
+/** Sources used to generate the place answer. This data type is not supported in Gemini API. */
 export declare interface GroundingChunkMapsPlaceAnswerSources {
   /** A link where users can flag a problem with the generated answer. */
   flagContentUri?: string;
@@ -2237,7 +2237,7 @@ export declare interface GroundingChunkMapsPlaceAnswerSources {
   reviewSnippets?: GroundingChunkMapsPlaceAnswerSourcesReviewSnippet[];
 }
 
-/** Chunk from Google Maps. */
+/** Chunk from Google Maps. This data type is not supported in Gemini API. */
 export declare interface GroundingChunkMaps {
   /** Sources used to generate the place answer. This includes review snippets and photos that were used to generate the answer, as well as uris to flag content. */
   placeAnswerSources?: GroundingChunkMapsPlaceAnswerSources;
@@ -2251,7 +2251,7 @@ export declare interface GroundingChunkMaps {
   uri?: string;
 }
 
-/** Represents where the chunk starts and ends in the document. */
+/** Represents where the chunk starts and ends in the document. This data type is not supported in Gemini API. */
 export declare interface RagChunkPageSpan {
   /** Page where chunk starts in the document. Inclusive. 1-indexed. */
   firstPage?: number;
@@ -2259,7 +2259,7 @@ export declare interface RagChunkPageSpan {
   lastPage?: number;
 }
 
-/** A RagChunk includes the content of a chunk of a RagFile, and associated metadata. */
+/** A RagChunk includes the content of a chunk of a RagFile, and associated metadata. This data type is not supported in Gemini API. */
 export declare interface RagChunk {
   /** If populated, represents where the chunk starts and ends in the document. */
   pageSpan?: RagChunkPageSpan;
@@ -2267,7 +2267,7 @@ export declare interface RagChunk {
   text?: string;
 }
 
-/** Chunk from context retrieved by the retrieval tools. */
+/** Chunk from context retrieved by the retrieval tools. This data type is not supported in Gemini API. */
 export declare interface GroundingChunkRetrievedContext {
   /** Output only. The full document name for the referenced Vertex AI Search document. */
   documentName?: string;
@@ -2283,7 +2283,7 @@ export declare interface GroundingChunkRetrievedContext {
 
 /** Chunk from the web. */
 export declare interface GroundingChunkWeb {
-  /** Domain of the (original) URI. */
+  /** Domain of the (original) URI. This field is not supported in Gemini API. */
   domain?: string;
   /** Title of the chunk. */
   title?: string;
@@ -2293,9 +2293,9 @@ export declare interface GroundingChunkWeb {
 
 /** Grounding chunk. */
 export declare interface GroundingChunk {
-  /** Grounding chunk from Google Maps. */
+  /** Grounding chunk from Google Maps. This field is not supported in Gemini API. */
   maps?: GroundingChunkMaps;
-  /** Grounding chunk from context retrieved by the retrieval tools. */
+  /** Grounding chunk from context retrieved by the retrieval tools. This field is not supported in Gemini API. */
   retrievedContext?: GroundingChunkRetrievedContext;
   /** Grounding chunk from the web. */
   web?: GroundingChunkWeb;
@@ -2338,7 +2338,7 @@ export declare interface SearchEntryPoint {
   sdkBlob?: string;
 }
 
-/** Source content flagging uri for a place or review. This is currently populated only for Google Maps grounding. */
+/** Source content flagging uri for a place or review. This is currently populated only for Google Maps grounding. This data type is not supported in Gemini API. */
 export declare interface GroundingMetadataSourceFlaggingUri {
   /** A link where users can flag a problem with the source (place or review). */
   flagContentUri?: string;
@@ -2348,7 +2348,7 @@ export declare interface GroundingMetadataSourceFlaggingUri {
 
 /** Metadata returned to client when grounding is enabled. */
 export declare interface GroundingMetadata {
-  /** Optional. Output only. Resource name of the Google Maps widget context token to be used with the PlacesContextElement widget to render contextual data. This is populated only for Google Maps grounding. */
+  /** Optional. Output only. Resource name of the Google Maps widget context token to be used with the PlacesContextElement widget to render contextual data. This is populated only for Google Maps grounding. This field is not supported in Gemini API. */
   googleMapsWidgetContextToken?: string;
   /** List of supporting references retrieved from specified grounding source. */
   groundingChunks?: GroundingChunk[];
@@ -2356,11 +2356,11 @@ export declare interface GroundingMetadata {
   groundingSupports?: GroundingSupport[];
   /** Optional. Output only. Retrieval metadata. */
   retrievalMetadata?: RetrievalMetadata;
-  /** Optional. Queries executed by the retrieval tools. */
+  /** Optional. Queries executed by the retrieval tools. This field is not supported in Gemini API. */
   retrievalQueries?: string[];
   /** Optional. Google search entry for the following-up web searches. */
   searchEntryPoint?: SearchEntryPoint;
-  /** Optional. Output only. List of source flagging uris. This is currently populated only for Google Maps grounding. */
+  /** Optional. Output only. List of source flagging uris. This is currently populated only for Google Maps grounding. This field is not supported in Gemini API. */
   sourceFlaggingUris?: GroundingMetadataSourceFlaggingUri[];
   /** Optional. Web search queries for the following-up web search. */
   webSearchQueries?: string[];
@@ -2400,11 +2400,11 @@ export declare interface SafetyRating {
   overwrittenThreshold?: HarmBlockThreshold;
   /** Output only. Harm probability levels in the content. */
   probability?: HarmProbability;
-  /** Output only. Harm probability score. */
+  /** Output only. Harm probability score. This field is not supported in Gemini API. */
   probabilityScore?: number;
   /** Output only. Harm severity levels in the content. */
   severity?: HarmSeverity;
-  /** Output only. Harm severity score. */
+  /** Output only. Harm severity score. This field is not supported in Gemini API. */
   severityScore?: number;
 }
 
@@ -2444,7 +2444,7 @@ export declare interface Candidate {
 export class GenerateContentResponsePromptFeedback {
   /** Output only. The reason why the prompt was blocked. */
   blockReason?: BlockedReason;
-  /** Output only. A readable message that explains the reason why the prompt was blocked. */
+  /** Output only. A readable message that explains the reason why the prompt was blocked. This field is not supported in Gemini API. */
   blockReasonMessage?: string;
   /** Output only. A list of safety ratings for the prompt. There is one rating per category. */
   safetyRatings?: SafetyRating[];
@@ -2458,7 +2458,7 @@ export declare interface ModalityTokenCount {
   tokenCount?: number;
 }
 
-/** Usage metadata about response(s). */
+/** Usage metadata about response(s). This data type is not supported in Gemini API. */
 export class GenerateContentResponseUsageMetadata {
   /** Output only. List of modalities of the cached content in the request input. */
   cacheTokensDetails?: ModalityTokenCount[];
@@ -3417,11 +3417,11 @@ export class DeleteModelResponse {
 export declare interface GenerationConfig {
   /** Optional. Config for model selection. */
   modelSelectionConfig?: ModelSelectionConfig;
-  /** Optional. If enabled, audio timestamp will be included in the request to the model. */
+  /** Optional. If enabled, audio timestamp will be included in the request to the model. This field is not supported in Gemini API. */
   audioTimestamp?: boolean;
   /** Optional. Number of candidates to generate. */
   candidateCount?: number;
-  /** Optional. If enabled, the model will detect emotions and adapt its responses accordingly. */
+  /** Optional. If enabled, the model will detect emotions and adapt its responses accordingly. This field is not supported in Gemini API. */
   enableAffectiveDialog?: boolean;
   /** Optional. Frequency penalties. */
   frequencyPenalty?: number;
@@ -3443,7 +3443,7 @@ export declare interface GenerationConfig {
   responseModalities?: Modality[];
   /** Optional. The `Schema` object allows the definition of input and output data types. These types can be objects, but also primitives and arrays. Represents a select subset of an [OpenAPI 3.0 schema object](https://spec.openapis.org/oas/v3.0.3#schema). If set, a compatible response_mime_type must also be set. Compatible mimetypes: `application/json`: Schema for JSON response. */
   responseSchema?: Schema;
-  /** Optional. Routing configuration. */
+  /** Optional. Routing configuration. This field is not supported in Gemini API. */
   routingConfig?: GenerationConfigRoutingConfig;
   /** Optional. Seed. */
   seed?: number;
@@ -3459,7 +3459,7 @@ export declare interface GenerationConfig {
   topK?: number;
   /** Optional. If specified, nucleus sampling will be used. */
   topP?: number;
-  /** Optional. Enables enhanced civic answers. It may not be available for all models. */
+  /** Optional. Enables enhanced civic answers. It may not be available for all models. This field is not supported in Vertex AI. */
   enableEnhancedCivicAnswers?: boolean;
 }
 
@@ -3806,7 +3806,7 @@ export declare interface TunedModel {
   checkpoints?: TunedModelCheckpoint[];
 }
 
-/** The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors). */
+/** The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors). This data type is not supported in Gemini API. */
 export declare interface GoogleRpcStatus {
   /** The status code, which should be an enum value of google.rpc.Code. */
   code?: number;
@@ -3816,7 +3816,7 @@ export declare interface GoogleRpcStatus {
   message?: string;
 }
 
-/** A pre-tuned model for continuous tuning. */
+/** A pre-tuned model for continuous tuning. This data type is not supported in Gemini API. */
 export declare interface PreTunedModel {
   /** Output only. The name of the base model this PreTunedModel was tuned from. */
   baseModel?: string;
@@ -3826,7 +3826,7 @@ export declare interface PreTunedModel {
   tunedModelName?: string;
 }
 
-/** Hyperparameters for SFT. */
+/** Hyperparameters for SFT. This data type is not supported in Gemini API. */
 export declare interface SupervisedHyperParameters {
   /** Optional. Adapter size for tuning. */
   adapterSize?: AdapterSize;
@@ -3840,7 +3840,7 @@ export declare interface SupervisedHyperParameters {
   learningRateMultiplier?: number;
 }
 
-/** Tuning Spec for Supervised Tuning for first party models. */
+/** Tuning Spec for Supervised Tuning for first party models. This data type is not supported in Gemini API. */
 export declare interface SupervisedTuningSpec {
   /** Optional. If set to true, disable intermediate checkpoints for SFT and only the last checkpoint will be exported. Otherwise, enable intermediate checkpoints for SFT. Default is false. */
   exportLastCheckpointOnly?: boolean;
@@ -3854,7 +3854,7 @@ export declare interface SupervisedTuningSpec {
   validationDatasetUri?: string;
 }
 
-/** Dataset bucket used to create a histogram for the distribution given a population of values. */
+/** Dataset bucket used to create a histogram for the distribution given a population of values. This data type is not supported in Gemini API. */
 export declare interface DatasetDistributionDistributionBucket {
   /** Output only. Number of values in the bucket. */
   count?: string;
@@ -3864,7 +3864,7 @@ export declare interface DatasetDistributionDistributionBucket {
   right?: number;
 }
 
-/** Distribution computed over a tuning dataset. */
+/** Distribution computed over a tuning dataset. This data type is not supported in Gemini API. */
 export declare interface DatasetDistribution {
   /** Output only. Defines the histogram bucket. */
   buckets?: DatasetDistributionDistributionBucket[];
@@ -3884,7 +3884,7 @@ export declare interface DatasetDistribution {
   sum?: number;
 }
 
-/** Statistics computed over a tuning dataset. */
+/** Statistics computed over a tuning dataset. This data type is not supported in Gemini API. */
 export declare interface DatasetStats {
   /** Output only. Number of billable characters in the tuning dataset. */
   totalBillableCharacterCount?: string;
@@ -3904,13 +3904,13 @@ export declare interface DatasetStats {
   userOutputTokenDistribution?: DatasetDistribution;
 }
 
-/** Statistics computed for datasets used for distillation. */
+/** Statistics computed for datasets used for distillation. This data type is not supported in Gemini API. */
 export declare interface DistillationDataStats {
   /** Output only. Statistics computed for the training dataset. */
   trainingDatasetStats?: DatasetStats;
 }
 
-/** Completion and its preference score. */
+/** Completion and its preference score. This data type is not supported in Gemini API. */
 export declare interface GeminiPreferenceExampleCompletion {
   /** Single turn completion for the given prompt. */
   completion?: Content;
@@ -3918,7 +3918,7 @@ export declare interface GeminiPreferenceExampleCompletion {
   score?: number;
 }
 
-/** Input example for preference optimization. */
+/** Input example for preference optimization. This data type is not supported in Gemini API. */
 export declare interface GeminiPreferenceExample {
   /** List of completions for a given prompt. */
   completions?: GeminiPreferenceExampleCompletion[];
@@ -3926,7 +3926,7 @@ export declare interface GeminiPreferenceExample {
   contents?: Content[];
 }
 
-/** Statistics computed for datasets used for preference optimization. */
+/** Statistics computed for datasets used for preference optimization. This data type is not supported in Gemini API. */
 export declare interface PreferenceOptimizationDataStats {
   /** Output only. Dataset distributions for scores variance per example. */
   scoreVariancePerExampleDistribution?: DatasetDistribution;
@@ -3946,7 +3946,7 @@ export declare interface PreferenceOptimizationDataStats {
   userOutputTokenDistribution?: DatasetDistribution;
 }
 
-/** Dataset bucket used to create a histogram for the distribution given a population of values. */
+/** Dataset bucket used to create a histogram for the distribution given a population of values. This data type is not supported in Gemini API. */
 export declare interface SupervisedTuningDatasetDistributionDatasetBucket {
   /** Output only. Number of values in the bucket. */
   count?: number;
@@ -3956,7 +3956,7 @@ export declare interface SupervisedTuningDatasetDistributionDatasetBucket {
   right?: number;
 }
 
-/** Dataset distribution for Supervised Tuning. */
+/** Dataset distribution for Supervised Tuning. This data type is not supported in Gemini API. */
 export declare interface SupervisedTuningDatasetDistribution {
   /** Output only. Sum of a given population of values that are billable. */
   billableSum?: string;
@@ -3978,7 +3978,7 @@ export declare interface SupervisedTuningDatasetDistribution {
   sum?: string;
 }
 
-/** Tuning data statistics for Supervised Tuning. */
+/** Tuning data statistics for Supervised Tuning. This data type is not supported in Gemini API. */
 export declare interface SupervisedTuningDataStats {
   /** Output only. For each index in `truncated_example_indices`, the user-facing reason why the example was dropped. */
   droppedExampleReasons?: string[];
@@ -4006,7 +4006,7 @@ export declare interface SupervisedTuningDataStats {
   userOutputTokenDistribution?: SupervisedTuningDatasetDistribution;
 }
 
-/** The tuning data statistic values for TuningJob. */
+/** The tuning data statistic values for TuningJob. This data type is not supported in Gemini API. */
 export declare interface TuningDataStats {
   /** Output only. Statistics for distillation. */
   distillationDataStats?: DistillationDataStats;
@@ -4016,13 +4016,13 @@ export declare interface TuningDataStats {
   supervisedTuningDataStats?: SupervisedTuningDataStats;
 }
 
-/** Represents a customer-managed encryption key spec that can be applied to a top-level resource. */
+/** Represents a customer-managed encryption key spec that can be applied to a top-level resource. This data type is not supported in Gemini API. */
 export declare interface EncryptionSpec {
   /** Required. The Cloud KMS resource identifier of the customer managed encryption key used to protect a resource. Has the form: `projects/my-project/locations/my-region/keyRings/my-kr/cryptoKeys/my-key`. The key needs to be in the same region as where the compute resource is created. */
   kmsKeyName?: string;
 }
 
-/** Tuning spec for Partner models. */
+/** Tuning spec for Partner models. This data type is not supported in Gemini API. */
 export declare interface PartnerModelTuningSpec {
   /** Hyperparameters for tuning. The accepted hyper_parameters and their valid range of values will differ depending on the base model. */
   hyperParameters?: Record<string, unknown>;
@@ -4032,7 +4032,7 @@ export declare interface PartnerModelTuningSpec {
   validationDatasetUri?: string;
 }
 
-/** Hyperparameters for Veo. */
+/** Hyperparameters for Veo. This data type is not supported in Gemini API. */
 export declare interface VeoHyperParameters {
   /** Optional. Number of complete passes the model makes over the entire training dataset during training. */
   epochCount?: string;
@@ -4042,7 +4042,7 @@ export declare interface VeoHyperParameters {
   tuningTask?: TuningTask;
 }
 
-/** Tuning Spec for Veo Model Tuning. */
+/** Tuning Spec for Veo Model Tuning. This data type is not supported in Gemini API. */
 export declare interface VeoTuningSpec {
   /** Optional. Hyperparameters for Veo. */
   hyperParameters?: VeoHyperParameters;
@@ -4156,7 +4156,7 @@ export declare interface CancelTuningJobParameters {
   config?: CancelTuningJobConfig;
 }
 
-/** A single example for tuning. */
+/** A single example for tuning. This data type is not supported in Vertex AI. */
 export declare interface TuningExample {
   /** Required. The expected model output. */
   output?: string;
@@ -4295,15 +4295,15 @@ export declare interface CreateCachedContentParameters {
 
 /** Metadata on the usage of the cached content. */
 export declare interface CachedContentUsageMetadata {
-  /** Duration of audio in seconds. */
+  /** Duration of audio in seconds. This field is not supported in Gemini API. */
   audioDurationSeconds?: number;
-  /** Number of images. */
+  /** Number of images. This field is not supported in Gemini API. */
   imageCount?: number;
-  /** Number of text characters. */
+  /** Number of text characters. This field is not supported in Gemini API. */
   textCount?: number;
   /** Total number of tokens that the cached content consumes. */
   totalTokenCount?: number;
-  /** Duration of video in seconds. */
+  /** Duration of video in seconds. This field is not supported in Gemini API. */
   videoDurationSeconds?: number;
 }
 
