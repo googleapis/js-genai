@@ -377,6 +377,7 @@ export class ApiClient {
     requestInit = await this.includeExtraHttpOptionsToRequestInit(
       requestInit,
       patchedHttpOptions,
+      url.toString(),
       request.abortSignal,
     );
     return this.unaryApiCall(url, requestInit, request.httpMethod);
@@ -432,6 +433,7 @@ export class ApiClient {
     requestInit = await this.includeExtraHttpOptionsToRequestInit(
       requestInit,
       patchedHttpOptions,
+      url.toString(),
       request.abortSignal,
     );
     return this.streamApiCall(url, requestInit, request.httpMethod);
@@ -440,6 +442,7 @@ export class ApiClient {
   private async includeExtraHttpOptionsToRequestInit(
     requestInit: RequestInit,
     httpOptions: HttpOptions,
+    url: string,
     abortSignal?: AbortSignal,
   ): Promise<RequestInit> {
     if ((httpOptions && httpOptions.timeout) || abortSignal) {
@@ -473,7 +476,7 @@ export class ApiClient {
         httpOptions.extraBody as Record<string, unknown>,
       );
     }
-    requestInit.headers = await this.getHeadersInternal(httpOptions);
+    requestInit.headers = await this.getHeadersInternal(httpOptions, url);
     return requestInit;
   }
 
@@ -616,6 +619,7 @@ export class ApiClient {
 
   private async getHeadersInternal(
     httpOptions: HttpOptions | undefined,
+    url: string,
   ): Promise<Headers> {
     const headers = new Headers();
     if (httpOptions && httpOptions.headers) {
@@ -631,7 +635,7 @@ export class ApiClient {
         );
       }
     }
-    await this.clientOptions.auth.addAuthHeaders(headers);
+    await this.clientOptions.auth.addAuthHeaders(headers, url);
     return headers;
   }
 

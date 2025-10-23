@@ -39,7 +39,7 @@ export class NodeAuth implements Auth {
     this.googleAuth = new GoogleAuth(vertexAuthOptions);
   }
 
-  async addAuthHeaders(headers: Headers): Promise<void> {
+  async addAuthHeaders(headers: Headers, url?: string): Promise<void> {
     if (this.apiKey !== undefined) {
       if (this.apiKey.startsWith('auth_tokens/')) {
         throw new Error('Ephemeral tokens are only supported by the live API.');
@@ -48,7 +48,7 @@ export class NodeAuth implements Auth {
       return;
     }
 
-    return this.addGoogleAuthHeaders(headers);
+    return this.addGoogleAuthHeaders(headers, url);
   }
 
   private addKeyHeader(headers: Headers) {
@@ -63,7 +63,10 @@ export class NodeAuth implements Auth {
     headers.append(GOOGLE_API_KEY_HEADER, this.apiKey);
   }
 
-  private async addGoogleAuthHeaders(headers: Headers): Promise<void> {
+  private async addGoogleAuthHeaders(
+    headers: Headers,
+    url?: string,
+  ): Promise<void> {
     if (this.googleAuth === undefined) {
       // This should never happen, addGoogleAuthHeaders should only be
       // called when there is no apiKey set and in these cases googleAuth
@@ -72,8 +75,8 @@ export class NodeAuth implements Auth {
         'Trying to set google-auth headers but googleAuth is unset',
       );
     }
-    const authHeaders = await this.googleAuth.getRequestHeaders();
-    for (const [key, value] of Object.entries(authHeaders)) {
+    const authHeaders = await this.googleAuth.getRequestHeaders(url);
+    for (const [key, value] of authHeaders) {
       if (headers.get(key) !== null) {
         continue;
       }
