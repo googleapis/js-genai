@@ -600,7 +600,7 @@ export class ApiClient {
     requestInit: RequestInit,
   ): Promise<Response> {
     return fetch(url, requestInit).catch((e) => {
-      throw new Error(`exception ${e} sending request`);
+      throw new Error(`exception ${e} sending request`, { cause: e });
     });
   }
 
