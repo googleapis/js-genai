@@ -635,7 +635,7 @@ describe('live', () => {
 
     const websocketSpyCall = websocketSpy.calls.all()[0];
     expect(websocketSpyCall.args[0]).toBe(
-      '{"setup":{"model":"models/gemini-live-2.5-flash-preview","generationConfig":{"responseModalities":["AUDIO"],"speechConfig":{"voiceConfig":{"prebuiltVoiceConfig":{"voiceName":"en-default"}},"languageCode":"en-US"}}}}',
+      '{"setup":{"model":"models/gemini-live-2.5-flash-preview","generationConfig":{"responseModalities":["AUDIO"],"speechConfig":{"languageCode":"en-US","voiceConfig":{"prebuiltVoiceConfig":{"voiceName":"en-default"}}}}}}',
     );
     expect(session).toBeDefined();
   });
