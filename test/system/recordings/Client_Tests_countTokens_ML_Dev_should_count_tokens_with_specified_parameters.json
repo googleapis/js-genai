@@ -4,8 +4,8 @@
     {
       "request": {
         "method": "POST",
-        "url": "/v1beta/models/gemini-1.5-flash:countTokens",
-        "request": "POST /v1beta/models/gemini-1.5-flash:countTokens HTTP/1.1",
+        "url": "/v1beta/models/gemini-2.5-flash:countTokens",
+        "request": "POST /v1beta/models/gemini-2.5-flash:countTokens HTTP/1.1",
         "headers": {
           "Accept": "*/*",
           "Accept-Encoding": "gzip, deflate",
@@ -35,16 +35,16 @@
         "port": 443,
         "protocol": "https"
       },
-      "shaSum": "3f82013c69c4f7262feba0b44136b020261c8b749df1d8689efcd507760ac5eb",
+      "shaSum": "39d447497670d237bae4a6e00d2e103886bd2a893b4d64afb540911ee2fb799b",
       "response": {
         "statusCode": 200,
         "headers": {
           "Content-Encoding": "gzip",
           "Content-Length": "159",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Sat, 16 Aug 2025 00:43:14 GMT",
+          "Date": "Fri, 24 Oct 2025 07:46:22 GMT",
           "Server": "scaffolding on HTTPServer2",
-          "Server-Timing": "gfet4t7; dur=42",
+          "Server-Timing": "gfet4t7; dur=31",
           "Vary": "Origin, X-Origin, Referer",
           "X-Content-Type-Options": "nosniff",
           "X-Frame-Options": "SAMEORIGIN",

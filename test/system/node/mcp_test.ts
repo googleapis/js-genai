@@ -223,7 +223,7 @@ describe('MCP related client Tests', () => {
       const callableTool1 = mcpToTool(await spinUpPrintingServer());
       const callableTool2 = mcpToTool(await spinUpBeepingServer());
       const response = await ai.models.generateContent({
-        model: 'gemini-2.0-flash',
+        model: 'gemini-2.5-pro',
         contents:
           'Use the printer to print a simple word: hello in blue, and beep with the beeper, make sure you beep',
         config: {
@@ -279,7 +279,7 @@ describe('MCP related client Tests', () => {
       });
       const mcpCallableTool = mcpToTool(await spinUpPrintingServer());
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-2.5-pro',
         contents: 'Use the printer to print a simple word: hello in red',
         config: {
           tools: [mcpCallableTool],

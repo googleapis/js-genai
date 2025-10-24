@@ -4,14 +4,14 @@
     {
       "request": {
         "method": "POST",
-        "url": "/v1beta/models/gemini-1.5-flash:streamGenerateContent?alt=sse",
-        "request": "POST /v1beta/models/gemini-1.5-flash:streamGenerateContent?alt=sse HTTP/1.1",
+        "url": "/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse",
+        "request": "POST /v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse HTTP/1.1",
         "headers": {
           "Accept": "*/*",
           "Accept-Encoding": "gzip, deflate",
           "Accept-Language": "*",
           "Connection": "keep-alive",
-          "Content-Length": "134",
+          "Content-Length": "173",
           "Content-Type": "application/json",
           "Sec-Fetch-Mode": "cors",
           "Test-Name": "Client Tests generateContentStream ML Dev should stream generate content with specified parameters"
@@ -30,7 +30,10 @@
             ],
             "generationConfig": {
               "candidateCount": 1,
-              "maxOutputTokens": 200
+              "maxOutputTokens": 200,
+              "thinkingConfig": {
+                "thinkingBudget": 50
+              }
             }
           }
         ],
@@ -39,15 +42,15 @@
         "port": 443,
         "protocol": "https"
       },
-      "shaSum": "62506dfcfc5137d154820483ac93a2a1937ff822e828393e476e483bb9fe3558",
+      "shaSum": "9e08e69ef6c749fd0e9bff9fc6bb0a652321fb4c9f7726402ff5c6778dffd47d",
       "response": {
         "statusCode": 200,
         "headers": {
           "Content-Disposition": "attachment",
           "Content-Type": "text/event-stream",
-          "Date": "Sat, 16 Aug 2025 00:43:00 GMT",
+          "Date": "Fri, 24 Oct 2025 07:45:45 GMT",
           "Server": "scaffolding on HTTPServer2",
-          "Server-Timing": "gfet4t7; dur=221",
+          "Server-Timing": "gfet4t7; dur=1335",
           "Vary": "Origin, X-Origin, Referer",
           "X-Content-Type-Options": "nosniff",
           "X-Frame-Options": "SAMEORIGIN",
@@ -60,188 +63,89 @@
                 "content": {
                   "parts": [
                     {
-                      "text": "The"
-                    }
-                  ],
-                  "role": "model"
-                }
-              }
-            ],
-            "modelVersion": "gemini-1.5-flash",
-            "responseId": "FNSfaKaKJZbzgLUPsqX4yAo",
-            "usageMetadata": {
-              "promptTokenCount": 7,
-              "promptTokensDetails": [
-                {
-                  "modality": "TEXT",
-                  "tokenCount": 7
-                }
-              ],
-              "totalTokenCount": 7
-            }
-          },
-          {
-            "candidates": [
-              {
-                "content": {
-                  "parts": [
-                    {
-                      "text": " sky is blue due to a phenomenon called **Rayleigh scattering**.  Sunlight is"
-                    }
-                  ],
-                  "role": "model"
-                }
-              }
-            ],
-            "modelVersion": "gemini-1.5-flash",
-            "responseId": "FNSfaKaKJZbzgLUPsqX4yAo",
-            "usageMetadata": {
-              "promptTokenCount": 7,
-              "promptTokensDetails": [
-                {
-                  "modality": "TEXT",
-                  "tokenCount": 7
-                }
-              ],
-              "totalTokenCount": 7
-            }
-          },
-          {
-            "candidates": [
-              {
-                "content": {
-                  "parts": [
-                    {
-                      "text": " made up of all the colors of the rainbow.  As sunlight enters the Earth"
-                    }
-                  ],
-                  "role": "model"
-                }
-              }
-            ],
-            "modelVersion": "gemini-1.5-flash",
-            "responseId": "FNSfaKaKJZbzgLUPsqX4yAo",
-            "usageMetadata": {
-              "promptTokenCount": 7,
-              "promptTokensDetails": [
-                {
-                  "modality": "TEXT",
-                  "tokenCount": 7
-                }
-              ],
-              "totalTokenCount": 7
-            }
-          },
-          {
-            "candidates": [
-              {
-                "content": {
-                  "parts": [
-                    {
-                      "text": "'s atmosphere, it collides with tiny air molecules (mostly nitrogen and oxygen).  These molecules are much smaller than the wavelengths of visible light.\n\nRay"
-                    }
-                  ],
-                  "role": "model"
-                }
-              }
-            ],
-            "modelVersion": "gemini-1.5-flash",
-            "responseId": "FNSfaKaKJZbzgLUPsqX4yAo",
-            "usageMetadata": {
-              "promptTokenCount": 7,
-              "promptTokensDetails": [
-                {
-                  "modality": "TEXT",
-                  "tokenCount": 7
-                }
-              ],
-              "totalTokenCount": 7
-            }
-          },
-          {
-            "candidates": [
-              {
-                "content": {
-                  "parts": [
-                    {
-                      "text": "leigh scattering affects shorter wavelengths of light more strongly than longer wavelengths.  Blue and violet light have the shortest wavelengths, so they are scattered more effectively than other colors"
-                    }
-                  ],
-                  "role": "model"
-                }
-              }
-            ],
-            "modelVersion": "gemini-1.5-flash",
-            "responseId": "FNSfaKaKJZbzgLUPsqX4yAo",
-            "usageMetadata": {
-              "promptTokenCount": 7,
-              "promptTokensDetails": [
-                {
-                  "modality": "TEXT",
-                  "tokenCount": 7
-                }
-              ],
-              "totalTokenCount": 7
-            }
-          },
-          {
-            "candidates": [
-              {
-                "content": {
-                  "parts": [
-                    {
-                      "text": ".  This scattered blue light is what we see when we look at the sky.\n\nWhile violet light is scattered even more than blue, our eyes are less sensitive to violet, and the sun emits slightly less violet light, resulting in a"
-                    }
-                  ],
-                  "role": "model"
-                }
-              }
-            ],
-            "modelVersion": "gemini-1.5-flash",
-            "responseId": "FNSfaKaKJZbzgLUPsqX4yAo",
-            "usageMetadata": {
-              "promptTokenCount": 7,
-              "promptTokensDetails": [
-                {
-                  "modality": "TEXT",
-                  "tokenCount": 7
-                }
-              ],
-              "totalTokenCount": 7
-            }
-          },
-          {
-            "candidates": [
-              {
-                "content": {
-                  "parts": [
-                    {
-                      "text": " blue sky rather than a violet one.\n"
+                      "text": "The sky is blue primarily due to a phenomenon called **Rayleigh Scattering**.\n\nHere's a breakdown of why it happens:\n\n1.  **Sunlight is White Light:** The light from the sun appears white to us, but it's"
                     }
                   ],
                   "role": "model"
                 },
-                "finishReason": "STOP"
+                "index": 0
               }
             ],
-            "modelVersion": "gemini-1.5-flash",
-            "responseId": "FNSfaKaKJZbzgLUPsqX4yAo",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "qS77aMCqBu6mvr0PsJiykAw",
+            "turnToken": "v1:ChdxUzc3YU1DcUJ1Nm12cjBQc0ppeWtBdxIXcVM3N2FNQ3FCdTZtdnIwUHNKaXlrQXc",
             "usageMetadata": {
-              "candidatesTokenCount": 154,
-              "candidatesTokensDetails": [
-                {
-                  "modality": "TEXT",
-                  "tokenCount": 154
-                }
-              ],
-              "promptTokenCount": 6,
+              "candidatesTokenCount": 51,
+              "promptTokenCount": 7,
               "promptTokensDetails": [
                 {
                   "modality": "TEXT",
-                  "tokenCount": 6
+                  "tokenCount": 7
                 }
               ],
-              "totalTokenCount": 160
+              "thoughtsTokenCount": 45,
+              "totalTokenCount": 103
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " actually made up of all the colors of the rainbow (red, orange, yellow, green, blue, indigo, violet). Each color has a different wavelength – red has the longest wavelength, and blue/violet have the shortest.\n\n2.  **"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "qS77aMCqBu6mvr0PsJiykAw",
+            "turnToken": "v1:ChdxUzc3YU1DcUJ1Nm12cjBQc0ppeWtBdxIXcVM3N2FNQ3FCdTZtdnIwUHNKaXlrQXc",
+            "usageMetadata": {
+              "candidatesTokenCount": 102,
+              "promptTokenCount": 7,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 7
+                }
+              ],
+              "thoughtsTokenCount": 45,
+              "totalTokenCount": 154
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "Earth's Atmosphere:** Our planet is surrounded by a layer of gases (mostly nitrogen and oxygen) and tiny particles.\n\n3.  **Scattering:** When sunlight enters the Earth's atmosphere, it collides with these gas molecules and particles."
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "MAX_TOKENS",
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "qS77aMCqBu6mvr0PsJiykAw",
+            "turnToken": "v1:ChdxUzc3YU1DcUJ1Nm12cjBQc0ppeWtBdxIXcVM3N2FNQ3FCdTZtdnIwUHNKaXlrQXc",
+            "usageMetadata": {
+              "candidatesTokenCount": 153,
+              "promptTokenCount": 7,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 7
+                }
+              ],
+              "thoughtsTokenCount": 45,
+              "totalTokenCount": 205
             }
           }
         ]

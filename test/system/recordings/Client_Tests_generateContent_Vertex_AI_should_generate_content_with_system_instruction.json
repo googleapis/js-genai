@@ -4,8 +4,8 @@
     {
       "request": {
         "method": "POST",
-        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-1.5-flash:generateContent",
-        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-1.5-flash:generateContent HTTP/1.1",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:generateContent",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:generateContent HTTP/1.1",
         "headers": {
           "Accept": "*/*",
           "Accept-Encoding": "gzip, deflate",
@@ -44,14 +44,14 @@
         "port": 443,
         "protocol": "https"
       },
-      "shaSum": "33386959ec3ebde9919c27c43275f6d3c07384cd70769113413bebd583bd6847",
+      "shaSum": "6ef70c54a830b1395d5dce0324667a53a62e9463c8e2f0e9c87417b4b0a1bb9b",
       "response": {
         "statusCode": 200,
         "headers": {
           "Content-Encoding": "gzip",
-          "Content-Length": "421",
+          "Content-Length": "406",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Sat, 16 Aug 2025 00:43:10 GMT",
+          "Date": "Fri, 24 Oct 2025 07:45:27 GMT",
           "Server": "scaffolding on HTTPServer2",
           "Vary": "Origin, X-Origin, Referer",
           "X-Content-Type-Options": "nosniff",
@@ -62,31 +62,31 @@
           {
             "candidates": [
               {
-                "avgLogprobs": -0.00003862223093165085,
+                "avgLogprobs": -11.656981468200684,
                 "content": {
                   "parts": [
                     {
-                      "text": "low\n"
+                      "text": "low"
                     }
                   ],
                   "role": "model"
                 },
                 "finishReason": "STOP",
-                "score": -0.0000772444618633017
+                "score": -11.656981468200684
               }
             ],
-            "createTime": "2025-08-16T00:43:10.644311Z",
-            "modelVersion": "gemini-1.5-flash-002",
-            "responseId": "HtSfaNepJ_mAm9IP_-LziQ0",
+            "createTime": "2025-10-24T07:45:26.690215Z",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "li77aKeQKuXb698PvciY6Ag",
             "usageMetadata": {
               "billablePromptUsage": {
                 "textCount": 22
               },
-              "candidatesTokenCount": 2,
+              "candidatesTokenCount": 1,
               "candidatesTokensDetails": [
                 {
                   "modality": "TEXT",
-                  "tokenCount": 2
+                  "tokenCount": 1
                 }
               ],
               "promptTokenCount": 8,
@@ -96,7 +96,8 @@
                   "tokenCount": 8
                 }
               ],
-              "totalTokenCount": 10,
+              "thoughtsTokenCount": 34,
+              "totalTokenCount": 43,
               "trafficType": "ON_DEMAND"
             }
           }

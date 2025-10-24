@@ -4,8 +4,8 @@
     {
       "request": {
         "method": "POST",
-        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-1.5-flash:generateContent",
-        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-1.5-flash:generateContent HTTP/1.1",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:generateContent",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:generateContent HTTP/1.1",
         "headers": {
           "Accept": "*/*",
           "Accept-Encoding": "gzip, deflate",
@@ -39,14 +39,14 @@
         "port": 443,
         "protocol": "https"
       },
-      "shaSum": "8896cf913c97a821a4f3ed5fe94f1ead3fbbaa17d34ed5ade04666cea476ffa8",
+      "shaSum": "3adbf5dba3d718f41767b2209150dd286d4a968ece9ad233421a1537f5f39d34",
       "response": {
         "statusCode": 200,
         "headers": {
           "Content-Encoding": "gzip",
-          "Content-Length": "483",
+          "Content-Length": "361",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Sat, 16 Aug 2025 00:43:11 GMT",
+          "Date": "Fri, 24 Oct 2025 07:45:10 GMT",
           "Server": "scaffolding on HTTPServer2",
           "Vary": "Origin, X-Origin, Referer",
           "X-Content-Type-Options": "nosniff",
@@ -57,33 +57,20 @@
           {
             "candidates": [
               {
-                "avgLogprobs": -0.005492566525936127,
                 "content": {
-                  "parts": [
-                    {
-                      "text": "The sky is blue due to a phenomenon called **Rayleigh scattering**.  Sunlight is made up of"
-                    }
-                  ],
                   "role": "model"
                 },
                 "finishReason": "MAX_TOKENS",
-                "score": -0.10985133051872253
+                "score": -1.1917359828948975
               }
             ],
-            "createTime": "2025-08-16T00:43:11.434287Z",
-            "modelVersion": "gemini-1.5-flash-002",
-            "responseId": "H9SfaO_AGo2Cm9IPpK2IgAg",
+            "createTime": "2025-10-24T07:45:10.591163Z",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "hi77aLuKJOf-698P5MX58Ao",
             "usageMetadata": {
               "billablePromptUsage": {
                 "textCount": 16
               },
-              "candidatesTokenCount": 20,
-              "candidatesTokensDetails": [
-                {
-                  "modality": "TEXT",
-                  "tokenCount": 20
-                }
-              ],
               "promptTokenCount": 6,
               "promptTokensDetails": [
                 {
@@ -91,7 +78,8 @@
                   "tokenCount": 6
                 }
               ],
-              "totalTokenCount": 26,
+              "thoughtsTokenCount": 19,
+              "totalTokenCount": 25,
               "trafficType": "ON_DEMAND"
             }
           }

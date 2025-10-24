@@ -4,8 +4,8 @@
     {
       "request": {
         "method": "POST",
-        "url": "/v1beta/models/gemini-1.5-flash:generateContent",
-        "request": "POST /v1beta/models/gemini-1.5-flash:generateContent HTTP/1.1",
+        "url": "/v1beta/models/gemini-2.5-flash:generateContent",
+        "request": "POST /v1beta/models/gemini-2.5-flash:generateContent HTTP/1.1",
         "headers": {
           "Accept": "*/*",
           "Accept-Encoding": "gzip, deflate",
@@ -66,16 +66,16 @@
         "port": 443,
         "protocol": "https"
       },
-      "shaSum": "e6c6526503f577723b8f4bdfa4bfe33e0989956c917989b15374e44cd1dce83c",
+      "shaSum": "0c6f58dff773154933d150870915df78a821151372b4f8d67a9de8c02bb06f59",
       "response": {
         "statusCode": 200,
         "headers": {
           "Content-Encoding": "gzip",
-          "Content-Length": "371",
+          "Content-Length": "779",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Sat, 16 Aug 2025 00:43:13 GMT",
+          "Date": "Fri, 24 Oct 2025 07:45:12 GMT",
           "Server": "scaffolding on HTTPServer2",
-          "Server-Timing": "gfet4t7; dur=496",
+          "Server-Timing": "gfet4t7; dur=2046",
           "Vary": "Origin, X-Origin, Referer",
           "X-Content-Type-Options": "nosniff",
           "X-Frame-Options": "SAMEORIGIN",
@@ -85,7 +85,6 @@
           {
             "candidates": [
               {
-                "avgLogprobs": -0.00003411569115188387,
                 "content": {
                   "parts": [
                     {
@@ -95,32 +94,31 @@
                           "secondString": "world"
                         },
                         "name": "concatStringFunction"
-                      }
+                      },
+                      "thoughtSignature": "CpUCAdHtim9pjKa09PSMm2rJMx/w+Zv+17DcCbM08LMBheh0ksyO8hosyPMGt1dQOUEELcknoicPY3Zb2Jx4mB7RX7kZZ1yCz0zrQMp1aEg+w/X5bV7dfvOem4YJY5yNH7uCque1YjlrHNbiXD3iAwTPVmkcdq0uHpzxiWbQEzy4XQtDA4cy5YoeVRyoDICqA55o4QGkjY7wZZwy/S5fxj4rhKlqlVo3JFDr7oGnQkdx+OcAoPDyXRc7s3qSS0p/ySzSmPGe5OLd1QAWQecM6Z6NBwd4dGKQAmFzrOLqIxCevhawd1fstxmNCDK0hh0XMdGltq0ppd9HwwZrozdlu+7GQ3ZoEcescwTCqOJe5Z+XE7GQu9KAbQ=="
                     }
                   ],
                   "role": "model"
                 },
-                "finishReason": "STOP"
+                "finishMessage": "Model generated function call(s).",
+                "finishReason": "STOP",
+                "index": 0
               }
             ],
-            "modelVersion": "gemini-1.5-flash",
-            "responseId": "INSfaKaWMuKMm9IPzITjqQc",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "iC77aIDWMcDDvr0PoK6JkAY",
+            "turnToken": "v1:ChdpQzc3YUlEV01jRER2cjBQb0s2SmtBWRIXaUM3N2FJRFdNY0REdnIwUG9LNkprQVk",
             "usageMetadata": {
-              "candidatesTokenCount": 9,
-              "candidatesTokensDetails": [
-                {
-                  "modality": "TEXT",
-                  "tokenCount": 9
-                }
-              ],
-              "promptTokenCount": 20,
+              "candidatesTokenCount": 22,
+              "promptTokenCount": 65,
               "promptTokensDetails": [
                 {
                   "modality": "TEXT",
-                  "tokenCount": 20
+                  "tokenCount": 65
                 }
               ],
-              "totalTokenCount": 29
+              "thoughtsTokenCount": 59,
+              "totalTokenCount": 146
             }
           }
         ]
