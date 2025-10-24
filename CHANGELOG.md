@@ -1,6 +1,21 @@
 # Changelog
 
 
+## [1.27.0](https://github.com/googleapis/js-genai/compare/v1.26.0...v1.27.0) (2025-10-24)
+
+
+### Features
+
+* Remove redundant calls to rollup/api-extractor, speeds up the TS SDK testing further by a factor of 2. ([009b75f](https://github.com/googleapis/js-genai/commit/009b75fd06129117cce480822efe9ffe9f13f853))
+* support default global location when not using api key with vertexai backend ([f8967b1](https://github.com/googleapis/js-genai/commit/f8967b1f353165b252e00407beebf2ca06831b76))
+* Update `test-server-sdk` dependency to `^0.2.9`. ([8d507bf](https://github.com/googleapis/js-genai/commit/8d507bf42585dc0a6b1e1c47be61c024efd0a565))
+
+
+### Bug Fixes
+
+* Fix downloader. With this change after you await the download, the file write is complete, and the data is fully readable. ([127c9bf](https://github.com/googleapis/js-genai/commit/127c9bf29c0110a1292d5742c2bc87e4482eb6eb))
+* google auth ADC error ([f87611c](https://github.com/googleapis/js-genai/commit/f87611c70e0b1edcacd67f384fa14b4b2b37ac57))
+
 ## [1.26.0](https://github.com/googleapis/js-genai/compare/v1.25.0...v1.26.0) (2025-10-21)
 
 
