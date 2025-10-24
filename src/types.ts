@@ -12,7 +12,7 @@ import {
   generateVideosOperationFromVertex,
 } from './converters/_operations_converters.js';
 
-/** Required. Outcome of the code execution. */
+/** Outcome of the code execution. */
 export enum Outcome {
   /**
    * Unspecified status. This value should not be used.
@@ -32,7 +32,7 @@ export enum Outcome {
   OUTCOME_DEADLINE_EXCEEDED = 'OUTCOME_DEADLINE_EXCEEDED',
 }
 
-/** Required. Programming language of the `code`. */
+/** Programming language of the `code`. */
 export enum Language {
   /**
    * Unspecified language. This value should not be used.
@@ -64,7 +64,7 @@ export enum FunctionResponseScheduling {
   INTERRUPT = 'INTERRUPT',
 }
 
-/** Optional. The type of the data. */
+/** The type of the data. */
 export enum Type {
   /**
    * Not specified, should not be used.
@@ -100,7 +100,7 @@ export enum Type {
   NULL = 'NULL',
 }
 
-/** Required. Harm category. */
+/** Harm category. */
 export enum HarmCategory {
   /**
    * The harm category is unspecified.
@@ -148,7 +148,7 @@ export enum HarmCategory {
   HARM_CATEGORY_JAILBREAK = 'HARM_CATEGORY_JAILBREAK',
 }
 
-/** Optional. Specify if the threshold is used for probability or severity score. If not specified, the threshold is used for probability score. */
+/** Specify if the threshold is used for probability or severity score. If not specified, the threshold is used for probability score. This enum is not supported in Gemini API. */
 export enum HarmBlockMethod {
   /**
    * The harm block method is unspecified.
@@ -164,7 +164,7 @@ export enum HarmBlockMethod {
   PROBABILITY = 'PROBABILITY',
 }
 
-/** Required. The harm block threshold. */
+/** The harm block threshold. */
 export enum HarmBlockThreshold {
   /**
    * Unspecified harm block threshold.
@@ -204,7 +204,7 @@ export enum Mode {
   MODE_DYNAMIC = 'MODE_DYNAMIC',
 }
 
-/** Type of auth scheme. */
+/** Type of auth scheme. This enum is not supported in Gemini API. */
 export enum AuthType {
   AUTH_TYPE_UNSPECIFIED = 'AUTH_TYPE_UNSPECIFIED',
   /**
@@ -233,7 +233,7 @@ export enum AuthType {
   OIDC_AUTH = 'OIDC_AUTH',
 }
 
-/** The API spec that the external API implements. */
+/** The API spec that the external API implements. This enum is not supported in Gemini API. */
 export enum ApiSpec {
   /**
    * Unspecified API spec. This value should not be used.
@@ -363,7 +363,7 @@ export enum HarmProbability {
   HIGH = 'HIGH',
 }
 
-/** Output only. Harm severity levels in the content. */
+/** Output only. Harm severity levels in the content. This enum is not supported in Gemini API. */
 export enum HarmSeverity {
   /**
    * Harm severity unspecified.
@@ -423,7 +423,7 @@ export enum BlockedReason {
   JAILBREAK = 'JAILBREAK',
 }
 
-/** Output only. Traffic type. This shows whether a request consumes Pay-As-You-Go or Provisioned Throughput quota. */
+/** Output only. Traffic type. This shows whether a request consumes Pay-As-You-Go or Provisioned Throughput quota. This enum is not supported in Gemini API. */
 export enum TrafficType {
   /**
    * Unspecified request traffic type.
@@ -531,7 +531,7 @@ export enum JobState {
   JOB_STATE_PARTIALLY_SUCCEEDED = 'JOB_STATE_PARTIALLY_SUCCEEDED',
 }
 
-/** Tuning mode. */
+/** Tuning mode. This enum is not supported in Gemini API. */
 export enum TuningMode {
   /**
    * Tuning mode is unspecified.
@@ -547,7 +547,7 @@ export enum TuningMode {
   TUNING_MODE_PEFT_ADAPTER = 'TUNING_MODE_PEFT_ADAPTER',
 }
 
-/** Optional. Adapter size for tuning. */
+/** Adapter size for tuning. This enum is not supported in Gemini API. */
 export enum AdapterSize {
   /**
    * Adapter size is unspecified.
@@ -579,7 +579,7 @@ export enum AdapterSize {
   ADAPTER_SIZE_THIRTY_TWO = 'ADAPTER_SIZE_THIRTY_TWO',
 }
 
-/** Optional. The tuning task. Either I2V or T2V. */
+/** The tuning task. Either I2V or T2V. This enum is not supported in Gemini API. */
 export enum TuningTask {
   /**
    * Default value. This value is unused.
@@ -2396,13 +2396,13 @@ export declare interface SafetyRating {
   blocked?: boolean;
   /** Output only. Harm category. */
   category?: HarmCategory;
-  /** Output only. The overwritten threshold for the safety category of Gemini 2.0 image out. If minors are detected in the output image, the threshold of each safety category will be overwritten if user sets a lower threshold. */
+  /** Output only. The overwritten threshold for the safety category of Gemini 2.0 image out. If minors are detected in the output image, the threshold of each safety category will be overwritten if user sets a lower threshold. This field is not supported in Gemini API. */
   overwrittenThreshold?: HarmBlockThreshold;
   /** Output only. Harm probability levels in the content. */
   probability?: HarmProbability;
   /** Output only. Harm probability score. This field is not supported in Gemini API. */
   probabilityScore?: number;
-  /** Output only. Harm severity levels in the content. */
+  /** Output only. Harm severity levels in the content. This field is not supported in Gemini API. */
   severity?: HarmSeverity;
   /** Output only. Harm severity score. This field is not supported in Gemini API. */
   severityScore?: number;
