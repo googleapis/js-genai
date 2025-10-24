@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import * as fs from 'fs/promises';
+import * as path from 'path';
 
 import {ApiClient} from '../_api_client.js';
 import {FileStat, Uploader} from '../_uploader.js';
@@ -151,6 +152,7 @@ export class NodeUploader implements Uploader {
     let response: HttpResponse = new HttpResponse(new Response());
     let uploadCommand = 'upload';
     let fileHandle: fs.FileHandle | undefined;
+    const fileName = path.basename(file);
     try {
       fileHandle = await fs.open(file, 'r');
       if (!fileHandle) {
@@ -193,6 +195,7 @@ export class NodeUploader implements Uploader {
                 'X-Goog-Upload-Command': uploadCommand,
                 'X-Goog-Upload-Offset': String(offset),
                 'Content-Length': String(bytesRead),
+                'X-Goog-Upload-File-Name': fileName,
               },
             },
           });
