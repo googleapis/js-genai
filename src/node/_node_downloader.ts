@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {once} from 'events';
 import {createWriteStream, writeFile} from 'fs';
 import {Readable} from 'node:stream';
 import type {ReadableStream} from 'node:stream/web';
@@ -11,26 +12,35 @@ import type {ReadableStream} from 'node:stream/web';
 import {ApiClient} from '../_api_client.js';
 import {Downloader} from '../_downloader.js';
 import {isGeneratedVideo, isVideo, tFileName} from '../_transformers.js';
-import {
-  DownloadFileParameters,
-  GeneratedVideo,
-  HttpResponse,
-  Video,
-} from '../types.js';
+import {DownloadFileParameters, GeneratedVideo, HttpResponse, Video,} from '../types.js';
 
 export class NodeDownloader implements Downloader {
   async download(
     params: DownloadFileParameters,
     apiClient: ApiClient,
   ): Promise<void> {
+    console.log('Downloading file using dev build');
     if (params.downloadPath) {
       const response = await downloadFile(params, apiClient);
       if (response instanceof HttpResponse) {
+        console.log('http response received');
         const writer = createWriteStream(params.downloadPath);
-        Readable.fromWeb(
-          response.responseInternal.body as ReadableStream<Uint8Array>,
-        ).pipe(writer);
+        const pipe = Readable
+                         .fromWeb(
+                             response.responseInternal.body as
+                                 ReadableStream<Uint8Array>,
+                             )
+                         .pipe(writer);
+        try {
+          await once(pipe, 'finish');
+          console.log('finished writing file');
+        } catch (error) {
+          throw new Error(
+              `Failed to write file to ${params.downloadPath}: ${error}`,
+          );
+        }
       } else {
+        console.log('non http response received');
         writeFile(
           params.downloadPath,
           response as string,

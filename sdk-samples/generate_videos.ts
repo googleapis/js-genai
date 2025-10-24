@@ -16,8 +16,9 @@ async function delay(ms: number): Promise<void> {
 
 async function generateVideosFromMLDev() {
   const ai = new GoogleGenAI({vertexai: false, apiKey: GEMINI_API_KEY});
+
   let operation = await ai.models.generateVideos({
-    model: 'veo-2.0-generate-001',
+    model: 'veo-3.1-generate-preview',
     prompt: 'Man with a dog',
     config: {
       numberOfVideos: 1,
@@ -30,18 +31,32 @@ async function generateVideosFromMLDev() {
     operation = await ai.operations.get({operation: operation});
   }
 
-  const videos = operation.response?.generatedVideos;
-  if (videos === undefined || videos.length === 0) {
-    throw new Error('No videos generated');
+  const video = operation?.response?.generatedVideos?.[0]?.video;
+
+  console.log('Video object:', video)
+
+  console.log('Video URI:', video?.uri)
+
+  console.log('Has videoBytes:', !!video?.videoBytes)
+
+
+  if (video && video.uri) {
+    await ai.files.download({
+      file: video.uri,
+      downloadPath: `video.mp4`,
+    });
+  }
+  else {
+    console.log('No video URI found.');
   }
 
-  videos.forEach((video, i) => {
-    ai.files.download({
-      file: video,
-      downloadPath: `video${i}.mp4`,
-    });
-    console.log('Downloaded video', `video${i}.mp4`);
-  });
+  // videos.forEach((video, i) => {
+  //   ai.files.download({
+  //     file: video?.video?.uri,
+  //     downloadPath: `video${i}.mp4`,
+  //   });
+  //   console.log('Downloaded video', `video${i}.mp4`);
+  // });
 }
 
 async function generateVideosFromVertexAI() {
