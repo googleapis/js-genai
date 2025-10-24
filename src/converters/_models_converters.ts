@@ -3173,15 +3173,15 @@ export function googleSearchToMldev(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
+  if (common.getValueByPath(fromObject, ['excludeDomains']) !== undefined) {
+    throw new Error('excludeDomains parameter is not supported in Gemini API.');
+  }
+
   const fromTimeRangeFilter = common.getValueByPath(fromObject, [
     'timeRangeFilter',
   ]);
   if (fromTimeRangeFilter != null) {
     common.setValueByPath(toObject, ['timeRangeFilter'], fromTimeRangeFilter);
-  }
-
-  if (common.getValueByPath(fromObject, ['excludeDomains']) !== undefined) {
-    throw new Error('excludeDomains parameter is not supported in Gemini API.');
   }
 
   return toObject;
@@ -4247,15 +4247,6 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
     throw new Error('retrieval parameter is not supported in Gemini API.');
   }
 
-  const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
-  if (fromGoogleSearch != null) {
-    common.setValueByPath(
-      toObject,
-      ['googleSearch'],
-      googleSearchToMldev(fromGoogleSearch),
-    );
-  }
-
   const fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
     'googleSearchRetrieval',
   ]);
@@ -4264,14 +4255,6 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
       toObject,
       ['googleSearchRetrieval'],
       fromGoogleSearchRetrieval,
-    );
-  }
-
-  if (
-    common.getValueByPath(fromObject, ['enterpriseWebSearch']) !== undefined
-  ) {
-    throw new Error(
-      'enterpriseWebSearch parameter is not supported in Gemini API.',
     );
   }
 
@@ -4284,11 +4267,6 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
     );
   }
 
-  const fromUrlContext = common.getValueByPath(fromObject, ['urlContext']);
-  if (fromUrlContext != null) {
-    common.setValueByPath(toObject, ['urlContext'], fromUrlContext);
-  }
-
   const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
   if (fromComputerUse != null) {
     common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
@@ -4299,6 +4277,28 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
   ]);
   if (fromCodeExecution != null) {
     common.setValueByPath(toObject, ['codeExecution'], fromCodeExecution);
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['enterpriseWebSearch']) !== undefined
+  ) {
+    throw new Error(
+      'enterpriseWebSearch parameter is not supported in Gemini API.',
+    );
+  }
+
+  const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
+  if (fromGoogleSearch != null) {
+    common.setValueByPath(
+      toObject,
+      ['googleSearch'],
+      googleSearchToMldev(fromGoogleSearch),
+    );
+  }
+
+  const fromUrlContext = common.getValueByPath(fromObject, ['urlContext']);
+  if (fromUrlContext != null) {
+    common.setValueByPath(toObject, ['urlContext'], fromUrlContext);
   }
 
   return toObject;
@@ -4325,11 +4325,6 @@ export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
     common.setValueByPath(toObject, ['retrieval'], fromRetrieval);
   }
 
-  const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
-  if (fromGoogleSearch != null) {
-    common.setValueByPath(toObject, ['googleSearch'], fromGoogleSearch);
-  }
-
   const fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
     'googleSearchRetrieval',
   ]);
@@ -4339,6 +4334,23 @@ export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
       ['googleSearchRetrieval'],
       fromGoogleSearchRetrieval,
     );
+  }
+
+  const fromGoogleMaps = common.getValueByPath(fromObject, ['googleMaps']);
+  if (fromGoogleMaps != null) {
+    common.setValueByPath(toObject, ['googleMaps'], fromGoogleMaps);
+  }
+
+  const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
+  if (fromComputerUse != null) {
+    common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
+  }
+
+  const fromCodeExecution = common.getValueByPath(fromObject, [
+    'codeExecution',
+  ]);
+  if (fromCodeExecution != null) {
+    common.setValueByPath(toObject, ['codeExecution'], fromCodeExecution);
   }
 
   const fromEnterpriseWebSearch = common.getValueByPath(fromObject, [
@@ -4352,26 +4364,14 @@ export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
     );
   }
 
-  const fromGoogleMaps = common.getValueByPath(fromObject, ['googleMaps']);
-  if (fromGoogleMaps != null) {
-    common.setValueByPath(toObject, ['googleMaps'], fromGoogleMaps);
+  const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
+  if (fromGoogleSearch != null) {
+    common.setValueByPath(toObject, ['googleSearch'], fromGoogleSearch);
   }
 
   const fromUrlContext = common.getValueByPath(fromObject, ['urlContext']);
   if (fromUrlContext != null) {
     common.setValueByPath(toObject, ['urlContext'], fromUrlContext);
-  }
-
-  const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
-  if (fromComputerUse != null) {
-    common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
-  }
-
-  const fromCodeExecution = common.getValueByPath(fromObject, [
-    'codeExecution',
-  ]);
-  if (fromCodeExecution != null) {
-    common.setValueByPath(toObject, ['codeExecution'], fromCodeExecution);
   }
 
   return toObject;
