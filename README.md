@@ -13,7 +13,7 @@ TypeScript and JavaScript developers to build applications powered by Gemini. Th
 supports both the [Gemini Developer API](https://ai.google.dev/gemini-api/docs)
 and [Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/overview).
 
-The Google Gen AI SDK is designed to work with Gemini 2.0 features.
+The Google Gen AI SDK is designed to work with Gemini 2.0+ features.
 
 > [!CAUTION]
 > **API Key Security:** Avoid exposing API keys in client-side code.
@@ -58,7 +58,7 @@ const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
 
 async function main() {
   const response = await ai.models.generateContent({
-    model: 'gemini-2.0-flash-001',
+    model: 'gemini-2.5-flash',
     contents: 'Why is the sky blue?',
   });
   console.log(response.text);
@@ -205,7 +205,7 @@ const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
 
 async function main() {
   const response = await ai.models.generateContentStream({
-    model: 'gemini-2.0-flash-001',
+    model: 'gemini-2.5-flash',
     contents: 'Write a 100-word poem.',
   });
   for await (const chunk of response) {
@@ -250,7 +250,7 @@ async function main() {
 
   const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
   const response = await ai.models.generateContent({
-    model: 'gemini-2.0-flash-001',
+    model: 'gemini-2.5-flash',
     contents: 'Dim the lights so the room feels cozy and warm.',
     config: {
       toolConfig: {
