@@ -2344,9 +2344,13 @@ export enum PagedItem {
     // (undocumented)
     PAGED_ITEM_CACHED_CONTENTS = "cachedContents",
     // (undocumented)
+    PAGED_ITEM_DOCUMENTS = "documents",
+    // (undocumented)
     PAGED_ITEM_FILES = "files",
     // (undocumented)
     PAGED_ITEM_MODELS = "models",
+    // (undocumented)
+    PAGED_ITEM_RAG_STORES = "ragStores",
     // (undocumented)
     PAGED_ITEM_TUNING_JOBS = "tuningJobs"
 }
