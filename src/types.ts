@@ -1827,49 +1827,6 @@ export declare interface ToolConfig {
   retrievalConfig?: RetrievalConfig;
 }
 
-/** The configuration for the prebuilt speaker to use. */
-export declare interface PrebuiltVoiceConfig {
-  /** The name of the prebuilt voice to use. */
-  voiceName?: string;
-}
-
-/** The configuration for the voice to use. */
-export declare interface VoiceConfig {
-  /** The configuration for the speaker to use.
-   */
-  prebuiltVoiceConfig?: PrebuiltVoiceConfig;
-}
-
-/** The configuration for the speaker to use. */
-export declare interface SpeakerVoiceConfig {
-  /** The name of the speaker to use. Should be the same as in the
-          prompt. */
-  speaker?: string;
-  /** The configuration for the voice to use. */
-  voiceConfig?: VoiceConfig;
-}
-
-/** The configuration for the multi-speaker setup. */
-export declare interface MultiSpeakerVoiceConfig {
-  /** The configuration for the speaker to use. */
-  speakerVoiceConfigs?: SpeakerVoiceConfig[];
-}
-
-/** The speech generation configuration. */
-export declare interface SpeechConfig {
-  /** The configuration for the speaker to use.
-   */
-  voiceConfig?: VoiceConfig;
-  /** The configuration for the multi-speaker setup.
-          It is mutually exclusive with the voice_config field.
-           */
-  multiSpeakerVoiceConfig?: MultiSpeakerVoiceConfig;
-  /** Language code (ISO 639. e.g. en-US) for the speech synthesization.
-      Only available for Live API.
-       */
-  languageCode?: string;
-}
-
 /** The configuration for automatic function calling. */
 export declare interface AutomaticFunctionCallingConfig {
   /** Whether to disable automatic function calling.
@@ -3402,6 +3359,42 @@ export declare interface DeleteModelParameters {
 export class DeleteModelResponse {
   /** Used to retain the full HTTP response. */
   sdkHttpResponse?: HttpResponse;
+}
+
+/** The configuration for the prebuilt speaker to use. */
+export declare interface PrebuiltVoiceConfig {
+  /** The name of the preset voice to use. */
+  voiceName?: string;
+}
+
+/** The configuration for the voice to use. */
+export declare interface VoiceConfig {
+  /** The configuration for the prebuilt voice to use. */
+  prebuiltVoiceConfig?: PrebuiltVoiceConfig;
+}
+
+/** The configuration for a single speaker in a multi speaker setup. This data type is not supported in Vertex AI. */
+export declare interface SpeakerVoiceConfig {
+  /** Required. The name of the speaker to use. Should be the same as in the prompt. */
+  speaker?: string;
+  /** Required. The configuration for the voice to use. */
+  voiceConfig?: VoiceConfig;
+}
+
+/** The configuration for the multi-speaker setup. This data type is not supported in Vertex AI. */
+export declare interface MultiSpeakerVoiceConfig {
+  /** Required. All the enabled speaker voices. */
+  speakerVoiceConfigs?: SpeakerVoiceConfig[];
+}
+
+/** The speech generation config. */
+export declare interface SpeechConfig {
+  /** Optional. Language code (ISO 639. e.g. en-US) for the speech synthesization. */
+  languageCode?: string;
+  /** The configuration for the speaker to use. */
+  voiceConfig?: VoiceConfig;
+  /** Optional. The configuration for the multi-speaker setup. It is mutually exclusive with the voice_config field. This field is not supported in Vertex AI. */
+  multiSpeakerVoiceConfig?: MultiSpeakerVoiceConfig;
 }
 
 /** Generation config. */
