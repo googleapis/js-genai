@@ -675,8 +675,12 @@ export class ApiClient {
       );
     }
     fileToUpload.mimeType = mimeType;
-
-    const uploadUrl = await this.fetchUploadUrl(fileToUpload, config);
+    let fileName: string = '';
+    if (typeof file === 'string') {
+      fileName = file.replace(/[/\\]+$/, '');
+      fileName = fileName.split(/[/\\]/).pop() ?? '';
+    }
+    const uploadUrl = await this.fetchUploadUrl(fileToUpload, fileName, config);
     return uploader.upload(file, uploadUrl, this);
   }
 
@@ -693,6 +697,7 @@ export class ApiClient {
 
   private async fetchUploadUrl(
     file: File,
+    fileName: string,
     config?: UploadFileConfig,
   ): Promise<string> {
     let httpOptions: HttpOptions = {};
@@ -707,6 +712,7 @@ export class ApiClient {
           'X-Goog-Upload-Command': 'start',
           'X-Goog-Upload-Header-Content-Length': `${file.sizeBytes}`,
           'X-Goog-Upload-Header-Content-Type': `${file.mimeType}`,
+          ...(fileName ? {'X-Goog-Upload-File-Name': fileName} : {}),
         },
       };
     }
