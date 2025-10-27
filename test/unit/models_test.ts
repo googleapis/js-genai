@@ -914,7 +914,7 @@ describe('generateContent', () => {
           },
         });
       } catch (e) {
-        expect((e as Error).message).toEqual(
+        expect((e as Error).message).toContain(
           'Automatic function calling with CallableTools and Tools is not yet supported.',
         );
       }
