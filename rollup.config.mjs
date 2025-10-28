@@ -23,6 +23,7 @@ const externalDeps = [
   'fs/promises',
   'fs',
   'node:stream',
+  'node:stream/promises',
   'zod',
   'zod-to-json-schema',
   '@modelcontextprotocol/sdk',
