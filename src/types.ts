@@ -5060,6 +5060,10 @@ export declare interface UpscaleImageConfig {
   abortSignal?: AbortSignal;
   /** Cloud Storage URI used to store the generated images. */
   outputGcsUri?: string;
+  /** Filter level for safety filtering. */
+  safetyFilterLevel?: SafetyFilterLevel;
+  /** Allows generation of people by the model. */
+  personGeneration?: PersonGeneration;
   /** Whether to include a reason for filtered-out images in the
       response. */
   includeRaiReason?: boolean;
