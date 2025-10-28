@@ -453,17 +453,6 @@ export function candidateFromMldev(
     common.setValueByPath(toObject, ['finishReason'], fromFinishReason);
   }
 
-  const fromUrlContextMetadata = common.getValueByPath(fromObject, [
-    'urlContextMetadata',
-  ]);
-  if (fromUrlContextMetadata != null) {
-    common.setValueByPath(
-      toObject,
-      ['urlContextMetadata'],
-      fromUrlContextMetadata,
-    );
-  }
-
   const fromAvgLogprobs = common.getValueByPath(fromObject, ['avgLogprobs']);
   if (fromAvgLogprobs != null) {
     common.setValueByPath(toObject, ['avgLogprobs'], fromAvgLogprobs);
@@ -503,6 +492,17 @@ export function candidateFromMldev(
       });
     }
     common.setValueByPath(toObject, ['safetyRatings'], transformedList);
+  }
+
+  const fromUrlContextMetadata = common.getValueByPath(fromObject, [
+    'urlContextMetadata',
+  ]);
+  if (fromUrlContextMetadata != null) {
+    common.setValueByPath(
+      toObject,
+      ['urlContextMetadata'],
+      fromUrlContextMetadata,
+    );
   }
 
   return toObject;

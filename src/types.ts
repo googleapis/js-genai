@@ -249,30 +249,6 @@ export enum ApiSpec {
   ELASTIC_SEARCH = 'ELASTIC_SEARCH',
 }
 
-/** Status of the url retrieval. */
-export enum UrlRetrievalStatus {
-  /**
-   * Default value. This value is unused
-   */
-  URL_RETRIEVAL_STATUS_UNSPECIFIED = 'URL_RETRIEVAL_STATUS_UNSPECIFIED',
-  /**
-   * Url retrieval is successful.
-   */
-  URL_RETRIEVAL_STATUS_SUCCESS = 'URL_RETRIEVAL_STATUS_SUCCESS',
-  /**
-   * Url retrieval is failed due to error.
-   */
-  URL_RETRIEVAL_STATUS_ERROR = 'URL_RETRIEVAL_STATUS_ERROR',
-  /**
-   * Url retrieval is failed because the content is behind paywall.
-   */
-  URL_RETRIEVAL_STATUS_PAYWALL = 'URL_RETRIEVAL_STATUS_PAYWALL',
-  /**
-   * Url retrieval is failed because the content is unsafe.
-   */
-  URL_RETRIEVAL_STATUS_UNSAFE = 'URL_RETRIEVAL_STATUS_UNSAFE',
-}
-
 /** Output only. The reason why the model stopped generating tokens.
 
 If empty, the model has not stopped generating the tokens. */
@@ -385,6 +361,30 @@ export enum HarmSeverity {
    * High level of harm severity.
    */
   HARM_SEVERITY_HIGH = 'HARM_SEVERITY_HIGH',
+}
+
+/** Status of the url retrieval. */
+export enum UrlRetrievalStatus {
+  /**
+   * Default value. This value is unused.
+   */
+  URL_RETRIEVAL_STATUS_UNSPECIFIED = 'URL_RETRIEVAL_STATUS_UNSPECIFIED',
+  /**
+   * Url retrieval is successful.
+   */
+  URL_RETRIEVAL_STATUS_SUCCESS = 'URL_RETRIEVAL_STATUS_SUCCESS',
+  /**
+   * Url retrieval is failed due to error.
+   */
+  URL_RETRIEVAL_STATUS_ERROR = 'URL_RETRIEVAL_STATUS_ERROR',
+  /**
+   * Url retrieval is failed because the content is behind paywall. This enum value is not supported in Vertex AI.
+   */
+  URL_RETRIEVAL_STATUS_PAYWALL = 'URL_RETRIEVAL_STATUS_PAYWALL',
+  /**
+   * Url retrieval is failed because the content is unsafe. This enum value is not supported in Vertex AI.
+   */
+  URL_RETRIEVAL_STATUS_UNSAFE = 'URL_RETRIEVAL_STATUS_UNSAFE',
 }
 
 /** Output only. The reason why the prompt was blocked. */
@@ -2135,20 +2135,6 @@ export declare interface CitationMetadata {
   citations?: Citation[];
 }
 
-/** Context for a single url retrieval. */
-export declare interface UrlMetadata {
-  /** The URL retrieved by the tool. */
-  retrievedUrl?: string;
-  /** Status of the url retrieval. */
-  urlRetrievalStatus?: UrlRetrievalStatus;
-}
-
-/** Metadata related to url context retrieval tool. */
-export declare interface UrlContextMetadata {
-  /** List of url context. */
-  urlMetadata?: UrlMetadata[];
-}
-
 /** Author attribution for a photo or review. This data type is not supported in Gemini API. */
 export declare interface GroundingChunkMapsPlaceAnswerSourcesAuthorAttribution {
   /** Name of the author of the Photo or Review. */
@@ -2356,6 +2342,20 @@ export declare interface SafetyRating {
   severityScore?: number;
 }
 
+/** Context of the a single url retrieval. */
+export declare interface UrlMetadata {
+  /** Retrieved url by the tool. */
+  retrievedUrl?: string;
+  /** Status of the url retrieval. */
+  urlRetrievalStatus?: UrlRetrievalStatus;
+}
+
+/** Metadata related to url context retrieval tool. */
+export declare interface UrlContextMetadata {
+  /** Output only. List of url context. */
+  urlMetadata?: UrlMetadata[];
+}
+
 /** A response candidate generated from the model. */
 export declare interface Candidate {
   /** Contains the multi-part content of the response.
@@ -2374,8 +2374,6 @@ export declare interface Candidate {
       If empty, the model has not stopped generating the tokens.
        */
   finishReason?: FinishReason;
-  /** Metadata related to url context retrieval tool. */
-  urlContextMetadata?: UrlContextMetadata;
   /** Output only. Average log probability score of the candidate. */
   avgLogprobs?: number;
   /** Output only. Metadata specifies sources used to ground generated content. */
@@ -2386,6 +2384,8 @@ export declare interface Candidate {
   logprobsResult?: LogprobsResult;
   /** Output only. List of ratings for the safety of a response candidate. There is at most one rating per category. */
   safetyRatings?: SafetyRating[];
+  /** Output only. Metadata related to url context retrieval tool. */
+  urlContextMetadata?: UrlContextMetadata;
 }
 
 /** Content filter results for a prompt sent in the request. Note: This is sent only in the first stream chunk and only if no candidates were generated due to content violations. */
