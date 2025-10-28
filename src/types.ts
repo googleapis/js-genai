@@ -479,6 +479,54 @@ export enum MediaResolution {
   MEDIA_RESOLUTION_HIGH = 'MEDIA_RESOLUTION_HIGH',
 }
 
+/** Tuning mode. This enum is not supported in Gemini API. */
+export enum TuningMode {
+  /**
+   * Tuning mode is unspecified.
+   */
+  TUNING_MODE_UNSPECIFIED = 'TUNING_MODE_UNSPECIFIED',
+  /**
+   * Full fine-tuning mode.
+   */
+  TUNING_MODE_FULL = 'TUNING_MODE_FULL',
+  /**
+   * PEFT adapter tuning mode.
+   */
+  TUNING_MODE_PEFT_ADAPTER = 'TUNING_MODE_PEFT_ADAPTER',
+}
+
+/** Adapter size for tuning. This enum is not supported in Gemini API. */
+export enum AdapterSize {
+  /**
+   * Adapter size is unspecified.
+   */
+  ADAPTER_SIZE_UNSPECIFIED = 'ADAPTER_SIZE_UNSPECIFIED',
+  /**
+   * Adapter size 1.
+   */
+  ADAPTER_SIZE_ONE = 'ADAPTER_SIZE_ONE',
+  /**
+   * Adapter size 2.
+   */
+  ADAPTER_SIZE_TWO = 'ADAPTER_SIZE_TWO',
+  /**
+   * Adapter size 4.
+   */
+  ADAPTER_SIZE_FOUR = 'ADAPTER_SIZE_FOUR',
+  /**
+   * Adapter size 8.
+   */
+  ADAPTER_SIZE_EIGHT = 'ADAPTER_SIZE_EIGHT',
+  /**
+   * Adapter size 16.
+   */
+  ADAPTER_SIZE_SIXTEEN = 'ADAPTER_SIZE_SIXTEEN',
+  /**
+   * Adapter size 32.
+   */
+  ADAPTER_SIZE_THIRTY_TWO = 'ADAPTER_SIZE_THIRTY_TWO',
+}
+
 /** Job state. */
 export enum JobState {
   /**
@@ -529,54 +577,6 @@ export enum JobState {
    * The job is partially succeeded, some results may be missing due to errors.
    */
   JOB_STATE_PARTIALLY_SUCCEEDED = 'JOB_STATE_PARTIALLY_SUCCEEDED',
-}
-
-/** Tuning mode. This enum is not supported in Gemini API. */
-export enum TuningMode {
-  /**
-   * Tuning mode is unspecified.
-   */
-  TUNING_MODE_UNSPECIFIED = 'TUNING_MODE_UNSPECIFIED',
-  /**
-   * Full fine-tuning mode.
-   */
-  TUNING_MODE_FULL = 'TUNING_MODE_FULL',
-  /**
-   * PEFT adapter tuning mode.
-   */
-  TUNING_MODE_PEFT_ADAPTER = 'TUNING_MODE_PEFT_ADAPTER',
-}
-
-/** Adapter size for tuning. This enum is not supported in Gemini API. */
-export enum AdapterSize {
-  /**
-   * Adapter size is unspecified.
-   */
-  ADAPTER_SIZE_UNSPECIFIED = 'ADAPTER_SIZE_UNSPECIFIED',
-  /**
-   * Adapter size 1.
-   */
-  ADAPTER_SIZE_ONE = 'ADAPTER_SIZE_ONE',
-  /**
-   * Adapter size 2.
-   */
-  ADAPTER_SIZE_TWO = 'ADAPTER_SIZE_TWO',
-  /**
-   * Adapter size 4.
-   */
-  ADAPTER_SIZE_FOUR = 'ADAPTER_SIZE_FOUR',
-  /**
-   * Adapter size 8.
-   */
-  ADAPTER_SIZE_EIGHT = 'ADAPTER_SIZE_EIGHT',
-  /**
-   * Adapter size 16.
-   */
-  ADAPTER_SIZE_SIXTEEN = 'ADAPTER_SIZE_SIXTEEN',
-  /**
-   * Adapter size 32.
-   */
-  ADAPTER_SIZE_THIRTY_TWO = 'ADAPTER_SIZE_THIRTY_TWO',
 }
 
 /** The tuning task. Either I2V or T2V. This enum is not supported in Gemini API. */
@@ -3790,6 +3790,34 @@ export declare interface TunedModel {
   checkpoints?: TunedModelCheckpoint[];
 }
 
+/** Hyperparameters for SFT. This data type is not supported in Gemini API. */
+export declare interface SupervisedHyperParameters {
+  /** Optional. Adapter size for tuning. */
+  adapterSize?: AdapterSize;
+  /** Optional. Batch size for tuning. This feature is only available for open source models. */
+  batchSize?: string;
+  /** Optional. Number of complete passes the model makes over the entire training dataset during training. */
+  epochCount?: string;
+  /** Optional. Learning rate for tuning. Mutually exclusive with `learning_rate_multiplier`. This feature is only available for open source models. */
+  learningRate?: number;
+  /** Optional. Multiplier for adjusting the default learning rate. Mutually exclusive with `learning_rate`. This feature is only available for 1P models. */
+  learningRateMultiplier?: number;
+}
+
+/** Supervised tuning spec for tuning. */
+export declare interface SupervisedTuningSpec {
+  /** Optional. If set to true, disable intermediate checkpoints for SFT and only the last checkpoint will be exported. Otherwise, enable intermediate checkpoints for SFT. Default is false. */
+  exportLastCheckpointOnly?: boolean;
+  /** Optional. Hyperparameters for SFT. */
+  hyperParameters?: SupervisedHyperParameters;
+  /** Required. Training dataset used for tuning. The dataset can be specified as either a Cloud Storage path to a JSONL file or as the resource name of a Vertex Multimodal Dataset. */
+  trainingDatasetUri?: string;
+  /** Tuning mode. */
+  tuningMode?: TuningMode;
+  /** Optional. Validation dataset used for tuning. The dataset can be specified as either a Cloud Storage path to a JSONL file or as the resource name of a Vertex Multimodal Dataset. */
+  validationDatasetUri?: string;
+}
+
 /** The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors). This data type is not supported in Gemini API. */
 export declare interface GoogleRpcStatus {
   /** The status code, which should be an enum value of google.rpc.Code. */
@@ -3808,34 +3836,6 @@ export declare interface PreTunedModel {
   checkpointId?: string;
   /** The resource name of the Model. E.g., a model resource name with a specified version id or alias: `projects/{project}/locations/{location}/models/{model}@{version_id}` `projects/{project}/locations/{location}/models/{model}@{alias}` Or, omit the version id to use the default version: `projects/{project}/locations/{location}/models/{model}` */
   tunedModelName?: string;
-}
-
-/** Hyperparameters for SFT. This data type is not supported in Gemini API. */
-export declare interface SupervisedHyperParameters {
-  /** Optional. Adapter size for tuning. */
-  adapterSize?: AdapterSize;
-  /** Optional. Batch size for tuning. This feature is only available for open source models. */
-  batchSize?: string;
-  /** Optional. Number of complete passes the model makes over the entire training dataset during training. */
-  epochCount?: string;
-  /** Optional. Learning rate for tuning. Mutually exclusive with `learning_rate_multiplier`. This feature is only available for open source models. */
-  learningRate?: number;
-  /** Optional. Multiplier for adjusting the default learning rate. Mutually exclusive with `learning_rate`. This feature is only available for 1P models. */
-  learningRateMultiplier?: number;
-}
-
-/** Tuning Spec for Supervised Tuning for first party models. This data type is not supported in Gemini API. */
-export declare interface SupervisedTuningSpec {
-  /** Optional. If set to true, disable intermediate checkpoints for SFT and only the last checkpoint will be exported. Otherwise, enable intermediate checkpoints for SFT. Default is false. */
-  exportLastCheckpointOnly?: boolean;
-  /** Optional. Hyperparameters for SFT. */
-  hyperParameters?: SupervisedHyperParameters;
-  /** Required. Training dataset used for tuning. The dataset can be specified as either a Cloud Storage path to a JSONL file or as the resource name of a Vertex Multimodal Dataset. */
-  trainingDatasetUri?: string;
-  /** Tuning mode. */
-  tuningMode?: TuningMode;
-  /** Optional. Validation dataset used for tuning. The dataset can be specified as either a Cloud Storage path to a JSONL file or as the resource name of a Vertex Multimodal Dataset. */
-  validationDatasetUri?: string;
 }
 
 /** Dataset bucket used to create a histogram for the distribution given a population of values. This data type is not supported in Gemini API. */

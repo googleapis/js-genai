@@ -9,13 +9,7 @@ import * as common from './_common.js';
 import {Downloader} from './_downloader.js';
 import {Uploader} from './_uploader.js';
 import {ApiError} from './errors.js';
-import {
-  DownloadFileParameters,
-  File,
-  HttpOptions,
-  HttpResponse,
-  UploadFileConfig,
-} from './types.js';
+import * as types from './types.js';
 
 const CONTENT_TYPE_HEADER = 'Content-Type';
 const SERVER_TIMEOUT_HEADER = 'X-Server-Timeout';
@@ -76,7 +70,7 @@ export interface ApiClientInitOptions {
   /**
    * Optional. A set of customizable configuration for HTTP requests.
    */
-  httpOptions?: HttpOptions;
+  httpOptions?: types.HttpOptions;
   /**
    * Optional. An extra string to append at the end of the User-Agent header.
    *
@@ -127,7 +121,7 @@ export interface HttpRequest {
   /**
    * Optional set of customizable configuration for HTTP requests.
    */
-  httpOptions?: HttpOptions;
+  httpOptions?: types.HttpOptions;
   /**
    * Optional abort signal which can be used to cancel the request.
    */
@@ -150,7 +144,7 @@ export class ApiClient {
       vertexai: opts.vertexai,
     };
 
-    const initHttpOptions: HttpOptions = {};
+    const initHttpOptions: types.HttpOptions = {};
 
     if (this.clientOptions.vertexai) {
       initHttpOptions.apiVersion =
@@ -260,7 +254,7 @@ export class ApiClient {
     }
   }
 
-  private getRequestUrlInternal(httpOptions?: HttpOptions) {
+  private getRequestUrlInternal(httpOptions?: types.HttpOptions) {
     if (
       !httpOptions ||
       httpOptions.baseUrl === undefined ||
@@ -305,7 +299,7 @@ export class ApiClient {
 
   private constructUrl(
     path: string,
-    httpOptions: HttpOptions,
+    httpOptions: types.HttpOptions,
     prependProjectLocation: boolean,
   ): URL {
     const urlElement: Array<string> = [this.getRequestUrlInternal(httpOptions)];
@@ -344,7 +338,7 @@ export class ApiClient {
     return true;
   }
 
-  async request(request: HttpRequest): Promise<HttpResponse> {
+  async request(request: HttpRequest): Promise<types.HttpResponse> {
     let patchedHttpOptions = this.clientOptions.httpOptions!;
     if (request.httpOptions) {
       patchedHttpOptions = this.patchHttpOptions(
@@ -384,12 +378,12 @@ export class ApiClient {
   }
 
   private patchHttpOptions(
-    baseHttpOptions: HttpOptions,
-    requestHttpOptions: HttpOptions,
-  ): HttpOptions {
+    baseHttpOptions: types.HttpOptions,
+    requestHttpOptions: types.HttpOptions,
+  ): types.HttpOptions {
     const patchedHttpOptions = JSON.parse(
       JSON.stringify(baseHttpOptions),
-    ) as HttpOptions;
+    ) as types.HttpOptions;
 
     for (const [key, value] of Object.entries(requestHttpOptions)) {
       // Records compile to objects.
@@ -410,7 +404,7 @@ export class ApiClient {
 
   async requestStream(
     request: HttpRequest,
-  ): Promise<AsyncGenerator<HttpResponse>> {
+  ): Promise<AsyncGenerator<types.HttpResponse>> {
     let patchedHttpOptions = this.clientOptions.httpOptions!;
     if (request.httpOptions) {
       patchedHttpOptions = this.patchHttpOptions(
@@ -441,7 +435,7 @@ export class ApiClient {
 
   private async includeExtraHttpOptionsToRequestInit(
     requestInit: RequestInit,
-    httpOptions: HttpOptions,
+    httpOptions: types.HttpOptions,
     url: string,
     abortSignal?: AbortSignal,
   ): Promise<RequestInit> {
@@ -484,14 +478,14 @@ export class ApiClient {
     url: URL,
     requestInit: RequestInit,
     httpMethod: 'GET' | 'POST' | 'PATCH' | 'DELETE',
-  ): Promise<HttpResponse> {
+  ): Promise<types.HttpResponse> {
     return this.apiCall(url.toString(), {
       ...requestInit,
       method: httpMethod,
     })
       .then(async (response) => {
         await throwErrorIfNotOK(response);
-        return new HttpResponse(response);
+        return new types.HttpResponse(response);
       })
       .catch((e) => {
         if (e instanceof Error) {
@@ -506,7 +500,7 @@ export class ApiClient {
     url: URL,
     requestInit: RequestInit,
     httpMethod: 'GET' | 'POST' | 'PATCH' | 'DELETE',
-  ): Promise<AsyncGenerator<HttpResponse>> {
+  ): Promise<AsyncGenerator<types.HttpResponse>> {
     return this.apiCall(url.toString(), {
       ...requestInit,
       method: httpMethod,
@@ -526,7 +520,7 @@ export class ApiClient {
 
   async *processStreamResponse(
     response: Response,
-  ): AsyncGenerator<HttpResponse> {
+  ): AsyncGenerator<types.HttpResponse> {
     const reader = response?.body?.getReader();
     const decoder = new TextDecoder('utf-8');
     if (!reader) {
@@ -581,7 +575,7 @@ export class ApiClient {
               status: response?.status,
               statusText: response?.statusText,
             });
-            yield new HttpResponse(partialResponse);
+            yield new types.HttpResponse(partialResponse);
             buffer = buffer.slice(match[0].length);
             match = buffer.match(responseLineRE);
           } catch (e) {
@@ -618,7 +612,7 @@ export class ApiClient {
   }
 
   private async getHeadersInternal(
-    httpOptions: HttpOptions | undefined,
+    httpOptions: types.HttpOptions | undefined,
     url: string,
   ): Promise<Headers> {
     const headers = new Headers();
@@ -645,16 +639,16 @@ export class ApiClient {
    *
    * @param file The string path to the file to be uploaded or a Blob object.
    * @param config Optional parameters specified in the `UploadFileConfig`
-   *     interface. @see {@link UploadFileConfig}
+   *     interface. @see {@link types.UploadFileConfig}
    * @return A promise that resolves to a `File` object.
    * @throws An error if called on a Vertex AI client.
    * @throws An error if the `mimeType` is not provided and can not be inferred,
    */
   async uploadFile(
     file: string | Blob,
-    config?: UploadFileConfig,
-  ): Promise<File> {
-    const fileToUpload: File = {};
+    config?: types.UploadFileConfig,
+  ): Promise<types.File> {
+    const fileToUpload: types.File = {};
     if (config != null) {
       fileToUpload.mimeType = config.mimeType;
       fileToUpload.name = config.name;
@@ -688,19 +682,19 @@ export class ApiClient {
    * Downloads a file asynchronously to the specified path.
    *
    * @params params - The parameters for the download request, see {@link
-   * DownloadFileParameters}
+   * types.DownloadFileParameters}
    */
-  async downloadFile(params: DownloadFileParameters): Promise<void> {
+  async downloadFile(params: types.DownloadFileParameters): Promise<void> {
     const downloader = this.clientOptions.downloader;
     await downloader.download(params, this);
   }
 
   private async fetchUploadUrl(
-    file: File,
+    file: types.File,
     fileName: string,
-    config?: UploadFileConfig,
+    config?: types.UploadFileConfig,
   ): Promise<string> {
-    let httpOptions: HttpOptions = {};
+    let httpOptions: types.HttpOptions = {};
     if (config?.httpOptions) {
       httpOptions = config.httpOptions;
     } else {
@@ -717,7 +711,7 @@ export class ApiClient {
       };
     }
 
-    const body: Record<string, File> = {
+    const body: Record<string, types.File> = {
       'file': file,
     };
     const httpResponse = await this.request({
