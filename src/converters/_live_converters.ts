@@ -14,13 +14,13 @@ import type * as types from '../types.js';
 export function blobToMldev(fromObject: types.Blob): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
-    throw new Error('displayName parameter is not supported in Gemini API.');
-  }
-
   const fromData = common.getValueByPath(fromObject, ['data']);
   if (fromData != null) {
     common.setValueByPath(toObject, ['data'], fromData);
+  }
+
+  if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
+    throw new Error('displayName parameter is not supported in Gemini API.');
   }
 
   const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
@@ -328,15 +328,15 @@ export function googleSearchToMldev(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
+  if (common.getValueByPath(fromObject, ['excludeDomains']) !== undefined) {
+    throw new Error('excludeDomains parameter is not supported in Gemini API.');
+  }
+
   const fromTimeRangeFilter = common.getValueByPath(fromObject, [
     'timeRangeFilter',
   ]);
   if (fromTimeRangeFilter != null) {
     common.setValueByPath(toObject, ['timeRangeFilter'], fromTimeRangeFilter);
-  }
-
-  if (common.getValueByPath(fromObject, ['excludeDomains']) !== undefined) {
-    throw new Error('excludeDomains parameter is not supported in Gemini API.');
   }
 
   return toObject;
@@ -1539,43 +1539,6 @@ export function liveServerMessageFromVertex(
 export function partToMldev(fromObject: types.Part): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromVideoMetadata = common.getValueByPath(fromObject, [
-    'videoMetadata',
-  ]);
-  if (fromVideoMetadata != null) {
-    common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
-  }
-
-  const fromThought = common.getValueByPath(fromObject, ['thought']);
-  if (fromThought != null) {
-    common.setValueByPath(toObject, ['thought'], fromThought);
-  }
-
-  const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
-  if (fromInlineData != null) {
-    common.setValueByPath(
-      toObject,
-      ['inlineData'],
-      blobToMldev(fromInlineData),
-    );
-  }
-
-  const fromFileData = common.getValueByPath(fromObject, ['fileData']);
-  if (fromFileData != null) {
-    common.setValueByPath(
-      toObject,
-      ['fileData'],
-      fileDataToMldev(fromFileData),
-    );
-  }
-
-  const fromThoughtSignature = common.getValueByPath(fromObject, [
-    'thoughtSignature',
-  ]);
-  if (fromThoughtSignature != null) {
-    common.setValueByPath(toObject, ['thoughtSignature'], fromThoughtSignature);
-  }
-
   const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
   if (fromFunctionCall != null) {
     common.setValueByPath(toObject, ['functionCall'], fromFunctionCall);
@@ -1599,6 +1562,15 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
     common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
   }
 
+  const fromFileData = common.getValueByPath(fromObject, ['fileData']);
+  if (fromFileData != null) {
+    common.setValueByPath(
+      toObject,
+      ['fileData'],
+      fileDataToMldev(fromFileData),
+    );
+  }
+
   const fromFunctionResponse = common.getValueByPath(fromObject, [
     'functionResponse',
   ]);
@@ -1606,9 +1578,37 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
     common.setValueByPath(toObject, ['functionResponse'], fromFunctionResponse);
   }
 
+  const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
+  if (fromInlineData != null) {
+    common.setValueByPath(
+      toObject,
+      ['inlineData'],
+      blobToMldev(fromInlineData),
+    );
+  }
+
   const fromText = common.getValueByPath(fromObject, ['text']);
   if (fromText != null) {
     common.setValueByPath(toObject, ['text'], fromText);
+  }
+
+  const fromThought = common.getValueByPath(fromObject, ['thought']);
+  if (fromThought != null) {
+    common.setValueByPath(toObject, ['thought'], fromThought);
+  }
+
+  const fromThoughtSignature = common.getValueByPath(fromObject, [
+    'thoughtSignature',
+  ]);
+  if (fromThoughtSignature != null) {
+    common.setValueByPath(toObject, ['thoughtSignature'], fromThoughtSignature);
+  }
+
+  const fromVideoMetadata = common.getValueByPath(fromObject, [
+    'videoMetadata',
+  ]);
+  if (fromVideoMetadata != null) {
+    common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
   }
 
   return toObject;
@@ -1636,6 +1636,11 @@ export function speechConfigToVertex(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
+  const fromLanguageCode = common.getValueByPath(fromObject, ['languageCode']);
+  if (fromLanguageCode != null) {
+    common.setValueByPath(toObject, ['languageCode'], fromLanguageCode);
+  }
+
   const fromVoiceConfig = common.getValueByPath(fromObject, ['voiceConfig']);
   if (fromVoiceConfig != null) {
     common.setValueByPath(toObject, ['voiceConfig'], fromVoiceConfig);
@@ -1647,11 +1652,6 @@ export function speechConfigToVertex(
     throw new Error(
       'multiSpeakerVoiceConfig parameter is not supported in Vertex AI.',
     );
-  }
-
-  const fromLanguageCode = common.getValueByPath(fromObject, ['languageCode']);
-  if (fromLanguageCode != null) {
-    common.setValueByPath(toObject, ['languageCode'], fromLanguageCode);
   }
 
   return toObject;
@@ -1677,15 +1677,6 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
     throw new Error('retrieval parameter is not supported in Gemini API.');
   }
 
-  const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
-  if (fromGoogleSearch != null) {
-    common.setValueByPath(
-      toObject,
-      ['googleSearch'],
-      googleSearchToMldev(fromGoogleSearch),
-    );
-  }
-
   const fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
     'googleSearchRetrieval',
   ]);
@@ -1694,14 +1685,6 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
       toObject,
       ['googleSearchRetrieval'],
       fromGoogleSearchRetrieval,
-    );
-  }
-
-  if (
-    common.getValueByPath(fromObject, ['enterpriseWebSearch']) !== undefined
-  ) {
-    throw new Error(
-      'enterpriseWebSearch parameter is not supported in Gemini API.',
     );
   }
 
@@ -1714,11 +1697,6 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
     );
   }
 
-  const fromUrlContext = common.getValueByPath(fromObject, ['urlContext']);
-  if (fromUrlContext != null) {
-    common.setValueByPath(toObject, ['urlContext'], fromUrlContext);
-  }
-
   const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
   if (fromComputerUse != null) {
     common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
@@ -1729,6 +1707,28 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
   ]);
   if (fromCodeExecution != null) {
     common.setValueByPath(toObject, ['codeExecution'], fromCodeExecution);
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['enterpriseWebSearch']) !== undefined
+  ) {
+    throw new Error(
+      'enterpriseWebSearch parameter is not supported in Gemini API.',
+    );
+  }
+
+  const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
+  if (fromGoogleSearch != null) {
+    common.setValueByPath(
+      toObject,
+      ['googleSearch'],
+      googleSearchToMldev(fromGoogleSearch),
+    );
+  }
+
+  const fromUrlContext = common.getValueByPath(fromObject, ['urlContext']);
+  if (fromUrlContext != null) {
+    common.setValueByPath(toObject, ['urlContext'], fromUrlContext);
   }
 
   return toObject;
@@ -1755,11 +1755,6 @@ export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
     common.setValueByPath(toObject, ['retrieval'], fromRetrieval);
   }
 
-  const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
-  if (fromGoogleSearch != null) {
-    common.setValueByPath(toObject, ['googleSearch'], fromGoogleSearch);
-  }
-
   const fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
     'googleSearchRetrieval',
   ]);
@@ -1769,6 +1764,23 @@ export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
       ['googleSearchRetrieval'],
       fromGoogleSearchRetrieval,
     );
+  }
+
+  const fromGoogleMaps = common.getValueByPath(fromObject, ['googleMaps']);
+  if (fromGoogleMaps != null) {
+    common.setValueByPath(toObject, ['googleMaps'], fromGoogleMaps);
+  }
+
+  const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
+  if (fromComputerUse != null) {
+    common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
+  }
+
+  const fromCodeExecution = common.getValueByPath(fromObject, [
+    'codeExecution',
+  ]);
+  if (fromCodeExecution != null) {
+    common.setValueByPath(toObject, ['codeExecution'], fromCodeExecution);
   }
 
   const fromEnterpriseWebSearch = common.getValueByPath(fromObject, [
@@ -1782,26 +1794,14 @@ export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
     );
   }
 
-  const fromGoogleMaps = common.getValueByPath(fromObject, ['googleMaps']);
-  if (fromGoogleMaps != null) {
-    common.setValueByPath(toObject, ['googleMaps'], fromGoogleMaps);
+  const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
+  if (fromGoogleSearch != null) {
+    common.setValueByPath(toObject, ['googleSearch'], fromGoogleSearch);
   }
 
   const fromUrlContext = common.getValueByPath(fromObject, ['urlContext']);
   if (fromUrlContext != null) {
     common.setValueByPath(toObject, ['urlContext'], fromUrlContext);
-  }
-
-  const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
-  if (fromComputerUse != null) {
-    common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
-  }
-
-  const fromCodeExecution = common.getValueByPath(fromObject, [
-    'codeExecution',
-  ]);
-  if (fromCodeExecution != null) {
-    common.setValueByPath(toObject, ['codeExecution'], fromCodeExecution);
   }
 
   return toObject;

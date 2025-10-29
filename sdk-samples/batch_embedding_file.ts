@@ -142,8 +142,6 @@ async function batchEmbedFile() {
         downloadPath: tempFilePath,
       });
 
-      await new Promise((resolve) => setTimeout(resolve, 10000)); // Wait 10 seconds
-
       console.log(`File downloaded to: ${tempFilePath}`);
 
       // Read the content from the temporary file

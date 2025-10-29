@@ -4,14 +4,14 @@
     {
       "request": {
         "method": "POST",
-        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-1.5-flash:generateContent",
-        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-1.5-flash:generateContent HTTP/1.1",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:generateContent",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:generateContent HTTP/1.1",
         "headers": {
           "Accept": "*/*",
           "Accept-Encoding": "gzip, deflate",
           "Accept-Language": "*",
           "Connection": "keep-alive",
-          "Content-Length": "133",
+          "Content-Length": "173",
           "Content-Type": "application/json",
           "Sec-Fetch-Mode": "cors",
           "Test-Name": "Client Tests generateContent Vertex AI should generate content with specified parameters"
@@ -30,7 +30,10 @@
             ],
             "generationConfig": {
               "candidateCount": 1,
-              "maxOutputTokens": 20
+              "maxOutputTokens": 200,
+              "thinkingConfig": {
+                "thinkingBudget": 50
+              }
             }
           }
         ],
@@ -39,14 +42,14 @@
         "port": 443,
         "protocol": "https"
       },
-      "shaSum": "8ddbaa7a944dec1ba7f7b57cff1bec85b829c02027e383759c2a39b74d6e3850",
+      "shaSum": "a79c74252c5c5f0bec46e618973010efed4eb6406d387f7c472d746c49742ec9",
       "response": {
         "statusCode": 200,
         "headers": {
           "Content-Encoding": "gzip",
-          "Content-Length": "482",
+          "Content-Length": "834",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Sat, 16 Aug 2025 00:43:10 GMT",
+          "Date": "Fri, 24 Oct 2025 07:45:17 GMT",
           "Server": "scaffolding on HTTPServer2",
           "Vary": "Origin, X-Origin, Referer",
           "X-Content-Type-Options": "nosniff",
@@ -57,31 +60,31 @@
           {
             "candidates": [
               {
-                "avgLogprobs": -0.0052413538098335264,
+                "avgLogprobs": -0.2347864704747354,
                 "content": {
                   "parts": [
                     {
-                      "text": "The sky is blue due to a phenomenon called **Rayleigh scattering**.  Sunlight is made up of"
+                      "text": "The sky is blue primarily due to a phenomenon called **Rayleigh scattering**.\n\nHere's a breakdown of how it works:\n\n1.  **Sunlight is White Light:** The light from the sun, which appears white to us, is actually made up of all the colors of the rainbow (red, orange, yellow, green, blue, indigo, violet). Each color has a different wavelength, with blue and violet having shorter, smaller wavelengths, and red and orange having longer, larger wavelengths.\n\n2.  **Earth's Atmosphere:** Our atmosphere is composed of tiny molecules, primarily nitrogen ($N_2$) and oxygen ($O_2$), along with some argon, carbon dioxide, and other trace gases. These molecules are much smaller than the wavelengths of"
                     }
                   ],
                   "role": "model"
                 },
                 "finishReason": "MAX_TOKENS",
-                "score": -0.10482707619667053
+                "score": -36.391902923583984
               }
             ],
-            "createTime": "2025-08-16T00:43:10.127929Z",
-            "modelVersion": "gemini-1.5-flash-002",
-            "responseId": "HtSfaLnnB6OrmecPu6_k0Qs",
+            "createTime": "2025-10-24T07:45:16.255887Z",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "jC77aI_PD-v8698Pl73V0QY",
             "usageMetadata": {
               "billablePromptUsage": {
                 "textCount": 16
               },
-              "candidatesTokenCount": 20,
+              "candidatesTokenCount": 155,
               "candidatesTokensDetails": [
                 {
                   "modality": "TEXT",
-                  "tokenCount": 20
+                  "tokenCount": 155
                 }
               ],
               "promptTokenCount": 6,
@@ -91,7 +94,8 @@
                   "tokenCount": 6
                 }
               ],
-              "totalTokenCount": 26,
+              "thoughtsTokenCount": 42,
+              "totalTokenCount": 203,
               "trafficType": "ON_DEMAND"
             }
           }

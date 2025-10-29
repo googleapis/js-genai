@@ -4,8 +4,8 @@
     {
       "request": {
         "method": "POST",
-        "url": "/v1beta/models/gemini-1.5-flash:generateContent",
-        "request": "POST /v1beta/models/gemini-1.5-flash:generateContent HTTP/1.1",
+        "url": "/v1beta/models/gemini-2.5-flash:generateContent",
+        "request": "POST /v1beta/models/gemini-2.5-flash:generateContent HTTP/1.1",
         "headers": {
           "Accept": "*/*",
           "Accept-Encoding": "gzip, deflate",
@@ -154,16 +154,16 @@
         "port": 443,
         "protocol": "https"
       },
-      "shaSum": "696f50df2dc5aa62c5c6d42f6f7840e161d5472718053d8cfd8bd5ef2ac20384",
+      "shaSum": "9b3698d572ca769331f8cd506f7db67cce5a6ae3ee4cf6c8b51d52ae0b6c3b12",
       "response": {
         "statusCode": 200,
         "headers": {
           "Content-Encoding": "gzip",
-          "Content-Length": "500",
+          "Content-Length": "642",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Sat, 16 Aug 2025 00:43:06 GMT",
+          "Date": "Fri, 24 Oct 2025 07:45:09 GMT",
           "Server": "scaffolding on HTTPServer2",
-          "Server-Timing": "gfet4t7; dur=1453",
+          "Server-Timing": "gfet4t7; dur=2917",
           "Vary": "Origin, X-Origin, Referer",
           "X-Content-Type-Options": "nosniff",
           "X-Frame-Options": "SAMEORIGIN",
@@ -173,36 +173,39 @@
           {
             "candidates": [
               {
-                "avgLogprobs": -0.007235370385341155,
                 "content": {
                   "parts": [
                     {
-                      "text": "{\"arrayFiled\": [\"string\"], \"inner\": {\"innerNumber\": 1.23, \"innerString\": \"string\"}, \"integerInt64\": 123, \"nullableArrayField\": null, \"nullableField\": null, \"nullableObjectField\": null, \"numberWithMinMax\": 1.23, \"simpleBoolean\": true, \"simpleInteger\": 123, \"simpleNumber\": 1.23, \"simpleString\": \"string\", \"stringDatatime\": \"2024-01-01T00:00:00Z\", \"stringWithEnum\": \"enumvalue1\", \"stringWithLength\": \"string\", \"unionField\": 1.23}"
+                      "text": "{\n  \"simpleString\": \"example\",\n  \"stringDatatime\": \"2023-10-27T10:00:00Z\",\n  \"stringWithEnum\": \"enumvalue1\",\n  \"stringWithLength\": \"short\",\n  \"simpleNumber\": 123.45,\n  \"simpleInteger\": 678,\n  \"integerInt64\": 9876543210,\n  \"numberWithMinMax\": 5.5,\n  \"simpleBoolean\": true,\n  \"arrayFiled\": [\"item1\", \"item2\"],\n  \"unionField\": \"unionString\",\n  \"nullableField\": null,\n  \"nullableArrayField\": [\"nullArr1\", \"nullArr2\"],\n  \"nullableObjectField\": {\n    \"innerString\": \"objString\",\n    \"innerNumber\": 42\n  },\n  \"inner\": {\n    \"innerString\": \"nestedString\",\n    \"innerNumber\": 100\n  }\n}"
                     }
                   ],
                   "role": "model"
                 },
-                "finishReason": "STOP"
+                "finishReason": "STOP",
+                "index": 0
               }
             ],
-            "modelVersion": "gemini-1.5-flash",
-            "responseId": "GdSfaLeBGOKMm9IPzITjqQc",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "hS77aOmpFb66vr0P9ruBiQM",
+            "turnToken": "v1:ChdoUzc3YU9tcEZiNjZ2cjBQOXJ1QmlRTRIXaFM3N2FPbXBGYjY2dnIwUDlydUJpUU0",
             "usageMetadata": {
-              "candidatesTokenCount": 156,
-              "candidatesTokensDetails": [
+              "cacheTokensDetails": [
                 {
                   "modality": "TEXT",
-                  "tokenCount": 156
+                  "tokenCount": 3
                 }
               ],
-              "promptTokenCount": 4,
+              "cachedContentTokenCount": 3,
+              "candidatesTokenCount": 238,
+              "promptTokenCount": 5,
               "promptTokensDetails": [
                 {
                   "modality": "TEXT",
-                  "tokenCount": 4
+                  "tokenCount": 5
                 }
               ],
-              "totalTokenCount": 160
+              "thoughtsTokenCount": 41,
+              "totalTokenCount": 284
             }
           }
         ]

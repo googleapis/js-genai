@@ -4,8 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {createWriteStream, writeFile} from 'fs';
+import {createWriteStream} from 'fs';
+import {writeFile} from 'fs/promises';
 import {Readable} from 'node:stream';
+import {finished} from 'node:stream/promises';
 import type {ReadableStream} from 'node:stream/web';
 
 import {ApiClient} from '../_api_client.js';
@@ -27,22 +29,21 @@ export class NodeDownloader implements Downloader {
       const response = await downloadFile(params, apiClient);
       if (response instanceof HttpResponse) {
         const writer = createWriteStream(params.downloadPath);
-        Readable.fromWeb(
+        const body = Readable.fromWeb(
           response.responseInternal.body as ReadableStream<Uint8Array>,
-        ).pipe(writer);
-      } else {
-        writeFile(
-          params.downloadPath,
-          response as string,
-          {encoding: 'base64'},
-          (error) => {
-            if (error) {
-              throw new Error(
-                `Failed to write file to ${params.downloadPath}: ${error}`,
-              );
-            }
-          },
         );
+        body.pipe(writer);
+        await finished(writer);
+      } else {
+        try {
+          await writeFile(params.downloadPath, response as string, {
+            encoding: 'base64',
+          });
+        } catch (error) {
+          throw new Error(
+            `Failed to write file to ${params.downloadPath}: ${error}`,
+          );
+        }
       }
     }
   }

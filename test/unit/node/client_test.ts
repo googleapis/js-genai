@@ -301,4 +301,107 @@ describe('Client', () => {
 
     expect(client['apiKey']).toBeUndefined();
   });
+  it('should default location to global when only project is provided', () => {
+    delete process.env['GOOGLE_CLOUD_LOCATION'];
+
+    const client = new GoogleGenAI({
+      vertexai: true,
+      project: 'fake_project_id',
+    });
+
+    expect(client.vertexai).toBe(true);
+    expect(client['project']).toBe('fake_project_id');
+    expect(client['location']).toBe('global');
+  });
+  it('should default location to global when credentials are provided with project but no location', () => {
+    delete process.env['GOOGLE_CLOUD_LOCATION'];
+    process.env['GOOGLE_API_KEY'] = '';
+
+    const credentials = {
+      type: 'service_account',
+      auth_uri: 'https://accounts.google.com/o/oauth2/auth',
+      token_uri: 'https://oauth2.googleapis.com/token',
+    };
+    const client = new GoogleGenAI({
+      vertexai: true,
+      project: 'fake_project_id',
+      googleAuthOptions: {
+        credentials,
+      },
+    });
+
+    expect(client.vertexai).toBe(true);
+    expect(client['apiKey']).toBeUndefined();
+    expect(client['project']).toBe('fake_project_id');
+    expect(client['location']).toBe('global');
+  });
+  it('should default location to global when explicit project takes precedence over env api key', () => {
+    delete process.env['GOOGLE_CLOUD_LOCATION'];
+    delete process.env['GOOGLE_CLOUD_PROJECT'];
+    process.env['GOOGLE_API_KEY'] = 'env_api_key';
+
+    const client = new GoogleGenAI({
+      vertexai: true,
+      project: 'explicit_project_id',
+    });
+
+    expect(client.vertexai).toBe(true);
+    expect(client['apiKey']).toBeUndefined();
+    expect(client['project']).toBe('explicit_project_id');
+    expect(client['location']).toBe('global');
+  });
+  it('should default location to global when env project takes precedence over env api key', () => {
+    delete process.env['GOOGLE_CLOUD_LOCATION'];
+    process.env['GOOGLE_CLOUD_PROJECT'] = 'env_project_id';
+    process.env['GOOGLE_API_KEY'] = 'env_api_key';
+
+    const client = new GoogleGenAI({
+      vertexai: true,
+    });
+
+    expect(client.vertexai).toBe(true);
+    expect(client['apiKey']).toBeUndefined();
+    expect(client['project']).toBe('env_project_id');
+    expect(client['location']).toBe('global');
+  });
+  it('should not default location to global when explicit location is set', () => {
+    delete process.env['GOOGLE_CLOUD_LOCATION'];
+
+    const client = new GoogleGenAI({
+      vertexai: true,
+      project: 'fake_project_id',
+      location: 'us-central1',
+    });
+
+    expect(client.vertexai).toBe(true);
+    expect(client['project']).toBe('fake_project_id');
+    expect(client['location']).toBe('us-central1');
+  });
+  it('should not default location to global when env location is set', () => {
+    process.env['GOOGLE_CLOUD_LOCATION'] = 'us-west1';
+    process.env['GOOGLE_CLOUD_PROJECT'] = 'fake_project_id';
+
+    const client = new GoogleGenAI({
+      vertexai: true,
+    });
+
+    expect(client.vertexai).toBe(true);
+    expect(client['project']).toBe('fake_project_id');
+    expect(client['location']).toBe('us-west1');
+  });
+  it('should not default location when using api key only mode', () => {
+    delete process.env['GOOGLE_CLOUD_LOCATION'];
+    delete process.env['GOOGLE_CLOUD_PROJECT'];
+    process.env['GOOGLE_API_KEY'] = '';
+
+    const client = new GoogleGenAI({
+      vertexai: true,
+      apiKey: 'vertexai_api_key',
+    });
+
+    expect(client.vertexai).toBe(true);
+    expect(client['apiKey']).toBe('vertexai_api_key');
+    expect(client['project']).toBeUndefined();
+    expect(client['location']).toBeUndefined();
+  });
 });

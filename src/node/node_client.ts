@@ -136,6 +136,10 @@ export class GoogleGenAI {
         );
         this.apiKey = undefined;
       }
+
+      if (!this.location && !this.apiKey) {
+        this.location = 'global';
+      }
     }
 
     const baseUrl = getBaseUrl(

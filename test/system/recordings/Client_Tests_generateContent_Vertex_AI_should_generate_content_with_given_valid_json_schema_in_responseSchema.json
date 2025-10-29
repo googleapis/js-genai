@@ -4,8 +4,8 @@
     {
       "request": {
         "method": "POST",
-        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-1.5-flash:generateContent",
-        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-1.5-flash:generateContent HTTP/1.1",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:generateContent",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:generateContent HTTP/1.1",
         "headers": {
           "Accept": "*/*",
           "Accept-Encoding": "gzip, deflate",
@@ -153,14 +153,14 @@
         "port": 443,
         "protocol": "https"
       },
-      "shaSum": "b766b389811c187eecafe028c275691e08dfaaef2b5d8996175d4e5a3be86be6",
+      "shaSum": "0a45b287df5842973931048d3c41718fd80f289fcfb577ca6ebb8a66e9e2829c",
       "response": {
         "statusCode": 200,
         "headers": {
           "Content-Encoding": "gzip",
-          "Content-Length": "599",
+          "Content-Length": "711",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Sat, 16 Aug 2025 00:43:04 GMT",
+          "Date": "Fri, 24 Oct 2025 07:45:02 GMT",
           "Server": "scaffolding on HTTPServer2",
           "Vary": "Origin, X-Origin, Referer",
           "X-Content-Type-Options": "nosniff",
@@ -171,31 +171,31 @@
           {
             "candidates": [
               {
-                "avgLogprobs": -0.0035818899831464215,
+                "avgLogprobs": -0.3792776766690341,
                 "content": {
                   "parts": [
                     {
-                      "text": "{\"arrayFiled\": [\"string\"], \"inner\": {\"innerNumber\": 1.23, \"innerString\": \"string\"}, \"integerInt64\": 123, \"nullableArrayField\": null, \"nullableField\": null, \"nullableObjectField\": null, \"numberWithMinMax\": 1.23, \"simpleBoolean\": true, \"simpleInteger\": 123, \"simpleNumber\": 1.23, \"stringDatetime\": \"2024-01-01T00:00:00Z\", \"stringWithEnum\": \"enumvalue1\", \"stringWithLength\": \"string\", \"unionField\": 1.23, \"simpleString\": \"string\"}"
+                      "text": "{\n  \"stringDatetime\": \"2023-10-27T10:00:00Z\",\n  \"stringWithEnum\": \"enumvalue1\",\n  \"stringWithLength\": \"short\",\n  \"simpleNumber\": 123.45,\n  \"simpleInteger\": 678,\n  \"integerInt64\": 9876543210,\n  \"numberWithMinMax\": 5.5,\n  \"simpleBoolean\": true,\n  \"arrayFiled\": [\n    \"item1\",\n    \"item2\"\n  ],\n  \"unionField\": \"union_string_value\",\n  \"nullableField\": \"this is a string\",\n  \"nullableArrayField\": [\n    \"array_item_a\",\n    \"array_item_b\"\n  ],\n  \"nullableObjectField\": {\n    \"innerString\": \"nullable_inner_value\",\n    \"innerNumber\": 456.78\n  },\n  \"inner\": {\n    \"innerString\": \"some_inner_string\",\n    \"innerNumber\": 99.99\n  },\n  \"simpleString\": \"hello world\"\n}"
                     }
                   ],
                   "role": "model"
                 },
                 "finishReason": "STOP",
-                "score": -0.5551929473876953
+                "score": -104.30136108398438
               }
             ],
-            "createTime": "2025-08-16T00:43:03.386457Z",
-            "modelVersion": "gemini-1.5-flash-002",
-            "responseId": "F9SfaJnLF_qAm9IPucqbqA4",
+            "createTime": "2025-10-24T07:44:58.089424Z",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "ei77aNC6Beet698P28GMwAM",
             "usageMetadata": {
               "billablePromptUsage": {
                 "textCount": 1061
               },
-              "candidatesTokenCount": 155,
+              "candidatesTokenCount": 275,
               "candidatesTokensDetails": [
                 {
                   "modality": "TEXT",
-                  "tokenCount": 155
+                  "tokenCount": 275
                 }
               ],
               "promptTokenCount": 4,
@@ -205,7 +205,8 @@
                   "tokenCount": 4
                 }
               ],
-              "totalTokenCount": 159,
+              "thoughtsTokenCount": 466,
+              "totalTokenCount": 745,
               "trafficType": "ON_DEMAND"
             }
           }
