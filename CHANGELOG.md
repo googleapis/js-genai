@@ -1,6 +1,22 @@
 # Changelog
 
 
+## [1.28.0](https://github.com/googleapis/js-genai/compare/v1.27.0...v1.28.0) (2025-10-29)
+
+
+### Features
+
+* Add safety_filter_level and person_generation for Imagen upscaling ([aaceb1b](https://github.com/googleapis/js-genai/commit/aaceb1b78883db0ae08fb374c0f1ee4d960f1094))
+* Add support for preference optimization tuning in the SDK. ([f74660e](https://github.com/googleapis/js-genai/commit/f74660e153964fea281f3d4b18f88460a5dac7b1))
+* Pass file name to the backend when uploading with a file path ([7115726](https://github.com/googleapis/js-genai/commit/71157260ef1e92bffcd6e3250eb722b6931d7627))
+* support default global location when not using api key with vertexai backend ([f8967b1](https://github.com/googleapis/js-genai/commit/f8967b1f353165b252e00407beebf2ca06831b76))
+* Update `test-server-sdk` dependency to `^0.2.9`. ([8d507bf](https://github.com/googleapis/js-genai/commit/8d507bf42585dc0a6b1e1c47be61c024efd0a565))
+
+
+### Bug Fixes
+
+* Fix downloader. With this change after you await the download, the file write is complete, and the data is fully readable. ([127c9bf](https://github.com/googleapis/js-genai/commit/127c9bf29c0110a1292d5742c2bc87e4482eb6eb))
+
 ## [1.27.0](https://github.com/googleapis/js-genai/compare/v1.26.0...v1.27.0) (2025-10-23)
 
 
