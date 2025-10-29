@@ -829,6 +829,18 @@ export enum VideoCompressionQuality {
   LOSSLESS = 'LOSSLESS',
 }
 
+/** Enum representing the tuning method. */
+export enum TuningMethod {
+  /**
+   * Supervised fine tuning.
+   */
+  SUPERVISED_FINE_TUNING = 'SUPERVISED_FINE_TUNING',
+  /**
+   * Preference optimization tuning.
+   */
+  PREFERENCE_TUNING = 'PREFERENCE_TUNING',
+}
+
 /** State for the lifecycle of a File. */
 export enum FileState {
   STATE_UNSPECIFIED = 'STATE_UNSPECIFIED',
@@ -3814,6 +3826,28 @@ export declare interface SupervisedTuningSpec {
   validationDatasetUri?: string;
 }
 
+/** Hyperparameters for Preference Optimization. This data type is not supported in Gemini API. */
+export declare interface PreferenceOptimizationHyperParameters {
+  /** Optional. Adapter size for preference optimization. */
+  adapterSize?: AdapterSize;
+  /** Optional. Weight for KL Divergence regularization. */
+  beta?: number;
+  /** Optional. Number of complete passes the model makes over the entire training dataset during training. */
+  epochCount?: string;
+  /** Optional. Multiplier for adjusting the default learning rate. */
+  learningRateMultiplier?: number;
+}
+
+/** Preference optimization tuning spec for tuning. */
+export declare interface PreferenceOptimizationSpec {
+  /** Optional. Hyperparameters for Preference Optimization. */
+  hyperParameters?: PreferenceOptimizationHyperParameters;
+  /** Required. Cloud Storage path to file containing training dataset for preference optimization tuning. The dataset must be formatted as a JSONL file. */
+  trainingDatasetUri?: string;
+  /** Optional. Cloud Storage path to file containing validation dataset for preference optimization tuning. The dataset must be formatted as a JSONL file. */
+  validationDatasetUri?: string;
+}
+
 /** The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors). This data type is not supported in Gemini API. */
 export declare interface GoogleRpcStatus {
   /** The status code, which should be an enum value of google.rpc.Code. */
@@ -4060,6 +4094,8 @@ export declare interface TuningJob {
   preTunedModel?: PreTunedModel;
   /** Tuning Spec for Supervised Fine Tuning. */
   supervisedTuningSpec?: SupervisedTuningSpec;
+  /** Tuning Spec for Preference Optimization. */
+  preferenceOptimizationSpec?: PreferenceOptimizationSpec;
   /** Output only. The tuning data statistics associated with this TuningJob. */
   tuningDataStats?: TuningDataStats;
   /** Customer-managed encryption key options for a TuningJob. If this is set, then all resources created by the TuningJob will be encrypted with the provided encryption key. */
@@ -4161,7 +4197,7 @@ export declare interface TuningValidationDataset {
   vertexDatasetResource?: string;
 }
 
-/** Supervised fine-tuning job creation request - optional fields. */
+/** Fine-tuning job creation request - optional fields. */
 export declare interface CreateTuningJobConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
@@ -4172,6 +4208,8 @@ export declare interface CreateTuningJobConfig {
   be charged usage for any applicable operations.
        */
   abortSignal?: AbortSignal;
+  /** The method to use for tuning (SUPERVISED_FINE_TUNING or PREFERENCE_TUNING). If not set, the default method (SFT) will be used. */
+  method?: TuningMethod;
   /** Validation dataset for tuning. The dataset must be formatted as a JSONL file. */
   validationDataset?: TuningValidationDataset;
   /** The display name of the tuned Model. The name can be up to 128 characters long and can consist of any UTF-8 characters. */
@@ -4182,7 +4220,7 @@ export declare interface CreateTuningJobConfig {
   epochCount?: number;
   /** Multiplier for adjusting the default learning rate. */
   learningRateMultiplier?: number;
-  /** If set to true, disable intermediate checkpoints for SFT and only the last checkpoint will be exported. Otherwise, enable intermediate checkpoints for SFT. */
+  /** If set to true, disable intermediate checkpoints and only the last checkpoint will be exported. Otherwise, enable intermediate checkpoints. */
   exportLastCheckpointOnly?: boolean;
   /** The optional checkpoint id of the pre-tuned model to use for tuning, if applicable. */
   preTunedModelCheckpointId?: string;
@@ -4194,9 +4232,11 @@ export declare interface CreateTuningJobConfig {
   learningRate?: number;
   /** Optional. The labels with user-defined metadata to organize TuningJob and generated resources such as Model and Endpoint. Label keys and values can be no longer than 64 characters (Unicode codepoints), can only contain lowercase letters, numeric characters, underscores and dashes. International characters are allowed. See https://goo.gl/xmQnxf for more information and examples of labels. */
   labels?: Record<string, string>;
+  /** Weight for KL Divergence regularization, Preference Optimization tuning only. */
+  beta?: number;
 }
 
-/** Supervised fine-tuning job creation parameters - optional fields. */
+/** Fine-tuning job creation parameters - optional fields. */
 export declare interface CreateTuningJobParametersPrivate {
   /** The base model that is being tuned, e.g., "gemini-2.5-flash". */
   baseModel?: string;
@@ -6152,7 +6192,7 @@ export declare interface OperationGetParameters<T, U extends Operation<T>> {
   operation: U;
 }
 
-/** Supervised fine-tuning job creation parameters - optional fields. */
+/** Fine-tuning job creation parameters - optional fields. */
 export declare interface CreateTuningJobParameters {
   /** The base model that is being tuned, e.g., "gemini-2.5-flash". */
   baseModel: string;

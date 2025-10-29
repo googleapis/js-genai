@@ -598,6 +598,7 @@ export interface CreateTuningJobConfig {
     abortSignal?: AbortSignal;
     adapterSize?: AdapterSize;
     batchSize?: number;
+    beta?: number;
     description?: string;
     epochCount?: number;
     exportLastCheckpointOnly?: boolean;
@@ -605,6 +606,7 @@ export interface CreateTuningJobConfig {
     labels?: Record<string, string>;
     learningRate?: number;
     learningRateMultiplier?: number;
+    method?: TuningMethod;
     preTunedModelCheckpointId?: string;
     tunedModelDisplayName?: string;
     validationDataset?: TuningValidationDataset;
@@ -2429,6 +2431,21 @@ export interface PreferenceOptimizationDataStats {
 }
 
 // @public
+export interface PreferenceOptimizationHyperParameters {
+    adapterSize?: AdapterSize;
+    beta?: number;
+    epochCount?: string;
+    learningRateMultiplier?: number;
+}
+
+// @public
+export interface PreferenceOptimizationSpec {
+    hyperParameters?: PreferenceOptimizationHyperParameters;
+    trainingDatasetUri?: string;
+    validationDatasetUri?: string;
+}
+
+// @public
 export interface PreTunedModel {
     baseModel?: string;
     checkpointId?: string;
@@ -3051,6 +3068,7 @@ export interface TuningJob {
     outputUri?: string;
     partnerModelTuningSpec?: PartnerModelTuningSpec;
     pipelineJob?: string;
+    preferenceOptimizationSpec?: PreferenceOptimizationSpec;
     preTunedModel?: PreTunedModel;
     sdkHttpResponse?: HttpResponse;
     serviceAccount?: string;
@@ -3062,6 +3080,12 @@ export interface TuningJob {
     tuningDataStats?: TuningDataStats;
     updateTime?: string;
     veoTuningSpec?: VeoTuningSpec;
+}
+
+// @public
+export enum TuningMethod {
+    PREFERENCE_TUNING = "PREFERENCE_TUNING",
+    SUPERVISED_FINE_TUNING = "SUPERVISED_FINE_TUNING"
 }
 
 // @public
