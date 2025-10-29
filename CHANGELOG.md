@@ -1,6 +1,18 @@
 # Changelog
 
 
+## [1.27.0](https://github.com/googleapis/js-genai/compare/v1.26.0...v1.27.0) (2025-10-23)
+
+
+### Features
+
+* Remove redundant calls to rollup/api-extractor, speeds up the TS SDK testing further by a factor of 2. ([009b75f](https://github.com/googleapis/js-genai/commit/009b75fd06129117cce480822efe9ffe9f13f853))
+
+
+### Bug Fixes
+
+* google auth ADC error ([f87611c](https://github.com/googleapis/js-genai/commit/f87611c70e0b1edcacd67f384fa14b4b2b37ac57))
+
 ## [1.26.0](https://github.com/googleapis/js-genai/compare/v1.25.0...v1.26.0) (2025-10-21)
 
 
