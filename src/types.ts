@@ -100,6 +100,63 @@ export enum Type {
   NULL = 'NULL',
 }
 
+/** The mode of the predictor to be used in dynamic retrieval. */
+export enum Mode {
+  /**
+   * Always trigger retrieval.
+   */
+  MODE_UNSPECIFIED = 'MODE_UNSPECIFIED',
+  /**
+   * Run retrieval only when system decides it is necessary.
+   */
+  MODE_DYNAMIC = 'MODE_DYNAMIC',
+}
+
+/** Type of auth scheme. This enum is not supported in Gemini API. */
+export enum AuthType {
+  AUTH_TYPE_UNSPECIFIED = 'AUTH_TYPE_UNSPECIFIED',
+  /**
+   * No Auth.
+   */
+  NO_AUTH = 'NO_AUTH',
+  /**
+   * API Key Auth.
+   */
+  API_KEY_AUTH = 'API_KEY_AUTH',
+  /**
+   * HTTP Basic Auth.
+   */
+  HTTP_BASIC_AUTH = 'HTTP_BASIC_AUTH',
+  /**
+   * Google Service Account Auth.
+   */
+  GOOGLE_SERVICE_ACCOUNT_AUTH = 'GOOGLE_SERVICE_ACCOUNT_AUTH',
+  /**
+   * OAuth auth.
+   */
+  OAUTH = 'OAUTH',
+  /**
+   * OpenID Connect (OIDC) Auth.
+   */
+  OIDC_AUTH = 'OIDC_AUTH',
+}
+
+/** The API spec that the external API implements. This enum is not supported in Gemini API. */
+export enum ApiSpec {
+  /**
+   * Unspecified API spec. This value should not be used.
+   */
+  API_SPEC_UNSPECIFIED = 'API_SPEC_UNSPECIFIED',
+  /**
+   * Simple search API spec.
+   */
+  SIMPLE_SEARCH = 'SIMPLE_SEARCH',
+  /**
+   * Elastic search API spec.
+   */
+  ELASTIC_SEARCH = 'ELASTIC_SEARCH',
+}
+
 /** Harm category. */
 export enum HarmCategory {
   /**
@@ -190,63 +247,6 @@ export enum HarmBlockThreshold {
    * Turn off the safety filter.
    */
   OFF = 'OFF',
-}
-
-/** The mode of the predictor to be used in dynamic retrieval. */
-export enum Mode {
-  /**
-   * Always trigger retrieval.
-   */
-  MODE_UNSPECIFIED = 'MODE_UNSPECIFIED',
-  /**
-   * Run retrieval only when system decides it is necessary.
-   */
-  MODE_DYNAMIC = 'MODE_DYNAMIC',
-}
-
-/** Type of auth scheme. This enum is not supported in Gemini API. */
-export enum AuthType {
-  AUTH_TYPE_UNSPECIFIED = 'AUTH_TYPE_UNSPECIFIED',
-  /**
-   * No Auth.
-   */
-  NO_AUTH = 'NO_AUTH',
-  /**
-   * API Key Auth.
-   */
-  API_KEY_AUTH = 'API_KEY_AUTH',
-  /**
-   * HTTP Basic Auth.
-   */
-  HTTP_BASIC_AUTH = 'HTTP_BASIC_AUTH',
-  /**
-   * Google Service Account Auth.
-   */
-  GOOGLE_SERVICE_ACCOUNT_AUTH = 'GOOGLE_SERVICE_ACCOUNT_AUTH',
-  /**
-   * OAuth auth.
-   */
-  OAUTH = 'OAUTH',
-  /**
-   * OpenID Connect (OIDC) Auth.
-   */
-  OIDC_AUTH = 'OIDC_AUTH',
-}
-
-/** The API spec that the external API implements. This enum is not supported in Gemini API. */
-export enum ApiSpec {
-  /**
-   * Unspecified API spec. This value should not be used.
-   */
-  API_SPEC_UNSPECIFIED = 'API_SPEC_UNSPECIFIED',
-  /**
-   * Simple search API spec.
-   */
-  SIMPLE_SEARCH = 'SIMPLE_SEARCH',
-  /**
-   * Elastic search API spec.
-   */
-  ELASTIC_SEARCH = 'ELASTIC_SEARCH',
 }
 
 /** Output only. The reason why the model stopped generating tokens.
@@ -1061,38 +1061,6 @@ export enum LiveMusicPlaybackControl {
   RESET_CONTEXT = 'RESET_CONTEXT',
 }
 
-/** Describes how the video in the Part should be used by the model. */
-export declare interface VideoMetadata {
-  /** The frame rate of the video sent to the model. If not specified, the
-        default value will be 1.0. The fps range is (0.0, 24.0]. */
-  fps?: number;
-  /** Optional. The end offset of the video. */
-  endOffset?: string;
-  /** Optional. The start offset of the video. */
-  startOffset?: string;
-}
-
-/** Content blob. */
-export declare interface Blob {
-  /** Optional. Display name of the blob. Used to provide a label or filename to distinguish blobs. This field is not currently used in the Gemini GenerateContent calls. */
-  displayName?: string;
-  /** Required. Raw bytes.
-   * @remarks Encoded as base64 string. */
-  data?: string;
-  /** Required. The IANA standard MIME type of the source data. */
-  mimeType?: string;
-}
-
-/** URI based data. */
-export declare interface FileData {
-  /** Optional. Display name of the file data. Used to provide a label or filename to distinguish file datas. It is not currently used in the Gemini GenerateContent calls. */
-  displayName?: string;
-  /** Required. URI. */
-  fileUri?: string;
-  /** Required. The IANA standard MIME type of the source data. */
-  mimeType?: string;
-}
-
 /** A function call. */
 export declare interface FunctionCall {
   /** The unique id of the function call. If populated, the client to execute the
@@ -1118,6 +1086,16 @@ export declare interface ExecutableCode {
   code?: string;
   /** Required. Programming language of the `code`. */
   language?: Language;
+}
+
+/** URI based data. */
+export declare interface FileData {
+  /** Optional. Display name of the file data. Used to provide a label or filename to distinguish file datas. This field is only returned in PromptMessage for prompt management. It is currently used in the Gemini GenerateContent calls only when server side tools (code_execution, google_search, and url_context) are enabled. This field is not supported in Gemini API. */
+  displayName?: string;
+  /** Required. URI. */
+  fileUri?: string;
+  /** Required. The IANA standard MIME type of the source data. */
+  mimeType?: string;
 }
 
 /** Raw media bytes for function response.
@@ -1201,23 +1179,33 @@ export class FunctionResponse {
   response?: Record<string, unknown>;
 }
 
+/** Content blob. */
+export declare interface Blob {
+  /** Required. Raw bytes.
+   * @remarks Encoded as base64 string. */
+  data?: string;
+  /** Optional. Display name of the blob. Used to provide a label or filename to distinguish blobs. This field is only returned in PromptMessage for prompt management. It is currently used in the Gemini GenerateContent calls only when server side tools (code_execution, google_search, and url_context) are enabled. This field is not supported in Gemini API. */
+  displayName?: string;
+  /** Required. The IANA standard MIME type of the source data. */
+  mimeType?: string;
+}
+
+/** Metadata describes the input video content. */
+export declare interface VideoMetadata {
+  /** Optional. The end offset of the video. */
+  endOffset?: string;
+  /** Optional. The frame rate of the video sent to the model. If not specified, the default value will be 1.0. The fps range is (0.0, 24.0]. */
+  fps?: number;
+  /** Optional. The start offset of the video. */
+  startOffset?: string;
+}
+
 /** A datatype containing media content.
 
 Exactly one field within a Part should be set, representing the specific type
 of content being conveyed. Using multiple fields within the same `Part`
 instance is considered invalid. */
 export declare interface Part {
-  /** Metadata for a given video. */
-  videoMetadata?: VideoMetadata;
-  /** Indicates if the part is thought from the model. */
-  thought?: boolean;
-  /** Optional. Inlined bytes data. */
-  inlineData?: Blob;
-  /** Optional. URI based data. */
-  fileData?: FileData;
-  /** An opaque signature for the thought so it can be reused in subsequent requests.
-   * @remarks Encoded as base64 string. */
-  thoughtSignature?: string;
   /** A predicted [FunctionCall] returned from the model that contains a string
       representing the [FunctionDeclaration.name] and a structured JSON object
       containing the parameters and their values. */
@@ -1226,10 +1214,21 @@ export declare interface Part {
   codeExecutionResult?: CodeExecutionResult;
   /** Optional. Code generated by the model that is meant to be executed. */
   executableCode?: ExecutableCode;
+  /** Optional. URI based data. */
+  fileData?: FileData;
   /** Optional. The result output of a [FunctionCall] that contains a string representing the [FunctionDeclaration.name] and a structured JSON object containing any output from the function call. It is used as context to the model. */
   functionResponse?: FunctionResponse;
+  /** Optional. Inlined bytes data. */
+  inlineData?: Blob;
   /** Optional. Text part (can be code). */
   text?: string;
+  /** Optional. Indicates if the part is thought from the model. */
+  thought?: boolean;
+  /** Optional. An opaque signature for the thought so it can be reused in subsequent requests.
+   * @remarks Encoded as base64 string. */
+  thoughtSignature?: string;
+  /** Optional. Video metadata. The metadata should only be specified while the video data is presented in inline_data or file_data. */
+  videoMetadata?: VideoMetadata;
 }
 /**
  * Creates a `Part` object from a `URI` string.
@@ -1327,9 +1326,7 @@ export declare interface Content {
   /** List of parts that constitute a single message. Each part may have
       a different IANA MIME type. */
   parts?: Part[];
-  /** Optional. The producer of the content. Must be either 'user' or
-      'model'. Useful to set for multi-turn conversations, otherwise can be
-      empty. If role is not specified, SDK will determine the role. */
+  /** Optional. The producer of the content. Must be either 'user' or 'model'. Useful to set for multi-turn conversations, otherwise can be left blank or unset. */
   role?: string;
 }
 function _isPart(obj: unknown): obj is Part {
@@ -1467,17 +1464,6 @@ export declare interface Schema {
 export declare interface ModelSelectionConfig {
   /** Options for feature selection preference. */
   featureSelectionPreference?: FeatureSelectionPreference;
-}
-
-/** Safety settings. */
-export declare interface SafetySetting {
-  /** Determines if the harm block method uses probability or probability
-      and severity scores. */
-  method?: HarmBlockMethod;
-  /** Required. Harm category. */
-  category?: HarmCategory;
-  /** Required. The harm block threshold. */
-  threshold?: HarmBlockThreshold;
 }
 
 /** Defines a function that the model can generate JSON inputs for.
@@ -1888,6 +1874,16 @@ export declare interface GenerationConfigRoutingConfig {
   autoMode?: GenerationConfigRoutingConfigAutoRoutingMode;
   /** Manual routing. */
   manualMode?: GenerationConfigRoutingConfigManualRoutingMode;
+}
+
+/** Safety settings. */
+export declare interface SafetySetting {
+  /** Required. Harm category. */
+  category?: HarmCategory;
+  /** Optional. Specify if the threshold is used for probability or severity score. If not specified, the threshold is used for probability score. This field is not supported in Gemini API. */
+  method?: HarmBlockMethod;
+  /** Required. The harm block threshold. */
+  threshold?: HarmBlockThreshold;
 }
 
 /** Optional model configuration parameters.
