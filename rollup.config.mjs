@@ -9,7 +9,7 @@ const pkg = JSON.parse(
 const rollupPlugins = [
   typescript({
     tsconfigOverride: {
-      exclude: ['test/**', 'src/private/**', 'src/interactions/**'],
+      exclude: ['test/**', 'src/private/**'],
     },
   }),
   json({
