@@ -2478,12 +2478,6 @@ export interface ModalityTokenCount {
 }
 
 // @public
-export enum Mode {
-    MODE_DYNAMIC = "MODE_DYNAMIC",
-    MODE_UNSPECIFIED = "MODE_UNSPECIFIED"
-}
-
-// @public
 export interface Model {
     checkpoints?: Checkpoint[];
     defaultCheckpointId?: string;
