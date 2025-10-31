@@ -888,6 +888,7 @@ export enum EndSensitivity {
 
 // @public
 export interface EnterpriseWebSearch {
+    blockingConfidence?: PhishBlockThreshold;
     excludeDomains?: string[];
 }
 
@@ -1492,6 +1493,7 @@ export interface GoogleRpcStatus {
 
 // @public
 export interface GoogleSearch {
+    blockingConfidence?: PhishBlockThreshold;
     excludeDomains?: string[];
     timeRangeFilter?: Interval;
 }
@@ -2411,6 +2413,17 @@ export enum PersonGeneration {
     ALLOW_ADULT = "ALLOW_ADULT",
     ALLOW_ALL = "ALLOW_ALL",
     DONT_ALLOW = "DONT_ALLOW"
+}
+
+// @public
+export enum PhishBlockThreshold {
+    BLOCK_HIGH_AND_ABOVE = "BLOCK_HIGH_AND_ABOVE",
+    BLOCK_HIGHER_AND_ABOVE = "BLOCK_HIGHER_AND_ABOVE",
+    BLOCK_LOW_AND_ABOVE = "BLOCK_LOW_AND_ABOVE",
+    BLOCK_MEDIUM_AND_ABOVE = "BLOCK_MEDIUM_AND_ABOVE",
+    BLOCK_ONLY_EXTREMELY_HIGH = "BLOCK_ONLY_EXTREMELY_HIGH",
+    BLOCK_VERY_HIGH_AND_ABOVE = "BLOCK_VERY_HIGH_AND_ABOVE",
+    PHISH_BLOCK_THRESHOLD_UNSPECIFIED = "PHISH_BLOCK_THRESHOLD_UNSPECIFIED"
 }
 
 // @public

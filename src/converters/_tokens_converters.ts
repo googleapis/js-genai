@@ -186,6 +186,12 @@ export function googleSearchToMldev(
     throw new Error('excludeDomains parameter is not supported in Gemini API.');
   }
 
+  if (common.getValueByPath(fromObject, ['blockingConfidence']) !== undefined) {
+    throw new Error(
+      'blockingConfidence parameter is not supported in Gemini API.',
+    );
+  }
+
   const fromTimeRangeFilter = common.getValueByPath(fromObject, [
     'timeRangeFilter',
   ]);

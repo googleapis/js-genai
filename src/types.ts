@@ -157,6 +157,38 @@ export enum ApiSpec {
   ELASTIC_SEARCH = 'ELASTIC_SEARCH',
 }
 
+/** Sites with confidence level chosen & above this value will be blocked from the search results. This enum is not supported in Gemini API. */
+export enum PhishBlockThreshold {
+  /**
+   * Defaults to unspecified.
+   */
+  PHISH_BLOCK_THRESHOLD_UNSPECIFIED = 'PHISH_BLOCK_THRESHOLD_UNSPECIFIED',
+  /**
+   * Blocks Low and above confidence URL that is risky.
+   */
+  BLOCK_LOW_AND_ABOVE = 'BLOCK_LOW_AND_ABOVE',
+  /**
+   * Blocks Medium and above confidence URL that is risky.
+   */
+  BLOCK_MEDIUM_AND_ABOVE = 'BLOCK_MEDIUM_AND_ABOVE',
+  /**
+   * Blocks High and above confidence URL that is risky.
+   */
+  BLOCK_HIGH_AND_ABOVE = 'BLOCK_HIGH_AND_ABOVE',
+  /**
+   * Blocks Higher and above confidence URL that is risky.
+   */
+  BLOCK_HIGHER_AND_ABOVE = 'BLOCK_HIGHER_AND_ABOVE',
+  /**
+   * Blocks Very high and above confidence URL that is risky.
+   */
+  BLOCK_VERY_HIGH_AND_ABOVE = 'BLOCK_VERY_HIGH_AND_ABOVE',
+  /**
+   * Blocks Extremely high confidence URL that is risky.
+   */
+  BLOCK_ONLY_EXTREMELY_HIGH = 'BLOCK_ONLY_EXTREMELY_HIGH',
+}
+
 /** Harm category. */
 export enum HarmCategory {
   /**
@@ -1739,6 +1771,8 @@ export declare interface ToolCodeExecution {}
 export declare interface EnterpriseWebSearch {
   /** Optional. List of domains to be excluded from the search results. The default limit is 2000 domains. */
   excludeDomains?: string[];
+  /** Optional. Sites with confidence level chosen & above this value will be blocked from the search results. */
+  blockingConfidence?: PhishBlockThreshold;
 }
 
 /** Represents a time interval, encoded as a Timestamp start (inclusive) and a Timestamp end (exclusive). The start must be less than or equal to the end. When the start equals the end, the interval is empty (matches no time). When both start and end are unspecified, the interval matches any time. */
@@ -1753,6 +1787,8 @@ export declare interface Interval {
 export declare interface GoogleSearch {
   /** Optional. List of domains to be excluded from the search results. The default limit is 2000 domains. Example: ["amazon.com", "facebook.com"]. This field is not supported in Gemini API. */
   excludeDomains?: string[];
+  /** Optional. Sites with confidence level chosen & above this value will be blocked from the search results. This field is not supported in Gemini API. */
+  blockingConfidence?: PhishBlockThreshold;
   /** Optional. Filter search results to a specific time range. If customers set a start time, they must set an end time (and vice versa). This field is not supported in Vertex AI. */
   timeRangeFilter?: Interval;
 }
