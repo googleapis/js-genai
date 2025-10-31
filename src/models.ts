@@ -69,9 +69,13 @@ export class Models extends BaseModule {
       return await this.generateContentInternal(transformedParams);
     }
 
-    if (afc.hasNonCallableTools(params)) {
+    const incompatibleToolIndexes = afc.findAfcIncompatibleToolIndexes(params);
+    if (incompatibleToolIndexes.length > 0) {
+      const formattedIndexes = incompatibleToolIndexes
+        .map((index: number) => `tools[${index}]`)
+        .join(', ');
       throw new Error(
-        'Automatic function calling with CallableTools and Tools is not yet supported.',
+        `Automatic function calling with CallableTools (or MCP objects) and basic FunctionDeclarations is not yet supported. Incompatible tools found at ${formattedIndexes}.`,
       );
     }
 
@@ -195,9 +199,17 @@ export class Models extends BaseModule {
       const transformedParams =
         await this.processParamsMaybeAddMcpUsage(params);
       return await this.generateContentStreamInternal(transformedParams);
-    } else {
-      return await this.processAfcStream(params);
     }
+    const incompatibleToolIndexes = afc.findAfcIncompatibleToolIndexes(params);
+    if (incompatibleToolIndexes.length > 0) {
+      const formattedIndexes = incompatibleToolIndexes
+        .map((index: number) => `tools[${index}]`)
+        .join(', ');
+      throw new Error(
+        `Incompatible tools found at ${formattedIndexes}. Automatic function calling with CallableTools (or MCP objects) and basic FunctionDeclarations" is not yet supported.`,
+      );
+    }
+    return await this.processAfcStream(params);
   };
 
   /**
