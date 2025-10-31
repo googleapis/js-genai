@@ -1,6 +1,19 @@
 # Changelog
 
 
+## [1.29.0](https://github.com/googleapis/js-genai/compare/v1.28.0...v1.29.0) (2025-10-31)
+
+
+### Features
+
+* Added phish filtering feature. ([4b75e5d](https://github.com/googleapis/js-genai/commit/4b75e5d142a11010ed21b967efb6cb74639c74c7))
+* update the build configs ([97a2fac](https://github.com/googleapis/js-genai/commit/97a2faceea154754e95e29e2de9e5614056f406e))
+
+
+### Bug Fixes
+
+* disable AFC when there are AFC incompatible tool presented. ([30c63b4](https://github.com/googleapis/js-genai/commit/30c63b4b41e4fd75f18231a00774b9c13e9d423d))
+
 ## [1.28.0](https://github.com/googleapis/js-genai/compare/v1.27.0...v1.28.0) (2025-10-29)
 
 
