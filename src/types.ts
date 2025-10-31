@@ -455,14 +455,14 @@ export enum BlockedReason {
   JAILBREAK = 'JAILBREAK',
 }
 
-/** Output only. Traffic type. This shows whether a request consumes Pay-As-You-Go or Provisioned Throughput quota. This enum is not supported in Gemini API. */
+/** Output only. The traffic type for this request. This enum is not supported in Gemini API. */
 export enum TrafficType {
   /**
    * Unspecified request traffic type.
    */
   TRAFFIC_TYPE_UNSPECIFIED = 'TRAFFIC_TYPE_UNSPECIFIED',
   /**
-   * Type for Pay-As-You-Go traffic.
+   * The request was processed using Pay-As-You-Go quota.
    */
   ON_DEMAND = 'ON_DEMAND',
   /**
@@ -625,6 +625,10 @@ export enum TuningTask {
    * Tuning task for text to video.
    */
   TUNING_TASK_T2V = 'TUNING_TASK_T2V',
+  /**
+   * Tuning task for reference to video.
+   */
+  TUNING_TASK_R2V = 'TUNING_TASK_R2V',
 }
 
 /** Options for feature selection preference. */
@@ -1112,7 +1116,7 @@ export declare interface FunctionCall {
   id?: string;
   /** Optional. The function parameters and values in JSON object format. See [FunctionDeclaration.parameters] for parameter details. */
   args?: Record<string, unknown>;
-  /** Required. The name of the function to call. Matches [FunctionDeclaration.name]. */
+  /** Optional. The name of the function to call. Matches [FunctionDeclaration.name]. */
   name?: string;
 }
 
@@ -1802,7 +1806,7 @@ export declare interface Tool {
   functionDeclarations?: FunctionDeclaration[];
   /** Optional. Retrieval tool type. System will always execute the provided retrieval tool(s) to get external knowledge to answer the prompt. Retrieval results are presented to the model for generation. This field is not supported in Gemini API. */
   retrieval?: Retrieval;
-  /** Optional. GoogleSearchRetrieval tool type. Specialized retrieval tool that is powered by Google search. */
+  /** Optional. Specialized retrieval tool that is powered by Google Search. */
   googleSearchRetrieval?: GoogleSearchRetrieval;
   /** Optional. Google Maps tool type. Specialized retrieval tool
       that is powered by Google Maps. */
@@ -2221,11 +2225,11 @@ export declare interface GroundingChunkMaps {
   placeAnswerSources?: GroundingChunkMapsPlaceAnswerSources;
   /** This Place's resource name, in `places/{place_id}` format. Can be used to look up the Place. */
   placeId?: string;
-  /** Text of the chunk. */
+  /** Text of the place answer. */
   text?: string;
-  /** Title of the chunk. */
+  /** Title of the place. */
   title?: string;
-  /** URI reference of the chunk. */
+  /** URI reference of the place. */
   uri?: string;
 }
 
@@ -2450,29 +2454,29 @@ export declare interface ModalityTokenCount {
   tokenCount?: number;
 }
 
-/** Usage metadata about response(s). This data type is not supported in Gemini API. */
+/** Usage metadata about the content generation request and response. This message provides a detailed breakdown of token usage and other relevant metrics. This data type is not supported in Gemini API. */
 export class GenerateContentResponseUsageMetadata {
-  /** Output only. List of modalities of the cached content in the request input. */
+  /** Output only. A detailed breakdown of the token count for each modality in the cached content. */
   cacheTokensDetails?: ModalityTokenCount[];
-  /** Output only. Number of tokens in the cached part in the input (the cached content). */
+  /** Output only. The number of tokens in the cached content that was used for this request. */
   cachedContentTokenCount?: number;
-  /** Number of tokens in the response(s). */
+  /** The total number of tokens in the generated candidates. */
   candidatesTokenCount?: number;
-  /** Output only. List of modalities that were returned in the response. */
+  /** Output only. A detailed breakdown of the token count for each modality in the generated candidates. */
   candidatesTokensDetails?: ModalityTokenCount[];
-  /** Number of tokens in the request. When `cached_content` is set, this is still the total effective prompt size meaning this includes the number of tokens in the cached content. */
+  /** The total number of tokens in the prompt. This includes any text, images, or other media provided in the request. When `cached_content` is set, this also includes the number of tokens in the cached content. */
   promptTokenCount?: number;
-  /** Output only. List of modalities that were processed in the request input. */
+  /** Output only. A detailed breakdown of the token count for each modality in the prompt. */
   promptTokensDetails?: ModalityTokenCount[];
-  /** Output only. Number of tokens present in thoughts output. */
+  /** Output only. The number of tokens that were part of the model's generated "thoughts" output, if applicable. */
   thoughtsTokenCount?: number;
-  /** Output only. Number of tokens present in tool-use prompt(s). */
+  /** Output only. The number of tokens in the results from tool executions, which are provided back to the model as input, if applicable. */
   toolUsePromptTokenCount?: number;
-  /** Output only. List of modalities that were processed for tool-use request inputs. */
+  /** Output only. A detailed breakdown by modality of the token counts from the results of tool executions, which are provided back to the model as input. */
   toolUsePromptTokensDetails?: ModalityTokenCount[];
-  /** Total token count for prompt, response candidates, and tool-use prompts (if present). */
+  /** The total number of tokens for the entire request. This is the sum of `prompt_token_count`, `candidates_token_count`, `tool_use_prompt_token_count`, and `thoughts_token_count`. */
   totalTokenCount?: number;
-  /** Output only. Traffic type. This shows whether a request consumes Pay-As-You-Go or Provisioned Throughput quota. */
+  /** Output only. The traffic type for this request. */
   trafficType?: TrafficType;
 }
 
@@ -3417,11 +3421,11 @@ export declare interface VoiceConfig {
   prebuiltVoiceConfig?: PrebuiltVoiceConfig;
 }
 
-/** The configuration for a single speaker in a multi speaker setup. This data type is not supported in Vertex AI. */
+/** Configuration for a single speaker in a multi speaker setup. */
 export declare interface SpeakerVoiceConfig {
-  /** Required. The name of the speaker to use. Should be the same as in the prompt. */
+  /** Required. The name of the speaker. This should be the same as the speaker name used in the prompt. */
   speaker?: string;
-  /** Required. The configuration for the voice to use. */
+  /** Required. The configuration for the voice of this speaker. */
   voiceConfig?: VoiceConfig;
 }
 
@@ -3876,6 +3880,8 @@ export declare interface PreferenceOptimizationHyperParameters {
 
 /** Preference optimization tuning spec for tuning. */
 export declare interface PreferenceOptimizationSpec {
+  /** Optional. If set to true, disable intermediate checkpoints for Preference Optimization and only the last checkpoint will be exported. Otherwise, enable intermediate checkpoints for Preference Optimization. Default is false. */
+  exportLastCheckpointOnly?: boolean;
   /** Optional. Hyperparameters for Preference Optimization. */
   hyperParameters?: PreferenceOptimizationHyperParameters;
   /** Required. Cloud Storage path to file containing training dataset for preference optimization tuning. The dataset must be formatted as a JSONL file. */
@@ -4082,6 +4088,12 @@ export declare interface PartnerModelTuningSpec {
   validationDatasetUri?: string;
 }
 
+/** Autorater config used for evaluation. */
+export declare interface AutoraterConfig {
+  /** Optional. Configuration options for model generation and outputs. */
+  generationConfig?: GenerationConfig;
+}
+
 /** Hyperparameters for Veo. This data type is not supported in Gemini API. */
 export declare interface VeoHyperParameters {
   /** Optional. Number of complete passes the model makes over the entire training dataset during training. */
@@ -4150,7 +4162,7 @@ export declare interface TuningJob {
   pipelineJob?: string;
   /** The service account that the tuningJob workload runs as. If not specified, the Vertex AI Secure Fine-Tuned Service Agent in the project will be used. See https://cloud.google.com/iam/docs/service-agents#vertex-ai-secure-fine-tuning-service-agent Users starting the pipeline must have the `iam.serviceAccounts.actAs` permission on this service account. */
   serviceAccount?: string;
-  /** Optional. The display name of the TunedModel. The name can be up to 128 characters long and can consist of any UTF-8 characters. */
+  /** Optional. The display name of the TunedModel. The name can be up to 128 characters long and can consist of any UTF-8 characters. For continuous tuning, tuned_model_display_name will by default use the same display name as the pre-tuned model. If a new display name is provided, the tuning job will create a new model instead of a new version. */
   tunedModelDisplayName?: string;
   /** Tuning Spec for Veo Tuning. */
   veoTuningSpec?: VeoTuningSpec;
