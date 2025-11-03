@@ -112,6 +112,22 @@ export enum Mode {
   MODE_DYNAMIC = 'MODE_DYNAMIC',
 }
 
+/** The API spec that the external API implements. This enum is not supported in Gemini API. */
+export enum ApiSpec {
+  /**
+   * Unspecified API spec. This value should not be used.
+   */
+  API_SPEC_UNSPECIFIED = 'API_SPEC_UNSPECIFIED',
+  /**
+   * Simple search API spec.
+   */
+  SIMPLE_SEARCH = 'SIMPLE_SEARCH',
+  /**
+   * Elastic search API spec.
+   */
+  ELASTIC_SEARCH = 'ELASTIC_SEARCH',
+}
+
 /** Type of auth scheme. This enum is not supported in Gemini API. */
 export enum AuthType {
   AUTH_TYPE_UNSPECIFIED = 'AUTH_TYPE_UNSPECIFIED',
@@ -141,20 +157,29 @@ export enum AuthType {
   OIDC_AUTH = 'OIDC_AUTH',
 }
 
-/** The API spec that the external API implements. This enum is not supported in Gemini API. */
-export enum ApiSpec {
+/** The location of the API key. This enum is not supported in Gemini API. */
+export enum HttpElementLocation {
+  HTTP_IN_UNSPECIFIED = 'HTTP_IN_UNSPECIFIED',
   /**
-   * Unspecified API spec. This value should not be used.
+   * Element is in the HTTP request query.
    */
-  API_SPEC_UNSPECIFIED = 'API_SPEC_UNSPECIFIED',
+  HTTP_IN_QUERY = 'HTTP_IN_QUERY',
   /**
-   * Simple search API spec.
+   * Element is in the HTTP request header.
    */
-  SIMPLE_SEARCH = 'SIMPLE_SEARCH',
+  HTTP_IN_HEADER = 'HTTP_IN_HEADER',
   /**
-   * Elastic search API spec.
+   * Element is in the HTTP request path.
    */
-  ELASTIC_SEARCH = 'ELASTIC_SEARCH',
+  HTTP_IN_PATH = 'HTTP_IN_PATH',
+  /**
+   * Element is in the HTTP request body.
+   */
+  HTTP_IN_BODY = 'HTTP_IN_BODY',
+  /**
+   * Element is in the HTTP request cookie.
+   */
+  HTTP_IN_COOKIE = 'HTTP_IN_COOKIE',
 }
 
 /** Sites with confidence level chosen & above this value will be blocked from the search results. This enum is not supported in Gemini API. */
@@ -1545,10 +1570,42 @@ export declare interface GoogleSearchRetrieval {
   dynamicRetrievalConfig?: DynamicRetrievalConfig;
 }
 
-/** Config for authentication with API key. */
-export declare interface ApiKeyConfig {
-  /** The API key to be used in the request directly. */
+/** Tool to support computer use. */
+export declare interface ComputerUse {
+  /** Required. The environment being operated. */
+  environment?: Environment;
+  /** By default, predefined functions are included in the final model call.
+    Some of them can be explicitly excluded from being automatically included.
+    This can serve two purposes:
+      1. Using a more restricted / different action space.
+      2. Improving the definitions / instructions of predefined functions. */
+  excludedPredefinedFunctions?: string[];
+}
+
+/** The API secret. This data type is not supported in Gemini API. */
+export declare interface ApiAuthApiKeyConfig {
+  /** Required. The SecretManager secret version resource name storing API key. e.g. projects/{project}/secrets/{secret}/versions/{version} */
+  apiKeySecretVersion?: string;
+  /** The API key string. Either this or `api_key_secret_version` must be set. */
   apiKeyString?: string;
+}
+
+/** The generic reusable api auth config. Deprecated. Please use AuthConfig (google/cloud/aiplatform/master/auth.proto) instead. This data type is not supported in Gemini API. */
+export declare interface ApiAuth {
+  /** The API secret. */
+  apiKeyConfig?: ApiAuthApiKeyConfig;
+}
+
+/** Config for authentication with API key. This data type is not supported in Gemini API. */
+export declare interface ApiKeyConfig {
+  /** Optional. The name of the SecretManager secret version resource storing the API key. Format: `projects/{project}/secrets/{secrete}/versions/{version}` - If both `api_key_secret` and `api_key_string` are specified, this field takes precedence over `api_key_string`. - If specified, the `secretmanager.versions.access` permission should be granted to Vertex AI Extension Service Agent (https://cloud.google.com/vertex-ai/docs/general/access-control#service-agents) on the specified resource. */
+  apiKeySecret?: string;
+  /** Optional. The API key to be used in the request directly. */
+  apiKeyString?: string;
+  /** Optional. The location of the API key. */
+  httpElementLocation?: HttpElementLocation;
+  /** Optional. The parameter name of the API key. E.g. If the API request is "https://example.com/act?api_key=", "api_key" would be the parameter name. */
+  name?: string;
 }
 
 /** Config for Google Service Account Authentication. This data type is not supported in Gemini API. */
@@ -1579,7 +1636,7 @@ export declare interface AuthConfigOidcConfig {
   serviceAccount?: string;
 }
 
-/** Auth configuration to run the extension. */
+/** Auth configuration to run the extension. This data type is not supported in Gemini API. */
 export declare interface AuthConfig {
   /** Config for API key auth. */
   apiKeyConfig?: ApiKeyConfig;
@@ -1593,40 +1650,6 @@ export declare interface AuthConfig {
   oauthConfig?: AuthConfigOauthConfig;
   /** Config for user OIDC auth. */
   oidcConfig?: AuthConfigOidcConfig;
-}
-
-/** Tool to support Google Maps in Model. */
-export declare interface GoogleMaps {
-  /** Optional. Auth config for the Google Maps tool. */
-  authConfig?: AuthConfig;
-  /** Optional. If true, include the widget context token in the response. */
-  enableWidget?: boolean;
-}
-
-/** Tool to support computer use. */
-export declare interface ComputerUse {
-  /** Required. The environment being operated. */
-  environment?: Environment;
-  /** By default, predefined functions are included in the final model call.
-    Some of them can be explicitly excluded from being automatically included.
-    This can serve two purposes:
-      1. Using a more restricted / different action space.
-      2. Improving the definitions / instructions of predefined functions. */
-  excludedPredefinedFunctions?: string[];
-}
-
-/** The API secret. This data type is not supported in Gemini API. */
-export declare interface ApiAuthApiKeyConfig {
-  /** Required. The SecretManager secret version resource name storing API key. e.g. projects/{project}/secrets/{secret}/versions/{version} */
-  apiKeySecretVersion?: string;
-  /** The API key string. Either this or `api_key_secret_version` must be set. */
-  apiKeyString?: string;
-}
-
-/** The generic reusable api auth config. Deprecated. Please use AuthConfig (google/cloud/aiplatform/master/auth.proto) instead. This data type is not supported in Gemini API. */
-export declare interface ApiAuth {
-  /** The API secret. */
-  apiKeyConfig?: ApiAuthApiKeyConfig;
 }
 
 /** The search parameters to use for the ELASTIC_SEARCH spec. This data type is not supported in Gemini API. */
@@ -1775,6 +1798,14 @@ export declare interface EnterpriseWebSearch {
   blockingConfidence?: PhishBlockThreshold;
 }
 
+/** Tool to retrieve public maps data for grounding, powered by Google. */
+export declare interface GoogleMaps {
+  /** The authentication config to access the API. Only API key is supported. This field is not supported in Gemini API. */
+  authConfig?: AuthConfig;
+  /** Optional. If true, include the widget context token in the response. */
+  enableWidget?: boolean;
+}
+
 /** Represents a time interval, encoded as a Timestamp start (inclusive) and a Timestamp end (exclusive). The start must be less than or equal to the end. When the start equals the end, the interval is empty (matches no time). When both start and end are unspecified, the interval matches any time. */
 export declare interface Interval {
   /** Optional. Exclusive end of the interval. If specified, a Timestamp matching this interval will have to be before the end. */
@@ -1804,9 +1835,6 @@ export declare interface Tool {
   retrieval?: Retrieval;
   /** Optional. GoogleSearchRetrieval tool type. Specialized retrieval tool that is powered by Google search. */
   googleSearchRetrieval?: GoogleSearchRetrieval;
-  /** Optional. Google Maps tool type. Specialized retrieval tool
-      that is powered by Google Maps. */
-  googleMaps?: GoogleMaps;
   /** Optional. Tool to support the model interacting directly with the
       computer. If enabled, it automatically populates computer-use specific
       Function Declarations. */
@@ -1815,6 +1843,8 @@ export declare interface Tool {
   codeExecution?: ToolCodeExecution;
   /** Optional. Tool to support searching public web data, powered by Vertex AI Search and Sec4 compliance. This field is not supported in Gemini API. */
   enterpriseWebSearch?: EnterpriseWebSearch;
+  /** Optional. GoogleMaps tool type. Tool to support Google Maps in Model. */
+  googleMaps?: GoogleMaps;
   /** Optional. GoogleSearch tool type. Tool to support Google Search in Model. Powered by Google. */
   googleSearch?: GoogleSearch;
   /** Optional. Tool to support URL context retrieval. */

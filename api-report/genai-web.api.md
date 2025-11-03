@@ -58,7 +58,10 @@ export interface ApiErrorInfo {
 
 // @public
 export interface ApiKeyConfig {
+    apiKeySecret?: string;
     apiKeyString?: string;
+    httpElementLocation?: HttpElementLocation;
+    name?: string;
 }
 
 // @public
@@ -1639,6 +1642,17 @@ export enum HarmSeverity {
     HARM_SEVERITY_MEDIUM = "HARM_SEVERITY_MEDIUM",
     HARM_SEVERITY_NEGLIGIBLE = "HARM_SEVERITY_NEGLIGIBLE",
     HARM_SEVERITY_UNSPECIFIED = "HARM_SEVERITY_UNSPECIFIED"
+}
+
+// @public
+export enum HttpElementLocation {
+    HTTP_IN_BODY = "HTTP_IN_BODY",
+    HTTP_IN_COOKIE = "HTTP_IN_COOKIE",
+    HTTP_IN_HEADER = "HTTP_IN_HEADER",
+    HTTP_IN_PATH = "HTTP_IN_PATH",
+    HTTP_IN_QUERY = "HTTP_IN_QUERY",
+    // (undocumented)
+    HTTP_IN_UNSPECIFIED = "HTTP_IN_UNSPECIFIED"
 }
 
 // @public
