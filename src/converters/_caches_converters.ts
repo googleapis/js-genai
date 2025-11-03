@@ -331,10 +331,6 @@ export function functionDeclarationToVertex(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  if (common.getValueByPath(fromObject, ['behavior']) !== undefined) {
-    throw new Error('behavior parameter is not supported in Vertex AI.');
-  }
-
   const fromDescription = common.getValueByPath(fromObject, ['description']);
   if (fromDescription != null) {
     common.setValueByPath(toObject, ['description'], fromDescription);
@@ -375,6 +371,10 @@ export function functionDeclarationToVertex(
       ['responseJsonSchema'],
       fromResponseJsonSchema,
     );
+  }
+
+  if (common.getValueByPath(fromObject, ['behavior']) !== undefined) {
+    throw new Error('behavior parameter is not supported in Vertex AI.');
   }
 
   return toObject;
@@ -673,19 +673,6 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
 export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromFunctionDeclarations = common.getValueByPath(fromObject, [
-    'functionDeclarations',
-  ]);
-  if (fromFunctionDeclarations != null) {
-    let transformedList = fromFunctionDeclarations;
-    if (Array.isArray(transformedList)) {
-      transformedList = transformedList.map((item) => {
-        return item;
-      });
-    }
-    common.setValueByPath(toObject, ['functionDeclarations'], transformedList);
-  }
-
   if (common.getValueByPath(fromObject, ['retrieval']) !== undefined) {
     throw new Error('retrieval parameter is not supported in Gemini API.');
   }
@@ -698,15 +685,6 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
       toObject,
       ['googleSearchRetrieval'],
       fromGoogleSearchRetrieval,
-    );
-  }
-
-  const fromGoogleMaps = common.getValueByPath(fromObject, ['googleMaps']);
-  if (fromGoogleMaps != null) {
-    common.setValueByPath(
-      toObject,
-      ['googleMaps'],
-      googleMapsToMldev(fromGoogleMaps),
     );
   }
 
@@ -730,6 +708,28 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
     );
   }
 
+  const fromFunctionDeclarations = common.getValueByPath(fromObject, [
+    'functionDeclarations',
+  ]);
+  if (fromFunctionDeclarations != null) {
+    let transformedList = fromFunctionDeclarations;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return item;
+      });
+    }
+    common.setValueByPath(toObject, ['functionDeclarations'], transformedList);
+  }
+
+  const fromGoogleMaps = common.getValueByPath(fromObject, ['googleMaps']);
+  if (fromGoogleMaps != null) {
+    common.setValueByPath(
+      toObject,
+      ['googleMaps'],
+      googleMapsToMldev(fromGoogleMaps),
+    );
+  }
+
   const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
   if (fromGoogleSearch != null) {
     common.setValueByPath(
@@ -750,19 +750,6 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
 export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromFunctionDeclarations = common.getValueByPath(fromObject, [
-    'functionDeclarations',
-  ]);
-  if (fromFunctionDeclarations != null) {
-    let transformedList = fromFunctionDeclarations;
-    if (Array.isArray(transformedList)) {
-      transformedList = transformedList.map((item) => {
-        return functionDeclarationToVertex(item);
-      });
-    }
-    common.setValueByPath(toObject, ['functionDeclarations'], transformedList);
-  }
-
   const fromRetrieval = common.getValueByPath(fromObject, ['retrieval']);
   if (fromRetrieval != null) {
     common.setValueByPath(toObject, ['retrieval'], fromRetrieval);
@@ -777,11 +764,6 @@ export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
       ['googleSearchRetrieval'],
       fromGoogleSearchRetrieval,
     );
-  }
-
-  const fromGoogleMaps = common.getValueByPath(fromObject, ['googleMaps']);
-  if (fromGoogleMaps != null) {
-    common.setValueByPath(toObject, ['googleMaps'], fromGoogleMaps);
   }
 
   const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
@@ -805,6 +787,24 @@ export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
       ['enterpriseWebSearch'],
       fromEnterpriseWebSearch,
     );
+  }
+
+  const fromFunctionDeclarations = common.getValueByPath(fromObject, [
+    'functionDeclarations',
+  ]);
+  if (fromFunctionDeclarations != null) {
+    let transformedList = fromFunctionDeclarations;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return functionDeclarationToVertex(item);
+      });
+    }
+    common.setValueByPath(toObject, ['functionDeclarations'], transformedList);
+  }
+
+  const fromGoogleMaps = common.getValueByPath(fromObject, ['googleMaps']);
+  if (fromGoogleMaps != null) {
+    common.setValueByPath(toObject, ['googleMaps'], fromGoogleMaps);
   }
 
   const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
