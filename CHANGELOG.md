@@ -1,6 +1,23 @@
 # Changelog
 
 
+## [1.29.0](https://github.com/googleapis/js-genai/compare/v1.28.0...v1.29.0) (2025-11-05)
+
+
+### Features
+
+* add complete stats to BatchJob ([3263514](https://github.com/googleapis/js-genai/commit/3263514b69cfe4433401f6955a4bea9d739b16fc))
+* Add FileSearch tool and associated FileSearchStore management APIs ([05cff8c](https://github.com/googleapis/js-genai/commit/05cff8ce01bb1579551f1f8d1fea95a6d2ae482a))
+* Add FileSearch tool and associated FileSearchStore management APIs ([25aa2a4](https://github.com/googleapis/js-genai/commit/25aa2a40c4a3c859e9ac18335458260ed1210980))
+* Add image_size to ImageConfig (Early Access Program) ([e1e883a](https://github.com/googleapis/js-genai/commit/e1e883aee308a1e5f166cd8981bc311a2057c616))
+* Added phish filtering feature. ([4b75e5d](https://github.com/googleapis/js-genai/commit/4b75e5d142a11010ed21b967efb6cb74639c74c7))
+* update the build configs ([97a2fac](https://github.com/googleapis/js-genai/commit/97a2faceea154754e95e29e2de9e5614056f406e))
+
+
+### Bug Fixes
+
+* disable AFC when there are AFC incompatible tool presented. ([30c63b4](https://github.com/googleapis/js-genai/commit/30c63b4b41e4fd75f18231a00774b9c13e9d423d))
+
 ## [1.28.0](https://github.com/googleapis/js-genai/compare/v1.27.0...v1.28.0) (2025-10-29)
 
 
