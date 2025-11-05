@@ -344,11 +344,6 @@ export interface Checkpoint {
 }
 
 // @public
-export interface ChunkingConfig {
-    whiteSpaceConfig?: WhiteSpaceConfig;
-}
-
-// @public
 export interface Citation {
     endIndex?: number;
     license?: string;
@@ -581,18 +576,6 @@ export class CreateFileResponse {
 }
 
 // @public
-export interface CreateFileSearchStoreConfig {
-    abortSignal?: AbortSignal;
-    displayName?: string;
-    httpOptions?: HttpOptions;
-}
-
-// @public
-export interface CreateFileSearchStoreParameters {
-    config?: CreateFileSearchStoreConfig;
-}
-
-// @public
 export function createFunctionResponsePartFromBase64(data: string, mimeType: string): FunctionResponsePart;
 
 // @public
@@ -660,14 +643,6 @@ export interface CreateTuningJobParametersPrivate {
 export function createUserContent(partOrString: PartListUnion | string): Content;
 
 // @public
-export interface CustomMetadata {
-    key?: string;
-    numericValue?: number;
-    stringListValue?: StringList;
-    stringValue?: string;
-}
-
-// @public
 export interface DatasetDistribution {
     buckets?: DatasetDistributionDistributionBucket[];
     max?: number;
@@ -728,19 +703,6 @@ export class DeleteCachedContentResponse {
 }
 
 // @public
-export interface DeleteDocumentConfig {
-    abortSignal?: AbortSignal;
-    force?: boolean;
-    httpOptions?: HttpOptions;
-}
-
-// @public
-export interface DeleteDocumentParameters {
-    config?: DeleteDocumentConfig;
-    name: string;
-}
-
-// @public
 export interface DeleteFileConfig {
     abortSignal?: AbortSignal;
     httpOptions?: HttpOptions;
@@ -755,19 +717,6 @@ export interface DeleteFileParameters {
 // @public
 export class DeleteFileResponse {
     sdkHttpResponse?: HttpResponse;
-}
-
-// @public
-export interface DeleteFileSearchStoreConfig {
-    abortSignal?: AbortSignal;
-    force?: boolean;
-    httpOptions?: HttpOptions;
-}
-
-// @public
-export interface DeleteFileSearchStoreParameters {
-    config?: DeleteFileSearchStoreConfig;
-    name: string;
 }
 
 // @public
@@ -802,31 +751,6 @@ export interface DeleteResourceJob {
 // @public
 export interface DistillationDataStats {
     trainingDatasetStats?: DatasetStats;
-}
-
-// @public
-interface Document_2 {
-    createTime?: string;
-    customMetadata?: CustomMetadata[];
-    displayName?: string;
-    mimeType?: string;
-    name?: string;
-    sizeBytes?: string;
-    state?: DocumentState;
-    updateTime?: string;
-}
-export { Document_2 as Document }
-
-// @public
-export enum DocumentState {
-    // (undocumented)
-    STATE_ACTIVE = "STATE_ACTIVE",
-    // (undocumented)
-    STATE_FAILED = "STATE_FAILED",
-    // (undocumented)
-    STATE_PENDING = "STATE_PENDING",
-    // (undocumented)
-    STATE_UNSPECIFIED = "STATE_UNSPECIFIED"
 }
 
 // @public (undocumented)
@@ -1079,25 +1003,6 @@ export class Files extends BaseModule {
     get(params: types.GetFileParameters): Promise<types.File>;
     list: (params?: types.ListFilesParameters) => Promise<Pager<types.File>>;
     upload(params: types.UploadFileParameters): Promise<types.File>;
-}
-
-// @public
-export interface FileSearch {
-    fileSearchStoreNames?: string[];
-    metadataFilter?: string;
-    topK?: number;
-}
-
-// @public
-export interface FileSearchStore {
-    activeDocumentsCount?: string;
-    createTime?: string;
-    displayName?: string;
-    failedDocumentsCount?: string;
-    name?: string;
-    pendingDocumentsCount?: string;
-    sizeBytes?: string;
-    updateTime?: string;
 }
 
 // @public
@@ -1393,7 +1298,7 @@ export class GenerateVideosOperation implements Operation<GenerateVideosResponse
     done?: boolean;
     error?: Record<string, unknown>;
     // @internal
-    _fromAPIResponse({ apiResponse, _isVertexAI, }: OperationFromAPIResponseParameters): Operation<GenerateVideosResponse>;
+    _fromAPIResponse({ apiResponse, isVertexAI, }: OperationFromAPIResponseParameters): Operation<GenerateVideosResponse>;
     metadata?: Record<string, unknown>;
     name?: string;
     response?: GenerateVideosResponse;
@@ -1496,18 +1401,6 @@ export interface GetCachedContentParameters {
 }
 
 // @public
-export interface GetDocumentConfig {
-    abortSignal?: AbortSignal;
-    httpOptions?: HttpOptions;
-}
-
-// @public
-export interface GetDocumentParameters {
-    config?: GetDocumentConfig;
-    name: string;
-}
-
-// @public
 export interface GetFileConfig {
     abortSignal?: AbortSignal;
     httpOptions?: HttpOptions;
@@ -1516,18 +1409,6 @@ export interface GetFileConfig {
 // @public
 export interface GetFileParameters {
     config?: GetFileConfig;
-    name: string;
-}
-
-// @public
-export interface GetFileSearchStoreConfig {
-    abortSignal?: AbortSignal;
-    httpOptions?: HttpOptions;
-}
-
-// @public
-export interface GetFileSearchStoreParameters {
-    config?: GetFileSearchStoreConfig;
     name: string;
 }
 
@@ -1556,7 +1437,7 @@ export interface GetOperationParameters {
     operationName: string;
 }
 
-// @public
+// @public (undocumented)
 export interface GetTuningJobConfig {
     abortSignal?: AbortSignal;
     httpOptions?: HttpOptions;
@@ -1584,10 +1465,6 @@ export class GoogleGenAI {
     readonly chats: Chats;
     // (undocumented)
     readonly files: Files;
-    // Warning: (ae-forgotten-export) The symbol "FileSearchStores" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
-    readonly fileSearchStores: FileSearchStores;
     // (undocumented)
     readonly live: Live;
     // (undocumented)
@@ -1831,40 +1708,6 @@ export enum ImagePromptLanguage {
 }
 
 // @public
-export interface ImportFileConfig {
-    abortSignal?: AbortSignal;
-    chunkingConfig?: ChunkingConfig;
-    customMetadata?: CustomMetadata[];
-    httpOptions?: HttpOptions;
-}
-
-// @public
-export class ImportFileOperation implements Operation<ImportFileResponse> {
-    done?: boolean;
-    error?: Record<string, unknown>;
-    // @internal
-    _fromAPIResponse({ apiResponse, _isVertexAI, }: OperationFromAPIResponseParameters): Operation<ImportFileResponse>;
-    metadata?: Record<string, unknown>;
-    name?: string;
-    response?: ImportFileResponse;
-    sdkHttpResponse?: HttpResponse;
-}
-
-// @public
-export interface ImportFileParameters {
-    config?: ImportFileConfig;
-    fileName: string;
-    fileSearchStoreName: string;
-}
-
-// @public
-export class ImportFileResponse {
-    documentName?: string;
-    parent?: string;
-    sdkHttpResponse?: HttpResponse;
-}
-
-// @public
 export class InlinedEmbedContentResponse {
     error?: JobError;
     response?: SingleEmbedContentResponse;
@@ -1976,30 +1819,6 @@ export class ListCachedContentsResponse {
 }
 
 // @public
-export interface ListDocumentsConfig {
-    abortSignal?: AbortSignal;
-    httpOptions?: HttpOptions;
-    // (undocumented)
-    pageSize?: number;
-    // (undocumented)
-    pageToken?: string;
-}
-
-// @public
-export interface ListDocumentsParameters {
-    // (undocumented)
-    config?: ListDocumentsConfig;
-    parent: string;
-}
-
-// @public
-export class ListDocumentsResponse {
-    documents?: Document_2[];
-    nextPageToken?: string;
-    sdkHttpResponse?: HttpResponse;
-}
-
-// @public (undocumented)
 export interface ListFilesConfig {
     abortSignal?: AbortSignal;
     httpOptions?: HttpOptions;
@@ -2007,29 +1826,6 @@ export interface ListFilesConfig {
     pageSize?: number;
     // (undocumented)
     pageToken?: string;
-}
-
-// @public
-export interface ListFileSearchStoresConfig {
-    abortSignal?: AbortSignal;
-    httpOptions?: HttpOptions;
-    // (undocumented)
-    pageSize?: number;
-    // (undocumented)
-    pageToken?: string;
-}
-
-// @public
-export interface ListFileSearchStoresParameters {
-    config?: ListFileSearchStoresConfig;
-}
-
-// @public
-export class ListFileSearchStoresResponse {
-    fileSearchStores?: FileSearchStore[];
-    // (undocumented)
-    nextPageToken?: string;
-    sdkHttpResponse?: HttpResponse;
 }
 
 // @public
@@ -2535,7 +2331,7 @@ export interface Operation<T> {
     done?: boolean;
     error?: Record<string, unknown>;
     // @internal
-    _fromAPIResponse({ apiResponse, _isVertexAI, }: OperationFromAPIResponseParameters): Operation<T>;
+    _fromAPIResponse({ apiResponse, isVertexAI, }: OperationFromAPIResponseParameters): Operation<T>;
     metadata?: Record<string, unknown>;
     name?: string;
     response?: T;
@@ -2544,7 +2340,7 @@ export interface Operation<T> {
 // @public
 export interface OperationFromAPIResponseParameters {
     apiResponse: Record<string, unknown>;
-    _isVertexAI: boolean;
+    isVertexAI: boolean;
 }
 
 // @public
@@ -2577,11 +2373,11 @@ export enum PagedItem {
     // (undocumented)
     PAGED_ITEM_DOCUMENTS = "documents",
     // (undocumented)
-    PAGED_ITEM_FILE_SEARCH_STORES = "fileSearchStores",
-    // (undocumented)
     PAGED_ITEM_FILES = "files",
     // (undocumented)
     PAGED_ITEM_MODELS = "models",
+    // (undocumented)
+    PAGED_ITEM_RAG_STORES = "ragStores",
     // (undocumented)
     PAGED_ITEM_TUNING_JOBS = "tuningJobs"
 }
@@ -3072,11 +2868,6 @@ export enum StartSensitivity {
 }
 
 // @public
-export interface StringList {
-    values?: string[];
-}
-
-// @public
 export interface StyleReferenceConfig {
     styleDescription?: string;
 }
@@ -3220,7 +3011,6 @@ export interface Tool {
     codeExecution?: ToolCodeExecution;
     computerUse?: ComputerUse;
     enterpriseWebSearch?: EnterpriseWebSearch;
-    fileSearch?: FileSearch;
     functionDeclarations?: FunctionDeclaration[];
     googleMaps?: GoogleMaps;
     googleSearch?: GoogleSearch;
@@ -3442,53 +3232,6 @@ export interface UploadFileParameters {
 }
 
 // @public
-export interface UploadToFileSearchStoreConfig {
-    abortSignal?: AbortSignal;
-    chunkingConfig?: ChunkingConfig;
-    customMetadata?: CustomMetadata[];
-    displayName?: string;
-    httpOptions?: HttpOptions;
-    mimeType?: string;
-}
-
-// @public
-export class UploadToFileSearchStoreOperation implements Operation<UploadToFileSearchStoreResponse> {
-    done?: boolean;
-    error?: Record<string, unknown>;
-    // @internal
-    _fromAPIResponse({ apiResponse, _isVertexAI, }: OperationFromAPIResponseParameters): Operation<UploadToFileSearchStoreResponse>;
-    metadata?: Record<string, unknown>;
-    name?: string;
-    response?: UploadToFileSearchStoreResponse;
-    sdkHttpResponse?: HttpResponse;
-}
-
-// @public
-export interface UploadToFileSearchStoreParameters {
-    config?: UploadToFileSearchStoreConfig;
-    fileSearchStoreName: string;
-}
-
-// @public
-export interface UploadToFileSearchStoreParameters {
-    config?: UploadToFileSearchStoreConfig;
-    file: string | globalThis.Blob;
-    fileSearchStoreName: string;
-}
-
-// @public
-export class UploadToFileSearchStoreResponse {
-    documentName?: string;
-    parent?: string;
-    sdkHttpResponse?: HttpResponse;
-}
-
-// @public
-export class UploadToFileSearchStoreResumableResponse {
-    sdkHttpResponse?: HttpResponse;
-}
-
-// @public
 export interface UpscaleImageConfig {
     abortSignal?: AbortSignal;
     enhanceInputImage?: boolean;
@@ -3656,12 +3399,6 @@ export interface VoiceConfig {
 export interface WeightedPrompt {
     text?: string;
     weight?: number;
-}
-
-// @public
-export interface WhiteSpaceConfig {
-    maxOverlapTokens?: number;
-    maxTokensPerChunk?: number;
 }
 
 // (No @packageDocumentation comment for this package)

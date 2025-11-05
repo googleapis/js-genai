@@ -10,8 +10,6 @@ import type {ReferenceImageAPIInternal} from './_internal_types.js';
 import {
   generateVideosOperationFromMldev,
   generateVideosOperationFromVertex,
-  importFileOperationFromMldev,
-  uploadToFileSearchStoreOperationFromMldev,
 } from './converters/_operations_converters.js';
 
 /** Outcome of the code execution. */
@@ -904,14 +902,6 @@ export enum TuningMethod {
   PREFERENCE_TUNING = 'PREFERENCE_TUNING',
 }
 
-/** State for the lifecycle of a Document. */
-export enum DocumentState {
-  STATE_UNSPECIFIED = 'STATE_UNSPECIFIED',
-  STATE_PENDING = 'STATE_PENDING',
-  STATE_ACTIVE = 'STATE_ACTIVE',
-  STATE_FAILED = 'STATE_FAILED',
-}
-
 /** State for the lifecycle of a File. */
 export enum FileState {
   STATE_UNSPECIFIED = 'STATE_UNSPECIFIED',
@@ -1596,17 +1586,6 @@ export declare interface ComputerUse {
   excludedPredefinedFunctions?: string[];
 }
 
-/** Tool to retrieve knowledge from the File Search Stores. */
-export declare interface FileSearch {
-  /** The names of the file_search_stores to retrieve from.
-      Example: `fileSearchStores/my-file-search-store-123` */
-  fileSearchStoreNames?: string[];
-  /** The number of file search retrieval chunks to retrieve. */
-  topK?: number;
-  /** Metadata filter to apply to the file search retrieval documents. See https://google.aip.dev/160 for the syntax of the filter expression. */
-  metadataFilter?: string;
-}
-
 /** The API secret. This data type is not supported in Gemini API. */
 export declare interface ApiAuthApiKeyConfig {
   /** Required. The SecretManager secret version resource name storing API key. e.g. projects/{project}/secrets/{secret}/versions/{version} */
@@ -1864,8 +1843,6 @@ export declare interface Tool {
       computer. If enabled, it automatically populates computer-use specific
       Function Declarations. */
   computerUse?: ComputerUse;
-  /** Optional. Tool to retrieve knowledge from the File Search Stores. */
-  fileSearch?: FileSearch;
   /** Optional. CodeExecution tool type. Enables the model to execute code as part of generation. */
   codeExecution?: ToolCodeExecution;
   /** Optional. Tool to support searching public web data, powered by Vertex AI Search and Sec4 compliance. This field is not supported in Gemini API. */
@@ -3794,7 +3771,7 @@ export declare interface Operation<T> {
    */
   _fromAPIResponse({
     apiResponse,
-    _isVertexAI,
+    isVertexAI,
   }: OperationFromAPIResponseParameters): Operation<T>;
 }
 
@@ -3819,13 +3796,13 @@ export class GenerateVideosOperation
    */
   _fromAPIResponse({
     apiResponse,
-    _isVertexAI,
+    isVertexAI,
   }: OperationFromAPIResponseParameters): Operation<GenerateVideosResponse> {
     const operation = new GenerateVideosOperation();
     let response;
     const op = apiResponse as unknown as GenerateVideosOperation;
 
-    if (_isVertexAI) {
+    if (isVertexAI) {
       response = generateVideosOperationFromVertex(op);
     } else {
       response = generateVideosOperationFromMldev(op);
@@ -3837,8 +3814,8 @@ export class GenerateVideosOperation
   sdkHttpResponse?: HttpResponse;
 }
 
-/** Optional parameters for tunings.get method. */
-export declare interface GetTuningJobConfig {
+export /** Optional parameters for tunings.get method. */
+declare interface GetTuningJobConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
   /** Abort signal which can be used to cancel the request.
@@ -4551,366 +4528,8 @@ export class ListCachedContentsResponse {
   cachedContents?: CachedContent[];
 }
 
-/** Optional Config. */
-export declare interface GetDocumentConfig {
-  /** Used to override HTTP request options. */
-  httpOptions?: HttpOptions;
-  /** Abort signal which can be used to cancel the request.
-
-  NOTE: AbortSignal is a client-only operation. Using it to cancel an
-  operation will not cancel the request in the service. You will still
-  be charged usage for any applicable operations.
-       */
-  abortSignal?: AbortSignal;
-}
-
-/** Parameters for documents.get. */
-export declare interface GetDocumentParameters {
-  /** The resource name of the Document.
-    Example: fileSearchStores/file-search-store-foo/documents/documents-bar */
-  name: string;
-  /** Optional parameters for the request. */
-  config?: GetDocumentConfig;
-}
-
-/** User provided string values assigned to a single metadata key. This data type is not supported in Vertex AI. */
-export declare interface StringList {
-  /** The string values of the metadata to store. */
-  values?: string[];
-}
-
-/** User provided metadata stored as key-value pairs. This data type is not supported in Vertex AI. */
-export declare interface CustomMetadata {
-  /** Required. The key of the metadata to store. */
-  key?: string;
-  /** The numeric value of the metadata to store. */
-  numericValue?: number;
-  /** The StringList value of the metadata to store. */
-  stringListValue?: StringList;
-  /** The string value of the metadata to store. */
-  stringValue?: string;
-}
-
-/** A Document is a collection of Chunks. */
-export declare interface Document {
-  /** The resource name of the Document.
-      Example: fileSearchStores/file-search-store-foo/documents/documents-bar */
-  name?: string;
-  /** The human-readable display name for the Document. */
-  displayName?: string;
-  /** The current state of the Document. */
-  state?: DocumentState;
-  /** The size of the Document in bytes. */
-  sizeBytes?: string;
-  /** The MIME type of the Document. */
-  mimeType?: string;
-  /** Output only. The Timestamp of when the `Document` was created. */
-  createTime?: string;
-  /** Optional. User provided custom metadata stored as key-value pairs used for querying. A `Document` can have a maximum of 20 `CustomMetadata`. */
-  customMetadata?: CustomMetadata[];
-  /** Output only. The Timestamp of when the `Document` was last updated. */
-  updateTime?: string;
-}
-
-/** Config for optional parameters. */
-export declare interface DeleteDocumentConfig {
-  /** Used to override HTTP request options. */
-  httpOptions?: HttpOptions;
-  /** Abort signal which can be used to cancel the request.
-
-  NOTE: AbortSignal is a client-only operation. Using it to cancel an
-  operation will not cancel the request in the service. You will still
-  be charged usage for any applicable operations.
-       */
-  abortSignal?: AbortSignal;
-  /** If set to true, any `Chunk`s and objects related to this `Document` will
-      also be deleted.
-       */
-  force?: boolean;
-}
-
-/** Config for documents.delete parameters. */
-export declare interface DeleteDocumentParameters {
-  /** The resource name of the Document.
-    Example: fileSearchStores/file-search-store-foo/documents/documents-bar */
-  name: string;
-  /** Optional parameters for the request. */
-  config?: DeleteDocumentConfig;
-}
-
-/** Config for optional parameters. */
-export declare interface ListDocumentsConfig {
-  /** Used to override HTTP request options. */
-  httpOptions?: HttpOptions;
-  /** Abort signal which can be used to cancel the request.
-
-  NOTE: AbortSignal is a client-only operation. Using it to cancel an
-  operation will not cancel the request in the service. You will still
-  be charged usage for any applicable operations.
-       */
-  abortSignal?: AbortSignal;
-  pageSize?: number;
-  pageToken?: string;
-}
-
-/** Config for documents.list parameters. */
-export declare interface ListDocumentsParameters {
-  /** The resource name of the FileSearchStores. Example: `fileSearchStore/file-search-store-foo` */
-  parent: string;
-  config?: ListDocumentsConfig;
-}
-
-/** Config for documents.list return value. */
-export class ListDocumentsResponse {
-  /** Used to retain the full HTTP response. */
-  sdkHttpResponse?: HttpResponse;
-  /** A token, which can be sent as `page_token` to retrieve the next page. If this field is omitted, there are no more pages. */
-  nextPageToken?: string;
-  /** The returned `Document`s. */
-  documents?: Document[];
-}
-
-/** Optional parameters for creating a file search store. */
-export declare interface CreateFileSearchStoreConfig {
-  /** Used to override HTTP request options. */
-  httpOptions?: HttpOptions;
-  /** Abort signal which can be used to cancel the request.
-
-  NOTE: AbortSignal is a client-only operation. Using it to cancel an
-  operation will not cancel the request in the service. You will still
-  be charged usage for any applicable operations.
-       */
-  abortSignal?: AbortSignal;
-  /** The human-readable display name for the file search store.
-   */
-  displayName?: string;
-}
-
-/** Config for file_search_stores.create parameters. */
-export declare interface CreateFileSearchStoreParameters {
-  /** Optional parameters for creating a file search store.
-   */
-  config?: CreateFileSearchStoreConfig;
-}
-
-/** A collection of Documents. */
-export declare interface FileSearchStore {
-  /** The resource name of the FileSearchStore. Example: `fileSearchStores/my-file-search-store-123` */
-  name?: string;
-  /** The human-readable display name for the FileSearchStore. */
-  displayName?: string;
-  /** The Timestamp of when the FileSearchStore was created. */
-  createTime?: string;
-  /** The Timestamp of when the FileSearchStore was last updated. */
-  updateTime?: string;
-  /** The number of documents in the FileSearchStore that are active and ready for retrieval. */
-  activeDocumentsCount?: string;
-  /** The number of documents in the FileSearchStore that are being processed. */
-  pendingDocumentsCount?: string;
-  /** The number of documents in the FileSearchStore that have failed processing. */
-  failedDocumentsCount?: string;
-  /** The size of raw bytes ingested into the FileSearchStore. This is the
-      total size of all the documents in the FileSearchStore. */
-  sizeBytes?: string;
-}
-
-/** Optional parameters for getting a FileSearchStore. */
-export declare interface GetFileSearchStoreConfig {
-  /** Used to override HTTP request options. */
-  httpOptions?: HttpOptions;
-  /** Abort signal which can be used to cancel the request.
-
-  NOTE: AbortSignal is a client-only operation. Using it to cancel an
-  operation will not cancel the request in the service. You will still
-  be charged usage for any applicable operations.
-       */
-  abortSignal?: AbortSignal;
-}
-
-/** Config for file_search_stores.get parameters. */
-export declare interface GetFileSearchStoreParameters {
-  /** The resource name of the FileSearchStore. Example: `fileSearchStores/my-file-search-store-123` */
-  name: string;
-  /** Optional parameters for the request. */
-  config?: GetFileSearchStoreConfig;
-}
-
-/** Optional parameters for deleting a FileSearchStore. */
-export declare interface DeleteFileSearchStoreConfig {
-  /** Used to override HTTP request options. */
-  httpOptions?: HttpOptions;
-  /** Abort signal which can be used to cancel the request.
-
-  NOTE: AbortSignal is a client-only operation. Using it to cancel an
-  operation will not cancel the request in the service. You will still
-  be charged usage for any applicable operations.
-       */
-  abortSignal?: AbortSignal;
-  /** If set to true, any Documents and objects related to this FileSearchStore will also be deleted.
-      If false (the default), a FAILED_PRECONDITION error will be returned if
-      the FileSearchStore contains any Documents.
-       */
-  force?: boolean;
-}
-
-/** Config for file_search_stores.delete parameters. */
-export declare interface DeleteFileSearchStoreParameters {
-  /** The resource name of the FileSearchStore. Example: `fileSearchStores/my-file-search-store-123` */
-  name: string;
-  /** Optional parameters for the request. */
-  config?: DeleteFileSearchStoreConfig;
-}
-
-/** Optional parameters for listing FileSearchStore. */
-export declare interface ListFileSearchStoresConfig {
-  /** Used to override HTTP request options. */
-  httpOptions?: HttpOptions;
-  /** Abort signal which can be used to cancel the request.
-
-  NOTE: AbortSignal is a client-only operation. Using it to cancel an
-  operation will not cancel the request in the service. You will still
-  be charged usage for any applicable operations.
-       */
-  abortSignal?: AbortSignal;
-  pageSize?: number;
-  pageToken?: string;
-}
-
-/** Config for file_search_stores.list parameters. */
-export declare interface ListFileSearchStoresParameters {
-  /** Optional parameters for the list request. */
-  config?: ListFileSearchStoresConfig;
-}
-
-/** Config for file_search_stores.list return value. */
-export class ListFileSearchStoresResponse {
-  /** Used to retain the full HTTP response. */
-  sdkHttpResponse?: HttpResponse;
-  nextPageToken?: string;
-  /** The returned file search stores. */
-  fileSearchStores?: FileSearchStore[];
-}
-
-/** Configuration for a white space chunking algorithm. */
-export declare interface WhiteSpaceConfig {
-  /** Maximum number of tokens per chunk. */
-  maxTokensPerChunk?: number;
-  /** Maximum number of overlapping tokens between two adjacent chunks. */
-  maxOverlapTokens?: number;
-}
-
-/** Config for telling the service how to chunk the file. */
-export declare interface ChunkingConfig {
-  /** White space chunking configuration. */
-  whiteSpaceConfig?: WhiteSpaceConfig;
-}
-
-/** Optional parameters for uploading a file to a FileSearchStore. */
-export declare interface UploadToFileSearchStoreConfig {
-  /** Used to override HTTP request options. */
-  httpOptions?: HttpOptions;
-  /** Abort signal which can be used to cancel the request.
-
-  NOTE: AbortSignal is a client-only operation. Using it to cancel an
-  operation will not cancel the request in the service. You will still
-  be charged usage for any applicable operations.
-       */
-  abortSignal?: AbortSignal;
-  /** MIME type of the file to be uploaded. If not provided, it will be inferred from the file extension. */
-  mimeType?: string;
-  /** Display name of the created document. */
-  displayName?: string;
-  /** User provided custom metadata stored as key-value pairs used for querying. */
-  customMetadata?: CustomMetadata[];
-  /** Config for telling the service how to chunk the file. */
-  chunkingConfig?: ChunkingConfig;
-}
-
-/** Generates the parameters for the private _upload_to_file_search_store method. */
-export declare interface UploadToFileSearchStoreParameters {
-  /** The resource name of the FileSearchStore. Example: `fileSearchStores/my-file-search-store-123` */
-  fileSearchStoreName: string;
-  /** Used to override the default configuration. */
-  config?: UploadToFileSearchStoreConfig;
-}
-
-/** Response for the resumable upload method. */
-export class UploadToFileSearchStoreResumableResponse {
-  /** Used to retain the full HTTP response. */
-  sdkHttpResponse?: HttpResponse;
-}
-
-/** Optional parameters for importing a file. */
-export declare interface ImportFileConfig {
-  /** Used to override HTTP request options. */
-  httpOptions?: HttpOptions;
-  /** Abort signal which can be used to cancel the request.
-
-  NOTE: AbortSignal is a client-only operation. Using it to cancel an
-  operation will not cancel the request in the service. You will still
-  be charged usage for any applicable operations.
-       */
-  abortSignal?: AbortSignal;
-  /** User provided custom metadata stored as key-value pairs used for querying. */
-  customMetadata?: CustomMetadata[];
-  /** Config for telling the service how to chunk the file. */
-  chunkingConfig?: ChunkingConfig;
-}
-
-/** Config for file_search_stores.import_file parameters. */
-export declare interface ImportFileParameters {
-  /** The resource name of the FileSearchStore. Example: `fileSearchStores/my-file-search-store-123` */
-  fileSearchStoreName: string;
-  /** The name of the File API File to import. Example: `files/abc-123` */
-  fileName: string;
-  /** Optional parameters for the request. */
-  config?: ImportFileConfig;
-}
-
-/** Response for ImportFile to import a File API file with a file search store. */
-export class ImportFileResponse {
-  /** Used to retain the full HTTP response. */
-  sdkHttpResponse?: HttpResponse;
-  /** The name of the FileSearchStore containing Documents. */
-  parent?: string;
-  /** The identifier for the Document imported. */
-  documentName?: string;
-}
-
-/** Long-running operation for importing a file to a FileSearchStore. */
-export class ImportFileOperation implements Operation<ImportFileResponse> {
-  /** The server-assigned name, which is only unique within the same service that originally returns it. If you use the default HTTP mapping, the `name` should be a resource name ending with `operations/{unique_id}`. */
-  name?: string;
-  /** Service-specific metadata associated with the operation. It typically contains progress information and common metadata such as create time. Some services might not provide such metadata.  Any method that returns a long-running operation should document the metadata type, if any. */
-  metadata?: Record<string, unknown>;
-  /** If the value is `false`, it means the operation is still in progress. If `true`, the operation is completed, and either `error` or `response` is available. */
-  done?: boolean;
-  /** The error result of the operation in case of failure or cancellation. */
-  error?: Record<string, unknown>;
-  /** The result of the ImportFile operation, available when the operation is done. */
-  response?: ImportFileResponse;
-
-  /**
-   * Instantiates an Operation of the same type as the one being called with the fields set from the API response.
-   * @internal
-   */
-  _fromAPIResponse({
-    apiResponse,
-    _isVertexAI,
-  }: OperationFromAPIResponseParameters): Operation<ImportFileResponse> {
-    const operation = new ImportFileOperation();
-
-    const op = apiResponse as unknown as ImportFileOperation;
-    const response = importFileOperationFromMldev(op);
-    Object.assign(operation, response);
-    return operation;
-  }
-  /** The full HTTP response. */
-  sdkHttpResponse?: HttpResponse;
-}
-
-export /** Used to override the default configuration. */
-declare interface ListFilesConfig {
+/** Used to override the default configuration. */
+export declare interface ListFilesConfig {
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
   /** Abort signal which can be used to cancel the request.
@@ -5976,7 +5595,7 @@ export declare interface OperationFromAPIResponseParameters {
   /** The API response to be converted to an Operation. */
   apiResponse: Record<string, unknown>;
   /** Whether the API response is from Vertex AI. */
-  _isVertexAI: boolean;
+  isVertexAI: boolean;
 }
 
 /**
@@ -6547,16 +6166,6 @@ export interface UploadFileParameters {
   config?: UploadFileConfig;
 }
 
-/** Parameters for the upload file to file search store method. */
-export interface UploadToFileSearchStoreParameters {
-  /** The name of the file search store to upload. */
-  fileSearchStoreName: string;
-  /** The string path to the file to be uploaded or a Blob object. */
-  file: string | globalThis.Blob;
-  /** Configuration that contains optional parameters. */
-  config?: UploadToFileSearchStoreConfig;
-}
-
 /**
  * CallableTool is an invokable tool that can be executed with external
  * application (e.g., via Model Context Protocol) or local functions with
@@ -6680,50 +6289,6 @@ export declare interface CreateTuningJobParameters {
   trainingDataset: TuningDataset;
   /** Configuration for the tuning job. */
   config?: CreateTuningJobConfig;
-}
-
-/** The response when long-running operation for uploading a file to a FileSearchStore complete. */
-export class UploadToFileSearchStoreResponse {
-  /** Used to retain the full HTTP response. */
-  sdkHttpResponse?: HttpResponse;
-  /** The name of the FileSearchStore containing Documents. */
-  parent?: string;
-  /** The identifier for the Document imported. */
-  documentName?: string;
-}
-
-/** Long-running operation for uploading a file to a FileSearchStore. */
-export class UploadToFileSearchStoreOperation
-  implements Operation<UploadToFileSearchStoreResponse>
-{
-  /** The server-assigned name, which is only unique within the same service that originally returns it. If you use the default HTTP mapping, the `name` should be a resource name ending with `operations/{unique_id}`. */
-  name?: string;
-  /** Service-specific metadata associated with the operation. It typically contains progress information and common metadata such as create time. Some services might not provide such metadata.  Any method that returns a long-running operation should document the metadata type, if any. */
-  metadata?: Record<string, unknown>;
-  /** If the value is `false`, it means the operation is still in progress. If `true`, the operation is completed, and either `error` or `response` is available. */
-  done?: boolean;
-  /** The error result of the operation in case of failure or cancellation. */
-  error?: Record<string, unknown>;
-  /** The result of the UploadToFileSearchStore operation, available when the operation is done. */
-  response?: UploadToFileSearchStoreResponse;
-
-  /**
-   * Instantiates an Operation of the same type as the one being called with the fields set from the API response.
-   * @internal
-   */
-  _fromAPIResponse({
-    apiResponse,
-    _isVertexAI,
-  }: OperationFromAPIResponseParameters): Operation<UploadToFileSearchStoreResponse> {
-    const operation = new UploadToFileSearchStoreOperation();
-
-    const op = apiResponse as unknown as UploadToFileSearchStoreOperation;
-    const response = uploadToFileSearchStoreOperationFromMldev(op);
-    Object.assign(operation, response);
-    return operation;
-  }
-  /** The full HTTP response. */
-  sdkHttpResponse?: HttpResponse;
 }
 
 export type BlobImageUnion = Blob;

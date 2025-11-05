@@ -1627,11 +1627,6 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
     common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
   }
 
-  const fromFileSearch = common.getValueByPath(fromObject, ['fileSearch']);
-  if (fromFileSearch != null) {
-    common.setValueByPath(toObject, ['fileSearch'], fromFileSearch);
-  }
-
   const fromCodeExecution = common.getValueByPath(fromObject, [
     'codeExecution',
   ]);

@@ -4,11 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import * as fs from 'fs/promises';
-import * as path from 'path';
 
 import {ApiClient} from '../_api_client.js';
 import {FileStat, Uploader} from '../_uploader.js';
-import * as _converters from '../converters/_operations_converters.js';
 import {
   DELAY_MULTIPLIER,
   INITIAL_RETRY_DELAY_MS,
@@ -18,13 +16,8 @@ import {
   getBlobStat,
   sleep,
   uploadBlob,
-  uploadBlobToFileSearchStore,
 } from '../cross/_cross_uploader.js';
-import {
-  File,
-  HttpResponse,
-  UploadToFileSearchStoreOperation,
-} from '../types.js';
+import {File, HttpResponse} from '../types.js';
 
 export class NodeUploader implements Uploader {
   async stat(file: string | Blob): Promise<FileStat> {
@@ -48,22 +41,6 @@ export class NodeUploader implements Uploader {
       return await this.uploadFileFromPath(file, uploadUrl, apiClient);
     } else {
       return uploadBlob(file, uploadUrl, apiClient);
-    }
-  }
-
-  async uploadToFileSearchStore(
-    file: string | Blob,
-    uploadUrl: string,
-    apiClient: ApiClient,
-  ): Promise<UploadToFileSearchStoreOperation> {
-    if (typeof file === 'string') {
-      return await this.uploadFileToFileSearchStoreFromPath(
-        file,
-        uploadUrl,
-        apiClient,
-      );
-    } else {
-      return uploadBlobToFileSearchStore(file, uploadUrl, apiClient);
     }
   }
 
@@ -169,54 +146,11 @@ export class NodeUploader implements Uploader {
     uploadUrl: string,
     apiClient: ApiClient,
   ): Promise<File> {
-    const response = await this.uploadFileFromPathInternal(
-      file,
-      uploadUrl,
-      apiClient,
-    );
-    const responseJson = (await response?.json()) as Record<
-      string,
-      File | unknown
-    >;
-    if (response?.headers?.[X_GOOG_UPLOAD_STATUS_HEADER_FIELD] !== 'final') {
-      throw new Error('Failed to upload file: Upload status is not finalized.');
-    }
-    return responseJson['file'] as File;
-  }
-
-  private async uploadFileToFileSearchStoreFromPath(
-    file: string,
-    uploadUrl: string,
-    apiClient: ApiClient,
-  ): Promise<UploadToFileSearchStoreOperation> {
-    const response = await this.uploadFileFromPathInternal(
-      file,
-      uploadUrl,
-      apiClient,
-    );
-    const responseJson =
-      (await response?.json()) as UploadToFileSearchStoreOperation;
-    if (response?.headers?.[X_GOOG_UPLOAD_STATUS_HEADER_FIELD] !== 'final') {
-      throw new Error('Failed to upload file: Upload status is not finalized.');
-    }
-    const resp =
-      _converters.uploadToFileSearchStoreOperationFromMldev(responseJson);
-    const typedResp = new UploadToFileSearchStoreOperation();
-    Object.assign(typedResp, resp);
-    return typedResp;
-  }
-
-  private async uploadFileFromPathInternal(
-    file: string,
-    uploadUrl: string,
-    apiClient: ApiClient,
-  ): Promise<HttpResponse> {
     let fileSize = 0;
     let offset = 0;
     let response: HttpResponse = new HttpResponse(new Response());
     let uploadCommand = 'upload';
     let fileHandle: fs.FileHandle | undefined;
-    const fileName = path.basename(file);
     try {
       fileHandle = await fs.open(file, 'r');
       if (!fileHandle) {
@@ -259,7 +193,6 @@ export class NodeUploader implements Uploader {
                 'X-Goog-Upload-Command': uploadCommand,
                 'X-Goog-Upload-Offset': String(offset),
                 'Content-Length': String(bytesRead),
-                'X-Goog-Upload-File-Name': fileName,
               },
             },
           });
@@ -284,7 +217,16 @@ export class NodeUploader implements Uploader {
           );
         }
       }
-      return response;
+      const responseJson = (await response?.json()) as Record<
+        string,
+        File | unknown
+      >;
+      if (response?.headers?.[X_GOOG_UPLOAD_STATUS_HEADER_FIELD] !== 'final') {
+        throw new Error(
+          'Failed to upload file: Upload status is not finalized.',
+        );
+      }
+      return responseJson['file'] as File;
     } finally {
       // Ensure the file handle is always closed
       if (fileHandle) {
