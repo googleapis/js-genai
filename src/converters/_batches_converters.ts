@@ -263,6 +263,13 @@ export function batchJobFromVertex(
     );
   }
 
+  const fromCompletionStats = common.getValueByPath(fromObject, [
+    'completionStats',
+  ]);
+  if (fromCompletionStats != null) {
+    common.setValueByPath(toObject, ['completionStats'], fromCompletionStats);
+  }
+
   return toObject;
 }
 

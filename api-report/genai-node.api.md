@@ -172,6 +172,7 @@ export class Batches extends BaseModule {
 
 // @public
 export interface BatchJob {
+    completionStats?: CompletionStats;
     createTime?: string;
     dest?: BatchJobDestination;
     displayName?: string;
@@ -361,6 +362,14 @@ export interface CitationMetadata {
 export interface CodeExecutionResult {
     outcome?: Outcome;
     output?: string;
+}
+
+// @public
+export interface CompletionStats {
+    failedCount?: string;
+    incompleteCount?: string;
+    successfulCount?: string;
+    successfulForecastPointCount?: string;
 }
 
 // @public
