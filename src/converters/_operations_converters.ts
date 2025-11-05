@@ -275,6 +275,130 @@ export function getOperationParametersToVertex(
   return toObject;
 }
 
+export function importFileOperationFromMldev(
+  fromObject: types.ImportFileOperation,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromName = common.getValueByPath(fromObject, ['name']);
+  if (fromName != null) {
+    common.setValueByPath(toObject, ['name'], fromName);
+  }
+
+  const fromMetadata = common.getValueByPath(fromObject, ['metadata']);
+  if (fromMetadata != null) {
+    common.setValueByPath(toObject, ['metadata'], fromMetadata);
+  }
+
+  const fromDone = common.getValueByPath(fromObject, ['done']);
+  if (fromDone != null) {
+    common.setValueByPath(toObject, ['done'], fromDone);
+  }
+
+  const fromError = common.getValueByPath(fromObject, ['error']);
+  if (fromError != null) {
+    common.setValueByPath(toObject, ['error'], fromError);
+  }
+
+  const fromResponse = common.getValueByPath(fromObject, ['response']);
+  if (fromResponse != null) {
+    common.setValueByPath(
+      toObject,
+      ['response'],
+      importFileResponseFromMldev(fromResponse),
+    );
+  }
+
+  return toObject;
+}
+
+export function importFileResponseFromMldev(
+  fromObject: types.ImportFileResponse,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromSdkHttpResponse = common.getValueByPath(fromObject, [
+    'sdkHttpResponse',
+  ]);
+  if (fromSdkHttpResponse != null) {
+    common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
+  }
+
+  const fromParent = common.getValueByPath(fromObject, ['parent']);
+  if (fromParent != null) {
+    common.setValueByPath(toObject, ['parent'], fromParent);
+  }
+
+  const fromDocumentName = common.getValueByPath(fromObject, ['documentName']);
+  if (fromDocumentName != null) {
+    common.setValueByPath(toObject, ['documentName'], fromDocumentName);
+  }
+
+  return toObject;
+}
+
+export function uploadToFileSearchStoreOperationFromMldev(
+  fromObject: types.UploadToFileSearchStoreOperation,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromName = common.getValueByPath(fromObject, ['name']);
+  if (fromName != null) {
+    common.setValueByPath(toObject, ['name'], fromName);
+  }
+
+  const fromMetadata = common.getValueByPath(fromObject, ['metadata']);
+  if (fromMetadata != null) {
+    common.setValueByPath(toObject, ['metadata'], fromMetadata);
+  }
+
+  const fromDone = common.getValueByPath(fromObject, ['done']);
+  if (fromDone != null) {
+    common.setValueByPath(toObject, ['done'], fromDone);
+  }
+
+  const fromError = common.getValueByPath(fromObject, ['error']);
+  if (fromError != null) {
+    common.setValueByPath(toObject, ['error'], fromError);
+  }
+
+  const fromResponse = common.getValueByPath(fromObject, ['response']);
+  if (fromResponse != null) {
+    common.setValueByPath(
+      toObject,
+      ['response'],
+      uploadToFileSearchStoreResponseFromMldev(fromResponse),
+    );
+  }
+
+  return toObject;
+}
+
+export function uploadToFileSearchStoreResponseFromMldev(
+  fromObject: types.UploadToFileSearchStoreResponse,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromSdkHttpResponse = common.getValueByPath(fromObject, [
+    'sdkHttpResponse',
+  ]);
+  if (fromSdkHttpResponse != null) {
+    common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
+  }
+
+  const fromParent = common.getValueByPath(fromObject, ['parent']);
+  if (fromParent != null) {
+    common.setValueByPath(toObject, ['parent'], fromParent);
+  }
+
+  const fromDocumentName = common.getValueByPath(fromObject, ['documentName']);
+  if (fromDocumentName != null) {
+    common.setValueByPath(toObject, ['documentName'], fromDocumentName);
+  }
+
+  return toObject;
+}
+
 export function videoFromMldev(
   fromObject: types.Video,
 ): Record<string, unknown> {

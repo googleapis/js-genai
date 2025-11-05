@@ -16,7 +16,7 @@ export enum PagedItem {
   PAGED_ITEM_TUNING_JOBS = 'tuningJobs',
   PAGED_ITEM_FILES = 'files',
   PAGED_ITEM_CACHED_CONTENTS = 'cachedContents',
-  PAGED_ITEM_RAG_STORES = 'ragStores',
+  PAGED_ITEM_FILE_SEARCH_STORES = 'fileSearchStores',
   PAGED_ITEM_DOCUMENTS = 'documents',
 }
 
@@ -36,7 +36,7 @@ interface PagedItemResponse<T> {
   tuningJobs?: T[];
   files?: T[];
   cachedContents?: T[];
-  ragStores?: T[];
+  fileSearchStores?: T[];
   documents?: T[];
 }
 
