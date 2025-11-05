@@ -16,9 +16,12 @@ export enum PagedItem {
   PAGED_ITEM_TUNING_JOBS = 'tuningJobs',
   PAGED_ITEM_FILES = 'files',
   PAGED_ITEM_CACHED_CONTENTS = 'cachedContents',
+  PAGED_ITEM_RAG_STORES = 'ragStores',
+  PAGED_ITEM_DOCUMENTS = 'documents',
 }
 
-interface PagedItemConfig {
+export interface PagedItemConfig {
+  parent?: string;
   config?: {
     pageToken?: string;
     pageSize?: number;
@@ -33,6 +36,8 @@ interface PagedItemResponse<T> {
   tuningJobs?: T[];
   files?: T[];
   cachedContents?: T[];
+  ragStores?: T[];
+  documents?: T[];
 }
 
 /**

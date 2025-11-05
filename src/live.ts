@@ -152,7 +152,7 @@ export class Live {
       url = `${websocketBaseUrl}/ws/google.cloud.aiplatform.${
         apiVersion
       }.LlmBidiService/BidiGenerateContent`;
-      await this.auth.addAuthHeaders(headers);
+      await this.auth.addAuthHeaders(headers, url);
     } else {
       const apiKey = this.apiClient.getApiKey();
 

@@ -4,8 +4,8 @@
     {
       "request": {
         "method": "POST",
-        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-1.5-flash:streamGenerateContent?alt=sse",
-        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-1.5-flash:streamGenerateContent?alt=sse HTTP/1.1",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:streamGenerateContent?alt=sse",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:streamGenerateContent?alt=sse HTTP/1.1",
         "headers": {
           "Accept": "*/*",
           "Accept-Encoding": "gzip, deflate",
@@ -47,13 +47,13 @@
         "port": 443,
         "protocol": "https"
       },
-      "shaSum": "234c09f644415a3cdbac6a87c99e68259102866b98378f52996d8646d4b4cbb6",
+      "shaSum": "7765ee5f38670cf7d5776ea9404ac886bb56629a30bad088b4c4544c53dcc6fe",
       "response": {
         "statusCode": 200,
         "headers": {
           "Content-Disposition": "attachment",
           "Content-Type": "text/event-stream",
-          "Date": "Sat, 16 Aug 2025 00:42:54 GMT",
+          "Date": "Fri, 24 Oct 2025 07:45:42 GMT",
           "Server": "scaffolding on HTTPServer2",
           "Vary": "Origin, X-Origin, Referer",
           "X-Content-Type-Options": "nosniff",
@@ -67,16 +67,16 @@
                 "content": {
                   "parts": [
                     {
-                      "text": "low"
+                      "text": "low\n\nThe sky appears blue due to a phenomenon called **Rayleigh scattering**. Here's a breakdown:\n\n1.  **Sunlight is White Light:** Sunlight is made up"
                     }
                   ],
                   "role": "model"
                 }
               }
             ],
-            "createTime": "2025-08-16T00:42:54.618015Z",
-            "modelVersion": "gemini-1.5-flash-002",
-            "responseId": "DtSfaJ_cJc2Dm9IPlu_Z0QI",
+            "createTime": "2025-10-24T07:45:41.024576Z",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "pS77aIDAAaWB2PgPgpCCyA8",
             "usageMetadata": {
               "billablePromptUsage": {
                 "textCount": 48
@@ -90,16 +90,16 @@
                 "content": {
                   "parts": [
                     {
-                      "text": "\n\nThe sky is blue because of a phenomenon called Rayleigh scattering.  Sunlight is"
+                      "text": " of all the colors of the rainbow, which together appear white. Each color has a different wavelength – red light has longer wavelengths, while blue and violet light have shorter wavelengths.\n\n2.  **Earth's Atmosphere:** Our atmosphere is composed"
                     }
                   ],
                   "role": "model"
                 }
               }
             ],
-            "createTime": "2025-08-16T00:42:54.618015Z",
-            "modelVersion": "gemini-1.5-flash-002",
-            "responseId": "DtSfaJ_cJc2Dm9IPlu_Z0QI",
+            "createTime": "2025-10-24T07:45:41.024576Z",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "pS77aIDAAaWB2PgPgpCCyA8",
             "usageMetadata": {
               "trafficType": "ON_DEMAND"
             }
@@ -110,103 +110,23 @@
                 "content": {
                   "parts": [
                     {
-                      "text": " made up of all the colors of the rainbow.  As sunlight enters the Earth"
-                    }
-                  ],
-                  "role": "model"
-                }
-              }
-            ],
-            "createTime": "2025-08-16T00:42:54.618015Z",
-            "modelVersion": "gemini-1.5-flash-002",
-            "responseId": "DtSfaJ_cJc2Dm9IPlu_Z0QI",
-            "usageMetadata": {
-              "trafficType": "ON_DEMAND"
-            }
-          },
-          {
-            "candidates": [
-              {
-                "content": {
-                  "parts": [
-                    {
-                      "text": "'s atmosphere, it collides with tiny air molecules (mostly nitrogen and oxygen).  These molecules are much smaller than the wavelengths of visible light.  Ray"
-                    }
-                  ],
-                  "role": "model"
-                }
-              }
-            ],
-            "createTime": "2025-08-16T00:42:54.618015Z",
-            "modelVersion": "gemini-1.5-flash-002",
-            "responseId": "DtSfaJ_cJc2Dm9IPlu_Z0QI",
-            "usageMetadata": {
-              "trafficType": "ON_DEMAND"
-            }
-          },
-          {
-            "candidates": [
-              {
-                "content": {
-                  "parts": [
-                    {
-                      "text": "leigh scattering affects shorter wavelengths of light more strongly than longer wavelengths.  Blue and violet light have the shortest wavelengths, so they are scattered more than other colors."
-                    }
-                  ],
-                  "role": "model"
-                }
-              }
-            ],
-            "createTime": "2025-08-16T00:42:54.618015Z",
-            "modelVersion": "gemini-1.5-flash-002",
-            "responseId": "DtSfaJ_cJc2Dm9IPlu_Z0QI",
-            "usageMetadata": {
-              "trafficType": "ON_DEMAND"
-            }
-          },
-          {
-            "candidates": [
-              {
-                "content": {
-                  "parts": [
-                    {
-                      "text": "  This scattered blue light is what we see when we look at the sky.  Violet light is scattered even more than blue, but our eyes are less sensitive to violet, and the sun emits slightly less violet light, so we perceive the"
-                    }
-                  ],
-                  "role": "model"
-                }
-              }
-            ],
-            "createTime": "2025-08-16T00:42:54.618015Z",
-            "modelVersion": "gemini-1.5-flash-002",
-            "responseId": "DtSfaJ_cJc2Dm9IPlu_Z0QI",
-            "usageMetadata": {
-              "trafficType": "ON_DEMAND"
-            }
-          },
-          {
-            "candidates": [
-              {
-                "content": {
-                  "parts": [
-                    {
-                      "text": " sky as blue.\n"
+                      "text": " of tiny molecules, primarily nitrogen (about 78%) and oxygen (about 21%).\n\n3.  **Scattering:** When sunlight enters the atmosphere, it collides with these tiny air molecules. These molecules are much"
                     }
                   ],
                   "role": "model"
                 },
-                "finishReason": "STOP"
+                "finishReason": "MAX_TOKENS"
               }
             ],
-            "createTime": "2025-08-16T00:42:54.618015Z",
-            "modelVersion": "gemini-1.5-flash-002",
-            "responseId": "DtSfaJ_cJc2Dm9IPlu_Z0QI",
+            "createTime": "2025-10-24T07:45:41.024576Z",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "pS77aIDAAaWB2PgPgpCCyA8",
             "usageMetadata": {
-              "candidatesTokenCount": 150,
+              "candidatesTokenCount": 132,
               "candidatesTokensDetails": [
                 {
                   "modality": "TEXT",
-                  "tokenCount": 150
+                  "tokenCount": 132
                 }
               ],
               "promptTokenCount": 17,
@@ -216,7 +136,8 @@
                   "tokenCount": 17
                 }
               ],
-              "totalTokenCount": 167,
+              "thoughtsTokenCount": 65,
+              "totalTokenCount": 214,
               "trafficType": "ON_DEMAND"
             }
           }

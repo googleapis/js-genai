@@ -4,8 +4,8 @@
     {
       "request": {
         "method": "POST",
-        "url": "/v1beta/models/gemini-1.5-flash:generateContent",
-        "request": "POST /v1beta/models/gemini-1.5-flash:generateContent HTTP/1.1",
+        "url": "/v1beta/models/gemini-2.5-flash:generateContent",
+        "request": "POST /v1beta/models/gemini-2.5-flash:generateContent HTTP/1.1",
         "headers": {
           "Accept": "*/*",
           "Accept-Encoding": "gzip, deflate",
@@ -44,16 +44,16 @@
         "port": 443,
         "protocol": "https"
       },
-      "shaSum": "3893003fe2d128dd1f7f59bfaedbfa734bc1f20860a3120d25607edd37b76a08",
+      "shaSum": "d45027f00b00cde00d2b406db650df7676d3a95ddd9262e719bd9410237c7e9d",
       "response": {
         "statusCode": 200,
         "headers": {
           "Content-Encoding": "gzip",
-          "Content-Length": "316",
+          "Content-Length": "360",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Sat, 16 Aug 2025 00:43:12 GMT",
+          "Date": "Fri, 24 Oct 2025 07:45:10 GMT",
           "Server": "scaffolding on HTTPServer2",
-          "Server-Timing": "gfet4t7; dur=401",
+          "Server-Timing": "gfet4t7; dur=912",
           "Vary": "Origin, X-Origin, Referer",
           "X-Content-Type-Options": "nosniff",
           "X-Frame-Options": "SAMEORIGIN",
@@ -63,36 +63,32 @@
           {
             "candidates": [
               {
-                "avgLogprobs": -0.00003236792690586299,
                 "content": {
                   "parts": [
                     {
-                      "text": "low\n"
+                      "text": "low"
                     }
                   ],
                   "role": "model"
                 },
-                "finishReason": "STOP"
+                "finishReason": "STOP",
+                "index": 0
               }
             ],
-            "modelVersion": "gemini-1.5-flash",
-            "responseId": "INSfaL3WGP6Hm9IPnr2N2QY",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "hi77aOvyCJ-jvr0P8syDgQw",
+            "turnToken": "v1:ChdoaTc3YU92eUNKLWp2cjBQOHN5RGdRdxIXaGk3N2FPdnlDSi1qdnIwUDhzeURnUXc",
             "usageMetadata": {
-              "candidatesTokenCount": 2,
-              "candidatesTokensDetails": [
-                {
-                  "modality": "TEXT",
-                  "tokenCount": 2
-                }
-              ],
-              "promptTokenCount": 7,
+              "candidatesTokenCount": 1,
+              "promptTokenCount": 9,
               "promptTokensDetails": [
                 {
                   "modality": "TEXT",
-                  "tokenCount": 7
+                  "tokenCount": 9
                 }
               ],
-              "totalTokenCount": 9
+              "thoughtsTokenCount": 20,
+              "totalTokenCount": 30
             }
           }
         ]

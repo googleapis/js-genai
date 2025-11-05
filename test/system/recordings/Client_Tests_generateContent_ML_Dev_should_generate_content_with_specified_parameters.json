@@ -4,14 +4,14 @@
     {
       "request": {
         "method": "POST",
-        "url": "/v1beta/models/gemini-1.5-flash:generateContent",
-        "request": "POST /v1beta/models/gemini-1.5-flash:generateContent HTTP/1.1",
+        "url": "/v1beta/models/gemini-2.5-flash:generateContent",
+        "request": "POST /v1beta/models/gemini-2.5-flash:generateContent HTTP/1.1",
         "headers": {
           "Accept": "*/*",
           "Accept-Encoding": "gzip, deflate",
           "Accept-Language": "*",
           "Connection": "keep-alive",
-          "Content-Length": "133",
+          "Content-Length": "173",
           "Content-Type": "application/json",
           "Sec-Fetch-Mode": "cors",
           "Test-Name": "Client Tests generateContent ML Dev should generate content with specified parameters"
@@ -30,7 +30,10 @@
             ],
             "generationConfig": {
               "candidateCount": 1,
-              "maxOutputTokens": 20
+              "maxOutputTokens": 200,
+              "thinkingConfig": {
+                "thinkingBudget": 50
+              }
             }
           }
         ],
@@ -39,16 +42,16 @@
         "port": 443,
         "protocol": "https"
       },
-      "shaSum": "3e2bf4110f664397c52d769fda35c3840f50d6a9e84105a6818181f2f56f1990",
+      "shaSum": "203bc86faa4935f96c54e87bc2e8295b9ecf1327599d06a3c81474050631a77e",
       "response": {
         "statusCode": 200,
         "headers": {
           "Content-Encoding": "gzip",
-          "Content-Length": "379",
+          "Content-Length": "755",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Sat, 16 Aug 2025 00:43:13 GMT",
+          "Date": "Fri, 24 Oct 2025 07:45:19 GMT",
           "Server": "scaffolding on HTTPServer2",
-          "Server-Timing": "gfet4t7; dur=486",
+          "Server-Timing": "gfet4t7; dur=2266",
           "Vary": "Origin, X-Origin, Referer",
           "X-Content-Type-Options": "nosniff",
           "X-Frame-Options": "SAMEORIGIN",
@@ -58,36 +61,32 @@
           {
             "candidates": [
               {
-                "avgLogprobs": -0.006019651517271995,
                 "content": {
                   "parts": [
                     {
-                      "text": "The sky is blue due to a phenomenon called **Rayleigh scattering**.  Sunlight is made up of"
+                      "text": "The sky is blue because of something called **Rayleigh Scattering**.\n\nHere's a breakdown of why it happens:\n\n1.  **Sunlight is White (or Full Spectrum):** The light that comes from the sun is actually made up of all the colors of the rainbow (red, orange, yellow, green, blue, indigo, violet). When all these colors combine, we perceive them as white light.\n\n2.  **Earth's Atmosphere:** Our planet is surrounded by a thick layer of gases – primarily nitrogen (about 78%) and oxygen (about 21%), along with smaller amounts of other gases and tiny particles of dust and water vapor.\n\n3.  **Wavelengths and Scattering:**\n"
                     }
                   ],
                   "role": "model"
                 },
-                "finishReason": "MAX_TOKENS"
+                "finishReason": "MAX_TOKENS",
+                "index": 0
               }
             ],
-            "modelVersion": "gemini-1.5-flash",
-            "responseId": "IdSfaMD_E4yfmecP5IKC0Q8",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "jy77aN2dK5v_1e8PlvqtsQ8",
+            "turnToken": "v1:ChdqeTc3YU4yZEs1dl8xZThQbHZxdHNROBIXank3N2FOMmRLNXZfMWU4UGx2cXRzUTg",
             "usageMetadata": {
-              "candidatesTokenCount": 20,
-              "candidatesTokensDetails": [
-                {
-                  "modality": "TEXT",
-                  "tokenCount": 20
-                }
-              ],
-              "promptTokenCount": 6,
+              "candidatesTokenCount": 149,
+              "promptTokenCount": 7,
               "promptTokensDetails": [
                 {
                   "modality": "TEXT",
-                  "tokenCount": 6
+                  "tokenCount": 7
                 }
               ],
-              "totalTokenCount": 26
+              "thoughtsTokenCount": 48,
+              "totalTokenCount": 204
             }
           }
         ]

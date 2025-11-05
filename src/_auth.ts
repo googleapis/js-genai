@@ -12,6 +12,7 @@ export interface Auth {
    * Sets the headers needed to authenticate with the API service.
    *
    * @param headers - The Headers object that will be updated with the authentication headers.
+   * @param url - The URL of the request.
    */
-  addAuthHeaders(headers: Headers): Promise<void>;
+  addAuthHeaders(headers: Headers, url?: string): Promise<void>;
 }

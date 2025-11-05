@@ -12,6 +12,7 @@ import type * as types from '../types.js';
 
 export function cancelTuningJobParametersToMldev(
   fromObject: types.CancelTuningJobParameters,
+  _rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -25,6 +26,7 @@ export function cancelTuningJobParametersToMldev(
 
 export function cancelTuningJobParametersToVertex(
   fromObject: types.CancelTuningJobParameters,
+  _rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -39,6 +41,7 @@ export function cancelTuningJobParametersToVertex(
 export function createTuningJobConfigToMldev(
   fromObject: types.CreateTuningJobConfig,
   parentObject: Record<string, unknown>,
+  _rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -127,24 +130,49 @@ export function createTuningJobConfigToMldev(
     throw new Error('labels parameter is not supported in Gemini API.');
   }
 
+  if (common.getValueByPath(fromObject, ['beta']) !== undefined) {
+    throw new Error('beta parameter is not supported in Gemini API.');
+  }
+
   return toObject;
 }
 
 export function createTuningJobConfigToVertex(
   fromObject: types.CreateTuningJobConfig,
   parentObject: Record<string, unknown>,
+  rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromValidationDataset = common.getValueByPath(fromObject, [
-    'validationDataset',
+  let discriminatorValidationDataset = common.getValueByPath(rootObject, [
+    'config',
+    'method',
   ]);
-  if (parentObject !== undefined && fromValidationDataset != null) {
-    common.setValueByPath(
-      parentObject,
-      ['supervisedTuningSpec'],
-      tuningValidationDatasetToVertex(fromValidationDataset, toObject),
-    );
+  if (discriminatorValidationDataset === undefined) {
+    discriminatorValidationDataset = 'SUPERVISED_FINE_TUNING';
+  }
+  if (discriminatorValidationDataset === 'SUPERVISED_FINE_TUNING') {
+    const fromValidationDataset = common.getValueByPath(fromObject, [
+      'validationDataset',
+    ]);
+    if (parentObject !== undefined && fromValidationDataset != null) {
+      common.setValueByPath(
+        parentObject,
+        ['supervisedTuningSpec'],
+        tuningValidationDatasetToVertex(fromValidationDataset, rootObject),
+      );
+    }
+  } else if (discriminatorValidationDataset === 'PREFERENCE_TUNING') {
+    const fromValidationDataset = common.getValueByPath(fromObject, [
+      'validationDataset',
+    ]);
+    if (parentObject !== undefined && fromValidationDataset != null) {
+      common.setValueByPath(
+        parentObject,
+        ['preferenceOptimizationSpec'],
+        tuningValidationDatasetToVertex(fromValidationDataset, rootObject),
+      );
+    }
   }
 
   const fromTunedModelDisplayName = common.getValueByPath(fromObject, [
@@ -163,46 +191,125 @@ export function createTuningJobConfigToVertex(
     common.setValueByPath(parentObject, ['description'], fromDescription);
   }
 
-  const fromEpochCount = common.getValueByPath(fromObject, ['epochCount']);
-  if (parentObject !== undefined && fromEpochCount != null) {
-    common.setValueByPath(
-      parentObject,
-      ['supervisedTuningSpec', 'hyperParameters', 'epochCount'],
-      fromEpochCount,
-    );
-  }
-
-  const fromLearningRateMultiplier = common.getValueByPath(fromObject, [
-    'learningRateMultiplier',
+  let discriminatorEpochCount = common.getValueByPath(rootObject, [
+    'config',
+    'method',
   ]);
-  if (parentObject !== undefined && fromLearningRateMultiplier != null) {
-    common.setValueByPath(
-      parentObject,
-      ['supervisedTuningSpec', 'hyperParameters', 'learningRateMultiplier'],
-      fromLearningRateMultiplier,
-    );
+  if (discriminatorEpochCount === undefined) {
+    discriminatorEpochCount = 'SUPERVISED_FINE_TUNING';
+  }
+  if (discriminatorEpochCount === 'SUPERVISED_FINE_TUNING') {
+    const fromEpochCount = common.getValueByPath(fromObject, ['epochCount']);
+    if (parentObject !== undefined && fromEpochCount != null) {
+      common.setValueByPath(
+        parentObject,
+        ['supervisedTuningSpec', 'hyperParameters', 'epochCount'],
+        fromEpochCount,
+      );
+    }
+  } else if (discriminatorEpochCount === 'PREFERENCE_TUNING') {
+    const fromEpochCount = common.getValueByPath(fromObject, ['epochCount']);
+    if (parentObject !== undefined && fromEpochCount != null) {
+      common.setValueByPath(
+        parentObject,
+        ['preferenceOptimizationSpec', 'hyperParameters', 'epochCount'],
+        fromEpochCount,
+      );
+    }
   }
 
-  const fromExportLastCheckpointOnly = common.getValueByPath(fromObject, [
-    'exportLastCheckpointOnly',
+  let discriminatorLearningRateMultiplier = common.getValueByPath(rootObject, [
+    'config',
+    'method',
   ]);
-  if (parentObject !== undefined && fromExportLastCheckpointOnly != null) {
-    common.setValueByPath(
-      parentObject,
-      ['supervisedTuningSpec', 'exportLastCheckpointOnly'],
-      fromExportLastCheckpointOnly,
-    );
+  if (discriminatorLearningRateMultiplier === undefined) {
+    discriminatorLearningRateMultiplier = 'SUPERVISED_FINE_TUNING';
+  }
+  if (discriminatorLearningRateMultiplier === 'SUPERVISED_FINE_TUNING') {
+    const fromLearningRateMultiplier = common.getValueByPath(fromObject, [
+      'learningRateMultiplier',
+    ]);
+    if (parentObject !== undefined && fromLearningRateMultiplier != null) {
+      common.setValueByPath(
+        parentObject,
+        ['supervisedTuningSpec', 'hyperParameters', 'learningRateMultiplier'],
+        fromLearningRateMultiplier,
+      );
+    }
+  } else if (discriminatorLearningRateMultiplier === 'PREFERENCE_TUNING') {
+    const fromLearningRateMultiplier = common.getValueByPath(fromObject, [
+      'learningRateMultiplier',
+    ]);
+    if (parentObject !== undefined && fromLearningRateMultiplier != null) {
+      common.setValueByPath(
+        parentObject,
+        [
+          'preferenceOptimizationSpec',
+          'hyperParameters',
+          'learningRateMultiplier',
+        ],
+        fromLearningRateMultiplier,
+      );
+    }
   }
 
-  const fromAdapterSize = common.getValueByPath(fromObject, ['adapterSize']);
-  if (parentObject !== undefined && fromAdapterSize != null) {
-    common.setValueByPath(
-      parentObject,
-      ['supervisedTuningSpec', 'hyperParameters', 'adapterSize'],
-      fromAdapterSize,
-    );
+  let discriminatorExportLastCheckpointOnly = common.getValueByPath(
+    rootObject,
+    ['config', 'method'],
+  );
+  if (discriminatorExportLastCheckpointOnly === undefined) {
+    discriminatorExportLastCheckpointOnly = 'SUPERVISED_FINE_TUNING';
+  }
+  if (discriminatorExportLastCheckpointOnly === 'SUPERVISED_FINE_TUNING') {
+    const fromExportLastCheckpointOnly = common.getValueByPath(fromObject, [
+      'exportLastCheckpointOnly',
+    ]);
+    if (parentObject !== undefined && fromExportLastCheckpointOnly != null) {
+      common.setValueByPath(
+        parentObject,
+        ['supervisedTuningSpec', 'exportLastCheckpointOnly'],
+        fromExportLastCheckpointOnly,
+      );
+    }
+  } else if (discriminatorExportLastCheckpointOnly === 'PREFERENCE_TUNING') {
+    const fromExportLastCheckpointOnly = common.getValueByPath(fromObject, [
+      'exportLastCheckpointOnly',
+    ]);
+    if (parentObject !== undefined && fromExportLastCheckpointOnly != null) {
+      common.setValueByPath(
+        parentObject,
+        ['preferenceOptimizationSpec', 'exportLastCheckpointOnly'],
+        fromExportLastCheckpointOnly,
+      );
+    }
   }
 
+  let discriminatorAdapterSize = common.getValueByPath(rootObject, [
+    'config',
+    'method',
+  ]);
+  if (discriminatorAdapterSize === undefined) {
+    discriminatorAdapterSize = 'SUPERVISED_FINE_TUNING';
+  }
+  if (discriminatorAdapterSize === 'SUPERVISED_FINE_TUNING') {
+    const fromAdapterSize = common.getValueByPath(fromObject, ['adapterSize']);
+    if (parentObject !== undefined && fromAdapterSize != null) {
+      common.setValueByPath(
+        parentObject,
+        ['supervisedTuningSpec', 'hyperParameters', 'adapterSize'],
+        fromAdapterSize,
+      );
+    }
+  } else if (discriminatorAdapterSize === 'PREFERENCE_TUNING') {
+    const fromAdapterSize = common.getValueByPath(fromObject, ['adapterSize']);
+    if (parentObject !== undefined && fromAdapterSize != null) {
+      common.setValueByPath(
+        parentObject,
+        ['preferenceOptimizationSpec', 'hyperParameters', 'adapterSize'],
+        fromAdapterSize,
+      );
+    }
+  }
   if (common.getValueByPath(fromObject, ['batchSize']) !== undefined) {
     throw new Error('batchSize parameter is not supported in Vertex AI.');
   }
@@ -216,11 +323,21 @@ export function createTuningJobConfigToVertex(
     common.setValueByPath(parentObject, ['labels'], fromLabels);
   }
 
+  const fromBeta = common.getValueByPath(fromObject, ['beta']);
+  if (parentObject !== undefined && fromBeta != null) {
+    common.setValueByPath(
+      parentObject,
+      ['preferenceOptimizationSpec', 'hyperParameters', 'beta'],
+      fromBeta,
+    );
+  }
+
   return toObject;
 }
 
 export function createTuningJobParametersPrivateToMldev(
   fromObject: types.CreateTuningJobParametersPrivate,
+  rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -240,16 +357,12 @@ export function createTuningJobParametersPrivateToMldev(
     'trainingDataset',
   ]);
   if (fromTrainingDataset != null) {
-    common.setValueByPath(
-      toObject,
-      ['tuningTask', 'trainingData'],
-      tuningDatasetToMldev(fromTrainingDataset),
-    );
+    tuningDatasetToMldev(fromTrainingDataset, rootObject);
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    createTuningJobConfigToMldev(fromConfig, toObject);
+    createTuningJobConfigToMldev(fromConfig, toObject, rootObject);
   }
 
   return toObject;
@@ -257,6 +370,7 @@ export function createTuningJobParametersPrivateToMldev(
 
 export function createTuningJobParametersPrivateToVertex(
   fromObject: types.CreateTuningJobParametersPrivate,
+  rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -276,16 +390,12 @@ export function createTuningJobParametersPrivateToVertex(
     'trainingDataset',
   ]);
   if (fromTrainingDataset != null) {
-    common.setValueByPath(
-      toObject,
-      ['supervisedTuningSpec', 'trainingDatasetUri'],
-      tuningDatasetToVertex(fromTrainingDataset, toObject),
-    );
+    tuningDatasetToVertex(fromTrainingDataset, toObject, rootObject);
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    createTuningJobConfigToVertex(fromConfig, toObject);
+    createTuningJobConfigToVertex(fromConfig, toObject, rootObject);
   }
 
   return toObject;
@@ -293,6 +403,7 @@ export function createTuningJobParametersPrivateToVertex(
 
 export function getTuningJobParametersToMldev(
   fromObject: types.GetTuningJobParameters,
+  _rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -306,6 +417,7 @@ export function getTuningJobParametersToMldev(
 
 export function getTuningJobParametersToVertex(
   fromObject: types.GetTuningJobParameters,
+  _rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -320,6 +432,7 @@ export function getTuningJobParametersToVertex(
 export function listTuningJobsConfigToMldev(
   fromObject: types.ListTuningJobsConfig,
   parentObject: Record<string, unknown>,
+  _rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -344,6 +457,7 @@ export function listTuningJobsConfigToMldev(
 export function listTuningJobsConfigToVertex(
   fromObject: types.ListTuningJobsConfig,
   parentObject: Record<string, unknown>,
+  _rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -367,12 +481,13 @@ export function listTuningJobsConfigToVertex(
 
 export function listTuningJobsParametersToMldev(
   fromObject: types.ListTuningJobsParameters,
+  rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    listTuningJobsConfigToMldev(fromConfig, toObject);
+    listTuningJobsConfigToMldev(fromConfig, toObject, rootObject);
   }
 
   return toObject;
@@ -380,12 +495,13 @@ export function listTuningJobsParametersToMldev(
 
 export function listTuningJobsParametersToVertex(
   fromObject: types.ListTuningJobsParameters,
+  rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
-    listTuningJobsConfigToVertex(fromConfig, toObject);
+    listTuningJobsConfigToVertex(fromConfig, toObject, rootObject);
   }
 
   return toObject;
@@ -393,6 +509,7 @@ export function listTuningJobsParametersToVertex(
 
 export function listTuningJobsResponseFromMldev(
   fromObject: types.ListTuningJobsResponse,
+  rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -415,7 +532,7 @@ export function listTuningJobsResponseFromMldev(
     let transformedList = fromTuningJobs;
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return tuningJobFromMldev(item);
+        return tuningJobFromMldev(item, rootObject);
       });
     }
     common.setValueByPath(toObject, ['tuningJobs'], transformedList);
@@ -426,6 +543,7 @@ export function listTuningJobsResponseFromMldev(
 
 export function listTuningJobsResponseFromVertex(
   fromObject: types.ListTuningJobsResponse,
+  rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -448,7 +566,7 @@ export function listTuningJobsResponseFromVertex(
     let transformedList = fromTuningJobs;
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return tuningJobFromVertex(item);
+        return tuningJobFromVertex(item, rootObject);
       });
     }
     common.setValueByPath(toObject, ['tuningJobs'], transformedList);
@@ -459,6 +577,7 @@ export function listTuningJobsResponseFromVertex(
 
 export function tunedModelFromMldev(
   fromObject: types.TunedModel,
+  _rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -477,6 +596,7 @@ export function tunedModelFromMldev(
 
 export function tuningDatasetToMldev(
   fromObject: types.TuningDataset,
+  _rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -509,29 +629,67 @@ export function tuningDatasetToMldev(
 export function tuningDatasetToVertex(
   fromObject: types.TuningDataset,
   parentObject: Record<string, unknown>,
+  rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromGcsUri = common.getValueByPath(fromObject, ['gcsUri']);
-  if (parentObject !== undefined && fromGcsUri != null) {
-    common.setValueByPath(
-      parentObject,
-      ['supervisedTuningSpec', 'trainingDatasetUri'],
-      fromGcsUri,
-    );
-  }
-
-  const fromVertexDatasetResource = common.getValueByPath(fromObject, [
-    'vertexDatasetResource',
+  let discriminatorGcsUri = common.getValueByPath(rootObject, [
+    'config',
+    'method',
   ]);
-  if (parentObject !== undefined && fromVertexDatasetResource != null) {
-    common.setValueByPath(
-      parentObject,
-      ['supervisedTuningSpec', 'trainingDatasetUri'],
-      fromVertexDatasetResource,
-    );
+  if (discriminatorGcsUri === undefined) {
+    discriminatorGcsUri = 'SUPERVISED_FINE_TUNING';
+  }
+  if (discriminatorGcsUri === 'SUPERVISED_FINE_TUNING') {
+    const fromGcsUri = common.getValueByPath(fromObject, ['gcsUri']);
+    if (parentObject !== undefined && fromGcsUri != null) {
+      common.setValueByPath(
+        parentObject,
+        ['supervisedTuningSpec', 'trainingDatasetUri'],
+        fromGcsUri,
+      );
+    }
+  } else if (discriminatorGcsUri === 'PREFERENCE_TUNING') {
+    const fromGcsUri = common.getValueByPath(fromObject, ['gcsUri']);
+    if (parentObject !== undefined && fromGcsUri != null) {
+      common.setValueByPath(
+        parentObject,
+        ['preferenceOptimizationSpec', 'trainingDatasetUri'],
+        fromGcsUri,
+      );
+    }
   }
 
+  let discriminatorVertexDatasetResource = common.getValueByPath(rootObject, [
+    'config',
+    'method',
+  ]);
+  if (discriminatorVertexDatasetResource === undefined) {
+    discriminatorVertexDatasetResource = 'SUPERVISED_FINE_TUNING';
+  }
+  if (discriminatorVertexDatasetResource === 'SUPERVISED_FINE_TUNING') {
+    const fromVertexDatasetResource = common.getValueByPath(fromObject, [
+      'vertexDatasetResource',
+    ]);
+    if (parentObject !== undefined && fromVertexDatasetResource != null) {
+      common.setValueByPath(
+        parentObject,
+        ['supervisedTuningSpec', 'trainingDatasetUri'],
+        fromVertexDatasetResource,
+      );
+    }
+  } else if (discriminatorVertexDatasetResource === 'PREFERENCE_TUNING') {
+    const fromVertexDatasetResource = common.getValueByPath(fromObject, [
+      'vertexDatasetResource',
+    ]);
+    if (parentObject !== undefined && fromVertexDatasetResource != null) {
+      common.setValueByPath(
+        parentObject,
+        ['preferenceOptimizationSpec', 'trainingDatasetUri'],
+        fromVertexDatasetResource,
+      );
+    }
+  }
   if (common.getValueByPath(fromObject, ['examples']) !== undefined) {
     throw new Error('examples parameter is not supported in Vertex AI.');
   }
@@ -541,6 +699,7 @@ export function tuningDatasetToVertex(
 
 export function tuningJobFromMldev(
   fromObject: types.TuningJob,
+  rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -602,7 +761,7 @@ export function tuningJobFromMldev(
     common.setValueByPath(
       toObject,
       ['tunedModel'],
-      tunedModelFromMldev(fromTunedModel),
+      tunedModelFromMldev(fromTunedModel, rootObject),
     );
   }
 
@@ -611,6 +770,7 @@ export function tuningJobFromMldev(
 
 export function tuningJobFromVertex(
   fromObject: types.TuningJob,
+  _rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -686,6 +846,17 @@ export function tuningJobFromVertex(
       toObject,
       ['supervisedTuningSpec'],
       fromSupervisedTuningSpec,
+    );
+  }
+
+  const fromPreferenceOptimizationSpec = common.getValueByPath(fromObject, [
+    'preferenceOptimizationSpec',
+  ]);
+  if (fromPreferenceOptimizationSpec != null) {
+    common.setValueByPath(
+      toObject,
+      ['preferenceOptimizationSpec'],
+      fromPreferenceOptimizationSpec,
     );
   }
 
@@ -771,6 +942,7 @@ export function tuningJobFromVertex(
 
 export function tuningOperationFromMldev(
   fromObject: types.TuningOperation,
+  _rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -806,7 +978,7 @@ export function tuningOperationFromMldev(
 
 export function tuningValidationDatasetToVertex(
   fromObject: types.TuningValidationDataset,
-  parentObject: Record<string, unknown>,
+  _rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -818,10 +990,10 @@ export function tuningValidationDatasetToVertex(
   const fromVertexDatasetResource = common.getValueByPath(fromObject, [
     'vertexDatasetResource',
   ]);
-  if (parentObject !== undefined && fromVertexDatasetResource != null) {
+  if (fromVertexDatasetResource != null) {
     common.setValueByPath(
-      parentObject,
-      ['supervisedTuningSpec', 'trainingDatasetUri'],
+      toObject,
+      ['validationDatasetUri'],
       fromVertexDatasetResource,
     );
   }

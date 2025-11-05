@@ -54,6 +54,10 @@ export declare interface UpscaleImageAPIConfigInternal {
   abortSignal?: AbortSignal;
   /** Cloud Storage URI used to store the generated images. */
   outputGcsUri?: string;
+  /** Filter level for safety filtering. */
+  safetyFilterLevel?: types.SafetyFilterLevel;
+  /** Allows generation of people by the model. */
+  personGeneration?: types.PersonGeneration;
   /** Whether to include a reason for filtered-out images in the
       response. */
   includeRaiReason?: boolean;

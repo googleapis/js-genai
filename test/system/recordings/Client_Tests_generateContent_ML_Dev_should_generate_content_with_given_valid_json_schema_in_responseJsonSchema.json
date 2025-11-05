@@ -4,8 +4,8 @@
     {
       "request": {
         "method": "POST",
-        "url": "/v1beta/models/gemini-1.5-flash:generateContent",
-        "request": "POST /v1beta/models/gemini-1.5-flash:generateContent HTTP/1.1",
+        "url": "/v1beta/models/gemini-2.5-flash:generateContent",
+        "request": "POST /v1beta/models/gemini-2.5-flash:generateContent HTTP/1.1",
         "headers": {
           "Accept": "*/*",
           "Accept-Encoding": "gzip, deflate",
@@ -154,16 +154,16 @@
         "port": 443,
         "protocol": "https"
       },
-      "shaSum": "425c2a0d186c908c3b4dbd6ab1b865c40ddb3c3fddad8e5993c4dcb0833209b6",
+      "shaSum": "0a722ff0d23669c706c8576b592109b9a6eda0afe84679ba208e99691e2937bc",
       "response": {
         "statusCode": 200,
         "headers": {
           "Content-Encoding": "gzip",
-          "Content-Length": "499",
+          "Content-Length": "635",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Sat, 16 Aug 2025 00:43:08 GMT",
+          "Date": "Fri, 24 Oct 2025 07:45:06 GMT",
           "Server": "scaffolding on HTTPServer2",
-          "Server-Timing": "gfet4t7; dur=1641",
+          "Server-Timing": "gfet4t7; dur=3642",
           "Vary": "Origin, X-Origin, Referer",
           "X-Content-Type-Options": "nosniff",
           "X-Frame-Options": "SAMEORIGIN",
@@ -173,36 +173,32 @@
           {
             "candidates": [
               {
-                "avgLogprobs": -0.021409494754595634,
                 "content": {
                   "parts": [
                     {
-                      "text": "{\"arrayFiled\": [\"string\"], \"inner\": {\"innerNumber\": 1.23, \"innerString\": \"string\"}, \"integerInt64\": 123, \"nullableArrayField\": null, \"nullableField\": null, \"nullableObjectField\": null, \"numberWithMinMax\": 1.23, \"simpleBoolean\": true, \"simpleInteger\": 123, \"simpleNumber\": 1.23, \"simpleString\": \"string\", \"stringDatatime\": \"2024-01-10T10:10:10Z\", \"stringWithEnum\": \"enumvalue1\", \"stringWithLength\": \"string\", \"unionField\": 1.23}"
+                      "text": "{\"simpleString\":\"Hello\",\"stringDatatime\":\"2023-10-27T10:00:00Z\",\"stringWithEnum\":\"enumvalue1\",\"stringWithLength\":\"shortstr\",\"simpleNumber\":123.45,\"simpleInteger\":987,\"integerInt64\":123456789012345,\"numberWithMinMax\":5.5,\"simpleBoolean\":true,\"arrayFiled\":[\"item1\",\"item2\",\"item3\"],\"unionField\":\"this is a string\",\"nullableField\":\"this can be null or string\",\"nullableArrayField\":[\"arrayItem1\",\"arrayItem2\"],\"nullableObjectField\":{\"innerString\":\"inner object string\",\"innerNumber\":99.99},\"inner\":{\"innerString\":\"required inner string\",\"innerNumber\":100}}"
                     }
                   ],
                   "role": "model"
                 },
-                "finishReason": "STOP"
+                "finishReason": "STOP",
+                "index": 0
               }
             ],
-            "modelVersion": "gemini-1.5-flash",
-            "responseId": "GtSfaMOTNPmAm9IP_-LziQ0",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "gi77aIS0Gdux1e8P96XL4QY",
+            "turnToken": "v1:ChdnaTc3YUlTMEdkdXgxZThQOTZYTDRRWRIXZ2k3N2FJUzBHZHV4MWU4UDk2WEw0UVk",
             "usageMetadata": {
-              "candidatesTokenCount": 156,
-              "candidatesTokensDetails": [
-                {
-                  "modality": "TEXT",
-                  "tokenCount": 156
-                }
-              ],
-              "promptTokenCount": 4,
+              "candidatesTokenCount": 177,
+              "promptTokenCount": 5,
               "promptTokensDetails": [
                 {
                   "modality": "TEXT",
-                  "tokenCount": 4
+                  "tokenCount": 5
                 }
               ],
-              "totalTokenCount": 160
+              "thoughtsTokenCount": 331,
+              "totalTokenCount": 513
             }
           }
         ]

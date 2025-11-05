@@ -9,7 +9,7 @@ const pkg = JSON.parse(
 const rollupPlugins = [
   typescript({
     tsconfigOverride: {
-      exclude: ['test/**', 'src/private/**', 'src/interactions/**'],
+      exclude: ['test/**', 'src/private/**'],
     },
   }),
   json({
@@ -23,6 +23,7 @@ const externalDeps = [
   'fs/promises',
   'fs',
   'node:stream',
+  'node:stream/promises',
   'zod',
   'zod-to-json-schema',
   '@modelcontextprotocol/sdk',

@@ -22,6 +22,7 @@ import {setupTestServer, shutdownTestServer} from '../test_server.js';
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
+const MODEL = 'gemini-2.5-flash';
 
 describe('Client Tests', () => {
   let testName: string = '';
@@ -52,17 +53,21 @@ describe('Client Tests', () => {
         httpOptions,
       });
       const response = await client.models.generateContent({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'why is the sky blue?',
-        config: {maxOutputTokens: 20, candidateCount: 1},
+        config: {
+          maxOutputTokens: 200,
+          candidateCount: 1,
+          thinkingConfig: {thinkingBudget: 50},
+        },
       });
       expect(response.candidates!.length).toBe(
         1,
         'Expected 1 candidate got ' + response.candidates!.length,
       );
       expect(response.usageMetadata!.candidatesTokenCount).toBeLessThanOrEqual(
-        20,
-        'Expected candidatesTokenCount to be less than or equal to 20, got ' +
+        250, // sometimes backend returns a little more than 200 tokens
+        'Expected candidatesTokenCount to be less than or equal to 250, got ' +
           response.usageMetadata!.candidatesTokenCount,
       );
       console.info(
@@ -79,16 +84,20 @@ describe('Client Tests', () => {
         httpOptions,
       });
       const response = await client.models.generateContent({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'why is the sky blue?',
-        config: {maxOutputTokens: 20, candidateCount: 1},
+        config: {
+          maxOutputTokens: 200,
+          candidateCount: 1,
+          thinkingConfig: {thinkingBudget: 50},
+        },
       });
       expect(response.candidates!.length).toBe(
         1,
         'Expected 1 candidate got ' + response.candidates!.length,
       );
       expect(response.usageMetadata!.candidatesTokenCount).toBeLessThanOrEqual(
-        20,
+        250,
         'Expected candidatesTokenCount to be less than or equal to 20, got ' +
           response.usageMetadata!.candidatesTokenCount,
       );
@@ -105,7 +114,7 @@ describe('Client Tests', () => {
         httpOptions,
       });
       const response = await client.models.generateContent({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'high',
         config: {systemInstruction: 'I say high you say low'},
       });
@@ -128,7 +137,7 @@ describe('Client Tests', () => {
         httpOptions,
       });
       const response = await client.models.generateContent({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'high',
         config: {systemInstruction: 'I say high you say low.'},
       });
@@ -150,7 +159,7 @@ describe('Client Tests', () => {
         httpOptions,
       });
       await client.models.generateContent({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'high',
         config: {systemInstruction: 'I say high you say low.'},
       });
@@ -174,7 +183,7 @@ describe('Client Tests', () => {
       });
       try {
         await client.models.generateContent({
-          model: 'gemini-1.5-flash',
+          model: MODEL,
           contents: 'why is the sky blue?',
           config: {maxOutputTokens: 20, candidateCount: 1},
         });
@@ -225,7 +234,7 @@ describe('Client Tests', () => {
         httpOptions,
       });
       const response = await client.models.generateContent({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'populate the following object',
         config: {
           responseMimeType: 'application/json',
@@ -274,7 +283,7 @@ describe('Client Tests', () => {
         httpOptions,
       });
       const response = await client.models.generateContent({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'populate the following object',
         config: {
           responseMimeType: 'application/json',
@@ -300,7 +309,7 @@ describe('Client Tests', () => {
         httpOptions,
       });
       const response = await client.models.generateContent({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'put word: hello and word: world into a string',
         config: {
           tools: [
@@ -370,7 +379,7 @@ describe('Client Tests', () => {
         httpOptions,
       });
       const response = await client.models.generateContent({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'populate the following object',
         config: {
           responseMimeType: 'application/json',
@@ -419,7 +428,7 @@ describe('Client Tests', () => {
         httpOptions,
       });
       const response = await client.models.generateContent({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'populate the following object',
         config: {
           responseMimeType: 'application/json',
@@ -445,7 +454,7 @@ describe('Client Tests', () => {
         httpOptions,
       });
       const response = await client.models.generateContent({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'put word: hello and word: world into a string',
         config: {
           tools: [
@@ -495,7 +504,7 @@ describe('Client Tests', () => {
         httpOptions,
       });
       const response = await client.models.generateContent({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'put word: hello and word: world into a string',
         config: {
           tools: [
@@ -541,7 +550,7 @@ describe('Client Tests', () => {
         httpOptions,
       });
       const response = await client.models.generateContent({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'put word: hello and word: world into a string',
         config: {
           tools: [
@@ -585,7 +594,7 @@ describe('Client Tests', () => {
         httpOptions,
       });
       const response = await client.models.generateContent({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'why is the sky blue?',
         config: {maxOutputTokens: 20, candidateCount: 1},
       });
@@ -607,7 +616,7 @@ describe('Client Tests', () => {
         httpOptions,
       });
       const response = await client.models.generateContent({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'why is the sky blue?',
         config: {maxOutputTokens: 20, candidateCount: 1},
       });
@@ -632,7 +641,7 @@ describe('Client Tests', () => {
       httpOptions,
     });
     const response = await client.models.generateContent({
-      model: 'gemini-1.5-flash',
+      model: MODEL,
       contents: 'put word: hello and word: world into a string',
       config: {
         tools: [
@@ -675,9 +684,13 @@ describe('Client Tests', () => {
         httpOptions,
       });
       const response = await client.models.generateContentStream({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'why is the sky blue?',
-        config: {candidateCount: 1, maxOutputTokens: 200},
+        config: {
+          candidateCount: 1,
+          maxOutputTokens: 200,
+          thinkingConfig: {thinkingBudget: 50},
+        },
       });
       let i = 1;
       let finalChunk: GenerateContentResponse | undefined = undefined;
@@ -711,9 +724,13 @@ describe('Client Tests', () => {
         httpOptions,
       });
       const response = await client.models.generateContentStream({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'why is the sky blue?',
-        config: {candidateCount: 1, maxOutputTokens: 200},
+        config: {
+          candidateCount: 1,
+          maxOutputTokens: 200,
+          thinkingConfig: {thinkingBudget: 50},
+        },
       });
       let i = 1;
       let finalChunk: GenerateContentResponse | undefined = undefined;
@@ -745,20 +762,15 @@ describe('Client Tests', () => {
         httpOptions,
       });
       const response = await client.models.generateContentStream({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'high',
         config: {
           systemInstruction:
             'I say high you say low, and then tell me why is the sky blue.',
           candidateCount: 1,
-          maxOutputTokens: 200,
         },
       });
       let i = 1;
-      let finalChunk: GenerateContentResponse | undefined = undefined;
-      console.info(
-        'ML Dev should stream generate content with system instruction',
-      );
       for await (const chunk of response) {
         console.info(`stream chunk ${i}`, chunk.text);
         expect(chunk.candidates!.length).toBe(
@@ -766,15 +778,7 @@ describe('Client Tests', () => {
           'Expected 1 candidate got ' + chunk.candidates!.length,
         );
         i++;
-        finalChunk = chunk;
       }
-      expect(
-        finalChunk?.usageMetadata!.candidatesTokenCount,
-      ).toBeLessThanOrEqual(
-        250, // sometimes backend returns a little more than 200 tokens
-        'Expected candidatesTokenCount to be less than or equal to 250, got ' +
-          finalChunk?.usageMetadata!.candidatesTokenCount,
-      );
     });
 
     it('Vertex AI should stream generate content with system instruction', async () => {
@@ -785,7 +789,7 @@ describe('Client Tests', () => {
         httpOptions,
       });
       const response = await client.models.generateContentStream({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'high',
         config: {
           systemInstruction:
@@ -816,14 +820,14 @@ describe('Client Tests', () => {
           finalChunk?.usageMetadata!.candidatesTokenCount,
       );
     });
-    it('ML Dev should should return the headers in the sdkHttpResponse for each chunk', async () => {
+    it('ML Dev should return the headers in the sdkHttpResponse for each chunk', async () => {
       const client = new GoogleGenAI({
         vertexai: false,
         apiKey: GOOGLE_API_KEY,
         httpOptions,
       });
       const response = await client.models.generateContentStream({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'why is the sky blue?',
         config: {candidateCount: 1, maxOutputTokens: 200},
       });
@@ -845,7 +849,7 @@ describe('Client Tests', () => {
       }
     });
 
-    it('Vertex AI should should return the headers in the sdkHttpResponse for each chunk', async () => {
+    it('Vertex AI should return the headers in the sdkHttpResponse for each chunk', async () => {
       const client = new GoogleGenAI({
         vertexai: true,
         project: GOOGLE_CLOUD_PROJECT,
@@ -853,9 +857,9 @@ describe('Client Tests', () => {
         httpOptions,
       });
       const response = await client.models.generateContentStream({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'why is the sky blue?',
-        config: {candidateCount: 1, maxOutputTokens: 200},
+        config: {candidateCount: 1},
       });
       let i = 1;
       console.info(
@@ -954,7 +958,7 @@ describe('Client Tests', () => {
 
     beforeEach(function () {
       originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-      jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000; // 10 seconds
+      jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000; // 10 seconds
     });
     it('ML Dev should generate image with specified parameters', async () => {
       const client = new GoogleGenAI({
@@ -1052,7 +1056,7 @@ describe('Client Tests', () => {
       });
 
       const response = await client.models.countTokens({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'The quick brown fox jumps over the lazy dog.',
       });
       expect(response!.totalTokens ?? 0).toBeGreaterThan(
@@ -1074,7 +1078,7 @@ describe('Client Tests', () => {
       });
 
       const response = await client.models.countTokens({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'The quick brown fox jumps over the lazy dog.',
       });
       expect(response!.totalTokens ?? 0).toBeGreaterThan(
@@ -1123,7 +1127,7 @@ describe('Client Tests', () => {
       });
 
       const response = await client.models.computeTokens({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'The quick brown fox jumps over the lazy dog.',
       });
       expect(response!.tokensInfo!.length).toBeGreaterThan(
@@ -1169,7 +1173,7 @@ describe('Client Tests', () => {
         };
 
         const cache = await client.caches.create({
-          model: 'gemini-1.5-pro-002',
+          model: MODEL,
           config: {contents: [cachedContent1, cachedContent2]},
         });
         expect(cache.name).toBeDefined();

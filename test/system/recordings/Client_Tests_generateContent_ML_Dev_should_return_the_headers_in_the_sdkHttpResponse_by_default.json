@@ -4,8 +4,8 @@
     {
       "request": {
         "method": "POST",
-        "url": "/v1beta/models/gemini-1.5-flash:generateContent",
-        "request": "POST /v1beta/models/gemini-1.5-flash:generateContent HTTP/1.1",
+        "url": "/v1beta/models/gemini-2.5-flash:generateContent",
+        "request": "POST /v1beta/models/gemini-2.5-flash:generateContent HTTP/1.1",
         "headers": {
           "Accept": "*/*",
           "Accept-Encoding": "gzip, deflate",
@@ -39,16 +39,16 @@
         "port": 443,
         "protocol": "https"
       },
-      "shaSum": "c7ed4a827a924fcbf057ae871cf05534f0251e0257f3211dc78d81967d73c6c3",
+      "shaSum": "7520aef50a538f6caacb051f8acfbdf66fec86e46ff8d334e5fcda73bc768c8e",
       "response": {
         "statusCode": 200,
         "headers": {
           "Content-Encoding": "gzip",
-          "Content-Length": "381",
+          "Content-Length": "339",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Sat, 16 Aug 2025 00:43:14 GMT",
+          "Date": "Fri, 24 Oct 2025 07:45:13 GMT",
           "Server": "scaffolding on HTTPServer2",
-          "Server-Timing": "gfet4t7; dur=443",
+          "Server-Timing": "gfet4t7; dur=850",
           "Vary": "Origin, X-Origin, Referer",
           "X-Content-Type-Options": "nosniff",
           "X-Frame-Options": "SAMEORIGIN",
@@ -58,35 +58,25 @@
           {
             "candidates": [
               {
-                "avgLogprobs": -0.006031157076358795,
                 "content": {
-                  "parts": [
-                    {
-                      "text": "The sky is blue due to a phenomenon called **Rayleigh scattering**.  Sunlight is made up of"
-                    }
-                  ],
                   "role": "model"
                 },
-                "finishReason": "MAX_TOKENS"
+                "finishReason": "MAX_TOKENS",
+                "index": 0
               }
             ],
-            "modelVersion": "gemini-1.5-flash",
-            "responseId": "ItSfaI3hFuKMm9IPzITjqQc",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "iS77aMa9K_up1e8P5J69qQQ",
+            "turnToken": "v1:ChdpUzc3YU1hOUtfdXAxZThQNUo2OXFRURIXaVM3N2FNYTlLX3VwMWU4UDVKNjlxUVE",
             "usageMetadata": {
-              "candidatesTokenCount": 20,
-              "candidatesTokensDetails": [
-                {
-                  "modality": "TEXT",
-                  "tokenCount": 20
-                }
-              ],
-              "promptTokenCount": 6,
+              "promptTokenCount": 7,
               "promptTokensDetails": [
                 {
                   "modality": "TEXT",
-                  "tokenCount": 6
+                  "tokenCount": 7
                 }
               ],
+              "thoughtsTokenCount": 19,
               "totalTokenCount": 26
             }
           }

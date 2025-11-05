@@ -1,0 +1,239 @@
+{
+  "recordID": "Client_Tests_generateContentStream_Vertex_AI_should_return_the_headers_in_the_sdkHttpResponse_for_each_chunk",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:streamGenerateContent?alt=sse",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:streamGenerateContent?alt=sse HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "112",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Client Tests generateContentStream Vertex AI should return the headers in the sdkHttpResponse for each chunk"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "why is the sky blue?"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {
+              "candidateCount": 1
+            }
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "us-central1-aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "67bf1e649240a3aaf2ddb9671a9e4b8922b91d55217056b995b7112e416a730b",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Disposition": "attachment",
+          "Content-Type": "text/event-stream",
+          "Date": "Fri, 24 Oct 2025 07:45:54 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "The sky appears blue due to a phenomenon called **Rayleigh scattering**. Here's a breakdown:\n\n1.  **Sunlight is White Light:** Sunlight, which appears white to us, is actually made up of all the colors of the rainbow (red, orange, yellow, green, blue, indigo, violet). Each"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-10-24T07:45:46.904785Z",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "qi77aNGcN7PQnvgP3Kaf8Ac",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 16
+              },
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " color has a different wavelength; red light has the longest wavelength, and violet light has the shortest.\n\n2.  **Earth's Atmosphere:** Earth's atmosphere is filled with tiny gas molecules, primarily nitrogen (about 78%) and oxygen (about 21%). These molecules are much smaller than the wavelengths of visible"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-10-24T07:45:46.904785Z",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "qi77aNGcN7PQnvgP3Kaf8Ac",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " light.\n\n3.  **Scattering of Light:** When sunlight enters the atmosphere, it interacts with these gas molecules. The light waves are \"scattered\" in different directions.\n    *   **Rayleigh scattering** states that shorter wavelengths of light are scattered much more efficiently than longer wavelengths.\n    *   Therefore,"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-10-24T07:45:46.904785Z",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "qi77aNGcN7PQnvgP3Kaf8Ac",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " **blue and violet light** (shorter wavelengths) are scattered much more strongly by the tiny gas molecules than red, orange, and yellow light (longer wavelengths).\n\n4.  **Why We See Blue:**\n    *   As sunlight travels through the atmosphere, the blue light is scattered in all directions.\n    "
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-10-24T07:45:46.904785Z",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "qi77aNGcN7PQnvgP3Kaf8Ac",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "*   When you look up at the sky, you're seeing this scattered blue light coming from all around you. This is why the sky appears blue.\n\n5.  **Why Not Violet?**\n    *   Violet light has an even shorter wavelength than blue and is scattered even more. So why isn't the sky violet"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-10-24T07:45:46.904785Z",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "qi77aNGcN7PQnvgP3Kaf8Ac",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "?\n        *   The sun emits slightly less violet light than blue light.\n        *   Our eyes are more sensitive to blue light than to violet light.\n    *   The combination of these factors makes us perceive the sky as blue.\n\n6.  **Sunsets and Sunrises:** This same principle explains why sunsets"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-10-24T07:45:46.904785Z",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "qi77aNGcN7PQnvgP3Kaf8Ac",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " and sunrises are red or orange. When the sun is low on the horizon, its light has to travel through much more of the atmosphere to reach your eyes. By the time it gets to you, most of the blue and even some of the green and yellow light has been scattered away, leaving primarily the longer"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-10-24T07:45:46.904785Z",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "qi77aNGcN7PQnvgP3Kaf8Ac",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "-wavelength red and orange light to reach your eyes directly."
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP"
+              }
+            ],
+            "createTime": "2025-10-24T07:45:46.904785Z",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "qi77aNGcN7PQnvgP3Kaf8Ac",
+            "usageMetadata": {
+              "candidatesTokenCount": 475,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 475
+                }
+              ],
+              "promptTokenCount": 6,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 6
+                }
+              ],
+              "thoughtsTokenCount": 1214,
+              "totalTokenCount": 1695,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
