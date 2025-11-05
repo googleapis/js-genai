@@ -58,7 +58,10 @@ export interface ApiErrorInfo {
 
 // @public
 export interface ApiKeyConfig {
+    apiKeySecret?: string;
     apiKeyString?: string;
+    httpElementLocation?: HttpElementLocation;
+    name?: string;
 }
 
 // @public
@@ -598,6 +601,7 @@ export interface CreateTuningJobConfig {
     abortSignal?: AbortSignal;
     adapterSize?: AdapterSize;
     batchSize?: number;
+    beta?: number;
     description?: string;
     epochCount?: number;
     exportLastCheckpointOnly?: boolean;
@@ -605,6 +609,7 @@ export interface CreateTuningJobConfig {
     labels?: Record<string, string>;
     learningRate?: number;
     learningRateMultiplier?: number;
+    method?: TuningMethod;
     preTunedModelCheckpointId?: string;
     tunedModelDisplayName?: string;
     validationDataset?: TuningValidationDataset;
@@ -886,6 +891,7 @@ export enum EndSensitivity {
 
 // @public
 export interface EnterpriseWebSearch {
+    blockingConfidence?: PhishBlockThreshold;
     excludeDomains?: string[];
 }
 
@@ -1490,6 +1496,7 @@ export interface GoogleRpcStatus {
 
 // @public
 export interface GoogleSearch {
+    blockingConfidence?: PhishBlockThreshold;
     excludeDomains?: string[];
     timeRangeFilter?: Interval;
 }
@@ -1635,6 +1642,17 @@ export enum HarmSeverity {
     HARM_SEVERITY_MEDIUM = "HARM_SEVERITY_MEDIUM",
     HARM_SEVERITY_NEGLIGIBLE = "HARM_SEVERITY_NEGLIGIBLE",
     HARM_SEVERITY_UNSPECIFIED = "HARM_SEVERITY_UNSPECIFIED"
+}
+
+// @public
+export enum HttpElementLocation {
+    HTTP_IN_BODY = "HTTP_IN_BODY",
+    HTTP_IN_COOKIE = "HTTP_IN_COOKIE",
+    HTTP_IN_HEADER = "HTTP_IN_HEADER",
+    HTTP_IN_PATH = "HTTP_IN_PATH",
+    HTTP_IN_QUERY = "HTTP_IN_QUERY",
+    // (undocumented)
+    HTTP_IN_UNSPECIFIED = "HTTP_IN_UNSPECIFIED"
 }
 
 // @public
@@ -2412,6 +2430,17 @@ export enum PersonGeneration {
 }
 
 // @public
+export enum PhishBlockThreshold {
+    BLOCK_HIGH_AND_ABOVE = "BLOCK_HIGH_AND_ABOVE",
+    BLOCK_HIGHER_AND_ABOVE = "BLOCK_HIGHER_AND_ABOVE",
+    BLOCK_LOW_AND_ABOVE = "BLOCK_LOW_AND_ABOVE",
+    BLOCK_MEDIUM_AND_ABOVE = "BLOCK_MEDIUM_AND_ABOVE",
+    BLOCK_ONLY_EXTREMELY_HIGH = "BLOCK_ONLY_EXTREMELY_HIGH",
+    BLOCK_VERY_HIGH_AND_ABOVE = "BLOCK_VERY_HIGH_AND_ABOVE",
+    PHISH_BLOCK_THRESHOLD_UNSPECIFIED = "PHISH_BLOCK_THRESHOLD_UNSPECIFIED"
+}
+
+// @public
 export interface PrebuiltVoiceConfig {
     voiceName?: string;
 }
@@ -2426,6 +2455,22 @@ export interface PreferenceOptimizationDataStats {
     userDatasetExamples?: GeminiPreferenceExample[];
     userInputTokenDistribution?: DatasetDistribution;
     userOutputTokenDistribution?: DatasetDistribution;
+}
+
+// @public
+export interface PreferenceOptimizationHyperParameters {
+    adapterSize?: AdapterSize;
+    beta?: number;
+    epochCount?: string;
+    learningRateMultiplier?: number;
+}
+
+// @public
+export interface PreferenceOptimizationSpec {
+    exportLastCheckpointOnly?: boolean;
+    hyperParameters?: PreferenceOptimizationHyperParameters;
+    trainingDatasetUri?: string;
+    validationDatasetUri?: string;
 }
 
 // @public
@@ -3051,6 +3096,7 @@ export interface TuningJob {
     outputUri?: string;
     partnerModelTuningSpec?: PartnerModelTuningSpec;
     pipelineJob?: string;
+    preferenceOptimizationSpec?: PreferenceOptimizationSpec;
     preTunedModel?: PreTunedModel;
     sdkHttpResponse?: HttpResponse;
     serviceAccount?: string;
@@ -3062,6 +3108,12 @@ export interface TuningJob {
     tuningDataStats?: TuningDataStats;
     updateTime?: string;
     veoTuningSpec?: VeoTuningSpec;
+}
+
+// @public
+export enum TuningMethod {
+    PREFERENCE_TUNING = "PREFERENCE_TUNING",
+    SUPERVISED_FINE_TUNING = "SUPERVISED_FINE_TUNING"
 }
 
 // @public
@@ -3083,6 +3135,7 @@ export interface TuningOperation {
 // @public
 export enum TuningTask {
     TUNING_TASK_I2V = "TUNING_TASK_I2V",
+    TUNING_TASK_R2V = "TUNING_TASK_R2V",
     TUNING_TASK_T2V = "TUNING_TASK_T2V",
     TUNING_TASK_UNSPECIFIED = "TUNING_TASK_UNSPECIFIED"
 }

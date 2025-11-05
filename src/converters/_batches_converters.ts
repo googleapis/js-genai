@@ -1253,6 +1253,12 @@ export function googleSearchToMldev(
     throw new Error('excludeDomains parameter is not supported in Gemini API.');
   }
 
+  if (common.getValueByPath(fromObject, ['blockingConfidence']) !== undefined) {
+    throw new Error(
+      'blockingConfidence parameter is not supported in Gemini API.',
+    );
+  }
+
   const fromTimeRangeFilter = common.getValueByPath(fromObject, [
     'timeRangeFilter',
   ]);
@@ -1609,15 +1615,6 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
     );
   }
 
-  const fromGoogleMaps = common.getValueByPath(fromObject, ['googleMaps']);
-  if (fromGoogleMaps != null) {
-    common.setValueByPath(
-      toObject,
-      ['googleMaps'],
-      googleMapsToMldev(fromGoogleMaps),
-    );
-  }
-
   const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
   if (fromComputerUse != null) {
     common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
@@ -1635,6 +1632,15 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
   ) {
     throw new Error(
       'enterpriseWebSearch parameter is not supported in Gemini API.',
+    );
+  }
+
+  const fromGoogleMaps = common.getValueByPath(fromObject, ['googleMaps']);
+  if (fromGoogleMaps != null) {
+    common.setValueByPath(
+      toObject,
+      ['googleMaps'],
+      googleMapsToMldev(fromGoogleMaps),
     );
   }
 

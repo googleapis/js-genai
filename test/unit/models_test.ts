@@ -914,9 +914,7 @@ describe('generateContent', () => {
           },
         });
       } catch (e) {
-        expect((e as Error).message).toEqual(
-          'Automatic function calling with CallableTools and Tools is not yet supported.',
-        );
+        expect((e as Error).message).toContain('Incompatible tools found');
       }
     });
     it('should handle the error thrown by the underlying tool and wrap it in the response', async () => {

@@ -2952,6 +2952,17 @@ export function generationConfigToVertex(
     common.setValueByPath(toObject, ['modelConfig'], fromModelSelectionConfig);
   }
 
+  const fromResponseJsonSchema = common.getValueByPath(fromObject, [
+    'responseJsonSchema',
+  ]);
+  if (fromResponseJsonSchema != null) {
+    common.setValueByPath(
+      toObject,
+      ['responseJsonSchema'],
+      fromResponseJsonSchema,
+    );
+  }
+
   const fromAudioTimestamp = common.getValueByPath(fromObject, [
     'audioTimestamp',
   ]);
@@ -3008,17 +3019,6 @@ export function generationConfigToVertex(
   ]);
   if (fromPresencePenalty != null) {
     common.setValueByPath(toObject, ['presencePenalty'], fromPresencePenalty);
-  }
-
-  const fromResponseJsonSchema = common.getValueByPath(fromObject, [
-    'responseJsonSchema',
-  ]);
-  if (fromResponseJsonSchema != null) {
-    common.setValueByPath(
-      toObject,
-      ['responseJsonSchema'],
-      fromResponseJsonSchema,
-    );
   }
 
   const fromResponseLogprobs = common.getValueByPath(fromObject, [
@@ -3175,6 +3175,12 @@ export function googleSearchToMldev(
 
   if (common.getValueByPath(fromObject, ['excludeDomains']) !== undefined) {
     throw new Error('excludeDomains parameter is not supported in Gemini API.');
+  }
+
+  if (common.getValueByPath(fromObject, ['blockingConfidence']) !== undefined) {
+    throw new Error(
+      'blockingConfidence parameter is not supported in Gemini API.',
+    );
   }
 
   const fromTimeRangeFilter = common.getValueByPath(fromObject, [
@@ -4258,15 +4264,6 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
     );
   }
 
-  const fromGoogleMaps = common.getValueByPath(fromObject, ['googleMaps']);
-  if (fromGoogleMaps != null) {
-    common.setValueByPath(
-      toObject,
-      ['googleMaps'],
-      googleMapsToMldev(fromGoogleMaps),
-    );
-  }
-
   const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
   if (fromComputerUse != null) {
     common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
@@ -4284,6 +4281,15 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
   ) {
     throw new Error(
       'enterpriseWebSearch parameter is not supported in Gemini API.',
+    );
+  }
+
+  const fromGoogleMaps = common.getValueByPath(fromObject, ['googleMaps']);
+  if (fromGoogleMaps != null) {
+    common.setValueByPath(
+      toObject,
+      ['googleMaps'],
+      googleMapsToMldev(fromGoogleMaps),
     );
   }
 
@@ -4336,11 +4342,6 @@ export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
     );
   }
 
-  const fromGoogleMaps = common.getValueByPath(fromObject, ['googleMaps']);
-  if (fromGoogleMaps != null) {
-    common.setValueByPath(toObject, ['googleMaps'], fromGoogleMaps);
-  }
-
   const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
   if (fromComputerUse != null) {
     common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
@@ -4362,6 +4363,11 @@ export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
       ['enterpriseWebSearch'],
       fromEnterpriseWebSearch,
     );
+  }
+
+  const fromGoogleMaps = common.getValueByPath(fromObject, ['googleMaps']);
+  if (fromGoogleMaps != null) {
+    common.setValueByPath(toObject, ['googleMaps'], fromGoogleMaps);
   }
 
   const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
