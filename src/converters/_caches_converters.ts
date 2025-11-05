@@ -706,6 +706,11 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
     common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
   }
 
+  const fromFileSearch = common.getValueByPath(fromObject, ['fileSearch']);
+  if (fromFileSearch != null) {
+    common.setValueByPath(toObject, ['fileSearch'], fromFileSearch);
+  }
+
   const fromCodeExecution = common.getValueByPath(fromObject, [
     'codeExecution',
   ]);
@@ -782,6 +787,10 @@ export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
   const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
   if (fromComputerUse != null) {
     common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
+  }
+
+  if (common.getValueByPath(fromObject, ['fileSearch']) !== undefined) {
+    throw new Error('fileSearch parameter is not supported in Vertex AI.');
   }
 
   const fromCodeExecution = common.getValueByPath(fromObject, [

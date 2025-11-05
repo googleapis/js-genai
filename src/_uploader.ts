@@ -5,7 +5,7 @@
  */
 
 import {ApiClient} from './_api_client.js';
-import {File} from './types.js';
+import {File, UploadToFileSearchStoreOperation} from './types.js';
 
 /**
  * Represents the size and mimeType of a file. The information is used to
@@ -41,6 +41,22 @@ export interface Uploader {
     uploadUrl: string,
     apiClient: ApiClient,
   ): Promise<File>;
+
+  /**
+   * Uploads a file to file search store via the given upload url.
+   *
+   * @param file The file to upload. file is in string type or a Blob.
+   * @param uploadUrl The upload URL as a string is where the file will be
+   *     uploaded to. The uploadUrl must be a url that was returned by the
+   * https://generativelanguage.googleapis.com/upload/v1beta/{file_search_store_name}:uploadToFileSearchStore endpoint
+   * @param apiClient The ApiClient to use for uploading.
+   * @return A Promise that resolves to types.UploadToFileSearchStoreOperation.
+   */
+  uploadToFileSearchStore(
+    file: string | Blob,
+    uploadUrl: string,
+    apiClient: ApiClient,
+  ): Promise<UploadToFileSearchStoreOperation>;
 
   /**
    * Returns the file's mimeType and the size of a given file. If the file is a

@@ -11,6 +11,7 @@ import {Caches} from '../caches.js';
 import {Chats} from '../chats.js';
 import {GoogleGenAIOptions} from '../client.js';
 import {Files} from '../files.js';
+import {FileSearchStores} from '../filesearchstores.js';
 import {Live} from '../live.js';
 import {Models} from '../models.js';
 import {Operations} from '../operations.js';
@@ -74,6 +75,7 @@ export class GoogleGenAI {
   readonly operations: Operations;
   readonly authTokens: Tokens;
   readonly tunings: Tunings;
+  readonly fileSearchStores: FileSearchStores;
 
   constructor(options: GoogleGenAIOptions) {
     if (options.apiKey == null) {
@@ -124,5 +126,6 @@ export class GoogleGenAI {
     this.operations = new Operations(this.apiClient);
     this.authTokens = new Tokens(this.apiClient);
     this.tunings = new Tunings(this.apiClient);
+    this.fileSearchStores = new FileSearchStores(this.apiClient);
   }
 }
