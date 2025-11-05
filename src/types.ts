@@ -1955,6 +1955,10 @@ export declare interface ImageConfig {
   /** Aspect ratio of the generated images. Supported values are
       "1:1", "2:3", "3:2", "3:4", "4:3", "9:16", "16:9", and "21:9". */
   aspectRatio?: string;
+  /** Optional. Specifies the size of generated images. Supported
+      values are `1K`, `2K`, `4K`. If not specified, the model will use default
+      value `1K`. */
+  imageSize?: string;
 }
 
 /** When automated routing is specified, the routing will be determined by the pretrained routing model and customer provided model routing preference. This data type is not supported in Gemini API. */

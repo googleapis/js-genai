@@ -1816,6 +1816,7 @@ export { Image_2 as Image }
 // @public
 export interface ImageConfig {
     aspectRatio?: string;
+    imageSize?: string;
 }
 
 // @public
