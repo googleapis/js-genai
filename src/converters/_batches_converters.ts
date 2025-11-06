@@ -263,6 +263,13 @@ export function batchJobFromVertex(
     );
   }
 
+  const fromCompletionStats = common.getValueByPath(fromObject, [
+    'completionStats',
+  ]);
+  if (fromCompletionStats != null) {
+    common.setValueByPath(toObject, ['completionStats'], fromCompletionStats);
+  }
+
   return toObject;
 }
 
@@ -1618,6 +1625,11 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
   const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
   if (fromComputerUse != null) {
     common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
+  }
+
+  const fromFileSearch = common.getValueByPath(fromObject, ['fileSearch']);
+  if (fromFileSearch != null) {
+    common.setValueByPath(toObject, ['fileSearch'], fromFileSearch);
   }
 
   const fromCodeExecution = common.getValueByPath(fromObject, [

@@ -52,7 +52,7 @@ export class Operations extends BaseModule {
 
       return operation._fromAPIResponse({
         apiResponse: rawOperation,
-        isVertexAI: true,
+        _isVertexAI: true,
       });
     } else {
       const rawOperation = await this.getVideosOperationInternal({
@@ -61,7 +61,7 @@ export class Operations extends BaseModule {
       });
       return operation._fromAPIResponse({
         apiResponse: rawOperation,
-        isVertexAI: false,
+        _isVertexAI: false,
       });
     }
   }
@@ -98,7 +98,7 @@ export class Operations extends BaseModule {
 
       return operation._fromAPIResponse({
         apiResponse: rawOperation,
-        isVertexAI: true,
+        _isVertexAI: true,
       });
     } else {
       const rawOperation = await this.getVideosOperationInternal({
@@ -107,7 +107,7 @@ export class Operations extends BaseModule {
       });
       return operation._fromAPIResponse({
         apiResponse: rawOperation,
-        isVertexAI: false,
+        _isVertexAI: false,
       });
     }
   }

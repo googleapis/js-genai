@@ -15,7 +15,7 @@ const CONTENT_TYPE_HEADER = 'Content-Type';
 const SERVER_TIMEOUT_HEADER = 'X-Server-Timeout';
 const USER_AGENT_HEADER = 'User-Agent';
 export const GOOGLE_API_CLIENT_HEADER = 'x-goog-api-client';
-export const SDK_VERSION = '1.28.0'; // x-release-please-version
+export const SDK_VERSION = '1.29.0'; // x-release-please-version
 const LIBRARY_LABEL = `google-genai-sdk/${SDK_VERSION}`;
 const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
 const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';
@@ -633,6 +633,15 @@ export class ApiClient {
     return headers;
   }
 
+  private getFileName(file: string | Blob): string {
+    let fileName: string = '';
+    if (typeof file === 'string') {
+      fileName = file.replace(/[/\\]+$/, '');
+      fileName = fileName.split(/[/\\]/).pop() ?? '';
+    }
+    return fileName;
+  }
+
   /**
    * Uploads a file asynchronously using Gemini API only, this is not supported
    * in Vertex AI.
@@ -669,13 +678,69 @@ export class ApiClient {
       );
     }
     fileToUpload.mimeType = mimeType;
-    let fileName: string = '';
-    if (typeof file === 'string') {
-      fileName = file.replace(/[/\\]+$/, '');
-      fileName = fileName.split(/[/\\]/).pop() ?? '';
-    }
-    const uploadUrl = await this.fetchUploadUrl(fileToUpload, fileName, config);
+    const body: Record<string, unknown> = {
+      file: fileToUpload,
+    };
+    const fileName = this.getFileName(file);
+    const path = common.formatMap(
+      'upload/v1beta/files',
+      body['_url'] as Record<string, unknown>,
+    );
+    const uploadUrl = await this.fetchUploadUrl(
+      path,
+      fileToUpload.sizeBytes,
+      fileToUpload.mimeType,
+      fileName,
+      body,
+      config?.httpOptions,
+    );
     return uploader.upload(file, uploadUrl, this);
+  }
+
+  /**
+   * Uploads a file to a given file search store asynchronously using Gemini API only, this is not supported
+   * in Vertex AI.
+   *
+   * @param fileSearchStoreName The name of the file search store to upload the file to.
+   * @param file The string path to the file to be uploaded or a Blob object.
+   * @param config Optional parameters specified in the `UploadFileConfig`
+   *     interface. @see {@link UploadFileConfig}
+   * @return A promise that resolves to a `File` object.
+   * @throws An error if called on a Vertex AI client.
+   * @throws An error if the `mimeType` is not provided and can not be inferred,
+   */
+  async uploadFileToFileSearchStore(
+    fileSearchStoreName: string,
+    file: string | Blob,
+    config?: types.UploadToFileSearchStoreConfig,
+  ): Promise<types.UploadToFileSearchStoreOperation> {
+    const uploader = this.clientOptions.uploader;
+    const fileStat = await uploader.stat(file);
+    const sizeBytes = String(fileStat.size);
+    const mimeType = config?.mimeType ?? fileStat.type;
+    if (mimeType === undefined || mimeType === '') {
+      throw new Error(
+        'Can not determine mimeType. Please provide mimeType in the config.',
+      );
+    }
+    const path = `upload/v1beta/${fileSearchStoreName}:uploadToFileSearchStore`;
+    const fileName = this.getFileName(file);
+    const body: Record<string, unknown> = {};
+    if (config?.customMetadata) {
+      body['customMetadata'] = config.customMetadata;
+    }
+    if (config?.chunkingConfig) {
+      body['chunkingConfig'] = config.chunkingConfig;
+    }
+    const uploadUrl = await this.fetchUploadUrl(
+      path,
+      sizeBytes,
+      mimeType,
+      fileName,
+      body,
+      config?.httpOptions,
+    );
+    return uploader.uploadToFileSearchStore(file, uploadUrl, this);
   }
 
   /**
@@ -690,13 +755,16 @@ export class ApiClient {
   }
 
   private async fetchUploadUrl(
-    file: types.File,
+    path: string,
+    sizeBytes: string,
+    mimeType: string,
     fileName: string,
-    config?: types.UploadFileConfig,
+    body: Record<string, unknown>,
+    configHttpOptions?: types.HttpOptions,
   ): Promise<string> {
     let httpOptions: types.HttpOptions = {};
-    if (config?.httpOptions) {
-      httpOptions = config.httpOptions;
+    if (configHttpOptions) {
+      httpOptions = configHttpOptions;
     } else {
       httpOptions = {
         apiVersion: '', // api-version is set in the path.
@@ -704,21 +772,15 @@ export class ApiClient {
           'Content-Type': 'application/json',
           'X-Goog-Upload-Protocol': 'resumable',
           'X-Goog-Upload-Command': 'start',
-          'X-Goog-Upload-Header-Content-Length': `${file.sizeBytes}`,
-          'X-Goog-Upload-Header-Content-Type': `${file.mimeType}`,
+          'X-Goog-Upload-Header-Content-Length': `${sizeBytes}`,
+          'X-Goog-Upload-Header-Content-Type': `${mimeType}`,
           ...(fileName ? {'X-Goog-Upload-File-Name': fileName} : {}),
         },
       };
     }
 
-    const body: Record<string, types.File> = {
-      'file': file,
-    };
     const httpResponse = await this.request({
-      path: common.formatMap(
-        'upload/v1beta/files',
-        body['_url'] as Record<string, unknown>,
-      ),
+      path,
       body: JSON.stringify(body),
       httpMethod: 'POST',
       httpOptions,

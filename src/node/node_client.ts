@@ -13,6 +13,7 @@ import {Caches} from '../caches.js';
 import {Chats} from '../chats.js';
 import {GoogleGenAIOptions} from '../client.js';
 import {Files} from '../files.js';
+import {FileSearchStores} from '../filesearchstores.js';
 import {Live} from '../live.js';
 import {Models} from '../models.js';
 import {NodeAuth} from '../node/_node_auth.js';
@@ -21,7 +22,6 @@ import {NodeWebSocketFactory} from '../node/_node_websocket.js';
 import {Operations} from '../operations.js';
 import {Tokens} from '../tokens.js';
 import {Tunings} from '../tunings.js';
-
 import {NodeUploader} from './_node_uploader.js';
 
 const LANGUAGE_LABEL_PREFIX = 'gl-node/';
@@ -83,6 +83,7 @@ export class GoogleGenAI {
   readonly operations: Operations;
   readonly authTokens: Tokens;
   readonly tunings: Tunings;
+  readonly fileSearchStores: FileSearchStores;
 
   constructor(options: GoogleGenAIOptions) {
     // Validate explicitly set initializer values.
@@ -182,6 +183,7 @@ export class GoogleGenAI {
     this.operations = new Operations(this.apiClient);
     this.authTokens = new Tokens(this.apiClient);
     this.tunings = new Tunings(this.apiClient);
+    this.fileSearchStores = new FileSearchStores(this.apiClient);
   }
 }
 
