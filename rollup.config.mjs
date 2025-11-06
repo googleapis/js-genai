@@ -29,6 +29,7 @@ const externalDeps = [
   '@modelcontextprotocol/sdk',
   '@modelcontextprotocol/sdk/client/index.js',
   '@modelcontextprotocol/sdk/types.js',
+  'path',
 ];
 
 export default [
