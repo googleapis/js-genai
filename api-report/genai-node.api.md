@@ -2485,9 +2485,14 @@ export interface Model {
     endpoints?: Endpoint[];
     inputTokenLimit?: number;
     labels?: Record<string, string>;
+    maxTemperature?: number;
     name?: string;
     outputTokenLimit?: number;
     supportedActions?: string[];
+    temperature?: number;
+    thinking?: boolean;
+    topK?: number;
+    topP?: number;
     tunedModelInfo?: TunedModelInfo;
     version?: string;
 }

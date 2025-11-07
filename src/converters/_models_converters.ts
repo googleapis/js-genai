@@ -3531,6 +3531,33 @@ export function modelFromMldev(
     common.setValueByPath(toObject, ['supportedActions'], fromSupportedActions);
   }
 
+  const fromTemperature = common.getValueByPath(fromObject, ['temperature']);
+  if (fromTemperature != null) {
+    common.setValueByPath(toObject, ['temperature'], fromTemperature);
+  }
+
+  const fromMaxTemperature = common.getValueByPath(fromObject, [
+    'maxTemperature',
+  ]);
+  if (fromMaxTemperature != null) {
+    common.setValueByPath(toObject, ['maxTemperature'], fromMaxTemperature);
+  }
+
+  const fromTopP = common.getValueByPath(fromObject, ['topP']);
+  if (fromTopP != null) {
+    common.setValueByPath(toObject, ['topP'], fromTopP);
+  }
+
+  const fromTopK = common.getValueByPath(fromObject, ['topK']);
+  if (fromTopK != null) {
+    common.setValueByPath(toObject, ['topK'], fromTopK);
+  }
+
+  const fromThinking = common.getValueByPath(fromObject, ['thinking']);
+  if (fromThinking != null) {
+    common.setValueByPath(toObject, ['thinking'], fromThinking);
+  }
+
   return toObject;
 }
 

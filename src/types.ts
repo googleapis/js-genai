@@ -3389,6 +3389,28 @@ export declare interface Model {
   defaultCheckpointId?: string;
   /** The checkpoints of the model. */
   checkpoints?: Checkpoint[];
+  /** Temperature value used for sampling set when the dataset was saved.
+      This value is used to tune the degree of randomness. */
+  temperature?: number;
+  /** The maximum temperature value used for sampling set when the
+      dataset was saved. This value is used to tune the degree of randomness. */
+  maxTemperature?: number;
+  /** Optional. Specifies the nucleus sampling threshold. The model
+      considers only the smallest set of tokens whose cumulative probability is
+      at least `top_p`. This helps generate more diverse and less repetitive
+      responses. For example, a `top_p` of 0.9 means the model considers tokens
+      until the cumulative probability of the tokens to select from reaches 0.9.
+      It's recommended to adjust either temperature or `top_p`, but not both. */
+  topP?: number;
+  /** Optional. Specifies the top-k sampling threshold. The model
+      considers only the top k most probable tokens for the next token. This can
+      be useful for generating more coherent and less random text. For example,
+      a `top_k` of 40 means the model will choose the next word from the 40 most
+      likely words. */
+  topK?: number;
+  /** Whether the model supports thinking features. If true, thoughts are
+      returned only if the model supports thought and thoughts are available. */
+  thinking?: boolean;
 }
 
 export declare interface ListModelsConfig {

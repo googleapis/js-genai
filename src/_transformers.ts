@@ -14,6 +14,9 @@ export function tModel(apiClient: ApiClient, model: string | unknown): string {
   if (!model || typeof model !== 'string') {
     throw new Error('model is required and must be a string');
   }
+  if (model.includes('..') || model.includes('?') || model.includes('&')) {
+    throw new Error('invalid model parameter');
+  }
 
   if (apiClient.isVertexAI()) {
     if (
