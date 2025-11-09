@@ -1,7 +1,7 @@
 {
-  "name": "@google/genai",
+  "name": "@githubmann/google-genai",
   "version": "1.29.0",
-  "description": "",
+  "description": "Google Generative AI SDK with HTTP/HTTPS proxy support - Fork of @google/genai",
   "type": "module",
   "main": "dist/node/index.mjs",
   "module": "dist/web/index.mjs",
@@ -115,7 +115,7 @@
   },
   "dependencies": {
     "google-auth-library": "^10.3.0",
-    "https-proxy-agent": "^7.0.2",
+    "undici": "^7.16.0",
     "ws": "^8.18.0"
   },
   "peerDependencies": {
@@ -128,12 +128,23 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/googleapis/js-genai.git"
+    "url": "https://github.com/kaneruan/js-genai.git"
   },
   "bugs": {
-    "url": "https://github.com/googleapis/js-genai/issues"
+    "url": "https://github.com/kaneruan/js-genai/issues"
   },
-  "homepage": "https://github.com/googleapis/js-genai#readme",
-  "author": "",
-  "license": "Apache-2.0"
+  "homepage": "https://github.com/kaneruan/js-genai#readme",
+  "author": "githubmann",
+  "license": "Apache-2.0",
+  "keywords": [
+    "google",
+    "genai",
+    "gemini",
+    "generative-ai",
+    "proxy",
+    "http-proxy",
+    "https-proxy",
+    "ai",
+    "sdk"
+  ]
 }

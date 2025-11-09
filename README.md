@@ -1,10 +1,23 @@
 # Google Gen AI SDK for TypeScript and JavaScript
 
-[![NPM Downloads](https://img.shields.io/npm/dw/%40google%2Fgenai)](https://www.npmjs.com/package/@google/genai)
-[![Node Current](https://img.shields.io/node/v/%40google%2Fgenai)](https://www.npmjs.com/package/@google/genai)
+> [!NOTE]
+> **This is a community fork** of [@google/genai](https://github.com/googleapis/js-genai) with **HTTP/HTTPS proxy support**.
+>
+> **Key differences from official SDK:**
+> - ✅ Full HTTP/HTTPS proxy support (environment variables & programmatic)
+> - ✅ NO_PROXY bypass patterns support
+> - ✅ Uses undici ProxyAgent for Node.js v18+ compatibility
+> - ✅ Compatible with corporate network environments
+>
+> **Official repository:** https://github.com/googleapis/js-genai
+> **This fork:** https://github.com/kaneruan/js-genai
+
+[![NPM Downloads](https://img.shields.io/npm/dw/%40githubmann%2Fgoogle-genai)](https://www.npmjs.com/package/@githubmann/google-genai)
+[![Node Current](https://img.shields.io/node/v/%40githubmann%2Fgoogle-genai)](https://www.npmjs.com/package/@githubmann/google-genai)
 
 ----------------------
 **Documentation:** https://googleapis.github.io/js-genai/
+**Proxy Documentation:** [docs/PROXY.md](docs/PROXY.md)
 
 ----------------------
 
@@ -39,7 +52,13 @@ A list of accepted authentication options are listed in [GoogleAuthOptions](http
 
 ## Installation
 
-To install the SDK, run the following command:
+To install this fork with proxy support:
+
+```shell
+npm install @githubmann/google-genai
+```
+
+Or to install the official SDK without proxy support:
 
 ```shell
 npm install @google/genai
@@ -51,7 +70,7 @@ The simplest way to get started is to use an API key from
 [Google AI Studio](https://aistudio.google.com/apikey):
 
 ```typescript
-import {GoogleGenAI} from '@google/genai';
+import {GoogleGenAI} from '@githubmann/google-genai';
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
 const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
@@ -80,7 +99,7 @@ For server-side applications, initialize using an API key, which can
 be acquired from [Google AI Studio](https://aistudio.google.com/apikey):
 
 ```typescript
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenAI } from '@githubmann/google-genai';
 const ai = new GoogleGenAI({apiKey: 'GEMINI_API_KEY'});
 ```
 
@@ -94,7 +113,7 @@ In the browser the initialization code is identical:
 
 
 ```typescript
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenAI } from '@githubmann/google-genai';
 const ai = new GoogleGenAI({apiKey: 'GEMINI_API_KEY'});
 ```
 
@@ -103,7 +122,7 @@ const ai = new GoogleGenAI({apiKey: 'GEMINI_API_KEY'});
 Sample code for VertexAI initialization:
 
 ```typescript
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenAI } from '@githubmann/google-genai';
 
 const ai = new GoogleGenAI({
     vertexai: true,
@@ -134,10 +153,74 @@ export GOOGLE_CLOUD_LOCATION='us-central1'
 ```
 
 ```typescript
-import {GoogleGenAI} from '@google/genai';
+import {GoogleGenAI} from '@githubmann/google-genai';
 
 const ai = new GoogleGenAI();
 ```
+
+## Proxy Configuration (Node.js only) 🌟
+
+This fork adds full HTTP/HTTPS proxy support for Node.js environments. Proxy configuration works with both Gemini Developer API and Vertex AI.
+
+### Using Environment Variables (Recommended)
+
+```bash
+export HTTPS_PROXY=http://proxy.example.com:8080
+export HTTP_PROXY=http://proxy.example.com:8080
+export NO_PROXY=localhost,127.0.0.1,.local
+```
+
+```typescript
+import {GoogleGenAI} from '@githubmann/google-genai';
+
+// SDK will automatically detect and use proxy from environment
+const ai = new GoogleGenAI({apiKey: 'GEMINI_API_KEY'});
+```
+
+### Programmatic Configuration
+
+```typescript
+import {GoogleGenAI} from '@githubmann/google-genai';
+
+// Using proxy URL string
+const ai = new GoogleGenAI({
+  apiKey: 'GEMINI_API_KEY',
+  httpOptions: {
+    proxy: 'http://proxy.example.com:8080'
+  }
+});
+
+// With authentication
+const aiWithAuth = new GoogleGenAI({
+  apiKey: 'GEMINI_API_KEY',
+  httpOptions: {
+    proxy: 'http://username:password@proxy.example.com:8080'
+  }
+});
+
+// Using proxy configuration object
+const aiWithConfig = new GoogleGenAI({
+  apiKey: 'GEMINI_API_KEY',
+  httpOptions: {
+    proxy: {
+      host: 'proxy.example.com',
+      port: 8080,
+      protocol: 'http',
+      auth: 'username:password'  // optional
+    }
+  }
+});
+
+// Explicitly disable proxy (even if env vars are set)
+const aiNoProxy = new GoogleGenAI({
+  apiKey: 'GEMINI_API_KEY',
+  httpOptions: {
+    proxy: false
+  }
+});
+```
+
+**For complete proxy documentation, see [docs/PROXY.md](docs/PROXY.md)**
 
 ## API Selection
 
