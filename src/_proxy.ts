@@ -144,7 +144,8 @@ export function resolveProxyUrl(
 
 /**
  * Creates a proxy agent for Node.js fetch requests.
- * This function dynamically imports the https-proxy-agent library to avoid
+ * Node.js v18+ uses undici for fetch, which requires undici's ProxyAgent.
+ * This function dynamically imports the undici library to avoid
  * bundling it in web environments.
  * @param proxyUrl The proxy URL
  * @returns A proxy agent or undefined if the library is not available
@@ -158,15 +159,12 @@ export async function createProxyAgent(
   }
 
   try {
-    // Dynamic import to avoid bundling in web environments
+    // Node.js v18+ uses undici for fetch, which requires ProxyAgent from undici
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const {HttpsProxyAgent} = (await import('https-proxy-agent')) as any;
-    return new HttpsProxyAgent(proxyUrl);
+    const {ProxyAgent} = (await import('undici')) as any;
+    return new ProxyAgent(proxyUrl);
   } catch (error) {
-    console.warn(
-      'https-proxy-agent not available. Proxy support is disabled.',
-      error,
-    );
+    console.warn('undici not available. Proxy support is disabled.', error);
     return undefined;
   }
 }
