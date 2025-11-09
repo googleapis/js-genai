@@ -7,6 +7,7 @@
 import {Auth} from './_auth.js';
 import * as common from './_common.js';
 import {Downloader} from './_downloader.js';
+import * as proxy from './_proxy.js';
 import {Uploader} from './_uploader.js';
 import {ApiError} from './errors.js';
 import * as types from './types.js';
@@ -593,6 +594,25 @@ export class ApiClient {
     url: string,
     requestInit: RequestInit,
   ): Promise<Response> {
+    // Add proxy support for Node.js environments
+    const proxyUrl = proxy.resolveProxyUrl(
+      url,
+      this.clientOptions.httpOptions?.proxy,
+    );
+
+    if (proxyUrl) {
+      try {
+        const proxyAgent = await proxy.createProxyAgent(proxyUrl);
+        if (proxyAgent) {
+          // Add the proxy agent to the request
+          // @ts-expect-error - dispatcher is a Node.js-specific option for fetch
+          requestInit.dispatcher = proxyAgent;
+        }
+      } catch (error) {
+        console.warn('Failed to create proxy agent:', error);
+      }
+    }
+
     return fetch(url, requestInit).catch((e) => {
       throw new Error(`exception ${e} sending request`);
     });

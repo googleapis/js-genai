@@ -1489,6 +1489,61 @@ export declare interface HttpOptions {
       - VertexAI backend API docs: https://cloud.google.com/vertex-ai/docs/reference/rest
       - GeminiAPI backend API docs: https://ai.google.dev/api/rest */
   extraBody?: Record<string, unknown>;
+  /**
+   * Proxy configuration for HTTP requests (Node.js only).
+   * Can be a string URL (e.g., 'http://proxy.example.com:8080') or an object with proxy settings.
+   * If not specified, the SDK will automatically use proxy settings from environment variables:
+   * - HTTP_PROXY or http_proxy: for HTTP requests
+   * - HTTPS_PROXY or https_proxy: for HTTPS requests
+   * - NO_PROXY or no_proxy: comma-separated list of domains to exclude from proxy
+   *
+   * Set to `false` to explicitly disable proxy usage even when environment variables are set.
+   *
+   * @example
+   * ```typescript
+   * // Using a proxy URL string
+   * const ai = new GoogleGenAI({
+   *   apiKey: 'your-api-key',
+   *   httpOptions: {
+   *     proxy: 'http://proxy.example.com:8080'
+   *   }
+   * });
+   *
+   * // Using a proxy configuration object
+   * const ai = new GoogleGenAI({
+   *   apiKey: 'your-api-key',
+   *   httpOptions: {
+   *     proxy: {
+   *       host: 'proxy.example.com',
+   *       port: 8080,
+   *       protocol: 'http',
+   *       auth: 'username:password' // optional
+   *     }
+   *   }
+   * });
+   *
+   * // Disable proxy
+   * const ai = new GoogleGenAI({
+   *   apiKey: 'your-api-key',
+   *   httpOptions: {
+   *     proxy: false
+   *   }
+   * });
+   * ```
+   */
+  proxy?: string | ProxyConfig | false;
+}
+
+/** Proxy configuration object for advanced proxy settings. */
+export declare interface ProxyConfig {
+  /** The proxy server hostname or IP address. */
+  host: string;
+  /** The proxy server port. */
+  port: number;
+  /** The protocol to use for the proxy connection. Defaults to 'http'. */
+  protocol?: 'http' | 'https';
+  /** Optional authentication credentials in the format 'username:password'. */
+  auth?: string;
 }
 
 /** Schema is used to define the format of input/output data.
