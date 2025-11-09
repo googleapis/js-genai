@@ -115,6 +115,7 @@
   },
   "dependencies": {
     "google-auth-library": "^10.3.0",
+    "https-proxy-agent": "^7.0.2",
     "ws": "^8.18.0"
   },
   "peerDependencies": {
