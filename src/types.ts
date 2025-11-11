@@ -2597,6 +2597,7 @@ export class GenerateContentResponse {
         if (
           fieldName !== 'text' &&
           fieldName !== 'thought' &&
+          fieldName !== 'thoughtSignature' &&
           (fieldValue !== null || fieldValue !== undefined)
         ) {
           nonTextParts.push(fieldName);
