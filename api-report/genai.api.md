@@ -1793,6 +1793,7 @@ export interface HttpOptions {
     baseUrl?: string;
     extraBody?: Record<string, unknown>;
     headers?: Record<string, string>;
+    proxy?: string | ProxyConfig | false;
     timeout?: number;
 }
 
@@ -2707,6 +2708,14 @@ export interface ProactivityConfig {
 // @public
 export interface ProductImage {
     productImage?: Image_2;
+}
+
+// @public
+export interface ProxyConfig {
+    auth?: string;
+    host: string;
+    port: number;
+    protocol?: 'http' | 'https';
 }
 
 // @public
