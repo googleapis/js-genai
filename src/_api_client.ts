@@ -21,6 +21,14 @@ const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
 const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';
 const responseLineRE = /^\s*data: (.*)(?:\n\n|\r\r|\r\n\r\n)/;
 
+// Default retry options
+const RETRY_ATTEMPTS = 5;
+const RETRY_INITIAL_DELAY_SECONDS = 1.0;
+const RETRY_MAX_DELAY_SECONDS = 60.0;
+const RETRY_EXP_BASE = 2.0;
+const RETRY_JITTER = 1.0;
+const RETRY_HTTP_STATUS_CODES = [408, 429, 500, 501, 502, 503, 504];
+
 /**
  * Options for initializing the ApiClient. The ApiClient uses the parameters
  * for authentication purposes as well as to infer if SDK should send the
@@ -314,6 +322,58 @@ export class ApiClient {
     return url;
   }
 
+  private async _retryRequest<T>(
+    fn: () => Promise<T>,
+    httpOptions?: types.HttpOptions,
+  ): Promise<T> {
+    let retryOptions = httpOptions?.retryOptions;
+
+    let maxAttempts;
+
+    if (!retryOptions) {
+      retryOptions = {attempts: 1};
+      maxAttempts = 1;
+    } else if (retryOptions.attempts === 0) {
+      // If attempts is set to 0, we should not retry.
+      maxAttempts = 1;
+    } else {
+      maxAttempts = retryOptions.attempts ?? RETRY_ATTEMPTS;
+    }
+
+    const initialDelay =
+      (retryOptions.initialDelay ?? RETRY_INITIAL_DELAY_SECONDS) * 1000;
+    const maxDelay = (retryOptions.maxDelay ?? RETRY_MAX_DELAY_SECONDS) * 1000;
+    const expBase = retryOptions.expBase ?? RETRY_EXP_BASE;
+    const jitter = retryOptions.jitter ?? RETRY_JITTER;
+    const retryableStatusCodes =
+      retryOptions.httpStatusCodes ?? RETRY_HTTP_STATUS_CODES;
+
+    let lastError: Error | undefined = undefined;
+
+    for (let i = 0; i < maxAttempts; i++) {
+      try {
+        return await fn();
+      } catch (e: unknown) {
+        if (e instanceof ApiError && retryableStatusCodes.includes(e.status)) {
+          lastError = e;
+          if (i < maxAttempts - 1) {
+            const delay = Math.min(
+              maxDelay,
+              initialDelay * Math.pow(expBase, i),
+            );
+            const jitterDelay = delay * (1 + jitter * (Math.random() * 2 - 1));
+            await new Promise((resolve) => setTimeout(resolve, jitterDelay));
+          }
+        } else if (e instanceof Error) {
+          throw e;
+        } else {
+          throw new Error(JSON.stringify(e));
+        }
+      }
+    }
+    throw lastError;
+  }
+
   private shouldPrependVertexProjectPath(request: HttpRequest): boolean {
     if (this.clientOptions.apiKey) {
       return false;
@@ -374,7 +434,12 @@ export class ApiClient {
       url.toString(),
       request.abortSignal,
     );
-    return this.unaryApiCall(url, requestInit, request.httpMethod);
+    return this.unaryApiCall(
+      url,
+      requestInit,
+      request.httpMethod,
+      patchedHttpOptions,
+    );
   }
 
   private patchHttpOptions(
@@ -430,7 +495,12 @@ export class ApiClient {
       url.toString(),
       request.abortSignal,
     );
-    return this.streamApiCall(url, requestInit, request.httpMethod);
+    return this.streamApiCall(
+      url,
+      requestInit,
+      request.httpMethod,
+      patchedHttpOptions,
+    );
   }
 
   private async includeExtraHttpOptionsToRequestInit(
@@ -478,44 +548,32 @@ export class ApiClient {
     url: URL,
     requestInit: RequestInit,
     httpMethod: 'GET' | 'POST' | 'PATCH' | 'DELETE',
+    httpOptions?: types.HttpOptions, // Pass httpOptions here
   ): Promise<types.HttpResponse> {
-    return this.apiCall(url.toString(), {
-      ...requestInit,
-      method: httpMethod,
-    })
-      .then(async (response) => {
-        await throwErrorIfNotOK(response);
-        return new types.HttpResponse(response);
-      })
-      .catch((e) => {
-        if (e instanceof Error) {
-          throw e;
-        } else {
-          throw new Error(JSON.stringify(e));
-        }
+    return this._retryRequest(async () => {
+      const response = await this.apiCall(url.toString(), {
+        ...requestInit,
+        method: httpMethod,
       });
+      await throwErrorIfNotOK(response);
+      return new types.HttpResponse(response);
+    }, httpOptions);
   }
 
   private async streamApiCall(
     url: URL,
     requestInit: RequestInit,
     httpMethod: 'GET' | 'POST' | 'PATCH' | 'DELETE',
+    httpOptions?: types.HttpOptions, // Pass httpOptions here
   ): Promise<AsyncGenerator<types.HttpResponse>> {
-    return this.apiCall(url.toString(), {
-      ...requestInit,
-      method: httpMethod,
-    })
-      .then(async (response) => {
-        await throwErrorIfNotOK(response);
-        return this.processStreamResponse(response);
-      })
-      .catch((e) => {
-        if (e instanceof Error) {
-          throw e;
-        } else {
-          throw new Error(JSON.stringify(e));
-        }
+    return this._retryRequest(async () => {
+      const response = await this.apiCall(url.toString(), {
+        ...requestInit,
+        method: httpMethod,
       });
+      await throwErrorIfNotOK(response);
+      return this.processStreamResponse(response);
+    }, httpOptions);
   }
 
   async *processStreamResponse(

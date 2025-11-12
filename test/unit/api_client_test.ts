@@ -1740,6 +1740,99 @@ describe('ApiClient', () => {
       );
     });
   });
+  describe('ApiClient retry logic', () => {
+    it('should execute once if no retry options are provided', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth('test-api-key'),
+        apiKey: 'test-api-key',
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+        httpOptions: {
+          baseUrl: 'https://custom-request-base-url.googleapis.com',
+          headers: {'google-custom-header': 'custom-header-value'},
+          apiVersion: 'v1alpha',
+          timeout: 1001,
+        },
+      });
+
+      let fetchCalls = 0;
+      spyOn(global, 'fetch').and.callFake(() => {
+        fetchCalls++;
+        // Succeed on first call
+        return Promise.resolve(
+          new Response(
+            JSON.stringify(mockGenerateContentResponse),
+            fetchOkOptions,
+          ),
+        );
+      });
+
+      const response = await client.request({
+        path: 'test-path',
+        httpMethod: 'POST',
+      });
+
+      // Check that fetch was called once
+      expect(fetchCalls).toBe(1);
+
+      // Check that the response is successful
+      const responseJson = await response.json();
+      const mockResponseJson = await new types.HttpResponse(
+        new Response(JSON.stringify(mockGenerateContentResponse)),
+      ).json();
+      expect(responseJson).toEqual(mockResponseJson);
+    });
+  });
+  it('should retry on 500 error and eventually succeed when retry options are provided to the client', async () => {
+    const client = new ApiClient({
+      auth: new FakeAuth('test-api-key'),
+      apiKey: 'test-api-key',
+      uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
+      httpOptions: {
+        retryOptions: {
+          attempts: 3,
+          initialDelay: 0,
+        },
+      },
+    });
+
+    let fetchCalls = 0;
+    spyOn(global, 'fetch').and.callFake(() => {
+      fetchCalls++;
+      if (fetchCalls < 3) {
+        // Fail the first two times
+        return Promise.resolve(
+          new Response(
+            JSON.stringify({error: 'Internal Server Error'}),
+            fetch500Options,
+          ),
+        );
+      }
+      // Succeed on the third try
+      return Promise.resolve(
+        new Response(
+          JSON.stringify(mockGenerateContentResponse),
+          fetchOkOptions,
+        ),
+      );
+    });
+
+    const response = await client.request({
+      path: 'test-path',
+      httpMethod: 'POST',
+    });
+
+    // Check that fetch was called 3 times
+    expect(fetchCalls).toBe(3);
+
+    // Check that the final response is the successful one
+    const responseJson = await response.json();
+    const mockResponseJson = await new types.HttpResponse(
+      new Response(JSON.stringify(mockGenerateContentResponse)),
+    ).json();
+    expect(responseJson).toEqual(mockResponseJson);
+  });
 });
 
 const extraBodyTestCases = [
