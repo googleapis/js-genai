@@ -117,7 +117,38 @@ describe('GenerateContentResponse.text', () => {
         },
       } as Candidate,
     ];
+
     expect(response.text).toBe('Hello ');
+  });
+
+  it('should not warn when thought_signature is present', () => {
+    const response = new GenerateContentResponse();
+    response.candidates = [
+      {
+        content: {
+          parts: [{text: 'Hello '}, {thoughtSignature: 'thought'}],
+        },
+      } as Candidate,
+    ];
+    spyOn(console, 'warn');
+
+    expect(response.text).toEqual('Hello ');
+    expect(console.warn).not.toHaveBeenCalled();
+  });
+
+  it('should not warn when thought_signature is present in a text part', () => {
+    const response = new GenerateContentResponse();
+    response.candidates = [
+      {
+        content: {
+          parts: [{text: 'Hello ', thoughtSignature: 'thought'}],
+        },
+      } as Candidate,
+    ];
+    spyOn(console, 'warn');
+
+    expect(response.text).toEqual('Hello ');
+    expect(console.warn).not.toHaveBeenCalled();
   });
 });
 
