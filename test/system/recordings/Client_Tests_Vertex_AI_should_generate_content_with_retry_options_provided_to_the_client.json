@@ -1,0 +1,106 @@
+{
+  "recordID": "Client_Tests_Vertex_AI_should_generate_content_with_retry_options_provided_to_the_client",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:generateContent",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:generateContent HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "173",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Client Tests Vertex AI should generate content with retry options provided to the client"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "why is the sky blue?"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {
+              "candidateCount": 1,
+              "maxOutputTokens": 200,
+              "thinkingConfig": {
+                "thinkingBudget": 50
+              }
+            }
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "us-central1-aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "ff12f5ee0d2db86c6cca9aabc3c7899ccc981a61299a90233d5c013acd03dd20",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Encoding": "gzip",
+          "Content-Length": "833",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Thu, 13 Nov 2025 19:42:24 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "avgLogprobs": -0.1788948621505346,
+                "content": {
+                  "parts": [
+                    {
+                      "text": "The sky is blue primarily due to a phenomenon called **Rayleigh Scattering**.\n\nHere's a breakdown of how it works:\n\n1.  **Sunlight is White Light:** Sunlight, as it reaches Earth, appears white to us. However, it's actually composed of all the colors of the rainbow (red, orange, yellow, green, blue, indigo, violet), each with a different wavelength. Red light has longer wavelengths, while blue and violet light have shorter wavelengths.\n\n2.  **Earth's Atmosphere:** Our planet is surrounded by an atmosphere made up of gases (like nitrogen and oxygen) and tiny particles (dust, water vapor).\n\n3.  **Scattering:** When sunlight enters the atmosphere, it collides with these gas molecules and"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "MAX_TOKENS",
+                "score": -27.9075984954834
+              }
+            ],
+            "createTime": "2025-11-13T19:42:23.524481Z",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "nzQWacGBIImam9IPk8GTgQ4",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 16
+              },
+              "candidatesTokenCount": 156,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 156
+                }
+              ],
+              "promptTokenCount": 6,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 6
+                }
+              ],
+              "thoughtsTokenCount": 41,
+              "totalTokenCount": 203,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
