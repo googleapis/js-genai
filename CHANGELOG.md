@@ -1,6 +1,15 @@
 # Changelog
 
 
+## [1.29.1](https://github.com/googleapis/js-genai/compare/v1.29.0...v1.29.1) (2025-11-12)
+
+
+### Bug Fixes
+
+* Add missing fields to the model types ([8937903](https://github.com/googleapis/js-genai/commit/8937903299bf3180ec8eb806d189c642392f1546))
+* Don't generate warnings from response.text property because of thought_signature. ([356b843](https://github.com/googleapis/js-genai/commit/356b84306542a972cc49ede11b24c8b0156d78eb))
+* Fix base_steps parameter for recontext_image ([946415f](https://github.com/googleapis/js-genai/commit/946415ffc42bdc9bcf7f086aac9612ff7aaa89d2))
+
 ## [1.29.0](https://github.com/googleapis/js-genai/compare/v1.28.0...v1.29.0) (2025-11-05)
 
 
