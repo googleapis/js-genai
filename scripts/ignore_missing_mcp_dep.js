@@ -38,6 +38,7 @@ const dtsFilePaths = [
   'dist/node/node.d.ts',
   'dist/web/web.d.ts',
   'dist/genai.d.ts',
+  'dist-private/index.d.ts',
 ];
 
 const targetImportLine =
@@ -52,7 +53,8 @@ const processFile = (filePath) => {
   console.log(`Processing file: ${filePath}`);
 
   try {
-    const absolutePath = path.resolve(process.cwd(), filePath);
+    const rootDir = path.resolve(import.meta.dirname, '..');
+    const absolutePath = path.resolve(rootDir, filePath);
 
     if (!fs.existsSync(absolutePath)) {
       console.warn(`File not found: ${absolutePath}. Skipping.`);
