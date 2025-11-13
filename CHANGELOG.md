@@ -1,6 +1,13 @@
 # Changelog
 
 
+## [1.30.0](https://github.com/googleapis/js-genai/compare/v1.29.1...v1.30.0) (2025-11-13)
+
+
+### Features
+
+* add display name to FunctionResponseBlob ([81036ed](https://github.com/googleapis/js-genai/commit/81036edbea077b600d29c565c7dea5ad840d0fe0))
+
 ## [1.29.1](https://github.com/googleapis/js-genai/compare/v1.29.0...v1.29.1) (2025-11-12)
 
 
