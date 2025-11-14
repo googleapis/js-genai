@@ -1191,6 +1191,9 @@ export class FunctionResponseBlob {
   /** Required. Inline media bytes.
    * @remarks Encoded as base64 string. */
   data?: string;
+  /** Optional. Display name of the blob.
+      Used to provide a label or filename to distinguish blobs. */
+  displayName?: string;
 }
 
 /** URI based data for function response. */

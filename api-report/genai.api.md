@@ -1194,6 +1194,7 @@ export class FunctionResponse {
 // @public
 export class FunctionResponseBlob {
     data?: string;
+    displayName?: string;
     mimeType?: string;
 }
 

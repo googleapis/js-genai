@@ -3748,7 +3748,7 @@ export function recontextImageConfigToVertex(
   if (parentObject !== undefined && fromBaseSteps != null) {
     common.setValueByPath(
       parentObject,
-      ['parameters', 'editConfig', 'baseSteps'],
+      ['parameters', 'baseSteps'],
       fromBaseSteps,
     );
   }
