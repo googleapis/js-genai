@@ -35,6 +35,14 @@ const fetchOkOptions = {
   url: 'some-url',
 };
 
+const fetch500Options = {
+  status: 500,
+  statusText: 'Internal Server Error',
+  ok: false,
+  headers: {'Content-Type': 'application/json'},
+  url: 'some-url',
+};
+
 const mockGenerateContentResponse: types.GenerateContentResponse =
   Object.setPrototypeOf(
     {
@@ -1266,6 +1274,48 @@ describe('generateContent', () => {
       unknown
     >;
     expect(requestOptions['timeout']).toEqual(1);
+  });
+  it('should retry on 500 error and eventually succeed when per-request retry options are provided', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+
+    let fetchCalls = 0;
+    spyOn(global, 'fetch').and.callFake(() => {
+      fetchCalls++;
+      if (fetchCalls < 3) {
+        // Fail the first two times
+        return Promise.resolve(
+          new Response(
+            JSON.stringify({error: 'Internal Server Error'}),
+            fetch500Options,
+          ),
+        );
+      }
+      // Succeed on the third try
+      return Promise.resolve(
+        new Response(
+          JSON.stringify(mockGenerateContentResponse),
+          fetchOkOptions,
+        ),
+      );
+    });
+
+    const response = await client.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: 'Why is the sky blue?',
+      config: {
+        httpOptions: {
+          retryOptions: {
+            attempts: 3,
+            initialDelay: 0,
+          },
+        },
+      },
+    });
+
+    expect(fetchCalls).toBe(3);
+
+    // Check that the final response is the successful one
+    expect(response.candidates).toEqual(mockGenerateContentResponse.candidates);
   });
 });
 describe('generateContentStream', () => {

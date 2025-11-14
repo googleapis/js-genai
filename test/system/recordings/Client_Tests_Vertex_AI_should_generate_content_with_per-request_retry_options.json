@@ -1,0 +1,95 @@
+{
+  "recordID": "Client_Tests_Vertex_AI_should_generate_content_with_per-request_retry_options",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta/models/gemini-2.5-flash:generateContent",
+        "request": "POST /v1beta/models/gemini-2.5-flash:generateContent HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "173",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Client Tests Vertex AI should generate content with per-request retry options"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "why is the sky blue?"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {
+              "candidateCount": 1,
+              "maxOutputTokens": 200,
+              "thinkingConfig": {
+                "thinkingBudget": 50
+              }
+            }
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "generativelanguage.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "228abba637a32be76f0f97e22bcb695750104f776019e131431f5a2538d0c7da",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Encoding": "gzip",
+          "Content-Length": "684",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Wed, 12 Nov 2025 21:30:14 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Server-Timing": "gfet4t7; dur=1536",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "The sky is blue primarily due to a phenomenon called **Rayleigh Scattering**.\n\nHere's a breakdown of why it happens:\n\n1.  **Sunlight is White:** Sunlight is made up of all the colors of the rainbow (red, orange, yellow, green, blue, indigo, violet). Each color has a different wavelength – blue and violet light have shorter, smaller wavelengths, while red and orange light have longer, larger wavelengths.\n\n2.  **Earth's Atmosphere:** Our atmosphere is made up of various gases (like nitrogen and oxygen) and tiny particles.\n\n3.  **Scattering:** When sunlight enters the atmosphere, it collides with these gas molecules and tiny particles. This causes the light to be scattered in all directions.\n\n4"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "MAX_TOKENS",
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "ZvwUabDMKZWcz7IP256O0Qc",
+            "usageMetadata": {
+              "candidatesTokenCount": 156,
+              "promptTokenCount": 7,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 7
+                }
+              ],
+              "thoughtsTokenCount": 42,
+              "totalTokenCount": 205
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
