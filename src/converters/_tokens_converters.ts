@@ -160,18 +160,89 @@ export function fileDataToMldev(
   return toObject;
 }
 
-export function googleMapsToMldev(
-  fromObject: types.GoogleMaps,
+export function functionResponseFileDataToMldev(
+  fromObject: types.FunctionResponseFileData,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  if (common.getValueByPath(fromObject, ['authConfig']) !== undefined) {
-    throw new Error('authConfig parameter is not supported in Gemini API.');
+  const fromFileUri = common.getValueByPath(fromObject, ['fileUri']);
+  if (fromFileUri != null) {
+    common.setValueByPath(toObject, ['fileUri'], fromFileUri);
   }
 
-  const fromEnableWidget = common.getValueByPath(fromObject, ['enableWidget']);
-  if (fromEnableWidget != null) {
-    common.setValueByPath(toObject, ['enableWidget'], fromEnableWidget);
+  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+  if (fromMimeType != null) {
+    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+  }
+
+  if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
+    throw new Error('displayName parameter is not supported in Gemini API.');
+  }
+
+  return toObject;
+}
+
+export function functionResponsePartToMldev(
+  fromObject: types.FunctionResponsePart,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
+  if (fromInlineData != null) {
+    common.setValueByPath(toObject, ['inlineData'], fromInlineData);
+  }
+
+  const fromFileData = common.getValueByPath(fromObject, ['fileData']);
+  if (fromFileData != null) {
+    common.setValueByPath(
+      toObject,
+      ['fileData'],
+      functionResponseFileDataToMldev(fromFileData),
+    );
+  }
+
+  return toObject;
+}
+
+export function functionResponseToMldev(
+  fromObject: types.FunctionResponse,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromWillContinue = common.getValueByPath(fromObject, ['willContinue']);
+  if (fromWillContinue != null) {
+    common.setValueByPath(toObject, ['willContinue'], fromWillContinue);
+  }
+
+  const fromScheduling = common.getValueByPath(fromObject, ['scheduling']);
+  if (fromScheduling != null) {
+    common.setValueByPath(toObject, ['scheduling'], fromScheduling);
+  }
+
+  const fromParts = common.getValueByPath(fromObject, ['parts']);
+  if (fromParts != null) {
+    let transformedList = fromParts;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return functionResponsePartToMldev(item);
+      });
+    }
+    common.setValueByPath(toObject, ['parts'], transformedList);
+  }
+
+  const fromId = common.getValueByPath(fromObject, ['id']);
+  if (fromId != null) {
+    common.setValueByPath(toObject, ['id'], fromId);
+  }
+
+  const fromName = common.getValueByPath(fromObject, ['name']);
+  if (fromName != null) {
+    common.setValueByPath(toObject, ['name'], fromName);
+  }
+
+  const fromResponse = common.getValueByPath(fromObject, ['response']);
+  if (fromResponse != null) {
+    common.setValueByPath(toObject, ['response'], fromResponse);
   }
 
   return toObject;
@@ -182,14 +253,14 @@ export function googleSearchToMldev(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  if (common.getValueByPath(fromObject, ['excludeDomains']) !== undefined) {
-    throw new Error('excludeDomains parameter is not supported in Gemini API.');
-  }
-
   if (common.getValueByPath(fromObject, ['blockingConfidence']) !== undefined) {
     throw new Error(
       'blockingConfidence parameter is not supported in Gemini API.',
     );
+  }
+
+  if (common.getValueByPath(fromObject, ['excludeDomains']) !== undefined) {
+    throw new Error('excludeDomains parameter is not supported in Gemini API.');
   }
 
   const fromTimeRangeFilter = common.getValueByPath(fromObject, [
@@ -474,7 +545,11 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
     'functionResponse',
   ]);
   if (fromFunctionResponse != null) {
-    common.setValueByPath(toObject, ['functionResponse'], fromFunctionResponse);
+    common.setValueByPath(
+      toObject,
+      ['functionResponse'],
+      functionResponseToMldev(fromFunctionResponse),
+    );
   }
 
   const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
@@ -508,6 +583,11 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
   ]);
   if (fromVideoMetadata != null) {
     common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
+  }
+
+  const fromPartMetadata = common.getValueByPath(fromObject, ['partMetadata']);
+  if (fromPartMetadata != null) {
+    common.setValueByPath(toObject, ['partMetadata'], fromPartMetadata);
   }
 
   return toObject;
@@ -588,11 +668,7 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
 
   const fromGoogleMaps = common.getValueByPath(fromObject, ['googleMaps']);
   if (fromGoogleMaps != null) {
-    common.setValueByPath(
-      toObject,
-      ['googleMaps'],
-      googleMapsToMldev(fromGoogleMaps),
-    );
+    common.setValueByPath(toObject, ['googleMaps'], fromGoogleMaps);
   }
 
   const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
