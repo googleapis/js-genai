@@ -1202,6 +1202,9 @@ export class FunctionResponseFileData {
   fileUri?: string;
   /** Required. The IANA standard MIME type of the source data. */
   mimeType?: string;
+  /** Optional. Display name of the file.
+      Used to provide a label or filename to distinguish files. */
+  displayName?: string;
 }
 
 /** A datatype containing media that is part of a `FunctionResponse` message.

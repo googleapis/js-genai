@@ -1200,6 +1200,7 @@ export class FunctionResponseBlob {
 
 // @public
 export class FunctionResponseFileData {
+    displayName?: string;
     fileUri?: string;
     mimeType?: string;
 }
