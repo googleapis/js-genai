@@ -1818,6 +1818,8 @@ export { Image_2 as Image }
 export interface ImageConfig {
     aspectRatio?: string;
     imageSize?: string;
+    outputCompressionQuality?: number;
+    outputMimeType?: string;
 }
 
 // @public
