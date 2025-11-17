@@ -1322,7 +1322,11 @@ export function generateContentConfigToMldev(
 
   const fromImageConfig = common.getValueByPath(fromObject, ['imageConfig']);
   if (fromImageConfig != null) {
-    common.setValueByPath(toObject, ['imageConfig'], fromImageConfig);
+    common.setValueByPath(
+      toObject,
+      ['imageConfig'],
+      imageConfigToMldev(fromImageConfig),
+    );
   }
 
   return toObject;
@@ -1544,7 +1548,11 @@ export function generateContentConfigToVertex(
 
   const fromImageConfig = common.getValueByPath(fromObject, ['imageConfig']);
   if (fromImageConfig != null) {
-    common.setValueByPath(toObject, ['imageConfig'], fromImageConfig);
+    common.setValueByPath(
+      toObject,
+      ['imageConfig'],
+      imageConfigToVertex(fromImageConfig),
+    );
   }
 
   return toObject;
@@ -3188,6 +3196,77 @@ export function googleSearchToMldev(
   ]);
   if (fromTimeRangeFilter != null) {
     common.setValueByPath(toObject, ['timeRangeFilter'], fromTimeRangeFilter);
+  }
+
+  return toObject;
+}
+
+export function imageConfigToMldev(
+  fromObject: types.ImageConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromAspectRatio = common.getValueByPath(fromObject, ['aspectRatio']);
+  if (fromAspectRatio != null) {
+    common.setValueByPath(toObject, ['aspectRatio'], fromAspectRatio);
+  }
+
+  const fromImageSize = common.getValueByPath(fromObject, ['imageSize']);
+  if (fromImageSize != null) {
+    common.setValueByPath(toObject, ['imageSize'], fromImageSize);
+  }
+
+  if (common.getValueByPath(fromObject, ['outputMimeType']) !== undefined) {
+    throw new Error('outputMimeType parameter is not supported in Gemini API.');
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['outputCompressionQuality']) !==
+    undefined
+  ) {
+    throw new Error(
+      'outputCompressionQuality parameter is not supported in Gemini API.',
+    );
+  }
+
+  return toObject;
+}
+
+export function imageConfigToVertex(
+  fromObject: types.ImageConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromAspectRatio = common.getValueByPath(fromObject, ['aspectRatio']);
+  if (fromAspectRatio != null) {
+    common.setValueByPath(toObject, ['aspectRatio'], fromAspectRatio);
+  }
+
+  const fromImageSize = common.getValueByPath(fromObject, ['imageSize']);
+  if (fromImageSize != null) {
+    common.setValueByPath(toObject, ['imageSize'], fromImageSize);
+  }
+
+  const fromOutputMimeType = common.getValueByPath(fromObject, [
+    'outputMimeType',
+  ]);
+  if (fromOutputMimeType != null) {
+    common.setValueByPath(
+      toObject,
+      ['imageOutputOptions', 'mimeType'],
+      fromOutputMimeType,
+    );
+  }
+
+  const fromOutputCompressionQuality = common.getValueByPath(fromObject, [
+    'outputCompressionQuality',
+  ]);
+  if (fromOutputCompressionQuality != null) {
+    common.setValueByPath(
+      toObject,
+      ['imageOutputOptions', 'compressionQuality'],
+      fromOutputCompressionQuality,
+    );
   }
 
   return toObject;

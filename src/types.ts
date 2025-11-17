@@ -1962,6 +1962,12 @@ export declare interface ImageConfig {
       values are `1K`, `2K`, `4K`. If not specified, the model will use default
       value `1K`. */
   imageSize?: string;
+  /** MIME type of the generated image. This field is not
+      supported in Gemini API. */
+  outputMimeType?: string;
+  /** Compression quality of the generated image (for
+      ``image/jpeg`` only). This field is not supported in Gemini API. */
+  outputCompressionQuality?: number;
 }
 
 /** When automated routing is specified, the routing will be determined by the pretrained routing model and customer provided model routing preference. This data type is not supported in Gemini API. */
