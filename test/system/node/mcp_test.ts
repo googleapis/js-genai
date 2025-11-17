@@ -64,6 +64,141 @@ describe('MCP related client Tests', () => {
     httpOptions = {headers: {'Test-Name': testName}};
   });
 
+  describe('generateContentStream with streamFunctionCallingArguments enabled', () => {
+    it('ML Dev should throw error', async () => {
+      const mcpCallableTool = mcpToTool(await greetServerStructuredOutput());
+      const client = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+        httpOptions,
+      });
+      try {
+        await client.models.generateContentStream({
+          model: 'gemini-2.5-pro',
+          contents:
+            'call the greeter once with name: jone smith, and greeting: Hello',
+          config: {
+            tools: [mcpCallableTool],
+            toolConfig: {
+              functionCallingConfig: {
+                streamFunctionCallArguments: true,
+              },
+            },
+          },
+        });
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          expect(
+            error.message.includes(
+              'streamFunctionCallArguments parameter is not supported in Gemini API',
+            ),
+          );
+        }
+      }
+    });
+    it('Vertex AI should stream arguments when afc is disabled explicitly', async () => {
+      const mcpCallableTool = mcpToTool(await greetServerStructuredOutput());
+      const client = new GoogleGenAI({
+        vertexai: true,
+        project: GOOGLE_CLOUD_PROJECT,
+        location: GOOGLE_CLOUD_LOCATION,
+        httpOptions,
+      });
+      const response = await client.models.generateContentStream({
+        model: 'gemini-2.5-pro',
+        contents:
+          'call the greeter once with name: jone smith, and greeting: Hello',
+        config: {
+          tools: [mcpCallableTool],
+          automaticFunctionCalling: {
+            disable: true,
+          },
+          toolConfig: {
+            functionCallingConfig: {
+              streamFunctionCallArguments: true,
+            },
+          },
+        },
+      });
+      console.info(
+        'Vertex AI should stream generate content with specified parameters',
+      );
+      for await (const chunk of response) {
+        expect(chunk.candidates!.length).toBe(
+          1,
+          'Expected 1 candidate got ' + chunk.candidates!.length,
+        );
+      }
+    });
+    it('Vertex AI should throw error when no afc config is provided', async () => {
+      const mcpCallableTool = mcpToTool(await greetServerStructuredOutput());
+      const client = new GoogleGenAI({
+        vertexai: true,
+        project: GOOGLE_CLOUD_PROJECT,
+        location: GOOGLE_CLOUD_LOCATION,
+        httpOptions,
+      });
+      try {
+        await client.models.generateContentStream({
+          model: 'gemini-2.5-pro',
+          contents:
+            'call the greeter once with name: jone smith, and greeting: Hello',
+          config: {
+            tools: [mcpCallableTool],
+            toolConfig: {
+              functionCallingConfig: {
+                streamFunctionCallArguments: true,
+              },
+            },
+          },
+        });
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          expect(
+            error.message.includes(
+              'not compatible with automatic function calling (AFC)',
+            ),
+          );
+        }
+      }
+    });
+    it('Vertex AI should throw error when afc disable is set to false', async () => {
+      const mcpCallableTool = mcpToTool(await greetServerStructuredOutput());
+      const client = new GoogleGenAI({
+        vertexai: true,
+        project: GOOGLE_CLOUD_PROJECT,
+        location: GOOGLE_CLOUD_LOCATION,
+        httpOptions,
+      });
+      try {
+        await client.models.generateContentStream({
+          model: 'gemini-2.5-pro',
+          contents:
+            'call the greeter once with name: jone smith, and greeting: Hello',
+          config: {
+            tools: [mcpCallableTool],
+            automaticFunctionCalling: {
+              disable: false,
+            },
+            toolConfig: {
+              functionCallingConfig: {
+                streamFunctionCallArguments: true,
+              },
+            },
+          },
+        });
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          expect(
+            error.message.includes(
+              'not compatible with automatic function calling (AFC)',
+            ),
+          );
+        }
+      }
+    });
+  });
+
   describe('generateContent', () => {
     it('ML Dev one CallableTool with MCPClients and conduct automated function calling', async () => {
       const ai = new GoogleGenAI({
