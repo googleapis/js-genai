@@ -1153,12 +1153,15 @@ export interface FunctionCall {
     args?: Record<string, unknown>;
     id?: string;
     name?: string;
+    partialArgs?: PartialArg[];
+    willContinue?: boolean;
 }
 
 // @public
 export interface FunctionCallingConfig {
     allowedFunctionNames?: string[];
     mode?: FunctionCallingConfigMode;
+    streamFunctionCallArguments?: boolean;
 }
 
 // @public
@@ -2630,6 +2633,16 @@ export interface Part {
     thought?: boolean;
     thoughtSignature?: string;
     videoMetadata?: VideoMetadata;
+}
+
+// @public
+export interface PartialArg {
+    boolValue?: boolean;
+    jsonPath?: string;
+    nullValue?: 'NULL_VALUE';
+    numberValue?: number;
+    stringValue?: string;
+    willContinue?: boolean;
 }
 
 // @public (undocumented)

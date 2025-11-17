@@ -209,6 +209,24 @@ export class Models extends BaseModule {
         `Incompatible tools found at ${formattedIndexes}. Automatic function calling with CallableTools (or MCP objects) and basic FunctionDeclarations" is not yet supported.`,
       );
     }
+
+    // With tool compatibility confirmed, validate that the configuration are
+    // compatible with each other and raise an error if invalid.
+    const streamFunctionCall =
+      params?.config?.toolConfig?.functionCallingConfig
+        ?.streamFunctionCallArguments;
+    const disableAfc = params?.config?.automaticFunctionCalling?.disable;
+
+    if (streamFunctionCall && !disableAfc) {
+      throw new Error(
+        "Running in streaming mode with 'streamFunctionCallArguments' enabled, " +
+          'this feature is not compatible with automatic function calling (AFC). ' +
+          "Please set 'config.automaticFunctionCalling.disable' to true to disable AFC " +
+          "or leave 'config.toolConfig.functionCallingConfig.streamFunctionCallArguments' " +
+          'to be undefined or set to false to disable streaming function call arguments feature.',
+      );
+    }
+
     return await this.processAfcStream(params);
   };
 

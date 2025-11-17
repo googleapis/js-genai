@@ -160,6 +160,37 @@ export function fileDataToMldev(
   return toObject;
 }
 
+export function functionCallToMldev(
+  fromObject: types.FunctionCall,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromId = common.getValueByPath(fromObject, ['id']);
+  if (fromId != null) {
+    common.setValueByPath(toObject, ['id'], fromId);
+  }
+
+  const fromArgs = common.getValueByPath(fromObject, ['args']);
+  if (fromArgs != null) {
+    common.setValueByPath(toObject, ['args'], fromArgs);
+  }
+
+  const fromName = common.getValueByPath(fromObject, ['name']);
+  if (fromName != null) {
+    common.setValueByPath(toObject, ['name'], fromName);
+  }
+
+  if (common.getValueByPath(fromObject, ['partialArgs']) !== undefined) {
+    throw new Error('partialArgs parameter is not supported in Gemini API.');
+  }
+
+  if (common.getValueByPath(fromObject, ['willContinue']) !== undefined) {
+    throw new Error('willContinue parameter is not supported in Gemini API.');
+  }
+
+  return toObject;
+}
+
 export function googleMapsToMldev(
   fromObject: types.GoogleMaps,
 ): Record<string, unknown> {
@@ -438,11 +469,6 @@ export function liveConnectConstraintsToMldev(
 export function partToMldev(fromObject: types.Part): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
-  if (fromFunctionCall != null) {
-    common.setValueByPath(toObject, ['functionCall'], fromFunctionCall);
-  }
-
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
     'codeExecutionResult',
   ]);
@@ -467,6 +493,15 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
       toObject,
       ['fileData'],
       fileDataToMldev(fromFileData),
+    );
+  }
+
+  const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
+  if (fromFunctionCall != null) {
+    common.setValueByPath(
+      toObject,
+      ['functionCall'],
+      functionCallToMldev(fromFunctionCall),
     );
   }
 
