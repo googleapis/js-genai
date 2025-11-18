@@ -1,0 +1,162 @@
+{
+  "recordID": "Client_Tests_generateContentStream_partial_function_calling_Vertex_AI_should_stream_generate_content_with_particial_function_calling_in_the_content",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-pro:streamGenerateContent?alt=sse",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-pro:streamGenerateContent?alt=sse HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "1267",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Client Tests generateContentStream partial function calling Vertex AI should stream generate content with particial function calling in the content"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "get the current weather in NewYorkCity in celsius, the country should be left null, the purpose is to check weather today? I already have an example of thefunction call in the previous turn. I attached it in the history. Help me amke the function call as a form of FunctionCall."
+                  }
+                ],
+                "role": "user"
+              },
+              {
+                "parts": [
+                  {
+                    "functionCall": {
+                      "name": "get_current_weather",
+                      "willContinue": true
+                    }
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "functionCall": {
+                      "name": "get_current_weather",
+                      "partialArgs": [
+                        {
+                          "jsonPath": "$.country",
+                          "nullValue": "NULL_VALUE"
+                        }
+                      ],
+                      "willContinue": false
+                    }
+                  }
+                ],
+                "role": "model"
+              }
+            ],
+            "generationConfig": {},
+            "toolConfig": {
+              "functionCallingConfig": {
+                "streamFunctionCallArguments": true
+              }
+            },
+            "tools": [
+              {
+                "functionDeclarations": [
+                  {
+                    "description": "Get the current weather in a city",
+                    "name": "getCurrentWeather",
+                    "parametersJsonSchema": {
+                      "properties": {
+                        "country": {
+                          "anyOf": [
+                            {
+                              "description": "The country to get the weather for",
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ],
+                          "description": "The country to get the weather for"
+                        },
+                        "location": {
+                          "description": "The location to get the weather for",
+                          "type": "string"
+                        },
+                        "purpose": {
+                          "description": "Discribes the purpose of asking the weather",
+                          "type": "string"
+                        },
+                        "unit": {
+                          "enum": ["C", "F"],
+                          "type": "string"
+                        }
+                      },
+                      "required": ["location", "unit", "country"],
+                      "type": "object"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "us-central1-aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "4f7dfd266e012f87ab1d2ba77f26eb81459fd22f5b732643c3cc6732a8083f54",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Disposition": "attachment",
+          "Content-Type": "text/event-stream",
+          "Date": "Thu, 13 Nov 2025 02:09:12 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": ""
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP"
+              }
+            ],
+            "createTime": "2025-11-13T02:09:11.148049Z",
+            "modelVersion": "gemini-2.5-pro",
+            "responseId": "xz0VadGECeS-2PgPwvqJ4As",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 609
+              },
+              "promptTokenCount": 83,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 83
+                }
+              ],
+              "totalTokenCount": 83,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

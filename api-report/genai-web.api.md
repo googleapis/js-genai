@@ -602,7 +602,7 @@ export function createFunctionResponsePartFromUri(uri: string, mimeType: string)
 export function createModelContent(partOrString: PartListUnion | string): Content;
 
 // @public
-export function createPartFromBase64(data: string, mimeType: string): Part;
+export function createPartFromBase64(data: string, mimeType: string, mediaResolution?: PartMediaResolutionLevel): Part;
 
 // @public
 export function createPartFromCodeExecutionResult(outcome: Outcome, output: string): Part;
@@ -620,7 +620,7 @@ export function createPartFromFunctionResponse(id: string, name: string, respons
 export function createPartFromText(text: string): Part;
 
 // @public
-export function createPartFromUri(uri: string, mimeType: string): Part;
+export function createPartFromUri(uri: string, mimeType: string, mediaResolution?: PartMediaResolutionLevel): Part;
 
 // @public
 export interface CreateTuningJobConfig {
@@ -1153,12 +1153,15 @@ export interface FunctionCall {
     args?: Record<string, unknown>;
     id?: string;
     name?: string;
+    partialArgs?: PartialArg[];
+    willContinue?: boolean;
 }
 
 // @public
 export interface FunctionCallingConfig {
     allowedFunctionNames?: string[];
     mode?: FunctionCallingConfigMode;
+    streamFunctionCallArguments?: boolean;
 }
 
 // @public
@@ -1200,6 +1203,7 @@ export class FunctionResponseBlob {
 
 // @public
 export class FunctionResponseFileData {
+    displayName?: string;
     fileUri?: string;
     mimeType?: string;
 }
@@ -1818,6 +1822,8 @@ export { Image_2 as Image }
 export interface ImageConfig {
     aspectRatio?: string;
     imageSize?: string;
+    outputCompressionQuality?: number;
+    outputMimeType?: string;
 }
 
 // @public
@@ -2623,14 +2629,39 @@ export interface Part {
     functionCall?: FunctionCall;
     functionResponse?: FunctionResponse;
     inlineData?: Blob_2;
+    mediaResolution?: PartMediaResolution;
     text?: string;
     thought?: boolean;
     thoughtSignature?: string;
     videoMetadata?: VideoMetadata;
 }
 
+// @public
+export interface PartialArg {
+    boolValue?: boolean;
+    jsonPath?: string;
+    nullValue?: 'NULL_VALUE';
+    numberValue?: number;
+    stringValue?: string;
+    willContinue?: boolean;
+}
+
 // @public (undocumented)
 export type PartListUnion = PartUnion[] | PartUnion;
+
+// @public
+export interface PartMediaResolution {
+    level?: PartMediaResolutionLevel;
+    numTokens?: number;
+}
+
+// @public
+export enum PartMediaResolutionLevel {
+    MEDIA_RESOLUTION_HIGH = "MEDIA_RESOLUTION_HIGH",
+    MEDIA_RESOLUTION_LOW = "MEDIA_RESOLUTION_LOW",
+    MEDIA_RESOLUTION_MEDIUM = "MEDIA_RESOLUTION_MEDIUM",
+    MEDIA_RESOLUTION_UNSPECIFIED = "MEDIA_RESOLUTION_UNSPECIFIED"
+}
 
 // @public
 export interface PartnerModelTuningSpec {
@@ -3207,6 +3238,14 @@ export interface TestTableItem {
 export interface ThinkingConfig {
     includeThoughts?: boolean;
     thinkingBudget?: number;
+    thinkingLevel?: ThinkingLevel;
+}
+
+// @public
+export enum ThinkingLevel {
+    HIGH = "HIGH",
+    LOW = "LOW",
+    THINKING_LEVEL_UNSPECIFIED = "THINKING_LEVEL_UNSPECIFIED"
 }
 
 // @public (undocumented)

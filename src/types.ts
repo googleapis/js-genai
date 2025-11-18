@@ -216,6 +216,22 @@ export enum PhishBlockThreshold {
   BLOCK_ONLY_EXTREMELY_HIGH = 'BLOCK_ONLY_EXTREMELY_HIGH',
 }
 
+/** The level of thoughts tokens that the model should generate. */
+export enum ThinkingLevel {
+  /**
+   * Default value.
+   */
+  THINKING_LEVEL_UNSPECIFIED = 'THINKING_LEVEL_UNSPECIFIED',
+  /**
+   * Low thinking level.
+   */
+  LOW = 'LOW',
+  /**
+   * High thinking level.
+   */
+  HIGH = 'HIGH',
+}
+
 /** Harm category. */
 export enum HarmCategory {
   /**
@@ -656,6 +672,26 @@ export enum TuningTask {
    * Tuning task for reference to video.
    */
   TUNING_TASK_R2V = 'TUNING_TASK_R2V',
+}
+
+/** The tokenization quality used for given media. */
+export enum PartMediaResolutionLevel {
+  /**
+   * Media resolution has not been set.
+   */
+  MEDIA_RESOLUTION_UNSPECIFIED = 'MEDIA_RESOLUTION_UNSPECIFIED',
+  /**
+   * Media resolution set to low.
+   */
+  MEDIA_RESOLUTION_LOW = 'MEDIA_RESOLUTION_LOW',
+  /**
+   * Media resolution set to medium.
+   */
+  MEDIA_RESOLUTION_MEDIUM = 'MEDIA_RESOLUTION_MEDIUM',
+  /**
+   * Media resolution set to high.
+   */
+  MEDIA_RESOLUTION_HIGH = 'MEDIA_RESOLUTION_HIGH',
 }
 
 /** Options for feature selection preference. */
@@ -1144,15 +1180,14 @@ export enum LiveMusicPlaybackControl {
   RESET_CONTEXT = 'RESET_CONTEXT',
 }
 
-/** A function call. */
-export declare interface FunctionCall {
-  /** The unique id of the function call. If populated, the client to execute the
-   `function_call` and return the response with the matching `id`. */
-  id?: string;
-  /** Optional. The function parameters and values in JSON object format. See [FunctionDeclaration.parameters] for parameter details. */
-  args?: Record<string, unknown>;
-  /** Optional. The name of the function to call. Matches [FunctionDeclaration.name]. */
-  name?: string;
+/** Media resolution for the input media. */
+export declare interface PartMediaResolution {
+  /** The tokenization quality used for given media.
+   */
+  level?: PartMediaResolutionLevel;
+  /** Specifies the required sequence length for media tokenization.
+   */
+  numTokens?: number;
 }
 
 /** Result of executing the [ExecutableCode]. Only generated when using the [CodeExecution] tool, and always follows a `part` containing the [ExecutableCode]. */
@@ -1181,6 +1216,37 @@ export declare interface FileData {
   mimeType?: string;
 }
 
+/** Partial argument value of the function call. This data type is not supported in Gemini API. */
+export declare interface PartialArg {
+  /** Optional. Represents a null value. */
+  nullValue?: 'NULL_VALUE';
+  /** Optional. Represents a double value. */
+  numberValue?: number;
+  /** Optional. Represents a string value. */
+  stringValue?: string;
+  /** Optional. Represents a boolean value. */
+  boolValue?: boolean;
+  /** Required. A JSON Path (RFC 9535) to the argument being streamed. https://datatracker.ietf.org/doc/html/rfc9535. e.g. "$.foo.bar[0].data". */
+  jsonPath?: string;
+  /** Optional. Whether this is not the last part of the same json_path. If true, another PartialArg message for the current json_path is expected to follow. */
+  willContinue?: boolean;
+}
+
+/** A function call. */
+export declare interface FunctionCall {
+  /** The unique id of the function call. If populated, the client to execute the
+   `function_call` and return the response with the matching `id`. */
+  id?: string;
+  /** Optional. The function parameters and values in JSON object format. See [FunctionDeclaration.parameters] for parameter details. */
+  args?: Record<string, unknown>;
+  /** Optional. The name of the function to call. Matches [FunctionDeclaration.name]. */
+  name?: string;
+  /** Optional. The partial argument value of the function call. If provided, represents the arguments/fields that are streamed incrementally. This field is not supported in Gemini API. */
+  partialArgs?: PartialArg[];
+  /** Optional. Whether this is the last part of the FunctionCall. If true, another partial message for the current FunctionCall is expected to follow. This field is not supported in Gemini API. */
+  willContinue?: boolean;
+}
+
 /** Raw media bytes for function response.
 
 Text should not be sent as raw bytes, use the FunctionResponse.response
@@ -1202,6 +1268,9 @@ export class FunctionResponseFileData {
   fileUri?: string;
   /** Required. The IANA standard MIME type of the source data. */
   mimeType?: string;
+  /** Optional. Display name of the file.
+      Used to provide a label or filename to distinguish files. */
+  displayName?: string;
 }
 
 /** A datatype containing media that is part of a `FunctionResponse` message.
@@ -1292,16 +1361,17 @@ Exactly one field within a Part should be set, representing the specific type
 of content being conveyed. Using multiple fields within the same `Part`
 instance is considered invalid. */
 export declare interface Part {
-  /** A predicted [FunctionCall] returned from the model that contains a string
-      representing the [FunctionDeclaration.name] and a structured JSON object
-      containing the parameters and their values. */
-  functionCall?: FunctionCall;
+  /** Media resolution for the input media.
+   */
+  mediaResolution?: PartMediaResolution;
   /** Optional. Result of executing the [ExecutableCode]. */
   codeExecutionResult?: CodeExecutionResult;
   /** Optional. Code generated by the model that is meant to be executed. */
   executableCode?: ExecutableCode;
   /** Optional. URI based data. */
   fileData?: FileData;
+  /** Optional. A predicted [FunctionCall] returned from the model that contains a string representing the [FunctionDeclaration.name] with the parameters and their values. */
+  functionCall?: FunctionCall;
   /** Optional. The result output of a [FunctionCall] that contains a string representing the [FunctionDeclaration.name] and a structured JSON object containing any output from the function call. It is used as context to the model. */
   functionResponse?: FunctionResponse;
   /** Optional. Inlined bytes data. */
@@ -1319,12 +1389,17 @@ export declare interface Part {
 /**
  * Creates a `Part` object from a `URI` string.
  */
-export function createPartFromUri(uri: string, mimeType: string): Part {
+export function createPartFromUri(
+  uri: string,
+  mimeType: string,
+  mediaResolution?: PartMediaResolutionLevel,
+): Part {
   return {
     fileData: {
       fileUri: uri,
       mimeType: mimeType,
     },
+    ...(mediaResolution && {mediaResolution: {level: mediaResolution}}),
   };
 }
 /**
@@ -1370,12 +1445,17 @@ export function createPartFromFunctionResponse(
 /**
  * Creates a `Part` object from a `base64` encoded `string`.
  */
-export function createPartFromBase64(data: string, mimeType: string): Part {
+export function createPartFromBase64(
+  data: string,
+  mimeType: string,
+  mediaResolution?: PartMediaResolutionLevel,
+): Part {
   return {
     inlineData: {
       data: data,
       mimeType: mimeType,
     },
+    ...(mediaResolution && {mediaResolution: {level: mediaResolution}}),
   };
 }
 /**
@@ -1887,6 +1967,8 @@ export declare interface FunctionCallingConfig {
   mode?: FunctionCallingConfigMode;
   /** Optional. Function names to call. Only set when the Mode is ANY. Function names should match [FunctionDeclaration.name]. With mode set to ANY, model will predict a function call from the set of function names provided. */
   allowedFunctionNames?: string[];
+  /** Optional. When set to true, arguments of a single function call will be streamed out in multiple parts/contents/responses. Partial parameter results will be returned in the [FunctionCall.partial_args] field. This field is not supported in Gemini API. */
+  streamFunctionCallArguments?: boolean;
 }
 
 /** An object that represents a latitude/longitude pair.
@@ -1951,6 +2033,8 @@ export declare interface ThinkingConfig {
   /** Indicates the thinking budget in tokens. 0 is DISABLED. -1 is AUTOMATIC. The default values and allowed ranges are model dependent.
    */
   thinkingBudget?: number;
+  /** Optional. The level of thoughts tokens that the model should generate. */
+  thinkingLevel?: ThinkingLevel;
 }
 
 /** The image generation configuration to be used in GenerateContentConfig. */
@@ -1962,6 +2046,12 @@ export declare interface ImageConfig {
       values are `1K`, `2K`, `4K`. If not specified, the model will use default
       value `1K`. */
   imageSize?: string;
+  /** MIME type of the generated image. This field is not
+      supported in Gemini API. */
+  outputMimeType?: string;
+  /** Compression quality of the generated image (for
+      ``image/jpeg`` only). This field is not supported in Gemini API. */
+  outputCompressionQuality?: number;
 }
 
 /** When automated routing is specified, the routing will be determined by the pretrained routing model and customer provided model routing preference. This data type is not supported in Gemini API. */

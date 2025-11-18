@@ -20,7 +20,7 @@ async function generateVideosFromMLDev() {
     apiKey: GEMINI_API_KEY,
   });
   let operation1 = await ai.models.generateVideos({
-    model: 'veo-3-exp',
+    model: 'veo-3.1-generate-preview',
     prompt: 'Rain',
     config: {
       numberOfVideos: 1,
@@ -47,7 +47,7 @@ async function generateVideosFromMLDev() {
   });
 
   let operation2 = await ai.models.generateVideos({
-    model: 'veo-3-exp',
+    model: 'veo-3.1-generate-preview',
     source: {
       prompt: 'Sun',
       video: videos[0].video,
@@ -84,7 +84,7 @@ async function generateVideosFromVertexAI() {
     location: GOOGLE_CLOUD_LOCATION,
   });
   let operation = await ai.models.generateVideos({
-    model: 'veo-2.0-generate-001',
+    model: 'veo-2.0-generate-001', // Not supported on Veo 3.1 yet.
     source: {prompt: 'Man with a dog'},
   });
 

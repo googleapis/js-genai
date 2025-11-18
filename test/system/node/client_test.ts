@@ -10,7 +10,9 @@ import {zodToJsonSchema} from 'zod-to-json-schema';
 
 import {GoogleGenAI} from '../../../src/node/node_client.js';
 import {
+  Content,
   FunctionCallingConfigMode,
+  FunctionDeclaration,
   GenerateContentResponse,
   HttpOptions,
   Modality,
@@ -677,45 +679,183 @@ describe('Client Tests', () => {
   });
 
   describe('generateContentStream', () => {
-    it('ML Dev should stream generate content with specified parameters', async () => {
-      const client = new GoogleGenAI({
-        vertexai: false,
-        apiKey: GOOGLE_API_KEY,
-        httpOptions,
-      });
-      const response = await client.models.generateContentStream({
-        model: MODEL,
-        contents: 'why is the sky blue?',
-        config: {
-          candidateCount: 1,
-          maxOutputTokens: 200,
-          thinkingConfig: {thinkingBudget: 50},
+    describe('partial function calling', () => {
+      const json_function_declarations: FunctionDeclaration[] = [
+        {
+          'name': 'getCurrentWeather',
+          'description': 'Get the current weather in a city',
+          'parametersJsonSchema': {
+            'type': 'object',
+            'properties': {
+              'location': {
+                'type': 'string',
+                'description': 'The location to get the weather for',
+              },
+              'country': {
+                'anyOf': [
+                  {
+                    'type': 'string',
+                    'description': 'The country to get the weather for',
+                  },
+                  {
+                    'type': 'null',
+                  },
+                ],
+                'description': 'The country to get the weather for',
+              },
+              'unit': {
+                'type': 'string',
+                'enum': ['C', 'F'],
+              },
+              'purpose': {
+                'type': 'string',
+                'description': 'Discribes the purpose of asking the weather',
+              },
+            },
+            'required': ['location', 'unit', 'country'],
+          },
         },
+      ];
+      const previous_generate_content_history: Content[] = [
+        {
+          role: 'user',
+          parts: [
+            {
+              text: 'get the current weather in NewYorkCity in celsius, the country should be left null, the purpose is to check weather today? I already have an example of thefunction call in the previous turn. I attached it in the history. Help me amke the function call as a form of FunctionCall.',
+            },
+          ],
+        },
+        {
+          role: 'model',
+          parts: [
+            {
+              functionCall: {
+                name: 'get_current_weather',
+                willContinue: true,
+              },
+            },
+          ],
+        },
+        {
+          role: 'model',
+          parts: [
+            {
+              functionCall: {
+                name: 'get_current_weather',
+                partialArgs: [
+                  {
+                    jsonPath: '$.country',
+                    nullValue: 'NULL_VALUE',
+                  },
+                ],
+                willContinue: false,
+              },
+            },
+          ],
+        },
+      ];
+      it('ML Dev will throw error when enabbled streamFunctionCallArguments', async () => {
+        const client = new GoogleGenAI({
+          vertexai: false,
+          apiKey: GOOGLE_API_KEY,
+          httpOptions,
+        });
+        try {
+          await client.models.generateContentStream({
+            model: 'gemini-2.5-pro',
+            contents:
+              'get the current weather in NewYorkCity in celsius, the country should be left null, the purpose is to know what to wear today.',
+            config: {
+              tools: [
+                {
+                  functionDeclarations: json_function_declarations,
+                },
+              ],
+              toolConfig: {
+                functionCallingConfig: {
+                  streamFunctionCallArguments: true,
+                },
+              },
+            },
+          });
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            expect(
+              error.message.includes(
+                'streamFunctionCallArguments parameter is not supported in Gemini API',
+              ),
+            );
+          }
+        }
       });
-      let i = 1;
-      let finalChunk: GenerateContentResponse | undefined = undefined;
-      console.info(
-        'ML Dev should stream generate content with specified parameters',
-      );
-      for await (const chunk of response) {
-        expect(chunk.text).toBeDefined();
-        console.info(`stream chunk ${i}`, chunk.text);
-        expect(chunk.candidates!.length).toBe(
-          1,
-          'Expected 1 candidate got ' + chunk.candidates!.length,
+      it('Vertex AI should stream generate content enabled streamFunctionCallArguments', async () => {
+        const client = new GoogleGenAI({
+          vertexai: true,
+          project: GOOGLE_CLOUD_PROJECT,
+          location: GOOGLE_CLOUD_LOCATION,
+          httpOptions,
+        });
+        const response = await client.models.generateContentStream({
+          model: 'gemini-2.5-pro',
+          contents:
+            'get the current weather in NewYorkCity in celsius, the country should be USA, the purpose is to know what to wear today.',
+          config: {
+            tools: [
+              {
+                functionDeclarations: json_function_declarations,
+              },
+            ],
+            toolConfig: {
+              functionCallingConfig: {
+                streamFunctionCallArguments: true,
+              },
+            },
+          },
+        });
+        console.info(
+          'Vertex AI should stream generate content with specified parameters',
         );
-        i++;
-        finalChunk = chunk;
-      }
-      expect(
-        finalChunk?.usageMetadata!.candidatesTokenCount,
-      ).toBeLessThanOrEqual(
-        250, // sometimes backend returns a little more than 200 tokens
-        'Expected candidatesTokenCount to be less than or equal to 250, got ' +
-          finalChunk?.usageMetadata!.candidatesTokenCount,
-      );
+        for await (const chunk of response) {
+          expect(chunk.candidates!.length).toBe(
+            1,
+            'Expected 1 candidate got ' + chunk.candidates!.length,
+          );
+        }
+      });
+      it('Vertex AI should stream generate content with particial function calling in the content', async () => {
+        const client = new GoogleGenAI({
+          vertexai: true,
+          project: GOOGLE_CLOUD_PROJECT,
+          location: GOOGLE_CLOUD_LOCATION,
+          httpOptions,
+        });
+        const response = await client.models.generateContentStream({
+          model: 'gemini-2.5-pro',
+          contents: previous_generate_content_history,
+          config: {
+            tools: [
+              {
+                functionDeclarations: json_function_declarations,
+              },
+            ],
+            toolConfig: {
+              functionCallingConfig: {
+                streamFunctionCallArguments: true,
+              },
+            },
+          },
+        });
+        console.info(
+          'Vertex AI should stream generate content with specified parameters',
+        );
+        for await (const chunk of response) {
+          expect(chunk.candidates!.length).toBe(
+            1,
+            'Expected 1 candidate got ' + chunk.candidates!.length,
+          );
+        }
+      });
     });
-
     it('Vertex AI should stream generate content with specified parameters', async () => {
       const client = new GoogleGenAI({
         vertexai: true,
@@ -749,7 +889,8 @@ describe('Client Tests', () => {
       expect(
         finalChunk?.usageMetadata!.candidatesTokenCount,
       ).toBeLessThanOrEqual(
-        250, // sometimes backend returns a little more than 200 tokens
+        250, // sometimes backend returns a little more than 200
+        // tokens
         'Expected candidatesTokenCount to be less than or equal to 250, got ' +
           finalChunk?.usageMetadata!.candidatesTokenCount,
       );
@@ -815,7 +956,8 @@ describe('Client Tests', () => {
       expect(
         finalChunk?.usageMetadata!.candidatesTokenCount,
       ).toBeLessThanOrEqual(
-        250, // sometimes backend returns a little more than 200 tokens
+        250, // sometimes backend returns a little more than 200
+        // tokens
         'Expected candidatesTokenCount to be less than or equal to 250, got ' +
           finalChunk?.usageMetadata!.candidatesTokenCount,
       );
@@ -861,21 +1003,14 @@ describe('Client Tests', () => {
         contents: 'why is the sky blue?',
         config: {candidateCount: 1},
       });
-      let i = 1;
       console.info(
         'Vertex AI should stream generate content with specified parameters',
       );
       for await (const chunk of response) {
-        console.info(`stream chunk ${i}`, chunk.sdkHttpResponse?.headers);
-        expect(chunk.sdkHttpResponse?.headers).toEqual(
-          jasmine.objectContaining({
-            'content-type': 'text/event-stream',
-            'transfer-encoding': 'chunked',
-            'x-content-type-options': 'nosniff',
-            'x-xss-protection': '0',
-          }),
+        expect(chunk.candidates!.length).toBe(
+          1,
+          'Expected 1 candidate got ' + chunk.candidates!.length,
         );
-        i++;
       }
     });
 

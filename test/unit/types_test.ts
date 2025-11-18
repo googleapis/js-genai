@@ -14,6 +14,7 @@ import {
   LiveServerMessage,
   Outcome,
   Part,
+  PartMediaResolutionLevel,
   createFunctionResponsePartFromBase64,
   createFunctionResponsePartFromUri,
   createModelContent,
@@ -462,6 +463,23 @@ describe('createPart usability functions', () => {
     expect(part).toEqual(expectedPart);
   });
 
+  it('createPartFromUri should create a file data part with media resolution', () => {
+    const part = createPartFromUri(
+      'gs://bucket/file.txt',
+      'image/png',
+      PartMediaResolutionLevel.MEDIA_RESOLUTION_LOW,
+    );
+    const expectedPart: Part = {
+      fileData: {
+        fileUri: 'gs://bucket/file.txt',
+        mimeType: 'image/png',
+      },
+      mediaResolution: {level: PartMediaResolutionLevel.MEDIA_RESOLUTION_LOW},
+    };
+
+    expect(part).toEqual(expectedPart);
+  });
+
   it('createPartFromFunctionCall should create a function call part', () => {
     const part = createPartFromFunctionCall('func1', {
       param1: 'value1',
@@ -541,6 +559,23 @@ describe('createPart usability functions', () => {
         data: 'dGVzdA==',
         mimeType: 'text/plain',
       },
+    };
+
+    expect(part).toEqual(expectedPart);
+  });
+
+  it('createPartFromBase64 should create an inline data part with media resolution', () => {
+    const part = createPartFromBase64(
+      'dGVzdA==',
+      'image/png',
+      PartMediaResolutionLevel.MEDIA_RESOLUTION_HIGH,
+    );
+    const expectedPart: Part = {
+      inlineData: {
+        data: 'dGVzdA==',
+        mimeType: 'image/png',
+      },
+      mediaResolution: {level: PartMediaResolutionLevel.MEDIA_RESOLUTION_HIGH},
     };
 
     expect(part).toEqual(expectedPart);

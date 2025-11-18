@@ -1,6 +1,18 @@
 # Changelog
 
 
+## [1.30.0](https://github.com/googleapis/js-genai/compare/v1.29.1...v1.30.0) (2025-11-18)
+
+
+### Features
+
+* add display name to FunctionResponseBlob ([81036ed](https://github.com/googleapis/js-genai/commit/81036edbea077b600d29c565c7dea5ad840d0fe0))
+* add display name to FunctionResponseFileData ([564f718](https://github.com/googleapis/js-genai/commit/564f7180087ed35b69d5d0777a98a6992b7adb3e))
+* Add generate_content_config.thinking_level ([4e586df](https://github.com/googleapis/js-genai/commit/4e586df51c403e12e5b715288e0fcd882b5aaf38))
+* Add image output options to ImageConfig for Vertex ([fff5fb6](https://github.com/googleapis/js-genai/commit/fff5fb687be5630ec113c8c60114cbfc25156931))
+* Add part.media_resolution ([4e586df](https://github.com/googleapis/js-genai/commit/4e586df51c403e12e5b715288e0fcd882b5aaf38))
+* support Function call argument streaming for all languages ([b3b94f6](https://github.com/googleapis/js-genai/commit/b3b94f6e12e0895eac6b15ff54cc0ce3afd796e7))
+
 ## [1.29.1](https://github.com/googleapis/js-genai/compare/v1.29.0...v1.29.1) (2025-11-12)
 
 

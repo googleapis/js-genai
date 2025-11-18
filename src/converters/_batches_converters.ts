@@ -932,6 +932,70 @@ export function fileDataToMldev(
   return toObject;
 }
 
+export function functionCallToMldev(
+  fromObject: types.FunctionCall,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromId = common.getValueByPath(fromObject, ['id']);
+  if (fromId != null) {
+    common.setValueByPath(toObject, ['id'], fromId);
+  }
+
+  const fromArgs = common.getValueByPath(fromObject, ['args']);
+  if (fromArgs != null) {
+    common.setValueByPath(toObject, ['args'], fromArgs);
+  }
+
+  const fromName = common.getValueByPath(fromObject, ['name']);
+  if (fromName != null) {
+    common.setValueByPath(toObject, ['name'], fromName);
+  }
+
+  if (common.getValueByPath(fromObject, ['partialArgs']) !== undefined) {
+    throw new Error('partialArgs parameter is not supported in Gemini API.');
+  }
+
+  if (common.getValueByPath(fromObject, ['willContinue']) !== undefined) {
+    throw new Error('willContinue parameter is not supported in Gemini API.');
+  }
+
+  return toObject;
+}
+
+export function functionCallingConfigToMldev(
+  fromObject: types.FunctionCallingConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromMode = common.getValueByPath(fromObject, ['mode']);
+  if (fromMode != null) {
+    common.setValueByPath(toObject, ['mode'], fromMode);
+  }
+
+  const fromAllowedFunctionNames = common.getValueByPath(fromObject, [
+    'allowedFunctionNames',
+  ]);
+  if (fromAllowedFunctionNames != null) {
+    common.setValueByPath(
+      toObject,
+      ['allowedFunctionNames'],
+      fromAllowedFunctionNames,
+    );
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['streamFunctionCallArguments']) !==
+    undefined
+  ) {
+    throw new Error(
+      'streamFunctionCallArguments parameter is not supported in Gemini API.',
+    );
+  }
+
+  return toObject;
+}
+
 export function generateContentConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.GenerateContentConfig,
@@ -1084,7 +1148,11 @@ export function generateContentConfigToMldev(
 
   const fromToolConfig = common.getValueByPath(fromObject, ['toolConfig']);
   if (parentObject !== undefined && fromToolConfig != null) {
-    common.setValueByPath(parentObject, ['toolConfig'], fromToolConfig);
+    common.setValueByPath(
+      parentObject,
+      ['toolConfig'],
+      toolConfigToMldev(fromToolConfig),
+    );
   }
 
   if (common.getValueByPath(fromObject, ['labels']) !== undefined) {
@@ -1142,7 +1210,11 @@ export function generateContentConfigToMldev(
 
   const fromImageConfig = common.getValueByPath(fromObject, ['imageConfig']);
   if (fromImageConfig != null) {
-    common.setValueByPath(toObject, ['imageConfig'], fromImageConfig);
+    common.setValueByPath(
+      toObject,
+      ['imageConfig'],
+      imageConfigToMldev(fromImageConfig),
+    );
   }
 
   return toObject;
@@ -1271,6 +1343,37 @@ export function googleSearchToMldev(
   ]);
   if (fromTimeRangeFilter != null) {
     common.setValueByPath(toObject, ['timeRangeFilter'], fromTimeRangeFilter);
+  }
+
+  return toObject;
+}
+
+export function imageConfigToMldev(
+  fromObject: types.ImageConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromAspectRatio = common.getValueByPath(fromObject, ['aspectRatio']);
+  if (fromAspectRatio != null) {
+    common.setValueByPath(toObject, ['aspectRatio'], fromAspectRatio);
+  }
+
+  const fromImageSize = common.getValueByPath(fromObject, ['imageSize']);
+  if (fromImageSize != null) {
+    common.setValueByPath(toObject, ['imageSize'], fromImageSize);
+  }
+
+  if (common.getValueByPath(fromObject, ['outputMimeType']) !== undefined) {
+    throw new Error('outputMimeType parameter is not supported in Gemini API.');
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['outputCompressionQuality']) !==
+    undefined
+  ) {
+    throw new Error(
+      'outputCompressionQuality parameter is not supported in Gemini API.',
+    );
   }
 
   return toObject;
@@ -1494,9 +1597,11 @@ export function listBatchJobsResponseFromVertex(
 export function partToMldev(fromObject: types.Part): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
-  if (fromFunctionCall != null) {
-    common.setValueByPath(toObject, ['functionCall'], fromFunctionCall);
+  const fromMediaResolution = common.getValueByPath(fromObject, [
+    'mediaResolution',
+  ]);
+  if (fromMediaResolution != null) {
+    common.setValueByPath(toObject, ['mediaResolution'], fromMediaResolution);
   }
 
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
@@ -1523,6 +1628,15 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
       toObject,
       ['fileData'],
       fileDataToMldev(fromFileData),
+    );
+  }
+
+  const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
+  if (fromFunctionCall != null) {
+    common.setValueByPath(
+      toObject,
+      ['functionCall'],
+      functionCallToMldev(fromFunctionCall),
     );
   }
 
@@ -1586,6 +1700,32 @@ export function safetySettingToMldev(
   const fromThreshold = common.getValueByPath(fromObject, ['threshold']);
   if (fromThreshold != null) {
     common.setValueByPath(toObject, ['threshold'], fromThreshold);
+  }
+
+  return toObject;
+}
+
+export function toolConfigToMldev(
+  fromObject: types.ToolConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromFunctionCallingConfig = common.getValueByPath(fromObject, [
+    'functionCallingConfig',
+  ]);
+  if (fromFunctionCallingConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['functionCallingConfig'],
+      functionCallingConfigToMldev(fromFunctionCallingConfig),
+    );
+  }
+
+  const fromRetrievalConfig = common.getValueByPath(fromObject, [
+    'retrievalConfig',
+  ]);
+  if (fromRetrievalConfig != null) {
+    common.setValueByPath(toObject, ['retrievalConfig'], fromRetrievalConfig);
   }
 
   return toObject;
