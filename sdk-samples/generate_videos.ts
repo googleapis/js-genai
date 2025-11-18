@@ -17,7 +17,7 @@ async function delay(ms: number): Promise<void> {
 async function generateVideosFromMLDev() {
   const ai = new GoogleGenAI({vertexai: false, apiKey: GEMINI_API_KEY});
   let operation = await ai.models.generateVideos({
-    model: 'veo-2.0-generate-001',
+    model: 'veo-3.1-generate-preview',
     prompt: 'Man with a dog',
     config: {
       numberOfVideos: 1,
@@ -51,7 +51,7 @@ async function generateVideosFromVertexAI() {
     location: GOOGLE_CLOUD_LOCATION,
   });
   let operation = await ai.models.generateVideos({
-    model: 'veo-2.0-generate-001',
+    model: 'veo-3.1-generate-preview',
     source: {prompt: 'Man with a dog'},
   });
 

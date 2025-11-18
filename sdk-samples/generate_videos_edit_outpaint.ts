@@ -20,7 +20,7 @@ async function generateVideosEditOutpaintFromVertexAI() {
     location: GOOGLE_CLOUD_LOCATION,
   });
   let operation = await ai.models.generateVideos({
-    model: 'veo-2.0-generate-exp',
+    model: 'veo-2.0-generate-preview',
     source: {
       prompt: 'A mountain landscape',
       video: {
