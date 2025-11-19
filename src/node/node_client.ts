@@ -22,6 +22,7 @@ import {NodeWebSocketFactory} from '../node/_node_websocket.js';
 import {Operations} from '../operations.js';
 import {Tokens} from '../tokens.js';
 import {Tunings} from '../tunings.js';
+import {HttpOptions} from '../types.js';
 import {NodeUploader} from './_node_uploader.js';
 
 const LANGUAGE_LABEL_PREFIX = 'gl-node/';
@@ -74,6 +75,7 @@ export class GoogleGenAI {
   private readonly project?: string;
   private readonly location?: string;
   private readonly apiVersion?: string;
+  private readonly httpOptions?: HttpOptions;
   readonly models: Models;
   readonly live: Live;
   readonly batches: Batches;
@@ -84,7 +86,6 @@ export class GoogleGenAI {
   readonly authTokens: Tokens;
   readonly tunings: Tunings;
   readonly fileSearchStores: FileSearchStores;
-
   constructor(options: GoogleGenAIOptions) {
     // Validate explicitly set initializer values.
     if ((options.project || options.location) && options.apiKey) {
@@ -158,6 +159,7 @@ export class GoogleGenAI {
     }
 
     this.apiVersion = options.apiVersion;
+    this.httpOptions = options.httpOptions;
     const auth = new NodeAuth({
       apiKey: this.apiKey,
       googleAuthOptions: options.googleAuthOptions,
@@ -169,7 +171,7 @@ export class GoogleGenAI {
       apiVersion: this.apiVersion,
       apiKey: this.apiKey,
       vertexai: this.vertexai,
-      httpOptions: options.httpOptions,
+      httpOptions: this.httpOptions,
       userAgentExtra: LANGUAGE_LABEL_PREFIX + process.version,
       uploader: new NodeUploader(),
       downloader: new NodeDownloader(),
