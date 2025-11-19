@@ -4,6 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+// copybara:strip_begin(google-internal)
+// internal testing
+// copybara:strip_end
+
+// Testing
+
 export {BaseUrlParameters, setDefaultBaseUrls} from './_base_url';
 export * from './batches';
 export * from './caches';
