@@ -37,7 +37,7 @@
     }
   },
   "scripts": {
-    "prepare": "npm run build-prod",
+    "prepare": "node scripts/prepare.js",
     "build": "patch-package && rollup -c && npm-run-all --parallel api-extractor:dev:* && node scripts/ignore_missing_mcp_dep.js",
     "build-prod": "patch-package && rollup -c && npm-run-all --parallel api-extractor:prod:* && node scripts/ignore_missing_mcp_dep.js",
     "api-extractor:dev:main": "api-extractor run --local --verbose",
