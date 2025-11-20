@@ -29,14 +29,18 @@ trap cleanup EXIT
 
 UNIT=coverage-unit-test
 SYSTEM=coverage-system-test
+# TODO- b/462434591: Add coverage for interactions tests.
+EXCLUDE_FLAGS=(
+    "--exclude" "src/interactions/**"
+)
 # TODO: b/435204110 - Add coverage for table tests.
 
 # Generate the reports for each test suite separately to avoid covering each
 # other.
 tsc
 GOOGLE_API_KEY=googapikey GOOGLE_CLOUD_PROJECT=googcloudproj GOOGLE_CLOUD_LOCATION=googcloudloc
-c8 --reporter=json --report-dir=./${WORK_DIR}/${UNIT} jasmine dist/test/unit/**/*_test.js dist/test/unit/*_test.js
-c8 --reporter=json --report-dir=./${WORK_DIR}/${SYSTEM} jasmine dist/test/system/node/*_test.js -- --test-server
+c8 "${EXCLUDE_FLAGS[@]}" --reporter=json --report-dir=./${WORK_DIR}/${UNIT} jasmine dist/test/unit/**/*_test.js dist/test/unit/*_test.js
+c8 "${EXCLUDE_FLAGS[@]}" --reporter=json --report-dir=./${WORK_DIR}/${SYSTEM} jasmine dist/test/system/node/*_test.js -- --test-server
 
 # Move all the generated coverage reports to the same directory to merge reports.
 mv ./${WORK_DIR}/${UNIT}/coverage-final.json  ./${WORK_DIR}/${UNIT}-coverage-report.json
