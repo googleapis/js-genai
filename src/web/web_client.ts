@@ -17,6 +17,7 @@ import {Models} from '../models.js';
 import {Operations} from '../operations.js';
 import {Tokens} from '../tokens.js';
 import {Tunings} from '../tunings.js';
+import {HttpOptions} from '../types.js';
 
 import {BrowserDownloader} from './_browser_downloader.js';
 import {BrowserUploader} from './_browser_uploader.js';
@@ -66,6 +67,7 @@ export class GoogleGenAI {
   private readonly apiKey?: string;
   public readonly vertexai: boolean;
   private readonly apiVersion?: string;
+  private readonly httpOptions?: HttpOptions;
   readonly models: Models;
   readonly live: Live;
   readonly batches: Batches;
@@ -76,7 +78,6 @@ export class GoogleGenAI {
   readonly authTokens: Tokens;
   readonly tunings: Tunings;
   readonly fileSearchStores: FileSearchStores;
-
   constructor(options: GoogleGenAIOptions) {
     if (options.apiKey == null) {
       throw new Error('An API Key must be set when running in a browser');
@@ -106,13 +107,14 @@ export class GoogleGenAI {
     }
 
     this.apiVersion = options.apiVersion;
+    this.httpOptions = options.httpOptions;
     const auth = new WebAuth(this.apiKey);
     this.apiClient = new ApiClient({
       auth: auth,
       apiVersion: this.apiVersion,
       apiKey: this.apiKey,
       vertexai: this.vertexai,
-      httpOptions: options.httpOptions,
+      httpOptions: this.httpOptions,
       userAgentExtra: LANGUAGE_LABEL_PREFIX + 'web',
       uploader: new BrowserUploader(),
       downloader: new BrowserDownloader(),
