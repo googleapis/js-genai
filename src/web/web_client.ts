@@ -3,7 +3,6 @@
  * Copyright 2025 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
-
 import {ApiClient} from '../_api_client.js';
 import {getBaseUrl} from '../_base_url.js';
 import {Batches} from '../batches.js';

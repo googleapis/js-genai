@@ -3,7 +3,6 @@
  * Copyright 2025 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
-
 import {GoogleAuthOptions} from 'google-auth-library';
 
 import {ApiClient} from '../_api_client.js';
