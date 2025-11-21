@@ -19,10 +19,10 @@ export class Caches extends BaseModule {
   }
 
   /**
-   * Lists cached content configurations.
+   * Lists cached contents.
    *
    * @param params - The parameters for the list request.
-   * @return The paginated results of the list of cached contents.
+   * @return - A pager of cached contents.
    *
    * @example
    * ```ts

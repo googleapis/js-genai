@@ -23,6 +23,32 @@ export class FileSearchStores extends BaseModule {
   }
 
   /**
+   * Lists file search stores.
+   *
+   * @param params - The parameters for the list request.
+   * @return - A pager of file search stores.
+   *
+   * @example
+   * ```ts
+   * const fileSearchStores = await ai.fileSearchStores.list({config: {'pageSize': 2}});
+   * for await (const fileSearchStore of fileSearchStores) {
+   *   console.log(fileSearchStore);
+   * }
+   * ```
+   */
+
+  list = async (
+    params: types.ListFileSearchStoresParameters = {},
+  ): Promise<Pager<types.FileSearchStore>> => {
+    return new Pager<types.FileSearchStore>(
+      PagedItem.PAGED_ITEM_FILE_SEARCH_STORES,
+      (x: types.ListFileSearchStoresParameters) => this.listInternal(x),
+      await this.listInternal(params),
+      params,
+    );
+  };
+
+  /**
    * Uploads a file asynchronously to a given File Search Store.
    * This method is not available in Vertex AI.
    * Supported upload sources:
@@ -73,31 +99,6 @@ export class FileSearchStores extends BaseModule {
       params.config,
     );
   }
-
-  /**
-   * Lists file search stores.
-   *
-   * @param params - The parameters for the list request.
-   * @return - A pager of file search stores.
-   *
-   * @example
-   * ```ts
-   * const fileSearchStores = await ai.fileSearchStores.list({config: {'pageSize': 2}});
-   * for await (const fileSearchStore of fileSearchStores) {
-   *   console.log(fileSearchStore);
-   * }
-   * ```
-   */
-  list = async (
-    params: types.ListFileSearchStoresParameters = {},
-  ): Promise<Pager<types.FileSearchStore>> => {
-    return new Pager<types.FileSearchStore>(
-      PagedItem.PAGED_ITEM_FILE_SEARCH_STORES,
-      (x: types.ListFileSearchStoresParameters) => this.listInternal(x),
-      await this.listInternal(params),
-      params,
-    );
-  };
 
   /**
    * Creates a File Search Store.
@@ -226,13 +227,6 @@ export class FileSearchStores extends BaseModule {
       });
     }
   }
-
-  /**
-   * Lists all FileSearchStore owned by the user.
-   *
-   * @param params - The parameters for listing file search stores.
-   * @return ListFileSearchStoresResponse.
-   */
 
   private async listInternal(
     params: types.ListFileSearchStoresParameters,

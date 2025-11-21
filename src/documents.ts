@@ -26,22 +26,20 @@ export class Documents extends BaseModule {
    *
    * @example
    * ```ts
-   * const documents = await ai.documents.list({config: {'pageSize': 2}});
+   * const documents = await ai.documents.list({parent:'rag_store_name', config: {'pageSize': 2}});
    * for await (const document of documents) {
    *   console.log(document);
    * }
    * ```
    */
+
   list = async (
     params: types.ListDocumentsParameters,
   ): Promise<Pager<types.Document>> => {
     return new Pager<types.Document>(
       PagedItem.PAGED_ITEM_DOCUMENTS,
       (x: PagedItemConfig) =>
-        this.listInternal({
-          parent: params.parent,
-          config: x.config,
-        }),
+        this.listInternal({parent: params.parent, config: x.config}),
       await this.listInternal(params),
       params,
     );
@@ -125,13 +123,6 @@ export class Documents extends BaseModule {
       });
     }
   }
-
-  /**
-   * Lists all Documents in a FileSearchStore.
-   *
-   * @param params - The parameters for listing documents.
-   * @return ListDocumentsResponse.
-   */
 
   private async listInternal(
     params: types.ListDocumentsParameters,
