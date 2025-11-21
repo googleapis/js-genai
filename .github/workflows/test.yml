@@ -23,7 +23,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm ci
+    - run: USE_LOCAL_BUILD=true npm ci
     - run: npm run build
     - run: npm run unit-test
     - run: npm run test-server-tests
