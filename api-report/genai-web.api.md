@@ -308,6 +308,11 @@ export interface CancelTuningJobParameters {
 }
 
 // @public
+export class CancelTuningJobResponse {
+    sdkHttpResponse?: HttpResponse;
+}
+
+// @public
 export interface Candidate {
     avgLogprobs?: number;
     citationMetadata?: CitationMetadata;
