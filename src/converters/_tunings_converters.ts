@@ -38,6 +38,38 @@ export function cancelTuningJobParametersToVertex(
   return toObject;
 }
 
+export function cancelTuningJobResponseFromMldev(
+  fromObject: types.CancelTuningJobResponse,
+  _rootObject?: unknown,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromSdkHttpResponse = common.getValueByPath(fromObject, [
+    'sdkHttpResponse',
+  ]);
+  if (fromSdkHttpResponse != null) {
+    common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
+  }
+
+  return toObject;
+}
+
+export function cancelTuningJobResponseFromVertex(
+  fromObject: types.CancelTuningJobResponse,
+  _rootObject?: unknown,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromSdkHttpResponse = common.getValueByPath(fromObject, [
+    'sdkHttpResponse',
+  ]);
+  if (fromSdkHttpResponse != null) {
+    common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
+  }
+
+  return toObject;
+}
+
 export function createTuningJobConfigToMldev(
   fromObject: types.CreateTuningJobConfig,
   parentObject: Record<string, unknown>,
