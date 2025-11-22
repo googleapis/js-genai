@@ -8,6 +8,7 @@ import {Auth} from './_auth.js';
 import * as common from './_common.js';
 import {Downloader} from './_downloader.js';
 import {Uploader} from './_uploader.js';
+import {uploadToFileSearchStoreConfigToMldev} from './converters/_filesearchstores_converters.js';
 import {ApiError} from './errors.js';
 import * as types from './types.js';
 
@@ -726,11 +727,8 @@ export class ApiClient {
     const path = `upload/v1beta/${fileSearchStoreName}:uploadToFileSearchStore`;
     const fileName = this.getFileName(file);
     const body: Record<string, unknown> = {};
-    if (config?.customMetadata) {
-      body['customMetadata'] = config.customMetadata;
-    }
-    if (config?.chunkingConfig) {
-      body['chunkingConfig'] = config.chunkingConfig;
+    if (config != null) {
+      uploadToFileSearchStoreConfigToMldev(config, body);
     }
     const uploadUrl = await this.fetchUploadUrl(
       path,
