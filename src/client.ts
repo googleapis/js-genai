@@ -125,6 +125,7 @@ export class GoogleGenAI {
   private readonly apiKey?: string;
   public readonly vertexai: boolean;
   private readonly apiVersion?: string;
+  private readonly httpOptions?: HttpOptions;
   readonly models: Models;
   readonly live: Live;
   readonly batches: Batches;
@@ -145,13 +146,14 @@ export class GoogleGenAI {
     this.vertexai = options.vertexai ?? false;
     this.apiKey = options.apiKey;
     this.apiVersion = options.apiVersion;
+    this.httpOptions = options.httpOptions;
     const auth = new WebAuth(this.apiKey);
     this.apiClient = new ApiClient({
       auth: auth,
       apiVersion: this.apiVersion,
       apiKey: this.apiKey,
       vertexai: this.vertexai,
-      httpOptions: options.httpOptions,
+      httpOptions: this.httpOptions,
       userAgentExtra: LANGUAGE_LABEL_PREFIX + 'cross',
       uploader: new CrossUploader(),
       downloader: new CrossDownloader(),
