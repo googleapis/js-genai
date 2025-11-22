@@ -67,6 +67,7 @@ async function uploadBlobToFileSearchStore(fileSearchStoreName: string) {
     file: BLOB,
     config: {
       customMetadata: [{key: 'author', stringValue: 'foo'}],
+      displayName: 'a blob name',
     },
   });
   while (!op.done) {
