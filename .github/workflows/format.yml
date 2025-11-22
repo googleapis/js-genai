@@ -18,7 +18,7 @@ jobs:
       with:
         node-version: 22.x
         cache: 'npm'
-    - run: npm ci
+    - run: USE_LOCAL_BUILD=true npm ci
     - name: Run format
       run: npx prettier '**/*.ts' '**/*.mjs' '**/*.mjs' '**/*.json' --check
     - name: Run linter
