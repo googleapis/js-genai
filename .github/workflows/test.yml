@@ -31,6 +31,7 @@ jobs:
         cd sdk-samples
         npm install
         npm run build
+        find ./build -type f | wc -l
 
   api-consistency:
     runs-on: ubuntu-latest
