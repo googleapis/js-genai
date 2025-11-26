@@ -208,7 +208,7 @@ describe('generateContent', () => {
         ),
       );
       await client.models.generateContent({
-        model: 'gemini-1.5-flash-exp',
+        model: 'gemini-2.5-flash-exp',
         contents: 'why is the sky blue?',
         config: {
           responseSchema: shouldBeGivenToResponseSchema,
@@ -266,7 +266,7 @@ describe('generateContent', () => {
         ),
       );
       await client.models.generateContent({
-        model: 'gemini-1.5-flash-exp',
+        model: 'gemini-2.5-flash-exp',
         contents: 'why is the sky blue?',
         config: {
           responseSchema: shouldBeGivenToResponseJsonSchema,
@@ -323,7 +323,7 @@ describe('generateContent', () => {
         ),
       );
       await client.models.generateContent({
-        model: 'gemini-1.5-flash-exp',
+        model: 'gemini-2.5-flash-exp',
         contents: 'why is the sky blue?',
         config: {
           responseJsonSchema: shouldBeGivenToResponseJsonSchema,
@@ -350,7 +350,7 @@ describe('generateContent', () => {
         ),
       );
       await client.models.generateContent({
-        model: 'gemini-1.5-flash-exp',
+        model: 'gemini-2.5-flash-exp',
         contents: 'why is the sky blue?',
         config: {
           responseSchema: {type: types.Type.OBJECT},
@@ -409,7 +409,7 @@ describe('generateContent', () => {
           ),
         );
         await client.models.generateContent({
-          model: 'gemini-1.5-flash-exp',
+          model: 'gemini-2.5-flash-exp',
           contents: 'why is the sky blue?',
           config: {
             tools: [
@@ -473,7 +473,7 @@ describe('generateContent', () => {
           ),
         );
         await client.models.generateContent({
-          model: 'gemini-1.5-flash-exp',
+          model: 'gemini-2.5-flash-exp',
           contents: 'why is the sky blue?',
           config: {
             tools: [
@@ -533,7 +533,7 @@ describe('generateContent', () => {
           ),
         );
         await client.models.generateContent({
-          model: 'gemini-1.5-flash-exp',
+          model: 'gemini-2.5-flash-exp',
           contents: 'why is the sky blue?',
           config: {
             tools: [
@@ -569,7 +569,7 @@ describe('generateContent', () => {
           ),
         );
         await client.models.generateContent({
-          model: 'gemini-1.5-flash-exp',
+          model: 'gemini-2.5-flash-exp',
           contents: 'why is the sky blue?',
           config: {
             tools: [
@@ -609,7 +609,7 @@ describe('generateContent', () => {
         ),
       );
       await client.models.generateContent({
-        model: 'gemini-1.5-flash-exp',
+        model: 'gemini-2.5-flash-exp',
         contents: 'why is the sky blue?',
         config: {
           tools: [
@@ -661,7 +661,7 @@ describe('generateContent', () => {
         ),
       );
       await client.models.generateContent({
-        model: 'gemini-1.5-flash-exp',
+        model: 'gemini-2.5-flash-exp',
         contents: 'why is the sky blue?',
         config: {
           responseSchema: zodToJsonSchema(zodSchema),
@@ -698,7 +698,7 @@ describe('generateContent', () => {
         ),
       );
       await client.models.generateContent({
-        model: 'gemini-1.5-flash-exp',
+        model: 'gemini-2.5-flash-exp',
         contents: 'why is the sky blue?',
         config: {
           responseSchema: zodToJsonSchema(nestedSchema),
@@ -746,7 +746,7 @@ describe('generateContent', () => {
         ...mockResponses,
       );
       await client.models.generateContent({
-        model: 'gemini-1.5-flash-exp',
+        model: 'gemini-2.5-flash-exp',
         contents:
           'Use the printer to print a simple math question in red and the answer in blue',
         config: {
@@ -823,7 +823,7 @@ describe('generateContent', () => {
         ...mockResponses,
       );
       await client.models.generateContent({
-        model: 'gemini-1.5-flash-exp',
+        model: 'gemini-2.5-flash-exp',
         contents:
           'Use the printer to print a simple math question in red and the answer in blue, and beep with the beeper',
         config: {
@@ -900,7 +900,7 @@ describe('generateContent', () => {
       ];
       try {
         await client.models.generateContent({
-          model: 'gemini-1.5-flash-exp',
+          model: 'gemini-2.5-flash-exp',
           contents:
             'Use the printer to print a simple math question in red and the answer in blue, and beep with the beeper',
           config: {
@@ -968,7 +968,7 @@ describe('generateContent', () => {
       );
 
       await client.models.generateContent({
-        model: 'gemini-1.5-flash-exp',
+        model: 'gemini-2.5-flash-exp',
         contents: 'Call the throwing tool.',
         config: {
           tools: [callableTool],
@@ -1070,7 +1070,7 @@ describe('generateContent', () => {
       );
       const consoleLogSpy = spyOn(console, 'log');
       await client.models.generateContent({
-        model: 'gemini-1.5-flash-exp',
+        model: 'gemini-2.5-flash-exp',
         contents: 'Call the throwing tool.',
         config: {
           tools: [callableTool],
@@ -1110,7 +1110,7 @@ describe('generateContent', () => {
       );
       const consoleBeepSpy = spyOn(process.stdout, 'write').and.callThrough();
       await client.models.generateContent({
-        model: 'gemini-1.5-flash-exp',
+        model: 'gemini-2.5-flash-exp',
         contents: 'Call the printing tool.',
         config: {
           tools: [callableTool],
@@ -1150,7 +1150,7 @@ describe('generateContent', () => {
       ];
       spyOn(global, 'fetch').and.returnValues(...mockResponses);
       const response = await client.models.generateContent({
-        model: 'gemini-1.5-flash-exp',
+        model: 'gemini-2.5-flash-exp',
         contents:
           'Use the printer to print a simple math question in red and the answer in blue, and beep with the beeper',
         config: {
@@ -1245,7 +1245,7 @@ describe('generateContent', () => {
     const consoleBeepSpy = spyOn(process.stdout, 'write').and.callThrough();
     const callToolSpy = spyOn(mcpClient, 'callTool').and.callThrough();
     await client.models.generateContent({
-      model: 'gemini-1.5-flash-exp',
+      model: 'gemini-2.5-flash-exp',
       contents: 'Call the printing tool.',
       config: {
         tools: [callableTool],
@@ -1307,7 +1307,7 @@ describe('generateContentStream', () => {
     ];
     const fetchSpy = spyOn(global, 'fetch').and.returnValues(...mockResponses);
     const response = await client.models.generateContentStream({
-      model: 'gemini-1.5-flash-exp',
+      model: 'gemini-2.5-flash-exp',
       contents:
         'Use the printer to print a simple math question in red and the answer in blue',
       config: {
@@ -1393,7 +1393,7 @@ describe('generateContentStream', () => {
     ];
     spyOn(global, 'fetch').and.returnValues(...mockResponses);
     const response = await client.models.generateContentStream({
-      model: 'gemini-1.5-flash-exp',
+      model: 'gemini-2.5-flash-exp',
       contents: 'Do anything.',
     });
 

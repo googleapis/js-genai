@@ -35,7 +35,7 @@ async function createCacheFromVertexAI() {
   };
 
   const cache = await ai.caches.create({
-    model: 'gemini-1.5-pro-002',
+    model: 'gemini-2.5-flash',
     config: {contents: [cachedContent1, cachedContent2]},
   });
 

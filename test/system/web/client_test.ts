@@ -25,7 +25,7 @@ describe('generateContent', () => {
   it('ML Dev should generate content with specified parameters', async () => {
     const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
     const response = await client.models.generateContent({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       contents: 'why is the sky blue?',
       config: {maxOutputTokens: 20, candidateCount: 1},
     });
@@ -47,7 +47,7 @@ describe('generateContent', () => {
   it('ML Dev should generate content with system instruction', async () => {
     const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
     const response = await client.models.generateContent({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       contents: 'high',
       config: {systemInstruction: 'I say high you say low'},
     });
@@ -89,7 +89,7 @@ describe('generateContent', () => {
     });
     const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
     const response = await client.models.generateContent({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       contents: 'populate the following object',
       config: {
         responseMimeType: 'application/json',
@@ -110,7 +110,7 @@ describe('generateContent', () => {
     });
     const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
     const response = await client.models.generateContent({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       contents: 'put word: hello and word: world into a string',
       config: {
         tools: [
@@ -153,7 +153,7 @@ describe('generateContentStream', () => {
   it('ML Dev should stream generate content with specified parameters', async () => {
     const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
     const response = await client.models.generateContentStream({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       contents: 'why is the sky blue?',
       config: {candidateCount: 1, maxOutputTokens: 200},
     });
@@ -182,7 +182,7 @@ describe('generateContentStream', () => {
   it('ML Dev should stream generate content with system instruction', async () => {
     const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
     const response = await client.models.generateContentStream({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       contents: 'high',
       config: {
         systemInstruction:
@@ -248,7 +248,7 @@ describe('test async performance', () => {
     const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
     async function firstAsyncFunc() {
       client.models.generateContent({
-        model: 'gemini-1.5-flash',
+        model: 'gemini-2.5-flash',
         contents: 'high',
         config: {
           systemInstruction: 'I say high you say low.',
@@ -258,7 +258,7 @@ describe('test async performance', () => {
     }
     async function secondAsyncFunc() {
       client.models.generateContent({
-        model: 'gemini-1.5-flash',
+        model: 'gemini-2.5-flash',
         contents: 'high',
         config: {
           systemInstruction: 'I say high you say low.',
@@ -285,7 +285,7 @@ describe('test async performance', () => {
     const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
     async function firstAsyncFunc() {
       client.models.generateContentStream({
-        model: 'gemini-1.5-flash',
+        model: 'gemini-2.5-flash',
         contents: 'high',
         config: {
           systemInstruction: 'I say high you say low.',
@@ -295,7 +295,7 @@ describe('test async performance', () => {
     }
     async function secondAsyncFunc() {
       client.models.generateContentStream({
-        model: 'gemini-1.5-flash',
+        model: 'gemini-2.5-flash',
         contents: 'high',
         config: {
           systemInstruction: 'I say high you say low.',
@@ -348,7 +348,7 @@ describe('countTokens', () => {
     const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
 
     const response = await client.models.countTokens({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       contents: 'The quick brown fox jumps over the lazy dog.',
     });
     expect(response!.totalTokens ?? 0).toBeGreaterThan(

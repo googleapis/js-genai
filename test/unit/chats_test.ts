@@ -66,18 +66,18 @@ describe('sendMessage invalid response', () => {
       spyOn(modelsModule, 'generateContent').and.returnValue(
         Promise.resolve(testCase.response),
       );
-      const chat = client.chats.create({model: 'gemini-1.5-flash'});
+      const chat = client.chats.create({model: 'gemini-2.5-flash'});
       let response = await chat.sendMessage({message: 'send message 1'});
       expect(response).toEqual(testCase.response);
       response = await chat.sendMessage({message: 'send message 2'});
       expect(modelsModule.generateContent).toHaveBeenCalledWith({
-        model: 'gemini-1.5-flash',
+        model: 'gemini-2.5-flash',
         contents: [{role: 'user', parts: [{text: 'send message 1'}]}],
         config: {},
       });
       // Verify that invalid response and request are not added to the
       expect(modelsModule.generateContent).toHaveBeenCalledWith({
-        model: 'gemini-1.5-flash',
+        model: 'gemini-2.5-flash',
         contents: [{role: 'user', parts: [{text: 'send message 2'}]}],
         config: {},
       });
@@ -112,18 +112,18 @@ describe('sendMessage valid response', () => {
     spyOn(modelsModule, 'generateContent').and.returnValue(
       Promise.resolve(validResponse),
     );
-    const chat = client.chats.create({model: 'gemini-1.5-flash'});
+    const chat = client.chats.create({model: 'gemini-2.5-flash'});
     let response = await chat.sendMessage({message: 'send message 1'});
     expect(response).toEqual(validResponse);
     response = await chat.sendMessage({message: 'send message 2'});
     expect(modelsModule.generateContent).toHaveBeenCalledWith({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       contents: [{role: 'user', parts: [{text: 'send message 1'}]}],
       config: {},
     });
     // Verify that valid response and request are added to the history.
     expect(modelsModule.generateContent).toHaveBeenCalledWith({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       contents: [
         {role: 'user', parts: [{text: 'send message 1'}]},
         {role: 'model', parts: [{text: 'valid response 1'}, {text: ''}]},
@@ -137,7 +137,7 @@ describe('sendMessage valid response', () => {
 describe('sendMessage subsequent calls', () => {
   it('sendMessage errors should not persist', async () => {
     const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
-    const chat = client.chats.create({model: 'gemini-1.5-flash'});
+    const chat = client.chats.create({model: 'gemini-2.5-flash'});
 
     const successResponse = buildGenerateContentResponse({
       role: 'model',
@@ -242,7 +242,7 @@ describe('sendMessage config', () => {
   it('use default config', async () => {
     const defaultConfig = {candidateCount: 1};
     const chat = client.chats.create({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       config: defaultConfig,
     });
     await chat.sendMessage({message: 'send message'});
@@ -256,7 +256,7 @@ describe('sendMessage config', () => {
     const defaultConfig = {candidateCount: 1};
     const requestConfig = {candidateCount: 2};
     const chat = client.chats.create({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       config: defaultConfig,
     });
     await chat.sendMessage({message: 'send message', config: requestConfig});
@@ -301,7 +301,7 @@ describe('sendMessageStream config', () => {
   it('use default config', async () => {
     const defaultConfig = {candidateCount: 1};
     const chat = client.chats.create({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       config: defaultConfig,
     });
     await chat.sendMessageStream({message: 'send message'});
@@ -315,7 +315,7 @@ describe('sendMessageStream config', () => {
     const defaultConfig = {candidateCount: 1};
     const requestConfig = {candidateCount: 2};
     const chat = client.chats.create({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       config: defaultConfig,
     });
     await chat.sendMessageStream({
@@ -378,17 +378,17 @@ describe('sendMessageStream invalid response', () => {
     spyOn(modelsModule, 'generateContentStream').and.returnValue(
       Promise.resolve(mockStreamResponse()),
     );
-    const chat = client.chats.create({model: 'gemini-1.5-flash'});
+    const chat = client.chats.create({model: 'gemini-2.5-flash'});
     await chat.sendMessageStream({message: 'send message 1'});
     await chat.sendMessageStream({message: 'send message 2'});
     expect(modelsModule.generateContentStream).toHaveBeenCalledWith({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       contents: [{role: 'user', parts: [{text: 'send message 1'}]}],
       config: {},
     });
     // Verify that invalid response and request are not added to the history.
     expect(modelsModule.generateContentStream).toHaveBeenCalledWith({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       contents: [{role: 'user', parts: [{text: 'send message 2'}]}],
       config: {},
     });
@@ -421,7 +421,7 @@ describe('sendMessageStream valid response', () => {
       modelsModule,
       'generateContentStream',
     ).and.returnValue(Promise.resolve(mockStreamResponse()));
-    const chat = client.chats.create({model: 'gemini-1.5-flash'});
+    const chat = client.chats.create({model: 'gemini-2.5-flash'});
     const response1 = await chat.sendMessageStream({message: 'send message 1'});
     const chunks1 = [];
     for await (const chunk of response1) {
@@ -457,7 +457,7 @@ describe('create chat with history', () => {
     ];
 
     expect(() =>
-      client.chats.create({model: 'gemini-1.5-flash', history}),
+      client.chats.create({model: 'gemini-2.5-flash', history}),
     ).toThrowError('Role must be user or model, but got unknown_role.');
   });
 
@@ -470,7 +470,7 @@ describe('create chat with history', () => {
       {role: 'model', parts: [{text: 'valid model response'}]},
     ];
     const chat = client.chats.create({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       history: comprehensiveHistory,
     });
 
@@ -495,7 +495,7 @@ describe('create chat with history', () => {
       },
     ];
     const chat = client.chats.create({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       history: comprehensiveHistory,
     });
 
@@ -509,7 +509,7 @@ describe('create chat with history', () => {
       {role: 'model', parts: [{text: 'model content'}]},
     ];
     const chat = client.chats.create({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       history: comprehensiveHistory,
     });
 
@@ -526,7 +526,7 @@ describe('create chat with history', () => {
       {role: 'model', parts: [{text: 'model content 3'}]},
     ];
     const chat = client.chats.create({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       history: comprehensiveHistory,
     });
 
@@ -542,7 +542,7 @@ describe('create chat with history', () => {
       {role: 'model', parts: [{text: 'model content 2'}]},
     ];
     const chat = client.chats.create({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       history: comprehensiveHistory,
     });
 
@@ -556,7 +556,7 @@ describe('create chat with history', () => {
       {role: 'user', parts: [{text: 'user content'}]},
     ];
     const chat = client.chats.create({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       history: comprehensiveHistory,
     });
 
@@ -571,7 +571,7 @@ describe('create chat with history', () => {
       {role: 'user', parts: [{text: 'user content 2'}]},
     ];
     const chat = client.chats.create({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       history: comprehensiveHistory,
     });
 
@@ -587,7 +587,7 @@ describe('create chat with history', () => {
       {role: 'user', parts: [{text: 'user content 2'}]},
     ];
     const chat = client.chats.create({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       history: comprehensiveHistory,
     });
 
@@ -603,7 +603,7 @@ describe('create chat with history', () => {
       {role: 'model', parts: [{}]}, // invalid content
     ];
     const chat = client.chats.create({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       history: comprehensiveHistory,
     });
 
@@ -621,7 +621,7 @@ describe('create chat with history', () => {
       {role: 'model', parts: [{text: 'model content 1'}]},
     ];
     const chat = client.chats.create({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       history: comprehensiveHistory,
     });
 
@@ -636,7 +636,7 @@ describe('create chat with history', () => {
       {role: 'model', parts: [{text: 'model content 1'}]},
     ];
     const chat = client.chats.create({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       history: externalHistory,
     });
     externalHistory.push(
@@ -667,7 +667,7 @@ describe('create chat with history', () => {
       {role: 'model', parts: [{text: 'model content 1'}]},
     ];
     const chat = client.chats.create({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       history: externalHistory,
     });
     await chat.sendMessage({message: 'user content 2'});
@@ -709,7 +709,7 @@ describe('getHistory', () => {
       Promise.resolve(mockResponse),
     );
     const chat = client.chats.create({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       history: [existingInputContent, existingOutputContent],
     });
 
@@ -732,7 +732,7 @@ describe('getHistory', () => {
       Promise.resolve(mockStreamResponse()),
     );
     const chat = client.chats.create({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       history: [existingInputContent, existingOutputContent],
     });
 
@@ -767,7 +767,7 @@ describe('getHistory', () => {
       Promise.resolve(mockResponse),
     );
     const chat = client.chats.create({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
     });
 
     await chat.sendMessage({message: 'new user content'});
@@ -787,7 +787,7 @@ describe('getHistory', () => {
       Promise.resolve(new GenerateContentResponse()),
     );
     const chat = client.chats.create({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
     });
 
     await chat.sendMessage({message: 'new user content'});
@@ -811,7 +811,7 @@ describe('getHistory', () => {
       Promise.resolve(mockResponse),
     );
     const chat = client.chats.create({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       history: [existingInputContent, existingOutputContent],
     });
     const fetchedHistory1 = chat.getHistory();
@@ -831,7 +831,7 @@ describe('getHistory', () => {
       {role: 'model', parts: [{text: 'model content 1'}]},
     ];
     const chat = client.chats.create({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       history: originalHistory,
     });
 
