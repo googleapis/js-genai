@@ -1798,6 +1798,7 @@ export interface HttpOptions {
     baseUrl?: string;
     extraBody?: Record<string, unknown>;
     headers?: Record<string, string>;
+    skipAuth?: boolean;
     timeout?: number;
 }
 

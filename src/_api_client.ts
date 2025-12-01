@@ -316,6 +316,11 @@ export class ApiClient {
   }
 
   private shouldPrependVertexProjectPath(request: HttpRequest): boolean {
+    // If using a custom baseUrl (not Google's), don't prepend project/location path
+    const baseUrl = this.clientOptions.httpOptions?.baseUrl;
+    if (baseUrl && !baseUrl.includes('aiplatform.googleapis.com')) {
+      return false;
+    }
     if (this.clientOptions.apiKey) {
       return false;
     }
