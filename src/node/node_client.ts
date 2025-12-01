@@ -87,61 +87,76 @@ export class GoogleGenAI {
   readonly tunings: Tunings;
   readonly fileSearchStores: FileSearchStores;
   constructor(options: GoogleGenAIOptions) {
-    // Validate explicitly set initializer values.
-    if ((options.project || options.location) && options.apiKey) {
-      throw new Error(
-        'Project/location and API key are mutually exclusive in the client initializer.',
-      );
+    // Check if skipping auth via httpOptions
+    const skipAuth = options.httpOptions?.skipAuth ?? false;
+    
+    // Skip validation when skipping auth
+    if (!skipAuth) {
+      // Validate explicitly set initializer values.
+      if ((options.project || options.location) && options.apiKey) {
+        throw new Error(
+          'Project/location and API key are mutually exclusive in the client initializer.',
+        );
+      }
     }
 
     this.vertexai =
       options.vertexai ?? getBooleanEnv('GOOGLE_GENAI_USE_VERTEXAI') ?? false;
-    const envApiKey = getApiKeyFromEnv();
-    const envProject = getEnv('GOOGLE_CLOUD_PROJECT');
-    const envLocation = getEnv('GOOGLE_CLOUD_LOCATION');
+    
+    // Only try to get env vars if not skipping auth
+    if (!skipAuth) {
+      const envApiKey = getApiKeyFromEnv();
+      const envProject = getEnv('GOOGLE_CLOUD_PROJECT');
+      const envLocation = getEnv('GOOGLE_CLOUD_LOCATION');
 
-    this.apiKey = options.apiKey ?? envApiKey;
-    this.project = options.project ?? envProject;
-    this.location = options.location ?? envLocation;
+      this.apiKey = options.apiKey ?? envApiKey;
+      this.project = options.project ?? envProject;
+      this.location = options.location ?? envLocation;
 
-    // Handle when to use Vertex AI in express mode (api key)
-    if (options.vertexai) {
-      if (options.googleAuthOptions?.credentials) {
-        // Explicit credentials take precedence over implicit api_key.
-        console.debug(
-          'The user provided Google Cloud credentials will take precedence' +
-            ' over the API key from the environment variable.',
-        );
-        this.apiKey = undefined;
-      }
-      // Explicit api_key and explicit project/location already handled above.
-      if ((envProject || envLocation) && options.apiKey) {
-        // Explicit api_key takes precedence over implicit project/location.
-        console.debug(
-          'The user provided Vertex AI API key will take precedence over' +
-            ' the project/location from the environment variables.',
-        );
-        this.project = undefined;
-        this.location = undefined;
-      } else if ((options.project || options.location) && envApiKey) {
-        // Explicit project/location takes precedence over implicit api_key.
-        console.debug(
-          'The user provided project/location will take precedence over' +
-            ' the API key from the environment variables.',
-        );
-        this.apiKey = undefined;
-      } else if ((envProject || envLocation) && envApiKey) {
-        // Implicit project/location takes precedence over implicit api_key.
-        console.debug(
-          'The project/location from the environment variables will take' +
-            ' precedence over the API key from the environment variables.',
-        );
-        this.apiKey = undefined;
-      }
+      // Handle when to use Vertex AI in express mode (api key)
+      if (options.vertexai) {
+        if (options.googleAuthOptions?.credentials) {
+          // Explicit credentials take precedence over implicit api_key.
+          console.debug(
+            'The user provided Google Cloud credentials will take precedence' +
+              ' over the API key from the environment variable.',
+          );
+          this.apiKey = undefined;
+        }
+        // Explicit api_key and explicit project/location already handled above.
+        if ((envProject || envLocation) && options.apiKey) {
+          // Explicit api_key takes precedence over implicit project/location.
+          console.debug(
+            'The user provided Vertex AI API key will take precedence over' +
+              ' the project/location from the environment variables.',
+          );
+          this.project = undefined;
+          this.location = undefined;
+        } else if ((options.project || options.location) && envApiKey) {
+          // Explicit project/location takes precedence over implicit api_key.
+          console.debug(
+            'The user provided project/location will take precedence over' +
+              ' the API key from the environment variables.',
+          );
+          this.apiKey = undefined;
+        } else if ((envProject || envLocation) && envApiKey) {
+          // Implicit project/location takes precedence over implicit api_key.
+          console.debug(
+            'The project/location from the environment variables will take' +
+              ' precedence over the API key from the environment variables.',
+          );
+          this.apiKey = undefined;
+        }
 
-      if (!this.location && !this.apiKey) {
-        this.location = 'global';
+        if (!this.location && !this.apiKey) {
+          this.location = 'global';
+        }
       }
+    } else {
+      // When skipping auth, use whatever is provided (can be undefined)
+      this.apiKey = options.apiKey;
+      this.project = options.project;
+      this.location = options.location;
     }
 
     const baseUrl = getBaseUrl(
@@ -163,6 +178,7 @@ export class GoogleGenAI {
     const auth = new NodeAuth({
       apiKey: this.apiKey,
       googleAuthOptions: options.googleAuthOptions,
+      skipAuth: skipAuth,
     });
     this.apiClient = new ApiClient({
       auth: auth,

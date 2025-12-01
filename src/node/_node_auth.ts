@@ -24,13 +24,26 @@ export interface NodeAuthOptions {
    * https://github.com/googleapis/google-auth-library-nodejs/blob/main/src/auth/googleauth.ts.
    */
   googleAuthOptions?: GoogleAuthOptions;
+  /**
+   * Optional. Set to true to skip Google Cloud authentication.
+   * When true, the SDK will not attempt to load Google Cloud credentials.
+   */
+  skipAuth?: boolean;
 }
 
 export class NodeAuth implements Auth {
   private readonly googleAuth?: GoogleAuth;
   private readonly apiKey?: string;
+  private readonly skipAuth: boolean;
 
   constructor(opts: NodeAuthOptions) {
+    this.skipAuth = opts.skipAuth ?? false;
+    
+    // If skipping auth, don't initialize anything
+    if (this.skipAuth) {
+      return;
+    }
+    
     if (opts.apiKey !== undefined) {
       this.apiKey = opts.apiKey;
       return;
@@ -40,6 +53,11 @@ export class NodeAuth implements Auth {
   }
 
   async addAuthHeaders(headers: Headers, url?: string): Promise<void> {
+    // If skipping auth, don't add any auth headers
+    if (this.skipAuth) {
+      return;
+    }
+    
     if (this.apiKey !== undefined) {
       if (this.apiKey.startsWith('auth_tokens/')) {
         throw new Error('Ephemeral tokens are only supported by the live API.');

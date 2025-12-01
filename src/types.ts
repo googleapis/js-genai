@@ -1572,6 +1572,12 @@ export declare interface HttpOptions {
       - VertexAI backend API docs: https://cloud.google.com/vertex-ai/docs/reference/rest
       - GeminiAPI backend API docs: https://ai.google.dev/api/rest */
   extraBody?: Record<string, unknown>;
+  /** 
+   * Optional. Set to true to skip Google Cloud authentication when using custom endpoints.
+   * When true, the SDK will not require or load Google Cloud credentials, project, or location.
+   * Use this when your custom endpoint handles authentication independently (e.g., via custom headers).
+   */
+  skipAuth?: boolean;
 }
 
 /** Schema is used to define the format of input/output data.
