@@ -89,22 +89,19 @@ export class GoogleGenAI {
   constructor(options: GoogleGenAIOptions) {
     // Check if skipping auth via httpOptions
     const skipAuth = options.httpOptions?.skipAuth ?? false;
+
+    this.vertexai =
+      options.vertexai ?? getBooleanEnv('GOOGLE_GENAI_USE_VERTEXAI') ?? false;
     
-    // Skip validation when skipping auth
+    // Only validate and load env vars if not skipping auth
     if (!skipAuth) {
-      // Validate explicitly set initializer values.
+      // Validate explicitly set initializer values
       if ((options.project || options.location) && options.apiKey) {
         throw new Error(
           'Project/location and API key are mutually exclusive in the client initializer.',
         );
       }
-    }
 
-    this.vertexai =
-      options.vertexai ?? getBooleanEnv('GOOGLE_GENAI_USE_VERTEXAI') ?? false;
-    
-    // Only try to get env vars if not skipping auth
-    if (!skipAuth) {
       const envApiKey = getApiKeyFromEnv();
       const envProject = getEnv('GOOGLE_CLOUD_PROJECT');
       const envLocation = getEnv('GOOGLE_CLOUD_LOCATION');
