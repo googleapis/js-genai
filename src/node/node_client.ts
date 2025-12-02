@@ -90,13 +90,11 @@ export class GoogleGenAI {
     // Check if skipping auth via httpOptions
     const skipAuth = options.httpOptions?.skipAuth ?? false;
 
-    // skipAuth requires a baseUrl to be provided
     if (skipAuth && !options.httpOptions?.baseUrl) {
       throw new Error(
         'skipAuth requires a baseUrl to be provided in httpOptions.',
       );
     }
-
     // Validate only when not skipping auth
     if (!skipAuth && (options.project || options.location) && options.apiKey) {
       throw new Error(
@@ -106,13 +104,11 @@ export class GoogleGenAI {
 
     this.vertexai =
       options.vertexai ?? getBooleanEnv('GOOGLE_GENAI_USE_VERTEXAI') ?? false;
-
     // Load env vars (undefined when skipping auth)
     const envApiKey = skipAuth ? undefined : getApiKeyFromEnv();
     const envProject = skipAuth ? undefined : getEnv('GOOGLE_CLOUD_PROJECT');
     const envLocation = skipAuth ? undefined : getEnv('GOOGLE_CLOUD_LOCATION');
 
-    // Single assignment point - env vars are undefined when skipAuth
     this.apiKey = options.apiKey ?? envApiKey;
     this.project = options.project ?? envProject;
     this.location = options.location ?? envLocation;
