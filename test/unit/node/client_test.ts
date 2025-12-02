@@ -404,4 +404,80 @@ describe('Client', () => {
     expect(client['project']).toBeUndefined();
     expect(client['location']).toBeUndefined();
   });
+
+  // skipAuth tests
+  it('should throw error if skipAuth is true without baseUrl', () => {
+    expect(() => {
+      new GoogleGenAI({
+        httpOptions: {
+          skipAuth: true,
+        },
+      });
+    }).toThrowError('skipAuth requires a baseUrl to be provided in httpOptions.');
+  });
+
+  it('should not throw error if skipAuth is true with baseUrl', () => {
+    const client = new GoogleGenAI({
+      vertexai: true,
+      httpOptions: {
+        baseUrl: 'https://custom.endpoint.com/v1/',
+        skipAuth: true,
+      },
+    });
+    expect(client).toBeDefined();
+    expect(client.vertexai).toBe(true);
+  });
+
+  it('should skip env vars when skipAuth is true', () => {
+    process.env['GOOGLE_API_KEY'] = 'env_api_key';
+    process.env['GOOGLE_CLOUD_PROJECT'] = 'env_project';
+    process.env['GOOGLE_CLOUD_LOCATION'] = 'env_location';
+
+    const client = new GoogleGenAI({
+      vertexai: true,
+      httpOptions: {
+        baseUrl: 'https://custom.endpoint.com/v1/',
+        skipAuth: true,
+      },
+    });
+
+    // When skipAuth is true, env vars should not be loaded
+    expect(client['apiKey']).toBeUndefined();
+    expect(client['project']).toBeUndefined();
+    expect(client['location']).toBeUndefined();
+  });
+
+  it('should use provided values when skipAuth is true', () => {
+    const client = new GoogleGenAI({
+      vertexai: true,
+      project: 'explicit_project',
+      location: 'explicit_location',
+      httpOptions: {
+        baseUrl: 'https://custom.endpoint.com/v1/',
+        skipAuth: true,
+      },
+    });
+
+    expect(client['project']).toBe('explicit_project');
+    expect(client['location']).toBe('explicit_location');
+  });
+
+  it('should skip validation when skipAuth is true', () => {
+    // This would normally throw because project/location and apiKey are mutually exclusive
+    // But with skipAuth, validation is skipped
+    const client = new GoogleGenAI({
+      vertexai: true,
+      project: 'my_project',
+      location: 'my_location',
+      apiKey: 'my_api_key',
+      httpOptions: {
+        baseUrl: 'https://custom.endpoint.com/v1/',
+        skipAuth: true,
+      },
+    });
+
+    expect(client['project']).toBe('my_project');
+    expect(client['location']).toBe('my_location');
+    expect(client['apiKey']).toBe('my_api_key');
+  });
 });

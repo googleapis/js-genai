@@ -1381,6 +1381,70 @@ describe('ApiClient', () => {
       'https://test-location-aiplatform.googleapis.com/v1beta1/publishers/google/models/test-model',
     );
   });
+  it('should not prepend project/location to path when skipAuth is true', async () => {
+    const client = new ApiClient({
+      auth: new FakeAuth(),
+      vertexai: true,
+      project: 'test-project',
+      location: 'test-location',
+      uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
+      httpOptions: {
+        baseUrl: 'https://custom.endpoint.com/v1/',
+        apiVersion: '',
+        skipAuth: true,
+      },
+    });
+    const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+      Promise.resolve(
+        new Response(
+          JSON.stringify(mockGenerateContentResponse),
+          fetchOkOptions,
+        ),
+      ),
+    );
+    await client.request({
+      path: 'publishers/google/models/test-model:generateContent',
+      httpMethod: 'POST',
+    });
+    const fetchArgs = fetchSpy.calls.first().args;
+    // Should NOT prepend projects/test-project/locations/test-location/
+    expect(fetchArgs[0]).toBe(
+      'https://custom.endpoint.com/v1/publishers/google/models/test-model:generateContent',
+    );
+  });
+  it('should not prepend project/location to path when skipAuth is true for requestStream', async () => {
+    const client = new ApiClient({
+      auth: new FakeAuth(),
+      vertexai: true,
+      project: 'test-project',
+      location: 'test-location',
+      uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
+      httpOptions: {
+        baseUrl: 'https://custom.endpoint.com/v1/',
+        apiVersion: '',
+        skipAuth: true,
+      },
+    });
+    const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+      Promise.resolve(
+        new Response(
+          JSON.stringify(mockGenerateContentResponse),
+          fetchOkOptions,
+        ),
+      ),
+    );
+    await client.requestStream({
+      path: 'publishers/google/models/test-model:streamGenerateContent',
+      httpMethod: 'POST',
+    });
+    const fetchArgs = fetchSpy.calls.first().args;
+    // Should NOT prepend projects/test-project/locations/test-location/
+    expect(fetchArgs[0]).toBe(
+      'https://custom.endpoint.com/v1/publishers/google/models/test-model:streamGenerateContent?alt=sse',
+    );
+  });
   describe('requestStream', () => {
     it('should throw ApiError if response is 500', async () => {
       const client = new ApiClient({

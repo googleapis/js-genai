@@ -110,4 +110,29 @@ describe('addAuthHeaders', () => {
 
     expect(googleAuthMock.getRequestHeaders).not.toHaveBeenCalled();
   });
+
+  it('should not add any auth headers when skipAuth is true', async () => {
+    const nodeAuth = new NodeAuth({skipAuth: true});
+    const headers = new Headers();
+    headers.append('Authorization', 'Bearer custom-token');
+
+    await nodeAuth.addAuthHeaders(headers, mockUrl);
+
+    // Custom header should remain unchanged, no Google auth headers added
+    expect(headers.get('Authorization')).toBe('Bearer custom-token');
+    expect(headers.get(GOOGLE_API_KEY_HEADER)).toBeNull();
+  });
+
+  it('should not initialize googleAuth when skipAuth is true', () => {
+    const nodeAuth = new NodeAuth({skipAuth: true});
+    expect((nodeAuth as unknown as NodeAuthWithGoogleAuth).googleAuth).toBeUndefined();
+  });
+
+  it('should not throw when skipAuth is true even without credentials', async () => {
+    const nodeAuth = new NodeAuth({skipAuth: true});
+    const headers = new Headers();
+
+    // This should not throw because skipAuth skips all auth logic
+    await expectAsync(nodeAuth.addAuthHeaders(headers, mockUrl)).toBeResolved();
+  });
 });
