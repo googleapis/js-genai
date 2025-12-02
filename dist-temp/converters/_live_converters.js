@@ -1,0 +1,1279 @@
+/**
+ * @license
+ * Copyright 2025 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+import * as common from '../_common.js';
+import * as t from '../_transformers.js';
+export function blobToMldev(fromObject) {
+    const toObject = {};
+    const fromData = common.getValueByPath(fromObject, ['data']);
+    if (fromData != null) {
+        common.setValueByPath(toObject, ['data'], fromData);
+    }
+    if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
+        throw new Error('displayName parameter is not supported in Gemini API.');
+    }
+    const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+    if (fromMimeType != null) {
+        common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+    }
+    return toObject;
+}
+export function contentToMldev(fromObject) {
+    const toObject = {};
+    const fromParts = common.getValueByPath(fromObject, ['parts']);
+    if (fromParts != null) {
+        let transformedList = fromParts;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return partToMldev(item);
+            });
+        }
+        common.setValueByPath(toObject, ['parts'], transformedList);
+    }
+    const fromRole = common.getValueByPath(fromObject, ['role']);
+    if (fromRole != null) {
+        common.setValueByPath(toObject, ['role'], fromRole);
+    }
+    return toObject;
+}
+export function fileDataToMldev(fromObject) {
+    const toObject = {};
+    if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
+        throw new Error('displayName parameter is not supported in Gemini API.');
+    }
+    const fromFileUri = common.getValueByPath(fromObject, ['fileUri']);
+    if (fromFileUri != null) {
+        common.setValueByPath(toObject, ['fileUri'], fromFileUri);
+    }
+    const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+    if (fromMimeType != null) {
+        common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+    }
+    return toObject;
+}
+export function functionCallToMldev(fromObject) {
+    const toObject = {};
+    const fromId = common.getValueByPath(fromObject, ['id']);
+    if (fromId != null) {
+        common.setValueByPath(toObject, ['id'], fromId);
+    }
+    const fromArgs = common.getValueByPath(fromObject, ['args']);
+    if (fromArgs != null) {
+        common.setValueByPath(toObject, ['args'], fromArgs);
+    }
+    const fromName = common.getValueByPath(fromObject, ['name']);
+    if (fromName != null) {
+        common.setValueByPath(toObject, ['name'], fromName);
+    }
+    if (common.getValueByPath(fromObject, ['partialArgs']) !== undefined) {
+        throw new Error('partialArgs parameter is not supported in Gemini API.');
+    }
+    if (common.getValueByPath(fromObject, ['willContinue']) !== undefined) {
+        throw new Error('willContinue parameter is not supported in Gemini API.');
+    }
+    return toObject;
+}
+export function functionDeclarationToVertex(fromObject) {
+    const toObject = {};
+    if (common.getValueByPath(fromObject, ['behavior']) !== undefined) {
+        throw new Error('behavior parameter is not supported in Vertex AI.');
+    }
+    const fromDescription = common.getValueByPath(fromObject, ['description']);
+    if (fromDescription != null) {
+        common.setValueByPath(toObject, ['description'], fromDescription);
+    }
+    const fromName = common.getValueByPath(fromObject, ['name']);
+    if (fromName != null) {
+        common.setValueByPath(toObject, ['name'], fromName);
+    }
+    const fromParameters = common.getValueByPath(fromObject, ['parameters']);
+    if (fromParameters != null) {
+        common.setValueByPath(toObject, ['parameters'], fromParameters);
+    }
+    const fromParametersJsonSchema = common.getValueByPath(fromObject, [
+        'parametersJsonSchema',
+    ]);
+    if (fromParametersJsonSchema != null) {
+        common.setValueByPath(toObject, ['parametersJsonSchema'], fromParametersJsonSchema);
+    }
+    const fromResponse = common.getValueByPath(fromObject, ['response']);
+    if (fromResponse != null) {
+        common.setValueByPath(toObject, ['response'], fromResponse);
+    }
+    const fromResponseJsonSchema = common.getValueByPath(fromObject, [
+        'responseJsonSchema',
+    ]);
+    if (fromResponseJsonSchema != null) {
+        common.setValueByPath(toObject, ['responseJsonSchema'], fromResponseJsonSchema);
+    }
+    return toObject;
+}
+export function generationConfigToVertex(fromObject) {
+    const toObject = {};
+    const fromModelSelectionConfig = common.getValueByPath(fromObject, [
+        'modelSelectionConfig',
+    ]);
+    if (fromModelSelectionConfig != null) {
+        common.setValueByPath(toObject, ['modelConfig'], fromModelSelectionConfig);
+    }
+    const fromResponseJsonSchema = common.getValueByPath(fromObject, [
+        'responseJsonSchema',
+    ]);
+    if (fromResponseJsonSchema != null) {
+        common.setValueByPath(toObject, ['responseJsonSchema'], fromResponseJsonSchema);
+    }
+    const fromAudioTimestamp = common.getValueByPath(fromObject, [
+        'audioTimestamp',
+    ]);
+    if (fromAudioTimestamp != null) {
+        common.setValueByPath(toObject, ['audioTimestamp'], fromAudioTimestamp);
+    }
+    const fromCandidateCount = common.getValueByPath(fromObject, [
+        'candidateCount',
+    ]);
+    if (fromCandidateCount != null) {
+        common.setValueByPath(toObject, ['candidateCount'], fromCandidateCount);
+    }
+    const fromEnableAffectiveDialog = common.getValueByPath(fromObject, [
+        'enableAffectiveDialog',
+    ]);
+    if (fromEnableAffectiveDialog != null) {
+        common.setValueByPath(toObject, ['enableAffectiveDialog'], fromEnableAffectiveDialog);
+    }
+    const fromFrequencyPenalty = common.getValueByPath(fromObject, [
+        'frequencyPenalty',
+    ]);
+    if (fromFrequencyPenalty != null) {
+        common.setValueByPath(toObject, ['frequencyPenalty'], fromFrequencyPenalty);
+    }
+    const fromLogprobs = common.getValueByPath(fromObject, ['logprobs']);
+    if (fromLogprobs != null) {
+        common.setValueByPath(toObject, ['logprobs'], fromLogprobs);
+    }
+    const fromMaxOutputTokens = common.getValueByPath(fromObject, [
+        'maxOutputTokens',
+    ]);
+    if (fromMaxOutputTokens != null) {
+        common.setValueByPath(toObject, ['maxOutputTokens'], fromMaxOutputTokens);
+    }
+    const fromMediaResolution = common.getValueByPath(fromObject, [
+        'mediaResolution',
+    ]);
+    if (fromMediaResolution != null) {
+        common.setValueByPath(toObject, ['mediaResolution'], fromMediaResolution);
+    }
+    const fromPresencePenalty = common.getValueByPath(fromObject, [
+        'presencePenalty',
+    ]);
+    if (fromPresencePenalty != null) {
+        common.setValueByPath(toObject, ['presencePenalty'], fromPresencePenalty);
+    }
+    const fromResponseLogprobs = common.getValueByPath(fromObject, [
+        'responseLogprobs',
+    ]);
+    if (fromResponseLogprobs != null) {
+        common.setValueByPath(toObject, ['responseLogprobs'], fromResponseLogprobs);
+    }
+    const fromResponseMimeType = common.getValueByPath(fromObject, [
+        'responseMimeType',
+    ]);
+    if (fromResponseMimeType != null) {
+        common.setValueByPath(toObject, ['responseMimeType'], fromResponseMimeType);
+    }
+    const fromResponseModalities = common.getValueByPath(fromObject, [
+        'responseModalities',
+    ]);
+    if (fromResponseModalities != null) {
+        common.setValueByPath(toObject, ['responseModalities'], fromResponseModalities);
+    }
+    const fromResponseSchema = common.getValueByPath(fromObject, [
+        'responseSchema',
+    ]);
+    if (fromResponseSchema != null) {
+        common.setValueByPath(toObject, ['responseSchema'], fromResponseSchema);
+    }
+    const fromRoutingConfig = common.getValueByPath(fromObject, [
+        'routingConfig',
+    ]);
+    if (fromRoutingConfig != null) {
+        common.setValueByPath(toObject, ['routingConfig'], fromRoutingConfig);
+    }
+    const fromSeed = common.getValueByPath(fromObject, ['seed']);
+    if (fromSeed != null) {
+        common.setValueByPath(toObject, ['seed'], fromSeed);
+    }
+    const fromSpeechConfig = common.getValueByPath(fromObject, ['speechConfig']);
+    if (fromSpeechConfig != null) {
+        common.setValueByPath(toObject, ['speechConfig'], speechConfigToVertex(fromSpeechConfig));
+    }
+    const fromStopSequences = common.getValueByPath(fromObject, [
+        'stopSequences',
+    ]);
+    if (fromStopSequences != null) {
+        common.setValueByPath(toObject, ['stopSequences'], fromStopSequences);
+    }
+    const fromTemperature = common.getValueByPath(fromObject, ['temperature']);
+    if (fromTemperature != null) {
+        common.setValueByPath(toObject, ['temperature'], fromTemperature);
+    }
+    const fromThinkingConfig = common.getValueByPath(fromObject, [
+        'thinkingConfig',
+    ]);
+    if (fromThinkingConfig != null) {
+        common.setValueByPath(toObject, ['thinkingConfig'], fromThinkingConfig);
+    }
+    const fromTopK = common.getValueByPath(fromObject, ['topK']);
+    if (fromTopK != null) {
+        common.setValueByPath(toObject, ['topK'], fromTopK);
+    }
+    const fromTopP = common.getValueByPath(fromObject, ['topP']);
+    if (fromTopP != null) {
+        common.setValueByPath(toObject, ['topP'], fromTopP);
+    }
+    if (common.getValueByPath(fromObject, ['enableEnhancedCivicAnswers']) !==
+        undefined) {
+        throw new Error('enableEnhancedCivicAnswers parameter is not supported in Vertex AI.');
+    }
+    return toObject;
+}
+export function googleMapsToMldev(fromObject) {
+    const toObject = {};
+    if (common.getValueByPath(fromObject, ['authConfig']) !== undefined) {
+        throw new Error('authConfig parameter is not supported in Gemini API.');
+    }
+    const fromEnableWidget = common.getValueByPath(fromObject, ['enableWidget']);
+    if (fromEnableWidget != null) {
+        common.setValueByPath(toObject, ['enableWidget'], fromEnableWidget);
+    }
+    return toObject;
+}
+export function googleSearchToMldev(fromObject) {
+    const toObject = {};
+    if (common.getValueByPath(fromObject, ['excludeDomains']) !== undefined) {
+        throw new Error('excludeDomains parameter is not supported in Gemini API.');
+    }
+    if (common.getValueByPath(fromObject, ['blockingConfidence']) !== undefined) {
+        throw new Error('blockingConfidence parameter is not supported in Gemini API.');
+    }
+    const fromTimeRangeFilter = common.getValueByPath(fromObject, [
+        'timeRangeFilter',
+    ]);
+    if (fromTimeRangeFilter != null) {
+        common.setValueByPath(toObject, ['timeRangeFilter'], fromTimeRangeFilter);
+    }
+    return toObject;
+}
+export function liveClientContentToMldev(fromObject) {
+    const toObject = {};
+    const fromTurns = common.getValueByPath(fromObject, ['turns']);
+    if (fromTurns != null) {
+        let transformedList = fromTurns;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return contentToMldev(item);
+            });
+        }
+        common.setValueByPath(toObject, ['turns'], transformedList);
+    }
+    const fromTurnComplete = common.getValueByPath(fromObject, ['turnComplete']);
+    if (fromTurnComplete != null) {
+        common.setValueByPath(toObject, ['turnComplete'], fromTurnComplete);
+    }
+    return toObject;
+}
+export function liveClientMessageToMldev(fromObject) {
+    const toObject = {};
+    const fromSetup = common.getValueByPath(fromObject, ['setup']);
+    if (fromSetup != null) {
+        common.setValueByPath(toObject, ['setup'], liveClientSetupToMldev(fromSetup));
+    }
+    const fromClientContent = common.getValueByPath(fromObject, [
+        'clientContent',
+    ]);
+    if (fromClientContent != null) {
+        common.setValueByPath(toObject, ['clientContent'], liveClientContentToMldev(fromClientContent));
+    }
+    const fromRealtimeInput = common.getValueByPath(fromObject, [
+        'realtimeInput',
+    ]);
+    if (fromRealtimeInput != null) {
+        common.setValueByPath(toObject, ['realtimeInput'], liveClientRealtimeInputToMldev(fromRealtimeInput));
+    }
+    const fromToolResponse = common.getValueByPath(fromObject, ['toolResponse']);
+    if (fromToolResponse != null) {
+        common.setValueByPath(toObject, ['toolResponse'], fromToolResponse);
+    }
+    return toObject;
+}
+export function liveClientMessageToVertex(fromObject) {
+    const toObject = {};
+    const fromSetup = common.getValueByPath(fromObject, ['setup']);
+    if (fromSetup != null) {
+        common.setValueByPath(toObject, ['setup'], liveClientSetupToVertex(fromSetup));
+    }
+    const fromClientContent = common.getValueByPath(fromObject, [
+        'clientContent',
+    ]);
+    if (fromClientContent != null) {
+        common.setValueByPath(toObject, ['clientContent'], fromClientContent);
+    }
+    const fromRealtimeInput = common.getValueByPath(fromObject, [
+        'realtimeInput',
+    ]);
+    if (fromRealtimeInput != null) {
+        common.setValueByPath(toObject, ['realtimeInput'], liveClientRealtimeInputToVertex(fromRealtimeInput));
+    }
+    const fromToolResponse = common.getValueByPath(fromObject, ['toolResponse']);
+    if (fromToolResponse != null) {
+        common.setValueByPath(toObject, ['toolResponse'], fromToolResponse);
+    }
+    return toObject;
+}
+export function liveClientRealtimeInputToMldev(fromObject) {
+    const toObject = {};
+    const fromMediaChunks = common.getValueByPath(fromObject, ['mediaChunks']);
+    if (fromMediaChunks != null) {
+        let transformedList = fromMediaChunks;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return blobToMldev(item);
+            });
+        }
+        common.setValueByPath(toObject, ['mediaChunks'], transformedList);
+    }
+    const fromAudio = common.getValueByPath(fromObject, ['audio']);
+    if (fromAudio != null) {
+        common.setValueByPath(toObject, ['audio'], blobToMldev(fromAudio));
+    }
+    const fromAudioStreamEnd = common.getValueByPath(fromObject, [
+        'audioStreamEnd',
+    ]);
+    if (fromAudioStreamEnd != null) {
+        common.setValueByPath(toObject, ['audioStreamEnd'], fromAudioStreamEnd);
+    }
+    const fromVideo = common.getValueByPath(fromObject, ['video']);
+    if (fromVideo != null) {
+        common.setValueByPath(toObject, ['video'], blobToMldev(fromVideo));
+    }
+    const fromText = common.getValueByPath(fromObject, ['text']);
+    if (fromText != null) {
+        common.setValueByPath(toObject, ['text'], fromText);
+    }
+    const fromActivityStart = common.getValueByPath(fromObject, [
+        'activityStart',
+    ]);
+    if (fromActivityStart != null) {
+        common.setValueByPath(toObject, ['activityStart'], fromActivityStart);
+    }
+    const fromActivityEnd = common.getValueByPath(fromObject, ['activityEnd']);
+    if (fromActivityEnd != null) {
+        common.setValueByPath(toObject, ['activityEnd'], fromActivityEnd);
+    }
+    return toObject;
+}
+export function liveClientRealtimeInputToVertex(fromObject) {
+    const toObject = {};
+    const fromMediaChunks = common.getValueByPath(fromObject, ['mediaChunks']);
+    if (fromMediaChunks != null) {
+        let transformedList = fromMediaChunks;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return item;
+            });
+        }
+        common.setValueByPath(toObject, ['mediaChunks'], transformedList);
+    }
+    const fromAudio = common.getValueByPath(fromObject, ['audio']);
+    if (fromAudio != null) {
+        common.setValueByPath(toObject, ['audio'], fromAudio);
+    }
+    if (common.getValueByPath(fromObject, ['audioStreamEnd']) !== undefined) {
+        throw new Error('audioStreamEnd parameter is not supported in Vertex AI.');
+    }
+    const fromVideo = common.getValueByPath(fromObject, ['video']);
+    if (fromVideo != null) {
+        common.setValueByPath(toObject, ['video'], fromVideo);
+    }
+    const fromText = common.getValueByPath(fromObject, ['text']);
+    if (fromText != null) {
+        common.setValueByPath(toObject, ['text'], fromText);
+    }
+    const fromActivityStart = common.getValueByPath(fromObject, [
+        'activityStart',
+    ]);
+    if (fromActivityStart != null) {
+        common.setValueByPath(toObject, ['activityStart'], fromActivityStart);
+    }
+    const fromActivityEnd = common.getValueByPath(fromObject, ['activityEnd']);
+    if (fromActivityEnd != null) {
+        common.setValueByPath(toObject, ['activityEnd'], fromActivityEnd);
+    }
+    return toObject;
+}
+export function liveClientSetupToMldev(fromObject) {
+    const toObject = {};
+    const fromModel = common.getValueByPath(fromObject, ['model']);
+    if (fromModel != null) {
+        common.setValueByPath(toObject, ['model'], fromModel);
+    }
+    const fromGenerationConfig = common.getValueByPath(fromObject, [
+        'generationConfig',
+    ]);
+    if (fromGenerationConfig != null) {
+        common.setValueByPath(toObject, ['generationConfig'], fromGenerationConfig);
+    }
+    const fromSystemInstruction = common.getValueByPath(fromObject, [
+        'systemInstruction',
+    ]);
+    if (fromSystemInstruction != null) {
+        common.setValueByPath(toObject, ['systemInstruction'], contentToMldev(t.tContent(fromSystemInstruction)));
+    }
+    const fromTools = common.getValueByPath(fromObject, ['tools']);
+    if (fromTools != null) {
+        let transformedList = t.tTools(fromTools);
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return toolToMldev(t.tTool(item));
+            });
+        }
+        common.setValueByPath(toObject, ['tools'], transformedList);
+    }
+    const fromRealtimeInputConfig = common.getValueByPath(fromObject, [
+        'realtimeInputConfig',
+    ]);
+    if (fromRealtimeInputConfig != null) {
+        common.setValueByPath(toObject, ['realtimeInputConfig'], fromRealtimeInputConfig);
+    }
+    const fromSessionResumption = common.getValueByPath(fromObject, [
+        'sessionResumption',
+    ]);
+    if (fromSessionResumption != null) {
+        common.setValueByPath(toObject, ['sessionResumption'], sessionResumptionConfigToMldev(fromSessionResumption));
+    }
+    const fromContextWindowCompression = common.getValueByPath(fromObject, [
+        'contextWindowCompression',
+    ]);
+    if (fromContextWindowCompression != null) {
+        common.setValueByPath(toObject, ['contextWindowCompression'], fromContextWindowCompression);
+    }
+    const fromInputAudioTranscription = common.getValueByPath(fromObject, [
+        'inputAudioTranscription',
+    ]);
+    if (fromInputAudioTranscription != null) {
+        common.setValueByPath(toObject, ['inputAudioTranscription'], fromInputAudioTranscription);
+    }
+    const fromOutputAudioTranscription = common.getValueByPath(fromObject, [
+        'outputAudioTranscription',
+    ]);
+    if (fromOutputAudioTranscription != null) {
+        common.setValueByPath(toObject, ['outputAudioTranscription'], fromOutputAudioTranscription);
+    }
+    const fromProactivity = common.getValueByPath(fromObject, ['proactivity']);
+    if (fromProactivity != null) {
+        common.setValueByPath(toObject, ['proactivity'], fromProactivity);
+    }
+    return toObject;
+}
+export function liveClientSetupToVertex(fromObject) {
+    const toObject = {};
+    const fromModel = common.getValueByPath(fromObject, ['model']);
+    if (fromModel != null) {
+        common.setValueByPath(toObject, ['model'], fromModel);
+    }
+    const fromGenerationConfig = common.getValueByPath(fromObject, [
+        'generationConfig',
+    ]);
+    if (fromGenerationConfig != null) {
+        common.setValueByPath(toObject, ['generationConfig'], generationConfigToVertex(fromGenerationConfig));
+    }
+    const fromSystemInstruction = common.getValueByPath(fromObject, [
+        'systemInstruction',
+    ]);
+    if (fromSystemInstruction != null) {
+        common.setValueByPath(toObject, ['systemInstruction'], t.tContent(fromSystemInstruction));
+    }
+    const fromTools = common.getValueByPath(fromObject, ['tools']);
+    if (fromTools != null) {
+        let transformedList = t.tTools(fromTools);
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return toolToVertex(t.tTool(item));
+            });
+        }
+        common.setValueByPath(toObject, ['tools'], transformedList);
+    }
+    const fromRealtimeInputConfig = common.getValueByPath(fromObject, [
+        'realtimeInputConfig',
+    ]);
+    if (fromRealtimeInputConfig != null) {
+        common.setValueByPath(toObject, ['realtimeInputConfig'], fromRealtimeInputConfig);
+    }
+    const fromSessionResumption = common.getValueByPath(fromObject, [
+        'sessionResumption',
+    ]);
+    if (fromSessionResumption != null) {
+        common.setValueByPath(toObject, ['sessionResumption'], fromSessionResumption);
+    }
+    const fromContextWindowCompression = common.getValueByPath(fromObject, [
+        'contextWindowCompression',
+    ]);
+    if (fromContextWindowCompression != null) {
+        common.setValueByPath(toObject, ['contextWindowCompression'], fromContextWindowCompression);
+    }
+    const fromInputAudioTranscription = common.getValueByPath(fromObject, [
+        'inputAudioTranscription',
+    ]);
+    if (fromInputAudioTranscription != null) {
+        common.setValueByPath(toObject, ['inputAudioTranscription'], fromInputAudioTranscription);
+    }
+    const fromOutputAudioTranscription = common.getValueByPath(fromObject, [
+        'outputAudioTranscription',
+    ]);
+    if (fromOutputAudioTranscription != null) {
+        common.setValueByPath(toObject, ['outputAudioTranscription'], fromOutputAudioTranscription);
+    }
+    const fromProactivity = common.getValueByPath(fromObject, ['proactivity']);
+    if (fromProactivity != null) {
+        common.setValueByPath(toObject, ['proactivity'], fromProactivity);
+    }
+    return toObject;
+}
+export function liveConnectConfigToMldev(fromObject, parentObject) {
+    const toObject = {};
+    const fromGenerationConfig = common.getValueByPath(fromObject, [
+        'generationConfig',
+    ]);
+    if (parentObject !== undefined && fromGenerationConfig != null) {
+        common.setValueByPath(parentObject, ['setup', 'generationConfig'], fromGenerationConfig);
+    }
+    const fromResponseModalities = common.getValueByPath(fromObject, [
+        'responseModalities',
+    ]);
+    if (parentObject !== undefined && fromResponseModalities != null) {
+        common.setValueByPath(parentObject, ['setup', 'generationConfig', 'responseModalities'], fromResponseModalities);
+    }
+    const fromTemperature = common.getValueByPath(fromObject, ['temperature']);
+    if (parentObject !== undefined && fromTemperature != null) {
+        common.setValueByPath(parentObject, ['setup', 'generationConfig', 'temperature'], fromTemperature);
+    }
+    const fromTopP = common.getValueByPath(fromObject, ['topP']);
+    if (parentObject !== undefined && fromTopP != null) {
+        common.setValueByPath(parentObject, ['setup', 'generationConfig', 'topP'], fromTopP);
+    }
+    const fromTopK = common.getValueByPath(fromObject, ['topK']);
+    if (parentObject !== undefined && fromTopK != null) {
+        common.setValueByPath(parentObject, ['setup', 'generationConfig', 'topK'], fromTopK);
+    }
+    const fromMaxOutputTokens = common.getValueByPath(fromObject, [
+        'maxOutputTokens',
+    ]);
+    if (parentObject !== undefined && fromMaxOutputTokens != null) {
+        common.setValueByPath(parentObject, ['setup', 'generationConfig', 'maxOutputTokens'], fromMaxOutputTokens);
+    }
+    const fromMediaResolution = common.getValueByPath(fromObject, [
+        'mediaResolution',
+    ]);
+    if (parentObject !== undefined && fromMediaResolution != null) {
+        common.setValueByPath(parentObject, ['setup', 'generationConfig', 'mediaResolution'], fromMediaResolution);
+    }
+    const fromSeed = common.getValueByPath(fromObject, ['seed']);
+    if (parentObject !== undefined && fromSeed != null) {
+        common.setValueByPath(parentObject, ['setup', 'generationConfig', 'seed'], fromSeed);
+    }
+    const fromSpeechConfig = common.getValueByPath(fromObject, ['speechConfig']);
+    if (parentObject !== undefined && fromSpeechConfig != null) {
+        common.setValueByPath(parentObject, ['setup', 'generationConfig', 'speechConfig'], t.tLiveSpeechConfig(fromSpeechConfig));
+    }
+    const fromThinkingConfig = common.getValueByPath(fromObject, [
+        'thinkingConfig',
+    ]);
+    if (parentObject !== undefined && fromThinkingConfig != null) {
+        common.setValueByPath(parentObject, ['setup', 'generationConfig', 'thinkingConfig'], fromThinkingConfig);
+    }
+    const fromEnableAffectiveDialog = common.getValueByPath(fromObject, [
+        'enableAffectiveDialog',
+    ]);
+    if (parentObject !== undefined && fromEnableAffectiveDialog != null) {
+        common.setValueByPath(parentObject, ['setup', 'generationConfig', 'enableAffectiveDialog'], fromEnableAffectiveDialog);
+    }
+    const fromSystemInstruction = common.getValueByPath(fromObject, [
+        'systemInstruction',
+    ]);
+    if (parentObject !== undefined && fromSystemInstruction != null) {
+        common.setValueByPath(parentObject, ['setup', 'systemInstruction'], contentToMldev(t.tContent(fromSystemInstruction)));
+    }
+    const fromTools = common.getValueByPath(fromObject, ['tools']);
+    if (parentObject !== undefined && fromTools != null) {
+        let transformedList = t.tTools(fromTools);
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return toolToMldev(t.tTool(item));
+            });
+        }
+        common.setValueByPath(parentObject, ['setup', 'tools'], transformedList);
+    }
+    const fromSessionResumption = common.getValueByPath(fromObject, [
+        'sessionResumption',
+    ]);
+    if (parentObject !== undefined && fromSessionResumption != null) {
+        common.setValueByPath(parentObject, ['setup', 'sessionResumption'], sessionResumptionConfigToMldev(fromSessionResumption));
+    }
+    const fromInputAudioTranscription = common.getValueByPath(fromObject, [
+        'inputAudioTranscription',
+    ]);
+    if (parentObject !== undefined && fromInputAudioTranscription != null) {
+        common.setValueByPath(parentObject, ['setup', 'inputAudioTranscription'], fromInputAudioTranscription);
+    }
+    const fromOutputAudioTranscription = common.getValueByPath(fromObject, [
+        'outputAudioTranscription',
+    ]);
+    if (parentObject !== undefined && fromOutputAudioTranscription != null) {
+        common.setValueByPath(parentObject, ['setup', 'outputAudioTranscription'], fromOutputAudioTranscription);
+    }
+    const fromRealtimeInputConfig = common.getValueByPath(fromObject, [
+        'realtimeInputConfig',
+    ]);
+    if (parentObject !== undefined && fromRealtimeInputConfig != null) {
+        common.setValueByPath(parentObject, ['setup', 'realtimeInputConfig'], fromRealtimeInputConfig);
+    }
+    const fromContextWindowCompression = common.getValueByPath(fromObject, [
+        'contextWindowCompression',
+    ]);
+    if (parentObject !== undefined && fromContextWindowCompression != null) {
+        common.setValueByPath(parentObject, ['setup', 'contextWindowCompression'], fromContextWindowCompression);
+    }
+    const fromProactivity = common.getValueByPath(fromObject, ['proactivity']);
+    if (parentObject !== undefined && fromProactivity != null) {
+        common.setValueByPath(parentObject, ['setup', 'proactivity'], fromProactivity);
+    }
+    return toObject;
+}
+export function liveConnectConfigToVertex(fromObject, parentObject) {
+    const toObject = {};
+    const fromGenerationConfig = common.getValueByPath(fromObject, [
+        'generationConfig',
+    ]);
+    if (parentObject !== undefined && fromGenerationConfig != null) {
+        common.setValueByPath(parentObject, ['setup', 'generationConfig'], generationConfigToVertex(fromGenerationConfig));
+    }
+    const fromResponseModalities = common.getValueByPath(fromObject, [
+        'responseModalities',
+    ]);
+    if (parentObject !== undefined && fromResponseModalities != null) {
+        common.setValueByPath(parentObject, ['setup', 'generationConfig', 'responseModalities'], fromResponseModalities);
+    }
+    const fromTemperature = common.getValueByPath(fromObject, ['temperature']);
+    if (parentObject !== undefined && fromTemperature != null) {
+        common.setValueByPath(parentObject, ['setup', 'generationConfig', 'temperature'], fromTemperature);
+    }
+    const fromTopP = common.getValueByPath(fromObject, ['topP']);
+    if (parentObject !== undefined && fromTopP != null) {
+        common.setValueByPath(parentObject, ['setup', 'generationConfig', 'topP'], fromTopP);
+    }
+    const fromTopK = common.getValueByPath(fromObject, ['topK']);
+    if (parentObject !== undefined && fromTopK != null) {
+        common.setValueByPath(parentObject, ['setup', 'generationConfig', 'topK'], fromTopK);
+    }
+    const fromMaxOutputTokens = common.getValueByPath(fromObject, [
+        'maxOutputTokens',
+    ]);
+    if (parentObject !== undefined && fromMaxOutputTokens != null) {
+        common.setValueByPath(parentObject, ['setup', 'generationConfig', 'maxOutputTokens'], fromMaxOutputTokens);
+    }
+    const fromMediaResolution = common.getValueByPath(fromObject, [
+        'mediaResolution',
+    ]);
+    if (parentObject !== undefined && fromMediaResolution != null) {
+        common.setValueByPath(parentObject, ['setup', 'generationConfig', 'mediaResolution'], fromMediaResolution);
+    }
+    const fromSeed = common.getValueByPath(fromObject, ['seed']);
+    if (parentObject !== undefined && fromSeed != null) {
+        common.setValueByPath(parentObject, ['setup', 'generationConfig', 'seed'], fromSeed);
+    }
+    const fromSpeechConfig = common.getValueByPath(fromObject, ['speechConfig']);
+    if (parentObject !== undefined && fromSpeechConfig != null) {
+        common.setValueByPath(parentObject, ['setup', 'generationConfig', 'speechConfig'], speechConfigToVertex(t.tLiveSpeechConfig(fromSpeechConfig)));
+    }
+    const fromThinkingConfig = common.getValueByPath(fromObject, [
+        'thinkingConfig',
+    ]);
+    if (parentObject !== undefined && fromThinkingConfig != null) {
+        common.setValueByPath(parentObject, ['setup', 'generationConfig', 'thinkingConfig'], fromThinkingConfig);
+    }
+    const fromEnableAffectiveDialog = common.getValueByPath(fromObject, [
+        'enableAffectiveDialog',
+    ]);
+    if (parentObject !== undefined && fromEnableAffectiveDialog != null) {
+        common.setValueByPath(parentObject, ['setup', 'generationConfig', 'enableAffectiveDialog'], fromEnableAffectiveDialog);
+    }
+    const fromSystemInstruction = common.getValueByPath(fromObject, [
+        'systemInstruction',
+    ]);
+    if (parentObject !== undefined && fromSystemInstruction != null) {
+        common.setValueByPath(parentObject, ['setup', 'systemInstruction'], t.tContent(fromSystemInstruction));
+    }
+    const fromTools = common.getValueByPath(fromObject, ['tools']);
+    if (parentObject !== undefined && fromTools != null) {
+        let transformedList = t.tTools(fromTools);
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return toolToVertex(t.tTool(item));
+            });
+        }
+        common.setValueByPath(parentObject, ['setup', 'tools'], transformedList);
+    }
+    const fromSessionResumption = common.getValueByPath(fromObject, [
+        'sessionResumption',
+    ]);
+    if (parentObject !== undefined && fromSessionResumption != null) {
+        common.setValueByPath(parentObject, ['setup', 'sessionResumption'], fromSessionResumption);
+    }
+    const fromInputAudioTranscription = common.getValueByPath(fromObject, [
+        'inputAudioTranscription',
+    ]);
+    if (parentObject !== undefined && fromInputAudioTranscription != null) {
+        common.setValueByPath(parentObject, ['setup', 'inputAudioTranscription'], fromInputAudioTranscription);
+    }
+    const fromOutputAudioTranscription = common.getValueByPath(fromObject, [
+        'outputAudioTranscription',
+    ]);
+    if (parentObject !== undefined && fromOutputAudioTranscription != null) {
+        common.setValueByPath(parentObject, ['setup', 'outputAudioTranscription'], fromOutputAudioTranscription);
+    }
+    const fromRealtimeInputConfig = common.getValueByPath(fromObject, [
+        'realtimeInputConfig',
+    ]);
+    if (parentObject !== undefined && fromRealtimeInputConfig != null) {
+        common.setValueByPath(parentObject, ['setup', 'realtimeInputConfig'], fromRealtimeInputConfig);
+    }
+    const fromContextWindowCompression = common.getValueByPath(fromObject, [
+        'contextWindowCompression',
+    ]);
+    if (parentObject !== undefined && fromContextWindowCompression != null) {
+        common.setValueByPath(parentObject, ['setup', 'contextWindowCompression'], fromContextWindowCompression);
+    }
+    const fromProactivity = common.getValueByPath(fromObject, ['proactivity']);
+    if (parentObject !== undefined && fromProactivity != null) {
+        common.setValueByPath(parentObject, ['setup', 'proactivity'], fromProactivity);
+    }
+    return toObject;
+}
+export function liveConnectParametersToMldev(apiClient, fromObject) {
+    const toObject = {};
+    const fromModel = common.getValueByPath(fromObject, ['model']);
+    if (fromModel != null) {
+        common.setValueByPath(toObject, ['setup', 'model'], t.tModel(apiClient, fromModel));
+    }
+    const fromConfig = common.getValueByPath(fromObject, ['config']);
+    if (fromConfig != null) {
+        common.setValueByPath(toObject, ['config'], liveConnectConfigToMldev(fromConfig, toObject));
+    }
+    return toObject;
+}
+export function liveConnectParametersToVertex(apiClient, fromObject) {
+    const toObject = {};
+    const fromModel = common.getValueByPath(fromObject, ['model']);
+    if (fromModel != null) {
+        common.setValueByPath(toObject, ['setup', 'model'], t.tModel(apiClient, fromModel));
+    }
+    const fromConfig = common.getValueByPath(fromObject, ['config']);
+    if (fromConfig != null) {
+        common.setValueByPath(toObject, ['config'], liveConnectConfigToVertex(fromConfig, toObject));
+    }
+    return toObject;
+}
+export function liveMusicClientMessageToVertex(fromObject) {
+    const toObject = {};
+    if (common.getValueByPath(fromObject, ['setup']) !== undefined) {
+        throw new Error('setup parameter is not supported in Vertex AI.');
+    }
+    if (common.getValueByPath(fromObject, ['clientContent']) !== undefined) {
+        throw new Error('clientContent parameter is not supported in Vertex AI.');
+    }
+    if (common.getValueByPath(fromObject, ['musicGenerationConfig']) !== undefined) {
+        throw new Error('musicGenerationConfig parameter is not supported in Vertex AI.');
+    }
+    if (common.getValueByPath(fromObject, ['playbackControl']) !== undefined) {
+        throw new Error('playbackControl parameter is not supported in Vertex AI.');
+    }
+    return toObject;
+}
+export function liveMusicConnectParametersToMldev(fromObject) {
+    const toObject = {};
+    const fromModel = common.getValueByPath(fromObject, ['model']);
+    if (fromModel != null) {
+        common.setValueByPath(toObject, ['setup', 'model'], fromModel);
+    }
+    const fromCallbacks = common.getValueByPath(fromObject, ['callbacks']);
+    if (fromCallbacks != null) {
+        common.setValueByPath(toObject, ['callbacks'], fromCallbacks);
+    }
+    return toObject;
+}
+export function liveMusicConnectParametersToVertex(fromObject) {
+    const toObject = {};
+    if (common.getValueByPath(fromObject, ['model']) !== undefined) {
+        throw new Error('model parameter is not supported in Vertex AI.');
+    }
+    if (common.getValueByPath(fromObject, ['callbacks']) !== undefined) {
+        throw new Error('callbacks parameter is not supported in Vertex AI.');
+    }
+    return toObject;
+}
+export function liveMusicSetConfigParametersToMldev(fromObject) {
+    const toObject = {};
+    const fromMusicGenerationConfig = common.getValueByPath(fromObject, [
+        'musicGenerationConfig',
+    ]);
+    if (fromMusicGenerationConfig != null) {
+        common.setValueByPath(toObject, ['musicGenerationConfig'], fromMusicGenerationConfig);
+    }
+    return toObject;
+}
+export function liveMusicSetConfigParametersToVertex(fromObject) {
+    const toObject = {};
+    if (common.getValueByPath(fromObject, ['musicGenerationConfig']) !== undefined) {
+        throw new Error('musicGenerationConfig parameter is not supported in Vertex AI.');
+    }
+    return toObject;
+}
+export function liveMusicSetWeightedPromptsParametersToMldev(fromObject) {
+    const toObject = {};
+    const fromWeightedPrompts = common.getValueByPath(fromObject, [
+        'weightedPrompts',
+    ]);
+    if (fromWeightedPrompts != null) {
+        let transformedList = fromWeightedPrompts;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return item;
+            });
+        }
+        common.setValueByPath(toObject, ['weightedPrompts'], transformedList);
+    }
+    return toObject;
+}
+export function liveMusicSetWeightedPromptsParametersToVertex(fromObject) {
+    const toObject = {};
+    if (common.getValueByPath(fromObject, ['weightedPrompts']) !== undefined) {
+        throw new Error('weightedPrompts parameter is not supported in Vertex AI.');
+    }
+    return toObject;
+}
+export function liveSendRealtimeInputParametersToMldev(fromObject) {
+    const toObject = {};
+    const fromMedia = common.getValueByPath(fromObject, ['media']);
+    if (fromMedia != null) {
+        let transformedList = t.tBlobs(fromMedia);
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return blobToMldev(item);
+            });
+        }
+        common.setValueByPath(toObject, ['mediaChunks'], transformedList);
+    }
+    const fromAudio = common.getValueByPath(fromObject, ['audio']);
+    if (fromAudio != null) {
+        common.setValueByPath(toObject, ['audio'], blobToMldev(t.tAudioBlob(fromAudio)));
+    }
+    const fromAudioStreamEnd = common.getValueByPath(fromObject, [
+        'audioStreamEnd',
+    ]);
+    if (fromAudioStreamEnd != null) {
+        common.setValueByPath(toObject, ['audioStreamEnd'], fromAudioStreamEnd);
+    }
+    const fromVideo = common.getValueByPath(fromObject, ['video']);
+    if (fromVideo != null) {
+        common.setValueByPath(toObject, ['video'], blobToMldev(t.tImageBlob(fromVideo)));
+    }
+    const fromText = common.getValueByPath(fromObject, ['text']);
+    if (fromText != null) {
+        common.setValueByPath(toObject, ['text'], fromText);
+    }
+    const fromActivityStart = common.getValueByPath(fromObject, [
+        'activityStart',
+    ]);
+    if (fromActivityStart != null) {
+        common.setValueByPath(toObject, ['activityStart'], fromActivityStart);
+    }
+    const fromActivityEnd = common.getValueByPath(fromObject, ['activityEnd']);
+    if (fromActivityEnd != null) {
+        common.setValueByPath(toObject, ['activityEnd'], fromActivityEnd);
+    }
+    return toObject;
+}
+export function liveSendRealtimeInputParametersToVertex(fromObject) {
+    const toObject = {};
+    const fromMedia = common.getValueByPath(fromObject, ['media']);
+    if (fromMedia != null) {
+        let transformedList = t.tBlobs(fromMedia);
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return item;
+            });
+        }
+        common.setValueByPath(toObject, ['mediaChunks'], transformedList);
+    }
+    const fromAudio = common.getValueByPath(fromObject, ['audio']);
+    if (fromAudio != null) {
+        common.setValueByPath(toObject, ['audio'], t.tAudioBlob(fromAudio));
+    }
+    const fromAudioStreamEnd = common.getValueByPath(fromObject, [
+        'audioStreamEnd',
+    ]);
+    if (fromAudioStreamEnd != null) {
+        common.setValueByPath(toObject, ['audioStreamEnd'], fromAudioStreamEnd);
+    }
+    const fromVideo = common.getValueByPath(fromObject, ['video']);
+    if (fromVideo != null) {
+        common.setValueByPath(toObject, ['video'], t.tImageBlob(fromVideo));
+    }
+    const fromText = common.getValueByPath(fromObject, ['text']);
+    if (fromText != null) {
+        common.setValueByPath(toObject, ['text'], fromText);
+    }
+    const fromActivityStart = common.getValueByPath(fromObject, [
+        'activityStart',
+    ]);
+    if (fromActivityStart != null) {
+        common.setValueByPath(toObject, ['activityStart'], fromActivityStart);
+    }
+    const fromActivityEnd = common.getValueByPath(fromObject, ['activityEnd']);
+    if (fromActivityEnd != null) {
+        common.setValueByPath(toObject, ['activityEnd'], fromActivityEnd);
+    }
+    return toObject;
+}
+export function liveServerMessageFromVertex(fromObject) {
+    const toObject = {};
+    const fromSetupComplete = common.getValueByPath(fromObject, [
+        'setupComplete',
+    ]);
+    if (fromSetupComplete != null) {
+        common.setValueByPath(toObject, ['setupComplete'], fromSetupComplete);
+    }
+    const fromServerContent = common.getValueByPath(fromObject, [
+        'serverContent',
+    ]);
+    if (fromServerContent != null) {
+        common.setValueByPath(toObject, ['serverContent'], fromServerContent);
+    }
+    const fromToolCall = common.getValueByPath(fromObject, ['toolCall']);
+    if (fromToolCall != null) {
+        common.setValueByPath(toObject, ['toolCall'], fromToolCall);
+    }
+    const fromToolCallCancellation = common.getValueByPath(fromObject, [
+        'toolCallCancellation',
+    ]);
+    if (fromToolCallCancellation != null) {
+        common.setValueByPath(toObject, ['toolCallCancellation'], fromToolCallCancellation);
+    }
+    const fromUsageMetadata = common.getValueByPath(fromObject, [
+        'usageMetadata',
+    ]);
+    if (fromUsageMetadata != null) {
+        common.setValueByPath(toObject, ['usageMetadata'], usageMetadataFromVertex(fromUsageMetadata));
+    }
+    const fromGoAway = common.getValueByPath(fromObject, ['goAway']);
+    if (fromGoAway != null) {
+        common.setValueByPath(toObject, ['goAway'], fromGoAway);
+    }
+    const fromSessionResumptionUpdate = common.getValueByPath(fromObject, [
+        'sessionResumptionUpdate',
+    ]);
+    if (fromSessionResumptionUpdate != null) {
+        common.setValueByPath(toObject, ['sessionResumptionUpdate'], fromSessionResumptionUpdate);
+    }
+    return toObject;
+}
+export function partToMldev(fromObject) {
+    const toObject = {};
+    const fromMediaResolution = common.getValueByPath(fromObject, [
+        'mediaResolution',
+    ]);
+    if (fromMediaResolution != null) {
+        common.setValueByPath(toObject, ['mediaResolution'], fromMediaResolution);
+    }
+    const fromCodeExecutionResult = common.getValueByPath(fromObject, [
+        'codeExecutionResult',
+    ]);
+    if (fromCodeExecutionResult != null) {
+        common.setValueByPath(toObject, ['codeExecutionResult'], fromCodeExecutionResult);
+    }
+    const fromExecutableCode = common.getValueByPath(fromObject, [
+        'executableCode',
+    ]);
+    if (fromExecutableCode != null) {
+        common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
+    }
+    const fromFileData = common.getValueByPath(fromObject, ['fileData']);
+    if (fromFileData != null) {
+        common.setValueByPath(toObject, ['fileData'], fileDataToMldev(fromFileData));
+    }
+    const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
+    if (fromFunctionCall != null) {
+        common.setValueByPath(toObject, ['functionCall'], functionCallToMldev(fromFunctionCall));
+    }
+    const fromFunctionResponse = common.getValueByPath(fromObject, [
+        'functionResponse',
+    ]);
+    if (fromFunctionResponse != null) {
+        common.setValueByPath(toObject, ['functionResponse'], fromFunctionResponse);
+    }
+    const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
+    if (fromInlineData != null) {
+        common.setValueByPath(toObject, ['inlineData'], blobToMldev(fromInlineData));
+    }
+    const fromText = common.getValueByPath(fromObject, ['text']);
+    if (fromText != null) {
+        common.setValueByPath(toObject, ['text'], fromText);
+    }
+    const fromThought = common.getValueByPath(fromObject, ['thought']);
+    if (fromThought != null) {
+        common.setValueByPath(toObject, ['thought'], fromThought);
+    }
+    const fromThoughtSignature = common.getValueByPath(fromObject, [
+        'thoughtSignature',
+    ]);
+    if (fromThoughtSignature != null) {
+        common.setValueByPath(toObject, ['thoughtSignature'], fromThoughtSignature);
+    }
+    const fromVideoMetadata = common.getValueByPath(fromObject, [
+        'videoMetadata',
+    ]);
+    if (fromVideoMetadata != null) {
+        common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
+    }
+    return toObject;
+}
+export function sessionResumptionConfigToMldev(fromObject) {
+    const toObject = {};
+    const fromHandle = common.getValueByPath(fromObject, ['handle']);
+    if (fromHandle != null) {
+        common.setValueByPath(toObject, ['handle'], fromHandle);
+    }
+    if (common.getValueByPath(fromObject, ['transparent']) !== undefined) {
+        throw new Error('transparent parameter is not supported in Gemini API.');
+    }
+    return toObject;
+}
+export function speechConfigToVertex(fromObject) {
+    const toObject = {};
+    const fromLanguageCode = common.getValueByPath(fromObject, ['languageCode']);
+    if (fromLanguageCode != null) {
+        common.setValueByPath(toObject, ['languageCode'], fromLanguageCode);
+    }
+    const fromVoiceConfig = common.getValueByPath(fromObject, ['voiceConfig']);
+    if (fromVoiceConfig != null) {
+        common.setValueByPath(toObject, ['voiceConfig'], fromVoiceConfig);
+    }
+    if (common.getValueByPath(fromObject, ['multiSpeakerVoiceConfig']) !== undefined) {
+        throw new Error('multiSpeakerVoiceConfig parameter is not supported in Vertex AI.');
+    }
+    return toObject;
+}
+export function toolToMldev(fromObject) {
+    const toObject = {};
+    const fromFunctionDeclarations = common.getValueByPath(fromObject, [
+        'functionDeclarations',
+    ]);
+    if (fromFunctionDeclarations != null) {
+        let transformedList = fromFunctionDeclarations;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return item;
+            });
+        }
+        common.setValueByPath(toObject, ['functionDeclarations'], transformedList);
+    }
+    if (common.getValueByPath(fromObject, ['retrieval']) !== undefined) {
+        throw new Error('retrieval parameter is not supported in Gemini API.');
+    }
+    const fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
+        'googleSearchRetrieval',
+    ]);
+    if (fromGoogleSearchRetrieval != null) {
+        common.setValueByPath(toObject, ['googleSearchRetrieval'], fromGoogleSearchRetrieval);
+    }
+    const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
+    if (fromComputerUse != null) {
+        common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
+    }
+    const fromFileSearch = common.getValueByPath(fromObject, ['fileSearch']);
+    if (fromFileSearch != null) {
+        common.setValueByPath(toObject, ['fileSearch'], fromFileSearch);
+    }
+    const fromCodeExecution = common.getValueByPath(fromObject, [
+        'codeExecution',
+    ]);
+    if (fromCodeExecution != null) {
+        common.setValueByPath(toObject, ['codeExecution'], fromCodeExecution);
+    }
+    if (common.getValueByPath(fromObject, ['enterpriseWebSearch']) !== undefined) {
+        throw new Error('enterpriseWebSearch parameter is not supported in Gemini API.');
+    }
+    const fromGoogleMaps = common.getValueByPath(fromObject, ['googleMaps']);
+    if (fromGoogleMaps != null) {
+        common.setValueByPath(toObject, ['googleMaps'], googleMapsToMldev(fromGoogleMaps));
+    }
+    const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
+    if (fromGoogleSearch != null) {
+        common.setValueByPath(toObject, ['googleSearch'], googleSearchToMldev(fromGoogleSearch));
+    }
+    const fromUrlContext = common.getValueByPath(fromObject, ['urlContext']);
+    if (fromUrlContext != null) {
+        common.setValueByPath(toObject, ['urlContext'], fromUrlContext);
+    }
+    return toObject;
+}
+export function toolToVertex(fromObject) {
+    const toObject = {};
+    const fromFunctionDeclarations = common.getValueByPath(fromObject, [
+        'functionDeclarations',
+    ]);
+    if (fromFunctionDeclarations != null) {
+        let transformedList = fromFunctionDeclarations;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return functionDeclarationToVertex(item);
+            });
+        }
+        common.setValueByPath(toObject, ['functionDeclarations'], transformedList);
+    }
+    const fromRetrieval = common.getValueByPath(fromObject, ['retrieval']);
+    if (fromRetrieval != null) {
+        common.setValueByPath(toObject, ['retrieval'], fromRetrieval);
+    }
+    const fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
+        'googleSearchRetrieval',
+    ]);
+    if (fromGoogleSearchRetrieval != null) {
+        common.setValueByPath(toObject, ['googleSearchRetrieval'], fromGoogleSearchRetrieval);
+    }
+    const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
+    if (fromComputerUse != null) {
+        common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
+    }
+    if (common.getValueByPath(fromObject, ['fileSearch']) !== undefined) {
+        throw new Error('fileSearch parameter is not supported in Vertex AI.');
+    }
+    const fromCodeExecution = common.getValueByPath(fromObject, [
+        'codeExecution',
+    ]);
+    if (fromCodeExecution != null) {
+        common.setValueByPath(toObject, ['codeExecution'], fromCodeExecution);
+    }
+    const fromEnterpriseWebSearch = common.getValueByPath(fromObject, [
+        'enterpriseWebSearch',
+    ]);
+    if (fromEnterpriseWebSearch != null) {
+        common.setValueByPath(toObject, ['enterpriseWebSearch'], fromEnterpriseWebSearch);
+    }
+    const fromGoogleMaps = common.getValueByPath(fromObject, ['googleMaps']);
+    if (fromGoogleMaps != null) {
+        common.setValueByPath(toObject, ['googleMaps'], fromGoogleMaps);
+    }
+    const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
+    if (fromGoogleSearch != null) {
+        common.setValueByPath(toObject, ['googleSearch'], fromGoogleSearch);
+    }
+    const fromUrlContext = common.getValueByPath(fromObject, ['urlContext']);
+    if (fromUrlContext != null) {
+        common.setValueByPath(toObject, ['urlContext'], fromUrlContext);
+    }
+    return toObject;
+}
+export function usageMetadataFromVertex(fromObject) {
+    const toObject = {};
+    const fromPromptTokenCount = common.getValueByPath(fromObject, [
+        'promptTokenCount',
+    ]);
+    if (fromPromptTokenCount != null) {
+        common.setValueByPath(toObject, ['promptTokenCount'], fromPromptTokenCount);
+    }
+    const fromCachedContentTokenCount = common.getValueByPath(fromObject, [
+        'cachedContentTokenCount',
+    ]);
+    if (fromCachedContentTokenCount != null) {
+        common.setValueByPath(toObject, ['cachedContentTokenCount'], fromCachedContentTokenCount);
+    }
+    const fromResponseTokenCount = common.getValueByPath(fromObject, [
+        'candidatesTokenCount',
+    ]);
+    if (fromResponseTokenCount != null) {
+        common.setValueByPath(toObject, ['responseTokenCount'], fromResponseTokenCount);
+    }
+    const fromToolUsePromptTokenCount = common.getValueByPath(fromObject, [
+        'toolUsePromptTokenCount',
+    ]);
+    if (fromToolUsePromptTokenCount != null) {
+        common.setValueByPath(toObject, ['toolUsePromptTokenCount'], fromToolUsePromptTokenCount);
+    }
+    const fromThoughtsTokenCount = common.getValueByPath(fromObject, [
+        'thoughtsTokenCount',
+    ]);
+    if (fromThoughtsTokenCount != null) {
+        common.setValueByPath(toObject, ['thoughtsTokenCount'], fromThoughtsTokenCount);
+    }
+    const fromTotalTokenCount = common.getValueByPath(fromObject, [
+        'totalTokenCount',
+    ]);
+    if (fromTotalTokenCount != null) {
+        common.setValueByPath(toObject, ['totalTokenCount'], fromTotalTokenCount);
+    }
+    const fromPromptTokensDetails = common.getValueByPath(fromObject, [
+        'promptTokensDetails',
+    ]);
+    if (fromPromptTokensDetails != null) {
+        let transformedList = fromPromptTokensDetails;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return item;
+            });
+        }
+        common.setValueByPath(toObject, ['promptTokensDetails'], transformedList);
+    }
+    const fromCacheTokensDetails = common.getValueByPath(fromObject, [
+        'cacheTokensDetails',
+    ]);
+    if (fromCacheTokensDetails != null) {
+        let transformedList = fromCacheTokensDetails;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return item;
+            });
+        }
+        common.setValueByPath(toObject, ['cacheTokensDetails'], transformedList);
+    }
+    const fromResponseTokensDetails = common.getValueByPath(fromObject, [
+        'candidatesTokensDetails',
+    ]);
+    if (fromResponseTokensDetails != null) {
+        let transformedList = fromResponseTokensDetails;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return item;
+            });
+        }
+        common.setValueByPath(toObject, ['responseTokensDetails'], transformedList);
+    }
+    const fromToolUsePromptTokensDetails = common.getValueByPath(fromObject, [
+        'toolUsePromptTokensDetails',
+    ]);
+    if (fromToolUsePromptTokensDetails != null) {
+        let transformedList = fromToolUsePromptTokensDetails;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return item;
+            });
+        }
+        common.setValueByPath(toObject, ['toolUsePromptTokensDetails'], transformedList);
+    }
+    const fromTrafficType = common.getValueByPath(fromObject, ['trafficType']);
+    if (fromTrafficType != null) {
+        common.setValueByPath(toObject, ['trafficType'], fromTrafficType);
+    }
+    return toObject;
+}

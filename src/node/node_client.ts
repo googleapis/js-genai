@@ -90,6 +90,13 @@ export class GoogleGenAI {
     // Check if skipping auth via httpOptions
     const skipAuth = options.httpOptions?.skipAuth ?? false;
 
+    // skipAuth requires a baseUrl to be provided
+    if (skipAuth && !options.httpOptions?.baseUrl) {
+      throw new Error(
+        'skipAuth requires a baseUrl to be provided in httpOptions.',
+      );
+    }
+
     this.vertexai =
       options.vertexai ?? getBooleanEnv('GOOGLE_GENAI_USE_VERTEXAI') ?? false;
     

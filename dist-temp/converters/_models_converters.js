@@ -1,0 +1,3229 @@
+/**
+ * @license
+ * Copyright 2025 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+import * as common from '../_common.js';
+import * as t from '../_transformers.js';
+export function blobToMldev(fromObject) {
+    const toObject = {};
+    const fromData = common.getValueByPath(fromObject, ['data']);
+    if (fromData != null) {
+        common.setValueByPath(toObject, ['data'], fromData);
+    }
+    if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
+        throw new Error('displayName parameter is not supported in Gemini API.');
+    }
+    const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+    if (fromMimeType != null) {
+        common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+    }
+    return toObject;
+}
+export function candidateFromMldev(fromObject) {
+    const toObject = {};
+    const fromContent = common.getValueByPath(fromObject, ['content']);
+    if (fromContent != null) {
+        common.setValueByPath(toObject, ['content'], fromContent);
+    }
+    const fromCitationMetadata = common.getValueByPath(fromObject, [
+        'citationMetadata',
+    ]);
+    if (fromCitationMetadata != null) {
+        common.setValueByPath(toObject, ['citationMetadata'], citationMetadataFromMldev(fromCitationMetadata));
+    }
+    const fromTokenCount = common.getValueByPath(fromObject, ['tokenCount']);
+    if (fromTokenCount != null) {
+        common.setValueByPath(toObject, ['tokenCount'], fromTokenCount);
+    }
+    const fromFinishReason = common.getValueByPath(fromObject, ['finishReason']);
+    if (fromFinishReason != null) {
+        common.setValueByPath(toObject, ['finishReason'], fromFinishReason);
+    }
+    const fromAvgLogprobs = common.getValueByPath(fromObject, ['avgLogprobs']);
+    if (fromAvgLogprobs != null) {
+        common.setValueByPath(toObject, ['avgLogprobs'], fromAvgLogprobs);
+    }
+    const fromGroundingMetadata = common.getValueByPath(fromObject, [
+        'groundingMetadata',
+    ]);
+    if (fromGroundingMetadata != null) {
+        common.setValueByPath(toObject, ['groundingMetadata'], fromGroundingMetadata);
+    }
+    const fromIndex = common.getValueByPath(fromObject, ['index']);
+    if (fromIndex != null) {
+        common.setValueByPath(toObject, ['index'], fromIndex);
+    }
+    const fromLogprobsResult = common.getValueByPath(fromObject, [
+        'logprobsResult',
+    ]);
+    if (fromLogprobsResult != null) {
+        common.setValueByPath(toObject, ['logprobsResult'], fromLogprobsResult);
+    }
+    const fromSafetyRatings = common.getValueByPath(fromObject, [
+        'safetyRatings',
+    ]);
+    if (fromSafetyRatings != null) {
+        let transformedList = fromSafetyRatings;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return item;
+            });
+        }
+        common.setValueByPath(toObject, ['safetyRatings'], transformedList);
+    }
+    const fromUrlContextMetadata = common.getValueByPath(fromObject, [
+        'urlContextMetadata',
+    ]);
+    if (fromUrlContextMetadata != null) {
+        common.setValueByPath(toObject, ['urlContextMetadata'], fromUrlContextMetadata);
+    }
+    return toObject;
+}
+export function citationMetadataFromMldev(fromObject) {
+    const toObject = {};
+    const fromCitations = common.getValueByPath(fromObject, ['citationSources']);
+    if (fromCitations != null) {
+        let transformedList = fromCitations;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return item;
+            });
+        }
+        common.setValueByPath(toObject, ['citations'], transformedList);
+    }
+    return toObject;
+}
+export function computeTokensParametersToVertex(apiClient, fromObject) {
+    const toObject = {};
+    const fromModel = common.getValueByPath(fromObject, ['model']);
+    if (fromModel != null) {
+        common.setValueByPath(toObject, ['_url', 'model'], t.tModel(apiClient, fromModel));
+    }
+    const fromContents = common.getValueByPath(fromObject, ['contents']);
+    if (fromContents != null) {
+        let transformedList = t.tContents(fromContents);
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return item;
+            });
+        }
+        common.setValueByPath(toObject, ['contents'], transformedList);
+    }
+    return toObject;
+}
+export function computeTokensResponseFromVertex(fromObject) {
+    const toObject = {};
+    const fromSdkHttpResponse = common.getValueByPath(fromObject, [
+        'sdkHttpResponse',
+    ]);
+    if (fromSdkHttpResponse != null) {
+        common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
+    }
+    const fromTokensInfo = common.getValueByPath(fromObject, ['tokensInfo']);
+    if (fromTokensInfo != null) {
+        let transformedList = fromTokensInfo;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return item;
+            });
+        }
+        common.setValueByPath(toObject, ['tokensInfo'], transformedList);
+    }
+    return toObject;
+}
+export function contentEmbeddingFromVertex(fromObject) {
+    const toObject = {};
+    const fromValues = common.getValueByPath(fromObject, ['values']);
+    if (fromValues != null) {
+        common.setValueByPath(toObject, ['values'], fromValues);
+    }
+    const fromStatistics = common.getValueByPath(fromObject, ['statistics']);
+    if (fromStatistics != null) {
+        common.setValueByPath(toObject, ['statistics'], contentEmbeddingStatisticsFromVertex(fromStatistics));
+    }
+    return toObject;
+}
+export function contentEmbeddingStatisticsFromVertex(fromObject) {
+    const toObject = {};
+    const fromTruncated = common.getValueByPath(fromObject, ['truncated']);
+    if (fromTruncated != null) {
+        common.setValueByPath(toObject, ['truncated'], fromTruncated);
+    }
+    const fromTokenCount = common.getValueByPath(fromObject, ['token_count']);
+    if (fromTokenCount != null) {
+        common.setValueByPath(toObject, ['tokenCount'], fromTokenCount);
+    }
+    return toObject;
+}
+export function contentToMldev(fromObject) {
+    const toObject = {};
+    const fromParts = common.getValueByPath(fromObject, ['parts']);
+    if (fromParts != null) {
+        let transformedList = fromParts;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return partToMldev(item);
+            });
+        }
+        common.setValueByPath(toObject, ['parts'], transformedList);
+    }
+    const fromRole = common.getValueByPath(fromObject, ['role']);
+    if (fromRole != null) {
+        common.setValueByPath(toObject, ['role'], fromRole);
+    }
+    return toObject;
+}
+export function controlReferenceConfigToVertex(fromObject) {
+    const toObject = {};
+    const fromControlType = common.getValueByPath(fromObject, ['controlType']);
+    if (fromControlType != null) {
+        common.setValueByPath(toObject, ['controlType'], fromControlType);
+    }
+    const fromEnableControlImageComputation = common.getValueByPath(fromObject, [
+        'enableControlImageComputation',
+    ]);
+    if (fromEnableControlImageComputation != null) {
+        common.setValueByPath(toObject, ['computeControl'], fromEnableControlImageComputation);
+    }
+    return toObject;
+}
+export function countTokensConfigToMldev(fromObject) {
+    const toObject = {};
+    if (common.getValueByPath(fromObject, ['systemInstruction']) !== undefined) {
+        throw new Error('systemInstruction parameter is not supported in Gemini API.');
+    }
+    if (common.getValueByPath(fromObject, ['tools']) !== undefined) {
+        throw new Error('tools parameter is not supported in Gemini API.');
+    }
+    if (common.getValueByPath(fromObject, ['generationConfig']) !== undefined) {
+        throw new Error('generationConfig parameter is not supported in Gemini API.');
+    }
+    return toObject;
+}
+export function countTokensConfigToVertex(fromObject, parentObject) {
+    const toObject = {};
+    const fromSystemInstruction = common.getValueByPath(fromObject, [
+        'systemInstruction',
+    ]);
+    if (parentObject !== undefined && fromSystemInstruction != null) {
+        common.setValueByPath(parentObject, ['systemInstruction'], t.tContent(fromSystemInstruction));
+    }
+    const fromTools = common.getValueByPath(fromObject, ['tools']);
+    if (parentObject !== undefined && fromTools != null) {
+        let transformedList = fromTools;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return toolToVertex(item);
+            });
+        }
+        common.setValueByPath(parentObject, ['tools'], transformedList);
+    }
+    const fromGenerationConfig = common.getValueByPath(fromObject, [
+        'generationConfig',
+    ]);
+    if (parentObject !== undefined && fromGenerationConfig != null) {
+        common.setValueByPath(parentObject, ['generationConfig'], generationConfigToVertex(fromGenerationConfig));
+    }
+    return toObject;
+}
+export function countTokensParametersToMldev(apiClient, fromObject) {
+    const toObject = {};
+    const fromModel = common.getValueByPath(fromObject, ['model']);
+    if (fromModel != null) {
+        common.setValueByPath(toObject, ['_url', 'model'], t.tModel(apiClient, fromModel));
+    }
+    const fromContents = common.getValueByPath(fromObject, ['contents']);
+    if (fromContents != null) {
+        let transformedList = t.tContents(fromContents);
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return contentToMldev(item);
+            });
+        }
+        common.setValueByPath(toObject, ['contents'], transformedList);
+    }
+    const fromConfig = common.getValueByPath(fromObject, ['config']);
+    if (fromConfig != null) {
+        countTokensConfigToMldev(fromConfig);
+    }
+    return toObject;
+}
+export function countTokensParametersToVertex(apiClient, fromObject) {
+    const toObject = {};
+    const fromModel = common.getValueByPath(fromObject, ['model']);
+    if (fromModel != null) {
+        common.setValueByPath(toObject, ['_url', 'model'], t.tModel(apiClient, fromModel));
+    }
+    const fromContents = common.getValueByPath(fromObject, ['contents']);
+    if (fromContents != null) {
+        let transformedList = t.tContents(fromContents);
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return item;
+            });
+        }
+        common.setValueByPath(toObject, ['contents'], transformedList);
+    }
+    const fromConfig = common.getValueByPath(fromObject, ['config']);
+    if (fromConfig != null) {
+        countTokensConfigToVertex(fromConfig, toObject);
+    }
+    return toObject;
+}
+export function countTokensResponseFromMldev(fromObject) {
+    const toObject = {};
+    const fromSdkHttpResponse = common.getValueByPath(fromObject, [
+        'sdkHttpResponse',
+    ]);
+    if (fromSdkHttpResponse != null) {
+        common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
+    }
+    const fromTotalTokens = common.getValueByPath(fromObject, ['totalTokens']);
+    if (fromTotalTokens != null) {
+        common.setValueByPath(toObject, ['totalTokens'], fromTotalTokens);
+    }
+    const fromCachedContentTokenCount = common.getValueByPath(fromObject, [
+        'cachedContentTokenCount',
+    ]);
+    if (fromCachedContentTokenCount != null) {
+        common.setValueByPath(toObject, ['cachedContentTokenCount'], fromCachedContentTokenCount);
+    }
+    return toObject;
+}
+export function countTokensResponseFromVertex(fromObject) {
+    const toObject = {};
+    const fromSdkHttpResponse = common.getValueByPath(fromObject, [
+        'sdkHttpResponse',
+    ]);
+    if (fromSdkHttpResponse != null) {
+        common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
+    }
+    const fromTotalTokens = common.getValueByPath(fromObject, ['totalTokens']);
+    if (fromTotalTokens != null) {
+        common.setValueByPath(toObject, ['totalTokens'], fromTotalTokens);
+    }
+    return toObject;
+}
+export function deleteModelParametersToMldev(apiClient, fromObject) {
+    const toObject = {};
+    const fromModel = common.getValueByPath(fromObject, ['model']);
+    if (fromModel != null) {
+        common.setValueByPath(toObject, ['_url', 'name'], t.tModel(apiClient, fromModel));
+    }
+    return toObject;
+}
+export function deleteModelParametersToVertex(apiClient, fromObject) {
+    const toObject = {};
+    const fromModel = common.getValueByPath(fromObject, ['model']);
+    if (fromModel != null) {
+        common.setValueByPath(toObject, ['_url', 'name'], t.tModel(apiClient, fromModel));
+    }
+    return toObject;
+}
+export function deleteModelResponseFromMldev(fromObject) {
+    const toObject = {};
+    const fromSdkHttpResponse = common.getValueByPath(fromObject, [
+        'sdkHttpResponse',
+    ]);
+    if (fromSdkHttpResponse != null) {
+        common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
+    }
+    return toObject;
+}
+export function deleteModelResponseFromVertex(fromObject) {
+    const toObject = {};
+    const fromSdkHttpResponse = common.getValueByPath(fromObject, [
+        'sdkHttpResponse',
+    ]);
+    if (fromSdkHttpResponse != null) {
+        common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
+    }
+    return toObject;
+}
+export function editImageConfigToVertex(fromObject, parentObject) {
+    const toObject = {};
+    const fromOutputGcsUri = common.getValueByPath(fromObject, ['outputGcsUri']);
+    if (parentObject !== undefined && fromOutputGcsUri != null) {
+        common.setValueByPath(parentObject, ['parameters', 'storageUri'], fromOutputGcsUri);
+    }
+    const fromNegativePrompt = common.getValueByPath(fromObject, [
+        'negativePrompt',
+    ]);
+    if (parentObject !== undefined && fromNegativePrompt != null) {
+        common.setValueByPath(parentObject, ['parameters', 'negativePrompt'], fromNegativePrompt);
+    }
+    const fromNumberOfImages = common.getValueByPath(fromObject, [
+        'numberOfImages',
+    ]);
+    if (parentObject !== undefined && fromNumberOfImages != null) {
+        common.setValueByPath(parentObject, ['parameters', 'sampleCount'], fromNumberOfImages);
+    }
+    const fromAspectRatio = common.getValueByPath(fromObject, ['aspectRatio']);
+    if (parentObject !== undefined && fromAspectRatio != null) {
+        common.setValueByPath(parentObject, ['parameters', 'aspectRatio'], fromAspectRatio);
+    }
+    const fromGuidanceScale = common.getValueByPath(fromObject, [
+        'guidanceScale',
+    ]);
+    if (parentObject !== undefined && fromGuidanceScale != null) {
+        common.setValueByPath(parentObject, ['parameters', 'guidanceScale'], fromGuidanceScale);
+    }
+    const fromSeed = common.getValueByPath(fromObject, ['seed']);
+    if (parentObject !== undefined && fromSeed != null) {
+        common.setValueByPath(parentObject, ['parameters', 'seed'], fromSeed);
+    }
+    const fromSafetyFilterLevel = common.getValueByPath(fromObject, [
+        'safetyFilterLevel',
+    ]);
+    if (parentObject !== undefined && fromSafetyFilterLevel != null) {
+        common.setValueByPath(parentObject, ['parameters', 'safetySetting'], fromSafetyFilterLevel);
+    }
+    const fromPersonGeneration = common.getValueByPath(fromObject, [
+        'personGeneration',
+    ]);
+    if (parentObject !== undefined && fromPersonGeneration != null) {
+        common.setValueByPath(parentObject, ['parameters', 'personGeneration'], fromPersonGeneration);
+    }
+    const fromIncludeSafetyAttributes = common.getValueByPath(fromObject, [
+        'includeSafetyAttributes',
+    ]);
+    if (parentObject !== undefined && fromIncludeSafetyAttributes != null) {
+        common.setValueByPath(parentObject, ['parameters', 'includeSafetyAttributes'], fromIncludeSafetyAttributes);
+    }
+    const fromIncludeRaiReason = common.getValueByPath(fromObject, [
+        'includeRaiReason',
+    ]);
+    if (parentObject !== undefined && fromIncludeRaiReason != null) {
+        common.setValueByPath(parentObject, ['parameters', 'includeRaiReason'], fromIncludeRaiReason);
+    }
+    const fromLanguage = common.getValueByPath(fromObject, ['language']);
+    if (parentObject !== undefined && fromLanguage != null) {
+        common.setValueByPath(parentObject, ['parameters', 'language'], fromLanguage);
+    }
+    const fromOutputMimeType = common.getValueByPath(fromObject, [
+        'outputMimeType',
+    ]);
+    if (parentObject !== undefined && fromOutputMimeType != null) {
+        common.setValueByPath(parentObject, ['parameters', 'outputOptions', 'mimeType'], fromOutputMimeType);
+    }
+    const fromOutputCompressionQuality = common.getValueByPath(fromObject, [
+        'outputCompressionQuality',
+    ]);
+    if (parentObject !== undefined && fromOutputCompressionQuality != null) {
+        common.setValueByPath(parentObject, ['parameters', 'outputOptions', 'compressionQuality'], fromOutputCompressionQuality);
+    }
+    const fromAddWatermark = common.getValueByPath(fromObject, ['addWatermark']);
+    if (parentObject !== undefined && fromAddWatermark != null) {
+        common.setValueByPath(parentObject, ['parameters', 'addWatermark'], fromAddWatermark);
+    }
+    const fromLabels = common.getValueByPath(fromObject, ['labels']);
+    if (parentObject !== undefined && fromLabels != null) {
+        common.setValueByPath(parentObject, ['labels'], fromLabels);
+    }
+    const fromEditMode = common.getValueByPath(fromObject, ['editMode']);
+    if (parentObject !== undefined && fromEditMode != null) {
+        common.setValueByPath(parentObject, ['parameters', 'editMode'], fromEditMode);
+    }
+    const fromBaseSteps = common.getValueByPath(fromObject, ['baseSteps']);
+    if (parentObject !== undefined && fromBaseSteps != null) {
+        common.setValueByPath(parentObject, ['parameters', 'editConfig', 'baseSteps'], fromBaseSteps);
+    }
+    return toObject;
+}
+export function editImageParametersInternalToVertex(apiClient, fromObject) {
+    const toObject = {};
+    const fromModel = common.getValueByPath(fromObject, ['model']);
+    if (fromModel != null) {
+        common.setValueByPath(toObject, ['_url', 'model'], t.tModel(apiClient, fromModel));
+    }
+    const fromPrompt = common.getValueByPath(fromObject, ['prompt']);
+    if (fromPrompt != null) {
+        common.setValueByPath(toObject, ['instances[0]', 'prompt'], fromPrompt);
+    }
+    const fromReferenceImages = common.getValueByPath(fromObject, [
+        'referenceImages',
+    ]);
+    if (fromReferenceImages != null) {
+        let transformedList = fromReferenceImages;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return referenceImageAPIInternalToVertex(item);
+            });
+        }
+        common.setValueByPath(toObject, ['instances[0]', 'referenceImages'], transformedList);
+    }
+    const fromConfig = common.getValueByPath(fromObject, ['config']);
+    if (fromConfig != null) {
+        editImageConfigToVertex(fromConfig, toObject);
+    }
+    return toObject;
+}
+export function editImageResponseFromVertex(fromObject) {
+    const toObject = {};
+    const fromSdkHttpResponse = common.getValueByPath(fromObject, [
+        'sdkHttpResponse',
+    ]);
+    if (fromSdkHttpResponse != null) {
+        common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
+    }
+    const fromGeneratedImages = common.getValueByPath(fromObject, [
+        'predictions',
+    ]);
+    if (fromGeneratedImages != null) {
+        let transformedList = fromGeneratedImages;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return generatedImageFromVertex(item);
+            });
+        }
+        common.setValueByPath(toObject, ['generatedImages'], transformedList);
+    }
+    return toObject;
+}
+export function embedContentConfigToMldev(fromObject, parentObject) {
+    const toObject = {};
+    const fromTaskType = common.getValueByPath(fromObject, ['taskType']);
+    if (parentObject !== undefined && fromTaskType != null) {
+        common.setValueByPath(parentObject, ['requests[]', 'taskType'], fromTaskType);
+    }
+    const fromTitle = common.getValueByPath(fromObject, ['title']);
+    if (parentObject !== undefined && fromTitle != null) {
+        common.setValueByPath(parentObject, ['requests[]', 'title'], fromTitle);
+    }
+    const fromOutputDimensionality = common.getValueByPath(fromObject, [
+        'outputDimensionality',
+    ]);
+    if (parentObject !== undefined && fromOutputDimensionality != null) {
+        common.setValueByPath(parentObject, ['requests[]', 'outputDimensionality'], fromOutputDimensionality);
+    }
+    if (common.getValueByPath(fromObject, ['mimeType']) !== undefined) {
+        throw new Error('mimeType parameter is not supported in Gemini API.');
+    }
+    if (common.getValueByPath(fromObject, ['autoTruncate']) !== undefined) {
+        throw new Error('autoTruncate parameter is not supported in Gemini API.');
+    }
+    return toObject;
+}
+export function embedContentConfigToVertex(fromObject, parentObject) {
+    const toObject = {};
+    const fromTaskType = common.getValueByPath(fromObject, ['taskType']);
+    if (parentObject !== undefined && fromTaskType != null) {
+        common.setValueByPath(parentObject, ['instances[]', 'task_type'], fromTaskType);
+    }
+    const fromTitle = common.getValueByPath(fromObject, ['title']);
+    if (parentObject !== undefined && fromTitle != null) {
+        common.setValueByPath(parentObject, ['instances[]', 'title'], fromTitle);
+    }
+    const fromOutputDimensionality = common.getValueByPath(fromObject, [
+        'outputDimensionality',
+    ]);
+    if (parentObject !== undefined && fromOutputDimensionality != null) {
+        common.setValueByPath(parentObject, ['parameters', 'outputDimensionality'], fromOutputDimensionality);
+    }
+    const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+    if (parentObject !== undefined && fromMimeType != null) {
+        common.setValueByPath(parentObject, ['instances[]', 'mimeType'], fromMimeType);
+    }
+    const fromAutoTruncate = common.getValueByPath(fromObject, ['autoTruncate']);
+    if (parentObject !== undefined && fromAutoTruncate != null) {
+        common.setValueByPath(parentObject, ['parameters', 'autoTruncate'], fromAutoTruncate);
+    }
+    return toObject;
+}
+export function embedContentParametersToMldev(apiClient, fromObject) {
+    const toObject = {};
+    const fromModel = common.getValueByPath(fromObject, ['model']);
+    if (fromModel != null) {
+        common.setValueByPath(toObject, ['_url', 'model'], t.tModel(apiClient, fromModel));
+    }
+    const fromContents = common.getValueByPath(fromObject, ['contents']);
+    if (fromContents != null) {
+        let transformedList = t.tContentsForEmbed(apiClient, fromContents);
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return item;
+            });
+        }
+        common.setValueByPath(toObject, ['requests[]', 'content'], transformedList);
+    }
+    const fromConfig = common.getValueByPath(fromObject, ['config']);
+    if (fromConfig != null) {
+        embedContentConfigToMldev(fromConfig, toObject);
+    }
+    const fromModelForEmbedContent = common.getValueByPath(fromObject, ['model']);
+    if (fromModelForEmbedContent !== undefined) {
+        common.setValueByPath(toObject, ['requests[]', 'model'], t.tModel(apiClient, fromModelForEmbedContent));
+    }
+    return toObject;
+}
+export function embedContentParametersToVertex(apiClient, fromObject) {
+    const toObject = {};
+    const fromModel = common.getValueByPath(fromObject, ['model']);
+    if (fromModel != null) {
+        common.setValueByPath(toObject, ['_url', 'model'], t.tModel(apiClient, fromModel));
+    }
+    const fromContents = common.getValueByPath(fromObject, ['contents']);
+    if (fromContents != null) {
+        let transformedList = t.tContentsForEmbed(apiClient, fromContents);
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return item;
+            });
+        }
+        common.setValueByPath(toObject, ['instances[]', 'content'], transformedList);
+    }
+    const fromConfig = common.getValueByPath(fromObject, ['config']);
+    if (fromConfig != null) {
+        embedContentConfigToVertex(fromConfig, toObject);
+    }
+    return toObject;
+}
+export function embedContentResponseFromMldev(fromObject) {
+    const toObject = {};
+    const fromSdkHttpResponse = common.getValueByPath(fromObject, [
+        'sdkHttpResponse',
+    ]);
+    if (fromSdkHttpResponse != null) {
+        common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
+    }
+    const fromEmbeddings = common.getValueByPath(fromObject, ['embeddings']);
+    if (fromEmbeddings != null) {
+        let transformedList = fromEmbeddings;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return item;
+            });
+        }
+        common.setValueByPath(toObject, ['embeddings'], transformedList);
+    }
+    const fromMetadata = common.getValueByPath(fromObject, ['metadata']);
+    if (fromMetadata != null) {
+        common.setValueByPath(toObject, ['metadata'], fromMetadata);
+    }
+    return toObject;
+}
+export function embedContentResponseFromVertex(fromObject) {
+    const toObject = {};
+    const fromSdkHttpResponse = common.getValueByPath(fromObject, [
+        'sdkHttpResponse',
+    ]);
+    if (fromSdkHttpResponse != null) {
+        common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
+    }
+    const fromEmbeddings = common.getValueByPath(fromObject, [
+        'predictions[]',
+        'embeddings',
+    ]);
+    if (fromEmbeddings != null) {
+        let transformedList = fromEmbeddings;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return contentEmbeddingFromVertex(item);
+            });
+        }
+        common.setValueByPath(toObject, ['embeddings'], transformedList);
+    }
+    const fromMetadata = common.getValueByPath(fromObject, ['metadata']);
+    if (fromMetadata != null) {
+        common.setValueByPath(toObject, ['metadata'], fromMetadata);
+    }
+    return toObject;
+}
+export function endpointFromVertex(fromObject) {
+    const toObject = {};
+    const fromName = common.getValueByPath(fromObject, ['endpoint']);
+    if (fromName != null) {
+        common.setValueByPath(toObject, ['name'], fromName);
+    }
+    const fromDeployedModelId = common.getValueByPath(fromObject, [
+        'deployedModelId',
+    ]);
+    if (fromDeployedModelId != null) {
+        common.setValueByPath(toObject, ['deployedModelId'], fromDeployedModelId);
+    }
+    return toObject;
+}
+export function fileDataToMldev(fromObject) {
+    const toObject = {};
+    if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
+        throw new Error('displayName parameter is not supported in Gemini API.');
+    }
+    const fromFileUri = common.getValueByPath(fromObject, ['fileUri']);
+    if (fromFileUri != null) {
+        common.setValueByPath(toObject, ['fileUri'], fromFileUri);
+    }
+    const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+    if (fromMimeType != null) {
+        common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+    }
+    return toObject;
+}
+export function functionCallToMldev(fromObject) {
+    const toObject = {};
+    const fromId = common.getValueByPath(fromObject, ['id']);
+    if (fromId != null) {
+        common.setValueByPath(toObject, ['id'], fromId);
+    }
+    const fromArgs = common.getValueByPath(fromObject, ['args']);
+    if (fromArgs != null) {
+        common.setValueByPath(toObject, ['args'], fromArgs);
+    }
+    const fromName = common.getValueByPath(fromObject, ['name']);
+    if (fromName != null) {
+        common.setValueByPath(toObject, ['name'], fromName);
+    }
+    if (common.getValueByPath(fromObject, ['partialArgs']) !== undefined) {
+        throw new Error('partialArgs parameter is not supported in Gemini API.');
+    }
+    if (common.getValueByPath(fromObject, ['willContinue']) !== undefined) {
+        throw new Error('willContinue parameter is not supported in Gemini API.');
+    }
+    return toObject;
+}
+export function functionCallingConfigToMldev(fromObject) {
+    const toObject = {};
+    const fromMode = common.getValueByPath(fromObject, ['mode']);
+    if (fromMode != null) {
+        common.setValueByPath(toObject, ['mode'], fromMode);
+    }
+    const fromAllowedFunctionNames = common.getValueByPath(fromObject, [
+        'allowedFunctionNames',
+    ]);
+    if (fromAllowedFunctionNames != null) {
+        common.setValueByPath(toObject, ['allowedFunctionNames'], fromAllowedFunctionNames);
+    }
+    if (common.getValueByPath(fromObject, ['streamFunctionCallArguments']) !==
+        undefined) {
+        throw new Error('streamFunctionCallArguments parameter is not supported in Gemini API.');
+    }
+    return toObject;
+}
+export function functionDeclarationToVertex(fromObject) {
+    const toObject = {};
+    if (common.getValueByPath(fromObject, ['behavior']) !== undefined) {
+        throw new Error('behavior parameter is not supported in Vertex AI.');
+    }
+    const fromDescription = common.getValueByPath(fromObject, ['description']);
+    if (fromDescription != null) {
+        common.setValueByPath(toObject, ['description'], fromDescription);
+    }
+    const fromName = common.getValueByPath(fromObject, ['name']);
+    if (fromName != null) {
+        common.setValueByPath(toObject, ['name'], fromName);
+    }
+    const fromParameters = common.getValueByPath(fromObject, ['parameters']);
+    if (fromParameters != null) {
+        common.setValueByPath(toObject, ['parameters'], fromParameters);
+    }
+    const fromParametersJsonSchema = common.getValueByPath(fromObject, [
+        'parametersJsonSchema',
+    ]);
+    if (fromParametersJsonSchema != null) {
+        common.setValueByPath(toObject, ['parametersJsonSchema'], fromParametersJsonSchema);
+    }
+    const fromResponse = common.getValueByPath(fromObject, ['response']);
+    if (fromResponse != null) {
+        common.setValueByPath(toObject, ['response'], fromResponse);
+    }
+    const fromResponseJsonSchema = common.getValueByPath(fromObject, [
+        'responseJsonSchema',
+    ]);
+    if (fromResponseJsonSchema != null) {
+        common.setValueByPath(toObject, ['responseJsonSchema'], fromResponseJsonSchema);
+    }
+    return toObject;
+}
+export function generateContentConfigToMldev(apiClient, fromObject, parentObject) {
+    const toObject = {};
+    const fromSystemInstruction = common.getValueByPath(fromObject, [
+        'systemInstruction',
+    ]);
+    if (parentObject !== undefined && fromSystemInstruction != null) {
+        common.setValueByPath(parentObject, ['systemInstruction'], contentToMldev(t.tContent(fromSystemInstruction)));
+    }
+    const fromTemperature = common.getValueByPath(fromObject, ['temperature']);
+    if (fromTemperature != null) {
+        common.setValueByPath(toObject, ['temperature'], fromTemperature);
+    }
+    const fromTopP = common.getValueByPath(fromObject, ['topP']);
+    if (fromTopP != null) {
+        common.setValueByPath(toObject, ['topP'], fromTopP);
+    }
+    const fromTopK = common.getValueByPath(fromObject, ['topK']);
+    if (fromTopK != null) {
+        common.setValueByPath(toObject, ['topK'], fromTopK);
+    }
+    const fromCandidateCount = common.getValueByPath(fromObject, [
+        'candidateCount',
+    ]);
+    if (fromCandidateCount != null) {
+        common.setValueByPath(toObject, ['candidateCount'], fromCandidateCount);
+    }
+    const fromMaxOutputTokens = common.getValueByPath(fromObject, [
+        'maxOutputTokens',
+    ]);
+    if (fromMaxOutputTokens != null) {
+        common.setValueByPath(toObject, ['maxOutputTokens'], fromMaxOutputTokens);
+    }
+    const fromStopSequences = common.getValueByPath(fromObject, [
+        'stopSequences',
+    ]);
+    if (fromStopSequences != null) {
+        common.setValueByPath(toObject, ['stopSequences'], fromStopSequences);
+    }
+    const fromResponseLogprobs = common.getValueByPath(fromObject, [
+        'responseLogprobs',
+    ]);
+    if (fromResponseLogprobs != null) {
+        common.setValueByPath(toObject, ['responseLogprobs'], fromResponseLogprobs);
+    }
+    const fromLogprobs = common.getValueByPath(fromObject, ['logprobs']);
+    if (fromLogprobs != null) {
+        common.setValueByPath(toObject, ['logprobs'], fromLogprobs);
+    }
+    const fromPresencePenalty = common.getValueByPath(fromObject, [
+        'presencePenalty',
+    ]);
+    if (fromPresencePenalty != null) {
+        common.setValueByPath(toObject, ['presencePenalty'], fromPresencePenalty);
+    }
+    const fromFrequencyPenalty = common.getValueByPath(fromObject, [
+        'frequencyPenalty',
+    ]);
+    if (fromFrequencyPenalty != null) {
+        common.setValueByPath(toObject, ['frequencyPenalty'], fromFrequencyPenalty);
+    }
+    const fromSeed = common.getValueByPath(fromObject, ['seed']);
+    if (fromSeed != null) {
+        common.setValueByPath(toObject, ['seed'], fromSeed);
+    }
+    const fromResponseMimeType = common.getValueByPath(fromObject, [
+        'responseMimeType',
+    ]);
+    if (fromResponseMimeType != null) {
+        common.setValueByPath(toObject, ['responseMimeType'], fromResponseMimeType);
+    }
+    const fromResponseSchema = common.getValueByPath(fromObject, [
+        'responseSchema',
+    ]);
+    if (fromResponseSchema != null) {
+        common.setValueByPath(toObject, ['responseSchema'], t.tSchema(fromResponseSchema));
+    }
+    const fromResponseJsonSchema = common.getValueByPath(fromObject, [
+        'responseJsonSchema',
+    ]);
+    if (fromResponseJsonSchema != null) {
+        common.setValueByPath(toObject, ['responseJsonSchema'], fromResponseJsonSchema);
+    }
+    if (common.getValueByPath(fromObject, ['routingConfig']) !== undefined) {
+        throw new Error('routingConfig parameter is not supported in Gemini API.');
+    }
+    if (common.getValueByPath(fromObject, ['modelSelectionConfig']) !== undefined) {
+        throw new Error('modelSelectionConfig parameter is not supported in Gemini API.');
+    }
+    const fromSafetySettings = common.getValueByPath(fromObject, [
+        'safetySettings',
+    ]);
+    if (parentObject !== undefined && fromSafetySettings != null) {
+        let transformedList = fromSafetySettings;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return safetySettingToMldev(item);
+            });
+        }
+        common.setValueByPath(parentObject, ['safetySettings'], transformedList);
+    }
+    const fromTools = common.getValueByPath(fromObject, ['tools']);
+    if (parentObject !== undefined && fromTools != null) {
+        let transformedList = t.tTools(fromTools);
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return toolToMldev(t.tTool(item));
+            });
+        }
+        common.setValueByPath(parentObject, ['tools'], transformedList);
+    }
+    const fromToolConfig = common.getValueByPath(fromObject, ['toolConfig']);
+    if (parentObject !== undefined && fromToolConfig != null) {
+        common.setValueByPath(parentObject, ['toolConfig'], toolConfigToMldev(fromToolConfig));
+    }
+    if (common.getValueByPath(fromObject, ['labels']) !== undefined) {
+        throw new Error('labels parameter is not supported in Gemini API.');
+    }
+    const fromCachedContent = common.getValueByPath(fromObject, [
+        'cachedContent',
+    ]);
+    if (parentObject !== undefined && fromCachedContent != null) {
+        common.setValueByPath(parentObject, ['cachedContent'], t.tCachedContentName(apiClient, fromCachedContent));
+    }
+    const fromResponseModalities = common.getValueByPath(fromObject, [
+        'responseModalities',
+    ]);
+    if (fromResponseModalities != null) {
+        common.setValueByPath(toObject, ['responseModalities'], fromResponseModalities);
+    }
+    const fromMediaResolution = common.getValueByPath(fromObject, [
+        'mediaResolution',
+    ]);
+    if (fromMediaResolution != null) {
+        common.setValueByPath(toObject, ['mediaResolution'], fromMediaResolution);
+    }
+    const fromSpeechConfig = common.getValueByPath(fromObject, ['speechConfig']);
+    if (fromSpeechConfig != null) {
+        common.setValueByPath(toObject, ['speechConfig'], t.tSpeechConfig(fromSpeechConfig));
+    }
+    if (common.getValueByPath(fromObject, ['audioTimestamp']) !== undefined) {
+        throw new Error('audioTimestamp parameter is not supported in Gemini API.');
+    }
+    const fromThinkingConfig = common.getValueByPath(fromObject, [
+        'thinkingConfig',
+    ]);
+    if (fromThinkingConfig != null) {
+        common.setValueByPath(toObject, ['thinkingConfig'], fromThinkingConfig);
+    }
+    const fromImageConfig = common.getValueByPath(fromObject, ['imageConfig']);
+    if (fromImageConfig != null) {
+        common.setValueByPath(toObject, ['imageConfig'], imageConfigToMldev(fromImageConfig));
+    }
+    return toObject;
+}
+export function generateContentConfigToVertex(apiClient, fromObject, parentObject) {
+    const toObject = {};
+    const fromSystemInstruction = common.getValueByPath(fromObject, [
+        'systemInstruction',
+    ]);
+    if (parentObject !== undefined && fromSystemInstruction != null) {
+        common.setValueByPath(parentObject, ['systemInstruction'], t.tContent(fromSystemInstruction));
+    }
+    const fromTemperature = common.getValueByPath(fromObject, ['temperature']);
+    if (fromTemperature != null) {
+        common.setValueByPath(toObject, ['temperature'], fromTemperature);
+    }
+    const fromTopP = common.getValueByPath(fromObject, ['topP']);
+    if (fromTopP != null) {
+        common.setValueByPath(toObject, ['topP'], fromTopP);
+    }
+    const fromTopK = common.getValueByPath(fromObject, ['topK']);
+    if (fromTopK != null) {
+        common.setValueByPath(toObject, ['topK'], fromTopK);
+    }
+    const fromCandidateCount = common.getValueByPath(fromObject, [
+        'candidateCount',
+    ]);
+    if (fromCandidateCount != null) {
+        common.setValueByPath(toObject, ['candidateCount'], fromCandidateCount);
+    }
+    const fromMaxOutputTokens = common.getValueByPath(fromObject, [
+        'maxOutputTokens',
+    ]);
+    if (fromMaxOutputTokens != null) {
+        common.setValueByPath(toObject, ['maxOutputTokens'], fromMaxOutputTokens);
+    }
+    const fromStopSequences = common.getValueByPath(fromObject, [
+        'stopSequences',
+    ]);
+    if (fromStopSequences != null) {
+        common.setValueByPath(toObject, ['stopSequences'], fromStopSequences);
+    }
+    const fromResponseLogprobs = common.getValueByPath(fromObject, [
+        'responseLogprobs',
+    ]);
+    if (fromResponseLogprobs != null) {
+        common.setValueByPath(toObject, ['responseLogprobs'], fromResponseLogprobs);
+    }
+    const fromLogprobs = common.getValueByPath(fromObject, ['logprobs']);
+    if (fromLogprobs != null) {
+        common.setValueByPath(toObject, ['logprobs'], fromLogprobs);
+    }
+    const fromPresencePenalty = common.getValueByPath(fromObject, [
+        'presencePenalty',
+    ]);
+    if (fromPresencePenalty != null) {
+        common.setValueByPath(toObject, ['presencePenalty'], fromPresencePenalty);
+    }
+    const fromFrequencyPenalty = common.getValueByPath(fromObject, [
+        'frequencyPenalty',
+    ]);
+    if (fromFrequencyPenalty != null) {
+        common.setValueByPath(toObject, ['frequencyPenalty'], fromFrequencyPenalty);
+    }
+    const fromSeed = common.getValueByPath(fromObject, ['seed']);
+    if (fromSeed != null) {
+        common.setValueByPath(toObject, ['seed'], fromSeed);
+    }
+    const fromResponseMimeType = common.getValueByPath(fromObject, [
+        'responseMimeType',
+    ]);
+    if (fromResponseMimeType != null) {
+        common.setValueByPath(toObject, ['responseMimeType'], fromResponseMimeType);
+    }
+    const fromResponseSchema = common.getValueByPath(fromObject, [
+        'responseSchema',
+    ]);
+    if (fromResponseSchema != null) {
+        common.setValueByPath(toObject, ['responseSchema'], t.tSchema(fromResponseSchema));
+    }
+    const fromResponseJsonSchema = common.getValueByPath(fromObject, [
+        'responseJsonSchema',
+    ]);
+    if (fromResponseJsonSchema != null) {
+        common.setValueByPath(toObject, ['responseJsonSchema'], fromResponseJsonSchema);
+    }
+    const fromRoutingConfig = common.getValueByPath(fromObject, [
+        'routingConfig',
+    ]);
+    if (fromRoutingConfig != null) {
+        common.setValueByPath(toObject, ['routingConfig'], fromRoutingConfig);
+    }
+    const fromModelSelectionConfig = common.getValueByPath(fromObject, [
+        'modelSelectionConfig',
+    ]);
+    if (fromModelSelectionConfig != null) {
+        common.setValueByPath(toObject, ['modelConfig'], fromModelSelectionConfig);
+    }
+    const fromSafetySettings = common.getValueByPath(fromObject, [
+        'safetySettings',
+    ]);
+    if (parentObject !== undefined && fromSafetySettings != null) {
+        let transformedList = fromSafetySettings;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return item;
+            });
+        }
+        common.setValueByPath(parentObject, ['safetySettings'], transformedList);
+    }
+    const fromTools = common.getValueByPath(fromObject, ['tools']);
+    if (parentObject !== undefined && fromTools != null) {
+        let transformedList = t.tTools(fromTools);
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return toolToVertex(t.tTool(item));
+            });
+        }
+        common.setValueByPath(parentObject, ['tools'], transformedList);
+    }
+    const fromToolConfig = common.getValueByPath(fromObject, ['toolConfig']);
+    if (parentObject !== undefined && fromToolConfig != null) {
+        common.setValueByPath(parentObject, ['toolConfig'], fromToolConfig);
+    }
+    const fromLabels = common.getValueByPath(fromObject, ['labels']);
+    if (parentObject !== undefined && fromLabels != null) {
+        common.setValueByPath(parentObject, ['labels'], fromLabels);
+    }
+    const fromCachedContent = common.getValueByPath(fromObject, [
+        'cachedContent',
+    ]);
+    if (parentObject !== undefined && fromCachedContent != null) {
+        common.setValueByPath(parentObject, ['cachedContent'], t.tCachedContentName(apiClient, fromCachedContent));
+    }
+    const fromResponseModalities = common.getValueByPath(fromObject, [
+        'responseModalities',
+    ]);
+    if (fromResponseModalities != null) {
+        common.setValueByPath(toObject, ['responseModalities'], fromResponseModalities);
+    }
+    const fromMediaResolution = common.getValueByPath(fromObject, [
+        'mediaResolution',
+    ]);
+    if (fromMediaResolution != null) {
+        common.setValueByPath(toObject, ['mediaResolution'], fromMediaResolution);
+    }
+    const fromSpeechConfig = common.getValueByPath(fromObject, ['speechConfig']);
+    if (fromSpeechConfig != null) {
+        common.setValueByPath(toObject, ['speechConfig'], speechConfigToVertex(t.tSpeechConfig(fromSpeechConfig)));
+    }
+    const fromAudioTimestamp = common.getValueByPath(fromObject, [
+        'audioTimestamp',
+    ]);
+    if (fromAudioTimestamp != null) {
+        common.setValueByPath(toObject, ['audioTimestamp'], fromAudioTimestamp);
+    }
+    const fromThinkingConfig = common.getValueByPath(fromObject, [
+        'thinkingConfig',
+    ]);
+    if (fromThinkingConfig != null) {
+        common.setValueByPath(toObject, ['thinkingConfig'], fromThinkingConfig);
+    }
+    const fromImageConfig = common.getValueByPath(fromObject, ['imageConfig']);
+    if (fromImageConfig != null) {
+        common.setValueByPath(toObject, ['imageConfig'], imageConfigToVertex(fromImageConfig));
+    }
+    return toObject;
+}
+export function generateContentParametersToMldev(apiClient, fromObject) {
+    const toObject = {};
+    const fromModel = common.getValueByPath(fromObject, ['model']);
+    if (fromModel != null) {
+        common.setValueByPath(toObject, ['_url', 'model'], t.tModel(apiClient, fromModel));
+    }
+    const fromContents = common.getValueByPath(fromObject, ['contents']);
+    if (fromContents != null) {
+        let transformedList = t.tContents(fromContents);
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return contentToMldev(item);
+            });
+        }
+        common.setValueByPath(toObject, ['contents'], transformedList);
+    }
+    const fromConfig = common.getValueByPath(fromObject, ['config']);
+    if (fromConfig != null) {
+        common.setValueByPath(toObject, ['generationConfig'], generateContentConfigToMldev(apiClient, fromConfig, toObject));
+    }
+    return toObject;
+}
+export function generateContentParametersToVertex(apiClient, fromObject) {
+    const toObject = {};
+    const fromModel = common.getValueByPath(fromObject, ['model']);
+    if (fromModel != null) {
+        common.setValueByPath(toObject, ['_url', 'model'], t.tModel(apiClient, fromModel));
+    }
+    const fromContents = common.getValueByPath(fromObject, ['contents']);
+    if (fromContents != null) {
+        let transformedList = t.tContents(fromContents);
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return item;
+            });
+        }
+        common.setValueByPath(toObject, ['contents'], transformedList);
+    }
+    const fromConfig = common.getValueByPath(fromObject, ['config']);
+    if (fromConfig != null) {
+        common.setValueByPath(toObject, ['generationConfig'], generateContentConfigToVertex(apiClient, fromConfig, toObject));
+    }
+    return toObject;
+}
+export function generateContentResponseFromMldev(fromObject) {
+    const toObject = {};
+    const fromSdkHttpResponse = common.getValueByPath(fromObject, [
+        'sdkHttpResponse',
+    ]);
+    if (fromSdkHttpResponse != null) {
+        common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
+    }
+    const fromCandidates = common.getValueByPath(fromObject, ['candidates']);
+    if (fromCandidates != null) {
+        let transformedList = fromCandidates;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return candidateFromMldev(item);
+            });
+        }
+        common.setValueByPath(toObject, ['candidates'], transformedList);
+    }
+    const fromModelVersion = common.getValueByPath(fromObject, ['modelVersion']);
+    if (fromModelVersion != null) {
+        common.setValueByPath(toObject, ['modelVersion'], fromModelVersion);
+    }
+    const fromPromptFeedback = common.getValueByPath(fromObject, [
+        'promptFeedback',
+    ]);
+    if (fromPromptFeedback != null) {
+        common.setValueByPath(toObject, ['promptFeedback'], fromPromptFeedback);
+    }
+    const fromResponseId = common.getValueByPath(fromObject, ['responseId']);
+    if (fromResponseId != null) {
+        common.setValueByPath(toObject, ['responseId'], fromResponseId);
+    }
+    const fromUsageMetadata = common.getValueByPath(fromObject, [
+        'usageMetadata',
+    ]);
+    if (fromUsageMetadata != null) {
+        common.setValueByPath(toObject, ['usageMetadata'], fromUsageMetadata);
+    }
+    return toObject;
+}
+export function generateContentResponseFromVertex(fromObject) {
+    const toObject = {};
+    const fromSdkHttpResponse = common.getValueByPath(fromObject, [
+        'sdkHttpResponse',
+    ]);
+    if (fromSdkHttpResponse != null) {
+        common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
+    }
+    const fromCandidates = common.getValueByPath(fromObject, ['candidates']);
+    if (fromCandidates != null) {
+        let transformedList = fromCandidates;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return item;
+            });
+        }
+        common.setValueByPath(toObject, ['candidates'], transformedList);
+    }
+    const fromCreateTime = common.getValueByPath(fromObject, ['createTime']);
+    if (fromCreateTime != null) {
+        common.setValueByPath(toObject, ['createTime'], fromCreateTime);
+    }
+    const fromModelVersion = common.getValueByPath(fromObject, ['modelVersion']);
+    if (fromModelVersion != null) {
+        common.setValueByPath(toObject, ['modelVersion'], fromModelVersion);
+    }
+    const fromPromptFeedback = common.getValueByPath(fromObject, [
+        'promptFeedback',
+    ]);
+    if (fromPromptFeedback != null) {
+        common.setValueByPath(toObject, ['promptFeedback'], fromPromptFeedback);
+    }
+    const fromResponseId = common.getValueByPath(fromObject, ['responseId']);
+    if (fromResponseId != null) {
+        common.setValueByPath(toObject, ['responseId'], fromResponseId);
+    }
+    const fromUsageMetadata = common.getValueByPath(fromObject, [
+        'usageMetadata',
+    ]);
+    if (fromUsageMetadata != null) {
+        common.setValueByPath(toObject, ['usageMetadata'], fromUsageMetadata);
+    }
+    return toObject;
+}
+export function generateImagesConfigToMldev(fromObject, parentObject) {
+    const toObject = {};
+    if (common.getValueByPath(fromObject, ['outputGcsUri']) !== undefined) {
+        throw new Error('outputGcsUri parameter is not supported in Gemini API.');
+    }
+    if (common.getValueByPath(fromObject, ['negativePrompt']) !== undefined) {
+        throw new Error('negativePrompt parameter is not supported in Gemini API.');
+    }
+    const fromNumberOfImages = common.getValueByPath(fromObject, [
+        'numberOfImages',
+    ]);
+    if (parentObject !== undefined && fromNumberOfImages != null) {
+        common.setValueByPath(parentObject, ['parameters', 'sampleCount'], fromNumberOfImages);
+    }
+    const fromAspectRatio = common.getValueByPath(fromObject, ['aspectRatio']);
+    if (parentObject !== undefined && fromAspectRatio != null) {
+        common.setValueByPath(parentObject, ['parameters', 'aspectRatio'], fromAspectRatio);
+    }
+    const fromGuidanceScale = common.getValueByPath(fromObject, [
+        'guidanceScale',
+    ]);
+    if (parentObject !== undefined && fromGuidanceScale != null) {
+        common.setValueByPath(parentObject, ['parameters', 'guidanceScale'], fromGuidanceScale);
+    }
+    if (common.getValueByPath(fromObject, ['seed']) !== undefined) {
+        throw new Error('seed parameter is not supported in Gemini API.');
+    }
+    const fromSafetyFilterLevel = common.getValueByPath(fromObject, [
+        'safetyFilterLevel',
+    ]);
+    if (parentObject !== undefined && fromSafetyFilterLevel != null) {
+        common.setValueByPath(parentObject, ['parameters', 'safetySetting'], fromSafetyFilterLevel);
+    }
+    const fromPersonGeneration = common.getValueByPath(fromObject, [
+        'personGeneration',
+    ]);
+    if (parentObject !== undefined && fromPersonGeneration != null) {
+        common.setValueByPath(parentObject, ['parameters', 'personGeneration'], fromPersonGeneration);
+    }
+    const fromIncludeSafetyAttributes = common.getValueByPath(fromObject, [
+        'includeSafetyAttributes',
+    ]);
+    if (parentObject !== undefined && fromIncludeSafetyAttributes != null) {
+        common.setValueByPath(parentObject, ['parameters', 'includeSafetyAttributes'], fromIncludeSafetyAttributes);
+    }
+    const fromIncludeRaiReason = common.getValueByPath(fromObject, [
+        'includeRaiReason',
+    ]);
+    if (parentObject !== undefined && fromIncludeRaiReason != null) {
+        common.setValueByPath(parentObject, ['parameters', 'includeRaiReason'], fromIncludeRaiReason);
+    }
+    const fromLanguage = common.getValueByPath(fromObject, ['language']);
+    if (parentObject !== undefined && fromLanguage != null) {
+        common.setValueByPath(parentObject, ['parameters', 'language'], fromLanguage);
+    }
+    const fromOutputMimeType = common.getValueByPath(fromObject, [
+        'outputMimeType',
+    ]);
+    if (parentObject !== undefined && fromOutputMimeType != null) {
+        common.setValueByPath(parentObject, ['parameters', 'outputOptions', 'mimeType'], fromOutputMimeType);
+    }
+    const fromOutputCompressionQuality = common.getValueByPath(fromObject, [
+        'outputCompressionQuality',
+    ]);
+    if (parentObject !== undefined && fromOutputCompressionQuality != null) {
+        common.setValueByPath(parentObject, ['parameters', 'outputOptions', 'compressionQuality'], fromOutputCompressionQuality);
+    }
+    if (common.getValueByPath(fromObject, ['addWatermark']) !== undefined) {
+        throw new Error('addWatermark parameter is not supported in Gemini API.');
+    }
+    if (common.getValueByPath(fromObject, ['labels']) !== undefined) {
+        throw new Error('labels parameter is not supported in Gemini API.');
+    }
+    const fromImageSize = common.getValueByPath(fromObject, ['imageSize']);
+    if (parentObject !== undefined && fromImageSize != null) {
+        common.setValueByPath(parentObject, ['parameters', 'sampleImageSize'], fromImageSize);
+    }
+    if (common.getValueByPath(fromObject, ['enhancePrompt']) !== undefined) {
+        throw new Error('enhancePrompt parameter is not supported in Gemini API.');
+    }
+    return toObject;
+}
+export function generateImagesConfigToVertex(fromObject, parentObject) {
+    const toObject = {};
+    const fromOutputGcsUri = common.getValueByPath(fromObject, ['outputGcsUri']);
+    if (parentObject !== undefined && fromOutputGcsUri != null) {
+        common.setValueByPath(parentObject, ['parameters', 'storageUri'], fromOutputGcsUri);
+    }
+    const fromNegativePrompt = common.getValueByPath(fromObject, [
+        'negativePrompt',
+    ]);
+    if (parentObject !== undefined && fromNegativePrompt != null) {
+        common.setValueByPath(parentObject, ['parameters', 'negativePrompt'], fromNegativePrompt);
+    }
+    const fromNumberOfImages = common.getValueByPath(fromObject, [
+        'numberOfImages',
+    ]);
+    if (parentObject !== undefined && fromNumberOfImages != null) {
+        common.setValueByPath(parentObject, ['parameters', 'sampleCount'], fromNumberOfImages);
+    }
+    const fromAspectRatio = common.getValueByPath(fromObject, ['aspectRatio']);
+    if (parentObject !== undefined && fromAspectRatio != null) {
+        common.setValueByPath(parentObject, ['parameters', 'aspectRatio'], fromAspectRatio);
+    }
+    const fromGuidanceScale = common.getValueByPath(fromObject, [
+        'guidanceScale',
+    ]);
+    if (parentObject !== undefined && fromGuidanceScale != null) {
+        common.setValueByPath(parentObject, ['parameters', 'guidanceScale'], fromGuidanceScale);
+    }
+    const fromSeed = common.getValueByPath(fromObject, ['seed']);
+    if (parentObject !== undefined && fromSeed != null) {
+        common.setValueByPath(parentObject, ['parameters', 'seed'], fromSeed);
+    }
+    const fromSafetyFilterLevel = common.getValueByPath(fromObject, [
+        'safetyFilterLevel',
+    ]);
+    if (parentObject !== undefined && fromSafetyFilterLevel != null) {
+        common.setValueByPath(parentObject, ['parameters', 'safetySetting'], fromSafetyFilterLevel);
+    }
+    const fromPersonGeneration = common.getValueByPath(fromObject, [
+        'personGeneration',
+    ]);
+    if (parentObject !== undefined && fromPersonGeneration != null) {
+        common.setValueByPath(parentObject, ['parameters', 'personGeneration'], fromPersonGeneration);
+    }
+    const fromIncludeSafetyAttributes = common.getValueByPath(fromObject, [
+        'includeSafetyAttributes',
+    ]);
+    if (parentObject !== undefined && fromIncludeSafetyAttributes != null) {
+        common.setValueByPath(parentObject, ['parameters', 'includeSafetyAttributes'], fromIncludeSafetyAttributes);
+    }
+    const fromIncludeRaiReason = common.getValueByPath(fromObject, [
+        'includeRaiReason',
+    ]);
+    if (parentObject !== undefined && fromIncludeRaiReason != null) {
+        common.setValueByPath(parentObject, ['parameters', 'includeRaiReason'], fromIncludeRaiReason);
+    }
+    const fromLanguage = common.getValueByPath(fromObject, ['language']);
+    if (parentObject !== undefined && fromLanguage != null) {
+        common.setValueByPath(parentObject, ['parameters', 'language'], fromLanguage);
+    }
+    const fromOutputMimeType = common.getValueByPath(fromObject, [
+        'outputMimeType',
+    ]);
+    if (parentObject !== undefined && fromOutputMimeType != null) {
+        common.setValueByPath(parentObject, ['parameters', 'outputOptions', 'mimeType'], fromOutputMimeType);
+    }
+    const fromOutputCompressionQuality = common.getValueByPath(fromObject, [
+        'outputCompressionQuality',
+    ]);
+    if (parentObject !== undefined && fromOutputCompressionQuality != null) {
+        common.setValueByPath(parentObject, ['parameters', 'outputOptions', 'compressionQuality'], fromOutputCompressionQuality);
+    }
+    const fromAddWatermark = common.getValueByPath(fromObject, ['addWatermark']);
+    if (parentObject !== undefined && fromAddWatermark != null) {
+        common.setValueByPath(parentObject, ['parameters', 'addWatermark'], fromAddWatermark);
+    }
+    const fromLabels = common.getValueByPath(fromObject, ['labels']);
+    if (parentObject !== undefined && fromLabels != null) {
+        common.setValueByPath(parentObject, ['labels'], fromLabels);
+    }
+    const fromImageSize = common.getValueByPath(fromObject, ['imageSize']);
+    if (parentObject !== undefined && fromImageSize != null) {
+        common.setValueByPath(parentObject, ['parameters', 'sampleImageSize'], fromImageSize);
+    }
+    const fromEnhancePrompt = common.getValueByPath(fromObject, [
+        'enhancePrompt',
+    ]);
+    if (parentObject !== undefined && fromEnhancePrompt != null) {
+        common.setValueByPath(parentObject, ['parameters', 'enhancePrompt'], fromEnhancePrompt);
+    }
+    return toObject;
+}
+export function generateImagesParametersToMldev(apiClient, fromObject) {
+    const toObject = {};
+    const fromModel = common.getValueByPath(fromObject, ['model']);
+    if (fromModel != null) {
+        common.setValueByPath(toObject, ['_url', 'model'], t.tModel(apiClient, fromModel));
+    }
+    const fromPrompt = common.getValueByPath(fromObject, ['prompt']);
+    if (fromPrompt != null) {
+        common.setValueByPath(toObject, ['instances[0]', 'prompt'], fromPrompt);
+    }
+    const fromConfig = common.getValueByPath(fromObject, ['config']);
+    if (fromConfig != null) {
+        generateImagesConfigToMldev(fromConfig, toObject);
+    }
+    return toObject;
+}
+export function generateImagesParametersToVertex(apiClient, fromObject) {
+    const toObject = {};
+    const fromModel = common.getValueByPath(fromObject, ['model']);
+    if (fromModel != null) {
+        common.setValueByPath(toObject, ['_url', 'model'], t.tModel(apiClient, fromModel));
+    }
+    const fromPrompt = common.getValueByPath(fromObject, ['prompt']);
+    if (fromPrompt != null) {
+        common.setValueByPath(toObject, ['instances[0]', 'prompt'], fromPrompt);
+    }
+    const fromConfig = common.getValueByPath(fromObject, ['config']);
+    if (fromConfig != null) {
+        generateImagesConfigToVertex(fromConfig, toObject);
+    }
+    return toObject;
+}
+export function generateImagesResponseFromMldev(fromObject) {
+    const toObject = {};
+    const fromSdkHttpResponse = common.getValueByPath(fromObject, [
+        'sdkHttpResponse',
+    ]);
+    if (fromSdkHttpResponse != null) {
+        common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
+    }
+    const fromGeneratedImages = common.getValueByPath(fromObject, [
+        'predictions',
+    ]);
+    if (fromGeneratedImages != null) {
+        let transformedList = fromGeneratedImages;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return generatedImageFromMldev(item);
+            });
+        }
+        common.setValueByPath(toObject, ['generatedImages'], transformedList);
+    }
+    const fromPositivePromptSafetyAttributes = common.getValueByPath(fromObject, [
+        'positivePromptSafetyAttributes',
+    ]);
+    if (fromPositivePromptSafetyAttributes != null) {
+        common.setValueByPath(toObject, ['positivePromptSafetyAttributes'], safetyAttributesFromMldev(fromPositivePromptSafetyAttributes));
+    }
+    return toObject;
+}
+export function generateImagesResponseFromVertex(fromObject) {
+    const toObject = {};
+    const fromSdkHttpResponse = common.getValueByPath(fromObject, [
+        'sdkHttpResponse',
+    ]);
+    if (fromSdkHttpResponse != null) {
+        common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
+    }
+    const fromGeneratedImages = common.getValueByPath(fromObject, [
+        'predictions',
+    ]);
+    if (fromGeneratedImages != null) {
+        let transformedList = fromGeneratedImages;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return generatedImageFromVertex(item);
+            });
+        }
+        common.setValueByPath(toObject, ['generatedImages'], transformedList);
+    }
+    const fromPositivePromptSafetyAttributes = common.getValueByPath(fromObject, [
+        'positivePromptSafetyAttributes',
+    ]);
+    if (fromPositivePromptSafetyAttributes != null) {
+        common.setValueByPath(toObject, ['positivePromptSafetyAttributes'], safetyAttributesFromVertex(fromPositivePromptSafetyAttributes));
+    }
+    return toObject;
+}
+export function generateVideosConfigToMldev(fromObject, parentObject) {
+    const toObject = {};
+    const fromNumberOfVideos = common.getValueByPath(fromObject, [
+        'numberOfVideos',
+    ]);
+    if (parentObject !== undefined && fromNumberOfVideos != null) {
+        common.setValueByPath(parentObject, ['parameters', 'sampleCount'], fromNumberOfVideos);
+    }
+    if (common.getValueByPath(fromObject, ['outputGcsUri']) !== undefined) {
+        throw new Error('outputGcsUri parameter is not supported in Gemini API.');
+    }
+    if (common.getValueByPath(fromObject, ['fps']) !== undefined) {
+        throw new Error('fps parameter is not supported in Gemini API.');
+    }
+    const fromDurationSeconds = common.getValueByPath(fromObject, [
+        'durationSeconds',
+    ]);
+    if (parentObject !== undefined && fromDurationSeconds != null) {
+        common.setValueByPath(parentObject, ['parameters', 'durationSeconds'], fromDurationSeconds);
+    }
+    if (common.getValueByPath(fromObject, ['seed']) !== undefined) {
+        throw new Error('seed parameter is not supported in Gemini API.');
+    }
+    const fromAspectRatio = common.getValueByPath(fromObject, ['aspectRatio']);
+    if (parentObject !== undefined && fromAspectRatio != null) {
+        common.setValueByPath(parentObject, ['parameters', 'aspectRatio'], fromAspectRatio);
+    }
+    const fromResolution = common.getValueByPath(fromObject, ['resolution']);
+    if (parentObject !== undefined && fromResolution != null) {
+        common.setValueByPath(parentObject, ['parameters', 'resolution'], fromResolution);
+    }
+    const fromPersonGeneration = common.getValueByPath(fromObject, [
+        'personGeneration',
+    ]);
+    if (parentObject !== undefined && fromPersonGeneration != null) {
+        common.setValueByPath(parentObject, ['parameters', 'personGeneration'], fromPersonGeneration);
+    }
+    if (common.getValueByPath(fromObject, ['pubsubTopic']) !== undefined) {
+        throw new Error('pubsubTopic parameter is not supported in Gemini API.');
+    }
+    const fromNegativePrompt = common.getValueByPath(fromObject, [
+        'negativePrompt',
+    ]);
+    if (parentObject !== undefined && fromNegativePrompt != null) {
+        common.setValueByPath(parentObject, ['parameters', 'negativePrompt'], fromNegativePrompt);
+    }
+    const fromEnhancePrompt = common.getValueByPath(fromObject, [
+        'enhancePrompt',
+    ]);
+    if (parentObject !== undefined && fromEnhancePrompt != null) {
+        common.setValueByPath(parentObject, ['parameters', 'enhancePrompt'], fromEnhancePrompt);
+    }
+    if (common.getValueByPath(fromObject, ['generateAudio']) !== undefined) {
+        throw new Error('generateAudio parameter is not supported in Gemini API.');
+    }
+    const fromLastFrame = common.getValueByPath(fromObject, ['lastFrame']);
+    if (parentObject !== undefined && fromLastFrame != null) {
+        common.setValueByPath(parentObject, ['instances[0]', 'lastFrame'], imageToMldev(fromLastFrame));
+    }
+    const fromReferenceImages = common.getValueByPath(fromObject, [
+        'referenceImages',
+    ]);
+    if (parentObject !== undefined && fromReferenceImages != null) {
+        let transformedList = fromReferenceImages;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return videoGenerationReferenceImageToMldev(item);
+            });
+        }
+        common.setValueByPath(parentObject, ['instances[0]', 'referenceImages'], transformedList);
+    }
+    if (common.getValueByPath(fromObject, ['mask']) !== undefined) {
+        throw new Error('mask parameter is not supported in Gemini API.');
+    }
+    if (common.getValueByPath(fromObject, ['compressionQuality']) !== undefined) {
+        throw new Error('compressionQuality parameter is not supported in Gemini API.');
+    }
+    return toObject;
+}
+export function generateVideosConfigToVertex(fromObject, parentObject) {
+    const toObject = {};
+    const fromNumberOfVideos = common.getValueByPath(fromObject, [
+        'numberOfVideos',
+    ]);
+    if (parentObject !== undefined && fromNumberOfVideos != null) {
+        common.setValueByPath(parentObject, ['parameters', 'sampleCount'], fromNumberOfVideos);
+    }
+    const fromOutputGcsUri = common.getValueByPath(fromObject, ['outputGcsUri']);
+    if (parentObject !== undefined && fromOutputGcsUri != null) {
+        common.setValueByPath(parentObject, ['parameters', 'storageUri'], fromOutputGcsUri);
+    }
+    const fromFps = common.getValueByPath(fromObject, ['fps']);
+    if (parentObject !== undefined && fromFps != null) {
+        common.setValueByPath(parentObject, ['parameters', 'fps'], fromFps);
+    }
+    const fromDurationSeconds = common.getValueByPath(fromObject, [
+        'durationSeconds',
+    ]);
+    if (parentObject !== undefined && fromDurationSeconds != null) {
+        common.setValueByPath(parentObject, ['parameters', 'durationSeconds'], fromDurationSeconds);
+    }
+    const fromSeed = common.getValueByPath(fromObject, ['seed']);
+    if (parentObject !== undefined && fromSeed != null) {
+        common.setValueByPath(parentObject, ['parameters', 'seed'], fromSeed);
+    }
+    const fromAspectRatio = common.getValueByPath(fromObject, ['aspectRatio']);
+    if (parentObject !== undefined && fromAspectRatio != null) {
+        common.setValueByPath(parentObject, ['parameters', 'aspectRatio'], fromAspectRatio);
+    }
+    const fromResolution = common.getValueByPath(fromObject, ['resolution']);
+    if (parentObject !== undefined && fromResolution != null) {
+        common.setValueByPath(parentObject, ['parameters', 'resolution'], fromResolution);
+    }
+    const fromPersonGeneration = common.getValueByPath(fromObject, [
+        'personGeneration',
+    ]);
+    if (parentObject !== undefined && fromPersonGeneration != null) {
+        common.setValueByPath(parentObject, ['parameters', 'personGeneration'], fromPersonGeneration);
+    }
+    const fromPubsubTopic = common.getValueByPath(fromObject, ['pubsubTopic']);
+    if (parentObject !== undefined && fromPubsubTopic != null) {
+        common.setValueByPath(parentObject, ['parameters', 'pubsubTopic'], fromPubsubTopic);
+    }
+    const fromNegativePrompt = common.getValueByPath(fromObject, [
+        'negativePrompt',
+    ]);
+    if (parentObject !== undefined && fromNegativePrompt != null) {
+        common.setValueByPath(parentObject, ['parameters', 'negativePrompt'], fromNegativePrompt);
+    }
+    const fromEnhancePrompt = common.getValueByPath(fromObject, [
+        'enhancePrompt',
+    ]);
+    if (parentObject !== undefined && fromEnhancePrompt != null) {
+        common.setValueByPath(parentObject, ['parameters', 'enhancePrompt'], fromEnhancePrompt);
+    }
+    const fromGenerateAudio = common.getValueByPath(fromObject, [
+        'generateAudio',
+    ]);
+    if (parentObject !== undefined && fromGenerateAudio != null) {
+        common.setValueByPath(parentObject, ['parameters', 'generateAudio'], fromGenerateAudio);
+    }
+    const fromLastFrame = common.getValueByPath(fromObject, ['lastFrame']);
+    if (parentObject !== undefined && fromLastFrame != null) {
+        common.setValueByPath(parentObject, ['instances[0]', 'lastFrame'], imageToVertex(fromLastFrame));
+    }
+    const fromReferenceImages = common.getValueByPath(fromObject, [
+        'referenceImages',
+    ]);
+    if (parentObject !== undefined && fromReferenceImages != null) {
+        let transformedList = fromReferenceImages;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return videoGenerationReferenceImageToVertex(item);
+            });
+        }
+        common.setValueByPath(parentObject, ['instances[0]', 'referenceImages'], transformedList);
+    }
+    const fromMask = common.getValueByPath(fromObject, ['mask']);
+    if (parentObject !== undefined && fromMask != null) {
+        common.setValueByPath(parentObject, ['instances[0]', 'mask'], videoGenerationMaskToVertex(fromMask));
+    }
+    const fromCompressionQuality = common.getValueByPath(fromObject, [
+        'compressionQuality',
+    ]);
+    if (parentObject !== undefined && fromCompressionQuality != null) {
+        common.setValueByPath(parentObject, ['parameters', 'compressionQuality'], fromCompressionQuality);
+    }
+    return toObject;
+}
+export function generateVideosOperationFromMldev(fromObject) {
+    const toObject = {};
+    const fromName = common.getValueByPath(fromObject, ['name']);
+    if (fromName != null) {
+        common.setValueByPath(toObject, ['name'], fromName);
+    }
+    const fromMetadata = common.getValueByPath(fromObject, ['metadata']);
+    if (fromMetadata != null) {
+        common.setValueByPath(toObject, ['metadata'], fromMetadata);
+    }
+    const fromDone = common.getValueByPath(fromObject, ['done']);
+    if (fromDone != null) {
+        common.setValueByPath(toObject, ['done'], fromDone);
+    }
+    const fromError = common.getValueByPath(fromObject, ['error']);
+    if (fromError != null) {
+        common.setValueByPath(toObject, ['error'], fromError);
+    }
+    const fromResponse = common.getValueByPath(fromObject, [
+        'response',
+        'generateVideoResponse',
+    ]);
+    if (fromResponse != null) {
+        common.setValueByPath(toObject, ['response'], generateVideosResponseFromMldev(fromResponse));
+    }
+    return toObject;
+}
+export function generateVideosOperationFromVertex(fromObject) {
+    const toObject = {};
+    const fromName = common.getValueByPath(fromObject, ['name']);
+    if (fromName != null) {
+        common.setValueByPath(toObject, ['name'], fromName);
+    }
+    const fromMetadata = common.getValueByPath(fromObject, ['metadata']);
+    if (fromMetadata != null) {
+        common.setValueByPath(toObject, ['metadata'], fromMetadata);
+    }
+    const fromDone = common.getValueByPath(fromObject, ['done']);
+    if (fromDone != null) {
+        common.setValueByPath(toObject, ['done'], fromDone);
+    }
+    const fromError = common.getValueByPath(fromObject, ['error']);
+    if (fromError != null) {
+        common.setValueByPath(toObject, ['error'], fromError);
+    }
+    const fromResponse = common.getValueByPath(fromObject, ['response']);
+    if (fromResponse != null) {
+        common.setValueByPath(toObject, ['response'], generateVideosResponseFromVertex(fromResponse));
+    }
+    return toObject;
+}
+export function generateVideosParametersToMldev(apiClient, fromObject) {
+    const toObject = {};
+    const fromModel = common.getValueByPath(fromObject, ['model']);
+    if (fromModel != null) {
+        common.setValueByPath(toObject, ['_url', 'model'], t.tModel(apiClient, fromModel));
+    }
+    const fromPrompt = common.getValueByPath(fromObject, ['prompt']);
+    if (fromPrompt != null) {
+        common.setValueByPath(toObject, ['instances[0]', 'prompt'], fromPrompt);
+    }
+    const fromImage = common.getValueByPath(fromObject, ['image']);
+    if (fromImage != null) {
+        common.setValueByPath(toObject, ['instances[0]', 'image'], imageToMldev(fromImage));
+    }
+    const fromVideo = common.getValueByPath(fromObject, ['video']);
+    if (fromVideo != null) {
+        common.setValueByPath(toObject, ['instances[0]', 'video'], videoToMldev(fromVideo));
+    }
+    const fromSource = common.getValueByPath(fromObject, ['source']);
+    if (fromSource != null) {
+        generateVideosSourceToMldev(fromSource, toObject);
+    }
+    const fromConfig = common.getValueByPath(fromObject, ['config']);
+    if (fromConfig != null) {
+        generateVideosConfigToMldev(fromConfig, toObject);
+    }
+    return toObject;
+}
+export function generateVideosParametersToVertex(apiClient, fromObject) {
+    const toObject = {};
+    const fromModel = common.getValueByPath(fromObject, ['model']);
+    if (fromModel != null) {
+        common.setValueByPath(toObject, ['_url', 'model'], t.tModel(apiClient, fromModel));
+    }
+    const fromPrompt = common.getValueByPath(fromObject, ['prompt']);
+    if (fromPrompt != null) {
+        common.setValueByPath(toObject, ['instances[0]', 'prompt'], fromPrompt);
+    }
+    const fromImage = common.getValueByPath(fromObject, ['image']);
+    if (fromImage != null) {
+        common.setValueByPath(toObject, ['instances[0]', 'image'], imageToVertex(fromImage));
+    }
+    const fromVideo = common.getValueByPath(fromObject, ['video']);
+    if (fromVideo != null) {
+        common.setValueByPath(toObject, ['instances[0]', 'video'], videoToVertex(fromVideo));
+    }
+    const fromSource = common.getValueByPath(fromObject, ['source']);
+    if (fromSource != null) {
+        generateVideosSourceToVertex(fromSource, toObject);
+    }
+    const fromConfig = common.getValueByPath(fromObject, ['config']);
+    if (fromConfig != null) {
+        generateVideosConfigToVertex(fromConfig, toObject);
+    }
+    return toObject;
+}
+export function generateVideosResponseFromMldev(fromObject) {
+    const toObject = {};
+    const fromGeneratedVideos = common.getValueByPath(fromObject, [
+        'generatedSamples',
+    ]);
+    if (fromGeneratedVideos != null) {
+        let transformedList = fromGeneratedVideos;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return generatedVideoFromMldev(item);
+            });
+        }
+        common.setValueByPath(toObject, ['generatedVideos'], transformedList);
+    }
+    const fromRaiMediaFilteredCount = common.getValueByPath(fromObject, [
+        'raiMediaFilteredCount',
+    ]);
+    if (fromRaiMediaFilteredCount != null) {
+        common.setValueByPath(toObject, ['raiMediaFilteredCount'], fromRaiMediaFilteredCount);
+    }
+    const fromRaiMediaFilteredReasons = common.getValueByPath(fromObject, [
+        'raiMediaFilteredReasons',
+    ]);
+    if (fromRaiMediaFilteredReasons != null) {
+        common.setValueByPath(toObject, ['raiMediaFilteredReasons'], fromRaiMediaFilteredReasons);
+    }
+    return toObject;
+}
+export function generateVideosResponseFromVertex(fromObject) {
+    const toObject = {};
+    const fromGeneratedVideos = common.getValueByPath(fromObject, ['videos']);
+    if (fromGeneratedVideos != null) {
+        let transformedList = fromGeneratedVideos;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return generatedVideoFromVertex(item);
+            });
+        }
+        common.setValueByPath(toObject, ['generatedVideos'], transformedList);
+    }
+    const fromRaiMediaFilteredCount = common.getValueByPath(fromObject, [
+        'raiMediaFilteredCount',
+    ]);
+    if (fromRaiMediaFilteredCount != null) {
+        common.setValueByPath(toObject, ['raiMediaFilteredCount'], fromRaiMediaFilteredCount);
+    }
+    const fromRaiMediaFilteredReasons = common.getValueByPath(fromObject, [
+        'raiMediaFilteredReasons',
+    ]);
+    if (fromRaiMediaFilteredReasons != null) {
+        common.setValueByPath(toObject, ['raiMediaFilteredReasons'], fromRaiMediaFilteredReasons);
+    }
+    return toObject;
+}
+export function generateVideosSourceToMldev(fromObject, parentObject) {
+    const toObject = {};
+    const fromPrompt = common.getValueByPath(fromObject, ['prompt']);
+    if (parentObject !== undefined && fromPrompt != null) {
+        common.setValueByPath(parentObject, ['instances[0]', 'prompt'], fromPrompt);
+    }
+    const fromImage = common.getValueByPath(fromObject, ['image']);
+    if (parentObject !== undefined && fromImage != null) {
+        common.setValueByPath(parentObject, ['instances[0]', 'image'], imageToMldev(fromImage));
+    }
+    const fromVideo = common.getValueByPath(fromObject, ['video']);
+    if (parentObject !== undefined && fromVideo != null) {
+        common.setValueByPath(parentObject, ['instances[0]', 'video'], videoToMldev(fromVideo));
+    }
+    return toObject;
+}
+export function generateVideosSourceToVertex(fromObject, parentObject) {
+    const toObject = {};
+    const fromPrompt = common.getValueByPath(fromObject, ['prompt']);
+    if (parentObject !== undefined && fromPrompt != null) {
+        common.setValueByPath(parentObject, ['instances[0]', 'prompt'], fromPrompt);
+    }
+    const fromImage = common.getValueByPath(fromObject, ['image']);
+    if (parentObject !== undefined && fromImage != null) {
+        common.setValueByPath(parentObject, ['instances[0]', 'image'], imageToVertex(fromImage));
+    }
+    const fromVideo = common.getValueByPath(fromObject, ['video']);
+    if (parentObject !== undefined && fromVideo != null) {
+        common.setValueByPath(parentObject, ['instances[0]', 'video'], videoToVertex(fromVideo));
+    }
+    return toObject;
+}
+export function generatedImageFromMldev(fromObject) {
+    const toObject = {};
+    const fromImage = common.getValueByPath(fromObject, ['_self']);
+    if (fromImage != null) {
+        common.setValueByPath(toObject, ['image'], imageFromMldev(fromImage));
+    }
+    const fromRaiFilteredReason = common.getValueByPath(fromObject, [
+        'raiFilteredReason',
+    ]);
+    if (fromRaiFilteredReason != null) {
+        common.setValueByPath(toObject, ['raiFilteredReason'], fromRaiFilteredReason);
+    }
+    const fromSafetyAttributes = common.getValueByPath(fromObject, ['_self']);
+    if (fromSafetyAttributes != null) {
+        common.setValueByPath(toObject, ['safetyAttributes'], safetyAttributesFromMldev(fromSafetyAttributes));
+    }
+    return toObject;
+}
+export function generatedImageFromVertex(fromObject) {
+    const toObject = {};
+    const fromImage = common.getValueByPath(fromObject, ['_self']);
+    if (fromImage != null) {
+        common.setValueByPath(toObject, ['image'], imageFromVertex(fromImage));
+    }
+    const fromRaiFilteredReason = common.getValueByPath(fromObject, [
+        'raiFilteredReason',
+    ]);
+    if (fromRaiFilteredReason != null) {
+        common.setValueByPath(toObject, ['raiFilteredReason'], fromRaiFilteredReason);
+    }
+    const fromSafetyAttributes = common.getValueByPath(fromObject, ['_self']);
+    if (fromSafetyAttributes != null) {
+        common.setValueByPath(toObject, ['safetyAttributes'], safetyAttributesFromVertex(fromSafetyAttributes));
+    }
+    const fromEnhancedPrompt = common.getValueByPath(fromObject, ['prompt']);
+    if (fromEnhancedPrompt != null) {
+        common.setValueByPath(toObject, ['enhancedPrompt'], fromEnhancedPrompt);
+    }
+    return toObject;
+}
+export function generatedImageMaskFromVertex(fromObject) {
+    const toObject = {};
+    const fromMask = common.getValueByPath(fromObject, ['_self']);
+    if (fromMask != null) {
+        common.setValueByPath(toObject, ['mask'], imageFromVertex(fromMask));
+    }
+    const fromLabels = common.getValueByPath(fromObject, ['labels']);
+    if (fromLabels != null) {
+        let transformedList = fromLabels;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return item;
+            });
+        }
+        common.setValueByPath(toObject, ['labels'], transformedList);
+    }
+    return toObject;
+}
+export function generatedVideoFromMldev(fromObject) {
+    const toObject = {};
+    const fromVideo = common.getValueByPath(fromObject, ['video']);
+    if (fromVideo != null) {
+        common.setValueByPath(toObject, ['video'], videoFromMldev(fromVideo));
+    }
+    return toObject;
+}
+export function generatedVideoFromVertex(fromObject) {
+    const toObject = {};
+    const fromVideo = common.getValueByPath(fromObject, ['_self']);
+    if (fromVideo != null) {
+        common.setValueByPath(toObject, ['video'], videoFromVertex(fromVideo));
+    }
+    return toObject;
+}
+export function generationConfigToVertex(fromObject) {
+    const toObject = {};
+    const fromModelSelectionConfig = common.getValueByPath(fromObject, [
+        'modelSelectionConfig',
+    ]);
+    if (fromModelSelectionConfig != null) {
+        common.setValueByPath(toObject, ['modelConfig'], fromModelSelectionConfig);
+    }
+    const fromResponseJsonSchema = common.getValueByPath(fromObject, [
+        'responseJsonSchema',
+    ]);
+    if (fromResponseJsonSchema != null) {
+        common.setValueByPath(toObject, ['responseJsonSchema'], fromResponseJsonSchema);
+    }
+    const fromAudioTimestamp = common.getValueByPath(fromObject, [
+        'audioTimestamp',
+    ]);
+    if (fromAudioTimestamp != null) {
+        common.setValueByPath(toObject, ['audioTimestamp'], fromAudioTimestamp);
+    }
+    const fromCandidateCount = common.getValueByPath(fromObject, [
+        'candidateCount',
+    ]);
+    if (fromCandidateCount != null) {
+        common.setValueByPath(toObject, ['candidateCount'], fromCandidateCount);
+    }
+    const fromEnableAffectiveDialog = common.getValueByPath(fromObject, [
+        'enableAffectiveDialog',
+    ]);
+    if (fromEnableAffectiveDialog != null) {
+        common.setValueByPath(toObject, ['enableAffectiveDialog'], fromEnableAffectiveDialog);
+    }
+    const fromFrequencyPenalty = common.getValueByPath(fromObject, [
+        'frequencyPenalty',
+    ]);
+    if (fromFrequencyPenalty != null) {
+        common.setValueByPath(toObject, ['frequencyPenalty'], fromFrequencyPenalty);
+    }
+    const fromLogprobs = common.getValueByPath(fromObject, ['logprobs']);
+    if (fromLogprobs != null) {
+        common.setValueByPath(toObject, ['logprobs'], fromLogprobs);
+    }
+    const fromMaxOutputTokens = common.getValueByPath(fromObject, [
+        'maxOutputTokens',
+    ]);
+    if (fromMaxOutputTokens != null) {
+        common.setValueByPath(toObject, ['maxOutputTokens'], fromMaxOutputTokens);
+    }
+    const fromMediaResolution = common.getValueByPath(fromObject, [
+        'mediaResolution',
+    ]);
+    if (fromMediaResolution != null) {
+        common.setValueByPath(toObject, ['mediaResolution'], fromMediaResolution);
+    }
+    const fromPresencePenalty = common.getValueByPath(fromObject, [
+        'presencePenalty',
+    ]);
+    if (fromPresencePenalty != null) {
+        common.setValueByPath(toObject, ['presencePenalty'], fromPresencePenalty);
+    }
+    const fromResponseLogprobs = common.getValueByPath(fromObject, [
+        'responseLogprobs',
+    ]);
+    if (fromResponseLogprobs != null) {
+        common.setValueByPath(toObject, ['responseLogprobs'], fromResponseLogprobs);
+    }
+    const fromResponseMimeType = common.getValueByPath(fromObject, [
+        'responseMimeType',
+    ]);
+    if (fromResponseMimeType != null) {
+        common.setValueByPath(toObject, ['responseMimeType'], fromResponseMimeType);
+    }
+    const fromResponseModalities = common.getValueByPath(fromObject, [
+        'responseModalities',
+    ]);
+    if (fromResponseModalities != null) {
+        common.setValueByPath(toObject, ['responseModalities'], fromResponseModalities);
+    }
+    const fromResponseSchema = common.getValueByPath(fromObject, [
+        'responseSchema',
+    ]);
+    if (fromResponseSchema != null) {
+        common.setValueByPath(toObject, ['responseSchema'], fromResponseSchema);
+    }
+    const fromRoutingConfig = common.getValueByPath(fromObject, [
+        'routingConfig',
+    ]);
+    if (fromRoutingConfig != null) {
+        common.setValueByPath(toObject, ['routingConfig'], fromRoutingConfig);
+    }
+    const fromSeed = common.getValueByPath(fromObject, ['seed']);
+    if (fromSeed != null) {
+        common.setValueByPath(toObject, ['seed'], fromSeed);
+    }
+    const fromSpeechConfig = common.getValueByPath(fromObject, ['speechConfig']);
+    if (fromSpeechConfig != null) {
+        common.setValueByPath(toObject, ['speechConfig'], speechConfigToVertex(fromSpeechConfig));
+    }
+    const fromStopSequences = common.getValueByPath(fromObject, [
+        'stopSequences',
+    ]);
+    if (fromStopSequences != null) {
+        common.setValueByPath(toObject, ['stopSequences'], fromStopSequences);
+    }
+    const fromTemperature = common.getValueByPath(fromObject, ['temperature']);
+    if (fromTemperature != null) {
+        common.setValueByPath(toObject, ['temperature'], fromTemperature);
+    }
+    const fromThinkingConfig = common.getValueByPath(fromObject, [
+        'thinkingConfig',
+    ]);
+    if (fromThinkingConfig != null) {
+        common.setValueByPath(toObject, ['thinkingConfig'], fromThinkingConfig);
+    }
+    const fromTopK = common.getValueByPath(fromObject, ['topK']);
+    if (fromTopK != null) {
+        common.setValueByPath(toObject, ['topK'], fromTopK);
+    }
+    const fromTopP = common.getValueByPath(fromObject, ['topP']);
+    if (fromTopP != null) {
+        common.setValueByPath(toObject, ['topP'], fromTopP);
+    }
+    if (common.getValueByPath(fromObject, ['enableEnhancedCivicAnswers']) !==
+        undefined) {
+        throw new Error('enableEnhancedCivicAnswers parameter is not supported in Vertex AI.');
+    }
+    return toObject;
+}
+export function getModelParametersToMldev(apiClient, fromObject) {
+    const toObject = {};
+    const fromModel = common.getValueByPath(fromObject, ['model']);
+    if (fromModel != null) {
+        common.setValueByPath(toObject, ['_url', 'name'], t.tModel(apiClient, fromModel));
+    }
+    return toObject;
+}
+export function getModelParametersToVertex(apiClient, fromObject) {
+    const toObject = {};
+    const fromModel = common.getValueByPath(fromObject, ['model']);
+    if (fromModel != null) {
+        common.setValueByPath(toObject, ['_url', 'name'], t.tModel(apiClient, fromModel));
+    }
+    return toObject;
+}
+export function googleMapsToMldev(fromObject) {
+    const toObject = {};
+    if (common.getValueByPath(fromObject, ['authConfig']) !== undefined) {
+        throw new Error('authConfig parameter is not supported in Gemini API.');
+    }
+    const fromEnableWidget = common.getValueByPath(fromObject, ['enableWidget']);
+    if (fromEnableWidget != null) {
+        common.setValueByPath(toObject, ['enableWidget'], fromEnableWidget);
+    }
+    return toObject;
+}
+export function googleSearchToMldev(fromObject) {
+    const toObject = {};
+    if (common.getValueByPath(fromObject, ['excludeDomains']) !== undefined) {
+        throw new Error('excludeDomains parameter is not supported in Gemini API.');
+    }
+    if (common.getValueByPath(fromObject, ['blockingConfidence']) !== undefined) {
+        throw new Error('blockingConfidence parameter is not supported in Gemini API.');
+    }
+    const fromTimeRangeFilter = common.getValueByPath(fromObject, [
+        'timeRangeFilter',
+    ]);
+    if (fromTimeRangeFilter != null) {
+        common.setValueByPath(toObject, ['timeRangeFilter'], fromTimeRangeFilter);
+    }
+    return toObject;
+}
+export function imageConfigToMldev(fromObject) {
+    const toObject = {};
+    const fromAspectRatio = common.getValueByPath(fromObject, ['aspectRatio']);
+    if (fromAspectRatio != null) {
+        common.setValueByPath(toObject, ['aspectRatio'], fromAspectRatio);
+    }
+    const fromImageSize = common.getValueByPath(fromObject, ['imageSize']);
+    if (fromImageSize != null) {
+        common.setValueByPath(toObject, ['imageSize'], fromImageSize);
+    }
+    if (common.getValueByPath(fromObject, ['outputMimeType']) !== undefined) {
+        throw new Error('outputMimeType parameter is not supported in Gemini API.');
+    }
+    if (common.getValueByPath(fromObject, ['outputCompressionQuality']) !==
+        undefined) {
+        throw new Error('outputCompressionQuality parameter is not supported in Gemini API.');
+    }
+    return toObject;
+}
+export function imageConfigToVertex(fromObject) {
+    const toObject = {};
+    const fromAspectRatio = common.getValueByPath(fromObject, ['aspectRatio']);
+    if (fromAspectRatio != null) {
+        common.setValueByPath(toObject, ['aspectRatio'], fromAspectRatio);
+    }
+    const fromImageSize = common.getValueByPath(fromObject, ['imageSize']);
+    if (fromImageSize != null) {
+        common.setValueByPath(toObject, ['imageSize'], fromImageSize);
+    }
+    const fromOutputMimeType = common.getValueByPath(fromObject, [
+        'outputMimeType',
+    ]);
+    if (fromOutputMimeType != null) {
+        common.setValueByPath(toObject, ['imageOutputOptions', 'mimeType'], fromOutputMimeType);
+    }
+    const fromOutputCompressionQuality = common.getValueByPath(fromObject, [
+        'outputCompressionQuality',
+    ]);
+    if (fromOutputCompressionQuality != null) {
+        common.setValueByPath(toObject, ['imageOutputOptions', 'compressionQuality'], fromOutputCompressionQuality);
+    }
+    return toObject;
+}
+export function imageFromMldev(fromObject) {
+    const toObject = {};
+    const fromImageBytes = common.getValueByPath(fromObject, [
+        'bytesBase64Encoded',
+    ]);
+    if (fromImageBytes != null) {
+        common.setValueByPath(toObject, ['imageBytes'], t.tBytes(fromImageBytes));
+    }
+    const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+    if (fromMimeType != null) {
+        common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+    }
+    return toObject;
+}
+export function imageFromVertex(fromObject) {
+    const toObject = {};
+    const fromGcsUri = common.getValueByPath(fromObject, ['gcsUri']);
+    if (fromGcsUri != null) {
+        common.setValueByPath(toObject, ['gcsUri'], fromGcsUri);
+    }
+    const fromImageBytes = common.getValueByPath(fromObject, [
+        'bytesBase64Encoded',
+    ]);
+    if (fromImageBytes != null) {
+        common.setValueByPath(toObject, ['imageBytes'], t.tBytes(fromImageBytes));
+    }
+    const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+    if (fromMimeType != null) {
+        common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+    }
+    return toObject;
+}
+export function imageToMldev(fromObject) {
+    const toObject = {};
+    if (common.getValueByPath(fromObject, ['gcsUri']) !== undefined) {
+        throw new Error('gcsUri parameter is not supported in Gemini API.');
+    }
+    const fromImageBytes = common.getValueByPath(fromObject, ['imageBytes']);
+    if (fromImageBytes != null) {
+        common.setValueByPath(toObject, ['bytesBase64Encoded'], t.tBytes(fromImageBytes));
+    }
+    const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+    if (fromMimeType != null) {
+        common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+    }
+    return toObject;
+}
+export function imageToVertex(fromObject) {
+    const toObject = {};
+    const fromGcsUri = common.getValueByPath(fromObject, ['gcsUri']);
+    if (fromGcsUri != null) {
+        common.setValueByPath(toObject, ['gcsUri'], fromGcsUri);
+    }
+    const fromImageBytes = common.getValueByPath(fromObject, ['imageBytes']);
+    if (fromImageBytes != null) {
+        common.setValueByPath(toObject, ['bytesBase64Encoded'], t.tBytes(fromImageBytes));
+    }
+    const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+    if (fromMimeType != null) {
+        common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+    }
+    return toObject;
+}
+export function listModelsConfigToMldev(apiClient, fromObject, parentObject) {
+    const toObject = {};
+    const fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
+    if (parentObject !== undefined && fromPageSize != null) {
+        common.setValueByPath(parentObject, ['_query', 'pageSize'], fromPageSize);
+    }
+    const fromPageToken = common.getValueByPath(fromObject, ['pageToken']);
+    if (parentObject !== undefined && fromPageToken != null) {
+        common.setValueByPath(parentObject, ['_query', 'pageToken'], fromPageToken);
+    }
+    const fromFilter = common.getValueByPath(fromObject, ['filter']);
+    if (parentObject !== undefined && fromFilter != null) {
+        common.setValueByPath(parentObject, ['_query', 'filter'], fromFilter);
+    }
+    const fromQueryBase = common.getValueByPath(fromObject, ['queryBase']);
+    if (parentObject !== undefined && fromQueryBase != null) {
+        common.setValueByPath(parentObject, ['_url', 'models_url'], t.tModelsUrl(apiClient, fromQueryBase));
+    }
+    return toObject;
+}
+export function listModelsConfigToVertex(apiClient, fromObject, parentObject) {
+    const toObject = {};
+    const fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
+    if (parentObject !== undefined && fromPageSize != null) {
+        common.setValueByPath(parentObject, ['_query', 'pageSize'], fromPageSize);
+    }
+    const fromPageToken = common.getValueByPath(fromObject, ['pageToken']);
+    if (parentObject !== undefined && fromPageToken != null) {
+        common.setValueByPath(parentObject, ['_query', 'pageToken'], fromPageToken);
+    }
+    const fromFilter = common.getValueByPath(fromObject, ['filter']);
+    if (parentObject !== undefined && fromFilter != null) {
+        common.setValueByPath(parentObject, ['_query', 'filter'], fromFilter);
+    }
+    const fromQueryBase = common.getValueByPath(fromObject, ['queryBase']);
+    if (parentObject !== undefined && fromQueryBase != null) {
+        common.setValueByPath(parentObject, ['_url', 'models_url'], t.tModelsUrl(apiClient, fromQueryBase));
+    }
+    return toObject;
+}
+export function listModelsParametersToMldev(apiClient, fromObject) {
+    const toObject = {};
+    const fromConfig = common.getValueByPath(fromObject, ['config']);
+    if (fromConfig != null) {
+        listModelsConfigToMldev(apiClient, fromConfig, toObject);
+    }
+    return toObject;
+}
+export function listModelsParametersToVertex(apiClient, fromObject) {
+    const toObject = {};
+    const fromConfig = common.getValueByPath(fromObject, ['config']);
+    if (fromConfig != null) {
+        listModelsConfigToVertex(apiClient, fromConfig, toObject);
+    }
+    return toObject;
+}
+export function listModelsResponseFromMldev(fromObject) {
+    const toObject = {};
+    const fromSdkHttpResponse = common.getValueByPath(fromObject, [
+        'sdkHttpResponse',
+    ]);
+    if (fromSdkHttpResponse != null) {
+        common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
+    }
+    const fromNextPageToken = common.getValueByPath(fromObject, [
+        'nextPageToken',
+    ]);
+    if (fromNextPageToken != null) {
+        common.setValueByPath(toObject, ['nextPageToken'], fromNextPageToken);
+    }
+    const fromModels = common.getValueByPath(fromObject, ['_self']);
+    if (fromModels != null) {
+        let transformedList = t.tExtractModels(fromModels);
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return modelFromMldev(item);
+            });
+        }
+        common.setValueByPath(toObject, ['models'], transformedList);
+    }
+    return toObject;
+}
+export function listModelsResponseFromVertex(fromObject) {
+    const toObject = {};
+    const fromSdkHttpResponse = common.getValueByPath(fromObject, [
+        'sdkHttpResponse',
+    ]);
+    if (fromSdkHttpResponse != null) {
+        common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
+    }
+    const fromNextPageToken = common.getValueByPath(fromObject, [
+        'nextPageToken',
+    ]);
+    if (fromNextPageToken != null) {
+        common.setValueByPath(toObject, ['nextPageToken'], fromNextPageToken);
+    }
+    const fromModels = common.getValueByPath(fromObject, ['_self']);
+    if (fromModels != null) {
+        let transformedList = t.tExtractModels(fromModels);
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return modelFromVertex(item);
+            });
+        }
+        common.setValueByPath(toObject, ['models'], transformedList);
+    }
+    return toObject;
+}
+export function maskReferenceConfigToVertex(fromObject) {
+    const toObject = {};
+    const fromMaskMode = common.getValueByPath(fromObject, ['maskMode']);
+    if (fromMaskMode != null) {
+        common.setValueByPath(toObject, ['maskMode'], fromMaskMode);
+    }
+    const fromSegmentationClasses = common.getValueByPath(fromObject, [
+        'segmentationClasses',
+    ]);
+    if (fromSegmentationClasses != null) {
+        common.setValueByPath(toObject, ['maskClasses'], fromSegmentationClasses);
+    }
+    const fromMaskDilation = common.getValueByPath(fromObject, ['maskDilation']);
+    if (fromMaskDilation != null) {
+        common.setValueByPath(toObject, ['dilation'], fromMaskDilation);
+    }
+    return toObject;
+}
+export function modelFromMldev(fromObject) {
+    const toObject = {};
+    const fromName = common.getValueByPath(fromObject, ['name']);
+    if (fromName != null) {
+        common.setValueByPath(toObject, ['name'], fromName);
+    }
+    const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
+    if (fromDisplayName != null) {
+        common.setValueByPath(toObject, ['displayName'], fromDisplayName);
+    }
+    const fromDescription = common.getValueByPath(fromObject, ['description']);
+    if (fromDescription != null) {
+        common.setValueByPath(toObject, ['description'], fromDescription);
+    }
+    const fromVersion = common.getValueByPath(fromObject, ['version']);
+    if (fromVersion != null) {
+        common.setValueByPath(toObject, ['version'], fromVersion);
+    }
+    const fromTunedModelInfo = common.getValueByPath(fromObject, ['_self']);
+    if (fromTunedModelInfo != null) {
+        common.setValueByPath(toObject, ['tunedModelInfo'], tunedModelInfoFromMldev(fromTunedModelInfo));
+    }
+    const fromInputTokenLimit = common.getValueByPath(fromObject, [
+        'inputTokenLimit',
+    ]);
+    if (fromInputTokenLimit != null) {
+        common.setValueByPath(toObject, ['inputTokenLimit'], fromInputTokenLimit);
+    }
+    const fromOutputTokenLimit = common.getValueByPath(fromObject, [
+        'outputTokenLimit',
+    ]);
+    if (fromOutputTokenLimit != null) {
+        common.setValueByPath(toObject, ['outputTokenLimit'], fromOutputTokenLimit);
+    }
+    const fromSupportedActions = common.getValueByPath(fromObject, [
+        'supportedGenerationMethods',
+    ]);
+    if (fromSupportedActions != null) {
+        common.setValueByPath(toObject, ['supportedActions'], fromSupportedActions);
+    }
+    const fromTemperature = common.getValueByPath(fromObject, ['temperature']);
+    if (fromTemperature != null) {
+        common.setValueByPath(toObject, ['temperature'], fromTemperature);
+    }
+    const fromMaxTemperature = common.getValueByPath(fromObject, [
+        'maxTemperature',
+    ]);
+    if (fromMaxTemperature != null) {
+        common.setValueByPath(toObject, ['maxTemperature'], fromMaxTemperature);
+    }
+    const fromTopP = common.getValueByPath(fromObject, ['topP']);
+    if (fromTopP != null) {
+        common.setValueByPath(toObject, ['topP'], fromTopP);
+    }
+    const fromTopK = common.getValueByPath(fromObject, ['topK']);
+    if (fromTopK != null) {
+        common.setValueByPath(toObject, ['topK'], fromTopK);
+    }
+    const fromThinking = common.getValueByPath(fromObject, ['thinking']);
+    if (fromThinking != null) {
+        common.setValueByPath(toObject, ['thinking'], fromThinking);
+    }
+    return toObject;
+}
+export function modelFromVertex(fromObject) {
+    const toObject = {};
+    const fromName = common.getValueByPath(fromObject, ['name']);
+    if (fromName != null) {
+        common.setValueByPath(toObject, ['name'], fromName);
+    }
+    const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
+    if (fromDisplayName != null) {
+        common.setValueByPath(toObject, ['displayName'], fromDisplayName);
+    }
+    const fromDescription = common.getValueByPath(fromObject, ['description']);
+    if (fromDescription != null) {
+        common.setValueByPath(toObject, ['description'], fromDescription);
+    }
+    const fromVersion = common.getValueByPath(fromObject, ['versionId']);
+    if (fromVersion != null) {
+        common.setValueByPath(toObject, ['version'], fromVersion);
+    }
+    const fromEndpoints = common.getValueByPath(fromObject, ['deployedModels']);
+    if (fromEndpoints != null) {
+        let transformedList = fromEndpoints;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return endpointFromVertex(item);
+            });
+        }
+        common.setValueByPath(toObject, ['endpoints'], transformedList);
+    }
+    const fromLabels = common.getValueByPath(fromObject, ['labels']);
+    if (fromLabels != null) {
+        common.setValueByPath(toObject, ['labels'], fromLabels);
+    }
+    const fromTunedModelInfo = common.getValueByPath(fromObject, ['_self']);
+    if (fromTunedModelInfo != null) {
+        common.setValueByPath(toObject, ['tunedModelInfo'], tunedModelInfoFromVertex(fromTunedModelInfo));
+    }
+    const fromDefaultCheckpointId = common.getValueByPath(fromObject, [
+        'defaultCheckpointId',
+    ]);
+    if (fromDefaultCheckpointId != null) {
+        common.setValueByPath(toObject, ['defaultCheckpointId'], fromDefaultCheckpointId);
+    }
+    const fromCheckpoints = common.getValueByPath(fromObject, ['checkpoints']);
+    if (fromCheckpoints != null) {
+        let transformedList = fromCheckpoints;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return item;
+            });
+        }
+        common.setValueByPath(toObject, ['checkpoints'], transformedList);
+    }
+    return toObject;
+}
+export function partToMldev(fromObject) {
+    const toObject = {};
+    const fromMediaResolution = common.getValueByPath(fromObject, [
+        'mediaResolution',
+    ]);
+    if (fromMediaResolution != null) {
+        common.setValueByPath(toObject, ['mediaResolution'], fromMediaResolution);
+    }
+    const fromCodeExecutionResult = common.getValueByPath(fromObject, [
+        'codeExecutionResult',
+    ]);
+    if (fromCodeExecutionResult != null) {
+        common.setValueByPath(toObject, ['codeExecutionResult'], fromCodeExecutionResult);
+    }
+    const fromExecutableCode = common.getValueByPath(fromObject, [
+        'executableCode',
+    ]);
+    if (fromExecutableCode != null) {
+        common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
+    }
+    const fromFileData = common.getValueByPath(fromObject, ['fileData']);
+    if (fromFileData != null) {
+        common.setValueByPath(toObject, ['fileData'], fileDataToMldev(fromFileData));
+    }
+    const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
+    if (fromFunctionCall != null) {
+        common.setValueByPath(toObject, ['functionCall'], functionCallToMldev(fromFunctionCall));
+    }
+    const fromFunctionResponse = common.getValueByPath(fromObject, [
+        'functionResponse',
+    ]);
+    if (fromFunctionResponse != null) {
+        common.setValueByPath(toObject, ['functionResponse'], fromFunctionResponse);
+    }
+    const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
+    if (fromInlineData != null) {
+        common.setValueByPath(toObject, ['inlineData'], blobToMldev(fromInlineData));
+    }
+    const fromText = common.getValueByPath(fromObject, ['text']);
+    if (fromText != null) {
+        common.setValueByPath(toObject, ['text'], fromText);
+    }
+    const fromThought = common.getValueByPath(fromObject, ['thought']);
+    if (fromThought != null) {
+        common.setValueByPath(toObject, ['thought'], fromThought);
+    }
+    const fromThoughtSignature = common.getValueByPath(fromObject, [
+        'thoughtSignature',
+    ]);
+    if (fromThoughtSignature != null) {
+        common.setValueByPath(toObject, ['thoughtSignature'], fromThoughtSignature);
+    }
+    const fromVideoMetadata = common.getValueByPath(fromObject, [
+        'videoMetadata',
+    ]);
+    if (fromVideoMetadata != null) {
+        common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
+    }
+    return toObject;
+}
+export function productImageToVertex(fromObject) {
+    const toObject = {};
+    const fromProductImage = common.getValueByPath(fromObject, ['productImage']);
+    if (fromProductImage != null) {
+        common.setValueByPath(toObject, ['image'], imageToVertex(fromProductImage));
+    }
+    return toObject;
+}
+export function recontextImageConfigToVertex(fromObject, parentObject) {
+    const toObject = {};
+    const fromNumberOfImages = common.getValueByPath(fromObject, [
+        'numberOfImages',
+    ]);
+    if (parentObject !== undefined && fromNumberOfImages != null) {
+        common.setValueByPath(parentObject, ['parameters', 'sampleCount'], fromNumberOfImages);
+    }
+    const fromBaseSteps = common.getValueByPath(fromObject, ['baseSteps']);
+    if (parentObject !== undefined && fromBaseSteps != null) {
+        common.setValueByPath(parentObject, ['parameters', 'baseSteps'], fromBaseSteps);
+    }
+    const fromOutputGcsUri = common.getValueByPath(fromObject, ['outputGcsUri']);
+    if (parentObject !== undefined && fromOutputGcsUri != null) {
+        common.setValueByPath(parentObject, ['parameters', 'storageUri'], fromOutputGcsUri);
+    }
+    const fromSeed = common.getValueByPath(fromObject, ['seed']);
+    if (parentObject !== undefined && fromSeed != null) {
+        common.setValueByPath(parentObject, ['parameters', 'seed'], fromSeed);
+    }
+    const fromSafetyFilterLevel = common.getValueByPath(fromObject, [
+        'safetyFilterLevel',
+    ]);
+    if (parentObject !== undefined && fromSafetyFilterLevel != null) {
+        common.setValueByPath(parentObject, ['parameters', 'safetySetting'], fromSafetyFilterLevel);
+    }
+    const fromPersonGeneration = common.getValueByPath(fromObject, [
+        'personGeneration',
+    ]);
+    if (parentObject !== undefined && fromPersonGeneration != null) {
+        common.setValueByPath(parentObject, ['parameters', 'personGeneration'], fromPersonGeneration);
+    }
+    const fromAddWatermark = common.getValueByPath(fromObject, ['addWatermark']);
+    if (parentObject !== undefined && fromAddWatermark != null) {
+        common.setValueByPath(parentObject, ['parameters', 'addWatermark'], fromAddWatermark);
+    }
+    const fromOutputMimeType = common.getValueByPath(fromObject, [
+        'outputMimeType',
+    ]);
+    if (parentObject !== undefined && fromOutputMimeType != null) {
+        common.setValueByPath(parentObject, ['parameters', 'outputOptions', 'mimeType'], fromOutputMimeType);
+    }
+    const fromOutputCompressionQuality = common.getValueByPath(fromObject, [
+        'outputCompressionQuality',
+    ]);
+    if (parentObject !== undefined && fromOutputCompressionQuality != null) {
+        common.setValueByPath(parentObject, ['parameters', 'outputOptions', 'compressionQuality'], fromOutputCompressionQuality);
+    }
+    const fromEnhancePrompt = common.getValueByPath(fromObject, [
+        'enhancePrompt',
+    ]);
+    if (parentObject !== undefined && fromEnhancePrompt != null) {
+        common.setValueByPath(parentObject, ['parameters', 'enhancePrompt'], fromEnhancePrompt);
+    }
+    const fromLabels = common.getValueByPath(fromObject, ['labels']);
+    if (parentObject !== undefined && fromLabels != null) {
+        common.setValueByPath(parentObject, ['labels'], fromLabels);
+    }
+    return toObject;
+}
+export function recontextImageParametersToVertex(apiClient, fromObject) {
+    const toObject = {};
+    const fromModel = common.getValueByPath(fromObject, ['model']);
+    if (fromModel != null) {
+        common.setValueByPath(toObject, ['_url', 'model'], t.tModel(apiClient, fromModel));
+    }
+    const fromSource = common.getValueByPath(fromObject, ['source']);
+    if (fromSource != null) {
+        recontextImageSourceToVertex(fromSource, toObject);
+    }
+    const fromConfig = common.getValueByPath(fromObject, ['config']);
+    if (fromConfig != null) {
+        recontextImageConfigToVertex(fromConfig, toObject);
+    }
+    return toObject;
+}
+export function recontextImageResponseFromVertex(fromObject) {
+    const toObject = {};
+    const fromGeneratedImages = common.getValueByPath(fromObject, [
+        'predictions',
+    ]);
+    if (fromGeneratedImages != null) {
+        let transformedList = fromGeneratedImages;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return generatedImageFromVertex(item);
+            });
+        }
+        common.setValueByPath(toObject, ['generatedImages'], transformedList);
+    }
+    return toObject;
+}
+export function recontextImageSourceToVertex(fromObject, parentObject) {
+    const toObject = {};
+    const fromPrompt = common.getValueByPath(fromObject, ['prompt']);
+    if (parentObject !== undefined && fromPrompt != null) {
+        common.setValueByPath(parentObject, ['instances[0]', 'prompt'], fromPrompt);
+    }
+    const fromPersonImage = common.getValueByPath(fromObject, ['personImage']);
+    if (parentObject !== undefined && fromPersonImage != null) {
+        common.setValueByPath(parentObject, ['instances[0]', 'personImage', 'image'], imageToVertex(fromPersonImage));
+    }
+    const fromProductImages = common.getValueByPath(fromObject, [
+        'productImages',
+    ]);
+    if (parentObject !== undefined && fromProductImages != null) {
+        let transformedList = fromProductImages;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return productImageToVertex(item);
+            });
+        }
+        common.setValueByPath(parentObject, ['instances[0]', 'productImages'], transformedList);
+    }
+    return toObject;
+}
+export function referenceImageAPIInternalToVertex(fromObject) {
+    const toObject = {};
+    const fromReferenceImage = common.getValueByPath(fromObject, [
+        'referenceImage',
+    ]);
+    if (fromReferenceImage != null) {
+        common.setValueByPath(toObject, ['referenceImage'], imageToVertex(fromReferenceImage));
+    }
+    const fromReferenceId = common.getValueByPath(fromObject, ['referenceId']);
+    if (fromReferenceId != null) {
+        common.setValueByPath(toObject, ['referenceId'], fromReferenceId);
+    }
+    const fromReferenceType = common.getValueByPath(fromObject, [
+        'referenceType',
+    ]);
+    if (fromReferenceType != null) {
+        common.setValueByPath(toObject, ['referenceType'], fromReferenceType);
+    }
+    const fromMaskImageConfig = common.getValueByPath(fromObject, [
+        'maskImageConfig',
+    ]);
+    if (fromMaskImageConfig != null) {
+        common.setValueByPath(toObject, ['maskImageConfig'], maskReferenceConfigToVertex(fromMaskImageConfig));
+    }
+    const fromControlImageConfig = common.getValueByPath(fromObject, [
+        'controlImageConfig',
+    ]);
+    if (fromControlImageConfig != null) {
+        common.setValueByPath(toObject, ['controlImageConfig'], controlReferenceConfigToVertex(fromControlImageConfig));
+    }
+    const fromStyleImageConfig = common.getValueByPath(fromObject, [
+        'styleImageConfig',
+    ]);
+    if (fromStyleImageConfig != null) {
+        common.setValueByPath(toObject, ['styleImageConfig'], fromStyleImageConfig);
+    }
+    const fromSubjectImageConfig = common.getValueByPath(fromObject, [
+        'subjectImageConfig',
+    ]);
+    if (fromSubjectImageConfig != null) {
+        common.setValueByPath(toObject, ['subjectImageConfig'], fromSubjectImageConfig);
+    }
+    return toObject;
+}
+export function safetyAttributesFromMldev(fromObject) {
+    const toObject = {};
+    const fromCategories = common.getValueByPath(fromObject, [
+        'safetyAttributes',
+        'categories',
+    ]);
+    if (fromCategories != null) {
+        common.setValueByPath(toObject, ['categories'], fromCategories);
+    }
+    const fromScores = common.getValueByPath(fromObject, [
+        'safetyAttributes',
+        'scores',
+    ]);
+    if (fromScores != null) {
+        common.setValueByPath(toObject, ['scores'], fromScores);
+    }
+    const fromContentType = common.getValueByPath(fromObject, ['contentType']);
+    if (fromContentType != null) {
+        common.setValueByPath(toObject, ['contentType'], fromContentType);
+    }
+    return toObject;
+}
+export function safetyAttributesFromVertex(fromObject) {
+    const toObject = {};
+    const fromCategories = common.getValueByPath(fromObject, [
+        'safetyAttributes',
+        'categories',
+    ]);
+    if (fromCategories != null) {
+        common.setValueByPath(toObject, ['categories'], fromCategories);
+    }
+    const fromScores = common.getValueByPath(fromObject, [
+        'safetyAttributes',
+        'scores',
+    ]);
+    if (fromScores != null) {
+        common.setValueByPath(toObject, ['scores'], fromScores);
+    }
+    const fromContentType = common.getValueByPath(fromObject, ['contentType']);
+    if (fromContentType != null) {
+        common.setValueByPath(toObject, ['contentType'], fromContentType);
+    }
+    return toObject;
+}
+export function safetySettingToMldev(fromObject) {
+    const toObject = {};
+    const fromCategory = common.getValueByPath(fromObject, ['category']);
+    if (fromCategory != null) {
+        common.setValueByPath(toObject, ['category'], fromCategory);
+    }
+    if (common.getValueByPath(fromObject, ['method']) !== undefined) {
+        throw new Error('method parameter is not supported in Gemini API.');
+    }
+    const fromThreshold = common.getValueByPath(fromObject, ['threshold']);
+    if (fromThreshold != null) {
+        common.setValueByPath(toObject, ['threshold'], fromThreshold);
+    }
+    return toObject;
+}
+export function scribbleImageToVertex(fromObject) {
+    const toObject = {};
+    const fromImage = common.getValueByPath(fromObject, ['image']);
+    if (fromImage != null) {
+        common.setValueByPath(toObject, ['image'], imageToVertex(fromImage));
+    }
+    return toObject;
+}
+export function segmentImageConfigToVertex(fromObject, parentObject) {
+    const toObject = {};
+    const fromMode = common.getValueByPath(fromObject, ['mode']);
+    if (parentObject !== undefined && fromMode != null) {
+        common.setValueByPath(parentObject, ['parameters', 'mode'], fromMode);
+    }
+    const fromMaxPredictions = common.getValueByPath(fromObject, [
+        'maxPredictions',
+    ]);
+    if (parentObject !== undefined && fromMaxPredictions != null) {
+        common.setValueByPath(parentObject, ['parameters', 'maxPredictions'], fromMaxPredictions);
+    }
+    const fromConfidenceThreshold = common.getValueByPath(fromObject, [
+        'confidenceThreshold',
+    ]);
+    if (parentObject !== undefined && fromConfidenceThreshold != null) {
+        common.setValueByPath(parentObject, ['parameters', 'confidenceThreshold'], fromConfidenceThreshold);
+    }
+    const fromMaskDilation = common.getValueByPath(fromObject, ['maskDilation']);
+    if (parentObject !== undefined && fromMaskDilation != null) {
+        common.setValueByPath(parentObject, ['parameters', 'maskDilation'], fromMaskDilation);
+    }
+    const fromBinaryColorThreshold = common.getValueByPath(fromObject, [
+        'binaryColorThreshold',
+    ]);
+    if (parentObject !== undefined && fromBinaryColorThreshold != null) {
+        common.setValueByPath(parentObject, ['parameters', 'binaryColorThreshold'], fromBinaryColorThreshold);
+    }
+    const fromLabels = common.getValueByPath(fromObject, ['labels']);
+    if (parentObject !== undefined && fromLabels != null) {
+        common.setValueByPath(parentObject, ['labels'], fromLabels);
+    }
+    return toObject;
+}
+export function segmentImageParametersToVertex(apiClient, fromObject) {
+    const toObject = {};
+    const fromModel = common.getValueByPath(fromObject, ['model']);
+    if (fromModel != null) {
+        common.setValueByPath(toObject, ['_url', 'model'], t.tModel(apiClient, fromModel));
+    }
+    const fromSource = common.getValueByPath(fromObject, ['source']);
+    if (fromSource != null) {
+        segmentImageSourceToVertex(fromSource, toObject);
+    }
+    const fromConfig = common.getValueByPath(fromObject, ['config']);
+    if (fromConfig != null) {
+        segmentImageConfigToVertex(fromConfig, toObject);
+    }
+    return toObject;
+}
+export function segmentImageResponseFromVertex(fromObject) {
+    const toObject = {};
+    const fromGeneratedMasks = common.getValueByPath(fromObject, ['predictions']);
+    if (fromGeneratedMasks != null) {
+        let transformedList = fromGeneratedMasks;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return generatedImageMaskFromVertex(item);
+            });
+        }
+        common.setValueByPath(toObject, ['generatedMasks'], transformedList);
+    }
+    return toObject;
+}
+export function segmentImageSourceToVertex(fromObject, parentObject) {
+    const toObject = {};
+    const fromPrompt = common.getValueByPath(fromObject, ['prompt']);
+    if (parentObject !== undefined && fromPrompt != null) {
+        common.setValueByPath(parentObject, ['instances[0]', 'prompt'], fromPrompt);
+    }
+    const fromImage = common.getValueByPath(fromObject, ['image']);
+    if (parentObject !== undefined && fromImage != null) {
+        common.setValueByPath(parentObject, ['instances[0]', 'image'], imageToVertex(fromImage));
+    }
+    const fromScribbleImage = common.getValueByPath(fromObject, [
+        'scribbleImage',
+    ]);
+    if (parentObject !== undefined && fromScribbleImage != null) {
+        common.setValueByPath(parentObject, ['instances[0]', 'scribble'], scribbleImageToVertex(fromScribbleImage));
+    }
+    return toObject;
+}
+export function speechConfigToVertex(fromObject) {
+    const toObject = {};
+    const fromLanguageCode = common.getValueByPath(fromObject, ['languageCode']);
+    if (fromLanguageCode != null) {
+        common.setValueByPath(toObject, ['languageCode'], fromLanguageCode);
+    }
+    const fromVoiceConfig = common.getValueByPath(fromObject, ['voiceConfig']);
+    if (fromVoiceConfig != null) {
+        common.setValueByPath(toObject, ['voiceConfig'], fromVoiceConfig);
+    }
+    if (common.getValueByPath(fromObject, ['multiSpeakerVoiceConfig']) !== undefined) {
+        throw new Error('multiSpeakerVoiceConfig parameter is not supported in Vertex AI.');
+    }
+    return toObject;
+}
+export function toolConfigToMldev(fromObject) {
+    const toObject = {};
+    const fromFunctionCallingConfig = common.getValueByPath(fromObject, [
+        'functionCallingConfig',
+    ]);
+    if (fromFunctionCallingConfig != null) {
+        common.setValueByPath(toObject, ['functionCallingConfig'], functionCallingConfigToMldev(fromFunctionCallingConfig));
+    }
+    const fromRetrievalConfig = common.getValueByPath(fromObject, [
+        'retrievalConfig',
+    ]);
+    if (fromRetrievalConfig != null) {
+        common.setValueByPath(toObject, ['retrievalConfig'], fromRetrievalConfig);
+    }
+    return toObject;
+}
+export function toolToMldev(fromObject) {
+    const toObject = {};
+    const fromFunctionDeclarations = common.getValueByPath(fromObject, [
+        'functionDeclarations',
+    ]);
+    if (fromFunctionDeclarations != null) {
+        let transformedList = fromFunctionDeclarations;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return item;
+            });
+        }
+        common.setValueByPath(toObject, ['functionDeclarations'], transformedList);
+    }
+    if (common.getValueByPath(fromObject, ['retrieval']) !== undefined) {
+        throw new Error('retrieval parameter is not supported in Gemini API.');
+    }
+    const fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
+        'googleSearchRetrieval',
+    ]);
+    if (fromGoogleSearchRetrieval != null) {
+        common.setValueByPath(toObject, ['googleSearchRetrieval'], fromGoogleSearchRetrieval);
+    }
+    const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
+    if (fromComputerUse != null) {
+        common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
+    }
+    const fromFileSearch = common.getValueByPath(fromObject, ['fileSearch']);
+    if (fromFileSearch != null) {
+        common.setValueByPath(toObject, ['fileSearch'], fromFileSearch);
+    }
+    const fromCodeExecution = common.getValueByPath(fromObject, [
+        'codeExecution',
+    ]);
+    if (fromCodeExecution != null) {
+        common.setValueByPath(toObject, ['codeExecution'], fromCodeExecution);
+    }
+    if (common.getValueByPath(fromObject, ['enterpriseWebSearch']) !== undefined) {
+        throw new Error('enterpriseWebSearch parameter is not supported in Gemini API.');
+    }
+    const fromGoogleMaps = common.getValueByPath(fromObject, ['googleMaps']);
+    if (fromGoogleMaps != null) {
+        common.setValueByPath(toObject, ['googleMaps'], googleMapsToMldev(fromGoogleMaps));
+    }
+    const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
+    if (fromGoogleSearch != null) {
+        common.setValueByPath(toObject, ['googleSearch'], googleSearchToMldev(fromGoogleSearch));
+    }
+    const fromUrlContext = common.getValueByPath(fromObject, ['urlContext']);
+    if (fromUrlContext != null) {
+        common.setValueByPath(toObject, ['urlContext'], fromUrlContext);
+    }
+    return toObject;
+}
+export function toolToVertex(fromObject) {
+    const toObject = {};
+    const fromFunctionDeclarations = common.getValueByPath(fromObject, [
+        'functionDeclarations',
+    ]);
+    if (fromFunctionDeclarations != null) {
+        let transformedList = fromFunctionDeclarations;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return functionDeclarationToVertex(item);
+            });
+        }
+        common.setValueByPath(toObject, ['functionDeclarations'], transformedList);
+    }
+    const fromRetrieval = common.getValueByPath(fromObject, ['retrieval']);
+    if (fromRetrieval != null) {
+        common.setValueByPath(toObject, ['retrieval'], fromRetrieval);
+    }
+    const fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
+        'googleSearchRetrieval',
+    ]);
+    if (fromGoogleSearchRetrieval != null) {
+        common.setValueByPath(toObject, ['googleSearchRetrieval'], fromGoogleSearchRetrieval);
+    }
+    const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
+    if (fromComputerUse != null) {
+        common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
+    }
+    if (common.getValueByPath(fromObject, ['fileSearch']) !== undefined) {
+        throw new Error('fileSearch parameter is not supported in Vertex AI.');
+    }
+    const fromCodeExecution = common.getValueByPath(fromObject, [
+        'codeExecution',
+    ]);
+    if (fromCodeExecution != null) {
+        common.setValueByPath(toObject, ['codeExecution'], fromCodeExecution);
+    }
+    const fromEnterpriseWebSearch = common.getValueByPath(fromObject, [
+        'enterpriseWebSearch',
+    ]);
+    if (fromEnterpriseWebSearch != null) {
+        common.setValueByPath(toObject, ['enterpriseWebSearch'], fromEnterpriseWebSearch);
+    }
+    const fromGoogleMaps = common.getValueByPath(fromObject, ['googleMaps']);
+    if (fromGoogleMaps != null) {
+        common.setValueByPath(toObject, ['googleMaps'], fromGoogleMaps);
+    }
+    const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
+    if (fromGoogleSearch != null) {
+        common.setValueByPath(toObject, ['googleSearch'], fromGoogleSearch);
+    }
+    const fromUrlContext = common.getValueByPath(fromObject, ['urlContext']);
+    if (fromUrlContext != null) {
+        common.setValueByPath(toObject, ['urlContext'], fromUrlContext);
+    }
+    return toObject;
+}
+export function tunedModelInfoFromMldev(fromObject) {
+    const toObject = {};
+    const fromBaseModel = common.getValueByPath(fromObject, ['baseModel']);
+    if (fromBaseModel != null) {
+        common.setValueByPath(toObject, ['baseModel'], fromBaseModel);
+    }
+    const fromCreateTime = common.getValueByPath(fromObject, ['createTime']);
+    if (fromCreateTime != null) {
+        common.setValueByPath(toObject, ['createTime'], fromCreateTime);
+    }
+    const fromUpdateTime = common.getValueByPath(fromObject, ['updateTime']);
+    if (fromUpdateTime != null) {
+        common.setValueByPath(toObject, ['updateTime'], fromUpdateTime);
+    }
+    return toObject;
+}
+export function tunedModelInfoFromVertex(fromObject) {
+    const toObject = {};
+    const fromBaseModel = common.getValueByPath(fromObject, [
+        'labels',
+        'google-vertex-llm-tuning-base-model-id',
+    ]);
+    if (fromBaseModel != null) {
+        common.setValueByPath(toObject, ['baseModel'], fromBaseModel);
+    }
+    const fromCreateTime = common.getValueByPath(fromObject, ['createTime']);
+    if (fromCreateTime != null) {
+        common.setValueByPath(toObject, ['createTime'], fromCreateTime);
+    }
+    const fromUpdateTime = common.getValueByPath(fromObject, ['updateTime']);
+    if (fromUpdateTime != null) {
+        common.setValueByPath(toObject, ['updateTime'], fromUpdateTime);
+    }
+    return toObject;
+}
+export function updateModelConfigToMldev(fromObject, parentObject) {
+    const toObject = {};
+    const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
+    if (parentObject !== undefined && fromDisplayName != null) {
+        common.setValueByPath(parentObject, ['displayName'], fromDisplayName);
+    }
+    const fromDescription = common.getValueByPath(fromObject, ['description']);
+    if (parentObject !== undefined && fromDescription != null) {
+        common.setValueByPath(parentObject, ['description'], fromDescription);
+    }
+    const fromDefaultCheckpointId = common.getValueByPath(fromObject, [
+        'defaultCheckpointId',
+    ]);
+    if (parentObject !== undefined && fromDefaultCheckpointId != null) {
+        common.setValueByPath(parentObject, ['defaultCheckpointId'], fromDefaultCheckpointId);
+    }
+    return toObject;
+}
+export function updateModelConfigToVertex(fromObject, parentObject) {
+    const toObject = {};
+    const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
+    if (parentObject !== undefined && fromDisplayName != null) {
+        common.setValueByPath(parentObject, ['displayName'], fromDisplayName);
+    }
+    const fromDescription = common.getValueByPath(fromObject, ['description']);
+    if (parentObject !== undefined && fromDescription != null) {
+        common.setValueByPath(parentObject, ['description'], fromDescription);
+    }
+    const fromDefaultCheckpointId = common.getValueByPath(fromObject, [
+        'defaultCheckpointId',
+    ]);
+    if (parentObject !== undefined && fromDefaultCheckpointId != null) {
+        common.setValueByPath(parentObject, ['defaultCheckpointId'], fromDefaultCheckpointId);
+    }
+    return toObject;
+}
+export function updateModelParametersToMldev(apiClient, fromObject) {
+    const toObject = {};
+    const fromModel = common.getValueByPath(fromObject, ['model']);
+    if (fromModel != null) {
+        common.setValueByPath(toObject, ['_url', 'name'], t.tModel(apiClient, fromModel));
+    }
+    const fromConfig = common.getValueByPath(fromObject, ['config']);
+    if (fromConfig != null) {
+        updateModelConfigToMldev(fromConfig, toObject);
+    }
+    return toObject;
+}
+export function updateModelParametersToVertex(apiClient, fromObject) {
+    const toObject = {};
+    const fromModel = common.getValueByPath(fromObject, ['model']);
+    if (fromModel != null) {
+        common.setValueByPath(toObject, ['_url', 'model'], t.tModel(apiClient, fromModel));
+    }
+    const fromConfig = common.getValueByPath(fromObject, ['config']);
+    if (fromConfig != null) {
+        updateModelConfigToVertex(fromConfig, toObject);
+    }
+    return toObject;
+}
+export function upscaleImageAPIConfigInternalToVertex(fromObject, parentObject) {
+    const toObject = {};
+    const fromOutputGcsUri = common.getValueByPath(fromObject, ['outputGcsUri']);
+    if (parentObject !== undefined && fromOutputGcsUri != null) {
+        common.setValueByPath(parentObject, ['parameters', 'storageUri'], fromOutputGcsUri);
+    }
+    const fromSafetyFilterLevel = common.getValueByPath(fromObject, [
+        'safetyFilterLevel',
+    ]);
+    if (parentObject !== undefined && fromSafetyFilterLevel != null) {
+        common.setValueByPath(parentObject, ['parameters', 'safetySetting'], fromSafetyFilterLevel);
+    }
+    const fromPersonGeneration = common.getValueByPath(fromObject, [
+        'personGeneration',
+    ]);
+    if (parentObject !== undefined && fromPersonGeneration != null) {
+        common.setValueByPath(parentObject, ['parameters', 'personGeneration'], fromPersonGeneration);
+    }
+    const fromIncludeRaiReason = common.getValueByPath(fromObject, [
+        'includeRaiReason',
+    ]);
+    if (parentObject !== undefined && fromIncludeRaiReason != null) {
+        common.setValueByPath(parentObject, ['parameters', 'includeRaiReason'], fromIncludeRaiReason);
+    }
+    const fromOutputMimeType = common.getValueByPath(fromObject, [
+        'outputMimeType',
+    ]);
+    if (parentObject !== undefined && fromOutputMimeType != null) {
+        common.setValueByPath(parentObject, ['parameters', 'outputOptions', 'mimeType'], fromOutputMimeType);
+    }
+    const fromOutputCompressionQuality = common.getValueByPath(fromObject, [
+        'outputCompressionQuality',
+    ]);
+    if (parentObject !== undefined && fromOutputCompressionQuality != null) {
+        common.setValueByPath(parentObject, ['parameters', 'outputOptions', 'compressionQuality'], fromOutputCompressionQuality);
+    }
+    const fromEnhanceInputImage = common.getValueByPath(fromObject, [
+        'enhanceInputImage',
+    ]);
+    if (parentObject !== undefined && fromEnhanceInputImage != null) {
+        common.setValueByPath(parentObject, ['parameters', 'upscaleConfig', 'enhanceInputImage'], fromEnhanceInputImage);
+    }
+    const fromImagePreservationFactor = common.getValueByPath(fromObject, [
+        'imagePreservationFactor',
+    ]);
+    if (parentObject !== undefined && fromImagePreservationFactor != null) {
+        common.setValueByPath(parentObject, ['parameters', 'upscaleConfig', 'imagePreservationFactor'], fromImagePreservationFactor);
+    }
+    const fromLabels = common.getValueByPath(fromObject, ['labels']);
+    if (parentObject !== undefined && fromLabels != null) {
+        common.setValueByPath(parentObject, ['labels'], fromLabels);
+    }
+    const fromNumberOfImages = common.getValueByPath(fromObject, [
+        'numberOfImages',
+    ]);
+    if (parentObject !== undefined && fromNumberOfImages != null) {
+        common.setValueByPath(parentObject, ['parameters', 'sampleCount'], fromNumberOfImages);
+    }
+    const fromMode = common.getValueByPath(fromObject, ['mode']);
+    if (parentObject !== undefined && fromMode != null) {
+        common.setValueByPath(parentObject, ['parameters', 'mode'], fromMode);
+    }
+    return toObject;
+}
+export function upscaleImageAPIParametersInternalToVertex(apiClient, fromObject) {
+    const toObject = {};
+    const fromModel = common.getValueByPath(fromObject, ['model']);
+    if (fromModel != null) {
+        common.setValueByPath(toObject, ['_url', 'model'], t.tModel(apiClient, fromModel));
+    }
+    const fromImage = common.getValueByPath(fromObject, ['image']);
+    if (fromImage != null) {
+        common.setValueByPath(toObject, ['instances[0]', 'image'], imageToVertex(fromImage));
+    }
+    const fromUpscaleFactor = common.getValueByPath(fromObject, [
+        'upscaleFactor',
+    ]);
+    if (fromUpscaleFactor != null) {
+        common.setValueByPath(toObject, ['parameters', 'upscaleConfig', 'upscaleFactor'], fromUpscaleFactor);
+    }
+    const fromConfig = common.getValueByPath(fromObject, ['config']);
+    if (fromConfig != null) {
+        upscaleImageAPIConfigInternalToVertex(fromConfig, toObject);
+    }
+    return toObject;
+}
+export function upscaleImageResponseFromVertex(fromObject) {
+    const toObject = {};
+    const fromSdkHttpResponse = common.getValueByPath(fromObject, [
+        'sdkHttpResponse',
+    ]);
+    if (fromSdkHttpResponse != null) {
+        common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
+    }
+    const fromGeneratedImages = common.getValueByPath(fromObject, [
+        'predictions',
+    ]);
+    if (fromGeneratedImages != null) {
+        let transformedList = fromGeneratedImages;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return generatedImageFromVertex(item);
+            });
+        }
+        common.setValueByPath(toObject, ['generatedImages'], transformedList);
+    }
+    return toObject;
+}
+export function videoFromMldev(fromObject) {
+    const toObject = {};
+    const fromUri = common.getValueByPath(fromObject, ['uri']);
+    if (fromUri != null) {
+        common.setValueByPath(toObject, ['uri'], fromUri);
+    }
+    const fromVideoBytes = common.getValueByPath(fromObject, ['encodedVideo']);
+    if (fromVideoBytes != null) {
+        common.setValueByPath(toObject, ['videoBytes'], t.tBytes(fromVideoBytes));
+    }
+    const fromMimeType = common.getValueByPath(fromObject, ['encoding']);
+    if (fromMimeType != null) {
+        common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+    }
+    return toObject;
+}
+export function videoFromVertex(fromObject) {
+    const toObject = {};
+    const fromUri = common.getValueByPath(fromObject, ['gcsUri']);
+    if (fromUri != null) {
+        common.setValueByPath(toObject, ['uri'], fromUri);
+    }
+    const fromVideoBytes = common.getValueByPath(fromObject, [
+        'bytesBase64Encoded',
+    ]);
+    if (fromVideoBytes != null) {
+        common.setValueByPath(toObject, ['videoBytes'], t.tBytes(fromVideoBytes));
+    }
+    const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+    if (fromMimeType != null) {
+        common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+    }
+    return toObject;
+}
+export function videoGenerationMaskToVertex(fromObject) {
+    const toObject = {};
+    const fromImage = common.getValueByPath(fromObject, ['image']);
+    if (fromImage != null) {
+        common.setValueByPath(toObject, ['_self'], imageToVertex(fromImage));
+    }
+    const fromMaskMode = common.getValueByPath(fromObject, ['maskMode']);
+    if (fromMaskMode != null) {
+        common.setValueByPath(toObject, ['maskMode'], fromMaskMode);
+    }
+    return toObject;
+}
+export function videoGenerationReferenceImageToMldev(fromObject) {
+    const toObject = {};
+    const fromImage = common.getValueByPath(fromObject, ['image']);
+    if (fromImage != null) {
+        common.setValueByPath(toObject, ['image'], imageToMldev(fromImage));
+    }
+    const fromReferenceType = common.getValueByPath(fromObject, [
+        'referenceType',
+    ]);
+    if (fromReferenceType != null) {
+        common.setValueByPath(toObject, ['referenceType'], fromReferenceType);
+    }
+    return toObject;
+}
+export function videoGenerationReferenceImageToVertex(fromObject) {
+    const toObject = {};
+    const fromImage = common.getValueByPath(fromObject, ['image']);
+    if (fromImage != null) {
+        common.setValueByPath(toObject, ['image'], imageToVertex(fromImage));
+    }
+    const fromReferenceType = common.getValueByPath(fromObject, [
+        'referenceType',
+    ]);
+    if (fromReferenceType != null) {
+        common.setValueByPath(toObject, ['referenceType'], fromReferenceType);
+    }
+    return toObject;
+}
+export function videoToMldev(fromObject) {
+    const toObject = {};
+    const fromUri = common.getValueByPath(fromObject, ['uri']);
+    if (fromUri != null) {
+        common.setValueByPath(toObject, ['uri'], fromUri);
+    }
+    const fromVideoBytes = common.getValueByPath(fromObject, ['videoBytes']);
+    if (fromVideoBytes != null) {
+        common.setValueByPath(toObject, ['encodedVideo'], t.tBytes(fromVideoBytes));
+    }
+    const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+    if (fromMimeType != null) {
+        common.setValueByPath(toObject, ['encoding'], fromMimeType);
+    }
+    return toObject;
+}
+export function videoToVertex(fromObject) {
+    const toObject = {};
+    const fromUri = common.getValueByPath(fromObject, ['uri']);
+    if (fromUri != null) {
+        common.setValueByPath(toObject, ['gcsUri'], fromUri);
+    }
+    const fromVideoBytes = common.getValueByPath(fromObject, ['videoBytes']);
+    if (fromVideoBytes != null) {
+        common.setValueByPath(toObject, ['bytesBase64Encoded'], t.tBytes(fromVideoBytes));
+    }
+    const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+    if (fromMimeType != null) {
+        common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+    }
+    return toObject;
+}
