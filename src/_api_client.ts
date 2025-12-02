@@ -316,10 +316,8 @@ export class ApiClient {
   }
 
   private shouldPrependVertexProjectPath(request: HttpRequest): boolean {
-    // If using a custom baseUrl (not Google's) or skipAuth, don't prepend project/location path
-    const baseUrl = this.clientOptions.httpOptions?.baseUrl;
-    const skipAuth = this.clientOptions.httpOptions?.skipAuth;
-    if ((baseUrl && !baseUrl.includes('aiplatform.googleapis.com')) || skipAuth) {
+    // If skipAuth is set, don't prepend project/location path
+    if (this.clientOptions.httpOptions?.skipAuth) {
       return false;
     }
     if (this.clientOptions.apiKey) {
