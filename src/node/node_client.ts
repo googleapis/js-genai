@@ -100,8 +100,12 @@ export class GoogleGenAI {
     this.vertexai =
       options.vertexai ?? getBooleanEnv('GOOGLE_GENAI_USE_VERTEXAI') ?? false;
     
-    // Only validate and load env vars if not skipping auth
-    if (!skipAuth) {
+    // When skipping auth, just use provided values (no env vars, no validation)
+    if (skipAuth) {
+      this.apiKey = options.apiKey;
+      this.project = options.project;
+      this.location = options.location;
+    } else {
       // Validate explicitly set initializer values
       if ((options.project || options.location) && options.apiKey) {
         throw new Error(
@@ -156,11 +160,6 @@ export class GoogleGenAI {
           this.location = 'global';
         }
       }
-    } else {
-      // When skipping auth, use whatever is provided (can be undefined)
-      this.apiKey = options.apiKey;
-      this.project = options.project;
-      this.location = options.location;
     }
 
     const baseUrl = getBaseUrl(
