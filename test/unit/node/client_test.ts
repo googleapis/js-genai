@@ -405,7 +405,6 @@ describe('Client', () => {
     expect(client['location']).toBeUndefined();
   });
 
-  // skipAuth tests
   it('should throw error if skipAuth is true without baseUrl', () => {
     expect(() => {
       new GoogleGenAI({
@@ -441,7 +440,6 @@ describe('Client', () => {
       },
     });
 
-    // When skipAuth is true, env vars should not be loaded
     expect(client['apiKey']).toBeUndefined();
     expect(client['project']).toBeUndefined();
     expect(client['location']).toBeUndefined();
