@@ -117,10 +117,9 @@ const ai = new GoogleGenAI({});
 
 -   By default, use the following models when using `google-genai`:
     -   **General Text & Multimodal Tasks:** `gemini-2.5-flash`
-    -   **Coding and Complex Reasoning Tasks:** `gemini-2.5-pro`
-    -   **Image Generation Tasks:** `imagen-4.0-fast-generate-001`,
-        `imagen-4.0-generate-001` or `imagen-4.0-ultra-generate-001`
-    -   **Image Editing Tasks:** `gemini-2.5-flash-image-preview`
+    -   **Coding and Complex Reasoning Tasks:** `gemini-3-pro-preview`
+    -   **Fast Image Generation and Editing:** `gemini-2.5-flash-image` (aka Nano Banana)
+    -   **High-Quality Image Generation and Editing:** `gemini-3-pro-image-preview` (aka Nano Banana Pro)
     -   **Video Generation Tasks:** `veo-3.0-fast-generate-preview` or
         `veo-3.0-generate-preview`.
 
@@ -541,33 +540,74 @@ run();
 
 ### Generate Images
 
-Here's how to generate images using the Imagen models.
+Here's how to generate images using the Nano Banana models. Start with the
+Gemini 2.5 Flash image (Nano Banana) model as it should cover most use-cases.
 
 ```javascript
 import { GoogleGenAI } from "@google/genai";
 
 const ai = new GoogleGenAI({});
 
-async function run() {
-    const response = await ai.models.generateImages({
-        model: 'imagen-4.0-fast-generate-001',
-        prompt: 'A friendly robot holding a red skateboard, minimalist vector art',
-        config: {
-          numberOfImages: 1, // 1 to 4 (always 1 for the ultra model)
-          outputMimeType: 'image/jpeg',
-          aspectRatio: '1:1', // "1:1", "3:4", "4:3", "9:16", or "16:9"
-        },
-    });
+async function main() {
+  const prompt =
+  "Create a picture of a nano banana dish in a fancy restaurant with a Gemini theme";
 
-    const base64ImageBytes = response.generatedImages[0].image.imageBytes;
-    // This can be used directly in an <img> src attribute
-    const imageUrl = `data:image/jpeg;base64,${base64ImageBytes}`;
-    console.log(imageUrl);
+  const response = await ai.models.generateContent({
+    model: "gemini-2.5-flash-image",
+    contents: prompt,
+  });
+  for (const part of response.candidates[0].content.parts) {
+    if (part.text) {
+      console.log(part.text);
+    } else if (part.inlineData) {
+      const base64ImageBytes: string = part.inlineData.data;
+      const imageUrl = `data:image/png;base64,${base64ImageBytes}`;
+    }
+  }
 }
-run();
+
+main();
 ```
 
-Note: Do not include negativePrompts in config, it's not supported.
+Upgrade to the Gemini 3 Pro image (Nano Banana Pro) model if the user requests
+high-resolution images or needs real-time information using the Google Search tool.
+
+```javascript
+import { GoogleGenAI } from "@google/genai";
+import * as fs from "node:fs";
+
+async function main() {
+
+  const ai = new GoogleGenAI({});
+
+  const prompt = 'Visualize the current weather forecast for the next 5 days in San Francisco as a clean, modern weather chart. Add a visual on what I should wear each day';
+  const aspectRatio = '16:9'; // "1:1","2:3","3:2","3:4","4:3","4:5","5:4","9:16","16:9","21:9"
+  const resolution = '2K';  // "1K", "2K", "4K"
+
+  const response = await ai.models.generateContent({
+    model: 'gemini-3-pro-image-preview',
+    contents: prompt,
+    config: {
+      imageConfig: {
+        aspectRatio: aspectRatio,
+        imageSize: resolution,
+      },
+      tools: [{google_search: {}}]
+    },
+  });
+
+  for (const part of response.candidates[0].content.parts) {
+    if (part.text) {
+      console.log(part.text);
+    } else if (part.inlineData) {
+      const base64ImageBytes: string = part.inlineData.data;
+      const imageUrl = `data:image/png;base64,${base64ImageBytes}`;
+    }
+  }
+}
+
+main();
+```
 
 ### Edit Images
 
