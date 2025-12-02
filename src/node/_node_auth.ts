@@ -38,12 +38,9 @@ export class NodeAuth implements Auth {
 
   constructor(opts: NodeAuthOptions) {
     this.skipAuth = opts.skipAuth ?? false;
-    
-    // If skipping auth, don't initialize anything
     if (this.skipAuth) {
       return;
     }
-    
     if (opts.apiKey !== undefined) {
       this.apiKey = opts.apiKey;
       return;
@@ -53,11 +50,9 @@ export class NodeAuth implements Auth {
   }
 
   async addAuthHeaders(headers: Headers, url?: string): Promise<void> {
-    // If skipping auth, don't add any auth headers
     if (this.skipAuth) {
       return;
     }
-    
     if (this.apiKey !== undefined) {
       if (this.apiKey.startsWith('auth_tokens/')) {
         throw new Error('Ephemeral tokens are only supported by the live API.');

@@ -87,7 +87,6 @@ export class GoogleGenAI {
   readonly tunings: Tunings;
   readonly fileSearchStores: FileSearchStores;
   constructor(options: GoogleGenAIOptions) {
-    // Check if skipping auth via httpOptions
     const skipAuth = options.httpOptions?.skipAuth ?? false;
 
     if (skipAuth && !options.httpOptions?.baseUrl) {
@@ -95,7 +94,7 @@ export class GoogleGenAI {
         'skipAuth requires a baseUrl to be provided in httpOptions.',
       );
     }
-    // Validate only when not skipping auth
+    // Validate explicitly set initializer values - only when not skipping auth
     if (!skipAuth && (options.project || options.location) && options.apiKey) {
       throw new Error(
         'Project/location and API key are mutually exclusive in the client initializer.',
