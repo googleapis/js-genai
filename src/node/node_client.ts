@@ -97,15 +97,15 @@ export class GoogleGenAI {
       );
     }
 
-    this.vertexai =
-      options.vertexai ?? getBooleanEnv('GOOGLE_GENAI_USE_VERTEXAI') ?? false;
-    
     // Validate only when not skipping auth
     if (!skipAuth && (options.project || options.location) && options.apiKey) {
       throw new Error(
         'Project/location and API key are mutually exclusive in the client initializer.',
       );
     }
+
+    this.vertexai =
+      options.vertexai ?? getBooleanEnv('GOOGLE_GENAI_USE_VERTEXAI') ?? false;
 
     // Load env vars (undefined when skipping auth)
     const envApiKey = skipAuth ? undefined : getApiKeyFromEnv();
