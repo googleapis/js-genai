@@ -19,19 +19,16 @@ export class Files extends BaseModule {
   }
 
   /**
-   * Lists all current project files from the service.
+   * Lists files.
    *
-   * @param params - The parameters for the list request
-   * @return The paginated results of the list of files
+   * @param params - The parameters for the list request.
+   * @return - A pager of files.
    *
    * @example
-   * The following code prints the names of all files from the service, the
-   * size of each page is 10.
-   *
    * ```ts
-   * const listResponse = await ai.files.list({config: {'pageSize': 10}});
-   * for await (const file of listResponse) {
-   *   console.log(file.name);
+   * const files = await ai.files.list({config: {'pageSize': 2}});
+   * for await (const file of files) {
+   *   console.log(file);
    * }
    * ```
    */

@@ -19,6 +19,31 @@ export class Tunings extends BaseModule {
   }
 
   /**
+   * Lists tuning jobs.
+   *
+   * @param params - The parameters for the list request.
+   * @return - A pager of tuning jobs.
+   *
+   * @example
+   * ```ts
+   * const tuningJobs = await ai.tunings.list({config: {'pageSize': 2}});
+   * for await (const tuningJob of tuningJobs) {
+   *   console.log(tuningJob);
+   * }
+   * ```
+   */
+  list = async (
+    params: types.ListTuningJobsParameters = {},
+  ): Promise<Pager<types.TuningJob>> => {
+    return new Pager<types.TuningJob>(
+      PagedItem.PAGED_ITEM_TUNING_JOBS,
+      (x: types.ListTuningJobsParameters) => this.listInternal(x),
+      await this.listInternal(params),
+      params,
+    );
+  };
+
+  /**
    * Gets a TuningJob.
    *
    * @param name - The resource name of the tuning job.
@@ -31,26 +56,6 @@ export class Tunings extends BaseModule {
     params: types.GetTuningJobParameters,
   ): Promise<types.TuningJob> => {
     return await this.getInternal(params);
-  };
-
-  /**
-   * Lists tuning jobs.
-   *
-   * @param config - The configuration for the list request.
-   * @return - A list of tuning jobs.
-   *
-   * @experimental - The SDK's tuning implementation is experimental, and may
-   * change in future versions.
-   */
-  list = async (
-    params: types.ListTuningJobsParameters = {},
-  ): Promise<Pager<types.TuningJob>> => {
-    return new Pager<types.TuningJob>(
-      PagedItem.PAGED_ITEM_TUNING_JOBS,
-      (x: types.ListTuningJobsParameters) => this.listInternal(x),
-      await this.listInternal(params),
-      params,
-    );
   };
 
   /**

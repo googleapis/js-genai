@@ -162,11 +162,11 @@ export class Batches extends BaseModule {
     // Warning: (ae-forgotten-export) The symbol "ApiClient" needs to be exported by the entry point index.d.ts
     constructor(apiClient: ApiClient);
     cancel(params: types.CancelBatchJobParameters): Promise<void>;
-    // Warning: (ae-forgotten-export) The symbol "types" needs to be exported by the entry point index.d.ts
     create: (params: types.CreateBatchJobParameters) => Promise<types.BatchJob>;
     createEmbeddings: (params: types.CreateEmbeddingsBatchJobParameters) => Promise<types.BatchJob>;
     delete(params: types.DeleteBatchJobParameters): Promise<types.DeleteResourceJob>;
     get(params: types.GetBatchJobParameters): Promise<types.BatchJob>;
+    // Warning: (ae-forgotten-export) The symbol "types" needs to be exported by the entry point index.d.ts
     list: (params?: types.ListBatchJobsParameters) => Promise<Pager<types.BatchJob>>;
 }
 

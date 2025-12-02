@@ -19,6 +19,31 @@ export class Batches extends BaseModule {
   }
 
   /**
+   * Lists batch jobs.
+   *
+   * @param params - The parameters for the list request.
+   * @return - A pager of batch jobs.
+   *
+   * @example
+   * ```ts
+   * const batchJobs = await ai.batches.list({config: {'pageSize': 2}});
+   * for await (const batchJob of batchJobs) {
+   *   console.log(batchJob);
+   * }
+   * ```
+   */
+  list = async (
+    params: types.ListBatchJobsParameters = {},
+  ): Promise<Pager<types.BatchJob>> => {
+    return new Pager<types.BatchJob>(
+      PagedItem.PAGED_ITEM_BATCH_JOBS,
+      (x: types.ListBatchJobsParameters) => this.listInternal(x),
+      await this.listInternal(params),
+      params,
+    );
+  };
+
+  /**
    * Create batch job.
    *
    * @param params - The parameters for create batch job request.
@@ -77,31 +102,6 @@ export class Batches extends BaseModule {
     }
 
     return this.createEmbeddingsInternal(params);
-  };
-
-  /**
-   * Lists batch job configurations.
-   *
-   * @param params - The parameters for the list request.
-   * @return The paginated results of the list of batch jobs.
-   *
-   * @example
-   * ```ts
-   * const batchJobs = await ai.batches.list({config: {'pageSize': 2}});
-   * for await (const batchJob of batchJobs) {
-   *   console.log(batchJob);
-   * }
-   * ```
-   */
-  list = async (
-    params: types.ListBatchJobsParameters = {},
-  ): Promise<Pager<types.BatchJob>> => {
-    return new Pager<types.BatchJob>(
-      PagedItem.PAGED_ITEM_BATCH_JOBS,
-      (x: types.ListBatchJobsParameters) => this.listInternal(x),
-      await this.listInternal(params),
-      params,
-    );
   };
 
   // Helper function to handle inlined generate content requests
