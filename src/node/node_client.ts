@@ -104,7 +104,6 @@ export class GoogleGenAI {
 
     this.vertexai =
       options.vertexai ?? getBooleanEnv('GOOGLE_GENAI_USE_VERTEXAI') ?? false;
-    // Load env vars (undefined when skipping auth)
     const envApiKey = skipAuth ? undefined : getApiKeyFromEnv();
     const envProject = skipAuth ? undefined : getEnv('GOOGLE_CLOUD_PROJECT');
     const envLocation = skipAuth ? undefined : getEnv('GOOGLE_CLOUD_LOCATION');
