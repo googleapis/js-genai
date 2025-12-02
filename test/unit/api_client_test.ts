@@ -1408,7 +1408,6 @@ describe('ApiClient', () => {
       httpMethod: 'POST',
     });
     const fetchArgs = fetchSpy.calls.first().args;
-    // Should NOT prepend projects/test-project/locations/test-location/
     expect(fetchArgs[0]).toBe(
       'https://custom.endpoint.com/v1/publishers/google/models/test-model:generateContent',
     );
@@ -1440,7 +1439,6 @@ describe('ApiClient', () => {
       httpMethod: 'POST',
     });
     const fetchArgs = fetchSpy.calls.first().args;
-    // Should NOT prepend projects/test-project/locations/test-location/
     expect(fetchArgs[0]).toBe(
       'https://custom.endpoint.com/v1/publishers/google/models/test-model:streamGenerateContent?alt=sse',
     );

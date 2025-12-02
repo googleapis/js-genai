@@ -463,8 +463,6 @@ describe('Client', () => {
   });
 
   it('should skip validation when skipAuth is true', () => {
-    // This would normally throw because project/location and apiKey are mutually exclusive
-    // But with skipAuth, validation is skipped
     const client = new GoogleGenAI({
       vertexai: true,
       project: 'my_project',

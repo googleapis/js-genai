@@ -118,7 +118,6 @@ describe('addAuthHeaders', () => {
 
     await nodeAuth.addAuthHeaders(headers, mockUrl);
 
-    // Custom header should remain unchanged, no Google auth headers added
     expect(headers.get('Authorization')).toBe('Bearer custom-token');
     expect(headers.get(GOOGLE_API_KEY_HEADER)).toBeNull();
   });
@@ -132,7 +131,6 @@ describe('addAuthHeaders', () => {
     const nodeAuth = new NodeAuth({skipAuth: true});
     const headers = new Headers();
 
-    // This should not throw because skipAuth skips all auth logic
     await expectAsync(nodeAuth.addAuthHeaders(headers, mockUrl)).toBeResolved();
   });
 });
