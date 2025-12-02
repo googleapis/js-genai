@@ -2173,6 +2173,9 @@ export declare interface GenerateContentConfig {
       object](https://spec.openapis.org/oas/v3.0.3#schema).
       If set, a compatible response_mime_type must also be set.
       Compatible mimetypes: `application/json`: Schema for JSON response.
+
+      If `response_schema` doesn't process your schema correctly, try using
+      `response_json_schema` instead.
        */
   responseSchema?: SchemaUnion;
   /** Optional. Output schema of the generated response.
