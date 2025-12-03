@@ -4398,6 +4398,12 @@ export declare interface CancelTuningJobParameters {
   config?: CancelTuningJobConfig;
 }
 
+/** Empty response for tunings.cancel method. */
+export class CancelTuningJobResponse {
+  /** Used to retain the full HTTP response. */
+  sdkHttpResponse?: HttpResponse;
+}
+
 /** A single example for tuning. This data type is not supported in Vertex AI. */
 export declare interface TuningExample {
   /** Required. The expected model output. */

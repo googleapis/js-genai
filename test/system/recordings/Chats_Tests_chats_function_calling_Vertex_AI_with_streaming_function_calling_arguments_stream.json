@@ -1,0 +1,310 @@
+{
+  "recordID": "Chats_Tests_chats_function_calling_Vertex_AI_with_streaming_function_calling_arguments_stream",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-3-pro-preview:streamGenerateContent?alt=sse",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-3-pro-preview:streamGenerateContent?alt=sse HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "385",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Chats Tests chats function calling Vertex AI with streaming function calling arguments stream"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "what is the result of 100/2"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {},
+            "toolConfig": {
+              "functionCallingConfig": {
+                "streamFunctionCallArguments": true
+              }
+            },
+            "tools": [
+              {
+                "functionDeclarations": [
+                  {
+                    "description": "Custom divide function",
+                    "name": "customDivide",
+                    "parameters": {
+                      "properties": {
+                        "denominator": {
+                          "type": "NUMBER"
+                        },
+                        "numerator": {
+                          "type": "NUMBER"
+                        }
+                      },
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "3d54636f9fe1904b9f54d770dee97c74090a8d897d9b0b6e88d42bee86a5986f",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Disposition": "attachment",
+          "Content-Type": "text/event-stream",
+          "Date": "Mon, 01 Dec 2025 22:30:13 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Goog-Sherlog-Link": "https://sherlog.corp.google.com/workflow?config=Serving\u0026dataid=aiplatform.googleapis.com/google.cloud.aiplatform.v1beta1.PredictionService.StreamGenerateContent\u0026gaia=790080187114\u0026reason=sharedLink\u0026version=187d380282158c7ecc99f65e41a3d404",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "name": "customDivide",
+                        "partialArgs": [
+                          {
+                            "jsonPath": "$.denominator",
+                            "numberValue": 2
+                          },
+                          {
+                            "jsonPath": "$.numerator",
+                            "numberValue": 100
+                          }
+                        ]
+                      },
+                      "thoughtSignature": "CiQB4/H/XtVjZNFEr20gDeWSWnqDUnYcqQFSbe10oPRImUIb9rcKUQHj8f9e9Zhm2EwkrPBzn2sLsAav7p1zRS1OvLemuOKIiIW+m9L2O56Bl7sRFyRewD7zVOz3CtDPIffCy/M6y6B0Eo+Z8NmOzKjK+lB+SSPttApdAePx/177YmoeGnPbdVUJFQcUxvXGHiB3Q8VEUNuxel9U+p9s/rhxsbZqCP9uDNhnf9qVLYH+IFytHxY7yecDjn/6NA1nmOPp+YKjmCHmj7ATWkHFxrjP8EyaLzzhCjwB4/H/Xv/x+oVC+eRuLk+Nrxo3hHHChWH0HMKdWyGxz4sWsE+K9iiIIvP0WE5Te3nKd7RKxe/rZ32IR7M="
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP"
+              }
+            ],
+            "createTime": "2025-12-01T22:30:12.474357Z",
+            "modelVersion": "gemini-3-pro-preview",
+            "responseId": "9BYuafX5HMLJ4_UP1bqJ-AU",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 86
+              },
+              "candidatesTokenCount": 13,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 13
+                }
+              ],
+              "promptTokenCount": 21,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 21
+                }
+              ],
+              "thoughtsTokenCount": 44,
+              "totalTokenCount": 78,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-3-pro-preview:streamGenerateContent?alt=sse",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-3-pro-preview:streamGenerateContent?alt=sse HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "1059",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Chats Tests chats function calling Vertex AI with streaming function calling arguments stream"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "what is the result of 100/2"
+                  }
+                ],
+                "role": "user"
+              },
+              {
+                "parts": [
+                  {
+                    "functionCall": {
+                      "name": "customDivide",
+                      "partialArgs": [
+                        {
+                          "jsonPath": "$.denominator",
+                          "numberValue": 2
+                        },
+                        {
+                          "jsonPath": "$.numerator",
+                          "numberValue": 100
+                        }
+                      ]
+                    },
+                    "thoughtSignature": "CiQB4/H/XtVjZNFEr20gDeWSWnqDUnYcqQFSbe10oPRImUIb9rcKUQHj8f9e9Zhm2EwkrPBzn2sLsAav7p1zRS1OvLemuOKIiIW+m9L2O56Bl7sRFyRewD7zVOz3CtDPIffCy/M6y6B0Eo+Z8NmOzKjK+lB+SSPttApdAePx/177YmoeGnPbdVUJFQcUxvXGHiB3Q8VEUNuxel9U+p9s/rhxsbZqCP9uDNhnf9qVLYH+IFytHxY7yecDjn/6NA1nmOPp+YKjmCHmj7ATWkHFxrjP8EyaLzzhCjwB4/H/Xv/x+oVC+eRuLk+Nrxo3hHHChWH0HMKdWyGxz4sWsE+K9iiIIvP0WE5Te3nKd7RKxe/rZ32IR7M="
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "functionResponse": {
+                      "id": "id",
+                      "name": "customDivide",
+                      "response": {
+                        "result": 51
+                      }
+                    }
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {},
+            "toolConfig": {
+              "functionCallingConfig": {
+                "streamFunctionCallArguments": true
+              }
+            },
+            "tools": [
+              {
+                "functionDeclarations": [
+                  {
+                    "description": "Custom divide function",
+                    "name": "customDivide",
+                    "parameters": {
+                      "properties": {
+                        "denominator": {
+                          "type": "NUMBER"
+                        },
+                        "numerator": {
+                          "type": "NUMBER"
+                        }
+                      },
+                      "type": "OBJECT"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "previousRequest": "3d54636f9fe1904b9f54d770dee97c74090a8d897d9b0b6e88d42bee86a5986f",
+        "serverAddress": "aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "a5eae768939c1ef7c9a3521dbf5f51adc09b6eaaacdf1ef1ed229664eae2cfaa",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Disposition": "attachment",
+          "Content-Type": "text/event-stream",
+          "Date": "Mon, 01 Dec 2025 22:30:15 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Goog-Sherlog-Link": "https://sherlog.corp.google.com/workflow?config=Serving\u0026dataid=aiplatform.googleapis.com/google.cloud.aiplatform.v1beta1.PredictionService.StreamGenerateContent\u0026gaia=790080187114\u0026reason=sharedLink\u0026version=187d3802e16e9be8c05f05dc21c76644",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "The result of "
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-12-01T22:30:14.061274Z",
+            "modelVersion": "gemini-3-pro-preview",
+            "responseId": "9hYuadreA56Z4_UP_vnfsQY",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 149
+              },
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "100/2 is 51."
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP"
+              }
+            ],
+            "createTime": "2025-12-01T22:30:14.061274Z",
+            "modelVersion": "gemini-3-pro-preview",
+            "responseId": "9hYuadreA56Z4_UP_vnfsQY",
+            "usageMetadata": {
+              "candidatesTokenCount": 14,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 14
+                }
+              ],
+              "promptTokenCount": 34,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 34
+                }
+              ],
+              "totalTokenCount": 48,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

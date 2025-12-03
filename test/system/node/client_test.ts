@@ -10,7 +10,6 @@ import {zodToJsonSchema} from 'zod-to-json-schema';
 
 import {GoogleGenAI} from '../../../src/node/node_client.js';
 import {
-  Content,
   FunctionCallingConfigMode,
   FunctionDeclaration,
   GenerateContentResponse,
@@ -716,44 +715,6 @@ describe('Client Tests', () => {
           },
         },
       ];
-      const previous_generate_content_history: Content[] = [
-        {
-          role: 'user',
-          parts: [
-            {
-              text: 'get the current weather in NewYorkCity in celsius, the country should be left null, the purpose is to check weather today? I already have an example of thefunction call in the previous turn. I attached it in the history. Help me amke the function call as a form of FunctionCall.',
-            },
-          ],
-        },
-        {
-          role: 'model',
-          parts: [
-            {
-              functionCall: {
-                name: 'get_current_weather',
-                willContinue: true,
-              },
-            },
-          ],
-        },
-        {
-          role: 'model',
-          parts: [
-            {
-              functionCall: {
-                name: 'get_current_weather',
-                partialArgs: [
-                  {
-                    jsonPath: '$.country',
-                    nullValue: 'NULL_VALUE',
-                  },
-                ],
-                willContinue: false,
-              },
-            },
-          ],
-        },
-      ];
       it('ML Dev will throw error when enabbled streamFunctionCallArguments', async () => {
         const client = new GoogleGenAI({
           vertexai: false,
@@ -762,7 +723,7 @@ describe('Client Tests', () => {
         });
         try {
           await client.models.generateContentStream({
-            model: 'gemini-2.5-pro',
+            model: 'gemini-3-pro-preview',
             contents:
               'get the current weather in NewYorkCity in celsius, the country should be left null, the purpose is to know what to wear today.',
             config: {
@@ -789,6 +750,7 @@ describe('Client Tests', () => {
         }
       });
       it('Vertex AI should stream generate content enabled streamFunctionCallArguments', async () => {
+        httpOptions.baseUrl = 'http://localhost:1455';
         const client = new GoogleGenAI({
           vertexai: true,
           project: GOOGLE_CLOUD_PROJECT,
@@ -796,7 +758,7 @@ describe('Client Tests', () => {
           httpOptions,
         });
         const response = await client.models.generateContentStream({
-          model: 'gemini-2.5-pro',
+          model: 'gemini-3-pro-preview',
           contents:
             'get the current weather in NewYorkCity in celsius, the country should be USA, the purpose is to know what to wear today.',
           config: {
@@ -823,6 +785,7 @@ describe('Client Tests', () => {
         }
       });
       it('Vertex AI should stream generate content with particial function calling in the content', async () => {
+        httpOptions.baseUrl = 'http://localhost:1455';
         const client = new GoogleGenAI({
           vertexai: true,
           project: GOOGLE_CLOUD_PROJECT,
@@ -830,8 +793,9 @@ describe('Client Tests', () => {
           httpOptions,
         });
         const response = await client.models.generateContentStream({
-          model: 'gemini-2.5-pro',
-          contents: previous_generate_content_history,
+          model: 'gemini-3-pro-preview',
+          contents:
+            'get the current weather in NewYorkCity in celsius, the country should be USA, the purpose is to know what to wear today.',
           config: {
             tools: [
               {

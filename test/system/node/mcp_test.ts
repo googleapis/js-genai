@@ -74,7 +74,7 @@ describe('MCP related client Tests', () => {
       });
       try {
         await client.models.generateContentStream({
-          model: 'gemini-2.5-pro',
+          model: 'gemini-3-pro-preview',
           contents:
             'call the greeter once with name: jone smith, and greeting: Hello',
           config: {
@@ -98,6 +98,7 @@ describe('MCP related client Tests', () => {
     });
     it('Vertex AI should stream arguments when afc is disabled explicitly', async () => {
       const mcpCallableTool = mcpToTool(await greetServerStructuredOutput());
+      httpOptions.baseUrl = 'http://localhost:1455';
       const client = new GoogleGenAI({
         vertexai: true,
         project: GOOGLE_CLOUD_PROJECT,
@@ -105,7 +106,7 @@ describe('MCP related client Tests', () => {
         httpOptions,
       });
       const response = await client.models.generateContentStream({
-        model: 'gemini-2.5-pro',
+        model: 'gemini-3-pro-preview',
         contents:
           'call the greeter once with name: jone smith, and greeting: Hello',
         config: {
@@ -140,7 +141,7 @@ describe('MCP related client Tests', () => {
       });
       try {
         await client.models.generateContentStream({
-          model: 'gemini-2.5-pro',
+          model: 'gemini-3-pro-preview',
           contents:
             'call the greeter once with name: jone smith, and greeting: Hello',
           config: {
@@ -172,7 +173,7 @@ describe('MCP related client Tests', () => {
       });
       try {
         await client.models.generateContentStream({
-          model: 'gemini-2.5-pro',
+          model: 'gemini-3-pro-preview',
           contents:
             'call the greeter once with name: jone smith, and greeting: Hello',
           config: {

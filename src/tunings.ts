@@ -19,6 +19,31 @@ export class Tunings extends BaseModule {
   }
 
   /**
+   * Lists tuning jobs.
+   *
+   * @param params - The parameters for the list request.
+   * @return - A pager of tuning jobs.
+   *
+   * @example
+   * ```ts
+   * const tuningJobs = await ai.tunings.list({config: {'pageSize': 2}});
+   * for await (const tuningJob of tuningJobs) {
+   *   console.log(tuningJob);
+   * }
+   * ```
+   */
+  list = async (
+    params: types.ListTuningJobsParameters = {},
+  ): Promise<Pager<types.TuningJob>> => {
+    return new Pager<types.TuningJob>(
+      PagedItem.PAGED_ITEM_TUNING_JOBS,
+      (x: types.ListTuningJobsParameters) => this.listInternal(x),
+      await this.listInternal(params),
+      params,
+    );
+  };
+
+  /**
    * Gets a TuningJob.
    *
    * @param name - The resource name of the tuning job.
@@ -31,26 +56,6 @@ export class Tunings extends BaseModule {
     params: types.GetTuningJobParameters,
   ): Promise<types.TuningJob> => {
     return await this.getInternal(params);
-  };
-
-  /**
-   * Lists tuning jobs.
-   *
-   * @param config - The configuration for the list request.
-   * @return - A list of tuning jobs.
-   *
-   * @experimental - The SDK's tuning implementation is experimental, and may
-   * change in future versions.
-   */
-  list = async (
-    params: types.ListTuningJobsParameters = {},
-  ): Promise<Pager<types.TuningJob>> => {
-    return new Pager<types.TuningJob>(
-      PagedItem.PAGED_ITEM_TUNING_JOBS,
-      (x: types.ListTuningJobsParameters) => this.listInternal(x),
-      await this.listInternal(params),
-      params,
-    );
   };
 
   /**
@@ -280,7 +285,11 @@ export class Tunings extends BaseModule {
    * await ai.tunings.cancel({name: '...'}); // The server-generated resource name.
    * ```
    */
-  async cancel(params: types.CancelTuningJobParameters): Promise<void> {
+  async cancel(
+    params: types.CancelTuningJobParameters,
+  ): Promise<types.CancelTuningJobResponse> {
+    let response: Promise<types.CancelTuningJobResponse>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -293,13 +302,30 @@ export class Tunings extends BaseModule {
       delete body['_url'];
       delete body['_query'];
 
-      await this.apiClient.request({
-        path: path,
-        queryParams: queryParams,
-        body: JSON.stringify(body),
-        httpMethod: 'POST',
-        httpOptions: params.config?.httpOptions,
-        abortSignal: params.config?.abortSignal,
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.CancelTuningJobResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
+        }) as Promise<types.CancelTuningJobResponse>;
+
+      return response.then((apiResponse) => {
+        const resp = converters.cancelTuningJobResponseFromVertex(apiResponse);
+        const typedResp = new types.CancelTuningJobResponse();
+        Object.assign(typedResp, resp);
+        return typedResp;
       });
     } else {
       const body = converters.cancelTuningJobParametersToMldev(params, params);
@@ -311,13 +337,30 @@ export class Tunings extends BaseModule {
       delete body['_url'];
       delete body['_query'];
 
-      await this.apiClient.request({
-        path: path,
-        queryParams: queryParams,
-        body: JSON.stringify(body),
-        httpMethod: 'POST',
-        httpOptions: params.config?.httpOptions,
-        abortSignal: params.config?.abortSignal,
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.CancelTuningJobResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
+        }) as Promise<types.CancelTuningJobResponse>;
+
+      return response.then((apiResponse) => {
+        const resp = converters.cancelTuningJobResponseFromMldev(apiResponse);
+        const typedResp = new types.CancelTuningJobResponse();
+        Object.assign(typedResp, resp);
+        return typedResp;
       });
     }
   }
