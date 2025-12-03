@@ -60,7 +60,7 @@ async function chatFromVertexAI() {
     },
   };
   const chat = ai.chats.create({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-3-pro-preview',
     config: {
       tools: [controlLightCallableTool],
       automaticFunctionCalling: {
@@ -82,12 +82,37 @@ async function chatFromVertexAI() {
   for await (const chunk of response) {
     if (chunk.text) {
       console.log(chunk.text);
+    } else if (chunk.functionCalls) {
+      console.log(
+        'functionCalls: ',
+        JSON.stringify(chunk.functionCalls, null, 2),
+      );
     }
   }
   const secondResponse = await chat.sendMessageStream({
-    message: 'Thanks!',
+    message: {
+      functionResponse: {
+        name: 'controlLight',
+        response: {brightness: 25, colorTemperature: 'warm'},
+      },
+    },
   });
   for await (const chunk of secondResponse) {
+    if (chunk) {
+      const textPart = chunk.text;
+      const functionCalls = chunk.functionCalls;
+      if (textPart) {
+        console.log('text: ', textPart);
+      }
+      if (functionCalls) {
+        console.log('functionCalls: ', JSON.stringify(functionCalls, null, 2));
+      }
+    }
+  }
+  const thirdResponse = await chat.sendMessageStream({
+    message: 'Thanks!',
+  });
+  for await (const chunk of thirdResponse) {
     if (chunk) {
       const textPart = chunk.text;
       const functionCalls = chunk.functionCalls;

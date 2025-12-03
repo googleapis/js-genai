@@ -8,6 +8,8 @@ import {GoogleGenAIOptions} from '../../../src/client.js';
 import {mcpToTool} from '../../../src/mcp/_mcp.js';
 import {GoogleGenAI} from '../../../src/node/node_client.js';
 import {
+  createPartFromFunctionResponse,
+  createPartFromText,
   FunctionCallingConfigMode,
   HttpOptions,
   Tool,
@@ -325,9 +327,37 @@ describe('Chats Tests', () => {
           'what is the result of 50/2?',
         ],
       },
+      {
+        name: 'Vertex AI with streaming function calling arguments',
+        streamOnly: true,
+        useVertexAIGlobalEndpoint: true,
+        clientParams: {vertexai: true, project: GOOGLE_CLOUD_PROJECT},
+        model: 'gemini-3-pro-preview',
+        config: {
+          tools: [function_calling],
+          automaticFunctionCalling: {
+            disable: false,
+          },
+          toolConfig: {
+            functionCallingConfig: {
+              streamFunctionCallArguments: true,
+            },
+          },
+        },
+        history: [],
+        messages: [
+          createPartFromText('what is the result of 100/2'),
+          createPartFromFunctionResponse('id', 'customDivide', {
+            result: 51,
+          }),
+        ],
+      },
     ];
 
     testCases.forEach(async (testCase) => {
+      if (testCase.streamOnly) {
+        return;
+      }
       it(testCase.name, async () => {
         const clientParams: GoogleGenAIOptions = testCase.clientParams;
         clientParams.httpOptions = httpOptions;
@@ -351,6 +381,11 @@ describe('Chats Tests', () => {
     testCases.forEach(async (testCase) => {
       it(testCase.name + ' stream', async () => {
         const clientParams: GoogleGenAIOptions = testCase.clientParams;
+        // This is to redirect the request to the port that will redirect to the
+        // global endpoint
+        if (testCase.useVertexAIGlobalEndpoint) {
+          httpOptions.baseUrl = 'http://localhost:1455';
+        }
         clientParams.httpOptions = httpOptions;
         const client = new GoogleGenAI(clientParams);
         const chat = client.chats.create({
