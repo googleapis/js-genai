@@ -1,6 +1,13 @@
 # Changelog
 
 
+## [1.31.0](https://github.com/googleapis/js-genai/compare/v1.30.0...v1.31.0) (2025-12-03)
+
+
+### Features
+
+* Add empty response for tunings.cancel() ([5dc25bc](https://github.com/googleapis/js-genai/commit/5dc25bcec56b0fdba1b893a332c915f2320ff0b8))
+
 ## [1.30.0](https://github.com/googleapis/js-genai/compare/v1.29.1...v1.30.0) (2025-11-18)
 
 
