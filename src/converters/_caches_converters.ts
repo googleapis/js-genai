@@ -11,6 +11,52 @@ import * as common from '../_common.js';
 import * as t from '../_transformers.js';
 import type * as types from '../types.js';
 
+export function authConfigToMldev(
+  fromObject: types.AuthConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromApiKey = common.getValueByPath(fromObject, ['apiKey']);
+  if (fromApiKey != null) {
+    common.setValueByPath(toObject, ['apiKey'], fromApiKey);
+  }
+
+  if (common.getValueByPath(fromObject, ['apiKeyConfig']) !== undefined) {
+    throw new Error('apiKeyConfig parameter is not supported in Gemini API.');
+  }
+
+  if (common.getValueByPath(fromObject, ['authType']) !== undefined) {
+    throw new Error('authType parameter is not supported in Gemini API.');
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['googleServiceAccountConfig']) !==
+    undefined
+  ) {
+    throw new Error(
+      'googleServiceAccountConfig parameter is not supported in Gemini API.',
+    );
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['httpBasicAuthConfig']) !== undefined
+  ) {
+    throw new Error(
+      'httpBasicAuthConfig parameter is not supported in Gemini API.',
+    );
+  }
+
+  if (common.getValueByPath(fromObject, ['oauthConfig']) !== undefined) {
+    throw new Error('oauthConfig parameter is not supported in Gemini API.');
+  }
+
+  if (common.getValueByPath(fromObject, ['oidcConfig']) !== undefined) {
+    throw new Error('oidcConfig parameter is not supported in Gemini API.');
+  }
+
+  return toObject;
+}
+
 export function blobToMldev(fromObject: types.Blob): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -42,6 +88,30 @@ export function contentToMldev(
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
         return partToMldev(item);
+      });
+    }
+    common.setValueByPath(toObject, ['parts'], transformedList);
+  }
+
+  const fromRole = common.getValueByPath(fromObject, ['role']);
+  if (fromRole != null) {
+    common.setValueByPath(toObject, ['role'], fromRole);
+  }
+
+  return toObject;
+}
+
+export function contentToVertex(
+  fromObject: types.Content,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromParts = common.getValueByPath(fromObject, ['parts']);
+  if (fromParts != null) {
+    let transformedList = fromParts;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return partToVertex(item);
       });
     }
     common.setValueByPath(toObject, ['parts'], transformedList);
@@ -111,11 +181,7 @@ export function createCachedContentConfigToMldev(
 
   const fromToolConfig = common.getValueByPath(fromObject, ['toolConfig']);
   if (parentObject !== undefined && fromToolConfig != null) {
-    common.setValueByPath(
-      parentObject,
-      ['toolConfig'],
-      toolConfigToMldev(fromToolConfig),
-    );
+    common.setValueByPath(parentObject, ['toolConfig'], fromToolConfig);
   }
 
   if (common.getValueByPath(fromObject, ['kmsKeyName']) !== undefined) {
@@ -151,7 +217,7 @@ export function createCachedContentConfigToVertex(
     let transformedList = t.tContents(fromContents);
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return item;
+        return contentToVertex(item);
       });
     }
     common.setValueByPath(parentObject, ['contents'], transformedList);
@@ -164,7 +230,7 @@ export function createCachedContentConfigToVertex(
     common.setValueByPath(
       parentObject,
       ['systemInstruction'],
-      t.tContent(fromSystemInstruction),
+      contentToVertex(t.tContent(fromSystemInstruction)),
     );
   }
 
@@ -330,70 +396,6 @@ export function fileDataToMldev(
   return toObject;
 }
 
-export function functionCallToMldev(
-  fromObject: types.FunctionCall,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromId = common.getValueByPath(fromObject, ['id']);
-  if (fromId != null) {
-    common.setValueByPath(toObject, ['id'], fromId);
-  }
-
-  const fromArgs = common.getValueByPath(fromObject, ['args']);
-  if (fromArgs != null) {
-    common.setValueByPath(toObject, ['args'], fromArgs);
-  }
-
-  const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName != null) {
-    common.setValueByPath(toObject, ['name'], fromName);
-  }
-
-  if (common.getValueByPath(fromObject, ['partialArgs']) !== undefined) {
-    throw new Error('partialArgs parameter is not supported in Gemini API.');
-  }
-
-  if (common.getValueByPath(fromObject, ['willContinue']) !== undefined) {
-    throw new Error('willContinue parameter is not supported in Gemini API.');
-  }
-
-  return toObject;
-}
-
-export function functionCallingConfigToMldev(
-  fromObject: types.FunctionCallingConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromMode = common.getValueByPath(fromObject, ['mode']);
-  if (fromMode != null) {
-    common.setValueByPath(toObject, ['mode'], fromMode);
-  }
-
-  const fromAllowedFunctionNames = common.getValueByPath(fromObject, [
-    'allowedFunctionNames',
-  ]);
-  if (fromAllowedFunctionNames != null) {
-    common.setValueByPath(
-      toObject,
-      ['allowedFunctionNames'],
-      fromAllowedFunctionNames,
-    );
-  }
-
-  if (
-    common.getValueByPath(fromObject, ['streamFunctionCallArguments']) !==
-    undefined
-  ) {
-    throw new Error(
-      'streamFunctionCallArguments parameter is not supported in Gemini API.',
-    );
-  }
-
-  return toObject;
-}
-
 export function functionDeclarationToVertex(
   fromObject: types.FunctionDeclaration,
 ): Record<string, unknown> {
@@ -489,8 +491,13 @@ export function googleMapsToMldev(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  if (common.getValueByPath(fromObject, ['authConfig']) !== undefined) {
-    throw new Error('authConfig parameter is not supported in Gemini API.');
+  const fromAuthConfig = common.getValueByPath(fromObject, ['authConfig']);
+  if (fromAuthConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['authConfig'],
+      authConfigToMldev(fromAuthConfig),
+    );
   }
 
   const fromEnableWidget = common.getValueByPath(fromObject, ['enableWidget']);
@@ -506,14 +513,14 @@ export function googleSearchToMldev(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  if (common.getValueByPath(fromObject, ['excludeDomains']) !== undefined) {
-    throw new Error('excludeDomains parameter is not supported in Gemini API.');
-  }
-
   if (common.getValueByPath(fromObject, ['blockingConfidence']) !== undefined) {
     throw new Error(
       'blockingConfidence parameter is not supported in Gemini API.',
     );
+  }
+
+  if (common.getValueByPath(fromObject, ['excludeDomains']) !== undefined) {
+    throw new Error('excludeDomains parameter is not supported in Gemini API.');
   }
 
   const fromTimeRangeFilter = common.getValueByPath(fromObject, [
@@ -699,11 +706,7 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
 
   const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
   if (fromFunctionCall != null) {
-    common.setValueByPath(
-      toObject,
-      ['functionCall'],
-      functionCallToMldev(fromFunctionCall),
-    );
+    common.setValueByPath(toObject, ['functionCall'], fromFunctionCall);
   }
 
   const fromFunctionResponse = common.getValueByPath(fromObject, [
@@ -746,30 +749,90 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
     common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
   }
 
+  const fromPartMetadata = common.getValueByPath(fromObject, ['partMetadata']);
+  if (fromPartMetadata != null) {
+    common.setValueByPath(toObject, ['partMetadata'], fromPartMetadata);
+  }
+
   return toObject;
 }
 
-export function toolConfigToMldev(
-  fromObject: types.ToolConfig,
-): Record<string, unknown> {
+export function partToVertex(fromObject: types.Part): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromFunctionCallingConfig = common.getValueByPath(fromObject, [
-    'functionCallingConfig',
+  const fromMediaResolution = common.getValueByPath(fromObject, [
+    'mediaResolution',
   ]);
-  if (fromFunctionCallingConfig != null) {
+  if (fromMediaResolution != null) {
+    common.setValueByPath(toObject, ['mediaResolution'], fromMediaResolution);
+  }
+
+  const fromCodeExecutionResult = common.getValueByPath(fromObject, [
+    'codeExecutionResult',
+  ]);
+  if (fromCodeExecutionResult != null) {
     common.setValueByPath(
       toObject,
-      ['functionCallingConfig'],
-      functionCallingConfigToMldev(fromFunctionCallingConfig),
+      ['codeExecutionResult'],
+      fromCodeExecutionResult,
     );
   }
 
-  const fromRetrievalConfig = common.getValueByPath(fromObject, [
-    'retrievalConfig',
+  const fromExecutableCode = common.getValueByPath(fromObject, [
+    'executableCode',
   ]);
-  if (fromRetrievalConfig != null) {
-    common.setValueByPath(toObject, ['retrievalConfig'], fromRetrievalConfig);
+  if (fromExecutableCode != null) {
+    common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
+  }
+
+  const fromFileData = common.getValueByPath(fromObject, ['fileData']);
+  if (fromFileData != null) {
+    common.setValueByPath(toObject, ['fileData'], fromFileData);
+  }
+
+  const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
+  if (fromFunctionCall != null) {
+    common.setValueByPath(toObject, ['functionCall'], fromFunctionCall);
+  }
+
+  const fromFunctionResponse = common.getValueByPath(fromObject, [
+    'functionResponse',
+  ]);
+  if (fromFunctionResponse != null) {
+    common.setValueByPath(toObject, ['functionResponse'], fromFunctionResponse);
+  }
+
+  const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
+  if (fromInlineData != null) {
+    common.setValueByPath(toObject, ['inlineData'], fromInlineData);
+  }
+
+  const fromText = common.getValueByPath(fromObject, ['text']);
+  if (fromText != null) {
+    common.setValueByPath(toObject, ['text'], fromText);
+  }
+
+  const fromThought = common.getValueByPath(fromObject, ['thought']);
+  if (fromThought != null) {
+    common.setValueByPath(toObject, ['thought'], fromThought);
+  }
+
+  const fromThoughtSignature = common.getValueByPath(fromObject, [
+    'thoughtSignature',
+  ]);
+  if (fromThoughtSignature != null) {
+    common.setValueByPath(toObject, ['thoughtSignature'], fromThoughtSignature);
+  }
+
+  const fromVideoMetadata = common.getValueByPath(fromObject, [
+    'videoMetadata',
+  ]);
+  if (fromVideoMetadata != null) {
+    common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
+  }
+
+  if (common.getValueByPath(fromObject, ['partMetadata']) !== undefined) {
+    throw new Error('partMetadata parameter is not supported in Vertex AI.');
   }
 
   return toObject;
@@ -816,6 +879,15 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
     common.setValueByPath(toObject, ['fileSearch'], fromFileSearch);
   }
 
+  const fromGoogleMaps = common.getValueByPath(fromObject, ['googleMaps']);
+  if (fromGoogleMaps != null) {
+    common.setValueByPath(
+      toObject,
+      ['googleMaps'],
+      googleMapsToMldev(fromGoogleMaps),
+    );
+  }
+
   const fromCodeExecution = common.getValueByPath(fromObject, [
     'codeExecution',
   ]);
@@ -828,15 +900,6 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
   ) {
     throw new Error(
       'enterpriseWebSearch parameter is not supported in Gemini API.',
-    );
-  }
-
-  const fromGoogleMaps = common.getValueByPath(fromObject, ['googleMaps']);
-  if (fromGoogleMaps != null) {
-    common.setValueByPath(
-      toObject,
-      ['googleMaps'],
-      googleMapsToMldev(fromGoogleMaps),
     );
   }
 
@@ -898,6 +961,10 @@ export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
     throw new Error('fileSearch parameter is not supported in Vertex AI.');
   }
 
+  if (common.getValueByPath(fromObject, ['googleMaps']) !== undefined) {
+    throw new Error('googleMaps parameter is not supported in Vertex AI.');
+  }
+
   const fromCodeExecution = common.getValueByPath(fromObject, [
     'codeExecution',
   ]);
@@ -914,11 +981,6 @@ export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
       ['enterpriseWebSearch'],
       fromEnterpriseWebSearch,
     );
-  }
-
-  const fromGoogleMaps = common.getValueByPath(fromObject, ['googleMaps']);
-  if (fromGoogleMaps != null) {
-    common.setValueByPath(toObject, ['googleMaps'], fromGoogleMaps);
   }
 
   const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
