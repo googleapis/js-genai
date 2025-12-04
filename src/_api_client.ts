@@ -20,7 +20,6 @@ export const SDK_VERSION = '1.31.0'; // x-release-please-version
 const LIBRARY_LABEL = `google-genai-sdk/${SDK_VERSION}`;
 const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
 const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';
-const responseLineRE = /^\s*data: (.*)(?:\n\n|\r\r|\r\n\r\n)/;
 
 /**
  * Options for initializing the ApiClient. The ApiClient uses the parameters
@@ -530,6 +529,9 @@ export class ApiClient {
 
     try {
       let buffer = '';
+      const dataPrefix = 'data:';
+      const delimiters = ['\n\n', '\r\r', '\r\n\r\n'];
+
       while (true) {
         const {done, value} = await reader.read();
         if (done) {
@@ -567,22 +569,50 @@ export class ApiClient {
           }
         }
         buffer += chunkString;
-        let match = buffer.match(responseLineRE);
-        while (match) {
-          const processedChunkString = match[1];
-          try {
-            const partialResponse = new Response(processedChunkString, {
-              headers: response?.headers,
-              status: response?.status,
-              statusText: response?.statusText,
-            });
-            yield new types.HttpResponse(partialResponse);
-            buffer = buffer.slice(match[0].length);
-            match = buffer.match(responseLineRE);
-          } catch (e) {
-            throw new Error(
-              `exception parsing stream chunk ${processedChunkString}. ${e}`,
-            );
+
+        let delimiterIndex = -1;
+        let delimiterLength = 0;
+
+        while (true) {
+          delimiterIndex = -1;
+          delimiterLength = 0;
+
+          for (const delimiter of delimiters) {
+            const index = buffer.indexOf(delimiter);
+            if (
+              index !== -1 &&
+              (delimiterIndex === -1 || index < delimiterIndex)
+            ) {
+              delimiterIndex = index;
+              delimiterLength = delimiter.length;
+            }
+          }
+
+          if (delimiterIndex === -1) {
+            break; // No complete event in buffer
+          }
+
+          const eventString = buffer.substring(0, delimiterIndex);
+          buffer = buffer.substring(delimiterIndex + delimiterLength);
+
+          const trimmedEvent = eventString.trim();
+
+          if (trimmedEvent.startsWith(dataPrefix)) {
+            const processedChunkString = trimmedEvent
+              .substring(dataPrefix.length)
+              .trim();
+            try {
+              const partialResponse = new Response(processedChunkString, {
+                headers: response?.headers,
+                status: response?.status,
+                statusText: response?.statusText,
+              });
+              yield new types.HttpResponse(partialResponse);
+            } catch (e) {
+              throw new Error(
+                `exception parsing stream chunk ${processedChunkString}. ${e}`,
+              );
+            }
           }
         }
       }
