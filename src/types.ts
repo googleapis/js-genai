@@ -1572,6 +1572,9 @@ export declare interface HttpOptions {
       - VertexAI backend API docs: https://cloud.google.com/vertex-ai/docs/reference/rest
       - GeminiAPI backend API docs: https://ai.google.dev/api/rest */
   extraBody?: Record<string, unknown>;
+  /** Undici dispatcher for custom HTTP agent configuration (Node.js only).
+      This can be used to configure mTLS with client certificates. */
+  dispatcher?: unknown;
 }
 
 /** Schema is used to define the format of input/output data.
