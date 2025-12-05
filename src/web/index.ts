@@ -3,7 +3,6 @@
  * Copyright 2025 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
-
 export {BaseUrlParameters, setDefaultBaseUrls} from '../_base_url.js';
 export * from '../batches.js';
 export * from '../caches.js';
