@@ -316,6 +316,10 @@ export class ApiClient {
   }
 
   private shouldPrependVertexProjectPath(request: HttpRequest): boolean {
+    // If skipAuth is set, don't prepend project/location path
+    if (this.clientOptions.httpOptions?.skipAuth) {
+      return false;
+    }
     if (this.clientOptions.apiKey) {
       return false;
     }

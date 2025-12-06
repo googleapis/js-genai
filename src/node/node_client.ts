@@ -87,8 +87,15 @@ export class GoogleGenAI {
   readonly tunings: Tunings;
   readonly fileSearchStores: FileSearchStores;
   constructor(options: GoogleGenAIOptions) {
-    // Validate explicitly set initializer values.
-    if ((options.project || options.location) && options.apiKey) {
+    const skipAuth = options.httpOptions?.skipAuth ?? false;
+
+    if (skipAuth && !options.httpOptions?.baseUrl) {
+      throw new Error(
+        'skipAuth requires a baseUrl to be provided in httpOptions.',
+      );
+    }
+    // Validate explicitly set initializer values - only when not skipping auth
+    if (!skipAuth && (options.project || options.location) && options.apiKey) {
       throw new Error(
         'Project/location and API key are mutually exclusive in the client initializer.',
       );
@@ -96,16 +103,16 @@ export class GoogleGenAI {
 
     this.vertexai =
       options.vertexai ?? getBooleanEnv('GOOGLE_GENAI_USE_VERTEXAI') ?? false;
-    const envApiKey = getApiKeyFromEnv();
-    const envProject = getEnv('GOOGLE_CLOUD_PROJECT');
-    const envLocation = getEnv('GOOGLE_CLOUD_LOCATION');
+    const envApiKey = skipAuth ? undefined : getApiKeyFromEnv();
+    const envProject = skipAuth ? undefined : getEnv('GOOGLE_CLOUD_PROJECT');
+    const envLocation = skipAuth ? undefined : getEnv('GOOGLE_CLOUD_LOCATION');
 
     this.apiKey = options.apiKey ?? envApiKey;
     this.project = options.project ?? envProject;
     this.location = options.location ?? envLocation;
 
-    // Handle when to use Vertex AI in express mode (api key)
-    if (options.vertexai) {
+    // Handle Vertex AI express mode (api key) - only when not skipping auth
+    if (!skipAuth && options.vertexai) {
       if (options.googleAuthOptions?.credentials) {
         // Explicit credentials take precedence over implicit api_key.
         console.debug(
@@ -163,6 +170,7 @@ export class GoogleGenAI {
     const auth = new NodeAuth({
       apiKey: this.apiKey,
       googleAuthOptions: options.googleAuthOptions,
+      skipAuth: skipAuth,
     });
     this.apiClient = new ApiClient({
       auth: auth,
