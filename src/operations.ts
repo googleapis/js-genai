@@ -55,7 +55,7 @@ export class Operations extends BaseModule {
         _isVertexAI: true,
       });
     } else {
-      const rawOperation = await this.getVideosOperationInternal({
+      const rawOperation = await this.getOperationInternal({
         operationName: operation.name,
         config: config,
       });
@@ -101,7 +101,7 @@ export class Operations extends BaseModule {
         _isVertexAI: true,
       });
     } else {
-      const rawOperation = await this.getVideosOperationInternal({
+      const rawOperation = await this.getOperationInternal({
         operationName: operation.name,
         config: config,
       });
@@ -112,7 +112,7 @@ export class Operations extends BaseModule {
     }
   }
 
-  private async getVideosOperationInternal(
+  private async getOperationInternal(
     params: types.GetOperationParameters,
   ): Promise<Record<string, unknown>> {
     let response: Promise<Record<string, unknown>>;
