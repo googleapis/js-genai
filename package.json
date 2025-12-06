@@ -108,13 +108,13 @@
     "typedoc": "^0.27.0",
     "typescript": "~5.2.0",
     "typescript-eslint": "8.24.1",
-    "undici": "^7.16.0",
     "undici-types": "^7.16.0",
     "zod": "^3.22.4",
     "zod-to-json-schema": "^3.22.4"
   },
   "dependencies": {
     "google-auth-library": "^10.3.0",
+    "undici": "^7.16.0",
     "ws": "^8.18.0"
   },
   "peerDependencies": {

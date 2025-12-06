@@ -4,7 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import * as fs from 'fs';
 import {GoogleAuthOptions} from 'google-auth-library';
+import {Agent} from 'undici';
 
 import {ApiClient} from '../_api_client.js';
 import {getBaseUrl} from '../_base_url.js';
@@ -158,6 +160,23 @@ export class GoogleGenAI {
       }
     }
 
+    // Configure mTLS if client certificates are provided
+    const clientCert = getClientCertFromEnv();
+    const clientKey = getClientKeyFromEnv();
+    if (clientCert && clientKey) {
+      const agent = new Agent({
+        connect: {
+          cert: clientCert,
+          key: clientKey,
+        },
+      });
+      if (options.httpOptions) {
+        options.httpOptions.dispatcher = agent;
+      } else {
+        options.httpOptions = {dispatcher: agent};
+      }
+    }
+
     this.apiVersion = options.apiVersion;
     this.httpOptions = options.httpOptions;
     const auth = new NodeAuth({
@@ -213,4 +232,44 @@ function getApiKeyFromEnv(): string | undefined {
     );
   }
   return envGoogleApiKey || envGeminiApiKey || undefined;
+}
+
+function getClientCertFromEnv(): string | undefined {
+  const envGoogleClientCert = getEnv('GOOGLE_CLIENT_CERT');
+  const envGeminiClientCert = getEnv('GEMINI_CLIENT_CERT');
+  if (envGoogleClientCert && envGeminiClientCert) {
+    console.warn(
+      'Both GOOGLE_CLIENT_CERT and GEMINI_CLIENT_CERT are set. Using GOOGLE_CLIENT_CERT.',
+    );
+  }
+  const certPath = envGoogleClientCert || envGeminiClientCert;
+  if (certPath) {
+    try {
+      return fs.readFileSync(certPath, 'utf8');
+    } catch (error) {
+      throw new Error(
+        `Failed to read client certificate from ${certPath}: ${error}`,
+      );
+    }
+  }
+  return undefined;
+}
+
+function getClientKeyFromEnv(): string | undefined {
+  const envGoogleClientKey = getEnv('GOOGLE_CLIENT_KEY');
+  const envGeminiClientKey = getEnv('GEMINI_CLIENT_KEY');
+  if (envGoogleClientKey && envGeminiClientKey) {
+    console.warn(
+      'Both GOOGLE_CLIENT_KEY and GEMINI_CLIENT_KEY are set. Using GOOGLE_CLIENT_KEY.',
+    );
+  }
+  const keyPath = envGoogleClientKey || envGeminiClientKey;
+  if (keyPath) {
+    try {
+      return fs.readFileSync(keyPath, 'utf8');
+    } catch (error) {
+      throw new Error(`Failed to read client key from ${keyPath}: ${error}`);
+    }
+  }
+  return undefined;
 }
