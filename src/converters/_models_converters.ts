@@ -4397,14 +4397,14 @@ export function speechConfigToVertex(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromLanguageCode = common.getValueByPath(fromObject, ['languageCode']);
-  if (fromLanguageCode != null) {
-    common.setValueByPath(toObject, ['languageCode'], fromLanguageCode);
-  }
-
   const fromVoiceConfig = common.getValueByPath(fromObject, ['voiceConfig']);
   if (fromVoiceConfig != null) {
     common.setValueByPath(toObject, ['voiceConfig'], fromVoiceConfig);
+  }
+
+  const fromLanguageCode = common.getValueByPath(fromObject, ['languageCode']);
+  if (fromLanguageCode != null) {
+    common.setValueByPath(toObject, ['languageCode'], fromLanguageCode);
   }
 
   if (
