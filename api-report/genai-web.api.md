@@ -2890,6 +2890,12 @@ export class ReplayResponse {
 }
 
 // @public
+export interface ReplicatedVoiceConfig {
+    mimeType?: string;
+    voiceSampleAudio?: string;
+}
+
+// @public
 export interface Retrieval {
     disableAttribution?: boolean;
     externalApi?: ExternalApi;
@@ -3098,7 +3104,7 @@ export interface SpeakerVoiceConfig {
     voiceConfig?: VoiceConfig;
 }
 
-// @public
+// @public (undocumented)
 export interface SpeechConfig {
     languageCode?: string;
     multiSpeakerVoiceConfig?: MultiSpeakerVoiceConfig;
@@ -3699,9 +3705,10 @@ export interface VideoMetadata {
     startOffset?: string;
 }
 
-// @public
+// @public (undocumented)
 export interface VoiceConfig {
     prebuiltVoiceConfig?: PrebuiltVoiceConfig;
+    replicatedVoiceConfig?: ReplicatedVoiceConfig;
 }
 
 // @public

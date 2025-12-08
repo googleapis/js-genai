@@ -47,9 +47,11 @@ describe('live', () => {
     expect(websocketFactorySpyCall.args[0]).toBe(
       'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=test-api-key',
     );
-    expect(JSON.stringify(websocketFactorySpyCall.args[1])).toBe(
-      `{"content-type":"application/json","user-agent":"google-genai-sdk/${SDK_VERSION} undefined","x-goog-api-client":"google-genai-sdk/${SDK_VERSION} undefined"}`,
-    );
+    expect(websocketFactorySpyCall.args[1]).toEqual({
+      'content-type': 'application/json',
+      'user-agent': `google-genai-sdk/${SDK_VERSION} undefined`,
+      'x-goog-api-client': `google-genai-sdk/${SDK_VERSION} undefined`,
+    });
     // Check that the onopen callback is wrapped to call the provided callbacks
     // and then resolve the onopen promise. The string is not fully checked to
     // avoid issues with whitespace.
@@ -205,9 +207,11 @@ describe('live', () => {
     expect(websocketFactorySpyCall.args[0]).toBe(
       'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=test-api-key',
     );
-    expect(JSON.stringify(websocketFactorySpyCall.args[1])).toBe(
-      `{"content-type":"application/json","user-agent":"google-genai-sdk/${SDK_VERSION} undefined","x-goog-api-client":"google-genai-sdk/${SDK_VERSION} undefined"}`,
-    );
+    expect(websocketFactorySpyCall.args[1]).toEqual({
+      'content-type': 'application/json',
+      'user-agent': `google-genai-sdk/${SDK_VERSION} undefined`,
+      'x-goog-api-client': `google-genai-sdk/${SDK_VERSION} undefined`,
+    });
     // Check that the onopen callback is wrapped to call the provided callbacks
     // and then resolve the onopen promise. The string is not fully checked to
     // avoid issues with whitespace.
@@ -224,9 +228,9 @@ describe('live', () => {
     ).toContain('void e');
     expect(websocket.connect).toHaveBeenCalled();
     const websocketSpyCall = websocketSpy.calls.all()[0];
-    expect(websocketSpyCall.args[0]).toBe(
-      '{"setup":{"model":"models/gemini-live-2.5-flash-preview"}}',
-    );
+    expect(JSON.parse(websocketSpyCall.args[0])).toEqual({
+      setup: {model: 'models/gemini-live-2.5-flash-preview'},
+    });
     expect(session).toBeDefined();
   });
 
@@ -391,9 +395,13 @@ describe('live', () => {
     });
 
     const websocketSpyCall = websocketSpy.calls.all()[0];
-    expect(websocketSpyCall.args[0]).toBe(
-      '{"setup":{"model":"models/gemini-2.0-flash-live-preview-04-09","generationConfig":{"responseModalities":["AUDIO"]},"sessionResumption":{"handle":"test_handle","transparent":true}}}',
-    );
+    expect(JSON.parse(websocketSpyCall.args[0])).toEqual({
+      setup: {
+        model: 'models/gemini-2.0-flash-live-preview-04-09',
+        generationConfig: {responseModalities: ['AUDIO']},
+        sessionResumption: {handle: 'test_handle', transparent: true},
+      },
+    });
     expect(session).toBeDefined();
   });
 
@@ -451,9 +459,16 @@ describe('live', () => {
     });
 
     const websocketSpyCall = websocketSpy.calls.all()[0];
-    expect(websocketSpyCall.args[0]).toBe(
-      '{"setup":{"model":"models/gemini-live-2.5-flash-preview","generationConfig":{"responseModalities":["AUDIO"]},"contextWindowCompression":{"triggerTokens":"1000","slidingWindow":{"targetTokens":"10"}}}}',
-    );
+    expect(JSON.parse(websocketSpyCall.args[0])).toEqual({
+      setup: {
+        model: 'models/gemini-live-2.5-flash-preview',
+        generationConfig: {responseModalities: ['AUDIO']},
+        contextWindowCompression: {
+          triggerTokens: '1000',
+          slidingWindow: {targetTokens: '10'},
+        },
+      },
+    });
     expect(session).toBeDefined();
   });
 
@@ -514,9 +529,20 @@ describe('live', () => {
     });
 
     const websocketSpyCall = websocketSpy.calls.all()[0];
-    expect(websocketSpyCall.args[0]).toBe(
-      '{"setup":{"model":"models/gemini-live-2.5-flash-preview","generationConfig":{"responseModalities":["AUDIO"]},"realtimeInputConfig":{"automaticActivityDetection":{"startOfSpeechSensitivity":"START_SENSITIVITY_HIGH","endOfSpeechSensitivity":"END_SENSITIVITY_HIGH"},"activityHandling":"NO_INTERRUPTION","turnCoverage":"TURN_INCLUDES_ALL_INPUT"}}}',
-    );
+    expect(JSON.parse(websocketSpyCall.args[0])).toEqual({
+      setup: {
+        model: 'models/gemini-live-2.5-flash-preview',
+        generationConfig: {responseModalities: ['AUDIO']},
+        realtimeInputConfig: {
+          automaticActivityDetection: {
+            startOfSpeechSensitivity: 'START_SENSITIVITY_HIGH',
+            endOfSpeechSensitivity: 'END_SENSITIVITY_HIGH',
+          },
+          activityHandling: 'NO_INTERRUPTION',
+          turnCoverage: 'TURN_INCLUDES_ALL_INPUT',
+        },
+      },
+    });
     expect(session).toBeDefined();
   });
 
@@ -572,9 +598,18 @@ describe('live', () => {
     });
 
     const websocketSpyCall = websocketSpy.calls.all()[0];
-    expect(websocketSpyCall.args[0]).toBe(
-      '{"setup":{"model":"models/gemini-live-2.5-flash-preview","generationConfig":{"responseModalities":["AUDIO"],"temperature":0.5,"topP":0.9,"topK":3,"seed":12}}}',
-    );
+    expect(JSON.parse(websocketSpyCall.args[0])).toEqual({
+      setup: {
+        model: 'models/gemini-live-2.5-flash-preview',
+        generationConfig: {
+          responseModalities: ['AUDIO'],
+          temperature: 0.5,
+          topP: 0.9,
+          topK: 3,
+          seed: 12,
+        },
+      },
+    });
     expect(session).toBeDefined();
   });
 
@@ -634,9 +669,18 @@ describe('live', () => {
     });
 
     const websocketSpyCall = websocketSpy.calls.all()[0];
-    expect(websocketSpyCall.args[0]).toBe(
-      '{"setup":{"model":"models/gemini-live-2.5-flash-preview","generationConfig":{"responseModalities":["AUDIO"],"speechConfig":{"languageCode":"en-US","voiceConfig":{"prebuiltVoiceConfig":{"voiceName":"en-default"}}}}}}',
-    );
+    expect(JSON.parse(websocketSpyCall.args[0])).toEqual({
+      setup: {
+        model: 'models/gemini-live-2.5-flash-preview',
+        generationConfig: {
+          responseModalities: ['AUDIO'],
+          speechConfig: {
+            voiceConfig: {prebuiltVoiceConfig: {voiceName: 'en-default'}},
+            languageCode: 'en-US',
+          },
+        },
+      },
+    });
     expect(session).toBeDefined();
   });
 
@@ -763,9 +807,34 @@ describe('live', () => {
     });
 
     const websocketSpyCall = websocketSpy.calls.all()[0];
-    expect(websocketSpyCall.args[0]).toBe(
-      '{"setup":{"model":"models/gemini-live-2.5-flash-preview","tools":[{"functionDeclarations":[{"name":"print","parametersJsonSchema":{"type":"object","properties":{"text":{"type":"string"},"color":{"type":"string","pattern":"red|blue|green|white"}},"required":["text","color"],"additionalProperties":false,"$schema":"http://json-schema.org/draft-07/schema#"},"behavior":"NON_BLOCKING"}]}]}}',
-    );
+    expect(JSON.parse(websocketSpyCall.args[0])).toEqual({
+      setup: {
+        model: 'models/gemini-live-2.5-flash-preview',
+        tools: [
+          {
+            functionDeclarations: [
+              {
+                name: 'print',
+                parametersJsonSchema: {
+                  type: 'object',
+                  properties: {
+                    text: {type: 'string'},
+                    color: {
+                      type: 'string',
+                      pattern: 'red|blue|green|white',
+                    },
+                  },
+                  required: ['text', 'color'],
+                  additionalProperties: false,
+                  $schema: 'http://json-schema.org/draft-07/schema#',
+                },
+                behavior: 'NON_BLOCKING',
+              },
+            ],
+          },
+        ],
+      },
+    });
     expect(session).toBeDefined();
   });
 
@@ -853,9 +922,13 @@ describe('live', () => {
     });
 
     const websocketSpyCall = websocketSpy.calls.all()[0];
-    expect(websocketSpyCall.args[0]).toBe(
-      '{"setup":{"model":"models/gemini-live-2.5-flash-preview","generationConfig":{"responseModalities":["AUDIO"]},"outputAudioTranscription":{}}}',
-    );
+    expect(JSON.parse(websocketSpyCall.args[0])).toEqual({
+      setup: {
+        model: 'models/gemini-live-2.5-flash-preview',
+        generationConfig: {responseModalities: ['AUDIO']},
+        outputAudioTranscription: {},
+      },
+    });
     expect(session).toBeDefined();
   });
 

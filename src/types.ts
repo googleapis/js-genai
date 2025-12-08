@@ -2009,6 +2009,53 @@ export declare interface ToolConfig {
   retrievalConfig?: RetrievalConfig;
 }
 
+/** ReplicatedVoiceConfig is used to configure replicated voice. */
+export declare interface ReplicatedVoiceConfig {
+  /** The mime type of the replicated voice.
+   */
+  mimeType?: string;
+  /** The sample audio of the replicated voice.
+      
+  * @remarks Encoded as base64 string. */
+  voiceSampleAudio?: string;
+}
+
+/** The configuration for the prebuilt speaker to use. */
+export declare interface PrebuiltVoiceConfig {
+  /** The name of the preset voice to use. */
+  voiceName?: string;
+}
+
+export declare interface VoiceConfig {
+  /** If true, the model will use a replicated voice for the response. */
+  replicatedVoiceConfig?: ReplicatedVoiceConfig;
+  /** The configuration for the prebuilt voice to use. */
+  prebuiltVoiceConfig?: PrebuiltVoiceConfig;
+}
+
+/** Configuration for a single speaker in a multi speaker setup. */
+export declare interface SpeakerVoiceConfig {
+  /** Required. The name of the speaker. This should be the same as the speaker name used in the prompt. */
+  speaker?: string;
+  /** Required. The configuration for the voice of this speaker. */
+  voiceConfig?: VoiceConfig;
+}
+
+/** The configuration for the multi-speaker setup. This data type is not supported in Vertex AI. */
+export declare interface MultiSpeakerVoiceConfig {
+  /** Required. All the enabled speaker voices. */
+  speakerVoiceConfigs?: SpeakerVoiceConfig[];
+}
+
+export declare interface SpeechConfig {
+  /** Configuration for the voice of the response. */
+  voiceConfig?: VoiceConfig;
+  /** Optional. Language code (ISO 639. e.g. en-US) for the speech synthesization. */
+  languageCode?: string;
+  /** Optional. The configuration for the multi-speaker setup. It is mutually exclusive with the voice_config field. This field is not supported in Vertex AI. */
+  multiSpeakerVoiceConfig?: MultiSpeakerVoiceConfig;
+}
+
 /** The configuration for automatic function calling. */
 export declare interface AutomaticFunctionCallingConfig {
   /** Whether to disable automatic function calling.
@@ -3589,42 +3636,6 @@ export declare interface DeleteModelParameters {
 export class DeleteModelResponse {
   /** Used to retain the full HTTP response. */
   sdkHttpResponse?: HttpResponse;
-}
-
-/** The configuration for the prebuilt speaker to use. */
-export declare interface PrebuiltVoiceConfig {
-  /** The name of the preset voice to use. */
-  voiceName?: string;
-}
-
-/** The configuration for the voice to use. */
-export declare interface VoiceConfig {
-  /** The configuration for the prebuilt voice to use. */
-  prebuiltVoiceConfig?: PrebuiltVoiceConfig;
-}
-
-/** Configuration for a single speaker in a multi speaker setup. */
-export declare interface SpeakerVoiceConfig {
-  /** Required. The name of the speaker. This should be the same as the speaker name used in the prompt. */
-  speaker?: string;
-  /** Required. The configuration for the voice of this speaker. */
-  voiceConfig?: VoiceConfig;
-}
-
-/** The configuration for the multi-speaker setup. This data type is not supported in Vertex AI. */
-export declare interface MultiSpeakerVoiceConfig {
-  /** Required. All the enabled speaker voices. */
-  speakerVoiceConfigs?: SpeakerVoiceConfig[];
-}
-
-/** The speech generation config. */
-export declare interface SpeechConfig {
-  /** Optional. Language code (ISO 639. e.g. en-US) for the speech synthesization. */
-  languageCode?: string;
-  /** The configuration for the speaker to use. */
-  voiceConfig?: VoiceConfig;
-  /** Optional. The configuration for the multi-speaker setup. It is mutually exclusive with the voice_config field. This field is not supported in Vertex AI. */
-  multiSpeakerVoiceConfig?: MultiSpeakerVoiceConfig;
 }
 
 /** Generation config. */
