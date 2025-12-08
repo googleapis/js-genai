@@ -2398,6 +2398,15 @@ export function generateVideosConfigToMldev(
     );
   }
 
+  const fromVideoMode = common.getValueByPath(fromObject, ['videoMode']);
+  if (parentObject !== undefined && fromVideoMode != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'videoMode'],
+      fromVideoMode,
+    );
+  }
+
   return toObject;
 }
 
@@ -2562,6 +2571,15 @@ export function generateVideosConfigToVertex(
       parentObject,
       ['parameters', 'compressionQuality'],
       fromCompressionQuality,
+    );
+  }
+
+  const fromVideoMode = common.getValueByPath(fromObject, ['videoMode']);
+  if (parentObject !== undefined && fromVideoMode != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'videoMode'],
+      fromVideoMode,
     );
   }
 

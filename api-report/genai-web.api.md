@@ -1396,6 +1396,7 @@ export interface GenerateVideosConfig {
     referenceImages?: VideoGenerationReferenceImage[];
     resolution?: string;
     seed?: number;
+    videoMode?: string;
 }
 
 // @public

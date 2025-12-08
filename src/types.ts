@@ -3872,6 +3872,9 @@ export declare interface GenerateVideosConfig {
   mask?: VideoGenerationMask;
   /** Compression quality of the generated videos. */
   compressionQuality?: VideoCompressionQuality;
+  /** Output video mode. Only allowed for reference to video
+      generation. Supported values are: precise (default), expressive. */
+  videoMode?: string;
 }
 
 /** Class that represents the parameters for generating videos. */
