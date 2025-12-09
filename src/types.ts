@@ -1011,6 +1011,22 @@ export enum MediaModality {
   DOCUMENT = 'DOCUMENT',
 }
 
+/** The type of the VAD signal. */
+export enum VadSignalType {
+  /**
+   * The default is VAD_SIGNAL_TYPE_UNSPECIFIED.
+   */
+  VAD_SIGNAL_TYPE_UNSPECIFIED = 'VAD_SIGNAL_TYPE_UNSPECIFIED',
+  /**
+   * Start of sentence signal.
+   */
+  VAD_SIGNAL_TYPE_SOS = 'VAD_SIGNAL_TYPE_SOS',
+  /**
+   * End of sentence signal.
+   */
+  VAD_SIGNAL_TYPE_EOS = 'VAD_SIGNAL_TYPE_EOS',
+}
+
 /** Start of speech sensitivity. */
 export enum StartSensitivity {
   /**
@@ -6031,6 +6047,11 @@ Note: This should not be used for when resuming a session at some time later -- 
   lastConsumedClientMessageIndex?: string;
 }
 
+export declare interface VoiceActivityDetectionSignal {
+  /** The type of the VAD signal. */
+  vadSignalType?: VadSignalType;
+}
+
 /** Response message for API call. */
 export class LiveServerMessage {
   /** Sent in response to a `LiveClientSetup` message from the client. */
@@ -6047,6 +6068,8 @@ export class LiveServerMessage {
   goAway?: LiveServerGoAway;
   /** Update of the session resumption state. */
   sessionResumptionUpdate?: LiveServerSessionResumptionUpdate;
+  /** Voice activity detection signal. */
+  voiceActivityDetectionSignal?: VoiceActivityDetectionSignal;
   /**
    * Returns the concatenation of all text parts from the server content if present.
    *
@@ -6242,6 +6265,10 @@ export declare interface LiveClientSetup {
   /** Configures the proactivity of the model. This allows the model to respond proactively to
     the input and to ignore irrelevant input. */
   proactivity?: ProactivityConfig;
+  /** Configures the explicit VAD signal. If enabled, the client will send
+      vad_signal to indicate the start and end of speech. This allows the server
+      to process the audio more efficiently. */
+  explicitVadSignal?: boolean;
 }
 
 /** Incremental update of the current conversation delivered from the client.
@@ -6453,6 +6480,10 @@ If included the server will send SessionResumptionUpdate messages. */
   /** Configures the proactivity of the model. This allows the model to respond proactively to
     the input and to ignore irrelevant input. */
   proactivity?: ProactivityConfig;
+  /** Configures the explicit VAD signal. If enabled, the client will send
+      vad_signal to indicate the start and end of speech. This allows the server
+      to process the audio more efficiently. */
+  explicitVadSignal?: boolean;
 }
 
 /** Parameters for connecting to the live API. */

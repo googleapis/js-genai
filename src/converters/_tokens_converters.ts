@@ -436,6 +436,12 @@ export function liveConnectConfigToMldev(
     );
   }
 
+  if (common.getValueByPath(fromObject, ['explicitVadSignal']) !== undefined) {
+    throw new Error(
+      'explicitVadSignal parameter is not supported in Gemini API.',
+    );
+  }
+
   return toObject;
 }
 
