@@ -7,8 +7,7 @@
 ### Features
 
 * Add enableEnhancedCivicAnswers feature in GenerateContentConfig ([b429389](https://github.com/googleapis/js-genai/commit/b4293896f3ab718426c93c3507827955aeb51e37))
-* Update data types from discovery doc. ([ddb7e7a](https://github.com/googleapis/js-genai/commit/ddb7e7a09fc4e2657474ce537288ecf8264738e6))
-* Update data types from discovery doc. ([f0a09d1](https://github.com/googleapis/js-genai/commit/f0a09d103f4cb45d886b93c08ab85690f518e547))
+* Support ReplicatedVoiceConfig ([7a56e35](https://github.com/googleapis/js-genai/commit/7a56e35f7f4fb3beed903eb02817dd70c1a4b6a9))
 
 
 ### Bug Fixes
