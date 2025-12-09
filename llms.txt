@@ -1,46 +1,3 @@
-# About this file (for humans only)
-
-This file provides curated prompts to help generative AI models like Gemini and
-Claude produce code using the latest Gemini APIs.
-
-Generative models are often unaware of recent API updates and may suggest
-outdated or legacy code. You can copy and paste the instructions from this file
-into your development environment to provide the model with the necessary
-context.
-
-> **Note: This is an Alpha (v0.2) Release** This is an early and experimental
-> collection of prompts. It's intended for testing and to gather feedback from
-> the community. Results are not guaranteed, and we expect frequent updates.
-
-## Disclaimer
-
-Please be aware that generative models can generate incorrect or unexpected
-outputs. You should always verify the results.
-
-## Scope
-
-To maintain a manageable context size, this guide does not cover the full range
-of the Gemini API's features. Refer to our [developer
-documentation](https://ai.google.dev/gemini-api/docs) for comprehensive feature
-guides.
-
-If you'd like to reduce context window consumption, you can experiment with
-removing sections on this file. You can let us know how it works at our
-[community forums](https://discuss.ai.google.dev/c/gemini-api).
-
-Note: These instructions are for the [Gemini
-API](https://ai.google.dev/gemini-api/docs). Vertex AI developers should note
-that while the APIs are similar, there may be minor differences, and the
-[official Vertex AI documentation](https://cloud.google.com/vertex-ai/docs)
-should be used for definitive guidance
-
-## Contributions
-
-We welcome suggestions for improvement. Please feel free to open an issue or
-send a pull request.
-
-You can copy paste the next section.
-
 # Gemini API Coding Guidelines (JavaScript/TypeScript)
 
 You are a Gemini API coding expert. Help me with writing code using the Gemini
@@ -48,18 +5,17 @@ API calling the official libraries and SDKs.
 
 Please follow the following guidelines when generating code.
 
-You can find the official SDK documentation and code samples here:
-https://googleapis.github.io/js-genai/
+**Official Documentation:** [https://googleapis.github.io/js-genai/](https://googleapis.github.io/js-genai/)
 
 ## Golden Rule: Use the Correct and Current SDK
 
-Always use the Google Gen AI SDK to call the Gemini models, which is the
-standard library for all Gemini API interactions. Do not use legacy libraries
-and SDKs.
+Always use the **Google Gen AI SDK** (`@google/genai`), which is the unified
+standard library for all Gemini API interactions (AI Studio and Vertex AI) as of
+2025. Do not use legacy libraries and SDKs.
 
 -   **Library Name:** Google Gen AI SDK
 -   **NPM Package:** `@google/genai`
--   **Legacy Libraries**: (`@google/generative-ai`) are deprecated
+-   **Legacy Libraries**: (`@google/generative-ai`, `@google-ai/generativelanguage`) are deprecated.
 
 **Installation:**
 
@@ -94,7 +50,7 @@ and SDKs.
 -   **Incorrect** `GenerateContentRequest` -> **Correct**
     `GenerateContentParameters`
 
-## Initialization and API key
+## Initialization and API Key
 
 The `@google/genai` library requires creating a `GoogleGenAI` instance for all
 API calls.
@@ -106,26 +62,28 @@ API calls.
 ```javascript
 import { GoogleGenAI } from '@google/genai';
 
-// Uses the GEMINI_API_KEY environment variable if apiKey not specified
+// Best practice: implicitly use GEMINI_API_KEY env variable
 const ai = new GoogleGenAI({});
 
-// Or pass the API key directly
-// const ai = new GoogleGenAI({apiKey: process.env.GEMINI_API_KEY});
+// Alternative: explicit key (avoid hardcoding in production)
+// const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 ```
 
 ## Models
 
--   By default, use the following models when using `google-genai`:
+-   By default, use the following models when using `@google/genai`:
     -   **General Text & Multimodal Tasks:** `gemini-2.5-flash`
     -   **Coding and Complex Reasoning Tasks:** `gemini-3-pro-preview`
+    -   **Low Latency & High Volume Tasks:** `gemini-2.5-flash-lite`
     -   **Fast Image Generation and Editing:** `gemini-2.5-flash-image` (aka Nano Banana)
     -   **High-Quality Image Generation and Editing:** `gemini-3-pro-image-preview` (aka Nano Banana Pro)
-    -   **Video Generation Tasks:** `veo-3.0-fast-generate-preview` or
-        `veo-3.0-generate-preview`.
+    -   **High-Fidelity Video Generation:** `veo-3.0-generate-001` or `veo-3.1-generate-preview`
+    -   **Fast Video Generation:** `veo-3.0-fast-generate-001` or `veo-3.1-fast-generate-preview`
+    -   **Advanced Video Editing Tasks:** `veo-3.1-generate-preview`
 
 -   It is also acceptable to use the following model if explicitly requested by
     the user:
-    -   **Gemini 2.0 Series**: `gemini-2.0-flash`, `gemini-2.0-pro`
+    -   **Gemini 2.0 Series**: `gemini-2.0-flash`, `gemini-2.0-flash-lite`
 
 -   Do not use the following deprecated models (or their variants like
     `gemini-1.5-flash-latest`):
@@ -136,16 +94,17 @@ const ai = new GoogleGenAI({});
 ## Basic Inference (Text Generation)
 
 Here's how to generate a response from a text prompt.
+Calls are stateless using the `ai.models` accessor.
 
 ```javascript
 import { GoogleGenAI } from '@google/genai';
 
-const ai = new GoogleGenAI({}); // Assumes GEMINI_API_KEY is set
+const ai = new GoogleGenAI({});
 
 async function run() {
   const response = await ai.models.generateContent({
     model: 'gemini-2.5-flash',
-    contents: 'why is the sky blue?',
+    contents: 'Why is the sky blue?',
   });
 
   console.log(response.text); // output is often markdown
@@ -154,7 +113,14 @@ async function run() {
 run();
 ```
 
-Multimodal inputs are supported by passing file data in the `contents` array.
+## Multimodal Inputs
+
+Pass images directly as base64 strings or use the File API.
+
+### Using Local Files (Base64)
+
+You can use this approach to pass a variety of data types (images, audio, video,
+pdf). For PDF, use `application/pdf` as `mimeType`.
 
 ```javascript
 import { GoogleGenAI, Part } from '@google/genai';
@@ -173,64 +139,104 @@ function fileToGenerativePart(path, mimeType): Part {
 }
 
 async function run() {
-    const imagePart = fileToGenerativePart("path/to/image.jpg", "image/jpeg");
+  const imagePart = fileToGenerativePart("path/to/image.jpg", "image/jpeg");
 
-    const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: [imagePart, "explain that image"],
-    });
+  const response = await ai.models.generateContent({
+    model: 'gemini-2.5-flash',
+    contents: [
+      imagePart,
+      'Describe this image in detail.'
+    ],
+  });
 
-    console.log(response.text); // The output often is markdown
+  console.log(response.text);
 }
 
 run();
 ```
 
-You can use this approach to pass a variety of data types (images, audio, video,
-pdf). For PDF, use `application/pdf` as `mimeType`.
+### File API (For Large Files)
 
-For larger files, use `ai.files.upload`:
+For video files, PDF, or long audio, upload to the File API first.
 
 ```javascript
 import { GoogleGenAI, createPartFromUri, createUserContent } from '@google/genai';
 const ai = new GoogleGenAI({});
 
 async function run() {
-    const f = await ai.files.upload({
-        file: 'path/to/sample.mp3',
-        config:{mimeType: 'audio/mp3'},
+    // Upload
+    const myFile = await ai.files.upload({
+        file: 'video.mp4',
+        config: { mimeType: 'video/mp4' },
     });
 
+    // Generate
     const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash',
          contents: createUserContent([
-          createPartFromUri(f.uri, f.mimeType),
-          "Describe this audio clip"
+          createPartFromUri(myFile.uri, myFile.mimeType),
+          "What happens in this video?"
         ])
     });
 
     console.log(response.text);
+
+    // You can delete files after use like this:
+    await ai.files.delete({name: myFile.name});
 }
 
 run();
 ```
 
-You can delete files after use like this:
+## Advanced Capabilities
+
+### Thinking (Reasoning)
+
+Gemini 2.5 and 3 series models support explicit "thinking" for complex logic.
+
+#### Gemini 3
+
+Thinking is on by default for `gemini-3-pro-preview`. It can be adjusted by
+using the `thinkingLevel` parameter.
+
+- **Low**: Minimizes latency and cost. Best for simple instruction following or chat.
+- **High**: (Default) Maximizes reasoning depth.
 
 ```javascript
-const myFile = await ai.files.upload({file: 'path/to/sample.mp3', mimeType: 'audio/mp3'});
-await ai.files.delete({name: myFile.name});
+import { GoogleGenAI } from "@google/genai";
+
+const ai = new GoogleGenAI({});
+
+async function main() {
+  const response = await ai.models.generateContent({
+    model: "gemini-3-pro-preview",
+    contents: "What is AI?",
+    config: {
+      thinkingConfig: {
+        includeThoughts: true, // If you want to see the thoughts
+        // 'HIGH' is default.
+        thinkingLevel: 'LOW', // Use 'LOW' for faster/cheaper reasoning
+      },
+    },
+  });
+
+  // Access thoughts if returned and includeThoughts is true
+  const part = response.candidates?.[0]?.content?.parts?.[0];
+  if (part?.thought) {
+    console.log(`Thought: ${part.text}`); // The thought content
+  } else {
+    console.log(`Response: ${response.text}`);
+  }
+}
+
+main();
 ```
 
-## Additional Capabilities and Configurations
+#### Gemini 2.5
 
-Below are examples of advanced configurations.
-
-### Thinking
-
-Gemini 2.5 series models support thinking, which is on by default for
-`gemini-2.5-flash`. It can be adjusted by using `thinking_budget` setting.
-Setting it to zero turns thinking off, and will reduce latency.
+Thinking is on by default for `gemini-2.5-pro` and `gemini-2.5-flash`. It can be
+adjusted by using the `thinkingBudget` setting. Setting it to zero turns
+thinking off, and will reduce latency.
 
 ```javascript
 import { GoogleGenAI } from "@google/genai";
@@ -240,14 +246,11 @@ const ai = new GoogleGenAI({});
 async function main() {
   const response = await ai.models.generateContent({
     model: "gemini-2.5-pro",
-    contents: "Provide a list of 3 famous physicists and their key contributions",
+    contents: "What is AI?",
     config: {
       thinkingConfig: {
-        thinkingBudget: 1024,
-        // Turn off thinking:
-        // thinkingBudget: 0
-        // Turn on dynamic thinking:
-        // thinkingBudget: -1
+        thinkingBudget: 0 // Turn thinking OFF
+        // thinkingBudget: 1024 // Turn thinking ON with specific token budget
       },
     },
   });
@@ -262,12 +265,10 @@ IMPORTANT NOTES:
 
 -   Minimum thinking budget for `gemini-2.5-pro` is `128` and thinking can not
     be turned off for that model.
--   No models (apart from Gemini 2.5 series) support thinking or thinking
-    budgets APIs. Do not try to adjust thinking budgets other models (such as
-    `gemini-2.0-flash` or `gemini-2.0-pro`) otherwise it will cause syntax
-    errors.
+-   No models (apart from Gemini 2.5/3 series) support thinking or thinking
+    budgets APIs. Do not try to adjust thinking budgets for other models.
 
-### System instructions
+### System Instructions
 
 Use system instructions to guide the model's behavior.
 
@@ -279,7 +280,7 @@ const ai = new GoogleGenAI({});
 async function run() {
     const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash',
-        contents: "Hello.",
+        contents: "Explain quantum physics.",
         config: {
             systemInstruction: "You are a pirate",
         }
@@ -336,7 +337,7 @@ run();
 
 ### Streaming
 
-It is possible to stream responses to reduce user perceived latency:
+Use `generateContentStream` to reduce time-to-first-token.
 
 ```javascript
 import { GoogleGenAI } from '@google/genai';
@@ -345,7 +346,7 @@ const ai = new GoogleGenAI({});
 async function run() {
   const responseStream = await ai.models.generateContentStream({
     model: "gemini-2.5-flash",
-    contents: ["Explain how AI works"],
+    contents: ["Write a long story about a space pirate."],
   });
 
   for await (const chunk of responseStream) {
@@ -369,37 +370,45 @@ const ai = new GoogleGenAI({});
 async function run() {
     const chat = ai.chats.create({model: "gemini-2.5-flash"});
 
-    let response = await chat.sendMessage({message:"I have 2 dogs in my house."});
+    let response = await chat.sendMessage({message: "I have a cat named Whiskers."});
     console.log(response.text);
 
-    response = await chat.sendMessage({message: "How many paws are in my house?"});
+    response = await chat.sendMessage({message: "What is the name of my pet?"});
     console.log(response.text);
 
+    // To access specific elements in chat history
     const history = await chat.getHistory();
     for (const message of history) {
         console.log(`role - ${message.role}: ${message.parts[0].text}`);
     }
 }
 run();
-``` It is also possible to use streaming with Chat:
+```
+
+It is also possible to use streaming with Chat:
 
 ```javascript
+import { GoogleGenAI } from '@google/genai';
+
+const ai = new GoogleGenAI({});
+
+async function run() {
     const chat = ai.chats.create({model: "gemini-2.5-flash"});
     const stream = await chat.sendMessageStream({message:"I have 2 dogs in my house."});
     for await (const chunk of stream) {
       console.log(chunk.text);
       console.log("_".repeat(80));
     }
+}
+run();
 ```
 
-Note: ai.chats.create({model}) returns `Chat` under `@google/genai` which tracks
+Note: `ai.chats.create({model})` returns `Chat` under `@google/genai` which tracks
 the session.
 
-### Structured outputs
+### Structured Outputs (JSON Schema)
 
-Ask the model to return a response in JSON format.
-
-The recommended way is to configure a `responseSchema` for the expected output.
+Enforce a specific JSON schema using the `responseSchema` configuration.
 
 See the available types below that can be used in the `responseSchema`.
 
@@ -446,40 +455,47 @@ export enum Type {
 import { GoogleGenAI, Type } from "@google/genai";
 
 const ai = new GoogleGenAI({});
-const response = await ai.models.generateContent({
-   model: "gemini-2.5-flash",
-   contents: "List a few popular cookie recipes, and include the amounts of ingredients.",
-   config: {
-     responseMimeType: "application/json",
-     responseSchema: {
-        type: Type.ARRAY,
-        items: {
-          type: Type.OBJECT,
-          properties: {
-            recipeName: {
-              type: Type.STRING,
-              description: 'The name of the recipe.',
-            },
-            ingredients: {
-              type: Type.ARRAY,
-              items: {
-                type: Type.STRING,
-              },
-              description: 'The ingredients for the recipe.',
-            },
-          },
-          propertyOrdering: ["recipeName", "ingredients"],
-        },
-      },
-   },
-});
 
-let jsonStr = response.text.trim();
+async function main() {
+  const response = await ai.models.generateContent({
+    model: "gemini-2.5-flash",
+    contents: "List a few popular cookie recipes, and include the amounts of ingredients.",
+    config: {
+      responseMimeType: "application/json",
+      responseSchema: {
+          type: Type.ARRAY,
+          items: {
+            type: Type.OBJECT,
+            properties: {
+              recipeName: {
+                type: Type.STRING,
+                description: 'The name of the recipe.',
+              },
+              ingredients: {
+                type: Type.ARRAY,
+                items: {
+                  type: Type.STRING,
+                },
+                description: 'The ingredients for the recipe.',
+              },
+            },
+            propertyOrdering: ["recipeName", "ingredients"],
+          },
+        },
+    },
+  });
+
+  // response.text is guaranteed to be valid JSON matching the schema
+  console.log(response.text);
+  const recipe = JSON.parse(response.text);
+}
+
+main();
 ```
 
-The `jsonStr` might look like this:
+The `response.text` might look like this:
 
-```javascript
+```json
 [
   {
     "recipeName": "Chocolate Chip Cookies",
@@ -499,7 +515,7 @@ The `jsonStr` might look like this:
 ]
 ```
 
-#### Function Calling (Tools)
+### Function Calling (Tools)
 
 You can provide the model with tools (functions) it can use to bring in external
 information to answer a question or act on a request outside the model.
@@ -526,36 +542,73 @@ async function run() {
         model: 'gemini-2.5-flash',
         contents: 'Dim the lights so the room feels cozy and warm.',
         config: {
-            tools: [{functionDeclarations: [controlLightDeclaration]}]
+            tools: [{ functionDeclarations: [controlLightDeclaration] }]
         }
     });
 
     if (response.functionCalls) {
+        console.log('Function calls requested by the model:');
         console.log(response.functionCalls);
         // In a real app, you would execute the function and send the result back.
+    } else {
+        console.log(response.text);
     }
 }
 run();
 ```
 
-### Generate Images
+### Grounding (Google Search)
 
-Here's how to generate images using the Nano Banana models. Start with the
-Gemini 2.5 Flash image (Nano Banana) model as it should cover most use-cases.
+Connect the model to real-time web data.
 
 ```javascript
 import { GoogleGenAI } from "@google/genai";
 
 const ai = new GoogleGenAI({});
 
+async function run() {
+    const response = await ai.models.generateContent({
+       model: "gemini-2.5-flash",
+       contents: "What was the score of the latest Olympique Lyonais game?",
+       config: {
+         tools: [{ googleSearch: {} }],
+       },
+    });
+
+    console.log(response.text);
+
+    // Inspect grounding metadata
+    const metadata = response.candidates?.[0]?.groundingMetadata;
+    if (metadata) {
+        console.log("Search Queries:", metadata.webSearchQueries);
+        const urls = metadata.groundingChunks?.map(chunk => chunk.web?.title) || [];
+        console.log("Sources:", urls);
+    }
+}
+run();
+```
+
+## Media Generation
+
+### Generate Images
+
+Here's how to generate images using the Nano Banana models. Start with the
+Gemini 2.5 Flash Image (Nano Banana) model as it should cover most use-cases.
+
+```javascript
+import { GoogleGenAI } from "@google/genai";
+import * as fs from 'fs';
+
+const ai = new GoogleGenAI({});
+
 async function main() {
-  const prompt =
-  "Create a picture of a nano banana dish in a fancy restaurant with a Gemini theme";
+  const prompt = "Create a picture of a nano banana dish in a fancy restaurant with a Gemini theme";
 
   const response = await ai.models.generateContent({
     model: "gemini-2.5-flash-image",
     contents: prompt,
   });
+
   for (const part of response.candidates[0].content.parts) {
     if (part.text) {
       console.log(part.text);
@@ -570,16 +623,16 @@ main();
 ```
 
 Upgrade to the Gemini 3 Pro image (Nano Banana Pro) model if the user requests
-high-resolution images or needs real-time information using the Google Search tool.
+high-resolution images or needs real-time information using the Google Search
+tool.
 
 ```javascript
 import { GoogleGenAI } from "@google/genai";
-import * as fs from "node:fs";
+import * as fs from 'fs';
+
+const ai = new GoogleGenAI({});
 
 async function main() {
-
-  const ai = new GoogleGenAI({});
-
   const prompt = 'Visualize the current weather forecast for the next 5 days in San Francisco as a clean, modern weather chart. Add a visual on what I should wear each day';
   const aspectRatio = '16:9'; // "1:1","2:3","3:2","3:4","4:3","4:5","5:4","9:16","16:9","21:9"
   const resolution = '2K';  // "1K", "2K", "4K"
@@ -592,7 +645,7 @@ async function main() {
         aspectRatio: aspectRatio,
         imageSize: resolution,
       },
-      tools: [{google_search: {}}]
+      tools: [{ googleSearch: {} }]
     },
   });
 
@@ -611,29 +664,46 @@ main();
 
 ### Edit Images
 
-Editing images is better done using the Gemini native image generation model.
-Configs are not supported in this model (except modality).
+Editing images is better done using the Gemini native image generation model,
+and it is recommended to use chat mode. Configs are not supported in this model
+(except modality).
 
 ```javascript
 import { GoogleGenAI } from '@google/genai';
+import * as fs from 'fs';
 
 const ai = new GoogleGenAI({});
 
-const response = await ai.models.generateContent({
-  model: 'gemini-2.5-flash-image-preview',
-  contents: [imagePart, 'koala eating a nano banana']
-});
-for (const part of response.candidates[0].content.parts) {
-  if (part.inlineData) {
-    const base64ImageBytes: string = part.inlineData.data;
-    const imageUrl = `data:image/png;base64,${base64ImageBytes}`;
+async function main() {
+  const imageBuffer = fs.readFileSync('path/to/image.png');
+  const imageBase64 = imageBuffer.toString('base64');
+
+  // Create the chat
+  const chat = ai.chats.create({ model: 'gemini-2.5-flash-image' });
+
+  // Send the image and ask for it to be edited
+  const response = await chat.sendMessage({
+      content: [
+          { inlineData: { mimeType: 'image/png', data: imageBase64 } },
+          "Make it a bananas foster."
+      ]
+  });
+
+  // Get the generated image(s)
+  for (const part of response.candidates[0].content.parts) {
+    if (part.inlineData) {
+      const base64ImageBytes: string = part.inlineData.data;
+      const imageUrl = `data:image/png;base64,${base64ImageBytes}`;
+    }
   }
 }
+
+main();
 ```
 
-### Generate Videos
+### Video Generation (Veo)
 
-Here's how to generate videos using the Veo models. Usage of Veo can be costly,
+Use the Veo models for video generation. Usage of Veo can be costly,
 so after generating code for it, give user a heads up to check pricing for Veo.
 
 ```javascript
@@ -644,8 +714,9 @@ import { Readable } from "stream";
 const ai = new GoogleGenAI({});
 
 async function main() {
+  // Video generation is an async operation
   let operation = await ai.models.generateVideos({
-    model: "veo-3.0-fast-generate-preview",
+    model: "veo-3.0-fast-generate-001",
     prompt: "Panning wide shot of a calico kitten sleeping in the sunshine",
     config: {
       personGeneration: "dont_allow",
@@ -653,52 +724,29 @@ async function main() {
     },
   });
 
+  console.log("Generating video...");
+
+  // Poll for completion
   while (!operation.done) {
-    await new Promise((resolve) => setTimeout(resolve, 10000));
+    await new Promise((resolve) => setTimeout(resolve, 10000)); // Sleep 10s
     operation = await ai.operations.getVideosOperation({
       operation: operation,
     });
   }
 
-  operation.response?.generatedVideos?.forEach(async (generatedVideo, n) => {
-    const resp = await fetch(`${generatedVideo.video?.uri}&key=GEMINI_API_KEY`); // append your API key
-    const writer = createWriteStream(`video${n}.mp4`);
-    Readable.fromWeb(resp.body).pipe(writer);
-  });
+  // Download results
+  if (operation.response?.generatedVideos) {
+    operation.response.generatedVideos.forEach(async (video, n) => {
+        const videoUrl = `${video.video.uri}&key=${process.env.GEMINI_API_KEY}`;
+        const resp = await fetch(videoUrl);
+        const writer = createWriteStream(`video${n}.mp4`);
+        Readable.fromWeb(resp.body).pipe(writer);
+        console.log(`Saved video${n}.mp4`);
+    });
+  }
 }
 
 main();
-```
-
-### Search Grounding
-
-Google Search can be used as a tool for grounding queries that with up to date
-information from the web.
-
-```javascript
-import { GoogleGenAI } from "@google/genai";
-
-const ai = new GoogleGenAI({});
-
-async function run() {
-    const response = await ai.models.generateContent({
-       model: "gemini-2.5-flash",
-       contents: "Who won the latest F1 race?",
-       config: {
-         tools: [{googleSearch: {}}],
-       },
-    });
-
-    console.log("Response:", response.text);
-
-    // Extract and display grounding URLs
-    const searchChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks;
-    if (searchChunks) {
-        const urls = searchChunks.map(chunk => chunk.web.uri);
-        console.log("Sources:", urls);
-    }
-}
-run();
 ```
 
 ### Content and Part Hierarchy
@@ -734,7 +782,10 @@ async function run() {
     const response = await ai.models.generateContent({
         model: "gemini-2.5-flash",
         contents: [
-            { role: "user", parts: [{ text: "How does AI work?" }] },
+            {
+                role: "user",
+                parts: [{ text: "How does AI work?" }]
+            },
         ],
     });
     console.log(response.text);
@@ -751,7 +802,7 @@ run();
 
 The list of APIs and capabilities above are not comprehensive. If users ask you
 to generate code for a capability not provided above, refer them to
-https://googleapis.github.io/js-genai/.
+[https://googleapis.github.io/js-genai/](https://googleapis.github.io/js-genai/).
 
 ## Useful Links
 
