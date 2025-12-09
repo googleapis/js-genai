@@ -1,6 +1,20 @@
 # Changelog
 
 
+## [1.32.0](https://github.com/googleapis/js-genai/compare/v1.31.0...v1.32.0) (2025-12-09)
+
+
+### Features
+
+* Add enableEnhancedCivicAnswers feature in GenerateContentConfig ([b429389](https://github.com/googleapis/js-genai/commit/b4293896f3ab718426c93c3507827955aeb51e37))
+* Update data types from discovery doc. ([ddb7e7a](https://github.com/googleapis/js-genai/commit/ddb7e7a09fc4e2657474ce537288ecf8264738e6))
+* Update data types from discovery doc. ([f0a09d1](https://github.com/googleapis/js-genai/commit/f0a09d103f4cb45d886b93c08ab85690f518e547))
+
+
+### Bug Fixes
+
+* Improve stream parsing performance ([c9c1359](https://github.com/googleapis/js-genai/commit/c9c13596365b495a66be3015c312936a38be6ebc))
+
 ## [1.31.0](https://github.com/googleapis/js-genai/compare/v1.30.0...v1.31.0) (2025-12-03)
 
 
