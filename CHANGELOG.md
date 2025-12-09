@@ -1,6 +1,19 @@
 # Changelog
 
 
+## [1.32.0](https://github.com/googleapis/js-genai/compare/v1.31.0...v1.32.0) (2025-12-09)
+
+
+### Features
+
+* Add enableEnhancedCivicAnswers feature in GenerateContentConfig ([b429389](https://github.com/googleapis/js-genai/commit/b4293896f3ab718426c93c3507827955aeb51e37))
+* Support ReplicatedVoiceConfig ([7a56e35](https://github.com/googleapis/js-genai/commit/7a56e35f7f4fb3beed903eb02817dd70c1a4b6a9))
+
+
+### Bug Fixes
+
+* Improve stream parsing performance ([c9c1359](https://github.com/googleapis/js-genai/commit/c9c13596365b495a66be3015c312936a38be6ebc))
+
 ## [1.31.0](https://github.com/googleapis/js-genai/compare/v1.30.0...v1.31.0) (2025-12-03)
 
 
