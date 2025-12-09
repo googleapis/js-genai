@@ -9,16 +9,18 @@
     "build": "tsc"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.24.0",
     "@google/genai": "file:..",
-    "@modelcontextprotocol/sdk": "^1.20.1",
     "cors": "^2.8.5",
     "express": "^4.21.2",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "zod": "^3.25.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.0"
   },
   "overrides": {
-    "@modelcontextprotocol/sdk": "^1.20.1"
+    "@modelcontextprotocol/sdk": "$@modelcontextprotocol/sdk",
+    "zod": "$zod"
   }
 }
