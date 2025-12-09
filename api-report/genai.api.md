@@ -1246,6 +1246,7 @@ export interface GenerateContentConfig {
     automaticFunctionCalling?: AutomaticFunctionCallingConfig;
     cachedContent?: string;
     candidateCount?: number;
+    enableEnhancedCivicAnswers?: boolean;
     frequencyPenalty?: number;
     httpOptions?: HttpOptions;
     imageConfig?: ImageConfig;

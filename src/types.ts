@@ -2287,6 +2287,10 @@ export declare interface GenerateContentConfig {
   /** The image generation configuration.
    */
   imageConfig?: ImageConfig;
+  /** Enables enhanced civic answers. It may not be available for all
+      models. This field is not supported in Vertex AI.
+       */
+  enableEnhancedCivicAnswers?: boolean;
 }
 
 /** Config for models.generate_content parameters. */

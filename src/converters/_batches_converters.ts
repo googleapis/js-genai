@@ -1217,6 +1217,17 @@ export function generateContentConfigToMldev(
     );
   }
 
+  const fromEnableEnhancedCivicAnswers = common.getValueByPath(fromObject, [
+    'enableEnhancedCivicAnswers',
+  ]);
+  if (fromEnableEnhancedCivicAnswers != null) {
+    common.setValueByPath(
+      toObject,
+      ['enableEnhancedCivicAnswers'],
+      fromEnableEnhancedCivicAnswers,
+    );
+  }
+
   return toObject;
 }
 

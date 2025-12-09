@@ -1397,6 +1397,17 @@ export function generateContentConfigToMldev(
     );
   }
 
+  const fromEnableEnhancedCivicAnswers = common.getValueByPath(fromObject, [
+    'enableEnhancedCivicAnswers',
+  ]);
+  if (fromEnableEnhancedCivicAnswers != null) {
+    common.setValueByPath(
+      toObject,
+      ['enableEnhancedCivicAnswers'],
+      fromEnableEnhancedCivicAnswers,
+    );
+  }
+
   return toObject;
 }
 
@@ -1620,6 +1631,15 @@ export function generateContentConfigToVertex(
       toObject,
       ['imageConfig'],
       imageConfigToVertex(fromImageConfig),
+    );
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['enableEnhancedCivicAnswers']) !==
+    undefined
+  ) {
+    throw new Error(
+      'enableEnhancedCivicAnswers parameter is not supported in Vertex AI.',
     );
   }
 
