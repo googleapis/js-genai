@@ -2160,6 +2160,7 @@ export interface LiveClientRealtimeInput {
 // @public
 export interface LiveClientSetup {
     contextWindowCompression?: ContextWindowCompressionConfig;
+    explicitVadSignal?: boolean;
     generationConfig?: GenerationConfig;
     inputAudioTranscription?: AudioTranscriptionConfig;
     model?: string;
@@ -2181,6 +2182,7 @@ export interface LiveConnectConfig {
     abortSignal?: AbortSignal;
     contextWindowCompression?: ContextWindowCompressionConfig;
     enableAffectiveDialog?: boolean;
+    explicitVadSignal?: boolean;
     generationConfig?: GenerationConfig;
     httpOptions?: HttpOptions;
     inputAudioTranscription?: AudioTranscriptionConfig;
@@ -2377,6 +2379,7 @@ export class LiveServerMessage {
     toolCall?: LiveServerToolCall;
     toolCallCancellation?: LiveServerToolCallCancellation;
     usageMetadata?: UsageMetadata;
+    voiceActivityDetectionSignal?: VoiceActivityDetectionSignal;
 }
 
 // @public
@@ -3616,6 +3619,13 @@ export interface UsageMetadata {
 }
 
 // @public
+export enum VadSignalType {
+    VAD_SIGNAL_TYPE_EOS = "VAD_SIGNAL_TYPE_EOS",
+    VAD_SIGNAL_TYPE_SOS = "VAD_SIGNAL_TYPE_SOS",
+    VAD_SIGNAL_TYPE_UNSPECIFIED = "VAD_SIGNAL_TYPE_UNSPECIFIED"
+}
+
+// @public
 export interface VeoHyperParameters {
     epochCount?: string;
     learningRateMultiplier?: number;
@@ -3704,6 +3714,11 @@ export interface VideoMetadata {
     endOffset?: string;
     fps?: number;
     startOffset?: string;
+}
+
+// @public (undocumented)
+export interface VoiceActivityDetectionSignal {
+    vadSignalType?: VadSignalType;
 }
 
 // @public (undocumented)

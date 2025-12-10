@@ -689,6 +689,12 @@ export function liveClientSetupToMldev(
     common.setValueByPath(toObject, ['proactivity'], fromProactivity);
   }
 
+  if (common.getValueByPath(fromObject, ['explicitVadSignal']) !== undefined) {
+    throw new Error(
+      'explicitVadSignal parameter is not supported in Gemini API.',
+    );
+  }
+
   return toObject;
 }
 
@@ -793,6 +799,17 @@ export function liveClientSetupToVertex(
   const fromProactivity = common.getValueByPath(fromObject, ['proactivity']);
   if (fromProactivity != null) {
     common.setValueByPath(toObject, ['proactivity'], fromProactivity);
+  }
+
+  const fromExplicitVadSignal = common.getValueByPath(fromObject, [
+    'explicitVadSignal',
+  ]);
+  if (fromExplicitVadSignal != null) {
+    common.setValueByPath(
+      toObject,
+      ['explicitVadSignal'],
+      fromExplicitVadSignal,
+    );
   }
 
   return toObject;
@@ -1001,6 +1018,12 @@ export function liveConnectConfigToMldev(
     );
   }
 
+  if (common.getValueByPath(fromObject, ['explicitVadSignal']) !== undefined) {
+    throw new Error(
+      'explicitVadSignal parameter is not supported in Gemini API.',
+    );
+  }
+
   return toObject;
 }
 
@@ -1204,6 +1227,17 @@ export function liveConnectConfigToVertex(
       parentObject,
       ['setup', 'proactivity'],
       fromProactivity,
+    );
+  }
+
+  const fromExplicitVadSignal = common.getValueByPath(fromObject, [
+    'explicitVadSignal',
+  ]);
+  if (parentObject !== undefined && fromExplicitVadSignal != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'explicitVadSignal'],
+      fromExplicitVadSignal,
     );
   }
 
@@ -1567,6 +1601,17 @@ export function liveServerMessageFromVertex(
       toObject,
       ['sessionResumptionUpdate'],
       fromSessionResumptionUpdate,
+    );
+  }
+
+  const fromVoiceActivityDetectionSignal = common.getValueByPath(fromObject, [
+    'voiceActivityDetectionSignal',
+  ]);
+  if (fromVoiceActivityDetectionSignal != null) {
+    common.setValueByPath(
+      toObject,
+      ['voiceActivityDetectionSignal'],
+      fromVoiceActivityDetectionSignal,
     );
   }
 
