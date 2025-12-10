@@ -14,6 +14,8 @@ import {Chats} from '../chats.js';
 import {GoogleGenAIOptions} from '../client.js';
 import {Files} from '../files.js';
 import {FileSearchStores} from '../filesearchstores.js';
+import GeminiNextGenAPI from '../interactions/index.js';
+import {Interactions as GeminiNextGenInteractions} from '../interactions/resources/interactions.js';
 import {Live} from '../live.js';
 import {Models} from '../models.js';
 import {NodeAuth} from '../node/_node_auth.js';
@@ -23,6 +25,7 @@ import {Operations} from '../operations.js';
 import {Tokens} from '../tokens.js';
 import {Tunings} from '../tunings.js';
 import {HttpOptions} from '../types.js';
+
 import {NodeUploader} from './_node_uploader.js';
 
 const LANGUAGE_LABEL_PREFIX = 'gl-node/';
@@ -86,6 +89,42 @@ export class GoogleGenAI {
   readonly authTokens: Tokens;
   readonly tunings: Tunings;
   readonly fileSearchStores: FileSearchStores;
+  private _interactions: GeminiNextGenInteractions | undefined;
+
+  get interactions(): GeminiNextGenInteractions {
+    if (this._interactions !== undefined) {
+      return this._interactions;
+    }
+
+    console.warn(
+      'GoogleGenAI.interactions: Interactions usage is experimental and may change in future versions.',
+    );
+
+    if (this.vertexai) {
+      throw new Error(
+        'This version of the GenAI SDK does not support Vertex AI API for interactions.',
+      );
+    }
+
+    const httpOpts = this.httpOptions;
+
+    // Unsupported Options Warnings
+    if (httpOpts?.extraBody) {
+      console.warn(
+        'GoogleGenAI.interactions: Client level httpOptions.extraBody is not supported by the interactions client and will be ignored.',
+      );
+    }
+
+    const nextGenClient = new GeminiNextGenAPI({
+      baseURL: this.apiClient.getBaseUrl(),
+      apiKey: this.apiKey,
+      defaultHeaders: this.apiClient.getDefaultHeaders(),
+      timeout: httpOpts?.timeout,
+    });
+    this._interactions = nextGenClient.interactions;
+
+    return this._interactions;
+  }
   constructor(options: GoogleGenAIOptions) {
     // Validate explicitly set initializer values.
     if ((options.project || options.location) && options.apiKey) {
