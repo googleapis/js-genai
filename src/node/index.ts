@@ -11,7 +11,7 @@ export * from '../chats.js';
 export {GoogleGenAIOptions} from '../client.js';
 export * from '../errors.js';
 export {Files} from '../files.js';
-export { Interactions } from '../index.js';
+export type * as Interactions from '../interactions/resources/interactions.js';
 export * from '../live.js';
 export {mcpToTool} from '../mcp/_mcp.js';
 export {Models} from '../models.js';
