@@ -543,14 +543,14 @@ namespace ContentDelta {
     interface AudioDelta {
         // (undocumented)
         data?: string;
-        mime_type?: InteractionsAPI.AudioMimeType;
+        mime_type?: AudioMimeType;
         type: 'audio';
         // (undocumented)
         uri?: string;
     }
     // (undocumented)
     interface CodeExecutionCallDelta {
-        arguments?: InteractionsAPI.CodeExecutionCallArguments;
+        arguments?: CodeExecutionCallArguments;
         id?: string;
         type: 'code_execution_call';
     }
@@ -615,12 +615,12 @@ namespace ContentDelta {
         // (undocumented)
         interface Items {
             // (undocumented)
-            items?: Array<string | InteractionsAPI.ImageContent>;
+            items?: Array<string | ImageContent>;
         }
     }
     // (undocumented)
     interface GoogleSearchCallDelta {
-        arguments?: InteractionsAPI.GoogleSearchCallArguments;
+        arguments?: GoogleSearchCallArguments;
         id?: string;
         type: 'google_search_call';
     }
@@ -630,7 +630,7 @@ namespace ContentDelta {
         // (undocumented)
         is_error?: boolean;
         // (undocumented)
-        result?: Array<InteractionsAPI.GoogleSearchResult>;
+        result?: Array<GoogleSearchResult>;
         // (undocumented)
         signature?: string;
         type: 'google_search_result';
@@ -639,7 +639,7 @@ namespace ContentDelta {
     interface ImageDelta {
         // (undocumented)
         data?: string;
-        mime_type?: InteractionsAPI.ImageMimeType;
+        mime_type?: ImageMimeType;
         resolution?: 'low' | 'medium' | 'high';
         type: 'image';
         // (undocumented)
@@ -673,13 +673,12 @@ namespace ContentDelta {
         // (undocumented)
         interface Items {
             // (undocumented)
-            items?: Array<string | InteractionsAPI.ImageContent>;
+            items?: Array<string | ImageContent>;
         }
     }
     // (undocumented)
     interface TextDelta {
-        // Warning: (ae-forgotten-export) The symbol "InteractionsAPI" needs to be exported by the entry point index.d.ts
-        annotations?: Array<InteractionsAPI.Annotation>;
+        annotations?: Array<Annotation>;
         // (undocumented)
         text?: string;
         type: 'text';
@@ -691,12 +690,12 @@ namespace ContentDelta {
     }
     // (undocumented)
     interface ThoughtSummaryDelta {
-        content?: InteractionsAPI.TextContent | InteractionsAPI.ImageContent;
+        content?: TextContent | ImageContent;
         type: 'thought_summary';
     }
     // (undocumented)
     interface URLContextCallDelta {
-        arguments?: InteractionsAPI.URLContextCallArguments;
+        arguments?: URLContextCallArguments;
         id?: string;
         type: 'url_context_call';
     }
@@ -706,7 +705,7 @@ namespace ContentDelta {
         // (undocumented)
         is_error?: boolean;
         // (undocumented)
-        result?: Array<InteractionsAPI.URLContextResult>;
+        result?: Array<URLContextResult>;
         // (undocumented)
         signature?: string;
         type: 'url_context_result';
@@ -715,7 +714,7 @@ namespace ContentDelta {
     interface VideoDelta {
         // (undocumented)
         data?: string;
-        mime_type?: InteractionsAPI.VideoMimeType;
+        mime_type?: VideoMimeType;
         resolution?: 'low' | 'medium' | 'high';
         type: 'video';
         // (undocumented)
@@ -1664,7 +1663,7 @@ namespace FunctionResultContent {
     // (undocumented)
     interface Items {
         // (undocumented)
-        items?: Array<string | InteractionsAPI.ImageContent>;
+        items?: Array<string | ImageContent>;
     }
 }
 
@@ -2448,14 +2447,6 @@ interface InteractionEvent {
 type InteractionGetParams = InteractionGetParamsNonStreaming | InteractionGetParamsStreaming;
 
 // @public (undocumented)
-namespace InteractionGetParams {
-    // (undocumented)
-    type InteractionGetParamsNonStreaming = InteractionsAPI.InteractionGetParamsNonStreaming;
-    // (undocumented)
-    type InteractionGetParamsStreaming = InteractionsAPI.InteractionGetParamsStreaming;
-}
-
-// @public (undocumented)
 interface InteractionGetParamsBase {
     api_version?: string;
     last_event_id?: string;
@@ -3142,7 +3133,7 @@ namespace MCPServerToolResultContent {
     // (undocumented)
     interface Items {
         // (undocumented)
-        items?: Array<string | InteractionsAPI.ImageContent>;
+        items?: Array<string | ImageContent>;
     }
 }
 
@@ -4039,7 +4030,7 @@ namespace Tool_2 {
         type: 'google_search';
     }
     interface MCPServer {
-        allowed_tools?: Array<InteractionsAPI.AllowedTools>;
+        allowed_tools?: Array<AllowedTools>;
         headers?: {
             [key: string]: string;
         };

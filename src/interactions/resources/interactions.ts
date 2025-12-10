@@ -8,7 +8,7 @@
 
 import { APIResource } from '../core/resource.js';
 import * as Errors from '../core/error.js';
-import * as InteractionsAPI from './interactions.js';
+
 import { APIPromise } from '../core/api-promise.js';
 import { Stream } from '../core/streaming.js';
 import { RequestOptions } from '../internal/request-options.js';
@@ -289,7 +289,7 @@ export namespace ContentDelta {
     /**
      * Citation information for model-generated content.
      */
-    annotations?: Array<InteractionsAPI.Annotation>;
+    annotations?: Array<Annotation>;
 
     text?: string;
   }
@@ -305,7 +305,7 @@ export namespace ContentDelta {
     /**
      * The mime type of the image.
      */
-    mime_type?: InteractionsAPI.ImageMimeType;
+    mime_type?: ImageMimeType;
 
     /**
      * The resolution of the media.
@@ -326,7 +326,7 @@ export namespace ContentDelta {
     /**
      * The mime type of the audio.
      */
-    mime_type?: InteractionsAPI.AudioMimeType;
+    mime_type?: AudioMimeType;
 
     uri?: string;
   }
@@ -355,7 +355,7 @@ export namespace ContentDelta {
     /**
      * The mime type of the video.
      */
-    mime_type?: InteractionsAPI.VideoMimeType;
+    mime_type?: VideoMimeType;
 
     /**
      * The resolution of the media.
@@ -374,7 +374,7 @@ export namespace ContentDelta {
     /**
      * A text content block.
      */
-    content?: InteractionsAPI.TextContent | InteractionsAPI.ImageContent;
+    content?: TextContent | ImageContent;
   }
 
   export interface ThoughtSignatureDelta {
@@ -428,7 +428,7 @@ export namespace ContentDelta {
 
   export namespace FunctionResultDelta {
     export interface Items {
-      items?: Array<string | InteractionsAPI.ImageContent>;
+      items?: Array<string | ImageContent>;
     }
   }
 
@@ -446,7 +446,7 @@ export namespace ContentDelta {
     /**
      * The arguments to pass to the code execution.
      */
-    arguments?: InteractionsAPI.CodeExecutionCallArguments;
+    arguments?: CodeExecutionCallArguments;
   }
 
   export interface CodeExecutionResultDelta {
@@ -481,7 +481,7 @@ export namespace ContentDelta {
     /**
      * The arguments to pass to the URL context.
      */
-    arguments?: InteractionsAPI.URLContextCallArguments;
+    arguments?: URLContextCallArguments;
   }
 
   export interface URLContextResultDelta {
@@ -497,7 +497,7 @@ export namespace ContentDelta {
 
     is_error?: boolean;
 
-    result?: Array<InteractionsAPI.URLContextResult>;
+    result?: Array<URLContextResult>;
 
     signature?: string;
   }
@@ -516,7 +516,7 @@ export namespace ContentDelta {
     /**
      * The arguments to pass to Google Search.
      */
-    arguments?: InteractionsAPI.GoogleSearchCallArguments;
+    arguments?: GoogleSearchCallArguments;
   }
 
   export interface GoogleSearchResultDelta {
@@ -532,7 +532,7 @@ export namespace ContentDelta {
 
     is_error?: boolean;
 
-    result?: Array<InteractionsAPI.GoogleSearchResult>;
+    result?: Array<GoogleSearchResult>;
 
     signature?: string;
   }
@@ -578,7 +578,7 @@ export namespace ContentDelta {
 
   export namespace MCPServerToolResultDelta {
     export interface Items {
-      items?: Array<string | InteractionsAPI.ImageContent>;
+      items?: Array<string | ImageContent>;
     }
   }
 
@@ -851,7 +851,7 @@ export interface FunctionResultContent {
 
 export namespace FunctionResultContent {
   export interface Items {
-    items?: Array<string | InteractionsAPI.ImageContent>;
+    items?: Array<string | ImageContent>;
   }
 }
 
@@ -1221,7 +1221,7 @@ export interface MCPServerToolResultContent {
 
 export namespace MCPServerToolResultContent {
   export interface Items {
-    items?: Array<string | InteractionsAPI.ImageContent>;
+    items?: Array<string | ImageContent>;
   }
 }
 
@@ -1362,7 +1362,7 @@ export namespace Tool {
     /**
      * The allowed tools.
      */
-    allowed_tools?: Array<InteractionsAPI.AllowedTools>;
+    allowed_tools?: Array<AllowedTools>;
 
     /**
      * Optional: Fields for authentication headers, timeouts, etc., if needed.
@@ -1964,10 +1964,8 @@ export interface InteractionGetParamsBase {
   stream?: boolean;
 }
 
-export namespace InteractionGetParams {
-  export type InteractionGetParamsNonStreaming = InteractionsAPI.InteractionGetParamsNonStreaming;
-  export type InteractionGetParamsStreaming = InteractionsAPI.InteractionGetParamsStreaming;
-}
+
+
 
 export interface InteractionGetParamsNonStreaming extends InteractionGetParamsBase {
   /**

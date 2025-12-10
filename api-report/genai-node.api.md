@@ -543,14 +543,14 @@ namespace ContentDelta {
     interface AudioDelta {
         // (undocumented)
         data?: string;
-        mime_type?: Interactions_2.AudioMimeType;
+        mime_type?: AudioMimeType;
         type: 'audio';
         // (undocumented)
         uri?: string;
     }
     // (undocumented)
     interface CodeExecutionCallDelta {
-        arguments?: Interactions_2.CodeExecutionCallArguments;
+        arguments?: CodeExecutionCallArguments;
         id?: string;
         type: 'code_execution_call';
     }
@@ -615,12 +615,12 @@ namespace ContentDelta {
         // (undocumented)
         interface Items {
             // (undocumented)
-            items?: Array<string | Interactions_2.ImageContent>;
+            items?: Array<string | ImageContent>;
         }
     }
     // (undocumented)
     interface GoogleSearchCallDelta {
-        arguments?: Interactions_2.GoogleSearchCallArguments;
+        arguments?: GoogleSearchCallArguments;
         id?: string;
         type: 'google_search_call';
     }
@@ -630,7 +630,7 @@ namespace ContentDelta {
         // (undocumented)
         is_error?: boolean;
         // (undocumented)
-        result?: Array<Interactions_2.GoogleSearchResult>;
+        result?: Array<GoogleSearchResult>;
         // (undocumented)
         signature?: string;
         type: 'google_search_result';
@@ -639,7 +639,7 @@ namespace ContentDelta {
     interface ImageDelta {
         // (undocumented)
         data?: string;
-        mime_type?: Interactions_2.ImageMimeType;
+        mime_type?: ImageMimeType;
         resolution?: 'low' | 'medium' | 'high';
         type: 'image';
         // (undocumented)
@@ -673,13 +673,12 @@ namespace ContentDelta {
         // (undocumented)
         interface Items {
             // (undocumented)
-            items?: Array<string | Interactions_2.ImageContent>;
+            items?: Array<string | ImageContent>;
         }
     }
     // (undocumented)
     interface TextDelta {
-        // Warning: (ae-forgotten-export) The symbol "Interactions_2" needs to be exported by the entry point index.d.ts
-        annotations?: Array<Interactions_2.Annotation>;
+        annotations?: Array<Annotation>;
         // (undocumented)
         text?: string;
         type: 'text';
@@ -691,12 +690,12 @@ namespace ContentDelta {
     }
     // (undocumented)
     interface ThoughtSummaryDelta {
-        content?: Interactions_2.TextContent | Interactions_2.ImageContent;
+        content?: TextContent | ImageContent;
         type: 'thought_summary';
     }
     // (undocumented)
     interface URLContextCallDelta {
-        arguments?: Interactions_2.URLContextCallArguments;
+        arguments?: URLContextCallArguments;
         id?: string;
         type: 'url_context_call';
     }
@@ -706,7 +705,7 @@ namespace ContentDelta {
         // (undocumented)
         is_error?: boolean;
         // (undocumented)
-        result?: Array<Interactions_2.URLContextResult>;
+        result?: Array<URLContextResult>;
         // (undocumented)
         signature?: string;
         type: 'url_context_result';
@@ -715,7 +714,7 @@ namespace ContentDelta {
     interface VideoDelta {
         // (undocumented)
         data?: string;
-        mime_type?: Interactions_2.VideoMimeType;
+        mime_type?: VideoMimeType;
         resolution?: 'low' | 'medium' | 'high';
         type: 'video';
         // (undocumented)
@@ -1664,7 +1663,7 @@ namespace FunctionResultContent {
     // (undocumented)
     interface Items {
         // (undocumented)
-        items?: Array<string | Interactions_2.ImageContent>;
+        items?: Array<string | ImageContent>;
     }
 }
 
@@ -2054,7 +2053,7 @@ export class GoogleGenAI {
     // (undocumented)
     readonly fileSearchStores: FileSearchStores;
     // (undocumented)
-    get interactions(): Interactions_3;
+    get interactions(): Interactions_2;
     // (undocumented)
     readonly live: Live;
     // (undocumented)
@@ -2448,14 +2447,6 @@ interface InteractionEvent {
 type InteractionGetParams = InteractionGetParamsNonStreaming | InteractionGetParamsStreaming;
 
 // @public (undocumented)
-namespace InteractionGetParams {
-    // (undocumented)
-    type InteractionGetParamsNonStreaming = Interactions_2.InteractionGetParamsNonStreaming;
-    // (undocumented)
-    type InteractionGetParamsStreaming = Interactions_2.InteractionGetParamsStreaming;
-}
-
-// @public (undocumented)
 interface InteractionGetParamsBase {
     api_version?: string;
     last_event_id?: string;
@@ -2475,7 +2466,7 @@ interface InteractionGetParamsStreaming extends InteractionGetParamsBase {
 declare namespace Interactions {
     export {
         BaseInteractions,
-        Interactions_3 as Interactions,
+        Interactions_2 as Interactions,
         AllowedTools,
         Annotation,
         AudioContent,
@@ -2542,11 +2533,11 @@ declare namespace Interactions {
 }
 
 // @public (undocumented)
-class Interactions_3 extends BaseInteractions {
+class Interactions_2 extends BaseInteractions {
 }
 
 // @public (undocumented)
-namespace Interactions_3 {
+namespace Interactions_2 {
         { type AllowedTools as AllowedTools, type Annotation as Annotation, type AudioContent as AudioContent, type AudioMimeType as AudioMimeType, type CodeExecutionCallArguments as CodeExecutionCallArguments, type CodeExecutionCallContent as CodeExecutionCallContent, type CodeExecutionResultContent as CodeExecutionResultContent, type ContentDelta as ContentDelta, type ContentStart as ContentStart, type ContentStop as ContentStop, type DeepResearchAgentConfig as DeepResearchAgentConfig, type DocumentContent as DocumentContent, type DynamicAgentConfig as DynamicAgentConfig, type ErrorEvent as ErrorEvent, type FileSearchResultContent as FileSearchResultContent, type Function as Function, type FunctionCallContent as FunctionCallContent, type FunctionResultContent as FunctionResultContent, type GenerationConfig as GenerationConfig, type GoogleSearchCallArguments as GoogleSearchCallArguments, type GoogleSearchCallContent as GoogleSearchCallContent, type GoogleSearchResult as GoogleSearchResult, type GoogleSearchResultContent as GoogleSearchResultContent, type ImageContent as ImageContent, type ImageMimeType as ImageMimeType, type Interaction as Interaction, type InteractionEvent as InteractionEvent, type InteractionSSEEvent as InteractionSSEEvent, type InteractionStatusUpdate as InteractionStatusUpdate, type MCPServerToolCallContent as MCPServerToolCallContent, type MCPServerToolResultContent as MCPServerToolResultContent, type Model as Model, type SpeechConfig as SpeechConfig, type TextContent as TextContent, type ThinkingLevel as ThinkingLevel, type ThoughtContent as ThoughtContent, type Tool as Tool, type ToolChoice as ToolChoice, type ToolChoiceConfig as ToolChoiceConfig, type ToolChoiceType as ToolChoiceType, type Turn as Turn, type URLContextCallArguments as URLContextCallArguments, type URLContextCallContent as URLContextCallContent, type URLContextResult as URLContextResult, type URLContextResultContent as URLContextResultContent, type Usage as Usage, type VideoContent as VideoContent, type VideoMimeType as VideoMimeType, type InteractionDeleteResponse as InteractionDeleteResponse, type InteractionCreateParams as InteractionCreateParams, type CreateModelInteractionParamsNonStreaming as CreateModelInteractionParamsNonStreaming, type CreateModelInteractionParamsStreaming as CreateModelInteractionParamsStreaming, type CreateAgentInteractionParamsNonStreaming as CreateAgentInteractionParamsNonStreaming, type CreateAgentInteractionParamsStreaming as CreateAgentInteractionParamsStreaming, type InteractionDeleteParams as InteractionDeleteParams, type InteractionCancelParams as InteractionCancelParams, type InteractionGetParams as InteractionGetParams, type InteractionGetParamsNonStreaming as InteractionGetParamsNonStreaming, type InteractionGetParamsStreaming as InteractionGetParamsStreaming, };
 }
 
@@ -3142,7 +3133,7 @@ namespace MCPServerToolResultContent {
     // (undocumented)
     interface Items {
         // (undocumented)
-        items?: Array<string | Interactions_2.ImageContent>;
+        items?: Array<string | ImageContent>;
     }
 }
 
@@ -4039,7 +4030,7 @@ namespace Tool_2 {
         type: 'google_search';
     }
     interface MCPServer {
-        allowed_tools?: Array<Interactions_2.AllowedTools>;
+        allowed_tools?: Array<AllowedTools>;
         headers?: {
             [key: string]: string;
         };
