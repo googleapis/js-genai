@@ -4,8 +4,11 @@
 
 ```ts
 
+/// <reference types="node" />
+
 import type { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { GoogleAuthOptions } from 'google-auth-library';
+import { ReadableStream as ReadableStream_2 } from 'stream/web';
 
 // @public
 export interface ActivityEnd {
@@ -31,6 +34,19 @@ export enum AdapterSize {
     ADAPTER_SIZE_THIRTY_TWO = "ADAPTER_SIZE_THIRTY_TWO",
     ADAPTER_SIZE_TWO = "ADAPTER_SIZE_TWO",
     ADAPTER_SIZE_UNSPECIFIED = "ADAPTER_SIZE_UNSPECIFIED"
+}
+
+// @public
+interface AllowedTools {
+    mode?: ToolChoiceType;
+    tools?: Array<string>;
+}
+
+// @public
+interface Annotation {
+    end_index?: number;
+    source?: string;
+    start_index?: number;
 }
 
 // @public
@@ -77,6 +93,19 @@ export interface AudioChunk {
     mimeType?: string;
     sourceMetadata?: LiveMusicSourceMetadata;
 }
+
+// @public
+interface AudioContent {
+    // (undocumented)
+    data?: string;
+    mime_type?: AudioMimeType;
+    type: 'audio';
+    // (undocumented)
+    uri?: string;
+}
+
+// @public
+type AudioMimeType = 'audio/wav' | 'audio/mp3' | 'audio/aiff' | 'audio/aac' | 'audio/ogg' | 'audio/flac' | (string & {});
 
 // @public
 export interface AudioTranscriptionConfig {
@@ -145,6 +174,68 @@ export interface AutomaticFunctionCallingConfig {
     disable?: boolean;
     ignoreCallHistory?: boolean;
     maximumRemoteCalls?: number;
+}
+
+// @public (undocumented)
+interface BaseCreateAgentInteractionParams {
+    agent: (string & {}) | 'deep-research-pro-preview-12-2025';
+    agent_config?: DynamicAgentConfig | DeepResearchAgentConfig;
+    api_version?: string;
+    background?: boolean;
+    input: string | Array<TextContent | ImageContent | AudioContent | DocumentContent | VideoContent | ThoughtContent | FunctionCallContent | FunctionResultContent | CodeExecutionCallContent | CodeExecutionResultContent | URLContextCallContent | URLContextResultContent | GoogleSearchCallContent | GoogleSearchResultContent | MCPServerToolCallContent | MCPServerToolResultContent | FileSearchResultContent> | Array<Turn> | TextContent | ImageContent | AudioContent | DocumentContent | VideoContent | ThoughtContent | FunctionCallContent | FunctionResultContent | CodeExecutionCallContent | CodeExecutionResultContent | URLContextCallContent | URLContextResultContent | GoogleSearchCallContent | GoogleSearchResultContent | MCPServerToolCallContent | MCPServerToolResultContent | FileSearchResultContent;
+    previous_interaction_id?: string;
+    response_format?: unknown;
+    response_mime_type?: string;
+    response_modalities?: Array<'text' | 'image' | 'audio'>;
+    store?: boolean;
+    stream?: boolean;
+    system_instruction?: string;
+    tools?: Array<Tool_2>;
+}
+
+// @public (undocumented)
+interface BaseCreateModelInteractionParams {
+    api_version?: string;
+    background?: boolean;
+    generation_config?: GenerationConfig_2;
+    input: string | Array<TextContent | ImageContent | AudioContent | DocumentContent | VideoContent | ThoughtContent | FunctionCallContent | FunctionResultContent | CodeExecutionCallContent | CodeExecutionResultContent | URLContextCallContent | URLContextResultContent | GoogleSearchCallContent | GoogleSearchResultContent | MCPServerToolCallContent | MCPServerToolResultContent | FileSearchResultContent> | Array<Turn> | TextContent | ImageContent | AudioContent | DocumentContent | VideoContent | ThoughtContent | FunctionCallContent | FunctionResultContent | CodeExecutionCallContent | CodeExecutionResultContent | URLContextCallContent | URLContextResultContent | GoogleSearchCallContent | GoogleSearchResultContent | MCPServerToolCallContent | MCPServerToolResultContent | FileSearchResultContent;
+    model: Model_2;
+    previous_interaction_id?: string;
+    response_format?: unknown;
+    response_mime_type?: string;
+    response_modalities?: Array<'text' | 'image' | 'audio'>;
+    store?: boolean;
+    stream?: boolean;
+    system_instruction?: string;
+    tools?: Array<Tool_2>;
+}
+
+// Warning: (ae-forgotten-export) The symbol "APIResource" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+class BaseInteractions extends APIResource {
+    cancel(id: string, params?: InteractionCancelParams | null | undefined, options?: RequestOptions): APIPromise<Interaction>;
+    // Warning: (ae-forgotten-export) The symbol "RequestOptions" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "APIPromise" needs to be exported by the entry point index.d.ts
+    create(params: CreateModelInteractionParamsNonStreaming, options?: RequestOptions): APIPromise<Interaction>;
+    // Warning: (ae-forgotten-export) The symbol "Stream" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    create(params: CreateModelInteractionParamsStreaming, options?: RequestOptions): APIPromise<Stream<InteractionSSEEvent>>;
+    // (undocumented)
+    create(params: CreateAgentInteractionParamsNonStreaming, options?: RequestOptions): APIPromise<Interaction>;
+    // (undocumented)
+    create(params: CreateAgentInteractionParamsStreaming, options?: RequestOptions): APIPromise<Stream<InteractionSSEEvent>>;
+    // (undocumented)
+    create(params: BaseCreateModelInteractionParams | BaseCreateAgentInteractionParams, options?: RequestOptions): APIPromise<Stream<InteractionSSEEvent> | Interaction>;
+    delete(id: string, params?: InteractionDeleteParams | null | undefined, options?: RequestOptions): APIPromise<unknown>;
+    get(id: string, params?: InteractionGetParamsNonStreaming, options?: RequestOptions): APIPromise<Interaction>;
+    // (undocumented)
+    get(id: string, params: InteractionGetParamsStreaming, options?: RequestOptions): APIPromise<Stream<InteractionSSEEvent>>;
+    // (undocumented)
+    get(id: string, params?: InteractionGetParamsBase | undefined, options?: RequestOptions): APIPromise<Stream<InteractionSSEEvent> | Interaction>;
+    // (undocumented)
+    static readonly _key: readonly ['interactions'];
 }
 
 // @public
@@ -369,9 +460,31 @@ export interface CitationMetadata {
 }
 
 // @public
+interface CodeExecutionCallArguments {
+    code?: string;
+    language?: 'python';
+}
+
+// @public
+interface CodeExecutionCallContent {
+    arguments?: CodeExecutionCallArguments;
+    id?: string;
+    type: 'code_execution_call';
+}
+
+// @public
 export interface CodeExecutionResult {
     outcome?: Outcome;
     output?: string;
+}
+
+// @public
+interface CodeExecutionResultContent {
+    call_id?: string;
+    is_error?: boolean;
+    result?: string;
+    signature?: string;
+    type: 'code_execution_result';
 }
 
 // @public
@@ -413,6 +526,203 @@ export interface Content {
     role?: string;
 }
 
+// @public (undocumented)
+interface ContentDelta {
+    // (undocumented)
+    delta?: ContentDelta.TextDelta | ContentDelta.ImageDelta | ContentDelta.AudioDelta | ContentDelta.DocumentDelta | ContentDelta.VideoDelta | ContentDelta.ThoughtSummaryDelta | ContentDelta.ThoughtSignatureDelta | ContentDelta.FunctionCallDelta | ContentDelta.FunctionResultDelta | ContentDelta.CodeExecutionCallDelta | ContentDelta.CodeExecutionResultDelta | ContentDelta.URLContextCallDelta | ContentDelta.URLContextResultDelta | ContentDelta.GoogleSearchCallDelta | ContentDelta.GoogleSearchResultDelta | ContentDelta.MCPServerToolCallDelta | ContentDelta.MCPServerToolResultDelta | ContentDelta.FileSearchResultDelta;
+    event_id?: string;
+    // (undocumented)
+    event_type?: 'content.delta';
+    // (undocumented)
+    index?: number;
+}
+
+// @public (undocumented)
+namespace ContentDelta {
+    // (undocumented)
+    interface AudioDelta {
+        // (undocumented)
+        data?: string;
+        mime_type?: InteractionsAPI.AudioMimeType;
+        type: 'audio';
+        // (undocumented)
+        uri?: string;
+    }
+    // (undocumented)
+    interface CodeExecutionCallDelta {
+        arguments?: InteractionsAPI.CodeExecutionCallArguments;
+        id?: string;
+        type: 'code_execution_call';
+    }
+    // (undocumented)
+    interface CodeExecutionResultDelta {
+        call_id?: string;
+        // (undocumented)
+        is_error?: boolean;
+        // (undocumented)
+        result?: string;
+        // (undocumented)
+        signature?: string;
+        type: 'code_execution_result';
+    }
+    // (undocumented)
+    interface DocumentDelta {
+        // (undocumented)
+        data?: string;
+        // (undocumented)
+        mime_type?: string;
+        type: 'document';
+        // (undocumented)
+        uri?: string;
+    }
+    // (undocumented)
+    interface FileSearchResultDelta {
+        // (undocumented)
+        result?: Array<FileSearchResultDelta.Result>;
+        type: 'file_search_result';
+    }
+    // (undocumented)
+    namespace FileSearchResultDelta {
+        interface Result {
+            file_search_store?: string;
+            text?: string;
+            title?: string;
+        }
+    }
+    // (undocumented)
+    interface FunctionCallDelta {
+        // (undocumented)
+        arguments?: {
+            [key: string]: unknown;
+        };
+        id?: string;
+        // (undocumented)
+        name?: string;
+        type: 'function_call';
+    }
+    // (undocumented)
+    interface FunctionResultDelta {
+        call_id?: string;
+        // (undocumented)
+        is_error?: boolean;
+        // (undocumented)
+        name?: string;
+        result?: FunctionResultDelta.Items | string;
+        type: 'function_result';
+    }
+    // (undocumented)
+    namespace FunctionResultDelta {
+        // (undocumented)
+        interface Items {
+            // (undocumented)
+            items?: Array<string | InteractionsAPI.ImageContent>;
+        }
+    }
+    // (undocumented)
+    interface GoogleSearchCallDelta {
+        arguments?: InteractionsAPI.GoogleSearchCallArguments;
+        id?: string;
+        type: 'google_search_call';
+    }
+    // (undocumented)
+    interface GoogleSearchResultDelta {
+        call_id?: string;
+        // (undocumented)
+        is_error?: boolean;
+        // (undocumented)
+        result?: Array<InteractionsAPI.GoogleSearchResult>;
+        // (undocumented)
+        signature?: string;
+        type: 'google_search_result';
+    }
+    // (undocumented)
+    interface ImageDelta {
+        // (undocumented)
+        data?: string;
+        mime_type?: InteractionsAPI.ImageMimeType;
+        resolution?: 'low' | 'medium' | 'high';
+        type: 'image';
+        // (undocumented)
+        uri?: string;
+    }
+    // (undocumented)
+    interface MCPServerToolCallDelta {
+        // (undocumented)
+        arguments?: {
+            [key: string]: unknown;
+        };
+        id?: string;
+        // (undocumented)
+        name?: string;
+        // (undocumented)
+        server_name?: string;
+        type: 'mcp_server_tool_call';
+    }
+    // (undocumented)
+    interface MCPServerToolResultDelta {
+        call_id?: string;
+        // (undocumented)
+        name?: string;
+        result?: MCPServerToolResultDelta.Items | string;
+        // (undocumented)
+        server_name?: string;
+        type: 'mcp_server_tool_result';
+    }
+    // (undocumented)
+    namespace MCPServerToolResultDelta {
+        // (undocumented)
+        interface Items {
+            // (undocumented)
+            items?: Array<string | InteractionsAPI.ImageContent>;
+        }
+    }
+    // (undocumented)
+    interface TextDelta {
+        // Warning: (ae-forgotten-export) The symbol "InteractionsAPI" needs to be exported by the entry point index.d.ts
+        annotations?: Array<InteractionsAPI.Annotation>;
+        // (undocumented)
+        text?: string;
+        type: 'text';
+    }
+    // (undocumented)
+    interface ThoughtSignatureDelta {
+        signature?: string;
+        type: 'thought_signature';
+    }
+    // (undocumented)
+    interface ThoughtSummaryDelta {
+        content?: InteractionsAPI.TextContent | InteractionsAPI.ImageContent;
+        type: 'thought_summary';
+    }
+    // (undocumented)
+    interface URLContextCallDelta {
+        arguments?: InteractionsAPI.URLContextCallArguments;
+        id?: string;
+        type: 'url_context_call';
+    }
+    // (undocumented)
+    interface URLContextResultDelta {
+        call_id?: string;
+        // (undocumented)
+        is_error?: boolean;
+        // (undocumented)
+        result?: Array<InteractionsAPI.URLContextResult>;
+        // (undocumented)
+        signature?: string;
+        type: 'url_context_result';
+    }
+    // (undocumented)
+    interface VideoDelta {
+        // (undocumented)
+        data?: string;
+        mime_type?: InteractionsAPI.VideoMimeType;
+        resolution?: 'low' | 'medium' | 'high';
+        type: 'video';
+        // (undocumented)
+        uri?: string;
+    }
+}
+
 // @public
 export interface ContentEmbedding {
     statistics?: ContentEmbeddingStatistics;
@@ -435,6 +745,25 @@ export class ContentReferenceImage {
     referenceType?: string;
     // Warning: (ae-forgotten-export) The symbol "ReferenceImageAPIInternal" needs to be exported by the entry point index.d.ts
     toReferenceImageAPI(): ReferenceImageAPIInternal;
+}
+
+// @public (undocumented)
+interface ContentStart {
+    content?: TextContent | ImageContent | AudioContent | DocumentContent | VideoContent | ThoughtContent | FunctionCallContent | FunctionResultContent | CodeExecutionCallContent | CodeExecutionResultContent | URLContextCallContent | URLContextResultContent | GoogleSearchCallContent | GoogleSearchResultContent | MCPServerToolCallContent | MCPServerToolResultContent | FileSearchResultContent;
+    event_id?: string;
+    // (undocumented)
+    event_type?: 'content.start';
+    // (undocumented)
+    index?: number;
+}
+
+// @public (undocumented)
+interface ContentStop {
+    event_id?: string;
+    // (undocumented)
+    event_type?: 'content.stop';
+    // (undocumented)
+    index?: number;
 }
 
 // @public (undocumented)
@@ -494,6 +823,16 @@ export class CountTokensResponse {
     cachedContentTokenCount?: number;
     sdkHttpResponse?: HttpResponse;
     totalTokens?: number;
+}
+
+// @public (undocumented)
+interface CreateAgentInteractionParamsNonStreaming extends BaseCreateAgentInteractionParams {
+    stream?: false;
+}
+
+// @public (undocumented)
+interface CreateAgentInteractionParamsStreaming extends BaseCreateAgentInteractionParams {
+    stream: true;
 }
 
 // @public
@@ -606,6 +945,16 @@ export function createFunctionResponsePartFromUri(uri: string, mimeType: string)
 // @public
 export function createModelContent(partOrString: PartListUnion | string): Content;
 
+// @public (undocumented)
+interface CreateModelInteractionParamsNonStreaming extends BaseCreateModelInteractionParams {
+    stream?: false;
+}
+
+// @public (undocumented)
+interface CreateModelInteractionParamsStreaming extends BaseCreateModelInteractionParams {
+    stream: true;
+}
+
 // @public
 export function createPartFromBase64(data: string, mimeType: string, mediaResolution?: PartMediaResolutionLevel): Part;
 
@@ -701,6 +1050,12 @@ export interface DatasetStats {
     userInputTokenDistribution?: DatasetDistribution;
     userMessagePerExampleDistribution?: DatasetDistribution;
     userOutputTokenDistribution?: DatasetDistribution;
+}
+
+// @public
+interface DeepResearchAgentConfig {
+    thinking_summaries?: 'auto' | 'none';
+    type?: 'deep-research';
 }
 
 // @public
@@ -823,6 +1178,17 @@ interface Document_2 {
 export { Document_2 as Document }
 
 // @public
+interface DocumentContent {
+    // (undocumented)
+    data?: string;
+    // (undocumented)
+    mime_type?: string;
+    type: 'document';
+    // (undocumented)
+    uri?: string;
+}
+
+// @public
 export enum DocumentState {
     // (undocumented)
     STATE_ACTIVE = "STATE_ACTIVE",
@@ -848,6 +1214,13 @@ export interface DownloadFileParameters {
     config?: DownloadFileConfig;
     downloadPath: string;
     file: DownloadableFileUnion;
+}
+
+// @public
+interface DynamicAgentConfig {
+    // (undocumented)
+    [k: string]: unknown;
+    type?: 'dynamic';
 }
 
 // @public
@@ -997,6 +1370,22 @@ export enum Environment {
     ENVIRONMENT_UNSPECIFIED = "ENVIRONMENT_UNSPECIFIED"
 }
 
+// @public (undocumented)
+interface ErrorEvent_2 {
+    error?: ErrorEvent_2.Error;
+    event_id?: string;
+    // (undocumented)
+    event_type?: 'error';
+}
+
+// @public (undocumented)
+namespace ErrorEvent_2 {
+    interface Error {
+        code?: string;
+        message?: string;
+    }
+}
+
 // @public
 export interface ExecutableCode {
     code?: string;
@@ -1094,6 +1483,21 @@ export interface FileSearch {
 }
 
 // @public
+interface FileSearchResultContent {
+    result?: Array<FileSearchResultContent.Result>;
+    type: 'file_search_result';
+}
+
+// @public (undocumented)
+namespace FileSearchResultContent {
+    interface Result {
+        file_search_store?: string;
+        text?: string;
+        title?: string;
+    }
+}
+
+// @public
 export interface FileSearchStore {
     activeDocumentsCount?: string;
     createTime?: string;
@@ -1154,12 +1558,31 @@ export enum FinishReason {
 }
 
 // @public
+interface Function_2 {
+    description?: string;
+    name?: string;
+    parameters?: unknown;
+    // (undocumented)
+    type: 'function';
+}
+
+// @public
 export interface FunctionCall {
     args?: Record<string, unknown>;
     id?: string;
     name?: string;
     partialArgs?: PartialArg[];
     willContinue?: boolean;
+}
+
+// @public
+interface FunctionCallContent {
+    arguments: {
+        [key: string]: unknown;
+    };
+    id: string;
+    name: string;
+    type: 'function_call';
 }
 
 // @public
@@ -1225,6 +1648,24 @@ export enum FunctionResponseScheduling {
     SCHEDULING_UNSPECIFIED = "SCHEDULING_UNSPECIFIED",
     SILENT = "SILENT",
     WHEN_IDLE = "WHEN_IDLE"
+}
+
+// @public
+interface FunctionResultContent {
+    call_id: string;
+    is_error?: boolean;
+    name?: string;
+    result: FunctionResultContent.Items | unknown | string;
+    type: 'function_result';
+}
+
+// @public (undocumented)
+namespace FunctionResultContent {
+    // (undocumented)
+    interface Items {
+        // (undocumented)
+        items?: Array<string | InteractionsAPI.ImageContent>;
+    }
 }
 
 // @public
@@ -1463,6 +1904,19 @@ export interface GenerationConfig {
 }
 
 // @public
+interface GenerationConfig_2 {
+    max_output_tokens?: number;
+    seed?: number;
+    speech_config?: Array<SpeechConfig_2>;
+    stop_sequences?: Array<string>;
+    temperature?: number;
+    thinking_level?: ThinkingLevel_2;
+    thinking_summaries?: 'auto' | 'none';
+    tool_choice?: ToolChoice;
+    top_p?: number;
+}
+
+// @public
 export interface GenerationConfigRoutingConfig {
     autoMode?: GenerationConfigRoutingConfigAutoRoutingMode;
     manualMode?: GenerationConfigRoutingConfigManualRoutingMode;
@@ -1600,6 +2054,8 @@ export class GoogleGenAI {
     // (undocumented)
     readonly fileSearchStores: FileSearchStores;
     // (undocumented)
+    get interactions(): Interactions_2;
+    // (undocumented)
     readonly live: Live;
     // (undocumented)
     readonly models: Models;
@@ -1642,6 +2098,34 @@ export interface GoogleSearch {
     blockingConfidence?: PhishBlockThreshold;
     excludeDomains?: string[];
     timeRangeFilter?: Interval;
+}
+
+// @public
+interface GoogleSearchCallArguments {
+    queries?: Array<string>;
+}
+
+// @public
+interface GoogleSearchCallContent {
+    arguments?: GoogleSearchCallArguments;
+    id?: string;
+    type: 'google_search_call';
+}
+
+// @public
+interface GoogleSearchResult {
+    rendered_content?: string;
+    title?: string;
+    url?: string;
+}
+
+// @public
+interface GoogleSearchResultContent {
+    call_id?: string;
+    is_error?: boolean;
+    result?: Array<GoogleSearchResult>;
+    signature?: string;
+    type: 'google_search_result';
 }
 
 // @public
@@ -1833,6 +2317,20 @@ export interface ImageConfig {
 }
 
 // @public
+interface ImageContent {
+    // (undocumented)
+    data?: string;
+    mime_type?: ImageMimeType;
+    resolution?: 'low' | 'medium' | 'high';
+    type: 'image';
+    // (undocumented)
+    uri?: string;
+}
+
+// @public
+type ImageMimeType = 'image/png' | 'image/jpeg' | 'image/webp' | 'image/heic' | 'image/heif' | (string & {});
+
+// @public
 export enum ImagePromptLanguage {
     auto = "auto",
     en = "en",
@@ -1896,6 +2394,174 @@ export interface InlinedRequest {
 export class InlinedResponse {
     error?: JobError;
     response?: GenerateContentResponse;
+}
+
+// @public
+interface Interaction {
+    agent?: (string & {}) | 'deep-research-pro-preview-12-2025';
+    created?: string;
+    error?: Interaction.Error;
+    id: string;
+    model?: Model_2;
+    object?: 'interaction';
+    outputs?: Array<TextContent | ImageContent | AudioContent | DocumentContent | VideoContent | ThoughtContent | FunctionCallContent | FunctionResultContent | CodeExecutionCallContent | CodeExecutionResultContent | URLContextCallContent | URLContextResultContent | GoogleSearchCallContent | GoogleSearchResultContent | MCPServerToolCallContent | MCPServerToolResultContent | FileSearchResultContent>;
+    previous_interaction_id?: string;
+    role?: string;
+    status: 'in_progress' | 'requires_action' | 'completed' | 'failed' | 'cancelled';
+    updated?: string;
+    usage?: Usage;
+}
+
+// @public (undocumented)
+namespace Interaction {
+    interface Error {
+        code?: string;
+        message?: string;
+    }
+}
+
+// @public (undocumented)
+interface InteractionCancelParams {
+    api_version?: string;
+}
+
+// @public (undocumented)
+type InteractionCreateParams = CreateModelInteractionParamsNonStreaming | CreateModelInteractionParamsStreaming | CreateAgentInteractionParamsNonStreaming | CreateAgentInteractionParamsStreaming;
+
+// @public (undocumented)
+interface InteractionDeleteParams {
+    api_version?: string;
+}
+
+// @public (undocumented)
+type InteractionDeleteResponse = unknown;
+
+// @public (undocumented)
+interface InteractionEvent {
+    event_id?: string;
+    // (undocumented)
+    event_type?: 'interaction.start' | 'interaction.complete';
+    interaction?: Interaction;
+}
+
+// @public (undocumented)
+type InteractionGetParams = InteractionGetParamsNonStreaming | InteractionGetParamsStreaming;
+
+// @public (undocumented)
+namespace InteractionGetParams {
+    // (undocumented)
+    type InteractionGetParamsNonStreaming = InteractionsAPI.InteractionGetParamsNonStreaming;
+    // (undocumented)
+    type InteractionGetParamsStreaming = InteractionsAPI.InteractionGetParamsStreaming;
+}
+
+// @public (undocumented)
+interface InteractionGetParamsBase {
+    api_version?: string;
+    last_event_id?: string;
+    stream?: boolean;
+}
+
+// @public (undocumented)
+interface InteractionGetParamsNonStreaming extends InteractionGetParamsBase {
+    stream?: false;
+}
+
+// @public (undocumented)
+interface InteractionGetParamsStreaming extends InteractionGetParamsBase {
+    stream: true;
+}
+
+declare namespace Interactions {
+    export {
+        BaseInteractions,
+        Interactions_2 as Interactions,
+        AllowedTools,
+        Annotation,
+        AudioContent,
+        AudioMimeType,
+        CodeExecutionCallArguments,
+        CodeExecutionCallContent,
+        CodeExecutionResultContent,
+        ContentDelta,
+        ContentStart,
+        ContentStop,
+        DeepResearchAgentConfig,
+        DocumentContent,
+        DynamicAgentConfig,
+        ErrorEvent_2 as ErrorEvent,
+        FileSearchResultContent,
+        Function_2 as Function,
+        FunctionCallContent,
+        FunctionResultContent,
+        GenerationConfig_2 as GenerationConfig,
+        GoogleSearchCallArguments,
+        GoogleSearchCallContent,
+        GoogleSearchResult,
+        GoogleSearchResultContent,
+        ImageContent,
+        ImageMimeType,
+        Interaction,
+        InteractionEvent,
+        InteractionSSEEvent,
+        InteractionStatusUpdate,
+        MCPServerToolCallContent,
+        MCPServerToolResultContent,
+        Model_2 as Model,
+        SpeechConfig_2 as SpeechConfig,
+        TextContent,
+        ThinkingLevel_2 as ThinkingLevel,
+        ThoughtContent,
+        Tool_2 as Tool,
+        ToolChoice,
+        ToolChoiceConfig,
+        ToolChoiceType,
+        Turn,
+        URLContextCallArguments,
+        URLContextCallContent,
+        URLContextResult,
+        URLContextResultContent,
+        Usage,
+        VideoContent,
+        VideoMimeType,
+        InteractionDeleteResponse,
+        InteractionCreateParams,
+        BaseCreateModelInteractionParams,
+        BaseCreateAgentInteractionParams,
+        CreateModelInteractionParamsNonStreaming,
+        CreateModelInteractionParamsStreaming,
+        CreateAgentInteractionParamsNonStreaming,
+        CreateAgentInteractionParamsStreaming,
+        InteractionDeleteParams,
+        InteractionCancelParams,
+        InteractionGetParams,
+        InteractionGetParamsBase,
+        InteractionGetParamsNonStreaming,
+        InteractionGetParamsStreaming
+    }
+}
+
+// @public (undocumented)
+class Interactions_2 extends BaseInteractions {
+}
+
+// @public (undocumented)
+namespace Interactions_2 {
+        { type AllowedTools as AllowedTools, type Annotation as Annotation, type AudioContent as AudioContent, type AudioMimeType as AudioMimeType, type CodeExecutionCallArguments as CodeExecutionCallArguments, type CodeExecutionCallContent as CodeExecutionCallContent, type CodeExecutionResultContent as CodeExecutionResultContent, type ContentDelta as ContentDelta, type ContentStart as ContentStart, type ContentStop as ContentStop, type DeepResearchAgentConfig as DeepResearchAgentConfig, type DocumentContent as DocumentContent, type DynamicAgentConfig as DynamicAgentConfig, type ErrorEvent as ErrorEvent, type FileSearchResultContent as FileSearchResultContent, type Function as Function, type FunctionCallContent as FunctionCallContent, type FunctionResultContent as FunctionResultContent, type GenerationConfig as GenerationConfig, type GoogleSearchCallArguments as GoogleSearchCallArguments, type GoogleSearchCallContent as GoogleSearchCallContent, type GoogleSearchResult as GoogleSearchResult, type GoogleSearchResultContent as GoogleSearchResultContent, type ImageContent as ImageContent, type ImageMimeType as ImageMimeType, type Interaction as Interaction, type InteractionEvent as InteractionEvent, type InteractionSSEEvent as InteractionSSEEvent, type InteractionStatusUpdate as InteractionStatusUpdate, type MCPServerToolCallContent as MCPServerToolCallContent, type MCPServerToolResultContent as MCPServerToolResultContent, type Model as Model, type SpeechConfig as SpeechConfig, type TextContent as TextContent, type ThinkingLevel as ThinkingLevel, type ThoughtContent as ThoughtContent, type Tool as Tool, type ToolChoice as ToolChoice, type ToolChoiceConfig as ToolChoiceConfig, type ToolChoiceType as ToolChoiceType, type Turn as Turn, type URLContextCallArguments as URLContextCallArguments, type URLContextCallContent as URLContextCallContent, type URLContextResult as URLContextResult, type URLContextResultContent as URLContextResultContent, type Usage as Usage, type VideoContent as VideoContent, type VideoMimeType as VideoMimeType, type InteractionDeleteResponse as InteractionDeleteResponse, type InteractionCreateParams as InteractionCreateParams, type CreateModelInteractionParamsNonStreaming as CreateModelInteractionParamsNonStreaming, type CreateModelInteractionParamsStreaming as CreateModelInteractionParamsStreaming, type CreateAgentInteractionParamsNonStreaming as CreateAgentInteractionParamsNonStreaming, type CreateAgentInteractionParamsStreaming as CreateAgentInteractionParamsStreaming, type InteractionDeleteParams as InteractionDeleteParams, type InteractionCancelParams as InteractionCancelParams, type InteractionGetParams as InteractionGetParams, type InteractionGetParamsNonStreaming as InteractionGetParamsNonStreaming, type InteractionGetParamsStreaming as InteractionGetParamsStreaming, };
+}
+
+// @public (undocumented)
+type InteractionSSEEvent = InteractionEvent | InteractionStatusUpdate | ContentStart | ContentDelta | ContentStop | ErrorEvent_2;
+
+// @public (undocumented)
+interface InteractionStatusUpdate {
+    event_id?: string;
+    // (undocumented)
+    event_type?: 'interaction.status_update';
+    // (undocumented)
+    interaction_id?: string;
+    // (undocumented)
+    status?: 'in_progress' | 'requires_action' | 'completed' | 'failed' | 'cancelled';
 }
 
 // @public
@@ -2452,6 +3118,35 @@ export enum MaskReferenceMode {
 }
 
 // @public
+interface MCPServerToolCallContent {
+    arguments: {
+        [key: string]: unknown;
+    };
+    id: string;
+    name: string;
+    server_name: string;
+    type: 'mcp_server_tool_call';
+}
+
+// @public
+interface MCPServerToolResultContent {
+    call_id: string;
+    name?: string;
+    result: MCPServerToolResultContent.Items | unknown | string;
+    server_name?: string;
+    type: 'mcp_server_tool_result';
+}
+
+// @public (undocumented)
+namespace MCPServerToolResultContent {
+    // (undocumented)
+    interface Items {
+        // (undocumented)
+        items?: Array<string | InteractionsAPI.ImageContent>;
+    }
+}
+
+// @public
 export function mcpToTool(...args: [...Client[], CallableToolConfig | Client]): CallableTool;
 
 // @public
@@ -2512,6 +3207,9 @@ export interface Model {
     tunedModelInfo?: TunedModelInfo;
     version?: string;
 }
+
+// @public
+type Model_2 = 'gemini-2.5-pro' | 'gemini-2.5-flash' | 'gemini-2.5-flash-preview-09-2025' | 'gemini-2.5-flash-lite' | 'gemini-2.5-flash-lite-preview-09-2025' | 'gemini-2.5-flash-preview-native-audio-dialog' | 'gemini-2.5-flash-image-preview' | 'gemini-2.5-pro-preview-tts' | 'gemini-3-pro-preview' | (string & {});
 
 // @public (undocumented)
 export class Models extends BaseModule {
@@ -3114,6 +3812,13 @@ export interface SpeechConfig {
     voiceConfig?: VoiceConfig;
 }
 
+// @public
+interface SpeechConfig_2 {
+    language?: string;
+    speaker?: string;
+    voice?: string;
+}
+
 // @public (undocumented)
 export type SpeechConfigUnion = SpeechConfig | string;
 
@@ -3250,6 +3955,13 @@ export interface TestTableItem {
 }
 
 // @public
+interface TextContent {
+    annotations?: Array<Annotation>;
+    text?: string;
+    type: 'text';
+}
+
+// @public
 export interface ThinkingConfig {
     includeThoughts?: boolean;
     thinkingBudget?: number;
@@ -3261,6 +3973,16 @@ export enum ThinkingLevel {
     HIGH = "HIGH",
     LOW = "LOW",
     THINKING_LEVEL_UNSPECIFIED = "THINKING_LEVEL_UNSPECIFIED"
+}
+
+// @public (undocumented)
+type ThinkingLevel_2 = 'low' | 'high';
+
+// @public
+interface ThoughtContent {
+    signature?: string;
+    summary?: Array<TextContent | ImageContent>;
+    type: 'thought';
 }
 
 // @public (undocumented)
@@ -3289,6 +4011,59 @@ export interface Tool {
     retrieval?: Retrieval;
     urlContext?: UrlContext;
 }
+
+// @public
+type Tool_2 = Function_2 | Tool_2.GoogleSearch | Tool_2.CodeExecution | Tool_2.URLContext | Tool_2.ComputerUse | Tool_2.MCPServer | Tool_2.FileSearch;
+
+// @public (undocumented)
+namespace Tool_2 {
+    interface CodeExecution {
+        // (undocumented)
+        type: 'code_execution';
+    }
+    interface ComputerUse {
+        environment?: 'browser';
+        excludedPredefinedFunctions?: Array<string>;
+        // (undocumented)
+        type: 'computer_use';
+    }
+    interface FileSearch {
+        file_search_store_names?: Array<string>;
+        metadata_filter?: string;
+        top_k?: number;
+        // (undocumented)
+        type: 'file_search';
+    }
+    interface GoogleSearch {
+        // (undocumented)
+        type: 'google_search';
+    }
+    interface MCPServer {
+        allowed_tools?: Array<InteractionsAPI.AllowedTools>;
+        headers?: {
+            [key: string]: string;
+        };
+        name?: string;
+        // (undocumented)
+        type: 'mcp_server';
+        url?: string;
+    }
+    interface URLContext {
+        // (undocumented)
+        type: 'url_context';
+    }
+}
+
+// @public
+type ToolChoice = ToolChoiceType | ToolChoiceConfig;
+
+// @public (undocumented)
+interface ToolChoiceConfig {
+    allowed_tools?: AllowedTools;
+}
+
+// @public (undocumented)
+type ToolChoiceType = 'auto' | 'any' | 'none' | 'validated';
 
 // @public
 export interface ToolCodeExecution {
@@ -3424,6 +4199,12 @@ export enum TuningTask {
 export interface TuningValidationDataset {
     gcsUri?: string;
     vertexDatasetResource?: string;
+}
+
+// @public (undocumented)
+interface Turn {
+    content?: string | Array<TextContent | ImageContent | AudioContent | DocumentContent | VideoContent | ThoughtContent | FunctionCallContent | FunctionResultContent | CodeExecutionCallContent | CodeExecutionResultContent | URLContextCallContent | URLContextResultContent | GoogleSearchCallContent | GoogleSearchResultContent | MCPServerToolCallContent | MCPServerToolResultContent | FileSearchResultContent>;
+    role?: string;
 }
 
 // @public
@@ -3583,8 +4364,35 @@ export interface UrlContext {
 }
 
 // @public
+interface URLContextCallArguments {
+    urls?: Array<string>;
+}
+
+// @public
+interface URLContextCallContent {
+    arguments?: URLContextCallArguments;
+    id?: string;
+    type: 'url_context_call';
+}
+
+// @public
 export interface UrlContextMetadata {
     urlMetadata?: UrlMetadata[];
+}
+
+// @public
+interface URLContextResult {
+    status?: 'success' | 'error' | 'paywall' | 'unsafe';
+    url?: string;
+}
+
+// @public
+interface URLContextResultContent {
+    call_id?: string;
+    is_error?: boolean;
+    result?: Array<URLContextResult>;
+    signature?: string;
+    type: 'url_context_result';
 }
 
 // @public
@@ -3600,6 +4408,40 @@ export enum UrlRetrievalStatus {
     URL_RETRIEVAL_STATUS_SUCCESS = "URL_RETRIEVAL_STATUS_SUCCESS",
     URL_RETRIEVAL_STATUS_UNSAFE = "URL_RETRIEVAL_STATUS_UNSAFE",
     URL_RETRIEVAL_STATUS_UNSPECIFIED = "URL_RETRIEVAL_STATUS_UNSPECIFIED"
+}
+
+// @public
+interface Usage {
+    cached_tokens_by_modality?: Array<Usage.CachedTokensByModality>;
+    input_tokens_by_modality?: Array<Usage.InputTokensByModality>;
+    output_tokens_by_modality?: Array<Usage.OutputTokensByModality>;
+    tool_use_tokens_by_modality?: Array<Usage.ToolUseTokensByModality>;
+    total_cached_tokens?: number;
+    total_input_tokens?: number;
+    total_output_tokens?: number;
+    total_reasoning_tokens?: number;
+    total_tokens?: number;
+    total_tool_use_tokens?: number;
+}
+
+// @public (undocumented)
+namespace Usage {
+    interface CachedTokensByModality {
+        modality?: 'text' | 'image' | 'audio';
+        tokens?: number;
+    }
+    interface InputTokensByModality {
+        modality?: 'text' | 'image' | 'audio';
+        tokens?: number;
+    }
+    interface OutputTokensByModality {
+        modality?: 'text' | 'image' | 'audio';
+        tokens?: number;
+    }
+    interface ToolUseTokensByModality {
+        modality?: 'text' | 'image' | 'audio';
+        tokens?: number;
+    }
 }
 
 // @public
@@ -3683,6 +4525,17 @@ export enum VideoCompressionQuality {
 }
 
 // @public
+interface VideoContent {
+    // (undocumented)
+    data?: string;
+    mime_type?: VideoMimeType;
+    resolution?: 'low' | 'medium' | 'high';
+    type: 'video';
+    // (undocumented)
+    uri?: string;
+}
+
+// @public
 export interface VideoGenerationMask {
     image?: Image_2;
     maskMode?: VideoGenerationMaskMode;
@@ -3714,6 +4567,9 @@ export interface VideoMetadata {
     fps?: number;
     startOffset?: string;
 }
+
+// @public
+type VideoMimeType = 'video/mp4' | 'video/mpeg' | 'video/mov' | 'video/avi' | 'video/x-flv' | 'video/mpg' | 'video/webm' | 'video/wmv' | 'video/3gpp' | (string & {});
 
 // @public (undocumented)
 export interface VoiceActivityDetectionSignal {
