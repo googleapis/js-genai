@@ -1341,12 +1341,12 @@ export namespace Tool {
    * A tool that can be used by the model to interact with the computer.
    */
   export interface ComputerUse {
-    type: 'computer_use';
-
     /**
      * The environment being operated.
      */
-    environment?: 'browser';
+    environment: 'browser';
+
+    type: 'computer_use';
 
     /**
      * The list of predefined functions that are excluded from the model call.
