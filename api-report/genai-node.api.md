@@ -4,8 +4,11 @@
 
 ```ts
 
+/// <reference types="node" />
+
 import type { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { GoogleAuthOptions } from 'google-auth-library';
+import { ReadableStream as ReadableStream_2 } from 'stream/web';
 
 // @public
 export interface ActivityEnd {
@@ -1138,7 +1141,9 @@ export interface FileStatus {
 export enum FinishReason {
     BLOCKLIST = "BLOCKLIST",
     FINISH_REASON_UNSPECIFIED = "FINISH_REASON_UNSPECIFIED",
+    IMAGE_OTHER = "IMAGE_OTHER",
     IMAGE_PROHIBITED_CONTENT = "IMAGE_PROHIBITED_CONTENT",
+    IMAGE_RECITATION = "IMAGE_RECITATION",
     IMAGE_SAFETY = "IMAGE_SAFETY",
     LANGUAGE = "LANGUAGE",
     MALFORMED_FUNCTION_CALL = "MALFORMED_FUNCTION_CALL",
@@ -1600,6 +1605,8 @@ export class GoogleGenAI {
     // (undocumented)
     readonly fileSearchStores: FileSearchStores;
     // (undocumented)
+    get interactions(): Interactions;
+    // (undocumented)
     readonly live: Live;
     // (undocumented)
     readonly models: Models;
@@ -1897,6 +1904,17 @@ export interface InlinedRequest {
 export class InlinedResponse {
     error?: JobError;
     response?: GenerateContentResponse;
+}
+
+// Warning: (ae-forgotten-export) The symbol "BaseInteractions" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export class Interactions extends BaseInteractions {
+}
+
+// @public (undocumented)
+export namespace Interactions {
+        { export type AllowedTools as AllowedTools, export type Annotation as Annotation, export type AudioContent as AudioContent, export type AudioMimeType as AudioMimeType, export type CodeExecutionCallArguments as CodeExecutionCallArguments, export type CodeExecutionCallContent as CodeExecutionCallContent, export type CodeExecutionResultContent as CodeExecutionResultContent, export type ContentDelta as ContentDelta, export type ContentStart as ContentStart, export type ContentStop as ContentStop, export type DeepResearchAgentConfig as DeepResearchAgentConfig, export type DocumentContent as DocumentContent, export type DynamicAgentConfig as DynamicAgentConfig, export type ErrorEvent as ErrorEvent, export type FileSearchResultContent as FileSearchResultContent, export type Function as Function, export type FunctionCallContent as FunctionCallContent, export type FunctionResultContent as FunctionResultContent, export type GenerationConfig as GenerationConfig, export type GoogleSearchCallArguments as GoogleSearchCallArguments, export type GoogleSearchCallContent as GoogleSearchCallContent, export type GoogleSearchResult as GoogleSearchResult, export type GoogleSearchResultContent as GoogleSearchResultContent, export type ImageContent as ImageContent, export type ImageMimeType as ImageMimeType, export type Interaction as Interaction, export type InteractionEvent as InteractionEvent, export type InteractionSSEEvent as InteractionSSEEvent, export type InteractionStatusUpdate as InteractionStatusUpdate, export type MCPServerToolCallContent as MCPServerToolCallContent, export type MCPServerToolResultContent as MCPServerToolResultContent, export type Model as Model, export type SpeechConfig as SpeechConfig, export type TextContent as TextContent, export type ThinkingLevel as ThinkingLevel, export type ThoughtContent as ThoughtContent, export type Tool as Tool, export type ToolChoice as ToolChoice, export type ToolChoiceConfig as ToolChoiceConfig, export type ToolChoiceType as ToolChoiceType, export type Turn as Turn, export type URLContextCallArguments as URLContextCallArguments, export type URLContextCallContent as URLContextCallContent, export type URLContextResult as URLContextResult, export type URLContextResultContent as URLContextResultContent, export type Usage as Usage, export type VideoContent as VideoContent, export type VideoMimeType as VideoMimeType, export type InteractionDeleteResponse as InteractionDeleteResponse, export type InteractionCreateParams as InteractionCreateParams, export type CreateModelInteractionParamsNonStreaming as CreateModelInteractionParamsNonStreaming, export type CreateModelInteractionParamsStreaming as CreateModelInteractionParamsStreaming, export type CreateAgentInteractionParamsNonStreaming as CreateAgentInteractionParamsNonStreaming, export type CreateAgentInteractionParamsStreaming as CreateAgentInteractionParamsStreaming, export type InteractionDeleteParams as InteractionDeleteParams, export type InteractionCancelParams as InteractionCancelParams, export type InteractionGetParams as InteractionGetParams, export type InteractionGetParamsNonStreaming as InteractionGetParamsNonStreaming, export type InteractionGetParamsStreaming as InteractionGetParamsStreaming, };
 }
 
 // @public

@@ -388,6 +388,14 @@ export enum FinishReason {
    * The model was expected to generate an image, but none was generated.
    */
   NO_IMAGE = 'NO_IMAGE',
+  /**
+   * Image generation stopped because the generated image may be a recitation from a source.
+   */
+  IMAGE_RECITATION = 'IMAGE_RECITATION',
+  /**
+   * Image generation stopped for a reason not otherwise specified.
+   */
+  IMAGE_OTHER = 'IMAGE_OTHER',
 }
 
 /** Output only. Harm probability levels in the content. */
