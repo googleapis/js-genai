@@ -19,6 +19,14 @@ export class BaseInteractions extends APIResource {
 
   /**
    * Creates a new interaction.
+   *
+   * @example
+   * ```ts
+   * const interaction = await client.interactions.create({
+   *   input: 'string',
+   *   model: 'gemini-2.5-pro',
+   * });
+   * ```
    */
   create(params: CreateModelInteractionParamsNonStreaming, options?: RequestOptions): APIPromise<Interaction>;
   create(
@@ -58,6 +66,11 @@ export class BaseInteractions extends APIResource {
 
   /**
    * Deletes the interaction by id.
+   *
+   * @example
+   * ```ts
+   * const interaction = await client.interactions.delete('id');
+   * ```
    */
   delete(
     id: string,
@@ -69,7 +82,12 @@ export class BaseInteractions extends APIResource {
   }
 
   /**
-   * Cancels an interaction based on its `Interaction.id`.
+   * Cancels an interaction by id. This only applies to background interactions that are still running.
+   *
+   * @example
+   * ```ts
+   * const interaction = await client.interactions.cancel('id');
+   * ```
    */
   cancel(
     id: string,
@@ -82,6 +100,11 @@ export class BaseInteractions extends APIResource {
 
   /**
    * Retrieves the full details of a single interaction based on its `Interaction.id`.
+   *
+   * @example
+   * ```ts
+   * const interaction = await client.interactions.get('id');
+   * ```
    */
   get(
     id: string,
