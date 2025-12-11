@@ -1,15 +1,6 @@
 # Changelog
 
 
-## [1.33.0](https://github.com/googleapis/js-genai/compare/v1.32.0...v1.33.0) (2025-12-11)
-
-
-### Features
-
-* Add IMAGE_RECITATION and IMAGE_OTHER enum values to FinishReason ([ab87f51](https://github.com/googleapis/js-genai/commit/ab87f51b8b2f0109d3ea89a18987c49101adfd70))
-* Add voice activity detection signal. ([bff9695](https://github.com/googleapis/js-genai/commit/bff96959c8cec4ef710cb77551e944024884761f))
-* Make the Interactions API public. ([a8dd67b](https://github.com/googleapis/js-genai/commit/a8dd67bc3267ed010c809fcd609d42811b042ebe))
-
 ## [1.32.0](https://github.com/googleapis/js-genai/compare/v1.31.0...v1.32.0) (2025-12-09)
 
 

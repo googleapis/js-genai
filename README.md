@@ -363,6 +363,233 @@ async function main() {
 main();
 ```
 
+## Interactions (Preview)
+
+> **Warning:** The Interactions API is in **Beta**. This is a preview of an
+experimental feature. Features and schemas are subject to **breaking changes**.
+
+The Interactions API is a unified interface for interacting with Gemini models
+and agents. It simplifies state management, tool orchestration, and long-running
+tasks.
+
+See the [documentation site](https://ai.google.dev/gemini-api/docs/interactions)
+for more details.
+
+### Basic Interaction
+
+```typescript
+const interaction = await ai.interactions.create({
+    model: 'gemini-2.5-flash',
+    input: 'Hello, how are you?',
+});
+console.debug(interaction);
+
+```
+
+### Stateful Conversation
+
+The Interactions API supports server-side state management. You can continue a
+conversation by referencing the `previous_interaction_id`.
+
+```typescript
+// 1. First turn
+const interaction1 = await ai.interactions.create({
+    model: 'gemini-2.5-flash',
+    input: 'Hi, my name is Amir.',
+});
+console.debug(interaction1);
+
+// 2. Second turn (passing previous_interaction_id)
+const interaction2 = await ai.interactions.create({
+  model: 'gemini-2.5-flash',
+  input: 'What is my name?',
+  previous_interaction_id: interaction1.id,
+});
+console.debug(interaction2);
+
+```
+
+### Agents (Deep Research)
+
+You can use specialized agents like `deep-research-pro-preview-12-2025` for
+complex tasks.
+
+```typescript
+function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// 1. Start the Deep Research Agent
+const initialInteraction = await ai.interactions.create({
+  input:
+      'Research the history of the Google TPUs with a focus on 2025 and 2026.',
+  agent: 'deep-research-pro-preview-12-2025',
+  background: true,
+});
+
+console.log(`Research started. Interaction ID: ${initialInteraction.id}`);
+
+// 2. Poll for results
+while (true) {
+  const interaction = await ai.interactions.get(initialInteraction.id);
+  console.log(`Status: ${interaction.status}`);
+
+  if (interaction.status === 'completed') {
+    console.debug('\nFinal Report:\n', interaction.outputs);
+    break;
+  } else if (['failed', 'cancelled'].includes(interaction.status)) {
+    console.log(`Failed with status: ${interaction.status}`);
+    break;
+  }
+
+  await sleep(10000);  // Sleep for 10 seconds
+}
+
+```
+
+### Multimodal Input
+
+You can provide multimodal data (text, images, audio, etc.) in the input list.
+
+```typescript
+import base64
+
+// Assuming you have a base64 string
+// const base64Image = ...;
+
+const interaction = await ai.interactions.create({
+  model: 'gemini-2.5-flash',
+  input: [
+    { type: 'text', text: 'Describe the image.' },
+    { type: 'image', data: base64Image, mime_type: 'image/png' },
+  ],
+});
+
+console.debug(interaction);
+
+```
+
+### Function Calling
+
+You can define custom functions for the model to use. The Interactions API
+handles the tool selection, and you provide the execution result back to the
+model.
+
+```typescript
+// 1. Define the tool
+const getWeather = (location: string) => {
+  /* Gets the weather for a given location. */
+  return `The weather in ${location} is sunny.`;
+};
+
+// 2. Send the request with tools
+let interaction = await ai.interactions.create({
+  model: 'gemini-2.5-flash',
+  input: 'What is the weather in Mountain View, CA?',
+  tools: [
+    {
+      type: 'function',
+      name: 'get_weather',
+      description: 'Gets the weather for a given location.',
+      parameters: {
+        type: 'object',
+        properties: {
+          location: {
+            type: 'string',
+            description: 'The city and state, e.g. San Francisco, CA',
+          },
+        },
+        required: ['location'],
+      },
+    },
+  ],
+});
+
+// 3. Handle the tool call
+for (const output of interaction.outputs!) {
+  if (output.type === 'function_call') {
+    console.log(
+        `Tool Call: ${output.name}(${JSON.stringify(output.arguments)})`);
+
+    // Execute your actual function here
+    // Note: ensure arguments match your function signature
+    const result = getWeather(JSON.stringify(output.arguments.location));
+
+    // Send result back to the model
+    interaction = await ai.interactions.create({
+      model: 'gemini-2.5-flash',
+      previous_interaction_id: interaction.id,
+      input: [
+        {
+          type: 'function_result',
+          name: output.name,
+          call_id: output.id,
+          result: result,
+        },
+      ],
+    });
+
+    console.debug(`Response: ${JSON.stringify(interaction)}`);
+  }
+}
+
+```
+
+### Built-in Tools
+You can also use Google's built-in tools, such as **Google Search** or **Code
+Execution**.
+
+#### Grounding with Google Search
+
+```typescript
+const interaction = await ai.interactions.create({
+  model: 'gemini-2.5-flash',
+  input: 'Who won the last Super Bowl',
+  tools: [{ type: 'google_search' }],
+});
+
+console.debug(interaction);
+
+```
+
+#### Code Execution
+
+```typescript
+const interaction = await ai.interactions.create({
+  model: 'gemini-2.5-flash',
+  input: 'Calculate the 50th Fibonacci number.',
+  tools: [{ type: 'code_execution' }],
+});
+
+console.debug(interaction);
+
+```
+
+### Multimodal Output
+
+The Interactions API can generate multimodal outputs, such as images. You must
+specify the `response_modalities`.
+
+```typescript
+import * as fs from 'fs';
+
+const interaction = await ai.interactions.create({
+  model: 'gemini-3-pro-image-preview',
+  input: 'Generate an image of a futuristic city.',
+  response_modalities: ['image'],
+});
+
+for (const output of interaction.outputs!) {
+  if (output.type === 'image') {
+    console.log(`Generated image with mime_type: ${output.mime_type}`);
+    // Save the image
+    fs.writeFileSync(
+        'generated_city.png', Buffer.from(output.data!, 'base64'));
+  }
+}
+
+```
+
 ## How is this different from the other Google AI SDKs
 This SDK (`@google/genai`) is Google Deepmind’s "vanilla" SDK for its generative
 AI offerings, and is where Google Deepmind adds new AI features.
@@ -374,4 +601,3 @@ be targeting specific project environments (like Firebase).
 
 The `@google/generative_language` and `@google-cloud/vertexai` SDKs are previous
 iterations of this SDK and are no longer receiving new Gemini 2.0+ features.
-
