@@ -1,6 +1,13 @@
 # Changelog
 
 
+## [1.34.0](https://github.com/googleapis/js-genai/compare/v1.33.0...v1.34.0) (2025-12-12)
+
+
+### Features
+
+* support multi speaker for Vertex AI ([94d681b](https://github.com/googleapis/js-genai/commit/94d681bba5f3280949fb852b4365f5f2bf8a82ee))
+
 ## [1.33.0](https://github.com/googleapis/js-genai/compare/v1.32.0...v1.33.0) (2025-12-11)
 
 
