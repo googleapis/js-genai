@@ -1607,7 +1607,7 @@ export function generateContentConfigToVertex(
     common.setValueByPath(
       toObject,
       ['speechConfig'],
-      speechConfigToVertex(t.tSpeechConfig(fromSpeechConfig)),
+      t.tSpeechConfig(fromSpeechConfig),
     );
   }
 
@@ -3163,11 +3163,7 @@ export function generationConfigToVertex(
 
   const fromSpeechConfig = common.getValueByPath(fromObject, ['speechConfig']);
   if (fromSpeechConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['speechConfig'],
-      speechConfigToVertex(fromSpeechConfig),
-    );
+    common.setValueByPath(toObject, ['speechConfig'], fromSpeechConfig);
   }
 
   const fromStopSequences = common.getValueByPath(fromObject, [
@@ -4406,32 +4402,6 @@ export function segmentImageSourceToVertex(
       parentObject,
       ['instances[0]', 'scribble'],
       scribbleImageToVertex(fromScribbleImage),
-    );
-  }
-
-  return toObject;
-}
-
-export function speechConfigToVertex(
-  fromObject: types.SpeechConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromVoiceConfig = common.getValueByPath(fromObject, ['voiceConfig']);
-  if (fromVoiceConfig != null) {
-    common.setValueByPath(toObject, ['voiceConfig'], fromVoiceConfig);
-  }
-
-  const fromLanguageCode = common.getValueByPath(fromObject, ['languageCode']);
-  if (fromLanguageCode != null) {
-    common.setValueByPath(toObject, ['languageCode'], fromLanguageCode);
-  }
-
-  if (
-    common.getValueByPath(fromObject, ['multiSpeakerVoiceConfig']) !== undefined
-  ) {
-    throw new Error(
-      'multiSpeakerVoiceConfig parameter is not supported in Vertex AI.',
     );
   }
 
