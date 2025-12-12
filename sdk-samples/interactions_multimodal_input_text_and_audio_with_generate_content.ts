@@ -4,9 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import {GoogleGenAI} from '@google/genai';
-import fs from 'fs';
-import path from 'path';
-import {fileURLToPath} from 'url';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
@@ -17,11 +14,11 @@ async function createInteractionsFromMLDev() {
   });
 
   // Load and encode the audio
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = path.dirname(__filename);
-  const audioPath = path.join(__dirname, '../sample_audio.mp3');
-  const audioBuffer = fs.readFileSync(audioPath);
-  const base64Audio = audioBuffer.toString('base64');
+  const audioUrl =
+    'https://storage.googleapis.com/generativeai-downloads/data/Apollo-11_Day-01-Highlights-10s.mp3';
+  const audioResponse = await fetch(audioUrl);
+  const arrayBuffer = await audioResponse.arrayBuffer();
+  const base64Audio = Buffer.from(arrayBuffer).toString('base64');
 
   console.log(
     '[Interactions] Start interactions multimodal input text and audio',

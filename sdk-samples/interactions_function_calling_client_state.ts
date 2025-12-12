@@ -59,7 +59,11 @@ async function createInteractionsFromMLDev() {
 
   // add model response back to history
   if (response.outputs) {
-    fcConversationHistory.push(...response.outputs);
+    for (const output of response.outputs) {
+      if (output.type !== 'thought') {
+        fcConversationHistory.push(output);
+      }
+    }
   }
 
   for (const output of response.outputs ?? []) {
