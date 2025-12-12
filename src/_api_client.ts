@@ -10,6 +10,7 @@ import {Downloader} from './_downloader.js';
 import {Uploader} from './_uploader.js';
 import {uploadToFileSearchStoreConfigToMldev} from './converters/_filesearchstores_converters.js';
 import {ApiError} from './errors.js';
+import {GeminiNextGenAPIClientAdapter} from './interactions/client-adapter.js';
 import * as types from './types.js';
 
 const CONTENT_TYPE_HEADER = 'Content-Type';
@@ -132,9 +133,8 @@ export interface HttpRequest {
  * The ApiClient class is used to send requests to the Gemini API or Vertex AI
  * endpoints.
  */
-export class ApiClient {
+export class ApiClient implements GeminiNextGenAPIClientAdapter {
   readonly clientOptions: ApiClientInitOptions;
-
   constructor(opts: ApiClientInitOptions) {
     this.clientOptions = {
       ...opts,
@@ -217,6 +217,12 @@ export class ApiClient {
 
   getLocation() {
     return this.clientOptions.location;
+  }
+
+  async getAuthHeaders(): Promise<Headers> {
+    const headers = new Headers();
+    await this.clientOptions.auth.addAuthHeaders(headers);
+    return headers;
   }
 
   getApiVersion() {

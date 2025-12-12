@@ -96,6 +96,7 @@ import {
   parseLogLevel,
 } from './internal/utils/log.js';
 import { isEmptyObj } from './internal/utils/values.js';
+import { GeminiNextGenAPIClientAdapter } from './client-adapter.js';
 
 export interface ClientOptions {
   /**
@@ -172,6 +173,11 @@ export interface ClientOptions {
    * Defaults to globalThis.console.
    */
   logger?: Logger | undefined;
+
+  /**
+   * The adapter to the parent API client instance (for accessing auth, project, location)
+   */
+  clientAdapter: GeminiNextGenAPIClientAdapter;
 }
 
 /**
@@ -192,6 +198,7 @@ export class BaseGeminiNextGenAPIClient {
   private encoder: Opts.RequestEncoder;
   protected idempotencyHeader?: string;
   private _options: ClientOptions;
+  private clientAdapter: GeminiNextGenAPIClientAdapter;
 
   /**
    * API Client for interfacing with the Gemini Next Gen API API.
@@ -211,7 +218,7 @@ export class BaseGeminiNextGenAPIClient {
     apiKey = readEnv('GEMINI_API_KEY') ?? null,
     apiVersion = 'v1beta',
     ...opts
-  }: ClientOptions = {}) {
+  }: ClientOptions) {
     const options: ClientOptions = {
       apiKey,
       apiVersion,
@@ -238,6 +245,7 @@ export class BaseGeminiNextGenAPIClient {
 
     this.apiKey = apiKey;
     this.apiVersion = apiVersion;
+    this.clientAdapter = options.clientAdapter;
   }
 
   /**
@@ -272,6 +280,10 @@ export class BaseGeminiNextGenAPIClient {
   }
 
   protected validateHeaders({ values, nulls }: NullableHeaders) {
+    // The headers object handles case insensitivity.
+    if (values.has('authorization') || values.has('x-goog-api-key')) {
+      return;
+    }
     if (this.apiKey && values.get('x-goog-api-key')) {
       return;
     }
@@ -285,10 +297,21 @@ export class BaseGeminiNextGenAPIClient {
   }
 
   protected async authHeaders(opts: FinalRequestOptions): Promise<NullableHeaders | undefined> {
-    if (this.apiKey == null) {
+    const existingHeaders = buildHeaders([opts.headers]);
+
+    if (existingHeaders.values.has('authorization') || existingHeaders.values.has('x-goog-api-key')) {
       return undefined;
     }
-    return buildHeaders([{ 'x-goog-api-key': this.apiKey }]);
+
+    if (this.apiKey) {
+      return buildHeaders([{ 'x-goog-api-key': this.apiKey }]);
+    }
+
+    if (this.clientAdapter.isVertexAI()) {
+      return buildHeaders([await this.clientAdapter.getAuthHeaders()]);
+    }
+
+    return undefined;
   }
 
   /**
@@ -353,8 +376,20 @@ export class BaseGeminiNextGenAPIClient {
 
   /**
    * Used as a callback for mutating the given `FinalRequestOptions` object.
+
    */
-  protected async prepareOptions(options: FinalRequestOptions): Promise<void> {}
+  protected async prepareOptions(options: FinalRequestOptions): Promise<void> {
+    if (
+      this.clientAdapter &&
+      this.clientAdapter.isVertexAI() &&
+      !options.path.startsWith(`/${this.apiVersion}/projects/`)
+    ) {
+      const oldPath = options.path.slice(this.apiVersion.length + 1);
+      options.path = `/${
+        this.apiVersion
+      }/projects/${this.clientAdapter.getProject()}/locations/${this.clientAdapter.getLocation()}${oldPath}`;
+    }
+  }
 
   /**
    * Used as a callback for mutating the given `RequestInit` object.
@@ -719,7 +754,9 @@ export class BaseGeminiNextGenAPIClient {
       idempotencyHeaders[this.idempotencyHeader] = options.idempotencyKey;
     }
 
-    const headers = buildHeaders([
+    const authHeaders = await this.authHeaders(options);
+
+    let headers = buildHeaders([
       idempotencyHeaders,
       {
         Accept: 'application/json',
@@ -728,10 +765,10 @@ export class BaseGeminiNextGenAPIClient {
         ...(options.timeout ? { 'X-Stainless-Timeout': String(Math.trunc(options.timeout / 1000)) } : {}),
         ...getPlatformHeaders(),
       },
-      await this.authHeaders(options),
       this._options.defaultHeaders,
       bodyHeaders,
       options.headers,
+      authHeaders,
     ]);
 
     this.validateHeaders(headers);
