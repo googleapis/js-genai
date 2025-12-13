@@ -100,12 +100,6 @@ export class GoogleGenAI {
       'GoogleGenAI.interactions: Interactions usage is experimental and may change in future versions.',
     );
 
-    if (this.vertexai) {
-      throw new Error(
-        'This version of the GenAI SDK does not support Vertex AI API for interactions.',
-      );
-    }
-
     const httpOpts = this.httpOptions;
 
     // Unsupported Options Warnings
@@ -118,6 +112,8 @@ export class GoogleGenAI {
     const nextGenClient = new GeminiNextGenAPI({
       baseURL: this.apiClient.getBaseUrl(),
       apiKey: this.apiKey,
+      apiVersion: this.apiClient.getApiVersion(),
+      clientAdapter: this.apiClient,
       defaultHeaders: this.apiClient.getDefaultHeaders(),
       timeout: httpOpts?.timeout,
     });

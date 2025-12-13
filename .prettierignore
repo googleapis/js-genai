@@ -4,7 +4,9 @@ src/files.ts
 src/models.ts
 src/tunings.ts
 src/types.ts
+src/converters/**
 # Ignore built files:
 dist/**
+dist-private/**
 # Ignore interactions files:
 src/interactions/**

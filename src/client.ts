@@ -167,6 +167,8 @@ export class GoogleGenAI {
     const nextGenClient = new GeminiNextGenAPI({
       baseURL: this.apiClient.getBaseUrl(),
       apiKey: this.apiKey,
+      apiVersion: this.apiClient.getApiVersion(),
+      clientAdapter: this.apiClient,
       defaultHeaders: this.apiClient.getDefaultHeaders(),
       timeout: httpOpts?.timeout,
     });

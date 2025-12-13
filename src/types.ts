@@ -2065,9 +2065,9 @@ export declare interface SpeakerVoiceConfig {
   voiceConfig?: VoiceConfig;
 }
 
-/** The configuration for the multi-speaker setup. This data type is not supported in Vertex AI. */
+/** Configuration for a multi-speaker text-to-speech request. */
 export declare interface MultiSpeakerVoiceConfig {
-  /** Required. All the enabled speaker voices. */
+  /** Required. A list of configurations for the voices of the speakers. Exactly two speaker voice configurations must be provided. */
   speakerVoiceConfigs?: SpeakerVoiceConfig[];
 }
 
@@ -2076,7 +2076,7 @@ export declare interface SpeechConfig {
   voiceConfig?: VoiceConfig;
   /** Optional. Language code (ISO 639. e.g. en-US) for the speech synthesization. */
   languageCode?: string;
-  /** Optional. The configuration for the multi-speaker setup. It is mutually exclusive with the voice_config field. This field is not supported in Vertex AI. */
+  /** The configuration for a multi-speaker text-to-speech request. This field is mutually exclusive with `voice_config`. */
   multiSpeakerVoiceConfig?: MultiSpeakerVoiceConfig;
 }
 
