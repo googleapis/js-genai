@@ -19,6 +19,12 @@ The Google Gen AI SDK is designed to work with Gemini 2.0+ features.
 > **API Key Security:** Avoid exposing API keys in client-side code.
 > Use server-side implementations in production environments.
 
+## Code Generation
+
+Generative models are often unaware of recent API and SDK updates and may suggest outdated or legacy code.
+
+We recommend using our Code Generation instructions [`codegen_instructions.md`](https://raw.githubusercontent.com/googleapis/js-genai/refs/heads/main/codegen_instructions.md) when generating Google Gen AI SDK code to guide your model towards using the more recent SDK features. Copy and paste the instructions into your development environment to provide the model with the necessary context.
+
 ## Prerequisites
 
 1. Node.js version 20 or later
