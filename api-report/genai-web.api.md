@@ -3279,6 +3279,8 @@ export interface ThinkingConfig {
 export enum ThinkingLevel {
     HIGH = "HIGH",
     LOW = "LOW",
+    MEDIUM = "MEDIUM",
+    MINIMAL = "MINIMAL",
     THINKING_LEVEL_UNSPECIFIED = "THINKING_LEVEL_UNSPECIFIED"
 }
 
