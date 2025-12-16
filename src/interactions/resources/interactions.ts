@@ -178,9 +178,6 @@ export interface Annotation {
  * An audio content block.
  */
 export interface AudioContent {
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'audio';
 
   data?: string;
@@ -224,9 +221,6 @@ export interface CodeExecutionCallArguments {
  * Code execution content.
  */
 export interface CodeExecutionCallContent {
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'code_execution_call';
 
   /**
@@ -244,9 +238,6 @@ export interface CodeExecutionCallContent {
  * Code execution result content.
  */
 export interface CodeExecutionResultContent {
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'code_execution_result';
 
   /**
@@ -304,9 +295,6 @@ export interface ContentDelta {
 
 export namespace ContentDelta {
   export interface TextDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'text';
 
     /**
@@ -318,9 +306,6 @@ export namespace ContentDelta {
   }
 
   export interface ImageDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'image';
 
     data?: string;
@@ -339,9 +324,6 @@ export namespace ContentDelta {
   }
 
   export interface AudioDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'audio';
 
     data?: string;
@@ -355,9 +337,6 @@ export namespace ContentDelta {
   }
 
   export interface DocumentDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'document';
 
     data?: string;
@@ -368,9 +347,6 @@ export namespace ContentDelta {
   }
 
   export interface VideoDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'video';
 
     data?: string;
@@ -389,9 +365,6 @@ export namespace ContentDelta {
   }
 
   export interface ThoughtSummaryDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'thought_summary';
 
     /**
@@ -401,9 +374,6 @@ export namespace ContentDelta {
   }
 
   export interface ThoughtSignatureDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'thought_signature';
 
     /**
@@ -413,9 +383,6 @@ export namespace ContentDelta {
   }
 
   export interface FunctionCallDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'function_call';
 
     /**
@@ -429,9 +396,6 @@ export namespace ContentDelta {
   }
 
   export interface FunctionResultDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'function_result';
 
     /**
@@ -456,9 +420,6 @@ export namespace ContentDelta {
   }
 
   export interface CodeExecutionCallDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'code_execution_call';
 
     /**
@@ -473,9 +434,6 @@ export namespace ContentDelta {
   }
 
   export interface CodeExecutionResultDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'code_execution_result';
 
     /**
@@ -491,9 +449,6 @@ export namespace ContentDelta {
   }
 
   export interface URLContextCallDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'url_context_call';
 
     /**
@@ -508,9 +463,6 @@ export namespace ContentDelta {
   }
 
   export interface URLContextResultDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'url_context_result';
 
     /**
@@ -526,9 +478,6 @@ export namespace ContentDelta {
   }
 
   export interface GoogleSearchCallDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'google_search_call';
 
     /**
@@ -543,9 +492,6 @@ export namespace ContentDelta {
   }
 
   export interface GoogleSearchResultDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'google_search_result';
 
     /**
@@ -561,9 +507,6 @@ export namespace ContentDelta {
   }
 
   export interface MCPServerToolCallDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'mcp_server_tool_call';
 
     /**
@@ -579,9 +522,6 @@ export namespace ContentDelta {
   }
 
   export interface MCPServerToolResultDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'mcp_server_tool_result';
 
     /**
@@ -606,9 +546,6 @@ export namespace ContentDelta {
   }
 
   export interface FileSearchResultDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'file_search_result';
 
     result?: Array<FileSearchResultDelta.Result>;
@@ -692,9 +629,6 @@ export interface DeepResearchAgentConfig {
    */
   thinking_summaries?: 'auto' | 'none';
 
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type?: 'deep-research';
 }
 
@@ -702,9 +636,6 @@ export interface DeepResearchAgentConfig {
  * A document content block.
  */
 export interface DocumentContent {
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'document';
 
   data?: string;
@@ -718,9 +649,6 @@ export interface DocumentContent {
  * Configuration for dynamic agents.
  */
 export interface DynamicAgentConfig {
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type?: 'dynamic';
 
   [k: string]: unknown;
@@ -762,9 +690,6 @@ export namespace ErrorEvent {
  * File Search result content.
  */
 export interface FileSearchResultContent {
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'file_search_result';
 
   /**
@@ -836,9 +761,6 @@ export interface FunctionCallContent {
    */
   name: string;
 
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'function_call';
 }
 
@@ -856,9 +778,6 @@ export interface FunctionResultContent {
    */
   result: FunctionResultContent.Items | unknown | string;
 
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'function_result';
 
   /**
@@ -942,9 +861,6 @@ export interface GoogleSearchCallArguments {
  * Google Search content.
  */
 export interface GoogleSearchCallContent {
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'google_search_call';
 
   /**
@@ -982,9 +898,6 @@ export interface GoogleSearchResult {
  * Google Search result content.
  */
 export interface GoogleSearchResultContent {
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'google_search_result';
 
   /**
@@ -1012,9 +925,6 @@ export interface GoogleSearchResultContent {
  * An image content block.
  */
 export interface ImageContent {
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'image';
 
   data?: string;
@@ -1184,9 +1094,6 @@ export interface MCPServerToolCallContent {
    */
   server_name: string;
 
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'mcp_server_tool_call';
 }
 
@@ -1204,9 +1111,6 @@ export interface MCPServerToolResultContent {
    */
   result: MCPServerToolResultContent.Items | unknown | string;
 
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'mcp_server_tool_result';
 
   /**
@@ -1265,9 +1169,6 @@ export interface SpeechConfig {
  * A text content block.
  */
 export interface TextContent {
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'text';
 
   /**
@@ -1287,9 +1188,6 @@ export type ThinkingLevel = 'low' | 'high';
  * A thought content block.
  */
 export interface ThoughtContent {
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'thought';
 
   /**
@@ -1466,9 +1364,6 @@ export interface URLContextCallArguments {
  * URL context content.
  */
 export interface URLContextCallContent {
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'url_context_call';
 
   /**
@@ -1501,9 +1396,6 @@ export interface URLContextResult {
  * URL context result content.
  */
 export interface URLContextResultContent {
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'url_context_result';
 
   /**
@@ -1649,9 +1541,6 @@ export namespace Usage {
  * A video content block.
  */
 export interface VideoContent {
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'video';
 
   data?: string;
