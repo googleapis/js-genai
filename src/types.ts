@@ -700,6 +700,10 @@ export enum PartMediaResolutionLevel {
    * Media resolution set to high.
    */
   MEDIA_RESOLUTION_HIGH = 'MEDIA_RESOLUTION_HIGH',
+  /**
+   * Media resolution set to ultra high.
+   */
+  MEDIA_RESOLUTION_ULTRA_HIGH = 'MEDIA_RESOLUTION_ULTRA_HIGH',
 }
 
 /** Options for feature selection preference. */
