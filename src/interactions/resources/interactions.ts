@@ -318,7 +318,7 @@ export namespace ContentDelta {
     /**
      * The resolution of the media.
      */
-    resolution?: 'low' | 'medium' | 'high';
+    resolution?: 'low' | 'medium' | 'high' | 'ultra_high';
 
     uri?: string;
   }
@@ -362,7 +362,7 @@ export namespace ContentDelta {
     /**
      * The resolution of the media.
      */
-    resolution?: 'low' | 'medium' | 'high';
+    resolution?: 'low' | 'medium' | 'high' | 'ultra_high';
 
     uri?: string;
   }
@@ -948,7 +948,7 @@ export interface ImageContent {
   /**
    * The resolution of the media.
    */
-  resolution?: 'low' | 'medium' | 'high';
+  resolution?: 'low' | 'medium' | 'high' | 'ultra_high';
 
   uri?: string;
 }
@@ -1193,7 +1193,7 @@ export interface TextContent {
   text?: string;
 }
 
-export type ThinkingLevel = 'low' | 'high';
+export type ThinkingLevel = 'minimal' | 'low' | 'medium' | 'high';
 
 /**
  * A thought content block.
@@ -1564,7 +1564,7 @@ export interface VideoContent {
   /**
    * The resolution of the media.
    */
-  resolution?: 'low' | 'medium' | 'high';
+  resolution?: 'low' | 'medium' | 'high' | 'ultra_high';
 
   uri?: string;
 }
