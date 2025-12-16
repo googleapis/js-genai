@@ -216,10 +216,10 @@ export enum PhishBlockThreshold {
   BLOCK_ONLY_EXTREMELY_HIGH = 'BLOCK_ONLY_EXTREMELY_HIGH',
 }
 
-/** The level of thoughts tokens that the model should generate. */
+/** The number of thoughts tokens that the model should generate. */
 export enum ThinkingLevel {
   /**
-   * Default value.
+   * Unspecified thinking level.
    */
   THINKING_LEVEL_UNSPECIFIED = 'THINKING_LEVEL_UNSPECIFIED',
   /**
@@ -227,9 +227,17 @@ export enum ThinkingLevel {
    */
   LOW = 'LOW',
   /**
+   * Medium thinking level.
+   */
+  MEDIUM = 'MEDIUM',
+  /**
    * High thinking level.
    */
   HIGH = 'HIGH',
+  /**
+   * MINIMAL thinking level.
+   */
+  MINIMAL = 'MINIMAL',
 }
 
 /** Harm category. */
@@ -2104,7 +2112,7 @@ export declare interface ThinkingConfig {
   /** Indicates the thinking budget in tokens. 0 is DISABLED. -1 is AUTOMATIC. The default values and allowed ranges are model dependent.
    */
   thinkingBudget?: number;
-  /** Optional. The level of thoughts tokens that the model should generate. */
+  /** Optional. The number of thoughts tokens that the model should generate. */
   thinkingLevel?: ThinkingLevel;
 }
 
