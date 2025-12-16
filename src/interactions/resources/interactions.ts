@@ -341,7 +341,10 @@ export namespace ContentDelta {
 
     data?: string;
 
-    mime_type?: string;
+    /**
+     * The mime type of the document.
+     */
+    mime_type?: InteractionsAPI.DocumentMimeType;
 
     uri?: string;
   }
@@ -640,10 +643,18 @@ export interface DocumentContent {
 
   data?: string;
 
-  mime_type?: string;
+  /**
+   * The mime type of the document.
+   */
+  mime_type?: DocumentMimeType;
 
   uri?: string;
 }
+
+/**
+ * The mime type of the document.
+ */
+export type DocumentMimeType = (string & {}) | 'application/pdf';
 
 /**
  * Configuration for dynamic agents.
@@ -1887,6 +1898,7 @@ export declare namespace Interactions {
     type ContentStop as ContentStop,
     type DeepResearchAgentConfig as DeepResearchAgentConfig,
     type DocumentContent as DocumentContent,
+    type DocumentMimeType as DocumentMimeType,
     type DynamicAgentConfig as DynamicAgentConfig,
     type ErrorEvent as ErrorEvent,
     type FileSearchResultContent as FileSearchResultContent,
