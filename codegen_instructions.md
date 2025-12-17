@@ -72,7 +72,7 @@ const ai = new GoogleGenAI({});
 ## Models
 
 -   By default, use the following models when using `@google/genai`:
-    -   **General Text & Multimodal Tasks:** `gemini-2.5-flash`
+    -   **General Text & Multimodal Tasks:** `gemini-3-flash-preview`
     -   **Coding and Complex Reasoning Tasks:** `gemini-3-pro-preview`
     -   **Low Latency & High Volume Tasks:** `gemini-2.5-flash-lite`
     -   **Fast Image Generation and Editing:** `gemini-2.5-flash-image` (aka Nano Banana)
@@ -84,6 +84,7 @@ const ai = new GoogleGenAI({});
 -   It is also acceptable to use the following model if explicitly requested by
     the user:
     -   **Gemini 2.0 Series**: `gemini-2.0-flash`, `gemini-2.0-flash-lite`
+    -   **Gemini 2.5 Series**: `gemini-2.5-flash`, `gemini-2.5-pro`
 
 -   Do not use the following deprecated models (or their variants like
     `gemini-1.5-flash-latest`):
@@ -103,7 +104,7 @@ const ai = new GoogleGenAI({});
 
 async function run() {
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-3-flash-preview',
     contents: 'Why is the sky blue?',
   });
 
@@ -142,7 +143,7 @@ async function run() {
   const imagePart = fileToGenerativePart("path/to/image.jpg", "image/jpeg");
 
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-3-flash-preview',
     contents: [
       imagePart,
       'Describe this image in detail.'
@@ -172,7 +173,7 @@ async function run() {
 
     // Generate
     const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-3-flash-preview',
          contents: createUserContent([
           createPartFromUri(myFile.uri, myFile.mimeType),
           "What happens in this video?"
@@ -196,11 +197,13 @@ Gemini 2.5 and 3 series models support explicit "thinking" for complex logic.
 
 #### Gemini 3
 
-Thinking is on by default for `gemini-3-pro-preview`. It can be adjusted by
-using the `thinkingLevel` parameter.
+Thinking is on by default for `gemini-3-pro-preview` and `gemini-3-flash-preview`.
+It can be adjusted by using the `thinkingLevel` parameter.
 
-- **Low**: Minimizes latency and cost. Best for simple instruction following or chat.
-- **High**: (Default) Maximizes reasoning depth.
+- **`MINIMAL`:** (Gemini 3 Flash Only) Constrains the model to use as few tokens as possible for thinking and is best used for low-complexity tasks that wouldn't benefit from extensive reasoning.
+- **`LOW`**: Constrains the model to use fewer tokens for thinking and is suitable for simpler tasks where extensive reasoning is not required.
+- **`MEDIUM`**: (Gemini 3 Flash only) Offers a balanced approach suitable for tasks of moderate complexity that benefit from reasoning but don't require deep, multi-step planning.
+- **`HIGH`**: (Default) Maximizes reasoning depth. The model may take significantly longer to reach a first token, but the output will be more thoroughly vetted.
 
 ```javascript
 import { GoogleGenAI } from "@google/genai";
@@ -279,7 +282,7 @@ const ai = new GoogleGenAI({});
 
 async function run() {
     const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-3-flash-preview',
         contents: "Explain quantum physics.",
         config: {
             systemInstruction: "You are a pirate",
@@ -319,7 +322,7 @@ function fileToGenerativePart(path, mimeType): Part {
 async function run() {
     const img = fileToGenerativePart("/path/to/img.jpg", "image/jpeg");
     const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-3-flash-preview",
         contents: ['Do these look store-bought or homemade?', img],
         config: {
             safetySettings: [
@@ -345,7 +348,7 @@ const ai = new GoogleGenAI({});
 
 async function run() {
   const responseStream = await ai.models.generateContentStream({
-    model: "gemini-2.5-flash",
+    model: "gemini-3-flash-preview",
     contents: ["Write a long story about a space pirate."],
   });
 
@@ -368,7 +371,7 @@ import { GoogleGenAI } from '@google/genai';
 const ai = new GoogleGenAI({});
 
 async function run() {
-    const chat = ai.chats.create({model: "gemini-2.5-flash"});
+    const chat = ai.chats.create({model: "gemini-3-flash-preview"});
 
     let response = await chat.sendMessage({message: "I have a cat named Whiskers."});
     console.log(response.text);
@@ -393,7 +396,7 @@ import { GoogleGenAI } from '@google/genai';
 const ai = new GoogleGenAI({});
 
 async function run() {
-    const chat = ai.chats.create({model: "gemini-2.5-flash"});
+    const chat = ai.chats.create({model: "gemini-3-flash-preview"});
     const stream = await chat.sendMessageStream({message:"I have 2 dogs in my house."});
     for await (const chunk of stream) {
       console.log(chunk.text);
@@ -458,7 +461,7 @@ const ai = new GoogleGenAI({});
 
 async function main() {
   const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
+    model: "gemini-3-flash-preview",
     contents: "List a few popular cookie recipes, and include the amounts of ingredients.",
     config: {
       responseMimeType: "application/json",
@@ -539,7 +542,7 @@ async function run() {
     };
 
     const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-3-flash-preview',
         contents: 'Dim the lights so the room feels cozy and warm.',
         config: {
             tools: [{ functionDeclarations: [controlLightDeclaration] }]
@@ -568,7 +571,7 @@ const ai = new GoogleGenAI({});
 
 async function run() {
     const response = await ai.models.generateContent({
-       model: "gemini-2.5-flash",
+       model: "gemini-3-flash-preview",
        contents: "What was the score of the latest Olympique Lyonais game?",
        config: {
          tools: [{ googleSearch: {} }],
@@ -764,7 +767,7 @@ const ai = new GoogleGenAI({});
 
 async function run() {
     const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-3-flash-preview",
         contents: "How does AI work?",
     });
     console.log(response.text);
@@ -780,7 +783,7 @@ const ai = new GoogleGenAI({});
 
 async function run() {
     const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-3-flash-preview",
         contents: [
             {
                 role: "user",
