@@ -7,8 +7,6 @@
 ### Features
 
 * Add minimal and medium thinking levels. ([19f8969](https://github.com/googleapis/js-genai/commit/19f8969f0cd9f423b10384d91a4ea8396a791d01))
-* Add minimal and medium thinking levels. ([f693387](https://github.com/googleapis/js-genai/commit/f693387731baa2a2e0fe9b8e327ce5fe3a831dc0))
-* Add minimal and medium thinking levels. ([3ef84ac](https://github.com/googleapis/js-genai/commit/3ef84ac4fc7dfcdf56c06be0a2c59c29fcc79d53))
 * Add support for Struct in ToolResult Content. ([750a4f7](https://github.com/googleapis/js-genai/commit/750a4f79fea3198317a540563f04369302408a11))
 * Add ultra high resolution to the media resolution in Parts. ([fa9a99e](https://github.com/googleapis/js-genai/commit/fa9a99e79d8c517011772a0edfe7c41c5d7518b7))
 * Add ULTRA_HIGH MediaResolution and new ThinkingLevel enums ([b8a7d8c](https://github.com/googleapis/js-genai/commit/b8a7d8c98d29c9a121784796016b5d2674968799))
