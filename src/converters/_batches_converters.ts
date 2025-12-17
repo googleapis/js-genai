@@ -1374,6 +1374,12 @@ export function imageConfigToMldev(
     common.setValueByPath(toObject, ['imageSize'], fromImageSize);
   }
 
+  if (common.getValueByPath(fromObject, ['personGeneration']) !== undefined) {
+    throw new Error(
+      'personGeneration parameter is not supported in Gemini API.',
+    );
+  }
+
   if (common.getValueByPath(fromObject, ['outputMimeType']) !== undefined) {
     throw new Error('outputMimeType parameter is not supported in Gemini API.');
   }

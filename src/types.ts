@@ -2129,6 +2129,9 @@ export declare interface ImageConfig {
       values are `1K`, `2K`, `4K`. If not specified, the model will use default
       value `1K`. */
   imageSize?: string;
+  /** Controls the generation of people. Supported values are:
+      ALLOW_ALL, ALLOW_ADULT, ALLOW_NONE. */
+  personGeneration?: string;
   /** MIME type of the generated image. This field is not
       supported in Gemini API. */
   outputMimeType?: string;

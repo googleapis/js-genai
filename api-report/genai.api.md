@@ -1837,6 +1837,7 @@ export interface ImageConfig {
     imageSize?: string;
     outputCompressionQuality?: number;
     outputMimeType?: string;
+    personGeneration?: string;
 }
 
 // @public

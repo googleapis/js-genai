@@ -3300,6 +3300,12 @@ export function imageConfigToMldev(
     common.setValueByPath(toObject, ['imageSize'], fromImageSize);
   }
 
+  if (common.getValueByPath(fromObject, ['personGeneration']) !== undefined) {
+    throw new Error(
+      'personGeneration parameter is not supported in Gemini API.',
+    );
+  }
+
   if (common.getValueByPath(fromObject, ['outputMimeType']) !== undefined) {
     throw new Error('outputMimeType parameter is not supported in Gemini API.');
   }
@@ -3329,6 +3335,13 @@ export function imageConfigToVertex(
   const fromImageSize = common.getValueByPath(fromObject, ['imageSize']);
   if (fromImageSize != null) {
     common.setValueByPath(toObject, ['imageSize'], fromImageSize);
+  }
+
+  const fromPersonGeneration = common.getValueByPath(fromObject, [
+    'personGeneration',
+  ]);
+  if (fromPersonGeneration != null) {
+    common.setValueByPath(toObject, ['personGeneration'], fromPersonGeneration);
   }
 
   const fromOutputMimeType = common.getValueByPath(fromObject, [
