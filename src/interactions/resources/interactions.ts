@@ -995,11 +995,6 @@ export interface Interaction {
   model?: Model;
 
   /**
-   * Output only. The object type of the interaction. Always set to `interaction`.
-   */
-  object?: 'interaction';
-
-  /**
    * Output only. Responses from the model.
    */
   outputs?: Array<
