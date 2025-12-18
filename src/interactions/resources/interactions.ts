@@ -1468,7 +1468,7 @@ export interface Usage {
   /**
    * Number of tokens of thoughts for thinking models.
    */
-  total_reasoning_tokens?: number;
+  total_thought_tokens?: number;
 
   /**
    * Total token count for the interaction request (prompt + responses + other
