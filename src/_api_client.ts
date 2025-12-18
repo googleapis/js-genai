@@ -761,7 +761,7 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
       );
     }
     const path = `upload/v1beta/${fileSearchStoreName}:uploadToFileSearchStore`;
-    const fileName = this.getFileName(file);
+    const fileName = config?.displayName ?? this.getFileName(file);
     const body: Record<string, unknown> = {};
     if (config != null) {
       uploadToFileSearchStoreConfigToMldev(config, body);
