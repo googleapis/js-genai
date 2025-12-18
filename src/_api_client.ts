@@ -387,13 +387,17 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
     baseHttpOptions: types.HttpOptions,
     requestHttpOptions: types.HttpOptions,
   ): types.HttpOptions {
-    const patchedHttpOptions = JSON.parse(
-      JSON.stringify(baseHttpOptions),
-    ) as types.HttpOptions;
+    // Shallow clone to preserve non-serializable fields like dispatcher
+    const patchedHttpOptions: types.HttpOptions = {...baseHttpOptions};
 
     for (const [key, value] of Object.entries(requestHttpOptions)) {
+      // Skip dispatcher if it's being patched from baseHttpOptions
+      if (key === 'dispatcher') {
+        patchedHttpOptions[key] = value;
+        continue;
+      }
       // Records compile to objects.
-      if (typeof value === 'object') {
+      if (typeof value === 'object' && value !== null) {
         // @ts-expect-error TS2345TS7053: Element implicitly has an 'any' type
         // because expression of type 'string' can't be used to index type
         // 'HttpOptions'.
@@ -475,6 +479,11 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
         requestInit,
         httpOptions.extraBody as Record<string, unknown>,
       );
+    }
+    if (httpOptions && httpOptions.dispatcher) {
+      // @ts-expect-error TS2339: Property 'dispatcher' does not exist on type 'RequestInit'.
+      // This is a Node.js-specific property for undici
+      requestInit.dispatcher = httpOptions.dispatcher;
     }
     requestInit.headers = await this.getHeadersInternal(httpOptions, url);
     return requestInit;

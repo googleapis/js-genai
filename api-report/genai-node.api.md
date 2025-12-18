@@ -1809,6 +1809,7 @@ export enum HttpElementLocation {
 export interface HttpOptions {
     apiVersion?: string;
     baseUrl?: string;
+    dispatcher?: unknown;
     extraBody?: Record<string, unknown>;
     headers?: Record<string, string>;
     timeout?: number;
