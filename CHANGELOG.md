@@ -1,6 +1,13 @@
 # Changelog
 
 
+## [1.35.0](https://github.com/googleapis/js-genai/compare/v1.34.0...v1.35.0) (2025-12-18)
+
+
+### Features
+
+* Add PersonGeneration to ImageConfig for Vertex Gempix ([b0753d7](https://github.com/googleapis/js-genai/commit/b0753d7a527ab1f5f7544576207036ef48ac75d1))
+
 ## [1.34.0](https://github.com/googleapis/js-genai/compare/v1.33.0...v1.34.0) (2025-12-16)
 
 
