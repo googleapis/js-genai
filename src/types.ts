@@ -969,6 +969,7 @@ export enum FileSource {
   SOURCE_UNSPECIFIED = 'SOURCE_UNSPECIFIED',
   UPLOADED = 'UPLOADED',
   GENERATED = 'GENERATED',
+  REGISTERED = 'REGISTERED',
 }
 
 /** The reason why the turn is complete. */
