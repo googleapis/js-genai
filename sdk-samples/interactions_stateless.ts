@@ -29,7 +29,11 @@ async function createInteractionsFromMLDev() {
   console.log('Model: ', response1);
 
   if (response1.outputs) {
-    conversationHistory.push(...response1.outputs);
+    for (const output of response1.outputs) {
+      if (output.type !== 'thought') {
+        conversationHistory.push(output);
+      }
+    }
   }
   conversationHistory.push({
     type: 'text',
