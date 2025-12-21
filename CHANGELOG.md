@@ -1,6 +1,18 @@
 # Changelog
 
 
+## [1.34.0](https://github.com/googleapis/js-genai/compare/v1.33.0...v1.34.0) (2025-12-16)
+
+
+### Features
+
+* Add minimal and medium thinking levels. ([19f8969](https://github.com/googleapis/js-genai/commit/19f8969f0cd9f423b10384d91a4ea8396a791d01))
+* Add support for Struct in ToolResult Content. ([750a4f7](https://github.com/googleapis/js-genai/commit/750a4f79fea3198317a540563f04369302408a11))
+* Add ultra high resolution to the media resolution in Parts. ([fa9a99e](https://github.com/googleapis/js-genai/commit/fa9a99e79d8c517011772a0edfe7c41c5d7518b7))
+* Add ULTRA_HIGH MediaResolution and new ThinkingLevel enums ([b8a7d8c](https://github.com/googleapis/js-genai/commit/b8a7d8c98d29c9a121784796016b5d2674968799))
+* Define and use DocumentMimeType for DocumentContent ([c2f118d](https://github.com/googleapis/js-genai/commit/c2f118df83b0a05a821f486c9126fe5967c1bf95))
+* support multi speaker for Vertex AI ([94d681b](https://github.com/googleapis/js-genai/commit/94d681bba5f3280949fb852b4365f5f2bf8a82ee))
+
 ## [1.33.0](https://github.com/googleapis/js-genai/compare/v1.32.0...v1.33.0) (2025-12-11)
 
 

@@ -178,9 +178,6 @@ export interface Annotation {
  * An audio content block.
  */
 export interface AudioContent {
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'audio';
 
   data?: string;
@@ -224,9 +221,6 @@ export interface CodeExecutionCallArguments {
  * Code execution content.
  */
 export interface CodeExecutionCallContent {
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'code_execution_call';
 
   /**
@@ -244,9 +238,6 @@ export interface CodeExecutionCallContent {
  * Code execution result content.
  */
 export interface CodeExecutionResultContent {
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'code_execution_result';
 
   /**
@@ -304,9 +295,6 @@ export interface ContentDelta {
 
 export namespace ContentDelta {
   export interface TextDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'text';
 
     /**
@@ -318,9 +306,6 @@ export namespace ContentDelta {
   }
 
   export interface ImageDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'image';
 
     data?: string;
@@ -333,15 +318,12 @@ export namespace ContentDelta {
     /**
      * The resolution of the media.
      */
-    resolution?: 'low' | 'medium' | 'high';
+    resolution?: 'low' | 'medium' | 'high' | 'ultra_high';
 
     uri?: string;
   }
 
   export interface AudioDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'audio';
 
     data?: string;
@@ -355,22 +337,19 @@ export namespace ContentDelta {
   }
 
   export interface DocumentDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'document';
 
     data?: string;
 
-    mime_type?: string;
+    /**
+     * The mime type of the document.
+     */
+    mime_type?: InteractionsAPI.DocumentMimeType;
 
     uri?: string;
   }
 
   export interface VideoDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'video';
 
     data?: string;
@@ -383,15 +362,12 @@ export namespace ContentDelta {
     /**
      * The resolution of the media.
      */
-    resolution?: 'low' | 'medium' | 'high';
+    resolution?: 'low' | 'medium' | 'high' | 'ultra_high';
 
     uri?: string;
   }
 
   export interface ThoughtSummaryDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'thought_summary';
 
     /**
@@ -401,9 +377,6 @@ export namespace ContentDelta {
   }
 
   export interface ThoughtSignatureDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'thought_signature';
 
     /**
@@ -413,9 +386,6 @@ export namespace ContentDelta {
   }
 
   export interface FunctionCallDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'function_call';
 
     /**
@@ -429,9 +399,6 @@ export namespace ContentDelta {
   }
 
   export interface FunctionResultDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'function_result';
 
     /**
@@ -456,9 +423,6 @@ export namespace ContentDelta {
   }
 
   export interface CodeExecutionCallDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'code_execution_call';
 
     /**
@@ -473,9 +437,6 @@ export namespace ContentDelta {
   }
 
   export interface CodeExecutionResultDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'code_execution_result';
 
     /**
@@ -491,9 +452,6 @@ export namespace ContentDelta {
   }
 
   export interface URLContextCallDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'url_context_call';
 
     /**
@@ -508,9 +466,6 @@ export namespace ContentDelta {
   }
 
   export interface URLContextResultDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'url_context_result';
 
     /**
@@ -526,9 +481,6 @@ export namespace ContentDelta {
   }
 
   export interface GoogleSearchCallDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'google_search_call';
 
     /**
@@ -543,9 +495,6 @@ export namespace ContentDelta {
   }
 
   export interface GoogleSearchResultDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'google_search_result';
 
     /**
@@ -561,9 +510,6 @@ export namespace ContentDelta {
   }
 
   export interface MCPServerToolCallDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'mcp_server_tool_call';
 
     /**
@@ -579,9 +525,6 @@ export namespace ContentDelta {
   }
 
   export interface MCPServerToolResultDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'mcp_server_tool_result';
 
     /**
@@ -606,9 +549,6 @@ export namespace ContentDelta {
   }
 
   export interface FileSearchResultDelta {
-    /**
-     * Used as the OpenAPI type discriminator for the content oneof.
-     */
     type: 'file_search_result';
 
     result?: Array<FileSearchResultDelta.Result>;
@@ -692,9 +632,6 @@ export interface DeepResearchAgentConfig {
    */
   thinking_summaries?: 'auto' | 'none';
 
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type?: 'deep-research';
 }
 
@@ -702,25 +639,27 @@ export interface DeepResearchAgentConfig {
  * A document content block.
  */
 export interface DocumentContent {
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'document';
 
   data?: string;
 
-  mime_type?: string;
+  /**
+   * The mime type of the document.
+   */
+  mime_type?: DocumentMimeType;
 
   uri?: string;
 }
 
 /**
+ * The mime type of the document.
+ */
+export type DocumentMimeType = (string & {}) | 'application/pdf';
+
+/**
  * Configuration for dynamic agents.
  */
 export interface DynamicAgentConfig {
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type?: 'dynamic';
 
   [k: string]: unknown;
@@ -762,9 +701,6 @@ export namespace ErrorEvent {
  * File Search result content.
  */
 export interface FileSearchResultContent {
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'file_search_result';
 
   /**
@@ -836,9 +772,6 @@ export interface FunctionCallContent {
    */
   name: string;
 
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'function_call';
 }
 
@@ -856,9 +789,6 @@ export interface FunctionResultContent {
    */
   result: FunctionResultContent.Items | unknown | string;
 
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'function_result';
 
   /**
@@ -942,9 +872,6 @@ export interface GoogleSearchCallArguments {
  * Google Search content.
  */
 export interface GoogleSearchCallContent {
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'google_search_call';
 
   /**
@@ -982,9 +909,6 @@ export interface GoogleSearchResult {
  * Google Search result content.
  */
 export interface GoogleSearchResultContent {
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'google_search_result';
 
   /**
@@ -1012,9 +936,6 @@ export interface GoogleSearchResultContent {
  * An image content block.
  */
 export interface ImageContent {
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'image';
 
   data?: string;
@@ -1027,7 +948,7 @@ export interface ImageContent {
   /**
    * The resolution of the media.
    */
-  resolution?: 'low' | 'medium' | 'high';
+  resolution?: 'low' | 'medium' | 'high' | 'ultra_high';
 
   uri?: string;
 }
@@ -1072,11 +993,6 @@ export interface Interaction {
    * The name of the `Model` used for generating the interaction.
    */
   model?: Model;
-
-  /**
-   * Output only. The object type of the interaction. Always set to `interaction`.
-   */
-  object?: 'interaction';
 
   /**
    * Output only. Responses from the model.
@@ -1184,9 +1100,6 @@ export interface MCPServerToolCallContent {
    */
   server_name: string;
 
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'mcp_server_tool_call';
 }
 
@@ -1204,9 +1117,6 @@ export interface MCPServerToolResultContent {
    */
   result: MCPServerToolResultContent.Items | unknown | string;
 
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'mcp_server_tool_result';
 
   /**
@@ -1239,6 +1149,7 @@ export type Model =
   | 'gemini-2.5-flash-image-preview'
   | 'gemini-2.5-pro-preview-tts'
   | 'gemini-3-pro-preview'
+  | 'gemini-3-flash-preview'
   | (string & {});
 
 /**
@@ -1265,9 +1176,6 @@ export interface SpeechConfig {
  * A text content block.
  */
 export interface TextContent {
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'text';
 
   /**
@@ -1281,15 +1189,12 @@ export interface TextContent {
   text?: string;
 }
 
-export type ThinkingLevel = 'low' | 'high';
+export type ThinkingLevel = 'minimal' | 'low' | 'medium' | 'high';
 
 /**
  * A thought content block.
  */
 export interface ThoughtContent {
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'thought';
 
   /**
@@ -1466,9 +1371,6 @@ export interface URLContextCallArguments {
  * URL context content.
  */
 export interface URLContextCallContent {
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'url_context_call';
 
   /**
@@ -1501,9 +1403,6 @@ export interface URLContextResult {
  * URL context result content.
  */
 export interface URLContextResultContent {
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'url_context_result';
 
   /**
@@ -1569,7 +1468,7 @@ export interface Usage {
   /**
    * Number of tokens of thoughts for thinking models.
    */
-  total_reasoning_tokens?: number;
+  total_thought_tokens?: number;
 
   /**
    * Total token count for the interaction request (prompt + responses + other
@@ -1649,9 +1548,6 @@ export namespace Usage {
  * A video content block.
  */
 export interface VideoContent {
-  /**
-   * Used as the OpenAPI type discriminator for the content oneof.
-   */
   type: 'video';
 
   data?: string;
@@ -1664,7 +1560,7 @@ export interface VideoContent {
   /**
    * The resolution of the media.
    */
-  resolution?: 'low' | 'medium' | 'high';
+  resolution?: 'low' | 'medium' | 'high' | 'ultra_high';
 
   uri?: string;
 }
@@ -1998,6 +1894,7 @@ export declare namespace Interactions {
     type ContentStop as ContentStop,
     type DeepResearchAgentConfig as DeepResearchAgentConfig,
     type DocumentContent as DocumentContent,
+    type DocumentMimeType as DocumentMimeType,
     type DynamicAgentConfig as DynamicAgentConfig,
     type ErrorEvent as ErrorEvent,
     type FileSearchResultContent as FileSearchResultContent,

@@ -102,18 +102,6 @@ export enum Type {
   NULL = 'NULL',
 }
 
-/** The mode of the predictor to be used in dynamic retrieval. */
-export enum Mode {
-  /**
-   * Always trigger retrieval.
-   */
-  MODE_UNSPECIFIED = 'MODE_UNSPECIFIED',
-  /**
-   * Run retrieval only when system decides it is necessary.
-   */
-  MODE_DYNAMIC = 'MODE_DYNAMIC',
-}
-
 /** The API spec that the external API implements. This enum is not supported in Gemini API. */
 export enum ApiSpec {
   /**
@@ -214,6 +202,58 @@ export enum PhishBlockThreshold {
    * Blocks Extremely high confidence URL that is risky.
    */
   BLOCK_ONLY_EXTREMELY_HIGH = 'BLOCK_ONLY_EXTREMELY_HIGH',
+}
+
+/** Specifies the function Behavior. Currently only supported by the BidiGenerateContent method. This enum is not supported in Vertex AI. */
+export enum Behavior {
+  /**
+   * This value is unused.
+   */
+  UNSPECIFIED = 'UNSPECIFIED',
+  /**
+   * If set, the system will wait to receive the function response before continuing the conversation.
+   */
+  BLOCKING = 'BLOCKING',
+  /**
+   * If set, the system will not wait to receive the function response. Instead, it will attempt to handle function responses as they become available while maintaining the conversation between the user and the model.
+   */
+  NON_BLOCKING = 'NON_BLOCKING',
+}
+
+/** The mode of the predictor to be used in dynamic retrieval. */
+export enum DynamicRetrievalConfigMode {
+  /**
+   * Always trigger retrieval.
+   */
+  MODE_UNSPECIFIED = 'MODE_UNSPECIFIED',
+  /**
+   * Run retrieval only when system decides it is necessary.
+   */
+  MODE_DYNAMIC = 'MODE_DYNAMIC',
+}
+
+/** Function calling mode. */
+export enum FunctionCallingConfigMode {
+  /**
+   * Unspecified function calling mode. This value should not be used.
+   */
+  MODE_UNSPECIFIED = 'MODE_UNSPECIFIED',
+  /**
+   * Default model behavior, model decides to predict either function calls or natural language response.
+   */
+  AUTO = 'AUTO',
+  /**
+   * Model is constrained to always predicting function calls only. If "allowed_function_names" are set, the predicted function calls will be limited to any one of "allowed_function_names", else the predicted function calls will be any one of the provided "function_declarations".
+   */
+  ANY = 'ANY',
+  /**
+   * Model will not predict any function calls. Model behavior is same as when not passing any function declarations.
+   */
+  NONE = 'NONE',
+  /**
+   * Model is constrained to predict either function calls or natural language response. If "allowed_function_names" are set, the predicted function calls will be limited to any one of "allowed_function_names", else the predicted function calls will be any one of the provided "function_declarations".
+   */
+  VALIDATED = 'VALIDATED',
 }
 
 /** The number of thoughts tokens that the model should generate. */
@@ -722,34 +762,6 @@ export enum FeatureSelectionPreference {
   PRIORITIZE_COST = 'PRIORITIZE_COST',
 }
 
-/** Defines the function behavior. Defaults to `BLOCKING`. */
-export enum Behavior {
-  /**
-   * This value is unused.
-   */
-  UNSPECIFIED = 'UNSPECIFIED',
-  /**
-   * If set, the system will wait to receive the function response before continuing the conversation.
-   */
-  BLOCKING = 'BLOCKING',
-  /**
-   * If set, the system will not wait to receive the function response. Instead, it will attempt to handle function responses as they become available while maintaining the conversation between the user and the model.
-   */
-  NON_BLOCKING = 'NON_BLOCKING',
-}
-
-/** Config for the dynamic retrieval config mode. */
-export enum DynamicRetrievalConfigMode {
-  /**
-   * Always trigger retrieval.
-   */
-  MODE_UNSPECIFIED = 'MODE_UNSPECIFIED',
-  /**
-   * Run retrieval only when system decides it is necessary.
-   */
-  MODE_DYNAMIC = 'MODE_DYNAMIC',
-}
-
 /** The environment being operated. */
 export enum Environment {
   /**
@@ -760,30 +772,6 @@ export enum Environment {
    * Operates in a web browser.
    */
   ENVIRONMENT_BROWSER = 'ENVIRONMENT_BROWSER',
-}
-
-/** Config for the function calling config mode. */
-export enum FunctionCallingConfigMode {
-  /**
-   * The function calling config mode is unspecified. Should not be used.
-   */
-  MODE_UNSPECIFIED = 'MODE_UNSPECIFIED',
-  /**
-   * Default model behavior, model decides to predict either function calls or natural language response.
-   */
-  AUTO = 'AUTO',
-  /**
-   * Model is constrained to always predicting function calls only. If "allowed_function_names" are set, the predicted function calls will be limited to any one of "allowed_function_names", else the predicted function calls will be any one of the provided "function_declarations".
-   */
-  ANY = 'ANY',
-  /**
-   * Model will not predict any function calls. Model behavior is same as when not passing any function declarations.
-   */
-  NONE = 'NONE',
-  /**
-   * Model decides to predict either a function call or a natural language response, but will validate function calls with constrained decoding. If "allowed_function_names" are set, the predicted function call will be limited to any one of "allowed_function_names", else the predicted function call will be any one of the provided "function_declarations".
-   */
-  VALIDATED = 'VALIDATED',
 }
 
 /** Enum that controls the safety filter level for objectionable content. */
@@ -1674,41 +1662,6 @@ export declare interface ModelSelectionConfig {
   featureSelectionPreference?: FeatureSelectionPreference;
 }
 
-/** Defines a function that the model can generate JSON inputs for.
-
-The inputs are based on `OpenAPI 3.0 specifications
-<https://spec.openapis.org/oas/v3.0.3>`_. */
-export declare interface FunctionDeclaration {
-  /** Defines the function behavior. */
-  behavior?: Behavior;
-  /** Optional. Description and purpose of the function. Model uses it to decide how and whether to call the function. */
-  description?: string;
-  /** Required. The name of the function to call. Must start with a letter or an underscore. Must be a-z, A-Z, 0-9, or contain underscores, dots and dashes, with a maximum length of 64. */
-  name?: string;
-  /** Optional. Describes the parameters to this function in JSON Schema Object format. Reflects the Open API 3.03 Parameter Object. string Key: the name of the parameter. Parameter names are case sensitive. Schema Value: the Schema defining the type used for the parameter. For function with no parameters, this can be left unset. Parameter names must start with a letter or an underscore and must only contain chars a-z, A-Z, 0-9, or underscores with a maximum length of 64. Example with 1 required and 1 optional parameter: type: OBJECT properties: param1: type: STRING param2: type: INTEGER required: - param1 */
-  parameters?: Schema;
-  /** Optional. Describes the parameters to the function in JSON Schema format. The schema must describe an object where the properties are the parameters to the function. For example: ``` { "type": "object", "properties": { "name": { "type": "string" }, "age": { "type": "integer" } }, "additionalProperties": false, "required": ["name", "age"], "propertyOrdering": ["name", "age"] } ``` This field is mutually exclusive with `parameters`. */
-  parametersJsonSchema?: unknown;
-  /** Optional. Describes the output from this function in JSON Schema format. Reflects the Open API 3.03 Response Object. The Schema defines the type used for the response value of the function. */
-  response?: Schema;
-  /** Optional. Describes the output from this function in JSON Schema format. The value specified by the schema is the response value of the function. This field is mutually exclusive with `response`. */
-  responseJsonSchema?: unknown;
-}
-
-/** Describes the options to customize dynamic retrieval. */
-export declare interface DynamicRetrievalConfig {
-  /** The mode of the predictor to be used in dynamic retrieval. */
-  mode?: DynamicRetrievalConfigMode;
-  /** Optional. The threshold to be used in dynamic retrieval. If not set, a system default value is used. */
-  dynamicThreshold?: number;
-}
-
-/** Tool to retrieve public web data for grounding, powered by Google. */
-export declare interface GoogleSearchRetrieval {
-  /** Specifies the dynamic retrieval configuration for the given source. */
-  dynamicRetrievalConfig?: DynamicRetrievalConfig;
-}
-
 /** Tool to support computer use. */
 export declare interface ComputerUse {
   /** Required. The environment being operated. */
@@ -1948,6 +1901,24 @@ export declare interface EnterpriseWebSearch {
   blockingConfidence?: PhishBlockThreshold;
 }
 
+/** Structured representation of a function declaration as defined by the [OpenAPI 3.0 specification](https://spec.openapis.org/oas/v3.0.3). Included in this declaration are the function name, description, parameters and response type. This FunctionDeclaration is a representation of a block of code that can be used as a `Tool` by the model and executed by the client. */
+export declare interface FunctionDeclaration {
+  /** Optional. Description and purpose of the function. Model uses it to decide how and whether to call the function. */
+  description?: string;
+  /** Required. The name of the function to call. Must start with a letter or an underscore. Must be a-z, A-Z, 0-9, or contain underscores, dots and dashes, with a maximum length of 64. */
+  name?: string;
+  /** Optional. Describes the parameters to this function in JSON Schema Object format. Reflects the Open API 3.03 Parameter Object. string Key: the name of the parameter. Parameter names are case sensitive. Schema Value: the Schema defining the type used for the parameter. For function with no parameters, this can be left unset. Parameter names must start with a letter or an underscore and must only contain chars a-z, A-Z, 0-9, or underscores with a maximum length of 64. Example with 1 required and 1 optional parameter: type: OBJECT properties: param1: type: STRING param2: type: INTEGER required: - param1 */
+  parameters?: Schema;
+  /** Optional. Describes the parameters to the function in JSON Schema format. The schema must describe an object where the properties are the parameters to the function. For example: ``` { "type": "object", "properties": { "name": { "type": "string" }, "age": { "type": "integer" } }, "additionalProperties": false, "required": ["name", "age"], "propertyOrdering": ["name", "age"] } ``` This field is mutually exclusive with `parameters`. */
+  parametersJsonSchema?: unknown;
+  /** Optional. Describes the output from this function in JSON Schema format. Reflects the Open API 3.03 Response Object. The Schema defines the type used for the response value of the function. */
+  response?: Schema;
+  /** Optional. Describes the output from this function in JSON Schema format. The value specified by the schema is the response value of the function. This field is mutually exclusive with `response`. */
+  responseJsonSchema?: unknown;
+  /** Optional. Specifies the function Behavior. Currently only supported by the BidiGenerateContent method. This field is not supported in Vertex AI. */
+  behavior?: Behavior;
+}
+
 /** Tool to retrieve public maps data for grounding, powered by Google. */
 export declare interface GoogleMaps {
   /** The authentication config to access the API. Only API key is supported. This field is not supported in Gemini API. */
@@ -1974,17 +1945,27 @@ export declare interface GoogleSearch {
   timeRangeFilter?: Interval;
 }
 
+/** Describes the options to customize dynamic retrieval. */
+export declare interface DynamicRetrievalConfig {
+  /** Optional. The threshold to be used in dynamic retrieval. If not set, a system default value is used. */
+  dynamicThreshold?: number;
+  /** The mode of the predictor to be used in dynamic retrieval. */
+  mode?: DynamicRetrievalConfigMode;
+}
+
+/** Tool to retrieve public web data for grounding, powered by Google. */
+export declare interface GoogleSearchRetrieval {
+  /** Specifies the dynamic retrieval configuration for the given source. */
+  dynamicRetrievalConfig?: DynamicRetrievalConfig;
+}
+
 /** Tool to support URL context. */
 export declare interface UrlContext {}
 
 /** Tool details of a tool that the model may use to generate a response. */
 export declare interface Tool {
-  /** List of function declarations that the tool supports. */
-  functionDeclarations?: FunctionDeclaration[];
   /** Optional. Retrieval tool type. System will always execute the provided retrieval tool(s) to get external knowledge to answer the prompt. Retrieval results are presented to the model for generation. This field is not supported in Gemini API. */
   retrieval?: Retrieval;
-  /** Optional. Specialized retrieval tool that is powered by Google Search. */
-  googleSearchRetrieval?: GoogleSearchRetrieval;
   /** Optional. Tool to support the model interacting directly with the
       computer. If enabled, it automatically populates computer-use specific
       Function Declarations. */
@@ -1995,22 +1976,16 @@ export declare interface Tool {
   codeExecution?: ToolCodeExecution;
   /** Optional. Tool to support searching public web data, powered by Vertex AI Search and Sec4 compliance. This field is not supported in Gemini API. */
   enterpriseWebSearch?: EnterpriseWebSearch;
+  /** Optional. Function tool type. One or more function declarations to be passed to the model along with the current user query. Model may decide to call a subset of these functions by populating FunctionCall in the response. User should provide a FunctionResponse for each function call in the next turn. Based on the function responses, Model will generate the final response back to the user. Maximum 512 function declarations can be provided. */
+  functionDeclarations?: FunctionDeclaration[];
   /** Optional. GoogleMaps tool type. Tool to support Google Maps in Model. */
   googleMaps?: GoogleMaps;
   /** Optional. GoogleSearch tool type. Tool to support Google Search in Model. Powered by Google. */
   googleSearch?: GoogleSearch;
+  /** Optional. Specialized retrieval tool that is powered by Google Search. */
+  googleSearchRetrieval?: GoogleSearchRetrieval;
   /** Optional. Tool to support URL context retrieval. */
   urlContext?: UrlContext;
-}
-
-/** Function calling config. */
-export declare interface FunctionCallingConfig {
-  /** Optional. Function calling mode. */
-  mode?: FunctionCallingConfigMode;
-  /** Optional. Function names to call. Only set when the Mode is ANY. Function names should match [FunctionDeclaration.name]. With mode set to ANY, model will predict a function call from the set of function names provided. */
-  allowedFunctionNames?: string[];
-  /** Optional. When set to true, arguments of a single function call will be streamed out in multiple parts/contents/responses. Partial parameter results will be returned in the [FunctionCall.partial_args] field. This field is not supported in Gemini API. */
-  streamFunctionCallArguments?: boolean;
 }
 
 /** An object that represents a latitude/longitude pair.
@@ -2035,14 +2010,24 @@ export declare interface RetrievalConfig {
   languageCode?: string;
 }
 
+/** Function calling config. */
+export declare interface FunctionCallingConfig {
+  /** Optional. Function names to call. Only set when the Mode is ANY. Function names should match [FunctionDeclaration.name]. With mode set to ANY, model will predict a function call from the set of function names provided. */
+  allowedFunctionNames?: string[];
+  /** Optional. Function calling mode. */
+  mode?: FunctionCallingConfigMode;
+  /** Optional. When set to true, arguments of a single function call will be streamed out in multiple parts/contents/responses. Partial parameter results will be returned in the [FunctionCall.partial_args] field. This field is not supported in Gemini API. */
+  streamFunctionCallArguments?: boolean;
+}
+
 /** Tool config.
 
 This config is shared for all tools provided in the request. */
 export declare interface ToolConfig {
-  /** Optional. Function calling config. */
-  functionCallingConfig?: FunctionCallingConfig;
   /** Optional. Retrieval config. */
   retrievalConfig?: RetrievalConfig;
+  /** Optional. Function calling config. */
+  functionCallingConfig?: FunctionCallingConfig;
 }
 
 /** ReplicatedVoiceConfig is used to configure replicated voice. */
@@ -2135,6 +2120,9 @@ export declare interface ImageConfig {
       values are `1K`, `2K`, `4K`. If not specified, the model will use default
       value `1K`. */
   imageSize?: string;
+  /** Controls the generation of people. Supported values are:
+      ALLOW_ALL, ALLOW_ADULT, ALLOW_NONE. */
+  personGeneration?: string;
   /** MIME type of the generated image. This field is not
       supported in Gemini API. */
   outputMimeType?: string;

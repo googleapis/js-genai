@@ -21,6 +21,7 @@ export {
   type ContentStop,
   type DeepResearchAgentConfig,
   type DocumentContent,
+  type DocumentMimeType,
   type DynamicAgentConfig,
   type ErrorEvent,
   type FileSearchResultContent,
