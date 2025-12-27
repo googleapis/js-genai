@@ -12,6 +12,7 @@ import {uploadToFileSearchStoreConfigToMldev} from './converters/_filesearchstor
 import {ApiError} from './errors.js';
 import {GeminiNextGenAPIClientAdapter} from './interactions/client-adapter.js';
 import * as types from './types.js';
+import { Agent, type RequestInit as UndiciRequestInit } from 'undici';
 
 const CONTENT_TYPE_HEADER = 'Content-Type';
 const SERVER_TIMEOUT_HEADER = 'X-Server-Timeout';
@@ -461,6 +462,12 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
           // call unref to prevent nodejs process from hanging, see
           // https://nodejs.org/api/timers.html#timeoutunref
           timeoutHandle.unref();
+        }
+        if (typeof process !== 'undefined' && process.versions?.node) {
+          (requestInit as UndiciRequestInit).dispatcher = new Agent({
+            headersTimeout: httpOptions.timeout,
+            bodyTimeout: httpOptions.timeout,
+          });
         }
       }
       if (abortSignal) {
