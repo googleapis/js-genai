@@ -109,8 +109,6 @@
     "typedoc": "^0.27.0",
     "typescript": "~5.4.0",
     "typescript-eslint": "8.24.1",
-    "undici": "^7.16.0",
-    "undici-types": "^7.16.0",
     "zod": "^3.25.0",
     "zod-to-json-schema": "^3.25.0"
   },
@@ -119,10 +117,18 @@
     "ws": "^8.18.0"
   },
   "peerDependencies": {
-    "@modelcontextprotocol/sdk": "^1.24.0"
+    "@modelcontextprotocol/sdk": "^1.24.0",
+    "undici": "^7.16.0",
+    "undici-types": "^7.16.0"
   },
   "peerDependenciesMeta": {
     "@modelcontextprotocol/sdk": {
+      "optional": true
+    },
+    "undici": {
+      "optional": true
+    },
+    "undici-types": {
       "optional": true
     }
   },

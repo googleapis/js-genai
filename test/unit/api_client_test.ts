@@ -14,6 +14,7 @@ import {CrossDownloader} from '../../src/cross/_cross_downloader.js';
 import {CrossUploader} from '../../src/cross/_cross_uploader.js';
 import * as types from '../../src/types.js';
 import {FakeAuth} from '../_fake_auth.js';
+import {Agent, type RequestInit as UndiciRequestInit } from 'undici';
 
 const fetchOkOptions = {
   status: 200,
@@ -808,6 +809,29 @@ describe('ApiClient', () => {
       expect(fetchArgs[0][1].signal instanceof AbortSignal).toBeTrue();
       // @ts-expect-error TS2532: Object is possibly 'undefined'.
       expect(fetchArgs[0][1].signal.aborted).toBeTrue();
+    });
+    it('should set dispatcher with timeouts in Node.js', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth('test-api-key'),
+        apiKey: 'test-api-key',
+        httpOptions: {timeout: 1000},
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(
+            JSON.stringify(mockGenerateContentResponse),
+            fetchOkOptions,
+          ),
+        ),
+      );
+  
+      await client.request({path: 'test-path', httpMethod: 'POST'});
+      const fetchArgs = fetchSpy.calls.first().args;
+      const requestInit = fetchArgs[1] as UndiciRequestInit;
+      expect(requestInit.dispatcher).toBeDefined();
+      expect(requestInit.dispatcher).toBeInstanceOf(Agent);
     });
     it('should apply requestHttpOptions when provided', async () => {
       const client = new ApiClient({
