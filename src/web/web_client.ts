@@ -151,6 +151,7 @@ export class GoogleGenAI {
       userAgentExtra: LANGUAGE_LABEL_PREFIX + 'web',
       uploader: new BrowserUploader(),
       downloader: new BrowserDownloader(),
+      fetchImplementation: options.fetchImplementation,
     });
     this.models = new Models(this.apiClient);
     this.live = new Live(this.apiClient, auth, new BrowserWebSocketFactory());
