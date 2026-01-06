@@ -261,6 +261,28 @@ export interface CodeExecutionResultContent {
   signature?: string;
 }
 
+/**
+ * The content of the response.
+ */
+export type Content =
+  | TextContent
+  | ImageContent
+  | AudioContent
+  | DocumentContent
+  | VideoContent
+  | ThoughtContent
+  | FunctionCallContent
+  | FunctionResultContent
+  | CodeExecutionCallContent
+  | CodeExecutionResultContent
+  | URLContextCallContent
+  | URLContextResultContent
+  | GoogleSearchCallContent
+  | GoogleSearchResultContent
+  | MCPServerToolCallContent
+  | MCPServerToolResultContent
+  | FileSearchResultContent;
+
 export interface ContentDelta {
   delta?:
     | ContentDelta.TextDelta
@@ -581,24 +603,7 @@ export interface ContentStart {
   /**
    * The content of the response.
    */
-  content?:
-    | TextContent
-    | ImageContent
-    | AudioContent
-    | DocumentContent
-    | VideoContent
-    | ThoughtContent
-    | FunctionCallContent
-    | FunctionResultContent
-    | CodeExecutionCallContent
-    | CodeExecutionResultContent
-    | URLContextCallContent
-    | URLContextResultContent
-    | GoogleSearchCallContent
-    | GoogleSearchResultContent
-    | MCPServerToolCallContent
-    | MCPServerToolResultContent
-    | FileSearchResultContent;
+  content?: Content;
 
   /**
    * The event_id token to be used to resume the interaction stream, from
@@ -997,25 +1002,7 @@ export interface Interaction {
   /**
    * Output only. Responses from the model.
    */
-  outputs?: Array<
-    | TextContent
-    | ImageContent
-    | AudioContent
-    | DocumentContent
-    | VideoContent
-    | ThoughtContent
-    | FunctionCallContent
-    | FunctionResultContent
-    | CodeExecutionCallContent
-    | CodeExecutionResultContent
-    | URLContextCallContent
-    | URLContextResultContent
-    | GoogleSearchCallContent
-    | GoogleSearchResultContent
-    | MCPServerToolCallContent
-    | MCPServerToolResultContent
-    | FileSearchResultContent
-  >;
+  outputs?: Array<Content>;
 
   /**
    * The ID of the previous interaction, if any.
@@ -1328,27 +1315,7 @@ export interface Turn {
   /**
    * The content of the turn.
    */
-  content?:
-    | string
-    | Array<
-        | TextContent
-        | ImageContent
-        | AudioContent
-        | DocumentContent
-        | VideoContent
-        | ThoughtContent
-        | FunctionCallContent
-        | FunctionResultContent
-        | CodeExecutionCallContent
-        | CodeExecutionResultContent
-        | URLContextCallContent
-        | URLContextResultContent
-        | GoogleSearchCallContent
-        | GoogleSearchResultContent
-        | MCPServerToolCallContent
-        | MCPServerToolResultContent
-        | FileSearchResultContent
-      >;
+  content?: string | Array<Content>;
 
   /**
    * The originator of this turn. Must be user for input or model for
@@ -1594,25 +1561,7 @@ export interface BaseCreateModelInteractionParams {
    */
   input:
     | string
-    | Array<
-        | TextContent
-        | ImageContent
-        | AudioContent
-        | DocumentContent
-        | VideoContent
-        | ThoughtContent
-        | FunctionCallContent
-        | FunctionResultContent
-        | CodeExecutionCallContent
-        | CodeExecutionResultContent
-        | URLContextCallContent
-        | URLContextResultContent
-        | GoogleSearchCallContent
-        | GoogleSearchResultContent
-        | MCPServerToolCallContent
-        | MCPServerToolResultContent
-        | FileSearchResultContent
-      >
+    | Array<Content>
     | Array<Turn>
     | TextContent
     | ImageContent
@@ -1705,25 +1654,7 @@ export interface BaseCreateAgentInteractionParams {
    */
   input:
     | string
-    | Array<
-        | TextContent
-        | ImageContent
-        | AudioContent
-        | DocumentContent
-        | VideoContent
-        | ThoughtContent
-        | FunctionCallContent
-        | FunctionResultContent
-        | CodeExecutionCallContent
-        | CodeExecutionResultContent
-        | URLContextCallContent
-        | URLContextResultContent
-        | GoogleSearchCallContent
-        | GoogleSearchResultContent
-        | MCPServerToolCallContent
-        | MCPServerToolResultContent
-        | FileSearchResultContent
-      >
+    | Array<Content>
     | Array<Turn>
     | TextContent
     | ImageContent
@@ -1889,6 +1820,7 @@ export declare namespace Interactions {
     type CodeExecutionCallArguments as CodeExecutionCallArguments,
     type CodeExecutionCallContent as CodeExecutionCallContent,
     type CodeExecutionResultContent as CodeExecutionResultContent,
+    type Content as Content,
     type ContentDelta as ContentDelta,
     type ContentStart as ContentStart,
     type ContentStop as ContentStop,
