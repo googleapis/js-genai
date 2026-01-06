@@ -79,6 +79,19 @@ export function getFileParametersToMldev(
   return toObject;
 }
 
+export function internalRegisterFilesParametersToMldev(
+  fromObject: types.InternalRegisterFilesParameters,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromUris = common.getValueByPath(fromObject, ['uris']);
+  if (fromUris != null) {
+    common.setValueByPath(toObject, ['uris'], fromUris);
+  }
+
+  return toObject;
+}
+
 export function listFilesConfigToMldev(
   fromObject: types.ListFilesConfig,
   parentObject: Record<string, unknown>,
@@ -128,6 +141,32 @@ export function listFilesResponseFromMldev(
   ]);
   if (fromNextPageToken != null) {
     common.setValueByPath(toObject, ['nextPageToken'], fromNextPageToken);
+  }
+
+  const fromFiles = common.getValueByPath(fromObject, ['files']);
+  if (fromFiles != null) {
+    let transformedList = fromFiles;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return item;
+      });
+    }
+    common.setValueByPath(toObject, ['files'], transformedList);
+  }
+
+  return toObject;
+}
+
+export function registerFilesResponseFromMldev(
+  fromObject: types.RegisterFilesResponse,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromSdkHttpResponse = common.getValueByPath(fromObject, [
+    'sdkHttpResponse',
+  ]);
+  if (fromSdkHttpResponse != null) {
+    common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
   }
 
   const fromFiles = common.getValueByPath(fromObject, ['files']);
