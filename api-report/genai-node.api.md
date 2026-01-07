@@ -1113,6 +1113,8 @@ export enum FileSource {
     // (undocumented)
     GENERATED = "GENERATED",
     // (undocumented)
+    REGISTERED = "REGISTERED",
+    // (undocumented)
     SOURCE_UNSPECIFIED = "SOURCE_UNSPECIFIED",
     // (undocumented)
     UPLOADED = "UPLOADED"
