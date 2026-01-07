@@ -16,6 +16,7 @@ export {
   type CodeExecutionCallArguments,
   type CodeExecutionCallContent,
   type CodeExecutionResultContent,
+  type Content,
   type ContentDelta,
   type ContentStart,
   type ContentStop,

@@ -13,10 +13,11 @@ async function createInteractionsFromMLDev() {
     apiKey: GEMINI_API_KEY,
   });
 
-  const fcConversationHistory: Interactions.InteractionCreateParams['input'] = [
+  const fcConversationHistory: Interactions.Turn[] = [
     {
-      type: 'text',
-      text: 'Schedule a meeting for 2025-11-01 at 10 am with Peter and Amir about the Next Gen API.',
+      content:
+        'Schedule a meeting for 2025-11-01 at 10 am with Peter and Amir about the Next Gen API.',
+      role: 'user',
     },
   ];
 
@@ -58,9 +59,10 @@ async function createInteractionsFromMLDev() {
   });
 
   // add model response back to history
-  if (response.outputs) {
-    fcConversationHistory.push(...response.outputs);
-  }
+  fcConversationHistory.push({
+    content: response.outputs,
+    role: 'model',
+  });
 
   for (const output of response.outputs ?? []) {
     if (output.type == 'function_call') {
@@ -74,10 +76,15 @@ async function createInteractionsFromMLDev() {
 
       // 3. Send the result back to the model
       fcConversationHistory.push({
-        type: 'function_result',
-        name: output.name!,
-        call_id: output.id!,
-        result: 'Meeting scheduled successfully.',
+        content: [
+          {
+            type: 'function_result',
+            name: output.name!,
+            call_id: output.id!,
+            result: 'Meeting scheduled successfully.',
+          },
+        ],
+        role: 'user',
       });
 
       const response2 = await ai.interactions.create({

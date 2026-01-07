@@ -17,7 +17,7 @@ async function createInteractionsFromMLDev() {
     input: 'Say cheerfully: Have a wonderful day!',
     response_modalities: ['audio'],
     generation_config: {
-      speech_config: [{voice: 'achernar', language: 'en'}],
+      speech_config: [{voice: 'achernar', language: 'en-US'}],
     },
   });
 
