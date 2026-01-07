@@ -64,6 +64,7 @@ async function createInteractionsFromMLDev() {
       // 3. Send the result back to the model
       const response2 = await ai.interactions.create({
         model: 'gemini-2.5-flash',
+        previous_interaction_id: response.id,
         input: [
           {
             type: 'function_result',

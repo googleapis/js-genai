@@ -13,7 +13,7 @@ async function createInteractionsFromMLDev() {
     apiKey: GEMINI_API_KEY,
   });
   const response = await ai.interactions.create({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-2.5-computer-use-preview-10-2025',
     input:
       'Search for highly rated smart fridges with touchscreen, 2 doors, around 25 cu ft, priced below 4000 dollars on Google Shopping. Create a bulleted list of the 3 cheapest options in the format of name, description, price in an easy-to-read layout.',
     tools: [{type: 'computer_use', environment: 'browser'}],
