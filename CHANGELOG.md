@@ -1,14 +1,6 @@
 # Changelog
 
 
-## [1.35.0](https://github.com/googleapis/js-genai/compare/v1.34.0...v1.35.0) (2026-01-07)
-
-
-### Features
-
-* [Python] add RegisterFiles so gcs files can be used with genai. ([1bf555c](https://github.com/googleapis/js-genai/commit/1bf555c38e5001f147e29db16c1141653ec252d4))
-* Add PersonGeneration to ImageConfig for Vertex Gempix ([b0753d7](https://github.com/googleapis/js-genai/commit/b0753d7a527ab1f5f7544576207036ef48ac75d1))
-
 ## [1.34.0](https://github.com/googleapis/js-genai/compare/v1.33.0...v1.34.0) (2025-12-16)
 
 
