@@ -5,7 +5,11 @@
     "moduleResolution": "node",
     "outDir": "./build",
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "maxNodeModuleJsDepth": 0,
+    "rootDir": "."
   },
-  "include": ["*.ts"]
+  "include": ["*.ts"],
+  "exclude": ["node_modules"]
 }

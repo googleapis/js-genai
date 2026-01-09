@@ -20,13 +20,14 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - uses: pnpm/action-setup@v4
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22.x'
-          cache: 'npm'
+          cache: 'pnpm'
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install
       - name: Generate pages
         id: generate_pages
         run: |
@@ -34,10 +35,10 @@ jobs:
           echo "Generating pages from $GITHUB_EVENT"
           if [[ "$GITHUB_EVENT" == 'release' ]]; then
             echo "is_release_event=true" >> $GITHUB_OUTPUT
-            npm run pages-release
+            pnpm run pages-release
           else
             echo "is_release_event=false" >> $GITHUB_OUTPUT
-            npm run pages-main
+            pnpm run pages-main
           fi
       - name: Check for documentation changes
         id: check_changes

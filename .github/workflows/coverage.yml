@@ -1,4 +1,4 @@
-name: Run code coverage
+But name: Run code coverage
 
 on:
   push:
@@ -13,10 +13,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - uses: pnpm/action-setup@v4
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: 22.x
-        cache: 'npm'
-    - run: USE_LOCAL_BUILD=true npm ci
-    - run: npm run coverage-report
+        cache: 'pnpm'
+    - run: USE_LOCAL_BUILD=true pnpm install
+    - run: pnpm run coverage-report
