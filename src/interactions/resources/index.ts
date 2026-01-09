@@ -25,6 +25,7 @@ export {
   type DocumentMimeType,
   type DynamicAgentConfig,
   type ErrorEvent,
+  type FileSearchCallContent,
   type FileSearchResultContent,
   type Function,
   type FunctionCallContent,

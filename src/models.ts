@@ -401,7 +401,7 @@ export class Models extends BaseModule {
    * @example
    * ```ts
    * const response = await client.models.generateImages({
-   *  model: 'imagen-3.0-generate-002',
+   *  model: 'imagen-4.0-generate-001',
    *  prompt: 'Robot holding a red skateboard',
    *  config: {
    *    numberOfImages: 1,
@@ -532,7 +532,7 @@ export class Models extends BaseModule {
    * @example
    * ```ts
    * const response = await client.models.upscaleImage({
-   *  model: 'imagen-3.0-generate-002',
+   *  model: 'imagen-4.0-upscale-preview',
    *  image: image,
    *  upscaleFactor: 'x2',
    *  config: {
@@ -1121,7 +1121,7 @@ export class Models extends BaseModule {
    * console.log(response1?.generatedImages?.[0]?.image?.imageBytes);
    *
    * const response2 = await ai.models.recontextImage({
-   *  model: 'virtual-try-on-preview-08-04',
+   *  model: 'virtual-try-on-001',
    *  source: {
    *    personImage: personImage,
    *    productImages: [productImage],

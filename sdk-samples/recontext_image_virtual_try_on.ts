@@ -24,7 +24,7 @@ async function recontextImageProductRecontextFromVertexAI() {
   };
 
   const recontextImageResponse = await ai.models.recontextImage({
-    model: 'virtual-try-on-exp-05-31',
+    model: 'virtual-try-on-001',
     source: {
       personImage: {
         gcsUri: 'gs://genai-sdk-tests/inputs/images/man.jpg',

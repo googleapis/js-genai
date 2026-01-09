@@ -10,3 +10,4 @@ dist/**
 dist-private/**
 # Ignore interactions files:
 src/interactions/**
+src/interactions-private/**

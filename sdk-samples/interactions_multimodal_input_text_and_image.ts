@@ -4,15 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import {GoogleGenAI} from '@google/genai';
-import fs from 'fs';
-import path from 'path';
-import {fileURLToPath} from 'url';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 async function createInteractionsFromMLDev() {
   const ai = new GoogleGenAI({
@@ -20,16 +14,18 @@ async function createInteractionsFromMLDev() {
   });
 
   // Load and encode the image
-  const imagePath = path.join(__dirname, '../car.png');
-  const imageBuffer = fs.readFileSync(imagePath);
-  const base64Image = imageBuffer.toString('base64');
+  const imageUrl =
+    'https://storage.googleapis.com/generativeai-downloads/data/jetpack.png';
+  const imageResponse = await fetch(imageUrl);
+  const arrayBuffer = await imageResponse.arrayBuffer();
+  const base64Image = Buffer.from(arrayBuffer).toString('base64');
 
   const response = await ai.interactions.create({
     model: 'gemini-2.5-flash',
     input: [
       {
         type: 'text',
-        text: 'What is this landmark?',
+        text: 'What is in this picture?',
       },
       {
         type: 'image',
