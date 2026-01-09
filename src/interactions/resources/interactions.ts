@@ -307,7 +307,8 @@ export interface ContentDelta {
     | ContentDelta.FileSearchResultDelta;
 
   /**
-   * The event_id token to be used to resume the interaction stream, from this event.
+   * The event_id token to be used to resume the interaction stream, from
+   * this event.
    */
   event_id?: string;
 
@@ -616,7 +617,8 @@ export interface ContentStart {
   content?: Content;
 
   /**
-   * The event_id token to be used to resume the interaction stream, from this event.
+   * The event_id token to be used to resume the interaction stream, from
+   * this event.
    */
   event_id?: string;
 
@@ -627,7 +629,8 @@ export interface ContentStart {
 
 export interface ContentStop {
   /**
-   * The event_id token to be used to resume the interaction stream, from this event.
+   * The event_id token to be used to resume the interaction stream, from
+   * this event.
    */
   event_id?: string;
 
@@ -685,7 +688,8 @@ export interface ErrorEvent {
   error?: ErrorEvent.Error;
 
   /**
-   * The event_id token to be used to resume the interaction stream, from this event.
+   * The event_id token to be used to resume the interaction stream, from
+   * this event.
    */
   event_id?: string;
 
@@ -1047,7 +1051,8 @@ export interface Interaction {
 
 export interface InteractionEvent {
   /**
-   * The event_id token to be used to resume the interaction stream, from this event.
+   * The event_id token to be used to resume the interaction stream, from
+   * this event.
    */
   event_id?: string;
 
@@ -1069,7 +1074,8 @@ export type InteractionSSEEvent =
 
 export interface InteractionStatusUpdate {
   /**
-   * The event_id token to be used to resume the interaction stream, from this event.
+   * The event_id token to be used to resume the interaction stream, from
+   * this event.
    */
   event_id?: string;
 
