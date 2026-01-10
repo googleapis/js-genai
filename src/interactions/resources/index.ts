@@ -35,6 +35,7 @@ export {
   type GoogleSearchCallContent,
   type GoogleSearchResult,
   type GoogleSearchResultContent,
+  type ImageConfig,
   type ImageContent,
   type ImageMimeType,
   type Interaction,
