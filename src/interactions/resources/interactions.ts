@@ -837,6 +837,11 @@ export namespace FunctionResultContent {
  */
 export interface GenerationConfig {
   /**
+   * Configuration for image interaction.
+   */
+  image_config?: ImageConfig;
+
+  /**
    * The maximum number of tokens to include in the response.
    */
   max_output_tokens?: number;
@@ -954,6 +959,15 @@ export interface GoogleSearchResultContent {
    * The signature of the Google Search result.
    */
   signature?: string;
+}
+
+/**
+ * The configuration for image interaction.
+ */
+export interface ImageConfig {
+  aspect_ratio?: '1:1' | '2:3' | '3:2' | '3:4' | '4:3' | '9:16' | '16:9' | '21:9';
+
+  image_size?: '1K' | '2K' | '4K';
 }
 
 /**
@@ -1858,6 +1872,7 @@ export declare namespace Interactions {
     type GoogleSearchCallContent as GoogleSearchCallContent,
     type GoogleSearchResult as GoogleSearchResult,
     type GoogleSearchResultContent as GoogleSearchResultContent,
+    type ImageConfig as ImageConfig,
     type ImageContent as ImageContent,
     type ImageMimeType as ImageMimeType,
     type Interaction as Interaction,
