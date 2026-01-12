@@ -281,6 +281,7 @@ export type Content =
   | GoogleSearchResultContent
   | MCPServerToolCallContent
   | MCPServerToolResultContent
+  | FileSearchCallContent
   | FileSearchResultContent;
 
 export interface ContentDelta {
@@ -302,6 +303,7 @@ export interface ContentDelta {
     | ContentDelta.GoogleSearchResultDelta
     | ContentDelta.MCPServerToolCallDelta
     | ContentDelta.MCPServerToolResultDelta
+    | ContentDelta.FileSearchCallDelta
     | ContentDelta.FileSearchResultDelta;
 
   /**
@@ -569,6 +571,15 @@ export namespace ContentDelta {
     }
   }
 
+  export interface FileSearchCallDelta {
+    type: 'file_search_call';
+
+    /**
+     * A unique ID for this specific tool call.
+     */
+    id?: string;
+  }
+
   export interface FileSearchResultDelta {
     type: 'file_search_result';
 
@@ -699,6 +710,18 @@ export namespace ErrorEvent {
 }
 
 /**
+ * File Search content.
+ */
+export interface FileSearchCallContent {
+  type: 'file_search_call';
+
+  /**
+   * A unique ID for this specific tool call.
+   */
+  id?: string;
+}
+
+/**
  * File Search result content.
  */
 export interface FileSearchResultContent {
@@ -813,6 +836,11 @@ export namespace FunctionResultContent {
  * Configuration parameters for model interactions.
  */
 export interface GenerationConfig {
+  /**
+   * Configuration for image interaction.
+   */
+  image_config?: ImageConfig;
+
   /**
    * The maximum number of tokens to include in the response.
    */
@@ -931,6 +959,15 @@ export interface GoogleSearchResultContent {
    * The signature of the Google Search result.
    */
   signature?: string;
+}
+
+/**
+ * The configuration for image interaction.
+ */
+export interface ImageConfig {
+  aspect_ratio?: '1:1' | '2:3' | '3:2' | '3:4' | '4:3' | '9:16' | '16:9' | '21:9';
+
+  image_size?: '1K' | '2K' | '4K';
 }
 
 /**
@@ -1573,6 +1610,7 @@ export interface BaseCreateModelInteractionParams {
     | GoogleSearchResultContent
     | MCPServerToolCallContent
     | MCPServerToolResultContent
+    | FileSearchCallContent
     | FileSearchResultContent;
 
   /**
@@ -1666,6 +1704,7 @@ export interface BaseCreateAgentInteractionParams {
     | GoogleSearchResultContent
     | MCPServerToolCallContent
     | MCPServerToolResultContent
+    | FileSearchCallContent
     | FileSearchResultContent;
 
   /**
@@ -1823,6 +1862,7 @@ export declare namespace Interactions {
     type DocumentMimeType as DocumentMimeType,
     type DynamicAgentConfig as DynamicAgentConfig,
     type ErrorEvent as ErrorEvent,
+    type FileSearchCallContent as FileSearchCallContent,
     type FileSearchResultContent as FileSearchResultContent,
     type Function as Function,
     type FunctionCallContent as FunctionCallContent,
@@ -1832,6 +1872,7 @@ export declare namespace Interactions {
     type GoogleSearchCallContent as GoogleSearchCallContent,
     type GoogleSearchResult as GoogleSearchResult,
     type GoogleSearchResultContent as GoogleSearchResultContent,
+    type ImageConfig as ImageConfig,
     type ImageContent as ImageContent,
     type ImageMimeType as ImageMimeType,
     type Interaction as Interaction,

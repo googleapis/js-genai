@@ -9,6 +9,7 @@ export default [
       // Ignore built files.
       'dist/**',
       'src/interactions/**',
+      'src/interactions-private/**',
     ],
   },
   {
