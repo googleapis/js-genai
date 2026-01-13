@@ -23,6 +23,22 @@ const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
 const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';
 
 /**
+ * Partial definiion of the NodeJS.Timeout.
+ * https://nodejs.org/api/timers.html#timeoutunref
+ *
+ * Importing the full nodejs typings rewrites setTimeout / clearTimeout
+ * signatures on web builds. This causes compile errors in code that stores the
+ * timeout handle in an explicitly typed variable. E.g.:
+ * ```
+ * let timeoutHandle = 0;
+ * timeoutHandle = setTimeout(() => {}, 1000);
+ * ```
+ */
+declare interface NodeJSTimeout {
+  unref(): this;
+}
+
+/**
  * Options for initializing the ApiClient. The ApiClient uses the parameters
  * for authentication purposes as well as to infer if SDK should send the
  * request to Vertex AI or Gemini API.
@@ -453,14 +469,12 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
           () => abortController.abort(),
           httpOptions.timeout,
         );
-        if (
-          timeoutHandle &&
-          typeof (timeoutHandle as unknown as NodeJS.Timeout).unref ===
-            'function'
-        ) {
+        if (timeoutHandle &&
+            typeof (timeoutHandle as unknown as NodeJSTimeout).unref ===
+                'function') {
           // call unref to prevent nodejs process from hanging, see
           // https://nodejs.org/api/timers.html#timeoutunref
-          timeoutHandle.unref();
+          (timeoutHandle as unknown as NodeJSTimeout).unref();
         }
       }
       if (abortSignal) {
