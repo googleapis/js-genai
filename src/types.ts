@@ -6856,6 +6856,18 @@ export declare interface OperationGetParameters<T, U extends Operation<T>> {
   operation: U;
 }
 
+/** Local tokenizer count tokens result. */
+export declare interface CountTokensResult {
+  /** The total number of tokens. */
+  totalTokens?: number;
+}
+
+/** Local tokenizer compute tokens result. */
+export declare interface ComputeTokensResult {
+  /** Lists of tokens info from the input. */
+  tokensInfo?: TokensInfo[];
+}
+
 /** Fine-tuning job creation parameters - optional fields. */
 export declare interface CreateTuningJobParameters {
   /** The base model that is being tuned, e.g., "gemini-2.5-flash". */

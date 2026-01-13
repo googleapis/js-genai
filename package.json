@@ -34,6 +34,24 @@
       "types": "./dist/node/node.d.ts",
       "import": "./dist/node/index.mjs",
       "default": "./dist/node/index.mjs"
+    },
+    "./tokenizer": {
+      "node": {
+        "types": "./dist/tokenizer/node.d.ts",
+        "import": "./dist/tokenizer/node.mjs",
+        "require": "./dist/tokenizer/node.cjs",
+        "default": "./dist/tokenizer/node.mjs"
+      },
+      "types": "./dist/tokenizer/node.d.ts",
+      "import": "./dist/tokenizer/node.mjs",
+      "require": "./dist/tokenizer/node.cjs",
+      "default": "./dist/tokenizer/node.mjs"
+    },
+    "./tokenizer/node": {
+      "types": "./dist/tokenizer/node.d.ts",
+      "import": "./dist/tokenizer/node.mjs",
+      "require": "./dist/tokenizer/node.cjs",
+      "default": "./dist/tokenizer/node.mjs"
     }
   },
   "scripts": {
@@ -43,10 +61,12 @@
     "api-extractor:dev:main": "api-extractor run --local --verbose",
     "api-extractor:dev:node": "api-extractor run -c api-extractor.node.json --local --verbose",
     "api-extractor:dev:web": "api-extractor run -c api-extractor.web.json --local --verbose",
+    "api-extractor:dev:tokenizer-node": "api-extractor run -c api-extractor.tokenizer-node.json --local --verbose",
     "api-extractor:prod:main": "api-extractor run --verbose",
     "api-extractor:prod:node": "api-extractor run -c api-extractor.node.json --verbose",
     "api-extractor:prod:web": "api-extractor run -c api-extractor.web.json --verbose",
-    "unit-test": "tsc && jasmine dist/test/unit/**/*_test.js dist/test/unit/*_test.js",
+    "api-extractor:prod:tokenizer-node": "api-extractor run -c api-extractor.tokenizer-node.json --verbose",
+    "unit-test": "tsc && cp src/cross/sentencepiece/sentencepiece_model.pb.js dist/src/cross/sentencepiece/ && jasmine dist/test/unit/**/*_test.js dist/test/unit/**/**/*_test.js dist/test/unit/*_test.js",
     "system-test": "tsc && jasmine dist/test/system/**/*_test.js",
     "test-server-tests": "tsc && GOOGLE_CLOUD_PROJECT=googcloudproj GOOGLE_CLOUD_LOCATION=googcloudloc jasmine dist/test/system/node/*_test.js -- --test-server",
     "test-server-tests:record": "tsc && jasmine --fail-fast dist/test/system/node/*_test.js -- --test-server --record",
@@ -56,7 +76,8 @@
     "format": "prettier '**/*.ts' '**/*.mjs' '**/*.json' --write",
     "lint": "eslint '**/*.ts'",
     "lint-fix": "eslint --fix '**/*.ts'",
-    "coverage-report": "./test/generate_report.sh"
+    "coverage-report": "./test/generate_report.sh",
+    "generate-proto": "pbjs -t static-module -w es6 -o src/cross/sentencepiece/sentencepiece_model.pb.js src/cross/sentencepiece/sentencepiece_model.proto && pbts -o src/cross/sentencepiece/sentencepiece_model.pb.d.ts src/cross/sentencepiece/sentencepiece_model.pb.js && sed -i.bak 's/import \\* as \\$protobuf from \"protobufjs\\/minimal\"/import \\$protobuf from \"protobufjs\\/minimal.js\"/' src/cross/sentencepiece/sentencepiece_model.pb.js && rm src/cross/sentencepiece/sentencepiece_model.pb.js.bak"
   },
   "engines": {
     "node": ">=20.0.0"
@@ -76,6 +97,10 @@
     "dist/web/index.mjs",
     "dist/web/index.mjs.map",
     "dist/web/web.d.ts",
+    "dist/tokenizer/node.mjs",
+    "dist/tokenizer/node.cjs",
+    "dist/tokenizer/node.mjs.map",
+    "dist/tokenizer/node.d.ts",
     "node/package.json",
     "web/package.json"
   ],
@@ -101,6 +126,7 @@
     "patch-package": "^8.0.1",
     "prettier": "3.3.3",
     "prettier-plugin-organize-imports": "^4.1.0",
+    "protobufjs-cli": "^1.1.3",
     "rollup-plugin-typescript2": "^0.36.0",
     "test-server-sdk": "^0.2.9",
     "ts-node": "^10.9.2",
@@ -116,6 +142,7 @@
   },
   "dependencies": {
     "google-auth-library": "^10.3.0",
+    "protobufjs": "^7.5.4",
     "ws": "^8.18.0"
   },
   "peerDependencies": {

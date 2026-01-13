@@ -411,6 +411,11 @@ export class ComputeTokensResponse {
 }
 
 // @public
+export interface ComputeTokensResult {
+    tokensInfo?: TokensInfo[];
+}
+
+// @public
 export interface Content {
     parts?: Part[];
     role?: string;
@@ -496,6 +501,11 @@ export interface CountTokensParameters {
 export class CountTokensResponse {
     cachedContentTokenCount?: number;
     sdkHttpResponse?: HttpResponse;
+    totalTokens?: number;
+}
+
+// @public
+export interface CountTokensResult {
     totalTokens?: number;
 }
 
