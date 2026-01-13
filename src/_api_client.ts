@@ -396,12 +396,12 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
       if (typeof value === 'object') {
         // @ts-expect-error TS2345TS7053: Element implicitly has an 'any' type
         // because expression of type 'string' can't be used to index type
-        // 'HttpOptions'.
+        // 'HttpOptions'. Right?
         patchedHttpOptions[key] = {...patchedHttpOptions[key], ...value};
       } else if (value !== undefined) {
         // @ts-expect-error TS2345TS7053: Element implicitly has an 'any' type
         // because expression of type 'string' can't be used to index type
-        // 'HttpOptions'.
+        // 'HttpOptions'. Right?
         patchedHttpOptions[key] = value;
       }
     }
