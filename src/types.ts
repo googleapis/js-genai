@@ -1036,6 +1036,22 @@ export enum VadSignalType {
   VAD_SIGNAL_TYPE_EOS = 'VAD_SIGNAL_TYPE_EOS',
 }
 
+/** The type of the voice activity signal. */
+export enum VoiceActivityType {
+  /**
+   * The default is VOICE_ACTIVITY_TYPE_UNSPECIFIED.
+   */
+  TYPE_UNSPECIFIED = 'TYPE_UNSPECIFIED',
+  /**
+   * Start of sentence signal.
+   */
+  ACTIVITY_START = 'ACTIVITY_START',
+  /**
+   * End of sentence signal.
+   */
+  ACTIVITY_END = 'ACTIVITY_END',
+}
+
 /** Start of speech sensitivity. */
 export enum StartSensitivity {
   /**
@@ -6061,6 +6077,12 @@ export declare interface VoiceActivityDetectionSignal {
   vadSignalType?: VadSignalType;
 }
 
+/** Voice activity signal. */
+export declare interface VoiceActivity {
+  /** The type of the voice activity signal. */
+  voiceActivityType?: VoiceActivityType;
+}
+
 /** Response message for API call. */
 export class LiveServerMessage {
   /** Sent in response to a `LiveClientSetup` message from the client. */
@@ -6077,8 +6099,10 @@ export class LiveServerMessage {
   goAway?: LiveServerGoAway;
   /** Update of the session resumption state. */
   sessionResumptionUpdate?: LiveServerSessionResumptionUpdate;
-  /** Voice activity detection signal. */
+  /** Voice activity detection signal. Allowlisted only. */
   voiceActivityDetectionSignal?: VoiceActivityDetectionSignal;
+  /** Voice activity signal. */
+  voiceActivity?: VoiceActivity;
   /**
    * Returns the concatenation of all text parts from the server content if present.
    *
