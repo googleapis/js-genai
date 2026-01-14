@@ -51,9 +51,7 @@ async function createInteractionsFromMLDev() {
 
 async function main() {
   if (GOOGLE_GENAI_USE_VERTEXAI) {
-    throw new Error(
-      'This version of the GenAI SDK does not support Vertex AI API for interactions.',
-    );
+    console.log('Interactions API is not yet supported on Vertex');
   } else {
     await createInteractionsFromMLDev().catch((e) =>
       console.error('got error', e),

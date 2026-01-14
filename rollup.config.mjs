@@ -30,6 +30,10 @@ const externalDeps = [
   '@modelcontextprotocol/sdk/client/index.js',
   '@modelcontextprotocol/sdk/types.js',
   'path',
+  'crypto',
+  'os',
+  'protobufjs/minimal',
+  'protobufjs/minimal.js',
 ];
 
 export default [
@@ -87,6 +91,30 @@ export default [
     output: {
       file: pkg.exports['./web']['import'],
       format: 'es',
+      sourcemap: true,
+    },
+    plugins: rollupPlugins,
+    external: externalDeps,
+  },
+
+  // The `tokenizer/node` ES module (dist/tokenizer/node.mjs)
+  {
+    input: 'src/tokenizer/node.ts',
+    output: {
+      file: 'dist/tokenizer/node.mjs',
+      format: 'es',
+      sourcemap: true,
+    },
+    plugins: rollupPlugins,
+    external: externalDeps,
+  },
+
+  // The `tokenizer/node` CJS module (dist/tokenizer/node.cjs)
+  {
+    input: 'src/tokenizer/node.ts',
+    output: {
+      file: 'dist/tokenizer/node.cjs',
+      format: 'cjs',
       sourcemap: true,
     },
     plugins: rollupPlugins,

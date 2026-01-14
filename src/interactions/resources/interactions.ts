@@ -180,6 +180,9 @@ export interface Annotation {
 export interface AudioContent {
   type: 'audio';
 
+  /**
+   * The audio content.
+   */
   data?: string;
 
   /**
@@ -187,6 +190,9 @@ export interface AudioContent {
    */
   mime_type?: AudioMimeType;
 
+  /**
+   * The URI of the audio.
+   */
   uri?: string;
 }
 
@@ -654,6 +660,9 @@ export interface DeepResearchAgentConfig {
 export interface DocumentContent {
   type: 'document';
 
+  /**
+   * The document content.
+   */
   data?: string;
 
   /**
@@ -661,6 +670,9 @@ export interface DocumentContent {
    */
   mime_type?: DocumentMimeType;
 
+  /**
+   * The URI of the document.
+   */
   uri?: string;
 }
 
@@ -976,6 +988,9 @@ export interface ImageConfig {
 export interface ImageContent {
   type: 'image';
 
+  /**
+   * The image content.
+   */
   data?: string;
 
   /**
@@ -988,6 +1003,9 @@ export interface ImageContent {
    */
   resolution?: 'low' | 'medium' | 'high' | 'ultra_high';
 
+  /**
+   * The URI of the image.
+   */
   uri?: string;
 }
 
@@ -1548,6 +1566,9 @@ export namespace Usage {
 export interface VideoContent {
   type: 'video';
 
+  /**
+   * The video content.
+   */
   data?: string;
 
   /**
@@ -1560,6 +1581,9 @@ export interface VideoContent {
    */
   resolution?: 'low' | 'medium' | 'high' | 'ultra_high';
 
+  /**
+   * The URI of the video.
+   */
   uri?: string;
 }
 
