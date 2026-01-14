@@ -330,6 +330,73 @@ describe('File', () => {
         }
         expect(byteProcessed).toBe(fileSize);
       });
+
+    });
+  });
+  describe('registerFiles', () => {
+    it('should call the API client with the correct parameters', async () => {
+      const mockResponse = {
+        files: [
+          {
+            name: 'files/123',
+            displayName: 'object1',
+            mimeType: 'image/jpeg',
+            sizeBytes: '12345',
+            createTime: '2025-01-06T10:00:00Z',
+            updateTime: '2025-01-06T10:00:00Z',
+            expirationTime: '2025-01-07T10:00:00Z',
+            sha256Hash: 'abc123',
+            uri: 'gs://bucket/object1',
+            state: 'ACTIVE' as any,
+          },
+        ],
+      };
+
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(JSON.stringify(mockResponse), {
+            status: 200,
+            headers: {'Content-Type': 'application/json'},
+          }),
+        ),
+      );
+
+      const params = {
+        auth: {
+          getRequestHeaders: jasmine.createSpy().and.returnValue(Promise.resolve({})),
+        } as any,
+        uris: ['gs://bucket/object1'],
+      };
+
+      const response = await client.files.registerFiles(params as any);
+      expect(response.files).toEqual(mockResponse.files);
+
+      expect(fetchSpy).toHaveBeenCalledWith(
+        jasmine.stringMatching(/files:register$/),
+        jasmine.objectContaining({
+          method: 'POST',
+          body: JSON.stringify({uris: ['gs://bucket/object1']}),
+        }),
+      );
+    });
+
+    it('should throw an error if called on a Vertex AI client', async () => {
+      const vertexClient = new GoogleGenAI({
+        vertexai: true,
+        apiKey: 'fake-api-key',
+      });
+      const params = {
+        auth: {
+          getRequestHeaders: jasmine.createSpy().and.returnValue(Promise.resolve({})),
+        } as any,
+        uris: ['gs://bucket/object1'],
+      };
+
+      await expectAsync(
+        vertexClient.files.registerFiles(params as any),
+      ).toBeRejectedWithError(
+        'This method is only supported by the Gemini Developer API.',
+      );
     });
   });
 });

@@ -35,9 +35,9 @@ export class NodeAuth implements Auth {
       this.apiKey = opts.apiKey;
       return;
     }
-    const vertexAuthOptions = buildGoogleAuthOptions(opts.googleAuthOptions);
-    this.googleAuth = new GoogleAuth(vertexAuthOptions);
-  }
+      const vertexAuthOptions = buildGoogleAuthOptions(opts.googleAuthOptions);
+      this.googleAuth = new GoogleAuth(vertexAuthOptions);
+    }
 
   async addAuthHeaders(headers: Headers, url?: string): Promise<void> {
     if (this.apiKey !== undefined) {
