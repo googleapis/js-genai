@@ -1,16 +1,6 @@
 # Changelog
 
 
-## [1.36.0](https://github.com/googleapis/js-genai/compare/v1.35.0...v1.36.0) (2026-01-14)
-
-
-### Features
-
-* Add FileSearchCallContent to Interactions ([ccf11a4](https://github.com/googleapis/js-genai/commit/ccf11a463f3364683b7c39ffec9670f77bcc16dc))
-* Add ImageConfig to GenerationConfig for image generation in Interactions ([f34b6fb](https://github.com/googleapis/js-genai/commit/f34b6fbcb2ad846c73b9c47bfd3ba94e00eb73a9))
-* Support JS local tokenizer ([bb429ad](https://github.com/googleapis/js-genai/commit/bb429ad3ed8d170f2a5abda01a00a918012ab80c))
-* voice activity support ([3ad1011](https://github.com/googleapis/js-genai/commit/3ad101159a8257897940d6a1f94aa6b68b810f37))
-
 ## [1.35.0](https://github.com/googleapis/js-genai/compare/v1.34.0...v1.35.0) (2026-01-07)
 
 
