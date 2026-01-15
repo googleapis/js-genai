@@ -1,6 +1,13 @@
 # Changelog
 
 
+## [1.37.0](https://github.com/googleapis/js-genai/compare/v1.36.0...v1.37.0) (2026-01-15)
+
+
+### Features
+
+* Support 4:5 and 5:4 aspect ratio in Interactions ([5294da2](https://github.com/googleapis/js-genai/commit/5294da273cbc9a206cd58544b42d1de70500a7a9))
+
 ## [1.36.0](https://github.com/googleapis/js-genai/compare/v1.35.0...v1.36.0) (2026-01-14)
 
 
