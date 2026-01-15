@@ -1003,30 +1003,16 @@ export function generateContentConfigToMldev(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromSystemInstruction = common.getValueByPath(fromObject, [
-    'systemInstruction',
-  ]);
-  if (parentObject !== undefined && fromSystemInstruction != null) {
-    common.setValueByPath(
-      parentObject,
-      ['systemInstruction'],
-      contentToMldev(t.tContent(fromSystemInstruction)),
+  if (
+    common.getValueByPath(fromObject, ['modelSelectionConfig']) !== undefined
+  ) {
+    throw new Error(
+      'modelSelectionConfig parameter is not supported in Gemini API.',
     );
   }
 
-  const fromTemperature = common.getValueByPath(fromObject, ['temperature']);
-  if (fromTemperature != null) {
-    common.setValueByPath(toObject, ['temperature'], fromTemperature);
-  }
-
-  const fromTopP = common.getValueByPath(fromObject, ['topP']);
-  if (fromTopP != null) {
-    common.setValueByPath(toObject, ['topP'], fromTopP);
-  }
-
-  const fromTopK = common.getValueByPath(fromObject, ['topK']);
-  if (fromTopK != null) {
-    common.setValueByPath(toObject, ['topK'], fromTopK);
+  if (common.getValueByPath(fromObject, ['audioTimestamp']) !== undefined) {
+    throw new Error('audioTimestamp parameter is not supported in Gemini API.');
   }
 
   const fromCandidateCount = common.getValueByPath(fromObject, [
@@ -1036,37 +1022,12 @@ export function generateContentConfigToMldev(
     common.setValueByPath(toObject, ['candidateCount'], fromCandidateCount);
   }
 
-  const fromMaxOutputTokens = common.getValueByPath(fromObject, [
-    'maxOutputTokens',
-  ]);
-  if (fromMaxOutputTokens != null) {
-    common.setValueByPath(toObject, ['maxOutputTokens'], fromMaxOutputTokens);
-  }
-
-  const fromStopSequences = common.getValueByPath(fromObject, [
-    'stopSequences',
-  ]);
-  if (fromStopSequences != null) {
-    common.setValueByPath(toObject, ['stopSequences'], fromStopSequences);
-  }
-
-  const fromResponseLogprobs = common.getValueByPath(fromObject, [
-    'responseLogprobs',
-  ]);
-  if (fromResponseLogprobs != null) {
-    common.setValueByPath(toObject, ['responseLogprobs'], fromResponseLogprobs);
-  }
-
-  const fromLogprobs = common.getValueByPath(fromObject, ['logprobs']);
-  if (fromLogprobs != null) {
-    common.setValueByPath(toObject, ['logprobs'], fromLogprobs);
-  }
-
-  const fromPresencePenalty = common.getValueByPath(fromObject, [
-    'presencePenalty',
-  ]);
-  if (fromPresencePenalty != null) {
-    common.setValueByPath(toObject, ['presencePenalty'], fromPresencePenalty);
+  if (
+    common.getValueByPath(fromObject, ['enableAffectiveDialog']) !== undefined
+  ) {
+    throw new Error(
+      'enableAffectiveDialog parameter is not supported in Gemini API.',
+    );
   }
 
   const fromFrequencyPenalty = common.getValueByPath(fromObject, [
@@ -1076,27 +1037,30 @@ export function generateContentConfigToMldev(
     common.setValueByPath(toObject, ['frequencyPenalty'], fromFrequencyPenalty);
   }
 
-  const fromSeed = common.getValueByPath(fromObject, ['seed']);
-  if (fromSeed != null) {
-    common.setValueByPath(toObject, ['seed'], fromSeed);
+  const fromLogprobs = common.getValueByPath(fromObject, ['logprobs']);
+  if (fromLogprobs != null) {
+    common.setValueByPath(toObject, ['logprobs'], fromLogprobs);
   }
 
-  const fromResponseMimeType = common.getValueByPath(fromObject, [
-    'responseMimeType',
+  const fromMaxOutputTokens = common.getValueByPath(fromObject, [
+    'maxOutputTokens',
   ]);
-  if (fromResponseMimeType != null) {
-    common.setValueByPath(toObject, ['responseMimeType'], fromResponseMimeType);
+  if (fromMaxOutputTokens != null) {
+    common.setValueByPath(toObject, ['maxOutputTokens'], fromMaxOutputTokens);
   }
 
-  const fromResponseSchema = common.getValueByPath(fromObject, [
-    'responseSchema',
+  const fromMediaResolution = common.getValueByPath(fromObject, [
+    'mediaResolution',
   ]);
-  if (fromResponseSchema != null) {
-    common.setValueByPath(
-      toObject,
-      ['responseSchema'],
-      t.tSchema(fromResponseSchema),
-    );
+  if (fromMediaResolution != null) {
+    common.setValueByPath(toObject, ['mediaResolution'], fromMediaResolution);
+  }
+
+  const fromPresencePenalty = common.getValueByPath(fromObject, [
+    'presencePenalty',
+  ]);
+  if (fromPresencePenalty != null) {
+    common.setValueByPath(toObject, ['presencePenalty'], fromPresencePenalty);
   }
 
   const fromResponseJsonSchema = common.getValueByPath(fromObject, [
@@ -1110,15 +1074,108 @@ export function generateContentConfigToMldev(
     );
   }
 
+  const fromResponseLogprobs = common.getValueByPath(fromObject, [
+    'responseLogprobs',
+  ]);
+  if (fromResponseLogprobs != null) {
+    common.setValueByPath(toObject, ['responseLogprobs'], fromResponseLogprobs);
+  }
+
+  const fromResponseMimeType = common.getValueByPath(fromObject, [
+    'responseMimeType',
+  ]);
+  if (fromResponseMimeType != null) {
+    common.setValueByPath(toObject, ['responseMimeType'], fromResponseMimeType);
+  }
+
+  const fromResponseModalities = common.getValueByPath(fromObject, [
+    'responseModalities',
+  ]);
+  if (fromResponseModalities != null) {
+    common.setValueByPath(
+      toObject,
+      ['responseModalities'],
+      fromResponseModalities,
+    );
+  }
+
+  const fromResponseSchema = common.getValueByPath(fromObject, [
+    'responseSchema',
+  ]);
+  if (fromResponseSchema != null) {
+    common.setValueByPath(
+      toObject,
+      ['responseSchema'],
+      t.tSchema(fromResponseSchema),
+    );
+  }
+
   if (common.getValueByPath(fromObject, ['routingConfig']) !== undefined) {
     throw new Error('routingConfig parameter is not supported in Gemini API.');
   }
 
-  if (
-    common.getValueByPath(fromObject, ['modelSelectionConfig']) !== undefined
-  ) {
-    throw new Error(
-      'modelSelectionConfig parameter is not supported in Gemini API.',
+  const fromSeed = common.getValueByPath(fromObject, ['seed']);
+  if (fromSeed != null) {
+    common.setValueByPath(toObject, ['seed'], fromSeed);
+  }
+
+  const fromSpeechConfig = common.getValueByPath(fromObject, ['speechConfig']);
+  if (fromSpeechConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['speechConfig'],
+      t.tSpeechConfig(fromSpeechConfig),
+    );
+  }
+
+  const fromStopSequences = common.getValueByPath(fromObject, [
+    'stopSequences',
+  ]);
+  if (fromStopSequences != null) {
+    common.setValueByPath(toObject, ['stopSequences'], fromStopSequences);
+  }
+
+  const fromTemperature = common.getValueByPath(fromObject, ['temperature']);
+  if (fromTemperature != null) {
+    common.setValueByPath(toObject, ['temperature'], fromTemperature);
+  }
+
+  const fromThinkingConfig = common.getValueByPath(fromObject, [
+    'thinkingConfig',
+  ]);
+  if (fromThinkingConfig != null) {
+    common.setValueByPath(toObject, ['thinkingConfig'], fromThinkingConfig);
+  }
+
+  const fromTopK = common.getValueByPath(fromObject, ['topK']);
+  if (fromTopK != null) {
+    common.setValueByPath(toObject, ['topK'], fromTopK);
+  }
+
+  const fromTopP = common.getValueByPath(fromObject, ['topP']);
+  if (fromTopP != null) {
+    common.setValueByPath(toObject, ['topP'], fromTopP);
+  }
+
+  const fromEnableEnhancedCivicAnswers = common.getValueByPath(fromObject, [
+    'enableEnhancedCivicAnswers',
+  ]);
+  if (fromEnableEnhancedCivicAnswers != null) {
+    common.setValueByPath(
+      toObject,
+      ['enableEnhancedCivicAnswers'],
+      fromEnableEnhancedCivicAnswers,
+    );
+  }
+
+  const fromSystemInstruction = common.getValueByPath(fromObject, [
+    'systemInstruction',
+  ]);
+  if (parentObject !== undefined && fromSystemInstruction != null) {
+    common.setValueByPath(
+      parentObject,
+      ['systemInstruction'],
+      contentToMldev(t.tContent(fromSystemInstruction)),
     );
   }
 
@@ -1170,61 +1227,12 @@ export function generateContentConfigToMldev(
     );
   }
 
-  const fromResponseModalities = common.getValueByPath(fromObject, [
-    'responseModalities',
-  ]);
-  if (fromResponseModalities != null) {
-    common.setValueByPath(
-      toObject,
-      ['responseModalities'],
-      fromResponseModalities,
-    );
-  }
-
-  const fromMediaResolution = common.getValueByPath(fromObject, [
-    'mediaResolution',
-  ]);
-  if (fromMediaResolution != null) {
-    common.setValueByPath(toObject, ['mediaResolution'], fromMediaResolution);
-  }
-
-  const fromSpeechConfig = common.getValueByPath(fromObject, ['speechConfig']);
-  if (fromSpeechConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['speechConfig'],
-      t.tSpeechConfig(fromSpeechConfig),
-    );
-  }
-
-  if (common.getValueByPath(fromObject, ['audioTimestamp']) !== undefined) {
-    throw new Error('audioTimestamp parameter is not supported in Gemini API.');
-  }
-
-  const fromThinkingConfig = common.getValueByPath(fromObject, [
-    'thinkingConfig',
-  ]);
-  if (fromThinkingConfig != null) {
-    common.setValueByPath(toObject, ['thinkingConfig'], fromThinkingConfig);
-  }
-
   const fromImageConfig = common.getValueByPath(fromObject, ['imageConfig']);
   if (fromImageConfig != null) {
     common.setValueByPath(
       toObject,
       ['imageConfig'],
       imageConfigToMldev(fromImageConfig),
-    );
-  }
-
-  const fromEnableEnhancedCivicAnswers = common.getValueByPath(fromObject, [
-    'enableEnhancedCivicAnswers',
-  ]);
-  if (fromEnableEnhancedCivicAnswers != null) {
-    common.setValueByPath(
-      toObject,
-      ['enableEnhancedCivicAnswers'],
-      fromEnableEnhancedCivicAnswers,
     );
   }
 

@@ -174,17 +174,6 @@ export function generationConfigToVertex(
     common.setValueByPath(toObject, ['modelConfig'], fromModelSelectionConfig);
   }
 
-  const fromResponseJsonSchema = common.getValueByPath(fromObject, [
-    'responseJsonSchema',
-  ]);
-  if (fromResponseJsonSchema != null) {
-    common.setValueByPath(
-      toObject,
-      ['responseJsonSchema'],
-      fromResponseJsonSchema,
-    );
-  }
-
   const fromAudioTimestamp = common.getValueByPath(fromObject, [
     'audioTimestamp',
   ]);
@@ -241,6 +230,17 @@ export function generationConfigToVertex(
   ]);
   if (fromPresencePenalty != null) {
     common.setValueByPath(toObject, ['presencePenalty'], fromPresencePenalty);
+  }
+
+  const fromResponseJsonSchema = common.getValueByPath(fromObject, [
+    'responseJsonSchema',
+  ]);
+  if (fromResponseJsonSchema != null) {
+    common.setValueByPath(
+      toObject,
+      ['responseJsonSchema'],
+      fromResponseJsonSchema,
+    );
   }
 
   const fromResponseLogprobs = common.getValueByPath(fromObject, [

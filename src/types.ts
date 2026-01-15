@@ -66,42 +66,6 @@ export enum FunctionResponseScheduling {
   INTERRUPT = 'INTERRUPT',
 }
 
-/** The type of the data. */
-export enum Type {
-  /**
-   * Not specified, should not be used.
-   */
-  TYPE_UNSPECIFIED = 'TYPE_UNSPECIFIED',
-  /**
-   * OpenAPI string type
-   */
-  STRING = 'STRING',
-  /**
-   * OpenAPI number type
-   */
-  NUMBER = 'NUMBER',
-  /**
-   * OpenAPI integer type
-   */
-  INTEGER = 'INTEGER',
-  /**
-   * OpenAPI boolean type
-   */
-  BOOLEAN = 'BOOLEAN',
-  /**
-   * OpenAPI array type
-   */
-  ARRAY = 'ARRAY',
-  /**
-   * OpenAPI object type
-   */
-  OBJECT = 'OBJECT',
-  /**
-   * Null type
-   */
-  NULL = 'NULL',
-}
-
 /** The API spec that the external API implements. This enum is not supported in Gemini API. */
 export enum ApiSpec {
   /**
@@ -220,6 +184,42 @@ export enum Behavior {
   NON_BLOCKING = 'NON_BLOCKING',
 }
 
+/** The type of the data. */
+export enum Type {
+  /**
+   * Not specified, should not be used.
+   */
+  TYPE_UNSPECIFIED = 'TYPE_UNSPECIFIED',
+  /**
+   * OpenAPI string type
+   */
+  STRING = 'STRING',
+  /**
+   * OpenAPI number type
+   */
+  NUMBER = 'NUMBER',
+  /**
+   * OpenAPI integer type
+   */
+  INTEGER = 'INTEGER',
+  /**
+   * OpenAPI boolean type
+   */
+  BOOLEAN = 'BOOLEAN',
+  /**
+   * OpenAPI array type
+   */
+  ARRAY = 'ARRAY',
+  /**
+   * OpenAPI object type
+   */
+  OBJECT = 'OBJECT',
+  /**
+   * Null type
+   */
+  NULL = 'NULL',
+}
+
 /** The mode of the predictor to be used in dynamic retrieval. */
 export enum DynamicRetrievalConfigMode {
   /**
@@ -254,6 +254,46 @@ export enum FunctionCallingConfigMode {
    * Model is constrained to predict either function calls or natural language response. If "allowed_function_names" are set, the predicted function calls will be limited to any one of "allowed_function_names", else the predicted function calls will be any one of the provided "function_declarations".
    */
   VALIDATED = 'VALIDATED',
+}
+
+/** If specified, the media resolution specified will be used. */
+export enum MediaResolution {
+  /**
+   * Media resolution has not been set.
+   */
+  MEDIA_RESOLUTION_UNSPECIFIED = 'MEDIA_RESOLUTION_UNSPECIFIED',
+  /**
+   * Media resolution set to low (64 tokens).
+   */
+  MEDIA_RESOLUTION_LOW = 'MEDIA_RESOLUTION_LOW',
+  /**
+   * Media resolution set to medium (256 tokens).
+   */
+  MEDIA_RESOLUTION_MEDIUM = 'MEDIA_RESOLUTION_MEDIUM',
+  /**
+   * Media resolution set to high (zoomed reframing with 256 tokens).
+   */
+  MEDIA_RESOLUTION_HIGH = 'MEDIA_RESOLUTION_HIGH',
+}
+
+/** Server content modalities. */
+export enum Modality {
+  /**
+   * The modality is unspecified.
+   */
+  MODALITY_UNSPECIFIED = 'MODALITY_UNSPECIFIED',
+  /**
+   * Indicates the model should return text
+   */
+  TEXT = 'TEXT',
+  /**
+   * Indicates the model should return images.
+   */
+  IMAGE = 'IMAGE',
+  /**
+   * Indicates the model should return audio.
+   */
+  AUDIO = 'AUDIO',
 }
 
 /** The number of thoughts tokens that the model should generate. */
@@ -570,46 +610,6 @@ export enum TrafficType {
   PROVISIONED_THROUGHPUT = 'PROVISIONED_THROUGHPUT',
 }
 
-/** Server content modalities. */
-export enum Modality {
-  /**
-   * The modality is unspecified.
-   */
-  MODALITY_UNSPECIFIED = 'MODALITY_UNSPECIFIED',
-  /**
-   * Indicates the model should return text
-   */
-  TEXT = 'TEXT',
-  /**
-   * Indicates the model should return images.
-   */
-  IMAGE = 'IMAGE',
-  /**
-   * Indicates the model should return audio.
-   */
-  AUDIO = 'AUDIO',
-}
-
-/** The media resolution to use. */
-export enum MediaResolution {
-  /**
-   * Media resolution has not been set
-   */
-  MEDIA_RESOLUTION_UNSPECIFIED = 'MEDIA_RESOLUTION_UNSPECIFIED',
-  /**
-   * Media resolution set to low (64 tokens).
-   */
-  MEDIA_RESOLUTION_LOW = 'MEDIA_RESOLUTION_LOW',
-  /**
-   * Media resolution set to medium (256 tokens).
-   */
-  MEDIA_RESOLUTION_MEDIUM = 'MEDIA_RESOLUTION_MEDIUM',
-  /**
-   * Media resolution set to high (zoomed reframing with 256 tokens).
-   */
-  MEDIA_RESOLUTION_HIGH = 'MEDIA_RESOLUTION_HIGH',
-}
-
 /** Tuning mode. This enum is not supported in Gemini API. */
 export enum TuningMode {
   /**
@@ -752,14 +752,6 @@ export enum PartMediaResolutionLevel {
    * Media resolution set to ultra high.
    */
   MEDIA_RESOLUTION_ULTRA_HIGH = 'MEDIA_RESOLUTION_ULTRA_HIGH',
-}
-
-/** Options for feature selection preference. */
-export enum FeatureSelectionPreference {
-  FEATURE_SELECTION_PREFERENCE_UNSPECIFIED = 'FEATURE_SELECTION_PREFERENCE_UNSPECIFIED',
-  PRIORITIZE_QUALITY = 'PRIORITIZE_QUALITY',
-  BALANCED = 'BALANCED',
-  PRIORITIZE_COST = 'PRIORITIZE_COST',
 }
 
 /** The environment being operated. */
@@ -1221,6 +1213,14 @@ export enum LiveMusicPlaybackControl {
   RESET_CONTEXT = 'RESET_CONTEXT',
 }
 
+/** Options for feature selection preference. */
+export enum FeatureSelectionPreference {
+  FEATURE_SELECTION_PREFERENCE_UNSPECIFIED = 'FEATURE_SELECTION_PREFERENCE_UNSPECIFIED',
+  PRIORITIZE_QUALITY = 'PRIORITIZE_QUALITY',
+  BALANCED = 'BALANCED',
+  PRIORITIZE_COST = 'PRIORITIZE_COST',
+}
+
 /** Media resolution for the input media. */
 export declare interface PartMediaResolution {
   /** The tokenization quality used for given media.
@@ -1615,64 +1615,6 @@ export declare interface HttpOptions {
   extraBody?: Record<string, unknown>;
 }
 
-/** Schema is used to define the format of input/output data.
-
-Represents a select subset of an [OpenAPI 3.0 schema
-object](https://spec.openapis.org/oas/v3.0.3#schema-object). More fields may
-be added in the future as needed. */
-export declare interface Schema {
-  /** Optional. The value should be validated against any (one or more) of the subschemas in the list. */
-  anyOf?: Schema[];
-  /** Optional. Default value of the data. */
-  default?: unknown;
-  /** Optional. The description of the data. */
-  description?: string;
-  /** Optional. Possible values of the element of primitive type with enum format. Examples: 1. We can define direction as : {type:STRING, format:enum, enum:["EAST", NORTH", "SOUTH", "WEST"]} 2. We can define apartment number as : {type:INTEGER, format:enum, enum:["101", "201", "301"]} */
-  enum?: string[];
-  /** Optional. Example of the object. Will only populated when the object is the root. */
-  example?: unknown;
-  /** Optional. The format of the data. Supported formats: for NUMBER type: "float", "double" for INTEGER type: "int32", "int64" for STRING type: "email", "byte", etc */
-  format?: string;
-  /** Optional. SCHEMA FIELDS FOR TYPE ARRAY Schema of the elements of Type.ARRAY. */
-  items?: Schema;
-  /** Optional. Maximum number of the elements for Type.ARRAY. */
-  maxItems?: string;
-  /** Optional. Maximum length of the Type.STRING */
-  maxLength?: string;
-  /** Optional. Maximum number of the properties for Type.OBJECT. */
-  maxProperties?: string;
-  /** Optional. Maximum value of the Type.INTEGER and Type.NUMBER */
-  maximum?: number;
-  /** Optional. Minimum number of the elements for Type.ARRAY. */
-  minItems?: string;
-  /** Optional. SCHEMA FIELDS FOR TYPE STRING Minimum length of the Type.STRING */
-  minLength?: string;
-  /** Optional. Minimum number of the properties for Type.OBJECT. */
-  minProperties?: string;
-  /** Optional. SCHEMA FIELDS FOR TYPE INTEGER and NUMBER Minimum value of the Type.INTEGER and Type.NUMBER */
-  minimum?: number;
-  /** Optional. Indicates if the value may be null. */
-  nullable?: boolean;
-  /** Optional. Pattern of the Type.STRING to restrict a string to a regular expression. */
-  pattern?: string;
-  /** Optional. SCHEMA FIELDS FOR TYPE OBJECT Properties of Type.OBJECT. */
-  properties?: Record<string, Schema>;
-  /** Optional. The order of the properties. Not a standard field in open api spec. Only used to support the order of the properties. */
-  propertyOrdering?: string[];
-  /** Optional. Required properties of Type.OBJECT. */
-  required?: string[];
-  /** Optional. The title of the Schema. */
-  title?: string;
-  /** Optional. The type of the data. */
-  type?: Type;
-}
-
-/** Config for model selection. */
-export declare interface ModelSelectionConfig {
-  /** Options for feature selection preference. */
-  featureSelectionPreference?: FeatureSelectionPreference;
-}
-
 /** Tool to support computer use. */
 export declare interface ComputerUse {
   /** Required. The environment being operated. */
@@ -1912,6 +1854,58 @@ export declare interface EnterpriseWebSearch {
   blockingConfidence?: PhishBlockThreshold;
 }
 
+/** Schema is used to define the format of input/output data.
+
+Represents a select subset of an [OpenAPI 3.0 schema
+object](https://spec.openapis.org/oas/v3.0.3#schema-object). More fields may
+be added in the future as needed. */
+export declare interface Schema {
+  /** Optional. The value should be validated against any (one or more) of the subschemas in the list. */
+  anyOf?: Schema[];
+  /** Optional. Default value of the data. */
+  default?: unknown;
+  /** Optional. The description of the data. */
+  description?: string;
+  /** Optional. Possible values of the element of primitive type with enum format. Examples: 1. We can define direction as : {type:STRING, format:enum, enum:["EAST", NORTH", "SOUTH", "WEST"]} 2. We can define apartment number as : {type:INTEGER, format:enum, enum:["101", "201", "301"]} */
+  enum?: string[];
+  /** Optional. Example of the object. Will only populated when the object is the root. */
+  example?: unknown;
+  /** Optional. The format of the data. Supported formats: for NUMBER type: "float", "double" for INTEGER type: "int32", "int64" for STRING type: "email", "byte", etc */
+  format?: string;
+  /** Optional. SCHEMA FIELDS FOR TYPE ARRAY Schema of the elements of Type.ARRAY. */
+  items?: Schema;
+  /** Optional. Maximum number of the elements for Type.ARRAY. */
+  maxItems?: string;
+  /** Optional. Maximum length of the Type.STRING */
+  maxLength?: string;
+  /** Optional. Maximum number of the properties for Type.OBJECT. */
+  maxProperties?: string;
+  /** Optional. Maximum value of the Type.INTEGER and Type.NUMBER */
+  maximum?: number;
+  /** Optional. Minimum number of the elements for Type.ARRAY. */
+  minItems?: string;
+  /** Optional. SCHEMA FIELDS FOR TYPE STRING Minimum length of the Type.STRING */
+  minLength?: string;
+  /** Optional. Minimum number of the properties for Type.OBJECT. */
+  minProperties?: string;
+  /** Optional. SCHEMA FIELDS FOR TYPE INTEGER and NUMBER Minimum value of the Type.INTEGER and Type.NUMBER */
+  minimum?: number;
+  /** Optional. Indicates if the value may be null. */
+  nullable?: boolean;
+  /** Optional. Pattern of the Type.STRING to restrict a string to a regular expression. */
+  pattern?: string;
+  /** Optional. SCHEMA FIELDS FOR TYPE OBJECT Properties of Type.OBJECT. */
+  properties?: Record<string, Schema>;
+  /** Optional. The order of the properties. Not a standard field in open api spec. Only used to support the order of the properties. */
+  propertyOrdering?: string[];
+  /** Optional. Required properties of Type.OBJECT. */
+  required?: string[];
+  /** Optional. The title of the Schema. */
+  title?: string;
+  /** Optional. The type of the data. */
+  type?: Type;
+}
+
 /** Structured representation of a function declaration as defined by the [OpenAPI 3.0 specification](https://spec.openapis.org/oas/v3.0.3). Included in this declaration are the function name, description, parameters and response type. This FunctionDeclaration is a representation of a block of code that can be used as a `Tool` by the model and executed by the client. */
 export declare interface FunctionDeclaration {
   /** Optional. Description and purpose of the function. Model uses it to decide how and whether to call the function. */
@@ -2041,6 +2035,78 @@ export declare interface ToolConfig {
   functionCallingConfig?: FunctionCallingConfig;
 }
 
+/** The image generation configuration to be used in GenerateContentConfig. */
+export declare interface ImageConfig {
+  /** Aspect ratio of the generated images. Supported values are
+      "1:1", "2:3", "3:2", "3:4", "4:3", "9:16", "16:9", and "21:9". */
+  aspectRatio?: string;
+  /** Optional. Specifies the size of generated images. Supported
+      values are `1K`, `2K`, `4K`. If not specified, the model will use default
+      value `1K`. */
+  imageSize?: string;
+  /** Controls the generation of people. Supported values are:
+      ALLOW_ALL, ALLOW_ADULT, ALLOW_NONE. */
+  personGeneration?: string;
+  /** MIME type of the generated image. This field is not
+      supported in Gemini API. */
+  outputMimeType?: string;
+  /** Compression quality of the generated image (for
+      ``image/jpeg`` only). This field is not supported in Gemini API. */
+  outputCompressionQuality?: number;
+}
+
+/** The configuration for automatic function calling. */
+export declare interface AutomaticFunctionCallingConfig {
+  /** Whether to disable automatic function calling.
+      If not set or set to False, will enable automatic function calling.
+      If set to True, will disable automatic function calling.
+       */
+  disable?: boolean;
+  /** If automatic function calling is enabled,
+      maximum number of remote calls for automatic function calling.
+      This number should be a positive integer.
+      If not set, SDK will set maximum number of remote calls to 10.
+       */
+  maximumRemoteCalls?: number;
+  /** If automatic function calling is enabled,
+      whether to ignore call history to the response.
+      If not set, SDK will set ignore_call_history to false,
+      and will append the call history to
+      GenerateContentResponse.automatic_function_calling_history.
+       */
+  ignoreCallHistory?: boolean;
+}
+
+/** Config for model selection. */
+export declare interface ModelSelectionConfig {
+  /** Options for feature selection preference. */
+  featureSelectionPreference?: FeatureSelectionPreference;
+}
+
+/** When automated routing is specified, the routing will be determined by the pretrained routing model and customer provided model routing preference. This data type is not supported in Gemini API. */
+export declare interface GenerationConfigRoutingConfigAutoRoutingMode {
+  /** The model routing preference. */
+  modelRoutingPreference?:
+    | 'UNKNOWN'
+    | 'PRIORITIZE_QUALITY'
+    | 'BALANCED'
+    | 'PRIORITIZE_COST';
+}
+
+/** When manual routing is set, the specified model will be used directly. This data type is not supported in Gemini API. */
+export declare interface GenerationConfigRoutingConfigManualRoutingMode {
+  /** The model name to use. Only the public LLM models are accepted. See [Supported models](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference#supported-models). */
+  modelName?: string;
+}
+
+/** The configuration for routing the request to a specific model. This data type is not supported in Gemini API. */
+export declare interface GenerationConfigRoutingConfig {
+  /** Automated routing. */
+  autoMode?: GenerationConfigRoutingConfigAutoRoutingMode;
+  /** Manual routing. */
+  manualMode?: GenerationConfigRoutingConfigManualRoutingMode;
+}
+
 /** ReplicatedVoiceConfig is used to configure replicated voice. */
 export declare interface ReplicatedVoiceConfig {
   /** The mime type of the replicated voice.
@@ -2088,28 +2154,6 @@ export declare interface SpeechConfig {
   multiSpeakerVoiceConfig?: MultiSpeakerVoiceConfig;
 }
 
-/** The configuration for automatic function calling. */
-export declare interface AutomaticFunctionCallingConfig {
-  /** Whether to disable automatic function calling.
-      If not set or set to False, will enable automatic function calling.
-      If set to True, will disable automatic function calling.
-       */
-  disable?: boolean;
-  /** If automatic function calling is enabled,
-      maximum number of remote calls for automatic function calling.
-      This number should be a positive integer.
-      If not set, SDK will set maximum number of remote calls to 10.
-       */
-  maximumRemoteCalls?: number;
-  /** If automatic function calling is enabled,
-      whether to ignore call history to the response.
-      If not set, SDK will set ignore_call_history to false,
-      and will append the call history to
-      GenerateContentResponse.automatic_function_calling_history.
-       */
-  ignoreCallHistory?: boolean;
-}
-
 /** The thinking features configuration. */
 export declare interface ThinkingConfig {
   /** Indicates whether to include thoughts in the response. If true, thoughts are returned only if the model supports thought and thoughts are available.
@@ -2120,50 +2164,6 @@ export declare interface ThinkingConfig {
   thinkingBudget?: number;
   /** Optional. The number of thoughts tokens that the model should generate. */
   thinkingLevel?: ThinkingLevel;
-}
-
-/** The image generation configuration to be used in GenerateContentConfig. */
-export declare interface ImageConfig {
-  /** Aspect ratio of the generated images. Supported values are
-      "1:1", "2:3", "3:2", "3:4", "4:3", "9:16", "16:9", and "21:9". */
-  aspectRatio?: string;
-  /** Optional. Specifies the size of generated images. Supported
-      values are `1K`, `2K`, `4K`. If not specified, the model will use default
-      value `1K`. */
-  imageSize?: string;
-  /** Controls the generation of people. Supported values are:
-      ALLOW_ALL, ALLOW_ADULT, ALLOW_NONE. */
-  personGeneration?: string;
-  /** MIME type of the generated image. This field is not
-      supported in Gemini API. */
-  outputMimeType?: string;
-  /** Compression quality of the generated image (for
-      ``image/jpeg`` only). This field is not supported in Gemini API. */
-  outputCompressionQuality?: number;
-}
-
-/** When automated routing is specified, the routing will be determined by the pretrained routing model and customer provided model routing preference. This data type is not supported in Gemini API. */
-export declare interface GenerationConfigRoutingConfigAutoRoutingMode {
-  /** The model routing preference. */
-  modelRoutingPreference?:
-    | 'UNKNOWN'
-    | 'PRIORITIZE_QUALITY'
-    | 'BALANCED'
-    | 'PRIORITIZE_COST';
-}
-
-/** When manual routing is set, the specified model will be used directly. This data type is not supported in Gemini API. */
-export declare interface GenerationConfigRoutingConfigManualRoutingMode {
-  /** The model name to use. Only the public LLM models are accepted. See [Supported models](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference#supported-models). */
-  modelName?: string;
-}
-
-/** The configuration for routing the request to a specific model. This data type is not supported in Gemini API. */
-export declare interface GenerationConfigRoutingConfig {
-  /** Automated routing. */
-  autoMode?: GenerationConfigRoutingConfigAutoRoutingMode;
-  /** Manual routing. */
-  manualMode?: GenerationConfigRoutingConfigManualRoutingMode;
 }
 
 /** Safety settings. */
@@ -2181,6 +2181,52 @@ export declare interface SafetySetting {
 For more information, see `Content generation parameters
 <https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/content-generation-parameters>`_. */
 export declare interface GenerateContentConfig {
+  /** Optional. Config for model selection. */
+  modelSelectionConfig?: ModelSelectionConfig;
+  /** Optional. If enabled, audio timestamp will be included in the request to the model. This field is not supported in Gemini API. */
+  audioTimestamp?: boolean;
+  /** Optional. Number of candidates to generate. */
+  candidateCount?: number;
+  /** Optional. If enabled, the model will detect emotions and adapt its responses accordingly. This field is not supported in Gemini API. */
+  enableAffectiveDialog?: boolean;
+  /** Optional. Frequency penalties. */
+  frequencyPenalty?: number;
+  /** Optional. Logit probabilities. */
+  logprobs?: number;
+  /** Optional. The maximum number of output tokens to generate per message. */
+  maxOutputTokens?: number;
+  /** Optional. If specified, the media resolution specified will be used. */
+  mediaResolution?: MediaResolution;
+  /** Optional. Positive penalties. */
+  presencePenalty?: number;
+  /** Optional. Output schema of the generated response. This is an alternative to `response_schema` that accepts [JSON Schema](https://json-schema.org/). If set, `response_schema` must be omitted, but `response_mime_type` is required. While the full JSON Schema may be sent, not all features are supported. Specifically, only the following properties are supported: - `$id` - `$defs` - `$ref` - `$anchor` - `type` - `format` - `title` - `description` - `enum` (for strings and numbers) - `items` - `prefixItems` - `minItems` - `maxItems` - `minimum` - `maximum` - `anyOf` - `oneOf` (interpreted the same as `anyOf`) - `properties` - `additionalProperties` - `required` The non-standard `propertyOrdering` property may also be set. Cyclic references are unrolled to a limited degree and, as such, may only be used within non-required properties. (Nullable properties are not sufficient.) If `$ref` is set on a sub-schema, no other properties, except for than those starting as a `$`, may be set. */
+  responseJsonSchema?: unknown;
+  /** Optional. If true, export the logprobs results in response. */
+  responseLogprobs?: boolean;
+  /** Optional. Output response mimetype of the generated candidate text. Supported mimetype: - `text/plain`: (default) Text output. - `application/json`: JSON response in the candidates. The model needs to be prompted to output the appropriate response type, otherwise the behavior is undefined. This is a preview feature. */
+  responseMimeType?: string;
+  /** Optional. The modalities of the response. */
+  responseModalities?: string[];
+  /** Optional. The `Schema` object allows the definition of input and output data types. These types can be objects, but also primitives and arrays. Represents a select subset of an [OpenAPI 3.0 schema object](https://spec.openapis.org/oas/v3.0.3#schema). If set, a compatible response_mime_type must also be set. Compatible mimetypes: `application/json`: Schema for JSON response. */
+  responseSchema?: SchemaUnion;
+  /** Optional. Routing configuration. This field is not supported in Gemini API. */
+  routingConfig?: GenerationConfigRoutingConfig;
+  /** Optional. Seed. */
+  seed?: number;
+  /** Optional. The speech generation config. */
+  speechConfig?: SpeechConfigUnion;
+  /** Optional. Stop sequences. */
+  stopSequences?: string[];
+  /** Optional. Controls the randomness of predictions. */
+  temperature?: number;
+  /** Optional. Config for thinking features. An error will be returned if this field is set for models that don't support thinking. */
+  thinkingConfig?: ThinkingConfig;
+  /** Optional. If specified, top-k sampling will be used. */
+  topK?: number;
+  /** Optional. If specified, nucleus sampling will be used. */
+  topP?: number;
+  /** Optional. Enables enhanced civic answers. It may not be available for all models. This field is not supported in Vertex AI. */
+  enableEnhancedCivicAnswers?: boolean;
   /** Used to override HTTP request options. */
   httpOptions?: HttpOptions;
   /** Abort signal which can be used to cancel the request.
@@ -2195,99 +2241,6 @@ export declare interface GenerateContentConfig {
       terms in your response".
        */
   systemInstruction?: ContentUnion;
-  /** Value that controls the degree of randomness in token selection.
-      Lower temperatures are good for prompts that require a less open-ended or
-      creative response, while higher temperatures can lead to more diverse or
-      creative results.
-       */
-  temperature?: number;
-  /** Tokens are selected from the most to least probable until the sum
-      of their probabilities equals this value. Use a lower value for less
-      random responses and a higher value for more random responses.
-       */
-  topP?: number;
-  /** For each token selection step, the ``top_k`` tokens with the
-      highest probabilities are sampled. Then tokens are further filtered based
-      on ``top_p`` with the final token selected using temperature sampling. Use
-      a lower number for less random responses and a higher number for more
-      random responses.
-       */
-  topK?: number;
-  /** Number of response variations to return.
-   */
-  candidateCount?: number;
-  /** Maximum number of tokens that can be generated in the response.
-   */
-  maxOutputTokens?: number;
-  /** List of strings that tells the model to stop generating text if one
-      of the strings is encountered in the response.
-       */
-  stopSequences?: string[];
-  /** Whether to return the log probabilities of the tokens that were
-      chosen by the model at each step.
-       */
-  responseLogprobs?: boolean;
-  /** Number of top candidate tokens to return the log probabilities for
-      at each generation step.
-       */
-  logprobs?: number;
-  /** Positive values penalize tokens that already appear in the
-      generated text, increasing the probability of generating more diverse
-      content.
-       */
-  presencePenalty?: number;
-  /** Positive values penalize tokens that repeatedly appear in the
-      generated text, increasing the probability of generating more diverse
-      content.
-       */
-  frequencyPenalty?: number;
-  /** When ``seed`` is fixed to a specific number, the model makes a best
-      effort to provide the same response for repeated requests. By default, a
-      random number is used.
-       */
-  seed?: number;
-  /** Output response mimetype of the generated candidate text.
-      Supported mimetype:
-        - `text/plain`: (default) Text output.
-        - `application/json`: JSON response in the candidates.
-      The model needs to be prompted to output the appropriate response type,
-      otherwise the behavior is undefined.
-      This is a preview feature.
-       */
-  responseMimeType?: string;
-  /** The `Schema` object allows the definition of input and output data types.
-      These types can be objects, but also primitives and arrays.
-      Represents a select subset of an [OpenAPI 3.0 schema
-      object](https://spec.openapis.org/oas/v3.0.3#schema).
-      If set, a compatible response_mime_type must also be set.
-      Compatible mimetypes: `application/json`: Schema for JSON response.
-
-      If `response_schema` doesn't process your schema correctly, try using
-      `response_json_schema` instead.
-       */
-  responseSchema?: SchemaUnion;
-  /** Optional. Output schema of the generated response.
-      This is an alternative to `response_schema` that accepts [JSON
-      Schema](https://json-schema.org/). If set, `response_schema` must be
-      omitted, but `response_mime_type` is required. While the full JSON Schema
-      may be sent, not all features are supported. Specifically, only the
-      following properties are supported: - `$id` - `$defs` - `$ref` - `$anchor`
-      - `type` - `format` - `title` - `description` - `enum` (for strings and
-      numbers) - `items` - `prefixItems` - `minItems` - `maxItems` - `minimum` -
-      `maximum` - `anyOf` - `oneOf` (interpreted the same as `anyOf`) -
-      `properties` - `additionalProperties` - `required` The non-standard
-      `propertyOrdering` property may also be set. Cyclic references are
-      unrolled to a limited degree and, as such, may only be used within
-      non-required properties. (Nullable properties are not sufficient.) If
-      `$ref` is set on a sub-schema, no other properties, except for than those
-      starting as a `$`, may be set. */
-  responseJsonSchema?: unknown;
-  /** Configuration for model router requests.
-   */
-  routingConfig?: GenerationConfigRoutingConfig;
-  /** Configuration for model selection.
-   */
-  modelSelectionConfig?: ModelSelectionConfig;
   /** Safety settings in the request to block unsafe content in the
       response.
        */
@@ -2305,33 +2258,12 @@ export declare interface GenerateContentConfig {
       requests.
        */
   cachedContent?: string;
-  /** The requested modalities of the response. Represents the set of
-      modalities that the model can return.
-       */
-  responseModalities?: string[];
-  /** If specified, the media resolution specified will be used.
-   */
-  mediaResolution?: MediaResolution;
-  /** The speech generation configuration.
-   */
-  speechConfig?: SpeechConfigUnion;
-  /** If enabled, audio timestamp will be included in the request to the
-       model.
-       */
-  audioTimestamp?: boolean;
-  /** The configuration for automatic function calling.
-   */
-  automaticFunctionCalling?: AutomaticFunctionCallingConfig;
-  /** The thinking features configuration.
-   */
-  thinkingConfig?: ThinkingConfig;
   /** The image generation configuration.
    */
   imageConfig?: ImageConfig;
-  /** Enables enhanced civic answers. It may not be available for all
-      models. This field is not supported in Vertex AI.
-       */
-  enableEnhancedCivicAnswers?: boolean;
+  /** The configuration for automatic function calling.
+   */
+  automaticFunctionCalling?: AutomaticFunctionCallingConfig;
 }
 
 /** Config for models.generate_content parameters. */
@@ -3681,10 +3613,6 @@ export class DeleteModelResponse {
 export declare interface GenerationConfig {
   /** Optional. Config for model selection. */
   modelSelectionConfig?: ModelSelectionConfig;
-  /** Output schema of the generated response. This is an alternative to
-      `response_schema` that accepts [JSON Schema](https://json-schema.org/).
-       */
-  responseJsonSchema?: unknown;
   /** Optional. If enabled, audio timestamp will be included in the request to the model. This field is not supported in Gemini API. */
   audioTimestamp?: boolean;
   /** Optional. Number of candidates to generate. */
@@ -3701,6 +3629,8 @@ export declare interface GenerationConfig {
   mediaResolution?: MediaResolution;
   /** Optional. Positive penalties. */
   presencePenalty?: number;
+  /** Optional. Output schema of the generated response. This is an alternative to `response_schema` that accepts [JSON Schema](https://json-schema.org/). If set, `response_schema` must be omitted, but `response_mime_type` is required. While the full JSON Schema may be sent, not all features are supported. Specifically, only the following properties are supported: - `$id` - `$defs` - `$ref` - `$anchor` - `type` - `format` - `title` - `description` - `enum` (for strings and numbers) - `items` - `prefixItems` - `minItems` - `maxItems` - `minimum` - `maximum` - `anyOf` - `oneOf` (interpreted the same as `anyOf`) - `properties` - `additionalProperties` - `required` The non-standard `propertyOrdering` property may also be set. Cyclic references are unrolled to a limited degree and, as such, may only be used within non-required properties. (Nullable properties are not sufficient.) If `$ref` is set on a sub-schema, no other properties, except for than those starting as a `$`, may be set. */
+  responseJsonSchema?: unknown;
   /** Optional. If true, export the logprobs results in response. */
   responseLogprobs?: boolean;
   /** Optional. Output response mimetype of the generated candidate text. Supported mimetype: - `text/plain`: (default) Text output. - `application/json`: JSON response in the candidates. The model needs to be prompted to output the appropriate response type, otherwise the behavior is undefined. This is a preview feature. */
