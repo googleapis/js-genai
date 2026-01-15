@@ -4,13 +4,13 @@ To run the samples first build the SDK and the samples, from the repository root
 
 ```sh
 # Build the SDK
-npm install
-npm run build
+pnpm install
+pnpm run build
 
 # Build the samples
 cd sdk-samples
-npm install
-npm run build
+pnpm install
+pnpm run build
 ```
 
 The samples use key and project settings from environment variables, set the following environment variables prior to invoking samples:

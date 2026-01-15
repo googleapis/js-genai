@@ -2,7 +2,7 @@
 
 set -ex
 
-npm pack
+pnpm pack
 
 PACKAGE_VERSION=$(jq -r .version package.json)
 TARBALL="$(pwd)/google-genai-${PACKAGE_VERSION}.tgz"
@@ -16,8 +16,8 @@ fi
 echo "Building sdk-samples..."
 
 pushd sdk-samples
-npm install "${TARBALL}"
-npm run build
+pnpm add "${TARBALL}"
+NODE_OPTIONS="--max-old-space-size=8192" pnpm run build
 popd
 
 # See: no-optional-deps/README.md
@@ -27,5 +27,5 @@ TMP_WORKDIR="$(mktemp -d)"
 cp -r test/packaging/no-optional-deps/* "${TMP_WORKDIR}"
 cd ${TMP_WORKDIR}
 
-npm install "${TARBALL}"
-npm run build
+pnpm add "${TARBALL}"
+NODE_OPTIONS="--max-old-space-size=8192" pnpm run build

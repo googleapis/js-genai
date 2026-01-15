@@ -13,13 +13,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - uses: pnpm/action-setup@v4
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: 22.x
-        cache: 'npm'
-    - run: USE_LOCAL_BUILD=true npm ci
+        cache: 'pnpm'
+    - run: USE_LOCAL_BUILD=true pnpm install
     - name: Run format
-      run: npx prettier '**/*.ts' '**/*.mjs' '**/*.mjs' '**/*.json' --check
+      run: pnpm exec prettier '**/*.ts' '**/*.mjs' '**/*.mjs' '**/*.json' --check
     - name: Run linter
-      run: npm run lint
+      run: pnpm run lint

@@ -8,7 +8,7 @@ import { execSync } from 'node:child_process';
 import process from 'node:process';
 
 const isLocal = process.env.USE_LOCAL_BUILD === 'true';
-const command = isLocal ? 'npm run build' : 'npm run build-prod';
+const command = isLocal ? 'corepack pnpm run build' : 'corepack pnpm run build-prod';
 
 console.log(`> Executing: ${command}`);
 
