@@ -2410,6 +2410,7 @@ export class LiveServerMessage {
     toolCall?: LiveServerToolCall;
     toolCallCancellation?: LiveServerToolCallCancellation;
     usageMetadata?: UsageMetadata;
+    voiceActivity?: VoiceActivity;
     voiceActivityDetectionSignal?: VoiceActivityDetectionSignal;
 }
 
@@ -3744,9 +3745,21 @@ export interface VideoMetadata {
     startOffset?: string;
 }
 
+// @public
+export interface VoiceActivity {
+    voiceActivityType?: VoiceActivityType;
+}
+
 // @public (undocumented)
 export interface VoiceActivityDetectionSignal {
     vadSignalType?: VadSignalType;
+}
+
+// @public
+export enum VoiceActivityType {
+    ACTIVITY_END = "ACTIVITY_END",
+    ACTIVITY_START = "ACTIVITY_START",
+    TYPE_UNSPECIFIED = "TYPE_UNSPECIFIED"
 }
 
 // @public (undocumented)

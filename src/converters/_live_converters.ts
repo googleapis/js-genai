@@ -1538,6 +1538,89 @@ export function liveSendRealtimeInputParametersToVertex(
   return toObject;
 }
 
+export function liveServerMessageFromMldev(
+  fromObject: types.LiveServerMessage,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromSetupComplete = common.getValueByPath(fromObject, [
+    'setupComplete',
+  ]);
+  if (fromSetupComplete != null) {
+    common.setValueByPath(toObject, ['setupComplete'], fromSetupComplete);
+  }
+
+  const fromServerContent = common.getValueByPath(fromObject, [
+    'serverContent',
+  ]);
+  if (fromServerContent != null) {
+    common.setValueByPath(toObject, ['serverContent'], fromServerContent);
+  }
+
+  const fromToolCall = common.getValueByPath(fromObject, ['toolCall']);
+  if (fromToolCall != null) {
+    common.setValueByPath(toObject, ['toolCall'], fromToolCall);
+  }
+
+  const fromToolCallCancellation = common.getValueByPath(fromObject, [
+    'toolCallCancellation',
+  ]);
+  if (fromToolCallCancellation != null) {
+    common.setValueByPath(
+      toObject,
+      ['toolCallCancellation'],
+      fromToolCallCancellation,
+    );
+  }
+
+  const fromUsageMetadata = common.getValueByPath(fromObject, [
+    'usageMetadata',
+  ]);
+  if (fromUsageMetadata != null) {
+    common.setValueByPath(toObject, ['usageMetadata'], fromUsageMetadata);
+  }
+
+  const fromGoAway = common.getValueByPath(fromObject, ['goAway']);
+  if (fromGoAway != null) {
+    common.setValueByPath(toObject, ['goAway'], fromGoAway);
+  }
+
+  const fromSessionResumptionUpdate = common.getValueByPath(fromObject, [
+    'sessionResumptionUpdate',
+  ]);
+  if (fromSessionResumptionUpdate != null) {
+    common.setValueByPath(
+      toObject,
+      ['sessionResumptionUpdate'],
+      fromSessionResumptionUpdate,
+    );
+  }
+
+  const fromVoiceActivityDetectionSignal = common.getValueByPath(fromObject, [
+    'voiceActivityDetectionSignal',
+  ]);
+  if (fromVoiceActivityDetectionSignal != null) {
+    common.setValueByPath(
+      toObject,
+      ['voiceActivityDetectionSignal'],
+      fromVoiceActivityDetectionSignal,
+    );
+  }
+
+  const fromVoiceActivity = common.getValueByPath(fromObject, [
+    'voiceActivity',
+  ]);
+  if (fromVoiceActivity != null) {
+    common.setValueByPath(
+      toObject,
+      ['voiceActivity'],
+      voiceActivityFromMldev(fromVoiceActivity),
+    );
+  }
+
+  return toObject;
+}
+
 export function liveServerMessageFromVertex(
   fromObject: types.LiveServerMessage,
 ): Record<string, unknown> {
@@ -1608,6 +1691,17 @@ export function liveServerMessageFromVertex(
       toObject,
       ['voiceActivityDetectionSignal'],
       fromVoiceActivityDetectionSignal,
+    );
+  }
+
+  const fromVoiceActivity = common.getValueByPath(fromObject, [
+    'voiceActivity',
+  ]);
+  if (fromVoiceActivity != null) {
+    common.setValueByPath(
+      toObject,
+      ['voiceActivity'],
+      voiceActivityFromVertex(fromVoiceActivity),
     );
   }
 
@@ -2001,6 +2095,40 @@ export function usageMetadataFromVertex(
   const fromTrafficType = common.getValueByPath(fromObject, ['trafficType']);
   if (fromTrafficType != null) {
     common.setValueByPath(toObject, ['trafficType'], fromTrafficType);
+  }
+
+  return toObject;
+}
+
+export function voiceActivityFromMldev(
+  fromObject: types.VoiceActivity,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromVoiceActivityType = common.getValueByPath(fromObject, ['type']);
+  if (fromVoiceActivityType != null) {
+    common.setValueByPath(
+      toObject,
+      ['voiceActivityType'],
+      fromVoiceActivityType,
+    );
+  }
+
+  return toObject;
+}
+
+export function voiceActivityFromVertex(
+  fromObject: types.VoiceActivity,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromVoiceActivityType = common.getValueByPath(fromObject, ['type']);
+  if (fromVoiceActivityType != null) {
+    common.setValueByPath(
+      toObject,
+      ['voiceActivityType'],
+      fromVoiceActivityType,
+    );
   }
 
   return toObject;
