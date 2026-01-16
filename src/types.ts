@@ -2176,6 +2176,14 @@ export declare interface SafetySetting {
   threshold?: HarmBlockThreshold;
 }
 
+/** Configuration for Model Armor integrations of prompt and responses. This data type is not supported in Gemini API. */
+export declare interface ModelArmorConfig {
+  /** Optional. The name of the Model Armor template to use for prompt sanitization. */
+  promptTemplateName?: string;
+  /** Optional. The name of the Model Armor template to use for response sanitization. */
+  responseTemplateName?: string;
+}
+
 /** Optional model configuration parameters.
 
 For more information, see `Content generation parameters
@@ -2332,6 +2340,10 @@ export declare interface GenerateContentConfig {
       models. This field is not supported in Vertex AI.
        */
   enableEnhancedCivicAnswers?: boolean;
+  /** Settings for prompt and response sanitization using the Model Armor
+      service. If supplied, safety_settings must not be supplied.
+       */
+  modelArmorConfig?: ModelArmorConfig;
 }
 
 /** Config for models.generate_content parameters. */
