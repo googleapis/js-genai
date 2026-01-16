@@ -14,7 +14,7 @@ import {GoogleGenAI} from '../../../src/node/node_client.js';
 import * as types from '../../../src/types.js';
 import {setupTestServer, shutdownTestServer} from '../test_server.js';
 
-const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY || 'test-api-key';
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
 
@@ -163,6 +163,7 @@ describe('live', () => {
   });
 
   it('ML Dev should initialize from environment variables', async () => {
+    process.env['GOOGLE_API_KEY'] = 'test-api-key';
     const client = new GoogleGenAI({vertexai: false, httpOptions});
     expect(client.live).not.toBeNull();
   });

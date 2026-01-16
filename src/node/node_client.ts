@@ -139,6 +139,10 @@ export class GoogleGenAI {
     this.project = options.project ?? envProject;
     this.location = options.location ?? envLocation;
 
+    if (!this.vertexai && !this.apiKey) {
+      throw new Error('API key must be set when using the Gemini API.');
+    }
+
     // Handle when to use Vertex AI in express mode (api key)
     if (options.vertexai) {
       if (options.googleAuthOptions?.credentials) {

@@ -68,6 +68,7 @@ const mockGenerateContentResponse: types.GenerateContentResponse =
 describe('processStreamResponse', () => {
   const apiClient = new ApiClient({
     auth: new FakeAuth(),
+    apiKey: 'test-api-key',
     uploader: new CrossUploader(),
     downloader: new CrossDownloader(),
   });
@@ -451,6 +452,7 @@ describe('ApiClient', () => {
     it('should use default value if not provided', () => {
       const client = new ApiClient({
         auth: new FakeAuth(),
+        apiKey: 'test-api-key',
         project: 'env-project',
         uploader: new CrossUploader(),
         downloader: new CrossDownloader(),
@@ -458,6 +460,44 @@ describe('ApiClient', () => {
       // baseUrl is based on apiVersion
       expect(client.getRequestUrl()).toContain('/v1');
       expect(client.isVertexAI()).toBeFalse();
+    });
+
+    it('should initialize with custom base URL and no auth', () => {
+      const originalGeminiApiKey = process.env['GEMINI_API_KEY'];
+      const originalGoogleApiKey = process.env['GOOGLE_API_KEY'];
+      const originalProject = process.env['GOOGLE_CLOUD_PROJECT'];
+      const originalLocation = process.env['GOOGLE_CLOUD_LOCATION'];
+
+      delete process.env['GEMINI_API_KEY'];
+      delete process.env['GOOGLE_API_KEY'];
+      delete process.env['GOOGLE_CLOUD_PROJECT'];
+      delete process.env['GOOGLE_CLOUD_LOCATION'];
+
+      try {
+        const client = new ApiClient({
+          auth: new FakeAuth(),
+          vertexai: true,
+          httpOptions: {
+            baseUrl: 'https://custom-gateway.com',
+          },
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        });
+
+        expect(client.isVertexAI()).toBe(true);
+        expect(client.getProject()).toBeUndefined();
+        expect(client.getLocation()).toBeUndefined();
+        expect(client.getApiKey()).toBeUndefined();
+        expect(client.getRequestUrl()).toBe(
+          'https://custom-gateway.com/v1beta1',
+        );
+        expect(client.getApiVersion()).toBe('v1beta1');
+      } finally {
+        process.env['GEMINI_API_KEY'] = originalGeminiApiKey;
+        process.env['GOOGLE_API_KEY'] = originalGoogleApiKey;
+        process.env['GOOGLE_CLOUD_PROJECT'] = originalProject;
+        process.env['GOOGLE_CLOUD_LOCATION'] = originalLocation;
+      }
     });
 
     it('should set websocket protocol to ws when base URL is http', () => {
@@ -593,6 +633,7 @@ describe('ApiClient', () => {
         auth: new FakeAuth(),
         project: 'project-from-opts',
         location: 'location-from-opts',
+        apiKey: 'test-api-key',
         vertexai: false,
         apiVersion: 'v1beta',
         httpOptions: httpOptions,
@@ -687,6 +728,8 @@ describe('ApiClient', () => {
       const client = new ApiClient({
         auth: new FakeAuth(),
         vertexai: true,
+        project: 'test-project',
+        location: 'test-location',
         uploader: new CrossUploader(),
         downloader: new CrossDownloader(),
       });
@@ -706,6 +749,8 @@ describe('ApiClient', () => {
         body: JSON.stringify({data: 'test'}),
         httpMethod: 'POST',
       });
+      const fetchArgs = (global.fetch as jasmine.Spy).calls.first().args;
+      expect(fetchArgs[0]).toContain('base-resource-path');
       expect(client.getBaseResourcePath).toHaveBeenCalled();
     });
     it('should append query parameters to URL', async () => {

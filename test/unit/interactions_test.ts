@@ -116,6 +116,7 @@ describe('Interactions resource', () => {
       );
       client = new GeminiNextGenAPIClient({
         clientAdapter,
+        apiKey: null,
 
         baseURL: 'https://my.base.host',
         apiVersion: 'somev1',

@@ -33,6 +33,7 @@ describe('tModel', () => {
       tModel(
         new ApiClient({
           auth: new FakeAuth(),
+          apiKey: 'test-api-key',
           uploader: new CrossUploader(),
           downloader: new CrossDownloader(),
         }),
@@ -45,6 +46,7 @@ describe('tModel', () => {
       tModel(
         new ApiClient({
           auth: new FakeAuth(),
+          apiKey: 'test-api-key',
           uploader: new CrossUploader(),
           downloader: new CrossDownloader(),
         }),
@@ -57,6 +59,7 @@ describe('tModel', () => {
       tModel(
         new ApiClient({
           auth: new FakeAuth(),
+          apiKey: 'test-api-key',
           uploader: new CrossUploader(),
           downloader: new CrossDownloader(),
         }),
@@ -69,6 +72,7 @@ describe('tModel', () => {
       tModel(
         new ApiClient({
           auth: new FakeAuth(),
+          apiKey: 'test-api-key',
           uploader: new CrossUploader(),
           downloader: new CrossDownloader(),
         }),
@@ -82,6 +86,8 @@ describe('tModel', () => {
         new ApiClient({
           auth: new FakeAuth(),
           vertexai: true,
+          project: 'test-project',
+          location: 'test-location',
           uploader: new CrossUploader(),
           downloader: new CrossDownloader(),
         }),
@@ -95,6 +101,8 @@ describe('tModel', () => {
         new ApiClient({
           auth: new FakeAuth(),
           vertexai: true,
+          project: 'test-project',
+          location: 'test-location',
           uploader: new CrossUploader(),
           downloader: new CrossDownloader(),
         }),
@@ -108,6 +116,8 @@ describe('tModel', () => {
         new ApiClient({
           auth: new FakeAuth(),
           vertexai: true,
+          project: 'test-project',
+          location: 'test-location',
           uploader: new CrossUploader(),
           downloader: new CrossDownloader(),
         }),
@@ -121,6 +131,8 @@ describe('tModel', () => {
         new ApiClient({
           auth: new FakeAuth(),
           vertexai: true,
+          project: 'test-project',
+          location: 'test-location',
           uploader: new CrossUploader(),
           downloader: new CrossDownloader(),
         }),
@@ -134,6 +146,8 @@ describe('tModel', () => {
         new ApiClient({
           auth: new FakeAuth(),
           vertexai: true,
+          project: 'test-project',
+          location: 'test-location',
           uploader: new CrossUploader(),
           downloader: new CrossDownloader(),
         }),
@@ -148,6 +162,8 @@ describe('tModelsUrl', () => {
     const apiClient = new ApiClient({
       auth: new FakeAuth(),
       vertexai: true,
+      project: 'test-project',
+      location: 'test-location',
       uploader: new CrossUploader(),
       downloader: new CrossDownloader(),
     });
@@ -158,6 +174,7 @@ describe('tModelsUrl', () => {
     const apiClient = new ApiClient({
       auth: new FakeAuth(),
       vertexai: false,
+      apiKey: 'test-api-key',
       uploader: new CrossUploader(),
       downloader: new CrossDownloader(),
     });
@@ -168,6 +185,8 @@ describe('tModelsUrl', () => {
     const apiClient = new ApiClient({
       auth: new FakeAuth(),
       vertexai: true,
+      project: 'test-project',
+      location: 'test-location',
       uploader: new CrossUploader(),
       downloader: new CrossDownloader(),
     });
@@ -178,6 +197,7 @@ describe('tModelsUrl', () => {
     const apiClient = new ApiClient({
       auth: new FakeAuth(),
       vertexai: false,
+      apiKey: 'test-api-key',
       uploader: new CrossUploader(),
       downloader: new CrossDownloader(),
     });
