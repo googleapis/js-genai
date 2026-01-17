@@ -6,9 +6,9 @@ To run the samples directly against the source code without a full rebuild, use 
 
 ```sh
 # Install dependencies
-npm install
+npm install --registry=https://registry.npmjs.org
 cd sdk-samples
-npm install
+npm install --registry=https://registry.npmjs.org
 
 # Run any sample directly using tsx and the dev config
 npx tsx --tsconfig tsconfig.dev.json <sample_name>.ts

@@ -4,11 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export {BaseUrlParameters, setDefaultBaseUrls} from './_base_url';
+export type {BaseUrlParameters} from './_base_url';
+export {setDefaultBaseUrls} from './_base_url';
 export * from './batches';
 export * from './caches';
 export * from './chats';
-export {GoogleGenAI, GoogleGenAIOptions} from './client';
+export {GoogleGenAI} from './client';
+export type {GoogleGenAIOptions} from './client';
 export * from './errors';
 export {Files} from './files';
 export type {Interactions} from './interactions/resources/interactions.js';
