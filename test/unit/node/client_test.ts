@@ -301,6 +301,139 @@ describe('Client', () => {
 
     expect(client['apiKey']).toBeUndefined();
   });
+  it('should use global endpoint when location is us (multi-region) for Vertex', () => {
+    const client = new GoogleGenAI({
+      vertexai: true,
+      project: 'test_project',
+      location: 'us',
+    });
+
+    expect(client.vertexai).toBe(true);
+    expect(client['project']).toBe('test_project');
+    expect(client['location']).toBe('us');
+    // Multi-region 'us' should use global endpoint, not us-aiplatform.googleapis.com
+    expect(client['apiClient'].getBaseUrl()).toBe(
+      'https://aiplatform.googleapis.com/',
+    );
+
+    expect(client['apiKey']).toBeUndefined();
+  });
+  it('should use global endpoint when location is eu (multi-region) for Vertex', () => {
+    const client = new GoogleGenAI({
+      vertexai: true,
+      project: 'test_project',
+      location: 'eu',
+    });
+
+    expect(client.vertexai).toBe(true);
+    expect(client['project']).toBe('test_project');
+    expect(client['location']).toBe('eu');
+    // Multi-region 'eu' should use global endpoint, not eu-aiplatform.googleapis.com
+    expect(client['apiClient'].getBaseUrl()).toBe(
+      'https://aiplatform.googleapis.com/',
+    );
+
+    expect(client['apiKey']).toBeUndefined();
+  });
+  it('should use global endpoint when location is asia (multi-region) for Vertex', () => {
+    const client = new GoogleGenAI({
+      vertexai: true,
+      project: 'test_project',
+      location: 'asia',
+    });
+
+    expect(client.vertexai).toBe(true);
+    expect(client['project']).toBe('test_project');
+    expect(client['location']).toBe('asia');
+    // Multi-region 'asia' should use global endpoint, not asia-aiplatform.googleapis.com
+    expect(client['apiClient'].getBaseUrl()).toBe(
+      'https://aiplatform.googleapis.com/',
+    );
+
+    expect(client['apiKey']).toBeUndefined();
+  });
+  it('should use global endpoint when location is europe (multi-region) for Vertex', () => {
+    const client = new GoogleGenAI({
+      vertexai: true,
+      project: 'test_project',
+      location: 'europe',
+    });
+
+    expect(client.vertexai).toBe(true);
+    expect(client['project']).toBe('test_project');
+    expect(client['location']).toBe('europe');
+    // Multi-region 'europe' should use global endpoint, not europe-aiplatform.googleapis.com
+    expect(client['apiClient'].getBaseUrl()).toBe(
+      'https://aiplatform.googleapis.com/',
+    );
+
+    expect(client['apiKey']).toBeUndefined();
+  });
+  it('should use global endpoint when location is me (multi-region) for Vertex', () => {
+    const client = new GoogleGenAI({
+      vertexai: true,
+      project: 'test_project',
+      location: 'me',
+    });
+
+    expect(client.vertexai).toBe(true);
+    expect(client['project']).toBe('test_project');
+    expect(client['location']).toBe('me');
+    // Multi-region 'me' (Middle East) should use global endpoint, not me-aiplatform.googleapis.com
+    expect(client['apiClient'].getBaseUrl()).toBe(
+      'https://aiplatform.googleapis.com/',
+    );
+
+    expect(client['apiKey']).toBeUndefined();
+  });
+  it('should use global endpoint when location is northamerica (multi-region) for Vertex', () => {
+    const client = new GoogleGenAI({
+      vertexai: true,
+      project: 'test_project',
+      location: 'northamerica',
+    });
+
+    expect(client.vertexai).toBe(true);
+    expect(client['project']).toBe('test_project');
+    expect(client['location']).toBe('northamerica');
+    expect(client['apiClient'].getBaseUrl()).toBe(
+      'https://aiplatform.googleapis.com/',
+    );
+
+    expect(client['apiKey']).toBeUndefined();
+  });
+  it('should use global endpoint when location is southamerica (multi-region) for Vertex', () => {
+    const client = new GoogleGenAI({
+      vertexai: true,
+      project: 'test_project',
+      location: 'southamerica',
+    });
+
+    expect(client.vertexai).toBe(true);
+    expect(client['project']).toBe('test_project');
+    expect(client['location']).toBe('southamerica');
+    expect(client['apiClient'].getBaseUrl()).toBe(
+      'https://aiplatform.googleapis.com/',
+    );
+
+    expect(client['apiKey']).toBeUndefined();
+  });
+  it('should use global endpoint when location is africa (multi-region) for Vertex', () => {
+    const client = new GoogleGenAI({
+      vertexai: true,
+      project: 'test_project',
+      location: 'africa',
+    });
+
+    expect(client.vertexai).toBe(true);
+    expect(client['project']).toBe('test_project');
+    expect(client['location']).toBe('africa');
+    expect(client['apiClient'].getBaseUrl()).toBe(
+      'https://aiplatform.googleapis.com/',
+    );
+
+    expect(client['apiKey']).toBeUndefined();
+  });
   it('should default location to global when only project is provided', () => {
     delete process.env['GOOGLE_CLOUD_LOCATION'];
 

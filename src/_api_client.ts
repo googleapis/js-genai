@@ -172,20 +172,40 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
 
   /**
    * Determines the base URL for Vertex AI based on project and location.
-   * Uses the global endpoint if location is 'global' or if project/location
-   * are not specified (implying API key usage).
+   * Uses the global endpoint if location is a multi-region ('global', 'us', 'eu',
+   * 'asia', 'europe') or if project/location are not specified (implying API key usage).
+   * Multi-region locations use the global endpoint but with /locations/{location}/
+   * in the request path.
    * @private
    */
   private baseUrlFromProjectLocation(): string {
+    // Multi-region locations require the global endpoint aiplatform.googleapis.com
+    // (not {location}-aiplatform.googleapis.com which doesn't exist for multi-regions).
+    // See: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/locations
+    const multiRegionLocations = [
+      'global',
+      'us',
+      'eu',
+      'asia',
+      'europe',
+      'me',
+      'northamerica',
+      'southamerica',
+      'africa',
+    ];
+    const isGlobalOrMultiRegion =
+      !this.clientOptions.location ||
+      multiRegionLocations.includes(this.clientOptions.location);
+
     if (
       this.clientOptions.project &&
       this.clientOptions.location &&
-      this.clientOptions.location !== 'global'
+      !isGlobalOrMultiRegion
     ) {
-      // Regional endpoint
+      // Regional endpoint (e.g., us-central1, asia-east1, europe-west1)
       return `https://${this.clientOptions.location}-aiplatform.googleapis.com/`;
     }
-    // Global endpoint (covers 'global' location and API key usage)
+    // Global endpoint (covers multi-region locations and API key usage)
     return `https://aiplatform.googleapis.com/`;
   }
 
