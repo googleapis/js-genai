@@ -105,14 +105,15 @@ async function uploadBlobInternal(
     }
     let retryCount = 0;
     let currentDelayMs = INITIAL_RETRY_DELAY_MS;
+    const urlParts = new URL(uploadUrl);
     while (retryCount < MAX_RETRY_COUNT) {
       response = await apiClient.request({
-        path: '',
+        path: urlParts.pathname + urlParts.search,
         body: chunk,
         httpMethod: 'POST',
         httpOptions: {
           apiVersion: '',
-          baseUrl: uploadUrl,
+          // baseUrl: uploadUrl, // This baseUrl affects the baseUrl set in apiClient, remove it
           headers: {
             'X-Goog-Upload-Command': uploadCommand,
             'X-Goog-Upload-Offset': String(offset),
