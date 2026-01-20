@@ -1228,6 +1228,12 @@ export function generateContentConfigToMldev(
     );
   }
 
+  if (common.getValueByPath(fromObject, ['modelArmorConfig']) !== undefined) {
+    throw new Error(
+      'modelArmorConfig parameter is not supported in Gemini API.',
+    );
+  }
+
   return toObject;
 }
 

@@ -1271,6 +1271,7 @@ export interface GenerateContentConfig {
     logprobs?: number;
     maxOutputTokens?: number;
     mediaResolution?: MediaResolution;
+    modelArmorConfig?: ModelArmorConfig;
     modelSelectionConfig?: ModelSelectionConfig;
     presencePenalty?: number;
     responseJsonSchema?: unknown;
@@ -2538,6 +2539,12 @@ export interface Model {
     topP?: number;
     tunedModelInfo?: TunedModelInfo;
     version?: string;
+}
+
+// @public
+export interface ModelArmorConfig {
+    promptTemplateName?: string;
+    responseTemplateName?: string;
 }
 
 // @public (undocumented)

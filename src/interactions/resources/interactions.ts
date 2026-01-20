@@ -1648,7 +1648,7 @@ export interface BaseCreateModelInteractionParams {
   api_version?: string;
 
   /**
-   * Body param: Whether to run the model interaction in the background.
+   * Body param: Input only. Whether to run the model interaction in the background.
    */
   background?: boolean;
 
@@ -1742,7 +1742,7 @@ export interface BaseCreateAgentInteractionParams {
   agent_config?: DynamicAgentConfig | DeepResearchAgentConfig;
 
   /**
-   * Body param: Whether to run the model interaction in the background.
+   * Body param: Input only. Whether to run the model interaction in the background.
    */
   background?: boolean;
 

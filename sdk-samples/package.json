@@ -9,7 +9,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.24.0",
+    "@modelcontextprotocol/sdk": "^1.25.2",
     "@google/genai": "file:..",
     "cors": "^2.8.5",
     "express": "^4.21.2",
