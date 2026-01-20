@@ -1,6 +1,16 @@
 # Changelog
 
 
+## [1.38.0](https://github.com/googleapis/js-genai/compare/v1.37.0...v1.38.0) (2026-01-20)
+
+
+### Features
+
+* Add ModelArmorConfig support for prompt and response sanitization via the Model Armor service ([be65c24](https://github.com/googleapis/js-genai/commit/be65c2431d070bd19642623c97effccf4161f9a2))
+* Allow custom endpoints for authentication with Vertex AI in Typescript ([891e32d](https://github.com/googleapis/js-genai/commit/891e32d4ac0ce23bc728e2fe1b38d0ef919ab639)), closes [#1137](https://github.com/googleapis/js-genai/issues/1137)
+* Update data types from discovery doc. ([a16a180](https://github.com/googleapis/js-genai/commit/a16a18085a5647cde10243b788d6d2ce87fca009))
+* Update data types from discovery doc. ([a4eaa8c](https://github.com/googleapis/js-genai/commit/a4eaa8c1455d94f660c5bf5145d57f0f54ec5581))
+
 ## [1.37.0](https://github.com/googleapis/js-genai/compare/v1.36.0...v1.37.0) (2026-01-15)
 
 
