@@ -149,10 +149,19 @@ export class Live {
     }
     const headers = mapToHeaders(clientHeaders);
     if (this.apiClient.isVertexAI()) {
-      url = `${websocketBaseUrl}/ws/google.cloud.aiplatform.${
-        apiVersion
-      }.LlmBidiService/BidiGenerateContent`;
-      await this.auth.addAuthHeaders(headers, url);
+      const project = this.apiClient.getProject();
+      const location = this.apiClient.getLocation();
+      const apiKey = this.apiClient.getApiKey();
+      const hasStandardAuth = (!!project && !!location) || !!apiKey;
+
+      if (this.apiClient.getCustomBaseUrl() && !hasStandardAuth) {
+        // Custom base URL without standard auth (e.g., proxy).
+        url = websocketBaseUrl;
+        // Auth headers are assumed to be in `clientHeaders` from httpOptions.
+      } else {
+        url = `${websocketBaseUrl}/ws/google.cloud.aiplatform.${apiVersion}.LlmBidiService/BidiGenerateContent`;
+        await this.auth.addAuthHeaders(headers, url);
+      }
     } else {
       const apiKey = this.apiClient.getApiKey();
 
@@ -223,8 +232,10 @@ export class Live {
     ) {
       const project = this.apiClient.getProject();
       const location = this.apiClient.getLocation();
-      transformedModel =
-        `projects/${project}/locations/${location}/` + transformedModel;
+      if (project && location) {
+        transformedModel =
+          `projects/${project}/locations/${location}/` + transformedModel;
+      }
     }
 
     let clientMessage: Record<string, unknown> = {};

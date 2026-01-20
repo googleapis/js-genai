@@ -1822,6 +1822,7 @@ export enum HttpElementLocation {
 export interface HttpOptions {
     apiVersion?: string;
     baseUrl?: string;
+    baseUrlResourceScope?: ResourceScope;
     extraBody?: Record<string, unknown>;
     headers?: Record<string, string>;
     timeout?: number;
@@ -2930,6 +2931,11 @@ export class ReplayResponse {
 export interface ReplicatedVoiceConfig {
     mimeType?: string;
     voiceSampleAudio?: string;
+}
+
+// @public
+export enum ResourceScope {
+    COLLECTION = "COLLECTION"
 }
 
 // @public

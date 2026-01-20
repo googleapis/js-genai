@@ -754,6 +754,18 @@ export enum PartMediaResolutionLevel {
   MEDIA_RESOLUTION_ULTRA_HIGH = 'MEDIA_RESOLUTION_ULTRA_HIGH',
 }
 
+/** Resource scope. */
+export enum ResourceScope {
+  /**
+   * When setting base_url, this value configures resource scope to be the collection.
+      The resource name will not include api version, project, or location.
+      For example, if base_url is set to "https://aiplatform.googleapis.com",
+      then the resource name for a Model would be
+      "https://aiplatform.googleapis.com/publishers/google/models/gemini-3-pro-preview
+   */
+  COLLECTION = 'COLLECTION',
+}
+
 /** Options for feature selection preference. */
 export enum FeatureSelectionPreference {
   FEATURE_SELECTION_PREFERENCE_UNSPECIFIED = 'FEATURE_SELECTION_PREFERENCE_UNSPECIFIED',
@@ -1602,6 +1614,8 @@ export function createModelContent(
 export declare interface HttpOptions {
   /** The base URL for the AI platform service endpoint. */
   baseUrl?: string;
+  /** The resource scope used to constructing the resource name when base_url is set */
+  baseUrlResourceScope?: ResourceScope;
   /** Specifies the version of the API to use. */
   apiVersion?: string;
   /** Additional HTTP headers to be sent with the request. */

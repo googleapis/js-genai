@@ -135,24 +135,71 @@ export interface HttpRequest {
  */
 export class ApiClient implements GeminiNextGenAPIClientAdapter {
   readonly clientOptions: ApiClientInitOptions;
+  private readonly customBaseUrl?: string;
   constructor(opts: ApiClientInitOptions) {
     this.clientOptions = {
       ...opts,
-      project: opts.project,
-      location: opts.location,
-      apiKey: opts.apiKey,
-      vertexai: opts.vertexai,
     };
+
+    this.customBaseUrl = opts.httpOptions?.baseUrl;
+
+    if (this.clientOptions.vertexai) {
+      if (this.clientOptions.project && this.clientOptions.location) {
+        this.clientOptions.apiKey = undefined;
+      } else if (this.clientOptions.apiKey) {
+        this.clientOptions.project = undefined;
+        this.clientOptions.location = undefined;
+      }
+    }
 
     const initHttpOptions: types.HttpOptions = {};
 
     if (this.clientOptions.vertexai) {
+      if (
+        !this.clientOptions.location &&
+        !this.clientOptions.apiKey &&
+        !this.customBaseUrl
+      ) {
+        this.clientOptions.location = 'global';
+      }
+
+      const hasSufficientAuth =
+        (this.clientOptions.project && this.clientOptions.location) ||
+        this.clientOptions.apiKey;
+
+      if (!hasSufficientAuth && !this.customBaseUrl) {
+        throw new Error(
+          'Authentication is not set up. Please provide either a project and location, or an API key, or a custom base URL.',
+        );
+      }
+
+      const hasConstructorAuth =
+        (opts.project && opts.location) || !!opts.apiKey;
+
+      if (this.customBaseUrl && !hasConstructorAuth) {
+        initHttpOptions.baseUrl = this.customBaseUrl;
+        this.clientOptions.project = undefined;
+        this.clientOptions.location = undefined;
+      } else if (
+        this.clientOptions.apiKey ||
+        this.clientOptions.location === 'global'
+      ) {
+        // Vertex Express or global endpoint case.
+        initHttpOptions.baseUrl = 'https://aiplatform.googleapis.com/';
+      } else if (this.clientOptions.project && this.clientOptions.location) {
+        initHttpOptions.baseUrl = `https://${this.clientOptions.location}-aiplatform.googleapis.com/`;
+      }
+
       initHttpOptions.apiVersion =
         this.clientOptions.apiVersion ?? VERTEX_AI_API_DEFAULT_VERSION;
-      initHttpOptions.baseUrl = this.baseUrlFromProjectLocation();
-      this.normalizeAuthParameters();
     } else {
       // Gemini API
+      if (!this.clientOptions.apiKey) {
+        throw new ApiError({
+          message: 'API key must be set when using the Gemini API.',
+          status: 403,
+        });
+      }
       initHttpOptions.apiVersion =
         this.clientOptions.apiVersion ?? GOOGLE_AI_API_DEFAULT_VERSION;
       initHttpOptions.baseUrl = `https://generativelanguage.googleapis.com/`;
@@ -170,43 +217,6 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
     }
   }
 
-  /**
-   * Determines the base URL for Vertex AI based on project and location.
-   * Uses the global endpoint if location is 'global' or if project/location
-   * are not specified (implying API key usage).
-   * @private
-   */
-  private baseUrlFromProjectLocation(): string {
-    if (
-      this.clientOptions.project &&
-      this.clientOptions.location &&
-      this.clientOptions.location !== 'global'
-    ) {
-      // Regional endpoint
-      return `https://${this.clientOptions.location}-aiplatform.googleapis.com/`;
-    }
-    // Global endpoint (covers 'global' location and API key usage)
-    return `https://aiplatform.googleapis.com/`;
-  }
-
-  /**
-   * Normalizes authentication parameters for Vertex AI.
-   * If project and location are provided, API key is cleared.
-   * If project and location are not provided (implying API key usage),
-   * project and location are cleared.
-   * @private
-   */
-  private normalizeAuthParameters(): void {
-    if (this.clientOptions.project && this.clientOptions.location) {
-      // Using project/location for auth, clear potential API key
-      this.clientOptions.apiKey = undefined;
-      return;
-    }
-    // Using API key for auth (or no auth provided yet), clear project/location
-    this.clientOptions.project = undefined;
-    this.clientOptions.location = undefined;
-  }
-
   isVertexAI(): boolean {
     return this.clientOptions.vertexai ?? false;
   }
@@ -217,6 +227,10 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
 
   getLocation() {
     return this.clientOptions.location;
+  }
+
+  getCustomBaseUrl(): string | undefined {
+    return this.customBaseUrl;
   }
 
   async getAuthHeaders(): Promise<Headers> {
@@ -320,7 +334,16 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
     return url;
   }
 
-  private shouldPrependVertexProjectPath(request: HttpRequest): boolean {
+  private shouldPrependVertexProjectPath(
+    request: HttpRequest,
+    httpOptions: types.HttpOptions,
+  ): boolean {
+    if (
+      httpOptions.baseUrl &&
+      httpOptions.baseUrlResourceScope === types.ResourceScope.COLLECTION
+    ) {
+      return false;
+    }
     if (this.clientOptions.apiKey) {
       return false;
     }
@@ -353,7 +376,10 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
       );
     }
 
-    const prependProjectLocation = this.shouldPrependVertexProjectPath(request);
+    const prependProjectLocation = this.shouldPrependVertexProjectPath(
+      request,
+      patchedHttpOptions,
+    );
     const url = this.constructUrl(
       request.path,
       patchedHttpOptions,
@@ -419,7 +445,10 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
       );
     }
 
-    const prependProjectLocation = this.shouldPrependVertexProjectPath(request);
+    const prependProjectLocation = this.shouldPrependVertexProjectPath(
+      request,
+      patchedHttpOptions,
+    );
     const url = this.constructUrl(
       request.path,
       patchedHttpOptions,
