@@ -500,8 +500,8 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
               headersTimeout: httpOptions.timeout,
               bodyTimeout: httpOptions.timeout,
             });
-          } catch {
-            // Ignore errors, undici might not be available.
+          } catch (e) {
+            console.warn('undici is not available. Long timeouts (>300s) may not work properly in Node.js. Install undici as a peer dependency if needed.', e);
           }
         }
       }

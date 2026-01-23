@@ -141,14 +141,17 @@
   "dependencies": {
     "google-auth-library": "^10.3.0",
     "protobufjs": "^7.5.4",
-    "ws": "^8.18.0",
-    "undici": "^7.16.0"
+    "ws": "^8.18.0"
   },
   "peerDependencies": {
-    "@modelcontextprotocol/sdk": "^1.25.2"
+    "@modelcontextprotocol/sdk": "^1.25.2",
+    "undici": "^7.16.0"
   },
   "peerDependenciesMeta": {
     "@modelcontextprotocol/sdk": {
+      "optional": true
+    },
+    "undici": {
       "optional": true
     }
   },
