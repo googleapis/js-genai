@@ -1408,6 +1408,12 @@ export function generateContentConfigToMldev(
     );
   }
 
+  if (common.getValueByPath(fromObject, ['modelArmorConfig']) !== undefined) {
+    throw new Error(
+      'modelArmorConfig parameter is not supported in Gemini API.',
+    );
+  }
+
   return toObject;
 }
 
@@ -1640,6 +1646,17 @@ export function generateContentConfigToVertex(
   ) {
     throw new Error(
       'enableEnhancedCivicAnswers parameter is not supported in Vertex AI.',
+    );
+  }
+
+  const fromModelArmorConfig = common.getValueByPath(fromObject, [
+    'modelArmorConfig',
+  ]);
+  if (parentObject !== undefined && fromModelArmorConfig != null) {
+    common.setValueByPath(
+      parentObject,
+      ['modelArmorConfig'],
+      fromModelArmorConfig,
     );
   }
 

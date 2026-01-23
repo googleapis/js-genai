@@ -1,6 +1,33 @@
 # Changelog
 
 
+## [1.38.0](https://github.com/googleapis/js-genai/compare/v1.37.0...v1.38.0) (2026-01-20)
+
+
+### Features
+
+* Add ModelArmorConfig support for prompt and response sanitization via the Model Armor service ([be65c24](https://github.com/googleapis/js-genai/commit/be65c2431d070bd19642623c97effccf4161f9a2))
+* Allow custom endpoints for authentication with Vertex AI in Typescript ([891e32d](https://github.com/googleapis/js-genai/commit/891e32d4ac0ce23bc728e2fe1b38d0ef919ab639)), closes [#1137](https://github.com/googleapis/js-genai/issues/1137)
+* Update data types from discovery doc. ([a16a180](https://github.com/googleapis/js-genai/commit/a16a18085a5647cde10243b788d6d2ce87fca009))
+* Update data types from discovery doc. ([a4eaa8c](https://github.com/googleapis/js-genai/commit/a4eaa8c1455d94f660c5bf5145d57f0f54ec5581))
+
+## [1.37.0](https://github.com/googleapis/js-genai/compare/v1.36.0...v1.37.0) (2026-01-15)
+
+
+### Features
+
+* Support 4:5 and 5:4 aspect ratio in Interactions ([5294da2](https://github.com/googleapis/js-genai/commit/5294da273cbc9a206cd58544b42d1de70500a7a9))
+
+## [1.36.0](https://github.com/googleapis/js-genai/compare/v1.35.0...v1.36.0) (2026-01-14)
+
+
+### Features
+
+* Add FileSearchCallContent to Interactions ([ccf11a4](https://github.com/googleapis/js-genai/commit/ccf11a463f3364683b7c39ffec9670f77bcc16dc))
+* Add ImageConfig to GenerationConfig for image generation in Interactions ([f34b6fb](https://github.com/googleapis/js-genai/commit/f34b6fbcb2ad846c73b9c47bfd3ba94e00eb73a9))
+* Support JS local tokenizer ([bb429ad](https://github.com/googleapis/js-genai/commit/bb429ad3ed8d170f2a5abda01a00a918012ab80c))
+* voice activity support ([3ad1011](https://github.com/googleapis/js-genai/commit/3ad101159a8257897940d6a1f94aa6b68b810f37))
+
 ## [1.35.0](https://github.com/googleapis/js-genai/compare/v1.34.0...v1.35.0) (2026-01-07)
 
 

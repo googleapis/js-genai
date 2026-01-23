@@ -15,7 +15,7 @@ import {
 import {GoogleGenAI} from '../../../src/web/web_client.js';
 import {createZeroFilledTempFile} from '../../_generate_test_file.js';
 
-const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY || 'test-api-key';
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
 

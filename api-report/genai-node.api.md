@@ -1271,6 +1271,7 @@ export interface GenerateContentConfig {
     logprobs?: number;
     maxOutputTokens?: number;
     mediaResolution?: MediaResolution;
+    modelArmorConfig?: ModelArmorConfig;
     modelSelectionConfig?: ModelSelectionConfig;
     presencePenalty?: number;
     responseJsonSchema?: unknown;
@@ -1821,6 +1822,7 @@ export enum HttpElementLocation {
 export interface HttpOptions {
     apiVersion?: string;
     baseUrl?: string;
+    baseUrlResourceScope?: ResourceScope;
     extraBody?: Record<string, unknown>;
     headers?: Record<string, string>;
     timeout?: number;
@@ -2409,6 +2411,7 @@ export class LiveServerMessage {
     toolCall?: LiveServerToolCall;
     toolCallCancellation?: LiveServerToolCallCancellation;
     usageMetadata?: UsageMetadata;
+    voiceActivity?: VoiceActivity;
     voiceActivityDetectionSignal?: VoiceActivityDetectionSignal;
 }
 
@@ -2536,6 +2539,12 @@ export interface Model {
     topP?: number;
     tunedModelInfo?: TunedModelInfo;
     version?: string;
+}
+
+// @public
+export interface ModelArmorConfig {
+    promptTemplateName?: string;
+    responseTemplateName?: string;
 }
 
 // @public (undocumented)
@@ -2922,6 +2931,11 @@ export class ReplayResponse {
 export interface ReplicatedVoiceConfig {
     mimeType?: string;
     voiceSampleAudio?: string;
+}
+
+// @public
+export enum ResourceScope {
+    COLLECTION = "COLLECTION"
 }
 
 // @public
@@ -3743,9 +3757,21 @@ export interface VideoMetadata {
     startOffset?: string;
 }
 
+// @public
+export interface VoiceActivity {
+    voiceActivityType?: VoiceActivityType;
+}
+
 // @public (undocumented)
 export interface VoiceActivityDetectionSignal {
     vadSignalType?: VadSignalType;
+}
+
+// @public
+export enum VoiceActivityType {
+    ACTIVITY_END = "ACTIVITY_END",
+    ACTIVITY_START = "ACTIVITY_START",
+    TYPE_UNSPECIFIED = "TYPE_UNSPECIFIED"
 }
 
 // @public (undocumented)

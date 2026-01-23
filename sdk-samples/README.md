@@ -1,6 +1,22 @@
 # Usage samples for `@google/genai/node`
 
-To run the samples first build the SDK and the samples, from the repository root:
+## Quick Start (Development)
+
+To run the samples directly against the source code without a full rebuild, use the development configuration:
+
+```sh
+# Install dependencies
+npm install
+cd sdk-samples
+npm install
+
+# Run any sample directly using tsx and the dev config
+npx tsx --tsconfig tsconfig.dev.json <sample_name>.ts
+```
+
+## Standard Build Workflow
+
+If you prefer to build the project first:
 
 ```sh
 # Build the SDK
@@ -11,6 +27,9 @@ npm run build
 cd sdk-samples
 npm install
 npm run build
+
+# Run the compiled sample
+node build/<sample_name>.js
 ```
 
 The samples use key and project settings from environment variables, set the following environment variables prior to invoking samples:
@@ -24,21 +43,22 @@ export GOOGLE_CLOUD_LOCATION=<GCP_REGION>
 Now you can run the compiled samples, e.g:
 
 ```sh
-node build/sdk-samples/generate_content_with_text.js
+node build/generate_content_with_text.js
 ```
 
 
 ## Test Run all samples
 
-To test run all samples, first build them following the instructions above,
-then run the script:
+To run all samples (compiled):
 
-```
+```sh
+cd sdk-samples
 bash run_samples.sh
 ```
 
-On the first run it will write the list of samples to `js_files_to_run.txt`.
-It executes the examples listed in the file top to bottom, exiting if a sample
-fails.
+This script will:
+1. Generate a list of all built `.js` files in `build/` (excluding `live_server.js`) into `js_files_to_run.txt`.
+2. Execute them sequentially using `node`.
+3. Report any failures.
 
-To skip a sample on subsequent runs, remove it from the file.
+To skip a sample on subsequent runs, remove it from `js_files_to_run.txt`.

@@ -754,6 +754,18 @@ export enum PartMediaResolutionLevel {
   MEDIA_RESOLUTION_ULTRA_HIGH = 'MEDIA_RESOLUTION_ULTRA_HIGH',
 }
 
+/** Resource scope. */
+export enum ResourceScope {
+  /**
+   * When setting base_url, this value configures resource scope to be the collection.
+      The resource name will not include api version, project, or location.
+      For example, if base_url is set to "https://aiplatform.googleapis.com",
+      then the resource name for a Model would be
+      "https://aiplatform.googleapis.com/publishers/google/models/gemini-3-pro-preview
+   */
+  COLLECTION = 'COLLECTION',
+}
+
 /** Options for feature selection preference. */
 export enum FeatureSelectionPreference {
   FEATURE_SELECTION_PREFERENCE_UNSPECIFIED = 'FEATURE_SELECTION_PREFERENCE_UNSPECIFIED',
@@ -1034,6 +1046,22 @@ export enum VadSignalType {
    * End of sentence signal.
    */
   VAD_SIGNAL_TYPE_EOS = 'VAD_SIGNAL_TYPE_EOS',
+}
+
+/** The type of the voice activity signal. */
+export enum VoiceActivityType {
+  /**
+   * The default is VOICE_ACTIVITY_TYPE_UNSPECIFIED.
+   */
+  TYPE_UNSPECIFIED = 'TYPE_UNSPECIFIED',
+  /**
+   * Start of sentence signal.
+   */
+  ACTIVITY_START = 'ACTIVITY_START',
+  /**
+   * End of sentence signal.
+   */
+  ACTIVITY_END = 'ACTIVITY_END',
 }
 
 /** Start of speech sensitivity. */
@@ -1586,6 +1614,8 @@ export function createModelContent(
 export declare interface HttpOptions {
   /** The base URL for the AI platform service endpoint. */
   baseUrl?: string;
+  /** The resource scope used to constructing the resource name when base_url is set */
+  baseUrlResourceScope?: ResourceScope;
   /** Specifies the version of the API to use. */
   apiVersion?: string;
   /** Additional HTTP headers to be sent with the request. */
@@ -2160,6 +2190,14 @@ export declare interface SafetySetting {
   threshold?: HarmBlockThreshold;
 }
 
+/** Configuration for Model Armor integrations of prompt and responses. This data type is not supported in Gemini API. */
+export declare interface ModelArmorConfig {
+  /** Optional. The name of the Model Armor template to use for prompt sanitization. */
+  promptTemplateName?: string;
+  /** Optional. The name of the Model Armor template to use for response sanitization. */
+  responseTemplateName?: string;
+}
+
 /** Optional model configuration parameters.
 
 For more information, see `Content generation parameters
@@ -2316,6 +2354,10 @@ export declare interface GenerateContentConfig {
       models. This field is not supported in Vertex AI.
        */
   enableEnhancedCivicAnswers?: boolean;
+  /** Settings for prompt and response sanitization using the Model Armor
+      service. If supplied, safety_settings must not be supplied.
+       */
+  modelArmorConfig?: ModelArmorConfig;
 }
 
 /** Config for models.generate_content parameters. */
@@ -6061,6 +6103,12 @@ export declare interface VoiceActivityDetectionSignal {
   vadSignalType?: VadSignalType;
 }
 
+/** Voice activity signal. */
+export declare interface VoiceActivity {
+  /** The type of the voice activity signal. */
+  voiceActivityType?: VoiceActivityType;
+}
+
 /** Response message for API call. */
 export class LiveServerMessage {
   /** Sent in response to a `LiveClientSetup` message from the client. */
@@ -6077,8 +6125,10 @@ export class LiveServerMessage {
   goAway?: LiveServerGoAway;
   /** Update of the session resumption state. */
   sessionResumptionUpdate?: LiveServerSessionResumptionUpdate;
-  /** Voice activity detection signal. */
+  /** Voice activity detection signal. Allowlisted only. */
   voiceActivityDetectionSignal?: VoiceActivityDetectionSignal;
+  /** Voice activity signal. */
+  voiceActivity?: VoiceActivity;
   /**
    * Returns the concatenation of all text parts from the server content if present.
    *

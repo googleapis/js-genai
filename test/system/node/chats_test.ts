@@ -21,7 +21,7 @@ import {
 } from '../../unit/test_mcp_server.js';
 import {setupTestServer, shutdownTestServer} from '../test_server.js';
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'test-api-key';
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 
 const function_calling: Tool = {
