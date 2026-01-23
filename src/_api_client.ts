@@ -492,7 +492,8 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
           // https://nodejs.org/api/timers.html#timeoutunref
           timeoutHandle.unref();
         }
-        if (typeof process !== 'undefined' && process.versions?.node) {
+        if (typeof process !== 'undefined' && process.versions?.node && httpOptions.timeout > 300_000) {
+          // For Node.js, use undici agent when timeout > 300s to handle long timeouts properly.
           try {
             const { Agent } = await import('undici');
             (requestInit as UndiciRequestInit).dispatcher = new Agent({
