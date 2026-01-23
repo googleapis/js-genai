@@ -12,7 +12,7 @@ import {GoogleGenAI} from '../../../src/node/node_client.js';
 import * as types from '../../../src/types.js';
 
 describe('Client', () => {
-  afterEach(() => {
+  beforeEach(() => {
     delete process.env['GOOGLE_API_KEY'];
     delete process.env['GEMINI_API_KEY'];
     delete process.env['GOOGLE_GENAI_USE_VERTEXAI'];
