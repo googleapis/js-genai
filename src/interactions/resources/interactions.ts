@@ -82,7 +82,8 @@ export class BaseInteractions extends APIResource {
   }
 
   /**
-   * Cancels an interaction by id. This only applies to background interactions that are still running.
+   * Cancels an interaction by id. This only applies to background interactions that
+   * are still running.
    *
    * @example
    * ```ts
@@ -99,7 +100,8 @@ export class BaseInteractions extends APIResource {
   }
 
   /**
-   * Retrieves the full details of a single interaction based on its `Interaction.id`.
+   * Retrieves the full details of a single interaction based on its
+   * `Interaction.id`.
    *
    * @example
    * ```ts
@@ -161,8 +163,8 @@ export interface Annotation {
   end_index?: number;
 
   /**
-   * Source attributed for a portion of the text. Could be a URL, title, or
-   * other identifier.
+   * Source attributed for a portion of the text. Could be a URL, title, or other
+   * identifier.
    */
   source?: string;
 
@@ -1173,7 +1175,8 @@ export namespace MCPServerToolResultContent {
 }
 
 /**
- * The model that will complete your prompt.\n\nSee [models](https://ai.google.dev/gemini-api/docs/models) for additional details.
+ * The model that will complete your prompt.\n\nSee
+ * [models](https://ai.google.dev/gemini-api/docs/models) for additional details.
  */
 export type Model =
   | 'gemini-2.5-pro'
@@ -1317,8 +1320,7 @@ export namespace Tool {
     name?: string;
 
     /**
-     * The full URL for the MCPServer endpoint.
-     * Example: "https://api.example.com/mcp"
+     * The full URL for the MCPServer endpoint. Example: "https://api.example.com/mcp"
      */
     url?: string;
   }
@@ -1367,8 +1369,7 @@ export interface Turn {
   content?: string | Array<Content>;
 
   /**
-   * The originator of this turn. Must be user for input or model for
-   * model output.
+   * The originator of this turn. Must be user for input or model for model output.
    */
   role?: string;
 }
@@ -1663,13 +1664,14 @@ export interface BaseCreateModelInteractionParams {
   previous_interaction_id?: string;
 
   /**
-   * Body param: Enforces that the generated response is a JSON object that complies with
-   * the JSON schema specified in this field.
+   * Body param: Enforces that the generated response is a JSON object that complies
+   * with the JSON schema specified in this field.
    */
   response_format?: unknown;
 
   /**
-   * Body param: The mime type of the response. This is required if response_format is set.
+   * Body param: The mime type of the response. This is required if response_format
+   * is set.
    */
   response_mime_type?: string;
 
@@ -1679,7 +1681,8 @@ export interface BaseCreateModelInteractionParams {
   response_modalities?: Array<'text' | 'image' | 'audio'>;
 
   /**
-   * Body param: Input only. Whether to store the response and request for later retrieval.
+   * Body param: Input only. Whether to store the response and request for later
+   * retrieval.
    */
   store?: boolean;
 
@@ -1752,13 +1755,14 @@ export interface BaseCreateAgentInteractionParams {
   previous_interaction_id?: string;
 
   /**
-   * Body param: Enforces that the generated response is a JSON object that complies with
-   * the JSON schema specified in this field.
+   * Body param: Enforces that the generated response is a JSON object that complies
+   * with the JSON schema specified in this field.
    */
   response_format?: unknown;
 
   /**
-   * Body param: The mime type of the response. This is required if response_format is set.
+   * Body param: The mime type of the response. This is required if response_format
+   * is set.
    */
   response_mime_type?: string;
 
@@ -1768,7 +1772,8 @@ export interface BaseCreateAgentInteractionParams {
   response_modalities?: Array<'text' | 'image' | 'audio'>;
 
   /**
-   * Body param: Input only. Whether to store the response and request for later retrieval.
+   * Body param: Input only. Whether to store the response and request for later
+   * retrieval.
    */
   store?: boolean;
 
@@ -1839,12 +1844,15 @@ export interface InteractionGetParamsBase {
   api_version?: string;
 
   /**
-   * Query param: Optional. If set, resumes the interaction stream from the next chunk after the event marked by the event id. Can only be used if `stream` is true.
+   * Query param: Optional. If set, resumes the interaction stream from the next
+   * chunk after the event marked by the event id. Can only be used if `stream` is
+   * true.
    */
   last_event_id?: string;
 
   /**
-   * Query param: If set to true, the generated content will be streamed incrementally.
+   * Query param: If set to true, the generated content will be streamed
+   * incrementally.
    */
   stream?: boolean;
 }
@@ -1856,14 +1864,16 @@ export namespace InteractionGetParams {
 
 export interface InteractionGetParamsNonStreaming extends InteractionGetParamsBase {
   /**
-   * Query param: If set to true, the generated content will be streamed incrementally.
+   * Query param: If set to true, the generated content will be streamed
+   * incrementally.
    */
   stream?: false;
 }
 
 export interface InteractionGetParamsStreaming extends InteractionGetParamsBase {
   /**
-   * Query param: If set to true, the generated content will be streamed incrementally.
+   * Query param: If set to true, the generated content will be streamed
+   * incrementally.
    */
   stream: true;
 }
