@@ -23,6 +23,9 @@ describe('Client', () => {
 
     setDefaultBaseUrls({});
   });
+  afterEach(() => {
+    setDefaultBaseUrls({});
+  });
 
   it('should not successfully initialize without any options', () => {
     expect(() => {
