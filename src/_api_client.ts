@@ -12,7 +12,6 @@ import {uploadToFileSearchStoreConfigToMldev} from './converters/_filesearchstor
 import {ApiError} from './errors.js';
 import {GeminiNextGenAPIClientAdapter} from './interactions/client-adapter.js';
 import * as types from './types.js';
-import type { RequestInit as UndiciRequestInit, Agent } from 'undici';
 
 const CONTENT_TYPE_HEADER = 'Content-Type';
 const SERVER_TIMEOUT_HEADER = 'X-Server-Timeout';
@@ -137,7 +136,8 @@ export interface HttpRequest {
 export class ApiClient implements GeminiNextGenAPIClientAdapter {
   readonly clientOptions: ApiClientInitOptions;
   private readonly customBaseUrl?: string;
-  private cachedNodeAgent?: Agent;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private cachedNodeAgent?: any;
   constructor(opts: ApiClientInitOptions) {
     this.clientOptions = {
       ...opts,
@@ -493,7 +493,7 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
           // https://nodejs.org/api/timers.html#timeoutunref
           timeoutHandle.unref();
         }
-        
+
         const isNode = typeof process !== 'undefined' && process.versions?.node;
         if (isNode && httpOptions.timeout > 300_000) {
           // For Node.js, use undici agent when timeout > 300s to handle long timeouts properly.
@@ -501,16 +501,20 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
           // Cache undici agent
           if (!this.cachedNodeAgent) {
             try {
-              const { Agent } = await import('undici');
+              const {Agent} = await import('undici');
               this.cachedNodeAgent = new Agent({
                 headersTimeout: timeout,
                 bodyTimeout: timeout,
               });
             } catch (e) {
-              console.warn('undici is not available. Long timeouts (>300s) may not work properly in Node.js. Install undici as a peer dependency if needed.', e);
+              console.warn(
+                'undici is not available. Long timeouts (>300s) may not work properly in Node.js. Install undici as a peer dependency if needed.',
+                e,
+              );
             }
           }
-          (requestInit as UndiciRequestInit).dispatcher = this.cachedNodeAgent;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (requestInit as any).dispatcher = this.cachedNodeAgent;
         }
       }
       if (abortSignal) {
