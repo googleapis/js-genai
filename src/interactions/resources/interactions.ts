@@ -447,7 +447,7 @@ export namespace ContentDelta {
 
   export namespace FunctionResultDelta {
     export interface Items {
-      items?: Array<string | InteractionsAPI.ImageContent | unknown>;
+      items?: Array<InteractionsAPI.TextContent | InteractionsAPI.ImageContent | unknown>;
     }
   }
 
@@ -840,7 +840,7 @@ export interface FunctionResultContent {
 
 export namespace FunctionResultContent {
   export interface Items {
-    items?: Array<string | InteractionsAPI.ImageContent | unknown>;
+    items?: Array<InteractionsAPI.TextContent | InteractionsAPI.ImageContent | unknown>;
   }
 }
 
