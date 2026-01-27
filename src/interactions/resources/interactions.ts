@@ -1077,13 +1077,13 @@ export interface Interaction {
   usage?: Usage;
 }
 
-export interface InteractionEvent {
+export interface InteractionCompleteEvent {
   /**
    * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
 
-  event_type?: 'interaction.start' | 'interaction.complete';
+  event_type?: 'interaction.complete';
 
   /**
    * The Interaction resource.
@@ -1092,12 +1092,27 @@ export interface InteractionEvent {
 }
 
 export type InteractionSSEEvent =
-  | InteractionEvent
+  | InteractionStartEvent
+  | InteractionCompleteEvent
   | InteractionStatusUpdate
   | ContentStart
   | ContentDelta
   | ContentStop
   | ErrorEvent;
+
+export interface InteractionStartEvent {
+  /**
+   * The event_id token to be used to resume the interaction stream, from this event.
+   */
+  event_id?: string;
+
+  event_type?: 'interaction.start';
+
+  /**
+   * The Interaction resource.
+   */
+  interaction?: Interaction;
+}
 
 export interface InteractionStatusUpdate {
   /**
@@ -1900,8 +1915,9 @@ export declare namespace Interactions {
     type ImageContent as ImageContent,
     type ImageMimeType as ImageMimeType,
     type Interaction as Interaction,
-    type InteractionEvent as InteractionEvent,
+    type InteractionCompleteEvent as InteractionCompleteEvent,
     type InteractionSSEEvent as InteractionSSEEvent,
+    type InteractionStartEvent as InteractionStartEvent,
     type InteractionStatusUpdate as InteractionStatusUpdate,
     type MCPServerToolCallContent as MCPServerToolCallContent,
     type MCPServerToolResultContent as MCPServerToolResultContent,
