@@ -62,10 +62,14 @@ function App() {
           </div>
         </div>
       </div>
-      <GenerateContentText apiKey={apiKey} vertexai={vertexai} />
-      <UploadFile apiKey={apiKey} vertexai={vertexai} />
-      <TextAndImage apiKey={apiKey} vertexai={vertexai} />
-      <VideoGeneration apiKey={apiKey} vertexai={vertexai} />
+      {apiKey && (
+        <>
+          <GenerateContentText apiKey={apiKey} vertexai={vertexai} />
+          <UploadFile apiKey={apiKey} vertexai={vertexai} />
+          <TextAndImage apiKey={apiKey} vertexai={vertexai} />
+          <VideoGeneration apiKey={apiKey} vertexai={vertexai} />
+        </>
+      )}
     </>
   );
 }
