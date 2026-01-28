@@ -1854,6 +1854,11 @@ export interface InteractionGetParamsBase {
   api_version?: string;
 
   /**
+   * Query param: If set to true, includes the input in the response.
+   */
+  include_input?: boolean;
+
+  /**
    * Query param: Optional. If set, resumes the interaction stream from the next chunk after the event marked by the event id. Can only be used if `stream` is true.
    */
   last_event_id?: string;
