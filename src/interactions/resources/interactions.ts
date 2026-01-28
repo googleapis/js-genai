@@ -23,6 +23,7 @@ export class BaseInteractions extends APIResource {
    * @example
    * ```ts
    * const interaction = await client.interactions.create({
+   *   api_version: 'api_version',
    *   input: 'string',
    *   model: 'gemini-2.5-pro',
    * });
@@ -69,7 +70,9 @@ export class BaseInteractions extends APIResource {
    *
    * @example
    * ```ts
-   * const interaction = await client.interactions.delete('id');
+   * const interaction = await client.interactions.delete('id', {
+   *   api_version: 'api_version',
+   * });
    * ```
    */
   delete(
@@ -86,7 +89,9 @@ export class BaseInteractions extends APIResource {
    *
    * @example
    * ```ts
-   * const interaction = await client.interactions.cancel('id');
+   * const interaction = await client.interactions.cancel('id', {
+   *   api_version: 'api_version',
+   * });
    * ```
    */
   cancel(
@@ -103,7 +108,9 @@ export class BaseInteractions extends APIResource {
    *
    * @example
    * ```ts
-   * const interaction = await client.interactions.get('id');
+   * const interaction = await client.interactions.get('id', {
+   *   api_version: 'api_version',
+   * });
    * ```
    */
   get(
@@ -1627,6 +1634,11 @@ export type InteractionCreateParams =
 
 export interface BaseCreateModelInteractionParams {
   /**
+   * Path param: Which version of the API to use.
+   */
+  api_version?: string;
+
+  /**
    * Body param: The inputs for the interaction.
    */
   input:
@@ -1656,11 +1668,6 @@ export interface BaseCreateModelInteractionParams {
    * Body param: The name of the `Model` used for generating the interaction.
    */
   model: Model;
-
-  /**
-   * Path param: Which version of the API to use.
-   */
-  api_version?: string;
 
   /**
    * Body param: Input only. Whether to run the model interaction in the background.
@@ -1716,6 +1723,11 @@ export interface BaseCreateModelInteractionParams {
 
 export interface BaseCreateAgentInteractionParams {
   /**
+   * Path param: Which version of the API to use.
+   */
+  api_version?: string;
+
+  /**
    * Body param: The name of the `Agent` used for generating the interaction.
    */
   agent: (string & {}) | 'deep-research-pro-preview-12-2025';
@@ -1745,11 +1757,6 @@ export interface BaseCreateAgentInteractionParams {
     | MCPServerToolResultContent
     | FileSearchCallContent
     | FileSearchResultContent;
-
-  /**
-   * Path param: Which version of the API to use.
-   */
-  api_version?: string;
 
   /**
    * Body param: Configuration for the agent.
