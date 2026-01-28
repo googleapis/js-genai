@@ -859,7 +859,7 @@ describe('ApiClient', () => {
       const client = new ApiClient({
         auth: new FakeAuth('test-api-key'),
         apiKey: 'test-api-key',
-        httpOptions: {timeout: 1000},
+        httpOptions: {timeout: 300_001}, // above 5 minutes to trigger dispatcher
         uploader: new CrossUploader(),
         downloader: new CrossDownloader(),
       });
