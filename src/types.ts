@@ -5273,6 +5273,35 @@ export class DeleteFileResponse {
   sdkHttpResponse?: HttpResponse;
 }
 
+/** Used to override the default configuration. */
+export declare interface RegisterFilesConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
+}
+
+/** Parameters for the private _Register method. */
+export declare interface InternalRegisterFilesParameters {
+  /** The Google Cloud Storage URIs to register. Example: `gs://bucket/object`. */
+  uris: string[];
+  /** Used to override the default configuration. */
+  config?: RegisterFilesConfig;
+}
+
+/** Response for the _register file method. */
+export class RegisterFilesResponse {
+  /** Used to retain the full HTTP response. */
+  sdkHttpResponse?: HttpResponse;
+  /** The registered files. */
+  files?: File[];
+}
+
 /** Config for inlined request. */
 export declare interface InlinedRequest {
   /** ID of the model to use. For a list of models, see `Google models
@@ -6212,6 +6241,21 @@ export declare interface OperationFromAPIResponseParameters {
  */
 export declare interface GenerationConfigThinkingConfig
   extends ThinkingConfig {}
+
+/** Generates the parameters for the private registerFiles method. */
+export declare interface RegisterFilesParameters {
+  /**
+   * The authentication object.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  auth?: any;
+  /**
+   * The Google Cloud Storage URIs to register. Example: `gs://bucket/object`.
+   */
+  uris: string[];
+  /** Used to override the default configuration. */
+  config?: RegisterFilesConfig;
+}
 
 /** Configures automatic detection of activity. */
 export declare interface AutomaticActivityDetection {

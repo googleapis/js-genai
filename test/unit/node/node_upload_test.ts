@@ -40,6 +40,29 @@ const mockResponse = new Response(
 );
 
 describe('Node uploader', () => {
+  let originalGeminiBaseUrl: string | undefined;
+  let originalVertexBaseUrl: string | undefined;
+
+  beforeEach(() => {
+    originalGeminiBaseUrl = process.env['GOOGLE_GEMINI_BASE_URL'];
+    originalVertexBaseUrl = process.env['GOOGLE_VERTEX_BASE_URL'];
+    delete process.env['GOOGLE_GEMINI_BASE_URL'];
+    delete process.env['GOOGLE_VERTEX_BASE_URL'];
+  });
+
+  afterEach(() => {
+    if (originalGeminiBaseUrl !== undefined) {
+      process.env['GOOGLE_GEMINI_BASE_URL'] = originalGeminiBaseUrl;
+    } else {
+      delete process.env['GOOGLE_GEMINI_BASE_URL'];
+    }
+    if (originalVertexBaseUrl !== undefined) {
+      process.env['GOOGLE_VERTEX_BASE_URL'] = originalVertexBaseUrl;
+    } else {
+      delete process.env['GOOGLE_VERTEX_BASE_URL'];
+    }
+  });
+
   describe('Input is a string path', () => {
     let filePath: string;
     const fileSize = TEST_FILE_SIZE;
