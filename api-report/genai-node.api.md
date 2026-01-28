@@ -644,6 +644,7 @@ export function createPartFromUri(uri: string, mimeType: string, mediaResolution
 export interface CreateTuningJobConfig {
     abortSignal?: AbortSignal;
     adapterSize?: AdapterSize;
+    baseTeacherModel?: string;
     batchSize?: number;
     beta?: number;
     description?: string;
@@ -654,8 +655,11 @@ export interface CreateTuningJobConfig {
     learningRate?: number;
     learningRateMultiplier?: number;
     method?: TuningMethod;
+    outputUri?: string;
     preTunedModelCheckpointId?: string;
+    sftLossWeightMultiplier?: number;
     tunedModelDisplayName?: string;
+    tunedTeacherModelSource?: string;
     validationDataset?: TuningValidationDataset;
 }
 
@@ -820,6 +824,25 @@ export interface DeleteResourceJob {
 // @public
 export interface DistillationDataStats {
     trainingDatasetStats?: DatasetStats;
+}
+
+// @public
+export interface DistillationHyperParameters {
+    adapterSize?: AdapterSize;
+    epochCount?: string;
+    learningRateMultiplier?: number;
+}
+
+// @public
+export interface DistillationSpec {
+    baseTeacherModel?: string;
+    hyperParameters?: DistillationHyperParameters;
+    pipelineRootDirectory?: string;
+    promptDatasetUri?: string;
+    studentModel?: string;
+    trainingDatasetUri?: string;
+    tunedTeacherModelSource?: string;
+    validationDatasetUri?: string;
 }
 
 // @public
@@ -3437,6 +3460,7 @@ export interface TuningJob {
     createTime?: string;
     customBaseModel?: string;
     description?: string;
+    distillationSpec?: DistillationSpec;
     encryptionSpec?: EncryptionSpec;
     endTime?: string;
     error?: GoogleRpcStatus;
@@ -3462,6 +3486,7 @@ export interface TuningJob {
 
 // @public
 export enum TuningMethod {
+    DISTILLATION = "DISTILLATION",
     PREFERENCE_TUNING = "PREFERENCE_TUNING",
     SUPERVISED_FINE_TUNING = "SUPERVISED_FINE_TUNING"
 }

@@ -958,6 +958,10 @@ export enum TuningMethod {
    * Preference optimization tuning.
    */
   PREFERENCE_TUNING = 'PREFERENCE_TUNING',
+  /**
+   * Distillation tuning.
+   */
+  DISTILLATION = 'DISTILLATION',
 }
 
 /** State for the lifecycle of a Document. */
@@ -4150,6 +4154,36 @@ export declare interface PreferenceOptimizationSpec {
   validationDatasetUri?: string;
 }
 
+/** Hyperparameters for Distillation. This data type is not supported in Gemini API. */
+export declare interface DistillationHyperParameters {
+  /** Optional. Adapter size for distillation. */
+  adapterSize?: AdapterSize;
+  /** Optional. Number of complete passes the model makes over the entire training dataset during training. */
+  epochCount?: string;
+  /** Optional. Multiplier for adjusting the default learning rate. */
+  learningRateMultiplier?: number;
+}
+
+/** Distillation tuning spec for tuning. */
+export declare interface DistillationSpec {
+  /** The GCS URI of the prompt dataset to use during distillation. */
+  promptDatasetUri?: string;
+  /** The base teacher model that is being distilled. See [Supported models](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/tuning#supported_models). */
+  baseTeacherModel?: string;
+  /** Optional. Hyperparameters for Distillation. */
+  hyperParameters?: DistillationHyperParameters;
+  /** Deprecated. A path in a Cloud Storage bucket, which will be treated as the root output directory of the distillation pipeline. It is used by the system to generate the paths of output artifacts. */
+  pipelineRootDirectory?: string;
+  /** The student model that is being tuned, e.g., "google/gemma-2b-1.1-it". Deprecated. Use base_model instead. */
+  studentModel?: string;
+  /** Deprecated. Cloud Storage path to file containing training dataset for tuning. The dataset must be formatted as a JSONL file. */
+  trainingDatasetUri?: string;
+  /** The resource name of the Tuned teacher model. Format: `projects/{project}/locations/{location}/models/{model}`. */
+  tunedTeacherModelSource?: string;
+  /** Optional. Cloud Storage path to file containing validation dataset for tuning. The dataset must be formatted as a JSONL file. */
+  validationDatasetUri?: string;
+}
+
 /** The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors). This data type is not supported in Gemini API. */
 export declare interface GoogleRpcStatus {
   /** The status code, which should be an enum value of google.rpc.Code. */
@@ -4398,6 +4432,8 @@ export declare interface TuningJob {
   supervisedTuningSpec?: SupervisedTuningSpec;
   /** Tuning Spec for Preference Optimization. */
   preferenceOptimizationSpec?: PreferenceOptimizationSpec;
+  /** Tuning Spec for Distillation. */
+  distillationSpec?: DistillationSpec;
   /** Output only. The tuning data statistics associated with this TuningJob. */
   tuningDataStats?: TuningDataStats;
   /** Customer-managed encryption key options for a TuningJob. If this is set, then all resources created by the TuningJob will be encrypted with the provided encryption key. */
@@ -4516,7 +4552,7 @@ export declare interface CreateTuningJobConfig {
   be charged usage for any applicable operations.
        */
   abortSignal?: AbortSignal;
-  /** The method to use for tuning (SUPERVISED_FINE_TUNING or PREFERENCE_TUNING). If not set, the default method (SFT) will be used. */
+  /** The method to use for tuning (SUPERVISED_FINE_TUNING or PREFERENCE_TUNING or DISTILLATION). If not set, the default method (SFT) will be used. */
   method?: TuningMethod;
   /** Validation dataset for tuning. The dataset must be formatted as a JSONL file. */
   validationDataset?: TuningValidationDataset;
@@ -4542,6 +4578,14 @@ export declare interface CreateTuningJobConfig {
   labels?: Record<string, string>;
   /** Weight for KL Divergence regularization, Preference Optimization tuning only. */
   beta?: number;
+  /** The base teacher model that is being distilled. Distillation only. */
+  baseTeacherModel?: string;
+  /** The resource name of the Tuned teacher model. Distillation only. */
+  tunedTeacherModelSource?: string;
+  /** Multiplier for adjusting the weight of the SFT loss. Distillation only. */
+  sftLossWeightMultiplier?: number;
+  /** The Google Cloud Storage location where the tuning job outputs are written. */
+  outputUri?: string;
 }
 
 /** Fine-tuning job creation parameters - optional fields. */
