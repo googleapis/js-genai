@@ -27,6 +27,7 @@ import {Tunings} from '../tunings.js';
 import {HttpOptions} from '../types.js';
 
 import {NodeUploader} from './_node_uploader.js';
+import {NodeFiles} from './node_files.js';
 
 const LANGUAGE_LABEL_PREFIX = 'gl-node/';
 
@@ -220,7 +221,7 @@ export class GoogleGenAI {
     this.batches = new Batches(this.apiClient);
     this.chats = new Chats(this.models, this.apiClient);
     this.caches = new Caches(this.apiClient);
-    this.files = new Files(this.apiClient);
+    this.files = new NodeFiles(this.apiClient);
     this.operations = new Operations(this.apiClient);
     this.authTokens = new Tokens(this.apiClient);
     this.tunings = new Tunings(this.apiClient);
