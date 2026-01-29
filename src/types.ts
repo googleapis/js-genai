@@ -4562,7 +4562,7 @@ export declare interface CreateTuningJobConfig {
   description?: string;
   /** Number of complete passes the model makes over the entire training dataset during training. */
   epochCount?: number;
-  /** Multiplier for adjusting the default learning rate. */
+  /** Multiplier for adjusting the default learning rate. 1P models only. Mutually exclusive with learning_rate. */
   learningRateMultiplier?: number;
   /** If set to true, disable intermediate checkpoints and only the last checkpoint will be exported. Otherwise, enable intermediate checkpoints. */
   exportLastCheckpointOnly?: boolean;
@@ -4570,9 +4570,13 @@ export declare interface CreateTuningJobConfig {
   preTunedModelCheckpointId?: string;
   /** Adapter size for tuning. */
   adapterSize?: AdapterSize;
-  /** The batch size hyperparameter for tuning. If not set, a default of 4 or 16 will be used based on the number of training examples. */
+  /** Tuning mode for SFT tuning. */
+  tuningMode?: TuningMode;
+  /** Custom base model for tuning. This is only supported for OSS models in Vertex. */
+  customBaseModel?: string;
+  /** The batch size hyperparameter for tuning. This is only supported for OSS models in Vertex. */
   batchSize?: number;
-  /** The learning rate hyperparameter for tuning. If not set, a default of 0.001 or 0.0002 will be calculated based on the number of training examples. */
+  /** The learning rate for tuning. OSS models only. Mutually exclusive with learning_rate_multiplier. */
   learningRate?: number;
   /** Optional. The labels with user-defined metadata to organize TuningJob and generated resources such as Model and Endpoint. Label keys and values can be no longer than 64 characters (Unicode codepoints), can only contain lowercase letters, numeric characters, underscores and dashes. International characters are allowed. See https://goo.gl/xmQnxf for more information and examples of labels. */
   labels?: Record<string, string>;

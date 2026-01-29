@@ -140,6 +140,16 @@ export function createTuningJobConfigToMldev(
     throw new Error('adapterSize parameter is not supported in Gemini API.');
   }
 
+  if (common.getValueByPath(fromObject, ['tuningMode']) !== undefined) {
+    throw new Error('tuningMode parameter is not supported in Gemini API.');
+  }
+
+  if (common.getValueByPath(fromObject, ['customBaseModel']) !== undefined) {
+    throw new Error(
+      'customBaseModel parameter is not supported in Gemini API.',
+    );
+  }
+
   const fromBatchSize = common.getValueByPath(fromObject, ['batchSize']);
   if (parentObject !== undefined && fromBatchSize != null) {
     common.setValueByPath(
@@ -419,12 +429,72 @@ export function createTuningJobConfigToVertex(
       );
     }
   }
-  if (common.getValueByPath(fromObject, ['batchSize']) !== undefined) {
-    throw new Error('batchSize parameter is not supported in Vertex AI.');
+
+  let discriminatorTuningMode = common.getValueByPath(rootObject, [
+    'config',
+    'method',
+  ]);
+  if (discriminatorTuningMode === undefined) {
+    discriminatorTuningMode = 'SUPERVISED_FINE_TUNING';
+  }
+  if (discriminatorTuningMode === 'SUPERVISED_FINE_TUNING') {
+    const fromTuningMode = common.getValueByPath(fromObject, ['tuningMode']);
+    if (parentObject !== undefined && fromTuningMode != null) {
+      common.setValueByPath(
+        parentObject,
+        ['supervisedTuningSpec', 'tuningMode'],
+        fromTuningMode,
+      );
+    }
   }
 
-  if (common.getValueByPath(fromObject, ['learningRate']) !== undefined) {
-    throw new Error('learningRate parameter is not supported in Vertex AI.');
+  const fromCustomBaseModel = common.getValueByPath(fromObject, [
+    'customBaseModel',
+  ]);
+  if (parentObject !== undefined && fromCustomBaseModel != null) {
+    common.setValueByPath(
+      parentObject,
+      ['customBaseModel'],
+      fromCustomBaseModel,
+    );
+  }
+
+  let discriminatorBatchSize = common.getValueByPath(rootObject, [
+    'config',
+    'method',
+  ]);
+  if (discriminatorBatchSize === undefined) {
+    discriminatorBatchSize = 'SUPERVISED_FINE_TUNING';
+  }
+  if (discriminatorBatchSize === 'SUPERVISED_FINE_TUNING') {
+    const fromBatchSize = common.getValueByPath(fromObject, ['batchSize']);
+    if (parentObject !== undefined && fromBatchSize != null) {
+      common.setValueByPath(
+        parentObject,
+        ['supervisedTuningSpec', 'hyperParameters', 'batchSize'],
+        fromBatchSize,
+      );
+    }
+  }
+
+  let discriminatorLearningRate = common.getValueByPath(rootObject, [
+    'config',
+    'method',
+  ]);
+  if (discriminatorLearningRate === undefined) {
+    discriminatorLearningRate = 'SUPERVISED_FINE_TUNING';
+  }
+  if (discriminatorLearningRate === 'SUPERVISED_FINE_TUNING') {
+    const fromLearningRate = common.getValueByPath(fromObject, [
+      'learningRate',
+    ]);
+    if (parentObject !== undefined && fromLearningRate != null) {
+      common.setValueByPath(
+        parentObject,
+        ['supervisedTuningSpec', 'hyperParameters', 'learningRate'],
+        fromLearningRate,
+      );
+    }
   }
 
   const fromLabels = common.getValueByPath(fromObject, ['labels']);
