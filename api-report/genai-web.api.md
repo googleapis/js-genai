@@ -1943,6 +1943,7 @@ export interface InlinedRequest {
 // @public
 export class InlinedResponse {
     error?: JobError;
+    metadata?: Record<string, string>;
     response?: GenerateContentResponse;
 }
 
