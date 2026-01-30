@@ -1468,6 +1468,11 @@ export function inlinedResponseFromMldev(
     );
   }
 
+  const fromMetadata = common.getValueByPath(fromObject, ['metadata']);
+  if (fromMetadata != null) {
+    common.setValueByPath(toObject, ['metadata'], fromMetadata);
+  }
+
   const fromError = common.getValueByPath(fromObject, ['error']);
   if (fromError != null) {
     common.setValueByPath(toObject, ['error'], fromError);

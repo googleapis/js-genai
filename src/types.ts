@@ -5401,6 +5401,8 @@ export class InlinedResponse {
   /** The response to the request.
    */
   response?: GenerateContentResponse;
+  /** The metadata to be associated with the request. */
+  metadata?: Record<string, string>;
   /** The error encountered while processing the request.
    */
   error?: JobError;
