@@ -11,6 +11,7 @@ import {zodToJsonSchema} from 'zod-to-json-schema';
 import {
   FunctionCallingConfigMode,
   GenerateContentResponse,
+  HttpOptions,
 } from '../../../src/types.js';
 import {GoogleGenAI} from '../../../src/web/web_client.js';
 import {createZeroFilledTempFile} from '../../_generate_test_file.js';
@@ -103,6 +104,75 @@ describe('generateContent', () => {
     const validationResult = nestedSchema.safeParse(parsedResponse);
     expect(validationResult.success).toEqual(true);
   });
+  it('ML Dev should generate content with retry options provided to the client', async () => {
+    const httpOptionsWithRetryOptions: HttpOptions = {
+      retryOptions: {
+        attempts: 3,
+        initialDelay: 1000,
+        maxDelay: 5000,
+        httpStatusCodes: [500, 503],
+      },
+    };
+    const client = new GoogleGenAI({
+      vertexai: false,
+      apiKey: GOOGLE_API_KEY,
+      httpOptions: httpOptionsWithRetryOptions,
+    });
+    const response = await client.models.generateContent({
+      model: 'gemini-1.5-flash',
+      contents: 'why is the sky blue?',
+      config: {maxOutputTokens: 20, candidateCount: 1},
+    });
+    expect(response.candidates!.length).toBe(
+      1,
+      'Expected 1 candidate got ' + response.candidates!.length,
+    );
+    expect(response.usageMetadata!.candidatesTokenCount).toBeLessThanOrEqual(
+      20,
+      'Expected candidatesTokenCount to be less than or equal to 20, got ' +
+        response.usageMetadata!.candidatesTokenCount,
+    );
+    console.info(
+      'ML Dev should generate content with retry options provided to the client\n',
+      response.text,
+    );
+  }, 30000);
+  it('ML Dev should generate content with per-request retry options', async () => {
+    const httpOptionsWithRetryOptions: HttpOptions = {
+      retryOptions: {
+        attempts: 3,
+        initialDelay: 1000,
+        maxDelay: 5000,
+        httpStatusCodes: [500, 503],
+      },
+    };
+    const client = new GoogleGenAI({
+      vertexai: false,
+      apiKey: GOOGLE_API_KEY,
+    });
+    const response = await client.models.generateContent({
+      model: 'gemini-1.5-flash',
+      contents: 'why is the sky blue?',
+      config: {
+        maxOutputTokens: 20,
+        candidateCount: 1,
+        httpOptions: httpOptionsWithRetryOptions,
+      },
+    });
+    expect(response.candidates!.length).toBe(
+      1,
+      'Expected 1 candidate got ' + response.candidates!.length,
+    );
+    expect(response.usageMetadata!.candidatesTokenCount).toBeLessThanOrEqual(
+      20,
+      'Expected candidatesTokenCount to be less than or equal to 20, got ' +
+        response.usageMetadata!.candidatesTokenCount,
+    );
+    console.info(
+      'ML Dev should generate content with per-request retry options\n',
+      response.text,
+    );
+  }, 30000);
   it('ML Dev should help build the FunctionDeclaration', async () => {
     const stringArgument = z.object({
       firstString: z.string(),
