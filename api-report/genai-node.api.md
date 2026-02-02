@@ -647,6 +647,7 @@ export interface CreateTuningJobConfig {
     baseTeacherModel?: string;
     batchSize?: number;
     beta?: number;
+    customBaseModel?: string;
     description?: string;
     epochCount?: number;
     exportLastCheckpointOnly?: boolean;
@@ -660,6 +661,7 @@ export interface CreateTuningJobConfig {
     sftLossWeightMultiplier?: number;
     tunedModelDisplayName?: string;
     tunedTeacherModelSource?: string;
+    tuningMode?: TuningMode;
     validationDataset?: TuningValidationDataset;
 }
 
@@ -1943,6 +1945,7 @@ export interface InlinedRequest {
 // @public
 export class InlinedResponse {
     error?: JobError;
+    metadata?: Record<string, string>;
     response?: GenerateContentResponse;
 }
 

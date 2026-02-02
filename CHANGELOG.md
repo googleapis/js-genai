@@ -1,6 +1,21 @@
 # Changelog
 
 
+## [1.39.0](https://github.com/googleapis/js-genai/compare/v1.38.0...v1.39.0) (2026-01-30)
+
+
+### Features
+
+* Add `include_input` query parameter to Get Interaction endpoint. ([84bc7f4](https://github.com/googleapis/js-genai/commit/84bc7f4d386da05a5e893cfe810b078451400a30))
+* Add registerFiles for you can use gcs files with mldev. ([7acf3e0](https://github.com/googleapis/js-genai/commit/7acf3e0e2bca83ce7be6b1a37a97f351343b9554))
+* Support distillation tuning ([c9a2e72](https://github.com/googleapis/js-genai/commit/c9a2e72cf7d9a7a73a036ebddf0a10c509ee53e5))
+* Support OSS Tuning in GenAI SDK ([258f211](https://github.com/googleapis/js-genai/commit/258f2115b0f2803caafe4c137d4a7d8dbd11d5dc))
+
+
+### Bug Fixes
+
+* Add metadata in batch inlined response ([0e95bb7](https://github.com/googleapis/js-genai/commit/0e95bb7a8dea285a5e7f2fad6457dc74ce9e8466))
+
 ## [1.38.0](https://github.com/googleapis/js-genai/compare/v1.37.0...v1.38.0) (2026-01-20)
 
 

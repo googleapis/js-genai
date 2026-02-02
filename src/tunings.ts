@@ -153,7 +153,7 @@ export class Tunings extends BaseModule {
         }) as Promise<types.TuningJob>;
 
       return response.then((apiResponse) => {
-        const resp = converters.tuningJobFromVertex(apiResponse);
+        const resp = converters.tuningJobFromVertex(apiResponse, params);
 
         return resp as types.TuningJob;
       });
@@ -187,7 +187,7 @@ export class Tunings extends BaseModule {
         }) as Promise<types.TuningJob>;
 
       return response.then((apiResponse) => {
-        const resp = converters.tuningJobFromMldev(apiResponse);
+        const resp = converters.tuningJobFromMldev(apiResponse, params);
 
         return resp as types.TuningJob;
       });
@@ -231,7 +231,10 @@ export class Tunings extends BaseModule {
         }) as Promise<types.ListTuningJobsResponse>;
 
       return response.then((apiResponse) => {
-        const resp = converters.listTuningJobsResponseFromVertex(apiResponse);
+        const resp = converters.listTuningJobsResponseFromVertex(
+          apiResponse,
+          params,
+        );
         const typedResp = new types.ListTuningJobsResponse();
         Object.assign(typedResp, resp);
         return typedResp;
@@ -266,7 +269,10 @@ export class Tunings extends BaseModule {
         }) as Promise<types.ListTuningJobsResponse>;
 
       return response.then((apiResponse) => {
-        const resp = converters.listTuningJobsResponseFromMldev(apiResponse);
+        const resp = converters.listTuningJobsResponseFromMldev(
+          apiResponse,
+          params,
+        );
         const typedResp = new types.ListTuningJobsResponse();
         Object.assign(typedResp, resp);
         return typedResp;
@@ -322,7 +328,10 @@ export class Tunings extends BaseModule {
         }) as Promise<types.CancelTuningJobResponse>;
 
       return response.then((apiResponse) => {
-        const resp = converters.cancelTuningJobResponseFromVertex(apiResponse);
+        const resp = converters.cancelTuningJobResponseFromVertex(
+          apiResponse,
+          params,
+        );
         const typedResp = new types.CancelTuningJobResponse();
         Object.assign(typedResp, resp);
         return typedResp;
@@ -357,7 +366,10 @@ export class Tunings extends BaseModule {
         }) as Promise<types.CancelTuningJobResponse>;
 
       return response.then((apiResponse) => {
-        const resp = converters.cancelTuningJobResponseFromMldev(apiResponse);
+        const resp = converters.cancelTuningJobResponseFromMldev(
+          apiResponse,
+          params,
+        );
         const typedResp = new types.CancelTuningJobResponse();
         Object.assign(typedResp, resp);
         return typedResp;
@@ -405,7 +417,7 @@ export class Tunings extends BaseModule {
         }) as Promise<types.TuningJob>;
 
       return response.then((apiResponse) => {
-        const resp = converters.tuningJobFromVertex(apiResponse);
+        const resp = converters.tuningJobFromVertex(apiResponse, params);
 
         return resp as types.TuningJob;
       });
@@ -458,7 +470,7 @@ export class Tunings extends BaseModule {
         }) as Promise<types.TuningOperation>;
 
       return response.then((apiResponse) => {
-        const resp = converters.tuningOperationFromMldev(apiResponse);
+        const resp = converters.tuningOperationFromMldev(apiResponse, params);
 
         return resp as types.TuningOperation;
       });
