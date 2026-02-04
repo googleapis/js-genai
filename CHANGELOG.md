@@ -1,6 +1,13 @@
 # Changelog
 
 
+## [1.40.0](https://github.com/googleapis/js-genai/compare/v1.39.0...v1.40.0) (2026-02-04)
+
+
+### Features
+
+* Update data types from discovery doc. ([bad81a7](https://github.com/googleapis/js-genai/commit/bad81a7c5f75404cc24610e33549cfdd90fd7594))
+
 ## [1.39.0](https://github.com/googleapis/js-genai/compare/v1.38.0...v1.39.0) (2026-01-30)
 
 
