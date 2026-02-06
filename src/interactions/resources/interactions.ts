@@ -25,7 +25,7 @@ export class BaseInteractions extends APIResource {
    * const interaction = await client.interactions.create({
    *   api_version: 'api_version',
    *   input: 'string',
-   *   model: 'gemini-2.5-pro',
+   *   model: 'gemini-2.5-flash',
    * });
    * ```
    */
@@ -1198,16 +1198,18 @@ export namespace MCPServerToolResultContent {
  * The model that will complete your prompt.\n\nSee [models](https://ai.google.dev/gemini-api/docs/models) for additional details.
  */
 export type Model =
-  | 'gemini-2.5-pro'
   | 'gemini-2.5-flash'
-  | 'gemini-2.5-flash-preview-09-2025'
+  | 'gemini-2.5-flash-image'
   | 'gemini-2.5-flash-lite'
   | 'gemini-2.5-flash-lite-preview-09-2025'
-  | 'gemini-2.5-flash-preview-native-audio-dialog'
-  | 'gemini-2.5-flash-image-preview'
+  | 'gemini-2.5-flash-native-audio-preview-12-2025'
+  | 'gemini-2.5-flash-preview-09-2025'
+  | 'gemini-2.5-flash-preview-tts'
+  | 'gemini-2.5-pro'
   | 'gemini-2.5-pro-preview-tts'
-  | 'gemini-3-pro-preview'
   | 'gemini-3-flash-preview'
+  | 'gemini-3-pro-image-preview'
+  | 'gemini-3-pro-preview'
   | (string & {});
 
 /**
