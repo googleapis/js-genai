@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import * as retry from 'retry';
 import {Auth} from './_auth.js';
 import * as common from './_common.js';
 import {Downloader} from './_downloader.js';
@@ -22,20 +21,6 @@ export const SDK_VERSION = '1.40.0'; // x-release-please-version
 const LIBRARY_LABEL = `google-genai-sdk/${SDK_VERSION}`;
 const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
 const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';
-
-// Default retry options.
-// The config is based on https://cloud.google.com/storage/docs/retry-strategy.
-const DEFAULT_RETRY_ATTEMPTS = 5; // Including the initial call
-// LINT.IfChange
-const DEFAULT_RETRY_HTTP_STATUS_CODES = [
-  408, // Request timeout
-  429, // Too many requests
-  500, // Internal server error
-  502, // Bad gateway
-  503, // Service unavailable
-  504, // Gateway timeout
-];
-// LINT.ThenChange(//depot/google3/third_party/py/google/genai/_api_client.py)
 
 /**
  * Options for initializing the ApiClient. The ApiClient uses the parameters
@@ -670,65 +655,12 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
       reader.releaseLock();
     }
   }
-
   private async apiCall(
     url: string,
     requestInit: RequestInit,
   ): Promise<Response> {
-    if (
-      !this.clientOptions.httpOptions ||
-      !this.clientOptions.httpOptions.retryOptions
-    ) {
-      return fetch(url, requestInit);
-    }
-
-    const retryOptions = this.clientOptions.httpOptions.retryOptions;
-    const operation = retry.operation({
-      // Retry attempts is one less than the number of total attempts.
-      retries: (retryOptions.attempts ?? DEFAULT_RETRY_ATTEMPTS) - 1,
-    });
-
-    return new Promise<Response>((resolve, reject) => {
-      operation.attempt(async (_currentAttempt: number) => {
-        try {
-          const response = await fetch(url, requestInit);
-          if (response.ok) {
-            resolve(response);
-            return;
-          }
-
-          if (DEFAULT_RETRY_HTTP_STATUS_CODES.includes(response.status)) {
-            const err = new Error(`Retryable HTTP Error: ${response.status}`);
-            // `operation.retry` returns 'true' if another attempt is scheduled.
-            if (operation.retry(err)) {
-              console.warn(
-                `Retriable exception ${
-                  response.statusText
-                } sending request. Retrying...`,
-              );
-              return;
-            }
-
-            // If out of retries, reject with the accumulated error.
-            reject(operation.mainError());
-            return;
-          }
-
-          reject(
-            new Error(
-              `Non-retryable exception ${response.statusText} sending request`,
-            ),
-          );
-        } catch (err) {
-          if (operation.retry(err as Error)) {
-            console.log(`exception ${err} sending request. Retrying...`);
-            return;
-          }
-
-          // If retries are exhausted, reject with the main error.
-          reject(operation.mainError());
-        }
-      });
+    return fetch(url, requestInit).catch((e) => {
+      throw new Error(`exception ${e} sending request`);
     });
   }
 
