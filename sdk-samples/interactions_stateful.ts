@@ -26,6 +26,7 @@ async function createInteractionsFromMLDev() {
   const response2 = await ai.interactions.create({
     model: 'gemini-2.5-flash',
     input: 'What is the most famous landmark in the second one?',
+    previous_interaction_id: response1.id,
   });
   console.log('Model: ', response2);
 }
