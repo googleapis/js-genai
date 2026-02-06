@@ -4590,6 +4590,8 @@ export declare interface CreateTuningJobConfig {
   sftLossWeightMultiplier?: number;
   /** The Google Cloud Storage location where the tuning job outputs are written. */
   outputUri?: string;
+  /** The encryption spec of the tuning job. Customer-managed encryption key options for a TuningJob. If this is set, then all resources created by the TuningJob will be encrypted with provided encryption key. */
+  encryptionSpec?: EncryptionSpec;
 }
 
 /** Fine-tuning job creation parameters - optional fields. */

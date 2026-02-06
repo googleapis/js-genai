@@ -202,6 +202,10 @@ export function createTuningJobConfigToMldev(
     throw new Error('outputUri parameter is not supported in Gemini API.');
   }
 
+  if (common.getValueByPath(fromObject, ['encryptionSpec']) !== undefined) {
+    throw new Error('encryptionSpec parameter is not supported in Gemini API.');
+  }
+
   return toObject;
 }
 
@@ -547,6 +551,13 @@ export function createTuningJobConfigToVertex(
   const fromOutputUri = common.getValueByPath(fromObject, ['outputUri']);
   if (parentObject !== undefined && fromOutputUri != null) {
     common.setValueByPath(parentObject, ['outputUri'], fromOutputUri);
+  }
+
+  const fromEncryptionSpec = common.getValueByPath(fromObject, [
+    'encryptionSpec',
+  ]);
+  if (parentObject !== undefined && fromEncryptionSpec != null) {
+    common.setValueByPath(parentObject, ['encryptionSpec'], fromEncryptionSpec);
   }
 
   return toObject;

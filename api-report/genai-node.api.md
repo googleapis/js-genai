@@ -649,6 +649,7 @@ export interface CreateTuningJobConfig {
     beta?: number;
     customBaseModel?: string;
     description?: string;
+    encryptionSpec?: EncryptionSpec;
     epochCount?: number;
     exportLastCheckpointOnly?: boolean;
     httpOptions?: HttpOptions;
