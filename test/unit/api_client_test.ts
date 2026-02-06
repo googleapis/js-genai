@@ -381,6 +381,37 @@ describe('processStreamResponse', () => {
     const result = await resultHttpResponse.value.json();
     expect(result).toEqual(expectedResponse);
   });
+
+  it('should handle large fragmented payloads correctly (regression for $O(n^2)$)', async () => {
+    // Simulate a large payload (e.g., a base64 image) delivered in many small fragments.
+    const largeData = 'A'.repeat(1024 * 1024); // 1MB of data
+    const jsonPayload = JSON.stringify({ data: largeData });
+    const ssePayload = `data: ${jsonPayload}\n\n`;
+
+    const stream = new Readable();
+    const chunkSize = 1024;
+    for (let i = 0; i < ssePayload.length; i += chunkSize) {
+      stream.push(ssePayload.substring(i, i + chunkSize));
+    }
+    stream.push(null);
+
+    const readableStream = new ReadableStream({
+      start(controller) {
+        stream.on('data', (chunk) => controller.enqueue(new TextEncoder().encode(chunk)));
+        stream.on('end', () => controller.close());
+      },
+    });
+    const response = new Response(readableStream);
+
+    const generator = apiClient.processStreamResponse(response);
+    const result = await generator.next();
+    expect(result.done).toBeFalse();
+    const json = await result.value.json();
+    expect(json.data).toBe(largeData);
+    
+    const final = await generator.next();
+    expect(final.done).toBeTrue();
+  });
 });
 
 describe('ApiClient', () => {

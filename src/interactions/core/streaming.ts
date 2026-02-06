@@ -237,11 +237,13 @@ export async function* _iterSSEMessages(
 
 /**
  * Given an async iterable iterator, iterates over it and yields full
- * SSE chunks, i.e. yields when a double new-line is encountered.
+ * SSE chunks.
+ *
+ * Note: Historically this buffered until a double-newline was found,
+ * but that is redundant as the downstream LineDecoder already handles
+ * fragmented chunks.
  */
 async function* iterSSEChunks(iterator: AsyncIterableIterator<Bytes>): AsyncGenerator<Uint8Array> {
-  let data = new Uint8Array();
-
   for await (const chunk of iterator) {
     if (chunk == null) {
       continue;
@@ -252,32 +254,17 @@ async function* iterSSEChunks(iterator: AsyncIterableIterator<Bytes>): AsyncGene
       : typeof chunk === 'string' ? encodeUTF8(chunk)
       : chunk;
 
-    let newData = new Uint8Array(data.length + binaryChunk.length);
-    newData.set(data);
-    newData.set(binaryChunk, data.length);
-    data = newData;
-
-    let patternIndex;
-    while ((patternIndex = findDoubleNewlineIndex(data)) !== -1) {
-      yield data.slice(0, patternIndex);
-      data = data.slice(patternIndex);
-    }
-  }
-
-  if (data.length > 0) {
-    yield data;
+    yield binaryChunk;
   }
 }
 
 class SSEDecoder {
   private data: string[];
   private event: string | null;
-  private chunks: string[];
 
   constructor() {
     this.event = null;
     this.data = [];
-    this.chunks = [];
   }
 
   decode(line: string) {
@@ -286,29 +273,32 @@ class SSEDecoder {
     }
 
     if (!line) {
-      // empty line and we didn't previously encounter any messages
       if (!this.event && !this.data.length) return null;
 
       const sse: ServerSentEvent = {
         event: this.event,
         data: this.data.join('\n'),
-        raw: this.chunks,
+        raw: [], // Raw chunks removed to save memory on large payloads
       };
 
       this.event = null;
       this.data = [];
-      this.chunks = [];
 
       return sse;
     }
-
-    this.chunks.push(line);
 
     if (line.startsWith(':')) {
       return null;
     }
 
-    let [fieldname, _, value] = partition(line, ':');
+    const colonIndex = line.indexOf(':');
+    if (colonIndex === -1) {
+      // No colon, entire line is fieldname
+      return null; 
+    }
+
+    const fieldname = line.substring(0, colonIndex);
+    let value = line.substring(colonIndex + 1);
 
     if (value.startsWith(' ')) {
       value = value.substring(1);
