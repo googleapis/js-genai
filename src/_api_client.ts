@@ -78,6 +78,13 @@ export interface ApiClientInitOptions {
    * This can be used to e.g specify the runtime and its version.
    */
   userAgentExtra?: string;
+  /**
+   * Optional. A custom fetch implementation to use for all HTTP requests made by the SDK.
+   *
+   * @remarks
+   * If unset, the SDK will use the default `fetch` implementation available in the runtime environment.
+   */
+  fetchImplementation?: typeof fetch;
 }
 
 /**
@@ -659,7 +666,10 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
     url: string,
     requestInit: RequestInit,
   ): Promise<Response> {
-    return fetch(url, requestInit).catch((e) => {
+    return (this.clientOptions.fetchImplementation || fetch)(
+      url,
+      requestInit,
+    ).catch((e) => {
       throw new Error(`exception ${e} sending request`);
     });
   }

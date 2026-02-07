@@ -215,6 +215,7 @@ export class GoogleGenAI {
       userAgentExtra: LANGUAGE_LABEL_PREFIX + process.version,
       uploader: new NodeUploader(),
       downloader: new NodeDownloader(),
+      fetchImplementation: options.fetchImplementation,
     });
     this.models = new Models(this.apiClient);
     this.live = new Live(this.apiClient, auth, new NodeWebSocketFactory());

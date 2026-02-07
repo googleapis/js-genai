@@ -1666,6 +1666,7 @@ export class GoogleGenAI {
 export interface GoogleGenAIOptions {
     apiKey?: string;
     apiVersion?: string;
+    fetchImplementation?: typeof fetch;
     googleAuthOptions?: GoogleAuthOptions;
     httpOptions?: HttpOptions;
     location?: string;
