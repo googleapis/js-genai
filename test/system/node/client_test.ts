@@ -14,6 +14,7 @@ import {
   FunctionDeclaration,
   GenerateContentResponse,
   HttpOptions,
+  HttpRetryOptions,
   Modality,
   Part,
 } from '../../../src/types.js';
@@ -629,7 +630,162 @@ describe('Client Tests', () => {
         }),
       );
     });
+    it('ML Dev should generate content with retry options provided to the client', async () => {
+      const retryOptions: HttpRetryOptions = {
+        attempts: 3,
+        initialDelay: 1000,
+        maxDelay: 5000,
+        httpStatusCodes: [500, 503],
+      };
+      const httpOptionsWithRetryOptions: HttpOptions = httpOptions;
+      httpOptionsWithRetryOptions.retryOptions = retryOptions;
+
+      const client = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+        httpOptions: httpOptionsWithRetryOptions,
+      });
+      const response = await client.models.generateContent({
+        model: MODEL,
+        contents: 'why is the sky blue?',
+        config: {
+          maxOutputTokens: 200,
+          candidateCount: 1,
+          thinkingConfig: {thinkingBudget: 50},
+        },
+      });
+      expect(response.candidates!.length).toBe(
+        1,
+        'Expected 1 candidate got ' + response.candidates!.length,
+      );
+      expect(response.usageMetadata!.candidatesTokenCount).toBeLessThanOrEqual(
+        250,
+        'Expected candidatesTokenCount to be less than or equal to 250, got ' +
+          response.usageMetadata!.candidatesTokenCount,
+      );
+      console.info(
+        'ML Dev should generate content with retry options provided to the client\n',
+        response.text,
+      );
+    }, 60000);
   });
+  it('Vertex AI should generate content with retry options provided to the client', async () => {
+    const retryOptions: HttpRetryOptions = {
+      attempts: 3,
+      initialDelay: 1000,
+      maxDelay: 5000,
+      httpStatusCodes: [500, 503],
+    };
+    const httpOptionsWithRetryOptions: HttpOptions = httpOptions;
+    httpOptionsWithRetryOptions.retryOptions = retryOptions;
+
+    const client = new GoogleGenAI({
+      vertexai: true,
+      project: GOOGLE_CLOUD_PROJECT,
+      location: GOOGLE_CLOUD_LOCATION,
+      httpOptions: httpOptionsWithRetryOptions,
+    });
+    const response = await client.models.generateContent({
+      model: MODEL,
+      contents: 'why is the sky blue?',
+      config: {
+        maxOutputTokens: 200,
+        candidateCount: 1,
+        thinkingConfig: {thinkingBudget: 50},
+      },
+    });
+    expect(response.candidates!.length).toBe(
+      1,
+      'Expected 1 candidate got ' + response.candidates!.length,
+    );
+    expect(response.usageMetadata!.candidatesTokenCount).toBeLessThanOrEqual(
+      250,
+      'Expected candidatesTokenCount to be less than or equal to 250, got ' +
+        response.usageMetadata!.candidatesTokenCount,
+    );
+    console.info(
+      'Vertex AI should generate content with retry options provided to the client\n',
+      response.text,
+    );
+  }, 30000);
+  it('ML Dev should generate content with per-request retry options', async () => {
+    const retryOptions: HttpRetryOptions = {
+      attempts: 3,
+      initialDelay: 1000,
+      maxDelay: 5000,
+      httpStatusCodes: [500, 503],
+    };
+    const httpOptionsWithRetryOptions: HttpOptions = httpOptions;
+    httpOptionsWithRetryOptions.retryOptions = retryOptions;
+
+    const client = new GoogleGenAI({
+      vertexai: false,
+      apiKey: GOOGLE_API_KEY,
+      httpOptions: httpOptionsWithRetryOptions,
+    });
+    const response = await client.models.generateContent({
+      model: MODEL,
+      contents: 'why is the sky blue?',
+      config: {
+        maxOutputTokens: 200,
+        candidateCount: 1,
+        thinkingConfig: {thinkingBudget: 50},
+        httpOptions: httpOptionsWithRetryOptions,
+      },
+    });
+    expect(response.candidates!.length).toBe(
+      1,
+      'Expected 1 candidate got ' + response.candidates!.length,
+    );
+    expect(response.usageMetadata!.candidatesTokenCount).toBeLessThanOrEqual(
+      250,
+      'Expected candidatesTokenCount to be less than or equal to 250, got ' +
+        response.usageMetadata!.candidatesTokenCount,
+    );
+    console.info(
+      'ML Dev should generate content with per-request retry options\n',
+      response.text,
+    );
+  }, 30000);
+  it('Vertex AI should generate content with per-request retry options', async () => {
+    const retryOptions: HttpRetryOptions = {
+      attempts: 3,
+      initialDelay: 1000,
+      maxDelay: 5000,
+      httpStatusCodes: [500, 503],
+    };
+    const httpOptionsWithRetryOptions: HttpOptions = httpOptions;
+    httpOptionsWithRetryOptions.retryOptions = retryOptions;
+
+    const client = new GoogleGenAI({
+      vertexai: false,
+      apiKey: GOOGLE_API_KEY,
+      httpOptions,
+    });
+    const response = await client.models.generateContent({
+      model: MODEL,
+      contents: 'why is the sky blue?',
+      config: {
+        maxOutputTokens: 200,
+        candidateCount: 1,
+        thinkingConfig: {thinkingBudget: 50},
+        httpOptions: httpOptionsWithRetryOptions,
+      },
+    });
+    expect(response.candidates!.length).toBe(
+      1,
+      'Expected 1 candidate got ' + response.candidates!.length,
+    );
+    expect(response.usageMetadata!.candidatesTokenCount).toBeLessThanOrEqual(
+      250,
+      'Expected candidatesTokenCount to be less than or equal to 250, got ' +
+        response.usageMetadata!.candidatesTokenCount,
+    );
+    console.info(
+      'Vertex AI should generate content with per-request retry options\n',
+      response.text,
+    );
+  }, 30000);
   it('Vertex AI can use JSON schema in parametersJsonSchema to build FunctionDeclaration', async () => {
     const stringArgument = z.object({
       firstString: z.string(),
