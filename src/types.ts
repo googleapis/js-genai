@@ -1614,6 +1614,13 @@ export function createModelContent(
     parts: _toParts(partOrString),
   };
 }
+/** HTTP retry options to be used in each of the requests. */
+export declare interface HttpRetryOptions {
+  /** Maximum number of attempts, including the original request.
+      If 0 or 1, it means no retries. If not specified, default to 5. */
+  attempts?: number;
+}
+
 /** HTTP options to be used in each of the requests. */
 export declare interface HttpOptions {
   /** The base URL for the AI platform service endpoint. */
@@ -1631,6 +1638,8 @@ export declare interface HttpOptions {
       - VertexAI backend API docs: https://cloud.google.com/vertex-ai/docs/reference/rest
       - GeminiAPI backend API docs: https://ai.google.dev/api/rest */
   extraBody?: Record<string, unknown>;
+  /** HTTP retry options for the request. */
+  retryOptions?: HttpRetryOptions;
 }
 
 /** Schema is used to define the format of input/output data.
