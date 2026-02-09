@@ -449,12 +449,12 @@ export namespace ContentDelta {
     /**
      * Tool call result delta.
      */
-    result?: FunctionResultDelta.Items | string;
+    result?: FunctionResultDelta.Items | unknown | string;
   }
 
   export namespace FunctionResultDelta {
     export interface Items {
-      items?: Array<InteractionsAPI.TextContent | InteractionsAPI.ImageContent | unknown>;
+      items?: Array<InteractionsAPI.TextContent | InteractionsAPI.ImageContent>;
     }
   }
 
@@ -573,14 +573,14 @@ export namespace ContentDelta {
     /**
      * Tool call result delta.
      */
-    result?: MCPServerToolResultDelta.Items | string;
+    result?: MCPServerToolResultDelta.Items | unknown | string;
 
     server_name?: string;
   }
 
   export namespace MCPServerToolResultDelta {
     export interface Items {
-      items?: Array<string | InteractionsAPI.ImageContent | unknown>;
+      items?: Array<InteractionsAPI.TextContent | InteractionsAPI.ImageContent>;
     }
   }
 
@@ -847,7 +847,7 @@ export interface FunctionResultContent {
 
 export namespace FunctionResultContent {
   export interface Items {
-    items?: Array<InteractionsAPI.TextContent | InteractionsAPI.ImageContent | unknown>;
+    items?: Array<InteractionsAPI.TextContent | InteractionsAPI.ImageContent>;
   }
 }
 
@@ -1190,7 +1190,7 @@ export interface MCPServerToolResultContent {
 
 export namespace MCPServerToolResultContent {
   export interface Items {
-    items?: Array<string | InteractionsAPI.ImageContent | unknown>;
+    items?: Array<InteractionsAPI.TextContent | InteractionsAPI.ImageContent>;
   }
 }
 
