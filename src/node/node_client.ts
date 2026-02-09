@@ -117,6 +117,7 @@ export class GoogleGenAI {
       clientAdapter: this.apiClient,
       defaultHeaders: this.apiClient.getDefaultHeaders(),
       timeout: httpOpts?.timeout,
+      maxRetries: httpOpts?.retryOptions?.attempts,
     });
     this._interactions = nextGenClient.interactions;
 
