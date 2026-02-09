@@ -1854,6 +1854,7 @@ export interface HttpOptions {
     baseUrlResourceScope?: ResourceScope;
     extraBody?: Record<string, unknown>;
     headers?: Record<string, string>;
+    retryOptions?: HttpRetryOptions;
     timeout?: number;
 }
 
@@ -1864,6 +1865,11 @@ export class HttpResponse {
     // (undocumented)
     json(): Promise<unknown>;
     responseInternal: Response;
+}
+
+// @public
+export interface HttpRetryOptions {
+    attempts?: number;
 }
 
 // @public
