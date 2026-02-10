@@ -924,7 +924,7 @@ describe('live', () => {
 
     const websocketSpyCall = websocketSpy.calls.all()[0];
     expect(websocketSpyCall.args[0]).toBe(
-      '{"setup":{"model":"models/gemini-2.0-flash-live-001","generationConfig":{"responseModalities":["AUDIO"]},"inputAudioTranscription":{},"outputAudioTranscription":{}}}',
+      '{"setup":{"model":"models/gemini-live-2.5-flash-preview","generationConfig":{"responseModalities":["AUDIO"]},"outputAudioTranscription":{}}}',
     );
     expect(JSON.parse(websocketSpyCall.args[0])).toEqual({
       setup: {

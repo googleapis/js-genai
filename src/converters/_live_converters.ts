@@ -1173,16 +1173,8 @@ export function liveConnectConfigToVertex(
     );
   }
 
-  const fromInputAudioTranscription = common.getValueByPath(fromObject, [
-    'inputAudioTranscription',
-  ]);
-  if (parentObject !== undefined && fromInputAudioTranscription != null) {
-    common.setValueByPath(
-      parentObject,
-      ['setup', 'inputAudioTranscription'],
-      fromInputAudioTranscription,
-    );
-  }
+  // Vertex AI does not support inputAudioTranscription in the setup message;
+  // it is intentionally not added to the setup.
 
   const fromOutputAudioTranscription = common.getValueByPath(fromObject, [
     'outputAudioTranscription',

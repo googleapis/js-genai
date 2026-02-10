@@ -266,6 +266,7 @@ export class Live {
           }),
         },
       };
+    }
     if (params.config?.generationConfig) {
       // Raise deprecation warning for generationConfig.
       console.warn(
@@ -296,17 +297,10 @@ export class Live {
         liveConnectParameters,
       );
     } else {
-      clientMessage = {
-        setup: {
-          model: transformedModel,
-          ...(params.config?.generationConfig && {
-            generationConfig: params.config.generationConfig,
-          }),
-          ...(params.config?.responseModalities && {
-            responseModalities: params.config.responseModalities,
-          }),
-        },
-      };
+      clientMessage = converters.liveConnectParametersToMldev(
+        this.apiClient,
+        liveConnectParameters,
+      );
     }
     delete clientMessage['config'];
     conn.send(JSON.stringify(clientMessage));
