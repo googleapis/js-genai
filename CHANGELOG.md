@@ -1,6 +1,20 @@
 # Changelog
 
 
+## [1.41.0](https://github.com/googleapis/js-genai/compare/v1.40.0...v1.41.0) (2026-02-10)
+
+
+### Features
+
+* Add HTTP retry support to the SDK ([37d4f2e](https://github.com/googleapis/js-genai/commit/37d4f2e806793d71074eb0b763336b5c7132224b))
+* Add INCOMPLETE status to Interaction. ([519f837](https://github.com/googleapis/js-genai/commit/519f83706d86c18cac6f500a3273f0cd927bb63b))
+* Add retry functionality to the TypeScript SDK ([1eaee6d](https://github.com/googleapis/js-genai/commit/1eaee6d5006708d33d8620ac21486d1315f08515))
+* Add retry functionality to the TypeScript SDK ([3df1cd5](https://github.com/googleapis/js-genai/commit/3df1cd57353d120686b718625152c30e7384802f))
+* Pass retry options to the underlying Interactions client ([78b4041](https://github.com/googleapis/js-genai/commit/78b4041cb52cb9f150fa5016b01f2b73457311a8))
+* Pass retry options to the underlying Interactions client ([67e68d7](https://github.com/googleapis/js-genai/commit/67e68d71b4441cff486de94391a381b5f51201fa))
+* Pass retry options to the underlying Interactions client ([086cf82](https://github.com/googleapis/js-genai/commit/086cf82470dc7ba0393a3c63c060dc704b6d9586))
+* Support encryption_spec in tuning job creation configuration for GenAI SDK ([e218add](https://github.com/googleapis/js-genai/commit/e218add2061ba7a387a7b9ecee0ca6e8b15c90f8))
+
 ## [1.40.0](https://github.com/googleapis/js-genai/compare/v1.39.0...v1.40.0) (2026-02-04)
 
 
