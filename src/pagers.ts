@@ -8,15 +8,20 @@
  * Pagers for the GenAI List APIs.
  */
 
+import * as types from '../src/types';
+
 export enum PagedItem {
   PAGED_ITEM_BATCH_JOBS = 'batchJobs',
   PAGED_ITEM_MODELS = 'models',
   PAGED_ITEM_TUNING_JOBS = 'tuningJobs',
   PAGED_ITEM_FILES = 'files',
   PAGED_ITEM_CACHED_CONTENTS = 'cachedContents',
+  PAGED_ITEM_FILE_SEARCH_STORES = 'fileSearchStores',
+  PAGED_ITEM_DOCUMENTS = 'documents',
 }
 
-interface PagedItemConfig {
+export interface PagedItemConfig {
+  parent?: string;
   config?: {
     pageToken?: string;
     pageSize?: number;
@@ -25,11 +30,14 @@ interface PagedItemConfig {
 
 interface PagedItemResponse<T> {
   nextPageToken?: string;
+  sdkHttpResponse?: types.HttpResponse;
   batchJobs?: T[];
   models?: T[];
   tuningJobs?: T[];
   files?: T[];
   cachedContents?: T[];
+  fileSearchStores?: T[];
+  documents?: T[];
 }
 
 /**
@@ -40,6 +48,7 @@ export class Pager<T> implements AsyncIterable<T> {
   private pageInternal: T[] = [];
   private paramsInternal: PagedItemConfig = {};
   private pageInternalSize!: number;
+  private sdkHttpResponseInternal?: types.HttpResponse;
   protected requestInternal!: (
     params: PagedItemConfig,
   ) => Promise<PagedItemResponse<T>>;
@@ -62,9 +71,11 @@ export class Pager<T> implements AsyncIterable<T> {
   ) {
     this.nameInternal = name;
     this.pageInternal = response[this.nameInternal] || [];
+
+    this.sdkHttpResponseInternal = response?.sdkHttpResponse;
     this.idxInternal = 0;
     let requestParams: PagedItemConfig = {config: {}};
-    if (!params) {
+    if (!params || Object.keys(params).length === 0) {
       requestParams = {config: {}};
     } else if (typeof params === 'object') {
       requestParams = {...params};
@@ -109,6 +120,13 @@ export class Pager<T> implements AsyncIterable<T> {
    */
   get pageSize(): number {
     return this.pageInternalSize;
+  }
+
+  /**
+   * Returns the headers of the API response.
+   */
+  get sdkHttpResponse(): types.HttpResponse | undefined {
+    return this.sdkHttpResponseInternal;
   }
 
   /**

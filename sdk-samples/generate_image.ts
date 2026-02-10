@@ -10,10 +10,10 @@ const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
 const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
 
-async function generateContentFromMLDev() {
+async function generateImagesFromMLDev() {
   const ai = new GoogleGenAI({vertexai: false, apiKey: GEMINI_API_KEY});
   const response = await ai.models.generateImages({
-    model: 'imagen-3.0-generate-002',
+    model: 'imagen-4.0-generate-001',
     prompt: 'Robot holding a red skateboard',
     config: {
       numberOfImages: 1,
@@ -24,14 +24,14 @@ async function generateContentFromMLDev() {
   console.debug(response?.generatedImages?.[0]?.image?.imageBytes);
 }
 
-async function generateContentFromVertexAI() {
+async function generateImagesFromVertexAI() {
   const ai = new GoogleGenAI({
     vertexai: true,
     project: GOOGLE_CLOUD_PROJECT,
     location: GOOGLE_CLOUD_LOCATION,
   });
   const response = await ai.models.generateImages({
-    model: 'imagen-3.0-generate-002',
+    model: 'imagen-4.0-generate-001',
     prompt: 'Robot holding a red skateboard',
     config: {
       numberOfImages: 1,
@@ -44,13 +44,11 @@ async function generateContentFromVertexAI() {
 
 async function main() {
   if (GOOGLE_GENAI_USE_VERTEXAI) {
-    await generateContentFromVertexAI().catch((e) =>
+    await generateImagesFromVertexAI().catch((e) =>
       console.error('got error', e),
     );
   } else {
-    await generateContentFromMLDev().catch((e) =>
-      console.error('got error', e),
-    );
+    await generateImagesFromMLDev().catch((e) => console.error('got error', e));
   }
 }
 

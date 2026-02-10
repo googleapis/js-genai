@@ -8,16 +8,14 @@ import {
   WebSocketCallbacks,
   WebSocketFactory,
   WebSocket as Ws,
-} from '../_websocket';
-import {crossError} from './_cross_error';
+} from '../_websocket.js';
+import {crossError} from './_cross_error.js';
 
-// TODO((b/401271082): re-enable lint once CrossWebSocketFactory is implemented.
-/*  eslint-disable @typescript-eslint/no-unused-vars */
 export class CrossWebSocketFactory implements WebSocketFactory {
   create(
-    url: string,
-    headers: Record<string, string>,
-    callbacks: WebSocketCallbacks,
+    _url: string,
+    _headers: Record<string, string>,
+    _callbacks: WebSocketCallbacks,
   ): Ws {
     throw crossError();
   }

@@ -1,0 +1,318 @@
+{
+  "recordID": "MCP_related_client_Tests_generateContent_ML_Dev_Multiple_CallableTool_with_MCPClients_and_conduct_automated_function_calling",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta/models/gemini-2.5-pro:generateContent",
+        "request": "POST /v1beta/models/gemini-2.5-pro:generateContent HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "631",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "MCP related client Tests generateContent ML Dev Multiple CallableTool with MCPClients and conduct automated function calling"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "Use the printer to print a simple word: hello in blue, and beep with the beeper, make sure you beep"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {},
+            "toolConfig": {
+              "functionCallingConfig": {
+                "mode": "AUTO"
+              }
+            },
+            "tools": [
+              {
+                "functionDeclarations": [
+                  {
+                    "name": "print",
+                    "parametersJsonSchema": {
+                      "$schema": "http://json-schema.org/draft-07/schema#",
+                      "additionalProperties": false,
+                      "properties": {
+                        "color": {
+                          "pattern": "red|blue|green|white",
+                          "type": "string"
+                        },
+                        "text": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["text", "color"],
+                      "type": "object"
+                    }
+                  }
+                ]
+              },
+              {
+                "functionDeclarations": [
+                  {
+                    "name": "beep",
+                    "parametersJsonSchema": {
+                      "properties": {},
+                      "type": "object"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "generativelanguage.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "5a1a8e630c8381eceba25a24f50b83b79617b4c97390cd6af12eb85e30940025",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Encoding": "gzip",
+          "Content-Length": "1049",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Fri, 24 Oct 2025 07:29:13 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Server-Timing": "gfet4t7; dur=5610",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "args": {
+                          "color": "blue",
+                          "text": "hello"
+                        },
+                        "name": "print"
+                      },
+                      "thoughtSignature": "CtQEAdHtim++AM2qAS9X0ktnUUYqs8V/wQb80XJZ5T1i89Sr5+wliGwVMJz8ivqZZw770tgdBRYl89mBKuO4nlEVGA4sMj+ZI5UBn428kCvqZEhPjpRGlU8S62O242Col7+dkHEAWq8+T4Wh1iNJA5RGpuwFCAzlgASjgvL8BKPkQh3sqcHXq8gVeDFaTagAjYCNja2YX/Chxzz77scAVkqAMcHGGANvr5twWFGygCvTX+d2Rrd3bJqf4dgS0gZ3zP6qmsQT/06dGfB5QpRRutK+WqXzxcPqOgz8WFaszCcuxvKigI984OeiVnriVp3nBX4eu3Bm7sZ+pF7n+ww6DFXlER7Mrn90rHzE24Pl3P1WgJgwfMUFpNkYU+/zGJw089y0QARiUNk1QAKG+NaWy5CigkFMD8dw4gKG+pMDPsFeq0x9kqmVjAE6WKvuy4fA8MSibw8U0na8N+L8ge5xtF88smtW73KDzgsW6Bk8ruamw7Y/yH3nlv8hv+b+dHl4MOjcrI9szTupa5qFmPnbzApMT+IJcYWNa1i1WtIqE+xSGakBoMp148+rPFNCr7OS8JmG3/gZEvsxngnUrN75ZB6qNqVmYPw6vRrdGwyHDM7ZPla5mGwoRZVXMdCj07nl702RZhkkYiNOc95AF1Zx0DZ3F1qEGOHCQzS1e4Lg6t98kMQdbt772vpTT0UhOP1Sno0se5MeQH74+yuykvdd6e8nkc9tDC7q4uw5QWHMmVY2U+5v+TvAD601235n8rU8uE1Po/Rhrha0SQE6VDtWmU+UFePm4eA="
+                    },
+                    {
+                      "functionCall": {
+                        "args": {},
+                        "name": "beep"
+                      }
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishMessage": "Model generated function call(s).",
+                "finishReason": "STOP",
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-pro",
+            "responseId": "ySr7aIiVCYam1e8PyLWRiQw",
+            "usageMetadata": {
+              "candidatesTokenCount": 26,
+              "promptTokenCount": 85,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 85
+                }
+              ],
+              "thoughtsTokenCount": 155,
+              "totalTokenCount": 266
+            }
+          }
+        ]
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta/models/gemini-2.5-pro:generateContent",
+        "request": "POST /v1beta/models/gemini-2.5-pro:generateContent HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "1827",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "MCP related client Tests generateContent ML Dev Multiple CallableTool with MCPClients and conduct automated function calling"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "Use the printer to print a simple word: hello in blue, and beep with the beeper, make sure you beep"
+                  }
+                ],
+                "role": "user"
+              },
+              {
+                "parts": [
+                  {
+                    "functionCall": {
+                      "args": {
+                        "color": "blue",
+                        "text": "hello"
+                      },
+                      "name": "print"
+                    },
+                    "thoughtSignature": "CtQEAdHtim++AM2qAS9X0ktnUUYqs8V/wQb80XJZ5T1i89Sr5+wliGwVMJz8ivqZZw770tgdBRYl89mBKuO4nlEVGA4sMj+ZI5UBn428kCvqZEhPjpRGlU8S62O242Col7+dkHEAWq8+T4Wh1iNJA5RGpuwFCAzlgASjgvL8BKPkQh3sqcHXq8gVeDFaTagAjYCNja2YX/Chxzz77scAVkqAMcHGGANvr5twWFGygCvTX+d2Rrd3bJqf4dgS0gZ3zP6qmsQT/06dGfB5QpRRutK+WqXzxcPqOgz8WFaszCcuxvKigI984OeiVnriVp3nBX4eu3Bm7sZ+pF7n+ww6DFXlER7Mrn90rHzE24Pl3P1WgJgwfMUFpNkYU+/zGJw089y0QARiUNk1QAKG+NaWy5CigkFMD8dw4gKG+pMDPsFeq0x9kqmVjAE6WKvuy4fA8MSibw8U0na8N+L8ge5xtF88smtW73KDzgsW6Bk8ruamw7Y/yH3nlv8hv+b+dHl4MOjcrI9szTupa5qFmPnbzApMT+IJcYWNa1i1WtIqE+xSGakBoMp148+rPFNCr7OS8JmG3/gZEvsxngnUrN75ZB6qNqVmYPw6vRrdGwyHDM7ZPla5mGwoRZVXMdCj07nl702RZhkkYiNOc95AF1Zx0DZ3F1qEGOHCQzS1e4Lg6t98kMQdbt772vpTT0UhOP1Sno0se5MeQH74+yuykvdd6e8nkc9tDC7q4uw5QWHMmVY2U+5v+TvAD601235n8rU8uE1Po/Rhrha0SQE6VDtWmU+UFePm4eA="
+                  },
+                  {
+                    "functionCall": {
+                      "args": {},
+                      "name": "beep"
+                    }
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "functionResponse": {
+                      "name": "print",
+                      "response": {
+                        "content": [
+                          {
+                            "text": "\u001b[34mhello\u001b[0m",
+                            "type": "text"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "functionResponse": {
+                      "name": "beep",
+                      "response": {
+                        "content": [
+                          {
+                            "text": "beep",
+                            "type": "text"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {},
+            "toolConfig": {
+              "functionCallingConfig": {
+                "mode": "AUTO"
+              }
+            },
+            "tools": [
+              {
+                "functionDeclarations": [
+                  {
+                    "name": "print",
+                    "parametersJsonSchema": {
+                      "$schema": "http://json-schema.org/draft-07/schema#",
+                      "additionalProperties": false,
+                      "properties": {
+                        "color": {
+                          "pattern": "red|blue|green|white",
+                          "type": "string"
+                        },
+                        "text": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["text", "color"],
+                      "type": "object"
+                    }
+                  }
+                ]
+              },
+              {
+                "functionDeclarations": [
+                  {
+                    "name": "beep",
+                    "parametersJsonSchema": {
+                      "properties": {},
+                      "type": "object"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "previousRequest": "5a1a8e630c8381eceba25a24f50b83b79617b4c97390cd6af12eb85e30940025",
+        "serverAddress": "generativelanguage.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "32cfb7d489eee43d01864b00efcaf08fc9e98e71be91df40e043bd352c9f06d2",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Encoding": "gzip",
+          "Content-Length": "287",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Fri, 24 Oct 2025 07:29:16 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Server-Timing": "gfet4t7; dur=2830",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "ok, done\n"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-pro",
+            "responseId": "zCr7aMgR4ZvV7w_A9rTBBg",
+            "usageMetadata": {
+              "candidatesTokenCount": 3,
+              "promptTokenCount": 171,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 171
+                }
+              ],
+              "totalTokenCount": 174
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

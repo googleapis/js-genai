@@ -1,0 +1,96 @@
+{
+  "recordID": "Client_Tests_test_thinking_generate_content_should_return_thought_field",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1alpha/models/gemini-2.0-flash-thinking-exp:generateContent",
+        "request": "POST /v1alpha/models/gemini-2.0-flash-thinking-exp:generateContent HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "204",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Client Tests test thinking generate content should return thought field"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "What is the sum of natural numbers from 1 to 100?"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {
+              "candidateCount": 1,
+              "maxOutputTokens": 20,
+              "thinkingConfig": {
+                "includeThoughts": true
+              }
+            }
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "generativelanguage.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "119900ab0d8dddf8b4de1707fe6a4bd6210709b6ba14cda6978ab4853e45c2b3",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Encoding": "gzip",
+          "Content-Length": "680",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Fri, 24 Oct 2025 07:46:22 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Server-Timing": "gfet4t7; dur=1274",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "**Breaking Down the Sum of Natural Numbers**\n\nOkay, so I'm looking at this problem, and my first instinct, as always, is to pinpoint the central question. They're asking for the *sum* of natural numbers, specifically from some starting point. That \"sum\" is the crucial term, isn't it? It implies an arithmetic progression, and that immediately starts to pull up memories of those elegant summation formulas. Now, I need to figure out the starting and ending points of this sequence. Is it a standard 1 to n, or is it from a different value?\n",
+                      "thought": true
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "MAX_TOKENS",
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.0-flash-thinking-exp-01-21",
+            "responseId": "zi77aPQDsqLV7w_tk62YBQ",
+            "turnToken": "v1:ChZ6aTc3YVBRRHNxTFY3d190azYyWUJREhZ6aTc3YVBRRHNxTFY3d190azYyWUJR",
+            "usageMetadata": {
+              "promptTokenCount": 17,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 17
+                }
+              ],
+              "thoughtsTokenCount": 19,
+              "totalTokenCount": 36
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

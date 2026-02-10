@@ -4,7 +4,6 @@
       "changelog-path": "CHANGELOG.md",
       "release-type": "node",
       "bump-minor-pre-major": true,
-      "bump-patch-for-minor-pre-major": true,
       "draft": false,
       "prerelease": false,
       "extra-files": ["src/_api_client.ts"]

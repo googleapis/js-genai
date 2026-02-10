@@ -7,10 +7,16 @@
 import {
   Candidate,
   Content,
+  FunctionResponsePart,
   GenerateContentResponse,
   Language,
+  LiveServerContent,
+  LiveServerMessage,
   Outcome,
   Part,
+  PartMediaResolutionLevel,
+  createFunctionResponsePartFromBase64,
+  createFunctionResponsePartFromUri,
   createModelContent,
   createPartFromBase64,
   createPartFromCodeExecutionResult,
@@ -20,7 +26,7 @@ import {
   createPartFromText,
   createPartFromUri,
   createUserContent,
-} from '../../src/types';
+} from '../../src/types.js';
 
 describe('GenerateContentResponse.text', () => {
   it('should return undefined when candidates is undefined', () => {
@@ -112,7 +118,145 @@ describe('GenerateContentResponse.text', () => {
         },
       } as Candidate,
     ];
+
     expect(response.text).toBe('Hello ');
+  });
+
+  it('should not warn when thought_signature is present', () => {
+    const response = new GenerateContentResponse();
+    response.candidates = [
+      {
+        content: {
+          parts: [{text: 'Hello '}, {thoughtSignature: 'thought'}],
+        },
+      } as Candidate,
+    ];
+    spyOn(console, 'warn');
+
+    expect(response.text).toEqual('Hello ');
+    expect(console.warn).not.toHaveBeenCalled();
+  });
+
+  it('should not warn when thought_signature is present in a text part', () => {
+    const response = new GenerateContentResponse();
+    response.candidates = [
+      {
+        content: {
+          parts: [{text: 'Hello ', thoughtSignature: 'thought'}],
+        },
+      } as Candidate,
+    ];
+    spyOn(console, 'warn');
+
+    expect(response.text).toEqual('Hello ');
+    expect(console.warn).not.toHaveBeenCalled();
+  });
+});
+
+describe('GenerateContentResponse.data', () => {
+  it('should return undefined when candidates is undefined', () => {
+    const response = new GenerateContentResponse();
+    expect(response.data).toBeUndefined();
+  });
+
+  it('should return undefined when candidates is an empty array', () => {
+    const response = new GenerateContentResponse();
+    response.candidates = [];
+    expect(response.data).toBeUndefined();
+  });
+
+  it('should return undefined when content is undefined', () => {
+    const response = new GenerateContentResponse();
+    response.candidates = [{} as Candidate];
+    expect(response.data).toBeUndefined();
+  });
+
+  it('should return undefined when content.parts is undefined', () => {
+    const response = new GenerateContentResponse();
+    response.candidates = [{content: {} as Content} as Candidate];
+    expect(response.data).toBeUndefined();
+  });
+
+  it('should return undefined when content.parts is empty array', () => {
+    const response = new GenerateContentResponse();
+    response.candidates = [{content: {parts: []}} as Candidate];
+    expect(response.data).toBeUndefined();
+  });
+
+  it('should use first candidate when there are multiple candidates', () => {
+    const response = new GenerateContentResponse();
+    response.candidates = [
+      {
+        content: {
+          parts: [
+            {inlineData: {data: 'SGVsbG8gV29ybGQh', mimeType: 'text/plain'}},
+          ],
+        },
+      } as Candidate,
+      {
+        content: {
+          parts: [
+            {
+              inlineData: {
+                data: 'WW91IGFyZSBhd2Vzb21lIQ==',
+                mimeType: 'text/plain',
+              },
+            },
+          ],
+        },
+      } as Candidate,
+    ];
+    spyOn(console, 'warn');
+
+    expect(response.data).toBe('SGVsbG8gV29ybGQh');
+    expect(console.warn).toHaveBeenCalledWith(
+      'there are multiple candidates in the response, returning data from the first one.',
+    );
+  });
+
+  it('should return concatenated inline data from valid data parts', () => {
+    const response = new GenerateContentResponse();
+    response.candidates = [
+      {
+        content: {
+          parts: [
+            {inlineData: {data: 'SGVsbG8gV29ybGQh', mimeType: 'text/plain'}},
+            {
+              inlineData: {
+                data: 'WW91IGFyZSBhd2Vzb21lIQ==',
+                mimeType: 'text/plain',
+              },
+            },
+          ],
+        },
+      } as Candidate,
+    ];
+    expect(response.data).toBe('SGVsbG8gV29ybGQhWW91IGFyZSBhd2Vzb21lIQ==');
+  });
+
+  it('should log a warning when parts contain invalid fields', () => {
+    const response = new GenerateContentResponse();
+    response.candidates = [
+      {
+        content: {
+          parts: [
+            {text: 'Hello '},
+            {
+              inlineData: {
+                data: 'SGVsbG8gV29ybGQh',
+                mimeType: 'text/plain',
+              },
+            },
+          ],
+        },
+      } as Candidate,
+    ];
+    spyOn(console, 'warn');
+
+    expect(response.data).toEqual('SGVsbG8gV29ybGQh');
+    expect(console.warn).toHaveBeenCalledWith(
+      'there are non-data parts text in the response, returning concatenation of all data parts. Please refer to the non data parts for a full response from model.',
+    );
   });
 });
 
@@ -319,6 +463,23 @@ describe('createPart usability functions', () => {
     expect(part).toEqual(expectedPart);
   });
 
+  it('createPartFromUri should create a file data part with media resolution', () => {
+    const part = createPartFromUri(
+      'gs://bucket/file.txt',
+      'image/png',
+      PartMediaResolutionLevel.MEDIA_RESOLUTION_LOW,
+    );
+    const expectedPart: Part = {
+      fileData: {
+        fileUri: 'gs://bucket/file.txt',
+        mimeType: 'image/png',
+      },
+      mediaResolution: {level: PartMediaResolutionLevel.MEDIA_RESOLUTION_LOW},
+    };
+
+    expect(part).toEqual(expectedPart);
+  });
+
   it('createPartFromFunctionCall should create a function call part', () => {
     const part = createPartFromFunctionCall('func1', {
       param1: 'value1',
@@ -354,6 +515,43 @@ describe('createPart usability functions', () => {
     expect(part).toEqual(expectedPart);
   });
 
+  it('createPartFromFunctionResponse with multi modal parts should create a function response part', () => {
+    const part = createPartFromFunctionResponse(
+      'id1',
+      'func1',
+      {
+        output: 'value1',
+      },
+      [
+        {
+          inlineData: {
+            data: 'dGVzdA==',
+            mimeType: 'text/plain',
+          },
+        },
+      ],
+    );
+    const expectedPart: Part = {
+      functionResponse: {
+        id: 'id1',
+        name: 'func1',
+        response: {
+          output: 'value1',
+        },
+        parts: [
+          {
+            inlineData: {
+              data: 'dGVzdA==',
+              mimeType: 'text/plain',
+            },
+          },
+        ],
+      },
+    };
+
+    expect(part).toEqual(expectedPart);
+  });
+
   it('createPartFromBase64 should create an inline data part', () => {
     const part = createPartFromBase64('dGVzdA==', 'text/plain');
     const expectedPart: Part = {
@@ -361,6 +559,23 @@ describe('createPart usability functions', () => {
         data: 'dGVzdA==',
         mimeType: 'text/plain',
       },
+    };
+
+    expect(part).toEqual(expectedPart);
+  });
+
+  it('createPartFromBase64 should create an inline data part with media resolution', () => {
+    const part = createPartFromBase64(
+      'dGVzdA==',
+      'image/png',
+      PartMediaResolutionLevel.MEDIA_RESOLUTION_HIGH,
+    );
+    const expectedPart: Part = {
+      inlineData: {
+        data: 'dGVzdA==',
+        mimeType: 'image/png',
+      },
+      mediaResolution: {level: PartMediaResolutionLevel.MEDIA_RESOLUTION_HIGH},
     };
 
     expect(part).toEqual(expectedPart);
@@ -390,6 +605,35 @@ describe('createPart usability functions', () => {
       executableCode: {
         code: 'print("Hello world!")',
         language: Language.PYTHON,
+      },
+    };
+
+    expect(part).toEqual(expectedPart);
+  });
+});
+
+describe('createFunctionResponsePart usability functions', () => {
+  it('createFunctionResponsePartFromBase64 should create an inline data function response part', () => {
+    const part = createFunctionResponsePartFromBase64('dGVzdA==', 'text/plain');
+    const expectedPart: FunctionResponsePart = {
+      inlineData: {
+        data: 'dGVzdA==',
+        mimeType: 'text/plain',
+      },
+    };
+
+    expect(part).toEqual(expectedPart);
+  });
+
+  it('createFunctionResponsePartFromUri should create a file data function response part', () => {
+    const part = createFunctionResponsePartFromUri(
+      'gs://bucket/file.txt',
+      'text/plain',
+    );
+    const expectedPart: FunctionResponsePart = {
+      fileData: {
+        fileUri: 'gs://bucket/file.txt',
+        mimeType: 'text/plain',
       },
     };
 
@@ -505,5 +749,129 @@ describe('createModelContent', () => {
         },
       ],
     });
+  });
+});
+
+describe('LiveServerMessage.text', () => {
+  it('should return undefined when serverContent is undefined', () => {
+    const response = new LiveServerMessage();
+    expect(response.text).toBeUndefined();
+  });
+
+  it('should return undefined when modelTurn is undefined', () => {
+    const response = new LiveServerMessage();
+    response.serverContent = {} as LiveServerContent;
+    expect(response.text).toBeUndefined();
+  });
+
+  it('should return undefined when content.parts is undefined', () => {
+    const response = new LiveServerMessage();
+    response.serverContent = {modelTurn: {} as Content};
+    expect(response.text).toBeUndefined();
+  });
+
+  it('should return undefined when content.parts is empty array', () => {
+    const response = new LiveServerMessage();
+    response.serverContent = {modelTurn: {parts: [{} as Part]}};
+    expect(response.text).toBeUndefined();
+  });
+
+  it('should return concatenated text from valid text parts', () => {
+    const response = new LiveServerMessage();
+    response.serverContent = {
+      modelTurn: {
+        parts: [{text: 'Hello '}, {text: 'world!'}],
+      },
+    };
+    expect(response.text).toBe('Hello world!');
+  });
+
+  it('should log a warning when parts contain invalid fields', () => {
+    const response = new LiveServerMessage();
+    response.serverContent = {
+      modelTurn: {
+        parts: [
+          {text: 'Hello '},
+          {
+            inlineData: {
+              data: 'world!',
+              mimeType: 'text/plain',
+            },
+          },
+        ],
+      },
+    };
+    spyOn(console, 'warn');
+
+    expect(response.text).toEqual('Hello ');
+    expect(console.warn).toHaveBeenCalledWith(
+      'there are non-text parts inlineData in the response, returning concatenation of all text parts. Please refer to the non text parts for a full response from model.',
+    );
+  });
+});
+
+describe('LiveServerMessage.data', () => {
+  it('should return undefined when serverContent is undefined', () => {
+    const response = new LiveServerMessage();
+    expect(response.data).toBeUndefined();
+  });
+
+  it('should return undefined when modelTurn is undefined', () => {
+    const response = new LiveServerMessage();
+    response.serverContent = {} as LiveServerContent;
+    expect(response.data).toBeUndefined();
+  });
+
+  it('should return undefined when content.parts is undefined', () => {
+    const response = new LiveServerMessage();
+    response.serverContent = {modelTurn: {} as Content};
+    expect(response.data).toBeUndefined();
+  });
+
+  it('should return undefined when content.parts is empty array', () => {
+    const response = new LiveServerMessage();
+    response.serverContent = {modelTurn: {parts: [{} as Part]}};
+    expect(response.data).toBeUndefined();
+  });
+
+  it('should return concatenated inline data from valid text parts', () => {
+    const response = new LiveServerMessage();
+    response.serverContent = {
+      modelTurn: {
+        parts: [
+          {inlineData: {data: 'SGVsbG8gV29ybGQh', mimeType: 'text/plain'}},
+          {
+            inlineData: {
+              data: 'WW91IGFyZSBhd2Vzb21lIQ==',
+              mimeType: 'text/plain',
+            },
+          },
+        ],
+      },
+    };
+    expect(response.data).toBe('SGVsbG8gV29ybGQhWW91IGFyZSBhd2Vzb21lIQ==');
+  });
+
+  it('should log a warning when parts contain invalid fields', () => {
+    const response = new LiveServerMessage();
+    response.serverContent = {
+      modelTurn: {
+        parts: [
+          {text: 'Hello '},
+          {
+            inlineData: {
+              data: 'SGVsbG8gV29ybGQh',
+              mimeType: 'text/plain',
+            },
+          },
+        ],
+      },
+    };
+    spyOn(console, 'warn');
+
+    expect(response.data).toEqual('SGVsbG8gV29ybGQh');
+    expect(console.warn).toHaveBeenCalledWith(
+      'there are non-data parts text in the response, returning concatenation of all data parts. Please refer to the non data parts for a full response from model.',
+    );
   });
 });

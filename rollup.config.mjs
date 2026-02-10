@@ -9,7 +9,7 @@ const pkg = JSON.parse(
 const rollupPlugins = [
   typescript({
     tsconfigOverride: {
-      exclude: ['test/**'],
+      exclude: ['test/**', 'src/private/**'],
     },
   }),
   json({
@@ -21,12 +21,23 @@ const externalDeps = [
   'google-auth-library',
   'ws',
   'fs/promises',
+  'fs',
+  'node:stream',
+  'node:stream/promises',
   'zod',
   'zod-to-json-schema',
+  '@modelcontextprotocol/sdk',
+  '@modelcontextprotocol/sdk/client/index.js',
+  '@modelcontextprotocol/sdk/types.js',
+  'path',
+  'crypto',
+  'os',
+  'protobufjs/minimal',
+  'protobufjs/minimal.js',
 ];
 
 export default [
-  // ES module (dist/index.mjs)
+  // Cross ES module (dist/index.mjs)
   {
     input: 'src/index.ts',
     output: {
@@ -38,7 +49,7 @@ export default [
     external: externalDeps,
   },
 
-  // CommonJS module (dist/index.js)
+  // Cross CJS module (dist/index.cjs)
   {
     input: 'src/index.ts',
     output: {
@@ -50,11 +61,23 @@ export default [
     external: externalDeps,
   },
 
-  // The `node/` module, commonjs only (dist/node/index.js)
+  // The `node/` ES module (dist/node/index.mjs)
   {
     input: 'src/node/index.ts',
     output: {
-      file: pkg.exports['./node']['require'],
+      file: pkg.exports['./node']['import'],
+      format: 'es',
+      sourcemap: true,
+    },
+    plugins: rollupPlugins,
+    external: externalDeps,
+  },
+
+  // The `node/` CJS module (dist/node/index.cjs)
+  {
+    input: 'src/node/index.ts',
+    output: {
+      file: pkg.exports['.']['node']['require'],
       format: 'cjs',
       sourcemap: true,
     },
@@ -68,6 +91,30 @@ export default [
     output: {
       file: pkg.exports['./web']['import'],
       format: 'es',
+      sourcemap: true,
+    },
+    plugins: rollupPlugins,
+    external: externalDeps,
+  },
+
+  // The `tokenizer/node` ES module (dist/tokenizer/node.mjs)
+  {
+    input: 'src/tokenizer/node.ts',
+    output: {
+      file: 'dist/tokenizer/node.mjs',
+      format: 'es',
+      sourcemap: true,
+    },
+    plugins: rollupPlugins,
+    external: externalDeps,
+  },
+
+  // The `tokenizer/node` CJS module (dist/tokenizer/node.cjs)
+  {
+    input: 'src/tokenizer/node.ts',
+    output: {
+      file: 'dist/tokenizer/node.cjs',
+      format: 'cjs',
       sourcemap: true,
     },
     plugins: rollupPlugins,

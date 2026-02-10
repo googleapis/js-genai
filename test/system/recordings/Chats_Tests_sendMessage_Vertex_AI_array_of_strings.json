@@ -1,0 +1,102 @@
+{
+  "recordID": "Chats_Tests_sendMessage_Vertex_AI_array_of_strings",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash:generateContent",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash:generateContent HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "141",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Chats Tests sendMessage Vertex AI array of strings"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "why is the sky blue?"
+                  },
+                  {
+                    "text": "Can the sky appear in other colors?"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {}
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "us-central1-aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "84ef6806ed066eaf9b5ba1ee8402488ac6b7a9594e112bc11fd6fdc85572b674",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Encoding": "gzip",
+          "Content-Length": "1612",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sat, 16 Aug 2025 00:45:40 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "avgLogprobs": -0.3495481191017744,
+                "content": {
+                  "parts": [
+                    {
+                      "text": "The sky is blue primarily due to a phenomenon called **Rayleigh scattering**. Here's a breakdown:\n\n*   **Sunlight is White (but Composed of All Colors):** Sunlight appears white, but it's actually made up of all the colors of the rainbow.\n*   **Earth's Atmosphere:** Earth is surrounded by an atmosphere filled with tiny air molecules (mostly nitrogen and oxygen).\n*   **Scattering:** When sunlight enters the atmosphere, it collides with these air molecules. This collision causes the light to scatter in different directions.\n*   **Rayleigh Scattering Favors Blue:** Rayleigh scattering is more effective at scattering shorter wavelengths of light. Blue and violet light have the shortest wavelengths in the visible spectrum.\n*   **Why Not Violet?** Although violet light is scattered even more than blue, our eyes are more sensitive to blue. Also, the sun emits slightly less violet light, and some of it is absorbed by the upper atmosphere.\n\n**Can the Sky Appear in Other Colors?**\n\nYes, the sky can definitely appear in other colors, depending on various factors:\n\n*   **Sunrise and Sunset (Red and Orange):** As the sun sets or rises, sunlight has to travel through a much longer path through the atmosphere to reach our eyes. In this longer path, most of the blue light is scattered away. The longer wavelengths, like red and orange, are less affected by scattering and are able to reach our eyes, giving us those beautiful sunset colors. This is still Rayleigh scattering, but viewed through a much longer atmospheric path.\n\n*   **Pollution and Dust (Yellowish or Hazy):** Higher concentrations of larger particles like dust, pollution, or smoke can scatter all colors of light more equally. This is called **Mie scattering**, and it can cause the sky to appear yellowish, whitish, or hazy.\n\n*   **After Volcanic Eruptions (Red or Purple):** Volcanic ash and aerosols can scatter light in unique ways, sometimes leading to vibrant red or purple sunsets and sunrises.\n\n*   **Night Sky (Black):** When the sun is not illuminating the atmosphere, there's no light to scatter, and the sky appears black.\n\n*   **Skies on Other Planets:** The color of the sky on other planets depends on the composition and density of their atmosphere. For example, Mars has a thin atmosphere filled with reddish dust, giving it a reddish-brown sky.\n\n**In Summary:**\n\nRayleigh scattering is the main reason why we typically see a blue sky. However, changes in the atmospheric conditions (like sunrise/sunset, pollution, volcanic eruptions) can significantly alter the scattering of light, resulting in skies of various other colors.\n"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "score": -193.30010986328125
+              }
+            ],
+            "createTime": "2025-08-16T00:45:36.567451Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "sNSfaJvRIv6Hm9IPnr2N2QY",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 45
+              },
+              "candidatesTokenCount": 553,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 553
+                }
+              ],
+              "promptTokenCount": 14,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 14
+                }
+              ],
+              "totalTokenCount": 567,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

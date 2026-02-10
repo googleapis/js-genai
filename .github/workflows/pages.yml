@@ -57,8 +57,10 @@ jobs:
           path: pages-deploy
       - name: Replace docs
         if: steps.check_changes.outputs.has_changes == 'true'
+        env:
+          IS_RELEASE_EVENT: ${{ steps.generate_pages.outputs.is_release_event }}
         run:  |
-          if steps.generate_pages.outputs.is_release_event == 'true'; then
+          if [[ "$IS_RELEASE_EVENT" == 'true' ]]; then
             echo "Updating release_docs"
             rm -rf ./pages-deploy/release_docs || true
             cp -a ./release_docs/. ./pages-deploy/release_docs/
@@ -69,6 +71,8 @@ jobs:
           fi
       - name: Commit and push changes to pages-only branch
         if: steps.check_changes.outputs.has_changes == 'true'
+        env:
+          IS_RELEASE_EVENT: ${{ steps.generate_pages.outputs.is_release_event }}
         working-directory: ./pages-deploy
         run: |
           git config user.email "genai-sdk-bot@google.com"
@@ -79,7 +83,7 @@ jobs:
              exit 0
           fi
 
-          if steps.generate_pages.outputs.is_release_event == 'true'; then
+          if [[ "$IS_RELEASE_EVENT" == 'true' ]]; then
             echo "Staging changes in release_docs/..."
             git add release_docs/
             COMMIT_MESSAGE="Update release pages from release-please commit: ${{ github.sha }}"

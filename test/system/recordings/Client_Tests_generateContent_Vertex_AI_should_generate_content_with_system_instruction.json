@@ -1,0 +1,108 @@
+{
+  "recordID": "Client_Tests_generateContent_Vertex_AI_should_generate_content_with_system_instruction",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:generateContent",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:generateContent HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "159",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Client Tests generateContent Vertex AI should generate content with system instruction"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "high"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {},
+            "systemInstruction": {
+              "parts": [
+                {
+                  "text": "I say high you say low."
+                }
+              ],
+              "role": "user"
+            }
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "us-central1-aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "6ef70c54a830b1395d5dce0324667a53a62e9463c8e2f0e9c87417b4b0a1bb9b",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Encoding": "gzip",
+          "Content-Length": "406",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Fri, 24 Oct 2025 07:45:27 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "avgLogprobs": -11.656981468200684,
+                "content": {
+                  "parts": [
+                    {
+                      "text": "low"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "score": -11.656981468200684
+              }
+            ],
+            "createTime": "2025-10-24T07:45:26.690215Z",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "li77aKeQKuXb698PvciY6Ag",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 22
+              },
+              "candidatesTokenCount": 1,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1
+                }
+              ],
+              "promptTokenCount": 8,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 8
+                }
+              ],
+              "thoughtsTokenCount": 34,
+              "totalTokenCount": 43,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

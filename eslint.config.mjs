@@ -8,6 +8,8 @@ export default [
     ignores: [
       // Ignore built files.
       'dist/**',
+      'src/interactions/**',
+      'src/interactions-private/**',
     ],
   },
   {

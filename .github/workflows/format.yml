@@ -18,40 +18,8 @@ jobs:
       with:
         node-version: 22.x
         cache: 'npm'
-    - run: npm ci
+    - run: USE_LOCAL_BUILD=true npm ci
     - name: Run format
       run: npx prettier '**/*.ts' '**/*.mjs' '**/*.mjs' '**/*.json' --check
-    - name: Get PR lint count
-      id: pr-lint-count
-      run: |
-        PR_LINT_COUNT=$(npm run lint | tail -n 3 | head -n 2 | grep -oP '✖ \K\d+' || echo 0)
-        echo "pr_count=$PR_LINT_COUNT" >> $GITHUB_OUTPUT
-    - name: Checkout Main Branch
-      uses: actions/checkout@v4
-      with:
-        ref: main
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - name: Get main lint count
-      id: main-lint-count
-      run: |
-        MAIN_LINT_COUNT=$(npm run lint | tail -n 3 | head -n 2 | grep -oP '✖ \K\d+' || echo 0)
-        echo "main_count=$MAIN_LINT_COUNT" >> $GITHUB_OUTPUT
-    - name: Compare Lint Counts
-      run: |
-        PR_COUNT=${{ steps.pr-lint-count.outputs.pr_count }}
-        MAIN_COUNT=${{ steps.main-lint-count.outputs.main_count }}
-
-        echo "PR Lint Count: $PR_COUNT"
-        echo "Main Lint Count: $MAIN_COUNT"
-
-        if [[ "$PR_COUNT" -gt "$MAIN_COUNT" ]]; then
-          echo "Error: PR lint count ($PR_COUNT) is greater than main branch lint count ($MAIN_COUNT)"
-          exit 1
-        else
-          echo "PR lint count is not greater than main branch lint count.  Success!"
-        fi
+    - name: Run linter
+      run: npm run lint

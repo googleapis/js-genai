@@ -1,0 +1,19 @@
+{
+  "name": "no-optional-deps",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^24.0.3",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@google/genai": "file:../../google-genai-1.5.1.tgz"
+  }
+}

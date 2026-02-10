@@ -1,0 +1,26 @@
+/**
+ * API Extractor configuration for the tokenizer/node subpackage.
+ * This configuration extends the one in api-extractor.json and changes
+ * input and output paths for the tokenizer/node subpath export.
+ */
+{
+  "extends": "./api-extractor.json",
+
+  "mainEntryPointFilePath": "<projectFolder>/dist/src/tokenizer/node.d.ts",
+
+  "apiReport": {
+    "reportFileName": "<unscopedPackageName>-tokenizer-node"
+  },
+
+  "docModel": {
+    "apiJsonFilePath": "<projectFolder>/temp/tokenizer-node/<unscopedPackageName>.api.json"
+  },
+
+  "dtsRollup": {
+    "untrimmedFilePath": "<projectFolder>/dist/tokenizer/node.d.ts"
+  },
+
+  "tsdocMetadata": {
+    "tsdocMetadataFilePath": "<projectFolder>/dist/tokenizer/node-tsdoc-metadata.json"
+  }
+}

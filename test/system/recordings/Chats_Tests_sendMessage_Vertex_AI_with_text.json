@@ -1,0 +1,99 @@
+{
+  "recordID": "Chats_Tests_sendMessage_Vertex_AI_with_text",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash:generateContent",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash:generateContent HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "94",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Chats Tests sendMessage Vertex AI with text"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "why is the sky blue?"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {}
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "us-central1-aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "c9afebb3e2b32a696c6278dc178b915c54e43771042fbfd86927ef7d0d1c1884",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Encoding": "gzip",
+          "Content-Length": "1333",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sat, 16 Aug 2025 00:45:43 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "avgLogprobs": -0.2701149502316037,
+                "content": {
+                  "parts": [
+                    {
+                      "text": "The sky is blue because of a phenomenon called **Rayleigh scattering**. Here's a breakdown of why:\n\n*   **Sunlight is made of all colors:** White sunlight is actually composed of all the colors of the rainbow (red, orange, yellow, green, blue, indigo, and violet).\n\n*   **Entering the Atmosphere:** When sunlight enters the Earth's atmosphere, it collides with tiny air molecules (mostly nitrogen and oxygen).\n\n*   **Scattering of Light:** This collision causes the sunlight to scatter in different directions.\n\n*   **Why Blue?**  Blue and violet light have shorter wavelengths and higher frequencies than other colors.  These shorter wavelengths are scattered *much* more effectively by the air molecules than longer wavelengths like red and orange.  Rayleigh scattering is inversely proportional to the fourth power of the wavelength (1/λ⁴). This means that shorter wavelengths are scattered much more.\n\n*   **Our Perception:** We see the sky as blue because blue light is scattered around more and reaches our eyes from all directions.\n\n**Why not violet?**\n\nViolet light is scattered even more than blue light. However, there are a couple of reasons why the sky appears blue rather than violet:\n\n1.  **Sun's Output:** The sun emits slightly less violet light than blue light.\n2.  **Atmospheric Absorption:** The upper atmosphere absorbs some violet light.\n3.  **Our Eyes' Sensitivity:** Our eyes are also slightly less sensitive to violet light than to blue light.\n\n**In Summary:**\n\nSunlight enters the atmosphere, and its blue light is scattered more than other colors due to its shorter wavelength. This scattered blue light is what we see when we look up at the sky.\n\n**Other related points:**\n\n*   **Sunsets and Sunrises:**  At sunset and sunrise, the sunlight travels through a longer path in the atmosphere. This means that most of the blue light has already been scattered away, leaving the longer wavelengths like orange and red to dominate, giving us those beautiful colors.\n*   **Space:**  In space, there is no atmosphere to scatter the light, so the sky appears black."
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "score": -119.93103790283203
+              }
+            ],
+            "createTime": "2025-08-16T00:45:40.459570Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "tNSfaLKGHNefmecP0eH_kAg",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 16
+              },
+              "candidatesTokenCount": 444,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 444
+                }
+              ],
+              "promptTokenCount": 6,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 6
+                }
+              ],
+              "totalTokenCount": 450,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

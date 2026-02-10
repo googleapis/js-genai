@@ -10,13 +10,15 @@
  * @experimental
  */
 
-import {ApiClient} from './_api_client';
-import {Auth} from './_auth';
-import * as t from './_transformers';
-import {WebSocket, WebSocketCallbacks, WebSocketFactory} from './_websocket';
-import * as converters from './converters/_live_converters';
-import {contentToMldev, contentToVertex} from './converters/_models_converters';
-import * as types from './types';
+import {ApiClient} from './_api_client.js';
+import {Auth} from './_auth.js';
+import * as t from './_transformers.js';
+import {WebSocket, WebSocketCallbacks, WebSocketFactory} from './_websocket.js';
+import * as converters from './converters/_live_converters.js';
+import {contentToMldev} from './converters/_models_converters.js';
+import {hasMcpToolUsage, setMcpUsageHeader} from './mcp/_mcp.js';
+import {LiveMusic} from './music.js';
+import * as types from './types.js';
 
 const FUNCTION_RESPONSE_REQUIRES_ID =
   'FunctionResponse request must have an `id` field from the response of a ToolCall.FunctionalCalls in Google AI.';
@@ -39,17 +41,24 @@ async function handleWebSocketMessage(
   onmessage: (msg: types.LiveServerMessage) => void,
   event: MessageEvent,
 ): Promise<void> {
-  let serverMessage: types.LiveServerMessage;
-  let data: types.LiveServerMessage;
+  const serverMessage: types.LiveServerMessage = new types.LiveServerMessage();
+  let jsonData: string;
   if (event.data instanceof Blob) {
-    data = JSON.parse(await event.data.text()) as types.LiveServerMessage;
+    jsonData = await event.data.text();
+  } else if (event.data instanceof ArrayBuffer) {
+    jsonData = new TextDecoder().decode(event.data);
   } else {
-    data = JSON.parse(event.data) as types.LiveServerMessage;
+    jsonData = event.data;
   }
+
+  const data = JSON.parse(jsonData) as types.LiveServerMessage;
+
   if (apiClient.isVertexAI()) {
-    serverMessage = converters.liveServerMessageFromVertex(apiClient, data);
+    const resp = converters.liveServerMessageFromVertex(data);
+    Object.assign(serverMessage, resp);
   } else {
-    serverMessage = converters.liveServerMessageFromMldev(apiClient, data);
+    const resp = data;
+    Object.assign(serverMessage, resp);
   }
 
   onmessage(serverMessage);
@@ -62,17 +71,26 @@ async function handleWebSocketMessage(
    @experimental
   */
 export class Live {
+  public readonly music: LiveMusic;
+
   constructor(
     private readonly apiClient: ApiClient,
     private readonly auth: Auth,
     private readonly webSocketFactory: WebSocketFactory,
-  ) {}
+  ) {
+    this.music = new LiveMusic(
+      this.apiClient,
+      this.auth,
+      this.webSocketFactory,
+    );
+  }
 
   /**
      Establishes a connection to the specified model with the given
      configuration and returns a Session object representing that connection.
 
-     @experimental
+     @experimental Built-in MCP support is an experimental feature, may change in
+     future versions.
 
      @remarks
 
@@ -85,7 +103,7 @@ export class Live {
      if (GOOGLE_GENAI_USE_VERTEXAI) {
        model = 'gemini-2.0-flash-live-preview-04-09';
      } else {
-       model = 'gemini-2.0-flash-live-001';
+       model = 'gemini-live-2.5-flash-preview';
      }
      const session = await ai.live.connect({
        model: model,
@@ -110,20 +128,61 @@ export class Live {
      ```
     */
   async connect(params: types.LiveConnectParameters): Promise<Session> {
+    // TODO: b/404946746 - Support per request HTTP options.
+    if (params.config && params.config.httpOptions) {
+      throw new Error(
+        'The Live module does not support httpOptions at request-level in' +
+          ' LiveConnectConfig yet. Please use the client-level httpOptions' +
+          ' configuration instead.',
+      );
+    }
     const websocketBaseUrl = this.apiClient.getWebsocketBaseUrl();
     const apiVersion = this.apiClient.getApiVersion();
     let url: string;
-    const headers = mapToHeaders(this.apiClient.getDefaultHeaders());
+    const clientHeaders = this.apiClient.getHeaders();
+    if (
+      params.config &&
+      params.config.tools &&
+      hasMcpToolUsage(params.config.tools)
+    ) {
+      setMcpUsageHeader(clientHeaders);
+    }
+    const headers = mapToHeaders(clientHeaders);
     if (this.apiClient.isVertexAI()) {
-      url = `${websocketBaseUrl}/ws/google.cloud.aiplatform.${
-        apiVersion
-      }.LlmBidiService/BidiGenerateContent`;
-      await this.auth.addAuthHeaders(headers);
+      const project = this.apiClient.getProject();
+      const location = this.apiClient.getLocation();
+      const apiKey = this.apiClient.getApiKey();
+      const hasStandardAuth = (!!project && !!location) || !!apiKey;
+
+      if (this.apiClient.getCustomBaseUrl() && !hasStandardAuth) {
+        // Custom base URL without standard auth (e.g., proxy).
+        url = websocketBaseUrl;
+        // Auth headers are assumed to be in `clientHeaders` from httpOptions.
+      } else {
+        url = `${websocketBaseUrl}/ws/google.cloud.aiplatform.${apiVersion}.LlmBidiService/BidiGenerateContent`;
+        await this.auth.addAuthHeaders(headers, url);
+      }
     } else {
       const apiKey = this.apiClient.getApiKey();
+
+      let method = 'BidiGenerateContent';
+      let keyName = 'key';
+      if (apiKey?.startsWith('auth_tokens/')) {
+        console.warn(
+          'Warning: Ephemeral token support is experimental and may change in future versions.',
+        );
+        if (apiVersion !== 'v1alpha') {
+          console.warn(
+            "Warning: The SDK's ephemeral token support is in v1alpha only. Please use const ai = new GoogleGenAI({apiKey: token.name, httpOptions: { apiVersion: 'v1alpha' }}); before session connection.",
+          );
+        }
+        method = 'BidiGenerateContentConstrained';
+        keyName = 'access_token';
+      }
+
       url = `${websocketBaseUrl}/ws/google.ai.generativelanguage.${
         apiVersion
-      }.GenerativeService.BidiGenerateContent?key=${apiKey}`;
+      }.GenerativeService.${method}?${keyName}=${apiKey}`;
     }
 
     let onopenResolve: (value: unknown) => void = () => {};
@@ -173,8 +232,10 @@ export class Live {
     ) {
       const project = this.apiClient.getProject();
       const location = this.apiClient.getLocation();
-      transformedModel =
-        `projects/${project}/locations/${location}/` + transformedModel;
+      if (project && location) {
+        transformedModel =
+          `projects/${project}/locations/${location}/` + transformedModel;
+      }
     }
 
     let clientMessage: Record<string, unknown> = {};
@@ -205,6 +266,35 @@ export class Live {
           }),
         },
       };
+    if (params.config?.generationConfig) {
+      // Raise deprecation warning for generationConfig.
+      console.warn(
+        'Setting `LiveConnectConfig.generation_config` is deprecated, please set the fields on `LiveConnectConfig` directly. This will become an error in a future version (not before Q3 2025).',
+      );
+    }
+    const inputTools = params.config?.tools ?? [];
+    const convertedTools: types.Tool[] = [];
+    for (const tool of inputTools) {
+      if (this.isCallableTool(tool)) {
+        const callableTool = tool as types.CallableTool;
+        convertedTools.push(await callableTool.tool());
+      } else {
+        convertedTools.push(tool as types.Tool);
+      }
+    }
+    if (convertedTools.length > 0) {
+      params.config!.tools = convertedTools;
+    }
+    const liveConnectParameters: types.LiveConnectParameters = {
+      model: transformedModel,
+      config: params.config,
+      callbacks: params.callbacks,
+    };
+    if (this.apiClient.isVertexAI()) {
+      clientMessage = converters.liveConnectParametersToVertex(
+        this.apiClient,
+        liveConnectParameters,
+      );
     } else {
       clientMessage = {
         setup: {
@@ -221,6 +311,11 @@ export class Live {
     delete clientMessage['config'];
     conn.send(JSON.stringify(clientMessage));
     return new Session(conn, this.apiClient);
+  }
+
+  // TODO: b/416041229 - Abstract this method to a common place.
+  private isCallableTool(tool: types.ToolUnion): boolean {
+    return 'callTool' in tool && typeof tool.callTool === 'function';
   }
 }
 
@@ -247,14 +342,9 @@ export class Session {
     if (params.turns !== null && params.turns !== undefined) {
       let contents: types.Content[] = [];
       try {
-        contents = t.tContents(
-          apiClient,
-          params.turns as types.ContentListUnion,
-        );
-        if (apiClient.isVertexAI()) {
-          contents = contents.map((item) => contentToVertex(apiClient, item));
-        } else {
-          contents = contents.map((item) => contentToMldev(apiClient, item));
+        contents = t.tContents(params.turns as types.ContentListUnion);
+        if (!apiClient.isVertexAI()) {
+          contents = contents.map((item) => contentToMldev(item));
         }
       } catch {
         throw new Error(
@@ -269,28 +359,6 @@ export class Session {
     return {
       clientContent: {turnComplete: params.turnComplete},
     };
-  }
-
-  private tLiveClientRealtimeInput(
-    apiClient: ApiClient,
-    params: types.LiveSendRealtimeInputParameters,
-  ): types.LiveClientMessage {
-    let clientMessage: types.LiveClientMessage = {};
-    if (!('media' in params) || !params.media) {
-      throw new Error(
-        `Failed to convert realtime input "media", type: '${typeof params.media}'`,
-      );
-    }
-
-    // LiveClientRealtimeInput
-    clientMessage = {
-      realtimeInput: {
-        mediaChunks: [params.media],
-        activityStart: params.activityStart,
-        activityEnd: params.activityEnd,
-      },
-    };
-    return clientMessage;
   }
 
   private tLiveClienttToolResponse(
@@ -420,12 +488,19 @@ export class Session {
     of audio and image mimetypes are allowed.
    */
   sendRealtimeInput(params: types.LiveSendRealtimeInputParameters) {
-    if (params.media == null) {
-      throw new Error('Media is required.');
-    }
+    let clientMessage: types.LiveClientMessage = {};
 
-    const clientMessage: types.LiveClientMessage =
-      this.tLiveClientRealtimeInput(this.apiClient, params);
+    if (this.apiClient.isVertexAI()) {
+      clientMessage = {
+        'realtimeInput':
+          converters.liveSendRealtimeInputParametersToVertex(params),
+      };
+    } else {
+      clientMessage = {
+        'realtimeInput':
+          converters.liveSendRealtimeInputParametersToMldev(params),
+      };
+    }
     this.conn.send(JSON.stringify(clientMessage));
   }
 
@@ -464,7 +539,7 @@ export class Session {
      if (GOOGLE_GENAI_USE_VERTEXAI) {
        model = 'gemini-2.0-flash-live-preview-04-09';
      } else {
-       model = 'gemini-2.0-flash-live-001';
+       model = 'gemini-live-2.5-flash-preview';
      }
      const session = await ai.live.connect({
        model: model,

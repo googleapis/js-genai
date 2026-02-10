@@ -1,0 +1,249 @@
+{
+  "recordID": "Client_Tests_generateContentStream_ML_Dev_should_stream_generate_content_with_system_instruction",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse",
+        "request": "POST /v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "215",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Client Tests generateContentStream ML Dev should stream generate content with system instruction"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "high"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {
+              "candidateCount": 1
+            },
+            "systemInstruction": {
+              "parts": [
+                {
+                  "text": "I say high you say low, and then tell me why is the sky blue."
+                }
+              ],
+              "role": "user"
+            }
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "generativelanguage.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "8b2a9fb055db1c9bcbc47b49fa7a4aba38267748a50a4500631887d3abd9a26c",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Disposition": "attachment",
+          "Content-Type": "text/event-stream",
+          "Date": "Fri, 24 Oct 2025 07:45:59 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Server-Timing": "gfet4t7; dur=3602",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "low!\n\nThe sky is blue primarily due to a phenomenon called **Rayleigh scattering**. Here's a breakdown:\n\n1.  **Sunlight is White:** Sunlight, which appears white to us, is actually made up of all the colors"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "tS77aIl-4ZvV7w_A9rTBBg",
+            "turnToken": "v1:ChZ0Uzc3YUlsLTRadlY3d19BOXJUQkJnEhZ0Uzc3YUlsLTRadlY3d19BOXJUQkJn",
+            "usageMetadata": {
+              "candidatesTokenCount": 50,
+              "promptTokenCount": 20,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 20
+                }
+              ],
+              "thoughtsTokenCount": 260,
+              "totalTokenCount": 330
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " of the rainbow, each with a different wavelength (red has the longest, violet the shortest).\n2.  **Atmospheric Particles:** Earth's atmosphere is filled with tiny gas molecules (mostly nitrogen and oxygen) and some small dust particles."
+                    }
+                  ],
+                  "role": "model"
+                },
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "tS77aIl-4ZvV7w_A9rTBBg",
+            "turnToken": "v1:ChZ0Uzc3YUlsLTRadlY3d19BOXJUQkJnEhZ0Uzc3YUlsLTRadlY3d19BOXJUQkJn",
+            "usageMetadata": {
+              "candidatesTokenCount": 100,
+              "promptTokenCount": 20,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 20
+                }
+              ],
+              "thoughtsTokenCount": 260,
+              "totalTokenCount": 380
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "\n3.  **Scattering:** When sunlight enters the atmosphere, it hits these tiny molecules. Shorter-wavelength colors (like blue and violet) are scattered much more efficiently and in all directions by these small particles than longer-wavelength colors (like"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "tS77aIl-4ZvV7w_A9rTBBg",
+            "turnToken": "v1:ChZ0Uzc3YUlsLTRadlY3d19BOXJUQkJnEhZ0Uzc3YUlsLTRadlY3d19BOXJUQkJn",
+            "usageMetadata": {
+              "candidatesTokenCount": 150,
+              "promptTokenCount": 20,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 20
+                }
+              ],
+              "thoughtsTokenCount": 260,
+              "totalTokenCount": 430
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " red, orange, and yellow).\n4.  **Blue Everywhere:** Because blue light is scattered all over the sky, no matter where you look during the day, some of that scattered blue light reaches your eyes, making the sky appear blue"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "tS77aIl-4ZvV7w_A9rTBBg",
+            "turnToken": "v1:ChZ0Uzc3YUlsLTRadlY3d19BOXJUQkJnEhZ0Uzc3YUlsLTRadlY3d19BOXJUQkJn",
+            "usageMetadata": {
+              "candidatesTokenCount": 199,
+              "promptTokenCount": 20,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 20
+                }
+              ],
+              "thoughtsTokenCount": 260,
+              "totalTokenCount": 479
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": ".\n5.  **Why Not Violet?** Violet light is scattered even more than blue, but our eyes are more sensitive to blue light, and some of the violet light is absorbed in the upper atmosphere, so we perceive the sky as blue"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "tS77aIl-4ZvV7w_A9rTBBg",
+            "turnToken": "v1:ChZ0Uzc3YUlsLTRadlY3d19BOXJUQkJnEhZ0Uzc3YUlsLTRadlY3d19BOXJUQkJn",
+            "usageMetadata": {
+              "candidatesTokenCount": 249,
+              "promptTokenCount": 20,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 20
+                }
+              ],
+              "thoughtsTokenCount": 260,
+              "totalTokenCount": 529
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " rather than violet."
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "tS77aIl-4ZvV7w_A9rTBBg",
+            "turnToken": "v1:ChZ0Uzc3YUlsLTRadlY3d19BOXJUQkJnEhZ0Uzc3YUlsLTRadlY3d19BOXJUQkJn",
+            "usageMetadata": {
+              "candidatesTokenCount": 253,
+              "promptTokenCount": 20,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 20
+                }
+              ],
+              "thoughtsTokenCount": 260,
+              "totalTokenCount": 533
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,163 @@
+{
+  "recordID": "Client_Tests_generateContentStream_Vertex_AI_should_stream_generate_content_with_specified_parameters",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:streamGenerateContent?alt=sse",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:streamGenerateContent?alt=sse HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "173",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Client Tests generateContentStream Vertex AI should stream generate content with specified parameters"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "why is the sky blue?"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {
+              "candidateCount": 1,
+              "maxOutputTokens": 200,
+              "thinkingConfig": {
+                "thinkingBudget": 50
+              }
+            }
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "us-central1-aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "b5ee4afe7e336e750bf9daa2016d26b26bb47ec9316eb732e21ef7736922d670",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Disposition": "attachment",
+          "Content-Type": "text/event-stream",
+          "Date": "Fri, 24 Oct 2025 07:45:43 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "The sky is blue because of a phenomenon called **Rayleigh Scattering**.\n\nHere's a breakdown of how it works:\n\n1.  **Sunlight is"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-10-24T07:45:43.133318Z",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "py77aMaRCNWD2PgPnuuEyAE",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 16
+              },
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " White Light:** Sunlight, which appears white to us, is actually made up of all the colors of the rainbow (red, orange, yellow, green, blue, indigo"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-10-24T07:45:43.133318Z",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "py77aMaRCNWD2PgPnuuEyAE",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": ", violet). Each color has a different **wavelength**.\n    *   **Blue and violet light** have shorter, smaller wavelengths.\n    *   **Red and orange light** have longer, larger wavelengths.\n\n2.  **Earth"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-10-24T07:45:43.133318Z",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "py77aMaRCNWD2PgPnuuEyAE",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "'s Atmosphere:** Our planet is surrounded by an atmosphere made up of tiny gas molecules (like nitrogen and oxygen) and small particles.\n\n3.  **Scattering:** When sunlight enters the atmosphere,"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "MAX_TOKENS"
+              }
+            ],
+            "createTime": "2025-10-24T07:45:43.133318Z",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "py77aMaRCNWD2PgPnuuEyAE",
+            "usageMetadata": {
+              "candidatesTokenCount": 156,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 156
+                }
+              ],
+              "promptTokenCount": 6,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 6
+                }
+              ],
+              "thoughtsTokenCount": 41,
+              "totalTokenCount": 203,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

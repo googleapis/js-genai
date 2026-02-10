@@ -6,18 +6,28 @@
 
 import {GoogleAuthOptions} from 'google-auth-library';
 
-import {ApiClient} from '../_api_client';
-import {Caches} from '../caches';
-import {Chats} from '../chats';
-import {GoogleGenAIOptions} from '../client';
-import {Files} from '../files';
-import {Live} from '../live';
-import {Models} from '../models';
-import {NodeAuth} from '../node/_node_auth';
-import {NodeWebSocketFactory} from '../node/_node_websocket';
-import {Operations} from '../operations';
+import {ApiClient} from '../_api_client.js';
+import {getBaseUrl} from '../_base_url.js';
+import {Batches} from '../batches.js';
+import {Caches} from '../caches.js';
+import {Chats} from '../chats.js';
+import {GoogleGenAIOptions} from '../client.js';
+import {Files} from '../files.js';
+import {FileSearchStores} from '../filesearchstores.js';
+import GeminiNextGenAPI from '../interactions/index.js';
+import {Interactions as GeminiNextGenInteractions} from '../interactions/resources/interactions.js';
+import {Live} from '../live.js';
+import {Models} from '../models.js';
+import {NodeAuth} from '../node/_node_auth.js';
+import {NodeDownloader} from '../node/_node_downloader.js';
+import {NodeWebSocketFactory} from '../node/_node_websocket.js';
+import {Operations} from '../operations.js';
+import {Tokens} from '../tokens.js';
+import {Tunings} from '../tunings.js';
+import {HttpOptions} from '../types.js';
 
-import {NodeUploader} from './_node_uploader';
+import {NodeUploader} from './_node_uploader.js';
+import {NodeFiles} from './node_files.js';
 
 const LANGUAGE_LABEL_PREFIX = 'gl-node/';
 
@@ -69,13 +79,50 @@ export class GoogleGenAI {
   private readonly project?: string;
   private readonly location?: string;
   private readonly apiVersion?: string;
+  private readonly httpOptions?: HttpOptions;
   readonly models: Models;
   readonly live: Live;
+  readonly batches: Batches;
   readonly chats: Chats;
   readonly caches: Caches;
   readonly files: Files;
   readonly operations: Operations;
+  readonly authTokens: Tokens;
+  readonly tunings: Tunings;
+  readonly fileSearchStores: FileSearchStores;
+  private _interactions: GeminiNextGenInteractions | undefined;
 
+  get interactions(): GeminiNextGenInteractions {
+    if (this._interactions !== undefined) {
+      return this._interactions;
+    }
+
+    console.warn(
+      'GoogleGenAI.interactions: Interactions usage is experimental and may change in future versions.',
+    );
+
+    const httpOpts = this.httpOptions;
+
+    // Unsupported Options Warnings
+    if (httpOpts?.extraBody) {
+      console.warn(
+        'GoogleGenAI.interactions: Client level httpOptions.extraBody is not supported by the interactions client and will be ignored.',
+      );
+    }
+
+    const nextGenClient = new GeminiNextGenAPI({
+      baseURL: this.apiClient.getBaseUrl(),
+      apiKey: this.apiKey,
+      apiVersion: this.apiClient.getApiVersion(),
+      clientAdapter: this.apiClient,
+      defaultHeaders: this.apiClient.getDefaultHeaders(),
+      timeout: httpOpts?.timeout,
+      maxRetries: httpOpts?.retryOptions?.attempts,
+    });
+    this._interactions = nextGenClient.interactions;
+
+    return this._interactions;
+  }
   constructor(options: GoogleGenAIOptions) {
     // Validate explicitly set initializer values.
     if ((options.project || options.location) && options.apiKey) {
@@ -86,7 +133,7 @@ export class GoogleGenAI {
 
     this.vertexai =
       options.vertexai ?? getBooleanEnv('GOOGLE_GENAI_USE_VERTEXAI') ?? false;
-    const envApiKey = getEnv('GOOGLE_API_KEY');
+    const envApiKey = getApiKeyFromEnv();
     const envProject = getEnv('GOOGLE_CLOUD_PROJECT');
     const envLocation = getEnv('GOOGLE_CLOUD_LOCATION');
 
@@ -94,8 +141,20 @@ export class GoogleGenAI {
     this.project = options.project ?? envProject;
     this.location = options.location ?? envLocation;
 
+    if (!this.vertexai && !this.apiKey) {
+      throw new Error('API key must be set when using the Gemini API.');
+    }
+
     // Handle when to use Vertex AI in express mode (api key)
     if (options.vertexai) {
+      if (options.googleAuthOptions?.credentials) {
+        // Explicit credentials take precedence over implicit api_key.
+        console.debug(
+          'The user provided Google Cloud credentials will take precedence' +
+            ' over the API key from the environment variable.',
+        );
+        this.apiKey = undefined;
+      }
       // Explicit api_key and explicit project/location already handled above.
       if ((envProject || envLocation) && options.apiKey) {
         // Explicit api_key takes precedence over implicit project/location.
@@ -120,9 +179,28 @@ export class GoogleGenAI {
         );
         this.apiKey = undefined;
       }
+
+      if (!this.location && !this.apiKey) {
+        this.location = 'global';
+      }
+    }
+
+    const baseUrl = getBaseUrl(
+      options.httpOptions,
+      options.vertexai,
+      getEnv('GOOGLE_VERTEX_BASE_URL'),
+      getEnv('GOOGLE_GEMINI_BASE_URL'),
+    );
+    if (baseUrl) {
+      if (options.httpOptions) {
+        options.httpOptions.baseUrl = baseUrl;
+      } else {
+        options.httpOptions = {baseUrl: baseUrl};
+      }
     }
 
     this.apiVersion = options.apiVersion;
+    this.httpOptions = options.httpOptions;
     const auth = new NodeAuth({
       apiKey: this.apiKey,
       googleAuthOptions: options.googleAuthOptions,
@@ -134,16 +212,21 @@ export class GoogleGenAI {
       apiVersion: this.apiVersion,
       apiKey: this.apiKey,
       vertexai: this.vertexai,
-      httpOptions: options.httpOptions,
+      httpOptions: this.httpOptions,
       userAgentExtra: LANGUAGE_LABEL_PREFIX + process.version,
       uploader: new NodeUploader(),
+      downloader: new NodeDownloader(),
     });
     this.models = new Models(this.apiClient);
     this.live = new Live(this.apiClient, auth, new NodeWebSocketFactory());
+    this.batches = new Batches(this.apiClient);
     this.chats = new Chats(this.models, this.apiClient);
     this.caches = new Caches(this.apiClient);
-    this.files = new Files(this.apiClient);
+    this.files = new NodeFiles(this.apiClient);
     this.operations = new Operations(this.apiClient);
+    this.authTokens = new Tokens(this.apiClient);
+    this.tunings = new Tunings(this.apiClient);
+    this.fileSearchStores = new FileSearchStores(this.apiClient);
   }
 }
 
@@ -160,4 +243,15 @@ function stringToBoolean(str?: string): boolean {
     return false;
   }
   return str.toLowerCase() === 'true';
+}
+
+function getApiKeyFromEnv(): string | undefined {
+  const envGoogleApiKey = getEnv('GOOGLE_API_KEY');
+  const envGeminiApiKey = getEnv('GEMINI_API_KEY');
+  if (envGoogleApiKey && envGeminiApiKey) {
+    console.warn(
+      'Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.',
+    );
+  }
+  return envGoogleApiKey || envGeminiApiKey || undefined;
 }

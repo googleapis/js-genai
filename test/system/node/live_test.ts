@@ -4,14 +4,52 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {GoogleGenAIOptions} from '../../../src/client';
-import {Session} from '../../../src/live';
-import {GoogleGenAI} from '../../../src/node/node_client';
-import * as types from '../../../src/types';
+import * as fs from 'fs';
+import * as path from 'path';
+import {fileURLToPath} from 'url';
 
-const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+import {GoogleGenAIOptions} from '../../../src/client.js';
+import {Session} from '../../../src/live.js';
+import {GoogleGenAI} from '../../../src/node/node_client.js';
+import * as types from '../../../src/types.js';
+import {setupTestServer, shutdownTestServer} from '../test_server.js';
+
+const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY || 'test-api-key';
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
+
+const VERTEX_MODEL = 'gemini-2.0-flash-live-preview-04-09';
+const MLDEV_MODEL = 'gemini-live-2.5-flash-preview';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+function loadFileAsBase64(filename: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    // Construct the full path to the file, the test file is in dist/, while the test asset is in test/
+    const filePath = path.join(
+      __dirname,
+      '..',
+      '..',
+      '..',
+      '..',
+      'test',
+      'system',
+      'node',
+      filename,
+    );
+
+    fs.readFile(filePath, (err, data) => {
+      if (err) {
+        reject(err); // Reject if there's an error reading the file
+        return;
+      }
+      // Encode the file content to base64
+      const base64Data = data.toString('base64');
+      resolve(base64Data); // Resolve with the base64 string
+    });
+  });
+}
 
 class SessionWithQueue {
   private messageQueue: types.LiveServerMessage[] = [];
@@ -102,9 +140,31 @@ async function make_session_with_queue(
   return session;
 }
 
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 10 * 1000; // 10 seconds
+
 describe('live', () => {
+  let testName: string = '';
+  let httpOptions: types.HttpOptions;
+  beforeAll(async () => {
+    await setupTestServer();
+    jasmine.getEnv().addReporter({
+      specStarted: function (result) {
+        testName = result.fullName;
+      },
+    });
+  });
+
+  afterAll(async () => {
+    await shutdownTestServer();
+  });
+
+  beforeEach(() => {
+    httpOptions = {headers: {'Test-Name': testName}};
+  });
+
   it('ML Dev should initialize from environment variables', async () => {
-    const client = new GoogleGenAI({vertexai: false});
+    process.env['GOOGLE_API_KEY'] = 'test-api-key';
+    const client = new GoogleGenAI({vertexai: false, httpOptions});
     expect(client.live).not.toBeNull();
   });
 
@@ -112,12 +172,10 @@ describe('live', () => {
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
       apiKey: GOOGLE_API_KEY,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
-    const session = await make_session_with_queue(
-      client,
-      'models/gemini-2.0-flash-live-001',
-    );
+    const session = await make_session_with_queue(client, MLDEV_MODEL);
 
     session.sendClientContent({
       turns: 'Hello what should we talk about?',
@@ -139,12 +197,10 @@ describe('live', () => {
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
-    const session = await make_session_with_queue(
-      client,
-      'gemini-2.0-flash-live-preview-04-09',
-    );
+    const session = await make_session_with_queue(client, VERTEX_MODEL);
 
     session.sendClientContent({
       turns: 'Hello what should we talk about?',
@@ -164,12 +220,10 @@ describe('live', () => {
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
       apiKey: GOOGLE_API_KEY,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
-    const session = await make_session_with_queue(
-      client,
-      'models/gemini-2.0-flash-live-001',
-    );
+    const session = await make_session_with_queue(client, MLDEV_MODEL);
 
     session.sendClientContent({
       turns: [
@@ -191,12 +245,10 @@ describe('live', () => {
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
-    const session = await make_session_with_queue(
-      client,
-      'gemini-2.0-flash-live-preview-04-09',
-    );
+    const session = await make_session_with_queue(client, VERTEX_MODEL);
 
     session.sendClientContent({
       turns: [
@@ -217,16 +269,13 @@ describe('live', () => {
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
       apiKey: GOOGLE_API_KEY,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
     const config: types.LiveConnectConfig = {
       outputAudioTranscription: {},
     };
-    const session = await make_session_with_queue(
-      client,
-      'models/gemini-2.0-flash-live-001',
-      config,
-    );
+    const session = await make_session_with_queue(client, MLDEV_MODEL, config);
 
     session.sendClientContent({
       turns: 'Hello what should we talk about?',
@@ -254,16 +303,13 @@ describe('live', () => {
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
     const config: types.LiveConnectConfig = {
       outputAudioTranscription: {},
     };
-    const session = await make_session_with_queue(
-      client,
-      'gemini-2.0-flash-live-preview-04-09',
-      config,
-    );
+    const session = await make_session_with_queue(client, VERTEX_MODEL, config);
 
     session.sendClientContent({
       turns: 'Hello what should we talk about?',
@@ -289,12 +335,10 @@ describe('live', () => {
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
       apiKey: GOOGLE_API_KEY,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
-    const session = await make_session_with_queue(
-      client,
-      'models/gemini-2.0-flash-live-001',
-    );
+    const session = await make_session_with_queue(client, MLDEV_MODEL);
 
     try {
       session.sendToolResponse({
@@ -313,12 +357,10 @@ describe('live', () => {
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
-    const session = await make_session_with_queue(
-      client,
-      'gemini-2.0-flash-live-preview-04-09',
-    );
+    const session = await make_session_with_queue(client, VERTEX_MODEL);
 
     try {
       session.sendToolResponse({
@@ -338,6 +380,7 @@ describe('live', () => {
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
     const session = await make_session_with_queue(
@@ -355,12 +398,10 @@ describe('live', () => {
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
-    const session = await make_session_with_queue(
-      client,
-      'gemini-2.0-flash-live-preview-04-09',
-    );
+    const session = await make_session_with_queue(client, VERTEX_MODEL);
     const setupMessage = await session.receive();
     expect(setupMessage.setupComplete).not.toBeNull();
 
@@ -371,38 +412,35 @@ describe('live', () => {
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
       apiKey: GOOGLE_API_KEY,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
-    const session = await make_session_with_queue(
-      client,
-      'models/gemini-2.0-flash-live-001',
-      {
-        tools: [
-          {
-            functionDeclarations: [
-              {
-                name: 'get_current_weather',
-                description: 'Get the current weather in a given location',
-                parameters: {
-                  type: types.Type.OBJECT,
-                  properties: {
-                    location: {
-                      type: types.Type.STRING,
-                      description: 'The city and state, e.g. San Francisco, CA',
-                    },
-                    unit: {
-                      type: types.Type.STRING,
-                      enum: ['celsius', 'fahrenheit'],
-                    },
+    const session = await make_session_with_queue(client, MLDEV_MODEL, {
+      tools: [
+        {
+          functionDeclarations: [
+            {
+              name: 'get_current_weather',
+              description: 'Get the current weather in a given location',
+              parameters: {
+                type: types.Type.OBJECT,
+                properties: {
+                  location: {
+                    type: types.Type.STRING,
+                    description: 'The city and state, e.g. San Francisco, CA',
                   },
-                  required: ['location'],
+                  unit: {
+                    type: types.Type.STRING,
+                    enum: ['celsius', 'fahrenheit'],
+                  },
                 },
+                required: ['location'],
               },
-            ],
-          },
-        ],
-      },
-    );
+            },
+          ],
+        },
+      ],
+    });
 
     session.sendClientContent({
       turns: [
@@ -427,38 +465,35 @@ describe('live', () => {
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
-    const session = await make_session_with_queue(
-      client,
-      'gemini-2.0-flash-live-preview-04-09',
-      {
-        tools: [
-          {
-            functionDeclarations: [
-              {
-                name: 'get_current_weather',
-                description: 'Get the current weather in a given location',
-                parameters: {
-                  type: types.Type.OBJECT,
-                  properties: {
-                    location: {
-                      type: types.Type.STRING,
-                      description: 'The city and state, e.g. San Francisco, CA',
-                    },
-                    unit: {
-                      type: types.Type.STRING,
-                      enum: ['celsius', 'fahrenheit'],
-                    },
+    const session = await make_session_with_queue(client, VERTEX_MODEL, {
+      tools: [
+        {
+          functionDeclarations: [
+            {
+              name: 'get_current_weather',
+              description: 'Get the current weather in a given location',
+              parameters: {
+                type: types.Type.OBJECT,
+                properties: {
+                  location: {
+                    type: types.Type.STRING,
+                    description: 'The city and state, e.g. San Francisco, CA',
                   },
-                  required: ['location'],
+                  unit: {
+                    type: types.Type.STRING,
+                    enum: ['celsius', 'fahrenheit'],
+                  },
                 },
+                required: ['location'],
               },
-            ],
-          },
-        ],
-      },
-    );
+            },
+          ],
+        },
+      ],
+    });
 
     session.sendClientContent({
       turns: [
@@ -482,12 +517,10 @@ describe('live', () => {
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
       apiKey: GOOGLE_API_KEY,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
-    const session = await make_session_with_queue(
-      client,
-      'models/gemini-2.0-flash-live-001',
-    );
+    const session = await make_session_with_queue(client, MLDEV_MODEL);
 
     session.sendToolResponse({
       functionResponses: [
@@ -508,12 +541,10 @@ describe('live', () => {
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
+      httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
-    const session = await make_session_with_queue(
-      client,
-      'gemini-2.0-flash-live-preview-04-09',
-    );
+    const session = await make_session_with_queue(client, VERTEX_MODEL);
 
     session.sendToolResponse({
       functionResponses: [
@@ -525,6 +556,151 @@ describe('live', () => {
         },
       ],
     });
+    session.close();
+  });
+
+  it('Vertex should respond to realtime media-audio input', async () => {
+    //  If you need to generate any other audio files this command was useful:
+    //
+    //  ffmpeg -i hello_are_you_there.wav -f s16le -acodec pcm_s16le -ar 16000 hello_are_you_there.pcm
+    const audioBase64 = await loadFileAsBase64('hello_are_you_there.pcm');
+    const clientOpts: GoogleGenAIOptions = {
+      vertexai: true,
+      project: GOOGLE_CLOUD_PROJECT,
+      location: GOOGLE_CLOUD_LOCATION,
+      httpOptions,
+    };
+    const client = new GoogleGenAI(clientOpts);
+    const session = await make_session_with_queue(client, VERTEX_MODEL, {
+      responseModalities: [types.Modality.TEXT],
+    });
+
+    session.sendRealtimeInput({
+      media: {
+        data: audioBase64,
+        mimeType: 'audio/pcm;rate=16000',
+      },
+    });
+    const setupMessage = await session.receive();
+    expect(setupMessage.setupComplete).not.toBeNull();
+
+    const message = await session.receive();
+    expect(message.serverContent).not.toBeNull();
+
+    session.close();
+  });
+
+  it('ML Dev should respond to realtime media-audio input', async () => {
+    const audioBase64 = await loadFileAsBase64('hello_are_you_there.pcm');
+
+    const clientOpts: GoogleGenAIOptions = {
+      vertexai: false,
+      apiKey: GOOGLE_API_KEY,
+      httpOptions,
+    };
+    const client = new GoogleGenAI(clientOpts);
+    const session = await make_session_with_queue(client, MLDEV_MODEL, {
+      responseModalities: [types.Modality.TEXT],
+    });
+
+    session.sendRealtimeInput({
+      media: {
+        data: audioBase64,
+        mimeType: 'audio/pcm;rate=16000',
+      },
+    });
+    const setupMessage = await session.receive();
+    expect(setupMessage.setupComplete).not.toBeNull();
+
+    const message = await session.receive();
+    expect(message.serverContent).not.toBeNull();
+
+    session.close();
+  });
+
+  it('ML Dev should reply to realtime audio input', async () => {
+    const audioBase64 = await loadFileAsBase64('hello_are_you_there.pcm');
+    const clientOpts: GoogleGenAIOptions = {
+      vertexai: false,
+      apiKey: GOOGLE_API_KEY,
+      httpOptions,
+    };
+    const client = new GoogleGenAI(clientOpts);
+    const session = await make_session_with_queue(client, MLDEV_MODEL, {
+      responseModalities: [types.Modality.TEXT],
+    });
+
+    session.sendRealtimeInput({
+      audio: {
+        data: audioBase64,
+        mimeType: 'audio/pcm;rate=16000',
+      },
+    });
+    const setupMessage = await session.receive();
+    expect(setupMessage.setupComplete).not.toBeNull();
+
+    const message = await session.receive();
+    expect(message.serverContent).not.toBeNull();
+
+    session.close();
+  });
+
+  it('ML Dev should reply to realtime text input', async () => {
+    const clientOpts: GoogleGenAIOptions = {
+      vertexai: false,
+      apiKey: GOOGLE_API_KEY,
+      httpOptions,
+    };
+    const client = new GoogleGenAI(clientOpts);
+    const session = await make_session_with_queue(client, MLDEV_MODEL, {
+      responseModalities: [types.Modality.TEXT],
+    });
+
+    session.sendRealtimeInput({
+      text: 'Are you there Gemini?',
+    });
+    const setupMessage = await session.receive();
+    expect(setupMessage.setupComplete).not.toBeNull();
+
+    const message = await session.receive();
+    expect(message.serverContent).not.toBeNull();
+
+    session.close();
+  });
+
+  it('ML Dev handle activity start and end', async () => {
+    const audioBase64 = await loadFileAsBase64('hello_are_you_there.pcm');
+
+    const clientOpts: GoogleGenAIOptions = {
+      vertexai: false,
+      apiKey: GOOGLE_API_KEY,
+      httpOptions,
+    };
+    const client = new GoogleGenAI(clientOpts);
+    const session = await make_session_with_queue(client, MLDEV_MODEL, {
+      responseModalities: [types.Modality.TEXT],
+      realtimeInputConfig: {automaticActivityDetection: {disabled: true}},
+    } as types.LiveConnectConfig);
+
+    session.sendRealtimeInput({
+      activityStart: {},
+    } as types.LiveSendRealtimeInputParameters);
+    session.sendRealtimeInput({
+      audio: {
+        data: audioBase64,
+        mimeType: 'audio/pcm;rate=16000',
+      },
+    });
+    session.sendRealtimeInput({
+      activityEnd: {},
+    } as types.LiveSendRealtimeInputParameters);
+
+    const setupMessage = await session.receive();
+    expect(setupMessage.setupComplete).not.toBeNull();
+
+    const message = await session.receive();
+    expect(message.serverContent).not.toBeNull();
+
     session.close();
   });
 });
