@@ -59,14 +59,15 @@
       },
       "shaSum": "e0b492b4dc6c744081916d71a5f34cc9a8422c59e76107174b3da491a1c977ad",
       "response": {
-        "statusCode": 200,
+        "statusCode": 400,
         "headers": {
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
           "Content-Encoding": "gzip",
-          "Content-Length": "368",
+          "Content-Length": "278",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Sat, 16 Aug 2025 00:45:59 GMT",
+          "Date": "Thu, 12 Feb 2026 09:06:59 GMT",
           "Server": "scaffolding on HTTPServer2",
-          "Server-Timing": "gfet4t7; dur=473",
+          "Server-Timing": "gfet4t7; dur=78",
           "Vary": "Origin, X-Origin, Referer",
           "X-Content-Type-Options": "nosniff",
           "X-Frame-Options": "SAMEORIGIN",
@@ -74,182 +75,25 @@
         },
         "bodySegments": [
           {
-            "candidates": [
-              {
-                "avgLogprobs": -0.0014493816221753757,
-                "content": {
-                  "parts": [
-                    {
-                      "functionCall": {
-                        "args": {
-                          "denominator": 2,
-                          "numerator": 100
-                        },
-                        "name": "customDivide"
-                      }
-                    }
-                  ],
-                  "role": "model"
+            "error": {
+              "code": 400,
+              "details": [
+                {
+                  "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+                  "domain": "googleapis.com",
+                  "metadata": {
+                    "service": "generativelanguage.googleapis.com"
+                  },
+                  "reason": "API_KEY_INVALID"
                 },
-                "finishReason": "STOP"
-              }
-            ],
-            "modelVersion": "gemini-2.0-flash",
-            "responseId": "x9SfaLCQBs7shMIP2Mei0AI",
-            "usageMetadata": {
-              "candidatesTokenCount": 6,
-              "candidatesTokensDetails": [
                 {
-                  "modality": "TEXT",
-                  "tokenCount": 6
+                  "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+                  "locale": "en-US",
+                  "message": "API key not valid. Please pass a valid API key."
                 }
               ],
-              "promptTokenCount": 21,
-              "promptTokensDetails": [
-                {
-                  "modality": "TEXT",
-                  "tokenCount": 21
-                }
-              ],
-              "totalTokenCount": 27
-            }
-          }
-        ]
-      }
-    },
-    {
-      "request": {
-        "method": "POST",
-        "url": "/v1beta/models/gemini-2.0-flash:generateContent",
-        "request": "POST /v1beta/models/gemini-2.0-flash:generateContent HTTP/1.1",
-        "headers": {
-          "Accept": "*/*",
-          "Accept-Encoding": "gzip, deflate",
-          "Accept-Language": "*",
-          "Connection": "keep-alive",
-          "Content-Length": "483",
-          "Content-Type": "application/json",
-          "Sec-Fetch-Mode": "cors",
-          "Test-Name": "Chats Tests chats function calling Google AI with function calling"
-        },
-        "bodySegments": [
-          {
-            "contents": [
-              {
-                "parts": [
-                  {
-                    "text": "what is the result of 100/2"
-                  }
-                ],
-                "role": "user"
-              },
-              {
-                "parts": [
-                  {
-                    "functionCall": {
-                      "args": {
-                        "denominator": 2,
-                        "numerator": 100
-                      },
-                      "name": "customDivide"
-                    }
-                  }
-                ],
-                "role": "model"
-              },
-              {
-                "parts": [
-                  {
-                    "text": "what is the result of 50/2?"
-                  }
-                ],
-                "role": "user"
-              }
-            ],
-            "generationConfig": {},
-            "tools": [
-              {
-                "functionDeclarations": [
-                  {
-                    "description": "Custom divide function",
-                    "name": "customDivide",
-                    "parameters": {
-                      "properties": {
-                        "denominator": {
-                          "type": "NUMBER"
-                        },
-                        "numerator": {
-                          "type": "NUMBER"
-                        }
-                      },
-                      "type": "OBJECT"
-                    }
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "previousRequest": "e0b492b4dc6c744081916d71a5f34cc9a8422c59e76107174b3da491a1c977ad",
-        "serverAddress": "generativelanguage.googleapis.com",
-        "port": 443,
-        "protocol": "https"
-      },
-      "shaSum": "cd68ad9705a6538cc65fae8779f0924b08fe5dd277dc45107df8b23320b2a666",
-      "response": {
-        "statusCode": 200,
-        "headers": {
-          "Content-Encoding": "gzip",
-          "Content-Length": "367",
-          "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Sat, 16 Aug 2025 00:45:59 GMT",
-          "Server": "scaffolding on HTTPServer2",
-          "Server-Timing": "gfet4t7; dur=429",
-          "Vary": "Origin, X-Origin, Referer",
-          "X-Content-Type-Options": "nosniff",
-          "X-Frame-Options": "SAMEORIGIN",
-          "X-Xss-Protection": "0"
-        },
-        "bodySegments": [
-          {
-            "candidates": [
-              {
-                "avgLogprobs": -0.022812319298585255,
-                "content": {
-                  "parts": [
-                    {
-                      "functionCall": {
-                        "args": {
-                          "denominator": 2,
-                          "numerator": 50
-                        },
-                        "name": "customDivide"
-                      }
-                    }
-                  ],
-                  "role": "model"
-                },
-                "finishReason": "STOP"
-              }
-            ],
-            "modelVersion": "gemini-2.0-flash",
-            "responseId": "x9SfaP7BJIa0nvgPrtmFgQY",
-            "usageMetadata": {
-              "candidatesTokenCount": 6,
-              "candidatesTokensDetails": [
-                {
-                  "modality": "TEXT",
-                  "tokenCount": 6
-                }
-              ],
-              "promptTokenCount": 38,
-              "promptTokensDetails": [
-                {
-                  "modality": "TEXT",
-                  "tokenCount": 38
-                }
-              ],
-              "totalTokenCount": 44
+              "message": "API key not valid. Please pass a valid API key.",
+              "status": "INVALID_ARGUMENT"
             }
           }
         ]
