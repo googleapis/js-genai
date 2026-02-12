@@ -1267,11 +1267,20 @@ export function liveConnectParametersToVertex(
 
   const fromModel = common.getValueByPath(fromObject, ['model']);
   if (fromModel != null) {
-    common.setValueByPath(
-      toObject,
-      ['setup', 'model'],
-      t.tModel(apiClient, fromModel),
-    );
+    let model = t.tModel(apiClient, fromModel);
+    // Vertex Live API requires projects/{project}/locations/{location}/ prefix
+    // for publisher models in the setup message.
+    if (
+      apiClient.isVertexAI() &&
+      model.startsWith('publishers/') &&
+      apiClient.getProject() &&
+      apiClient.getLocation()
+    ) {
+      model =
+        `projects/${apiClient.getProject()}/locations/${apiClient.getLocation()}/` +
+        model;
+    }
+    common.setValueByPath(toObject, ['setup', 'model'], model);
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
