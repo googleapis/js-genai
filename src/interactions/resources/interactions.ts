@@ -1039,7 +1039,7 @@ export interface Interaction {
   /**
    * Output only. The status of the interaction.
    */
-  status: 'in_progress' | 'requires_action' | 'completed' | 'failed' | 'cancelled';
+  status: 'in_progress' | 'requires_action' | 'completed' | 'failed' | 'cancelled' | 'incomplete';
 
   /**
    * The name of the `Agent` used for generating the interaction.
@@ -1131,7 +1131,7 @@ export interface InteractionStatusUpdate {
 
   interaction_id?: string;
 
-  status?: 'in_progress' | 'requires_action' | 'completed' | 'failed' | 'cancelled';
+  status?: 'in_progress' | 'requires_action' | 'completed' | 'failed' | 'cancelled' | 'incomplete';
 }
 
 /**
