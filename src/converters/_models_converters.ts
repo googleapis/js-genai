@@ -846,59 +846,129 @@ export function embedContentConfigToMldev(
 export function embedContentConfigToVertex(
   fromObject: types.EmbedContentConfig,
   parentObject: Record<string, unknown>,
-  _rootObject?: unknown,
+  rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromTaskType = common.getValueByPath(fromObject, ['taskType']);
-  if (parentObject !== undefined && fromTaskType != null) {
-    common.setValueByPath(
-      parentObject,
-      ['instances[]', 'task_type'],
-      fromTaskType,
-    );
-  }
-
-  const fromTitle = common.getValueByPath(fromObject, ['title']);
-  if (parentObject !== undefined && fromTitle != null) {
-    common.setValueByPath(parentObject, ['instances[]', 'title'], fromTitle);
-  }
-
-  const fromOutputDimensionality = common.getValueByPath(fromObject, [
-    'outputDimensionality',
+  let discriminatorTaskType = common.getValueByPath(rootObject, [
+    'embeddingApiType',
   ]);
-  if (parentObject !== undefined && fromOutputDimensionality != null) {
-    common.setValueByPath(
-      parentObject,
-      ['parameters', 'outputDimensionality'],
-      fromOutputDimensionality,
-    );
+  if (discriminatorTaskType === undefined) {
+    discriminatorTaskType = 'PREDICT';
+  }
+  if (discriminatorTaskType === 'PREDICT') {
+    const fromTaskType = common.getValueByPath(fromObject, ['taskType']);
+    if (parentObject !== undefined && fromTaskType != null) {
+      common.setValueByPath(
+        parentObject,
+        ['instances[]', 'task_type'],
+        fromTaskType,
+      );
+    }
+  } else if (discriminatorTaskType === 'EMBED_CONTENT') {
+    const fromTaskType = common.getValueByPath(fromObject, ['taskType']);
+    if (parentObject !== undefined && fromTaskType != null) {
+      common.setValueByPath(parentObject, ['taskType'], fromTaskType);
+    }
   }
 
-  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
-  if (parentObject !== undefined && fromMimeType != null) {
-    common.setValueByPath(
-      parentObject,
-      ['instances[]', 'mimeType'],
-      fromMimeType,
-    );
+  let discriminatorTitle = common.getValueByPath(rootObject, [
+    'embeddingApiType',
+  ]);
+  if (discriminatorTitle === undefined) {
+    discriminatorTitle = 'PREDICT';
+  }
+  if (discriminatorTitle === 'PREDICT') {
+    const fromTitle = common.getValueByPath(fromObject, ['title']);
+    if (parentObject !== undefined && fromTitle != null) {
+      common.setValueByPath(parentObject, ['instances[]', 'title'], fromTitle);
+    }
+  } else if (discriminatorTitle === 'EMBED_CONTENT') {
+    const fromTitle = common.getValueByPath(fromObject, ['title']);
+    if (parentObject !== undefined && fromTitle != null) {
+      common.setValueByPath(parentObject, ['title'], fromTitle);
+    }
   }
 
-  const fromAutoTruncate = common.getValueByPath(fromObject, ['autoTruncate']);
-  if (parentObject !== undefined && fromAutoTruncate != null) {
-    common.setValueByPath(
-      parentObject,
-      ['parameters', 'autoTruncate'],
-      fromAutoTruncate,
-    );
+  let discriminatorOutputDimensionality = common.getValueByPath(rootObject, [
+    'embeddingApiType',
+  ]);
+  if (discriminatorOutputDimensionality === undefined) {
+    discriminatorOutputDimensionality = 'PREDICT';
+  }
+  if (discriminatorOutputDimensionality === 'PREDICT') {
+    const fromOutputDimensionality = common.getValueByPath(fromObject, [
+      'outputDimensionality',
+    ]);
+    if (parentObject !== undefined && fromOutputDimensionality != null) {
+      common.setValueByPath(
+        parentObject,
+        ['parameters', 'outputDimensionality'],
+        fromOutputDimensionality,
+      );
+    }
+  } else if (discriminatorOutputDimensionality === 'EMBED_CONTENT') {
+    const fromOutputDimensionality = common.getValueByPath(fromObject, [
+      'outputDimensionality',
+    ]);
+    if (parentObject !== undefined && fromOutputDimensionality != null) {
+      common.setValueByPath(
+        parentObject,
+        ['outputDimensionality'],
+        fromOutputDimensionality,
+      );
+    }
+  }
+
+  let discriminatorMimeType = common.getValueByPath(rootObject, [
+    'embeddingApiType',
+  ]);
+  if (discriminatorMimeType === undefined) {
+    discriminatorMimeType = 'PREDICT';
+  }
+  if (discriminatorMimeType === 'PREDICT') {
+    const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+    if (parentObject !== undefined && fromMimeType != null) {
+      common.setValueByPath(
+        parentObject,
+        ['instances[]', 'mimeType'],
+        fromMimeType,
+      );
+    }
+  }
+
+  let discriminatorAutoTruncate = common.getValueByPath(rootObject, [
+    'embeddingApiType',
+  ]);
+  if (discriminatorAutoTruncate === undefined) {
+    discriminatorAutoTruncate = 'PREDICT';
+  }
+  if (discriminatorAutoTruncate === 'PREDICT') {
+    const fromAutoTruncate = common.getValueByPath(fromObject, [
+      'autoTruncate',
+    ]);
+    if (parentObject !== undefined && fromAutoTruncate != null) {
+      common.setValueByPath(
+        parentObject,
+        ['parameters', 'autoTruncate'],
+        fromAutoTruncate,
+      );
+    }
+  } else if (discriminatorAutoTruncate === 'EMBED_CONTENT') {
+    const fromAutoTruncate = common.getValueByPath(fromObject, [
+      'autoTruncate',
+    ]);
+    if (parentObject !== undefined && fromAutoTruncate != null) {
+      common.setValueByPath(parentObject, ['autoTruncate'], fromAutoTruncate);
+    }
   }
 
   return toObject;
 }
 
-export function embedContentParametersToMldev(
+export function embedContentParametersPrivateToMldev(
   apiClient: ApiClient,
-  fromObject: types.EmbedContentParameters,
+  fromObject: types.EmbedContentParametersPrivate,
   rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -923,6 +993,11 @@ export function embedContentParametersToMldev(
     common.setValueByPath(toObject, ['requests[]', 'content'], transformedList);
   }
 
+  const fromContent = common.getValueByPath(fromObject, ['content']);
+  if (fromContent != null) {
+    contentToMldev(t.tContent(fromContent), rootObject);
+  }
+
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
     embedContentConfigToMldev(fromConfig, toObject, rootObject);
@@ -940,9 +1015,9 @@ export function embedContentParametersToMldev(
   return toObject;
 }
 
-export function embedContentParametersToVertex(
+export function embedContentParametersPrivateToVertex(
   apiClient: ApiClient,
-  fromObject: types.EmbedContentParameters,
+  fromObject: types.EmbedContentParametersPrivate,
   rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
@@ -956,19 +1031,40 @@ export function embedContentParametersToVertex(
     );
   }
 
-  const fromContents = common.getValueByPath(fromObject, ['contents']);
-  if (fromContents != null) {
-    let transformedList = t.tContentsForEmbed(apiClient, fromContents);
-    if (Array.isArray(transformedList)) {
-      transformedList = transformedList.map((item) => {
-        return item;
-      });
+  let discriminatorContents = common.getValueByPath(rootObject, [
+    'embeddingApiType',
+  ]);
+  if (discriminatorContents === undefined) {
+    discriminatorContents = 'PREDICT';
+  }
+  if (discriminatorContents === 'PREDICT') {
+    const fromContents = common.getValueByPath(fromObject, ['contents']);
+    if (fromContents != null) {
+      let transformedList = t.tContentsForEmbed(apiClient, fromContents);
+      if (Array.isArray(transformedList)) {
+        transformedList = transformedList.map((item) => {
+          return item;
+        });
+      }
+      common.setValueByPath(
+        toObject,
+        ['instances[]', 'content'],
+        transformedList,
+      );
     }
-    common.setValueByPath(
-      toObject,
-      ['instances[]', 'content'],
-      transformedList,
-    );
+  }
+
+  let discriminatorContent = common.getValueByPath(rootObject, [
+    'embeddingApiType',
+  ]);
+  if (discriminatorContent === undefined) {
+    discriminatorContent = 'PREDICT';
+  }
+  if (discriminatorContent === 'EMBED_CONTENT') {
+    const fromContent = common.getValueByPath(fromObject, ['content']);
+    if (fromContent != null) {
+      common.setValueByPath(toObject, ['content'], t.tContent(fromContent));
+    }
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
@@ -1041,6 +1137,31 @@ export function embedContentResponseFromVertex(
   const fromMetadata = common.getValueByPath(fromObject, ['metadata']);
   if (fromMetadata != null) {
     common.setValueByPath(toObject, ['metadata'], fromMetadata);
+  }
+
+  if (
+    rootObject &&
+    common.getValueByPath(rootObject, ['embeddingApiType']) === 'EMBED_CONTENT'
+  ) {
+    const embedding = common.getValueByPath(fromObject, ['embedding']);
+    const usageMetadata = common.getValueByPath(fromObject, ['usageMetadata']);
+    const truncated = common.getValueByPath(fromObject, ['truncated']);
+    if (embedding) {
+      const stats = {} as types.ContentEmbeddingStatistics;
+      if (
+        usageMetadata &&
+        (usageMetadata as Record<string, unknown>)['promptTokenCount']
+      ) {
+        stats.tokenCount = (usageMetadata as Record<string, unknown>)[
+          'promptTokenCount'
+        ] as number;
+      }
+      if (truncated) {
+        stats.truncated = truncated as boolean;
+      }
+      (embedding as types.ContentEmbedding).statistics = stats;
+      common.setValueByPath(toObject, ['embeddings'], [embedding]);
+    }
   }
 
   return toObject;

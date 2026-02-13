@@ -786,6 +786,18 @@ export enum Environment {
   ENVIRONMENT_BROWSER = 'ENVIRONMENT_BROWSER',
 }
 
+/** Enum representing the Vertex embedding API to use. */
+export enum EmbeddingApiType {
+  /**
+   * predict API endpoint (default)
+   */
+  PREDICT = 'PREDICT',
+  /**
+   * embedContent API Endpoint
+   */
+  EMBED_CONTENT = 'EMBED_CONTENT',
+}
+
 /** Enum that controls the safety filter level for objectionable content. */
 export enum SafetyFilterLevel {
   BLOCK_LOW_AND_ABOVE = 'BLOCK_LOW_AND_ABOVE',
@@ -3099,14 +3111,20 @@ export declare interface EmbedContentConfig {
   autoTruncate?: boolean;
 }
 
-/** Parameters for the embed_content method. */
-export declare interface EmbedContentParameters {
+/** Parameters for the _embed_content method. */
+export declare interface EmbedContentParametersPrivate {
   /** ID of the model to use. For a list of models, see `Google models
     <https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models>`_. */
   model: string;
   /** The content to embed. Only the `parts.text` fields will be counted.
    */
-  contents: ContentListUnion;
+  contents?: ContentListUnion;
+  /** The single content to embed. Only the `parts.text` fields will be counted.
+   */
+  content?: ContentUnion;
+  /** The Vertex embedding API to use.
+   */
+  embeddingApiType?: EmbeddingApiType;
   /** Configuration that contains optional parameters.
    */
   config?: EmbedContentConfig;
@@ -7031,6 +7049,19 @@ export declare interface CreateTuningJobParameters {
   trainingDataset: TuningDataset;
   /** Configuration for the tuning job. */
   config?: CreateTuningJobConfig;
+}
+
+/** Parameters for the embed_content method. */
+export declare interface EmbedContentParameters {
+  /** ID of the model to use. For a list of models, see `Google models
+    <https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models>`_. */
+  model: string;
+  /** The content to embed. Only the `parts.text` fields will be counted.
+   */
+  contents: ContentListUnion;
+  /** Configuration that contains optional parameters.
+   */
+  config?: EmbedContentConfig;
 }
 
 /** The response when long-running operation for uploading a file to a FileSearchStore complete. */

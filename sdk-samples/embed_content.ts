@@ -28,12 +28,31 @@ async function embedContentFromVertexAI() {
     location: GOOGLE_CLOUD_LOCATION,
   });
 
-  const response = await ai.models.embedContent({
+  const textResponse = await ai.models.embedContent({
     model: 'text-embedding-004',
     contents: 'Hello world!',
   });
 
-  console.debug(JSON.stringify(response));
+  const multimodalResponse = await ai.models.embedContent({
+    model: 'gemini-embedding-2-exp-11-2025',
+    contents: [
+      {
+        parts: [
+          {text: 'Similar things to the following image:'},
+          {
+            fileData: {
+              mimeType: 'image/png',
+              fileUri:
+                'gs://cloud-samples-data/generative-ai/image/a-man-and-a-dog.png',
+            },
+          },
+        ],
+      },
+    ],
+  });
+
+  console.debug(JSON.stringify(textResponse));
+  console.debug(JSON.stringify(multimodalResponse));
 }
 
 async function main() {

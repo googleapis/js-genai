@@ -983,3 +983,10 @@ export function tJobState(state: unknown): string {
     return stateString;
   }
 }
+
+export function tIsVertexEmbedContentModel(model: string): boolean {
+  return (
+    (model.includes('gemini') && model !== 'gemini-embedding-001') ||
+    model.includes('maas')
+  );
+}

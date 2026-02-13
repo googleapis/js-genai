@@ -11,7 +11,7 @@ import {ApiClient} from './_api_client.js';
 import * as common from './_common.js';
 import {BaseModule} from './_common.js';
 import * as _internal_types from './_internal_types.js';
-import {tContents} from './_transformers.js';
+import {tContents, tIsVertexEmbedContentModel} from './_transformers.js';
 import * as converters from './converters/_models_converters.js';
 import * as mcp from './mcp/_mcp.js';
 import {PagedItem, Pager} from './pagers.js';
@@ -21,6 +21,60 @@ export class Models extends BaseModule {
   constructor(private readonly apiClient: ApiClient) {
     super();
   }
+
+  /**
+   * Calculates embeddings for the given contents.
+   *
+   * @param params - The parameters for embedding contents.
+   * @return The response from the API.
+   *
+   * @example
+   * ```ts
+   * const response = await ai.models.embedContent({
+   *  model: 'text-embedding-004',
+   *  contents: [
+   *    'What is your name?',
+   *    'What is your favorite color?',
+   *  ],
+   *  config: {
+   *    outputDimensionality: 64,
+   *  },
+   * });
+   * console.log(response);
+   * ```
+   */
+  embedContent = async (
+    params: types.EmbedContentParameters,
+  ): Promise<types.EmbedContentResponse> => {
+    if (!this.apiClient.isVertexAI()) {
+      return await this.embedContentInternal(params);
+    }
+    const isVertexEmbedContentModel =
+      (params.model.includes('gemini') &&
+        params.model !== 'gemini-embedding-001') ||
+      params.model.includes('maas');
+
+    if (isVertexEmbedContentModel) {
+      const contents = tContents(params.contents);
+      if (contents.length > 1) {
+        throw new Error(
+          'The embedContent API for this model only supports one content at a time.',
+        );
+      }
+      const paramsPrivate: types.EmbedContentParametersPrivate = {
+        ...params,
+        content: contents[0],
+        embeddingApiType: types.EmbeddingApiType.EMBED_CONTENT,
+      };
+      return await this.embedContentInternal(paramsPrivate);
+    } else {
+      const paramsPrivate: types.EmbedContentParametersPrivate = {
+        ...params,
+        embeddingApiType: types.EmbeddingApiType.PREDICT,
+      };
+      return await this.embedContentInternal(paramsPrivate);
+    }
+  };
 
   /**
    * Makes an API request to generate content with a given model.
@@ -826,21 +880,24 @@ export class Models extends BaseModule {
    * console.log(response);
    * ```
    */
-  async embedContent(
-    params: types.EmbedContentParameters,
+  private async embedContentInternal(
+    params: types.EmbedContentParametersPrivate,
   ): Promise<types.EmbedContentResponse> {
     let response: Promise<types.EmbedContentResponse>;
 
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      const body = converters.embedContentParametersToVertex(
+      const body = converters.embedContentParametersPrivateToVertex(
         this.apiClient,
         params,
         params,
       );
+      const endpointUrl = tIsVertexEmbedContentModel(params.model)
+        ? '{model}:embedContent'
+        : '{model}:predict';
       path = common.formatMap(
-        '{model}:predict',
+        endpointUrl,
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
@@ -876,7 +933,7 @@ export class Models extends BaseModule {
         return typedResp;
       });
     } else {
-      const body = converters.embedContentParametersToMldev(
+      const body = converters.embedContentParametersPrivateToMldev(
         this.apiClient,
         params,
         params,
