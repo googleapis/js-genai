@@ -786,6 +786,18 @@ export enum Environment {
   ENVIRONMENT_BROWSER = 'ENVIRONMENT_BROWSER',
 }
 
+/** Enum representing the Vertex embedding API to use. */
+export enum EmbeddingApiType {
+  /**
+   * predict API endpoint (default)
+   */
+  PREDICT = 'PREDICT',
+  /**
+   * embedContent API Endpoint
+   */
+  EMBED_CONTENT = 'EMBED_CONTENT',
+}
+
 /** Enum that controls the safety filter level for objectionable content. */
 export enum SafetyFilterLevel {
   BLOCK_LOW_AND_ABOVE = 'BLOCK_LOW_AND_ABOVE',
@@ -1614,6 +1626,13 @@ export function createModelContent(
     parts: _toParts(partOrString),
   };
 }
+/** HTTP retry options to be used in each of the requests. */
+export declare interface HttpRetryOptions {
+  /** Maximum number of attempts, including the original request.
+      If 0 or 1, it means no retries. If not specified, default to 5. */
+  attempts?: number;
+}
+
 /** HTTP options to be used in each of the requests. */
 export declare interface HttpOptions {
   /** The base URL for the AI platform service endpoint. */
@@ -1631,6 +1650,8 @@ export declare interface HttpOptions {
       - VertexAI backend API docs: https://cloud.google.com/vertex-ai/docs/reference/rest
       - GeminiAPI backend API docs: https://ai.google.dev/api/rest */
   extraBody?: Record<string, unknown>;
+  /** HTTP retry options for the request. */
+  retryOptions?: HttpRetryOptions;
 }
 
 /** Schema is used to define the format of input/output data.
@@ -3090,14 +3111,20 @@ export declare interface EmbedContentConfig {
   autoTruncate?: boolean;
 }
 
-/** Parameters for the embed_content method. */
-export declare interface EmbedContentParameters {
+/** Parameters for the _embed_content method. */
+export declare interface EmbedContentParametersPrivate {
   /** ID of the model to use. For a list of models, see `Google models
     <https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models>`_. */
   model: string;
   /** The content to embed. Only the `parts.text` fields will be counted.
    */
-  contents: ContentListUnion;
+  contents?: ContentListUnion;
+  /** The single content to embed. Only the `parts.text` fields will be counted.
+   */
+  content?: ContentUnion;
+  /** The Vertex embedding API to use.
+   */
+  embeddingApiType?: EmbeddingApiType;
   /** Configuration that contains optional parameters.
    */
   config?: EmbedContentConfig;
@@ -4590,6 +4617,8 @@ export declare interface CreateTuningJobConfig {
   sftLossWeightMultiplier?: number;
   /** The Google Cloud Storage location where the tuning job outputs are written. */
   outputUri?: string;
+  /** The encryption spec of the tuning job. Customer-managed encryption key options for a TuningJob. If this is set, then all resources created by the TuningJob will be encrypted with provided encryption key. */
+  encryptionSpec?: EncryptionSpec;
 }
 
 /** Fine-tuning job creation parameters - optional fields. */
@@ -7020,6 +7049,19 @@ export declare interface CreateTuningJobParameters {
   trainingDataset: TuningDataset;
   /** Configuration for the tuning job. */
   config?: CreateTuningJobConfig;
+}
+
+/** Parameters for the embed_content method. */
+export declare interface EmbedContentParameters {
+  /** ID of the model to use. For a list of models, see `Google models
+    <https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models>`_. */
+  model: string;
+  /** The content to embed. Only the `parts.text` fields will be counted.
+   */
+  contents: ContentListUnion;
+  /** Configuration that contains optional parameters.
+   */
+  config?: EmbedContentConfig;
 }
 
 /** The response when long-running operation for uploading a file to a FileSearchStore complete. */

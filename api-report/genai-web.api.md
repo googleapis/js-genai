@@ -649,6 +649,7 @@ export interface CreateTuningJobConfig {
     beta?: number;
     customBaseModel?: string;
     description?: string;
+    encryptionSpec?: EncryptionSpec;
     epochCount?: number;
     exportLastCheckpointOnly?: boolean;
     httpOptions?: HttpOptions;
@@ -987,10 +988,25 @@ export interface EmbedContentParameters {
 }
 
 // @public
+export interface EmbedContentParametersPrivate {
+    config?: EmbedContentConfig;
+    content?: ContentUnion;
+    contents?: ContentListUnion;
+    embeddingApiType?: EmbeddingApiType;
+    model: string;
+}
+
+// @public
 export class EmbedContentResponse {
     embeddings?: ContentEmbedding[];
     metadata?: EmbedContentMetadata;
     sdkHttpResponse?: HttpResponse;
+}
+
+// @public
+export enum EmbeddingApiType {
+    EMBED_CONTENT = "EMBED_CONTENT",
+    PREDICT = "PREDICT"
 }
 
 // @public (undocumented)
@@ -1853,6 +1869,7 @@ export interface HttpOptions {
     baseUrlResourceScope?: ResourceScope;
     extraBody?: Record<string, unknown>;
     headers?: Record<string, string>;
+    retryOptions?: HttpRetryOptions;
     timeout?: number;
 }
 
@@ -1863,6 +1880,11 @@ export class HttpResponse {
     // (undocumented)
     json(): Promise<unknown>;
     responseInternal: Response;
+}
+
+// @public
+export interface HttpRetryOptions {
+    attempts?: number;
 }
 
 // @public
@@ -2589,7 +2611,7 @@ export class Models extends BaseModule {
     countTokens(params: types.CountTokensParameters): Promise<types.CountTokensResponse>;
     delete(params: types.DeleteModelParameters): Promise<types.DeleteModelResponse>;
     editImage: (params: types.EditImageParameters) => Promise<types.EditImageResponse>;
-    embedContent(params: types.EmbedContentParameters): Promise<types.EmbedContentResponse>;
+    embedContent: (params: types.EmbedContentParameters) => Promise<types.EmbedContentResponse>;
     generateContent: (params: types.GenerateContentParameters) => Promise<types.GenerateContentResponse>;
     generateContentStream: (params: types.GenerateContentParameters) => Promise<AsyncGenerator<types.GenerateContentResponse>>;
     generateImages: (params: types.GenerateImagesParameters) => Promise<types.GenerateImagesResponse>;

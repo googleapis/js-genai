@@ -61,7 +61,7 @@ export class Stream<Item> implements AsyncIterable<Item> {
           } else {
             try {
               // @ts-ignore
-              yield JSON.parse(sse.data);
+              yield JSON.parse(sse.data) as Item;
             } catch (e) {
               logger.error(`Could not parse message into JSON:`, sse.data);
               logger.error(`From chunk:`, sse.raw);
@@ -121,7 +121,7 @@ export class Stream<Item> implements AsyncIterable<Item> {
         for await (const line of iterLines()) {
           if (done) continue;
           // @ts-ignore
-          if (line) yield JSON.parse(line);
+          if (line) yield JSON.parse(line) as Item;
         }
         done = true;
       } catch (e) {

@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import pRetry, {AbortError} from 'p-retry';
 import {Auth} from './_auth.js';
 import * as common from './_common.js';
 import {Downloader} from './_downloader.js';
@@ -17,10 +18,24 @@ const CONTENT_TYPE_HEADER = 'Content-Type';
 const SERVER_TIMEOUT_HEADER = 'X-Server-Timeout';
 const USER_AGENT_HEADER = 'User-Agent';
 export const GOOGLE_API_CLIENT_HEADER = 'x-goog-api-client';
-export const SDK_VERSION = '1.40.0'; // x-release-please-version
+export const SDK_VERSION = '1.41.0'; // x-release-please-version
 const LIBRARY_LABEL = `google-genai-sdk/${SDK_VERSION}`;
 const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
 const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';
+
+// Default retry options.
+// The config is based on https://cloud.google.com/storage/docs/retry-strategy.
+const DEFAULT_RETRY_ATTEMPTS = 5; // Including the initial call
+// LINT.IfChange
+const DEFAULT_RETRY_HTTP_STATUS_CODES = [
+  408, // Request timeout
+  429, // Too many requests
+  500, // Internal server error
+  502, // Bad gateway
+  503, // Service unavailable
+  504, // Gateway timeout
+];
+// LINT.ThenChange(//depot/google3/third_party/py/google/genai/_api_client.py)
 
 /**
  * Options for initializing the ApiClient. The ApiClient uses the parameters
@@ -684,8 +699,33 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
     url: string,
     requestInit: RequestInit,
   ): Promise<Response> {
-    return fetch(url, requestInit).catch((e) => {
-      throw new Error(`exception ${e} sending request`);
+    if (
+      !this.clientOptions.httpOptions ||
+      !this.clientOptions.httpOptions.retryOptions
+    ) {
+      return fetch(url, requestInit);
+    }
+
+    const retryOptions = this.clientOptions.httpOptions.retryOptions;
+    const runFetch = async () => {
+      const response = await fetch(url, requestInit);
+
+      if (response.ok) {
+        return response;
+      }
+
+      if (DEFAULT_RETRY_HTTP_STATUS_CODES.includes(response.status)) {
+        throw new Error(`Retryable HTTP Error: ${response.statusText}`);
+      }
+
+      throw new AbortError(
+        `Non-retryable exception ${response.statusText} sending request`,
+      );
+    };
+
+    return pRetry(runFetch, {
+      // Retry attempts is one less than the number of total attempts.
+      retries: (retryOptions.attempts ?? DEFAULT_RETRY_ATTEMPTS) - 1,
     });
   }
 

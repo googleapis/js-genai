@@ -386,6 +386,8 @@ describe('processStreamResponse', () => {
 
 describe('ApiClient', () => {
   describe('constructor', () => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 60000; // 60 seconds.
+
     it('should initialize with provided values', () => {
       const client = new ApiClient({
         auth: new FakeAuth(),
@@ -721,6 +723,94 @@ describe('ApiClient', () => {
       expect(headers['User-Agent']).toContain('google-genai-sdk/');
       expect(headers['x-goog-api-client']).toContain('google-genai-sdk/');
       expect(client.getApiVersion()).toBe('v1beta1');
+    });
+
+    it('should retry requests if retry options are set', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        project: 'vertex-project',
+        location: 'vertex-location',
+        vertexai: true,
+        apiVersion: 'v1beta1',
+        httpOptions: {
+          retryOptions: {
+            attempts: 2,
+          },
+        },
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(
+            JSON.stringify({'error': 'Internal Server Error'}),
+            fetch500Options,
+          ),
+        ),
+      );
+      await client
+        .request({path: 'test-path', httpMethod: 'POST'})
+        .catch((e) => {
+          console.log(e);
+        });
+      expect(fetchSpy).toHaveBeenCalledTimes(2);
+    });
+
+    it('should not retry requests if retry options are not set', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        project: 'vertex-project',
+        location: 'vertex-location',
+        vertexai: true,
+        apiVersion: 'v1beta1',
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(
+            JSON.stringify({'error': 'Internal Server Error'}),
+            fetch500Options,
+          ),
+        ),
+      );
+      await client
+        .request({path: 'test-path', httpMethod: 'POST'})
+        .catch((e) => {
+          expect(e.name).toEqual('ApiError');
+          expect(e.message).toContain('Internal Server Error');
+          expect(e.status).toEqual(500);
+        });
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should retry requests with default retry options if retry options are not set', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        project: 'vertex-project',
+        location: 'vertex-location',
+        vertexai: true,
+        apiVersion: 'v1beta1',
+        httpOptions: {
+          retryOptions: {},
+        },
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(
+            JSON.stringify({'error': 'Internal Server Error'}),
+            fetch500Options,
+          ),
+        ),
+      );
+      await client
+        .request({path: 'test-path', httpMethod: 'POST'})
+        .catch((e) => {
+          console.log(e);
+        });
+      expect(fetchSpy).toHaveBeenCalledTimes(5); // Default retry attempts is 5.
     });
   });
 
