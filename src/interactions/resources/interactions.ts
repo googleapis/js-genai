@@ -24,7 +24,7 @@ export class BaseInteractions extends APIResource {
    * ```ts
    * const interaction = await client.interactions.create({
    *   api_version: 'api_version',
-   *   input: 'string',
+   *   input: [{ text: 'text', type: 'text' }],
    *   model: 'gemini-2.5-flash',
    * });
    * ```
@@ -397,7 +397,7 @@ export namespace ContentDelta {
     type: 'thought_summary';
 
     /**
-     * A text content block.
+     * A new summary item to be added to the thought.
      */
     content?: InteractionsAPI.TextContent | InteractionsAPI.ImageContent;
   }
@@ -884,7 +884,7 @@ export interface FunctionResultContent {
   /**
    * The result of the tool call.
    */
-  result: FunctionResultContent.Items | unknown | string;
+  result: unknown | Array<TextContent | ImageContent> | string;
 
   type: 'function_result';
 
@@ -902,12 +902,6 @@ export interface FunctionResultContent {
    * A signature hash for backend validation.
    */
   signature?: string;
-}
-
-export namespace FunctionResultContent {
-  export interface Items {
-    items?: Array<InteractionsAPI.TextContent | InteractionsAPI.ImageContent>;
-  }
 }
 
 /**
@@ -1131,16 +1125,16 @@ export interface Interaction {
   agent?: (string & {}) | 'deep-research-pro-preview-12-2025';
 
   /**
-   * Configuration for the agent.
+   * Configuration parameters for the agent interaction.
    */
   agent_config?: DynamicAgentConfig | DeepResearchAgentConfig;
 
   /**
-   * The inputs for the interaction.
+   * The input for the interaction.
    */
   input?:
-    | string
     | Array<Content>
+    | string
     | Array<Turn>
     | TextContent
     | ImageContent
@@ -1306,9 +1300,9 @@ export interface MCPServerToolResultContent {
   call_id: string;
 
   /**
-   * The result of the tool call.
+   * The output from the MCP server call. Can be simple text or rich content.
    */
-  result: MCPServerToolResultContent.Items | unknown | string;
+  result: unknown | Array<TextContent | ImageContent> | string;
 
   type: 'mcp_server_tool_result';
 
@@ -1326,12 +1320,6 @@ export interface MCPServerToolResultContent {
    * A signature hash for backend validation.
    */
   signature?: string;
-}
-
-export namespace MCPServerToolResultContent {
-  export interface Items {
-    items?: Array<InteractionsAPI.TextContent | InteractionsAPI.ImageContent>;
-  }
 }
 
 /**
@@ -1415,26 +1403,14 @@ export interface ThoughtContent {
  */
 export type Tool =
   | Function
-  | Tool.GoogleSearch
   | Tool.CodeExecution
   | Tool.URLContext
   | Tool.ComputerUse
   | Tool.MCPServer
+  | Tool.GoogleSearch
   | Tool.FileSearch;
 
 export namespace Tool {
-  /**
-   * A tool that can be used by the model to search Google.
-   */
-  export interface GoogleSearch {
-    type: 'google_search';
-
-    /**
-     * The types of search grounding to enable.
-     */
-    search_types?: Array<'web_search' | 'image_search'>;
-  }
-
   /**
    * A tool that can be used by the model to execute code.
    */
@@ -1492,6 +1468,18 @@ export namespace Tool {
      * Example: "https://api.example.com/mcp"
      */
     url?: string;
+  }
+
+  /**
+   * A tool that can be used by the model to search Google.
+   */
+  export interface GoogleSearch {
+    type: 'google_search';
+
+    /**
+     * The types of search grounding to enable.
+     */
+    search_types?: Array<'web_search' | 'image_search'>;
   }
 
   /**
@@ -1785,11 +1773,11 @@ export interface BaseCreateModelInteractionParams {
   api_version?: string;
 
   /**
-   * Body param: The inputs for the interaction.
+   * Body param: The input for the interaction.
    */
   input:
-    | string
     | Array<Content>
+    | string
     | Array<Turn>
     | TextContent
     | ImageContent
@@ -1879,11 +1867,11 @@ export interface BaseCreateAgentInteractionParams {
   agent: (string & {}) | 'deep-research-pro-preview-12-2025';
 
   /**
-   * Body param: The inputs for the interaction.
+   * Body param: The input for the interaction.
    */
   input:
-    | string
     | Array<Content>
+    | string
     | Array<Turn>
     | TextContent
     | ImageContent
@@ -1905,7 +1893,7 @@ export interface BaseCreateAgentInteractionParams {
     | FileSearchResultContent;
 
   /**
-   * Body param: Configuration for the agent.
+   * Body param: Configuration parameters for the agent interaction.
    */
   agent_config?: DynamicAgentConfig | DeepResearchAgentConfig;
 
