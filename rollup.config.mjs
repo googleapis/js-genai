@@ -34,6 +34,7 @@ const externalDeps = [
   'os',
   'protobufjs/minimal',
   'protobufjs/minimal.js',
+  'undici',
 ];
 
 export default [

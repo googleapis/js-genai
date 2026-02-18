@@ -151,6 +151,8 @@ export interface HttpRequest {
 export class ApiClient implements GeminiNextGenAPIClientAdapter {
   readonly clientOptions: ApiClientInitOptions;
   private readonly customBaseUrl?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private cachedNodeAgent?: any;
   constructor(opts: ApiClientInitOptions) {
     this.clientOptions = {
       ...opts,
@@ -505,6 +507,29 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
           // call unref to prevent nodejs process from hanging, see
           // https://nodejs.org/api/timers.html#timeoutunref
           timeoutHandle.unref();
+        }
+
+        const isNode = typeof process !== 'undefined' && process.versions?.node;
+        if (isNode && httpOptions.timeout > 300_000) {
+          // For Node.js, use undici agent when timeout > 300s to handle long timeouts properly.
+          const timeout = httpOptions.timeout;
+          // Cache undici agent
+          if (!this.cachedNodeAgent) {
+            try {
+              const {Agent} = await import('undici');
+              this.cachedNodeAgent = new Agent({
+                headersTimeout: timeout,
+                bodyTimeout: timeout,
+              });
+            } catch (e) {
+              console.warn(
+                'undici is not available. Long timeouts (>300s) may not work properly in Node.js. Install undici as a peer dependency if needed.',
+                e,
+              );
+            }
+          }
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (requestInit as any).dispatcher = this.cachedNodeAgent;
         }
       }
       if (abortSignal) {

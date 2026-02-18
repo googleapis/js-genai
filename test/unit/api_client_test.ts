@@ -6,6 +6,7 @@
 
 import {Readable} from 'stream';
 
+import {Agent, type RequestInit as UndiciRequestInit} from 'undici';
 import {
   ApiClient,
   includeExtraBodyToRequestInit,
@@ -943,6 +944,29 @@ describe('ApiClient', () => {
       expect(fetchArgs[0][1].signal instanceof AbortSignal).toBeTrue();
       // @ts-expect-error TS2532: Object is possibly 'undefined'.
       expect(fetchArgs[0][1].signal.aborted).toBeTrue();
+    });
+    it('should set dispatcher with timeouts in Node.js', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth('test-api-key'),
+        apiKey: 'test-api-key',
+        httpOptions: {timeout: 300_001}, // above 5 minutes to trigger dispatcher
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(
+            JSON.stringify(mockGenerateContentResponse),
+            fetchOkOptions,
+          ),
+        ),
+      );
+
+      await client.request({path: 'test-path', httpMethod: 'POST'});
+      const fetchArgs = fetchSpy.calls.first().args;
+      const requestInit = fetchArgs[1] as UndiciRequestInit;
+      expect(requestInit.dispatcher).toBeDefined();
+      expect(requestInit.dispatcher).toBeInstanceOf(Agent);
     });
     it('should apply requestHttpOptions when provided', async () => {
       const client = new ApiClient({
