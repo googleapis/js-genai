@@ -449,7 +449,7 @@ export namespace ContentDelta {
     /**
      * Tool call result delta.
      */
-    result?: FunctionResultDelta.Items | unknown | string;
+    result?: FunctionResultDelta.Items | string;
   }
 
   export namespace FunctionResultDelta {
@@ -573,7 +573,7 @@ export namespace ContentDelta {
     /**
      * Tool call result delta.
      */
-    result?: MCPServerToolResultDelta.Items | unknown | string;
+    result?: MCPServerToolResultDelta.Items | string;
 
     server_name?: string;
   }
@@ -830,7 +830,7 @@ export interface FunctionResultContent {
   /**
    * The result of the tool call.
    */
-  result: FunctionResultContent.Items | unknown | string;
+  result: FunctionResultContent.Items | string;
 
   type: 'function_result';
 
@@ -1173,7 +1173,7 @@ export interface MCPServerToolResultContent {
   /**
    * The result of the tool call.
    */
-  result: MCPServerToolResultContent.Items | unknown | string;
+  result: MCPServerToolResultContent.Items | string;
 
   type: 'mcp_server_tool_result';
 
