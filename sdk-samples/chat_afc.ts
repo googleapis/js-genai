@@ -41,6 +41,27 @@ async function chatAutofcSample(ai: GoogleGenAI) {
   });
 }
 
+async function chatWithHistoryAndSystemInstructionSample(ai: GoogleGenAI) {
+  const conversationHistory = [
+    {role: 'user', parts: [{text: 'Hello!'}]},
+    {role: 'model', parts: [{text: 'Hi, how can I help you?'}]},
+  ];
+
+  const personaDescription = 'You are a helpful assistant.';
+
+  const chat = await ai.chats.create({
+    model: 'gemini-2.0-flash',
+    history: conversationHistory,
+    config: {
+      systemInstruction: personaDescription,
+    },
+  });
+
+  await chat.sendMessage({
+    message: {text: 'Multiply 5 by 6.'},
+  });
+}
+
 async function spinUpWeatherServer(): Promise<Client> {
   const server = new McpServer({
     name: 'reporter',
@@ -122,6 +143,7 @@ async function main() {
   }
 
   chatAutofcSample(ai);
+  chatWithHistoryAndSystemInstructionSample(ai);
 }
 
 main();
