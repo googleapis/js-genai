@@ -1,13 +1,6 @@
 # Changelog
 
 
-## [1.42.0](https://github.com/googleapis/js-genai/compare/v1.41.0...v1.42.0) (2026-02-18)
-
-
-### Features
-
-* Support multimodal embedding for Gemini Embedding 2.0 and support MaaS models in Models.embed_content() (Vertex AI API) ([944ae97](https://github.com/googleapis/js-genai/commit/944ae97f33168aa36612f4fec9717726b9d03629))
-
 ## [1.41.0](https://github.com/googleapis/js-genai/compare/v1.40.0...v1.41.0) (2026-02-10)
 
 

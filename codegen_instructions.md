@@ -411,9 +411,9 @@ the session.
 
 ### Structured Outputs (JSON Schema)
 
-Enforce a specific JSON schema using the `responseSchema` configuration.
+Enforce a specific JSON schema using the `responseJsonSchema` configuration.
 
-See the available types below that can be used in the `responseSchema`.
+See the available types below that can be used in the `responseJsonSchema`.
 
 ```javascript
 export enum Type {
@@ -465,7 +465,7 @@ async function main() {
     contents: "List a few popular cookie recipes, and include the amounts of ingredients.",
     config: {
       responseMimeType: "application/json",
-      responseSchema: {
+      responseJsonSchema: {
           type: Type.ARRAY,
           items: {
             type: Type.OBJECT,
