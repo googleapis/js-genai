@@ -24,6 +24,9 @@ export async function createZeroFilledTempFile(size: number): Promise<string> {
 
     while (remainingSize > 0) {
       const writeSize = Math.min(remainingSize, chunkSize);
+      // TODO: go/ts59upgrade - Remove this suppression after TS 5.9.2 upgrade
+      //   TS2769: No overload matches this call.
+      // @ts-ignore
       await fileHandle.write(buffer, 0, writeSize);
       remainingSize -= writeSize;
     }
