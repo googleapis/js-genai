@@ -298,6 +298,8 @@ export type Content =
   | FileSearchResultContent;
 
 export interface ContentDelta {
+  event_type: 'content.delta';
+
   delta?:
     | ContentDelta.TextDelta
     | ContentDelta.ImageDelta
@@ -323,8 +325,6 @@ export interface ContentDelta {
    * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
-
-  event_type?: 'content.delta';
 
   index?: number;
 }
@@ -623,6 +623,8 @@ export namespace ContentDelta {
 }
 
 export interface ContentStart {
+  event_type: 'content.start';
+
   /**
    * The content of the response.
    */
@@ -633,18 +635,16 @@ export interface ContentStart {
    */
   event_id?: string;
 
-  event_type?: 'content.start';
-
   index?: number;
 }
 
 export interface ContentStop {
+  event_type: 'content.stop';
+
   /**
    * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
-
-  event_type?: 'content.stop';
 
   index?: number;
 }
@@ -653,12 +653,12 @@ export interface ContentStop {
  * Configuration for the Deep Research agent.
  */
 export interface DeepResearchAgentConfig {
+  type: 'deep-research';
+
   /**
    * Whether to include thought summaries in the response.
    */
   thinking_summaries?: 'auto' | 'none';
-
-  type?: 'deep-research';
 }
 
 /**
@@ -692,12 +692,14 @@ export type DocumentMimeType = (string & {}) | 'application/pdf';
  * Configuration for dynamic agents.
  */
 export interface DynamicAgentConfig {
-  type?: 'dynamic';
+  type: 'dynamic';
 
   [k: string]: unknown;
 }
 
 export interface ErrorEvent {
+  event_type: 'error';
+
   /**
    * Error message from an interaction.
    */
@@ -707,8 +709,6 @@ export interface ErrorEvent {
    * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
-
-  event_type?: 'error';
 }
 
 export namespace ErrorEvent {
@@ -1085,12 +1085,12 @@ export interface Interaction {
 }
 
 export interface InteractionCompleteEvent {
+  event_type: 'interaction.complete';
+
   /**
    * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
-
-  event_type?: 'interaction.complete';
 
   /**
    * The Interaction resource.
@@ -1108,12 +1108,12 @@ export type InteractionSSEEvent =
   | ErrorEvent;
 
 export interface InteractionStartEvent {
+  event_type: 'interaction.start';
+
   /**
    * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
-
-  event_type?: 'interaction.start';
 
   /**
    * The Interaction resource.
@@ -1122,12 +1122,12 @@ export interface InteractionStartEvent {
 }
 
 export interface InteractionStatusUpdate {
+  event_type: 'interaction.status_update';
+
   /**
    * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
-
-  event_type?: 'interaction.status_update';
 
   interaction_id?: string;
 
