@@ -195,25 +195,13 @@ export interface AudioContent {
   /**
    * The mime type of the audio.
    */
-  mime_type?: AudioMimeType;
+  mime_type?: 'audio/wav' | 'audio/mp3' | 'audio/aiff' | 'audio/aac' | 'audio/ogg' | 'audio/flac';
 
   /**
    * The URI of the audio.
    */
   uri?: string;
 }
-
-/**
- * The mime type of the audio.
- */
-export type AudioMimeType =
-  | 'audio/wav'
-  | 'audio/mp3'
-  | 'audio/aiff'
-  | 'audio/aac'
-  | 'audio/ogg'
-  | 'audio/flac'
-  | (string & {});
 
 /**
  * The arguments to pass to the code execution.
@@ -346,10 +334,7 @@ export namespace ContentDelta {
 
     data?: string;
 
-    /**
-     * The mime type of the image.
-     */
-    mime_type?: InteractionsAPI.ImageMimeType;
+    mime_type?: 'image/png' | 'image/jpeg' | 'image/webp' | 'image/heic' | 'image/heif';
 
     /**
      * The resolution of the media.
@@ -364,10 +349,7 @@ export namespace ContentDelta {
 
     data?: string;
 
-    /**
-     * The mime type of the audio.
-     */
-    mime_type?: InteractionsAPI.AudioMimeType;
+    mime_type?: 'audio/wav' | 'audio/mp3' | 'audio/aiff' | 'audio/aac' | 'audio/ogg' | 'audio/flac';
 
     uri?: string;
   }
@@ -377,10 +359,7 @@ export namespace ContentDelta {
 
     data?: string;
 
-    /**
-     * The mime type of the document.
-     */
-    mime_type?: InteractionsAPI.DocumentMimeType;
+    mime_type?: 'application/pdf';
 
     uri?: string;
   }
@@ -390,10 +369,16 @@ export namespace ContentDelta {
 
     data?: string;
 
-    /**
-     * The mime type of the video.
-     */
-    mime_type?: InteractionsAPI.VideoMimeType;
+    mime_type?:
+      | 'video/mp4'
+      | 'video/mpeg'
+      | 'video/mpg'
+      | 'video/mov'
+      | 'video/avi'
+      | 'video/x-flv'
+      | 'video/webm'
+      | 'video/wmv'
+      | 'video/3gpp';
 
     /**
      * The resolution of the media.
@@ -675,18 +660,13 @@ export interface DocumentContent {
   /**
    * The mime type of the document.
    */
-  mime_type?: DocumentMimeType;
+  mime_type?: 'application/pdf';
 
   /**
    * The URI of the document.
    */
   uri?: string;
 }
-
-/**
- * The mime type of the document.
- */
-export type DocumentMimeType = (string & {}) | 'application/pdf';
 
 /**
  * Configuration for dynamic agents.
@@ -1003,7 +983,7 @@ export interface ImageContent {
   /**
    * The mime type of the image.
    */
-  mime_type?: ImageMimeType;
+  mime_type?: 'image/png' | 'image/jpeg' | 'image/webp' | 'image/heic' | 'image/heif';
 
   /**
    * The resolution of the media.
@@ -1015,17 +995,6 @@ export interface ImageContent {
    */
   uri?: string;
 }
-
-/**
- * The mime type of the image.
- */
-export type ImageMimeType =
-  | 'image/png'
-  | 'image/jpeg'
-  | 'image/webp'
-  | 'image/heic'
-  | 'image/heif'
-  | (string & {});
 
 /**
  * The Interaction resource.
@@ -1598,7 +1567,16 @@ export interface VideoContent {
   /**
    * The mime type of the video.
    */
-  mime_type?: VideoMimeType;
+  mime_type?:
+    | 'video/mp4'
+    | 'video/mpeg'
+    | 'video/mpg'
+    | 'video/mov'
+    | 'video/avi'
+    | 'video/x-flv'
+    | 'video/webm'
+    | 'video/wmv'
+    | 'video/3gpp';
 
   /**
    * The resolution of the media.
@@ -1610,21 +1588,6 @@ export interface VideoContent {
    */
   uri?: string;
 }
-
-/**
- * The mime type of the video.
- */
-export type VideoMimeType =
-  | 'video/mp4'
-  | 'video/mpeg'
-  | 'video/mov'
-  | 'video/avi'
-  | 'video/x-flv'
-  | 'video/mpg'
-  | 'video/webm'
-  | 'video/wmv'
-  | 'video/3gpp'
-  | (string & {});
 
 export type InteractionDeleteResponse = unknown;
 
@@ -1902,7 +1865,6 @@ export declare namespace Interactions {
     type AllowedTools as AllowedTools,
     type Annotation as Annotation,
     type AudioContent as AudioContent,
-    type AudioMimeType as AudioMimeType,
     type CodeExecutionCallArguments as CodeExecutionCallArguments,
     type CodeExecutionCallContent as CodeExecutionCallContent,
     type CodeExecutionResultContent as CodeExecutionResultContent,
@@ -1912,7 +1874,6 @@ export declare namespace Interactions {
     type ContentStop as ContentStop,
     type DeepResearchAgentConfig as DeepResearchAgentConfig,
     type DocumentContent as DocumentContent,
-    type DocumentMimeType as DocumentMimeType,
     type DynamicAgentConfig as DynamicAgentConfig,
     type ErrorEvent as ErrorEvent,
     type FileSearchCallContent as FileSearchCallContent,
@@ -1927,7 +1888,6 @@ export declare namespace Interactions {
     type GoogleSearchResultContent as GoogleSearchResultContent,
     type ImageConfig as ImageConfig,
     type ImageContent as ImageContent,
-    type ImageMimeType as ImageMimeType,
     type Interaction as Interaction,
     type InteractionCompleteEvent as InteractionCompleteEvent,
     type InteractionSSEEvent as InteractionSSEEvent,
@@ -1951,7 +1911,6 @@ export declare namespace Interactions {
     type URLContextResultContent as URLContextResultContent,
     type Usage as Usage,
     type VideoContent as VideoContent,
-    type VideoMimeType as VideoMimeType,
     type InteractionDeleteResponse as InteractionDeleteResponse,
     type InteractionCreateParams as InteractionCreateParams,
     type CreateModelInteractionParamsNonStreaming as CreateModelInteractionParamsNonStreaming,
