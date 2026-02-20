@@ -1,6 +1,13 @@
 # Changelog
 
 
+## [1.43.0](https://github.com/googleapis/js-genai/compare/v1.42.0...v1.43.0) (2026-02-20)
+
+
+### Features
+
+* enable server side MCP and disable all other AFC when server side MCP is configured. ([c7888c4](https://github.com/googleapis/js-genai/commit/c7888c4aec34b7f86983ea0c55c499c1f8d089c2))
+
 ## [1.42.0](https://github.com/googleapis/js-genai/compare/v1.41.0...v1.42.0) (2026-02-18)
 
 
