@@ -3191,8 +3191,9 @@ export declare interface GenerateImagesConfig {
   /** Number of images to generate. */
   numberOfImages?: number;
   /** Aspect ratio of the generated images. Supported values are
-      "1:1", "3:4", "4:3", "9:16", and "16:9". */
-  aspectRatio?: string;
+      "1:1", "3:4", "4:3", "9:16", and "16:9".
+       */
+  aspectRatio?: ImageAspectRatio;
   /** Controls how much the model adheres to the text prompt. Large
       values increase output and prompt alignment, but may compromise image
       quality. */
@@ -3345,8 +3346,9 @@ export declare interface EditImageConfig {
   /** Number of images to generate. */
   numberOfImages?: number;
   /** Aspect ratio of the generated images. Supported values are
-      "1:1", "3:4", "4:3", "9:16", and "16:9". */
-  aspectRatio?: string;
+      "1:1", "3:4", "4:3", "9:16", and "16:9".
+       */
+  aspectRatio?: ImageAspectRatio;
   /** Controls how much the model adheres to the text prompt. Large
       values increase output and prompt alignment, but may compromise image
       quality. */
@@ -3942,11 +3944,9 @@ export declare interface GenerateVideosConfig {
       a random RNG seed will be used each time to produce a different
       result. */
   seed?: number;
-  /** The aspect ratio for the generated video. 16:9 (landscape) and
-      9:16 (portrait) are supported. */
-  aspectRatio?: string;
-  /** The resolution for the generated video. 720p and 1080p are
-      supported. */
+  /** The aspect ratio for the generated video. 16:9 (landscape) and 9:16 (portrait) are supported. */
+  aspectRatio?: VideoAspectRatio;
+  /** The resolution for the generated video. 720p and 1080p are supported. */
   resolution?: string;
   /** Whether allow to generate person videos, and restrict to specific
       ages. Supported values are: dont_allow, allow_adult. */
@@ -7131,3 +7131,13 @@ export type DownloadableFileUnion = string | File | GeneratedVideo | Video;
 export type BatchJobSourceUnion = BatchJobSource | InlinedRequest[] | string;
 
 export type BatchJobDestinationUnion = BatchJobDestination | string;
+
+
+// Common aspect ratios supported across all media generation APIs
+export type CommonAspectRatio = "9:16" | "16:9";
+
+// Aspect ratios for image generation and editing
+export type ImageAspectRatio = CommonAspectRatio | "1:1" | "3:4" | "4:3";
+
+// Aspect ratios for video generation  
+export type VideoAspectRatio = CommonAspectRatio;
