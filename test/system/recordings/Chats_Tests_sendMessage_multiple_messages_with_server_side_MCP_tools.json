@@ -1,0 +1,377 @@
+{
+  "recordID": "Chats_Tests_sendMessage_multiple_messages_with_server_side_MCP_tools",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta/models/gemini-2.5-flash:generateContent",
+        "request": "POST /v1beta/models/gemini-2.5-flash:generateContent HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "329",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Chats Tests sendMessage multiple messages with server side MCP tools"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "What is the weather in San Francisco on 02/02/2026?"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {},
+            "tools": [
+              {
+                "mcpServers": [
+                  {
+                    "name": "weather_server",
+                    "streamableHttpTransport": {
+                      "headers": {
+                        "AUTHORIZATION": "Bearer github_pat_XXXX"
+                      },
+                      "timeout": "10s",
+                      "url": "https://gemini-api-demos.uc.r.appspot.com/mcp"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "generativelanguage.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "d8c099bcfb9db7ca9142ac818f672654bf38c4db86089171ca523f222e901e06",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Encoding": "gzip",
+          "Content-Length": "1133",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Mon, 16 Feb 2026 00:56:22 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Server-Timing": "gfet4t7; dur=4315",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "args": {
+                          "endDate": "2026-02-02",
+                          "location": "San Francisco",
+                          "startDate": "2026-02-02"
+                        },
+                        "name": "weather_server_get_weather"
+                      }
+                    },
+                    {
+                      "functionResponse": {
+                        "name": "weather_server_get_weather",
+                        "response": {
+                          "call_tool_result_json": "{\"meta\":null,\"content\":[{\"type\":\"text\",\"text\":\"{\\\"2026-02-02T00:00\\\":\\\"18.2°C\\\",\\\"2026-02-02T01:00\\\":\\\"16.8°C\\\",\\\"2026-02-02T02:00\\\":\\\"14.1°C\\\",\\\"2026-02-02T03:00\\\":\\\"13.6°C\\\",\\\"2026-02-02T04:00\\\":\\\"12.5°C\\\",\\\"2026-02-02T05:00\\\":\\\"11.2°C\\\",\\\"2026-02-02T06:00\\\":\\\"11.5°C\\\",\\\"2026-02-02T07:00\\\":\\\"10.6°C\\\",\\\"2026-02-02T08:00\\\":\\\"10.2°C\\\",\\\"2026-02-02T09:00\\\":\\\"8.6°C\\\",\\\"2026-02-02T10:00\\\":\\\"7.8°C\\\",\\\"2026-02-02T11:00\\\":\\\"7.7°C\\\",\\\"2026-02-02T12:00\\\":\\\"7.4°C\\\",\\\"2026-02-02T13:00\\\":\\\"6.9°C\\\",\\\"2026-02-02T14:00\\\":\\\"6.3°C\\\",\\\"2026-02-02T15:00\\\":\\\"6.2°C\\\",\\\"2026-02-02T16:00\\\":\\\"6.6°C\\\",\\\"2026-02-02T17:00\\\":\\\"10.6°C\\\",\\\"2026-02-02T18:00\\\":\\\"13.1°C\\\",\\\"2026-02-02T19:00\\\":\\\"15.6°C\\\",\\\"2026-02-02T20:00\\\":\\\"17.4°C\\\",\\\"2026-02-02T21:00\\\":\\\"18.8°C\\\",\\\"2026-02-02T22:00\\\":\\\"20.5°C\\\",\\\"2026-02-02T23:00\\\":\\\"20.3°C\\\"}\",\"annotations\":null,\"meta\":null}],\"structuredContent\":null,\"isError\":false}",
+                          "result": "{\"2026-02-02T00:00\":\"18.2°C\",\"2026-02-02T01:00\":\"16.8°C\",\"2026-02-02T02:00\":\"14.1°C\",\"2026-02-02T03:00\":\"13.6°C\",\"2026-02-02T04:00\":\"12.5°C\",\"2026-02-02T05:00\":\"11.2°C\",\"2026-02-02T06:00\":\"11.5°C\",\"2026-02-02T07:00\":\"10.6°C\",\"2026-02-02T08:00\":\"10.2°C\",\"2026-02-02T09:00\":\"8.6°C\",\"2026-02-02T10:00\":\"7.8°C\",\"2026-02-02T11:00\":\"7.7°C\",\"2026-02-02T12:00\":\"7.4°C\",\"2026-02-02T13:00\":\"6.9°C\",\"2026-02-02T14:00\":\"6.3°C\",\"2026-02-02T15:00\":\"6.2°C\",\"2026-02-02T16:00\":\"6.6°C\",\"2026-02-02T17:00\":\"10.6°C\",\"2026-02-02T18:00\":\"13.1°C\",\"2026-02-02T19:00\":\"15.6°C\",\"2026-02-02T20:00\":\"17.4°C\",\"2026-02-02T21:00\":\"18.8°C\",\"2026-02-02T22:00\":\"20.5°C\",\"2026-02-02T23:00\":\"20.3°C\"}"
+                        }
+                      }
+                    },
+                    {
+                      "text": "Here"
+                    },
+                    {
+                      "text": "'s the hourly weather forecast for San Francisco on February 2, 2"
+                    },
+                    {
+                      "text": "026:\n\n* 00:00: 18.2°C\n* 01:00: 16.8°C\n* 02:00: 14."
+                    },
+                    {
+                      "text": "1°C\n* 03:00: 13.6°C\n* 04:00: 12.5°C\n* 05:00: 11."
+                    },
+                    {
+                      "text": "2°C\n* 06:00: 11.5°C\n* 07:00: 10.6°C\n* 08:00: 10."
+                    },
+                    {
+                      "text": "2°C\n* 09:00: 8.6°C\n* 10:00: 7.8°C\n* 11:00: 7.7°C"
+                    },
+                    {
+                      "text": "\n* 12:00: 7.4°C\n* 13:00: 6.9°C\n* 14:00: 6.3°C\n* "
+                    },
+                    {
+                      "text": "15:00: 6.2°C\n* 16:00: 6.6°C\n* 17:00: 10.6°C\n* 18"
+                    },
+                    {
+                      "text": ":00: 13.1°C\n* 19:00: 15.6°C\n* 20:00: 17.4°C\n* 21"
+                    },
+                    {
+                      "text": ":00: 18.8°C\n* 22:00: 20.5°C\n* 23:00: 20.3°C"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishMessage": "Model generated function call(s).",
+                "finishReason": "STOP",
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "NmuSaYCTD4Ha-8YPm4GDqAk",
+            "turnToken": "v1_ChdObXVTYVlDVEQ0SGEtOFlQbTRHRHFBaxIXTm11U2FZQ1RENEhhLThZUG00R0RxQWs",
+            "usageMetadata": {
+              "candidatesTokenCount": 443,
+              "promptTokenCount": 21,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 21
+                }
+              ],
+              "thoughtsTokenCount": 232,
+              "toolUsePromptTokenCount": 253,
+              "toolUsePromptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 253
+                }
+              ],
+              "totalTokenCount": 949
+            }
+          }
+        ]
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta/models/gemini-2.5-flash:generateContent",
+        "request": "POST /v1beta/models/gemini-2.5-flash:generateContent HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "3212",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Chats Tests sendMessage multiple messages with server side MCP tools"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "What is the weather in San Francisco on 02/02/2026?"
+                  }
+                ],
+                "role": "user"
+              },
+              {
+                "parts": [
+                  {
+                    "functionCall": {
+                      "args": {
+                        "endDate": "2026-02-02",
+                        "location": "San Francisco",
+                        "startDate": "2026-02-02"
+                      },
+                      "name": "weather_server_get_weather"
+                    }
+                  },
+                  {
+                    "functionResponse": {
+                      "name": "weather_server_get_weather",
+                      "response": {
+                        "call_tool_result_json": "{\"meta\":null,\"content\":[{\"type\":\"text\",\"text\":\"{\\\"2026-02-02T00:00\\\":\\\"18.2°C\\\",\\\"2026-02-02T01:00\\\":\\\"16.8°C\\\",\\\"2026-02-02T02:00\\\":\\\"14.1°C\\\",\\\"2026-02-02T03:00\\\":\\\"13.6°C\\\",\\\"2026-02-02T04:00\\\":\\\"12.5°C\\\",\\\"2026-02-02T05:00\\\":\\\"11.2°C\\\",\\\"2026-02-02T06:00\\\":\\\"11.5°C\\\",\\\"2026-02-02T07:00\\\":\\\"10.6°C\\\",\\\"2026-02-02T08:00\\\":\\\"10.2°C\\\",\\\"2026-02-02T09:00\\\":\\\"8.6°C\\\",\\\"2026-02-02T10:00\\\":\\\"7.8°C\\\",\\\"2026-02-02T11:00\\\":\\\"7.7°C\\\",\\\"2026-02-02T12:00\\\":\\\"7.4°C\\\",\\\"2026-02-02T13:00\\\":\\\"6.9°C\\\",\\\"2026-02-02T14:00\\\":\\\"6.3°C\\\",\\\"2026-02-02T15:00\\\":\\\"6.2°C\\\",\\\"2026-02-02T16:00\\\":\\\"6.6°C\\\",\\\"2026-02-02T17:00\\\":\\\"10.6°C\\\",\\\"2026-02-02T18:00\\\":\\\"13.1°C\\\",\\\"2026-02-02T19:00\\\":\\\"15.6°C\\\",\\\"2026-02-02T20:00\\\":\\\"17.4°C\\\",\\\"2026-02-02T21:00\\\":\\\"18.8°C\\\",\\\"2026-02-02T22:00\\\":\\\"20.5°C\\\",\\\"2026-02-02T23:00\\\":\\\"20.3°C\\\"}\",\"annotations\":null,\"meta\":null}],\"structuredContent\":null,\"isError\":false}",
+                        "result": "{\"2026-02-02T00:00\":\"18.2°C\",\"2026-02-02T01:00\":\"16.8°C\",\"2026-02-02T02:00\":\"14.1°C\",\"2026-02-02T03:00\":\"13.6°C\",\"2026-02-02T04:00\":\"12.5°C\",\"2026-02-02T05:00\":\"11.2°C\",\"2026-02-02T06:00\":\"11.5°C\",\"2026-02-02T07:00\":\"10.6°C\",\"2026-02-02T08:00\":\"10.2°C\",\"2026-02-02T09:00\":\"8.6°C\",\"2026-02-02T10:00\":\"7.8°C\",\"2026-02-02T11:00\":\"7.7°C\",\"2026-02-02T12:00\":\"7.4°C\",\"2026-02-02T13:00\":\"6.9°C\",\"2026-02-02T14:00\":\"6.3°C\",\"2026-02-02T15:00\":\"6.2°C\",\"2026-02-02T16:00\":\"6.6°C\",\"2026-02-02T17:00\":\"10.6°C\",\"2026-02-02T18:00\":\"13.1°C\",\"2026-02-02T19:00\":\"15.6°C\",\"2026-02-02T20:00\":\"17.4°C\",\"2026-02-02T21:00\":\"18.8°C\",\"2026-02-02T22:00\":\"20.5°C\",\"2026-02-02T23:00\":\"20.3°C\"}"
+                      }
+                    }
+                  },
+                  {
+                    "text": "Here"
+                  },
+                  {
+                    "text": "'s the hourly weather forecast for San Francisco on February 2, 2"
+                  },
+                  {
+                    "text": "026:\n\n* 00:00: 18.2°C\n* 01:00: 16.8°C\n* 02:00: 14."
+                  },
+                  {
+                    "text": "1°C\n* 03:00: 13.6°C\n* 04:00: 12.5°C\n* 05:00: 11."
+                  },
+                  {
+                    "text": "2°C\n* 06:00: 11.5°C\n* 07:00: 10.6°C\n* 08:00: 10."
+                  },
+                  {
+                    "text": "2°C\n* 09:00: 8.6°C\n* 10:00: 7.8°C\n* 11:00: 7.7°C"
+                  },
+                  {
+                    "text": "\n* 12:00: 7.4°C\n* 13:00: 6.9°C\n* 14:00: 6.3°C\n* "
+                  },
+                  {
+                    "text": "15:00: 6.2°C\n* 16:00: 6.6°C\n* 17:00: 10.6°C\n* 18"
+                  },
+                  {
+                    "text": ":00: 13.1°C\n* 19:00: 15.6°C\n* 20:00: 17.4°C\n* 21"
+                  },
+                  {
+                    "text": ":00: 18.8°C\n* 22:00: 20.5°C\n* 23:00: 20.3°C"
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "text": "What is the weather in Boston on 02/02/2026?"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {},
+            "tools": [
+              {
+                "mcpServers": [
+                  {
+                    "name": "weather_server",
+                    "streamableHttpTransport": {
+                      "headers": {
+                        "AUTHORIZATION": "Bearer github_pat_XXXX"
+                      },
+                      "timeout": "10s",
+                      "url": "https://gemini-api-demos.uc.r.appspot.com/mcp"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "previousRequest": "d8c099bcfb9db7ca9142ac818f672654bf38c4db86089171ca523f222e901e06",
+        "serverAddress": "generativelanguage.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "690882dc734b8d865fab26063e7a9b8a985bfaa82da0326337075bb780e66042",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Encoding": "gzip",
+          "Content-Length": "1074",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Mon, 16 Feb 2026 00:56:26 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Server-Timing": "gfet4t7; dur=3736",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "args": {
+                          "endDate": "2026-02-02",
+                          "location": "Boston",
+                          "startDate": "2026-02-02"
+                        },
+                        "name": "weather_server_get_weather"
+                      }
+                    },
+                    {
+                      "functionResponse": {
+                        "name": "weather_server_get_weather",
+                        "response": {
+                          "call_tool_result_json": "{\"meta\":null,\"content\":[{\"type\":\"text\",\"text\":\"{\\\"2026-02-02T00:00\\\":\\\"-7.9°C\\\",\\\"2026-02-02T01:00\\\":\\\"-8.3°C\\\",\\\"2026-02-02T02:00\\\":\\\"-9.3°C\\\",\\\"2026-02-02T03:00\\\":\\\"-9.6°C\\\",\\\"2026-02-02T04:00\\\":\\\"-10.2°C\\\",\\\"2026-02-02T05:00\\\":\\\"-10.1°C\\\",\\\"2026-02-02T06:00\\\":\\\"-10.7°C\\\",\\\"2026-02-02T07:00\\\":\\\"-11.2°C\\\",\\\"2026-02-02T08:00\\\":\\\"-11.1°C\\\",\\\"2026-02-02T09:00\\\":\\\"-11.3°C\\\",\\\"2026-02-02T10:00\\\":\\\"-11.3°C\\\",\\\"2026-02-02T11:00\\\":\\\"-11.1°C\\\",\\\"2026-02-02T12:00\\\":\\\"-12.8°C\\\",\\\"2026-02-02T13:00\\\":\\\"-11.5°C\\\",\\\"2026-02-02T14:00\\\":\\\"-7.6°C\\\",\\\"2026-02-02T15:00\\\":\\\"-5.5°C\\\",\\\"2026-02-02T16:00\\\":\\\"-3.7°C\\\",\\\"2026-02-02T17:00\\\":\\\"-2.3°C\\\",\\\"2026-02-02T18:00\\\":\\\"-1°C\\\",\\\"2026-02-02T19:00\\\":\\\"-0.1°C\\\",\\\"2026-02-02T20:00\\\":\\\"0.1°C\\\",\\\"2026-02-02T21:00\\\":\\\"-0.6°C\\\",\\\"2026-02-02T22:00\\\":\\\"-1.7°C\\\",\\\"2026-02-02T23:00\\\":\\\"-3.2°C\\\"}\",\"annotations\":null,\"meta\":null}],\"structuredContent\":null,\"isError\":false}",
+                          "result": "{\"2026-02-02T00:00\":\"-7.9°C\",\"2026-02-02T01:00\":\"-8.3°C\",\"2026-02-02T02:00\":\"-9.3°C\",\"2026-02-02T03:00\":\"-9.6°C\",\"2026-02-02T04:00\":\"-10.2°C\",\"2026-02-02T05:00\":\"-10.1°C\",\"2026-02-02T06:00\":\"-10.7°C\",\"2026-02-02T07:00\":\"-11.2°C\",\"2026-02-02T08:00\":\"-11.1°C\",\"2026-02-02T09:00\":\"-11.3°C\",\"2026-02-02T10:00\":\"-11.3°C\",\"2026-02-02T11:00\":\"-11.1°C\",\"2026-02-02T12:00\":\"-12.8°C\",\"2026-02-02T13:00\":\"-11.5°C\",\"2026-02-02T14:00\":\"-7.6°C\",\"2026-02-02T15:00\":\"-5.5°C\",\"2026-02-02T16:00\":\"-3.7°C\",\"2026-02-02T17:00\":\"-2.3°C\",\"2026-02-02T18:00\":\"-1°C\",\"2026-02-02T19:00\":\"-0.1°C\",\"2026-02-02T20:00\":\"0.1°C\",\"2026-02-02T21:00\":\"-0.6°C\",\"2026-02-02T22:00\":\"-1.7°C\",\"2026-02-02T23:00\":\"-3.2°C\"}"
+                        }
+                      }
+                    },
+                    {
+                      "text": "Here's the"
+                    },
+                    {
+                      "text": " hourly weather forecast for Boston on February 2, 2026:"
+                    },
+                    {
+                      "text": "\n\n* 00:00: -7.9°C\n* 01:00: -8.3°C\n* 02:00: -9.3°C\n* "
+                    },
+                    {
+                      "text": "03:00: -9.6°C\n* 04:00: -10.2°C\n* 05:00: -10.1°C\n* 0"
+                    },
+                    {
+                      "text": "6:00: -10.7°C\n* 07:00: -11.2°C\n* 08:00: -11.1°C\n* 0"
+                    },
+                    {
+                      "text": "9:00: -11.3°C\n* 10:00: -11.3°C\n* 11:00: -11.1°C\n* 1"
+                    },
+                    {
+                      "text": "2:00: -12.8°C\n* 13:00: -11.5°C\n* 14:00: -7.6°C\n* 15"
+                    },
+                    {
+                      "text": ":00: -5.5°C\n* 16:00: -3.7°C\n* 17:00: -2.3°C\n* 18:00"
+                    },
+                    {
+                      "text": ": -1°C\n* 19:00: -0.1°C\n* 20:00: 0.1°C\n* 21:00: -0.6"
+                    },
+                    {
+                      "text": "°C\n* 22:00: -1.7°C\n* 23:00: -3.2°C"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishMessage": "Model generated function call(s).",
+                "finishReason": "STOP",
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "OmuSacRr65GOsQ_DieywAg",
+            "turnToken": "v1_ChZPbXVTYWNScjY1R09zUV9EaWV5d0FnEhZPbXVTYWNScjY1R09zUV9EaWV5d0Fn",
+            "usageMetadata": {
+              "candidatesTokenCount": 433,
+              "promptTokenCount": 1832,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1832
+                }
+              ],
+              "thoughtsTokenCount": 194,
+              "toolUsePromptTokenCount": 2026,
+              "toolUsePromptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 2026
+                }
+              ],
+              "totalTokenCount": 4485
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

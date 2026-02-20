@@ -2012,6 +2012,28 @@ export declare interface GoogleSearchRetrieval {
 /** Tool to support URL context. */
 export declare interface UrlContext {}
 
+/** A transport that can stream HTTP requests and responses. Next ID: 6. This data type is not supported in Vertex AI. */
+export declare interface StreamableHttpTransport {
+  /** Optional: Fields for authentication headers, timeouts, etc., if needed. */
+  headers?: Record<string, string>;
+  /** Timeout for SSE read operations. */
+  sseReadTimeout?: string;
+  /** Whether to close the client session when the transport closes. */
+  terminateOnClose?: boolean;
+  /** HTTP timeout for regular operations. */
+  timeout?: string;
+  /** The full URL for the MCPServer endpoint. Example: "https://api.example.com/mcp". */
+  url?: string;
+}
+
+/** A MCPServer is a server that can be called by the model to perform actions. It is a server that implements the MCP protocol. Next ID: 5. This data type is not supported in Vertex AI. */
+export declare interface McpServer {
+  /** The name of the MCPServer. */
+  name?: string;
+  /** A transport that can stream HTTP requests and responses. */
+  streamableHttpTransport?: StreamableHttpTransport;
+}
+
 /** Tool details of a tool that the model may use to generate a response. */
 export declare interface Tool {
   /** Optional. Retrieval tool type. System will always execute the provided retrieval tool(s) to get external knowledge to answer the prompt. Retrieval results are presented to the model for generation. This field is not supported in Gemini API. */
@@ -2036,6 +2058,8 @@ export declare interface Tool {
   googleSearchRetrieval?: GoogleSearchRetrieval;
   /** Optional. Tool to support URL context retrieval. */
   urlContext?: UrlContext;
+  /** Optional. MCP Servers to connect to. This field is not supported in Vertex AI. */
+  mcpServers?: McpServer[];
 }
 
 /** An object that represents a latitude/longitude pair.

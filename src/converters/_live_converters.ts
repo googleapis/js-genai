@@ -1893,6 +1893,17 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
     common.setValueByPath(toObject, ['urlContext'], fromUrlContext);
   }
 
+  const fromMcpServers = common.getValueByPath(fromObject, ['mcpServers']);
+  if (fromMcpServers != null) {
+    let transformedList = fromMcpServers;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return item;
+      });
+    }
+    common.setValueByPath(toObject, ['mcpServers'], transformedList);
+  }
+
   return toObject;
 }
 
@@ -1968,6 +1979,10 @@ export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
   const fromUrlContext = common.getValueByPath(fromObject, ['urlContext']);
   if (fromUrlContext != null) {
     common.setValueByPath(toObject, ['urlContext'], fromUrlContext);
+  }
+
+  if (common.getValueByPath(fromObject, ['mcpServers']) !== undefined) {
+    throw new Error('mcpServers parameter is not supported in Vertex AI.');
   }
 
   return toObject;

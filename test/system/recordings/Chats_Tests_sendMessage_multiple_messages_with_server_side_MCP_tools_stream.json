@@ -1,0 +1,1222 @@
+{
+  "recordID": "Chats_Tests_sendMessage_multiple_messages_with_server_side_MCP_tools_stream",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse",
+        "request": "POST /v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "329",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Chats Tests sendMessage multiple messages with server side MCP tools stream"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "What is the weather in San Francisco on 02/02/2026?"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {},
+            "tools": [
+              {
+                "mcpServers": [
+                  {
+                    "name": "weather_server",
+                    "streamableHttpTransport": {
+                      "headers": {
+                        "AUTHORIZATION": "Bearer github_pat_XXXX"
+                      },
+                      "timeout": "10s",
+                      "url": "https://gemini-api-demos.uc.r.appspot.com/mcp"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "generativelanguage.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "d4a32fb3a77a2c51fc04977858dd964a690bd6f909df00fc691f24ab81fe003c",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Disposition": "attachment",
+          "Content-Type": "text/event-stream",
+          "Date": "Mon, 16 Feb 2026 00:56:27 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Server-Timing": "gfet4t7; dur=1432",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "args": {
+                          "endDate": "2026-02-02",
+                          "location": "San Francisco",
+                          "startDate": "2026-02-02"
+                        },
+                        "name": "weather_server_get_weather"
+                      }
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishMessage": "Model generated function call(s).",
+                "finishReason": "STOP",
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "OmuSafudI6atjrEPnv_wsA4",
+            "turnToken": "v1_ChdPbXVTYWZ1ZEk2YXRqckVQbnZfd3NBNBIXT211U2FmdWRJNmF0anJFUG52X3dzQTQ",
+            "usageMetadata": {
+              "candidatesTokenCount": 48,
+              "promptTokenCount": 21,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 21
+                }
+              ],
+              "thoughtsTokenCount": 213,
+              "totalTokenCount": 282
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "functionResponse": {
+                        "name": "weather_server_get_weather",
+                        "response": {
+                          "call_tool_result_json": "{\"meta\":null,\"content\":[{\"type\":\"text\",\"text\":\"{\\\"2026-02-02T00:00\\\":\\\"18.2°C\\\",\\\"2026-02-02T01:00\\\":\\\"16.8°C\\\",\\\"2026-02-02T02:00\\\":\\\"14.1°C\\\",\\\"2026-02-02T03:00\\\":\\\"13.6°C\\\",\\\"2026-02-02T04:00\\\":\\\"12.5°C\\\",\\\"2026-02-02T05:00\\\":\\\"11.2°C\\\",\\\"2026-02-02T06:00\\\":\\\"11.5°C\\\",\\\"2026-02-02T07:00\\\":\\\"10.6°C\\\",\\\"2026-02-02T08:00\\\":\\\"10.2°C\\\",\\\"2026-02-02T09:00\\\":\\\"8.6°C\\\",\\\"2026-02-02T10:00\\\":\\\"7.8°C\\\",\\\"2026-02-02T11:00\\\":\\\"7.7°C\\\",\\\"2026-02-02T12:00\\\":\\\"7.4°C\\\",\\\"2026-02-02T13:00\\\":\\\"6.9°C\\\",\\\"2026-02-02T14:00\\\":\\\"6.3°C\\\",\\\"2026-02-02T15:00\\\":\\\"6.2°C\\\",\\\"2026-02-02T16:00\\\":\\\"6.6°C\\\",\\\"2026-02-02T17:00\\\":\\\"10.6°C\\\",\\\"2026-02-02T18:00\\\":\\\"13.1°C\\\",\\\"2026-02-02T19:00\\\":\\\"15.6°C\\\",\\\"2026-02-02T20:00\\\":\\\"17.4°C\\\",\\\"2026-02-02T21:00\\\":\\\"18.8°C\\\",\\\"2026-02-02T22:00\\\":\\\"20.5°C\\\",\\\"2026-02-02T23:00\\\":\\\"20.3°C\\\"}\",\"annotations\":null,\"meta\":null}],\"structuredContent\":null,\"isError\":false}",
+                          "result": "{\"2026-02-02T00:00\":\"18.2°C\",\"2026-02-02T01:00\":\"16.8°C\",\"2026-02-02T02:00\":\"14.1°C\",\"2026-02-02T03:00\":\"13.6°C\",\"2026-02-02T04:00\":\"12.5°C\",\"2026-02-02T05:00\":\"11.2°C\",\"2026-02-02T06:00\":\"11.5°C\",\"2026-02-02T07:00\":\"10.6°C\",\"2026-02-02T08:00\":\"10.2°C\",\"2026-02-02T09:00\":\"8.6°C\",\"2026-02-02T10:00\":\"7.8°C\",\"2026-02-02T11:00\":\"7.7°C\",\"2026-02-02T12:00\":\"7.4°C\",\"2026-02-02T13:00\":\"6.9°C\",\"2026-02-02T14:00\":\"6.3°C\",\"2026-02-02T15:00\":\"6.2°C\",\"2026-02-02T16:00\":\"6.6°C\",\"2026-02-02T17:00\":\"10.6°C\",\"2026-02-02T18:00\":\"13.1°C\",\"2026-02-02T19:00\":\"15.6°C\",\"2026-02-02T20:00\":\"17.4°C\",\"2026-02-02T21:00\":\"18.8°C\",\"2026-02-02T22:00\":\"20.5°C\",\"2026-02-02T23:00\":\"20.3°C\"}"
+                        }
+                      }
+                    }
+                  ],
+                  "role": "model"
+                },
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "OmuSafudI6atjrEPnv_wsA4",
+            "turnToken": "v1_ChdPbXVTYWZ1ZEk2YXRqckVQbnZfd3NBNBIXT211U2FmdWRJNmF0anJFUG52X3dzQTQ",
+            "usageMetadata": {
+              "candidatesTokenCount": 48,
+              "promptTokenCount": 21,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 21
+                }
+              ],
+              "thoughtsTokenCount": 213,
+              "totalTokenCount": 282
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "Here"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "OmuSafudI6atjrEPnv_wsA4",
+            "turnToken": "v1_ChdPbXVTYWZ1ZEk2YXRqckVQbnZfd3NBNBIXT211U2FmdWRJNmF0anJFUG52X3dzQTQ",
+            "usageMetadata": {
+              "candidatesTokenCount": 49,
+              "promptTokenCount": 21,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 21
+                }
+              ],
+              "thoughtsTokenCount": 213,
+              "toolUsePromptTokenCount": 234,
+              "toolUsePromptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 234
+                }
+              ],
+              "totalTokenCount": 517
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "'s the hourly weather forecast for San Francisco on February 2nd, 20"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "OmuSafudI6atjrEPnv_wsA4",
+            "turnToken": "v1_ChdPbXVTYWZ1ZEk2YXRqckVQbnZfd3NBNBIXT211U2FmdWRJNmF0anJFUG52X3dzQTQ",
+            "usageMetadata": {
+              "candidatesTokenCount": 67,
+              "promptTokenCount": 21,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 21
+                }
+              ],
+              "thoughtsTokenCount": 213,
+              "toolUsePromptTokenCount": 234,
+              "toolUsePromptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 234
+                }
+              ],
+              "totalTokenCount": 535
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "26:\n\n* 00:00: 18.2°C\n* 01:00: 16.8°C\n* 02:00: 14.1°"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "OmuSafudI6atjrEPnv_wsA4",
+            "turnToken": "v1_ChdPbXVTYWZ1ZEk2YXRqckVQbnZfd3NBNBIXT211U2FmdWRJNmF0anJFUG52X3dzQTQ",
+            "usageMetadata": {
+              "candidatesTokenCount": 117,
+              "promptTokenCount": 21,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 21
+                }
+              ],
+              "thoughtsTokenCount": 213,
+              "toolUsePromptTokenCount": 234,
+              "toolUsePromptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 234
+                }
+              ],
+              "totalTokenCount": 585
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "C\n* 03:00: 13.6°C\n* 04:00: 12.5°C\n* 05:00: 11.2°"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "OmuSafudI6atjrEPnv_wsA4",
+            "turnToken": "v1_ChdPbXVTYWZ1ZEk2YXRqckVQbnZfd3NBNBIXT211U2FmdWRJNmF0anJFUG52X3dzQTQ",
+            "usageMetadata": {
+              "candidatesTokenCount": 165,
+              "promptTokenCount": 21,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 21
+                }
+              ],
+              "thoughtsTokenCount": 213,
+              "toolUsePromptTokenCount": 234,
+              "toolUsePromptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 234
+                }
+              ],
+              "totalTokenCount": 633
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "C\n* 06:00: 11.5°C\n* 07:00: 10.6°C\n* 08:00: 10.2°"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "OmuSafudI6atjrEPnv_wsA4",
+            "turnToken": "v1_ChdPbXVTYWZ1ZEk2YXRqckVQbnZfd3NBNBIXT211U2FmdWRJNmF0anJFUG52X3dzQTQ",
+            "usageMetadata": {
+              "candidatesTokenCount": 213,
+              "promptTokenCount": 21,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 21
+                }
+              ],
+              "thoughtsTokenCount": 213,
+              "toolUsePromptTokenCount": 234,
+              "toolUsePromptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 234
+                }
+              ],
+              "totalTokenCount": 681
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "C\n* 09:00: 8.6°C\n* 10:00: 7.8°C\n* 11:00: 7.7°C\n*"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "OmuSafudI6atjrEPnv_wsA4",
+            "turnToken": "v1_ChdPbXVTYWZ1ZEk2YXRqckVQbnZfd3NBNBIXT211U2FmdWRJNmF0anJFUG52X3dzQTQ",
+            "usageMetadata": {
+              "candidatesTokenCount": 261,
+              "promptTokenCount": 21,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 21
+                }
+              ],
+              "thoughtsTokenCount": 213,
+              "toolUsePromptTokenCount": 234,
+              "toolUsePromptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 234
+                }
+              ],
+              "totalTokenCount": 729
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " 12:00: 7.4°C\n* 13:00: 6.9°C\n* 14:00: 6.3°C\n* 15"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "OmuSafudI6atjrEPnv_wsA4",
+            "turnToken": "v1_ChdPbXVTYWZ1ZEk2YXRqckVQbnZfd3NBNBIXT211U2FmdWRJNmF0anJFUG52X3dzQTQ",
+            "usageMetadata": {
+              "candidatesTokenCount": 308,
+              "promptTokenCount": 21,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 21
+                }
+              ],
+              "thoughtsTokenCount": 213,
+              "toolUsePromptTokenCount": 234,
+              "toolUsePromptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 234
+                }
+              ],
+              "totalTokenCount": 776
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": ":00: 6.2°C\n* 16:00: 6.6°C\n* 17:00: 10.6°C\n* 18:0"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "OmuSafudI6atjrEPnv_wsA4",
+            "turnToken": "v1_ChdPbXVTYWZ1ZEk2YXRqckVQbnZfd3NBNBIXT211U2FmdWRJNmF0anJFUG52X3dzQTQ",
+            "usageMetadata": {
+              "candidatesTokenCount": 356,
+              "promptTokenCount": 21,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 21
+                }
+              ],
+              "thoughtsTokenCount": 213,
+              "toolUsePromptTokenCount": 234,
+              "toolUsePromptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 234
+                }
+              ],
+              "totalTokenCount": 824
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "0: 13.1°C\n* 19:00: 15.6°C\n* 20:00: 17.4°C\n* 21:0"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "OmuSafudI6atjrEPnv_wsA4",
+            "turnToken": "v1_ChdPbXVTYWZ1ZEk2YXRqckVQbnZfd3NBNBIXT211U2FmdWRJNmF0anJFUG52X3dzQTQ",
+            "usageMetadata": {
+              "candidatesTokenCount": 404,
+              "promptTokenCount": 21,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 21
+                }
+              ],
+              "thoughtsTokenCount": 213,
+              "toolUsePromptTokenCount": 234,
+              "toolUsePromptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 234
+                }
+              ],
+              "totalTokenCount": 872
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "0: 18.8°C\n* 22:00: 20.5°C\n* 23:00: 20.3°C"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "OmuSafudI6atjrEPnv_wsA4",
+            "turnToken": "v1_ChdPbXVTYWZ1ZEk2YXRqckVQbnZfd3NBNBIXT211U2FmdWRJNmF0anJFUG52X3dzQTQ",
+            "usageMetadata": {
+              "candidatesTokenCount": 445,
+              "promptTokenCount": 21,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 21
+                }
+              ],
+              "thoughtsTokenCount": 213,
+              "toolUsePromptTokenCount": 234,
+              "toolUsePromptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 234
+                }
+              ],
+              "totalTokenCount": 913
+            }
+          }
+        ]
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse",
+        "request": "POST /v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "3511",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Chats Tests sendMessage multiple messages with server side MCP tools stream"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "What is the weather in San Francisco on 02/02/2026?"
+                  }
+                ],
+                "role": "user"
+              },
+              {
+                "parts": [
+                  {
+                    "functionCall": {
+                      "args": {
+                        "endDate": "2026-02-02",
+                        "location": "San Francisco",
+                        "startDate": "2026-02-02"
+                      },
+                      "name": "weather_server_get_weather"
+                    }
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "functionResponse": {
+                      "name": "weather_server_get_weather",
+                      "response": {
+                        "call_tool_result_json": "{\"meta\":null,\"content\":[{\"type\":\"text\",\"text\":\"{\\\"2026-02-02T00:00\\\":\\\"18.2°C\\\",\\\"2026-02-02T01:00\\\":\\\"16.8°C\\\",\\\"2026-02-02T02:00\\\":\\\"14.1°C\\\",\\\"2026-02-02T03:00\\\":\\\"13.6°C\\\",\\\"2026-02-02T04:00\\\":\\\"12.5°C\\\",\\\"2026-02-02T05:00\\\":\\\"11.2°C\\\",\\\"2026-02-02T06:00\\\":\\\"11.5°C\\\",\\\"2026-02-02T07:00\\\":\\\"10.6°C\\\",\\\"2026-02-02T08:00\\\":\\\"10.2°C\\\",\\\"2026-02-02T09:00\\\":\\\"8.6°C\\\",\\\"2026-02-02T10:00\\\":\\\"7.8°C\\\",\\\"2026-02-02T11:00\\\":\\\"7.7°C\\\",\\\"2026-02-02T12:00\\\":\\\"7.4°C\\\",\\\"2026-02-02T13:00\\\":\\\"6.9°C\\\",\\\"2026-02-02T14:00\\\":\\\"6.3°C\\\",\\\"2026-02-02T15:00\\\":\\\"6.2°C\\\",\\\"2026-02-02T16:00\\\":\\\"6.6°C\\\",\\\"2026-02-02T17:00\\\":\\\"10.6°C\\\",\\\"2026-02-02T18:00\\\":\\\"13.1°C\\\",\\\"2026-02-02T19:00\\\":\\\"15.6°C\\\",\\\"2026-02-02T20:00\\\":\\\"17.4°C\\\",\\\"2026-02-02T21:00\\\":\\\"18.8°C\\\",\\\"2026-02-02T22:00\\\":\\\"20.5°C\\\",\\\"2026-02-02T23:00\\\":\\\"20.3°C\\\"}\",\"annotations\":null,\"meta\":null}],\"structuredContent\":null,\"isError\":false}",
+                        "result": "{\"2026-02-02T00:00\":\"18.2°C\",\"2026-02-02T01:00\":\"16.8°C\",\"2026-02-02T02:00\":\"14.1°C\",\"2026-02-02T03:00\":\"13.6°C\",\"2026-02-02T04:00\":\"12.5°C\",\"2026-02-02T05:00\":\"11.2°C\",\"2026-02-02T06:00\":\"11.5°C\",\"2026-02-02T07:00\":\"10.6°C\",\"2026-02-02T08:00\":\"10.2°C\",\"2026-02-02T09:00\":\"8.6°C\",\"2026-02-02T10:00\":\"7.8°C\",\"2026-02-02T11:00\":\"7.7°C\",\"2026-02-02T12:00\":\"7.4°C\",\"2026-02-02T13:00\":\"6.9°C\",\"2026-02-02T14:00\":\"6.3°C\",\"2026-02-02T15:00\":\"6.2°C\",\"2026-02-02T16:00\":\"6.6°C\",\"2026-02-02T17:00\":\"10.6°C\",\"2026-02-02T18:00\":\"13.1°C\",\"2026-02-02T19:00\":\"15.6°C\",\"2026-02-02T20:00\":\"17.4°C\",\"2026-02-02T21:00\":\"18.8°C\",\"2026-02-02T22:00\":\"20.5°C\",\"2026-02-02T23:00\":\"20.3°C\"}"
+                      }
+                    }
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "text": "Here"
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "text": "'s the hourly weather forecast for San Francisco on February 2nd, 20"
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "text": "26:\n\n* 00:00: 18.2°C\n* 01:00: 16.8°C\n* 02:00: 14.1°"
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "text": "C\n* 03:00: 13.6°C\n* 04:00: 12.5°C\n* 05:00: 11.2°"
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "text": "C\n* 06:00: 11.5°C\n* 07:00: 10.6°C\n* 08:00: 10.2°"
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "text": "C\n* 09:00: 8.6°C\n* 10:00: 7.8°C\n* 11:00: 7.7°C\n*"
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "text": " 12:00: 7.4°C\n* 13:00: 6.9°C\n* 14:00: 6.3°C\n* 15"
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "text": ":00: 6.2°C\n* 16:00: 6.6°C\n* 17:00: 10.6°C\n* 18:0"
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "text": "0: 13.1°C\n* 19:00: 15.6°C\n* 20:00: 17.4°C\n* 21:0"
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "text": "0: 18.8°C\n* 22:00: 20.5°C\n* 23:00: 20.3°C"
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "text": "What is the weather in Boston on 02/02/2026?"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {},
+            "tools": [
+              {
+                "mcpServers": [
+                  {
+                    "name": "weather_server",
+                    "streamableHttpTransport": {
+                      "headers": {
+                        "AUTHORIZATION": "Bearer github_pat_XXXX"
+                      },
+                      "timeout": "10s",
+                      "url": "https://gemini-api-demos.uc.r.appspot.com/mcp"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "previousRequest": "d4a32fb3a77a2c51fc04977858dd964a690bd6f909df00fc691f24ab81fe003c",
+        "serverAddress": "generativelanguage.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "4c61e3afb8987e15fc285e958f7f47de86b6d4e19188db4de71741ba8c3591c6",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Disposition": "attachment",
+          "Content-Type": "text/event-stream",
+          "Date": "Mon, 16 Feb 2026 00:56:30 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Server-Timing": "gfet4t7; dur=1261",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "args": {
+                          "endDate": "2026-02-02",
+                          "location": "Boston",
+                          "startDate": "2026-02-02"
+                        },
+                        "name": "weather_server_get_weather"
+                      }
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishMessage": "Model generated function call(s).",
+                "finishReason": "STOP",
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "PmuSafLFBeCsjrEPiOG92QU",
+            "turnToken": "v1_ChdQbXVTYWZMRkJlQ3NqckVQaU9HOTJRVRIXUG11U2FmTEZCZUNzanJFUGlPRzkyUVU",
+            "usageMetadata": {
+              "candidatesTokenCount": 47,
+              "promptTokenCount": 1844,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1844
+                }
+              ],
+              "thoughtsTokenCount": 91,
+              "totalTokenCount": 1982
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "functionResponse": {
+                        "name": "weather_server_get_weather",
+                        "response": {
+                          "call_tool_result_json": "{\"meta\":null,\"content\":[{\"type\":\"text\",\"text\":\"{\\\"2026-02-02T00:00\\\":\\\"-7.9°C\\\",\\\"2026-02-02T01:00\\\":\\\"-8.3°C\\\",\\\"2026-02-02T02:00\\\":\\\"-9.3°C\\\",\\\"2026-02-02T03:00\\\":\\\"-9.6°C\\\",\\\"2026-02-02T04:00\\\":\\\"-10.2°C\\\",\\\"2026-02-02T05:00\\\":\\\"-10.1°C\\\",\\\"2026-02-02T06:00\\\":\\\"-10.7°C\\\",\\\"2026-02-02T07:00\\\":\\\"-11.2°C\\\",\\\"2026-02-02T08:00\\\":\\\"-11.1°C\\\",\\\"2026-02-02T09:00\\\":\\\"-11.3°C\\\",\\\"2026-02-02T10:00\\\":\\\"-11.3°C\\\",\\\"2026-02-02T11:00\\\":\\\"-11.1°C\\\",\\\"2026-02-02T12:00\\\":\\\"-12.8°C\\\",\\\"2026-02-02T13:00\\\":\\\"-11.5°C\\\",\\\"2026-02-02T14:00\\\":\\\"-7.6°C\\\",\\\"2026-02-02T15:00\\\":\\\"-5.5°C\\\",\\\"2026-02-02T16:00\\\":\\\"-3.7°C\\\",\\\"2026-02-02T17:00\\\":\\\"-2.3°C\\\",\\\"2026-02-02T18:00\\\":\\\"-1°C\\\",\\\"2026-02-02T19:00\\\":\\\"-0.1°C\\\",\\\"2026-02-02T20:00\\\":\\\"0.1°C\\\",\\\"2026-02-02T21:00\\\":\\\"-0.6°C\\\",\\\"2026-02-02T22:00\\\":\\\"-1.7°C\\\",\\\"2026-02-02T23:00\\\":\\\"-3.2°C\\\"}\",\"annotations\":null,\"meta\":null}],\"structuredContent\":null,\"isError\":false}",
+                          "result": "{\"2026-02-02T00:00\":\"-7.9°C\",\"2026-02-02T01:00\":\"-8.3°C\",\"2026-02-02T02:00\":\"-9.3°C\",\"2026-02-02T03:00\":\"-9.6°C\",\"2026-02-02T04:00\":\"-10.2°C\",\"2026-02-02T05:00\":\"-10.1°C\",\"2026-02-02T06:00\":\"-10.7°C\",\"2026-02-02T07:00\":\"-11.2°C\",\"2026-02-02T08:00\":\"-11.1°C\",\"2026-02-02T09:00\":\"-11.3°C\",\"2026-02-02T10:00\":\"-11.3°C\",\"2026-02-02T11:00\":\"-11.1°C\",\"2026-02-02T12:00\":\"-12.8°C\",\"2026-02-02T13:00\":\"-11.5°C\",\"2026-02-02T14:00\":\"-7.6°C\",\"2026-02-02T15:00\":\"-5.5°C\",\"2026-02-02T16:00\":\"-3.7°C\",\"2026-02-02T17:00\":\"-2.3°C\",\"2026-02-02T18:00\":\"-1°C\",\"2026-02-02T19:00\":\"-0.1°C\",\"2026-02-02T20:00\":\"0.1°C\",\"2026-02-02T21:00\":\"-0.6°C\",\"2026-02-02T22:00\":\"-1.7°C\",\"2026-02-02T23:00\":\"-3.2°C\"}"
+                        }
+                      }
+                    }
+                  ],
+                  "role": "model"
+                },
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "PmuSafLFBeCsjrEPiOG92QU",
+            "turnToken": "v1_ChdQbXVTYWZMRkJlQ3NqckVQaU9HOTJRVRIXUG11U2FmTEZCZUNzanJFUGlPRzkyUVU",
+            "usageMetadata": {
+              "candidatesTokenCount": 47,
+              "promptTokenCount": 1844,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1844
+                }
+              ],
+              "thoughtsTokenCount": 91,
+              "totalTokenCount": 1982
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "Here's the"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "PmuSafLFBeCsjrEPiOG92QU",
+            "turnToken": "v1_ChdQbXVTYWZMRkJlQ3NqckVQaU9HOTJRVRIXUG11U2FmTEZCZUNzanJFUGlPRzkyUVU",
+            "usageMetadata": {
+              "cacheTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 901
+                }
+              ],
+              "cachedContentTokenCount": 901,
+              "candidatesTokenCount": 51,
+              "promptTokenCount": 1844,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1844
+                }
+              ],
+              "thoughtsTokenCount": 91,
+              "toolUsePromptTokenCount": 1934,
+              "toolUsePromptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1934
+                }
+              ],
+              "totalTokenCount": 3920
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " hourly weather forecast for Boston on February 2nd, 2026"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "PmuSafLFBeCsjrEPiOG92QU",
+            "turnToken": "v1_ChdQbXVTYWZMRkJlQ3NqckVQaU9HOTJRVRIXUG11U2FmTEZCZUNzanJFUGlPRzkyUVU",
+            "usageMetadata": {
+              "cacheTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 901
+                }
+              ],
+              "cachedContentTokenCount": 901,
+              "candidatesTokenCount": 67,
+              "promptTokenCount": 1844,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1844
+                }
+              ],
+              "thoughtsTokenCount": 91,
+              "toolUsePromptTokenCount": 1934,
+              "toolUsePromptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1934
+                }
+              ],
+              "totalTokenCount": 3936
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": ":\n\n* 00:00: -7.9°C\n* 01:00: -8.3°C\n* 02:00: -9.3°C\n*"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "PmuSafLFBeCsjrEPiOG92QU",
+            "turnToken": "v1_ChdQbXVTYWZMRkJlQ3NqckVQaU9HOTJRVRIXUG11U2FmTEZCZUNzanJFUGlPRzkyUVU",
+            "usageMetadata": {
+              "cacheTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 901
+                }
+              ],
+              "cachedContentTokenCount": 901,
+              "candidatesTokenCount": 115,
+              "promptTokenCount": 1844,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1844
+                }
+              ],
+              "thoughtsTokenCount": 91,
+              "toolUsePromptTokenCount": 1934,
+              "toolUsePromptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1934
+                }
+              ],
+              "totalTokenCount": 3984
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " 03:00: -9.6°C\n* 04:00: -10.2°C\n* 05:00: -10.1°C\n* "
+                    }
+                  ],
+                  "role": "model"
+                },
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "PmuSafLFBeCsjrEPiOG92QU",
+            "turnToken": "v1_ChdQbXVTYWZMRkJlQ3NqckVQaU9HOTJRVRIXUG11U2FmTEZCZUNzanJFUGlPRzkyUVU",
+            "usageMetadata": {
+              "cacheTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 901
+                }
+              ],
+              "cachedContentTokenCount": 901,
+              "candidatesTokenCount": 161,
+              "promptTokenCount": 1844,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1844
+                }
+              ],
+              "thoughtsTokenCount": 91,
+              "toolUsePromptTokenCount": 1934,
+              "toolUsePromptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1934
+                }
+              ],
+              "totalTokenCount": 4030
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "06:00: -10.7°C\n* 07:00: -11.2°C\n* 08:00: -11.1°C\n* "
+                    }
+                  ],
+                  "role": "model"
+                },
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "PmuSafLFBeCsjrEPiOG92QU",
+            "turnToken": "v1_ChdQbXVTYWZMRkJlQ3NqckVQaU9HOTJRVRIXUG11U2FmTEZCZUNzanJFUGlPRzkyUVU",
+            "usageMetadata": {
+              "cacheTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 901
+                }
+              ],
+              "cachedContentTokenCount": 901,
+              "candidatesTokenCount": 208,
+              "promptTokenCount": 1844,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1844
+                }
+              ],
+              "thoughtsTokenCount": 91,
+              "toolUsePromptTokenCount": 1934,
+              "toolUsePromptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1934
+                }
+              ],
+              "totalTokenCount": 4077
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "09:00: -11.3°C\n* 10:00: -11.3°C\n* 11:00: -11.1°C\n* "
+                    }
+                  ],
+                  "role": "model"
+                },
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "PmuSafLFBeCsjrEPiOG92QU",
+            "turnToken": "v1_ChdQbXVTYWZMRkJlQ3NqckVQaU9HOTJRVRIXUG11U2FmTEZCZUNzanJFUGlPRzkyUVU",
+            "usageMetadata": {
+              "cacheTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 901
+                }
+              ],
+              "cachedContentTokenCount": 901,
+              "candidatesTokenCount": 255,
+              "promptTokenCount": 1844,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1844
+                }
+              ],
+              "thoughtsTokenCount": 91,
+              "toolUsePromptTokenCount": 1934,
+              "toolUsePromptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1934
+                }
+              ],
+              "totalTokenCount": 4124
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "12:00: -12.8°C\n* 13:00: -11.5°C\n* 14:00: -7.6°C\n* 1"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "PmuSafLFBeCsjrEPiOG92QU",
+            "turnToken": "v1_ChdQbXVTYWZMRkJlQ3NqckVQaU9HOTJRVRIXUG11U2FmTEZCZUNzanJFUGlPRzkyUVU",
+            "usageMetadata": {
+              "cacheTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 901
+                }
+              ],
+              "cachedContentTokenCount": 901,
+              "candidatesTokenCount": 303,
+              "promptTokenCount": 1844,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1844
+                }
+              ],
+              "thoughtsTokenCount": 91,
+              "toolUsePromptTokenCount": 1934,
+              "toolUsePromptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1934
+                }
+              ],
+              "totalTokenCount": 4172
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "5:00: -5.5°C\n* 16:00: -3.7°C\n* 17:00: -2.3°C\n* 18:0"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "PmuSafLFBeCsjrEPiOG92QU",
+            "turnToken": "v1_ChdQbXVTYWZMRkJlQ3NqckVQaU9HOTJRVRIXUG11U2FmTEZCZUNzanJFUGlPRzkyUVU",
+            "usageMetadata": {
+              "cacheTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 901
+                }
+              ],
+              "cachedContentTokenCount": 901,
+              "candidatesTokenCount": 351,
+              "promptTokenCount": 1844,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1844
+                }
+              ],
+              "thoughtsTokenCount": 91,
+              "toolUsePromptTokenCount": 1934,
+              "toolUsePromptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1934
+                }
+              ],
+              "totalTokenCount": 4220
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "0: -1°C\n* 19:00: -0.1°C\n* 20:00: 0.1°C\n* 21:00: -0."
+                    }
+                  ],
+                  "role": "model"
+                },
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "PmuSafLFBeCsjrEPiOG92QU",
+            "turnToken": "v1_ChdQbXVTYWZMRkJlQ3NqckVQaU9HOTJRVRIXUG11U2FmTEZCZUNzanJFUGlPRzkyUVU",
+            "usageMetadata": {
+              "cacheTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 901
+                }
+              ],
+              "cachedContentTokenCount": 901,
+              "candidatesTokenCount": 399,
+              "promptTokenCount": 1844,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1844
+                }
+              ],
+              "thoughtsTokenCount": 91,
+              "toolUsePromptTokenCount": 1934,
+              "toolUsePromptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1934
+                }
+              ],
+              "totalTokenCount": 4268
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "6°C\n* 22:00: -1.7°C\n* 23:00: -3.2°C"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "PmuSafLFBeCsjrEPiOG92QU",
+            "turnToken": "v1_ChdQbXVTYWZMRkJlQ3NqckVQaU9HOTJRVRIXUG11U2FmTEZCZUNzanJFUGlPRzkyUVU",
+            "usageMetadata": {
+              "cacheTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 901
+                }
+              ],
+              "cachedContentTokenCount": 901,
+              "candidatesTokenCount": 432,
+              "promptTokenCount": 1844,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1844
+                }
+              ],
+              "thoughtsTokenCount": 91,
+              "toolUsePromptTokenCount": 1934,
+              "toolUsePromptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1934
+                }
+              ],
+              "totalTokenCount": 4301
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

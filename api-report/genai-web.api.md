@@ -2543,6 +2543,12 @@ export enum MaskReferenceMode {
 }
 
 // @public
+export interface McpServer {
+    name?: string;
+    streamableHttpTransport?: StreamableHttpTransport;
+}
+
+// @public
 export function mcpToTool(...args: [...Client[], CallableToolConfig | Client]): CallableTool;
 
 // @public
@@ -3241,6 +3247,15 @@ export enum StartSensitivity {
 }
 
 // @public
+export interface StreamableHttpTransport {
+    headers?: Record<string, string>;
+    sseReadTimeout?: string;
+    terminateOnClose?: boolean;
+    timeout?: string;
+    url?: string;
+}
+
+// @public
 export interface StringList {
     values?: string[];
 }
@@ -3404,6 +3419,7 @@ export interface Tool {
     googleMaps?: GoogleMaps;
     googleSearch?: GoogleSearch;
     googleSearchRetrieval?: GoogleSearchRetrieval;
+    mcpServers?: McpServer[];
     retrieval?: Retrieval;
     urlContext?: UrlContext;
 }
