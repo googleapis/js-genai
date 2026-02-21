@@ -196,4 +196,52 @@ describe('Interactions resource', () => {
       expect(headers.get('x-goog-api-key')).toBe('some-manual-key');
     });
   });
+
+  describe('streaming regression', () => {
+    let client: GeminiNextGenAPIClient;
+    let fetchSpy: jasmine.Spy<Fetch>;
+
+    beforeEach(() => {
+      client = new GeminiNextGenAPIClient({
+        clientAdapter,
+        apiKey: 'test-api-key',
+      });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      fetchSpy = spyOn(client as any, 'fetch');
+    });
+
+    it('should handle large fragmented SSE payloads correctly', async () => {
+      const largeData = 'A'.repeat(1024 * 1024); // 1MB
+      const mockSSE =
+        `data: {"event_type": "content.delta", "delta": {"type": "text", "text": "${largeData}"}}\n\n` +
+        `data: [DONE]\n\n`;
+      const sseBytes = new TextEncoder().encode(mockSSE);
+
+      const readableStream = new ReadableStream({
+        start(controller) {
+          const chunkSize = 1024;
+          for (let i = 0; i < sseBytes.length; i += chunkSize) {
+            controller.enqueue(sseBytes.subarray(i, i + chunkSize));
+          }
+          controller.close();
+        },
+      });
+
+      fetchSpy.and.resolveTo(new Response(readableStream));
+
+      const stream = await client.interactions.create({
+        model: 'gemini-pro',
+        input: 'test',
+        stream: true,
+      });
+
+      let received = '';
+      for await (const event of stream) {
+        if (event.event_type === 'content.delta' && event.delta?.type === 'text') {
+          received += event.delta.text;
+        }
+      }
+      expect(received).toBe(largeData);
+    });
+  });
 });

@@ -1402,3 +1402,53 @@ describe('generateContentStream', () => {
     }
   });
 });
+
+describe('generateContentStream regression', () => {
+  it('should handle large fragmented SSE payloads correctly', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+
+    // 1MB large text content
+    const largeText = 'A'.repeat(1024 * 1024);
+    const mockResponse = {
+      candidates: [
+        {
+          content: {
+            parts: [{text: largeText}],
+            role: 'model',
+          },
+        },
+      ],
+    };
+
+    const sseData = `data: ${JSON.stringify(mockResponse)}\n\n`;
+    const encoder = new TextEncoder();
+    const sseBytes = encoder.encode(sseData);
+
+    const readableStream = new ReadableStream({
+      start(controller) {
+        // Enqueue in small 1KB fragments
+        const chunkSize = 1024;
+        for (let i = 0; i < sseBytes.length; i += chunkSize) {
+          controller.enqueue(sseBytes.subarray(i, i + chunkSize));
+        }
+        controller.close();
+      },
+    });
+
+    spyOn(global, 'fetch').and.resolveTo(
+      new Response(readableStream, fetchOkOptions),
+    );
+
+    const stream = await client.models.generateContentStream({
+      model: 'gemini-pro',
+      contents: 'test',
+    });
+
+    let receivedText = '';
+    for await (const chunk of stream) {
+      receivedText += chunk.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
+    }
+
+    expect(receivedText).toBe(largeText);
+  });
+});

@@ -579,6 +579,7 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
 
     try {
       let buffer = '';
+      let searchIndex = 0;
       const dataPrefix = 'data:';
       const delimiters = ['\n\n', '\r\r', '\r\n\r\n'];
 
@@ -628,7 +629,7 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
           delimiterLength = 0;
 
           for (const delimiter of delimiters) {
-            const index = buffer.indexOf(delimiter);
+            const index = buffer.indexOf(delimiter, searchIndex);
             if (
               index !== -1 &&
               (delimiterIndex === -1 || index < delimiterIndex)
@@ -639,11 +640,13 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
           }
 
           if (delimiterIndex === -1) {
+            searchIndex = Math.max(0, buffer.length - 3);
             break; // No complete event in buffer
           }
 
           const eventString = buffer.substring(0, delimiterIndex);
           buffer = buffer.substring(delimiterIndex + delimiterLength);
+          searchIndex = 0;
 
           const trimmedEvent = eventString.trim();
 
