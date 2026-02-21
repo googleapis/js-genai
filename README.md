@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/googleapis-js-genai-badge.png)](https://mseep.ai/app/googleapis-js-genai)
+
 # Google Gen AI SDK for TypeScript and JavaScript
 
 [![NPM Downloads](https://img.shields.io/npm/dw/%40google%2Fgenai)](https://www.npmjs.com/package/@google/genai)
