@@ -4,8 +4,8 @@
     {
       "request": {
         "method": "POST",
-        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-3-pro-preview:streamGenerateContent?alt=sse",
-        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-3-pro-preview:streamGenerateContent?alt=sse HTTP/1.1",
+        "url": "/v1beta1/projects/REDACTED/locations/global/publishers/google/models/gemini-3-pro-preview:streamGenerateContent?alt=sse",
+        "request": "POST /v1beta1/projects/REDACTED/locations/global/publishers/google/models/gemini-3-pro-preview:streamGenerateContent?alt=sse HTTP/1.1",
         "headers": {
           "Accept": "*/*",
           "Accept-Encoding": "gzip, deflate",
@@ -51,7 +51,10 @@
                           "type": "string"
                         }
                       },
-                      "required": ["name", "greeting"],
+                      "required": [
+                        "name",
+                        "greeting"
+                      ],
                       "type": "object"
                     },
                     "responseJsonSchema": {
@@ -68,7 +71,11 @@
                           "type": "string"
                         }
                       },
-                      "required": ["name", "greeting", "completeMessage"],
+                      "required": [
+                        "name",
+                        "greeting",
+                        "completeMessage"
+                      ],
                       "type": "object"
                     }
                   }
@@ -82,18 +89,18 @@
         "port": 443,
         "protocol": "https"
       },
-      "shaSum": "0c76c346420007feec089bf6f7c9cf0b9b074646896f7c02a0505a51768723ad",
+      "shaSum": "1284af950e371aab5c0a88571cd05ee296b417a07aef1c393055a5aebcb195f2",
       "response": {
         "statusCode": 200,
         "headers": {
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
           "Content-Disposition": "attachment",
           "Content-Type": "text/event-stream",
-          "Date": "Mon, 01 Dec 2025 21:48:47 GMT",
+          "Date": "Thu, 12 Feb 2026 09:06:05 GMT",
           "Server": "scaffolding on HTTPServer2",
           "Vary": "Origin, X-Origin, Referer",
           "X-Content-Type-Options": "nosniff",
           "X-Frame-Options": "SAMEORIGIN",
-          "X-Goog-Sherlog-Link": "https://sherlog.corp.google.com/workflow?config=Serving\u0026dataid=aiplatform.googleapis.com/google.cloud.aiplatform.v1beta1.PredictionService.StreamGenerateContent\u0026gaia=790080187114\u0026reason=sharedLink\u0026version=187d35bf8e0c5e2f082901d9d2a9145d",
           "X-Xss-Protection": "0"
         },
         "bodySegments": [
@@ -107,20 +114,17 @@
                         "name": "greet",
                         "willContinue": true
                       },
-                      "thoughtSignature": "CiQB4/H/Xl+h+aLYnOZ1ohAD1DHueyGVbMcB+KH8NFIlcuYH9uEKZgHj8f9em5Qoz6iAGwQVSw7Dam8vzVJty8zXkssgJBEm5axOzh4SWa95A5YnwQo/A+YwTpebDNzVBY7w7etCZFhOak/EjVFwXLwEhnWEeL1VVYHzmnxn6tYIFCyWD6k2nRvWBjYt3gppAePx/17lOLn1dcvzxXEKmAi+0dpn/m8YJBR6NVA5vTjTnK7r6VwArdQTL68MhRnUw1fta+HqJq+oZ4Q+2y8mUFb1USTYspzuX/x+CLRft0g1FAEFH+KiDedCyb6NfXPTvyUTItl3y6rrCl4B4/H/Xvs54tmmDL1sw4duY6hEYOEI+zWY/t4+Pe/UzjAwFEa8LWZappW6nTBkBWsKEQGM68cbozxTVatQlxDr23h2CvKnkUe/T5orY0jd1kYN32Ia9t2+CaKHcSwS"
+                      "thoughtSignature": "CmUBjz1rX7QUG605nbXjURdNRtGTyMfZitrBGEp67ipHHxuh9JYB7mUwAUeXt2bJntY3U0dhH2DtYiVBSTPCaqiNWeRpo0CuLrpAqCV98wdHtLGDObGl8zGm1i2zDxUD04FNvM9U3gpRAY89a18/7Im/6uYn2Q9J8seggbQ0QTrGU+2cNxvb2Ad7XXpoj1eOxW/3DycE3UfgNICde0WFEtf4BXT+KwjyfGMoHFg0kYuZhs/cYLyiUUsxCnYBjz1rX0MPDO9oD4LQykRJlCJvfbzdo9e45iJskwDXqD9CEZgBZVesgl4ikmqDPfg343gPBXhdy0o5Ry1imD6EcUHlwJwINRhfJ+1vYK2YAXfYTmDhWVafYbadTJtT4lbihFVOqxGp5iVORSfEkUly2kDH+Zft"
                     }
                   ],
                   "role": "model"
                 }
               }
             ],
-            "createTime": "2025-12-01T21:48:45.889336Z",
+            "createTime": "2026-02-12T09:06:02.561113Z",
             "modelVersion": "gemini-3-pro-preview",
-            "responseId": "PQ0uafijNp6O998PlfbTuQU",
+            "responseId": "-peNadmfItfPseMPi8CkyAg",
             "usageMetadata": {
-              "billablePromptUsage": {
-                "textCount": 409
-              },
               "trafficType": "ON_DEMAND"
             }
           },
@@ -146,9 +150,9 @@
                 }
               }
             ],
-            "createTime": "2025-12-01T21:48:45.889336Z",
+            "createTime": "2026-02-12T09:06:02.561113Z",
             "modelVersion": "gemini-3-pro-preview",
-            "responseId": "PQ0uafijNp6O998PlfbTuQU",
+            "responseId": "-peNadmfItfPseMPi8CkyAg",
             "usageMetadata": {
               "trafficType": "ON_DEMAND"
             }
@@ -174,9 +178,9 @@
                 }
               }
             ],
-            "createTime": "2025-12-01T21:48:45.889336Z",
+            "createTime": "2026-02-12T09:06:02.561113Z",
             "modelVersion": "gemini-3-pro-preview",
-            "responseId": "PQ0uafijNp6O998PlfbTuQU",
+            "responseId": "-peNadmfItfPseMPi8CkyAg",
             "usageMetadata": {
               "trafficType": "ON_DEMAND"
             }
@@ -203,9 +207,9 @@
                 }
               }
             ],
-            "createTime": "2025-12-01T21:48:45.889336Z",
+            "createTime": "2026-02-12T09:06:02.561113Z",
             "modelVersion": "gemini-3-pro-preview",
-            "responseId": "PQ0uafijNp6O998PlfbTuQU",
+            "responseId": "-peNadmfItfPseMPi8CkyAg",
             "usageMetadata": {
               "trafficType": "ON_DEMAND"
             }
@@ -231,9 +235,9 @@
                 }
               }
             ],
-            "createTime": "2025-12-01T21:48:45.889336Z",
+            "createTime": "2026-02-12T09:06:02.561113Z",
             "modelVersion": "gemini-3-pro-preview",
-            "responseId": "PQ0uafijNp6O998PlfbTuQU",
+            "responseId": "-peNadmfItfPseMPi8CkyAg",
             "usageMetadata": {
               "trafficType": "ON_DEMAND"
             }
@@ -252,9 +256,9 @@
                 "finishReason": "STOP"
               }
             ],
-            "createTime": "2025-12-01T21:48:45.889336Z",
+            "createTime": "2026-02-12T09:06:02.561113Z",
             "modelVersion": "gemini-3-pro-preview",
-            "responseId": "PQ0uafijNp6O998PlfbTuQU",
+            "responseId": "-peNadmfItfPseMPi8CkyAg",
             "usageMetadata": {
               "candidatesTokenCount": 17,
               "candidatesTokensDetails": [
@@ -270,8 +274,8 @@
                   "tokenCount": 20
                 }
               ],
-              "thoughtsTokenCount": 58,
-              "totalTokenCount": 95,
+              "thoughtsTokenCount": 52,
+              "totalTokenCount": 89,
               "trafficType": "ON_DEMAND"
             }
           }

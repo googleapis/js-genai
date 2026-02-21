@@ -1173,16 +1173,8 @@ export function liveConnectConfigToVertex(
     );
   }
 
-  const fromInputAudioTranscription = common.getValueByPath(fromObject, [
-    'inputAudioTranscription',
-  ]);
-  if (parentObject !== undefined && fromInputAudioTranscription != null) {
-    common.setValueByPath(
-      parentObject,
-      ['setup', 'inputAudioTranscription'],
-      fromInputAudioTranscription,
-    );
-  }
+  // Vertex AI does not support inputAudioTranscription in the setup message;
+  // it is intentionally not added to the setup.
 
   const fromOutputAudioTranscription = common.getValueByPath(fromObject, [
     'outputAudioTranscription',
@@ -1275,11 +1267,20 @@ export function liveConnectParametersToVertex(
 
   const fromModel = common.getValueByPath(fromObject, ['model']);
   if (fromModel != null) {
-    common.setValueByPath(
-      toObject,
-      ['setup', 'model'],
-      t.tModel(apiClient, fromModel),
-    );
+    let model = t.tModel(apiClient, fromModel);
+    // Vertex Live API requires projects/{project}/locations/{location}/ prefix
+    // for publisher models in the setup message.
+    if (
+      apiClient.isVertexAI() &&
+      model.startsWith('publishers/') &&
+      apiClient.getProject() &&
+      apiClient.getLocation()
+    ) {
+      model =
+        `projects/${apiClient.getProject()}/locations/${apiClient.getLocation()}/` +
+        model;
+    }
+    common.setValueByPath(toObject, ['setup', 'model'], model);
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);

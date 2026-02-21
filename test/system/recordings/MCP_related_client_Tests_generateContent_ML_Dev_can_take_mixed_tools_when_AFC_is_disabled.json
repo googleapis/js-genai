@@ -51,7 +51,10 @@
                           "type": "string"
                         }
                       },
-                      "required": ["text", "color"],
+                      "required": [
+                        "text",
+                        "color"
+                      ],
                       "type": "object"
                     }
                   }
@@ -84,7 +87,10 @@
                           "type": "STRING"
                         }
                       },
-                      "required": ["brightness", "colorTemperature"],
+                      "required": [
+                        "brightness",
+                        "colorTemperature"
+                      ],
                       "type": "OBJECT"
                     }
                   }
@@ -100,14 +106,15 @@
       },
       "shaSum": "7be33435698959cd9401e70fa4cd95e4a0b4f6e8284e5707a6c36f8827a7a8d4",
       "response": {
-        "statusCode": 200,
+        "statusCode": 400,
         "headers": {
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
           "Content-Encoding": "gzip",
-          "Content-Length": "415",
+          "Content-Length": "278",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Tue, 26 Aug 2025 03:57:23 GMT",
+          "Date": "Thu, 12 Feb 2026 06:20:09 GMT",
           "Server": "scaffolding on HTTPServer2",
-          "Server-Timing": "gfet4t7; dur=755",
+          "Server-Timing": "gfet4t7; dur=77",
           "Vary": "Origin, X-Origin, Referer",
           "X-Content-Type-Options": "nosniff",
           "X-Frame-Options": "SAMEORIGIN",
@@ -115,59 +122,25 @@
         },
         "bodySegments": [
           {
-            "candidates": [
-              {
-                "avgLogprobs": -0.04113555871523344,
-                "content": {
-                  "parts": [
-                    {
-                      "functionCall": {
-                        "args": {
-                          "color": "blue",
-                          "text": "hello"
-                        },
-                        "name": "print"
-                      }
-                    },
-                    {
-                      "functionCall": {
-                        "args": {},
-                        "name": "beep"
-                      }
-                    },
-                    {
-                      "functionCall": {
-                        "args": {
-                          "brightness": 50,
-                          "colorTemperature": "warm"
-                        },
-                        "name": "controlLight"
-                      }
-                    }
-                  ],
-                  "role": "model"
+            "error": {
+              "code": 400,
+              "details": [
+                {
+                  "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+                  "domain": "googleapis.com",
+                  "metadata": {
+                    "service": "generativelanguage.googleapis.com"
+                  },
+                  "reason": "API_KEY_INVALID"
                 },
-                "finishReason": "STOP"
-              }
-            ],
-            "modelVersion": "gemini-2.0-flash",
-            "responseId": "ojCtaMv-M-H9jrEP_aiggAo",
-            "usageMetadata": {
-              "candidatesTokenCount": 13,
-              "candidatesTokensDetails": [
                 {
-                  "modality": "TEXT",
-                  "tokenCount": 13
+                  "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+                  "locale": "en-US",
+                  "message": "API key not valid. Please pass a valid API key."
                 }
               ],
-              "promptTokenCount": 96,
-              "promptTokensDetails": [
-                {
-                  "modality": "TEXT",
-                  "tokenCount": 96
-                }
-              ],
-              "totalTokenCount": 109
+              "message": "API key not valid. Please pass a valid API key.",
+              "status": "INVALID_ARGUMENT"
             }
           }
         ]
