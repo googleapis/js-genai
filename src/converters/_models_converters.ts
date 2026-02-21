@@ -2535,6 +2535,15 @@ export function generateVideosConfigToMldev(
     );
   }
 
+  const fromResizeMode = common.getValueByPath(fromObject, ['resizeMode']);
+  if (parentObject !== undefined && fromResizeMode != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'resizeMode'],
+      fromResizeMode,
+    );
+  }
+
   const fromPersonGeneration = common.getValueByPath(fromObject, [
     'personGeneration',
   ]);
@@ -2678,6 +2687,15 @@ export function generateVideosConfigToVertex(
       parentObject,
       ['parameters', 'resolution'],
       fromResolution,
+    );
+  }
+
+  const fromResizeMode = common.getValueByPath(fromObject, ['resizeMode']);
+  if (parentObject !== undefined && fromResizeMode != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'resizeMode'],
+      fromResizeMode,
     );
   }
 

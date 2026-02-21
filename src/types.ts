@@ -3972,6 +3972,9 @@ export declare interface GenerateVideosConfig {
   /** The resolution for the generated video. 720p and 1080p are
       supported. */
   resolution?: string;
+  /** The resize mode for the generated video. Supported values are: pad, crop.
+      Determines how the input image/video is resized to match the output aspect ratio. */
+  resizeMode?: string;
   /** Whether allow to generate person videos, and restrict to specific
       ages. Supported values are: dont_allow, allow_adult. */
   personGeneration?: string;
