@@ -995,6 +995,8 @@ export interface ImageConfig {
 export interface ImageContent {
   type: 'image';
 
+  caption?: string;
+
   /**
    * The image content.
    */
