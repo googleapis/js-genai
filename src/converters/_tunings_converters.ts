@@ -1147,9 +1147,33 @@ export function tuningJobFromVertex(
     common.setValueByPath(toObject, ['customBaseModel'], fromCustomBaseModel);
   }
 
+  const fromEvaluateDatasetRuns = common.getValueByPath(fromObject, [
+    'evaluateDatasetRuns',
+  ]);
+  if (fromEvaluateDatasetRuns != null) {
+    let transformedList = fromEvaluateDatasetRuns;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return item;
+      });
+    }
+    common.setValueByPath(toObject, ['evaluateDatasetRuns'], transformedList);
+  }
+
   const fromExperiment = common.getValueByPath(fromObject, ['experiment']);
   if (fromExperiment != null) {
     common.setValueByPath(toObject, ['experiment'], fromExperiment);
+  }
+
+  const fromFullFineTuningSpec = common.getValueByPath(fromObject, [
+    'fullFineTuningSpec',
+  ]);
+  if (fromFullFineTuningSpec != null) {
+    common.setValueByPath(
+      toObject,
+      ['fullFineTuningSpec'],
+      fromFullFineTuningSpec,
+    );
   }
 
   const fromLabels = common.getValueByPath(fromObject, ['labels']);
@@ -1183,6 +1207,13 @@ export function tuningJobFromVertex(
       ['tunedModelDisplayName'],
       fromTunedModelDisplayName,
     );
+  }
+
+  const fromTuningJobState = common.getValueByPath(fromObject, [
+    'tuningJobState',
+  ]);
+  if (fromTuningJobState != null) {
+    common.setValueByPath(toObject, ['tuningJobState'], fromTuningJobState);
   }
 
   const fromVeoTuningSpec = common.getValueByPath(fromObject, [
