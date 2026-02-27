@@ -1693,11 +1693,11 @@ export function listBatchJobsResponseFromVertex(
 export function partToMldev(fromObject: types.Part): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromMediaResolution = common.getValueByPath(fromObject, [
-    'mediaResolution',
+  const fromExecutableCode = common.getValueByPath(fromObject, [
+    'executableCode',
   ]);
-  if (fromMediaResolution != null) {
-    common.setValueByPath(toObject, ['mediaResolution'], fromMediaResolution);
+  if (fromExecutableCode != null) {
+    common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
   }
 
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
@@ -1711,11 +1711,21 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
     );
   }
 
-  const fromExecutableCode = common.getValueByPath(fromObject, [
-    'executableCode',
+  const fromMediaResolution = common.getValueByPath(fromObject, [
+    'mediaResolution',
   ]);
-  if (fromExecutableCode != null) {
-    common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
+  if (fromMediaResolution != null) {
+    common.setValueByPath(toObject, ['mediaResolution'], fromMediaResolution);
+  }
+
+  const fromToolCall = common.getValueByPath(fromObject, ['toolCall']);
+  if (fromToolCall != null) {
+    common.setValueByPath(toObject, ['toolCall'], fromToolCall);
+  }
+
+  const fromToolResponse = common.getValueByPath(fromObject, ['toolResponse']);
+  if (fromToolResponse != null) {
+    common.setValueByPath(toObject, ['toolResponse'], fromToolResponse);
   }
 
   const fromFileData = common.getValueByPath(fromObject, ['fileData']);
@@ -1811,6 +1821,18 @@ export function toolConfigToMldev(
   ]);
   if (fromRetrievalConfig != null) {
     common.setValueByPath(toObject, ['retrievalConfig'], fromRetrievalConfig);
+  }
+
+  const fromIncludeServerSideToolInvocations = common.getValueByPath(
+    fromObject,
+    ['includeServerSideToolInvocations'],
+  );
+  if (fromIncludeServerSideToolInvocations != null) {
+    common.setValueByPath(
+      toObject,
+      ['includeServerSideToolInvocations'],
+      fromIncludeServerSideToolInvocations,
+    );
   }
 
   const fromFunctionCallingConfig = common.getValueByPath(fromObject, [
