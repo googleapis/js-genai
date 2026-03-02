@@ -23,9 +23,19 @@ const LIBRARY_LABEL = `google-genai-sdk/${SDK_VERSION}`;
 const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
 const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';
 
+// Duplicate NodeJS.Timout to avoid pulling in global NodeJS typings which
+// declares that setTimout returns a Timeout object.  This can cause issues
+// with using GenAI typings in a browser environment where the type declaration
+// will cause compilation errors with code that expects a number.
+// The Timeout interface is stable and the code below already duck-types the
+// return value.
+type NodeJSTimeout = {
+  unref(): void;
+}
+
 // Default retry options.
 // The config is based on https://cloud.google.com/storage/docs/retry-strategy.
-const DEFAULT_RETRY_ATTEMPTS = 5; // Including the initial call
+const DEFAULT_RETRY_ATTEMPTS = 5;  // Including the initial call
 // LINT.IfChange
 const DEFAULT_RETRY_HTTP_STATUS_CODES = [
   408, // Request timeout
@@ -494,14 +504,12 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
           () => abortController.abort(),
           httpOptions.timeout,
         );
-        if (
-          timeoutHandle &&
-          typeof (timeoutHandle as unknown as NodeJS.Timeout).unref ===
-            'function'
-        ) {
+        if (timeoutHandle &&
+            typeof (timeoutHandle as unknown as NodeJSTimeout).unref ===
+                'function') {
           // call unref to prevent nodejs process from hanging, see
           // https://nodejs.org/api/timers.html#timeoutunref
-          timeoutHandle.unref();
+          (timeoutHandle as unknown as NodeJSTimeout).unref();
         }
       }
       if (abortSignal) {
