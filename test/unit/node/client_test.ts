@@ -27,11 +27,9 @@ describe('Client', () => {
     setDefaultBaseUrls({});
   });
 
-  it('should not successfully initialize without any options', () => {
-    expect(() => {
-      const client = new GoogleGenAI({});
-      expect(client).toBeDefined();
-    }).toThrowError('API key must be set when using the Gemini API.');
+  it('should initialize without any options', () => {
+    const client = new GoogleGenAI({});
+    expect(client).toBeDefined();
   });
 
   it('should set apiKey from GOOGLE_API_KEY if present', () => {
@@ -68,9 +66,8 @@ describe('Client', () => {
   it('should not set apiKey if both GEMINI_API_KEY and GOOGLE_API_KEY are set to empty string', () => {
     process.env['GOOGLE_API_KEY'] = '';
     process.env['GEMINI_API_KEY'] = '';
-    expect(() => {
-      new GoogleGenAI({});
-    }).toThrowError('API key must be set when using the Gemini API.');
+    const client = new GoogleGenAI({});
+    expect(client['apiKey']).toBe(undefined);
   });
 
   it('should set vertexai from environment', () => {

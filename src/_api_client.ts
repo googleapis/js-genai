@@ -210,10 +210,7 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
     } else {
       // Gemini API
       if (!this.clientOptions.apiKey) {
-        throw new ApiError({
-          message: 'API key must be set when using the Gemini API.',
-          status: 403,
-        });
+        console.warn('API key should be set when using the Gemini API.');
       }
       initHttpOptions.apiVersion =
         this.clientOptions.apiVersion ?? GOOGLE_AI_API_DEFAULT_VERSION;
