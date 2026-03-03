@@ -52,6 +52,10 @@
       "import": "./dist/tokenizer/node.mjs",
       "require": "./dist/tokenizer/node.cjs",
       "default": "./dist/tokenizer/node.mjs"
+    },
+    "./vertex_internal": {
+      "types": "./dist/vertex_internal/index.d.ts",
+      "import": "./dist/vertex_internal/index.js"
     }
   },
   "scripts": {
@@ -102,7 +106,8 @@
     "dist/tokenizer/node.mjs.map",
     "dist/tokenizer/node.d.ts",
     "node/package.json",
-    "web/package.json"
+    "web/package.json",
+    "dist/vertex_internal"
   ],
   "devDependencies": {
     "@cfworker/json-schema": "^4.1.1",

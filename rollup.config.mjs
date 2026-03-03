@@ -121,4 +121,16 @@ export default [
     plugins: rollupPlugins,
     external: externalDeps,
   },
+
+  // Internal module, only for use by Vertex SDK
+  {
+    input: 'src/vertex_internal/index.ts',
+    output: {
+      file: 'dist/vertex_internal/index.js',
+      format: 'es',
+      sourcemap: true,
+    },
+    plugins: rollupPlugins,
+    external: externalDeps,
+  },
 ];
