@@ -14,7 +14,6 @@ import { sleep } from './internal/utils/sleep.js';
 export type { Logger, LogLevel } from './internal/utils/log.js';
 import { castToError, isAbortError } from './internal/errors.js';
 import type { APIResponseProps } from './internal/parse.js';
-import { getPlatformHeaders } from './internal/detect-platform.js';
 import * as Shims from './internal/shims.js';
 import * as Opts from './internal/request-options.js';
 import { VERSION } from './version.js';
@@ -759,13 +758,7 @@ export class BaseGeminiNextGenAPIClient {
 
     let headers = buildHeaders([
       idempotencyHeaders,
-      {
-        Accept: 'application/json',
-        'User-Agent': this.getUserAgent(),
-        'X-Stainless-Retry-Count': String(retryCount),
-        ...(options.timeout ? { 'X-Stainless-Timeout': String(Math.trunc(options.timeout / 1000)) } : {}),
-        ...getPlatformHeaders(),
-      },
+      { Accept: 'application/json', 'User-Agent': this.getUserAgent() },
       this._options.defaultHeaders,
       bodyHeaders,
       options.headers,
