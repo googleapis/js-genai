@@ -129,7 +129,9 @@ export class Models extends BaseModule {
         .map((index: number) => `tools[${index}]`)
         .join(', ');
       throw new Error(
-        `Automatic function calling with CallableTools (or MCP objects) and basic FunctionDeclarations is not yet supported. Incompatible tools found at ${formattedIndexes}.`,
+        `Automatic function calling with CallableTools (or MCP objects) and basic FunctionDeclarations is not yet supported. Incompatible tools found at ${
+          formattedIndexes
+        }.`,
       );
     }
 
@@ -260,7 +262,9 @@ export class Models extends BaseModule {
         .map((index: number) => `tools[${index}]`)
         .join(', ');
       throw new Error(
-        `Incompatible tools found at ${formattedIndexes}. Automatic function calling with CallableTools (or MCP objects) and basic FunctionDeclarations" is not yet supported.`,
+        `Incompatible tools found at ${
+          formattedIndexes
+        }. Automatic function calling with CallableTools (or MCP objects) and basic FunctionDeclarations" is not yet supported.`,
       );
     }
 
