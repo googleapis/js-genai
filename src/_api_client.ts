@@ -23,6 +23,22 @@ const LIBRARY_LABEL = `google-genai-sdk/${SDK_VERSION}`;
 const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
 const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';
 
+/**
+ * Partial definiion of the NodeJS.Timeout.
+ * https://nodejs.org/api/timers.html#timeoutunref
+ *
+ * Importing the full nodejs typings rewrites setTimeout / clearTimeout
+ * signatures on web builds. This causes compile errors in code that stores the
+ * timeout handle in an explicitly typed variable. E.g.:
+ * ```
+ * let timeoutHandle = 0;
+ * timeoutHandle = setTimeout(() => {}, 1000);
+ * ```
+ */
+declare interface NodeJSTimeout {
+  unref(): this;
+}
+
 // Default retry options.
 // The config is based on https://cloud.google.com/storage/docs/retry-strategy.
 const DEFAULT_RETRY_ATTEMPTS = 5; // Including the initial call
@@ -496,12 +512,12 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
         );
         if (
           timeoutHandle &&
-          typeof (timeoutHandle as unknown as NodeJS.Timeout).unref ===
+          typeof (timeoutHandle as unknown as NodeJSTimeout).unref ===
             'function'
         ) {
           // call unref to prevent nodejs process from hanging, see
           // https://nodejs.org/api/timers.html#timeoutunref
-          timeoutHandle.unref();
+          (timeoutHandle as unknown as NodeJSTimeout).unref();
         }
       }
       if (abortSignal) {
