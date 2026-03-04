@@ -52,6 +52,10 @@
       "import": "./dist/tokenizer/node.mjs",
       "require": "./dist/tokenizer/node.cjs",
       "default": "./dist/tokenizer/node.mjs"
+    },
+    "./vertex_internal": {
+      "types": "./dist/vertex_internal/index.d.ts",
+      "import": "./dist/vertex_internal/index.js"
     }
   },
   "scripts": {

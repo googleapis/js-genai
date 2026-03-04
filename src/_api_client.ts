@@ -163,6 +163,9 @@ export interface HttpRequest {
 /**
  * The ApiClient class is used to send requests to the Gemini API or Vertex AI
  * endpoints.
+ *
+ * WARNING: This is an internal API and may change without notice. Direct usage
+ * is not supported and may break your application.
  */
 export class ApiClient implements GeminiNextGenAPIClientAdapter {
   readonly clientOptions: ApiClientInitOptions;
