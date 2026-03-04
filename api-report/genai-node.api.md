@@ -1550,6 +1550,7 @@ export interface GenerateVideosConfig {
     personGeneration?: string;
     pubsubTopic?: string;
     referenceImages?: VideoGenerationReferenceImage[];
+    resizeMode?: string;
     resolution?: string;
     seed?: number;
 }
