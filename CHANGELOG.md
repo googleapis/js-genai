@@ -1,6 +1,15 @@
 # Changelog
 
 
+## [1.44.0](https://github.com/googleapis/js-genai/compare/v1.43.0...v1.44.0) (2026-03-04)
+
+
+### Features
+
+* Add gemini-3.1-flash-image-preview model ([175603b](https://github.com/googleapis/js-genai/commit/175603bacbc593a437264f807a411143cdccbd0a))
+* Support signature for all Interaction tool types ([b79108f](https://github.com/googleapis/js-genai/commit/b79108fdd60d11e45cac916e6ea369eac95ff570))
+* Update data types from discovery doc. ([249b15a](https://github.com/googleapis/js-genai/commit/249b15a3b948d1453719af2a7df32490de20b423))
+
 ## [1.43.0](https://github.com/googleapis/js-genai/compare/v1.42.0...v1.43.0) (2026-02-26)
 
 
