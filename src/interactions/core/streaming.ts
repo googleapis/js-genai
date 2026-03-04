@@ -7,7 +7,7 @@
 import { GeminiNextGenAPIClientError } from './error.js';
 import { type ReadableStream } from '../internal/shim-types.js';
 import { makeReadableStream } from '../internal/shims.js';
-import { findDoubleNewlineIndex, LineDecoder } from '../internal/decoders/line.js';
+import { LineDecoder } from '../internal/decoders/line.js';
 import { ReadableStreamToAsyncIterable } from '../internal/shims.js';
 import { isAbortError } from '../internal/errors.js';
 import { encodeUTF8 } from '../internal/utils/bytes.js';
@@ -222,7 +222,7 @@ export async function* _iterSSEMessages(
   const lineDecoder = new LineDecoder();
 
   const iter = ReadableStreamToAsyncIterable<Bytes>(response.body);
-  for await (const sseChunk of iterSSEChunks(iter)) {
+  for await (const sseChunk of iterBinaryChunks(iter)) {
     for (const line of lineDecoder.decode(sseChunk)) {
       const sse = sseDecoder.decode(line);
       if (sse) yield sse;
@@ -236,12 +236,10 @@ export async function* _iterSSEMessages(
 }
 
 /**
- * Given an async iterable iterator, iterates over it and yields full
- * SSE chunks, i.e. yields when a double new-line is encountered.
+ * Given an async iterable iterator, normalizes each chunk to a
+ * Uint8Array and yields it.
  */
-async function* iterSSEChunks(iterator: AsyncIterableIterator<Bytes>): AsyncGenerator<Uint8Array> {
-  let data = new Uint8Array();
-
+async function* iterBinaryChunks(iterator: AsyncIterableIterator<Bytes>): AsyncGenerator<Uint8Array> {
   for await (const chunk of iterator) {
     if (chunk == null) {
       continue;
@@ -252,20 +250,7 @@ async function* iterSSEChunks(iterator: AsyncIterableIterator<Bytes>): AsyncGene
       : typeof chunk === 'string' ? encodeUTF8(chunk)
       : chunk;
 
-    let newData = new Uint8Array(data.length + binaryChunk.length);
-    newData.set(data);
-    newData.set(binaryChunk, data.length);
-    data = newData;
-
-    let patternIndex;
-    while ((patternIndex = findDoubleNewlineIndex(data)) !== -1) {
-      yield data.slice(0, patternIndex);
-      data = data.slice(patternIndex);
-    }
-  }
-
-  if (data.length > 0) {
-    yield data;
+    yield binaryChunk;
   }
 }
 
