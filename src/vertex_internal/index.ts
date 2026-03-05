@@ -3,8 +3,8 @@
  * Copyright 2025 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
+
 /**
- * @packageDocumentation
  * Internal APIs for Vertex libraries
  * @experimental
  *
