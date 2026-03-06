@@ -405,6 +405,57 @@ describe('live', () => {
     expect(session).toBeDefined();
   });
 
+  it('connect Vertex should prefix model with project/location for publishers/ models', async () => {
+    const apiClient = new ApiClient({
+      auth: new FakeAuth(),
+      uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
+      vertexai: true,
+      project: 'my-project',
+      location: 'us-central1',
+    });
+    const websocketFactory = new FakeWebSocketFactory();
+    const live = new Live(apiClient, new FakeAuth(), websocketFactory);
+
+    let websocket: FakeWebSocket = new FakeWebSocket(
+      '',
+      {},
+      {
+        onopen: function () {},
+        onmessage: function (_e: MessageEvent) {},
+        onerror: function (_e: ErrorEvent) {},
+        onclose: function (_e: CloseEvent) {},
+      },
+    );
+    let websocketSpy: jasmine.Spy;
+    spyOn(websocket, 'connect').and.callThrough();
+    websocketSpy = spyOn(websocket, 'send').and.callThrough();
+    spyOn(websocketFactory, 'create').and.callFake(
+      (url, headers, callbacks) => {
+        websocket = new FakeWebSocket(url, headers, callbacks);
+        spyOn(websocket, 'connect').and.callThrough();
+        websocketSpy = spyOn(websocket, 'send').and.callThrough();
+        return websocket;
+      },
+    );
+
+    await live.connect({
+      model: 'gemini-2.0-flash-live-preview-04-09',
+      callbacks: {
+        onmessage: function (e: types.LiveServerMessage) {
+          void e;
+        },
+      },
+    });
+
+    expect(websocketSpy).toHaveBeenCalled();
+    const websocketSpyCall = websocketSpy.calls.all()[0];
+    const sentMessage = JSON.parse(websocketSpyCall.args[0]);
+    expect(sentMessage.setup.model).toBe(
+      'projects/my-project/locations/us-central1/publishers/google/models/gemini-2.0-flash-live-preview-04-09',
+    );
+  });
+
   it('connect should send setup message with context window compression config', async () => {
     const apiClient = new ApiClient({
       auth: new FakeAuth(),
@@ -912,6 +963,7 @@ describe('live', () => {
     const session = await live.connect({
       model: 'models/gemini-live-2.5-flash-preview',
       config: {
+        inputAudioTranscription: {},
         outputAudioTranscription: {},
       },
       callbacks: {
@@ -922,6 +974,9 @@ describe('live', () => {
     });
 
     const websocketSpyCall = websocketSpy.calls.all()[0];
+    expect(websocketSpyCall.args[0]).toBe(
+      '{"setup":{"model":"models/gemini-live-2.5-flash-preview","generationConfig":{"responseModalities":["AUDIO"]},"outputAudioTranscription":{}}}',
+    );
     expect(JSON.parse(websocketSpyCall.args[0])).toEqual({
       setup: {
         model: 'models/gemini-live-2.5-flash-preview',

@@ -4,8 +4,8 @@
     {
       "request": {
         "method": "POST",
-        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:generateContent",
-        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:generateContent HTTP/1.1",
+        "url": "/v1beta1/projects/REDACTED/locations/global/publishers/google/models/gemini-2.5-flash:generateContent",
+        "request": "POST /v1beta1/projects/REDACTED/locations/global/publishers/google/models/gemini-2.5-flash:generateContent HTTP/1.1",
         "headers": {
           "Accept": "*/*",
           "Accept-Encoding": "gzip, deflate",
@@ -51,7 +51,10 @@
                           "type": "STRING"
                         }
                       },
-                      "required": ["brightness", "colorTemperature"],
+                      "required": [
+                        "brightness",
+                        "colorTemperature"
+                      ],
                       "type": "OBJECT"
                     }
                   }
@@ -65,14 +68,15 @@
         "port": 443,
         "protocol": "https"
       },
-      "shaSum": "3fd3b531fea0b6dcc7ed44fd65d7995beaaa9b7f07cab44cc856cc408584cc85",
+      "shaSum": "4996600086a79d8c40832411b339f167aa508cfd3bab5e5bca520141636311ae",
       "response": {
         "statusCode": 200,
         "headers": {
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
           "Content-Encoding": "gzip",
-          "Content-Length": "1039",
+          "Content-Length": "842",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Tue, 26 Aug 2025 01:07:35 GMT",
+          "Date": "Thu, 12 Feb 2026 06:20:08 GMT",
           "Server": "scaffolding on HTTPServer2",
           "Vary": "Origin, X-Origin, Referer",
           "X-Content-Type-Options": "nosniff",
@@ -83,7 +87,7 @@
           {
             "candidates": [
               {
-                "avgLogprobs": -2.0492847987583707,
+                "avgLogprobs": -1.2195961815970284,
                 "content": {
                   "parts": [
                     {
@@ -94,22 +98,18 @@
                         },
                         "name": "controlLight"
                       },
-                      "thoughtSignature": "CvIDAcu98PB7ArfbWDdHoIXtFODnzFVPGORDW1yFZpFN53ww1I8ZUgfV/Wgqoaghxw1FGm/riSHqUK4WTYMd+hSdERklVnm9oY+lgO66Xfib5JmwSAfCod9nYsNqGq3u/DlnM5YOquqSQCzEZOODLyOppM6n3UmHVUViyH1aesMWf3pWJNxlZwKLBguHvkk2L9Yrp4sTXmBwFLNqWRLWvMh1FWvx+1QKGiAtNMKl/I+jUjlfiIHBslpth4+KypAmozV7TwpZxELtiLmTKThHeOtUG5Hw4eV82yunmyGrcrDU/yxCeK2K8DVyss/6te1tGaSQEpsTfjRzjqlEqzrIaJi4TnDYSskBmZA+dzDVcLm8TmfdDqulYGFcco4hPRJtPiechS6caa8HgMss3ZUm1QA2jikcNJCk5n4vwc09Ri3FGqqntL5OkpAd15hi7xrA329QjJAcR69IvNNKkFEU2UdimCWLGPCmQEXpH95x6Zs/t0+1C55NnidkjNdX44uETC/tKMg6VOLev1H0tcY2uidutAe61SN+ChFMA1G32oGSQnOzqSUAJ29pbHyIUPSs0o75862uOvFXbowqPeDaIyRFYoKUH9hdFMmcTb1iNMHDoG/cnRpcWRGC7XltIlRauzWB2NA5prEA5KlRw38RvmgJQsto"
+                      "thoughtSignature": "CuACAY89a1+ZNGNzPatCI8Ynt9sgYWVuDgS+7Pu5dnSISZKld2rcTFJY+GARHbenx5hw4dZ2S4jTp2sn50ohcZIVLf7IBjWUFUOrUJAhcb0PAVWwoQtq+p/ZfBPQs2RwHUv4qQKMgG/24Lftz5nhGJCTsIVL61fSSZrzI5bLdCSf4xyV+Fret1kWJsrUuiHFNibVB19ucBSDMHKbbZhb24Zx7TWQl9XMgOY/H+CLjiAQDqqeMzEr7gN3i2NUB2Jrr/vTJ6DCfuPtsfC8iFjfWv6k547ra9QU9qR4eWLuq/OR3V0oxJrgdjPASGAxMq+TxKLPAAlSYlT7SjVNITvbwTLWU4mE/HQ9jrpYwzzf0L1wCga0GwKNFxMIC763jW5SS0FavOi22l6XTLO/TwhGKNCPi3Gy4qg/mRx1peIHWYFDulKNeOmzKGXPNmSy9355obv4vuTUismng6Z3HhJ4Y9U82w=="
                     }
                   ],
                   "role": "model"
                 },
-                "finishReason": "STOP",
-                "score": -14.344993591308594
+                "finishReason": "STOP"
               }
             ],
-            "createTime": "2025-08-26T01:07:34.366947Z",
+            "createTime": "2026-02-12T06:20:08.038941Z",
             "modelVersion": "gemini-2.5-flash",
-            "responseId": "1gitaOOyFvuomecPstGWoQ0",
+            "responseId": "GHGNaZ2wAsXchMIP4oTLkAU",
             "usageMetadata": {
-              "billablePromptUsage": {
-                "textCount": 258
-              },
               "candidatesTokenCount": 7,
               "candidatesTokensDetails": [
                 {
@@ -117,15 +117,15 @@
                   "tokenCount": 7
                 }
               ],
-              "promptTokenCount": 73,
+              "promptTokenCount": 74,
               "promptTokensDetails": [
                 {
                   "modality": "TEXT",
-                  "tokenCount": 73
+                  "tokenCount": 74
                 }
               ],
-              "thoughtsTokenCount": 124,
-              "totalTokenCount": 204,
+              "thoughtsTokenCount": 73,
+              "totalTokenCount": 154,
               "trafficType": "ON_DEMAND"
             }
           }

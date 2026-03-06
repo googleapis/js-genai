@@ -251,6 +251,22 @@ export class Live {
         params.config.responseModalities = [types.Modality.AUDIO];
       }
     }
+
+    // Add inputAudioTranscription to setup message if provided
+    if (params.config?.inputAudioTranscription) {
+      clientMessage = {
+        setup: {
+          model: transformedModel,
+          inputAudioTranscription: params.config.inputAudioTranscription,
+          ...(params.config.generationConfig && {
+            generationConfig: params.config.generationConfig,
+          }),
+          ...(params.config.responseModalities && {
+            responseModalities: params.config.responseModalities,
+          }),
+        },
+      };
+    }
     if (params.config?.generationConfig) {
       // Raise deprecation warning for generationConfig.
       console.warn(
