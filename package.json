@@ -70,6 +70,8 @@
     "api-extractor:prod:node": "api-extractor run -c api-extractor.node.json --verbose",
     "api-extractor:prod:web": "api-extractor run -c api-extractor.web.json --verbose",
     "api-extractor:prod:tokenizer-node": "api-extractor run -c api-extractor.tokenizer-node.json --verbose",
+    "api-extractor:dev:vertex_internal": "api-extractor run -c api-extractor.vertex_internal.json --local --verbose",
+    "api-extractor:prod:vertex_internal": "api-extractor run -c api-extractor.vertex_internal.json --verbose",
     "unit-test": "tsc && cp src/cross/sentencepiece/sentencepiece_model.pb.js dist/src/cross/sentencepiece/ && jasmine dist/test/unit/**/*_test.js dist/test/unit/**/**/*_test.js dist/test/unit/*_test.js",
     "system-test": "tsc && jasmine dist/test/system/**/*_test.js",
     "test-server-tests": "tsc && GOOGLE_CLOUD_PROJECT=googcloudproj GOOGLE_CLOUD_LOCATION=googcloudloc jasmine dist/test/system/node/*_test.js -- --test-server",
@@ -105,6 +107,9 @@
     "dist/tokenizer/node.cjs",
     "dist/tokenizer/node.mjs.map",
     "dist/tokenizer/node.d.ts",
+    "dist/vertex_internal/index.js",
+    "dist/vertex_internal/index.d.ts",
+    "dist/vertex_internal/index.js.map",
     "node/package.json",
     "web/package.json"
   ],
