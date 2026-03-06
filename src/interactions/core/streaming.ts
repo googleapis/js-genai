@@ -222,8 +222,8 @@ export async function* _iterSSEMessages(
   const lineDecoder = new LineDecoder();
 
   const iter = ReadableStreamToAsyncIterable<Bytes>(response.body);
-  for await (const sseChunk of iterBinaryChunks(iter)) {
-    for (const line of lineDecoder.decode(sseChunk)) {
+  for await (const chunk of iterUint8Chunks(iter)) {
+    for (const line of lineDecoder.decode(chunk)) {
       const sse = sseDecoder.decode(line);
       if (sse) yield sse;
     }
@@ -239,14 +239,15 @@ export async function* _iterSSEMessages(
  * Given an async iterable iterator, normalizes each chunk to a
  * Uint8Array and yields it.
  */
-async function* iterBinaryChunks(iterator: AsyncIterableIterator<Bytes>): AsyncGenerator<Uint8Array> {
+async function* iterUint8Chunks(iterator: AsyncIterableIterator<Bytes>): AsyncGenerator<Uint8Array> {
   for await (const chunk of iterator) {
     if (chunk == null) {
       continue;
     }
 
     const binaryChunk =
-      chunk instanceof ArrayBuffer ? new Uint8Array(chunk)
+      chunk instanceof Uint8Array ? chunk
+      : chunk instanceof ArrayBuffer ? new Uint8Array(chunk)
       : typeof chunk === 'string' ? encodeUTF8(chunk)
       : chunk;
 
@@ -293,7 +294,14 @@ class SSEDecoder {
       return null;
     }
 
-    let [fieldname, _, value] = partition(line, ':');
+    const colonIndex = line.indexOf(':');
+    if (colonIndex === -1) {
+      // No colon, entire line is fieldname
+      return null;
+    }
+
+    const fieldname = line.substring(0, colonIndex);
+    let value = line.substring(colonIndex + 1);
 
     if (value.startsWith(' ')) {
       value = value.substring(1);
@@ -307,13 +315,4 @@ class SSEDecoder {
 
     return null;
   }
-}
-
-function partition(str: string, delimiter: string): [string, string, string] {
-  const index = str.indexOf(delimiter);
-  if (index !== -1) {
-    return [str.substring(0, index), delimiter, str.substring(index + delimiter.length)];
-  }
-
-  return [str, '', ''];
 }
