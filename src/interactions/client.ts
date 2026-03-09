@@ -16,6 +16,7 @@ import { castToError, isAbortError } from './internal/errors.js';
 import type { APIResponseProps } from './internal/parse.js';
 import * as Shims from './internal/shims.js';
 import * as Opts from './internal/request-options.js';
+import { stringifyQuery } from './internal/utils/query.js';
 import { VERSION } from './version.js';
 import * as Errors from './core/error.js';
 import * as Uploads from './core/uploads.js';
@@ -316,21 +317,8 @@ export class BaseGeminiNextGenAPIClient {
   /**
    * Basic re-implementation of `qs.stringify` for primitive types.
    */
-  protected stringifyQuery(query: Record<string, unknown>): string {
-    return Object.entries(query)
-      .filter(([_, value]) => typeof value !== 'undefined')
-      .map(([key, value]) => {
-        if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
-          return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
-        }
-        if (value === null) {
-          return `${encodeURIComponent(key)}=`;
-        }
-        throw new Errors.GeminiNextGenAPIClientError(
-          `Cannot stringify type ${typeof value}; Expected string, number, boolean, or null. If you need to pass nested query parameters, you can manually encode them, e.g. { query: { 'foo[key1]': value1, 'foo[key2]': value2 } }, and please open a GitHub issue requesting better support for your use case.`,
-        );
-      })
-      .join('&');
+  protected stringifyQuery(query: object | Record<string, unknown>): string {
+    return stringifyQuery(query);
   }
 
   private getUserAgent(): string {
@@ -362,12 +350,13 @@ export class BaseGeminiNextGenAPIClient {
       : new URL(baseURL + (baseURL.endsWith('/') && path.startsWith('/') ? path.slice(1) : path));
 
     const defaultQuery = this.defaultQuery();
-    if (!isEmptyObj(defaultQuery)) {
-      query = { ...defaultQuery, ...query };
+    const pathQuery = Object.fromEntries(url.searchParams);
+    if (!isEmptyObj(defaultQuery) || !isEmptyObj(pathQuery)) {
+      query = { ...pathQuery, ...defaultQuery, ...query };
     }
 
     if (typeof query === 'object' && query && !Array.isArray(query)) {
-      url.search = this.stringifyQuery(query as Record<string, unknown>);
+      url.search = this.stringifyQuery(query);
     }
 
     return url.toString();
@@ -684,9 +673,9 @@ export class BaseGeminiNextGenAPIClient {
       }
     }
 
-    // If the API asks us to wait a certain amount of time (and it's a reasonable amount),
-    // just do what it says, but otherwise calculate a default
-    if (!(timeoutMillis && 0 <= timeoutMillis && timeoutMillis < 60 * 1000)) {
+    // If the API asks us to wait a certain amount of time, just do what it
+    // says, but otherwise calculate a default
+    if (timeoutMillis === undefined) {
       const maxRetries = options.maxRetries ?? this.maxRetries;
       timeoutMillis = this.calculateDefaultRetryTimeoutMillis(retriesRemaining, maxRetries);
     }
@@ -814,7 +803,7 @@ export class BaseGeminiNextGenAPIClient {
     ) {
       return {
         bodyHeaders: { 'content-type': 'application/x-www-form-urlencoded' },
-        body: this.stringifyQuery(body as Record<string, unknown>),
+        body: this.stringifyQuery(body),
       };
     } else {
       return this.encoder({ body, headers });
