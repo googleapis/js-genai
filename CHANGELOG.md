@@ -1,6 +1,37 @@
 # Changelog
 
 
+## [1.44.0](https://github.com/googleapis/js-genai/compare/v1.43.0...v1.44.0) (2026-03-04)
+
+
+### Features
+
+* Add gemini-3.1-flash-image-preview model ([175603b](https://github.com/googleapis/js-genai/commit/175603bacbc593a437264f807a411143cdccbd0a))
+* Support signature for all Interaction tool types ([b79108f](https://github.com/googleapis/js-genai/commit/b79108fdd60d11e45cac916e6ea369eac95ff570))
+* Update data types from discovery doc. ([249b15a](https://github.com/googleapis/js-genai/commit/249b15a3b948d1453719af2a7df32490de20b423))
+
+## [1.43.0](https://github.com/googleapis/js-genai/compare/v1.42.0...v1.43.0) (2026-02-26)
+
+
+### Features
+
+* Add gemini-3.1-pro-preview to list of models in Interactions ([14775fe](https://github.com/googleapis/js-genai/commit/14775fefb814c21d8f34b776935b72d7f20896bd))
+* Add Image Grounding support to GoogleSearch tool ([9187ca7](https://github.com/googleapis/js-genai/commit/9187ca748b9de10037134e34e4da8ca06f0d2696))
+* enable server side MCP and disable all other AFC when server side MCP is configured. ([c7888c4](https://github.com/googleapis/js-genai/commit/c7888c4aec34b7f86983ea0c55c499c1f8d089c2))
+* Support more image sizes and resolutions ([54f4145](https://github.com/googleapis/js-genai/commit/54f41457984fc451e659ab594086bc462486e9d0))
+
+
+### Bug Fixes
+
+* change interactions media mime type to enum (breaking change for experimental feature) ([7c2d5b2](https://github.com/googleapis/js-genai/commit/7c2d5b29b8e7d2a146ec1a117ccef4fe13b4362e))
+
+## [1.42.0](https://github.com/googleapis/js-genai/compare/v1.41.0...v1.42.0) (2026-02-18)
+
+
+### Features
+
+* Support multimodal embedding for Gemini Embedding 2.0 and support MaaS models in Models.embed_content() (Vertex AI API) ([944ae97](https://github.com/googleapis/js-genai/commit/944ae97f33168aa36612f4fec9717726b9d03629))
+
 ## [1.41.0](https://github.com/googleapis/js-genai/compare/v1.40.0...v1.41.0) (2026-02-10)
 
 

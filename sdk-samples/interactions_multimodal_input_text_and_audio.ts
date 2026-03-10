@@ -30,7 +30,7 @@ async function createInteractionsFromMLDev() {
       {
         type: 'audio',
         data: base64Audio,
-        mime_type: 'audio/mpeg',
+        mime_type: 'audio/mp3',
       },
     ],
   });

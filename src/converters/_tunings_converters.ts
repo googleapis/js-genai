@@ -629,6 +629,345 @@ export function createTuningJobParametersPrivateToVertex(
   return toObject;
 }
 
+export function generationConfigFromVertex(
+  fromObject: types.GenerationConfig,
+  _rootObject?: unknown,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromModelSelectionConfig = common.getValueByPath(fromObject, [
+    'modelConfig',
+  ]);
+  if (fromModelSelectionConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['modelSelectionConfig'],
+      fromModelSelectionConfig,
+    );
+  }
+
+  const fromResponseJsonSchema = common.getValueByPath(fromObject, [
+    'responseJsonSchema',
+  ]);
+  if (fromResponseJsonSchema != null) {
+    common.setValueByPath(
+      toObject,
+      ['responseJsonSchema'],
+      fromResponseJsonSchema,
+    );
+  }
+
+  const fromAudioTimestamp = common.getValueByPath(fromObject, [
+    'audioTimestamp',
+  ]);
+  if (fromAudioTimestamp != null) {
+    common.setValueByPath(toObject, ['audioTimestamp'], fromAudioTimestamp);
+  }
+
+  const fromCandidateCount = common.getValueByPath(fromObject, [
+    'candidateCount',
+  ]);
+  if (fromCandidateCount != null) {
+    common.setValueByPath(toObject, ['candidateCount'], fromCandidateCount);
+  }
+
+  const fromEnableAffectiveDialog = common.getValueByPath(fromObject, [
+    'enableAffectiveDialog',
+  ]);
+  if (fromEnableAffectiveDialog != null) {
+    common.setValueByPath(
+      toObject,
+      ['enableAffectiveDialog'],
+      fromEnableAffectiveDialog,
+    );
+  }
+
+  const fromFrequencyPenalty = common.getValueByPath(fromObject, [
+    'frequencyPenalty',
+  ]);
+  if (fromFrequencyPenalty != null) {
+    common.setValueByPath(toObject, ['frequencyPenalty'], fromFrequencyPenalty);
+  }
+
+  const fromLogprobs = common.getValueByPath(fromObject, ['logprobs']);
+  if (fromLogprobs != null) {
+    common.setValueByPath(toObject, ['logprobs'], fromLogprobs);
+  }
+
+  const fromMaxOutputTokens = common.getValueByPath(fromObject, [
+    'maxOutputTokens',
+  ]);
+  if (fromMaxOutputTokens != null) {
+    common.setValueByPath(toObject, ['maxOutputTokens'], fromMaxOutputTokens);
+  }
+
+  const fromMediaResolution = common.getValueByPath(fromObject, [
+    'mediaResolution',
+  ]);
+  if (fromMediaResolution != null) {
+    common.setValueByPath(toObject, ['mediaResolution'], fromMediaResolution);
+  }
+
+  const fromPresencePenalty = common.getValueByPath(fromObject, [
+    'presencePenalty',
+  ]);
+  if (fromPresencePenalty != null) {
+    common.setValueByPath(toObject, ['presencePenalty'], fromPresencePenalty);
+  }
+
+  const fromResponseLogprobs = common.getValueByPath(fromObject, [
+    'responseLogprobs',
+  ]);
+  if (fromResponseLogprobs != null) {
+    common.setValueByPath(toObject, ['responseLogprobs'], fromResponseLogprobs);
+  }
+
+  const fromResponseMimeType = common.getValueByPath(fromObject, [
+    'responseMimeType',
+  ]);
+  if (fromResponseMimeType != null) {
+    common.setValueByPath(toObject, ['responseMimeType'], fromResponseMimeType);
+  }
+
+  const fromResponseModalities = common.getValueByPath(fromObject, [
+    'responseModalities',
+  ]);
+  if (fromResponseModalities != null) {
+    common.setValueByPath(
+      toObject,
+      ['responseModalities'],
+      fromResponseModalities,
+    );
+  }
+
+  const fromResponseSchema = common.getValueByPath(fromObject, [
+    'responseSchema',
+  ]);
+  if (fromResponseSchema != null) {
+    common.setValueByPath(toObject, ['responseSchema'], fromResponseSchema);
+  }
+
+  const fromRoutingConfig = common.getValueByPath(fromObject, [
+    'routingConfig',
+  ]);
+  if (fromRoutingConfig != null) {
+    common.setValueByPath(toObject, ['routingConfig'], fromRoutingConfig);
+  }
+
+  const fromSeed = common.getValueByPath(fromObject, ['seed']);
+  if (fromSeed != null) {
+    common.setValueByPath(toObject, ['seed'], fromSeed);
+  }
+
+  const fromSpeechConfig = common.getValueByPath(fromObject, ['speechConfig']);
+  if (fromSpeechConfig != null) {
+    common.setValueByPath(toObject, ['speechConfig'], fromSpeechConfig);
+  }
+
+  const fromStopSequences = common.getValueByPath(fromObject, [
+    'stopSequences',
+  ]);
+  if (fromStopSequences != null) {
+    common.setValueByPath(toObject, ['stopSequences'], fromStopSequences);
+  }
+
+  const fromTemperature = common.getValueByPath(fromObject, ['temperature']);
+  if (fromTemperature != null) {
+    common.setValueByPath(toObject, ['temperature'], fromTemperature);
+  }
+
+  const fromThinkingConfig = common.getValueByPath(fromObject, [
+    'thinkingConfig',
+  ]);
+  if (fromThinkingConfig != null) {
+    common.setValueByPath(toObject, ['thinkingConfig'], fromThinkingConfig);
+  }
+
+  const fromTopK = common.getValueByPath(fromObject, ['topK']);
+  if (fromTopK != null) {
+    common.setValueByPath(toObject, ['topK'], fromTopK);
+  }
+
+  const fromTopP = common.getValueByPath(fromObject, ['topP']);
+  if (fromTopP != null) {
+    common.setValueByPath(toObject, ['topP'], fromTopP);
+  }
+
+  return toObject;
+}
+
+export function generationConfigToVertex(
+  fromObject: types.GenerationConfig,
+  _rootObject?: unknown,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromModelSelectionConfig = common.getValueByPath(fromObject, [
+    'modelSelectionConfig',
+  ]);
+  if (fromModelSelectionConfig != null) {
+    common.setValueByPath(toObject, ['modelConfig'], fromModelSelectionConfig);
+  }
+
+  const fromResponseJsonSchema = common.getValueByPath(fromObject, [
+    'responseJsonSchema',
+  ]);
+  if (fromResponseJsonSchema != null) {
+    common.setValueByPath(
+      toObject,
+      ['responseJsonSchema'],
+      fromResponseJsonSchema,
+    );
+  }
+
+  const fromAudioTimestamp = common.getValueByPath(fromObject, [
+    'audioTimestamp',
+  ]);
+  if (fromAudioTimestamp != null) {
+    common.setValueByPath(toObject, ['audioTimestamp'], fromAudioTimestamp);
+  }
+
+  const fromCandidateCount = common.getValueByPath(fromObject, [
+    'candidateCount',
+  ]);
+  if (fromCandidateCount != null) {
+    common.setValueByPath(toObject, ['candidateCount'], fromCandidateCount);
+  }
+
+  const fromEnableAffectiveDialog = common.getValueByPath(fromObject, [
+    'enableAffectiveDialog',
+  ]);
+  if (fromEnableAffectiveDialog != null) {
+    common.setValueByPath(
+      toObject,
+      ['enableAffectiveDialog'],
+      fromEnableAffectiveDialog,
+    );
+  }
+
+  const fromFrequencyPenalty = common.getValueByPath(fromObject, [
+    'frequencyPenalty',
+  ]);
+  if (fromFrequencyPenalty != null) {
+    common.setValueByPath(toObject, ['frequencyPenalty'], fromFrequencyPenalty);
+  }
+
+  const fromLogprobs = common.getValueByPath(fromObject, ['logprobs']);
+  if (fromLogprobs != null) {
+    common.setValueByPath(toObject, ['logprobs'], fromLogprobs);
+  }
+
+  const fromMaxOutputTokens = common.getValueByPath(fromObject, [
+    'maxOutputTokens',
+  ]);
+  if (fromMaxOutputTokens != null) {
+    common.setValueByPath(toObject, ['maxOutputTokens'], fromMaxOutputTokens);
+  }
+
+  const fromMediaResolution = common.getValueByPath(fromObject, [
+    'mediaResolution',
+  ]);
+  if (fromMediaResolution != null) {
+    common.setValueByPath(toObject, ['mediaResolution'], fromMediaResolution);
+  }
+
+  const fromPresencePenalty = common.getValueByPath(fromObject, [
+    'presencePenalty',
+  ]);
+  if (fromPresencePenalty != null) {
+    common.setValueByPath(toObject, ['presencePenalty'], fromPresencePenalty);
+  }
+
+  const fromResponseLogprobs = common.getValueByPath(fromObject, [
+    'responseLogprobs',
+  ]);
+  if (fromResponseLogprobs != null) {
+    common.setValueByPath(toObject, ['responseLogprobs'], fromResponseLogprobs);
+  }
+
+  const fromResponseMimeType = common.getValueByPath(fromObject, [
+    'responseMimeType',
+  ]);
+  if (fromResponseMimeType != null) {
+    common.setValueByPath(toObject, ['responseMimeType'], fromResponseMimeType);
+  }
+
+  const fromResponseModalities = common.getValueByPath(fromObject, [
+    'responseModalities',
+  ]);
+  if (fromResponseModalities != null) {
+    common.setValueByPath(
+      toObject,
+      ['responseModalities'],
+      fromResponseModalities,
+    );
+  }
+
+  const fromResponseSchema = common.getValueByPath(fromObject, [
+    'responseSchema',
+  ]);
+  if (fromResponseSchema != null) {
+    common.setValueByPath(toObject, ['responseSchema'], fromResponseSchema);
+  }
+
+  const fromRoutingConfig = common.getValueByPath(fromObject, [
+    'routingConfig',
+  ]);
+  if (fromRoutingConfig != null) {
+    common.setValueByPath(toObject, ['routingConfig'], fromRoutingConfig);
+  }
+
+  const fromSeed = common.getValueByPath(fromObject, ['seed']);
+  if (fromSeed != null) {
+    common.setValueByPath(toObject, ['seed'], fromSeed);
+  }
+
+  const fromSpeechConfig = common.getValueByPath(fromObject, ['speechConfig']);
+  if (fromSpeechConfig != null) {
+    common.setValueByPath(toObject, ['speechConfig'], fromSpeechConfig);
+  }
+
+  const fromStopSequences = common.getValueByPath(fromObject, [
+    'stopSequences',
+  ]);
+  if (fromStopSequences != null) {
+    common.setValueByPath(toObject, ['stopSequences'], fromStopSequences);
+  }
+
+  const fromTemperature = common.getValueByPath(fromObject, ['temperature']);
+  if (fromTemperature != null) {
+    common.setValueByPath(toObject, ['temperature'], fromTemperature);
+  }
+
+  const fromThinkingConfig = common.getValueByPath(fromObject, [
+    'thinkingConfig',
+  ]);
+  if (fromThinkingConfig != null) {
+    common.setValueByPath(toObject, ['thinkingConfig'], fromThinkingConfig);
+  }
+
+  const fromTopK = common.getValueByPath(fromObject, ['topK']);
+  if (fromTopK != null) {
+    common.setValueByPath(toObject, ['topK'], fromTopK);
+  }
+
+  const fromTopP = common.getValueByPath(fromObject, ['topP']);
+  if (fromTopP != null) {
+    common.setValueByPath(toObject, ['topP'], fromTopP);
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['enableEnhancedCivicAnswers']) !==
+    undefined
+  ) {
+    throw new Error(
+      'enableEnhancedCivicAnswers parameter is not supported in Vertex AI.',
+    );
+  }
+
+  return toObject;
+}
+
 export function getTuningJobParametersToMldev(
   fromObject: types.GetTuningJobParameters,
   _rootObject?: unknown,
@@ -1147,9 +1486,33 @@ export function tuningJobFromVertex(
     common.setValueByPath(toObject, ['customBaseModel'], fromCustomBaseModel);
   }
 
+  const fromEvaluateDatasetRuns = common.getValueByPath(fromObject, [
+    'evaluateDatasetRuns',
+  ]);
+  if (fromEvaluateDatasetRuns != null) {
+    let transformedList = fromEvaluateDatasetRuns;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return item;
+      });
+    }
+    common.setValueByPath(toObject, ['evaluateDatasetRuns'], transformedList);
+  }
+
   const fromExperiment = common.getValueByPath(fromObject, ['experiment']);
   if (fromExperiment != null) {
     common.setValueByPath(toObject, ['experiment'], fromExperiment);
+  }
+
+  const fromFullFineTuningSpec = common.getValueByPath(fromObject, [
+    'fullFineTuningSpec',
+  ]);
+  if (fromFullFineTuningSpec != null) {
+    common.setValueByPath(
+      toObject,
+      ['fullFineTuningSpec'],
+      fromFullFineTuningSpec,
+    );
   }
 
   const fromLabels = common.getValueByPath(fromObject, ['labels']);
@@ -1183,6 +1546,13 @@ export function tuningJobFromVertex(
       ['tunedModelDisplayName'],
       fromTunedModelDisplayName,
     );
+  }
+
+  const fromTuningJobState = common.getValueByPath(fromObject, [
+    'tuningJobState',
+  ]);
+  if (fromTuningJobState != null) {
+    common.setValueByPath(toObject, ['tuningJobState'], fromTuningJobState);
   }
 
   const fromVeoTuningSpec = common.getValueByPath(fromObject, [

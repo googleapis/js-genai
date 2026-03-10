@@ -55,15 +55,19 @@ export const createPathTagFunction = (pathEncoder = encodeURIPath) =>
     }, '');
 
     const pathOnly = path.split(/[?#]/, 1)[0]!;
-    const invalidSegmentPattern = /(?<=^|\/)(?:\.|%2e){1,2}(?=\/|$)/gi;
+    const invalidSegmentPattern = /(^|\/)(?:\.|%2e){1,2}(?=\/|$)/gi;
     let match;
 
     // Find all invalid segments
     while ((match = invalidSegmentPattern.exec(pathOnly)) !== null) {
+      const hasLeadingSlash = match[0].startsWith('/');
+      const offset = hasLeadingSlash ? 1 : 0;
+      const cleanMatch = hasLeadingSlash ? match[0].slice(1) : match[0];
+
       invalidSegments.push({
-        start: match.index,
-        length: match[0].length,
-        error: `Value "${match[0]}" can\'t be safely passed as a path parameter`,
+        start: match.index + offset,
+        length: cleanMatch.length,
+        error: `Value "${cleanMatch}" can\'t be safely passed as a path parameter`,
       });
     }
 

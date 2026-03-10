@@ -18,10 +18,26 @@ const CONTENT_TYPE_HEADER = 'Content-Type';
 const SERVER_TIMEOUT_HEADER = 'X-Server-Timeout';
 const USER_AGENT_HEADER = 'User-Agent';
 export const GOOGLE_API_CLIENT_HEADER = 'x-goog-api-client';
-export const SDK_VERSION = '1.41.0'; // x-release-please-version
+export const SDK_VERSION = '1.44.0'; // x-release-please-version
 const LIBRARY_LABEL = `google-genai-sdk/${SDK_VERSION}`;
 const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
 const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';
+
+/**
+ * Partial definiion of the NodeJS.Timeout.
+ * https://nodejs.org/api/timers.html#timeoutunref
+ *
+ * Importing the full nodejs typings rewrites setTimeout / clearTimeout
+ * signatures on web builds. This causes compile errors in code that stores the
+ * timeout handle in an explicitly typed variable. E.g.:
+ * ```
+ * let timeoutHandle = 0;
+ * timeoutHandle = setTimeout(() => {}, 1000);
+ * ```
+ */
+declare interface NodeJSTimeout {
+  unref(): this;
+}
 
 // Default retry options.
 // The config is based on https://cloud.google.com/storage/docs/retry-strategy.
@@ -147,6 +163,9 @@ export interface HttpRequest {
 /**
  * The ApiClient class is used to send requests to the Gemini API or Vertex AI
  * endpoints.
+ *
+ * WARNING: This is an internal API and may change without notice. Direct usage
+ * is not supported and may break your application.
  */
 export class ApiClient implements GeminiNextGenAPIClientAdapter {
   readonly clientOptions: ApiClientInitOptions;
@@ -212,10 +231,7 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
     } else {
       // Gemini API
       if (!this.clientOptions.apiKey) {
-        throw new ApiError({
-          message: 'API key must be set when using the Gemini API.',
-          status: 403,
-        });
+        console.warn('API key should be set when using the Gemini API.');
       }
       initHttpOptions.apiVersion =
         this.clientOptions.apiVersion ?? GOOGLE_AI_API_DEFAULT_VERSION;
@@ -501,12 +517,12 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
         );
         if (
           timeoutHandle &&
-          typeof (timeoutHandle as unknown as NodeJS.Timeout).unref ===
+          typeof (timeoutHandle as unknown as NodeJSTimeout).unref ===
             'function'
         ) {
           // call unref to prevent nodejs process from hanging, see
           // https://nodejs.org/api/timers.html#timeoutunref
-          timeoutHandle.unref();
+          (timeoutHandle as unknown as NodeJSTimeout).unref();
         }
 
         const isNode = typeof process !== 'undefined' && process.versions?.node;

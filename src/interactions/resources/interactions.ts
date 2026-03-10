@@ -195,25 +195,13 @@ export interface AudioContent {
   /**
    * The mime type of the audio.
    */
-  mime_type?: AudioMimeType;
+  mime_type?: 'audio/wav' | 'audio/mp3' | 'audio/aiff' | 'audio/aac' | 'audio/ogg' | 'audio/flac';
 
   /**
    * The URI of the audio.
    */
   uri?: string;
 }
-
-/**
- * The mime type of the audio.
- */
-export type AudioMimeType =
-  | 'audio/wav'
-  | 'audio/mp3'
-  | 'audio/aiff'
-  | 'audio/aac'
-  | 'audio/ogg'
-  | 'audio/flac'
-  | (string & {});
 
 /**
  * The arguments to pass to the code execution.
@@ -234,39 +222,44 @@ export interface CodeExecutionCallArguments {
  * Code execution content.
  */
 export interface CodeExecutionCallContent {
-  type: 'code_execution_call';
-
   /**
    * A unique ID for this specific tool call.
    */
-  id?: string;
+  id: string;
 
   /**
    * The arguments to pass to the code execution.
    */
-  arguments?: CodeExecutionCallArguments;
+  arguments: CodeExecutionCallArguments;
+
+  type: 'code_execution_call';
+
+  /**
+   * A signature hash for backend validation.
+   */
+  signature?: string;
 }
 
 /**
  * Code execution result content.
  */
 export interface CodeExecutionResultContent {
-  type: 'code_execution_result';
-
   /**
    * ID to match the ID from the code execution call block.
    */
-  call_id?: string;
+  call_id: string;
+
+  /**
+   * The output of the code execution.
+   */
+  result: string;
+
+  type: 'code_execution_result';
 
   /**
    * Whether the code execution resulted in an error.
    */
   is_error?: boolean;
-
-  /**
-   * The output of the code execution.
-   */
-  result?: string;
 
   /**
    * A signature hash for backend validation.
@@ -298,7 +291,7 @@ export type Content =
   | FileSearchResultContent;
 
 export interface ContentDelta {
-  delta?:
+  delta:
     | ContentDelta.TextDelta
     | ContentDelta.ImageDelta
     | ContentDelta.AudioDelta
@@ -319,26 +312,26 @@ export interface ContentDelta {
     | ContentDelta.FileSearchCallDelta
     | ContentDelta.FileSearchResultDelta;
 
+  event_type: 'content.delta';
+
+  index: number;
+
   /**
    * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
-
-  event_type?: 'content.delta';
-
-  index?: number;
 }
 
 export namespace ContentDelta {
   export interface TextDelta {
+    text: string;
+
     type: 'text';
 
     /**
      * Citation information for model-generated content.
      */
     annotations?: Array<InteractionsAPI.Annotation>;
-
-    text?: string;
   }
 
   export interface ImageDelta {
@@ -346,10 +339,7 @@ export namespace ContentDelta {
 
     data?: string;
 
-    /**
-     * The mime type of the image.
-     */
-    mime_type?: InteractionsAPI.ImageMimeType;
+    mime_type?: 'image/png' | 'image/jpeg' | 'image/webp' | 'image/heic' | 'image/heif';
 
     /**
      * The resolution of the media.
@@ -364,10 +354,7 @@ export namespace ContentDelta {
 
     data?: string;
 
-    /**
-     * The mime type of the audio.
-     */
-    mime_type?: InteractionsAPI.AudioMimeType;
+    mime_type?: 'audio/wav' | 'audio/mp3' | 'audio/aiff' | 'audio/aac' | 'audio/ogg' | 'audio/flac';
 
     uri?: string;
   }
@@ -377,10 +364,7 @@ export namespace ContentDelta {
 
     data?: string;
 
-    /**
-     * The mime type of the document.
-     */
-    mime_type?: InteractionsAPI.DocumentMimeType;
+    mime_type?: 'application/pdf';
 
     uri?: string;
   }
@@ -390,10 +374,16 @@ export namespace ContentDelta {
 
     data?: string;
 
-    /**
-     * The mime type of the video.
-     */
-    mime_type?: InteractionsAPI.VideoMimeType;
+    mime_type?:
+      | 'video/mp4'
+      | 'video/mpeg'
+      | 'video/mpg'
+      | 'video/mov'
+      | 'video/avi'
+      | 'video/x-flv'
+      | 'video/webm'
+      | 'video/wmv'
+      | 'video/3gpp';
 
     /**
      * The resolution of the media.
@@ -422,34 +412,44 @@ export namespace ContentDelta {
   }
 
   export interface FunctionCallDelta {
-    type: 'function_call';
-
     /**
      * A unique ID for this specific tool call.
      */
-    id?: string;
+    id: string;
 
-    arguments?: { [key: string]: unknown };
+    arguments: { [key: string]: unknown };
 
-    name?: string;
+    name: string;
+
+    type: 'function_call';
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
   }
 
   export interface FunctionResultDelta {
-    type: 'function_result';
-
     /**
      * ID to match the ID from the function call block.
      */
-    call_id?: string;
+    call_id: string;
+
+    /**
+     * Tool call result delta.
+     */
+    result: FunctionResultDelta.Items | unknown | string;
+
+    type: 'function_result';
 
     is_error?: boolean;
 
     name?: string;
 
     /**
-     * Tool call result delta.
+     * A signature hash for backend validation.
      */
-    result?: FunctionResultDelta.Items | unknown | string;
+    signature?: string;
   }
 
   export namespace FunctionResultDelta {
@@ -459,123 +459,157 @@ export namespace ContentDelta {
   }
 
   export interface CodeExecutionCallDelta {
-    type: 'code_execution_call';
-
     /**
      * A unique ID for this specific tool call.
      */
-    id?: string;
+    id: string;
 
     /**
      * The arguments to pass to the code execution.
      */
-    arguments?: InteractionsAPI.CodeExecutionCallArguments;
+    arguments: InteractionsAPI.CodeExecutionCallArguments;
+
+    type: 'code_execution_call';
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
   }
 
   export interface CodeExecutionResultDelta {
-    type: 'code_execution_result';
-
     /**
      * ID to match the ID from the function call block.
      */
-    call_id?: string;
+    call_id: string;
+
+    result: string;
+
+    type: 'code_execution_result';
 
     is_error?: boolean;
 
-    result?: string;
-
+    /**
+     * A signature hash for backend validation.
+     */
     signature?: string;
   }
 
   export interface URLContextCallDelta {
-    type: 'url_context_call';
-
     /**
      * A unique ID for this specific tool call.
      */
-    id?: string;
+    id: string;
 
     /**
      * The arguments to pass to the URL context.
      */
-    arguments?: InteractionsAPI.URLContextCallArguments;
+    arguments: InteractionsAPI.URLContextCallArguments;
+
+    type: 'url_context_call';
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
   }
 
   export interface URLContextResultDelta {
-    type: 'url_context_result';
-
     /**
      * ID to match the ID from the function call block.
      */
-    call_id?: string;
+    call_id: string;
+
+    result: Array<InteractionsAPI.URLContextResult>;
+
+    type: 'url_context_result';
 
     is_error?: boolean;
 
-    result?: Array<InteractionsAPI.URLContextResult>;
-
+    /**
+     * A signature hash for backend validation.
+     */
     signature?: string;
   }
 
   export interface GoogleSearchCallDelta {
-    type: 'google_search_call';
-
     /**
      * A unique ID for this specific tool call.
      */
-    id?: string;
+    id: string;
 
     /**
      * The arguments to pass to Google Search.
      */
-    arguments?: InteractionsAPI.GoogleSearchCallArguments;
+    arguments: InteractionsAPI.GoogleSearchCallArguments;
+
+    type: 'google_search_call';
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
   }
 
   export interface GoogleSearchResultDelta {
-    type: 'google_search_result';
-
     /**
      * ID to match the ID from the function call block.
      */
-    call_id?: string;
+    call_id: string;
+
+    result: Array<InteractionsAPI.GoogleSearchResult>;
+
+    type: 'google_search_result';
 
     is_error?: boolean;
 
-    result?: Array<InteractionsAPI.GoogleSearchResult>;
-
+    /**
+     * A signature hash for backend validation.
+     */
     signature?: string;
   }
 
   export interface MCPServerToolCallDelta {
-    type: 'mcp_server_tool_call';
-
     /**
      * A unique ID for this specific tool call.
      */
-    id?: string;
+    id: string;
 
-    arguments?: { [key: string]: unknown };
+    arguments: { [key: string]: unknown };
 
-    name?: string;
+    name: string;
 
-    server_name?: string;
+    server_name: string;
+
+    type: 'mcp_server_tool_call';
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
   }
 
   export interface MCPServerToolResultDelta {
-    type: 'mcp_server_tool_result';
-
     /**
      * ID to match the ID from the function call block.
      */
-    call_id?: string;
-
-    name?: string;
+    call_id: string;
 
     /**
      * Tool call result delta.
      */
-    result?: MCPServerToolResultDelta.Items | unknown | string;
+    result: MCPServerToolResultDelta.Items | unknown | string;
+
+    type: 'mcp_server_tool_result';
+
+    name?: string;
 
     server_name?: string;
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
   }
 
   export namespace MCPServerToolResultDelta {
@@ -585,12 +619,17 @@ export namespace ContentDelta {
   }
 
   export interface FileSearchCallDelta {
-    type: 'file_search_call';
-
     /**
      * A unique ID for this specific tool call.
      */
-    id?: string;
+    id: string;
+
+    type: 'file_search_call';
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
   }
 
   export interface FileSearchResultDelta {
@@ -626,39 +665,39 @@ export interface ContentStart {
   /**
    * The content of the response.
    */
-  content?: Content;
+  content: Content;
+
+  event_type: 'content.start';
+
+  index: number;
 
   /**
    * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
-
-  event_type?: 'content.start';
-
-  index?: number;
 }
 
 export interface ContentStop {
+  event_type: 'content.stop';
+
+  index: number;
+
   /**
    * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
-
-  event_type?: 'content.stop';
-
-  index?: number;
 }
 
 /**
  * Configuration for the Deep Research agent.
  */
 export interface DeepResearchAgentConfig {
+  type: 'deep-research';
+
   /**
    * Whether to include thought summaries in the response.
    */
   thinking_summaries?: 'auto' | 'none';
-
-  type?: 'deep-research';
 }
 
 /**
@@ -675,7 +714,7 @@ export interface DocumentContent {
   /**
    * The mime type of the document.
    */
-  mime_type?: DocumentMimeType;
+  mime_type?: 'application/pdf';
 
   /**
    * The URI of the document.
@@ -684,20 +723,17 @@ export interface DocumentContent {
 }
 
 /**
- * The mime type of the document.
- */
-export type DocumentMimeType = (string & {}) | 'application/pdf';
-
-/**
  * Configuration for dynamic agents.
  */
 export interface DynamicAgentConfig {
-  type?: 'dynamic';
+  type: 'dynamic';
 
   [k: string]: unknown;
 }
 
 export interface ErrorEvent {
+  event_type: 'error';
+
   /**
    * Error message from an interaction.
    */
@@ -707,8 +743,6 @@ export interface ErrorEvent {
    * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
-
-  event_type?: 'error';
 }
 
 export namespace ErrorEvent {
@@ -732,24 +766,39 @@ export namespace ErrorEvent {
  * File Search content.
  */
 export interface FileSearchCallContent {
-  type: 'file_search_call';
-
   /**
    * A unique ID for this specific tool call.
    */
-  id?: string;
+  id: string;
+
+  type: 'file_search_call';
+
+  /**
+   * A signature hash for backend validation.
+   */
+  signature?: string;
 }
 
 /**
  * File Search result content.
  */
 export interface FileSearchResultContent {
+  /**
+   * ID to match the ID from the file search call block.
+   */
+  call_id: string;
+
   type: 'file_search_result';
 
   /**
    * The results of the File Search.
    */
   result?: Array<FileSearchResultContent.Result>;
+
+  /**
+   * A signature hash for backend validation.
+   */
+  signature?: string;
 }
 
 export namespace FileSearchResultContent {
@@ -816,6 +865,11 @@ export interface FunctionCallContent {
   name: string;
 
   type: 'function_call';
+
+  /**
+   * A signature hash for backend validation.
+   */
+  signature?: string;
 }
 
 /**
@@ -843,6 +897,11 @@ export interface FunctionResultContent {
    * The name of the tool that was called.
    */
   name?: string;
+
+  /**
+   * A signature hash for backend validation.
+   */
+  signature?: string;
 }
 
 export namespace FunctionResultContent {
@@ -898,7 +957,7 @@ export interface GenerationConfig {
   /**
    * The tool choice for the interaction.
    */
-  tool_choice?: ToolChoice;
+  tool_choice?: ToolChoiceType | ToolChoiceConfig;
 
   /**
    * The maximum cumulative probability of tokens to consider when sampling.
@@ -920,17 +979,27 @@ export interface GoogleSearchCallArguments {
  * Google Search content.
  */
 export interface GoogleSearchCallContent {
-  type: 'google_search_call';
-
   /**
    * A unique ID for this specific tool call.
    */
-  id?: string;
+  id: string;
 
   /**
    * The arguments to pass to Google Search.
    */
-  arguments?: GoogleSearchCallArguments;
+  arguments: GoogleSearchCallArguments;
+
+  type: 'google_search_call';
+
+  /**
+   * The type of search grounding enabled.
+   */
+  search_type?: 'web_search' | 'image_search';
+
+  /**
+   * A signature hash for backend validation.
+   */
+  signature?: string;
 }
 
 /**
@@ -957,12 +1026,17 @@ export interface GoogleSearchResult {
  * Google Search result content.
  */
 export interface GoogleSearchResultContent {
-  type: 'google_search_result';
-
   /**
    * ID to match the ID from the google search call block.
    */
-  call_id?: string;
+  call_id: string;
+
+  /**
+   * The results of the Google Search.
+   */
+  result: Array<GoogleSearchResult>;
+
+  type: 'google_search_result';
 
   /**
    * Whether the Google Search resulted in an error.
@@ -970,12 +1044,7 @@ export interface GoogleSearchResultContent {
   is_error?: boolean;
 
   /**
-   * The results of the Google Search.
-   */
-  result?: Array<GoogleSearchResult>;
-
-  /**
-   * The signature of the Google Search result.
+   * A signature hash for backend validation.
    */
   signature?: string;
 }
@@ -984,9 +1053,23 @@ export interface GoogleSearchResultContent {
  * The configuration for image interaction.
  */
 export interface ImageConfig {
-  aspect_ratio?: '1:1' | '2:3' | '3:2' | '3:4' | '4:3' | '4:5' | '5:4' | '9:16' | '16:9' | '21:9';
+  aspect_ratio?:
+    | '1:1'
+    | '2:3'
+    | '3:2'
+    | '3:4'
+    | '4:3'
+    | '4:5'
+    | '5:4'
+    | '9:16'
+    | '16:9'
+    | '21:9'
+    | '1:8'
+    | '8:1'
+    | '1:4'
+    | '4:1';
 
-  image_size?: '1K' | '2K' | '4K';
+  image_size?: '1K' | '2K' | '4K' | '512';
 }
 
 /**
@@ -1003,7 +1086,7 @@ export interface ImageContent {
   /**
    * The mime type of the image.
    */
-  mime_type?: ImageMimeType;
+  mime_type?: 'image/png' | 'image/jpeg' | 'image/webp' | 'image/heic' | 'image/heif';
 
   /**
    * The resolution of the media.
@@ -1017,17 +1100,6 @@ export interface ImageContent {
 }
 
 /**
- * The mime type of the image.
- */
-export type ImageMimeType =
-  | 'image/png'
-  | 'image/jpeg'
-  | 'image/webp'
-  | 'image/heic'
-  | 'image/heif'
-  | (string & {});
-
-/**
  * The Interaction resource.
  */
 export interface Interaction {
@@ -1037,9 +1109,21 @@ export interface Interaction {
   id: string;
 
   /**
+   * Output only. The time at which the response was created in ISO 8601 format
+   * (YYYY-MM-DDThh:mm:ssZ).
+   */
+  created: string;
+
+  /**
    * Output only. The status of the interaction.
    */
   status: 'in_progress' | 'requires_action' | 'completed' | 'failed' | 'cancelled' | 'incomplete';
+
+  /**
+   * Output only. The time at which the response was last updated in ISO 8601 format
+   * (YYYY-MM-DDThh:mm:ssZ).
+   */
+  updated: string;
 
   /**
    * The name of the `Agent` used for generating the interaction.
@@ -1047,10 +1131,35 @@ export interface Interaction {
   agent?: (string & {}) | 'deep-research-pro-preview-12-2025';
 
   /**
-   * Output only. The time at which the response was created in ISO 8601 format
-   * (YYYY-MM-DDThh:mm:ssZ).
+   * Configuration for the agent.
    */
-  created?: string;
+  agent_config?: DynamicAgentConfig | DeepResearchAgentConfig;
+
+  /**
+   * The inputs for the interaction.
+   */
+  input?:
+    | string
+    | Array<Content>
+    | Array<Turn>
+    | TextContent
+    | ImageContent
+    | AudioContent
+    | DocumentContent
+    | VideoContent
+    | ThoughtContent
+    | FunctionCallContent
+    | FunctionResultContent
+    | CodeExecutionCallContent
+    | CodeExecutionResultContent
+    | URLContextCallContent
+    | URLContextResultContent
+    | GoogleSearchCallContent
+    | GoogleSearchResultContent
+    | MCPServerToolCallContent
+    | MCPServerToolResultContent
+    | FileSearchCallContent
+    | FileSearchResultContent;
 
   /**
    * The name of the `Model` used for generating the interaction.
@@ -1068,15 +1177,35 @@ export interface Interaction {
   previous_interaction_id?: string;
 
   /**
+   * Enforces that the generated response is a JSON object that complies with
+   * the JSON schema specified in this field.
+   */
+  response_format?: unknown;
+
+  /**
+   * The mime type of the response. This is required if response_format is set.
+   */
+  response_mime_type?: string;
+
+  /**
+   * The requested modalities of the response (TEXT, IMAGE, AUDIO).
+   */
+  response_modalities?: Array<'text' | 'image' | 'audio'>;
+
+  /**
    * Output only. The role of the interaction.
    */
   role?: string;
 
   /**
-   * Output only. The time at which the response was last updated in ISO 8601 format
-   * (YYYY-MM-DDThh:mm:ssZ).
+   * System instruction for the interaction.
    */
-  updated?: string;
+  system_instruction?: string;
+
+  /**
+   * A list of tool declarations the model may call during interaction.
+   */
+  tools?: Array<Tool>;
 
   /**
    * Output only. Statistics on the interaction request's token usage.
@@ -1085,17 +1214,18 @@ export interface Interaction {
 }
 
 export interface InteractionCompleteEvent {
+  event_type: 'interaction.complete';
+
+  /**
+   * The completed interaction with empty outputs to reduce the payload size.
+   * Use the preceding ContentDelta events for the actual output.
+   */
+  interaction: Interaction;
+
   /**
    * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
-
-  event_type?: 'interaction.complete';
-
-  /**
-   * The Interaction resource.
-   */
-  interaction?: Interaction;
 }
 
 export type InteractionSSEEvent =
@@ -1108,30 +1238,30 @@ export type InteractionSSEEvent =
   | ErrorEvent;
 
 export interface InteractionStartEvent {
-  /**
-   * The event_id token to be used to resume the interaction stream, from this event.
-   */
-  event_id?: string;
-
-  event_type?: 'interaction.start';
+  event_type: 'interaction.start';
 
   /**
    * The Interaction resource.
    */
-  interaction?: Interaction;
-}
+  interaction: Interaction;
 
-export interface InteractionStatusUpdate {
   /**
    * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
+}
 
-  event_type?: 'interaction.status_update';
+export interface InteractionStatusUpdate {
+  event_type: 'interaction.status_update';
 
-  interaction_id?: string;
+  interaction_id: string;
 
-  status?: 'in_progress' | 'requires_action' | 'completed' | 'failed' | 'cancelled' | 'incomplete';
+  status: 'in_progress' | 'requires_action' | 'completed' | 'failed' | 'cancelled' | 'incomplete';
+
+  /**
+   * The event_id token to be used to resume the interaction stream, from this event.
+   */
+  event_id?: string;
 }
 
 /**
@@ -1159,6 +1289,11 @@ export interface MCPServerToolCallContent {
   server_name: string;
 
   type: 'mcp_server_tool_call';
+
+  /**
+   * A signature hash for backend validation.
+   */
+  signature?: string;
 }
 
 /**
@@ -1186,6 +1321,11 @@ export interface MCPServerToolResultContent {
    * The name of the used MCP server.
    */
   server_name?: string;
+
+  /**
+   * A signature hash for backend validation.
+   */
+  signature?: string;
 }
 
 export namespace MCPServerToolResultContent {
@@ -1210,6 +1350,8 @@ export type Model =
   | 'gemini-3-flash-preview'
   | 'gemini-3-pro-image-preview'
   | 'gemini-3-pro-preview'
+  | 'gemini-3.1-pro-preview'
+  | 'gemini-3.1-flash-image-preview'
   | (string & {});
 
 /**
@@ -1236,17 +1378,17 @@ export interface SpeechConfig {
  * A text content block.
  */
 export interface TextContent {
+  /**
+   * The text content.
+   */
+  text: string;
+
   type: 'text';
 
   /**
    * Citation information for model-generated content.
    */
   annotations?: Array<Annotation>;
-
-  /**
-   * The text content.
-   */
-  text?: string;
 }
 
 export type ThinkingLevel = 'minimal' | 'low' | 'medium' | 'high';
@@ -1286,6 +1428,11 @@ export namespace Tool {
    */
   export interface GoogleSearch {
     type: 'google_search';
+
+    /**
+     * The types of search grounding to enable.
+     */
+    search_types?: Array<'web_search' | 'image_search'>;
   }
 
   /**
@@ -1371,13 +1518,11 @@ export namespace Tool {
 }
 
 /**
- * The configuration for tool choice.
+ * The tool choice configuration containing allowed tools.
  */
-export type ToolChoice = ToolChoiceType | ToolChoiceConfig;
-
 export interface ToolChoiceConfig {
   /**
-   * The configuration for allowed tools.
+   * The allowed tools.
    */
   allowed_tools?: AllowedTools;
 }
@@ -1411,17 +1556,22 @@ export interface URLContextCallArguments {
  * URL context content.
  */
 export interface URLContextCallContent {
-  type: 'url_context_call';
-
   /**
    * A unique ID for this specific tool call.
    */
-  id?: string;
+  id: string;
 
   /**
    * The arguments to pass to the URL context.
    */
-  arguments?: URLContextCallArguments;
+  arguments: URLContextCallArguments;
+
+  type: 'url_context_call';
+
+  /**
+   * A signature hash for backend validation.
+   */
+  signature?: string;
 }
 
 /**
@@ -1443,12 +1593,17 @@ export interface URLContextResult {
  * URL context result content.
  */
 export interface URLContextResultContent {
-  type: 'url_context_result';
-
   /**
    * ID to match the ID from the url context call block.
    */
-  call_id?: string;
+  call_id: string;
+
+  /**
+   * The results of the URL context.
+   */
+  result: Array<URLContextResult>;
+
+  type: 'url_context_result';
 
   /**
    * Whether the URL context resulted in an error.
@@ -1456,12 +1611,7 @@ export interface URLContextResultContent {
   is_error?: boolean;
 
   /**
-   * The results of the URL context.
-   */
-  result?: Array<URLContextResult>;
-
-  /**
-   * The signature of the URL context result.
+   * A signature hash for backend validation.
    */
   signature?: string;
 }
@@ -1598,7 +1748,16 @@ export interface VideoContent {
   /**
    * The mime type of the video.
    */
-  mime_type?: VideoMimeType;
+  mime_type?:
+    | 'video/mp4'
+    | 'video/mpeg'
+    | 'video/mpg'
+    | 'video/mov'
+    | 'video/avi'
+    | 'video/x-flv'
+    | 'video/webm'
+    | 'video/wmv'
+    | 'video/3gpp';
 
   /**
    * The resolution of the media.
@@ -1610,21 +1769,6 @@ export interface VideoContent {
    */
   uri?: string;
 }
-
-/**
- * The mime type of the video.
- */
-export type VideoMimeType =
-  | 'video/mp4'
-  | 'video/mpeg'
-  | 'video/mov'
-  | 'video/avi'
-  | 'video/x-flv'
-  | 'video/mpg'
-  | 'video/webm'
-  | 'video/wmv'
-  | 'video/3gpp'
-  | (string & {});
 
 export type InteractionDeleteResponse = unknown;
 
@@ -1902,7 +2046,6 @@ export declare namespace Interactions {
     type AllowedTools as AllowedTools,
     type Annotation as Annotation,
     type AudioContent as AudioContent,
-    type AudioMimeType as AudioMimeType,
     type CodeExecutionCallArguments as CodeExecutionCallArguments,
     type CodeExecutionCallContent as CodeExecutionCallContent,
     type CodeExecutionResultContent as CodeExecutionResultContent,
@@ -1912,7 +2055,6 @@ export declare namespace Interactions {
     type ContentStop as ContentStop,
     type DeepResearchAgentConfig as DeepResearchAgentConfig,
     type DocumentContent as DocumentContent,
-    type DocumentMimeType as DocumentMimeType,
     type DynamicAgentConfig as DynamicAgentConfig,
     type ErrorEvent as ErrorEvent,
     type FileSearchCallContent as FileSearchCallContent,
@@ -1927,7 +2069,6 @@ export declare namespace Interactions {
     type GoogleSearchResultContent as GoogleSearchResultContent,
     type ImageConfig as ImageConfig,
     type ImageContent as ImageContent,
-    type ImageMimeType as ImageMimeType,
     type Interaction as Interaction,
     type InteractionCompleteEvent as InteractionCompleteEvent,
     type InteractionSSEEvent as InteractionSSEEvent,
@@ -1941,7 +2082,6 @@ export declare namespace Interactions {
     type ThinkingLevel as ThinkingLevel,
     type ThoughtContent as ThoughtContent,
     type Tool as Tool,
-    type ToolChoice as ToolChoice,
     type ToolChoiceConfig as ToolChoiceConfig,
     type ToolChoiceType as ToolChoiceType,
     type Turn as Turn,
@@ -1951,7 +2091,6 @@ export declare namespace Interactions {
     type URLContextResultContent as URLContextResultContent,
     type Usage as Usage,
     type VideoContent as VideoContent,
-    type VideoMimeType as VideoMimeType,
     type InteractionDeleteResponse as InteractionDeleteResponse,
     type InteractionCreateParams as InteractionCreateParams,
     type CreateModelInteractionParamsNonStreaming as CreateModelInteractionParamsNonStreaming,

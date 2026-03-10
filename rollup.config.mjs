@@ -35,6 +35,7 @@ const externalDeps = [
   'protobufjs/minimal',
   'protobufjs/minimal.js',
   'undici',
+  'p-retry',
 ];
 
 export default [
@@ -116,6 +117,18 @@ export default [
     output: {
       file: 'dist/tokenizer/node.cjs',
       format: 'cjs',
+      sourcemap: true,
+    },
+    plugins: rollupPlugins,
+    external: externalDeps,
+  },
+
+  // Internal module, only for use by Vertex SDK
+  {
+    input: 'src/vertex_internal/index.ts',
+    output: {
+      file: 'dist/vertex_internal/index.js',
+      format: 'es',
       sourcemap: true,
     },
     plugins: rollupPlugins,

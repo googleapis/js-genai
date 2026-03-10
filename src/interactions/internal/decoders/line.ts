@@ -21,10 +21,12 @@ export class LineDecoder {
 
   private buffer: Uint8Array;
   private carriageReturnIndex: number | null;
+  private searchIndex: number;
 
   constructor() {
     this.buffer = new Uint8Array();
     this.carriageReturnIndex = null;
+    this.searchIndex = 0;
   }
 
   decode(chunk: Bytes): string[] {
@@ -41,7 +43,9 @@ export class LineDecoder {
 
     const lines: string[] = [];
     let patternIndex;
-    while ((patternIndex = findNewlineIndex(this.buffer, this.carriageReturnIndex)) != null) {
+    while (
+      (patternIndex = findNewlineIndex(this.buffer, this.carriageReturnIndex ?? this.searchIndex)) != null
+    ) {
       if (patternIndex.carriage && this.carriageReturnIndex == null) {
         // skip until we either get a corresponding `\n`, a new `\r` or nothing
         this.carriageReturnIndex = patternIndex.index;
@@ -56,6 +60,7 @@ export class LineDecoder {
         lines.push(decodeUTF8(this.buffer.subarray(0, this.carriageReturnIndex - 1)));
         this.buffer = this.buffer.subarray(this.carriageReturnIndex);
         this.carriageReturnIndex = null;
+        this.searchIndex = 0;
         continue;
       }
 
@@ -67,7 +72,10 @@ export class LineDecoder {
 
       this.buffer = this.buffer.subarray(patternIndex.index);
       this.carriageReturnIndex = null;
+      this.searchIndex = 0;
     }
+
+    this.searchIndex = Math.max(0, this.buffer.length - 1);
 
     return lines;
   }
@@ -96,45 +104,74 @@ function findNewlineIndex(
   const newline = 0x0a; // \n
   const carriage = 0x0d; // \r
 
-  for (let i = startIndex ?? 0; i < buffer.length; i++) {
-    if (buffer[i] === newline) {
-      return { preceding: i, index: i + 1, carriage: false };
-    }
+  const start = startIndex ?? 0;
+  const nextNewline = buffer.indexOf(newline, start);
+  const nextCarriage = buffer.indexOf(carriage, start);
 
-    if (buffer[i] === carriage) {
-      return { preceding: i, index: i + 1, carriage: true };
-    }
+  if (nextNewline === -1 && nextCarriage === -1) {
+    return null;
   }
 
-  return null;
+  let i: number;
+  if (nextNewline !== -1 && nextCarriage !== -1) {
+    i = Math.min(nextNewline, nextCarriage);
+  } else {
+    i = nextNewline !== -1 ? nextNewline : nextCarriage;
+  }
+
+  if (buffer[i] === newline) {
+    return { preceding: i, index: i + 1, carriage: false };
+  }
+
+  return { preceding: i, index: i + 1, carriage: true };
 }
 
-export function findDoubleNewlineIndex(buffer: Uint8Array): number {
+export function findDoubleNewlineIndex(buffer: Uint8Array, startIndex: number = 0): number {
   // This function searches the buffer for the end patterns (\r\r, \n\n, \r\n\r\n)
   // and returns the index right after the first occurrence of any pattern,
   // or -1 if none of the patterns are found.
   const newline = 0x0a; // \n
   const carriage = 0x0d; // \r
 
-  for (let i = 0; i < buffer.length - 1; i++) {
-    if (buffer[i] === newline && buffer[i + 1] === newline) {
-      // \n\n
-      return i + 2;
+  let i = startIndex;
+  while (i < buffer.length - 1) {
+    const nextNewline = buffer.indexOf(newline, i);
+    const nextCarriage = buffer.indexOf(carriage, i);
+
+    if (nextNewline === -1 && nextCarriage === -1) {
+      return -1;
     }
-    if (buffer[i] === carriage && buffer[i + 1] === carriage) {
+
+    let index: number;
+    if (nextNewline !== -1 && nextCarriage !== -1) {
+      index = Math.min(nextNewline, nextCarriage);
+    } else {
+      index = nextNewline !== -1 ? nextNewline : nextCarriage;
+    }
+
+    if (index >= buffer.length - 1) {
+      return -1;
+    }
+
+    if (buffer[index] === newline && buffer[index + 1] === newline) {
+      // \n\n
+      return index + 2;
+    }
+    if (buffer[index] === carriage && buffer[index + 1] === carriage) {
       // \r\r
-      return i + 2;
+      return index + 2;
     }
     if (
-      buffer[i] === carriage &&
-      buffer[i + 1] === newline &&
-      i + 3 < buffer.length &&
-      buffer[i + 2] === carriage &&
-      buffer[i + 3] === newline
+      buffer[index] === carriage &&
+      buffer[index + 1] === newline &&
+      index + 3 < buffer.length &&
+      buffer[index + 2] === carriage &&
+      buffer[index + 3] === newline
     ) {
       // \r\n\r\n
-      return i + 4;
+      return index + 4;
     }
+    i = index + 1;
   }
 
   return -1;

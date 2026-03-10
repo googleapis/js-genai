@@ -37,6 +37,38 @@ export enum AdapterSize {
 }
 
 // @public
+export enum AggregationMetric {
+    AGGREGATION_METRIC_UNSPECIFIED = "AGGREGATION_METRIC_UNSPECIFIED",
+    AVERAGE = "AVERAGE",
+    MAXIMUM = "MAXIMUM",
+    MEDIAN = "MEDIAN",
+    MINIMUM = "MINIMUM",
+    MODE = "MODE",
+    PERCENTILE_P90 = "PERCENTILE_P90",
+    PERCENTILE_P95 = "PERCENTILE_P95",
+    PERCENTILE_P99 = "PERCENTILE_P99",
+    STANDARD_DEVIATION = "STANDARD_DEVIATION",
+    VARIANCE = "VARIANCE"
+}
+
+// @public
+export interface AggregationOutput {
+    aggregationResults?: AggregationResult[];
+    dataset?: EvaluationDataset;
+}
+
+// @public
+export interface AggregationResult {
+    aggregationMetric?: AggregationMetric;
+    bleuMetricValue?: BleuMetricValue;
+    customCodeExecutionResult?: CustomCodeExecutionResult;
+    exactMatchMetricValue?: ExactMatchMetricValue;
+    pairwiseMetricResult?: PairwiseMetricResult;
+    pointwiseMetricResult?: PointwiseMetricResult;
+    rougeMetricValue?: RougeMetricValue;
+}
+
+// @public
 export interface ApiAuth {
     apiKeyConfig?: ApiAuthApiKeyConfig;
 }
@@ -87,6 +119,7 @@ export interface AudioTranscriptionConfig {
 
 // @public
 export interface AuthConfig {
+    apiKey?: string;
     apiKeyConfig?: ApiKeyConfig;
     authType?: AuthType;
     googleServiceAccountConfig?: AuthConfigGoogleServiceAccountConfig;
@@ -219,6 +252,16 @@ export enum Behavior {
     BLOCKING = "BLOCKING",
     NON_BLOCKING = "NON_BLOCKING",
     UNSPECIFIED = "UNSPECIFIED"
+}
+
+// @public
+export interface BigQuerySource {
+    inputUri?: string;
+}
+
+// @public
+export interface BleuMetricValue {
+    score?: number;
 }
 
 // @public
@@ -685,11 +728,21 @@ export interface CreateTuningJobParametersPrivate {
 export function createUserContent(partOrString: PartListUnion | string): Content;
 
 // @public
+export interface CustomCodeExecutionResult {
+    score?: number;
+}
+
+// @public
 export interface CustomMetadata {
     key?: string;
     numericValue?: number;
     stringListValue?: StringList;
     stringValue?: string;
+}
+
+// @public
+export interface CustomOutput {
+    rawOutputs?: RawOutput;
 }
 
 // @public
@@ -713,6 +766,8 @@ export interface DatasetDistributionDistributionBucket {
 
 // @public
 export interface DatasetStats {
+    droppedExampleIndices?: string[];
+    droppedExampleReasons?: string[];
     totalBillableCharacterCount?: string;
     totalTuningCharacterCount?: string;
     tuningDatasetExampleCount?: string;
@@ -1052,6 +1107,32 @@ export enum Environment {
 }
 
 // @public
+export class EvaluateDatasetResponse {
+    aggregationOutput?: AggregationOutput;
+    outputInfo?: OutputInfo;
+}
+
+// @public
+export interface EvaluateDatasetRun {
+    checkpointId?: string;
+    error?: GoogleRpcStatus;
+    evaluateDatasetResponse?: EvaluateDatasetResponse;
+    evaluationRun?: string;
+    operationName?: string;
+}
+
+// @public
+export interface EvaluationDataset {
+    bigquerySource?: BigQuerySource;
+    gcsSource?: GcsSource;
+}
+
+// @public
+export interface ExactMatchMetricValue {
+    score?: number;
+}
+
+// @public
 export interface ExecutableCode {
     code?: string;
     language?: Language;
@@ -1215,6 +1296,13 @@ export enum FinishReason {
 }
 
 // @public
+export interface FullFineTuningSpec {
+    hyperParameters?: SupervisedHyperParameters;
+    trainingDatasetUri?: string;
+    validationDatasetUri?: string;
+}
+
+// @public
 export interface FunctionCall {
     args?: Record<string, unknown>;
     id?: string;
@@ -1286,6 +1374,11 @@ export enum FunctionResponseScheduling {
     SCHEDULING_UNSPECIFIED = "SCHEDULING_UNSPECIFIED",
     SILENT = "SILENT",
     WHEN_IDLE = "WHEN_IDLE"
+}
+
+// @public
+export interface GcsSource {
+    uris?: string[];
 }
 
 // @public
@@ -1705,6 +1798,7 @@ export interface GoogleRpcStatus {
 export interface GoogleSearch {
     blockingConfidence?: PhishBlockThreshold;
     excludeDomains?: string[];
+    searchTypes?: SearchTypes;
     timeRangeFilter?: Interval;
 }
 
@@ -1722,9 +1816,18 @@ export interface GoogleTypeDate {
 
 // @public
 export interface GroundingChunk {
+    image?: GroundingChunkImage;
     maps?: GroundingChunkMaps;
     retrievedContext?: GroundingChunkRetrievedContext;
     web?: GroundingChunkWeb;
+}
+
+// @public
+export interface GroundingChunkImage {
+    domain?: string;
+    imageUri?: string;
+    sourceUri?: string;
+    title?: string;
 }
 
 // @public
@@ -1739,6 +1842,7 @@ export interface GroundingChunkMaps {
 // @public
 export interface GroundingChunkMapsPlaceAnswerSources {
     flagContentUri?: string;
+    reviewSnippet?: GroundingChunkMapsPlaceAnswerSourcesReviewSnippet[];
     reviewSnippets?: GroundingChunkMapsPlaceAnswerSourcesReviewSnippet[];
 }
 
@@ -1781,6 +1885,7 @@ export interface GroundingMetadata {
     googleMapsWidgetContextToken?: string;
     groundingChunks?: GroundingChunk[];
     groundingSupports?: GroundingSupport[];
+    imageSearchQueries?: string[];
     retrievalMetadata?: RetrievalMetadata;
     retrievalQueries?: string[];
     searchEntryPoint?: SearchEntryPoint;
@@ -1898,10 +2003,18 @@ export { Image_2 as Image }
 // @public
 export interface ImageConfig {
     aspectRatio?: string;
+    imageOutputOptions?: ImageConfigImageOutputOptions;
     imageSize?: string;
     outputCompressionQuality?: number;
     outputMimeType?: string;
     personGeneration?: string;
+    prominentPeople?: ProminentPeople;
+}
+
+// @public
+export interface ImageConfigImageOutputOptions {
+    compressionQuality?: number;
+    mimeType?: string;
 }
 
 // @public
@@ -1914,6 +2027,10 @@ export enum ImagePromptLanguage {
     ko = "ko",
     pt = "pt",
     zh = "zh"
+}
+
+// @public
+export interface ImageSearch {
 }
 
 // @public
@@ -1979,7 +2096,7 @@ export class Interactions extends BaseInteractions {
 
 // @public (undocumented)
 export namespace Interactions {
-        { export type AllowedTools as AllowedTools, export type Annotation as Annotation, export type AudioContent as AudioContent, export type AudioMimeType as AudioMimeType, export type CodeExecutionCallArguments as CodeExecutionCallArguments, export type CodeExecutionCallContent as CodeExecutionCallContent, export type CodeExecutionResultContent as CodeExecutionResultContent, export type Content as Content, export type ContentDelta as ContentDelta, export type ContentStart as ContentStart, export type ContentStop as ContentStop, export type DeepResearchAgentConfig as DeepResearchAgentConfig, export type DocumentContent as DocumentContent, export type DocumentMimeType as DocumentMimeType, export type DynamicAgentConfig as DynamicAgentConfig, export type ErrorEvent as ErrorEvent, export type FileSearchCallContent as FileSearchCallContent, export type FileSearchResultContent as FileSearchResultContent, export type Function as Function, export type FunctionCallContent as FunctionCallContent, export type FunctionResultContent as FunctionResultContent, export type GenerationConfig as GenerationConfig, export type GoogleSearchCallArguments as GoogleSearchCallArguments, export type GoogleSearchCallContent as GoogleSearchCallContent, export type GoogleSearchResult as GoogleSearchResult, export type GoogleSearchResultContent as GoogleSearchResultContent, export type ImageConfig as ImageConfig, export type ImageContent as ImageContent, export type ImageMimeType as ImageMimeType, export type Interaction as Interaction, export type InteractionCompleteEvent as InteractionCompleteEvent, export type InteractionSSEEvent as InteractionSSEEvent, export type InteractionStartEvent as InteractionStartEvent, export type InteractionStatusUpdate as InteractionStatusUpdate, export type MCPServerToolCallContent as MCPServerToolCallContent, export type MCPServerToolResultContent as MCPServerToolResultContent, export type Model as Model, export type SpeechConfig as SpeechConfig, export type TextContent as TextContent, export type ThinkingLevel as ThinkingLevel, export type ThoughtContent as ThoughtContent, export type Tool as Tool, export type ToolChoice as ToolChoice, export type ToolChoiceConfig as ToolChoiceConfig, export type ToolChoiceType as ToolChoiceType, export type Turn as Turn, export type URLContextCallArguments as URLContextCallArguments, export type URLContextCallContent as URLContextCallContent, export type URLContextResult as URLContextResult, export type URLContextResultContent as URLContextResultContent, export type Usage as Usage, export type VideoContent as VideoContent, export type VideoMimeType as VideoMimeType, export type InteractionDeleteResponse as InteractionDeleteResponse, export type InteractionCreateParams as InteractionCreateParams, export type CreateModelInteractionParamsNonStreaming as CreateModelInteractionParamsNonStreaming, export type CreateModelInteractionParamsStreaming as CreateModelInteractionParamsStreaming, export type CreateAgentInteractionParamsNonStreaming as CreateAgentInteractionParamsNonStreaming, export type CreateAgentInteractionParamsStreaming as CreateAgentInteractionParamsStreaming, export type InteractionDeleteParams as InteractionDeleteParams, export type InteractionCancelParams as InteractionCancelParams, export type InteractionGetParams as InteractionGetParams, export type InteractionGetParamsNonStreaming as InteractionGetParamsNonStreaming, export type InteractionGetParamsStreaming as InteractionGetParamsStreaming, };
+        { export type AllowedTools as AllowedTools, export type Annotation as Annotation, export type AudioContent as AudioContent, export type CodeExecutionCallArguments as CodeExecutionCallArguments, export type CodeExecutionCallContent as CodeExecutionCallContent, export type CodeExecutionResultContent as CodeExecutionResultContent, export type Content as Content, export type ContentDelta as ContentDelta, export type ContentStart as ContentStart, export type ContentStop as ContentStop, export type DeepResearchAgentConfig as DeepResearchAgentConfig, export type DocumentContent as DocumentContent, export type DynamicAgentConfig as DynamicAgentConfig, export type ErrorEvent as ErrorEvent, export type FileSearchCallContent as FileSearchCallContent, export type FileSearchResultContent as FileSearchResultContent, export type Function as Function, export type FunctionCallContent as FunctionCallContent, export type FunctionResultContent as FunctionResultContent, export type GenerationConfig as GenerationConfig, export type GoogleSearchCallArguments as GoogleSearchCallArguments, export type GoogleSearchCallContent as GoogleSearchCallContent, export type GoogleSearchResult as GoogleSearchResult, export type GoogleSearchResultContent as GoogleSearchResultContent, export type ImageConfig as ImageConfig, export type ImageContent as ImageContent, export type Interaction as Interaction, export type InteractionCompleteEvent as InteractionCompleteEvent, export type InteractionSSEEvent as InteractionSSEEvent, export type InteractionStartEvent as InteractionStartEvent, export type InteractionStatusUpdate as InteractionStatusUpdate, export type MCPServerToolCallContent as MCPServerToolCallContent, export type MCPServerToolResultContent as MCPServerToolResultContent, export type Model as Model, export type SpeechConfig as SpeechConfig, export type TextContent as TextContent, export type ThinkingLevel as ThinkingLevel, export type ThoughtContent as ThoughtContent, export type Tool as Tool, export type ToolChoiceConfig as ToolChoiceConfig, export type ToolChoiceType as ToolChoiceType, export type Turn as Turn, export type URLContextCallArguments as URLContextCallArguments, export type URLContextCallContent as URLContextCallContent, export type URLContextResult as URLContextResult, export type URLContextResultContent as URLContextResultContent, export type Usage as Usage, export type VideoContent as VideoContent, export type InteractionDeleteResponse as InteractionDeleteResponse, export type InteractionCreateParams as InteractionCreateParams, export type CreateModelInteractionParamsNonStreaming as CreateModelInteractionParamsNonStreaming, export type CreateModelInteractionParamsStreaming as CreateModelInteractionParamsStreaming, export type CreateAgentInteractionParamsNonStreaming as CreateAgentInteractionParamsNonStreaming, export type CreateAgentInteractionParamsStreaming as CreateAgentInteractionParamsStreaming, export type InteractionDeleteParams as InteractionDeleteParams, export type InteractionCancelParams as InteractionCancelParams, export type InteractionGetParams as InteractionGetParams, export type InteractionGetParamsNonStreaming as InteractionGetParamsNonStreaming, export type InteractionGetParamsStreaming as InteractionGetParamsStreaming, };
 }
 
 // @public
@@ -2543,6 +2660,12 @@ export enum MaskReferenceMode {
 }
 
 // @public
+export interface McpServer {
+    name?: string;
+    streamableHttpTransport?: StreamableHttpTransport;
+}
+
+// @public
 export function mcpToTool(...args: [...Client[], CallableToolConfig | Client]): CallableTool;
 
 // @public
@@ -2681,6 +2804,11 @@ export enum Outcome {
     OUTCOME_UNSPECIFIED = "OUTCOME_UNSPECIFIED"
 }
 
+// @public
+export interface OutputInfo {
+    gcsOutputDirectory?: string;
+}
+
 // @public (undocumented)
 export enum PagedItem {
     // (undocumented)
@@ -2719,6 +2847,21 @@ export class Pager<T> implements AsyncIterable<T> {
     // (undocumented)
     protected requestInternal: (params: PagedItemConfig) => Promise<PagedItemResponse<T>>;
     get sdkHttpResponse(): types.HttpResponse | undefined;
+}
+
+// @public
+export enum PairwiseChoice {
+    BASELINE = "BASELINE",
+    CANDIDATE = "CANDIDATE",
+    PAIRWISE_CHOICE_UNSPECIFIED = "PAIRWISE_CHOICE_UNSPECIFIED",
+    TIE = "TIE"
+}
+
+// @public
+export interface PairwiseMetricResult {
+    customOutput?: CustomOutput;
+    explanation?: string;
+    pairwiseChoice?: PairwiseChoice;
 }
 
 // @public
@@ -2793,12 +2936,21 @@ export enum PhishBlockThreshold {
 }
 
 // @public
+export interface PointwiseMetricResult {
+    customOutput?: CustomOutput;
+    explanation?: string;
+    score?: number;
+}
+
+// @public
 export interface PrebuiltVoiceConfig {
     voiceName?: string;
 }
 
 // @public
 export interface PreferenceOptimizationDataStats {
+    droppedExampleIndices?: string[];
+    droppedExampleReasons?: string[];
     scoresDistribution?: DatasetDistribution;
     scoreVariancePerExampleDistribution?: DatasetDistribution;
     totalBillableTokenCount?: string;
@@ -2840,6 +2992,13 @@ export interface ProactivityConfig {
 // @public
 export interface ProductImage {
     productImage?: Image_2;
+}
+
+// @public
+export enum ProminentPeople {
+    ALLOW_PROMINENT_PEOPLE = "ALLOW_PROMINENT_PEOPLE",
+    BLOCK_PROMINENT_PEOPLE = "BLOCK_PROMINENT_PEOPLE",
+    PROMINENT_PEOPLE_UNSPECIFIED = "PROMINENT_PEOPLE_UNSPECIFIED"
 }
 
 // @public
@@ -2888,6 +3047,11 @@ export interface RagRetrievalConfigRankingLlmRanker {
 // @public
 export interface RagRetrievalConfigRankingRankService {
     modelName?: string;
+}
+
+// @public
+export interface RawOutput {
+    rawOutput?: string[];
 }
 
 // @public
@@ -3034,6 +3198,11 @@ export interface RetrievalMetadata {
 }
 
 // @public
+export interface RougeMetricValue {
+    score?: number;
+}
+
+// @public
 export interface SafetyAttributes {
     categories?: string[];
     contentType?: string;
@@ -3125,6 +3294,12 @@ export interface ScribbleImage {
 export interface SearchEntryPoint {
     renderedContent?: string;
     sdkBlob?: string;
+}
+
+// @public
+export interface SearchTypes {
+    imageSearch?: ImageSearch;
+    webSearch?: WebSearch;
 }
 
 // @public
@@ -3238,6 +3413,15 @@ export enum StartSensitivity {
     START_SENSITIVITY_HIGH = "START_SENSITIVITY_HIGH",
     START_SENSITIVITY_LOW = "START_SENSITIVITY_LOW",
     START_SENSITIVITY_UNSPECIFIED = "START_SENSITIVITY_UNSPECIFIED"
+}
+
+// @public
+export interface StreamableHttpTransport {
+    headers?: Record<string, string>;
+    sseReadTimeout?: string;
+    terminateOnClose?: boolean;
+    timeout?: string;
+    url?: string;
 }
 
 // @public
@@ -3404,6 +3588,8 @@ export interface Tool {
     googleMaps?: GoogleMaps;
     googleSearch?: GoogleSearch;
     googleSearchRetrieval?: GoogleSearchRetrieval;
+    mcpServers?: McpServer[];
+    parallelAiSearch?: ToolParallelAiSearch;
     retrieval?: Retrieval;
     urlContext?: UrlContext;
 }
@@ -3421,12 +3607,20 @@ export interface ToolConfig {
 // @public (undocumented)
 export type ToolListUnion = ToolUnion[];
 
+// @public
+export interface ToolParallelAiSearch {
+    apiKey?: string;
+    customConfigs?: Record<string, unknown>;
+}
+
 // @public (undocumented)
 export type ToolUnion = Tool | CallableTool;
 
 // @public
 export enum TrafficType {
     ON_DEMAND = "ON_DEMAND",
+    ON_DEMAND_FLEX = "ON_DEMAND_FLEX",
+    ON_DEMAND_PRIORITY = "ON_DEMAND_PRIORITY",
     PROVISIONED_THROUGHPUT = "PROVISIONED_THROUGHPUT",
     TRAFFIC_TYPE_UNSPECIFIED = "TRAFFIC_TYPE_UNSPECIFIED"
 }
@@ -3489,7 +3683,9 @@ export interface TuningJob {
     encryptionSpec?: EncryptionSpec;
     endTime?: string;
     error?: GoogleRpcStatus;
+    evaluateDatasetRuns?: EvaluateDatasetRun[];
     experiment?: string;
+    fullFineTuningSpec?: FullFineTuningSpec;
     labels?: Record<string, string>;
     name?: string;
     outputUri?: string;
@@ -3505,8 +3701,19 @@ export interface TuningJob {
     tunedModel?: TunedModel;
     tunedModelDisplayName?: string;
     tuningDataStats?: TuningDataStats;
+    tuningJobState?: TuningJobState;
     updateTime?: string;
     veoTuningSpec?: VeoTuningSpec;
+}
+
+// @public
+export enum TuningJobState {
+    TUNING_JOB_STATE_POST_PROCESSING = "TUNING_JOB_STATE_POST_PROCESSING",
+    TUNING_JOB_STATE_PROCESSING_DATASET = "TUNING_JOB_STATE_PROCESSING_DATASET",
+    TUNING_JOB_STATE_TUNING = "TUNING_JOB_STATE_TUNING",
+    TUNING_JOB_STATE_UNSPECIFIED = "TUNING_JOB_STATE_UNSPECIFIED",
+    TUNING_JOB_STATE_WAITING_FOR_CAPACITY = "TUNING_JOB_STATE_WAITING_FOR_CAPACITY",
+    TUNING_JOB_STATE_WAITING_FOR_QUOTA = "TUNING_JOB_STATE_WAITING_FOR_QUOTA"
 }
 
 // @public
@@ -3749,6 +3956,7 @@ export interface VeoHyperParameters {
     epochCount?: string;
     learningRateMultiplier?: number;
     tuningTask?: TuningTask;
+    veoDataMixtureRatio?: number;
 }
 
 // @public
@@ -3856,6 +4064,10 @@ export enum VoiceActivityType {
 export interface VoiceConfig {
     prebuiltVoiceConfig?: PrebuiltVoiceConfig;
     replicatedVoiceConfig?: ReplicatedVoiceConfig;
+}
+
+// @public
+export interface WebSearch {
 }
 
 // @public

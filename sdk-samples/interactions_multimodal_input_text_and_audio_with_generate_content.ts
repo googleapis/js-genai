@@ -34,7 +34,7 @@ async function createInteractionsFromMLDev() {
       {
         type: 'audio',
         data: base64Audio,
-        mime_type: 'audio/mpeg',
+        mime_type: 'audio/mp3',
       },
     ],
   });
@@ -54,7 +54,7 @@ async function createInteractionsFromMLDev() {
           },
           {
             inlineData: {
-              mimeType: 'audio/mpeg',
+              mimeType: 'audio/mp3',
               data: base64Audio,
             },
           },

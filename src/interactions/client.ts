@@ -14,9 +14,9 @@ import { sleep } from './internal/utils/sleep.js';
 export type { Logger, LogLevel } from './internal/utils/log.js';
 import { castToError, isAbortError } from './internal/errors.js';
 import type { APIResponseProps } from './internal/parse.js';
-import { getPlatformHeaders } from './internal/detect-platform.js';
 import * as Shims from './internal/shims.js';
 import * as Opts from './internal/request-options.js';
+import { stringifyQuery } from './internal/utils/query.js';
 import { VERSION } from './version.js';
 import * as Errors from './core/error.js';
 import * as Uploads from './core/uploads.js';
@@ -26,7 +26,6 @@ import {
   AllowedTools,
   Annotation,
   AudioContent,
-  AudioMimeType,
   CodeExecutionCallArguments,
   CodeExecutionCallContent,
   CodeExecutionResultContent,
@@ -40,7 +39,6 @@ import {
   CreateModelInteractionParamsStreaming,
   DeepResearchAgentConfig,
   DocumentContent,
-  DocumentMimeType,
   DynamicAgentConfig,
   ErrorEvent,
   FileSearchCallContent,
@@ -55,7 +53,6 @@ import {
   GoogleSearchResultContent,
   ImageConfig,
   ImageContent,
-  ImageMimeType,
   Interaction,
   InteractionCancelParams,
   InteractionCompleteEvent,
@@ -77,7 +74,6 @@ import {
   ThinkingLevel,
   ThoughtContent,
   Tool,
-  ToolChoice,
   ToolChoiceConfig,
   ToolChoiceType,
   Turn,
@@ -87,7 +83,6 @@ import {
   URLContextResultContent,
   Usage,
   VideoContent,
-  VideoMimeType,
 } from './resources/interactions.js';
 import { type Fetch } from './internal/builtin-types.js';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers.js';
@@ -322,21 +317,8 @@ export class BaseGeminiNextGenAPIClient {
   /**
    * Basic re-implementation of `qs.stringify` for primitive types.
    */
-  protected stringifyQuery(query: Record<string, unknown>): string {
-    return Object.entries(query)
-      .filter(([_, value]) => typeof value !== 'undefined')
-      .map(([key, value]) => {
-        if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
-          return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
-        }
-        if (value === null) {
-          return `${encodeURIComponent(key)}=`;
-        }
-        throw new Errors.GeminiNextGenAPIClientError(
-          `Cannot stringify type ${typeof value}; Expected string, number, boolean, or null. If you need to pass nested query parameters, you can manually encode them, e.g. { query: { 'foo[key1]': value1, 'foo[key2]': value2 } }, and please open a GitHub issue requesting better support for your use case.`,
-        );
-      })
-      .join('&');
+  protected stringifyQuery(query: object | Record<string, unknown>): string {
+    return stringifyQuery(query);
   }
 
   private getUserAgent(): string {
@@ -368,12 +350,13 @@ export class BaseGeminiNextGenAPIClient {
       : new URL(baseURL + (baseURL.endsWith('/') && path.startsWith('/') ? path.slice(1) : path));
 
     const defaultQuery = this.defaultQuery();
-    if (!isEmptyObj(defaultQuery)) {
-      query = { ...defaultQuery, ...query };
+    const pathQuery = Object.fromEntries(url.searchParams);
+    if (!isEmptyObj(defaultQuery) || !isEmptyObj(pathQuery)) {
+      query = { ...pathQuery, ...defaultQuery, ...query };
     }
 
     if (typeof query === 'object' && query && !Array.isArray(query)) {
-      url.search = this.stringifyQuery(query as Record<string, unknown>);
+      url.search = this.stringifyQuery(query);
     }
 
     return url.toString();
@@ -690,9 +673,9 @@ export class BaseGeminiNextGenAPIClient {
       }
     }
 
-    // If the API asks us to wait a certain amount of time (and it's a reasonable amount),
-    // just do what it says, but otherwise calculate a default
-    if (!(timeoutMillis && 0 <= timeoutMillis && timeoutMillis < 60 * 1000)) {
+    // If the API asks us to wait a certain amount of time, just do what it
+    // says, but otherwise calculate a default
+    if (timeoutMillis === undefined) {
       const maxRetries = options.maxRetries ?? this.maxRetries;
       timeoutMillis = this.calculateDefaultRetryTimeoutMillis(retriesRemaining, maxRetries);
     }
@@ -764,13 +747,7 @@ export class BaseGeminiNextGenAPIClient {
 
     let headers = buildHeaders([
       idempotencyHeaders,
-      {
-        Accept: 'application/json',
-        'User-Agent': this.getUserAgent(),
-        'X-Stainless-Retry-Count': String(retryCount),
-        ...(options.timeout ? { 'X-Stainless-Timeout': String(Math.trunc(options.timeout / 1000)) } : {}),
-        ...getPlatformHeaders(),
-      },
+      { Accept: 'application/json', 'User-Agent': this.getUserAgent() },
       this._options.defaultHeaders,
       bodyHeaders,
       options.headers,
@@ -820,6 +797,14 @@ export class BaseGeminiNextGenAPIClient {
         (Symbol.iterator in body && 'next' in body && typeof body.next === 'function'))
     ) {
       return { bodyHeaders: undefined, body: Shims.ReadableStreamFrom(body as AsyncIterable<Uint8Array>) };
+    } else if (
+      typeof body === 'object' &&
+      headers.values.get('content-type') === 'application/x-www-form-urlencoded'
+    ) {
+      return {
+        bodyHeaders: { 'content-type': 'application/x-www-form-urlencoded' },
+        body: this.stringifyQuery(body),
+      };
     } else {
       return this.encoder({ body, headers });
     }
@@ -863,7 +848,6 @@ export declare namespace GeminiNextGenAPIClient {
     type AllowedTools as AllowedTools,
     type Annotation as Annotation,
     type AudioContent as AudioContent,
-    type AudioMimeType as AudioMimeType,
     type CodeExecutionCallArguments as CodeExecutionCallArguments,
     type CodeExecutionCallContent as CodeExecutionCallContent,
     type CodeExecutionResultContent as CodeExecutionResultContent,
@@ -873,7 +857,6 @@ export declare namespace GeminiNextGenAPIClient {
     type ContentStop as ContentStop,
     type DeepResearchAgentConfig as DeepResearchAgentConfig,
     type DocumentContent as DocumentContent,
-    type DocumentMimeType as DocumentMimeType,
     type DynamicAgentConfig as DynamicAgentConfig,
     type ErrorEvent as ErrorEvent,
     type FileSearchCallContent as FileSearchCallContent,
@@ -888,7 +871,6 @@ export declare namespace GeminiNextGenAPIClient {
     type GoogleSearchResultContent as GoogleSearchResultContent,
     type ImageConfig as ImageConfig,
     type ImageContent as ImageContent,
-    type ImageMimeType as ImageMimeType,
     type Interaction as Interaction,
     type InteractionCompleteEvent as InteractionCompleteEvent,
     type InteractionSSEEvent as InteractionSSEEvent,
@@ -902,7 +884,6 @@ export declare namespace GeminiNextGenAPIClient {
     type ThinkingLevel as ThinkingLevel,
     type ThoughtContent as ThoughtContent,
     type Tool as Tool,
-    type ToolChoice as ToolChoice,
     type ToolChoiceConfig as ToolChoiceConfig,
     type ToolChoiceType as ToolChoiceType,
     type Turn as Turn,
@@ -912,7 +893,6 @@ export declare namespace GeminiNextGenAPIClient {
     type URLContextResultContent as URLContextResultContent,
     type Usage as Usage,
     type VideoContent as VideoContent,
-    type VideoMimeType as VideoMimeType,
     type InteractionDeleteResponse as InteractionDeleteResponse,
     type InteractionCreateParams as InteractionCreateParams,
     type CreateModelInteractionParamsNonStreaming as CreateModelInteractionParamsNonStreaming,
