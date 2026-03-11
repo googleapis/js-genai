@@ -133,4 +133,14 @@ export default [
     plugins: rollupPlugins,
     external: externalDeps,
   },
+  {
+    input: 'src/vertex_internal/index.ts',
+    output: {
+      file: 'dist/vertex_internal/index.cjs',
+      format: 'cjs',
+      sourcemap: true,
+    },
+    plugins: rollupPlugins,
+    external: externalDeps,
+  },
 ];
