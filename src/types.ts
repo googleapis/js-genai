@@ -4288,7 +4288,6 @@ export declare interface Operation<T> {
   response?: T;
   /**
    * Instantiates an Operation of the same type as the one being called with the fields set from the API response.
-   * @internal
    */
   _fromAPIResponse({
     apiResponse,
@@ -4313,7 +4312,6 @@ export class GenerateVideosOperation
 
   /**
    * Instantiates an Operation of the same type as the one being called with the fields set from the API response.
-   * @internal
    */
   _fromAPIResponse({
     apiResponse,
@@ -5598,7 +5596,6 @@ export class ImportFileOperation implements Operation<ImportFileResponse> {
 
   /**
    * Instantiates an Operation of the same type as the one being called with the fields set from the API response.
-   * @internal
    */
   _fromAPIResponse({
     apiResponse,
@@ -7513,7 +7510,6 @@ export class UploadToFileSearchStoreOperation
 
   /**
    * Instantiates an Operation of the same type as the one being called with the fields set from the API response.
-   * @internal
    */
   _fromAPIResponse({
     apiResponse,

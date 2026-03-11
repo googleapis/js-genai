@@ -1559,7 +1559,6 @@ export interface GenerateVideosConfig {
 export class GenerateVideosOperation implements Operation<GenerateVideosResponse> {
     done?: boolean;
     error?: Record<string, unknown>;
-    // @internal
     _fromAPIResponse({ apiResponse, _isVertexAI, }: OperationFromAPIResponseParameters): Operation<GenerateVideosResponse>;
     metadata?: Record<string, unknown>;
     name?: string;
@@ -2046,7 +2045,6 @@ export interface ImportFileConfig {
 export class ImportFileOperation implements Operation<ImportFileResponse> {
     done?: boolean;
     error?: Record<string, unknown>;
-    // @internal
     _fromAPIResponse({ apiResponse, _isVertexAI, }: OperationFromAPIResponseParameters): Operation<ImportFileResponse>;
     metadata?: Record<string, unknown>;
     name?: string;
@@ -2771,7 +2769,6 @@ export enum MusicGenerationMode {
 export interface Operation<T> {
     done?: boolean;
     error?: Record<string, unknown>;
-    // @internal
     _fromAPIResponse({ apiResponse, _isVertexAI, }: OperationFromAPIResponseParameters): Operation<T>;
     metadata?: Record<string, unknown>;
     name?: string;
@@ -3844,7 +3841,6 @@ export interface UploadToFileSearchStoreConfig {
 export class UploadToFileSearchStoreOperation implements Operation<UploadToFileSearchStoreResponse> {
     done?: boolean;
     error?: Record<string, unknown>;
-    // @internal
     _fromAPIResponse({ apiResponse, _isVertexAI, }: OperationFromAPIResponseParameters): Operation<UploadToFileSearchStoreResponse>;
     metadata?: Record<string, unknown>;
     name?: string;
