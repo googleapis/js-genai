@@ -233,11 +233,6 @@ export interface CodeExecutionCallContent {
   arguments: CodeExecutionCallArguments;
 
   type: 'code_execution_call';
-
-  /**
-   * A signature hash for backend validation.
-   */
-  signature?: string;
 }
 
 /**
@@ -422,11 +417,6 @@ export namespace ContentDelta {
     name: string;
 
     type: 'function_call';
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
   }
 
   export interface FunctionResultDelta {
@@ -470,11 +460,6 @@ export namespace ContentDelta {
     arguments: InteractionsAPI.CodeExecutionCallArguments;
 
     type: 'code_execution_call';
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
   }
 
   export interface CodeExecutionResultDelta {
@@ -507,11 +492,6 @@ export namespace ContentDelta {
     arguments: InteractionsAPI.URLContextCallArguments;
 
     type: 'url_context_call';
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
   }
 
   export interface URLContextResultDelta {
@@ -544,11 +524,6 @@ export namespace ContentDelta {
     arguments: InteractionsAPI.GoogleSearchCallArguments;
 
     type: 'google_search_call';
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
   }
 
   export interface GoogleSearchResultDelta {
@@ -582,11 +557,6 @@ export namespace ContentDelta {
     server_name: string;
 
     type: 'mcp_server_tool_call';
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
   }
 
   export interface MCPServerToolResultDelta {
@@ -625,17 +595,22 @@ export namespace ContentDelta {
     id: string;
 
     type: 'file_search_call';
+  }
+
+  export interface FileSearchResultDelta {
+    /**
+     * ID to match the ID from the function call block.
+     */
+    call_id: string;
+
+    type: 'file_search_result';
+
+    result?: Array<FileSearchResultDelta.Result>;
 
     /**
      * A signature hash for backend validation.
      */
     signature?: string;
-  }
-
-  export interface FileSearchResultDelta {
-    type: 'file_search_result';
-
-    result?: Array<FileSearchResultDelta.Result>;
   }
 
   export namespace FileSearchResultDelta {
@@ -772,11 +747,6 @@ export interface FileSearchCallContent {
   id: string;
 
   type: 'file_search_call';
-
-  /**
-   * A signature hash for backend validation.
-   */
-  signature?: string;
 }
 
 /**
@@ -865,11 +835,6 @@ export interface FunctionCallContent {
   name: string;
 
   type: 'function_call';
-
-  /**
-   * A signature hash for backend validation.
-   */
-  signature?: string;
 }
 
 /**
@@ -989,11 +954,6 @@ export interface GoogleSearchCallContent {
    * The type of search grounding enabled.
    */
   search_type?: 'web_search' | 'image_search';
-
-  /**
-   * A signature hash for backend validation.
-   */
-  signature?: string;
 }
 
 /**
@@ -1283,11 +1243,6 @@ export interface MCPServerToolCallContent {
   server_name: string;
 
   type: 'mcp_server_tool_call';
-
-  /**
-   * A signature hash for backend validation.
-   */
-  signature?: string;
 }
 
 /**
@@ -1555,11 +1510,6 @@ export interface URLContextCallContent {
   arguments: URLContextCallArguments;
 
   type: 'url_context_call';
-
-  /**
-   * A signature hash for backend validation.
-   */
-  signature?: string;
 }
 
 /**
