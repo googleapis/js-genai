@@ -605,34 +605,12 @@ export namespace ContentDelta {
 
     type: 'file_search_result';
 
-    result?: Array<FileSearchResult.Result>;
+    result?: Array<unknown>;
 
     /**
      * A signature hash for backend validation.
      */
     signature?: string;
-  }
-
-  export namespace FileSearchResult {
-    /**
-     * The result of the File Search.
-     */
-    export interface Result {
-      /**
-       * The name of the file search store.
-       */
-      file_search_store?: string;
-
-      /**
-       * The text of the search result.
-       */
-      text?: string;
-
-      /**
-       * The title of the search result.
-       */
-      title?: string;
-    }
   }
 }
 
@@ -763,34 +741,12 @@ export interface FileSearchResultContent {
   /**
    * The results of the File Search.
    */
-  result?: Array<FileSearchResultContent.Result>;
+  result?: Array<unknown>;
 
   /**
    * A signature hash for backend validation.
    */
   signature?: string;
-}
-
-export namespace FileSearchResultContent {
-  /**
-   * The result of the File Search.
-   */
-  export interface Result {
-    /**
-     * The name of the file search store.
-     */
-    file_search_store?: string;
-
-    /**
-     * The text of the search result.
-     */
-    text?: string;
-
-    /**
-     * The title of the search result.
-     */
-    title?: string;
-  }
 }
 
 /**
