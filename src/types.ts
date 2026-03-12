@@ -4442,8 +4442,13 @@ export declare interface PreferenceOptimizationSpec {
   validationDatasetUri?: string;
 }
 
-/** Hyperparameters for Distillation. This data type is not supported in Gemini API. */
+/** Hyperparameters for distillation. */
 export declare interface DistillationHyperParameters {
+  /** The batch size hyperparameter for tuning.
+      This is only supported for OSS models in Vertex. */
+  batchSize?: number;
+  /** The learning rate for tuning. OSS models only. */
+  learningRate?: number;
   /** Optional. Adapter size for distillation. */
   adapterSize?: AdapterSize;
   /** Optional. Number of complete passes the model makes over the entire training dataset during training. */
@@ -4456,10 +4461,12 @@ export declare interface DistillationHyperParameters {
 export declare interface DistillationSpec {
   /** The GCS URI of the prompt dataset to use during distillation. */
   promptDatasetUri?: string;
-  /** The base teacher model that is being distilled. See [Supported models](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/tuning#supported_models). */
-  baseTeacherModel?: string;
+  /** Tuning mode for tuning. */
+  tuningMode?: TuningMode;
   /** Optional. Hyperparameters for Distillation. */
   hyperParameters?: DistillationHyperParameters;
+  /** The base teacher model that is being distilled. See [Supported models](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/tuning#supported_models). */
+  baseTeacherModel?: string;
   /** Deprecated. A path in a Cloud Storage bucket, which will be treated as the root output directory of the distillation pipeline. It is used by the system to generate the paths of output artifacts. */
   pipelineRootDirectory?: string;
   /** The student model that is being tuned, e.g., "google/gemma-2b-1.1-it". Deprecated. Use base_model instead. */
@@ -5014,7 +5021,7 @@ export declare interface CreateTuningJobConfig {
   preTunedModelCheckpointId?: string;
   /** Adapter size for tuning. */
   adapterSize?: AdapterSize;
-  /** Tuning mode for SFT tuning. */
+  /** Tuning mode for tuning. */
   tuningMode?: TuningMode;
   /** Custom base model for tuning. This is only supported for OSS models in Vertex. */
   customBaseModel?: string;
