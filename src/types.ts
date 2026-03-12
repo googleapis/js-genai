@@ -6828,6 +6828,16 @@ export declare interface ProactivityConfig {
   proactiveAudio?: boolean;
 }
 
+/** Configuration for history exchange between client and server. */
+export declare interface HistoryConfig {
+  /** If true, after sending `setup_complete`, the server will wait
+      and at first process `client_content` messages until `turn_complete` is
+      `true`. This initial history will not trigger a model call and
+      may end with role `MODEL`. After `turn_complete` is `true`, the client
+      can start the realtime conversation via `realtime_input`. */
+  initialHistoryInClientContent?: boolean;
+}
+
 /** Message contains configuration that will apply for the duration of the streaming session. */
 export declare interface LiveClientSetup {
   /** 
@@ -6869,6 +6879,8 @@ export declare interface LiveClientSetup {
   /** Configures the proactivity of the model. This allows the model to respond proactively to
     the input and to ignore irrelevant input. */
   proactivity?: ProactivityConfig;
+  /** Configures the exchange of history between the client and the server. */
+  historyConfig?: HistoryConfig;
   /** Configures the explicit VAD signal. If enabled, the client will send
       vad_signal to indicate the start and end of speech. This allows the server
       to process the audio more efficiently. */
@@ -7084,6 +7096,8 @@ If included the server will send SessionResumptionUpdate messages. */
   /** Configures the proactivity of the model. This allows the model to respond proactively to
     the input and to ignore irrelevant input. */
   proactivity?: ProactivityConfig;
+  /** Configures the exchange of history between the client and the server. */
+  historyConfig?: HistoryConfig;
   /** Configures the explicit VAD signal. If enabled, the client will send
       vad_signal to indicate the start and end of speech. This allows the server
       to process the audio more efficiently. */

@@ -753,6 +753,13 @@ export function liveClientSetupToMldev(
     common.setValueByPath(toObject, ['proactivity'], fromProactivity);
   }
 
+  const fromHistoryConfig = common.getValueByPath(fromObject, [
+    'historyConfig',
+  ]);
+  if (fromHistoryConfig != null) {
+    common.setValueByPath(toObject, ['historyConfig'], fromHistoryConfig);
+  }
+
   if (common.getValueByPath(fromObject, ['explicitVadSignal']) !== undefined) {
     throw new Error(
       'explicitVadSignal parameter is not supported in Gemini API.',
@@ -863,6 +870,10 @@ export function liveClientSetupToVertex(
   const fromProactivity = common.getValueByPath(fromObject, ['proactivity']);
   if (fromProactivity != null) {
     common.setValueByPath(toObject, ['proactivity'], fromProactivity);
+  }
+
+  if (common.getValueByPath(fromObject, ['historyConfig']) !== undefined) {
+    throw new Error('historyConfig parameter is not supported in Vertex AI.');
   }
 
   const fromExplicitVadSignal = common.getValueByPath(fromObject, [
@@ -1082,6 +1093,17 @@ export function liveConnectConfigToMldev(
     );
   }
 
+  const fromHistoryConfig = common.getValueByPath(fromObject, [
+    'historyConfig',
+  ]);
+  if (parentObject !== undefined && fromHistoryConfig != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'historyConfig'],
+      fromHistoryConfig,
+    );
+  }
+
   if (common.getValueByPath(fromObject, ['explicitVadSignal']) !== undefined) {
     throw new Error(
       'explicitVadSignal parameter is not supported in Gemini API.',
@@ -1292,6 +1314,10 @@ export function liveConnectConfigToVertex(
       ['setup', 'proactivity'],
       fromProactivity,
     );
+  }
+
+  if (common.getValueByPath(fromObject, ['historyConfig']) !== undefined) {
+    throw new Error('historyConfig parameter is not supported in Vertex AI.');
   }
 
   const fromExplicitVadSignal = common.getValueByPath(fromObject, [
