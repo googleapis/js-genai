@@ -228,7 +228,7 @@ export interface CodeExecutionCallContent {
   id: string;
 
   /**
-   * The arguments to pass to the code execution.
+   * Required. The arguments to pass to the code execution.
    */
   arguments: CodeExecutionCallArguments;
 
@@ -245,7 +245,7 @@ export interface CodeExecutionResultContent {
   call_id: string;
 
   /**
-   * The output of the code execution.
+   * Required. The output of the code execution.
    */
   result: string;
 
@@ -761,7 +761,7 @@ export interface FileSearchResultContent {
   type: 'file_search_result';
 
   /**
-   * The results of the File Search.
+   * Required. The results of the File Search.
    */
   result?: Array<FileSearchResultContent.Result>;
 
@@ -825,12 +825,12 @@ export interface FunctionCallContent {
   id: string;
 
   /**
-   * The arguments to pass to the function.
+   * Required. The arguments to pass to the function.
    */
   arguments: { [key: string]: unknown };
 
   /**
-   * The name of the tool to call.
+   * Required. The name of the tool to call.
    */
   name: string;
 
@@ -944,7 +944,7 @@ export interface GoogleSearchCallContent {
   id: string;
 
   /**
-   * The arguments to pass to Google Search.
+   * Required. The arguments to pass to Google Search.
    */
   arguments: GoogleSearchCallArguments;
 
@@ -986,7 +986,7 @@ export interface GoogleSearchResultContent {
   call_id: string;
 
   /**
-   * The results of the Google Search.
+   * Required. The results of the Google Search.
    */
   result: Array<GoogleSearchResult>;
 
@@ -1058,23 +1058,23 @@ export interface ImageContent {
  */
 export interface Interaction {
   /**
-   * Output only. A unique identifier for the interaction completion.
+   * Required. Output only. A unique identifier for the interaction completion.
    */
   id: string;
 
   /**
-   * Output only. The time at which the response was created in ISO 8601 format
+   * Required. Output only. The time at which the response was created in ISO 8601 format
    * (YYYY-MM-DDThh:mm:ssZ).
    */
   created: string;
 
   /**
-   * Output only. The status of the interaction.
+   * Required. Output only. The status of the interaction.
    */
   status: 'in_progress' | 'requires_action' | 'completed' | 'failed' | 'cancelled' | 'incomplete';
 
   /**
-   * Output only. The time at which the response was last updated in ISO 8601 format
+   * Required. Output only. The time at which the response was last updated in ISO 8601 format
    * (YYYY-MM-DDThh:mm:ssZ).
    */
   updated: string;
@@ -1171,7 +1171,7 @@ export interface InteractionCompleteEvent {
   event_type: 'interaction.complete';
 
   /**
-   * The completed interaction with empty outputs to reduce the payload size.
+   * Required. The completed interaction with empty outputs to reduce the payload size.
    * Use the preceding ContentDelta events for the actual output.
    */
   interaction: Interaction;
@@ -1228,17 +1228,17 @@ export interface MCPServerToolCallContent {
   id: string;
 
   /**
-   * The JSON object of arguments for the function.
+   * Required. The JSON object of arguments for the function.
    */
   arguments: { [key: string]: unknown };
 
   /**
-   * The name of the tool which was called.
+   * Required. The name of the tool which was called.
    */
   name: string;
 
   /**
-   * The name of the used MCP server.
+   * Required. The name of the used MCP server.
    */
   server_name: string;
 
@@ -1322,7 +1322,7 @@ export interface SpeechConfig {
  */
 export interface TextContent {
   /**
-   * The text content.
+   * Required. The text content.
    */
   text: string;
 
@@ -1505,7 +1505,7 @@ export interface URLContextCallContent {
   id: string;
 
   /**
-   * The arguments to pass to the URL context.
+   * Required. The arguments to pass to the URL context.
    */
   arguments: URLContextCallArguments;
 
@@ -1537,7 +1537,7 @@ export interface URLContextResultContent {
   call_id: string;
 
   /**
-   * The results of the URL context.
+   * Required. The results of the URL context.
    */
   result: Array<URLContextResult>;
 
