@@ -6814,7 +6814,11 @@ export declare interface ContextWindowCompressionConfig {
 }
 
 /** The audio transcription configuration in Setup. */
-export declare interface AudioTranscriptionConfig {}
+export declare interface AudioTranscriptionConfig {
+  /** The language codes of the audio. BCP-47 language code. If not set, the transcription will be in the language detected by the model. If set, the server will use the language code specified in the model config as a hint for the language of the audio
+   */
+  languageCodes?: string[];
+}
 
 /** Config for proactivity features. */
 export declare interface ProactivityConfig {

@@ -115,6 +115,7 @@ export interface AudioChunk {
 
 // @public
 export interface AudioTranscriptionConfig {
+    languageCodes?: string[];
 }
 
 // @public

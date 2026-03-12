@@ -11,6 +11,18 @@ import * as common from '../_common.js';
 import * as t from '../_transformers.js';
 import type * as types from '../types.js';
 
+export function audioTranscriptionConfigToMldev(
+  fromObject: types.AudioTranscriptionConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  if (common.getValueByPath(fromObject, ['languageCodes']) !== undefined) {
+    throw new Error('languageCodes parameter is not supported in Gemini API.');
+  }
+
+  return toObject;
+}
+
 export function authConfigToMldev(
   fromObject: types.AuthConfig,
 ): Record<string, unknown> {
@@ -721,7 +733,7 @@ export function liveClientSetupToMldev(
     common.setValueByPath(
       toObject,
       ['inputAudioTranscription'],
-      fromInputAudioTranscription,
+      audioTranscriptionConfigToMldev(fromInputAudioTranscription),
     );
   }
 
@@ -732,7 +744,7 @@ export function liveClientSetupToMldev(
     common.setValueByPath(
       toObject,
       ['outputAudioTranscription'],
-      fromOutputAudioTranscription,
+      audioTranscriptionConfigToMldev(fromOutputAudioTranscription),
     );
   }
 
@@ -1024,7 +1036,7 @@ export function liveConnectConfigToMldev(
     common.setValueByPath(
       parentObject,
       ['setup', 'inputAudioTranscription'],
-      fromInputAudioTranscription,
+      audioTranscriptionConfigToMldev(fromInputAudioTranscription),
     );
   }
 
@@ -1035,7 +1047,7 @@ export function liveConnectConfigToMldev(
     common.setValueByPath(
       parentObject,
       ['setup', 'outputAudioTranscription'],
-      fromOutputAudioTranscription,
+      audioTranscriptionConfigToMldev(fromOutputAudioTranscription),
     );
   }
 
