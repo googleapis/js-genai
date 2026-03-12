@@ -1,6 +1,14 @@
 # Changelog
 
 
+## [1.45.0](https://github.com/googleapis/js-genai/compare/v1.44.0...v1.45.0) (2026-03-12)
+
+
+### Features
+
+* Add inference_generation_config to EvaluationConfig for Tuning ([b4ac722](https://github.com/googleapis/js-genai/commit/b4ac722b0225ef3f06b82f5dcb19d423efe63599))
+* enable language code for audio transcription config in Live API for Vertex AI ([67f39ec](https://github.com/googleapis/js-genai/commit/67f39ec0079b5b027a5364b5ffdc59ccd5c2fe4f))
+
 ## [1.44.0](https://github.com/googleapis/js-genai/compare/v1.43.0...v1.44.0) (2026-03-04)
 
 
