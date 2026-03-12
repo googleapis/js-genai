@@ -40,6 +40,7 @@ export interface Uploader {
     file: string | Blob,
     uploadUrl: string,
     apiClient: ApiClient,
+    httpOptions?: import('./types.js').HttpOptions,
   ): Promise<File>;
 
   /**
@@ -50,12 +51,14 @@ export interface Uploader {
    *     uploaded to. The uploadUrl must be a url that was returned by the
    * https://generativelanguage.googleapis.com/upload/v1beta/{file_search_store_name}:uploadToFileSearchStore endpoint
    * @param apiClient The ApiClient to use for uploading.
+   * @param httpOptions Optional HTTP options to merge.
    * @return A Promise that resolves to types.UploadToFileSearchStoreOperation.
    */
   uploadToFileSearchStore(
     file: string | Blob,
     uploadUrl: string,
     apiClient: ApiClient,
+    httpOptions?: import('./types.js').HttpOptions,
   ): Promise<UploadToFileSearchStoreOperation>;
 
   /**

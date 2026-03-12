@@ -127,14 +127,15 @@ export class NodeUploader implements Uploader {
     //
     // (undocumented)
     stat(file: string | Blob): Promise<FileStat>;
+    // Warning: (ae-forgotten-export) The symbol "HttpOptions" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "File_2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    upload(file: string | Blob, uploadUrl: string, apiClient: ApiClient): Promise<File_2>;
+    upload(file: string | Blob, uploadUrl: string, apiClient: ApiClient, httpOptions?: HttpOptions): Promise<File_2>;
     // Warning: (ae-forgotten-export) The symbol "UploadToFileSearchStoreOperation" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    uploadToFileSearchStore(file: string | Blob, uploadUrl: string, apiClient: ApiClient): Promise<UploadToFileSearchStoreOperation>;
+    uploadToFileSearchStore(file: string | Blob, uploadUrl: string, apiClient: ApiClient, httpOptions?: HttpOptions): Promise<UploadToFileSearchStoreOperation>;
 }
 
 // @public (undocumented)
@@ -143,8 +144,8 @@ export function setValueByPath(data: Record<string, unknown>, keys: string[], va
 // @public (undocumented)
 export interface Uploader {
     stat(file: string | Blob): Promise<FileStat>;
-    upload(file: string | Blob, uploadUrl: string, apiClient: ApiClient): Promise<File_2>;
-    uploadToFileSearchStore(file: string | Blob, uploadUrl: string, apiClient: ApiClient): Promise<UploadToFileSearchStoreOperation>;
+    upload(file: string | Blob, uploadUrl: string, apiClient: ApiClient, httpOptions?: HttpOptions): Promise<File_2>;
+    uploadToFileSearchStore(file: string | Blob, uploadUrl: string, apiClient: ApiClient, httpOptions?: HttpOptions): Promise<UploadToFileSearchStoreOperation>;
 }
 
 // (No @packageDocumentation comment for this package)
