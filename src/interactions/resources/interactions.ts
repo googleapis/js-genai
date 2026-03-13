@@ -228,7 +228,7 @@ export interface CodeExecutionCallContent {
   id: string;
 
   /**
-   * The arguments to pass to the code execution.
+   * Required. The arguments to pass to the code execution.
    */
   arguments: CodeExecutionCallArguments;
 
@@ -245,7 +245,7 @@ export interface CodeExecutionResultContent {
   call_id: string;
 
   /**
-   * The output of the code execution.
+   * Required. The output of the code execution.
    */
   result: string;
 
@@ -273,19 +273,133 @@ export type Content =
   | VideoContent
   | ThoughtContent
   | FunctionCallContent
-  | FunctionResultContent
   | CodeExecutionCallContent
-  | CodeExecutionResultContent
   | URLContextCallContent
-  | URLContextResultContent
-  | GoogleSearchCallContent
-  | GoogleSearchResultContent
   | MCPServerToolCallContent
-  | MCPServerToolResultContent
+  | GoogleSearchCallContent
   | FileSearchCallContent
-  | FileSearchResultContent;
+  | Content.GoogleMapsCall
+  | FunctionResultContent
+  | CodeExecutionResultContent
+  | URLContextResultContent
+  | GoogleSearchResultContent
+  | MCPServerToolResultContent
+  | FileSearchResultContent
+  | Content.GoogleMapsResult;
+
+export namespace Content {
+  /**
+   * Google Maps content.
+   */
+  export interface GoogleMapsCall {
+    /**
+     * Required. A unique ID for this specific tool call.
+     */
+    id: string;
+
+    type: 'google_maps_call';
+
+    /**
+     * The arguments to pass to the Google Maps tool.
+     */
+    arguments?: GoogleMapsCall.Arguments;
+  }
+
+  export namespace GoogleMapsCall {
+    /**
+     * The arguments to pass to the Google Maps tool.
+     */
+    export interface Arguments {
+      /**
+       * The queries to be executed.
+       */
+      queries?: Array<string>;
+    }
+  }
+
+  /**
+   * Google Maps result content.
+   */
+  export interface GoogleMapsResult {
+    /**
+     * Required. ID to match the ID from the function call block.
+     */
+    call_id: string;
+
+    type: 'google_maps_result';
+
+    /**
+     * The results of the Google Maps.
+     */
+    result?: Array<GoogleMapsResult.Result>;
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+
+    /**
+     * Resource name of the Google Maps widget context token.
+     */
+    widget_context_token?: string;
+  }
+
+  export namespace GoogleMapsResult {
+    /**
+     * The result of the Google Maps.
+     */
+    export interface Result {
+      /**
+       * Title of the place.
+       */
+      name?: string;
+
+      /**
+       * The ID of the place, in `places/{place_id}` format.
+       */
+      place_id?: string;
+
+      /**
+       * Snippets of reviews that are used to generate answers about the
+       * features of a given place in Google Maps.
+       */
+      review_snippets?: Array<Result.ReviewSnippet>;
+
+      /**
+       * URI reference of the place.
+       */
+      url?: string;
+    }
+
+    export namespace Result {
+      /**
+       * Encapsulates a snippet of a user review that answers a question about
+       * the features of a specific place in Google Maps.
+       */
+      export interface ReviewSnippet {
+        /**
+         * The ID of the review snippet.
+         */
+        review_id?: string;
+
+        /**
+         * Title of the review.
+         */
+        title?: string;
+
+        /**
+         * A link that corresponds to the user review on Google Maps.
+         */
+        url?: string;
+      }
+    }
+  }
+}
 
 export interface ContentDelta {
+  /**
+   * The delta content data for a content block.
+   */
   delta:
     | ContentDelta.Text
     | ContentDelta.Image
@@ -295,24 +409,27 @@ export interface ContentDelta {
     | ContentDelta.ThoughtSummary
     | ContentDelta.ThoughtSignature
     | ContentDelta.FunctionCall
-    | ContentDelta.FunctionResult
     | ContentDelta.CodeExecutionCall
-    | ContentDelta.CodeExecutionResult
     | ContentDelta.URLContextCall
-    | ContentDelta.URLContextResult
     | ContentDelta.GoogleSearchCall
-    | ContentDelta.GoogleSearchResult
     | ContentDelta.MCPServerToolCall
-    | ContentDelta.MCPServerToolResult
     | ContentDelta.FileSearchCall
-    | ContentDelta.FileSearchResult;
+    | ContentDelta.GoogleMapsCall
+    | ContentDelta.FunctionResult
+    | ContentDelta.CodeExecutionResult
+    | ContentDelta.URLContextResult
+    | ContentDelta.GoogleSearchResult
+    | ContentDelta.MCPServerToolResult
+    | ContentDelta.FileSearchResult
+    | ContentDelta.GoogleMapsResult;
 
   event_type: 'content.delta';
 
   index: number;
 
   /**
-   * The event_id token to be used to resume the interaction stream, from this event.
+   * The event_id token to be used to resume the interaction stream, from
+   * this event.
    */
   event_id?: string;
 }
@@ -419,35 +536,6 @@ export namespace ContentDelta {
     type: 'function_call';
   }
 
-  export interface FunctionResult {
-    /**
-     * ID to match the ID from the function call block.
-     */
-    call_id: string;
-
-    /**
-     * Tool call result delta.
-     */
-    result: FunctionResult.Items | unknown | string;
-
-    type: 'function_result';
-
-    is_error?: boolean;
-
-    name?: string;
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export namespace FunctionResult {
-    export interface Items {
-      items?: Array<InteractionsAPI.TextContent | InteractionsAPI.ImageContent>;
-    }
-  }
-
   export interface CodeExecutionCall {
     /**
      * A unique ID for this specific tool call.
@@ -460,6 +548,104 @@ export namespace ContentDelta {
     arguments: InteractionsAPI.CodeExecutionCallArguments;
 
     type: 'code_execution_call';
+  }
+
+  export interface URLContextCall {
+    /**
+     * A unique ID for this specific tool call.
+     */
+    id: string;
+
+    /**
+     * The arguments to pass to the URL context.
+     */
+    arguments: InteractionsAPI.URLContextCallArguments;
+
+    type: 'url_context_call';
+  }
+
+  export interface GoogleSearchCall {
+    /**
+     * A unique ID for this specific tool call.
+     */
+    id: string;
+
+    /**
+     * The arguments to pass to Google Search.
+     */
+    arguments: InteractionsAPI.GoogleSearchCallArguments;
+
+    type: 'google_search_call';
+  }
+
+  export interface MCPServerToolCall {
+    /**
+     * A unique ID for this specific tool call.
+     */
+    id: string;
+
+    arguments: { [key: string]: unknown };
+
+    name: string;
+
+    server_name: string;
+
+    type: 'mcp_server_tool_call';
+  }
+
+  export interface FileSearchCall {
+    /**
+     * A unique ID for this specific tool call.
+     */
+    id: string;
+
+    type: 'file_search_call';
+  }
+
+  export interface GoogleMapsCall {
+    /**
+     * Required. A unique ID for this specific tool call.
+     */
+    id: string;
+
+    type: 'google_maps_call';
+
+    /**
+     * The arguments to pass to the Google Maps tool.
+     */
+    arguments?: GoogleMapsCall.Arguments;
+  }
+
+  export namespace GoogleMapsCall {
+    /**
+     * The arguments to pass to the Google Maps tool.
+     */
+    export interface Arguments {
+      /**
+       * The queries to be executed.
+       */
+      queries?: Array<string>;
+    }
+  }
+
+  export interface FunctionResult {
+    /**
+     * ID to match the ID from the function call block.
+     */
+    call_id: string;
+
+    result: unknown | Array<InteractionsAPI.TextContent | InteractionsAPI.ImageContent> | string;
+
+    type: 'function_result';
+
+    is_error?: boolean;
+
+    name?: string;
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
   }
 
   export interface CodeExecutionResult {
@@ -480,20 +666,6 @@ export namespace ContentDelta {
     signature?: string;
   }
 
-  export interface URLContextCall {
-    /**
-     * A unique ID for this specific tool call.
-     */
-    id: string;
-
-    /**
-     * The arguments to pass to the URL context.
-     */
-    arguments: InteractionsAPI.URLContextCallArguments;
-
-    type: 'url_context_call';
-  }
-
   export interface URLContextResult {
     /**
      * ID to match the ID from the function call block.
@@ -510,20 +682,6 @@ export namespace ContentDelta {
      * A signature hash for backend validation.
      */
     signature?: string;
-  }
-
-  export interface GoogleSearchCall {
-    /**
-     * A unique ID for this specific tool call.
-     */
-    id: string;
-
-    /**
-     * The arguments to pass to Google Search.
-     */
-    arguments: InteractionsAPI.GoogleSearchCallArguments;
-
-    type: 'google_search_call';
   }
 
   export interface GoogleSearchResult {
@@ -544,31 +702,13 @@ export namespace ContentDelta {
     signature?: string;
   }
 
-  export interface MCPServerToolCall {
-    /**
-     * A unique ID for this specific tool call.
-     */
-    id: string;
-
-    arguments: { [key: string]: unknown };
-
-    name: string;
-
-    server_name: string;
-
-    type: 'mcp_server_tool_call';
-  }
-
   export interface MCPServerToolResult {
     /**
      * ID to match the ID from the function call block.
      */
     call_id: string;
 
-    /**
-     * Tool call result delta.
-     */
-    result: MCPServerToolResult.Items | unknown | string;
+    result: unknown | Array<InteractionsAPI.TextContent | InteractionsAPI.ImageContent> | string;
 
     type: 'mcp_server_tool_result';
 
@@ -582,30 +722,15 @@ export namespace ContentDelta {
     signature?: string;
   }
 
-  export namespace MCPServerToolResult {
-    export interface Items {
-      items?: Array<InteractionsAPI.TextContent | InteractionsAPI.ImageContent>;
-    }
-  }
-
-  export interface FileSearchCall {
-    /**
-     * A unique ID for this specific tool call.
-     */
-    id: string;
-
-    type: 'file_search_call';
-  }
-
   export interface FileSearchResult {
     /**
      * ID to match the ID from the function call block.
      */
     call_id: string;
 
-    type: 'file_search_result';
+    result: Array<FileSearchResult.Result>;
 
-    result?: Array<FileSearchResult.Result>;
+    type: 'file_search_result';
 
     /**
      * A signature hash for backend validation.
@@ -634,6 +759,81 @@ export namespace ContentDelta {
       title?: string;
     }
   }
+
+  export interface GoogleMapsResult {
+    /**
+     * Required. ID to match the ID from the function call block.
+     */
+    call_id: string;
+
+    type: 'google_maps_result';
+
+    /**
+     * The results of the Google Maps.
+     */
+    result?: Array<GoogleMapsResult.Result>;
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+
+    /**
+     * Resource name of the Google Maps widget context token.
+     */
+    widget_context_token?: string;
+  }
+
+  export namespace GoogleMapsResult {
+    /**
+     * The result of the Google Maps.
+     */
+    export interface Result {
+      /**
+       * Title of the place.
+       */
+      name?: string;
+
+      /**
+       * The ID of the place, in `places/{place_id}` format.
+       */
+      place_id?: string;
+
+      /**
+       * Snippets of reviews that are used to generate answers about the
+       * features of a given place in Google Maps.
+       */
+      review_snippets?: Array<Result.ReviewSnippet>;
+
+      /**
+       * URI reference of the place.
+       */
+      url?: string;
+    }
+
+    export namespace Result {
+      /**
+       * Encapsulates a snippet of a user review that answers a question about
+       * the features of a specific place in Google Maps.
+       */
+      export interface ReviewSnippet {
+        /**
+         * The ID of the review snippet.
+         */
+        review_id?: string;
+
+        /**
+         * Title of the review.
+         */
+        title?: string;
+
+        /**
+         * A link that corresponds to the user review on Google Maps.
+         */
+        url?: string;
+      }
+    }
+  }
 }
 
 export interface ContentStart {
@@ -647,7 +847,8 @@ export interface ContentStart {
   index: number;
 
   /**
-   * The event_id token to be used to resume the interaction stream, from this event.
+   * The event_id token to be used to resume the interaction stream, from
+   * this event.
    */
   event_id?: string;
 }
@@ -658,7 +859,8 @@ export interface ContentStop {
   index: number;
 
   /**
-   * The event_id token to be used to resume the interaction stream, from this event.
+   * The event_id token to be used to resume the interaction stream, from
+   * this event.
    */
   event_id?: string;
 }
@@ -715,7 +917,8 @@ export interface ErrorEvent {
   error?: ErrorEvent.Error;
 
   /**
-   * The event_id token to be used to resume the interaction stream, from this event.
+   * The event_id token to be used to resume the interaction stream, from
+   * this event.
    */
   event_id?: string;
 }
@@ -758,12 +961,12 @@ export interface FileSearchResultContent {
    */
   call_id: string;
 
-  type: 'file_search_result';
-
   /**
-   * The results of the File Search.
+   * Required. The results of the File Search.
    */
-  result?: Array<FileSearchResultContent.Result>;
+  result: Array<FileSearchResultContent.Result>;
+
+  type: 'file_search_result';
 
   /**
    * A signature hash for backend validation.
@@ -825,12 +1028,12 @@ export interface FunctionCallContent {
   id: string;
 
   /**
-   * The arguments to pass to the function.
+   * Required. The arguments to pass to the function.
    */
   arguments: { [key: string]: unknown };
 
   /**
-   * The name of the tool to call.
+   * Required. The name of the tool to call.
    */
   name: string;
 
@@ -914,7 +1117,7 @@ export interface GenerationConfig {
   thinking_summaries?: 'auto' | 'none';
 
   /**
-   * The tool choice for the interaction.
+   * The tool choice configuration.
    */
   tool_choice?: ToolChoiceType | ToolChoiceConfig;
 
@@ -944,7 +1147,7 @@ export interface GoogleSearchCallContent {
   id: string;
 
   /**
-   * The arguments to pass to Google Search.
+   * Required. The arguments to pass to Google Search.
    */
   arguments: GoogleSearchCallArguments;
 
@@ -986,7 +1189,7 @@ export interface GoogleSearchResultContent {
   call_id: string;
 
   /**
-   * The results of the Google Search.
+   * Required. The results of the Google Search.
    */
   result: Array<GoogleSearchResult>;
 
@@ -1058,23 +1261,23 @@ export interface ImageContent {
  */
 export interface Interaction {
   /**
-   * Output only. A unique identifier for the interaction completion.
+   * Required. Output only. A unique identifier for the interaction completion.
    */
   id: string;
 
   /**
-   * Output only. The time at which the response was created in ISO 8601 format
+   * Required. Output only. The time at which the response was created in ISO 8601 format
    * (YYYY-MM-DDThh:mm:ssZ).
    */
   created: string;
 
   /**
-   * Output only. The status of the interaction.
+   * Required. Output only. The status of the interaction.
    */
   status: 'in_progress' | 'requires_action' | 'completed' | 'failed' | 'cancelled' | 'incomplete';
 
   /**
-   * Output only. The time at which the response was last updated in ISO 8601 format
+   * Required. Output only. The time at which the response was last updated in ISO 8601 format
    * (YYYY-MM-DDThh:mm:ssZ).
    */
   updated: string;
@@ -1103,17 +1306,19 @@ export interface Interaction {
     | VideoContent
     | ThoughtContent
     | FunctionCallContent
-    | FunctionResultContent
     | CodeExecutionCallContent
-    | CodeExecutionResultContent
     | URLContextCallContent
-    | URLContextResultContent
-    | GoogleSearchCallContent
-    | GoogleSearchResultContent
     | MCPServerToolCallContent
-    | MCPServerToolResultContent
+    | GoogleSearchCallContent
     | FileSearchCallContent
-    | FileSearchResultContent;
+    | Interaction.GoogleMapsCallContent
+    | FunctionResultContent
+    | CodeExecutionResultContent
+    | URLContextResultContent
+    | GoogleSearchResultContent
+    | MCPServerToolResultContent
+    | FileSearchResultContent
+    | Interaction.GoogleMapsResultContent;
 
   /**
    * The name of the `Model` used for generating the interaction.
@@ -1167,17 +1372,127 @@ export interface Interaction {
   usage?: Usage;
 }
 
+export namespace Interaction {
+  /**
+   * Google Maps content.
+   */
+  export interface GoogleMapsCallContent {
+    /**
+     * Required. A unique ID for this specific tool call.
+     */
+    id: string;
+
+    type: 'google_maps_call';
+
+    /**
+     * The arguments to pass to the Google Maps tool.
+     */
+    arguments?: GoogleMapsCallContent.Arguments;
+  }
+
+  export namespace GoogleMapsCallContent {
+    /**
+     * The arguments to pass to the Google Maps tool.
+     */
+    export interface Arguments {
+      /**
+       * The queries to be executed.
+       */
+      queries?: Array<string>;
+    }
+  }
+
+  /**
+   * Google Maps result content.
+   */
+  export interface GoogleMapsResultContent {
+    /**
+     * Required. ID to match the ID from the function call block.
+     */
+    call_id: string;
+
+    type: 'google_maps_result';
+
+    /**
+     * The results of the Google Maps.
+     */
+    result?: Array<GoogleMapsResultContent.Result>;
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+
+    /**
+     * Resource name of the Google Maps widget context token.
+     */
+    widget_context_token?: string;
+  }
+
+  export namespace GoogleMapsResultContent {
+    /**
+     * The result of the Google Maps.
+     */
+    export interface Result {
+      /**
+       * Title of the place.
+       */
+      name?: string;
+
+      /**
+       * The ID of the place, in `places/{place_id}` format.
+       */
+      place_id?: string;
+
+      /**
+       * Snippets of reviews that are used to generate answers about the
+       * features of a given place in Google Maps.
+       */
+      review_snippets?: Array<Result.ReviewSnippet>;
+
+      /**
+       * URI reference of the place.
+       */
+      url?: string;
+    }
+
+    export namespace Result {
+      /**
+       * Encapsulates a snippet of a user review that answers a question about
+       * the features of a specific place in Google Maps.
+       */
+      export interface ReviewSnippet {
+        /**
+         * The ID of the review snippet.
+         */
+        review_id?: string;
+
+        /**
+         * Title of the review.
+         */
+        title?: string;
+
+        /**
+         * A link that corresponds to the user review on Google Maps.
+         */
+        url?: string;
+      }
+    }
+  }
+}
+
 export interface InteractionCompleteEvent {
   event_type: 'interaction.complete';
 
   /**
-   * The completed interaction with empty outputs to reduce the payload size.
+   * Required. The completed interaction with empty outputs to reduce the payload size.
    * Use the preceding ContentDelta events for the actual output.
    */
   interaction: Interaction;
 
   /**
-   * The event_id token to be used to resume the interaction stream, from this event.
+   * The event_id token to be used to resume the interaction stream, from
+   * this event.
    */
   event_id?: string;
 }
@@ -1200,7 +1515,8 @@ export interface InteractionStartEvent {
   interaction: Interaction;
 
   /**
-   * The event_id token to be used to resume the interaction stream, from this event.
+   * The event_id token to be used to resume the interaction stream, from
+   * this event.
    */
   event_id?: string;
 }
@@ -1213,7 +1529,8 @@ export interface InteractionStatusUpdate {
   status: 'in_progress' | 'requires_action' | 'completed' | 'failed' | 'cancelled' | 'incomplete';
 
   /**
-   * The event_id token to be used to resume the interaction stream, from this event.
+   * The event_id token to be used to resume the interaction stream, from
+   * this event.
    */
   event_id?: string;
 }
@@ -1228,17 +1545,17 @@ export interface MCPServerToolCallContent {
   id: string;
 
   /**
-   * The JSON object of arguments for the function.
+   * Required. The JSON object of arguments for the function.
    */
   arguments: { [key: string]: unknown };
 
   /**
-   * The name of the tool which was called.
+   * Required. The name of the tool which was called.
    */
   name: string;
 
   /**
-   * The name of the used MCP server.
+   * Required. The name of the used MCP server.
    */
   server_name: string;
 
@@ -1322,7 +1639,7 @@ export interface SpeechConfig {
  */
 export interface TextContent {
   /**
-   * The text content.
+   * Required. The text content.
    */
   text: string;
 
@@ -1363,7 +1680,8 @@ export type Tool =
   | Tool.ComputerUse
   | Tool.MCPServer
   | Tool.GoogleSearch
-  | Tool.FileSearch;
+  | Tool.FileSearch
+  | Tool.GoogleMaps;
 
 export namespace Tool {
   /**
@@ -1458,6 +1776,29 @@ export namespace Tool {
      */
     top_k?: number;
   }
+
+  /**
+   * A tool that can be used by the model to call Google Maps.
+   */
+  export interface GoogleMaps {
+    type: 'google_maps';
+
+    /**
+     * Whether to return a widget context token in the tool call result of the
+     * response.
+     */
+    enable_widget?: boolean;
+
+    /**
+     * The latitude of the user's location.
+     */
+    latitude?: number;
+
+    /**
+     * The longitude of the user's location.
+     */
+    longitude?: number;
+  }
 }
 
 /**
@@ -1473,10 +1814,7 @@ export interface ToolChoiceConfig {
 export type ToolChoiceType = 'auto' | 'any' | 'none' | 'validated';
 
 export interface Turn {
-  /**
-   * The content of the turn.
-   */
-  content?: string | Array<Content>;
+  content?: Array<Content> | string;
 
   /**
    * The originator of this turn. Must be user for input or model for
@@ -1505,7 +1843,7 @@ export interface URLContextCallContent {
   id: string;
 
   /**
-   * The arguments to pass to the URL context.
+   * Required. The arguments to pass to the URL context.
    */
   arguments: URLContextCallArguments;
 
@@ -1537,7 +1875,7 @@ export interface URLContextResultContent {
   call_id: string;
 
   /**
-   * The results of the URL context.
+   * Required. The results of the URL context.
    */
   result: Array<URLContextResult>;
 
@@ -1736,17 +2074,19 @@ export interface BaseCreateModelInteractionParams {
     | VideoContent
     | ThoughtContent
     | FunctionCallContent
-    | FunctionResultContent
     | CodeExecutionCallContent
-    | CodeExecutionResultContent
     | URLContextCallContent
-    | URLContextResultContent
-    | GoogleSearchCallContent
-    | GoogleSearchResultContent
     | MCPServerToolCallContent
-    | MCPServerToolResultContent
+    | GoogleSearchCallContent
     | FileSearchCallContent
-    | FileSearchResultContent;
+    | GoogleMapsCallContent
+    | FunctionResultContent
+    | CodeExecutionResultContent
+    | URLContextResultContent
+    | GoogleSearchResultContent
+    | MCPServerToolResultContent
+    | FileSearchResultContent
+    | GoogleMapsResultContent;
 
   /**
    * Body param: The name of the `Model` used for generating the interaction.
@@ -1805,6 +2145,115 @@ export interface BaseCreateModelInteractionParams {
   tools?: Array<Tool>;
 }
 
+export namespace BaseCreateModelInteractionParams {
+  /**
+   * Google Maps content.
+   */
+  export interface GoogleMapsCallContent {
+    /**
+     * Required. A unique ID for this specific tool call.
+     */
+    id: string;
+
+    type: 'google_maps_call';
+
+    /**
+     * The arguments to pass to the Google Maps tool.
+     */
+    arguments?: GoogleMapsCallContent.Arguments;
+  }
+
+  export namespace GoogleMapsCallContent {
+    /**
+     * The arguments to pass to the Google Maps tool.
+     */
+    export interface Arguments {
+      /**
+       * The queries to be executed.
+       */
+      queries?: Array<string>;
+    }
+  }
+
+  /**
+   * Google Maps result content.
+   */
+  export interface GoogleMapsResultContent {
+    /**
+     * Required. ID to match the ID from the function call block.
+     */
+    call_id: string;
+
+    type: 'google_maps_result';
+
+    /**
+     * The results of the Google Maps.
+     */
+    result?: Array<GoogleMapsResultContent.Result>;
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+
+    /**
+     * Resource name of the Google Maps widget context token.
+     */
+    widget_context_token?: string;
+  }
+
+  export namespace GoogleMapsResultContent {
+    /**
+     * The result of the Google Maps.
+     */
+    export interface Result {
+      /**
+       * Title of the place.
+       */
+      name?: string;
+
+      /**
+       * The ID of the place, in `places/{place_id}` format.
+       */
+      place_id?: string;
+
+      /**
+       * Snippets of reviews that are used to generate answers about the
+       * features of a given place in Google Maps.
+       */
+      review_snippets?: Array<Result.ReviewSnippet>;
+
+      /**
+       * URI reference of the place.
+       */
+      url?: string;
+    }
+
+    export namespace Result {
+      /**
+       * Encapsulates a snippet of a user review that answers a question about
+       * the features of a specific place in Google Maps.
+       */
+      export interface ReviewSnippet {
+        /**
+         * The ID of the review snippet.
+         */
+        review_id?: string;
+
+        /**
+         * Title of the review.
+         */
+        title?: string;
+
+        /**
+         * A link that corresponds to the user review on Google Maps.
+         */
+        url?: string;
+      }
+    }
+  }
+}
+
 export interface BaseCreateAgentInteractionParams {
   /**
    * Path param: Which version of the API to use.
@@ -1830,17 +2279,19 @@ export interface BaseCreateAgentInteractionParams {
     | VideoContent
     | ThoughtContent
     | FunctionCallContent
-    | FunctionResultContent
     | CodeExecutionCallContent
-    | CodeExecutionResultContent
     | URLContextCallContent
-    | URLContextResultContent
-    | GoogleSearchCallContent
-    | GoogleSearchResultContent
     | MCPServerToolCallContent
-    | MCPServerToolResultContent
+    | GoogleSearchCallContent
     | FileSearchCallContent
-    | FileSearchResultContent;
+    | GoogleMapsCallContent
+    | FunctionResultContent
+    | CodeExecutionResultContent
+    | URLContextResultContent
+    | GoogleSearchResultContent
+    | MCPServerToolResultContent
+    | FileSearchResultContent
+    | GoogleMapsResultContent;
 
   /**
    * Body param: Configuration parameters for the agent interaction.
@@ -1892,6 +2343,115 @@ export interface BaseCreateAgentInteractionParams {
    * Body param: A list of tool declarations the model may call during interaction.
    */
   tools?: Array<Tool>;
+}
+
+export namespace BaseCreateAgentInteractionParams {
+  /**
+   * Google Maps content.
+   */
+  export interface GoogleMapsCallContent {
+    /**
+     * Required. A unique ID for this specific tool call.
+     */
+    id: string;
+
+    type: 'google_maps_call';
+
+    /**
+     * The arguments to pass to the Google Maps tool.
+     */
+    arguments?: GoogleMapsCallContent.Arguments;
+  }
+
+  export namespace GoogleMapsCallContent {
+    /**
+     * The arguments to pass to the Google Maps tool.
+     */
+    export interface Arguments {
+      /**
+       * The queries to be executed.
+       */
+      queries?: Array<string>;
+    }
+  }
+
+  /**
+   * Google Maps result content.
+   */
+  export interface GoogleMapsResultContent {
+    /**
+     * Required. ID to match the ID from the function call block.
+     */
+    call_id: string;
+
+    type: 'google_maps_result';
+
+    /**
+     * The results of the Google Maps.
+     */
+    result?: Array<GoogleMapsResultContent.Result>;
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+
+    /**
+     * Resource name of the Google Maps widget context token.
+     */
+    widget_context_token?: string;
+  }
+
+  export namespace GoogleMapsResultContent {
+    /**
+     * The result of the Google Maps.
+     */
+    export interface Result {
+      /**
+       * Title of the place.
+       */
+      name?: string;
+
+      /**
+       * The ID of the place, in `places/{place_id}` format.
+       */
+      place_id?: string;
+
+      /**
+       * Snippets of reviews that are used to generate answers about the
+       * features of a given place in Google Maps.
+       */
+      review_snippets?: Array<Result.ReviewSnippet>;
+
+      /**
+       * URI reference of the place.
+       */
+      url?: string;
+    }
+
+    export namespace Result {
+      /**
+       * Encapsulates a snippet of a user review that answers a question about
+       * the features of a specific place in Google Maps.
+       */
+      export interface ReviewSnippet {
+        /**
+         * The ID of the review snippet.
+         */
+        review_id?: string;
+
+        /**
+         * Title of the review.
+         */
+        title?: string;
+
+        /**
+         * A link that corresponds to the user review on Google Maps.
+         */
+        url?: string;
+      }
+    }
+  }
 }
 
 export interface CreateModelInteractionParamsNonStreaming extends BaseCreateModelInteractionParams {
