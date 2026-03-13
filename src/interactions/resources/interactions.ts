@@ -287,25 +287,25 @@ export type Content =
 
 export interface ContentDelta {
   delta:
-    | ContentDelta.TextDelta
-    | ContentDelta.ImageDelta
-    | ContentDelta.AudioDelta
-    | ContentDelta.DocumentDelta
-    | ContentDelta.VideoDelta
-    | ContentDelta.ThoughtSummaryDelta
-    | ContentDelta.ThoughtSignatureDelta
-    | ContentDelta.FunctionCallDelta
-    | ContentDelta.FunctionResultDelta
-    | ContentDelta.CodeExecutionCallDelta
-    | ContentDelta.CodeExecutionResultDelta
-    | ContentDelta.URLContextCallDelta
-    | ContentDelta.URLContextResultDelta
-    | ContentDelta.GoogleSearchCallDelta
-    | ContentDelta.GoogleSearchResultDelta
-    | ContentDelta.MCPServerToolCallDelta
-    | ContentDelta.MCPServerToolResultDelta
-    | ContentDelta.FileSearchCallDelta
-    | ContentDelta.FileSearchResultDelta;
+    | ContentDelta.Text
+    | ContentDelta.Image
+    | ContentDelta.Audio
+    | ContentDelta.Document
+    | ContentDelta.Video
+    | ContentDelta.ThoughtSummary
+    | ContentDelta.ThoughtSignature
+    | ContentDelta.FunctionCall
+    | ContentDelta.FunctionResult
+    | ContentDelta.CodeExecutionCall
+    | ContentDelta.CodeExecutionResult
+    | ContentDelta.URLContextCall
+    | ContentDelta.URLContextResult
+    | ContentDelta.GoogleSearchCall
+    | ContentDelta.GoogleSearchResult
+    | ContentDelta.MCPServerToolCall
+    | ContentDelta.MCPServerToolResult
+    | ContentDelta.FileSearchCall
+    | ContentDelta.FileSearchResult;
 
   event_type: 'content.delta';
 
@@ -318,7 +318,7 @@ export interface ContentDelta {
 }
 
 export namespace ContentDelta {
-  export interface TextDelta {
+  export interface Text {
     text: string;
 
     type: 'text';
@@ -329,7 +329,7 @@ export namespace ContentDelta {
     annotations?: Array<InteractionsAPI.Annotation>;
   }
 
-  export interface ImageDelta {
+  export interface Image {
     type: 'image';
 
     data?: string;
@@ -344,7 +344,7 @@ export namespace ContentDelta {
     uri?: string;
   }
 
-  export interface AudioDelta {
+  export interface Audio {
     type: 'audio';
 
     data?: string;
@@ -354,7 +354,7 @@ export namespace ContentDelta {
     uri?: string;
   }
 
-  export interface DocumentDelta {
+  export interface Document {
     type: 'document';
 
     data?: string;
@@ -364,7 +364,7 @@ export namespace ContentDelta {
     uri?: string;
   }
 
-  export interface VideoDelta {
+  export interface Video {
     type: 'video';
 
     data?: string;
@@ -388,7 +388,7 @@ export namespace ContentDelta {
     uri?: string;
   }
 
-  export interface ThoughtSummaryDelta {
+  export interface ThoughtSummary {
     type: 'thought_summary';
 
     /**
@@ -397,7 +397,7 @@ export namespace ContentDelta {
     content?: InteractionsAPI.TextContent | InteractionsAPI.ImageContent;
   }
 
-  export interface ThoughtSignatureDelta {
+  export interface ThoughtSignature {
     type: 'thought_signature';
 
     /**
@@ -406,7 +406,7 @@ export namespace ContentDelta {
     signature?: string;
   }
 
-  export interface FunctionCallDelta {
+  export interface FunctionCall {
     /**
      * A unique ID for this specific tool call.
      */
@@ -419,7 +419,7 @@ export namespace ContentDelta {
     type: 'function_call';
   }
 
-  export interface FunctionResultDelta {
+  export interface FunctionResult {
     /**
      * ID to match the ID from the function call block.
      */
@@ -428,7 +428,7 @@ export namespace ContentDelta {
     /**
      * Tool call result delta.
      */
-    result: FunctionResultDelta.Items | unknown | string;
+    result: FunctionResult.Items | unknown | string;
 
     type: 'function_result';
 
@@ -442,13 +442,13 @@ export namespace ContentDelta {
     signature?: string;
   }
 
-  export namespace FunctionResultDelta {
+  export namespace FunctionResult {
     export interface Items {
       items?: Array<InteractionsAPI.TextContent | InteractionsAPI.ImageContent>;
     }
   }
 
-  export interface CodeExecutionCallDelta {
+  export interface CodeExecutionCall {
     /**
      * A unique ID for this specific tool call.
      */
@@ -462,7 +462,7 @@ export namespace ContentDelta {
     type: 'code_execution_call';
   }
 
-  export interface CodeExecutionResultDelta {
+  export interface CodeExecutionResult {
     /**
      * ID to match the ID from the function call block.
      */
@@ -480,7 +480,7 @@ export namespace ContentDelta {
     signature?: string;
   }
 
-  export interface URLContextCallDelta {
+  export interface URLContextCall {
     /**
      * A unique ID for this specific tool call.
      */
@@ -494,7 +494,7 @@ export namespace ContentDelta {
     type: 'url_context_call';
   }
 
-  export interface URLContextResultDelta {
+  export interface URLContextResult {
     /**
      * ID to match the ID from the function call block.
      */
@@ -512,7 +512,7 @@ export namespace ContentDelta {
     signature?: string;
   }
 
-  export interface GoogleSearchCallDelta {
+  export interface GoogleSearchCall {
     /**
      * A unique ID for this specific tool call.
      */
@@ -526,7 +526,7 @@ export namespace ContentDelta {
     type: 'google_search_call';
   }
 
-  export interface GoogleSearchResultDelta {
+  export interface GoogleSearchResult {
     /**
      * ID to match the ID from the function call block.
      */
@@ -544,7 +544,7 @@ export namespace ContentDelta {
     signature?: string;
   }
 
-  export interface MCPServerToolCallDelta {
+  export interface MCPServerToolCall {
     /**
      * A unique ID for this specific tool call.
      */
@@ -559,7 +559,7 @@ export namespace ContentDelta {
     type: 'mcp_server_tool_call';
   }
 
-  export interface MCPServerToolResultDelta {
+  export interface MCPServerToolResult {
     /**
      * ID to match the ID from the function call block.
      */
@@ -568,7 +568,7 @@ export namespace ContentDelta {
     /**
      * Tool call result delta.
      */
-    result: MCPServerToolResultDelta.Items | unknown | string;
+    result: MCPServerToolResult.Items | unknown | string;
 
     type: 'mcp_server_tool_result';
 
@@ -582,13 +582,13 @@ export namespace ContentDelta {
     signature?: string;
   }
 
-  export namespace MCPServerToolResultDelta {
+  export namespace MCPServerToolResult {
     export interface Items {
       items?: Array<InteractionsAPI.TextContent | InteractionsAPI.ImageContent>;
     }
   }
 
-  export interface FileSearchCallDelta {
+  export interface FileSearchCall {
     /**
      * A unique ID for this specific tool call.
      */
@@ -597,7 +597,7 @@ export namespace ContentDelta {
     type: 'file_search_call';
   }
 
-  export interface FileSearchResultDelta {
+  export interface FileSearchResult {
     /**
      * ID to match the ID from the function call block.
      */
@@ -605,7 +605,7 @@ export namespace ContentDelta {
 
     type: 'file_search_result';
 
-    result?: Array<FileSearchResultDelta.Result>;
+    result?: Array<FileSearchResult.Result>;
 
     /**
      * A signature hash for backend validation.
@@ -613,7 +613,7 @@ export namespace ContentDelta {
     signature?: string;
   }
 
-  export namespace FileSearchResultDelta {
+  export namespace FileSearchResult {
     /**
      * The result of the File Search.
      */
