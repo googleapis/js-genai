@@ -3,6 +3,7 @@
 
 dist/**/*
 temp/**/*
+var/**/*
 
 node_modules
 
