@@ -963,7 +963,7 @@ export interface GoogleSearchResult {
   /**
    * Web content snippet that can be embedded in a web page or an app webview.
    */
-  rendered_content?: string;
+  search_suggestions?: string;
 
   /**
    * Title of the search result.
