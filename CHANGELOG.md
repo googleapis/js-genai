@@ -1,6 +1,19 @@
 # Changelog
 
 
+## [1.46.0](https://github.com/googleapis/js-genai/compare/v1.45.0...v1.46.0) (2026-03-14)
+
+
+### Features
+
+* Support Google Maps in Interactions ([d0593e3](https://github.com/googleapis/js-genai/commit/d0593e31bf500a18890dacc4dc2628da051f36af))
+
+
+### Bug Fixes
+
+* Breaking change for Interactions, rename ContentDelta unions. ([917f24f](https://github.com/googleapis/js-genai/commit/917f24fe55270d02cb004e6b85f2c090caa9bfe6))
+* Breaking change to Interactions API to rename rendered_content to search_suggestions ([cc6bd38](https://github.com/googleapis/js-genai/commit/cc6bd38a2b2dd7fcea93c561dd5f397433e52393))
+
 ## [1.45.0](https://github.com/googleapis/js-genai/compare/v1.44.0...v1.45.0) (2026-03-12)
 
 
