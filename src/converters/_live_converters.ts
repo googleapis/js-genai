@@ -113,6 +113,30 @@ export function contentToMldev(
   return toObject;
 }
 
+export function contentToVertex(
+  fromObject: types.Content,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromParts = common.getValueByPath(fromObject, ['parts']);
+  if (fromParts != null) {
+    let transformedList = fromParts;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return partToVertex(item);
+      });
+    }
+    common.setValueByPath(toObject, ['parts'], transformedList);
+  }
+
+  const fromRole = common.getValueByPath(fromObject, ['role']);
+  if (fromRole != null) {
+    common.setValueByPath(toObject, ['role'], fromRole);
+  }
+
+  return toObject;
+}
+
 export function fileDataToMldev(
   fromObject: types.FileData,
 ): Record<string, unknown> {
@@ -467,6 +491,30 @@ export function liveClientContentToMldev(
   return toObject;
 }
 
+export function liveClientContentToVertex(
+  fromObject: types.LiveClientContent,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromTurns = common.getValueByPath(fromObject, ['turns']);
+  if (fromTurns != null) {
+    let transformedList = fromTurns;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return contentToVertex(item);
+      });
+    }
+    common.setValueByPath(toObject, ['turns'], transformedList);
+  }
+
+  const fromTurnComplete = common.getValueByPath(fromObject, ['turnComplete']);
+  if (fromTurnComplete != null) {
+    common.setValueByPath(toObject, ['turnComplete'], fromTurnComplete);
+  }
+
+  return toObject;
+}
+
 export function liveClientMessageToMldev(
   fromObject: types.LiveClientMessage,
 ): Record<string, unknown> {
@@ -529,7 +577,11 @@ export function liveClientMessageToVertex(
     'clientContent',
   ]);
   if (fromClientContent != null) {
-    common.setValueByPath(toObject, ['clientContent'], fromClientContent);
+    common.setValueByPath(
+      toObject,
+      ['clientContent'],
+      liveClientContentToVertex(fromClientContent),
+    );
   }
 
   const fromRealtimeInput = common.getValueByPath(fromObject, [
@@ -790,7 +842,7 @@ export function liveClientSetupToVertex(
     common.setValueByPath(
       toObject,
       ['systemInstruction'],
-      t.tContent(fromSystemInstruction),
+      contentToVertex(t.tContent(fromSystemInstruction)),
     );
   }
 
@@ -1215,7 +1267,7 @@ export function liveConnectConfigToVertex(
     common.setValueByPath(
       parentObject,
       ['setup', 'systemInstruction'],
-      t.tContent(fromSystemInstruction),
+      contentToVertex(t.tContent(fromSystemInstruction)),
     );
   }
 
@@ -1779,11 +1831,11 @@ export function liveServerMessageFromVertex(
 export function partToMldev(fromObject: types.Part): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromMediaResolution = common.getValueByPath(fromObject, [
-    'mediaResolution',
+  const fromExecutableCode = common.getValueByPath(fromObject, [
+    'executableCode',
   ]);
-  if (fromMediaResolution != null) {
-    common.setValueByPath(toObject, ['mediaResolution'], fromMediaResolution);
+  if (fromExecutableCode != null) {
+    common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
   }
 
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
@@ -1797,11 +1849,21 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
     );
   }
 
-  const fromExecutableCode = common.getValueByPath(fromObject, [
-    'executableCode',
+  const fromMediaResolution = common.getValueByPath(fromObject, [
+    'mediaResolution',
   ]);
-  if (fromExecutableCode != null) {
-    common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
+  if (fromMediaResolution != null) {
+    common.setValueByPath(toObject, ['mediaResolution'], fromMediaResolution);
+  }
+
+  const fromToolCall = common.getValueByPath(fromObject, ['toolCall']);
+  if (fromToolCall != null) {
+    common.setValueByPath(toObject, ['toolCall'], fromToolCall);
+  }
+
+  const fromToolResponse = common.getValueByPath(fromObject, ['toolResponse']);
+  if (fromToolResponse != null) {
+    common.setValueByPath(toObject, ['toolResponse'], fromToolResponse);
   }
 
   const fromFileData = common.getValueByPath(fromObject, ['fileData']);
@@ -1836,6 +1898,91 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
       ['inlineData'],
       blobToMldev(fromInlineData),
     );
+  }
+
+  const fromText = common.getValueByPath(fromObject, ['text']);
+  if (fromText != null) {
+    common.setValueByPath(toObject, ['text'], fromText);
+  }
+
+  const fromThought = common.getValueByPath(fromObject, ['thought']);
+  if (fromThought != null) {
+    common.setValueByPath(toObject, ['thought'], fromThought);
+  }
+
+  const fromThoughtSignature = common.getValueByPath(fromObject, [
+    'thoughtSignature',
+  ]);
+  if (fromThoughtSignature != null) {
+    common.setValueByPath(toObject, ['thoughtSignature'], fromThoughtSignature);
+  }
+
+  const fromVideoMetadata = common.getValueByPath(fromObject, [
+    'videoMetadata',
+  ]);
+  if (fromVideoMetadata != null) {
+    common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
+  }
+
+  return toObject;
+}
+
+export function partToVertex(fromObject: types.Part): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromExecutableCode = common.getValueByPath(fromObject, [
+    'executableCode',
+  ]);
+  if (fromExecutableCode != null) {
+    common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
+  }
+
+  const fromCodeExecutionResult = common.getValueByPath(fromObject, [
+    'codeExecutionResult',
+  ]);
+  if (fromCodeExecutionResult != null) {
+    common.setValueByPath(
+      toObject,
+      ['codeExecutionResult'],
+      fromCodeExecutionResult,
+    );
+  }
+
+  const fromMediaResolution = common.getValueByPath(fromObject, [
+    'mediaResolution',
+  ]);
+  if (fromMediaResolution != null) {
+    common.setValueByPath(toObject, ['mediaResolution'], fromMediaResolution);
+  }
+
+  if (common.getValueByPath(fromObject, ['toolCall']) !== undefined) {
+    throw new Error('toolCall parameter is not supported in Vertex AI.');
+  }
+
+  if (common.getValueByPath(fromObject, ['toolResponse']) !== undefined) {
+    throw new Error('toolResponse parameter is not supported in Vertex AI.');
+  }
+
+  const fromFileData = common.getValueByPath(fromObject, ['fileData']);
+  if (fromFileData != null) {
+    common.setValueByPath(toObject, ['fileData'], fromFileData);
+  }
+
+  const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
+  if (fromFunctionCall != null) {
+    common.setValueByPath(toObject, ['functionCall'], fromFunctionCall);
+  }
+
+  const fromFunctionResponse = common.getValueByPath(fromObject, [
+    'functionResponse',
+  ]);
+  if (fromFunctionResponse != null) {
+    common.setValueByPath(toObject, ['functionResponse'], fromFunctionResponse);
+  }
+
+  const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
+  if (fromInlineData != null) {
+    common.setValueByPath(toObject, ['inlineData'], fromInlineData);
   }
 
   const fromText = common.getValueByPath(fromObject, ['text']);
