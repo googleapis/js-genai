@@ -161,25 +161,7 @@ export interface AllowedTools {
 /**
  * Citation information for model-generated content.
  */
-export interface Annotation {
-  /**
-   * End of the attributed segment, exclusive.
-   */
-  end_index?: number;
-
-  /**
-   * Source attributed for a portion of the text. Could be a URL, title, or
-   * other identifier.
-   */
-  source?: string;
-
-  /**
-   * Start of segment of the response that is attributed to this source.
-   *
-   * Index indicates the start of the segment, measured in bytes.
-   */
-  start_index?: number;
-}
+export type Annotation = URLCitation | FileCitation | PlaceCitation;
 
 /**
  * An audio content block.
@@ -609,34 +591,12 @@ export namespace ContentDelta {
 
     type: 'file_search_result';
 
-    result?: Array<FileSearchResult.Result>;
+    result?: Array<unknown>;
 
     /**
      * A signature hash for backend validation.
      */
     signature?: string;
-  }
-
-  export namespace FileSearchResult {
-    /**
-     * The result of the File Search.
-     */
-    export interface Result {
-      /**
-       * The name of the file search store.
-       */
-      file_search_store?: string;
-
-      /**
-       * The text of the search result.
-       */
-      text?: string;
-
-      /**
-       * The title of the search result.
-       */
-      title?: string;
-    }
   }
 
   export interface GoogleMapsCall {
@@ -775,6 +735,38 @@ export namespace ErrorEvent {
 }
 
 /**
+ * A file citation annotation.
+ */
+export interface FileCitation {
+  type: 'file_citation';
+
+  /**
+   * The URI of the file.
+   */
+  document_uri?: string;
+
+  /**
+   * End of the attributed segment, exclusive.
+   */
+  end_index?: number;
+
+  /**
+   * The name of the file.
+   */
+  file_name?: string;
+
+  /**
+   * Source attributed for a portion of the text.
+   */
+  source?: string;
+
+  /**
+   * Start of segment of the response that is attributed to this source.
+   */
+  start_index?: number;
+}
+
+/**
  * File Search content.
  */
 export interface FileSearchCallContent {
@@ -800,34 +792,12 @@ export interface FileSearchResultContent {
   /**
    * The results of the File Search.
    */
-  result?: Array<FileSearchResultContent.Result>;
+  result?: Array<unknown>;
 
   /**
    * A signature hash for backend validation.
    */
   signature?: string;
-}
-
-export namespace FileSearchResultContent {
-  /**
-   * The result of the File Search.
-   */
-  export interface Result {
-    /**
-     * The name of the file search store.
-     */
-    file_search_store?: string;
-
-    /**
-     * The text of the search result.
-     */
-    text?: string;
-
-    /**
-     * The title of the search result.
-     */
-    title?: string;
-  }
 }
 
 /**
@@ -1113,16 +1083,6 @@ export interface GoogleSearchResult {
    * Web content snippet that can be embedded in a web page or an app webview.
    */
   search_suggestions?: string;
-
-  /**
-   * Title of the search result.
-   */
-  title?: string;
-
-  /**
-   * URI reference of the search result.
-   */
-  url?: string;
 }
 
 /**
@@ -1449,6 +1409,67 @@ export type Model =
   | (string & {});
 
 /**
+ * A place citation annotation.
+ */
+export interface PlaceCitation {
+  type: 'place_citation';
+
+  /**
+   * End of the attributed segment, exclusive.
+   */
+  end_index?: number;
+
+  /**
+   * Title of the place.
+   */
+  name?: string;
+
+  /**
+   * The ID of the place, in `places/{place_id}` format.
+   */
+  place_id?: string;
+
+  /**
+   * Snippets of reviews that are used to generate answers about the
+   * features of a given place in Google Maps.
+   */
+  review_snippets?: Array<PlaceCitation.ReviewSnippet>;
+
+  /**
+   * Start of segment of the response that is attributed to this source.
+   */
+  start_index?: number;
+
+  /**
+   * URI reference of the place.
+   */
+  url?: string;
+}
+
+export namespace PlaceCitation {
+  /**
+   * Encapsulates a snippet of a user review that answers a question about
+   * the features of a specific place in Google Maps.
+   */
+  export interface ReviewSnippet {
+    /**
+     * The ID of the review snippet.
+     */
+    review_id?: string;
+
+    /**
+     * Title of the review.
+     */
+    title?: string;
+
+    /**
+     * A link that corresponds to the user review on Google Maps.
+     */
+    url?: string;
+  }
+}
+
+/**
  * The configuration for speech interaction.
  */
 export interface SpeechConfig {
@@ -1658,6 +1679,33 @@ export interface Turn {
    * model output.
    */
   role?: string;
+}
+
+/**
+ * A URL citation annotation.
+ */
+export interface URLCitation {
+  type: 'url_citation';
+
+  /**
+   * End of the attributed segment, exclusive.
+   */
+  end_index?: number;
+
+  /**
+   * Start of segment of the response that is attributed to this source.
+   */
+  start_index?: number;
+
+  /**
+   * The title of the URL.
+   */
+  title?: string;
+
+  /**
+   * The URL.
+   */
+  url?: string;
 }
 
 /**
@@ -2174,6 +2222,7 @@ export declare namespace Interactions {
     type DocumentContent as DocumentContent,
     type DynamicAgentConfig as DynamicAgentConfig,
     type ErrorEvent as ErrorEvent,
+    type FileCitation as FileCitation,
     type FileSearchCallContent as FileSearchCallContent,
     type FileSearchResultContent as FileSearchResultContent,
     type Function as Function,
@@ -2198,6 +2247,7 @@ export declare namespace Interactions {
     type MCPServerToolCallContent as MCPServerToolCallContent,
     type MCPServerToolResultContent as MCPServerToolResultContent,
     type Model as Model,
+    type PlaceCitation as PlaceCitation,
     type SpeechConfig as SpeechConfig,
     type TextContent as TextContent,
     type ThinkingLevel as ThinkingLevel,
@@ -2206,6 +2256,7 @@ export declare namespace Interactions {
     type ToolChoiceConfig as ToolChoiceConfig,
     type ToolChoiceType as ToolChoiceType,
     type Turn as Turn,
+    type URLCitation as URLCitation,
     type URLContextCallArguments as URLContextCallArguments,
     type URLContextCallContent as URLContextCallContent,
     type URLContextResult as URLContextResult,
