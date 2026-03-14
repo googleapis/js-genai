@@ -283,7 +283,9 @@ export type Content =
   | MCPServerToolCallContent
   | MCPServerToolResultContent
   | FileSearchCallContent
-  | FileSearchResultContent;
+  | FileSearchResultContent
+  | GoogleMapsCallContent
+  | GoogleMapsResultContent;
 
 export interface ContentDelta {
   delta:
@@ -305,7 +307,9 @@ export interface ContentDelta {
     | ContentDelta.MCPServerToolCall
     | ContentDelta.MCPServerToolResult
     | ContentDelta.FileSearchCall
-    | ContentDelta.FileSearchResult;
+    | ContentDelta.FileSearchResult
+    | ContentDelta.GoogleMapsCall
+    | ContentDelta.GoogleMapsResult;
 
   event_type: 'content.delta';
 
@@ -634,6 +638,39 @@ export namespace ContentDelta {
       title?: string;
     }
   }
+
+  export interface GoogleMapsCall {
+    /**
+     * A unique ID for this specific tool call.
+     */
+    id: string;
+
+    type: 'google_maps_call';
+
+    /**
+     * The arguments to pass to the Google Maps tool.
+     */
+    arguments?: InteractionsAPI.GoogleMapsCallArguments;
+  }
+
+  export interface GoogleMapsResult {
+    /**
+     * ID to match the ID from the function call block.
+     */
+    call_id: string;
+
+    /**
+     * The results of the Google Maps.
+     */
+    result: Array<InteractionsAPI.GoogleMapsResult>;
+
+    type: 'google_maps_result';
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+  }
 }
 
 export interface ContentStart {
@@ -925,6 +962,118 @@ export interface GenerationConfig {
 }
 
 /**
+ * The arguments to pass to the Google Maps tool.
+ */
+export interface GoogleMapsCallArguments {
+  /**
+   * The queries to be executed.
+   */
+  queries?: Array<string>;
+}
+
+/**
+ * Google Maps content.
+ */
+export interface GoogleMapsCallContent {
+  /**
+   * A unique ID for this specific tool call.
+   */
+  id: string;
+
+  type: 'google_maps_call';
+
+  /**
+   * The arguments to pass to the Google Maps tool.
+   */
+  arguments?: GoogleMapsCallArguments;
+}
+
+/**
+ * The result of the Google Maps.
+ */
+export interface GoogleMapsResult {
+  /**
+   * The places that were found.
+   */
+  places?: Array<GoogleMapsResult.Place>;
+
+  /**
+   * Resource name of the Google Maps widget context token.
+   */
+  widget_context_token?: string;
+}
+
+export namespace GoogleMapsResult {
+  export interface Place {
+    /**
+     * Title of the place.
+     */
+    name?: string;
+
+    /**
+     * The ID of the place, in `places/{place_id}` format.
+     */
+    place_id?: string;
+
+    /**
+     * Snippets of reviews that are used to generate answers about the
+     * features of a given place in Google Maps.
+     */
+    review_snippets?: Array<Place.ReviewSnippet>;
+
+    /**
+     * URI reference of the place.
+     */
+    url?: string;
+  }
+
+  export namespace Place {
+    /**
+     * Encapsulates a snippet of a user review that answers a question about
+     * the features of a specific place in Google Maps.
+     */
+    export interface ReviewSnippet {
+      /**
+       * The ID of the review snippet.
+       */
+      review_id?: string;
+
+      /**
+       * Title of the review.
+       */
+      title?: string;
+
+      /**
+       * A link that corresponds to the user review on Google Maps.
+       */
+      url?: string;
+    }
+  }
+}
+
+/**
+ * Google Maps result content.
+ */
+export interface GoogleMapsResultContent {
+  /**
+   * ID to match the ID from the google maps call block.
+   */
+  call_id: string;
+
+  /**
+   * The results of the Google Maps.
+   */
+  result: Array<GoogleMapsResult>;
+
+  type: 'google_maps_result';
+
+  /**
+   * A signature hash for backend validation.
+   */
+  signature?: string;
+}
+
+/**
  * The arguments to pass to Google Search.
  */
 export interface GoogleSearchCallArguments {
@@ -1113,7 +1262,9 @@ export interface Interaction {
     | MCPServerToolCallContent
     | MCPServerToolResultContent
     | FileSearchCallContent
-    | FileSearchResultContent;
+    | FileSearchResultContent
+    | GoogleMapsCallContent
+    | GoogleMapsResultContent;
 
   /**
    * The name of the `Model` used for generating the interaction.
@@ -1358,14 +1509,27 @@ export interface ThoughtContent {
  */
 export type Tool =
   | Function
+  | Tool.GoogleSearch
   | Tool.CodeExecution
   | Tool.URLContext
   | Tool.ComputerUse
   | Tool.MCPServer
-  | Tool.GoogleSearch
-  | Tool.FileSearch;
+  | Tool.FileSearch
+  | Tool.GoogleMaps;
 
 export namespace Tool {
+  /**
+   * A tool that can be used by the model to search Google.
+   */
+  export interface GoogleSearch {
+    type: 'google_search';
+
+    /**
+     * The types of search grounding to enable.
+     */
+    search_types?: Array<'web_search' | 'image_search'>;
+  }
+
   /**
    * A tool that can be used by the model to execute code.
    */
@@ -1426,18 +1590,6 @@ export namespace Tool {
   }
 
   /**
-   * A tool that can be used by the model to search Google.
-   */
-  export interface GoogleSearch {
-    type: 'google_search';
-
-    /**
-     * The types of search grounding to enable.
-     */
-    search_types?: Array<'web_search' | 'image_search'>;
-  }
-
-  /**
    * A tool that can be used by the model to search files.
    */
   export interface FileSearch {
@@ -1457,6 +1609,29 @@ export namespace Tool {
      * The number of semantic retrieval chunks to retrieve.
      */
     top_k?: number;
+  }
+
+  /**
+   * A tool that can be used by the model to call Google Maps.
+   */
+  export interface GoogleMaps {
+    /**
+     * Whether to return a widget context token in the tool call result of the
+     * response.
+     */
+    enable_widget?: boolean;
+
+    /**
+     * The latitude of the user's location.
+     */
+    latitude?: number;
+
+    /**
+     * The longitude of the user's location.
+     */
+    longitude?: number;
+
+    type?: 'google_maps';
   }
 }
 
@@ -1746,7 +1921,9 @@ export interface BaseCreateModelInteractionParams {
     | MCPServerToolCallContent
     | MCPServerToolResultContent
     | FileSearchCallContent
-    | FileSearchResultContent;
+    | FileSearchResultContent
+    | GoogleMapsCallContent
+    | GoogleMapsResultContent;
 
   /**
    * Body param: The name of the `Model` used for generating the interaction.
@@ -1840,7 +2017,9 @@ export interface BaseCreateAgentInteractionParams {
     | MCPServerToolCallContent
     | MCPServerToolResultContent
     | FileSearchCallContent
-    | FileSearchResultContent;
+    | FileSearchResultContent
+    | GoogleMapsCallContent
+    | GoogleMapsResultContent;
 
   /**
    * Body param: Configuration parameters for the agent interaction.
@@ -2001,6 +2180,10 @@ export declare namespace Interactions {
     type FunctionCallContent as FunctionCallContent,
     type FunctionResultContent as FunctionResultContent,
     type GenerationConfig as GenerationConfig,
+    type GoogleMapsCallArguments as GoogleMapsCallArguments,
+    type GoogleMapsCallContent as GoogleMapsCallContent,
+    type GoogleMapsResult as GoogleMapsResult,
+    type GoogleMapsResultContent as GoogleMapsResultContent,
     type GoogleSearchCallArguments as GoogleSearchCallArguments,
     type GoogleSearchCallContent as GoogleSearchCallContent,
     type GoogleSearchResult as GoogleSearchResult,
