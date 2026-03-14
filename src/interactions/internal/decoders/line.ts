@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { concatBytes, decodeUTF8, encodeUTF8 } from '../utils/bytes.js';
+import { encodeUTF8 } from '../utils/bytes.js';
 
 export type Bytes = string | ArrayBuffer | Uint8Array | null | undefined;
 
@@ -15,19 +15,12 @@ export type Bytes = string | ArrayBuffer | Uint8Array | null | undefined;
  * https://github.com/encode/httpx/blob/920333ea98118e9cf617f246905d7b202510941c/httpx/_decoders.py#L258
  */
 export class LineDecoder {
-  // prettier-ignore
-  static NEWLINE_CHARS = new Set(['\n', '\r']);
-  static NEWLINE_REGEXP = /\r\n|[\n\r]/g;
+  private decoder = new TextDecoder();
+  private chunks: Uint8Array[] = [];
+  private totalLength: number = 0;
+  private pendingLine: string | null = null;
 
-  private buffer: Uint8Array;
-  private carriageReturnIndex: number | null;
-  private searchIndex: number;
-
-  constructor() {
-    this.buffer = new Uint8Array();
-    this.carriageReturnIndex = null;
-    this.searchIndex = 0;
-  }
+  constructor() {}
 
   decode(chunk: Bytes): string[] {
     if (chunk == null) {
@@ -35,95 +28,103 @@ export class LineDecoder {
     }
 
     const binaryChunk =
-      chunk instanceof ArrayBuffer ? new Uint8Array(chunk)
+      chunk instanceof Uint8Array ? chunk
+      : chunk instanceof ArrayBuffer ? new Uint8Array(chunk)
       : typeof chunk === 'string' ? encodeUTF8(chunk)
       : chunk;
 
-    this.buffer = concatBytes([this.buffer, binaryChunk]);
-
     const lines: string[] = [];
-    let patternIndex;
-    while (
-      (patternIndex = findNewlineIndex(this.buffer, this.carriageReturnIndex ?? this.searchIndex)) != null
-    ) {
-      if (patternIndex.carriage && this.carriageReturnIndex == null) {
-        // skip until we either get a corresponding `\n`, a new `\r` or nothing
-        this.carriageReturnIndex = patternIndex.index;
-        continue;
+    let chunkOffset = 0;
+
+    if (this.pendingLine !== null) {
+      if (binaryChunk.length > 0) {
+        if (binaryChunk[0] === 0x0a) {
+          chunkOffset = 1;
+        }
+        lines.push(this.pendingLine);
+        this.pendingLine = null;
       }
-
-      // we got double \r or \rtext\n
-      if (
-        this.carriageReturnIndex != null &&
-        (patternIndex.index !== this.carriageReturnIndex + 1 || patternIndex.carriage)
-      ) {
-        lines.push(decodeUTF8(this.buffer.subarray(0, this.carriageReturnIndex - 1)));
-        this.buffer = this.buffer.subarray(this.carriageReturnIndex);
-        this.carriageReturnIndex = null;
-        this.searchIndex = 0;
-        continue;
-      }
-
-      const endIndex =
-        this.carriageReturnIndex !== null ? patternIndex.preceding - 1 : patternIndex.preceding;
-
-      const line = decodeUTF8(this.buffer.subarray(0, endIndex));
-      lines.push(line);
-
-      this.buffer = this.buffer.subarray(patternIndex.index);
-      this.carriageReturnIndex = null;
-      this.searchIndex = 0;
     }
 
-    this.searchIndex = Math.max(0, this.buffer.length - 1);
+    while (chunkOffset < binaryChunk.length) {
+      const newlineIndex = binaryChunk.indexOf(0x0a, chunkOffset); // \n
+      const carriageIndex = binaryChunk.indexOf(0x0d, chunkOffset); // \r
+
+      let index = -1;
+      let skip = 1;
+      let isTrailingCR = false;
+
+      if (newlineIndex !== -1 && (carriageIndex === -1 || newlineIndex < carriageIndex)) {
+        index = newlineIndex;
+      } else if (carriageIndex !== -1) {
+        index = carriageIndex;
+        if (index + 1 < binaryChunk.length) {
+          if (binaryChunk[index + 1] === 0x0a) {
+            skip = 2;
+          }
+        } else {
+          isTrailingCR = true;
+        }
+      }
+
+      if (index === -1) {
+        // No more newlines in this chunk
+        const remaining = binaryChunk.subarray(chunkOffset);
+        this.chunks.push(remaining);
+        this.totalLength += remaining.length;
+        break;
+      }
+
+      // Found a line end
+      const part = binaryChunk.subarray(chunkOffset, index);
+      let line: string;
+      if (this.chunks.length === 0) {
+        line = this.decoder.decode(part, { stream: true });
+      } else {
+        const fullLine = new Uint8Array(this.totalLength + part.length);
+        let offset = 0;
+        for (const c of this.chunks) {
+          fullLine.set(c, offset);
+          offset += c.length;
+        }
+        fullLine.set(part, offset);
+        line = this.decoder.decode(fullLine, { stream: true });
+        this.chunks = [];
+        this.totalLength = 0;
+      }
+
+      if (isTrailingCR) {
+        this.pendingLine = line;
+      } else {
+        lines.push(line);
+      }
+      chunkOffset = index + skip;
+    }
 
     return lines;
   }
 
   flush(): string[] {
-    if (!this.buffer.length) {
-      return [];
+    const lines: string[] = [];
+    if (this.pendingLine !== null) {
+      lines.push(this.pendingLine);
+      this.pendingLine = null;
     }
-    return this.decode('\n');
+    if (this.totalLength === 0) {
+      return lines;
+    }
+    const fullLine = new Uint8Array(this.totalLength);
+    let offset = 0;
+    for (const c of this.chunks) {
+      fullLine.set(c, offset);
+      offset += c.length;
+    }
+    const line = this.decoder.decode(fullLine);
+    this.chunks = [];
+    this.totalLength = 0;
+    lines.push(line);
+    return lines;
   }
-}
-
-/**
- * This function searches the buffer for the end patterns, (\r or \n)
- * and returns an object with the index preceding the matched newline and the
- * index after the newline char. `null` is returned if no new line is found.
- *
- * ```ts
- * findNewLineIndex('abc\ndef') -> { preceding: 2, index: 3 }
- * ```
- */
-function findNewlineIndex(
-  buffer: Uint8Array,
-  startIndex: number | null,
-): { preceding: number; index: number; carriage: boolean } | null {
-  const newline = 0x0a; // \n
-  const carriage = 0x0d; // \r
-
-  const start = startIndex ?? 0;
-  const nextNewline = buffer.indexOf(newline, start);
-  const nextCarriage = buffer.indexOf(carriage, start);
-
-  if (nextNewline === -1 && nextCarriage === -1) {
-    return null;
-  }
-
-  let i: number;
-  if (nextNewline !== -1 && nextCarriage !== -1) {
-    i = Math.min(nextNewline, nextCarriage);
-  } else {
-    i = nextNewline !== -1 ? nextNewline : nextCarriage;
-  }
-
-  if (buffer[i] === newline) {
-    return { preceding: i, index: i + 1, carriage: false };
-  }
-
-  return { preceding: i, index: i + 1, carriage: true };
 }
 
 export function findDoubleNewlineIndex(buffer: Uint8Array, startIndex: number = 0): number {
