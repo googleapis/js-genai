@@ -2345,7 +2345,7 @@ export declare interface ImageConfigImageOutputOptions {
   mimeType?: string;
 }
 
-export declare type ImageSizeConfig = '512' | '1K' | '2K' | '4K';
+export declare type ImageSizeConfig = '1K' | '2K' | '4K';
 
 /** The image generation configuration to be used in GenerateContentConfig. */
 export declare interface ImageConfig {
