@@ -233,6 +233,11 @@ export interface CodeExecutionCallContent {
   arguments: CodeExecutionCallArguments;
 
   type: 'code_execution_call';
+
+  /**
+   * A signature hash for backend validation.
+   */
+  signature?: string;
 }
 
 /**
@@ -421,6 +426,11 @@ export namespace ContentDelta {
     name: string;
 
     type: 'function_call';
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
   }
 
   export interface FunctionResult {
@@ -464,6 +474,11 @@ export namespace ContentDelta {
     arguments: InteractionsAPI.CodeExecutionCallArguments;
 
     type: 'code_execution_call';
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
   }
 
   export interface CodeExecutionResult {
@@ -496,6 +511,11 @@ export namespace ContentDelta {
     arguments: InteractionsAPI.URLContextCallArguments;
 
     type: 'url_context_call';
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
   }
 
   export interface URLContextResult {
@@ -528,6 +548,11 @@ export namespace ContentDelta {
     arguments: InteractionsAPI.GoogleSearchCallArguments;
 
     type: 'google_search_call';
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
   }
 
   export interface GoogleSearchResult {
@@ -561,6 +586,11 @@ export namespace ContentDelta {
     server_name: string;
 
     type: 'mcp_server_tool_call';
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
   }
 
   export interface MCPServerToolResult {
@@ -599,6 +629,11 @@ export namespace ContentDelta {
     id: string;
 
     type: 'file_search_call';
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
   }
 
   export interface FileSearchResult {
@@ -651,6 +686,11 @@ export namespace ContentDelta {
      * The arguments to pass to the Google Maps tool.
      */
     arguments?: InteractionsAPI.GoogleMapsCallArguments;
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
   }
 
   export interface GoogleMapsResult {
@@ -784,6 +824,11 @@ export interface FileSearchCallContent {
   id: string;
 
   type: 'file_search_call';
+
+  /**
+   * A signature hash for backend validation.
+   */
+  signature?: string;
 }
 
 /**
@@ -872,6 +917,11 @@ export interface FunctionCallContent {
   name: string;
 
   type: 'function_call';
+
+  /**
+   * A signature hash for backend validation.
+   */
+  signature?: string;
 }
 
 /**
@@ -986,6 +1036,11 @@ export interface GoogleMapsCallContent {
    * The arguments to pass to the Google Maps tool.
    */
   arguments?: GoogleMapsCallArguments;
+
+  /**
+   * A signature hash for backend validation.
+   */
+  signature?: string;
 }
 
 /**
@@ -1103,6 +1158,11 @@ export interface GoogleSearchCallContent {
    * The type of search grounding enabled.
    */
   search_type?: 'web_search' | 'image_search';
+
+  /**
+   * A signature hash for backend validation.
+   */
+  signature?: string;
 }
 
 /**
@@ -1394,6 +1454,11 @@ export interface MCPServerToolCallContent {
   server_name: string;
 
   type: 'mcp_server_tool_call';
+
+  /**
+   * A signature hash for backend validation.
+   */
+  signature?: string;
 }
 
 /**
@@ -1685,6 +1750,11 @@ export interface URLContextCallContent {
   arguments: URLContextCallArguments;
 
   type: 'url_context_call';
+
+  /**
+   * A signature hash for backend validation.
+   */
+  signature?: string;
 }
 
 /**
