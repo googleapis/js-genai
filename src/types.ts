@@ -3486,7 +3486,7 @@ export declare interface GenerateImagesConfig {
   labels?: Record<string, string>;
   /** The size of the largest dimension of the generated image.
       Supported sizes are 1K and 2K (not supported for Imagen 3 models). */
-  imageSize?: ImageSizeConfig;
+  imageSize?: Omit<ImageSizeConfig, '4K'>;
   /** Whether to use the prompt rewriting logic. */
   enhancePrompt?: boolean;
 }
