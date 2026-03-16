@@ -1496,7 +1496,7 @@ export interface GeneratedVideo {
     video?: Video;
 }
 
-export type ImageSizeConfig = '512' | '1K' | '2K' | '4K';
+export type ImageSizeConfig = '1K' | '2K' | '4K';
 
 // @public
 export interface GenerateImagesConfig {
