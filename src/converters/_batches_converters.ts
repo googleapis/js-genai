@@ -1776,6 +1776,16 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
     common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
   }
 
+  const fromToolCall = common.getValueByPath(fromObject, ['toolCall']);
+  if (fromToolCall != null) {
+    common.setValueByPath(toObject, ['toolCall'], fromToolCall);
+  }
+
+  const fromToolResponse = common.getValueByPath(fromObject, ['toolResponse']);
+  if (fromToolResponse != null) {
+    common.setValueByPath(toObject, ['toolResponse'], fromToolResponse);
+  }
+
   return toObject;
 }
 
@@ -1821,6 +1831,18 @@ export function toolConfigToMldev(
       toObject,
       ['functionCallingConfig'],
       functionCallingConfigToMldev(fromFunctionCallingConfig),
+    );
+  }
+
+  const fromIncludeServerSideToolInvocations = common.getValueByPath(
+    fromObject,
+    ['includeServerSideToolInvocations'],
+  );
+  if (fromIncludeServerSideToolInvocations != null) {
+    common.setValueByPath(
+      toObject,
+      ['includeServerSideToolInvocations'],
+      fromIncludeServerSideToolInvocations,
     );
   }
 
