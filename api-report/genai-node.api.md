@@ -417,6 +417,7 @@ export interface CitationMetadata {
 
 // @public
 export interface CodeExecutionResult {
+    id?: string;
     outcome?: Outcome;
     output?: string;
 }
@@ -1136,6 +1137,7 @@ export interface ExactMatchMetricValue {
 // @public
 export interface ExecutableCode {
     code?: string;
+    id?: string;
     language?: Language;
 }
 
@@ -2879,6 +2881,8 @@ export interface Part {
     text?: string;
     thought?: boolean;
     thoughtSignature?: string;
+    toolCall?: ToolCall;
+    toolResponse?: ToolResponse;
     videoMetadata?: VideoMetadata;
 }
 
@@ -3598,12 +3602,20 @@ export interface Tool {
 }
 
 // @public
+export interface ToolCall {
+    args?: Record<string, unknown>;
+    id?: string;
+    toolType?: ToolType;
+}
+
+// @public
 export interface ToolCodeExecution {
 }
 
 // @public
 export interface ToolConfig {
     functionCallingConfig?: FunctionCallingConfig;
+    includeServerSideToolInvocations?: boolean;
     retrievalConfig?: RetrievalConfig;
 }
 
@@ -3614,6 +3626,23 @@ export type ToolListUnion = ToolUnion[];
 export interface ToolParallelAiSearch {
     apiKey?: string;
     customConfigs?: Record<string, unknown>;
+}
+
+// @public
+export class ToolResponse {
+    id?: string;
+    response?: Record<string, unknown>;
+    toolType?: ToolType;
+}
+
+// @public
+export enum ToolType {
+    FILE_SEARCH = "FILE_SEARCH",
+    GOOGLE_MAPS = "GOOGLE_MAPS",
+    GOOGLE_SEARCH_IMAGE = "GOOGLE_SEARCH_IMAGE",
+    GOOGLE_SEARCH_WEB = "GOOGLE_SEARCH_WEB",
+    TOOL_TYPE_UNSPECIFIED = "TOOL_TYPE_UNSPECIFIED",
+    URL_CONTEXT = "URL_CONTEXT"
 }
 
 // @public (undocumented)
