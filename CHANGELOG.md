@@ -3,20 +3,24 @@
 
 ## [1.46.0](https://github.com/googleapis/js-genai/compare/v1.45.0...v1.46.0) (2026-03-17)
 
+### Breaking changes
+
+* [Interactions] Breaking change to Interactions API to refactor TextContent annotations to use specific citation types ([9fa8b1d](https://github.com/googleapis/js-genai/commit/9fa8b1db3177d6baeab486b667652b639f08bdb1))
+* [Interactions] Breaking change for Interactions, rename ContentDelta unions. ([917f24f](https://github.com/googleapis/js-genai/commit/917f24fe55270d02cb004e6b85f2c090caa9bfe6))
+* [Interactions] Breaking change to Interactions API to rename rendered_content to search_suggestions ([cc6bd38](https://github.com/googleapis/js-genai/commit/cc6bd38a2b2dd7fcea93c561dd5f397433e52393))
+
 
 ### Features
 
-* Add and update 'signature' fields for tool call/result content types. ([e73ca5b](https://github.com/googleapis/js-genai/commit/e73ca5be5339dfac04d0b75f20f8656b4b6bf46e))
-* Breaking change to Interactions API to refactor TextContent annotations to use specific citation types ([9fa8b1d](https://github.com/googleapis/js-genai/commit/9fa8b1db3177d6baeab486b667652b639f08bdb1))
-* Support Google Maps in Interactions ([d0593e3](https://github.com/googleapis/js-genai/commit/d0593e31bf500a18890dacc4dc2628da051f36af))
+* [Interactions] Add and update 'signature' fields for tool call/result content types. ([e73ca5b](https://github.com/googleapis/js-genai/commit/e73ca5be5339dfac04d0b75f20f8656b4b6bf46e))
+* [Interactions] Support Google Maps in Interactions ([d0593e3](https://github.com/googleapis/js-genai/commit/d0593e31bf500a18890dacc4dc2628da051f36af))
 * Support include_server_side_tool_invocations for genai. ([c627d6f](https://github.com/googleapis/js-genai/commit/c627d6f1ce21eddc4beb13c719cbd6dda0c6c58d))
 
 
 ### Bug Fixes
 
-* Breaking change for Interactions, rename ContentDelta unions. ([917f24f](https://github.com/googleapis/js-genai/commit/917f24fe55270d02cb004e6b85f2c090caa9bfe6))
-* Breaking change to Interactions API to rename rendered_content to search_suggestions ([cc6bd38](https://github.com/googleapis/js-genai/commit/cc6bd38a2b2dd7fcea93c561dd5f397433e52393))
 * Quote `functionResponses` key in LiveClientMessage ([9740426](https://github.com/googleapis/js-genai/commit/9740426bb076b1f3debaf6ab55b8c17102e5f1ca))
+
 
 ## [1.45.0](https://github.com/googleapis/js-genai/compare/v1.44.0...v1.45.0) (2026-03-12)
 
