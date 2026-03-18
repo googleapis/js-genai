@@ -288,6 +288,58 @@ describe('live', () => {
     expect(receivedMessage.setupComplete).toBeDefined();
   });
 
+  it('connect should populate setupComplete with voiceConsentSignature', async () => {
+    const apiClient = new ApiClient({
+      auth: new FakeAuth(),
+      apiKey: 'test-api-key',
+      uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
+    });
+    const websocketFactory = new FakeWebSocketFactory();
+    const live = new Live(apiClient, new FakeAuth(), websocketFactory);
+
+    let capturedCallbacks: WebSocketCallbacks | undefined;
+    const websocketFactorySpy = spyOn(websocketFactory, 'create').and.callFake(
+      (url, headers, callbacks) => {
+        capturedCallbacks = callbacks;
+        return new FakeWebSocket(url, headers, callbacks);
+      },
+    );
+
+    const session = await live.connect({
+      model: 'models/gemini-live-2.5-flash-preview',
+      callbacks: {
+        onmessage: () => {},
+      },
+    });
+
+    expect(websocketFactorySpy).toHaveBeenCalled();
+    if (!capturedCallbacks) {
+      throw new Error('WebSocket callbacks were not captured');
+    }
+
+    const testMessage = {
+      setupComplete: {
+        voiceConsentSignature: {
+          signature: 'test_sig',
+        },
+      },
+    };
+    const jsonString = JSON.stringify(testMessage);
+
+    capturedCallbacks.onmessage({
+      data: jsonString,
+    } as MessageEvent);
+
+    // Allow the async handleWebSocketMessage to complete
+    await new Promise(process.nextTick);
+
+    expect(session.setupComplete).toBeDefined();
+    expect(session.setupComplete?.voiceConsentSignature?.signature).toBe(
+      'test_sig',
+    );
+  });
+
   it('connect Gemini should fail with setup message using transparent', async () => {
     const apiClient = new ApiClient({
       auth: new FakeAuth(),
