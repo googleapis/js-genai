@@ -3576,6 +3576,44 @@ export declare interface GenerateImagesParameters {
   config?: GenerateImagesConfig;
 }
 
+/** Configuration for generating audio. */
+export declare interface GenerateAudioConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request. */
+  abortSignal?: AbortSignal;
+}
+
+/** The parameters for generating audio. */
+export declare interface GenerateAudioParameters {
+  /** ID of the model to use. */
+  model: string;
+  /** Text prompt that describes the audio to output. */
+  prompt: string;
+  /** Description of what to discourage in the generated audio. */
+  negativePrompt?: string;
+  /** Number of audio samples to generate. */
+  sampleCount?: number;
+  /** Random seed for audio generation. Cannot be used with sample_count. */
+  seed?: number;
+  /** Configuration for generating audio. */
+  config?: GenerateAudioConfig;
+}
+
+/** An output audio prediction. */
+export declare interface GeneratedAudio {
+  /** The output audio data encoded as base64 string. */
+  bytesBase64Encoded?: string;
+}
+
+/** The output audio response. */
+export class GenerateAudioResponse {
+  /** Used to retain the full HTTP response. */
+  sdkHttpResponse?: HttpResponse;
+  /** List of generated audio predictions. */
+  predictions?: GeneratedAudio[];
+}
+
 /** An image. */
 export declare interface Image {
   /** The Cloud Storage URI of the image. ``Image`` can contain a value

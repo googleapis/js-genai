@@ -451,6 +451,27 @@ export class Models extends BaseModule {
   }
 
   /**
+   * Generates audio based on a text description and configuration.
+   *
+   * @param params - The parameters for generating audio.
+   * @return The response from the API.
+   *
+   * @example
+   * ```ts
+   * const response = await client.models.generateAudio({
+   *  model: 'lyria-002',
+   *  prompt: 'A gentle piano melody',
+   * });
+   * console.log(response?.predictions?.[0]?.bytesBase64Encoded);
+   * ```
+   */
+  generateAudio = async (
+    params: types.GenerateAudioParameters,
+  ): Promise<types.GenerateAudioResponse> => {
+    return await this.generateAudioInternal(params);
+  };
+
+  /**
    * Generates an image based on a text description and configuration.
    *
    * @param params - The parameters for generating images.
@@ -979,6 +1000,58 @@ export class Models extends BaseModule {
         return typedResp;
       });
     }
+  }
+
+  /**
+   * Private method for generating audio.
+   */
+  private async generateAudioInternal(
+    params: types.GenerateAudioParameters,
+  ): Promise<types.GenerateAudioResponse> {
+    if (!this.apiClient.isVertexAI()) {
+      throw new Error('This method is only supported by Vertex AI.');
+    }
+    const body = converters.generateAudioParametersToVertex(
+      this.apiClient,
+      params,
+      params,
+    );
+    const path = common.formatMap(
+      '{model}:predict',
+      body['_url'] as Record<string, unknown>,
+    );
+    const queryParams = body['_query'] as Record<string, string>;
+    delete body['_url'];
+    delete body['_query'];
+
+    const response = this.apiClient
+      .request({
+        path: path,
+        queryParams: queryParams || {},
+        body: JSON.stringify(body),
+        httpMethod: 'POST',
+        httpOptions: params.config?.httpOptions,
+        abortSignal: params.config?.abortSignal,
+      })
+      .then((httpResponse) => {
+        return httpResponse.json().then((jsonResponse) => {
+          const response = jsonResponse as types.GenerateAudioResponse;
+          response.sdkHttpResponse = {
+            headers: httpResponse.headers,
+          } as types.HttpResponse;
+          return response;
+        });
+      }) as Promise<types.GenerateAudioResponse>;
+
+    return response.then((apiResponse) => {
+      const resp = converters.generateAudioResponseFromVertex(
+        apiResponse,
+        params,
+      );
+      const typedResp = new types.GenerateAudioResponse();
+      Object.assign(typedResp, resp);
+      return typedResp;
+    });
   }
 
   /**
