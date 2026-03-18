@@ -19,19 +19,16 @@ export class Files extends BaseModule {
   }
 
   /**
-   * Lists all current project files from the service.
+   * Lists files.
    *
-   * @param params - The parameters for the list request
-   * @return The paginated results of the list of files
+   * @param params - The parameters for the list request.
+   * @return - A pager of files.
    *
    * @example
-   * The following code prints the names of all files from the service, the
-   * size of each page is 10.
-   *
    * ```ts
-   * const listResponse = await ai.files.list({config: {'pageSize': 10}});
-   * for await (const file of listResponse) {
-   *   console.log(file.name);
+   * const files = await ai.files.list({config: {'pageSize': 2}});
+   * for await (const file of files) {
+   *   console.log(file);
    * }
    * ```
    */
@@ -98,9 +95,8 @@ export class Files extends BaseModule {
 
     return this.apiClient
       .uploadFile(params.file, params.config)
-      .then((response) => {
-        const file = converters.fileFromMldev(this.apiClient, response);
-        return file as types.File;
+      .then((resp) => {
+        return resp as types.File;
       });
   }
 
@@ -125,10 +121,28 @@ export class Files extends BaseModule {
     await this.apiClient.downloadFile(params);
   }
 
+  /**
+   * Registers Google Cloud Storage files for use with the API.
+   * This method is only available in Node.js environments.
+   */
+  async registerFiles(
+    params: types.RegisterFilesParameters,
+  ): Promise<types.RegisterFilesResponse> {
+    void params;
+    throw new Error('registerFiles is only supported in Node.js environments.');
+  }
+
+  protected async _registerFiles(
+    params: types.InternalRegisterFilesParameters,
+  ): Promise<types.RegisterFilesResponse> {
+    return this.registerFilesInternal(params);
+  }
+
   private async listInternal(
     params: types.ListFilesParameters,
   ): Promise<types.ListFilesResponse> {
     let response: Promise<types.ListFilesResponse>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -136,13 +150,9 @@ export class Files extends BaseModule {
         'This method is only supported by the Gemini Developer API.',
       );
     } else {
-      const body = converters.listFilesParametersToMldev(
-        this.apiClient,
-        params,
-      );
+      const body = converters.listFilesParametersToMldev(params);
       path = common.formatMap('files', body['_url'] as Record<string, unknown>);
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -156,14 +166,17 @@ export class Files extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.ListFilesResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.ListFilesResponse>;
 
       return response.then((apiResponse) => {
-        const resp = converters.listFilesResponseFromMldev(
-          this.apiClient,
-          apiResponse,
-        );
+        const resp = converters.listFilesResponseFromMldev(apiResponse);
         const typedResp = new types.ListFilesResponse();
         Object.assign(typedResp, resp);
         return typedResp;
@@ -175,6 +188,7 @@ export class Files extends BaseModule {
     params: types.CreateFileParameters,
   ): Promise<types.CreateFileResponse> {
     let response: Promise<types.CreateFileResponse>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -182,16 +196,12 @@ export class Files extends BaseModule {
         'This method is only supported by the Gemini Developer API.',
       );
     } else {
-      const body = converters.createFileParametersToMldev(
-        this.apiClient,
-        params,
-      );
+      const body = converters.createFileParametersToMldev(params);
       path = common.formatMap(
         'upload/v1beta/files',
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -208,8 +218,8 @@ export class Files extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.CreateFileResponse>;
 
-      return response.then(() => {
-        const resp = converters.createFileResponseFromMldev();
+      return response.then((apiResponse) => {
+        const resp = converters.createFileResponseFromMldev(apiResponse);
         const typedResp = new types.CreateFileResponse();
         Object.assign(typedResp, resp);
         return typedResp;
@@ -234,6 +244,7 @@ export class Files extends BaseModule {
    */
   async get(params: types.GetFileParameters): Promise<types.File> {
     let response: Promise<types.File>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -241,13 +252,12 @@ export class Files extends BaseModule {
         'This method is only supported by the Gemini Developer API.',
       );
     } else {
-      const body = converters.getFileParametersToMldev(this.apiClient, params);
+      const body = converters.getFileParametersToMldev(params);
       path = common.formatMap(
         'files/{file}',
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -264,9 +274,7 @@ export class Files extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.File>;
 
-      return response.then((apiResponse) => {
-        const resp = converters.fileFromMldev(this.apiClient, apiResponse);
-
+      return response.then((resp) => {
         return resp as types.File;
       });
     }
@@ -289,6 +297,7 @@ export class Files extends BaseModule {
     params: types.DeleteFileParameters,
   ): Promise<types.DeleteFileResponse> {
     let response: Promise<types.DeleteFileResponse>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -296,16 +305,12 @@ export class Files extends BaseModule {
         'This method is only supported by the Gemini Developer API.',
       );
     } else {
-      const body = converters.deleteFileParametersToMldev(
-        this.apiClient,
-        params,
-      );
+      const body = converters.deleteFileParametersToMldev(params);
       path = common.formatMap(
         'files/{file}',
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -319,12 +324,61 @@ export class Files extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.DeleteFileResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.DeleteFileResponse>;
 
-      return response.then(() => {
-        const resp = converters.deleteFileResponseFromMldev();
+      return response.then((apiResponse) => {
+        const resp = converters.deleteFileResponseFromMldev(apiResponse);
         const typedResp = new types.DeleteFileResponse();
+        Object.assign(typedResp, resp);
+        return typedResp;
+      });
+    }
+  }
+
+  private async registerFilesInternal(
+    params: types.InternalRegisterFilesParameters,
+  ): Promise<types.RegisterFilesResponse> {
+    let response: Promise<types.RegisterFilesResponse>;
+
+    let path: string = '';
+    let queryParams: Record<string, string> = {};
+    if (this.apiClient.isVertexAI()) {
+      throw new Error(
+        'This method is only supported by the Gemini Developer API.',
+      );
+    } else {
+      const body = converters.internalRegisterFilesParametersToMldev(params);
+      path = common.formatMap(
+        'files:register',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
+      delete body['_url'];
+      delete body['_query'];
+
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json();
+        }) as Promise<types.RegisterFilesResponse>;
+
+      return response.then((apiResponse) => {
+        const resp = converters.registerFilesResponseFromMldev(apiResponse);
+        const typedResp = new types.RegisterFilesResponse();
         Object.assign(typedResp, resp);
         return typedResp;
       });

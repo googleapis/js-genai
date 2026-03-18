@@ -6,6 +6,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import {fileURLToPath} from 'url';
 
 const header = `/**
  * @license
@@ -38,6 +39,12 @@ function processDirectory(directory: string) {
   }
 }
 
-const targetDirName: string = process.argv[2] || 'docs';
-const docsDir = path.join(__dirname, '..', targetDirName);
-processDirectory(docsDir);
+const main = () => {
+  const targetDirName: string = process.argv[2] || 'docs';
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
+  const docsDir = path.join(__dirname, '..', targetDirName);
+  processDirectory(docsDir);
+};
+
+main();

@@ -1,0 +1,403 @@
+{
+  "recordID": "Chats_Tests_sendMessage_Vertex_AI_multilple_messages_stream",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash:streamGenerateContent?alt=sse",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash:streamGenerateContent?alt=sse HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "103",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Chats Tests sendMessage Vertex AI multilple messages stream"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "Tell me a story in 100 words?"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {}
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "us-central1-aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "3c72590e394bd14505e29740257efa2bdfdeece833e684729167cf9e5b8dd523",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Disposition": "attachment",
+          "Content-Type": "text/event-stream",
+          "Date": "Sat, 16 Aug 2025 00:45:43 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "El"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-08-16T00:45:43.512806Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "t9SfaKamH4qTmecP7tramAk",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 23
+              },
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "iza found the hummingbird frozen, wings stiff as paper. Tears blurred her vision as"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-08-16T00:45:43.512806Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "t9SfaKamH4qTmecP7tramAk",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " she cradled it. Recalling her grandmother's stories, she breathed gently"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-08-16T00:45:43.512806Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "t9SfaKamH4qTmecP7tramAk",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " on its chest, warming the tiny heart. Hours passed, hope dwindling with the setting sun. Then, a flutter. Eliza gasped, watching as the bird,"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-08-16T00:45:43.512806Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "t9SfaKamH4qTmecP7tramAk",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " still unsteady, took to the air, a vibrant jewel against the twilight. It hovered, looking back at her before darting away, leaving Eliza with a warmth"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-08-16T00:45:43.512806Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "t9SfaKamH4qTmecP7tramAk",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " that chased the winter chill from her soul.\n"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP"
+              }
+            ],
+            "createTime": "2025-08-16T00:45:43.512806Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "t9SfaKamH4qTmecP7tramAk",
+            "usageMetadata": {
+              "candidatesTokenCount": 107,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 107
+                }
+              ],
+              "promptTokenCount": 11,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 11
+                }
+              ],
+              "totalTokenCount": 118,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash:streamGenerateContent?alt=sse",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash:streamGenerateContent?alt=sse HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "904",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Chats Tests sendMessage Vertex AI multilple messages stream"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "Tell me a story in 100 words?"
+                  }
+                ],
+                "role": "user"
+              },
+              {
+                "parts": [
+                  {
+                    "text": "El"
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "text": "iza found the hummingbird frozen, wings stiff as paper. Tears blurred her vision as"
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "text": " she cradled it. Recalling her grandmother's stories, she breathed gently"
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "text": " on its chest, warming the tiny heart. Hours passed, hope dwindling with the setting sun. Then, a flutter. Eliza gasped, watching as the bird,"
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "text": " still unsteady, took to the air, a vibrant jewel against the twilight. It hovered, looking back at her before darting away, leaving Eliza with a warmth"
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "text": " that chased the winter chill from her soul.\n"
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "text": "What is the title of the story?"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {}
+          }
+        ],
+        "previousRequest": "3c72590e394bd14505e29740257efa2bdfdeece833e684729167cf9e5b8dd523",
+        "serverAddress": "us-central1-aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "b4d9ab47c0585b891bd3e882e69e690e31d0f38f80aea93a81dc0afcd7fab948",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Disposition": "attachment",
+          "Content-Type": "text/event-stream",
+          "Date": "Sat, 16 Aug 2025 00:45:44 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "While"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-08-16T00:45:44.648907Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "uNSfaMvNJ4yfmecP5IKC0Q8",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 463
+              },
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " the story doesn't explicitly have a title, a fitting one could be:\n\n"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-08-16T00:45:44.648907Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "uNSfaMvNJ4yfmecP5IKC0Q8",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "*   **The Hummingbird's Gift**\n*   **Eliza and the Frozen"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-08-16T00:45:44.648907Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "uNSfaMvNJ4yfmecP5IKC0Q8",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " Jewel**\n*   **A Breath of Hope**\n*   **Winter's Mercy**\n"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP"
+              }
+            ],
+            "createTime": "2025-08-16T00:45:44.648907Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "uNSfaMvNJ4yfmecP5IKC0Q8",
+            "usageMetadata": {
+              "candidatesTokenCount": 57,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 57
+                }
+              ],
+              "promptTokenCount": 126,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 126
+                }
+              ],
+              "totalTokenCount": 183,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

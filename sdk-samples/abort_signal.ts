@@ -16,7 +16,7 @@ async function abortStreamingFromMLDev() {
   const abortSignal = abortController.signal;
   const response = await ai.models.generateContentStream({
     model: 'gemini-2.0-flash',
-    contents: 'Tell me a stroy in 300 words?',
+    contents: 'Tell me a story in 300 words?',
     config: {
       abortSignal: abortSignal,
     },
@@ -39,7 +39,7 @@ async function abortStreamingFromVertexAI() {
   const abortSignal = abortController.signal;
   const response = await ai.models.generateContentStream({
     model: 'gemini-2.0-flash',
-    contents: 'Tell me a stroy in 300 words?',
+    contents: 'Tell me a story in 300 words?',
     config: {
       abortSignal: abortSignal,
     },

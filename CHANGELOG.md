@@ -1,6 +1,513 @@
 # Changelog
 
 
+## [1.46.0](https://github.com/googleapis/js-genai/compare/v1.45.0...v1.46.0) (2026-03-17)
+
+### Breaking changes
+
+* [Interactions] Breaking change to Interactions API to refactor TextContent annotations to use specific citation types ([9fa8b1d](https://github.com/googleapis/js-genai/commit/9fa8b1db3177d6baeab486b667652b639f08bdb1))
+* [Interactions] Breaking change for Interactions, rename ContentDelta unions. ([917f24f](https://github.com/googleapis/js-genai/commit/917f24fe55270d02cb004e6b85f2c090caa9bfe6))
+* [Interactions] Breaking change to Interactions API to rename rendered_content to search_suggestions ([cc6bd38](https://github.com/googleapis/js-genai/commit/cc6bd38a2b2dd7fcea93c561dd5f397433e52393))
+
+
+### Features
+
+* [Interactions] Add and update 'signature' fields for tool call/result content types. ([e73ca5b](https://github.com/googleapis/js-genai/commit/e73ca5be5339dfac04d0b75f20f8656b4b6bf46e))
+* [Interactions] Support Google Maps in Interactions ([d0593e3](https://github.com/googleapis/js-genai/commit/d0593e31bf500a18890dacc4dc2628da051f36af))
+* Support include_server_side_tool_invocations for genai. ([c627d6f](https://github.com/googleapis/js-genai/commit/c627d6f1ce21eddc4beb13c719cbd6dda0c6c58d))
+
+
+### Bug Fixes
+
+* Quote `functionResponses` key in LiveClientMessage ([9740426](https://github.com/googleapis/js-genai/commit/9740426bb076b1f3debaf6ab55b8c17102e5f1ca))
+
+
+## [1.45.0](https://github.com/googleapis/js-genai/compare/v1.44.0...v1.45.0) (2026-03-12)
+
+
+### Features
+
+* Add inference_generation_config to EvaluationConfig for Tuning ([b4ac722](https://github.com/googleapis/js-genai/commit/b4ac722b0225ef3f06b82f5dcb19d423efe63599))
+* enable language code for audio transcription config in Live API for Vertex AI ([67f39ec](https://github.com/googleapis/js-genai/commit/67f39ec0079b5b027a5364b5ffdc59ccd5c2fe4f))
+
+## [1.44.0](https://github.com/googleapis/js-genai/compare/v1.43.0...v1.44.0) (2026-03-04)
+
+
+### Features
+
+* Add gemini-3.1-flash-image-preview model ([175603b](https://github.com/googleapis/js-genai/commit/175603bacbc593a437264f807a411143cdccbd0a))
+* Support signature for all Interaction tool types ([b79108f](https://github.com/googleapis/js-genai/commit/b79108fdd60d11e45cac916e6ea369eac95ff570))
+* Update data types from discovery doc. ([249b15a](https://github.com/googleapis/js-genai/commit/249b15a3b948d1453719af2a7df32490de20b423))
+
+## [1.43.0](https://github.com/googleapis/js-genai/compare/v1.42.0...v1.43.0) (2026-02-26)
+
+
+### Features
+
+* Add gemini-3.1-pro-preview to list of models in Interactions ([14775fe](https://github.com/googleapis/js-genai/commit/14775fefb814c21d8f34b776935b72d7f20896bd))
+* Add Image Grounding support to GoogleSearch tool ([9187ca7](https://github.com/googleapis/js-genai/commit/9187ca748b9de10037134e34e4da8ca06f0d2696))
+* enable server side MCP and disable all other AFC when server side MCP is configured. ([c7888c4](https://github.com/googleapis/js-genai/commit/c7888c4aec34b7f86983ea0c55c499c1f8d089c2))
+* Support more image sizes and resolutions ([54f4145](https://github.com/googleapis/js-genai/commit/54f41457984fc451e659ab594086bc462486e9d0))
+
+
+### Bug Fixes
+
+* change interactions media mime type to enum (breaking change for experimental feature) ([7c2d5b2](https://github.com/googleapis/js-genai/commit/7c2d5b29b8e7d2a146ec1a117ccef4fe13b4362e))
+
+## [1.42.0](https://github.com/googleapis/js-genai/compare/v1.41.0...v1.42.0) (2026-02-18)
+
+
+### Features
+
+* Support multimodal embedding for Gemini Embedding 2.0 and support MaaS models in Models.embed_content() (Vertex AI API) ([944ae97](https://github.com/googleapis/js-genai/commit/944ae97f33168aa36612f4fec9717726b9d03629))
+
+## [1.41.0](https://github.com/googleapis/js-genai/compare/v1.40.0...v1.41.0) (2026-02-10)
+
+
+### Features
+
+* Add HTTP retry support to the SDK ([37d4f2e](https://github.com/googleapis/js-genai/commit/37d4f2e806793d71074eb0b763336b5c7132224b))
+* Add INCOMPLETE status to Interaction. ([519f837](https://github.com/googleapis/js-genai/commit/519f83706d86c18cac6f500a3273f0cd927bb63b))
+* Pass retry options to the underlying Interactions client ([086cf82](https://github.com/googleapis/js-genai/commit/086cf82470dc7ba0393a3c63c060dc704b6d9586))
+* Support encryption_spec in tuning job creation configuration for GenAI SDK ([e218add](https://github.com/googleapis/js-genai/commit/e218add2061ba7a387a7b9ecee0ca6e8b15c90f8))
+
+## [1.40.0](https://github.com/googleapis/js-genai/compare/v1.39.0...v1.40.0) (2026-02-04)
+
+
+### Features
+
+* Update data types from discovery doc. ([bad81a7](https://github.com/googleapis/js-genai/commit/bad81a7c5f75404cc24610e33549cfdd90fd7594))
+
+## [1.39.0](https://github.com/googleapis/js-genai/compare/v1.38.0...v1.39.0) (2026-01-30)
+
+
+### Features
+
+* Add `include_input` query parameter to Get Interaction endpoint. ([84bc7f4](https://github.com/googleapis/js-genai/commit/84bc7f4d386da05a5e893cfe810b078451400a30))
+* Add registerFiles for you can use gcs files with mldev. ([7acf3e0](https://github.com/googleapis/js-genai/commit/7acf3e0e2bca83ce7be6b1a37a97f351343b9554))
+* Support distillation tuning ([c9a2e72](https://github.com/googleapis/js-genai/commit/c9a2e72cf7d9a7a73a036ebddf0a10c509ee53e5))
+* Support OSS Tuning in GenAI SDK ([258f211](https://github.com/googleapis/js-genai/commit/258f2115b0f2803caafe4c137d4a7d8dbd11d5dc))
+
+
+### Bug Fixes
+
+* Add metadata in batch inlined response ([0e95bb7](https://github.com/googleapis/js-genai/commit/0e95bb7a8dea285a5e7f2fad6457dc74ce9e8466))
+
+## [1.38.0](https://github.com/googleapis/js-genai/compare/v1.37.0...v1.38.0) (2026-01-20)
+
+
+### Features
+
+* Add ModelArmorConfig support for prompt and response sanitization via the Model Armor service ([be65c24](https://github.com/googleapis/js-genai/commit/be65c2431d070bd19642623c97effccf4161f9a2))
+* Allow custom endpoints for authentication with Vertex AI in Typescript ([891e32d](https://github.com/googleapis/js-genai/commit/891e32d4ac0ce23bc728e2fe1b38d0ef919ab639)), closes [#1137](https://github.com/googleapis/js-genai/issues/1137)
+* Update data types from discovery doc. ([a16a180](https://github.com/googleapis/js-genai/commit/a16a18085a5647cde10243b788d6d2ce87fca009))
+* Update data types from discovery doc. ([a4eaa8c](https://github.com/googleapis/js-genai/commit/a4eaa8c1455d94f660c5bf5145d57f0f54ec5581))
+
+## [1.37.0](https://github.com/googleapis/js-genai/compare/v1.36.0...v1.37.0) (2026-01-15)
+
+
+### Features
+
+* Support 4:5 and 5:4 aspect ratio in Interactions ([5294da2](https://github.com/googleapis/js-genai/commit/5294da273cbc9a206cd58544b42d1de70500a7a9))
+
+## [1.36.0](https://github.com/googleapis/js-genai/compare/v1.35.0...v1.36.0) (2026-01-14)
+
+
+### Features
+
+* Add FileSearchCallContent to Interactions ([ccf11a4](https://github.com/googleapis/js-genai/commit/ccf11a463f3364683b7c39ffec9670f77bcc16dc))
+* Add ImageConfig to GenerationConfig for image generation in Interactions ([f34b6fb](https://github.com/googleapis/js-genai/commit/f34b6fbcb2ad846c73b9c47bfd3ba94e00eb73a9))
+* Support JS local tokenizer ([bb429ad](https://github.com/googleapis/js-genai/commit/bb429ad3ed8d170f2a5abda01a00a918012ab80c))
+* voice activity support ([3ad1011](https://github.com/googleapis/js-genai/commit/3ad101159a8257897940d6a1f94aa6b68b810f37))
+
+## [1.35.0](https://github.com/googleapis/js-genai/compare/v1.34.0...v1.35.0) (2026-01-07)
+
+
+### Features
+
+* [Python] add RegisterFiles so gcs files can be used with genai. ([1bf555c](https://github.com/googleapis/js-genai/commit/1bf555c38e5001f147e29db16c1141653ec252d4))
+* Add PersonGeneration to ImageConfig for Vertex Gempix ([b0753d7](https://github.com/googleapis/js-genai/commit/b0753d7a527ab1f5f7544576207036ef48ac75d1))
+
+## [1.34.0](https://github.com/googleapis/js-genai/compare/v1.33.0...v1.34.0) (2025-12-16)
+
+
+### Features
+
+* Add minimal and medium thinking levels. ([19f8969](https://github.com/googleapis/js-genai/commit/19f8969f0cd9f423b10384d91a4ea8396a791d01))
+* Add support for Struct in ToolResult Content. ([750a4f7](https://github.com/googleapis/js-genai/commit/750a4f79fea3198317a540563f04369302408a11))
+* Add ultra high resolution to the media resolution in Parts. ([fa9a99e](https://github.com/googleapis/js-genai/commit/fa9a99e79d8c517011772a0edfe7c41c5d7518b7))
+* Add ULTRA_HIGH MediaResolution and new ThinkingLevel enums ([b8a7d8c](https://github.com/googleapis/js-genai/commit/b8a7d8c98d29c9a121784796016b5d2674968799))
+* Define and use DocumentMimeType for DocumentContent ([c2f118d](https://github.com/googleapis/js-genai/commit/c2f118df83b0a05a821f486c9126fe5967c1bf95))
+* support multi speaker for Vertex AI ([94d681b](https://github.com/googleapis/js-genai/commit/94d681bba5f3280949fb852b4365f5f2bf8a82ee))
+
+## [1.33.0](https://github.com/googleapis/js-genai/compare/v1.32.0...v1.33.0) (2025-12-11)
+
+
+### Features
+
+* Add IMAGE_RECITATION and IMAGE_OTHER enum values to FinishReason ([ab87f51](https://github.com/googleapis/js-genai/commit/ab87f51b8b2f0109d3ea89a18987c49101adfd70))
+* Add voice activity detection signal. ([bff9695](https://github.com/googleapis/js-genai/commit/bff96959c8cec4ef710cb77551e944024884761f))
+* Make the Interactions API public. ([a8dd67b](https://github.com/googleapis/js-genai/commit/a8dd67bc3267ed010c809fcd609d42811b042ebe))
+
+## [1.32.0](https://github.com/googleapis/js-genai/compare/v1.31.0...v1.32.0) (2025-12-09)
+
+
+### Features
+
+* Add enableEnhancedCivicAnswers feature in GenerateContentConfig ([b429389](https://github.com/googleapis/js-genai/commit/b4293896f3ab718426c93c3507827955aeb51e37))
+* Support ReplicatedVoiceConfig ([7a56e35](https://github.com/googleapis/js-genai/commit/7a56e35f7f4fb3beed903eb02817dd70c1a4b6a9))
+
+
+### Bug Fixes
+
+* Improve stream parsing performance ([c9c1359](https://github.com/googleapis/js-genai/commit/c9c13596365b495a66be3015c312936a38be6ebc))
+
+## [1.31.0](https://github.com/googleapis/js-genai/compare/v1.30.0...v1.31.0) (2025-12-03)
+
+
+### Features
+
+* Add empty response for tunings.cancel() ([5dc25bc](https://github.com/googleapis/js-genai/commit/5dc25bcec56b0fdba1b893a332c915f2320ff0b8))
+
+## [1.30.0](https://github.com/googleapis/js-genai/compare/v1.29.1...v1.30.0) (2025-11-18)
+
+
+### Features
+
+* add display name to FunctionResponseBlob ([81036ed](https://github.com/googleapis/js-genai/commit/81036edbea077b600d29c565c7dea5ad840d0fe0))
+* add display name to FunctionResponseFileData ([564f718](https://github.com/googleapis/js-genai/commit/564f7180087ed35b69d5d0777a98a6992b7adb3e))
+* Add generate_content_config.thinking_level ([4e586df](https://github.com/googleapis/js-genai/commit/4e586df51c403e12e5b715288e0fcd882b5aaf38))
+* Add image output options to ImageConfig for Vertex ([fff5fb6](https://github.com/googleapis/js-genai/commit/fff5fb687be5630ec113c8c60114cbfc25156931))
+* Add part.media_resolution ([4e586df](https://github.com/googleapis/js-genai/commit/4e586df51c403e12e5b715288e0fcd882b5aaf38))
+* support Function call argument streaming for all languages ([b3b94f6](https://github.com/googleapis/js-genai/commit/b3b94f6e12e0895eac6b15ff54cc0ce3afd796e7))
+
+## [1.29.1](https://github.com/googleapis/js-genai/compare/v1.29.0...v1.29.1) (2025-11-12)
+
+
+### Bug Fixes
+
+* Add missing fields to the model types ([8937903](https://github.com/googleapis/js-genai/commit/8937903299bf3180ec8eb806d189c642392f1546))
+* Don't generate warnings from response.text property because of thought_signature. ([356b843](https://github.com/googleapis/js-genai/commit/356b84306542a972cc49ede11b24c8b0156d78eb))
+* Fix base_steps parameter for recontext_image ([946415f](https://github.com/googleapis/js-genai/commit/946415ffc42bdc9bcf7f086aac9612ff7aaa89d2))
+
+## [1.29.0](https://github.com/googleapis/js-genai/compare/v1.28.0...v1.29.0) (2025-11-05)
+
+
+### Features
+
+* add complete stats to BatchJob ([3263514](https://github.com/googleapis/js-genai/commit/3263514b69cfe4433401f6955a4bea9d739b16fc))
+* Add FileSearch tool and associated FileSearchStore management APIs ([05cff8c](https://github.com/googleapis/js-genai/commit/05cff8ce01bb1579551f1f8d1fea95a6d2ae482a))
+* Add FileSearch tool and associated FileSearchStore management APIs ([25aa2a4](https://github.com/googleapis/js-genai/commit/25aa2a40c4a3c859e9ac18335458260ed1210980))
+* Add image_size to ImageConfig (Early Access Program) ([e1e883a](https://github.com/googleapis/js-genai/commit/e1e883aee308a1e5f166cd8981bc311a2057c616))
+* Added phish filtering feature. ([4b75e5d](https://github.com/googleapis/js-genai/commit/4b75e5d142a11010ed21b967efb6cb74639c74c7))
+* update the build configs ([97a2fac](https://github.com/googleapis/js-genai/commit/97a2faceea154754e95e29e2de9e5614056f406e))
+
+
+### Bug Fixes
+
+* disable AFC when there are AFC incompatible tool presented. ([30c63b4](https://github.com/googleapis/js-genai/commit/30c63b4b41e4fd75f18231a00774b9c13e9d423d))
+
+## [1.28.0](https://github.com/googleapis/js-genai/compare/v1.27.0...v1.28.0) (2025-10-29)
+
+
+### Features
+
+* Add safety_filter_level and person_generation for Imagen upscaling ([aaceb1b](https://github.com/googleapis/js-genai/commit/aaceb1b78883db0ae08fb374c0f1ee4d960f1094))
+* Add support for preference optimization tuning in the SDK. ([f74660e](https://github.com/googleapis/js-genai/commit/f74660e153964fea281f3d4b18f88460a5dac7b1))
+* Pass file name to the backend when uploading with a file path ([7115726](https://github.com/googleapis/js-genai/commit/71157260ef1e92bffcd6e3250eb722b6931d7627))
+* support default global location when not using api key with vertexai backend ([f8967b1](https://github.com/googleapis/js-genai/commit/f8967b1f353165b252e00407beebf2ca06831b76))
+* Update `test-server-sdk` dependency to `^0.2.9`. ([8d507bf](https://github.com/googleapis/js-genai/commit/8d507bf42585dc0a6b1e1c47be61c024efd0a565))
+
+
+### Bug Fixes
+
+* Fix downloader. With this change after you await the download, the file write is complete, and the data is fully readable. ([127c9bf](https://github.com/googleapis/js-genai/commit/127c9bf29c0110a1292d5742c2bc87e4482eb6eb))
+
+## [1.27.0](https://github.com/googleapis/js-genai/compare/v1.26.0...v1.27.0) (2025-10-23)
+
+
+### Features
+
+* Remove redundant calls to rollup/api-extractor, speeds up the TS SDK testing further by a factor of 2. ([009b75f](https://github.com/googleapis/js-genai/commit/009b75fd06129117cce480822efe9ffe9f13f853))
+
+
+### Bug Fixes
+
+* google auth ADC error ([f87611c](https://github.com/googleapis/js-genai/commit/f87611c70e0b1edcacd67f384fa14b4b2b37ac57))
+
+## [1.26.0](https://github.com/googleapis/js-genai/compare/v1.25.0...v1.26.0) (2025-10-21)
+
+
+### Features
+
+* Add enable_enhanced_civic_answers in GenerationConfig ([0e95d72](https://github.com/googleapis/js-genai/commit/0e95d7244cccaeee3427a46d8843e9ba2fa38930))
+* support jailbreak in HarmCategory and BlockedReason ([cd79a83](https://github.com/googleapis/js-genai/commit/cd79a83972a3c6a2e59e9b33004fb8e0e463eb9c))
+
+## [1.25.0](https://github.com/googleapis/js-genai/compare/v1.24.0...v1.25.0) (2025-10-15)
+
+
+### Features
+
+* Support video extension for Veo on Gemini Developer API ([5d11d81](https://github.com/googleapis/js-genai/commit/5d11d810e2d8873be9197a3ae852f5b1df31e342))
+
+## [1.24.0](https://github.com/googleapis/js-genai/compare/v1.23.0...v1.24.0) (2025-10-10)
+
+
+### Features
+
+* Enable Google Maps tool for Genai. ([b671fe9](https://github.com/googleapis/js-genai/commit/b671fe92f033b5ff47f2bd4c5353514e88b74b9b))
+* Support enableWidget feature in GoogleMaps ([81ed6a3](https://github.com/googleapis/js-genai/commit/81ed6a3ba056493553794b0de0f276fb171e9a44))
+* Support Gemini batch inline request's metadata and add test coverage to safety setting ([722562b](https://github.com/googleapis/js-genai/commit/722562b1c893f643d05d15c45ea1b81d2538f0ca))
+
+## [1.23.0](https://github.com/googleapis/js-genai/compare/v1.22.0...v1.23.0) (2025-10-08)
+
+
+### Features
+
+* Add `NO_IMAGE` enum value to `FinishReason` ([5305334](https://github.com/googleapis/js-genai/commit/5305334d7c295b56bcfd0efe2bf8a1a7a5ba230a))
+* Add labels field to Imagen configs ([1e9e96c](https://github.com/googleapis/js-genai/commit/1e9e96ca06520cde31a0506a7cf72bed635df45e))
+* Add utility methods for creating `FunctionResponsePart` and creating FunctionResponse `Part` with `FunctionResponseParts` ([5a0ce38](https://github.com/googleapis/js-genai/commit/5a0ce383efbf09b3b9e4b14c720417879664c4a1))
+* Enable Ingredients to Video and Advanced Controls for Veo on Gemini Developer API (Early Access Program) ([d5bd0c1](https://github.com/googleapis/js-genai/commit/d5bd0c1b8147711f604049069f433539544d4829))
+
+
+### Bug Fixes
+
+* support system_instruction and tools mapping via converter and cleanup handwritten mapping ([54ec204](https://github.com/googleapis/js-genai/commit/54ec204a1ff5f08ad619a78a5e13ad3708d50500))
+
+## [1.22.0](https://github.com/googleapis/js-genai/compare/v1.21.0...v1.22.0) (2025-10-02)
+
+
+### Features
+
+* Add `ImageConfig` to `GenerateContentConfig` ([c137172](https://github.com/googleapis/js-genai/commit/c137172ddeb253341ce7aab5a1a84f172e63977a))
+* Add thinking_config for live ([decc090](https://github.com/googleapis/js-genai/commit/decc090411c950c1fcc358ff0a04a2f67ae05100))
+* rename ComputerUse tool (early access) ([e4345f9](https://github.com/googleapis/js-genai/commit/e4345f9175bcc729cd40d61905ad52ca6c3eba0d))
+
+## [1.21.0](https://github.com/googleapis/js-genai/compare/v1.20.0...v1.21.0) (2025-09-25)
+
+
+### Features
+
+* Add FunctionResponsePart & ToolComputerUse.excludedPredefinedFunctions ([61620f6](https://github.com/googleapis/js-genai/commit/61620f64cc8ca6997e958bda6f61ed52faff71c8))
+* Support Imagen 4 Ingredients on Vertex ([56cccfc](https://github.com/googleapis/js-genai/commit/56cccfca02b668ed3bfacc7e757eb821e827e35b))
+
+
+### Bug Fixes
+
+* [#963](https://github.com/googleapis/js-genai/issues/963) allow leading whitespace before data chunks ([24f4153](https://github.com/googleapis/js-genai/commit/24f4153ea652709e4093dd4f543c2fbebd693dc2))
+* Expose `JOB_STATE_RUNNING` and `JOB_STATE_EXPIRED` for Gemini Batches states ([b513c69](https://github.com/googleapis/js-genai/commit/b513c69d2102b94733d2e436d8d1b8a47dd1bbf4))
+* initialization of `pre_tuned_model_checkpoint_id` from tuning config. ([2e10e7f](https://github.com/googleapis/js-genai/commit/2e10e7f8d666fb8f0f332834266d9fd0a5d13c34))
+
+## [1.20.0](https://github.com/googleapis/js-genai/compare/v1.19.0...v1.20.0) (2025-09-16)
+
+
+### Features
+
+* Add 'turn_complete_reason' and 'waiting_for_input' fields. ([cb54332](https://github.com/googleapis/js-genai/commit/cb543326e805cf1fc4f9167b1a8af797dc8a11ca))
+* Add `VideoGenerationMaskMode` enum for Veo 2 Editing ([3e850fd](https://github.com/googleapis/js-genai/commit/3e850fdad8b5252608b8287b2e537fb9b0a2f35e))
+
+## [1.19.0](https://github.com/googleapis/js-genai/compare/v1.18.0...v1.19.0) (2025-09-09)
+
+
+### Features
+
+* Add labels to create tuning job config ([220c4d6](https://github.com/googleapis/js-genai/commit/220c4d6c925d8ebfa3cfccff5ed964df1b775a62))
+* Support Veo 2 Editing on Vertex ([6e34fd0](https://github.com/googleapis/js-genai/commit/6e34fd057cc88c300942f231f43e1c120f3a6fe6))
+
+
+### Bug Fixes
+
+* Enable `id` field in `FunctionCall` for Vertex AI. ([7c6e047](https://github.com/googleapis/js-genai/commit/7c6e047037103a0cc60c799a12dcc3ace3a5ba2f))
+
+## [1.18.0](https://github.com/googleapis/js-genai/compare/v1.17.0...v1.18.0) (2025-09-09)
+
+
+### Features
+
+* generate the function_call class's converters ([e57a7bc](https://github.com/googleapis/js-genai/commit/e57a7bcc4e30e0f9ddef036bbe50680ebc476e83))
+* Implement embed content batches. ([9cb8613](https://github.com/googleapis/js-genai/commit/9cb8613ef7646be0d6392f4da4da3eb6b0e6d5f6))
+
+## [1.17.0](https://github.com/googleapis/js-genai/compare/v1.16.0...v1.17.0) (2025-09-02)
+
+
+### Features
+
+* Add resolution field for Gemini Developer API Veo 3 generation ([5ce467b](https://github.com/googleapis/js-genai/commit/5ce467b754b82f1a2ba18e75f27962c0764db091))
+
+## [1.16.0](https://github.com/googleapis/js-genai/compare/v1.15.0...v1.16.0) (2025-08-27)
+
+
+### Features
+
+* add `sdkHttpResponse.headers` to *Delete responses. ([397c602](https://github.com/googleapis/js-genai/commit/397c6022864adfd5113da58977ee036d186e81a2))
+* Add add_watermark field for recontext_image (Virtual Try-On, Product Recontext) ([e182fe8](https://github.com/googleapis/js-genai/commit/e182fe89deebf2c0bbe0310c689e444a56351896))
+* Add output_gcs_uri to Imagen upscale_image ([8db102a](https://github.com/googleapis/js-genai/commit/8db102a976c6dadcf6596bdd2b378f982da1261b))
+* add outputSchema support for MCP ([e2d4e50](https://github.com/googleapis/js-genai/commit/e2d4e507513009ba1bff79f193459772673ac42d))
+* Add VALIDATED mode into FunctionCallingConfigMode ([af410e7](https://github.com/googleapis/js-genai/commit/af410e74f540411e809725f809caab40a624ba6f))
+* Add VideoGenerationReferenceType enum for generate_videos ([eb17013](https://github.com/googleapis/js-genai/commit/eb170130c2c81b7f149f1d824b813fb3c44db36d))
+* Support GenerateVideosSource for Veo GenerateVideos ([2241749](https://github.com/googleapis/js-genai/commit/2241749382f760eb942bf84318f64b2e9c535694))
+* support tunings.cancel in the genai SDK for Python, Java, JS, and Go ([2d67d25](https://github.com/googleapis/js-genai/commit/2d67d25d4b7cbdeb6b04caf15cb6b8b3b1033e68))
+* Update server test recordings to JSON. ([dd0a033](https://github.com/googleapis/js-genai/commit/dd0a0334375f373964acf9c7d6b4d2b8905226a1))
+
+
+### Bug Fixes
+
+* **js:** empty env vars should be treated as undefined. ([16a80c0](https://github.com/googleapis/js-genai/commit/16a80c04f0b8353a6c4e64a7d29c171e0c241ae3))
+
+## [1.15.0](https://github.com/googleapis/js-genai/compare/v1.14.0...v1.15.0) (2025-08-18)
+
+
+### Features
+
+* Support Imagen image segmentation on Vertex ([6b86bae](https://github.com/googleapis/js-genai/commit/6b86baecc425197c2db1b734e93a4a5dcb9a10a4))
+* Support Veo 2 Reference Images to Video Generation on Vertex ([6bca6ad](https://github.com/googleapis/js-genai/commit/6bca6ad37edd4ebda024b2eaf617d4ad213a791f))
+
+
+### Bug Fixes
+
+* **chats:** Drop the validation on part with empty text ([d2602d2](https://github.com/googleapis/js-genai/commit/d2602d2ec47402d567f095c6c621b258432ff896))
+* Fix the bug to support Gemini Batch inlined requests system instruction ([843c774](https://github.com/googleapis/js-genai/commit/843c7746edc9497499b8af277f4f3901f31dce9a))
+
+## [1.14.0](https://github.com/googleapis/js-genai/compare/v1.13.0...v1.14.0) (2025-08-13)
+
+
+### Features
+
+* add an _exclude_fields characteristic in the config for unused values to avoid unnecessary and unused code in converter and type generation. ([15a4504](https://github.com/googleapis/js-genai/commit/15a4504ac3455044bb3ef51440ccbf420168104e))
+* enable continuous fine-tuning on a pre-tuned model in the SDK. ([027f09d](https://github.com/googleapis/js-genai/commit/027f09db662ce6b30f737b10b4d2efcb4282a9b6))
+* support document name in grounding metadata ([b801236](https://github.com/googleapis/js-genai/commit/b8012365f7ec7917576ca048bbaa37ac9d011795))
+* Support exclude_domains in Google Search and Enterprise Web Search ([8ed49f1](https://github.com/googleapis/js-genai/commit/8ed49f171e2a1bf2cfb187869e4682ed2f8bd2fb))
+
+
+### Bug Fixes
+
+* Replace `gemini-2.5-flash-preview-04-17` with `gemini-2.5-flash`. ([d7f1c30](https://github.com/googleapis/js-genai/commit/d7f1c304554c045cdd8bf710d11178a1d07b2983))
+
+## [1.13.0](https://github.com/googleapis/js-genai/compare/v1.12.0...v1.13.0) (2025-08-06)
+
+
+### Features
+
+* Add image_size field for Gemini Developer API Imagen 4 generation ([9841ecb](https://github.com/googleapis/js-genai/commit/9841ecb359d57648e284271fdf3a477ca3c5d6f1))
+* Add Lyria enum for music generation mode for vocalization ([b05821f](https://github.com/googleapis/js-genai/commit/b05821f5279ba0a579312fb66deafc79bf56fda5))
+* allow methods in batch to return headers in sdk_http_response by default ([55a2be4](https://github.com/googleapis/js-genai/commit/55a2be418f132788e5be6266c05ba42bf96c4aa1))
+* enable responseId for Gemini Developer API ([40e3a58](https://github.com/googleapis/js-genai/commit/40e3a58e31d09f77eb600c4e472965646ad7dd63))
+* Support image recontext on Vertex ([e417867](https://github.com/googleapis/js-genai/commit/e417867f181ca3a577ed6089233d18110b5a6558))
+* Support new enum types for UrlRetrievalStatus ([88b47e6](https://github.com/googleapis/js-genai/commit/88b47e6f4bebea188bf7baec437a948e16d703bb))
+
+## [1.12.0](https://github.com/googleapis/js-genai/compare/v1.11.0...v1.12.0) (2025-07-30)
+
+
+### Features
+
+* allow methods in models to return headers in sdk_http_response by default. ([efdcb8a](https://github.com/googleapis/js-genai/commit/efdcb8a844155127cc58b05cfcb3f4f676613c1a))
+* allow methods in tuning to return headers in sdk_http_response by default ([f81c16a](https://github.com/googleapis/js-genai/commit/f81c16a4723c0696e100c5926fe5416263621b8b))
+
+
+### Bug Fixes
+
+* Correctly populated the Rai filter reasons on Video Generation ([316cdb0](https://github.com/googleapis/js-genai/commit/316cdb05d0bf87a03e463812e48f7c0c8fe5296a))
+
+## [1.11.0](https://github.com/googleapis/js-genai/compare/v1.10.0...v1.11.0) (2025-07-23)
+
+
+### Features
+
+* Add image_size field for Vertex Imagen 4 generation ([b6cc23e](https://github.com/googleapis/js-genai/commit/b6cc23ee90b576db1529f33ff5c209742baedab8))
+* enable function calling for Callable Tool besides McpClient in generateContent. ([90565bd](https://github.com/googleapis/js-genai/commit/90565bda219f4a72bbbe72497c72c34f6ead83b5))
+* Introduced Operations.get() which is a generic function to handle all Operation types. ([a6f85c1](https://github.com/googleapis/js-genai/commit/a6f85c1d5848f03b63b7038a0af6567caca295cf))
+* return headers for list method in all modules. ([e8591a3](https://github.com/googleapis/js-genai/commit/e8591a3adf024e4667f55610d2069edb52be8f8d))
+* Updates to codegen instructions to improve performance for TypeScript ([9c97ec6](https://github.com/googleapis/js-genai/commit/9c97ec645a7ab1e3a2e28319dac54a640e0eda57))
+
+## [1.10.0](https://github.com/googleapis/js-genai/compare/v1.9.0...v1.10.0) (2025-07-17)
+
+
+### Features
+
+* Add `addWatermark` parameter to the edit image configuration. ([16bca99](https://github.com/googleapis/js-genai/commit/16bca999fe432eabd69c78988e2e6e4bc099342d))
+* Adding codegen instructions to guide LLMs to generate code with the Google GenAI SDK ([7f74175](https://github.com/googleapis/js-genai/commit/7f741751ba7a7a15e29469c6debf25b6605252ed))
+* Update `hasMcpToolUsage` to set the MCP tool usage when it is detected by calling `mcpToTool` ([a70f9c4](https://github.com/googleapis/js-genai/commit/a70f9c4d76d6b6d05f831fedeb1bc166f5226ef1))
+
+
+### Bug Fixes
+
+* **live:** enhance security by moving api key from query parameters to header ([f183b7d](https://github.com/googleapis/js-genai/commit/f183b7d7fa33f4f66bef4b7d49ab0c4848cca2e4))
+* **live:** Rollback commit f183b7d, breaks live in web env ([be24e86](https://github.com/googleapis/js-genai/commit/be24e86e572c35d5b39313a9b154a04f7717340f))
+
+## [1.9.0](https://github.com/googleapis/js-genai/compare/v1.8.0...v1.9.0) (2025-07-09)
+
+
+### Features
+
+* Add new languages for Imagen 4 prompt language ([65be769](https://github.com/googleapis/js-genai/commit/65be7692d02e83708348980b7c771f673d744f84))
+
+
+### Bug Fixes
+
+* add unref() for request timeouts ([6b76c4b](https://github.com/googleapis/js-genai/commit/6b76c4b5850b28f246d11ff99bb556e9e3318ee6))
+
+## [1.8.0](https://github.com/googleapis/js-genai/compare/v1.7.0...v1.8.0) (2025-07-01)
+
+
+### Features
+
+* Enable Vertex Multimodal Dataset as input to supervised fine-tuning. ([055b435](https://github.com/googleapis/js-genai/commit/055b435ab57f6beb46fc0d0da757b4a24ff05e2d))
+* Support Batches delete ([6cd9174](https://github.com/googleapis/js-genai/commit/6cd917424ea783023f6b4197bb35554481539dba))
+* Support different media input in Vertex Live API ([305952e](https://github.com/googleapis/js-genai/commit/305952e3bd62729248e80a57bbaac0a9254a14ee))
+
+## [1.7.0](https://github.com/googleapis/js-genai/compare/v1.6.0...v1.7.0) (2025-06-25)
+
+
+### Features
+
+* Add compressionQuality enum for generate_videos ([4325773](https://github.com/googleapis/js-genai/commit/432577312dedb474e6892963f83edba830d9ed6d))
+* Add enhance_input_image and image_preservation_factor fields for upscale_image ([13eedda](https://github.com/googleapis/js-genai/commit/13eedda4c7ba0b190481e5e7f43995542702ee25))
+* Batches support in TS ([dd7355e](https://github.com/googleapis/js-genai/commit/dd7355efdfec4a7323c204b8bad6e6b07d897557))
+* expose the responseJsonSchema in GenerateContentConfig ([db54a5f](https://github.com/googleapis/js-genai/commit/db54a5f0f3cfa1f4ec300c2ea115eaf239a01639))
+
+
+### Bug Fixes
+
+* **live:** support ArrayBuffer in WebSocket messages ([5a8aeac](https://github.com/googleapis/js-genai/commit/5a8aeac1ce69e098b12f50b1299dab19ef0bd23a)), closes [#714](https://github.com/googleapis/js-genai/issues/714)
+
+## [1.6.0](https://github.com/googleapis/js-genai/compare/v1.5.1...v1.6.0) (2025-06-21)
+
+
+### Features
+
+* allow users to access headers for generateContent method and generateContentStream ([f5f0e02](https://github.com/googleapis/js-genai/commit/f5f0e023805ca75be348b38ad6a9382d5707f97a))
+* enable json schema for controlled output and function declaration. ([7d53d57](https://github.com/googleapis/js-genai/commit/7d53d578ea8b6fa7a418312357a8a593d3c0122a))
+* Include status code and export HTTP errors ([bcabcb6](https://github.com/googleapis/js-genai/commit/bcabcb6fa2975ff8b0afbbf108748def39f1e9aa))
+* support extra_body in HttpOptions ([1d48b6e](https://github.com/googleapis/js-genai/commit/1d48b6eafaee0d39ea72f7bfc396e45ada6c69ae))
+
+
+### Bug Fixes
+
+* Fix build errors when the mcp package is not installed. ([5b7e695](https://github.com/googleapis/js-genai/commit/5b7e695552b6d5cd1e55056bbe6bc9349a479e18))
+
+## [1.5.1](https://github.com/googleapis/js-genai/compare/v1.5.0...v1.5.1) (2025-06-13)
+
+
+### Bug Fixes
+
+* Update MCP dependencies to be type-only ([648019b](https://github.com/googleapis/js-genai/commit/648019bebb5cff3e8b3bb6db72534934bd7c1357))
+
+## [1.5.0](https://github.com/googleapis/js-genai/compare/v1.4.0...v1.5.0) (2025-06-11)
+
+
+### Features
+
+* add a timeout parameter to CallableToolConfig ([06f31fd](https://github.com/googleapis/js-genai/commit/06f31fdbb8be612759385190c6a03ea03d103dcf))
+* Add datastore_spec field for VertexAISearch ([1b18a52](https://github.com/googleapis/js-genai/commit/1b18a527ab4b9526a8901ecdc0453795df0905bf))
+* Add support for Veo frame interpolation and video extension ([53f22e6](https://github.com/googleapis/js-genai/commit/53f22e6ce54dc0b226145e9bcba20b731ea4645f))
+* Make the MCP SDK an optional peer dependency. ([2472fd3](https://github.com/googleapis/js-genai/commit/2472fd364a29ad3cf3e15bbb61a1f3ac00914d86))
+* RAG - Introducing context storing for Gemini Live API. ([bdc2355](https://github.com/googleapis/js-genai/commit/bdc2355f2f10b839aa95162216dc4d35c60cd58e))
+
+
+### Bug Fixes
+
+* Prioritize credentials over implicit api key (from env) for node client using Vertex AI ([d82aba2](https://github.com/googleapis/js-genai/commit/d82aba244bdb804b063ef8a983b2916c00b901d2)), closes [#616](https://github.com/googleapis/js-genai/issues/616)
+
 ## [1.4.0](https://github.com/googleapis/js-genai/compare/v1.3.0...v1.4.0) (2025-06-04)
 
 

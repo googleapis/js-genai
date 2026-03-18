@@ -1,0 +1,395 @@
+{
+  "recordID": "Client_Tests_generateContentStream_partial_function_calling_Vertex_AI_should_stream_generate_content_enabled_streamFunctionCallArguments",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-3-pro-preview:streamGenerateContent?alt=sse",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-3-pro-preview:streamGenerateContent?alt=sse HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "852",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Client Tests generateContentStream partial function calling Vertex AI should stream generate content enabled streamFunctionCallArguments"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "get the current weather in NewYorkCity in celsius, the country should be USA, the purpose is to know what to wear today."
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {},
+            "toolConfig": {
+              "functionCallingConfig": {
+                "streamFunctionCallArguments": true
+              }
+            },
+            "tools": [
+              {
+                "functionDeclarations": [
+                  {
+                    "description": "Get the current weather in a city",
+                    "name": "getCurrentWeather",
+                    "parametersJsonSchema": {
+                      "properties": {
+                        "country": {
+                          "anyOf": [
+                            {
+                              "description": "The country to get the weather for",
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ],
+                          "description": "The country to get the weather for"
+                        },
+                        "location": {
+                          "description": "The location to get the weather for",
+                          "type": "string"
+                        },
+                        "purpose": {
+                          "description": "Discribes the purpose of asking the weather",
+                          "type": "string"
+                        },
+                        "unit": {
+                          "enum": ["C", "F"],
+                          "type": "string"
+                        }
+                      },
+                      "required": ["location", "unit", "country"],
+                      "type": "object"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "9aba3196463004a952dc6c910c6190003808c4ea80decdd7d2b5a253297ff3bf",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Disposition": "attachment",
+          "Content-Type": "text/event-stream",
+          "Date": "Mon, 01 Dec 2025 21:58:28 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Goog-Sherlog-Link": "https://sherlog.corp.google.com/workflow?config=Serving\u0026dataid=aiplatform.googleapis.com/google.cloud.aiplatform.v1beta1.PredictionService.StreamGenerateContent\u0026gaia=790080187114\u0026reason=sharedLink\u0026version=187d36469f16b539a5510c175fdd510d",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "name": "getCurrentWeather",
+                        "willContinue": true
+                      },
+                      "thoughtSignature": "CiQB4/H/XgNlLzYfN9UaONwi+PaPjdmVSjIwFb3S+J2cl4mjydoKYwHj8f9enGz62mdOYW1JcvGz94pVJvy4Fybb04YVz75uqmrLcgYIM5NRCoSf72Bq7AePBTXGx37+jLfp694+OLMR3lBlqge9GCGDz5gfZZ6TT2oEm42zj5uS3ISvAg+sEU1XZQpkAePx/15A4SVFsbMuG1ExfYnw2dqIczkzmRPeAGuVp/KIvL1phsKjFILzYQzWnrSoB65QrJyYOgi9+BDYlAIHLQK16LGlc7T8R+Qlb5mNPfTzBRBNx8TQk0GyKSRe9zeVrAJPFAqAAQHj8f9eZDoHIzebebXdeAkwvuo5W1n5GTUxWnqclAyPLp1Kbnp2ytswe0uxrWCYRMQVudVdOcm/hC1AjQmHusz3hqLWRhzbuT4p+CrNAn/cRyBcXuUAK9RX5V1eCegEAARROwfQJo6zyA0gAYVUgQ5LgkuGL8tsTdmksmlY2NCiCoYBAePx/14KpoVNE0ngFz7Wao4kaG8y2XqFk3S37av+E/I7RcsFg4VDaJqDUgFzLm6r2pXT3v+Fad4Z0pQ7pP3K6k+WMEoAK7m7sSmHJmSTmxUx7WadGX1ldonM3jNfc3OL1dS8xHSipJQ2HIfKU2n6H5pjkgAjuiE2oTjdbcsYWW0YkMPnO6Y="
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-12-01T21:58:25.986363Z",
+            "modelVersion": "gemini-3-pro-preview",
+            "responseId": "gQ8uafuZPJ6Z4_UP_vnfsQY",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 453
+              },
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "partialArgs": [
+                          {
+                            "jsonPath": "$.country",
+                            "stringValue": "USA",
+                            "willContinue": true
+                          }
+                        ],
+                        "willContinue": true
+                      }
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-12-01T21:58:25.986363Z",
+            "modelVersion": "gemini-3-pro-preview",
+            "responseId": "gQ8uafuZPJ6Z4_UP_vnfsQY",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "partialArgs": [
+                          {
+                            "jsonPath": "$.country",
+                            "stringValue": ""
+                          }
+                        ],
+                        "willContinue": true
+                      }
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-12-01T21:58:25.986363Z",
+            "modelVersion": "gemini-3-pro-preview",
+            "responseId": "gQ8uafuZPJ6Z4_UP_vnfsQY",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "partialArgs": [
+                          {
+                            "jsonPath": "$.location",
+                            "stringValue": "NewYorkCity",
+                            "willContinue": true
+                          }
+                        ],
+                        "willContinue": true
+                      }
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-12-01T21:58:25.986363Z",
+            "modelVersion": "gemini-3-pro-preview",
+            "responseId": "gQ8uafuZPJ6Z4_UP_vnfsQY",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "partialArgs": [
+                          {
+                            "jsonPath": "$.location",
+                            "stringValue": ""
+                          }
+                        ],
+                        "willContinue": true
+                      }
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-12-01T21:58:25.986363Z",
+            "modelVersion": "gemini-3-pro-preview",
+            "responseId": "gQ8uafuZPJ6Z4_UP_vnfsQY",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "partialArgs": [
+                          {
+                            "jsonPath": "$.purpose",
+                            "stringValue": "to know what to wear today",
+                            "willContinue": true
+                          }
+                        ],
+                        "willContinue": true
+                      }
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-12-01T21:58:25.986363Z",
+            "modelVersion": "gemini-3-pro-preview",
+            "responseId": "gQ8uafuZPJ6Z4_UP_vnfsQY",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "partialArgs": [
+                          {
+                            "jsonPath": "$.purpose",
+                            "stringValue": ""
+                          }
+                        ],
+                        "willContinue": true
+                      }
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-12-01T21:58:25.986363Z",
+            "modelVersion": "gemini-3-pro-preview",
+            "responseId": "gQ8uafuZPJ6Z4_UP_vnfsQY",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "partialArgs": [
+                          {
+                            "jsonPath": "$.unit",
+                            "stringValue": "C",
+                            "willContinue": true
+                          }
+                        ],
+                        "willContinue": true
+                      }
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-12-01T21:58:25.986363Z",
+            "modelVersion": "gemini-3-pro-preview",
+            "responseId": "gQ8uafuZPJ6Z4_UP_vnfsQY",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "partialArgs": [
+                          {
+                            "jsonPath": "$.unit",
+                            "stringValue": ""
+                          }
+                        ],
+                        "willContinue": true
+                      }
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-12-01T21:58:25.986363Z",
+            "modelVersion": "gemini-3-pro-preview",
+            "responseId": "gQ8uafuZPJ6Z4_UP_vnfsQY",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {}
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP"
+              }
+            ],
+            "createTime": "2025-12-01T21:58:25.986363Z",
+            "modelVersion": "gemini-3-pro-preview",
+            "responseId": "gQ8uafuZPJ6Z4_UP_vnfsQY",
+            "usageMetadata": {
+              "candidatesTokenCount": 33,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 33
+                }
+              ],
+              "promptTokenCount": 36,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 36
+                }
+              ],
+              "thoughtsTokenCount": 93,
+              "totalTokenCount": 162,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,137 @@
+{
+  "recordID": "Client_Tests_Vertex_AI_can_use_JSON_schema_in_parametersJsonSchema_to_build_FunctionDeclaration",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:generateContent",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:generateContent HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "583",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Client Tests Vertex AI can use JSON schema in parametersJsonSchema to build FunctionDeclaration"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "put word: hello and word: world into a string"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {},
+            "toolConfig": {
+              "functionCallingConfig": {
+                "allowedFunctionNames": ["concatStringFunction"],
+                "mode": "ANY"
+              }
+            },
+            "tools": [
+              {
+                "functionDeclarations": [
+                  {
+                    "description": "this is a concat string function",
+                    "name": "concatStringFunction",
+                    "parametersJsonSchema": {
+                      "$schema": "http://json-schema.org/draft-07/schema#",
+                      "additionalProperties": false,
+                      "properties": {
+                        "firstString": {
+                          "type": "string"
+                        },
+                        "secondString": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["firstString", "secondString"],
+                      "type": "object"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "us-central1-aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "fce16f05081bc6d02bbac4250bb43b6ae0b04d4eebf291d801a5f1e7bb6b2e53",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Encoding": "gzip",
+          "Content-Length": "888",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Fri, 24 Oct 2025 07:45:28 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "avgLogprobs": -0.7892117500305176,
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "args": {
+                          "firstString": "hello",
+                          "secondString": "world"
+                        },
+                        "name": "concatStringFunction"
+                      },
+                      "thoughtSignature": "Ct0CAePx/17Gnphtb2DGal9dsCWAEjKsTpG6Jvdgy5VGim1OioXtvuMtbr9C+Wgp4A/mzM16+tgShUsrZF7wwlMC/nSuCtrVagoX7GtBG8s4gdqM3WU1DA1a/QyWq8d+MN0hnyceoRj6hUlqs11Vvyag816byPvhdmOT2CYLy/HM11YsGPiAWcloOcIm3BPMoOISDVkpbsXCKX1RdK9PkWxrTTtSrWXHOBuvoqqo1T+vpUYuTdXTs2WGEjJwDm6QG4fOqb5YUhP5nW6xqT5zvn7DIFkRnr9DFhJWAAfhp38VeIq+tKk4mWL74Dag+0oCiuaKHKz0FgbSVQQpAMA9FXJudzO0JTcIoa2qyAiOtI9GPgDjLOq/OPDp0iQOTRkMBd7XuohL56mQkMH3ChZP3/1qImuGzr6h+FbewFnnjVmT+PtQHXkeO9Hg2wfTyQwwDWZDbeyloanwOsTa2H6uxg=="
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "score": -7.102905750274658
+              }
+            ],
+            "createTime": "2025-10-24T07:45:27.535175Z",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "ly77aIfVILW4nvgPme6b-AU",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 249
+              },
+              "candidatesTokenCount": 9,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 9
+                }
+              ],
+              "promptTokenCount": 20,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 20
+                }
+              ],
+              "thoughtsTokenCount": 79,
+              "totalTokenCount": 108,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

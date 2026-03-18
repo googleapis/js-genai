@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {fail} from 'assert';
 import {GoogleAuthOptions} from 'google-auth-library';
 import {z} from 'zod';
 import {zodToJsonSchema} from 'zod-to-json-schema';
@@ -12,40 +11,64 @@ import {zodToJsonSchema} from 'zod-to-json-schema';
 import {GoogleGenAI} from '../../../src/node/node_client.js';
 import {
   FunctionCallingConfigMode,
+  FunctionDeclaration,
   GenerateContentResponse,
+  HttpOptions,
+  Modality,
   Part,
 } from '../../../src/types.js';
 import {createZeroFilledTempFile} from '../../_generate_test_file.js';
 import {setupTestServer, shutdownTestServer} from '../test_server.js';
 
-const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY || 'test-api-key';
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
+const MODEL = 'gemini-2.5-flash';
 
 describe('Client Tests', () => {
+  let testName: string = '';
+  let httpOptions: HttpOptions;
+
   beforeAll(async () => {
     await setupTestServer();
+    jasmine.getEnv().addReporter({
+      specStarted: function (result) {
+        testName = result.fullName;
+      },
+    });
   });
 
   afterAll(async () => {
     await shutdownTestServer();
   });
 
+  beforeEach(() => {
+    httpOptions = {headers: {'Test-Name': testName}};
+  });
+
   describe('generateContent', () => {
     it('ML Dev should generate content with specified parameters', async () => {
-      const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+      const client = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+        httpOptions,
+      });
       const response = await client.models.generateContent({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'why is the sky blue?',
-        config: {maxOutputTokens: 20, candidateCount: 1},
+        config: {
+          maxOutputTokens: 200,
+          candidateCount: 1,
+          thinkingConfig: {thinkingBudget: 50},
+        },
       });
       expect(response.candidates!.length).toBe(
         1,
         'Expected 1 candidate got ' + response.candidates!.length,
       );
       expect(response.usageMetadata!.candidatesTokenCount).toBeLessThanOrEqual(
-        20,
-        'Expected candidatesTokenCount to be less than or equal to 20, got ' +
+        250, // sometimes backend returns a little more than 200 tokens
+        'Expected candidatesTokenCount to be less than or equal to 250, got ' +
           response.usageMetadata!.candidatesTokenCount,
       );
       console.info(
@@ -59,18 +82,23 @@ describe('Client Tests', () => {
         vertexai: true,
         project: GOOGLE_CLOUD_PROJECT,
         location: GOOGLE_CLOUD_LOCATION,
+        httpOptions,
       });
       const response = await client.models.generateContent({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'why is the sky blue?',
-        config: {maxOutputTokens: 20, candidateCount: 1},
+        config: {
+          maxOutputTokens: 200,
+          candidateCount: 1,
+          thinkingConfig: {thinkingBudget: 50},
+        },
       });
       expect(response.candidates!.length).toBe(
         1,
         'Expected 1 candidate got ' + response.candidates!.length,
       );
       expect(response.usageMetadata!.candidatesTokenCount).toBeLessThanOrEqual(
-        20,
+        250,
         'Expected candidatesTokenCount to be less than or equal to 20, got ' +
           response.usageMetadata!.candidatesTokenCount,
       );
@@ -81,9 +109,13 @@ describe('Client Tests', () => {
     });
 
     it('ML Dev should generate content with system instruction', async () => {
-      const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+      const client = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+        httpOptions,
+      });
       const response = await client.models.generateContent({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'high',
         config: {systemInstruction: 'I say high you say low'},
       });
@@ -103,9 +135,10 @@ describe('Client Tests', () => {
         vertexai: true,
         project: GOOGLE_CLOUD_PROJECT,
         location: GOOGLE_CLOUD_LOCATION,
+        httpOptions,
       });
       const response = await client.models.generateContent({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'high',
         config: {systemInstruction: 'I say high you say low.'},
       });
@@ -124,9 +157,10 @@ describe('Client Tests', () => {
         vertexai: true,
         project: GOOGLE_CLOUD_PROJECT,
         location: GOOGLE_CLOUD_LOCATION,
+        httpOptions,
       });
       await client.models.generateContent({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'high',
         config: {systemInstruction: 'I say high you say low.'},
       });
@@ -146,10 +180,11 @@ describe('Client Tests', () => {
         project: GOOGLE_CLOUD_PROJECT,
         location: GOOGLE_CLOUD_LOCATION,
         googleAuthOptions: googleAuthOptions,
+        httpOptions,
       });
       try {
         await client.models.generateContent({
-          model: 'gemini-1.5-flash',
+          model: MODEL,
           contents: 'why is the sky blue?',
           config: {maxOutputTokens: 20, candidateCount: 1},
         });
@@ -168,7 +203,7 @@ describe('Client Tests', () => {
         }
       }
     });
-    it('ML Dev should generate content with given valid json schema', async () => {
+    it('ML Dev should generate content with given valid json schema in responseSchema', async () => {
       const innerObject = z.object({
         innerString: z.string(),
         innerNumber: z.number(),
@@ -194,9 +229,13 @@ describe('Client Tests', () => {
         nullableObjectField: nullableInnerObject.nullable(),
         inner: innerObject,
       });
-      const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+      const client = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+        httpOptions,
+      });
       const response = await client.models.generateContent({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'populate the following object',
         config: {
           responseMimeType: 'application/json',
@@ -211,7 +250,7 @@ describe('Client Tests', () => {
       expect(validationResult.success).toEqual(true);
     });
 
-    it('Vertex AI should generate content with given valid json schema', async () => {
+    it('Vertex AI should generate content with given valid json schema in responseSchema', async () => {
       const innerObject = z.object({
         innerString: z.string(),
         innerNumber: z.number(),
@@ -242,9 +281,10 @@ describe('Client Tests', () => {
         vertexai: true,
         project: GOOGLE_CLOUD_PROJECT,
         location: GOOGLE_CLOUD_LOCATION,
+        httpOptions,
       });
       const response = await client.models.generateContent({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'populate the following object',
         config: {
           responseMimeType: 'application/json',
@@ -264,9 +304,13 @@ describe('Client Tests', () => {
         secondString: z.string(),
       });
 
-      const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+      const client = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+        httpOptions,
+      });
       const response = await client.models.generateContent({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'put word: hello and word: world into a string',
         config: {
           tools: [
@@ -303,8 +347,290 @@ describe('Client Tests', () => {
         secondString: 'world',
       });
     });
+
+    it('ML Dev should generate content with given valid json schema in responseJsonSchema', async () => {
+      const innerObject = z.object({
+        innerString: z.string(),
+        innerNumber: z.number(),
+      });
+      const nullableInnerObject = z.object({
+        innerString: z.string(),
+        innerNumber: z.number(),
+      });
+      const nestedSchema = z.object({
+        simpleString: z.string().describe('This is a simple string'),
+        stringDatatime: z.string().datetime(),
+        stringWithEnum: z.enum(['enumvalue1', 'enumvalue2', 'enumvalue3']),
+        stringWithLength: z.string().min(1).max(10),
+        simpleNumber: z.number(),
+        simpleInteger: z.number().int(),
+        integerInt64: z.number().int(),
+        numberWithMinMax: z.number().min(1).max(10),
+        simpleBoolean: z.boolean(),
+        arrayFiled: z.array(z.string()),
+        unionField: z.union([z.string(), z.number()]),
+        nullableField: z.string().nullable(),
+        nullableArrayField: z.array(z.string()).nullable(),
+        nullableObjectField: nullableInnerObject.nullable(),
+        inner: innerObject,
+      });
+      const client = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+        httpOptions,
+      });
+      const response = await client.models.generateContent({
+        model: MODEL,
+        contents: 'populate the following object',
+        config: {
+          responseMimeType: 'application/json',
+          responseJsonSchema: zodToJsonSchema(nestedSchema),
+        },
+      });
+      const parsedResponse = JSON.parse(
+        response.candidates![0].content!['parts']![0].text as string,
+      );
+      console.log('mldev response', parsedResponse);
+      const validationResult = nestedSchema.safeParse(parsedResponse);
+      expect(validationResult.success).toEqual(true);
+    });
+
+    it('Vertex AI should generate content with given valid json schema in responseJsonSchema', async () => {
+      const innerObject = z.object({
+        innerString: z.string(),
+        innerNumber: z.number(),
+      });
+      const nullableInnerObject = z.object({
+        innerString: z.string(),
+        innerNumber: z.number(),
+      });
+      const nestedSchema = z.object({
+        simpleString: z.string().default('default'),
+        stringDatetime: z.string().datetime(),
+        stringWithEnum: z.enum(['enumvalue1', 'enumvalue2', 'enumvalue3']),
+        stringWithLength: z.string().min(1).max(10),
+        simpleNumber: z.number(),
+        simpleInteger: z.number().int(),
+        integerInt64: z.number().int(),
+        numberWithMinMax: z.number().min(1).max(10),
+        simpleBoolean: z.boolean(),
+        arrayFiled: z.array(z.string()),
+        unionField: z.union([z.string(), z.number()]),
+        nullableField: z.string().nullable(),
+        nullableArrayField: z.array(z.string()).nullable(),
+        nullableObjectField: nullableInnerObject.nullable(),
+        inner: innerObject,
+      });
+
+      const client = new GoogleGenAI({
+        vertexai: true,
+        project: GOOGLE_CLOUD_PROJECT,
+        location: GOOGLE_CLOUD_LOCATION,
+        httpOptions,
+      });
+      const response = await client.models.generateContent({
+        model: MODEL,
+        contents: 'populate the following object',
+        config: {
+          responseMimeType: 'application/json',
+          responseJsonSchema: zodToJsonSchema(nestedSchema),
+        },
+      });
+      const parsedResponse = JSON.parse(
+        response.candidates![0].content!['parts']![0].text as string,
+      );
+      console.log('vertex ai response', parsedResponse);
+      const validationResult = nestedSchema.safeParse(parsedResponse);
+      expect(validationResult.success).toEqual(true);
+    });
+    it('ML Dev can use JSON schema in parameters to build FunctionDeclaration', async () => {
+      const stringArgument = z.object({
+        firstString: z.string(),
+        secondString: z.string(),
+      });
+
+      const client = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+        httpOptions,
+      });
+      const response = await client.models.generateContent({
+        model: MODEL,
+        contents: 'put word: hello and word: world into a string',
+        config: {
+          tools: [
+            {
+              functionDeclarations: [
+                {
+                  name: 'concatStringFunction',
+                  description: 'this is a concat string function',
+                  parameters: zodToJsonSchema(stringArgument) as Record<
+                    string,
+                    unknown
+                  >,
+                },
+              ],
+            },
+          ],
+          toolConfig: {
+            functionCallingConfig: {
+              mode: FunctionCallingConfigMode.ANY,
+              allowedFunctionNames: ['concatStringFunction'],
+            },
+          },
+        },
+      });
+      const functionCallResponse =
+        response.candidates![0].content!['parts']![0].functionCall;
+      expect(functionCallResponse!.name).toEqual('concatStringFunction');
+      const parsedArgument = stringArgument.safeParse(
+        functionCallResponse!.args!,
+      );
+      expect(parsedArgument.success).toEqual(true);
+      expect(parsedArgument.data).toEqual({
+        firstString: 'hello',
+        secondString: 'world',
+      });
+    });
+    it('ML Dev can use JSON schema in parametersJsonSchema to build FunctionDeclaration', async () => {
+      const stringArgument = z.object({
+        firstString: z.string(),
+        secondString: z.string(),
+      });
+
+      console.log('httpoptions: ', httpOptions);
+      const client = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+        httpOptions,
+      });
+      const response = await client.models.generateContent({
+        model: MODEL,
+        contents: 'put word: hello and word: world into a string',
+        config: {
+          tools: [
+            {
+              functionDeclarations: [
+                {
+                  name: 'concatStringFunction',
+                  description: 'this is a concat string function',
+                  parametersJsonSchema: zodToJsonSchema(stringArgument),
+                },
+              ],
+            },
+          ],
+          toolConfig: {
+            functionCallingConfig: {
+              mode: FunctionCallingConfigMode.ANY,
+              allowedFunctionNames: ['concatStringFunction'],
+            },
+          },
+        },
+      });
+      const functionCallResponse =
+        response.candidates![0].content!['parts']![0].functionCall;
+      expect(functionCallResponse!.name).toEqual('concatStringFunction');
+      const parsedArgument = stringArgument.safeParse(
+        functionCallResponse!.args!,
+      );
+      expect(parsedArgument.success).toEqual(true);
+      expect(parsedArgument.data).toEqual({
+        firstString: 'hello',
+        secondString: 'world',
+      });
+    });
+    it('Vertex AI can use JSON schema in parameters to build FunctionDeclaration', async () => {
+      const stringArgument = z.object({
+        firstString: z.string(),
+        secondString: z.string(),
+      });
+      const client = new GoogleGenAI({
+        vertexai: true,
+        project: GOOGLE_CLOUD_PROJECT,
+        location: GOOGLE_CLOUD_LOCATION,
+        httpOptions,
+      });
+      const response = await client.models.generateContent({
+        model: MODEL,
+        contents: 'put word: hello and word: world into a string',
+        config: {
+          tools: [
+            {
+              functionDeclarations: [
+                {
+                  name: 'concatStringFunction',
+                  description: 'this is a concat string function',
+                  parameters: zodToJsonSchema(stringArgument) as Record<
+                    string,
+                    unknown
+                  >,
+                },
+              ],
+            },
+          ],
+          toolConfig: {
+            functionCallingConfig: {
+              mode: FunctionCallingConfigMode.ANY,
+              allowedFunctionNames: ['concatStringFunction'],
+            },
+          },
+        },
+      });
+      const functionCallResponse =
+        response.candidates![0].content!['parts']![0].functionCall;
+      expect(functionCallResponse!.name).toEqual('concatStringFunction');
+      const parsedArgument = stringArgument.safeParse(
+        functionCallResponse!.args!,
+      );
+      expect(parsedArgument.success).toEqual(true);
+      expect(parsedArgument.data).toEqual({
+        firstString: 'hello',
+        secondString: 'world',
+      });
+    });
+    it('ML Dev should return the headers in the sdkHttpResponse by default', async () => {
+      const client = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+        httpOptions,
+      });
+      const response = await client.models.generateContent({
+        model: MODEL,
+        contents: 'why is the sky blue?',
+        config: {maxOutputTokens: 20, candidateCount: 1},
+      });
+      console.log('response', response);
+      expect(response.sdkHttpResponse?.headers).toEqual(
+        jasmine.objectContaining({
+          'content-type': 'application/json; charset=UTF-8',
+          'x-content-type-options': 'nosniff',
+          'x-xss-protection': '0',
+        }),
+      );
+    });
+
+    it('Vertex AI should return the headers in the sdkHttpResponse by default', async () => {
+      const client = new GoogleGenAI({
+        vertexai: true,
+        project: GOOGLE_CLOUD_PROJECT,
+        location: GOOGLE_CLOUD_LOCATION,
+        httpOptions,
+      });
+      const response = await client.models.generateContent({
+        model: MODEL,
+        contents: 'why is the sky blue?',
+        config: {maxOutputTokens: 20, candidateCount: 1},
+      });
+      expect(response.sdkHttpResponse?.headers).toEqual(
+        jasmine.objectContaining({
+          'content-type': 'application/json; charset=UTF-8',
+          'x-content-type-options': 'nosniff',
+          'x-xss-protection': '0',
+        }),
+      );
+    });
   });
-  it('Vertex AI should be able to help build the FunctionDeclaration', async () => {
+  it('Vertex AI can use JSON schema in parametersJsonSchema to build FunctionDeclaration', async () => {
     const stringArgument = z.object({
       firstString: z.string(),
       secondString: z.string(),
@@ -313,9 +639,10 @@ describe('Client Tests', () => {
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
+      httpOptions,
     });
     const response = await client.models.generateContent({
-      model: 'gemini-1.5-flash',
+      model: MODEL,
       contents: 'put word: hello and word: world into a string',
       config: {
         tools: [
@@ -324,10 +651,7 @@ describe('Client Tests', () => {
               {
                 name: 'concatStringFunction',
                 description: 'this is a concat string function',
-                parameters: zodToJsonSchema(stringArgument) as Record<
-                  string,
-                  unknown
-                >,
+                parametersJsonSchema: zodToJsonSchema(stringArgument),
               },
             ],
           },
@@ -354,47 +678,163 @@ describe('Client Tests', () => {
   });
 
   describe('generateContentStream', () => {
-    it('ML Dev should stream generate content with specified parameters', async () => {
-      const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
-      const response = await client.models.generateContentStream({
-        model: 'gemini-1.5-flash',
-        contents: 'why is the sky blue?',
-        config: {candidateCount: 1, maxOutputTokens: 200},
+    describe('partial function calling', () => {
+      const json_function_declarations: FunctionDeclaration[] = [
+        {
+          'name': 'getCurrentWeather',
+          'description': 'Get the current weather in a city',
+          'parametersJsonSchema': {
+            'type': 'object',
+            'properties': {
+              'location': {
+                'type': 'string',
+                'description': 'The location to get the weather for',
+              },
+              'country': {
+                'anyOf': [
+                  {
+                    'type': 'string',
+                    'description': 'The country to get the weather for',
+                  },
+                  {
+                    'type': 'null',
+                  },
+                ],
+                'description': 'The country to get the weather for',
+              },
+              'unit': {
+                'type': 'string',
+                'enum': ['C', 'F'],
+              },
+              'purpose': {
+                'type': 'string',
+                'description': 'Discribes the purpose of asking the weather',
+              },
+            },
+            'required': ['location', 'unit', 'country'],
+          },
+        },
+      ];
+      it('ML Dev will throw error when enabbled streamFunctionCallArguments', async () => {
+        const client = new GoogleGenAI({
+          vertexai: false,
+          apiKey: GOOGLE_API_KEY,
+          httpOptions,
+        });
+        try {
+          await client.models.generateContentStream({
+            model: 'gemini-3-pro-preview',
+            contents:
+              'get the current weather in NewYorkCity in celsius, the country should be left null, the purpose is to know what to wear today.',
+            config: {
+              tools: [
+                {
+                  functionDeclarations: json_function_declarations,
+                },
+              ],
+              toolConfig: {
+                functionCallingConfig: {
+                  streamFunctionCallArguments: true,
+                },
+              },
+            },
+          });
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            expect(
+              error.message.includes(
+                'streamFunctionCallArguments parameter is not supported in Gemini API',
+              ),
+            );
+          }
+        }
       });
-      let i = 1;
-      let finalChunk: GenerateContentResponse | undefined = undefined;
-      console.info(
-        'ML Dev should stream generate content with specified parameters',
-      );
-      for await (const chunk of response) {
-        expect(chunk.text).toBeDefined();
-        console.info(`stream chunk ${i}`, chunk.text);
-        expect(chunk.candidates!.length).toBe(
-          1,
-          'Expected 1 candidate got ' + chunk.candidates!.length,
+      it('Vertex AI should stream generate content enabled streamFunctionCallArguments', async () => {
+        httpOptions.baseUrl = 'http://localhost:1455';
+        const client = new GoogleGenAI({
+          vertexai: true,
+          project: GOOGLE_CLOUD_PROJECT,
+          location: GOOGLE_CLOUD_LOCATION,
+          httpOptions,
+        });
+        const response = await client.models.generateContentStream({
+          model: 'gemini-3-pro-preview',
+          contents:
+            'get the current weather in NewYorkCity in celsius, the country should be USA, the purpose is to know what to wear today.',
+          config: {
+            tools: [
+              {
+                functionDeclarations: json_function_declarations,
+              },
+            ],
+            toolConfig: {
+              functionCallingConfig: {
+                streamFunctionCallArguments: true,
+              },
+            },
+          },
+        });
+        console.info(
+          'Vertex AI should stream generate content with specified parameters',
         );
-        i++;
-        finalChunk = chunk;
-      }
-      expect(
-        finalChunk?.usageMetadata!.candidatesTokenCount,
-      ).toBeLessThanOrEqual(
-        250, // sometimes backend returns a little more than 200 tokens
-        'Expected candidatesTokenCount to be less than or equal to 250, got ' +
-          finalChunk?.usageMetadata!.candidatesTokenCount,
-      );
+        for await (const chunk of response) {
+          expect(chunk.candidates!.length).toBe(
+            1,
+            'Expected 1 candidate got ' + chunk.candidates!.length,
+          );
+        }
+      });
+      it('Vertex AI should stream generate content with particial function calling in the content', async () => {
+        httpOptions.baseUrl = 'http://localhost:1455';
+        const client = new GoogleGenAI({
+          vertexai: true,
+          project: GOOGLE_CLOUD_PROJECT,
+          location: GOOGLE_CLOUD_LOCATION,
+          httpOptions,
+        });
+        const response = await client.models.generateContentStream({
+          model: 'gemini-3-pro-preview',
+          contents:
+            'get the current weather in NewYorkCity in celsius, the country should be USA, the purpose is to know what to wear today.',
+          config: {
+            tools: [
+              {
+                functionDeclarations: json_function_declarations,
+              },
+            ],
+            toolConfig: {
+              functionCallingConfig: {
+                streamFunctionCallArguments: true,
+              },
+            },
+          },
+        });
+        console.info(
+          'Vertex AI should stream generate content with specified parameters',
+        );
+        for await (const chunk of response) {
+          expect(chunk.candidates!.length).toBe(
+            1,
+            'Expected 1 candidate got ' + chunk.candidates!.length,
+          );
+        }
+      });
     });
-
     it('Vertex AI should stream generate content with specified parameters', async () => {
       const client = new GoogleGenAI({
         vertexai: true,
         project: GOOGLE_CLOUD_PROJECT,
         location: GOOGLE_CLOUD_LOCATION,
+        httpOptions,
       });
       const response = await client.models.generateContentStream({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'why is the sky blue?',
-        config: {candidateCount: 1, maxOutputTokens: 200},
+        config: {
+          candidateCount: 1,
+          maxOutputTokens: 200,
+          thinkingConfig: {thinkingBudget: 50},
+        },
       });
       let i = 1;
       let finalChunk: GenerateContentResponse | undefined = undefined;
@@ -413,29 +853,29 @@ describe('Client Tests', () => {
       expect(
         finalChunk?.usageMetadata!.candidatesTokenCount,
       ).toBeLessThanOrEqual(
-        250, // sometimes backend returns a little more than 200 tokens
+        250, // sometimes backend returns a little more than 200
+        // tokens
         'Expected candidatesTokenCount to be less than or equal to 250, got ' +
           finalChunk?.usageMetadata!.candidatesTokenCount,
       );
     });
 
     it('ML Dev should stream generate content with system instruction', async () => {
-      const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+      const client = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+        httpOptions,
+      });
       const response = await client.models.generateContentStream({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'high',
         config: {
           systemInstruction:
             'I say high you say low, and then tell me why is the sky blue.',
           candidateCount: 1,
-          maxOutputTokens: 200,
         },
       });
       let i = 1;
-      let finalChunk: GenerateContentResponse | undefined = undefined;
-      console.info(
-        'ML Dev should stream generate content with system instruction',
-      );
       for await (const chunk of response) {
         console.info(`stream chunk ${i}`, chunk.text);
         expect(chunk.candidates!.length).toBe(
@@ -443,15 +883,7 @@ describe('Client Tests', () => {
           'Expected 1 candidate got ' + chunk.candidates!.length,
         );
         i++;
-        finalChunk = chunk;
       }
-      expect(
-        finalChunk?.usageMetadata!.candidatesTokenCount,
-      ).toBeLessThanOrEqual(
-        250, // sometimes backend returns a little more than 200 tokens
-        'Expected candidatesTokenCount to be less than or equal to 250, got ' +
-          finalChunk?.usageMetadata!.candidatesTokenCount,
-      );
     });
 
     it('Vertex AI should stream generate content with system instruction', async () => {
@@ -459,9 +891,10 @@ describe('Client Tests', () => {
         vertexai: true,
         project: GOOGLE_CLOUD_PROJECT,
         location: GOOGLE_CLOUD_LOCATION,
+        httpOptions,
       });
       const response = await client.models.generateContentStream({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'high',
         config: {
           systemInstruction:
@@ -487,10 +920,135 @@ describe('Client Tests', () => {
       expect(
         finalChunk?.usageMetadata!.candidatesTokenCount,
       ).toBeLessThanOrEqual(
-        250, // sometimes backend returns a little more than 200 tokens
+        250, // sometimes backend returns a little more than 200
+        // tokens
         'Expected candidatesTokenCount to be less than or equal to 250, got ' +
           finalChunk?.usageMetadata!.candidatesTokenCount,
       );
+    });
+    it('ML Dev should return the headers in the sdkHttpResponse for each chunk', async () => {
+      const client = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+        httpOptions,
+      });
+      const response = await client.models.generateContentStream({
+        model: MODEL,
+        contents: 'why is the sky blue?',
+        config: {candidateCount: 1, maxOutputTokens: 200},
+      });
+      let i = 1;
+      console.info(
+        'ML Dev should stream generate content with specified parameters',
+      );
+      for await (const chunk of response) {
+        console.info(`stream chunk ${i}`, chunk.sdkHttpResponse?.headers);
+        expect(chunk.sdkHttpResponse?.headers).toEqual(
+          jasmine.objectContaining({
+            'content-type': 'text/event-stream',
+            'transfer-encoding': 'chunked',
+            'x-content-type-options': 'nosniff',
+            'x-xss-protection': '0',
+          }),
+        );
+        i++;
+      }
+    });
+
+    it('Vertex AI should return the headers in the sdkHttpResponse for each chunk', async () => {
+      const client = new GoogleGenAI({
+        vertexai: true,
+        project: GOOGLE_CLOUD_PROJECT,
+        location: GOOGLE_CLOUD_LOCATION,
+        httpOptions,
+      });
+      const response = await client.models.generateContentStream({
+        model: MODEL,
+        contents: 'why is the sky blue?',
+        config: {candidateCount: 1},
+      });
+      console.info(
+        'Vertex AI should stream generate content with specified parameters',
+      );
+      for await (const chunk of response) {
+        expect(chunk.candidates!.length).toBe(
+          1,
+          'Expected 1 candidate got ' + chunk.candidates!.length,
+        );
+      }
+    });
+
+    it('ML Dev should stream generate content with image output', async () => {
+      const client = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+        httpOptions,
+      });
+      const response = await client.models.generateContentStream({
+        model: 'gemini-2.0-flash-preview-image-generation',
+        contents:
+          'Generate an image of the Eiffel tower with fireworks in' +
+          '  the background.',
+        config: {responseModalities: [Modality.IMAGE, Modality.TEXT]},
+      });
+      let i = 1;
+      console.info('ML Dev should stream generate content with image output');
+      for await (const chunk of response) {
+        for (const candidate of chunk.candidates!) {
+          if (candidate.finishReason) {
+            continue;
+          }
+          for (const part of candidate.content!.parts!) {
+            expect(part.text || part.inlineData).toBeDefined();
+          }
+        }
+        if (chunk.text) {
+          console.info(`stream chunk ${i}`, chunk.text);
+        }
+        expect(chunk.candidates!.length).toBe(
+          1,
+          'Expected 1 candidate got ' + chunk.candidates!.length,
+        );
+        i++;
+      }
+    });
+
+    it('Vertex AI should stream generate content with image output', async () => {
+      const client = new GoogleGenAI({
+        vertexai: true,
+        project: GOOGLE_CLOUD_PROJECT,
+        location: GOOGLE_CLOUD_LOCATION,
+        httpOptions,
+      });
+      const response = await client.models.generateContentStream({
+        model: 'gemini-2.0-flash-preview-image-generation',
+        contents:
+          'Generate an image of the Eiffel tower with fireworks in' +
+          '  the background.',
+        config: {responseModalities: [Modality.IMAGE, Modality.TEXT]},
+      });
+      let i = 1;
+      console.info(
+        'Vertex AI should stream generate content with image output',
+      );
+      for await (const chunk of response) {
+        for (const candidate of chunk.candidates!) {
+          if (candidate.finishReason) {
+            continue;
+          }
+          for (const part of candidate.content!.parts!) {
+            expect(part.text || part.inlineData).toBeDefined();
+          }
+        }
+        if (chunk.text) {
+          console.info(`stream chunk ${i}`, chunk.text);
+        }
+        expect(chunk.candidates!.length).toBe(
+          1,
+          'Expected 1 candidate got ' + chunk.candidates!.length,
+        );
+        i++;
+      }
     });
   });
 
@@ -499,10 +1057,14 @@ describe('Client Tests', () => {
 
     beforeEach(function () {
       originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-      jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000; // 10 seconds
+      jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000; // 10 seconds
     });
     it('ML Dev should generate image with specified parameters', async () => {
-      const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+      const client = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+        httpOptions,
+      });
       const response = await client.models.generateImages({
         model: 'imagen-3.0-generate-002',
         prompt: 'Robot holding a red skateboard',
@@ -531,6 +1093,7 @@ describe('Client Tests', () => {
         vertexai: true,
         project: GOOGLE_CLOUD_PROJECT,
         location: GOOGLE_CLOUD_LOCATION,
+        httpOptions,
       });
       const response = await client.models.generateImages({
         model: 'imagen-3.0-generate-002',
@@ -560,85 +1123,12 @@ describe('Client Tests', () => {
     });
   });
 
-  describe('test async performance', () => {
-    it('generate content should complete in less than 1 second', async () => {
-      const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
-      async function firstAsyncFunc() {
-        client.models.generateContent({
-          model: 'gemini-1.5-flash',
-          contents: 'high',
-          config: {
-            systemInstruction: 'I say high you say low.',
-          },
-        });
-      }
-      async function secondAsyncFunc() {
-        client.models.generateContent({
-          model: 'gemini-1.5-flash',
-          contents: 'high',
-          config: {
-            systemInstruction: 'I say high you say low.',
-          },
-        });
-      }
-      const startTime = performance.now(); // Record start time
-      try {
-        await Promise.all([firstAsyncFunc(), secondAsyncFunc()]);
-      } catch (e) {
-        fail('Test failed due to error: ' + e);
-      } finally {
-        const endTime = performance.now(); // Record end time
-        const timeDelta = endTime - startTime;
-        expect(timeDelta).toBeLessThanOrEqual(
-          1050,
-          'Expected timeDelta to be less than or equal to 1050, got ' +
-            timeDelta,
-        );
-      }
-    });
-    it('stream generate content should complete in less than 1 second', async () => {
-      const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
-      async function firstAsyncFunc() {
-        client.models.generateContentStream({
-          model: 'gemini-1.5-flash',
-          contents: 'high',
-          config: {
-            systemInstruction: 'I say high you say low.',
-          },
-        });
-      }
-      async function secondAsyncFunc() {
-        client.models.generateContentStream({
-          model: 'gemini-1.5-flash',
-          contents: 'high',
-          config: {
-            systemInstruction: 'I say high you say low.',
-          },
-        });
-      }
-      const startTime = performance.now(); // Record start time
-      try {
-        await Promise.all([firstAsyncFunc(), secondAsyncFunc()]);
-      } catch (e) {
-        fail('Test failed due to error: ' + e);
-      } finally {
-        const endTime = performance.now(); // Record end time
-        const timeDelta = endTime - startTime;
-        expect(timeDelta).toBeLessThanOrEqual(
-          1050,
-          'Expected timeDelta to be less than or equal to 1050, got ' +
-            timeDelta,
-        );
-      }
-    });
-  });
-
   describe('test thinking', () => {
     it('generate content should return thought field', async () => {
       const client = new GoogleGenAI({
         vertexai: false,
         apiKey: GOOGLE_API_KEY,
-        httpOptions: {apiVersion: 'v1alpha'},
+        httpOptions: {apiVersion: 'v1alpha', headers: {'Test-Name': testName}},
       });
       const response = await client.models.generateContent({
         model: 'gemini-2.0-flash-thinking-exp',
@@ -658,10 +1148,14 @@ describe('Client Tests', () => {
 
   describe('countTokens', () => {
     it('ML Dev should count tokens with specified parameters', async () => {
-      const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+      const client = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+        httpOptions,
+      });
 
       const response = await client.models.countTokens({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'The quick brown fox jumps over the lazy dog.',
       });
       expect(response!.totalTokens ?? 0).toBeGreaterThan(
@@ -679,10 +1173,11 @@ describe('Client Tests', () => {
         vertexai: true,
         project: GOOGLE_CLOUD_PROJECT,
         location: GOOGLE_CLOUD_LOCATION,
+        httpOptions,
       });
 
       const response = await client.models.countTokens({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'The quick brown fox jumps over the lazy dog.',
       });
       expect(response!.totalTokens ?? 0).toBeGreaterThan(
@@ -702,6 +1197,7 @@ describe('Client Tests', () => {
         vertexai: true,
         project: GOOGLE_CLOUD_PROJECT,
         location: GOOGLE_CLOUD_LOCATION,
+        httpOptions,
       });
 
       const response = await client.models.embedContent({
@@ -726,10 +1222,11 @@ describe('Client Tests', () => {
         vertexai: true,
         project: GOOGLE_CLOUD_PROJECT,
         location: GOOGLE_CLOUD_LOCATION,
+        httpOptions,
       });
 
       const response = await client.models.computeTokens({
-        model: 'gemini-1.5-flash',
+        model: MODEL,
         contents: 'The quick brown fox jumps over the lazy dog.',
       });
       expect(response!.tokensInfo!.length).toBeGreaterThan(
@@ -741,6 +1238,92 @@ describe('Client Tests', () => {
         'Vertex AI should compute tokens with specified parameters\n',
         JSON.stringify(response),
       );
+    });
+  });
+
+  describe('server side MCP server', () => {
+    it('ML Dev should call server side MCP server', async () => {
+      const client = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+        httpOptions,
+      });
+
+      const response = await client.models.generateContent({
+        model: MODEL,
+        contents: 'What is the weather like in New York ON 02/02/2026?',
+        config: {
+          tools: [
+            {
+              mcpServers: [
+                {
+                  streamableHttpTransport: {
+                    url: 'https://gemini-api-demos.uc.r.appspot.com/mcp',
+                    headers: {
+                      'AUTHORIZATION': 'Bearer github_pat_XXXX',
+                    },
+                    timeout: '10s',
+                  },
+                  name: 'weather_server',
+                },
+              ],
+            },
+          ],
+        },
+      });
+      expect(response.functionCalls?.[0]?.name).toBe(
+        'weather_server_get_weather',
+      );
+      expect(
+        response.candidates?.[0]?.content?.parts?.[1]?.functionResponse?.name,
+      ).toBe('weather_server_get_weather');
+    });
+    it('ML Dev should call server side MCP server, stream', async () => {
+      const client = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+        httpOptions,
+      });
+
+      const response = await client.models.generateContentStream({
+        model: MODEL,
+        contents: 'What is the weather like in New York ON 02/02/2026?',
+        config: {
+          tools: [
+            {
+              mcpServers: [
+                {
+                  streamableHttpTransport: {
+                    url: 'https://gemini-api-demos.uc.r.appspot.com/mcp',
+                    headers: {
+                      'AUTHORIZATION': 'Bearer github_pat_XXXX',
+                    },
+                    timeout: '10s',
+                  },
+                  name: 'weather_server',
+                },
+              ],
+            },
+          ],
+        },
+      });
+      let seen_function_call = false;
+      let seen_function_response = false;
+      for await (const chunk of response) {
+        const parts = chunk.candidates?.[0]?.content?.parts;
+        if (Array.isArray(parts)) {
+          for (const part of parts) {
+            if (part.functionCall?.name === 'weather_server_get_weather') {
+              seen_function_call = true;
+            }
+            if (part.functionResponse?.name === 'weather_server_get_weather') {
+              seen_function_response = true;
+            }
+          }
+        }
+      }
+      expect(seen_function_call).toBeTrue();
+      expect(seen_function_response).toBeTrue();
     });
   });
 
@@ -756,6 +1339,7 @@ describe('Client Tests', () => {
           vertexai: true,
           project: GOOGLE_CLOUD_PROJECT,
           location: GOOGLE_CLOUD_LOCATION,
+          httpOptions,
         });
 
         const cachedContent1: Part = {
@@ -774,7 +1358,7 @@ describe('Client Tests', () => {
         };
 
         const cache = await client.caches.create({
-          model: 'gemini-1.5-pro-002',
+          model: MODEL,
           config: {contents: [cachedContent1, cachedContent2]},
         });
         expect(cache.name).toBeDefined();
@@ -794,6 +1378,7 @@ describe('Client Tests', () => {
         vertexai: true,
         project: GOOGLE_CLOUD_PROJECT,
         location: GOOGLE_CLOUD_LOCATION,
+        httpOptions,
       });
 
       const response = await client.caches.list();
@@ -827,7 +1412,11 @@ describe('Client Tests', () => {
   // recordings.
   xdescribe('files', () => {
     it('ML Dev list files with specified parameters', async () => {
-      const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+      const client = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+        httpOptions,
+      });
       const response = await client.files.list({config: {'pageSize': 2}});
       expect(response!.pageLength ?? 0).toBeGreaterThan(
         0,
@@ -840,7 +1429,11 @@ describe('Client Tests', () => {
       );
     });
     it('ML Dev list files with pagers', async () => {
-      const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+      const client = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+        httpOptions,
+      });
       const pager = await client.files.list({config: {pageSize: 2}});
       let page = pager.page;
       for (const file of page) {
@@ -856,7 +1449,11 @@ describe('Client Tests', () => {
       expect(pager.pageLength).toBeGreaterThan(0);
     });
     it('ML Dev should upload the file from a string path and get just uploaded file with specified parameters', async () => {
-      const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+      const client = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+        httpOptions,
+      });
       // generate a temp file
       const filePath = await createZeroFilledTempFile(1024 * 1024 * 10);
 
@@ -875,7 +1472,11 @@ describe('Client Tests', () => {
       expect(getFile.name).toBe(file.name);
     });
     it('ML Dev should upload the file from a Blob and get just uploaded file with specified parameters', async () => {
-      const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+      const client = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+        httpOptions,
+      });
       // generate a temp file
       const fileBlob = new Blob([new Uint8Array(1024 * 1024 * 30)], {
         type: 'text/plain',

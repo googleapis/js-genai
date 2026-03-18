@@ -11,7 +11,8 @@ export const GOOGLE_API_KEY_HEADER = 'x-goog-api-key';
 export class WebAuth implements Auth {
   constructor(private readonly apiKey: string) {}
 
-  async addAuthHeaders(headers: Headers): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async addAuthHeaders(headers: Headers, url?: string): Promise<void> {
     if (headers.get(GOOGLE_API_KEY_HEADER) !== null) {
       return;
     }

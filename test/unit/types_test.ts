@@ -7,12 +7,16 @@
 import {
   Candidate,
   Content,
+  FunctionResponsePart,
   GenerateContentResponse,
   Language,
   LiveServerContent,
   LiveServerMessage,
   Outcome,
   Part,
+  PartMediaResolutionLevel,
+  createFunctionResponsePartFromBase64,
+  createFunctionResponsePartFromUri,
   createModelContent,
   createPartFromBase64,
   createPartFromCodeExecutionResult,
@@ -114,7 +118,38 @@ describe('GenerateContentResponse.text', () => {
         },
       } as Candidate,
     ];
+
     expect(response.text).toBe('Hello ');
+  });
+
+  it('should not warn when thought_signature is present', () => {
+    const response = new GenerateContentResponse();
+    response.candidates = [
+      {
+        content: {
+          parts: [{text: 'Hello '}, {thoughtSignature: 'thought'}],
+        },
+      } as Candidate,
+    ];
+    spyOn(console, 'warn');
+
+    expect(response.text).toEqual('Hello ');
+    expect(console.warn).not.toHaveBeenCalled();
+  });
+
+  it('should not warn when thought_signature is present in a text part', () => {
+    const response = new GenerateContentResponse();
+    response.candidates = [
+      {
+        content: {
+          parts: [{text: 'Hello ', thoughtSignature: 'thought'}],
+        },
+      } as Candidate,
+    ];
+    spyOn(console, 'warn');
+
+    expect(response.text).toEqual('Hello ');
+    expect(console.warn).not.toHaveBeenCalled();
   });
 });
 
@@ -428,6 +463,23 @@ describe('createPart usability functions', () => {
     expect(part).toEqual(expectedPart);
   });
 
+  it('createPartFromUri should create a file data part with media resolution', () => {
+    const part = createPartFromUri(
+      'gs://bucket/file.txt',
+      'image/png',
+      PartMediaResolutionLevel.MEDIA_RESOLUTION_LOW,
+    );
+    const expectedPart: Part = {
+      fileData: {
+        fileUri: 'gs://bucket/file.txt',
+        mimeType: 'image/png',
+      },
+      mediaResolution: {level: PartMediaResolutionLevel.MEDIA_RESOLUTION_LOW},
+    };
+
+    expect(part).toEqual(expectedPart);
+  });
+
   it('createPartFromFunctionCall should create a function call part', () => {
     const part = createPartFromFunctionCall('func1', {
       param1: 'value1',
@@ -463,6 +515,43 @@ describe('createPart usability functions', () => {
     expect(part).toEqual(expectedPart);
   });
 
+  it('createPartFromFunctionResponse with multi modal parts should create a function response part', () => {
+    const part = createPartFromFunctionResponse(
+      'id1',
+      'func1',
+      {
+        output: 'value1',
+      },
+      [
+        {
+          inlineData: {
+            data: 'dGVzdA==',
+            mimeType: 'text/plain',
+          },
+        },
+      ],
+    );
+    const expectedPart: Part = {
+      functionResponse: {
+        id: 'id1',
+        name: 'func1',
+        response: {
+          output: 'value1',
+        },
+        parts: [
+          {
+            inlineData: {
+              data: 'dGVzdA==',
+              mimeType: 'text/plain',
+            },
+          },
+        ],
+      },
+    };
+
+    expect(part).toEqual(expectedPart);
+  });
+
   it('createPartFromBase64 should create an inline data part', () => {
     const part = createPartFromBase64('dGVzdA==', 'text/plain');
     const expectedPart: Part = {
@@ -470,6 +559,23 @@ describe('createPart usability functions', () => {
         data: 'dGVzdA==',
         mimeType: 'text/plain',
       },
+    };
+
+    expect(part).toEqual(expectedPart);
+  });
+
+  it('createPartFromBase64 should create an inline data part with media resolution', () => {
+    const part = createPartFromBase64(
+      'dGVzdA==',
+      'image/png',
+      PartMediaResolutionLevel.MEDIA_RESOLUTION_HIGH,
+    );
+    const expectedPart: Part = {
+      inlineData: {
+        data: 'dGVzdA==',
+        mimeType: 'image/png',
+      },
+      mediaResolution: {level: PartMediaResolutionLevel.MEDIA_RESOLUTION_HIGH},
     };
 
     expect(part).toEqual(expectedPart);
@@ -499,6 +605,35 @@ describe('createPart usability functions', () => {
       executableCode: {
         code: 'print("Hello world!")',
         language: Language.PYTHON,
+      },
+    };
+
+    expect(part).toEqual(expectedPart);
+  });
+});
+
+describe('createFunctionResponsePart usability functions', () => {
+  it('createFunctionResponsePartFromBase64 should create an inline data function response part', () => {
+    const part = createFunctionResponsePartFromBase64('dGVzdA==', 'text/plain');
+    const expectedPart: FunctionResponsePart = {
+      inlineData: {
+        data: 'dGVzdA==',
+        mimeType: 'text/plain',
+      },
+    };
+
+    expect(part).toEqual(expectedPart);
+  });
+
+  it('createFunctionResponsePartFromUri should create a file data function response part', () => {
+    const part = createFunctionResponsePartFromUri(
+      'gs://bucket/file.txt',
+      'text/plain',
+    );
+    const expectedPart: FunctionResponsePart = {
+      fileData: {
+        fileUri: 'gs://bucket/file.txt',
+        mimeType: 'text/plain',
       },
     };
 

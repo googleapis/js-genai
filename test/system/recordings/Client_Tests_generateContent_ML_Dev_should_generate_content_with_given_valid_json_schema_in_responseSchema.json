@@ -1,0 +1,215 @@
+{
+  "recordID": "Client_Tests_generateContent_ML_Dev_should_generate_content_with_given_valid_json_schema_in_responseSchema",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta/models/gemini-2.5-flash:generateContent",
+        "request": "POST /v1beta/models/gemini-2.5-flash:generateContent HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "1632",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Client Tests generateContent ML Dev should generate content with given valid json schema in responseSchema"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "populate the following object"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {
+              "responseJsonSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "additionalProperties": false,
+                "properties": {
+                  "arrayFiled": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "inner": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "innerNumber": {
+                        "type": "number"
+                      },
+                      "innerString": {
+                        "type": "string"
+                      }
+                    },
+                    "required": ["innerString", "innerNumber"],
+                    "type": "object"
+                  },
+                  "integerInt64": {
+                    "type": "integer"
+                  },
+                  "nullableArrayField": {
+                    "anyOf": [
+                      {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "nullableField": {
+                    "type": ["string", "null"]
+                  },
+                  "nullableObjectField": {
+                    "anyOf": [
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "innerNumber": {
+                            "type": "number"
+                          },
+                          "innerString": {
+                            "type": "string"
+                          }
+                        },
+                        "required": ["innerString", "innerNumber"],
+                        "type": "object"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "numberWithMinMax": {
+                    "maximum": 10,
+                    "minimum": 1,
+                    "type": "number"
+                  },
+                  "simpleBoolean": {
+                    "type": "boolean"
+                  },
+                  "simpleInteger": {
+                    "type": "integer"
+                  },
+                  "simpleNumber": {
+                    "type": "number"
+                  },
+                  "simpleString": {
+                    "description": "This is a simple string",
+                    "type": "string"
+                  },
+                  "stringDatatime": {
+                    "format": "date-time",
+                    "type": "string"
+                  },
+                  "stringWithEnum": {
+                    "enum": ["enumvalue1", "enumvalue2", "enumvalue3"],
+                    "type": "string"
+                  },
+                  "stringWithLength": {
+                    "maxLength": 10,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "unionField": {
+                    "type": ["string", "number"]
+                  }
+                },
+                "required": [
+                  "simpleString",
+                  "stringDatatime",
+                  "stringWithEnum",
+                  "stringWithLength",
+                  "simpleNumber",
+                  "simpleInteger",
+                  "integerInt64",
+                  "numberWithMinMax",
+                  "simpleBoolean",
+                  "arrayFiled",
+                  "unionField",
+                  "nullableField",
+                  "nullableArrayField",
+                  "nullableObjectField",
+                  "inner"
+                ],
+                "type": "object"
+              },
+              "responseMimeType": "application/json"
+            }
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "generativelanguage.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "9b3698d572ca769331f8cd506f7db67cce5a6ae3ee4cf6c8b51d52ae0b6c3b12",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Encoding": "gzip",
+          "Content-Length": "642",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Fri, 24 Oct 2025 07:45:09 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Server-Timing": "gfet4t7; dur=2917",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "{\n  \"simpleString\": \"example\",\n  \"stringDatatime\": \"2023-10-27T10:00:00Z\",\n  \"stringWithEnum\": \"enumvalue1\",\n  \"stringWithLength\": \"short\",\n  \"simpleNumber\": 123.45,\n  \"simpleInteger\": 678,\n  \"integerInt64\": 9876543210,\n  \"numberWithMinMax\": 5.5,\n  \"simpleBoolean\": true,\n  \"arrayFiled\": [\"item1\", \"item2\"],\n  \"unionField\": \"unionString\",\n  \"nullableField\": null,\n  \"nullableArrayField\": [\"nullArr1\", \"nullArr2\"],\n  \"nullableObjectField\": {\n    \"innerString\": \"objString\",\n    \"innerNumber\": 42\n  },\n  \"inner\": {\n    \"innerString\": \"nestedString\",\n    \"innerNumber\": 100\n  }\n}"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "hS77aOmpFb66vr0P9ruBiQM",
+            "turnToken": "v1:ChdoUzc3YU9tcEZiNjZ2cjBQOXJ1QmlRTRIXaFM3N2FPbXBGYjY2dnIwUDlydUJpUU0",
+            "usageMetadata": {
+              "cacheTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 3
+                }
+              ],
+              "cachedContentTokenCount": 3,
+              "candidatesTokenCount": 238,
+              "promptTokenCount": 5,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 5
+                }
+              ],
+              "thoughtsTokenCount": 41,
+              "totalTokenCount": 284
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

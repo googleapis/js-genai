@@ -6,7 +6,10 @@
 
 import {Readable} from 'stream';
 
-import {ApiClient} from '../../src/_api_client.js';
+import {
+  ApiClient,
+  includeExtraBodyToRequestInit,
+} from '../../src/_api_client.js';
 import {CrossDownloader} from '../../src/cross/_cross_downloader.js';
 import {CrossUploader} from '../../src/cross/_cross_uploader.js';
 import * as types from '../../src/types.js';
@@ -65,6 +68,7 @@ const mockGenerateContentResponse: types.GenerateContentResponse =
 describe('processStreamResponse', () => {
   const apiClient = new ApiClient({
     auth: new FakeAuth(),
+    apiKey: 'test-api-key',
     uploader: new CrossUploader(),
     downloader: new CrossDownloader(),
   });
@@ -244,6 +248,42 @@ describe('processStreamResponse', () => {
     expect(count).toEqual(3);
   });
 
+  it('should yield all expected chunks with leading whitespace', async () => {
+    const chunk1 =
+      '\n\ndata: {"candidates": [{"content": {"parts": [{"text": "One"}],"role": "model"},"finishReason": "STOP","index": 0}],"usageMetadata": {"promptTokenCount": 8,"candidatesTokenCount": 1,"totalTokenCount": 9}}\n\n';
+    const chunk2 =
+      '\r\rdata: {"candidates": [{"content": {"parts": [{"text": "Two"}],"role": "model"},"finishReason": "STOP","index": 0}],"usageMetadata": {"promptTokenCount": 8,"candidatesTokenCount": 1,"totalTokenCount": 9}}\r\r';
+    const chunk3 =
+      '\r\n\r\ndata: {"candidates": [{"content": {"parts": [{"text": "Three"}],"role": "model"},"finishReason": "STOP","index": 0}],"usageMetadata": {"promptTokenCount": 8,"candidatesTokenCount": 1,"totalTokenCount": 9}}\r\n\r\n';
+    const chunks = [chunk1, chunk2, chunk3];
+    const stream = new Readable();
+    for (const chunk of chunks) {
+      stream.push(chunk);
+    }
+    stream.push(null); // signal end of stream
+    const readableStream = new ReadableStream({
+      start(controller) {
+        stream.on('data', (chunk) => controller.enqueue(chunk));
+        stream.on('end', () => controller.close());
+        stream.on('error', (err) => controller.error(err));
+      },
+    });
+    const response = new Response(readableStream);
+
+    const streamResponse = await apiClient.processStreamResponse(response);
+
+    let count = 0;
+    const expectedText = ['One', 'Two', 'Three'];
+    for await (const jsonChunk of streamResponse) {
+      const typedChunk = new types.GenerateContentResponse();
+      const jsonChunkData = await jsonChunk.json();
+      Object.assign(typedChunk, jsonChunkData);
+      expect(typedChunk.text).toEqual(expectedText[count]);
+      count++;
+    }
+    expect(count).toEqual(3);
+  });
+
   it('should yield valid json split into multiple chunk data', async () => {
     const validChunk1 =
       'data: {"candidates": [{"content": {"parts": [{"text": "The"}],"role": "model"},"finishReason": "STOP","index": 0}],';
@@ -287,10 +327,98 @@ describe('processStreamResponse', () => {
     const result = await resultHttpResponse.value.json();
     expect(result).toEqual(expectedResponse);
   });
+
+  it('should yield valid json split into multiple chunk data at the middle of multi-byte character', async () => {
+    const encoder = new TextEncoder();
+    const fullData = new Uint8Array([
+      0xe3, 0x81, 0x93, 0xe3, 0x82, 0x93, 0xe3, 0x81, 0xab, 0xe3, 0x81, 0xa1,
+      0xe3, 0x81, 0xaf, 0xf0, 0x9f, 0x98, 0x8a,
+    ]);
+    const validChunkHead = encoder.encode(
+      'data: {"candidates": [{"content": {"parts": [{"text": "',
+    );
+    const validChunkTail = encoder.encode(
+      '"}],"role": "model"},"finishReason": "STOP","index": 0}],"usageMetadata": {"promptTokenCount": 8,"candidatesTokenCount": 1,"totalTokenCount": 9}}\n\n',
+    );
+    const validChunkHeadMultibytes = fullData.slice(0, 16);
+    const validChunkTailMultibytes = fullData.slice(16);
+
+    const stream = new Readable();
+    stream.push(Uint8Array.of(...validChunkHead, ...validChunkHeadMultibytes));
+    stream.push(Uint8Array.of(...validChunkTailMultibytes, ...validChunkTail));
+    stream.push(null); // signal end of stream
+    const readableStream = new ReadableStream({
+      start(controller) {
+        stream.on('data', (chunk) => controller.enqueue(chunk));
+        stream.on('end', () => controller.close());
+        stream.on('error', (err) => controller.error(err));
+      },
+    });
+    const response = new Response(readableStream);
+    const expectedResponse = {
+      candidates: [
+        {
+          content: {
+            parts: [
+              {
+                text: 'こんにちは😊',
+              },
+            ],
+            role: 'model',
+          },
+          finishReason: types.FinishReason.STOP,
+          index: 0,
+        },
+      ],
+      usageMetadata: {
+        promptTokenCount: 8,
+        candidatesTokenCount: 1,
+        totalTokenCount: 9,
+      },
+    };
+    const generator = apiClient.processStreamResponse(response);
+    const resultHttpResponse = await generator.next();
+    const result = await resultHttpResponse.value.json();
+    expect(result).toEqual(expectedResponse);
+  });
+
+  it('should handle large fragmented payloads correctly (regression for $O(n^2)$)', async () => {
+    const largeData = 'A'.repeat(10 * 1024);
+    const jsonPayload = JSON.stringify({data: largeData});
+    const ssePayload = `data: ${jsonPayload}\n\n`;
+
+    const stream = new Readable();
+    const chunkSize = 1024;
+    for (let i = 0; i < ssePayload.length; i += chunkSize) {
+      stream.push(ssePayload.substring(i, i + chunkSize));
+    }
+    stream.push(null);
+
+    const readableStream = new ReadableStream({
+      start(controller) {
+        stream.on('data', (chunk) =>
+          controller.enqueue(new TextEncoder().encode(chunk)),
+        );
+        stream.on('end', () => controller.close());
+      },
+    });
+    const response = new Response(readableStream);
+
+    const generator = apiClient.processStreamResponse(response);
+    const result = await generator.next();
+    expect(result.done).toBeFalse();
+    const json = await result.value.json();
+    expect(json.data).toBe(largeData);
+
+    const final = await generator.next();
+    expect(final.done).toBeTrue();
+  });
 });
 
 describe('ApiClient', () => {
   describe('constructor', () => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 60000; // 60 seconds.
+
     it('should initialize with provided values', () => {
       const client = new ApiClient({
         auth: new FakeAuth(),
@@ -358,6 +486,7 @@ describe('ApiClient', () => {
     it('should use default value if not provided', () => {
       const client = new ApiClient({
         auth: new FakeAuth(),
+        apiKey: 'test-api-key',
         project: 'env-project',
         uploader: new CrossUploader(),
         downloader: new CrossDownloader(),
@@ -365,6 +494,44 @@ describe('ApiClient', () => {
       // baseUrl is based on apiVersion
       expect(client.getRequestUrl()).toContain('/v1');
       expect(client.isVertexAI()).toBeFalse();
+    });
+
+    it('should initialize with custom base URL and no auth', () => {
+      const originalGeminiApiKey = process.env['GEMINI_API_KEY'];
+      const originalGoogleApiKey = process.env['GOOGLE_API_KEY'];
+      const originalProject = process.env['GOOGLE_CLOUD_PROJECT'];
+      const originalLocation = process.env['GOOGLE_CLOUD_LOCATION'];
+
+      delete process.env['GEMINI_API_KEY'];
+      delete process.env['GOOGLE_API_KEY'];
+      delete process.env['GOOGLE_CLOUD_PROJECT'];
+      delete process.env['GOOGLE_CLOUD_LOCATION'];
+
+      try {
+        const client = new ApiClient({
+          auth: new FakeAuth(),
+          vertexai: true,
+          httpOptions: {
+            baseUrl: 'https://custom-gateway.com',
+          },
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        });
+
+        expect(client.isVertexAI()).toBe(true);
+        expect(client.getProject()).toBeUndefined();
+        expect(client.getLocation()).toBeUndefined();
+        expect(client.getApiKey()).toBeUndefined();
+        expect(client.getRequestUrl()).toBe(
+          'https://custom-gateway.com/v1beta1',
+        );
+        expect(client.getApiVersion()).toBe('v1beta1');
+      } finally {
+        process.env['GEMINI_API_KEY'] = originalGeminiApiKey;
+        process.env['GOOGLE_API_KEY'] = originalGoogleApiKey;
+        process.env['GOOGLE_CLOUD_PROJECT'] = originalProject;
+        process.env['GOOGLE_CLOUD_LOCATION'] = originalLocation;
+      }
     });
 
     it('should set websocket protocol to ws when base URL is http', () => {
@@ -500,6 +667,7 @@ describe('ApiClient', () => {
         auth: new FakeAuth(),
         project: 'project-from-opts',
         location: 'location-from-opts',
+        apiKey: 'test-api-key',
         vertexai: false,
         apiVersion: 'v1beta',
         httpOptions: httpOptions,
@@ -587,6 +755,94 @@ describe('ApiClient', () => {
       expect(headers['x-goog-api-client']).toContain('google-genai-sdk/');
       expect(client.getApiVersion()).toBe('v1beta1');
     });
+
+    it('should retry requests if retry options are set', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        project: 'vertex-project',
+        location: 'vertex-location',
+        vertexai: true,
+        apiVersion: 'v1beta1',
+        httpOptions: {
+          retryOptions: {
+            attempts: 2,
+          },
+        },
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(
+            JSON.stringify({'error': 'Internal Server Error'}),
+            fetch500Options,
+          ),
+        ),
+      );
+      await client
+        .request({path: 'test-path', httpMethod: 'POST'})
+        .catch((e) => {
+          console.log(e);
+        });
+      expect(fetchSpy).toHaveBeenCalledTimes(2);
+    });
+
+    it('should not retry requests if retry options are not set', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        project: 'vertex-project',
+        location: 'vertex-location',
+        vertexai: true,
+        apiVersion: 'v1beta1',
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(
+            JSON.stringify({'error': 'Internal Server Error'}),
+            fetch500Options,
+          ),
+        ),
+      );
+      await client
+        .request({path: 'test-path', httpMethod: 'POST'})
+        .catch((e) => {
+          expect(e.name).toEqual('ApiError');
+          expect(e.message).toContain('Internal Server Error');
+          expect(e.status).toEqual(500);
+        });
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should retry requests with default retry options if retry options are not set', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        project: 'vertex-project',
+        location: 'vertex-location',
+        vertexai: true,
+        apiVersion: 'v1beta1',
+        httpOptions: {
+          retryOptions: {},
+        },
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(
+            JSON.stringify({'error': 'Internal Server Error'}),
+            fetch500Options,
+          ),
+        ),
+      );
+      await client
+        .request({path: 'test-path', httpMethod: 'POST'})
+        .catch((e) => {
+          console.log(e);
+        });
+      expect(fetchSpy).toHaveBeenCalledTimes(5); // Default retry attempts is 5.
+    });
   });
 
   describe('post/get methods', () => {
@@ -594,6 +850,8 @@ describe('ApiClient', () => {
       const client = new ApiClient({
         auth: new FakeAuth(),
         vertexai: true,
+        project: 'test-project',
+        location: 'test-location',
         uploader: new CrossUploader(),
         downloader: new CrossDownloader(),
       });
@@ -613,6 +871,8 @@ describe('ApiClient', () => {
         body: JSON.stringify({data: 'test'}),
         httpMethod: 'POST',
       });
+      const fetchArgs = (global.fetch as jasmine.Spy).calls.first().args;
+      expect(fetchArgs[0]).toContain('base-resource-path');
       expect(client.getBaseResourcePath).toHaveBeenCalled();
     });
     it('should append query parameters to URL', async () => {
@@ -735,7 +995,8 @@ describe('ApiClient', () => {
           ),
         ),
       );
-      const timeoutSpy = spyOn(global, 'setTimeout');
+      const mockTimer = jasmine.createSpyObj('timeout', ['unref']);
+      const timeoutSpy = spyOn(global, 'setTimeout').and.returnValue(mockTimer);
 
       await client.request({
         path: 'test-path',
@@ -763,6 +1024,7 @@ describe('ApiClient', () => {
       expect(fetchArgs[0]).toEqual(
         'https://custom-request-base-url.googleapis.com/v1alpha/test-path?param1=value1&param2=value2',
       );
+      expect(mockTimer.unref).toHaveBeenCalled();
     });
     it('should set bearer token for vertexai', async () => {
       const client = new ApiClient({
@@ -1105,6 +1367,73 @@ describe('ApiClient', () => {
       expect(postResponse.headers).toEqual(customHeaders);
       expect(postResponse.headers?.['x-custom-header']).toBe('custom-value');
     });
+
+    it('should merge clientOptions.httpOptions.extraBody into request body', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth('test-api-key'),
+        apiKey: 'test-api-key',
+        httpOptions: {
+          extraBody: {clientExtra: 'clientValue'},
+        },
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(
+            JSON.stringify(mockGenerateContentResponse),
+            fetchOkOptions,
+          ),
+        ),
+      );
+      await client.request({
+        path: 'test-path',
+        body: JSON.stringify({original: 'originalValue'}),
+        httpMethod: 'POST',
+      });
+      const fetchArgs = fetchSpy.calls.first().args;
+      const requestBody = JSON.parse(fetchArgs[1]?.body as string);
+      expect(requestBody).toEqual({
+        original: 'originalValue',
+        clientExtra: 'clientValue',
+      });
+    });
+
+    it('should merge request.httpOptions.extraBody and take precedence over clientOptions', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth('test-api-key'),
+        apiKey: 'test-api-key',
+        httpOptions: {
+          extraBody: {clientExtra: 'clientValue', commonKey: 'clientCommon'},
+        },
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(
+            JSON.stringify(mockGenerateContentResponse),
+            fetchOkOptions,
+          ),
+        ),
+      );
+      await client.request({
+        path: 'test-path',
+        body: JSON.stringify({original: 'originalValue'}),
+        httpMethod: 'POST',
+        httpOptions: {
+          extraBody: {requestExtra: 'requestValue', commonKey: 'requestCommon'},
+        },
+      });
+      const fetchArgs = fetchSpy.calls.first().args;
+      const requestBody = JSON.parse(fetchArgs[1]?.body as string);
+      expect(requestBody).toEqual({
+        original: 'originalValue',
+        clientExtra: 'clientValue', // This remains because request.httpOptions is merged with clientOptions
+        requestExtra: 'requestValue',
+        commonKey: 'requestCommon', // request commonKey overwrites client commonKey
+      });
+    });
   });
   it('should construct correct URL for public API calls', async () => {
     const client = new ApiClient({
@@ -1220,7 +1549,7 @@ describe('ApiClient', () => {
     );
   });
   describe('requestStream', () => {
-    it('should throw ServerError if response is 500', async () => {
+    it('should throw ApiError if response is 500', async () => {
       const client = new ApiClient({
         auth: new FakeAuth('test-api-key'),
         apiKey: 'test-api-key',
@@ -1228,16 +1557,22 @@ describe('ApiClient', () => {
         downloader: new CrossDownloader(),
       });
       spyOn(global, 'fetch').and.returnValue(
-        Promise.resolve(new Response(JSON.stringify({}), fetch500Options)),
+        Promise.resolve(
+          new Response(
+            JSON.stringify({'error': 'Internal Server Error'}),
+            fetch500Options,
+          ),
+        ),
       );
       await client
         .requestStream({path: 'test-path', httpMethod: 'POST'})
         .catch((e) => {
-          expect(e.name).toEqual('ServerError');
+          expect(e.name).toEqual('ApiError');
           expect(e.message).toContain('Internal Server Error');
+          expect(e.status).toEqual(500);
         });
     });
-    it('should throw ClientError if response is 400', async () => {
+    it('should throw ApiError if response is 400', async () => {
       const client = new ApiClient({
         auth: new FakeAuth('test-api-key'),
         apiKey: 'test-api-key',
@@ -1245,13 +1580,19 @@ describe('ApiClient', () => {
         downloader: new CrossDownloader(),
       });
       spyOn(global, 'fetch').and.returnValue(
-        Promise.resolve(new Response(JSON.stringify({}), fetch400Options)),
+        Promise.resolve(
+          new Response(
+            JSON.stringify({'error': 'Bad Request'}),
+            fetch400Options,
+          ),
+        ),
       );
       await client
         .requestStream({path: 'test-path', httpMethod: 'POST'})
         .catch((e) => {
-          expect(e.name).toEqual('ClientError');
+          expect(e.name).toEqual('ApiError');
           expect(e.message).toContain('Bad Request');
+          expect(e.status).toEqual(400);
         });
     });
     it('should yield data if response is ok', async () => {
@@ -1566,4 +1907,162 @@ describe('ApiClient', () => {
       );
     });
   });
+});
+
+const extraBodyTestCases = [
+  {
+    testName: 'should not modify requestInit.body if extraBody is null',
+    initialBody: JSON.stringify({a: 1}),
+    extraBody: null,
+    expectedBody: JSON.stringify({a: 1}),
+    expectedWarning: undefined,
+  },
+  {
+    testName: 'should not modify requestInit.body if extraBody is empty',
+    initialBody: JSON.stringify({a: 1}),
+    extraBody: {},
+    expectedBody: JSON.stringify({a: 1}),
+    expectedWarning: undefined,
+  },
+  {
+    testName: 'should not modify requestInit.body and warn if body is a Blob',
+    initialBody: new Blob(['test data']),
+    extraBody: {b: 2},
+    expectedBody: new Blob(['test data']),
+    expectedWarning:
+      'includeExtraBodyToRequestInit: extraBody provided but current request body is a Blob. extraBody will be ignored as merging is not supported for Blob bodies.',
+  },
+  {
+    testName:
+      'should set requestInit.body to extraBody if original body is empty string',
+    initialBody: '',
+    extraBody: {b: 2},
+    expectedBody: JSON.stringify({b: 2}),
+    expectedWarning: undefined,
+  },
+  {
+    testName:
+      'should set requestInit.body to extraBody if original body is undefined',
+    initialBody: undefined,
+    extraBody: {b: 2},
+    expectedBody: JSON.stringify({b: 2}),
+    expectedWarning: undefined,
+  },
+  {
+    testName: 'should merge extraBody into valid JSON string body',
+    initialBody: JSON.stringify({a: 1}),
+    extraBody: {b: 2, c: {d: 3}},
+    expectedBody: JSON.stringify({a: 1, b: 2, c: {d: 3}}),
+    expectedWarning: undefined,
+  },
+  {
+    testName: 'should overwrite existing keys in valid JSON string body',
+    initialBody: JSON.stringify({a: 1, b: 0}),
+    extraBody: {b: 2, c: 3},
+    expectedBody: JSON.stringify({a: 1, b: 2, c: 3}),
+    expectedWarning: undefined,
+  },
+  {
+    testName: 'should perform deep merge correctly',
+    initialBody: JSON.stringify({a: 1, c: {d: 3, e: 4}}),
+    extraBody: {b: 2, c: {d: 5, f: 6}},
+    expectedBody: JSON.stringify({a: 1, b: 2, c: {d: 5, e: 4, f: 6}}),
+    expectedWarning: undefined,
+  },
+  {
+    testName: 'should warn and overwrite on type mismatch during merge',
+    initialBody: JSON.stringify({a: 1}),
+    extraBody: {a: 'string'},
+    expectedBody: JSON.stringify({a: 'string'}),
+    expectedWarning:
+      'includeExtraBodyToRequestInit:deepMerge: Type mismatch for key "a". Original type: number, New type: string. Overwriting.',
+  },
+  {
+    testName: 'should not modify body and warn if original body is JSON array',
+    initialBody: JSON.stringify([1, 2]),
+    extraBody: {a: 1},
+    expectedBody: JSON.stringify([1, 2]),
+    expectedWarning:
+      'includeExtraBodyToRequestInit: Original request body is valid JSON but not a non-array object. Skip applying extraBody to the request body.',
+  },
+  {
+    testName:
+      'should not modify body and warn if original body is JSON primitive',
+    initialBody: JSON.stringify(123),
+    extraBody: {a: 1},
+    expectedBody: JSON.stringify(123),
+    expectedWarning:
+      'includeExtraBodyToRequestInit: Original request body is valid JSON but not a non-array object. Skip applying extraBody to the request body.',
+  },
+  {
+    testName:
+      'should not modify body and warn if original body is invalid JSON string',
+    initialBody: 'invalid json',
+    extraBody: {a: 1},
+    expectedBody: 'invalid json',
+    expectedWarning:
+      'includeExtraBodyToRequestInit: Original request body is not valid JSON. Skip applying extraBody to the request body.',
+  },
+  {
+    testName: 'should handle extraBody with null values',
+    initialBody: JSON.stringify({a: 1}),
+    extraBody: {b: null, c: {d: null}},
+    expectedBody: JSON.stringify({a: 1, b: null, c: {d: null}}),
+    expectedWarning: undefined,
+  },
+  {
+    testName: 'should handle extraBody overwriting with null values',
+    initialBody: JSON.stringify({a: 1, b: {c: 2}}),
+    extraBody: {b: 'b'},
+    expectedBody: JSON.stringify({a: 1, b: 'b'}),
+    expectedWarning:
+      'includeExtraBodyToRequestInit:deepMerge: Type mismatch for key "b". Original type: object, New type: string. Overwriting.',
+  },
+  {
+    testName:
+      'should handle extraBody with undefined values (which get stringified as absent)',
+    initialBody: JSON.stringify({a: 1}),
+    extraBody: {b: undefined, c: {d: undefined}},
+    expectedBody: JSON.stringify({a: 1, c: {}}), // undefined values are not included in JSON.stringify
+    expectedWarning: undefined,
+  },
+];
+
+describe('includeExtraBodyToRequestInit', () => {
+  let consoleWarnSpy: jasmine.Spy;
+
+  beforeEach(() => {
+    consoleWarnSpy = spyOn(console, 'warn').and.stub(); // or .and.callThrough(); if you want the original to execute
+  });
+
+  extraBodyTestCases.forEach(
+    ({testName, initialBody, extraBody, expectedBody, expectedWarning}) => {
+      it(testName, () => {
+        const requestInit: RequestInit = {body: initialBody};
+        includeExtraBodyToRequestInit(
+          requestInit,
+          extraBody as Record<string, unknown>,
+        );
+        if (
+          typeof expectedBody === 'string' &&
+          typeof requestInit.body === 'string'
+        ) {
+          if (expectedBody.startsWith('{') || expectedBody.startsWith('[')) {
+            expect(JSON.parse(requestInit.body as string)).toEqual(
+              JSON.parse(expectedBody),
+            );
+          } else {
+            expect(requestInit.body).toBe(expectedBody);
+          }
+        } else {
+          expect(requestInit.body).toEqual(expectedBody);
+        }
+        if (expectedWarning) {
+          expect(consoleWarnSpy).toHaveBeenCalledWith(expectedWarning);
+        } else {
+          expect(consoleWarnSpy).not.toHaveBeenCalled();
+        }
+      });
+    },
+  );
 });

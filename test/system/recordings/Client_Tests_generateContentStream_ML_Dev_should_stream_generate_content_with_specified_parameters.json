@@ -1,0 +1,155 @@
+{
+  "recordID": "Client_Tests_generateContentStream_ML_Dev_should_stream_generate_content_with_specified_parameters",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse",
+        "request": "POST /v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "173",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Client Tests generateContentStream ML Dev should stream generate content with specified parameters"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "why is the sky blue?"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {
+              "candidateCount": 1,
+              "maxOutputTokens": 200,
+              "thinkingConfig": {
+                "thinkingBudget": 50
+              }
+            }
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "generativelanguage.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "9e08e69ef6c749fd0e9bff9fc6bb0a652321fb4c9f7726402ff5c6778dffd47d",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Disposition": "attachment",
+          "Content-Type": "text/event-stream",
+          "Date": "Fri, 24 Oct 2025 07:45:45 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Server-Timing": "gfet4t7; dur=1335",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "The sky is blue primarily due to a phenomenon called **Rayleigh Scattering**.\n\nHere's a breakdown of why it happens:\n\n1.  **Sunlight is White Light:** The light from the sun appears white to us, but it's"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "qS77aMCqBu6mvr0PsJiykAw",
+            "turnToken": "v1:ChdxUzc3YU1DcUJ1Nm12cjBQc0ppeWtBdxIXcVM3N2FNQ3FCdTZtdnIwUHNKaXlrQXc",
+            "usageMetadata": {
+              "candidatesTokenCount": 51,
+              "promptTokenCount": 7,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 7
+                }
+              ],
+              "thoughtsTokenCount": 45,
+              "totalTokenCount": 103
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " actually made up of all the colors of the rainbow (red, orange, yellow, green, blue, indigo, violet). Each color has a different wavelength – red has the longest wavelength, and blue/violet have the shortest.\n\n2.  **"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "qS77aMCqBu6mvr0PsJiykAw",
+            "turnToken": "v1:ChdxUzc3YU1DcUJ1Nm12cjBQc0ppeWtBdxIXcVM3N2FNQ3FCdTZtdnIwUHNKaXlrQXc",
+            "usageMetadata": {
+              "candidatesTokenCount": 102,
+              "promptTokenCount": 7,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 7
+                }
+              ],
+              "thoughtsTokenCount": 45,
+              "totalTokenCount": 154
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "Earth's Atmosphere:** Our planet is surrounded by a layer of gases (mostly nitrogen and oxygen) and tiny particles.\n\n3.  **Scattering:** When sunlight enters the Earth's atmosphere, it collides with these gas molecules and particles."
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "MAX_TOKENS",
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "qS77aMCqBu6mvr0PsJiykAw",
+            "turnToken": "v1:ChdxUzc3YU1DcUJ1Nm12cjBQc0ppeWtBdxIXcVM3N2FNQ3FCdTZtdnIwUHNKaXlrQXc",
+            "usageMetadata": {
+              "candidatesTokenCount": 153,
+              "promptTokenCount": 7,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 7
+                }
+              ],
+              "thoughtsTokenCount": 45,
+              "totalTokenCount": 205
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

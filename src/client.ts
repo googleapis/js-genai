@@ -7,6 +7,7 @@
 import {GoogleAuthOptions} from 'google-auth-library';
 
 import {ApiClient} from './_api_client.js';
+import {Batches} from './batches.js';
 import {Caches} from './caches.js';
 import {Chats} from './chats.js';
 import {CrossDownloader} from './cross/_cross_downloader.js';
@@ -14,6 +15,9 @@ import {crossError} from './cross/_cross_error.js';
 import {CrossUploader} from './cross/_cross_uploader.js';
 import {CrossWebSocketFactory} from './cross/_cross_websocket.js';
 import {Files} from './files.js';
+import {FileSearchStores} from './filesearchstores.js';
+import GeminiNextGenAPI from './interactions/index.js';
+import {Interactions as GeminiNextGenInteractions} from './interactions/resources/interactions.js';
 import {Live} from './live.js';
 import {Models} from './models.js';
 import {Operations} from './operations.js';
@@ -123,14 +127,56 @@ export class GoogleGenAI {
   private readonly apiKey?: string;
   public readonly vertexai: boolean;
   private readonly apiVersion?: string;
+  private readonly httpOptions?: HttpOptions;
   readonly models: Models;
   readonly live: Live;
+  readonly batches: Batches;
   readonly chats: Chats;
   readonly caches: Caches;
   readonly files: Files;
   readonly operations: Operations;
   readonly authTokens: Tokens;
   readonly tunings: Tunings;
+  readonly fileSearchStores: FileSearchStores;
+  private _interactions: GeminiNextGenInteractions | undefined;
+
+  get interactions(): GeminiNextGenInteractions {
+    if (this._interactions !== undefined) {
+      return this._interactions;
+    }
+
+    console.warn(
+      'GoogleGenAI.interactions: Interactions usage is experimental and may change in future versions.',
+    );
+
+    if (this.vertexai) {
+      throw new Error(
+        'This version of the GenAI SDK does not support Vertex AI API for interactions.',
+      );
+    }
+
+    const httpOpts = this.httpOptions;
+
+    // Unsupported Options Warnings
+    if (httpOpts?.extraBody) {
+      console.warn(
+        'GoogleGenAI.interactions: Client level httpOptions.extraBody is not supported by the interactions client and will be ignored.',
+      );
+    }
+
+    const nextGenClient = new GeminiNextGenAPI({
+      baseURL: this.apiClient.getBaseUrl(),
+      apiKey: this.apiKey,
+      apiVersion: this.apiClient.getApiVersion(),
+      clientAdapter: this.apiClient,
+      defaultHeaders: this.apiClient.getDefaultHeaders(),
+      timeout: httpOpts?.timeout,
+      maxRetries: httpOpts?.retryOptions?.attempts,
+    });
+    this._interactions = nextGenClient.interactions;
+
+    return this._interactions;
+  }
 
   constructor(options: GoogleGenAIOptions) {
     if (options.apiKey == null) {
@@ -141,13 +187,14 @@ export class GoogleGenAI {
     this.vertexai = options.vertexai ?? false;
     this.apiKey = options.apiKey;
     this.apiVersion = options.apiVersion;
+    this.httpOptions = options.httpOptions;
     const auth = new WebAuth(this.apiKey);
     this.apiClient = new ApiClient({
       auth: auth,
       apiVersion: this.apiVersion,
       apiKey: this.apiKey,
       vertexai: this.vertexai,
-      httpOptions: options.httpOptions,
+      httpOptions: this.httpOptions,
       userAgentExtra: LANGUAGE_LABEL_PREFIX + 'cross',
       uploader: new CrossUploader(),
       downloader: new CrossDownloader(),
@@ -155,10 +202,12 @@ export class GoogleGenAI {
     this.models = new Models(this.apiClient);
     this.live = new Live(this.apiClient, auth, new CrossWebSocketFactory());
     this.chats = new Chats(this.models, this.apiClient);
+    this.batches = new Batches(this.apiClient);
     this.caches = new Caches(this.apiClient);
     this.files = new Files(this.apiClient);
     this.operations = new Operations(this.apiClient);
     this.authTokens = new Tokens(this.apiClient);
     this.tunings = new Tunings(this.apiClient);
+    this.fileSearchStores = new FileSearchStores(this.apiClient);
   }
 }

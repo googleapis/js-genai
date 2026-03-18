@@ -1,0 +1,94 @@
+{
+  "recordID": "Chats_Tests_sendMessage_Google_AI_with_text",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta/models/gemini-2.0-flash:generateContent",
+        "request": "POST /v1beta/models/gemini-2.0-flash:generateContent HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "94",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Chats Tests sendMessage Google AI with text"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "why is the sky blue?"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {}
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "generativelanguage.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "cf76a1cf3672e08fa225a60cd1f5202d30144774231f2e04b47a15e95001ffb5",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Encoding": "gzip",
+          "Content-Length": "1030",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sat, 16 Aug 2025 00:45:47 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Server-Timing": "gfet4t7; dur=2153",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "avgLogprobs": -0.1926684285020693,
+                "content": {
+                  "parts": [
+                    {
+                      "text": "The sky is blue because of a phenomenon called **Rayleigh scattering**. Here's a breakdown:\n\n*   **Sunlight and its Colors:** Sunlight appears white, but it's actually made up of all the colors of the rainbow. Each color has a different wavelength. Blue and violet light have shorter wavelengths, while red and orange light have longer wavelengths.\n\n*   **Entering the Atmosphere:** When sunlight enters the Earth's atmosphere, it collides with tiny air molecules (mostly nitrogen and oxygen).\n\n*   **Rayleigh Scattering:** This collision causes the light to scatter in different directions. This scattering is more effective for shorter wavelengths (blue and violet light) than for longer wavelengths (red and orange light).\n\n*   **Why Not Violet?** While violet light is scattered even more than blue light, there are a few reasons why we see a blue sky:\n\n    *   The sun emits slightly less violet light than blue light.\n    *   Our eyes are more sensitive to blue light than violet light.\n    *   The upper atmosphere absorbs some of the violet light.\n\n*   **Result:** Because blue light is scattered much more effectively, it bounces around in all directions. When you look up at the sky, you see this scattered blue light coming from all directions, making the sky appear blue.\n\n**In summary:** Blue light is scattered more than other colors by the Earth's atmosphere, making the sky appear blue to our eyes.\n\n**Think of it like this:** Imagine throwing different sized balls at a group of obstacles. The smaller balls (blue light) are more likely to bounce off and scatter in many directions, while the larger balls (red light) are more likely to go straight through.\n"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP"
+              }
+            ],
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "udSfaNTNEPP0n9kPrJGHuQ4",
+            "usageMetadata": {
+              "candidatesTokenCount": 353,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 353
+                }
+              ],
+              "promptTokenCount": 6,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 6
+                }
+              ],
+              "totalTokenCount": 359
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -24,7 +24,10 @@ export class Operations extends BaseModule {
    * @return The updated Operation object, with the latest status or result.
    */
   async getVideosOperation(
-    parameters: types.OperationGetParameters,
+    parameters: types.OperationGetParameters<
+      types.GenerateVideosResponse,
+      types.GenerateVideosOperation
+    >,
   ): Promise<types.GenerateVideosOperation> {
     const operation = parameters.operation;
     const config = parameters.config;
@@ -41,36 +44,88 @@ export class Operations extends BaseModule {
         httpOptions = config.httpOptions;
       }
 
-      return this.fetchPredictVideosOperationInternal({
+      const rawOperation = await this.fetchPredictVideosOperationInternal({
         operationName: operation.name,
         resourceName: resourceName,
         config: {httpOptions: httpOptions},
       });
+
+      return operation._fromAPIResponse({
+        apiResponse: rawOperation,
+        _isVertexAI: true,
+      });
     } else {
-      return this.getVideosOperationInternal({
+      const rawOperation = await this.getVideosOperationInternal({
         operationName: operation.name,
         config: config,
+      });
+      return operation._fromAPIResponse({
+        apiResponse: rawOperation,
+        _isVertexAI: false,
+      });
+    }
+  }
+
+  /**
+   * Gets the status of a long-running operation.
+   *
+   * @param parameters The parameters for the get operation request.
+   * @return The updated Operation object, with the latest status or result.
+   */
+  async get<T, U extends types.Operation<T>>(
+    parameters: types.OperationGetParameters<T, U>,
+  ): Promise<types.Operation<T>> {
+    const operation = parameters.operation;
+    const config = parameters.config;
+
+    if (operation.name === undefined || operation.name === '') {
+      throw new Error('Operation name is required.');
+    }
+
+    if (this.apiClient.isVertexAI()) {
+      const resourceName = operation.name.split('/operations/')[0];
+      let httpOptions: types.HttpOptions | undefined = undefined;
+
+      if (config && 'httpOptions' in config) {
+        httpOptions = config.httpOptions;
+      }
+
+      const rawOperation = await this.fetchPredictVideosOperationInternal({
+        operationName: operation.name,
+        resourceName: resourceName,
+        config: {httpOptions: httpOptions},
+      });
+
+      return operation._fromAPIResponse({
+        apiResponse: rawOperation,
+        _isVertexAI: true,
+      });
+    } else {
+      const rawOperation = await this.getVideosOperationInternal({
+        operationName: operation.name,
+        config: config,
+      });
+      return operation._fromAPIResponse({
+        apiResponse: rawOperation,
+        _isVertexAI: false,
       });
     }
   }
 
   private async getVideosOperationInternal(
     params: types.GetOperationParameters,
-  ): Promise<types.GenerateVideosOperation> {
-    let response: Promise<types.GenerateVideosOperation>;
+  ): Promise<Record<string, unknown>> {
+    let response: Promise<Record<string, unknown>>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      const body = converters.getOperationParametersToVertex(
-        this.apiClient,
-        params,
-      );
+      const body = converters.getOperationParametersToVertex(params);
       path = common.formatMap(
         '{operationName}',
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -85,27 +140,16 @@ export class Operations extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        }) as Promise<types.GenerateVideosOperation>;
+        }) as Promise<Record<string, unknown>>;
 
-      return response.then((apiResponse) => {
-        const resp = converters.generateVideosOperationFromVertex(
-          this.apiClient,
-          apiResponse,
-        );
-
-        return resp as types.GenerateVideosOperation;
-      });
+      return response;
     } else {
-      const body = converters.getOperationParametersToMldev(
-        this.apiClient,
-        params,
-      );
+      const body = converters.getOperationParametersToMldev(params);
       path = common.formatMap(
         '{operationName}',
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -120,36 +164,26 @@ export class Operations extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        }) as Promise<types.GenerateVideosOperation>;
+        }) as Promise<Record<string, unknown>>;
 
-      return response.then((apiResponse) => {
-        const resp = converters.generateVideosOperationFromMldev(
-          this.apiClient,
-          apiResponse,
-        );
-
-        return resp as types.GenerateVideosOperation;
-      });
+      return response;
     }
   }
 
   private async fetchPredictVideosOperationInternal(
     params: types.FetchPredictOperationParameters,
-  ): Promise<types.GenerateVideosOperation> {
-    let response: Promise<types.GenerateVideosOperation>;
+  ): Promise<Record<string, unknown>> {
+    let response: Promise<Record<string, unknown>>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      const body = converters.fetchPredictOperationParametersToVertex(
-        this.apiClient,
-        params,
-      );
+      const body = converters.fetchPredictOperationParametersToVertex(params);
       path = common.formatMap(
         '{resourceName}:fetchPredictOperation',
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -164,16 +198,9 @@ export class Operations extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        }) as Promise<types.GenerateVideosOperation>;
+        }) as Promise<Record<string, unknown>>;
 
-      return response.then((apiResponse) => {
-        const resp = converters.generateVideosOperationFromVertex(
-          this.apiClient,
-          apiResponse,
-        );
-
-        return resp as types.GenerateVideosOperation;
-      });
+      return response;
     } else {
       throw new Error('This method is only supported by the Vertex AI.');
     }

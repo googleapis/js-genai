@@ -4,15 +4,18 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Tool as McpTool} from '@modelcontextprotocol/sdk/types.js';
-import {z} from 'zod';
+import type {Tool as McpTool} from '@modelcontextprotocol/sdk/types';
 
 import {ApiClient} from './_api_client.js';
+import * as baseTransformers from './_base_transformers.js';
 import * as types from './types.js';
 
 export function tModel(apiClient: ApiClient, model: string | unknown): string {
   if (!model || typeof model !== 'string') {
     throw new Error('model is required and must be a string');
+  }
+  if (model.includes('..') || model.includes('?') || model.includes('&')) {
+    throw new Error('invalid model parameter');
   }
 
   if (apiClient.isVertexAI()) {
@@ -57,20 +60,16 @@ export function tCachesModel(
 }
 
 export function tBlobs(
-  apiClient: ApiClient,
   blobs: types.BlobImageUnion | types.BlobImageUnion[],
 ): types.Blob[] {
   if (Array.isArray(blobs)) {
-    return blobs.map((blob) => tBlob(apiClient, blob));
+    return blobs.map((blob) => tBlob(blob));
   } else {
-    return [tBlob(apiClient, blobs)];
+    return [tBlob(blobs)];
   }
 }
 
-export function tBlob(
-  apiClient: ApiClient,
-  blob: types.BlobImageUnion,
-): types.Blob {
+export function tBlob(blob: types.BlobImageUnion): types.Blob {
   if (typeof blob === 'object' && blob !== null) {
     return blob;
   }
@@ -80,11 +79,8 @@ export function tBlob(
   );
 }
 
-export function tImageBlob(
-  apiClient: ApiClient,
-  blob: types.BlobImageUnion,
-): types.Blob {
-  const transformedBlob = tBlob(apiClient, blob);
+export function tImageBlob(blob: types.BlobImageUnion): types.Blob {
+  const transformedBlob = tBlob(blob);
   if (
     transformedBlob.mimeType &&
     transformedBlob.mimeType.startsWith('image/')
@@ -94,8 +90,8 @@ export function tImageBlob(
   throw new Error(`Unsupported mime type: ${transformedBlob.mimeType!}`);
 }
 
-export function tAudioBlob(apiClient: ApiClient, blob: types.Blob): types.Blob {
-  const transformedBlob = tBlob(apiClient, blob);
+export function tAudioBlob(blob: types.Blob): types.Blob {
+  const transformedBlob = tBlob(blob);
   if (
     transformedBlob.mimeType &&
     transformedBlob.mimeType.startsWith('audio/')
@@ -105,10 +101,7 @@ export function tAudioBlob(apiClient: ApiClient, blob: types.Blob): types.Blob {
   throw new Error(`Unsupported mime type: ${transformedBlob.mimeType!}`);
 }
 
-export function tPart(
-  apiClient: ApiClient,
-  origin?: types.PartUnion | null,
-): types.Part {
+export function tPart(origin?: types.PartUnion | null): types.Part {
   if (origin === null || origin === undefined) {
     throw new Error('PartUnion is required');
   }
@@ -121,10 +114,7 @@ export function tPart(
   throw new Error(`Unsupported part type: ${typeof origin}`);
 }
 
-export function tParts(
-  apiClient: ApiClient,
-  origin?: types.PartListUnion | null,
-): types.Part[] {
+export function tParts(origin?: types.PartListUnion | null): types.Part[] {
   if (
     origin === null ||
     origin === undefined ||
@@ -133,9 +123,9 @@ export function tParts(
     throw new Error('PartListUnion is required');
   }
   if (Array.isArray(origin)) {
-    return origin.map((item) => tPart(apiClient, item as types.PartUnion)!);
+    return origin.map((item) => tPart(item as types.PartUnion)!);
   }
-  return [tPart(apiClient, origin)!];
+  return [tPart(origin)!];
 }
 
 function _isContent(origin: unknown): boolean {
@@ -166,10 +156,7 @@ function _isFunctionResponsePart(origin: unknown): boolean {
   );
 }
 
-export function tContent(
-  apiClient: ApiClient,
-  origin?: types.ContentUnion,
-): types.Content {
+export function tContent(origin?: types.ContentUnion): types.Content {
   if (origin === null || origin === undefined) {
     throw new Error('ContentUnion is required');
   }
@@ -181,7 +168,7 @@ export function tContent(
 
   return {
     role: 'user',
-    parts: tParts(apiClient, origin as types.PartListUnion)!,
+    parts: tParts(origin as types.PartListUnion)!,
   };
 }
 
@@ -194,7 +181,7 @@ export function tContentsForEmbed(
   }
   if (apiClient.isVertexAI() && Array.isArray(origin)) {
     return origin.flatMap((item) => {
-      const content = tContent(apiClient, item as types.ContentUnion);
+      const content = tContent(item as types.ContentUnion);
       if (
         content.parts &&
         content.parts.length > 0 &&
@@ -205,7 +192,7 @@ export function tContentsForEmbed(
       return [];
     });
   } else if (apiClient.isVertexAI()) {
-    const content = tContent(apiClient, origin as types.ContentUnion);
+    const content = tContent(origin as types.ContentUnion);
     if (
       content.parts &&
       content.parts.length > 0 &&
@@ -216,17 +203,12 @@ export function tContentsForEmbed(
     return [];
   }
   if (Array.isArray(origin)) {
-    return origin.map(
-      (item) => tContent(apiClient, item as types.ContentUnion)!,
-    );
+    return origin.map((item) => tContent(item as types.ContentUnion)!);
   }
-  return [tContent(apiClient, origin as types.ContentUnion)!];
+  return [tContent(origin as types.ContentUnion)!];
 }
 
-export function tContents(
-  apiClient: ApiClient,
-  origin?: types.ContentListUnion,
-): types.Content[] {
+export function tContents(origin?: types.ContentListUnion): types.Content[] {
   if (
     origin === null ||
     origin === undefined ||
@@ -241,7 +223,7 @@ export function tContents(
         'To specify functionCall or functionResponse parts, please wrap them in a Content object, specifying the role for them',
       );
     }
-    return [tContent(apiClient, origin as types.ContentUnion)];
+    return [tContent(origin as types.ContentUnion)];
   }
 
   const result: types.Content[] = [];
@@ -271,300 +253,17 @@ export function tContents(
   }
 
   if (!isContentArray) {
-    result.push({role: 'user', parts: tParts(apiClient, accumulatedParts)});
+    result.push({role: 'user', parts: tParts(accumulatedParts)});
   }
   return result;
 }
 
-/**
- * Represents the possible JSON schema types.
- */
-type JSONSchemaType =
-  | 'string'
-  | 'number'
-  | 'integer'
-  | 'object'
-  | 'array'
-  | 'boolean'
-  | 'null';
-
-/**
- * A subset of JSON Schema according to 2020-12 JSON Schema draft, plus one
- * additional google only field: propertyOrdering. The propertyOrdering field
- * is used to specify the order of the properties in the object. see details in
- * https://ai.google.dev/gemini-api/docs/structured-output#property-ordering
- * for more details.
- *
- * Represents a subset of a JSON Schema object that can be used by Gemini API.
- * The difference between this interface and the Schema interface is that this
- * interface is compatible with OpenAPI 3.1 schema objects while the
- * types.Schema interface @see {@link Schema} is used to make API call to
- * Gemini API.
- */
-export interface JSONSchema {
-  /**
-   * Validation succeeds if the type of the instance matches the type
-   * represented by the given type, or matches at least one of the given types
-   * in the array.
-   */
-  type?: JSONSchemaType | JSONSchemaType[];
-
-  /**
-   * Defines semantic information about a string instance (e.g., "date-time",
-   * "email").
-   */
-  format?: string;
-
-  /**
-   * A preferably short description about the purpose of the instance
-   * described by the schema. This is not supported for Gemini API.
-   */
-  title?: string;
-
-  /**
-   * An explanation about the purpose of the instance described by the
-   * schema.
-   */
-  description?: string;
-
-  /**
-   * This keyword can be used to supply a default JSON value associated
-   * with a particular schema. The value should be valid according to the
-   * schema. This is not supported for Gemini API.
-   */
-  default?: unknown;
-
-  /**
-   * Used for arrays. This keyword is used to define the schema of the elements
-   * in the array.
-   */
-  items?: JSONSchema;
-
-  /**
-   * Key word for arrays. Specify the minimum number of elements in the array.
-   */
-  minItems?: string;
-
-  /**
-   * Key word for arrays. Specify the maximum number of elements in the array.e
-   */
-  maxItems?: string;
-
-  /**
-   * Used for specify the possible values for an enum.
-   */
-  enum?: unknown[];
-
-  /**
-   * Used for objects. This keyword is used to define the schema of the
-   * properties in the object.
-   */
-  properties?: Record<string, JSONSchema>;
-
-  /**
-   * Used for objects. This keyword is used to specify the properties of the
-   * object that are required to be present in the instance.
-   */
-  required?: string[];
-
-  /**
-   * The key word for objects. Specify the minimum number of properties in the
-   * object.
-   */
-  minProperties?: string;
-
-  /**
-   * The key word for objects. Specify the maximum number of properties in the
-   * object.
-   */
-  maxProperties?: string;
-
-  /**
-   * Used for numbers. Specify the minimum value for a number.
-   */
-  minimum?: number;
-
-  /**
-   * Used for numbers. specify the maximum value for a number.
-   */
-  maximum?: number;
-
-  /**
-   * Used for strings. The keyword to specify the minimum length of the
-   * string.
-   */
-  minLength?: string;
-
-  /**
-   * Used for strings. The keyword to specify the maximum length of the
-   * string.
-   */
-  maxLength?: string;
-
-  /**
-   * Used for strings. Key word to specify a regular
-   * expression (ECMA-262) matches the instance successfully.
-   */
-  pattern?: string;
-
-  /**
-   * Used for Union types and Intersection types. This keyword is used to define
-   * the schema of the possible values.
-   */
-  anyOf?: JSONSchema[];
-
-  /**
-   * The order of the properties. Not a standard field in OpenAPI spec.
-   * Only used to support the order of the properties. see details in
-   * https://ai.google.dev/gemini-api/docs/structured-output#property-ordering
-   */
-  propertyOrdering?: string[];
-}
-
-// The fields that are supported by JSONSchema. Must be kept in sync with the
-// JSONSchema interface above.
-export const supportedJsonSchemaFields = new Set<string>([
-  'type',
-  'format',
-  'title',
-  'description',
-  'default',
-  'items',
-  'minItems',
-  'maxItems',
-  'enum',
-  'properties',
-  'required',
-  'minProperties',
-  'maxProperties',
-  'minimum',
-  'maximum',
-  'minLength',
-  'maxLength',
-  'pattern',
-  'anyOf',
-  'propertyOrdering',
-]);
-
-const jsonSchemaTypeValidator = z.enum([
-  'string',
-  'number',
-  'integer',
-  'object',
-  'array',
-  'boolean',
-  'null',
-]);
-
-// Handles all types and arrays of all types.
-const schemaTypeUnion = z.union([
-  jsonSchemaTypeValidator,
-  z.array(jsonSchemaTypeValidator),
-]);
-
-// Declare the type for the schema variable.
-type jsonSchemaValidatorType = z.ZodType<JSONSchema>;
-
-/**
- * Creates a zod validator for JSONSchema.
- *
- * @param strictMode Whether to enable strict mode, default to true. When
- * strict mode is enabled, the zod validator will throw error if there
- * are unrecognized fields in the input data. If strict mode is
- * disabled, the zod validator will ignore the unrecognized fields, only
- * populate the fields that are listed in the JSONSchema. Regardless of
- * the mode the type mismatch will always result in an error, for example
- * items field should be a single JSONSchema, but for tuple type it would
- * be an array of JSONSchema, this will always result in an error.
- * @return The zod validator for JSONSchema.
- */
-export function createJsonSchemaValidator(
-  strictMode: boolean = true,
-): jsonSchemaValidatorType {
-  const jsonSchemaValidator: jsonSchemaValidatorType = z.lazy(() => {
-    // Define the base object shape *inside* the z.lazy callback
-    const baseShape = z.object({
-      // --- Type ---
-      type: schemaTypeUnion.optional(),
-
-      // --- Annotations ---
-      format: z.string().optional(),
-      title: z.string().optional(),
-      description: z.string().optional(),
-      default: z.unknown().optional(),
-
-      // --- Array Validations ---
-      items: jsonSchemaValidator.optional(),
-      minItems: z.coerce.string().optional(),
-      maxItems: z.coerce.string().optional(),
-      // --- Generic Validations ---
-      enum: z.array(z.unknown()).optional(),
-
-      // --- Object Validations ---
-      properties: z.record(z.string(), jsonSchemaValidator).optional(),
-      required: z.array(z.string()).optional(),
-      minProperties: z.coerce.string().optional(),
-      maxProperties: z.coerce.string().optional(),
-      propertyOrdering: z.array(z.string()).optional(),
-
-      // --- Numeric Validations ---
-      minimum: z.number().optional(),
-      maximum: z.number().optional(),
-
-      // --- String Validations ---
-      minLength: z.coerce.string().optional(),
-      maxLength: z.coerce.string().optional(),
-      pattern: z.string().optional(),
-
-      // --- Schema Composition ---
-      anyOf: z.array(jsonSchemaValidator).optional(),
-
-      // --- Additional Properties --- This field is not included in the
-      // JSONSchema, will not be communicated to the model, it is here purely
-      // for enabling the zod validation strict mode.
-      additionalProperties: z.boolean().optional(),
-    });
-
-    // Conditionally apply .strict() based on the flag
-    return strictMode ? baseShape.strict() : baseShape;
-  });
-  return jsonSchemaValidator;
-}
-
 /*
-Handle type field:
-The resulted type field in JSONSchema form zod_to_json_schema can be either
-an array consist of primitive types or a single primitive type.
-This is due to the optimization of zod_to_json_schema, when the types in the
-union are primitive types without any additional specifications,
-zod_to_json_schema will squash the types into an array instead of put them
-in anyOf fields. Otherwise, it will put the types in anyOf fields.
-See the following link for more details:
-https://github.com/zodjs/zod-to-json-schema/blob/main/src/index.ts#L101
-The logic here is trying to undo that optimization, flattening the array of
-types to anyOf fields.
-                                 type field
-                                      |
-                            ___________________________
-                           /                           \
-                          /                              \
-                         /                                \
-                       Array                              Type.*
-                /                  \                       |
-      Include null.              Not included null     type = Type.*.
-      [null, Type.*, Type.*]     multiple types.
-      [null, Type.*]             [Type.*, Type.*]
-            /                                \
-      remove null                             \
-      add nullable = true                      \
-       /                    \                   \
-    [Type.*]           [Type.*, Type.*]          \
- only one type left     multiple types left       \
- add type = Type.*.           \                  /
-                               \                /
-                         not populate the type field in final result
-                           and make the types into anyOf fields
-                          anyOf:[{type: 'Type.*'}, {type: 'Type.*'}];
+Transform the type field from an array of types to an array of anyOf fields.
+Example:
+  {type: ['STRING', 'NUMBER']}
+will be transformed to
+  {anyOf: [{type: 'STRING'}, {type: 'NUMBER'}]}
 */
 function flattenTypeArrayToAnyOf(
   typeList: string[],
@@ -596,7 +295,7 @@ function flattenTypeArrayToAnyOf(
 }
 
 export function processJsonSchema(
-  _jsonSchema: JSONSchema | types.Schema | Record<string, unknown>,
+  _jsonSchema: types.Schema | Record<string, unknown>,
 ): types.Schema {
   const genAISchema: types.Schema = {};
   const schemaFieldNames = ['items'];
@@ -649,7 +348,7 @@ export function processJsonSchema(
       required: [ 'nullableArray' ],
     }
   */
-  const incomingAnyOf = _jsonSchema['anyOf'] as JSONSchema[];
+  const incomingAnyOf = _jsonSchema['anyOf'] as Record<string, unknown>[];
   if (incomingAnyOf != null && incomingAnyOf.length == 2) {
     if (incomingAnyOf[0]!['type'] === 'null') {
       genAISchema['nullable'] = true;
@@ -696,7 +395,9 @@ export function processJsonSchema(
           genAISchema['nullable'] = true;
           continue;
         }
-        listSchemaFieldValue.push(processJsonSchema(item as JSONSchema));
+        listSchemaFieldValue.push(
+          processJsonSchema(item as Record<string, unknown>),
+        );
       }
       (genAISchema as Record<string, unknown>)[fieldName] =
         listSchemaFieldValue;
@@ -705,7 +406,9 @@ export function processJsonSchema(
       for (const [key, value] of Object.entries(
         fieldValue as Record<string, unknown>,
       )) {
-        dictSchemaFieldValue[key] = processJsonSchema(value as JSONSchema);
+        dictSchemaFieldValue[key] = processJsonSchema(
+          value as Record<string, unknown>,
+        );
       }
       (genAISchema as Record<string, unknown>)[fieldName] =
         dictSchemaFieldValue;
@@ -727,21 +430,14 @@ export function processJsonSchema(
 // https://github.com/StefanTerdell/zod-to-json-schema/blob/70525efe555cd226691e093d171370a3b10921d1/src/zodToJsonSchema.ts#L7
 // typebox can return unknown, see details in
 // https://github.com/sinclairzx81/typebox/blob/5a5431439f7d5ca6b494d0d18fbfd7b1a356d67c/src/type/create/type.ts#L35
-export function tSchema(
-  apiClient: ApiClient,
-  schema: types.Schema | unknown,
-): types.Schema {
-  if (Object.keys(schema as Record<string, unknown>).includes('$schema')) {
-    delete (schema as Record<string, unknown>)['$schema'];
-    const validatedJsonSchema = createJsonSchemaValidator().parse(schema);
-    return processJsonSchema(validatedJsonSchema);
-  } else {
-    return processJsonSchema(schema as types.Schema);
-  }
+// Note: proper json schemas with the $schema field set never arrive to this
+// transformer. Schemas with $schema are routed to the equivalent API json
+// schema field.
+export function tSchema(schema: types.Schema | unknown): types.Schema {
+  return processJsonSchema(schema as types.Schema);
 }
 
 export function tSpeechConfig(
-  apiClient: ApiClient,
   speechConfig: types.SpeechConfigUnion,
 ): types.SpeechConfig {
   if (typeof speechConfig === 'object') {
@@ -760,7 +456,6 @@ export function tSpeechConfig(
 }
 
 export function tLiveSpeechConfig(
-  apiClient: ApiClient,
   speechConfig: types.SpeechConfig | object,
 ): types.SpeechConfig {
   if ('multiSpeakerVoiceConfig' in speechConfig) {
@@ -771,30 +466,41 @@ export function tLiveSpeechConfig(
   return speechConfig;
 }
 
-export function tTool(apiClient: ApiClient, tool: types.Tool): types.Tool {
+export function tTool(tool: types.Tool): types.Tool {
   if (tool.functionDeclarations) {
     for (const functionDeclaration of tool.functionDeclarations) {
       if (functionDeclaration.parameters) {
-        functionDeclaration.parameters = tSchema(
-          apiClient,
-          functionDeclaration.parameters,
-        );
+        if (!Object.keys(functionDeclaration.parameters).includes('$schema')) {
+          functionDeclaration.parameters = processJsonSchema(
+            functionDeclaration.parameters,
+          );
+        } else {
+          if (!functionDeclaration.parametersJsonSchema) {
+            functionDeclaration.parametersJsonSchema =
+              functionDeclaration.parameters;
+            delete functionDeclaration.parameters;
+          }
+        }
       }
       if (functionDeclaration.response) {
-        functionDeclaration.response = tSchema(
-          apiClient,
-          functionDeclaration.response,
-        );
+        if (!Object.keys(functionDeclaration.response).includes('$schema')) {
+          functionDeclaration.response = processJsonSchema(
+            functionDeclaration.response,
+          );
+        } else {
+          if (!functionDeclaration.responseJsonSchema) {
+            functionDeclaration.responseJsonSchema =
+              functionDeclaration.response;
+            delete functionDeclaration.response;
+          }
+        }
       }
     }
   }
   return tool;
 }
 
-export function tTools(
-  apiClient: ApiClient,
-  tools: types.ToolListUnion | unknown,
-): types.Tool[] {
+export function tTools(tools: types.ToolListUnion | unknown): types.Tool[] {
   // Check if the incoming type is defined.
   if (tools === undefined || tools === null) {
     throw new Error('tools is required');
@@ -899,10 +605,7 @@ export function tCachedContentName(
   return resourceName(apiClient, name, 'cachedContents');
 }
 
-export function tTuningJobStatus(
-  apiClient: ApiClient,
-  status: string | unknown,
-): string {
+export function tTuningJobStatus(status: string | unknown): string {
   switch (status) {
     case 'STATE_UNSPECIFIED':
       return 'JOB_STATE_UNSPECIFIED';
@@ -917,15 +620,8 @@ export function tTuningJobStatus(
   }
 }
 
-export function tBytes(
-  apiClient: ApiClient,
-  fromImageBytes: string | unknown,
-): string {
-  if (typeof fromImageBytes !== 'string') {
-    throw new Error('fromImageBytes must be a string');
-  }
-  // TODO(b/389133914): Remove dummy bytes converter.
-  return fromImageBytes;
+export function tBytes(fromImageBytes: string | unknown): string {
+  return baseTransformers.tBytes(fromImageBytes);
 }
 
 function _isFile(origin: unknown): boolean {
@@ -956,7 +652,6 @@ export function isVideo(origin: unknown): boolean {
 }
 
 export function tFileName(
-  apiClient: ApiClient,
   fromName: string | types.File | types.GeneratedVideo | types.Video,
 ): string | undefined {
   let name: string | undefined;
@@ -1010,10 +705,7 @@ export function tModelsUrl(
   return res;
 }
 
-export function tExtractModels(
-  apiClient: ApiClient,
-  response: unknown,
-): Record<string, unknown>[] {
+export function tExtractModels(response: unknown): Record<string, unknown>[] {
   for (const key of ['models', 'tunedModels', 'publisherModels']) {
     if (hasField(response, key)) {
       return (response as Record<string, unknown>)[key] as Record<
@@ -1037,12 +729,11 @@ export function mcpToGeminiTool(
   const functionDeclaration: Record<string, unknown> = {
     name: mcpToolSchema['name'],
     description: mcpToolSchema['description'],
-    parameters: processJsonSchema(
-      filterToJsonSchema(
-        mcpToolSchema['inputSchema'] as Record<string, unknown>,
-      ),
-    ),
+    parametersJsonSchema: mcpToolSchema['inputSchema'],
   };
+  if (mcpToolSchema['outputSchema']) {
+    functionDeclaration['responseJsonSchema'] = mcpToolSchema['outputSchema'];
+  }
   if (config.behavior) {
     functionDeclaration['behavior'] = config.behavior;
   }
@@ -1085,58 +776,217 @@ export function mcpToolsToGeminiTool(
   return {functionDeclarations: functionDeclarations};
 }
 
-// Filters the list schema field to only include fields that are supported by
-// JSONSchema.
-function filterListSchemaField(fieldValue: unknown): Record<string, unknown>[] {
-  const listSchemaFieldValue: Record<string, unknown>[] = [];
-  for (const listFieldValue of fieldValue as Record<string, unknown>[]) {
-    listSchemaFieldValue.push(filterToJsonSchema(listFieldValue));
+// Transforms a source input into a BatchJobSource object with validation.
+export function tBatchJobSource(
+  client: ApiClient,
+  src: string | types.InlinedRequest[] | types.BatchJobSource,
+): types.BatchJobSource {
+  let sourceObj: types.BatchJobSource;
+
+  if (typeof src === 'string') {
+    if (client.isVertexAI()) {
+      if (src.startsWith('gs://')) {
+        sourceObj = {format: 'jsonl', gcsUri: [src]};
+      } else if (src.startsWith('bq://')) {
+        sourceObj = {format: 'bigquery', bigqueryUri: src};
+      } else {
+        throw new Error(`Unsupported string source for Vertex AI: ${src}`);
+      }
+    } else {
+      // MLDEV
+      if (src.startsWith('files/')) {
+        sourceObj = {fileName: src}; // Default to fileName for string input
+      } else {
+        throw new Error(`Unsupported string source for Gemini API: ${src}`);
+      }
+    }
+  } else if (Array.isArray(src)) {
+    if (client.isVertexAI()) {
+      throw new Error('InlinedRequest[] is not supported in Vertex AI.');
+    }
+    sourceObj = {inlinedRequests: src};
+  } else {
+    // It's already a BatchJobSource object
+    sourceObj = src;
   }
-  return listSchemaFieldValue;
-}
 
-// Filters the dict schema field to only include fields that are supported by
-// JSONSchema.
-function filterDictSchemaField(fieldValue: unknown): Record<string, unknown> {
-  const dictSchemaFieldValue: Record<string, unknown> = {};
-  for (const [key, value] of Object.entries(
-    fieldValue as Record<string, unknown>,
-  )) {
-    const valueRecord = value as Record<string, unknown>;
-    dictSchemaFieldValue[key] = filterToJsonSchema(valueRecord);
-  }
-  return dictSchemaFieldValue;
-}
+  // Validation logic
+  const vertexSourcesCount = [sourceObj.gcsUri, sourceObj.bigqueryUri].filter(
+    Boolean,
+  ).length;
 
-// Filters the schema to only include fields that are supported by JSONSchema.
-function filterToJsonSchema(
-  schema: Record<string, unknown>,
-): Record<string, unknown> {
-  const schemaFieldNames: Set<string> = new Set(['items']); // 'additional_properties' to come
-  const listSchemaFieldNames: Set<string> = new Set(['anyOf']); // 'one_of', 'all_of', 'not' to come
-  const dictSchemaFieldNames: Set<string> = new Set(['properties']); // 'defs' to come
-  const filteredSchema: Record<string, unknown> = {};
+  const mldevSourcesCount = [
+    sourceObj.inlinedRequests,
+    sourceObj.fileName,
+  ].filter(Boolean).length;
 
-  for (const [fieldName, fieldValue] of Object.entries(schema)) {
-    if (schemaFieldNames.has(fieldName)) {
-      filteredSchema[fieldName] = filterToJsonSchema(
-        fieldValue as Record<string, unknown>,
+  if (client.isVertexAI()) {
+    if (mldevSourcesCount > 0 || vertexSourcesCount !== 1) {
+      throw new Error(
+        'Exactly one of `gcsUri` or `bigqueryUri` must be set for Vertex AI.',
       );
-    } else if (listSchemaFieldNames.has(fieldName)) {
-      filteredSchema[fieldName] = filterListSchemaField(fieldValue);
-    } else if (dictSchemaFieldNames.has(fieldName)) {
-      filteredSchema[fieldName] = filterDictSchemaField(fieldValue);
-    } else if (fieldName === 'type') {
-      const typeValue = (fieldValue as string).toUpperCase();
-      filteredSchema[fieldName] = Object.values(types.Type).includes(
-        typeValue as types.Type,
-      )
-        ? (typeValue as types.Type)
-        : types.Type.TYPE_UNSPECIFIED;
-    } else if (supportedJsonSchemaFields.has(fieldName)) {
-      filteredSchema[fieldName] = fieldValue;
+    }
+  } else {
+    // MLDEV
+    if (vertexSourcesCount > 0 || mldevSourcesCount !== 1) {
+      throw new Error(
+        'Exactly one of `inlinedRequests`, `fileName`, ' +
+          'must be set for Gemini API.',
+      );
     }
   }
 
-  return filteredSchema;
+  return sourceObj;
+}
+
+export function tEmbeddingBatchJobSource(
+  client: ApiClient,
+  src: types.EmbeddingsBatchJobSource,
+): types.EmbeddingsBatchJobSource {
+  if (client.isVertexAI()) {
+    throw new Error('Embedding batch jobs are not supported in Vertex AI.');
+  }
+
+  const sourceObj: types.EmbeddingsBatchJobSource = {...src};
+
+  const mldevSources =
+    Number(!!sourceObj.inlinedRequests) + Number(!!sourceObj.fileName);
+
+  if (mldevSources !== 1) {
+    throw new Error(
+      'Exactly one of `inlinedRequests` or `fileName` must be set for Embedding Batch Jobs in the Gemini API.',
+    );
+  }
+  return sourceObj;
+}
+
+export function tBatchJobDestination(
+  dest: string | types.BatchJobDestination,
+): types.BatchJobDestination {
+  if (typeof dest !== 'string') {
+    return dest as types.BatchJobDestination;
+  }
+  const destString = dest as string;
+  if (destString.startsWith('gs://')) {
+    return {
+      format: 'jsonl',
+      gcsUri: destString,
+    };
+  } else if (destString.startsWith('bq://')) {
+    return {
+      format: 'bigquery',
+      bigqueryUri: destString,
+    };
+  } else {
+    throw new Error(`Unsupported destination: ${destString}`);
+  }
+}
+
+export function tRecvBatchJobDestination(
+  dest: unknown,
+): types.BatchJobDestination {
+  // Ensure dest is a non-null object before proceeding.
+  if (typeof dest !== 'object' || dest === null) {
+    // If the input is not an object, it cannot be a valid BatchJobDestination
+    // based on the operations performed. Return it cast, or handle as an error.
+    // Casting an empty object might be a safe default.
+    return {} as types.BatchJobDestination;
+  }
+
+  // Cast to Record<string, unknown> to allow string property access.
+  const obj = dest as Record<string, unknown>;
+
+  // Safely access nested properties.
+  const inlineResponsesVal = obj['inlinedResponses'];
+  if (typeof inlineResponsesVal !== 'object' || inlineResponsesVal === null) {
+    return dest as types.BatchJobDestination;
+  }
+  const inlineResponsesObj = inlineResponsesVal as Record<string, unknown>;
+
+  const responsesArray = inlineResponsesObj['inlinedResponses'];
+  if (!Array.isArray(responsesArray) || responsesArray.length === 0) {
+    return dest as types.BatchJobDestination;
+  }
+
+  // Check if any response has the 'embedding' property.
+  let hasEmbedding = false;
+  for (const responseItem of responsesArray) {
+    if (typeof responseItem !== 'object' || responseItem === null) {
+      continue;
+    }
+    const responseItemObj = responseItem as Record<string, unknown>;
+
+    const responseVal = responseItemObj['response'];
+    if (typeof responseVal !== 'object' || responseVal === null) {
+      continue;
+    }
+    const responseObj = responseVal as Record<string, unknown>;
+
+    // Check for the existence of the 'embedding' key.
+    if (responseObj['embedding'] !== undefined) {
+      hasEmbedding = true;
+      break;
+    }
+  }
+
+  // Perform the transformation if an embedding was found.
+  if (hasEmbedding) {
+    obj['inlinedEmbedContentResponses'] = obj['inlinedResponses'];
+    delete obj['inlinedResponses'];
+  }
+
+  // Cast the (potentially) modified object to the target type.
+  return dest as types.BatchJobDestination;
+}
+
+export function tBatchJobName(apiClient: ApiClient, name: unknown): string {
+  const nameString = name as string;
+  if (!apiClient.isVertexAI()) {
+    const mldevPattern = /batches\/[^/]+$/;
+
+    if (mldevPattern.test(nameString)) {
+      return nameString.split('/').pop() as string;
+    } else {
+      throw new Error(`Invalid batch job name: ${nameString}.`);
+    }
+  }
+
+  const vertexPattern =
+    /^projects\/[^/]+\/locations\/[^/]+\/batchPredictionJobs\/[^/]+$/;
+
+  if (vertexPattern.test(nameString)) {
+    return nameString.split('/').pop() as string;
+  } else if (/^\d+$/.test(nameString)) {
+    return nameString;
+  } else {
+    throw new Error(`Invalid batch job name: ${nameString}.`);
+  }
+}
+
+export function tJobState(state: unknown): string {
+  const stateString = state as string;
+  if (stateString === 'BATCH_STATE_UNSPECIFIED') {
+    return 'JOB_STATE_UNSPECIFIED';
+  } else if (stateString === 'BATCH_STATE_PENDING') {
+    return 'JOB_STATE_PENDING';
+  } else if (stateString === 'BATCH_STATE_RUNNING') {
+    return 'JOB_STATE_RUNNING';
+  } else if (stateString === 'BATCH_STATE_SUCCEEDED') {
+    return 'JOB_STATE_SUCCEEDED';
+  } else if (stateString === 'BATCH_STATE_FAILED') {
+    return 'JOB_STATE_FAILED';
+  } else if (stateString === 'BATCH_STATE_CANCELLED') {
+    return 'JOB_STATE_CANCELLED';
+  } else if (stateString === 'BATCH_STATE_EXPIRED') {
+    return 'JOB_STATE_EXPIRED';
+  } else {
+    return stateString;
+  }
+}
+
+export function tIsVertexEmbedContentModel(model: string): boolean {
+  return (
+    (model.includes('gemini') && model !== 'gemini-embedding-001') ||
+    model.includes('maas')
+  );
 }

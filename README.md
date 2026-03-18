@@ -13,11 +13,17 @@ TypeScript and JavaScript developers to build applications powered by Gemini. Th
 supports both the [Gemini Developer API](https://ai.google.dev/gemini-api/docs)
 and [Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/overview).
 
-The Google Gen AI SDK is designed to work with Gemini 2.0 features.
+The Google Gen AI SDK is designed to work with Gemini 2.0+ features.
 
 > [!CAUTION]
 > **API Key Security:** Avoid exposing API keys in client-side code.
 > Use server-side implementations in production environments.
+
+## Code Generation
+
+Generative models are often unaware of recent API and SDK updates and may suggest outdated or legacy code.
+
+We recommend using our Code Generation instructions [`codegen_instructions.md`](https://raw.githubusercontent.com/googleapis/js-genai/refs/heads/main/codegen_instructions.md) when generating Google Gen AI SDK code to guide your model towards using the more recent SDK features. Copy and paste the instructions into your development environment to provide the model with the necessary context.
 
 ## Prerequisites
 
@@ -58,7 +64,7 @@ const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
 
 async function main() {
   const response = await ai.models.generateContent({
-    model: 'gemini-2.0-flash-001',
+    model: 'gemini-2.5-flash',
     contents: 'Why is the sky blue?',
   });
   console.log(response.text);
@@ -205,7 +211,7 @@ const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
 
 async function main() {
   const response = await ai.models.generateContentStream({
-    model: 'gemini-2.0-flash-001',
+    model: 'gemini-2.5-flash',
     contents: 'Write a 100-word poem.',
   });
   for await (const chunk of response) {
@@ -218,10 +224,10 @@ main();
 
 ### Function Calling
 
-To let Gemini to interact with external systems, you can provide provide
+To let Gemini to interact with external systems, you can provide
 `functionDeclaration` objects as `tools`. To use these tools it's a 4 step
 
-1. **Declare the function name, description, and parameters**
+1. **Declare the function name, description, and parametersJsonSchema**
 2. **Call `generateContent` with function calling enabled**
 3. **Use the returned `FunctionCall` parameters to call your actual function**
 3. **Send the result back to the model (with history, easier in `ai.chat`)
@@ -234,19 +240,14 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 async function main() {
   const controlLightDeclaration: FunctionDeclaration = {
     name: 'controlLight',
-    parameters: {
-      type: Type.OBJECT,
-      description: 'Set the brightness and color temperature of a room light.',
-      properties: {
+    parametersJsonSchema: {
+      type: 'object',
+      properties:{
         brightness: {
-          type: Type.NUMBER,
-          description:
-              'Light level from 0 to 100. Zero is off and 100 is full brightness.',
+          type:'number',
         },
         colorTemperature: {
-          type: Type.STRING,
-          description:
-              'Color temperature of the light fixture which can be `daylight`, `cool`, or `warm`.',
+          type:'string',
         },
       },
       required: ['brightness', 'colorTemperature'],
@@ -255,7 +256,7 @@ async function main() {
 
   const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
   const response = await ai.models.generateContent({
-    model: 'gemini-2.0-flash-001',
+    model: 'gemini-2.5-flash',
     contents: 'Dim the lights so the room feels cozy and warm.',
     config: {
       toolConfig: {
@@ -273,6 +274,49 @@ async function main() {
 }
 
 main();
+```
+
+#### Model Context Protocol (MCP) support (experimental)
+
+Built-in [MCP](https://modelcontextprotocol.io/introduction) support is an
+experimental feature. You can pass a local MCP server as a tool directly.
+
+```javascript
+import { GoogleGenAI, FunctionCallingConfigMode , mcpToTool} from '@google/genai';
+import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+
+// Create server parameters for stdio connection
+const serverParams = new StdioClientTransport({
+  command: "npx", // Executable
+  args: ["-y", "@philschmid/weather-mcp"] // MCP Server
+});
+
+const client = new Client(
+  {
+    name: "example-client",
+    version: "1.0.0"
+  }
+);
+
+// Configure the client
+const ai = new GoogleGenAI({});
+
+// Initialize the connection between client and server
+await client.connect(serverParams);
+
+// Send request to the model with MCP tools
+const response = await ai.models.generateContent({
+  model: "gemini-2.5-flash",
+  contents: `What is the weather in London in ${new Date().toLocaleDateString()}?`,
+  config: {
+    tools: [mcpToTool(client)],  // uses the session, will automatically call the tool using automatic function calling
+  },
+});
+console.log(response.text);
+
+// Close the connection
+await client.close();
 ```
 
 ### Generate Content
@@ -301,6 +345,257 @@ if you are specifying those, you need to explicitly provide the full
 `Content[]` structure making it explicit which Parts are 'spoken' by the model,
 or the user. The SDK will throw an exception if you try this.
 
+## Error Handling
+
+To handle errors raised by the API, the SDK provides this [ApiError](https://github.com/googleapis/js-genai/blob/main/src/errors.ts) class.
+
+```typescript
+import {GoogleGenAI} from '@google/genai';
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+
+const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
+
+async function main() {
+  await ai.models.generateContent({
+    model: 'non-existent-model',
+    contents: 'Write a 100-word poem.',
+  }).catch((e) => {
+    console.error('error name: ', e.name);
+    console.error('error message: ', e.message);
+    console.error('error status: ', e.status);
+  });
+}
+
+main();
+```
+
+## Interactions (Preview)
+
+> **Warning:** The Interactions API is in **Beta**. This is a preview of an
+experimental feature. Features and schemas are subject to **breaking changes**.
+
+The Interactions API is a unified interface for interacting with Gemini models
+and agents. It simplifies state management, tool orchestration, and long-running
+tasks.
+
+See the [documentation site](https://ai.google.dev/gemini-api/docs/interactions)
+for more details.
+
+### Basic Interaction
+
+```typescript
+const interaction = await ai.interactions.create({
+    model: 'gemini-2.5-flash',
+    input: 'Hello, how are you?',
+});
+console.debug(interaction);
+
+```
+
+### Stateful Conversation
+
+The Interactions API supports server-side state management. You can continue a
+conversation by referencing the `previous_interaction_id`.
+
+```typescript
+// 1. First turn
+const interaction1 = await ai.interactions.create({
+    model: 'gemini-2.5-flash',
+    input: 'Hi, my name is Amir.',
+});
+console.debug(interaction1);
+
+// 2. Second turn (passing previous_interaction_id)
+const interaction2 = await ai.interactions.create({
+  model: 'gemini-2.5-flash',
+  input: 'What is my name?',
+  previous_interaction_id: interaction1.id,
+});
+console.debug(interaction2);
+
+```
+
+### Agents (Deep Research)
+
+You can use specialized agents like `deep-research-pro-preview-12-2025` for
+complex tasks.
+
+```typescript
+function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// 1. Start the Deep Research Agent
+const initialInteraction = await ai.interactions.create({
+  input:
+      'Research the history of the Google TPUs with a focus on 2025 and 2026.',
+  agent: 'deep-research-pro-preview-12-2025',
+  background: true,
+});
+
+console.log(`Research started. Interaction ID: ${initialInteraction.id}`);
+
+// 2. Poll for results
+while (true) {
+  const interaction = await ai.interactions.get(initialInteraction.id);
+  console.log(`Status: ${interaction.status}`);
+
+  if (interaction.status === 'completed') {
+    console.debug('\nFinal Report:\n', interaction.outputs);
+    break;
+  } else if (['failed', 'cancelled'].includes(interaction.status)) {
+    console.log(`Failed with status: ${interaction.status}`);
+    break;
+  }
+
+  await sleep(10000);  // Sleep for 10 seconds
+}
+
+```
+
+### Multimodal Input
+
+You can provide multimodal data (text, images, audio, etc.) in the input list.
+
+```typescript
+import base64
+
+// Assuming you have a base64 string
+// const base64Image = ...;
+
+const interaction = await ai.interactions.create({
+  model: 'gemini-2.5-flash',
+  input: [
+    { type: 'text', text: 'Describe the image.' },
+    { type: 'image', data: base64Image, mime_type: 'image/png' },
+  ],
+});
+
+console.debug(interaction);
+
+```
+
+### Function Calling
+
+You can define custom functions for the model to use. The Interactions API
+handles the tool selection, and you provide the execution result back to the
+model.
+
+```typescript
+// 1. Define the tool
+const getWeather = (location: string) => {
+  /* Gets the weather for a given location. */
+  return `The weather in ${location} is sunny.`;
+};
+
+// 2. Send the request with tools
+let interaction = await ai.interactions.create({
+  model: 'gemini-2.5-flash',
+  input: 'What is the weather in Mountain View, CA?',
+  tools: [
+    {
+      type: 'function',
+      name: 'get_weather',
+      description: 'Gets the weather for a given location.',
+      parameters: {
+        type: 'object',
+        properties: {
+          location: {
+            type: 'string',
+            description: 'The city and state, e.g. San Francisco, CA',
+          },
+        },
+        required: ['location'],
+      },
+    },
+  ],
+});
+
+// 3. Handle the tool call
+for (const output of interaction.outputs!) {
+  if (output.type === 'function_call') {
+    console.log(
+        `Tool Call: ${output.name}(${JSON.stringify(output.arguments)})`);
+
+    // Execute your actual function here
+    // Note: ensure arguments match your function signature
+    const result = getWeather(JSON.stringify(output.arguments.location));
+
+    // Send result back to the model
+    interaction = await ai.interactions.create({
+      model: 'gemini-2.5-flash',
+      previous_interaction_id: interaction.id,
+      input: [
+        {
+          type: 'function_result',
+          name: output.name,
+          call_id: output.id,
+          result: result,
+        },
+      ],
+    });
+
+    console.debug(`Response: ${JSON.stringify(interaction)}`);
+  }
+}
+
+```
+
+### Built-in Tools
+You can also use Google's built-in tools, such as **Google Search** or **Code
+Execution**.
+
+#### Grounding with Google Search
+
+```typescript
+const interaction = await ai.interactions.create({
+  model: 'gemini-2.5-flash',
+  input: 'Who won the last Super Bowl',
+  tools: [{ type: 'google_search' }],
+});
+
+console.debug(interaction);
+
+```
+
+#### Code Execution
+
+```typescript
+const interaction = await ai.interactions.create({
+  model: 'gemini-2.5-flash',
+  input: 'Calculate the 50th Fibonacci number.',
+  tools: [{ type: 'code_execution' }],
+});
+
+console.debug(interaction);
+
+```
+
+### Multimodal Output
+
+The Interactions API can generate multimodal outputs, such as images. You must
+specify the `response_modalities`.
+
+```typescript
+import * as fs from 'fs';
+
+const interaction = await ai.interactions.create({
+  model: 'gemini-3-pro-image-preview',
+  input: 'Generate an image of a futuristic city.',
+  response_modalities: ['image'],
+});
+
+for (const output of interaction.outputs!) {
+  if (output.type === 'image') {
+    console.log(`Generated image with mime_type: ${output.mime_type}`);
+    // Save the image
+    fs.writeFileSync(
+        'generated_city.png', Buffer.from(output.data!, 'base64'));
+  }
+}
+
+```
+
 ## How is this different from the other Google AI SDKs
 This SDK (`@google/genai`) is Google Deepmind’s "vanilla" SDK for its generative
 AI offerings, and is where Google Deepmind adds new AI features.
@@ -312,4 +607,3 @@ be targeting specific project environments (like Firebase).
 
 The `@google/generative_language` and `@google-cloud/vertexai` SDKs are previous
 iterations of this SDK and are no longer receiving new Gemini 2.0+ features.
-

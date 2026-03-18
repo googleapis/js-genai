@@ -4,57 +4,54 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import pRetry, {AbortError} from 'p-retry';
 import {Auth} from './_auth.js';
 import * as common from './_common.js';
 import {Downloader} from './_downloader.js';
 import {Uploader} from './_uploader.js';
-import {
-  DownloadFileParameters,
-  File,
-  HttpOptions,
-  HttpResponse,
-  UploadFileConfig,
-} from './types.js';
+import {uploadToFileSearchStoreConfigToMldev} from './converters/_filesearchstores_converters.js';
+import {ApiError} from './errors.js';
+import {GeminiNextGenAPIClientAdapter} from './interactions/client-adapter.js';
+import * as types from './types.js';
 
 const CONTENT_TYPE_HEADER = 'Content-Type';
 const SERVER_TIMEOUT_HEADER = 'X-Server-Timeout';
 const USER_AGENT_HEADER = 'User-Agent';
 export const GOOGLE_API_CLIENT_HEADER = 'x-goog-api-client';
-export const SDK_VERSION = '1.4.0'; // x-release-please-version
+export const SDK_VERSION = '1.46.0'; // x-release-please-version
 const LIBRARY_LABEL = `google-genai-sdk/${SDK_VERSION}`;
 const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
 const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';
-const responseLineRE = /^data: (.*)(?:\n\n|\r\r|\r\n\r\n)/;
 
 /**
- * Client errors raised by the GenAI API.
+ * Partial definiion of the NodeJS.Timeout.
+ * https://nodejs.org/api/timers.html#timeoutunref
+ *
+ * Importing the full nodejs typings rewrites setTimeout / clearTimeout
+ * signatures on web builds. This causes compile errors in code that stores the
+ * timeout handle in an explicitly typed variable. E.g.:
+ * ```
+ * let timeoutHandle = 0;
+ * timeoutHandle = setTimeout(() => {}, 1000);
+ * ```
  */
-export class ClientError extends Error {
-  constructor(message: string, stackTrace?: string) {
-    if (stackTrace) {
-      super(message, {cause: stackTrace});
-    } else {
-      super(message, {cause: new Error().stack});
-    }
-    this.message = message;
-    this.name = 'ClientError';
-  }
+declare interface NodeJSTimeout {
+  unref(): this;
 }
 
-/**
- * Server errors raised by the GenAI API.
- */
-export class ServerError extends Error {
-  constructor(message: string, stackTrace?: string) {
-    if (stackTrace) {
-      super(message, {cause: stackTrace});
-    } else {
-      super(message, {cause: new Error().stack});
-    }
-    this.message = message;
-    this.name = 'ServerError';
-  }
-}
+// Default retry options.
+// The config is based on https://cloud.google.com/storage/docs/retry-strategy.
+const DEFAULT_RETRY_ATTEMPTS = 5; // Including the initial call
+// LINT.IfChange
+const DEFAULT_RETRY_HTTP_STATUS_CODES = [
+  408, // Request timeout
+  429, // Too many requests
+  500, // Internal server error
+  502, // Bad gateway
+  503, // Service unavailable
+  504, // Gateway timeout
+];
+// LINT.ThenChange(//depot/google3/third_party/py/google/genai/_api_client.py)
 
 /**
  * Options for initializing the ApiClient. The ApiClient uses the parameters
@@ -105,7 +102,7 @@ export interface ApiClientInitOptions {
   /**
    * Optional. A set of customizable configuration for HTTP requests.
    */
-  httpOptions?: HttpOptions;
+  httpOptions?: types.HttpOptions;
   /**
    * Optional. An extra string to append at the end of the User-Agent header.
    *
@@ -156,7 +153,7 @@ export interface HttpRequest {
   /**
    * Optional set of customizable configuration for HTTP requests.
    */
-  httpOptions?: HttpOptions;
+  httpOptions?: types.HttpOptions;
   /**
    * Optional abort signal which can be used to cancel the request.
    */
@@ -166,28 +163,74 @@ export interface HttpRequest {
 /**
  * The ApiClient class is used to send requests to the Gemini API or Vertex AI
  * endpoints.
+ *
+ * WARNING: This is an internal API and may change without notice. Direct usage
+ * is not supported and may break your application.
  */
-export class ApiClient {
+export class ApiClient implements GeminiNextGenAPIClientAdapter {
   readonly clientOptions: ApiClientInitOptions;
-
+  private readonly customBaseUrl?: string;
   constructor(opts: ApiClientInitOptions) {
     this.clientOptions = {
       ...opts,
-      project: opts.project,
-      location: opts.location,
-      apiKey: opts.apiKey,
-      vertexai: opts.vertexai,
     };
 
-    const initHttpOptions: HttpOptions = {};
+    this.customBaseUrl = opts.httpOptions?.baseUrl;
 
     if (this.clientOptions.vertexai) {
+      if (this.clientOptions.project && this.clientOptions.location) {
+        this.clientOptions.apiKey = undefined;
+      } else if (this.clientOptions.apiKey) {
+        this.clientOptions.project = undefined;
+        this.clientOptions.location = undefined;
+      }
+    }
+
+    const initHttpOptions: types.HttpOptions = {};
+
+    if (this.clientOptions.vertexai) {
+      if (
+        !this.clientOptions.location &&
+        !this.clientOptions.apiKey &&
+        !this.customBaseUrl
+      ) {
+        this.clientOptions.location = 'global';
+      }
+
+      const hasSufficientAuth =
+        (this.clientOptions.project && this.clientOptions.location) ||
+        this.clientOptions.apiKey;
+
+      if (!hasSufficientAuth && !this.customBaseUrl) {
+        throw new Error(
+          'Authentication is not set up. Please provide either a project and location, or an API key, or a custom base URL.',
+        );
+      }
+
+      const hasConstructorAuth =
+        (opts.project && opts.location) || !!opts.apiKey;
+
+      if (this.customBaseUrl && !hasConstructorAuth) {
+        initHttpOptions.baseUrl = this.customBaseUrl;
+        this.clientOptions.project = undefined;
+        this.clientOptions.location = undefined;
+      } else if (
+        this.clientOptions.apiKey ||
+        this.clientOptions.location === 'global'
+      ) {
+        // Vertex Express or global endpoint case.
+        initHttpOptions.baseUrl = 'https://aiplatform.googleapis.com/';
+      } else if (this.clientOptions.project && this.clientOptions.location) {
+        initHttpOptions.baseUrl = `https://${this.clientOptions.location}-aiplatform.googleapis.com/`;
+      }
+
       initHttpOptions.apiVersion =
         this.clientOptions.apiVersion ?? VERTEX_AI_API_DEFAULT_VERSION;
-      initHttpOptions.baseUrl = this.baseUrlFromProjectLocation();
-      this.normalizeAuthParameters();
     } else {
       // Gemini API
+      if (!this.clientOptions.apiKey) {
+        console.warn('API key should be set when using the Gemini API.');
+      }
       initHttpOptions.apiVersion =
         this.clientOptions.apiVersion ?? GOOGLE_AI_API_DEFAULT_VERSION;
       initHttpOptions.baseUrl = `https://generativelanguage.googleapis.com/`;
@@ -205,43 +248,6 @@ export class ApiClient {
     }
   }
 
-  /**
-   * Determines the base URL for Vertex AI based on project and location.
-   * Uses the global endpoint if location is 'global' or if project/location
-   * are not specified (implying API key usage).
-   * @private
-   */
-  private baseUrlFromProjectLocation(): string {
-    if (
-      this.clientOptions.project &&
-      this.clientOptions.location &&
-      this.clientOptions.location !== 'global'
-    ) {
-      // Regional endpoint
-      return `https://${this.clientOptions.location}-aiplatform.googleapis.com/`;
-    }
-    // Global endpoint (covers 'global' location and API key usage)
-    return `https://aiplatform.googleapis.com/`;
-  }
-
-  /**
-   * Normalizes authentication parameters for Vertex AI.
-   * If project and location are provided, API key is cleared.
-   * If project and location are not provided (implying API key usage),
-   * project and location are cleared.
-   * @private
-   */
-  private normalizeAuthParameters(): void {
-    if (this.clientOptions.project && this.clientOptions.location) {
-      // Using project/location for auth, clear potential API key
-      this.clientOptions.apiKey = undefined;
-      return;
-    }
-    // Using API key for auth (or no auth provided yet), clear project/location
-    this.clientOptions.project = undefined;
-    this.clientOptions.location = undefined;
-  }
-
   isVertexAI(): boolean {
     return this.clientOptions.vertexai ?? false;
   }
@@ -252,6 +258,16 @@ export class ApiClient {
 
   getLocation() {
     return this.clientOptions.location;
+  }
+
+  getCustomBaseUrl(): string | undefined {
+    return this.customBaseUrl;
+  }
+
+  async getAuthHeaders(): Promise<Headers> {
+    const headers = new Headers();
+    await this.clientOptions.auth.addAuthHeaders(headers);
+    return headers;
   }
 
   getApiVersion() {
@@ -289,7 +305,7 @@ export class ApiClient {
     }
   }
 
-  private getRequestUrlInternal(httpOptions?: HttpOptions) {
+  private getRequestUrlInternal(httpOptions?: types.HttpOptions) {
     if (
       !httpOptions ||
       httpOptions.baseUrl === undefined ||
@@ -334,7 +350,7 @@ export class ApiClient {
 
   private constructUrl(
     path: string,
-    httpOptions: HttpOptions,
+    httpOptions: types.HttpOptions,
     prependProjectLocation: boolean,
   ): URL {
     const urlElement: Array<string> = [this.getRequestUrlInternal(httpOptions)];
@@ -349,7 +365,16 @@ export class ApiClient {
     return url;
   }
 
-  private shouldPrependVertexProjectPath(request: HttpRequest): boolean {
+  private shouldPrependVertexProjectPath(
+    request: HttpRequest,
+    httpOptions: types.HttpOptions,
+  ): boolean {
+    if (
+      httpOptions.baseUrl &&
+      httpOptions.baseUrlResourceScope === types.ResourceScope.COLLECTION
+    ) {
+      return false;
+    }
     if (this.clientOptions.apiKey) {
       return false;
     }
@@ -373,7 +398,7 @@ export class ApiClient {
     return true;
   }
 
-  async request(request: HttpRequest): Promise<HttpResponse> {
+  async request(request: HttpRequest): Promise<types.HttpResponse> {
     let patchedHttpOptions = this.clientOptions.httpOptions!;
     if (request.httpOptions) {
       patchedHttpOptions = this.patchHttpOptions(
@@ -382,7 +407,10 @@ export class ApiClient {
       );
     }
 
-    const prependProjectLocation = this.shouldPrependVertexProjectPath(request);
+    const prependProjectLocation = this.shouldPrependVertexProjectPath(
+      request,
+      patchedHttpOptions,
+    );
     const url = this.constructUrl(
       request.path,
       patchedHttpOptions,
@@ -406,18 +434,19 @@ export class ApiClient {
     requestInit = await this.includeExtraHttpOptionsToRequestInit(
       requestInit,
       patchedHttpOptions,
+      url.toString(),
       request.abortSignal,
     );
     return this.unaryApiCall(url, requestInit, request.httpMethod);
   }
 
   private patchHttpOptions(
-    baseHttpOptions: HttpOptions,
-    requestHttpOptions: HttpOptions,
-  ): HttpOptions {
+    baseHttpOptions: types.HttpOptions,
+    requestHttpOptions: types.HttpOptions,
+  ): types.HttpOptions {
     const patchedHttpOptions = JSON.parse(
       JSON.stringify(baseHttpOptions),
-    ) as HttpOptions;
+    ) as types.HttpOptions;
 
     for (const [key, value] of Object.entries(requestHttpOptions)) {
       // Records compile to objects.
@@ -438,7 +467,7 @@ export class ApiClient {
 
   async requestStream(
     request: HttpRequest,
-  ): Promise<AsyncGenerator<HttpResponse>> {
+  ): Promise<AsyncGenerator<types.HttpResponse>> {
     let patchedHttpOptions = this.clientOptions.httpOptions!;
     if (request.httpOptions) {
       patchedHttpOptions = this.patchHttpOptions(
@@ -447,7 +476,10 @@ export class ApiClient {
       );
     }
 
-    const prependProjectLocation = this.shouldPrependVertexProjectPath(request);
+    const prependProjectLocation = this.shouldPrependVertexProjectPath(
+      request,
+      patchedHttpOptions,
+    );
     const url = this.constructUrl(
       request.path,
       patchedHttpOptions,
@@ -461,6 +493,7 @@ export class ApiClient {
     requestInit = await this.includeExtraHttpOptionsToRequestInit(
       requestInit,
       patchedHttpOptions,
+      url.toString(),
       request.abortSignal,
     );
     return this.streamApiCall(url, requestInit, request.httpMethod);
@@ -468,14 +501,27 @@ export class ApiClient {
 
   private async includeExtraHttpOptionsToRequestInit(
     requestInit: RequestInit,
-    httpOptions: HttpOptions,
+    httpOptions: types.HttpOptions,
+    url: string,
     abortSignal?: AbortSignal,
   ): Promise<RequestInit> {
     if ((httpOptions && httpOptions.timeout) || abortSignal) {
       const abortController = new AbortController();
       const signal = abortController.signal;
       if (httpOptions.timeout && httpOptions?.timeout > 0) {
-        setTimeout(() => abortController.abort(), httpOptions.timeout);
+        const timeoutHandle = setTimeout(
+          () => abortController.abort(),
+          httpOptions.timeout,
+        );
+        if (
+          timeoutHandle &&
+          typeof (timeoutHandle as unknown as NodeJSTimeout).unref ===
+            'function'
+        ) {
+          // call unref to prevent nodejs process from hanging, see
+          // https://nodejs.org/api/timers.html#timeoutunref
+          (timeoutHandle as unknown as NodeJSTimeout).unref();
+        }
       }
       if (abortSignal) {
         abortSignal.addEventListener('abort', () => {
@@ -484,7 +530,13 @@ export class ApiClient {
       }
       requestInit.signal = signal;
     }
-    requestInit.headers = await this.getHeadersInternal(httpOptions);
+    if (httpOptions && httpOptions.extraBody !== null) {
+      includeExtraBodyToRequestInit(
+        requestInit,
+        httpOptions.extraBody as Record<string, unknown>,
+      );
+    }
+    requestInit.headers = await this.getHeadersInternal(httpOptions, url);
     return requestInit;
   }
 
@@ -492,14 +544,14 @@ export class ApiClient {
     url: URL,
     requestInit: RequestInit,
     httpMethod: 'GET' | 'POST' | 'PATCH' | 'DELETE',
-  ): Promise<HttpResponse> {
+  ): Promise<types.HttpResponse> {
     return this.apiCall(url.toString(), {
       ...requestInit,
       method: httpMethod,
     })
       .then(async (response) => {
         await throwErrorIfNotOK(response);
-        return new HttpResponse(response);
+        return new types.HttpResponse(response);
       })
       .catch((e) => {
         if (e instanceof Error) {
@@ -514,7 +566,7 @@ export class ApiClient {
     url: URL,
     requestInit: RequestInit,
     httpMethod: 'GET' | 'POST' | 'PATCH' | 'DELETE',
-  ): Promise<AsyncGenerator<HttpResponse>> {
+  ): Promise<AsyncGenerator<types.HttpResponse>> {
     return this.apiCall(url.toString(), {
       ...requestInit,
       method: httpMethod,
@@ -534,7 +586,7 @@ export class ApiClient {
 
   async *processStreamResponse(
     response: Response,
-  ): AsyncGenerator<HttpResponse> {
+  ): AsyncGenerator<types.HttpResponse> {
     const reader = response?.body?.getReader();
     const decoder = new TextDecoder('utf-8');
     if (!reader) {
@@ -543,6 +595,9 @@ export class ApiClient {
 
     try {
       let buffer = '';
+      const dataPrefix = 'data:';
+      const delimiters = ['\n\n', '\r\r', '\r\n\r\n'];
+
       while (true) {
         const {done, value} = await reader.read();
         if (done) {
@@ -551,7 +606,7 @@ export class ApiClient {
           }
           break;
         }
-        const chunkString = decoder.decode(value);
+        const chunkString = decoder.decode(value, {stream: true});
 
         // Parse and throw an error if the chunk contains an error.
         try {
@@ -565,37 +620,65 @@ export class ApiClient {
             const errorMessage = `got status: ${status}. ${JSON.stringify(
               chunkJson,
             )}`;
-            if (code >= 400 && code < 500) {
-              const clientError = new ClientError(errorMessage);
-              throw clientError;
-            } else if (code >= 500 && code < 600) {
-              const serverError = new ServerError(errorMessage);
-              throw serverError;
+            if (code >= 400 && code < 600) {
+              const apiError = new ApiError({
+                message: errorMessage,
+                status: code,
+              });
+              throw apiError;
             }
           }
         } catch (e: unknown) {
           const error = e as Error;
-          if (error.name === 'ClientError' || error.name === 'ServerError') {
+          if (error.name === 'ApiError') {
             throw e;
           }
         }
         buffer += chunkString;
-        let match = buffer.match(responseLineRE);
-        while (match) {
-          const processedChunkString = match[1];
-          try {
-            const partialResponse = new Response(processedChunkString, {
-              headers: response?.headers,
-              status: response?.status,
-              statusText: response?.statusText,
-            });
-            yield new HttpResponse(partialResponse);
-            buffer = buffer.slice(match[0].length);
-            match = buffer.match(responseLineRE);
-          } catch (e) {
-            throw new Error(
-              `exception parsing stream chunk ${processedChunkString}. ${e}`,
-            );
+
+        let delimiterIndex = -1;
+        let delimiterLength = 0;
+
+        while (true) {
+          delimiterIndex = -1;
+          delimiterLength = 0;
+
+          for (const delimiter of delimiters) {
+            const index = buffer.indexOf(delimiter);
+            if (
+              index !== -1 &&
+              (delimiterIndex === -1 || index < delimiterIndex)
+            ) {
+              delimiterIndex = index;
+              delimiterLength = delimiter.length;
+            }
+          }
+
+          if (delimiterIndex === -1) {
+            break; // No complete event in buffer
+          }
+
+          const eventString = buffer.substring(0, delimiterIndex);
+          buffer = buffer.substring(delimiterIndex + delimiterLength);
+
+          const trimmedEvent = eventString.trim();
+
+          if (trimmedEvent.startsWith(dataPrefix)) {
+            const processedChunkString = trimmedEvent
+              .substring(dataPrefix.length)
+              .trim();
+            try {
+              const partialResponse = new Response(processedChunkString, {
+                headers: response?.headers,
+                status: response?.status,
+                statusText: response?.statusText,
+              });
+              yield new types.HttpResponse(partialResponse);
+            } catch (e) {
+              throw new Error(
+                `exception parsing stream chunk ${processedChunkString}. ${e}`,
+              );
+            }
           }
         }
       }
@@ -607,8 +690,33 @@ export class ApiClient {
     url: string,
     requestInit: RequestInit,
   ): Promise<Response> {
-    return fetch(url, requestInit).catch((e) => {
-      throw new Error(`exception ${e} sending request`);
+    if (
+      !this.clientOptions.httpOptions ||
+      !this.clientOptions.httpOptions.retryOptions
+    ) {
+      return fetch(url, requestInit);
+    }
+
+    const retryOptions = this.clientOptions.httpOptions.retryOptions;
+    const runFetch = async () => {
+      const response = await fetch(url, requestInit);
+
+      if (response.ok) {
+        return response;
+      }
+
+      if (DEFAULT_RETRY_HTTP_STATUS_CODES.includes(response.status)) {
+        throw new Error(`Retryable HTTP Error: ${response.statusText}`);
+      }
+
+      throw new AbortError(
+        `Non-retryable exception ${response.statusText} sending request`,
+      );
+    };
+
+    return pRetry(runFetch, {
+      // Retry attempts is one less than the number of total attempts.
+      retries: (retryOptions.attempts ?? DEFAULT_RETRY_ATTEMPTS) - 1,
     });
   }
 
@@ -626,7 +734,8 @@ export class ApiClient {
   }
 
   private async getHeadersInternal(
-    httpOptions: HttpOptions | undefined,
+    httpOptions: types.HttpOptions | undefined,
+    url: string,
   ): Promise<Headers> {
     const headers = new Headers();
     if (httpOptions && httpOptions.headers) {
@@ -642,8 +751,17 @@ export class ApiClient {
         );
       }
     }
-    await this.clientOptions.auth.addAuthHeaders(headers);
+    await this.clientOptions.auth.addAuthHeaders(headers, url);
     return headers;
+  }
+
+  private getFileName(file: string | Blob): string {
+    let fileName: string = '';
+    if (typeof file === 'string') {
+      fileName = file.replace(/[/\\]+$/, '');
+      fileName = fileName.split(/[/\\]/).pop() ?? '';
+    }
+    return fileName;
   }
 
   /**
@@ -652,16 +770,16 @@ export class ApiClient {
    *
    * @param file The string path to the file to be uploaded or a Blob object.
    * @param config Optional parameters specified in the `UploadFileConfig`
-   *     interface. @see {@link UploadFileConfig}
+   *     interface. @see {@link types.UploadFileConfig}
    * @return A promise that resolves to a `File` object.
    * @throws An error if called on a Vertex AI client.
    * @throws An error if the `mimeType` is not provided and can not be inferred,
    */
   async uploadFile(
     file: string | Blob,
-    config?: UploadFileConfig,
-  ): Promise<File> {
-    const fileToUpload: File = {};
+    config?: types.UploadFileConfig,
+  ): Promise<types.File> {
+    const fileToUpload: types.File = {};
     if (config != null) {
       fileToUpload.mimeType = config.mimeType;
       fileToUpload.name = config.name;
@@ -682,29 +800,90 @@ export class ApiClient {
       );
     }
     fileToUpload.mimeType = mimeType;
-
-    const uploadUrl = await this.fetchUploadUrl(fileToUpload, config);
+    const body: Record<string, unknown> = {
+      file: fileToUpload,
+    };
+    const fileName = this.getFileName(file);
+    const path = common.formatMap(
+      'upload/v1beta/files',
+      body['_url'] as Record<string, unknown>,
+    );
+    const uploadUrl = await this.fetchUploadUrl(
+      path,
+      fileToUpload.sizeBytes,
+      fileToUpload.mimeType,
+      fileName,
+      body,
+      config?.httpOptions,
+    );
     return uploader.upload(file, uploadUrl, this);
+  }
+
+  /**
+   * Uploads a file to a given file search store asynchronously using Gemini API only, this is not supported
+   * in Vertex AI.
+   *
+   * @param fileSearchStoreName The name of the file search store to upload the file to.
+   * @param file The string path to the file to be uploaded or a Blob object.
+   * @param config Optional parameters specified in the `UploadFileConfig`
+   *     interface. @see {@link UploadFileConfig}
+   * @return A promise that resolves to a `File` object.
+   * @throws An error if called on a Vertex AI client.
+   * @throws An error if the `mimeType` is not provided and can not be inferred,
+   */
+  async uploadFileToFileSearchStore(
+    fileSearchStoreName: string,
+    file: string | Blob,
+    config?: types.UploadToFileSearchStoreConfig,
+  ): Promise<types.UploadToFileSearchStoreOperation> {
+    const uploader = this.clientOptions.uploader;
+    const fileStat = await uploader.stat(file);
+    const sizeBytes = String(fileStat.size);
+    const mimeType = config?.mimeType ?? fileStat.type;
+    if (mimeType === undefined || mimeType === '') {
+      throw new Error(
+        'Can not determine mimeType. Please provide mimeType in the config.',
+      );
+    }
+    const path = `upload/v1beta/${fileSearchStoreName}:uploadToFileSearchStore`;
+    const fileName = this.getFileName(file);
+    const body: Record<string, unknown> = {};
+    if (config != null) {
+      uploadToFileSearchStoreConfigToMldev(config, body);
+    }
+    const uploadUrl = await this.fetchUploadUrl(
+      path,
+      sizeBytes,
+      mimeType,
+      fileName,
+      body,
+      config?.httpOptions,
+    );
+    return uploader.uploadToFileSearchStore(file, uploadUrl, this);
   }
 
   /**
    * Downloads a file asynchronously to the specified path.
    *
    * @params params - The parameters for the download request, see {@link
-   * DownloadFileParameters}
+   * types.DownloadFileParameters}
    */
-  async downloadFile(params: DownloadFileParameters): Promise<void> {
+  async downloadFile(params: types.DownloadFileParameters): Promise<void> {
     const downloader = this.clientOptions.downloader;
     await downloader.download(params, this);
   }
 
   private async fetchUploadUrl(
-    file: File,
-    config?: UploadFileConfig,
+    path: string,
+    sizeBytes: string,
+    mimeType: string,
+    fileName: string,
+    body: Record<string, unknown>,
+    configHttpOptions?: types.HttpOptions,
   ): Promise<string> {
-    let httpOptions: HttpOptions = {};
-    if (config?.httpOptions) {
-      httpOptions = config.httpOptions;
+    let httpOptions: types.HttpOptions = {};
+    if (configHttpOptions) {
+      httpOptions = configHttpOptions;
     } else {
       httpOptions = {
         apiVersion: '', // api-version is set in the path.
@@ -712,20 +891,15 @@ export class ApiClient {
           'Content-Type': 'application/json',
           'X-Goog-Upload-Protocol': 'resumable',
           'X-Goog-Upload-Command': 'start',
-          'X-Goog-Upload-Header-Content-Length': `${file.sizeBytes}`,
-          'X-Goog-Upload-Header-Content-Type': `${file.mimeType}`,
+          'X-Goog-Upload-Header-Content-Length': `${sizeBytes}`,
+          'X-Goog-Upload-Header-Content-Type': `${mimeType}`,
+          ...(fileName ? {'X-Goog-Upload-File-Name': fileName} : {}),
         },
       };
     }
 
-    const body: Record<string, File> = {
-      'file': file,
-    };
     const httpResponse = await this.request({
-      path: common.formatMap(
-        'upload/v1beta/files',
-        body['_url'] as Record<string, unknown>,
-      ),
+      path,
       body: JSON.stringify(body),
       httpMethod: 'POST',
       httpOptions,
@@ -750,11 +924,10 @@ export class ApiClient {
 
 async function throwErrorIfNotOK(response: Response | undefined) {
   if (response === undefined) {
-    throw new ServerError('response is undefined');
+    throw new Error('response is undefined');
   }
   if (!response.ok) {
     const status: number = response.status;
-    const statusText: string = response.statusText;
     let errorBody: Record<string, unknown>;
     if (response.headers.get('content-type')?.includes('application/json')) {
       errorBody = await response.json();
@@ -767,16 +940,115 @@ async function throwErrorIfNotOK(response: Response | undefined) {
         },
       };
     }
-    const errorMessage = `got status: ${status} ${statusText}. ${JSON.stringify(
-      errorBody,
-    )}`;
-    if (status >= 400 && status < 500) {
-      const clientError = new ClientError(errorMessage);
-      throw clientError;
-    } else if (status >= 500 && status < 600) {
-      const serverError = new ServerError(errorMessage);
-      throw serverError;
+    const errorMessage = JSON.stringify(errorBody);
+    if (status >= 400 && status < 600) {
+      const apiError = new ApiError({
+        message: errorMessage,
+        status: status,
+      });
+      throw apiError;
     }
     throw new Error(errorMessage);
   }
+}
+
+/**
+ * Recursively updates the `requestInit.body` with values from an `extraBody` object.
+ *
+ * If `requestInit.body` is a string, it's assumed to be JSON and will be parsed.
+ * The `extraBody` is then deeply merged into this parsed object.
+ * If `requestInit.body` is a Blob, `extraBody` will be ignored, and a warning logged,
+ * as merging structured data into an opaque Blob is not supported.
+ *
+ * The function does not enforce that updated values from `extraBody` have the
+ * same type as existing values in `requestInit.body`. Type mismatches during
+ * the merge will result in a warning, but the value from `extraBody` will overwrite
+ * the original. `extraBody` users are responsible for ensuring `extraBody` has the correct structure.
+ *
+ * @param requestInit The RequestInit object whose body will be updated.
+ * @param extraBody The object containing updates to be merged into `requestInit.body`.
+ */
+export function includeExtraBodyToRequestInit(
+  requestInit: RequestInit,
+  extraBody: Record<string, unknown>,
+) {
+  if (!extraBody || Object.keys(extraBody).length === 0) {
+    return;
+  }
+
+  if (requestInit.body instanceof Blob) {
+    console.warn(
+      'includeExtraBodyToRequestInit: extraBody provided but current request body is a Blob. extraBody will be ignored as merging is not supported for Blob bodies.',
+    );
+    return;
+  }
+
+  let currentBodyObject: Record<string, unknown> = {};
+
+  // If adding new type to HttpRequest.body, please check the code below to
+  // see if we need to update the logic.
+  if (typeof requestInit.body === 'string' && requestInit.body.length > 0) {
+    try {
+      const parsedBody = JSON.parse(requestInit.body);
+      if (
+        typeof parsedBody === 'object' &&
+        parsedBody !== null &&
+        !Array.isArray(parsedBody)
+      ) {
+        currentBodyObject = parsedBody as Record<string, unknown>;
+      } else {
+        console.warn(
+          'includeExtraBodyToRequestInit: Original request body is valid JSON but not a non-array object. Skip applying extraBody to the request body.',
+        );
+        return;
+      }
+      /*  eslint-disable-next-line @typescript-eslint/no-unused-vars */
+    } catch (e) {
+      console.warn(
+        'includeExtraBodyToRequestInit: Original request body is not valid JSON. Skip applying extraBody to the request body.',
+      );
+      return;
+    }
+  }
+
+  function deepMerge(
+    target: Record<string, unknown>,
+    source: Record<string, unknown>,
+  ): Record<string, unknown> {
+    const output = {...target};
+    for (const key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        const sourceValue = source[key];
+        const targetValue = output[key];
+        if (
+          sourceValue &&
+          typeof sourceValue === 'object' &&
+          !Array.isArray(sourceValue) &&
+          targetValue &&
+          typeof targetValue === 'object' &&
+          !Array.isArray(targetValue)
+        ) {
+          output[key] = deepMerge(
+            targetValue as Record<string, unknown>,
+            sourceValue as Record<string, unknown>,
+          );
+        } else {
+          if (
+            targetValue &&
+            sourceValue &&
+            typeof targetValue !== typeof sourceValue
+          ) {
+            console.warn(
+              `includeExtraBodyToRequestInit:deepMerge: Type mismatch for key "${key}". Original type: ${typeof targetValue}, New type: ${typeof sourceValue}. Overwriting.`,
+            );
+          }
+          output[key] = sourceValue;
+        }
+      }
+    }
+    return output;
+  }
+
+  const mergedBody = deepMerge(currentBodyObject, extraBody);
+  requestInit.body = JSON.stringify(mergedBody);
 }

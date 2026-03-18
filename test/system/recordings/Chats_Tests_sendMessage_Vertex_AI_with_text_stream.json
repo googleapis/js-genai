@@ -1,0 +1,336 @@
+{
+  "recordID": "Chats_Tests_sendMessage_Vertex_AI_with_text_stream",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash:streamGenerateContent?alt=sse",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.0-flash:streamGenerateContent?alt=sse HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "94",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Chats Tests sendMessage Vertex AI with text stream"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "why is the sky blue?"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {}
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "us-central1-aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "3e6c6775db72fef45535650311fc9b98fcfedeb22c141a343b2df52edd85e746",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Disposition": "attachment",
+          "Content-Type": "text/event-stream",
+          "Date": "Sat, 16 Aug 2025 00:45:50 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "The"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-08-16T00:45:50.684813Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "vtSfaI3mKY2Cm9IPpK2IgAg",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 16
+              },
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " sky is blue"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-08-16T00:45:50.684813Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "vtSfaI3mKY2Cm9IPpK2IgAg",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " because of a phenomenon called **Rayleigh scattering**. Here's the breakdown:\n\n*"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-08-16T00:45:50.684813Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "vtSfaI3mKY2Cm9IPpK2IgAg",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "   **Sunlight and the Atmosphere:** Sunlight is actually made up of all the"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-08-16T00:45:50.684813Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "vtSfaI3mKY2Cm9IPpK2IgAg",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " colors of the rainbow. When sunlight enters the Earth's atmosphere, it collides with tiny air molecules (mostly nitrogen and oxygen).\n\n*   **Scattering:** This"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-08-16T00:45:50.684813Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "vtSfaI3mKY2Cm9IPpK2IgAg",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " collision causes the sunlight to scatter in different directions.\n\n*   **Rayleigh Scattering:** Rayleigh scattering is the type of scattering that happens when the particles are much"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-08-16T00:45:50.684813Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "vtSfaI3mKY2Cm9IPpK2IgAg",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " smaller than the wavelength of the light. This type of scattering is more effective at shorter wavelengths (blue and violet) than longer wavelengths (red and orange).\n\n*   **Why Blue Dominates:** Blue and violet light have shorter wavelengths, so"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-08-16T00:45:50.684813Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "vtSfaI3mKY2Cm9IPpK2IgAg",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " they are scattered much more strongly than other colors. Violet is actually scattered slightly *more* than blue, but our eyes are more sensitive to blue light, and some of the violet light is absorbed higher up in the atmosphere.\n\n*   "
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-08-16T00:45:50.684813Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "vtSfaI3mKY2Cm9IPpK2IgAg",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "**The Result:** This is why when we look up at the sky, we see blue light coming from all directions.\n\n**In simpler terms:**\n\nImagine the atmosphere is full of tiny bouncy balls. Sunlight is like throwing a bunch of different sized balls at them. The tiny bouncy balls (air molecules) are better at bouncing the"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-08-16T00:45:50.684813Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "vtSfaI3mKY2Cm9IPpK2IgAg",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " smaller balls (blue and violet light) all over the place, while the bigger balls (red and orange light) mostly go straight through. That's why we see blue everywhere we look.\n\n**Why not violet?**\n\nWhile violet light is scattered even more, there are a few reasons we see blue instead:\n\n*"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-08-16T00:45:50.684813Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "vtSfaI3mKY2Cm9IPpK2IgAg",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "   **Sunlight has less violet light to begin with.** The sun emits less violet light than blue light.\n*   **Our eyes are less sensitive to violet light.** Our eyes are more sensitive to blue light than violet light.\n*   **Some violet light is absorbed by the atmosphere.** Some of the violet light"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-08-16T00:45:50.684813Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "vtSfaI3mKY2Cm9IPpK2IgAg",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " is absorbed by the upper atmosphere before it can be scattered.\n\n**What about sunsets?**\n\nAt sunset and sunrise, the sunlight has to travel through much more of the atmosphere to reach us. This means that almost all of the blue light is scattered away, leaving the longer wavelengths (reds, oranges, and"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-08-16T00:45:50.684813Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "vtSfaI3mKY2Cm9IPpK2IgAg",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " yellows) to reach our eyes. That's why sunsets are often red and orange.\n"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP"
+              }
+            ],
+            "createTime": "2025-08-16T00:45:50.684813Z",
+            "modelVersion": "gemini-2.0-flash",
+            "responseId": "vtSfaI3mKY2Cm9IPpK2IgAg",
+            "usageMetadata": {
+              "candidatesTokenCount": 481,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 481
+                }
+              ],
+              "promptTokenCount": 6,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 6
+                }
+              ],
+              "totalTokenCount": 487,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -5,8 +5,13 @@
  */
 import {ApiClient} from '../_api_client.js';
 import {FileStat, Uploader} from '../_uploader.js';
-import {File, HttpResponse} from '../types.js';
-
+import * as _converters from '../converters/_operations_converters.js';
+import {
+  File,
+  HttpOptions,
+  HttpResponse,
+  UploadToFileSearchStoreOperation,
+} from '../types.js';
 import {crossError} from './_cross_error.js';
 
 export const MAX_CHUNK_SIZE = 1024 * 1024 * 8; // bytes
@@ -20,11 +25,30 @@ export class CrossUploader implements Uploader {
     file: string | Blob,
     uploadUrl: string,
     apiClient: ApiClient,
+    httpOptions?: HttpOptions,
   ): Promise<File> {
     if (typeof file === 'string') {
       throw crossError();
     } else {
-      return uploadBlob(file, uploadUrl, apiClient);
+      return uploadBlob(file, uploadUrl, apiClient, httpOptions);
+    }
+  }
+
+  async uploadToFileSearchStore(
+    file: string | Blob,
+    uploadUrl: string,
+    apiClient: ApiClient,
+    httpOptions?: HttpOptions,
+  ): Promise<UploadToFileSearchStoreOperation> {
+    if (typeof file === 'string') {
+      throw crossError();
+    } else {
+      return uploadBlobToFileSearchStore(
+        file,
+        uploadUrl,
+        apiClient,
+        httpOptions,
+      );
     }
   }
 
@@ -41,7 +65,66 @@ export async function uploadBlob(
   file: Blob,
   uploadUrl: string,
   apiClient: ApiClient,
+  httpOptions?: HttpOptions,
 ): Promise<File> {
+  const response = await uploadBlobInternal(
+    file,
+    uploadUrl,
+    apiClient,
+    httpOptions,
+  );
+  const responseJson = (await response?.json()) as Record<
+    string,
+    File | unknown
+  >;
+  if (response?.headers?.[X_GOOG_UPLOAD_STATUS_HEADER_FIELD] !== 'final') {
+    throw new Error('Failed to upload file: Upload status is not finalized.');
+  }
+  return responseJson['file'] as File;
+}
+
+export async function uploadBlobToFileSearchStore(
+  file: Blob,
+  uploadUrl: string,
+  apiClient: ApiClient,
+  httpOptions?: HttpOptions,
+): Promise<UploadToFileSearchStoreOperation> {
+  const response = await uploadBlobInternal(
+    file,
+    uploadUrl,
+    apiClient,
+    httpOptions,
+  );
+  const responseJson =
+    (await response?.json()) as UploadToFileSearchStoreOperation;
+  if (response?.headers?.[X_GOOG_UPLOAD_STATUS_HEADER_FIELD] !== 'final') {
+    throw new Error('Failed to upload file: Upload status is not finalized.');
+  }
+  const resp =
+    _converters.uploadToFileSearchStoreOperationFromMldev(responseJson);
+  const typedResp = new UploadToFileSearchStoreOperation();
+  Object.assign(typedResp, resp);
+  return typedResp;
+}
+
+async function uploadBlobInternal(
+  file: Blob,
+  uploadUrl: string,
+  apiClient: ApiClient,
+  httpOptions?: HttpOptions,
+): Promise<HttpResponse> {
+  let finalUrl = uploadUrl;
+  const effectiveBaseUrl =
+    httpOptions?.baseUrl || apiClient.clientOptions.httpOptions?.baseUrl;
+  if (effectiveBaseUrl) {
+    const baseUri = new URL(effectiveBaseUrl);
+    const uploadUri = new URL(uploadUrl);
+    uploadUri.protocol = baseUri.protocol;
+    uploadUri.host = baseUri.host;
+    uploadUri.port = baseUri.port;
+    finalUrl = uploadUri.toString();
+  }
+
   let fileSize = 0;
   let offset = 0;
   let response: HttpResponse = new HttpResponse(new Response());
@@ -56,18 +139,22 @@ export async function uploadBlob(
     let retryCount = 0;
     let currentDelayMs = INITIAL_RETRY_DELAY_MS;
     while (retryCount < MAX_RETRY_COUNT) {
+      const mergedHeaders = {
+        ...(httpOptions?.headers || {}),
+        'X-Goog-Upload-Command': uploadCommand,
+        'X-Goog-Upload-Offset': String(offset),
+        'Content-Length': String(chunkSize),
+      };
+
       response = await apiClient.request({
         path: '',
         body: chunk,
         httpMethod: 'POST',
         httpOptions: {
+          ...httpOptions,
           apiVersion: '',
-          baseUrl: uploadUrl,
-          headers: {
-            'X-Goog-Upload-Command': uploadCommand,
-            'X-Goog-Upload-Offset': String(offset),
-            'Content-Length': String(chunkSize),
-          },
+          baseUrl: finalUrl,
+          headers: mergedHeaders,
         },
       });
       if (response?.headers?.[X_GOOG_UPLOAD_STATUS_HEADER_FIELD]) {
@@ -91,14 +178,8 @@ export async function uploadBlob(
       );
     }
   }
-  const responseJson = (await response?.json()) as Record<
-    string,
-    File | unknown
-  >;
-  if (response?.headers?.[X_GOOG_UPLOAD_STATUS_HEADER_FIELD] !== 'final') {
-    throw new Error('Failed to upload file: Upload status is not finalized.');
-  }
-  return responseJson['file'] as File;
+
+  return response;
 }
 
 export async function getBlobStat(file: Blob): Promise<FileStat> {

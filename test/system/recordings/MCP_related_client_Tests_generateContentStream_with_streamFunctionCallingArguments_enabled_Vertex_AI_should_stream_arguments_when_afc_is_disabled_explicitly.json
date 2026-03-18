@@ -1,0 +1,282 @@
+{
+  "recordID": "MCP_related_client_Tests_generateContentStream_with_streamFunctionCallingArguments_enabled_Vertex_AI_should_stream_arguments_when_afc_is_disabled_explicitly",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-3-pro-preview:streamGenerateContent?alt=sse",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-3-pro-preview:streamGenerateContent?alt=sse HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "795",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "MCP related client Tests generateContentStream with streamFunctionCallingArguments enabled Vertex AI should stream arguments when afc is disabled explicitly"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "call the greeter once with name: jone smith, and greeting: Hello"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {},
+            "toolConfig": {
+              "functionCallingConfig": {
+                "streamFunctionCallArguments": true
+              }
+            },
+            "tools": [
+              {
+                "functionDeclarations": [
+                  {
+                    "description": "Greet the user",
+                    "name": "greet",
+                    "parametersJsonSchema": {
+                      "$schema": "http://json-schema.org/draft-07/schema#",
+                      "additionalProperties": false,
+                      "properties": {
+                        "greeting": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["name", "greeting"],
+                      "type": "object"
+                    },
+                    "responseJsonSchema": {
+                      "$schema": "http://json-schema.org/draft-07/schema#",
+                      "additionalProperties": false,
+                      "properties": {
+                        "completeMessage": {
+                          "type": "string"
+                        },
+                        "greeting": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["name", "greeting", "completeMessage"],
+                      "type": "object"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "0c76c346420007feec089bf6f7c9cf0b9b074646896f7c02a0505a51768723ad",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Disposition": "attachment",
+          "Content-Type": "text/event-stream",
+          "Date": "Mon, 01 Dec 2025 21:48:47 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Goog-Sherlog-Link": "https://sherlog.corp.google.com/workflow?config=Serving\u0026dataid=aiplatform.googleapis.com/google.cloud.aiplatform.v1beta1.PredictionService.StreamGenerateContent\u0026gaia=790080187114\u0026reason=sharedLink\u0026version=187d35bf8e0c5e2f082901d9d2a9145d",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "name": "greet",
+                        "willContinue": true
+                      },
+                      "thoughtSignature": "CiQB4/H/Xl+h+aLYnOZ1ohAD1DHueyGVbMcB+KH8NFIlcuYH9uEKZgHj8f9em5Qoz6iAGwQVSw7Dam8vzVJty8zXkssgJBEm5axOzh4SWa95A5YnwQo/A+YwTpebDNzVBY7w7etCZFhOak/EjVFwXLwEhnWEeL1VVYHzmnxn6tYIFCyWD6k2nRvWBjYt3gppAePx/17lOLn1dcvzxXEKmAi+0dpn/m8YJBR6NVA5vTjTnK7r6VwArdQTL68MhRnUw1fta+HqJq+oZ4Q+2y8mUFb1USTYspzuX/x+CLRft0g1FAEFH+KiDedCyb6NfXPTvyUTItl3y6rrCl4B4/H/Xvs54tmmDL1sw4duY6hEYOEI+zWY/t4+Pe/UzjAwFEa8LWZappW6nTBkBWsKEQGM68cbozxTVatQlxDr23h2CvKnkUe/T5orY0jd1kYN32Ia9t2+CaKHcSwS"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-12-01T21:48:45.889336Z",
+            "modelVersion": "gemini-3-pro-preview",
+            "responseId": "PQ0uafijNp6O998PlfbTuQU",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 409
+              },
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "partialArgs": [
+                          {
+                            "jsonPath": "$.greeting",
+                            "stringValue": "Hello",
+                            "willContinue": true
+                          }
+                        ],
+                        "willContinue": true
+                      }
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-12-01T21:48:45.889336Z",
+            "modelVersion": "gemini-3-pro-preview",
+            "responseId": "PQ0uafijNp6O998PlfbTuQU",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "partialArgs": [
+                          {
+                            "jsonPath": "$.greeting",
+                            "stringValue": ""
+                          }
+                        ],
+                        "willContinue": true
+                      }
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-12-01T21:48:45.889336Z",
+            "modelVersion": "gemini-3-pro-preview",
+            "responseId": "PQ0uafijNp6O998PlfbTuQU",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "partialArgs": [
+                          {
+                            "jsonPath": "$.name",
+                            "stringValue": "jone smith",
+                            "willContinue": true
+                          }
+                        ],
+                        "willContinue": true
+                      }
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-12-01T21:48:45.889336Z",
+            "modelVersion": "gemini-3-pro-preview",
+            "responseId": "PQ0uafijNp6O998PlfbTuQU",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "partialArgs": [
+                          {
+                            "jsonPath": "$.name",
+                            "stringValue": ""
+                          }
+                        ],
+                        "willContinue": true
+                      }
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-12-01T21:48:45.889336Z",
+            "modelVersion": "gemini-3-pro-preview",
+            "responseId": "PQ0uafijNp6O998PlfbTuQU",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {}
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP"
+              }
+            ],
+            "createTime": "2025-12-01T21:48:45.889336Z",
+            "modelVersion": "gemini-3-pro-preview",
+            "responseId": "PQ0uafijNp6O998PlfbTuQU",
+            "usageMetadata": {
+              "candidatesTokenCount": 17,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 17
+                }
+              ],
+              "promptTokenCount": 20,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 20
+                }
+              ],
+              "thoughtsTokenCount": 58,
+              "totalTokenCount": 95,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

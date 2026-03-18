@@ -11,6 +11,7 @@ import {
 } from '@google/genai';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
 
 class AsyncQueue<T> {
   private queue: T[] = [];
@@ -127,12 +128,16 @@ async function live(client: GoogleGenAI, model: string) {
 }
 
 async function main() {
+  if (GOOGLE_GENAI_USE_VERTEXAI) {
+    console.log('This sample is not yet supported by Vertex AI.');
+    return;
+  }
   let client = new GoogleGenAI({
     apiKey: GEMINI_API_KEY,
     apiVersion: 'v1alpha',
   });
 
-  const model = 'gemini-2.0-flash-live-001';
+  const model = 'gemini-live-2.5-flash-preview';
   const token: AuthToken = await client.authTokens.create({
     config: {
       uses: 1, // The default

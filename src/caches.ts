@@ -19,15 +19,15 @@ export class Caches extends BaseModule {
   }
 
   /**
-   * Lists cached content configurations.
+   * Lists cached contents.
    *
    * @param params - The parameters for the list request.
-   * @return The paginated results of the list of cached contents.
+   * @return - A pager of cached contents.
    *
    * @example
    * ```ts
    * const cachedContents = await ai.caches.list({config: {'pageSize': 2}});
-   * for (const cachedContent of cachedContents) {
+   * for await (const cachedContent of cachedContents) {
    *   console.log(cachedContent);
    * }
    * ```
@@ -73,6 +73,7 @@ export class Caches extends BaseModule {
     params: types.CreateCachedContentParameters,
   ): Promise<types.CachedContent> {
     let response: Promise<types.CachedContent>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -85,7 +86,6 @@ export class Caches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -102,12 +102,7 @@ export class Caches extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.CachedContent>;
 
-      return response.then((apiResponse) => {
-        const resp = converters.cachedContentFromVertex(
-          this.apiClient,
-          apiResponse,
-        );
-
+      return response.then((resp) => {
         return resp as types.CachedContent;
       });
     } else {
@@ -120,7 +115,6 @@ export class Caches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -137,12 +131,7 @@ export class Caches extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.CachedContent>;
 
-      return response.then((apiResponse) => {
-        const resp = converters.cachedContentFromMldev(
-          this.apiClient,
-          apiResponse,
-        );
-
+      return response.then((resp) => {
         return resp as types.CachedContent;
       });
     }
@@ -163,6 +152,7 @@ export class Caches extends BaseModule {
     params: types.GetCachedContentParameters,
   ): Promise<types.CachedContent> {
     let response: Promise<types.CachedContent>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -175,7 +165,6 @@ export class Caches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -192,12 +181,7 @@ export class Caches extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.CachedContent>;
 
-      return response.then((apiResponse) => {
-        const resp = converters.cachedContentFromVertex(
-          this.apiClient,
-          apiResponse,
-        );
-
+      return response.then((resp) => {
         return resp as types.CachedContent;
       });
     } else {
@@ -210,7 +194,6 @@ export class Caches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -227,12 +210,7 @@ export class Caches extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.CachedContent>;
 
-      return response.then((apiResponse) => {
-        const resp = converters.cachedContentFromMldev(
-          this.apiClient,
-          apiResponse,
-        );
-
+      return response.then((resp) => {
         return resp as types.CachedContent;
       });
     }
@@ -253,6 +231,7 @@ export class Caches extends BaseModule {
     params: types.DeleteCachedContentParameters,
   ): Promise<types.DeleteCachedContentResponse> {
     let response: Promise<types.DeleteCachedContentResponse>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -265,7 +244,6 @@ export class Caches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -279,11 +257,18 @@ export class Caches extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.DeleteCachedContentResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.DeleteCachedContentResponse>;
 
-      return response.then(() => {
-        const resp = converters.deleteCachedContentResponseFromVertex();
+      return response.then((apiResponse) => {
+        const resp =
+          converters.deleteCachedContentResponseFromVertex(apiResponse);
         const typedResp = new types.DeleteCachedContentResponse();
         Object.assign(typedResp, resp);
         return typedResp;
@@ -298,7 +283,6 @@ export class Caches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -312,11 +296,18 @@ export class Caches extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.DeleteCachedContentResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.DeleteCachedContentResponse>;
 
-      return response.then(() => {
-        const resp = converters.deleteCachedContentResponseFromMldev();
+      return response.then((apiResponse) => {
+        const resp =
+          converters.deleteCachedContentResponseFromMldev(apiResponse);
         const typedResp = new types.DeleteCachedContentResponse();
         Object.assign(typedResp, resp);
         return typedResp;
@@ -342,6 +333,7 @@ export class Caches extends BaseModule {
     params: types.UpdateCachedContentParameters,
   ): Promise<types.CachedContent> {
     let response: Promise<types.CachedContent>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -354,7 +346,6 @@ export class Caches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -371,12 +362,7 @@ export class Caches extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.CachedContent>;
 
-      return response.then((apiResponse) => {
-        const resp = converters.cachedContentFromVertex(
-          this.apiClient,
-          apiResponse,
-        );
-
+      return response.then((resp) => {
         return resp as types.CachedContent;
       });
     } else {
@@ -389,7 +375,6 @@ export class Caches extends BaseModule {
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -406,12 +391,7 @@ export class Caches extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.CachedContent>;
 
-      return response.then((apiResponse) => {
-        const resp = converters.cachedContentFromMldev(
-          this.apiClient,
-          apiResponse,
-        );
-
+      return response.then((resp) => {
         return resp as types.CachedContent;
       });
     }
@@ -421,19 +401,16 @@ export class Caches extends BaseModule {
     params: types.ListCachedContentsParameters,
   ): Promise<types.ListCachedContentsResponse> {
     let response: Promise<types.ListCachedContentsResponse>;
+
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      const body = converters.listCachedContentsParametersToVertex(
-        this.apiClient,
-        params,
-      );
+      const body = converters.listCachedContentsParametersToVertex(params);
       path = common.formatMap(
         'cachedContents',
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -447,29 +424,29 @@ export class Caches extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.ListCachedContentsResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.ListCachedContentsResponse>;
 
       return response.then((apiResponse) => {
-        const resp = converters.listCachedContentsResponseFromVertex(
-          this.apiClient,
-          apiResponse,
-        );
+        const resp =
+          converters.listCachedContentsResponseFromVertex(apiResponse);
         const typedResp = new types.ListCachedContentsResponse();
         Object.assign(typedResp, resp);
         return typedResp;
       });
     } else {
-      const body = converters.listCachedContentsParametersToMldev(
-        this.apiClient,
-        params,
-      );
+      const body = converters.listCachedContentsParametersToMldev(params);
       path = common.formatMap(
         'cachedContents',
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
       delete body['_url'];
       delete body['_query'];
 
@@ -483,14 +460,18 @@ export class Caches extends BaseModule {
           abortSignal: params.config?.abortSignal,
         })
         .then((httpResponse) => {
-          return httpResponse.json();
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.ListCachedContentsResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
         }) as Promise<types.ListCachedContentsResponse>;
 
       return response.then((apiResponse) => {
-        const resp = converters.listCachedContentsResponseFromMldev(
-          this.apiClient,
-          apiResponse,
-        );
+        const resp =
+          converters.listCachedContentsResponseFromMldev(apiResponse);
         const typedResp = new types.ListCachedContentsResponse();
         Object.assign(typedResp, resp);
         return typedResp;

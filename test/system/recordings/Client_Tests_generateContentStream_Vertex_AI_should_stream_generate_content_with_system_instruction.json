@@ -1,0 +1,148 @@
+{
+  "recordID": "Client_Tests_generateContentStream_Vertex_AI_should_stream_generate_content_with_system_instruction",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:streamGenerateContent?alt=sse",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:streamGenerateContent?alt=sse HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "233",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Client Tests generateContentStream Vertex AI should stream generate content with system instruction"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "high"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {
+              "candidateCount": 1,
+              "maxOutputTokens": 200
+            },
+            "systemInstruction": {
+              "parts": [
+                {
+                  "text": "I say high you say low, then tell me why is the sky blue."
+                }
+              ],
+              "role": "user"
+            }
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "us-central1-aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "7765ee5f38670cf7d5776ea9404ac886bb56629a30bad088b4c4544c53dcc6fe",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Disposition": "attachment",
+          "Content-Type": "text/event-stream",
+          "Date": "Fri, 24 Oct 2025 07:45:42 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "low\n\nThe sky appears blue due to a phenomenon called **Rayleigh scattering**. Here's a breakdown:\n\n1.  **Sunlight is White Light:** Sunlight is made up"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-10-24T07:45:41.024576Z",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "pS77aIDAAaWB2PgPgpCCyA8",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 48
+              },
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " of all the colors of the rainbow, which together appear white. Each color has a different wavelength – red light has longer wavelengths, while blue and violet light have shorter wavelengths.\n\n2.  **Earth's Atmosphere:** Our atmosphere is composed"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ],
+            "createTime": "2025-10-24T07:45:41.024576Z",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "pS77aIDAAaWB2PgPgpCCyA8",
+            "usageMetadata": {
+              "trafficType": "ON_DEMAND"
+            }
+          },
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": " of tiny molecules, primarily nitrogen (about 78%) and oxygen (about 21%).\n\n3.  **Scattering:** When sunlight enters the atmosphere, it collides with these tiny air molecules. These molecules are much"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "MAX_TOKENS"
+              }
+            ],
+            "createTime": "2025-10-24T07:45:41.024576Z",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "pS77aIDAAaWB2PgPgpCCyA8",
+            "usageMetadata": {
+              "candidatesTokenCount": 132,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 132
+                }
+              ],
+              "promptTokenCount": 17,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 17
+                }
+              ],
+              "thoughtsTokenCount": 65,
+              "totalTokenCount": 214,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

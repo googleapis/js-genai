@@ -31,9 +31,6 @@ function isValidContent(content: types.Content): boolean {
     if (part === undefined || Object.keys(part).length === 0) {
       return false;
     }
-    if (!part.thought && part.text !== undefined && part.text === '') {
-      return false;
-    }
   }
   return true;
 }
@@ -191,7 +188,7 @@ export class Chat {
     params: types.SendMessageParameters,
   ): Promise<types.GenerateContentResponse> {
     await this.sendPromise;
-    const inputContent = t.tContent(this.apiClient, params.message);
+    const inputContent = t.tContent(params.message);
     const responsePromise = this.modelsModule.generateContent({
       model: this.model,
       contents: this.getHistory(true).concat(inputContent),
@@ -255,7 +252,7 @@ export class Chat {
     params: types.SendMessageParameters,
   ): Promise<AsyncGenerator<types.GenerateContentResponse>> {
     await this.sendPromise;
-    const inputContent = t.tContent(this.apiClient, params.message);
+    const inputContent = t.tContent(params.message);
     const streamResponse = this.modelsModule.generateContentStream({
       model: this.model,
       contents: this.getHistory(true).concat(inputContent),

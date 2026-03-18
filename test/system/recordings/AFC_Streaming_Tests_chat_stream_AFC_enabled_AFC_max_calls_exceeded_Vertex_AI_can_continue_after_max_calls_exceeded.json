@@ -1,0 +1,458 @@
+{
+  "recordID": "AFC_Streaming_Tests_chat_stream_AFC_enabled_AFC_max_calls_exceeded_Vertex_AI_can_continue_after_max_calls_exceeded",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:streamGenerateContent?alt=sse",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:streamGenerateContent?alt=sse HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "453",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "AFC Streaming Tests chat stream AFC enabled AFC max calls exceeded Vertex AI can continue after max calls exceeded"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "Divide 10 by 2 using the customDivide function, then divide the result by 2 again, then tell me the result"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {},
+            "toolConfig": {
+              "functionCallingConfig": {
+                "mode": "AUTO"
+              }
+            },
+            "tools": [
+              {
+                "functionDeclarations": [
+                  {
+                    "description": "Custom divide function",
+                    "name": "customDivide",
+                    "parametersJsonSchema": {
+                      "properties": {
+                        "denominator": {
+                          "type": "number"
+                        },
+                        "numerator": {
+                          "type": "number"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "us-central1-aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "beb4af97edcd877075b70cfb333bd9287184eee1e17ad2105da6d0e558b7f716",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Disposition": "attachment",
+          "Content-Type": "text/event-stream",
+          "Date": "Sat, 16 Aug 2025 00:44:29 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "args": {
+                          "denominator": 2,
+                          "numerator": 10
+                        },
+                        "name": "customDivide"
+                      },
+                      "thoughtSignature": "Ci8By73w8KeEl3SWDlASc6s83TcjpbZaffIuTQpOtsmZM7XJ1FwBQlhjfE4L8xcA6wp3Acu98PDRU508cogwu9z+wy4BMqf8pA3cTu+ce/YwTjSsHF3d9DXvZLoyYRnDswTUAplyhpwjYmKgV1xeuyJtCWihydJi9LYOFzdYwyVCGcKifZTfo8lgbSNWLHUdbtmEw2wewQJAYB9Y9DxTpxUxapKcu9bHI+EKUgHLvfDww8YSEBdhzAxgx86fvvBzM4SyVQCjuNX3F2BUvxr6OXpJK0IgnLppPRThQsbEfYMZlOmSmp1inhp5MQ3P1XnKk/7XhY4AbqAQPYIoJsIKqAEBy73w8DQrvtaiLsm1PtahM0xB1s07qgk+yTw5aFlJkDQYTR663V+74taqx/O9kAnpd6Pfm69iczncM8EXMXQusBFZazs2OJKEWb4DoEIsoDQhy8qhpSeUmNEBW42eDO7VAlJxdys/xX+6U28CBhPpMCQBNOdBSzjAT03eKZzqmEVYPuAwOdAmbNJzIQbw5PvE+JqDsVfSYeJyTzthqcSliZslBL3HiYAKiQEBy73w8INu9TlUJrUBtxj4dmEiwc2D1bnyacuTl0FLZk1Kc9QMcEveYiyXLlKj3nh6Y0cFdIMCLMitbKr2PZbYrbj1f/GLUdBjC0Lws6e2MHDkB3gEKq3gfZZzlQrplZ6Jg0qmQKb58MRHCqmWT+z5g+6R9JnEWT7MC22ofLDV39lSijFsnYZkwwqRAQHLvfDwRVGH7TNmY98rWRQjbAWbfEmNEU5IqT2XcVpgsXY5nwssh+vIUEpPFUxY9Sgxpc8S9PVdp6iCqQ/wy/RX+4GTfMkM4glSB8IvqVSs/tN+sRcVdt6ODkRbaokpaLk+oBlpIZBi+5o5HWSTi8wbd4PMp4XN1QNMK44ninr7pM3aHkODBE4CGteye9odj+Y="
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP"
+              }
+            ],
+            "createTime": "2025-08-16T00:44:28.690888Z",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "bNSfaMiVKo2Cm9IPpK2IgAg",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 179
+              },
+              "candidatesTokenCount": 6,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 6
+                }
+              ],
+              "promptTokenCount": 32,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 32
+                }
+              ],
+              "thoughtsTokenCount": 140,
+              "totalTokenCount": 178,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:streamGenerateContent?alt=sse",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:streamGenerateContent?alt=sse HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "1631",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "AFC Streaming Tests chat stream AFC enabled AFC max calls exceeded Vertex AI can continue after max calls exceeded"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "Divide 10 by 2 using the customDivide function, then divide the result by 2 again, then tell me the result"
+                  }
+                ],
+                "role": "user"
+              },
+              {
+                "parts": [
+                  {
+                    "functionCall": {
+                      "args": {
+                        "denominator": 2,
+                        "numerator": 10
+                      },
+                      "name": "customDivide"
+                    },
+                    "thoughtSignature": "Ci8By73w8KeEl3SWDlASc6s83TcjpbZaffIuTQpOtsmZM7XJ1FwBQlhjfE4L8xcA6wp3Acu98PDRU508cogwu9z+wy4BMqf8pA3cTu+ce/YwTjSsHF3d9DXvZLoyYRnDswTUAplyhpwjYmKgV1xeuyJtCWihydJi9LYOFzdYwyVCGcKifZTfo8lgbSNWLHUdbtmEw2wewQJAYB9Y9DxTpxUxapKcu9bHI+EKUgHLvfDww8YSEBdhzAxgx86fvvBzM4SyVQCjuNX3F2BUvxr6OXpJK0IgnLppPRThQsbEfYMZlOmSmp1inhp5MQ3P1XnKk/7XhY4AbqAQPYIoJsIKqAEBy73w8DQrvtaiLsm1PtahM0xB1s07qgk+yTw5aFlJkDQYTR663V+74taqx/O9kAnpd6Pfm69iczncM8EXMXQusBFZazs2OJKEWb4DoEIsoDQhy8qhpSeUmNEBW42eDO7VAlJxdys/xX+6U28CBhPpMCQBNOdBSzjAT03eKZzqmEVYPuAwOdAmbNJzIQbw5PvE+JqDsVfSYeJyTzthqcSliZslBL3HiYAKiQEBy73w8INu9TlUJrUBtxj4dmEiwc2D1bnyacuTl0FLZk1Kc9QMcEveYiyXLlKj3nh6Y0cFdIMCLMitbKr2PZbYrbj1f/GLUdBjC0Lws6e2MHDkB3gEKq3gfZZzlQrplZ6Jg0qmQKb58MRHCqmWT+z5g+6R9JnEWT7MC22ofLDV39lSijFsnYZkwwqRAQHLvfDwRVGH7TNmY98rWRQjbAWbfEmNEU5IqT2XcVpgsXY5nwssh+vIUEpPFUxY9Sgxpc8S9PVdp6iCqQ/wy/RX+4GTfMkM4glSB8IvqVSs/tN+sRcVdt6ODkRbaokpaLk+oBlpIZBi+5o5HWSTi8wbd4PMp4XN1QNMK44ninr7pM3aHkODBE4CGteye9odj+Y="
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "functionResponse": {
+                      "name": "customDivide",
+                      "response": {
+                        "output": 42
+                      }
+                    }
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {},
+            "toolConfig": {
+              "functionCallingConfig": {
+                "mode": "AUTO"
+              }
+            },
+            "tools": [
+              {
+                "functionDeclarations": [
+                  {
+                    "description": "Custom divide function",
+                    "name": "customDivide",
+                    "parametersJsonSchema": {
+                      "properties": {
+                        "denominator": {
+                          "type": "number"
+                        },
+                        "numerator": {
+                          "type": "number"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "previousRequest": "beb4af97edcd877075b70cfb333bd9287184eee1e17ad2105da6d0e558b7f716",
+        "serverAddress": "us-central1-aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "9dbd7c8df56eddcaf36aa1e1e7385e1e1d7aa6709083680e1ea399f116b3a15b",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Disposition": "attachment",
+          "Content-Type": "text/event-stream",
+          "Date": "Sat, 16 Aug 2025 00:44:31 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "args": {
+                          "denominator": 2,
+                          "numerator": 42
+                        },
+                        "name": "customDivide"
+                      },
+                      "thoughtSignature": "Ci0By73w8H8b3199MILHf32vMfBwNTApCZtInsoNCca1ztNU5HTIPeS9ClJ49zkKWAHLvfDw+uW7Cw9FiPRObbXtHyRvx9838Co1Vzqt3kfo+JSHBg1p/RNF6hYbBmRtzOs96IIfNxFA3XNImYJ47yFcQvvFnQAhl8gOADJ/ZcYNYK384IKEcyYKVgHLvfDwDMUFC96wg5uoJd9+SWKp7PZOf+ARSdPDVxdAtynRy5o4FZWe/1c8MzQUcMDHQ75YLm6+2DAacHBYq0TCsObFoxaIwp/Or007/QWIocpMrvNECrQBAcu98PCTrSDNCczDy+zUHcFbH1tY9jjKzQq60pz9D/tvrSsHR/S6hjGPbceHTwMnen/h29Tjhv4Homv2Y3ob+tSLOfC68fWsn6CIbTtEtFCUXSPcrsvpAsIXx5hznCYYSqXZLSLuAhFAqabpmRtPMBB9H3ZOkESETc/43lyGsa8TKCgNQsuGmuqjXw7GYiK8W638064Ynqp3Hb6htHXoUtFTulRiLicMddu28RLlDiu4W5ORCqEBAcu98PAujU9KQ9cnoXi6aF/cHt+p030QHTpUqG//IYJiLKslSvvMwCpf4iAxImXN/ONsoG5q9/o7g1N5q5iqun6exYpZXUXM3N+6rjbjcSNNZGm7gddLW1vN7pkH38QR3cuPDuQtN6+lKhqp59OmAA8SobmVoxyofyU5cIc2/hHdpL10rdVCrc2TQFfQtX5TN9OUJgt87UOnIEI7yFjSw7QK6QEBy73w8Oj1NUWTGH1KksTwTKGHEA65pMiEtRNPkIO+0WresvSsT3zbj5zHsbyGvS7A8JRRaIxtr66FX8PWIhVxf93NZceE2ED2THSOpd34tLoKcdoSz5Vara9oY/55hirmRnFxOdaj+VWOVFIBzHO0eH9hZA/OnelXl146nWmM+g9zVXAN2E3SKjCHC36ziv/UbzhtfBktIbGAkm6N/u+8W3IUPI1JrYVfwCFClYnDCRBOIznfsnquMoZ5xbdIoByYtdlk/nVBT/8BmwSkmnjHTLSjoaVQyHjWWx6V8uIrRSWaGUbYNiQViwrNAQHLvfDw7egKnUzRuLu7ylqS2uRkUAYaphxwb3ITwI/hgluz6WVCGtAs5Fx+OgtY3q2OlXWdIlMpo7OQCsRKptmJlqFcz85iR/CEcEhVJtI9UWKS4UVs26xbei+ejFOt8kKbC3DTCZv+L+FuEfIW2HGqeV0FYRzvglrUC+SGRfyOkjk3D27t+z3kDLRwUztbGx/gGwztFn9kbc2C3Wy/khzne2QWupctC6PCF2A48d2nHMXYhjZzQNTfwpE9VkuoqpfuauOHqlcJQNMEIpwK9wEBy73w8C858ARnQI4F8Tom/c5W9ijtoJBIu7h7q2zcQ36YusCi2MZNiX2S1z6HTXoWic/wsxP9N/B3vn2orJymfVqw4oej3A3UoIavCIfOkPRG2j0EETFxTnwrR/zSQ0G/IlVSvclPMXm4InCW6oglf/94Zmgo0mbnyqG6p0mxIu5t4mvyC6Q89pyaS8S0KNkxXFcSFq1hu9rlQ0Jln9oRsXVY2hB1sp1Sd5hCrbKM77mJB7LvIdcZnAET9MQfXnJc0Io6scUiFzwsasya1aMBAnfH40OC1tDN7gsIQsL1szilRH29dHUD/fRV8TMuFcUtV5d/YudWCikBy73w8MghOKczovIP8pa4XhHKVQO+eoUSsXO05R2PHJm6C9b/93VQ5Q=="
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP"
+              }
+            ],
+            "createTime": "2025-08-16T00:44:29.620397Z",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "bdSfaO3uJayWmecPoa-TkQM",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 251
+              },
+              "candidatesTokenCount": 6,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 6
+                }
+              ],
+              "promptTokenCount": 42,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 42
+                }
+              ],
+              "thoughtsTokenCount": 274,
+              "totalTokenCount": 322,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:streamGenerateContent?alt=sse",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/gemini-2.5-flash:streamGenerateContent?alt=sse HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "3604",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "AFC Streaming Tests chat stream AFC enabled AFC max calls exceeded Vertex AI can continue after max calls exceeded"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "Divide 10 by 2 using the customDivide function, then divide the result by 2 again, then tell me the result"
+                  }
+                ],
+                "role": "user"
+              },
+              {
+                "parts": [
+                  {
+                    "functionCall": {
+                      "args": {
+                        "denominator": 2,
+                        "numerator": 10
+                      },
+                      "name": "customDivide"
+                    },
+                    "thoughtSignature": "Ci8By73w8KeEl3SWDlASc6s83TcjpbZaffIuTQpOtsmZM7XJ1FwBQlhjfE4L8xcA6wp3Acu98PDRU508cogwu9z+wy4BMqf8pA3cTu+ce/YwTjSsHF3d9DXvZLoyYRnDswTUAplyhpwjYmKgV1xeuyJtCWihydJi9LYOFzdYwyVCGcKifZTfo8lgbSNWLHUdbtmEw2wewQJAYB9Y9DxTpxUxapKcu9bHI+EKUgHLvfDww8YSEBdhzAxgx86fvvBzM4SyVQCjuNX3F2BUvxr6OXpJK0IgnLppPRThQsbEfYMZlOmSmp1inhp5MQ3P1XnKk/7XhY4AbqAQPYIoJsIKqAEBy73w8DQrvtaiLsm1PtahM0xB1s07qgk+yTw5aFlJkDQYTR663V+74taqx/O9kAnpd6Pfm69iczncM8EXMXQusBFZazs2OJKEWb4DoEIsoDQhy8qhpSeUmNEBW42eDO7VAlJxdys/xX+6U28CBhPpMCQBNOdBSzjAT03eKZzqmEVYPuAwOdAmbNJzIQbw5PvE+JqDsVfSYeJyTzthqcSliZslBL3HiYAKiQEBy73w8INu9TlUJrUBtxj4dmEiwc2D1bnyacuTl0FLZk1Kc9QMcEveYiyXLlKj3nh6Y0cFdIMCLMitbKr2PZbYrbj1f/GLUdBjC0Lws6e2MHDkB3gEKq3gfZZzlQrplZ6Jg0qmQKb58MRHCqmWT+z5g+6R9JnEWT7MC22ofLDV39lSijFsnYZkwwqRAQHLvfDwRVGH7TNmY98rWRQjbAWbfEmNEU5IqT2XcVpgsXY5nwssh+vIUEpPFUxY9Sgxpc8S9PVdp6iCqQ/wy/RX+4GTfMkM4glSB8IvqVSs/tN+sRcVdt6ODkRbaokpaLk+oBlpIZBi+5o5HWSTi8wbd4PMp4XN1QNMK44ninr7pM3aHkODBE4CGteye9odj+Y="
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "functionResponse": {
+                      "name": "customDivide",
+                      "response": {
+                        "output": 42
+                      }
+                    }
+                  }
+                ],
+                "role": "user"
+              },
+              {
+                "parts": [
+                  {
+                    "functionCall": {
+                      "args": {
+                        "denominator": 2,
+                        "numerator": 42
+                      },
+                      "name": "customDivide"
+                    },
+                    "thoughtSignature": "Ci0By73w8H8b3199MILHf32vMfBwNTApCZtInsoNCca1ztNU5HTIPeS9ClJ49zkKWAHLvfDw+uW7Cw9FiPRObbXtHyRvx9838Co1Vzqt3kfo+JSHBg1p/RNF6hYbBmRtzOs96IIfNxFA3XNImYJ47yFcQvvFnQAhl8gOADJ/ZcYNYK384IKEcyYKVgHLvfDwDMUFC96wg5uoJd9+SWKp7PZOf+ARSdPDVxdAtynRy5o4FZWe/1c8MzQUcMDHQ75YLm6+2DAacHBYq0TCsObFoxaIwp/Or007/QWIocpMrvNECrQBAcu98PCTrSDNCczDy+zUHcFbH1tY9jjKzQq60pz9D/tvrSsHR/S6hjGPbceHTwMnen/h29Tjhv4Homv2Y3ob+tSLOfC68fWsn6CIbTtEtFCUXSPcrsvpAsIXx5hznCYYSqXZLSLuAhFAqabpmRtPMBB9H3ZOkESETc/43lyGsa8TKCgNQsuGmuqjXw7GYiK8W638064Ynqp3Hb6htHXoUtFTulRiLicMddu28RLlDiu4W5ORCqEBAcu98PAujU9KQ9cnoXi6aF/cHt+p030QHTpUqG//IYJiLKslSvvMwCpf4iAxImXN/ONsoG5q9/o7g1N5q5iqun6exYpZXUXM3N+6rjbjcSNNZGm7gddLW1vN7pkH38QR3cuPDuQtN6+lKhqp59OmAA8SobmVoxyofyU5cIc2/hHdpL10rdVCrc2TQFfQtX5TN9OUJgt87UOnIEI7yFjSw7QK6QEBy73w8Oj1NUWTGH1KksTwTKGHEA65pMiEtRNPkIO+0WresvSsT3zbj5zHsbyGvS7A8JRRaIxtr66FX8PWIhVxf93NZceE2ED2THSOpd34tLoKcdoSz5Vara9oY/55hirmRnFxOdaj+VWOVFIBzHO0eH9hZA/OnelXl146nWmM+g9zVXAN2E3SKjCHC36ziv/UbzhtfBktIbGAkm6N/u+8W3IUPI1JrYVfwCFClYnDCRBOIznfsnquMoZ5xbdIoByYtdlk/nVBT/8BmwSkmnjHTLSjoaVQyHjWWx6V8uIrRSWaGUbYNiQViwrNAQHLvfDw7egKnUzRuLu7ylqS2uRkUAYaphxwb3ITwI/hgluz6WVCGtAs5Fx+OgtY3q2OlXWdIlMpo7OQCsRKptmJlqFcz85iR/CEcEhVJtI9UWKS4UVs26xbei+ejFOt8kKbC3DTCZv+L+FuEfIW2HGqeV0FYRzvglrUC+SGRfyOkjk3D27t+z3kDLRwUztbGx/gGwztFn9kbc2C3Wy/khzne2QWupctC6PCF2A48d2nHMXYhjZzQNTfwpE9VkuoqpfuauOHqlcJQNMEIpwK9wEBy73w8C858ARnQI4F8Tom/c5W9ijtoJBIu7h7q2zcQ36YusCi2MZNiX2S1z6HTXoWic/wsxP9N/B3vn2orJymfVqw4oej3A3UoIavCIfOkPRG2j0EETFxTnwrR/zSQ0G/IlVSvclPMXm4InCW6oglf/94Zmgo0mbnyqG6p0mxIu5t4mvyC6Q89pyaS8S0KNkxXFcSFq1hu9rlQ0Jln9oRsXVY2hB1sp1Sd5hCrbKM77mJB7LvIdcZnAET9MQfXnJc0Io6scUiFzwsasya1aMBAnfH40OC1tDN7gsIQsL1szilRH29dHUD/fRV8TMuFcUtV5d/YudWCikBy73w8MghOKczovIP8pa4XhHKVQO+eoUSsXO05R2PHJm6C9b/93VQ5Q=="
+                  }
+                ],
+                "role": "model"
+              },
+              {
+                "parts": [
+                  {
+                    "functionResponse": {
+                      "name": "customDivide",
+                      "response": {
+                        "output": 2
+                      }
+                    }
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {},
+            "toolConfig": {
+              "functionCallingConfig": {
+                "mode": "AUTO"
+              }
+            },
+            "tools": [
+              {
+                "functionDeclarations": [
+                  {
+                    "description": "Custom divide function",
+                    "name": "customDivide",
+                    "parametersJsonSchema": {
+                      "properties": {
+                        "denominator": {
+                          "type": "number"
+                        },
+                        "numerator": {
+                          "type": "number"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "previousRequest": "9dbd7c8df56eddcaf36aa1e1e7385e1e1d7aa6709083680e1ea399f116b3a15b",
+        "serverAddress": "us-central1-aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "0271fa5d8566ce946743572983fbdc6f5b1eb5a0c3de7a2b63d159a067ed7269",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Disposition": "attachment",
+          "Content-Type": "text/event-stream",
+          "Date": "Sat, 16 Aug 2025 00:44:32 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "The result of dividing 10 by 2 using the customDivide function is 42. Dividing 42 by 2 again using the customDivide function results in 2.",
+                      "thoughtSignature": "Ci8By73w8OumoOIdsS98+riaBLhe4/VGufmJH6uieCBzJYyNLBuft/9u5y82wJttKApXAcu98PCk8RJTsS1uVPcqPg6fobxqNGBo2+T8t2K+Y7+DtQ8v2bl5KwYtXl2F+Fno/h5uPDA/MQPUklRASqe65TRtq5h2s5+vTAcVOJK7jNYlqZwVp/uTCmIBy73w8PETZaIBM1Gz06HTfyvr8gpJVQL+LBH/i7n3ZWbmrySHfC/XnLHJmTgzzZwNokBIDFdLQuoNEf6Cpd9gR+A1wkiKLIkC9X3A5FxJXSYJEG72b46AIqR0kdtzGvMWKwqnAQHLvfDwTFUtqcNGm7LI4mkZ3MHE59ZQEj95SPT3agR6D721oDenqqmonpyazn88vsPpBhUACqAhdvV6bDh5mvnHxnM+AKCxhWmJAvpv3jJPOJyRMK5+Uikws2nJpnQHjoXU9PzVIybAfvzzXpQsmSid3GQoO/Fxhswq/Db1Yrqu9/CWlxKzOiX1dNeL8x26DcL6H051O6/HAcUxOYEKK91teEDZfwTBCqoBAcu98PA1/3LBRO6JD2KBvHM8GAgtEhaOCcIgU9wqp+51G2O6mMtBWXcIhVgQQLCjqtmxf7UyC8MNp4nPdmB1R/1QTWirmzp6CAwDwGeFKNguHQn98WS1eYWClpb0KVPph540metUwv0hC/hRdAe4FATNnEs6sPXAMoy4xlgouRfdMJ0/s9J48woAH0dkuN3DreIBIf0Y2sCsZP2dTnl8UPUgz84cSA9nzIsK5gEBy73w8KTlL9Z3pLUCEfH5nz1wCGG59/zYR6MyX+uWnchN5u5P5coEyJqekU5sdhbnpcmuvFupcqWgY8uD3X3CCIofxnR5ENzdQq7omSEWhPumTjAlWK1n4X9y0jLYqgjbdCZGlVkAffJrfdTtfIIgqyj4pnXzoLkX8NV838Run9rTqR2hB2PziQrvScdQ43TLxuDcrOJhaFp1Fh4qyK39X3qY4W65iF16ZxpC0eDhdHHt3XXIcvWLf/9WAJuL3DhP1Ta/ovhezhc2XrneeEMc7gIZcgg81cLBhWT7A9U0NqYLq0d2IwqPAgHLvfDwczrIJXxp/0GtYG6MNXJpaacPZ2H9ZFozMqWN2doYAnE04Qf2RoI6SikkW/wuDHE+MCAr3Q4ZCQ13tFsK3QglAinZ9zHTS4x/ysrd/8UbCEKA6KYUGLmrmbFa88ndfdO2b3LOGQglU0qsqOQLuoQt/xTt/ORTY3qwOFbtEM0lKvoisy2q0rZ7Mdzh2Vazyg8+2MWID6QPyDM9ZmK7HxRAbri+hFlku3FxYK8b+7ivmZ3K+zckEOcrYM18JZatej2JlZMngNZzVPI+bKZH6dnz4Ebj2Vi6j5m+/QqsDk/gZw+Tmzoy2mJs0csaBRCCjAJhKxdQ1IB51LP9ivwc6ebht/qgeu5xW/bUj8sK6wEBy73w8KnlfnS1nrySh4wfo+LSjd/uoSAjp00gdlrlxDvku0rfpIpO1u6k717bwqKeB+Dalsne9I4fbKeds8TxOGPBVg2VGFZj1khVXkqUx1Ar/Q4COorkKW6WU64Nf3ObY2iyb7Lwz+Es/cqFULFaPwFK3tA1xcMPAxYKgRakr5EFITlJcepHyorgBuF/9U8iBMflXMOjf+sfPbxJIllKmTYOq1DBbh/kGVwu6l/FTtU5KYntWP09ABrpUhZ//xlK2XeMXwYvLWj1rP8SRxPAw6pYWECxfl5D1bBih1u3Z+2vZwut/GlxkzrM"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP"
+              }
+            ],
+            "createTime": "2025-08-16T00:44:31.211555Z",
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "b9SfaOP0DMeSmecP8YP84Ao",
+            "usageMetadata": {
+              "billablePromptUsage": {
+                "textCount": 321
+              },
+              "candidatesTokenCount": 39,
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 39
+                }
+              ],
+              "promptTokenCount": 52,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 52
+                }
+              ],
+              "thoughtsTokenCount": 277,
+              "totalTokenCount": 368,
+              "trafficType": "ON_DEMAND"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

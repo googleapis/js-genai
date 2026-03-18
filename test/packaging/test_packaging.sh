@@ -5,7 +5,7 @@ set -ex
 npm pack
 
 PACKAGE_VERSION=$(jq -r .version package.json)
-TARBALL="google-genai-${PACKAGE_VERSION}.tgz"
+TARBALL="$(pwd)/google-genai-${PACKAGE_VERSION}.tgz"
 
 # Verify that the tarball exists
 if [ ! -f "${TARBALL}" ]; then
@@ -13,6 +13,19 @@ if [ ! -f "${TARBALL}" ]; then
   exit 1
 fi
 
-cd sdk-samples
-npm install "../${TARBALL}"
+echo "Building sdk-samples..."
+
+pushd sdk-samples
+npm install "${TARBALL}"
+npm run build
+popd
+
+# See: no-optional-deps/README.md
+echo "Building no-optional-deps..."
+
+TMP_WORKDIR="$(mktemp -d)"
+cp -r test/packaging/no-optional-deps/* "${TMP_WORKDIR}"
+cd ${TMP_WORKDIR}
+
+npm install "${TARBALL}"
 npm run build

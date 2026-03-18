@@ -13,7 +13,6 @@ import {
   CallableTool,
   CallableToolConfig,
   FunctionCall,
-  GenerateContentParameters,
   Part,
   Tool,
   ToolListUnion,
@@ -21,6 +20,10 @@ import {
 
 // TODO: b/416041229 - Determine how to retrieve the MCP package version.
 export const MCP_LABEL = 'mcp_used/unknown';
+
+// Whether MCP tool usage is detected from mcpToTool. This is used for
+// telemetry.
+let hasMcpToolUsageFromMcpToTool = false;
 
 // Checks whether the list of tools contains any MCP tools.
 export function hasMcpToolUsage(tools: ToolListUnion): boolean {
@@ -33,7 +36,7 @@ export function hasMcpToolUsage(tools: ToolListUnion): boolean {
     }
   }
 
-  return false;
+  return hasMcpToolUsageFromMcpToTool;
 }
 
 // Sets the MCP version label in the Google API client header.
@@ -42,20 +45,6 @@ export function setMcpUsageHeader(headers: Record<string, string>) {
   headers[GOOGLE_API_CLIENT_HEADER] = (
     existingHeader + ` ${MCP_LABEL}`
   ).trimStart();
-}
-
-// Checks whether the list of tools contains any MCP clients. Will return true
-// if there is at least one MCP client.
-export function hasMcpClientTools(params: GenerateContentParameters): boolean {
-  return params.config?.tools?.some((tool) => isMcpCallableTool(tool)) ?? false;
-}
-
-// Checks whether the list of tools contains any non-MCP tools. Will return true
-// if there is at least one non-MCP tool.
-export function hasNonMcpTools(params: GenerateContentParameters): boolean {
-  return (
-    params.config?.tools?.some((tool) => !isMcpCallableTool(tool)) ?? false
-  );
 }
 
 // Returns true if the object is a MCP CallableTool, otherwise false.
@@ -161,10 +150,23 @@ export class McpCallableTool implements CallableTool {
     for (const functionCall of functionCalls) {
       if (functionCall.name! in this.functionNameToMcpClient) {
         const mcpClient = this.functionNameToMcpClient[functionCall.name!];
-        const callToolResponse = await mcpClient.callTool({
-          name: functionCall.name!,
-          arguments: functionCall.args,
-        });
+        let requestOptions = undefined;
+        // TODO: b/424238654 - Add support for finer grained timeout control.
+        if (this.config.timeout) {
+          requestOptions = {
+            timeout: this.config.timeout,
+          };
+        }
+        const callToolResponse = await mcpClient.callTool(
+          {
+            name: functionCall.name!,
+            arguments: functionCall.args,
+          },
+          // Set the result schema to undefined to allow MCP to rely on the
+          // default schema.
+          undefined,
+          requestOptions,
+        );
         functionCallResponseParts.push({
           functionResponse: {
             name: functionCall.name,
@@ -201,6 +203,8 @@ function isMcpClient(client: unknown): client is McpClient {
 export function mcpToTool(
   ...args: [...McpClient[], CallableToolConfig | McpClient]
 ): CallableTool {
+  // Set MCP usage for telemetry.
+  hasMcpToolUsageFromMcpToTool = true;
   if (args.length === 0) {
     throw new Error('No MCP clients provided');
   }
@@ -212,4 +216,12 @@ export function mcpToTool(
     args.slice(0, args.length - 1) as McpClient[],
     maybeConfig,
   );
+}
+
+/**
+ * Sets the MCP tool usage flag from calling mcpToTool. This is used for
+ * telemetry.
+ */
+export function setMcpToolUsageFromMcpToTool(mcpToolUsage: boolean) {
+  hasMcpToolUsageFromMcpToTool = mcpToolUsage;
 }

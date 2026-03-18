@@ -1,0 +1,128 @@
+{
+  "recordID": "Client_Tests_generateContent_ML_Dev_can_use_JSON_schema_in_parametersJsonSchema_to_build_FunctionDeclaration",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta/models/gemini-2.5-flash:generateContent",
+        "request": "POST /v1beta/models/gemini-2.5-flash:generateContent HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "583",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Client Tests generateContent ML Dev can use JSON schema in parametersJsonSchema to build FunctionDeclaration"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "put word: hello and word: world into a string"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {},
+            "toolConfig": {
+              "functionCallingConfig": {
+                "allowedFunctionNames": ["concatStringFunction"],
+                "mode": "ANY"
+              }
+            },
+            "tools": [
+              {
+                "functionDeclarations": [
+                  {
+                    "description": "this is a concat string function",
+                    "name": "concatStringFunction",
+                    "parametersJsonSchema": {
+                      "$schema": "http://json-schema.org/draft-07/schema#",
+                      "additionalProperties": false,
+                      "properties": {
+                        "firstString": {
+                          "type": "string"
+                        },
+                        "secondString": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["firstString", "secondString"],
+                      "type": "object"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "generativelanguage.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "0c6f58dff773154933d150870915df78a821151372b4f8d67a9de8c02bb06f59",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Encoding": "gzip",
+          "Content-Length": "779",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Fri, 24 Oct 2025 07:45:12 GMT",
+          "Server": "scaffolding on HTTPServer2",
+          "Server-Timing": "gfet4t7; dur=2046",
+          "Vary": "Origin, X-Origin, Referer",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Xss-Protection": "0"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "args": {
+                          "firstString": "hello",
+                          "secondString": "world"
+                        },
+                        "name": "concatStringFunction"
+                      },
+                      "thoughtSignature": "CpUCAdHtim9pjKa09PSMm2rJMx/w+Zv+17DcCbM08LMBheh0ksyO8hosyPMGt1dQOUEELcknoicPY3Zb2Jx4mB7RX7kZZ1yCz0zrQMp1aEg+w/X5bV7dfvOem4YJY5yNH7uCque1YjlrHNbiXD3iAwTPVmkcdq0uHpzxiWbQEzy4XQtDA4cy5YoeVRyoDICqA55o4QGkjY7wZZwy/S5fxj4rhKlqlVo3JFDr7oGnQkdx+OcAoPDyXRc7s3qSS0p/ySzSmPGe5OLd1QAWQecM6Z6NBwd4dGKQAmFzrOLqIxCevhawd1fstxmNCDK0hh0XMdGltq0ppd9HwwZrozdlu+7GQ3ZoEcescwTCqOJe5Z+XE7GQu9KAbQ=="
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishMessage": "Model generated function call(s).",
+                "finishReason": "STOP",
+                "index": 0
+              }
+            ],
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "iC77aIDWMcDDvr0PoK6JkAY",
+            "turnToken": "v1:ChdpQzc3YUlEV01jRER2cjBQb0s2SmtBWRIXaUM3N2FJRFdNY0REdnIwUG9LNkprQVk",
+            "usageMetadata": {
+              "candidatesTokenCount": 22,
+              "promptTokenCount": 65,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 65
+                }
+              ],
+              "thoughtsTokenCount": 59,
+              "totalTokenCount": 146
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

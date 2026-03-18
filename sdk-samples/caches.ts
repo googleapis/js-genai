@@ -35,11 +35,29 @@ async function createCacheFromVertexAI() {
   };
 
   const cache = await ai.caches.create({
-    model: 'gemini-1.5-pro-002',
+    model: 'gemini-2.5-flash',
     config: {contents: [cachedContent1, cachedContent2]},
   });
 
-  console.debug(JSON.stringify(cache));
+  console.debug('Created cache: ', JSON.stringify(cache));
+  const cacheName = cache.name ?? '';
+
+  const listResponse = await ai.caches.list();
+  let i = 1;
+  for await (const cachedContent of listResponse) {
+    console.debug(`List response ${i++}: `, JSON.stringify(cachedContent));
+  }
+
+  const getResponse = await ai.caches.get({name: cacheName});
+  console.debug('Get response: ', JSON.stringify(getResponse));
+
+  const updateResponse = await ai.caches.update({
+    name: cacheName,
+    config: {ttl: '86400s'},
+  });
+  console.debug('Update response: ', JSON.stringify(updateResponse));
+
+  await ai.caches.delete({name: cacheName});
 }
 
 async function main() {

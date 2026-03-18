@@ -14,8 +14,7 @@ async function generateContentFromMLDev() {
   const ai = new GoogleGenAI({vertexai: false, apiKey: GEMINI_API_KEY});
 
   const response = await ai.models.generateContent({
-    // Only 002 models + flash 1.5 8b models are enabled with log probs option.
-    model: 'gemini-1.5-flash-002',
+    model: 'gemini-2.5-flash',
     contents: 'Hello!',
     config: {
       responseLogprobs: true,

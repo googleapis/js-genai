@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {GoogleGenAIOptions} from './client.js';
+import {HttpOptions} from './types.js';
 
 let _defaultBaseGeminiUrl: string | undefined = undefined;
 let _defaultBaseVertexUrl: string | undefined = undefined;
@@ -59,18 +59,19 @@ export function getDefaultBaseUrls(): BaseUrlParameters {
  *   3. Base URLs set via environment variables.
  */
 export function getBaseUrl(
-  options: GoogleGenAIOptions,
+  httpOptions: HttpOptions | undefined,
+  vertexai: boolean | undefined,
   vertexBaseUrlFromEnv: string | undefined,
   geminiBaseUrlFromEnv: string | undefined,
 ): string | undefined {
-  if (!options.httpOptions?.baseUrl) {
+  if (!httpOptions?.baseUrl) {
     const defaultBaseUrls = getDefaultBaseUrls();
-    if (options.vertexai) {
+    if (vertexai) {
       return defaultBaseUrls.vertexUrl ?? vertexBaseUrlFromEnv;
     } else {
       return defaultBaseUrls.geminiUrl ?? geminiBaseUrlFromEnv;
     }
   }
 
-  return options.httpOptions.baseUrl;
+  return httpOptions.baseUrl;
 }

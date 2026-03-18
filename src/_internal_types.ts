@@ -32,7 +32,7 @@ export declare interface EditImageParametersInternal {
   model: string;
   /** A text description of the edit to apply to the image. */
   prompt: string;
-  /** The reference images for Imagen 3 editing. */
+  /** The reference images for editing. */
   referenceImages: ReferenceImageAPIInternal[];
   /** Configuration for editing. */
   config?: types.EditImageConfig;
@@ -40,9 +40,8 @@ export declare interface EditImageParametersInternal {
 
 /** Internal API config for UpscaleImage.
 
-  These fields require default values sent to the API which are not intended
-  to be modifiable or exposed to users in the SDK method.
-   */
+These fields require default values sent to the API which are not intended
+to be modifiable or exposed to users in the SDK method. */
 export declare interface UpscaleImageAPIConfigInternal {
   /** Used to override HTTP request options. */
   httpOptions?: types.HttpOptions;
@@ -53,14 +52,31 @@ export declare interface UpscaleImageAPIConfigInternal {
   be charged usage for any applicable operations.
        */
   abortSignal?: AbortSignal;
+  /** Cloud Storage URI used to store the generated images. */
+  outputGcsUri?: string;
+  /** Filter level for safety filtering. */
+  safetyFilterLevel?: types.SafetyFilterLevel;
+  /** Allows generation of people by the model. */
+  personGeneration?: types.PersonGeneration;
   /** Whether to include a reason for filtered-out images in the
       response. */
   includeRaiReason?: boolean;
   /** The image format that the output should be saved as. */
   outputMimeType?: string;
-  /** The level of compression if the ``output_mime_type`` is
-      ``image/jpeg``. */
+  /** The level of compression. Only applicable if the
+      ``output_mime_type`` is ``image/jpeg``. */
   outputCompressionQuality?: number;
+  /** Whether to add an image enhancing step before upscaling.
+      It is expected to suppress the noise and JPEG compression artifacts
+      from the input image. */
+  enhanceInputImage?: boolean;
+  /** With a higher image preservation factor, the original image
+      pixels are more respected. With a lower image preservation factor, the
+      output image will have be more different from the input image, but
+      with finer details and less noise. */
+  imagePreservationFactor?: number;
+  /** User specified labels to track billing usage. */
+  labels?: Record<string, string>;
   numberOfImages?: number;
   mode?: string;
 }

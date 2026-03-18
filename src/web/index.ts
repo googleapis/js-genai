@@ -5,10 +5,13 @@
  */
 
 export {BaseUrlParameters, setDefaultBaseUrls} from '../_base_url.js';
+export * from '../batches.js';
 export * from '../caches.js';
 export * from '../chats.js';
 export {GoogleGenAIOptions} from '../client.js';
+export * from '../errors.js';
 export {Files} from '../files.js';
+export type {Interactions} from '../interactions/resources/interactions.js';
 export * from '../live.js';
 export {mcpToTool} from '../mcp/_mcp';
 export {Models} from '../models.js';
