@@ -6236,8 +6236,8 @@ export declare interface GetBatchJobConfig {
 /** Config for batches.get parameters. */
 export declare interface GetBatchJobParameters {
   /** A fully-qualified BatchJob resource name or ID.
-    Example: "projects/.../locations/.../batchPredictionJobs/456"
-    or "456" when project and location are initialized in the client.
+    Example: "projects/.../locations/.../batchPredictionJobs/123"
+    or "123" when project and location are initialized in the client.
      */
   name: string;
   /** Optional parameters for the request. */
@@ -6260,8 +6260,8 @@ export declare interface CancelBatchJobConfig {
 /** Config for batches.cancel parameters. */
 export declare interface CancelBatchJobParameters {
   /** A fully-qualified BatchJob resource name or ID.
-    Example: "projects/.../locations/.../batchPredictionJobs/456"
-    or "456" when project and location are initialized in the client.
+    Example: "projects/.../locations/.../batchPredictionJobs/123"
+    or "123" when project and location are initialized in the client.
      */
   name: string;
   /** Optional parameters for the request. */
@@ -6313,8 +6313,8 @@ export declare interface DeleteBatchJobConfig {
 /** Config for batches.delete parameters. */
 export declare interface DeleteBatchJobParameters {
   /** A fully-qualified BatchJob resource name or ID.
-    Example: "projects/.../locations/.../batchPredictionJobs/456"
-    or "456" when project and location are initialized in the client.
+    Example: "projects/.../locations/.../batchPredictionJobs/123"
+    or "123" when project and location are initialized in the client.
      */
   name: string;
   /** Optional parameters for the request. */
