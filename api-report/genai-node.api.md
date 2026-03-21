@@ -894,6 +894,13 @@ export interface DistillationHyperParameters {
 }
 
 // @public
+export interface DistillationSamplingSpec {
+    baseTeacherModel?: string;
+    tunedTeacherModelSource?: string;
+    validationDatasetUri?: string;
+}
+
+// @public
 export interface DistillationSpec {
     baseTeacherModel?: string;
     hyperParameters?: DistillationHyperParameters;
@@ -920,13 +927,9 @@ export { Document_2 as Document }
 
 // @public
 export enum DocumentState {
-    // (undocumented)
     STATE_ACTIVE = "STATE_ACTIVE",
-    // (undocumented)
     STATE_FAILED = "STATE_FAILED",
-    // (undocumented)
     STATE_PENDING = "STATE_PENDING",
-    // (undocumented)
     STATE_UNSPECIFIED = "STATE_UNSPECIFIED"
 }
 
@@ -1449,6 +1452,7 @@ export class GenerateContentResponse {
     get data(): string | undefined;
     get executableCode(): string | undefined;
     get functionCalls(): FunctionCall[] | undefined;
+    modelStatus?: ModelStatus;
     modelVersion?: string;
     promptFeedback?: GenerateContentResponsePromptFeedback;
     responseId?: string;
@@ -1563,7 +1567,6 @@ export interface GenerateVideosConfig {
 export class GenerateVideosOperation implements Operation<GenerateVideosResponse> {
     done?: boolean;
     error?: Record<string, unknown>;
-    // @internal
     _fromAPIResponse({ apiResponse, _isVertexAI, }: OperationFromAPIResponseParameters): Operation<GenerateVideosResponse>;
     metadata?: Record<string, unknown>;
     name?: string;
@@ -1828,6 +1831,14 @@ export interface GroundingChunk {
 }
 
 // @public
+export interface GroundingChunkCustomMetadata {
+    key?: string;
+    numericValue?: number;
+    stringListValue?: GroundingChunkStringList;
+    stringValue?: string;
+}
+
+// @public
 export interface GroundingChunkImage {
     domain?: string;
     imageUri?: string;
@@ -1839,6 +1850,7 @@ export interface GroundingChunkImage {
 export interface GroundingChunkMaps {
     placeAnswerSources?: GroundingChunkMapsPlaceAnswerSources;
     placeId?: string;
+    route?: GroundingChunkMapsRoute;
     text?: string;
     title?: string;
     uri?: string;
@@ -1870,12 +1882,26 @@ export interface GroundingChunkMapsPlaceAnswerSourcesReviewSnippet {
 }
 
 // @public
+export interface GroundingChunkMapsRoute {
+    distanceMeters?: number;
+    duration?: string;
+    encodedPolyline?: string;
+}
+
+// @public
 export interface GroundingChunkRetrievedContext {
+    customMetadata?: GroundingChunkCustomMetadata[];
     documentName?: string;
+    fileSearchStore?: string;
     ragChunk?: RagChunk;
     text?: string;
     title?: string;
     uri?: string;
+}
+
+// @public
+export interface GroundingChunkStringList {
+    values?: string[];
 }
 
 // @public
@@ -1908,6 +1934,7 @@ export interface GroundingMetadataSourceFlaggingUri {
 export interface GroundingSupport {
     confidenceScores?: number[];
     groundingChunkIndices?: number[];
+    renderedParts?: number[];
     segment?: Segment;
 }
 
@@ -2050,7 +2077,6 @@ export interface ImportFileConfig {
 export class ImportFileOperation implements Operation<ImportFileResponse> {
     done?: boolean;
     error?: Record<string, unknown>;
-    // @internal
     _fromAPIResponse({ apiResponse, _isVertexAI, }: OperationFromAPIResponseParameters): Operation<ImportFileResponse>;
     metadata?: Record<string, unknown>;
     name?: string;
@@ -2075,6 +2101,7 @@ export class ImportFileResponse {
 // @public
 export class InlinedEmbedContentResponse {
     error?: JobError;
+    metadata?: Record<string, unknown>;
     response?: SingleEmbedContentResponse;
 }
 
@@ -2253,7 +2280,6 @@ export interface ListFileSearchStoresParameters {
 // @public
 export class ListFileSearchStoresResponse {
     fileSearchStores?: FileSearchStore[];
-    // (undocumented)
     nextPageToken?: string;
     sdkHttpResponse?: HttpResponse;
 }
@@ -2619,6 +2645,7 @@ export interface LiveServerToolCallCancellation {
 // @public
 export interface LogprobsResult {
     chosenCandidates?: LogprobsResultCandidate[];
+    logProbabilitySum?: number;
     topCandidates?: LogprobsResultTopCandidates[];
 }
 
@@ -2759,6 +2786,25 @@ export interface ModelSelectionConfig {
 }
 
 // @public
+export enum ModelStage {
+    DEPRECATED = "DEPRECATED",
+    EXPERIMENTAL = "EXPERIMENTAL",
+    LEGACY = "LEGACY",
+    MODEL_STAGE_UNSPECIFIED = "MODEL_STAGE_UNSPECIFIED",
+    PREVIEW = "PREVIEW",
+    RETIRED = "RETIRED",
+    STABLE = "STABLE",
+    UNSTABLE_EXPERIMENTAL = "UNSTABLE_EXPERIMENTAL"
+}
+
+// @public
+export interface ModelStatus {
+    message?: string;
+    modelStage?: ModelStage;
+    retirementTime?: string;
+}
+
+// @public
 export interface MultiSpeakerVoiceConfig {
     speakerVoiceConfigs?: SpeakerVoiceConfig[];
 }
@@ -2775,7 +2821,6 @@ export enum MusicGenerationMode {
 export interface Operation<T> {
     done?: boolean;
     error?: Record<string, unknown>;
-    // @internal
     _fromAPIResponse({ apiResponse, _isVertexAI, }: OperationFromAPIResponseParameters): Operation<T>;
     metadata?: Record<string, unknown>;
     name?: string;
@@ -2878,6 +2923,7 @@ export interface Part {
     functionResponse?: FunctionResponse;
     inlineData?: Blob_2;
     mediaResolution?: PartMediaResolution;
+    partMetadata?: Record<string, unknown>;
     text?: string;
     thought?: boolean;
     thoughtSignature?: string;
@@ -3711,6 +3757,7 @@ export interface TuningJob {
     createTime?: string;
     customBaseModel?: string;
     description?: string;
+    distillationSamplingSpec?: DistillationSamplingSpec;
     distillationSpec?: DistillationSpec;
     encryptionSpec?: EncryptionSpec;
     endTime?: string;
@@ -3733,9 +3780,16 @@ export interface TuningJob {
     tunedModel?: TunedModel;
     tunedModelDisplayName?: string;
     tuningDataStats?: TuningDataStats;
+    tuningJobMetadata?: TuningJobMetadata;
     tuningJobState?: TuningJobState;
     updateTime?: string;
     veoTuningSpec?: VeoTuningSpec;
+}
+
+// @public
+export interface TuningJobMetadata {
+    completedEpochCount?: string;
+    completedStepCount?: string;
 }
 
 // @public
@@ -3875,7 +3929,6 @@ export interface UploadToFileSearchStoreConfig {
 export class UploadToFileSearchStoreOperation implements Operation<UploadToFileSearchStoreResponse> {
     done?: boolean;
     error?: Record<string, unknown>;
-    // @internal
     _fromAPIResponse({ apiResponse, _isVertexAI, }: OperationFromAPIResponseParameters): Operation<UploadToFileSearchStoreResponse>;
     metadata?: Record<string, unknown>;
     name?: string;

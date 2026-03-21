@@ -1330,6 +1330,11 @@ export function generateContentResponseFromMldev(
     common.setValueByPath(toObject, ['usageMetadata'], fromUsageMetadata);
   }
 
+  const fromModelStatus = common.getValueByPath(fromObject, ['modelStatus']);
+  if (fromModelStatus != null) {
+    common.setValueByPath(toObject, ['modelStatus'], fromModelStatus);
+  }
+
   return toObject;
 }
 
@@ -1784,6 +1789,11 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
   const fromToolResponse = common.getValueByPath(fromObject, ['toolResponse']);
   if (fromToolResponse != null) {
     common.setValueByPath(toObject, ['toolResponse'], fromToolResponse);
+  }
+
+  const fromPartMetadata = common.getValueByPath(fromObject, ['partMetadata']);
+  if (fromPartMetadata != null) {
+    common.setValueByPath(toObject, ['partMetadata'], fromPartMetadata);
   }
 
   return toObject;

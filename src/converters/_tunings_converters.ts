@@ -1562,6 +1562,28 @@ export function tuningJobFromVertex(
     common.setValueByPath(toObject, ['veoTuningSpec'], fromVeoTuningSpec);
   }
 
+  const fromDistillationSamplingSpec = common.getValueByPath(fromObject, [
+    'distillationSamplingSpec',
+  ]);
+  if (fromDistillationSamplingSpec != null) {
+    common.setValueByPath(
+      toObject,
+      ['distillationSamplingSpec'],
+      fromDistillationSamplingSpec,
+    );
+  }
+
+  const fromTuningJobMetadata = common.getValueByPath(fromObject, [
+    'tuningJobMetadata',
+  ]);
+  if (fromTuningJobMetadata != null) {
+    common.setValueByPath(
+      toObject,
+      ['tuningJobMetadata'],
+      fromTuningJobMetadata,
+    );
+  }
+
   return toObject;
 }
 

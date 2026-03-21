@@ -840,6 +840,11 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
     common.setValueByPath(toObject, ['toolResponse'], fromToolResponse);
   }
 
+  const fromPartMetadata = common.getValueByPath(fromObject, ['partMetadata']);
+  if (fromPartMetadata != null) {
+    common.setValueByPath(toObject, ['partMetadata'], fromPartMetadata);
+  }
+
   return toObject;
 }
 
@@ -923,6 +928,10 @@ export function partToVertex(fromObject: types.Part): Record<string, unknown> {
 
   if (common.getValueByPath(fromObject, ['toolResponse']) !== undefined) {
     throw new Error('toolResponse parameter is not supported in Vertex AI.');
+  }
+
+  if (common.getValueByPath(fromObject, ['partMetadata']) !== undefined) {
+    throw new Error('partMetadata parameter is not supported in Vertex AI.');
   }
 
   return toObject;
