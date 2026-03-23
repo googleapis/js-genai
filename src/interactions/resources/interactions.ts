@@ -177,7 +177,14 @@ export interface AudioContent {
   /**
    * The mime type of the audio.
    */
-  mime_type?: 'audio/wav' | 'audio/mp3' | 'audio/aiff' | 'audio/aac' | 'audio/ogg' | 'audio/flac';
+  mime_type?:
+    | 'audio/wav'
+    | 'audio/mp3'
+    | 'audio/aiff'
+    | 'audio/aac'
+    | 'audio/ogg'
+    | 'audio/flac'
+    | 'audio/mpeg';
 
   /**
    * The URI of the audio.
@@ -340,7 +347,14 @@ export namespace ContentDelta {
 
     data?: string;
 
-    mime_type?: 'audio/wav' | 'audio/mp3' | 'audio/aiff' | 'audio/aac' | 'audio/ogg' | 'audio/flac';
+    mime_type?:
+      | 'audio/wav'
+      | 'audio/mp3'
+      | 'audio/aiff'
+      | 'audio/aac'
+      | 'audio/ogg'
+      | 'audio/flac'
+      | 'audio/mpeg';
 
     uri?: string;
   }
