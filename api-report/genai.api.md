@@ -3449,7 +3449,7 @@ export interface SpeakerVoiceConfig {
     voiceConfig?: VoiceConfig;
 }
 
-// @public (undocumented)
+// @public
 export interface SpeechConfig {
     languageCode?: string;
     multiSpeakerVoiceConfig?: MultiSpeakerVoiceConfig;
@@ -4143,7 +4143,7 @@ export enum VoiceActivityType {
     TYPE_UNSPECIFIED = "TYPE_UNSPECIFIED"
 }
 
-// @public (undocumented)
+// @public
 export interface VoiceConfig {
     prebuiltVoiceConfig?: PrebuiltVoiceConfig;
     replicatedVoiceConfig?: ReplicatedVoiceConfig;
