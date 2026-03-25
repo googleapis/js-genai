@@ -654,7 +654,7 @@ export namespace ContentDelta {
      */
     call_id: string;
 
-    result: Array<unknown>;
+    result: Array<FileSearchResult.Result>;
 
     type: 'file_search_result';
 
@@ -662,6 +662,18 @@ export namespace ContentDelta {
      * A signature hash for backend validation.
      */
     signature?: string;
+  }
+
+  export namespace FileSearchResult {
+    /**
+     * The result of the File Search.
+     */
+    export interface Result {
+      /**
+       * User provided metadata about the FileSearchResult.
+       */
+      custom_metadata?: Array<unknown>;
+    }
   }
 
   export interface GoogleMapsResult {
@@ -851,7 +863,7 @@ export interface FileSearchResultContent {
   /**
    * Required. The results of the File Search.
    */
-  result: Array<unknown>;
+  result: Array<FileSearchResultContent.Result>;
 
   type: 'file_search_result';
 
@@ -859,6 +871,18 @@ export interface FileSearchResultContent {
    * A signature hash for backend validation.
    */
   signature?: string;
+}
+
+export namespace FileSearchResultContent {
+  /**
+   * The result of the File Search.
+   */
+  export interface Result {
+    /**
+     * User provided metadata about the FileSearchResult.
+     */
+    custom_metadata?: Array<unknown>;
+  }
 }
 
 /**
