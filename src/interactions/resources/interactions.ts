@@ -184,7 +184,8 @@ export interface AudioContent {
     | 'audio/aac'
     | 'audio/ogg'
     | 'audio/flac'
-    | 'audio/mpeg';
+    | 'audio/mpeg'
+    | 'audio/m4a';
 
   /**
    * The URI of the audio.
@@ -336,7 +337,16 @@ export namespace ContentDelta {
 
     data?: string;
 
-    mime_type?: 'image/png' | 'image/jpeg' | 'image/webp' | 'image/heic' | 'image/heif';
+    mime_type?:
+      | 'image/png'
+      | 'image/jpeg'
+      | 'image/webp'
+      | 'image/heic'
+      | 'image/heif'
+      | 'image/jpg'
+      | 'image/gif'
+      | 'image/bmp'
+      | 'image/tiff';
 
     /**
      * The resolution of the media.
@@ -358,7 +368,8 @@ export namespace ContentDelta {
       | 'audio/aac'
       | 'audio/ogg'
       | 'audio/flac'
-      | 'audio/mpeg';
+      | 'audio/mpeg'
+      | 'audio/m4a';
 
     uri?: string;
   }
@@ -1214,7 +1225,16 @@ export interface ImageContent {
   /**
    * The mime type of the image.
    */
-  mime_type?: 'image/png' | 'image/jpeg' | 'image/webp' | 'image/heic' | 'image/heif';
+  mime_type?:
+    | 'image/png'
+    | 'image/jpeg'
+    | 'image/webp'
+    | 'image/heic'
+    | 'image/heif'
+    | 'image/jpg'
+    | 'image/gif'
+    | 'image/bmp'
+    | 'image/tiff';
 
   /**
    * The resolution of the media.
