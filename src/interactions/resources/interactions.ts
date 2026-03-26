@@ -177,7 +177,15 @@ export interface AudioContent {
   /**
    * The mime type of the audio.
    */
-  mime_type?: 'audio/wav' | 'audio/mp3' | 'audio/aiff' | 'audio/aac' | 'audio/ogg' | 'audio/flac';
+  mime_type?:
+    | 'audio/wav'
+    | 'audio/mp3'
+    | 'audio/aiff'
+    | 'audio/aac'
+    | 'audio/ogg'
+    | 'audio/flac'
+    | 'audio/mpeg'
+    | 'audio/m4a';
 
   /**
    * The URI of the audio.
@@ -210,7 +218,7 @@ export interface CodeExecutionCallContent {
   id: string;
 
   /**
-   * The arguments to pass to the code execution.
+   * Required. The arguments to pass to the code execution.
    */
   arguments: CodeExecutionCallArguments;
 
@@ -232,7 +240,7 @@ export interface CodeExecutionResultContent {
   call_id: string;
 
   /**
-   * The output of the code execution.
+   * Required. The output of the code execution.
    */
   result: string;
 
@@ -260,21 +268,24 @@ export type Content =
   | VideoContent
   | ThoughtContent
   | FunctionCallContent
-  | FunctionResultContent
   | CodeExecutionCallContent
-  | CodeExecutionResultContent
   | URLContextCallContent
-  | URLContextResultContent
-  | GoogleSearchCallContent
-  | GoogleSearchResultContent
   | MCPServerToolCallContent
-  | MCPServerToolResultContent
+  | GoogleSearchCallContent
   | FileSearchCallContent
-  | FileSearchResultContent
   | GoogleMapsCallContent
+  | FunctionResultContent
+  | CodeExecutionResultContent
+  | URLContextResultContent
+  | GoogleSearchResultContent
+  | MCPServerToolResultContent
+  | FileSearchResultContent
   | GoogleMapsResultContent;
 
 export interface ContentDelta {
+  /**
+   * The delta content data for a content block.
+   */
   delta:
     | ContentDelta.Text
     | ContentDelta.Image
@@ -284,18 +295,18 @@ export interface ContentDelta {
     | ContentDelta.ThoughtSummary
     | ContentDelta.ThoughtSignature
     | ContentDelta.FunctionCall
-    | ContentDelta.FunctionResult
     | ContentDelta.CodeExecutionCall
-    | ContentDelta.CodeExecutionResult
     | ContentDelta.URLContextCall
-    | ContentDelta.URLContextResult
     | ContentDelta.GoogleSearchCall
-    | ContentDelta.GoogleSearchResult
     | ContentDelta.MCPServerToolCall
-    | ContentDelta.MCPServerToolResult
     | ContentDelta.FileSearchCall
-    | ContentDelta.FileSearchResult
     | ContentDelta.GoogleMapsCall
+    | ContentDelta.FunctionResult
+    | ContentDelta.CodeExecutionResult
+    | ContentDelta.URLContextResult
+    | ContentDelta.GoogleSearchResult
+    | ContentDelta.MCPServerToolResult
+    | ContentDelta.FileSearchResult
     | ContentDelta.GoogleMapsResult;
 
   event_type: 'content.delta';
@@ -303,7 +314,8 @@ export interface ContentDelta {
   index: number;
 
   /**
-   * The event_id token to be used to resume the interaction stream, from this event.
+   * The event_id token to be used to resume the interaction stream, from
+   * this event.
    */
   event_id?: string;
 }
@@ -325,7 +337,16 @@ export namespace ContentDelta {
 
     data?: string;
 
-    mime_type?: 'image/png' | 'image/jpeg' | 'image/webp' | 'image/heic' | 'image/heif';
+    mime_type?:
+      | 'image/png'
+      | 'image/jpeg'
+      | 'image/webp'
+      | 'image/heic'
+      | 'image/heif'
+      | 'image/jpg'
+      | 'image/gif'
+      | 'image/bmp'
+      | 'image/tiff';
 
     /**
      * The resolution of the media.
@@ -340,7 +361,15 @@ export namespace ContentDelta {
 
     data?: string;
 
-    mime_type?: 'audio/wav' | 'audio/mp3' | 'audio/aiff' | 'audio/aac' | 'audio/ogg' | 'audio/flac';
+    mime_type?:
+      | 'audio/wav'
+      | 'audio/mp3'
+      | 'audio/aiff'
+      | 'audio/aac'
+      | 'audio/ogg'
+      | 'audio/flac'
+      | 'audio/mpeg'
+      | 'audio/m4a';
 
     uri?: string;
   }
@@ -415,35 +444,6 @@ export namespace ContentDelta {
     signature?: string;
   }
 
-  export interface FunctionResult {
-    /**
-     * ID to match the ID from the function call block.
-     */
-    call_id: string;
-
-    /**
-     * Tool call result delta.
-     */
-    result: FunctionResult.Items | unknown | string;
-
-    type: 'function_result';
-
-    is_error?: boolean;
-
-    name?: string;
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export namespace FunctionResult {
-    export interface Items {
-      items?: Array<InteractionsAPI.TextContent | InteractionsAPI.ImageContent>;
-    }
-  }
-
   export interface CodeExecutionCall {
     /**
      * A unique ID for this specific tool call.
@@ -456,24 +456,6 @@ export namespace ContentDelta {
     arguments: InteractionsAPI.CodeExecutionCallArguments;
 
     type: 'code_execution_call';
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface CodeExecutionResult {
-    /**
-     * ID to match the ID from the function call block.
-     */
-    call_id: string;
-
-    result: string;
-
-    type: 'code_execution_result';
-
-    is_error?: boolean;
 
     /**
      * A signature hash for backend validation.
@@ -500,24 +482,6 @@ export namespace ContentDelta {
     signature?: string;
   }
 
-  export interface URLContextResult {
-    /**
-     * ID to match the ID from the function call block.
-     */
-    call_id: string;
-
-    result: Array<InteractionsAPI.URLContextResult>;
-
-    type: 'url_context_result';
-
-    is_error?: boolean;
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
   export interface GoogleSearchCall {
     /**
      * A unique ID for this specific tool call.
@@ -530,24 +494,6 @@ export namespace ContentDelta {
     arguments: InteractionsAPI.GoogleSearchCallArguments;
 
     type: 'google_search_call';
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface GoogleSearchResult {
-    /**
-     * ID to match the ID from the function call block.
-     */
-    call_id: string;
-
-    result: Array<InteractionsAPI.GoogleSearchResult>;
-
-    type: 'google_search_result';
-
-    is_error?: boolean;
 
     /**
      * A signature hash for backend validation.
@@ -575,35 +521,6 @@ export namespace ContentDelta {
     signature?: string;
   }
 
-  export interface MCPServerToolResult {
-    /**
-     * ID to match the ID from the function call block.
-     */
-    call_id: string;
-
-    /**
-     * Tool call result delta.
-     */
-    result: MCPServerToolResult.Items | unknown | string;
-
-    type: 'mcp_server_tool_result';
-
-    name?: string;
-
-    server_name?: string;
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export namespace MCPServerToolResult {
-    export interface Items {
-      items?: Array<InteractionsAPI.TextContent | InteractionsAPI.ImageContent>;
-    }
-  }
-
   export interface FileSearchCall {
     /**
      * A unique ID for this specific tool call.
@@ -611,22 +528,6 @@ export namespace ContentDelta {
     id: string;
 
     type: 'file_search_call';
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface FileSearchResult {
-    /**
-     * ID to match the ID from the function call block.
-     */
-    call_id: string;
-
-    type: 'file_search_result';
-
-    result?: Array<unknown>;
 
     /**
      * A signature hash for backend validation.
@@ -653,18 +554,140 @@ export namespace ContentDelta {
     signature?: string;
   }
 
+  export interface FunctionResult {
+    /**
+     * ID to match the ID from the function call block.
+     */
+    call_id: string;
+
+    result: unknown | Array<InteractionsAPI.TextContent | InteractionsAPI.ImageContent> | string;
+
+    type: 'function_result';
+
+    is_error?: boolean;
+
+    name?: string;
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+  }
+
+  export interface CodeExecutionResult {
+    /**
+     * ID to match the ID from the function call block.
+     */
+    call_id: string;
+
+    result: string;
+
+    type: 'code_execution_result';
+
+    is_error?: boolean;
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+  }
+
+  export interface URLContextResult {
+    /**
+     * ID to match the ID from the function call block.
+     */
+    call_id: string;
+
+    result: Array<InteractionsAPI.URLContextResult>;
+
+    type: 'url_context_result';
+
+    is_error?: boolean;
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+  }
+
+  export interface GoogleSearchResult {
+    /**
+     * ID to match the ID from the function call block.
+     */
+    call_id: string;
+
+    result: Array<InteractionsAPI.GoogleSearchResult>;
+
+    type: 'google_search_result';
+
+    is_error?: boolean;
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+  }
+
+  export interface MCPServerToolResult {
+    /**
+     * ID to match the ID from the function call block.
+     */
+    call_id: string;
+
+    result: unknown | Array<InteractionsAPI.TextContent | InteractionsAPI.ImageContent> | string;
+
+    type: 'mcp_server_tool_result';
+
+    name?: string;
+
+    server_name?: string;
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+  }
+
+  export interface FileSearchResult {
+    /**
+     * ID to match the ID from the function call block.
+     */
+    call_id: string;
+
+    result: Array<FileSearchResult.Result>;
+
+    type: 'file_search_result';
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+  }
+
+  export namespace FileSearchResult {
+    /**
+     * The result of the File Search.
+     */
+    export interface Result {
+      /**
+       * User provided metadata about the FileSearchResult.
+       */
+      custom_metadata?: Array<unknown>;
+    }
+  }
+
   export interface GoogleMapsResult {
     /**
      * ID to match the ID from the function call block.
      */
     call_id: string;
 
+    type: 'google_maps_result';
+
     /**
      * The results of the Google Maps.
      */
-    result: Array<InteractionsAPI.GoogleMapsResult>;
-
-    type: 'google_maps_result';
+    result?: Array<InteractionsAPI.GoogleMapsResult>;
 
     /**
      * A signature hash for backend validation.
@@ -684,7 +707,8 @@ export interface ContentStart {
   index: number;
 
   /**
-   * The event_id token to be used to resume the interaction stream, from this event.
+   * The event_id token to be used to resume the interaction stream, from
+   * this event.
    */
   event_id?: string;
 }
@@ -695,7 +719,8 @@ export interface ContentStop {
   index: number;
 
   /**
-   * The event_id token to be used to resume the interaction stream, from this event.
+   * The event_id token to be used to resume the interaction stream, from
+   * this event.
    */
   event_id?: string;
 }
@@ -752,7 +777,8 @@ export interface ErrorEvent {
   error?: ErrorEvent.Error;
 
   /**
-   * The event_id token to be used to resume the interaction stream, from this event.
+   * The event_id token to be used to resume the interaction stream, from
+   * this event.
    */
   event_id?: string;
 }
@@ -802,6 +828,8 @@ export interface FileCitation {
 
   /**
    * Start of segment of the response that is attributed to this source.
+   *
+   * Index indicates the start of the segment, measured in bytes.
    */
   start_index?: number;
 }
@@ -832,17 +860,29 @@ export interface FileSearchResultContent {
    */
   call_id: string;
 
-  type: 'file_search_result';
-
   /**
-   * The results of the File Search.
+   * Required. The results of the File Search.
    */
-  result?: Array<unknown>;
+  result: Array<FileSearchResultContent.Result>;
+
+  type: 'file_search_result';
 
   /**
    * A signature hash for backend validation.
    */
   signature?: string;
+}
+
+export namespace FileSearchResultContent {
+  /**
+   * The result of the File Search.
+   */
+  export interface Result {
+    /**
+     * User provided metadata about the FileSearchResult.
+     */
+    custom_metadata?: Array<unknown>;
+  }
 }
 
 /**
@@ -877,12 +917,12 @@ export interface FunctionCallContent {
   id: string;
 
   /**
-   * The arguments to pass to the function.
+   * Required. The arguments to pass to the function.
    */
   arguments: { [key: string]: unknown };
 
   /**
-   * The name of the tool to call.
+   * Required. The name of the tool to call.
    */
   name: string;
 
@@ -971,7 +1011,7 @@ export interface GenerationConfig {
   thinking_summaries?: 'auto' | 'none';
 
   /**
-   * The tool choice for the interaction.
+   * The tool choice configuration.
    */
   tool_choice?: ToolChoiceType | ToolChoiceConfig;
 
@@ -1086,7 +1126,7 @@ export interface GoogleMapsResultContent {
   call_id: string;
 
   /**
-   * The results of the Google Maps.
+   * Required. The results of the Google Maps.
    */
   result: Array<GoogleMapsResult>;
 
@@ -1118,7 +1158,7 @@ export interface GoogleSearchCallContent {
   id: string;
 
   /**
-   * The arguments to pass to Google Search.
+   * Required. The arguments to pass to Google Search.
    */
   arguments: GoogleSearchCallArguments;
 
@@ -1155,7 +1195,7 @@ export interface GoogleSearchResultContent {
   call_id: string;
 
   /**
-   * The results of the Google Search.
+   * Required. The results of the Google Search.
    */
   result: Array<GoogleSearchResult>;
 
@@ -1209,7 +1249,16 @@ export interface ImageContent {
   /**
    * The mime type of the image.
    */
-  mime_type?: 'image/png' | 'image/jpeg' | 'image/webp' | 'image/heic' | 'image/heif';
+  mime_type?:
+    | 'image/png'
+    | 'image/jpeg'
+    | 'image/webp'
+    | 'image/heic'
+    | 'image/heif'
+    | 'image/jpg'
+    | 'image/gif'
+    | 'image/bmp'
+    | 'image/tiff';
 
   /**
    * The resolution of the media.
@@ -1227,23 +1276,23 @@ export interface ImageContent {
  */
 export interface Interaction {
   /**
-   * Output only. A unique identifier for the interaction completion.
+   * Required. Output only. A unique identifier for the interaction completion.
    */
   id: string;
 
   /**
-   * Output only. The time at which the response was created in ISO 8601 format
+   * Required. Output only. The time at which the response was created in ISO 8601 format
    * (YYYY-MM-DDThh:mm:ssZ).
    */
   created: string;
 
   /**
-   * Output only. The status of the interaction.
+   * Required. Output only. The status of the interaction.
    */
   status: 'in_progress' | 'requires_action' | 'completed' | 'failed' | 'cancelled' | 'incomplete';
 
   /**
-   * Output only. The time at which the response was last updated in ISO 8601 format
+   * Required. Output only. The time at which the response was last updated in ISO 8601 format
    * (YYYY-MM-DDThh:mm:ssZ).
    */
   updated: string;
@@ -1272,18 +1321,18 @@ export interface Interaction {
     | VideoContent
     | ThoughtContent
     | FunctionCallContent
-    | FunctionResultContent
     | CodeExecutionCallContent
-    | CodeExecutionResultContent
     | URLContextCallContent
-    | URLContextResultContent
-    | GoogleSearchCallContent
-    | GoogleSearchResultContent
     | MCPServerToolCallContent
-    | MCPServerToolResultContent
+    | GoogleSearchCallContent
     | FileSearchCallContent
-    | FileSearchResultContent
     | GoogleMapsCallContent
+    | FunctionResultContent
+    | CodeExecutionResultContent
+    | URLContextResultContent
+    | GoogleSearchResultContent
+    | MCPServerToolResultContent
+    | FileSearchResultContent
     | GoogleMapsResultContent;
 
   /**
@@ -1342,13 +1391,14 @@ export interface InteractionCompleteEvent {
   event_type: 'interaction.complete';
 
   /**
-   * The completed interaction with empty outputs to reduce the payload size.
+   * Required. The completed interaction with empty outputs to reduce the payload size.
    * Use the preceding ContentDelta events for the actual output.
    */
   interaction: Interaction;
 
   /**
-   * The event_id token to be used to resume the interaction stream, from this event.
+   * The event_id token to be used to resume the interaction stream, from
+   * this event.
    */
   event_id?: string;
 }
@@ -1371,7 +1421,8 @@ export interface InteractionStartEvent {
   interaction: Interaction;
 
   /**
-   * The event_id token to be used to resume the interaction stream, from this event.
+   * The event_id token to be used to resume the interaction stream, from
+   * this event.
    */
   event_id?: string;
 }
@@ -1384,7 +1435,8 @@ export interface InteractionStatusUpdate {
   status: 'in_progress' | 'requires_action' | 'completed' | 'failed' | 'cancelled' | 'incomplete';
 
   /**
-   * The event_id token to be used to resume the interaction stream, from this event.
+   * The event_id token to be used to resume the interaction stream, from
+   * this event.
    */
   event_id?: string;
 }
@@ -1399,17 +1451,17 @@ export interface MCPServerToolCallContent {
   id: string;
 
   /**
-   * The JSON object of arguments for the function.
+   * Required. The JSON object of arguments for the function.
    */
   arguments: { [key: string]: unknown };
 
   /**
-   * The name of the tool which was called.
+   * Required. The name of the tool which was called.
    */
   name: string;
 
   /**
-   * The name of the used MCP server.
+   * Required. The name of the used MCP server.
    */
   server_name: string;
 
@@ -1502,6 +1554,8 @@ export interface PlaceCitation {
 
   /**
    * Start of segment of the response that is attributed to this source.
+   *
+   * Index indicates the start of the segment, measured in bytes.
    */
   start_index?: number;
 
@@ -1559,7 +1613,7 @@ export interface SpeechConfig {
  */
 export interface TextContent {
   /**
-   * The text content.
+   * Required. The text content.
    */
   text: string;
 
@@ -1595,27 +1649,15 @@ export interface ThoughtContent {
  */
 export type Tool =
   | Function
-  | Tool.GoogleSearch
   | Tool.CodeExecution
   | Tool.URLContext
   | Tool.ComputerUse
   | Tool.MCPServer
+  | Tool.GoogleSearch
   | Tool.FileSearch
   | Tool.GoogleMaps;
 
 export namespace Tool {
-  /**
-   * A tool that can be used by the model to search Google.
-   */
-  export interface GoogleSearch {
-    type: 'google_search';
-
-    /**
-     * The types of search grounding to enable.
-     */
-    search_types?: Array<'web_search' | 'image_search'>;
-  }
-
   /**
    * A tool that can be used by the model to execute code.
    */
@@ -1676,6 +1718,18 @@ export namespace Tool {
   }
 
   /**
+   * A tool that can be used by the model to search Google.
+   */
+  export interface GoogleSearch {
+    type: 'google_search';
+
+    /**
+     * The types of search grounding to enable.
+     */
+    search_types?: Array<'web_search' | 'image_search'>;
+  }
+
+  /**
    * A tool that can be used by the model to search files.
    */
   export interface FileSearch {
@@ -1701,6 +1755,8 @@ export namespace Tool {
    * A tool that can be used by the model to call Google Maps.
    */
   export interface GoogleMaps {
+    type: 'google_maps';
+
     /**
      * Whether to return a widget context token in the tool call result of the
      * response.
@@ -1716,8 +1772,6 @@ export namespace Tool {
      * The longitude of the user's location.
      */
     longitude?: number;
-
-    type?: 'google_maps';
   }
 }
 
@@ -1734,10 +1788,7 @@ export interface ToolChoiceConfig {
 export type ToolChoiceType = 'auto' | 'any' | 'none' | 'validated';
 
 export interface Turn {
-  /**
-   * The content of the turn.
-   */
-  content?: string | Array<Content>;
+  content?: Array<Content> | string;
 
   /**
    * The originator of this turn. Must be user for input or model for
@@ -1759,6 +1810,8 @@ export interface URLCitation {
 
   /**
    * Start of segment of the response that is attributed to this source.
+   *
+   * Index indicates the start of the segment, measured in bytes.
    */
   start_index?: number;
 
@@ -1793,7 +1846,7 @@ export interface URLContextCallContent {
   id: string;
 
   /**
-   * The arguments to pass to the URL context.
+   * Required. The arguments to pass to the URL context.
    */
   arguments: URLContextCallArguments;
 
@@ -1830,7 +1883,7 @@ export interface URLContextResultContent {
   call_id: string;
 
   /**
-   * The results of the URL context.
+   * Required. The results of the URL context.
    */
   result: Array<URLContextResult>;
 
@@ -2029,18 +2082,18 @@ export interface BaseCreateModelInteractionParams {
     | VideoContent
     | ThoughtContent
     | FunctionCallContent
-    | FunctionResultContent
     | CodeExecutionCallContent
-    | CodeExecutionResultContent
     | URLContextCallContent
-    | URLContextResultContent
-    | GoogleSearchCallContent
-    | GoogleSearchResultContent
     | MCPServerToolCallContent
-    | MCPServerToolResultContent
+    | GoogleSearchCallContent
     | FileSearchCallContent
-    | FileSearchResultContent
     | GoogleMapsCallContent
+    | FunctionResultContent
+    | CodeExecutionResultContent
+    | URLContextResultContent
+    | GoogleSearchResultContent
+    | MCPServerToolResultContent
+    | FileSearchResultContent
     | GoogleMapsResultContent;
 
   /**
@@ -2125,18 +2178,18 @@ export interface BaseCreateAgentInteractionParams {
     | VideoContent
     | ThoughtContent
     | FunctionCallContent
-    | FunctionResultContent
     | CodeExecutionCallContent
-    | CodeExecutionResultContent
     | URLContextCallContent
-    | URLContextResultContent
-    | GoogleSearchCallContent
-    | GoogleSearchResultContent
     | MCPServerToolCallContent
-    | MCPServerToolResultContent
+    | GoogleSearchCallContent
     | FileSearchCallContent
-    | FileSearchResultContent
     | GoogleMapsCallContent
+    | FunctionResultContent
+    | CodeExecutionResultContent
+    | URLContextResultContent
+    | GoogleSearchResultContent
+    | MCPServerToolResultContent
+    | FileSearchResultContent
     | GoogleMapsResultContent;
 
   /**

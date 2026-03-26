@@ -102,36 +102,16 @@ export enum Type {
   NULL = 'NULL',
 }
 
-/** Sites with confidence level chosen & above this value will be blocked from the search results. This enum is not supported in Gemini API. */
-export enum PhishBlockThreshold {
+/** The environment being operated. */
+export enum Environment {
   /**
-   * Defaults to unspecified.
+   * Defaults to browser.
    */
-  PHISH_BLOCK_THRESHOLD_UNSPECIFIED = 'PHISH_BLOCK_THRESHOLD_UNSPECIFIED',
+  ENVIRONMENT_UNSPECIFIED = 'ENVIRONMENT_UNSPECIFIED',
   /**
-   * Blocks Low and above confidence URL that is risky.
+   * Operates in a web browser.
    */
-  BLOCK_LOW_AND_ABOVE = 'BLOCK_LOW_AND_ABOVE',
-  /**
-   * Blocks Medium and above confidence URL that is risky.
-   */
-  BLOCK_MEDIUM_AND_ABOVE = 'BLOCK_MEDIUM_AND_ABOVE',
-  /**
-   * Blocks High and above confidence URL that is risky.
-   */
-  BLOCK_HIGH_AND_ABOVE = 'BLOCK_HIGH_AND_ABOVE',
-  /**
-   * Blocks Higher and above confidence URL that is risky.
-   */
-  BLOCK_HIGHER_AND_ABOVE = 'BLOCK_HIGHER_AND_ABOVE',
-  /**
-   * Blocks Very high and above confidence URL that is risky.
-   */
-  BLOCK_VERY_HIGH_AND_ABOVE = 'BLOCK_VERY_HIGH_AND_ABOVE',
-  /**
-   * Blocks Extremely high confidence URL that is risky.
-   */
-  BLOCK_ONLY_EXTREMELY_HIGH = 'BLOCK_ONLY_EXTREMELY_HIGH',
+  ENVIRONMENT_BROWSER = 'ENVIRONMENT_BROWSER',
 }
 
 /** Type of auth scheme. This enum is not supported in Gemini API. */
@@ -204,6 +184,38 @@ export enum ApiSpec {
   ELASTIC_SEARCH = 'ELASTIC_SEARCH',
 }
 
+/** Sites with confidence level chosen & above this value will be blocked from the search results. This enum is not supported in Gemini API. */
+export enum PhishBlockThreshold {
+  /**
+   * Defaults to unspecified.
+   */
+  PHISH_BLOCK_THRESHOLD_UNSPECIFIED = 'PHISH_BLOCK_THRESHOLD_UNSPECIFIED',
+  /**
+   * Blocks Low and above confidence URL that is risky.
+   */
+  BLOCK_LOW_AND_ABOVE = 'BLOCK_LOW_AND_ABOVE',
+  /**
+   * Blocks Medium and above confidence URL that is risky.
+   */
+  BLOCK_MEDIUM_AND_ABOVE = 'BLOCK_MEDIUM_AND_ABOVE',
+  /**
+   * Blocks High and above confidence URL that is risky.
+   */
+  BLOCK_HIGH_AND_ABOVE = 'BLOCK_HIGH_AND_ABOVE',
+  /**
+   * Blocks Higher and above confidence URL that is risky.
+   */
+  BLOCK_HIGHER_AND_ABOVE = 'BLOCK_HIGHER_AND_ABOVE',
+  /**
+   * Blocks Very high and above confidence URL that is risky.
+   */
+  BLOCK_VERY_HIGH_AND_ABOVE = 'BLOCK_VERY_HIGH_AND_ABOVE',
+  /**
+   * Blocks Extremely high confidence URL that is risky.
+   */
+  BLOCK_ONLY_EXTREMELY_HIGH = 'BLOCK_ONLY_EXTREMELY_HIGH',
+}
+
 /** Specifies the function Behavior. Currently only supported by the BidiGenerateContent method. This enum is not supported in Vertex AI. */
 export enum Behavior {
   /**
@@ -263,6 +275,10 @@ export enum ThinkingLevel {
    */
   THINKING_LEVEL_UNSPECIFIED = 'THINKING_LEVEL_UNSPECIFIED',
   /**
+   * MINIMAL thinking level.
+   */
+  MINIMAL = 'MINIMAL',
+  /**
    * Low thinking level.
    */
   LOW = 'LOW',
@@ -274,10 +290,6 @@ export enum ThinkingLevel {
    * High thinking level.
    */
   HIGH = 'HIGH',
-  /**
-   * MINIMAL thinking level.
-   */
-  MINIMAL = 'MINIMAL',
 }
 
 /** Enum that controls the generation of people. */
@@ -294,6 +306,22 @@ export enum PersonGeneration {
    * Generate images that include adults and children.
    */
   ALLOW_ALL = 'ALLOW_ALL',
+}
+
+/** Controls whether prominent people (celebrities) generation is allowed. If used with personGeneration, personGeneration enum would take precedence. For instance, if ALLOW_NONE is set, all person generation would be blocked. If this field is unspecified, the default behavior is to allow prominent people. This enum is not supported in Gemini API. */
+export enum ProminentPeople {
+  /**
+   * Unspecified value. The model will proceed with the default behavior, which is to allow generation of prominent people.
+   */
+  PROMINENT_PEOPLE_UNSPECIFIED = 'PROMINENT_PEOPLE_UNSPECIFIED',
+  /**
+   * Allows the model to generate images of prominent people.
+   */
+  ALLOW_PROMINENT_PEOPLE = 'ALLOW_PROMINENT_PEOPLE',
+  /**
+   * Prevents the model from generating images of prominent people.
+   */
+  BLOCK_PROMINENT_PEOPLE = 'BLOCK_PROMINENT_PEOPLE',
 }
 
 /** The harm category to be blocked. */
@@ -614,6 +642,42 @@ export enum Modality {
   AUDIO = 'AUDIO',
 }
 
+/** The stage of the underlying model. This enum is not supported in Vertex AI. */
+export enum ModelStage {
+  /**
+   * Unspecified model stage.
+   */
+  MODEL_STAGE_UNSPECIFIED = 'MODEL_STAGE_UNSPECIFIED',
+  /**
+   * The underlying model is subject to lots of tunings.
+   */
+  UNSTABLE_EXPERIMENTAL = 'UNSTABLE_EXPERIMENTAL',
+  /**
+   * Models in this stage are for experimental purposes only.
+   */
+  EXPERIMENTAL = 'EXPERIMENTAL',
+  /**
+   * Models in this stage are more mature than experimental models.
+   */
+  PREVIEW = 'PREVIEW',
+  /**
+   * Models in this stage are considered stable and ready for production use.
+   */
+  STABLE = 'STABLE',
+  /**
+   * If the model is on this stage, it means that this model is on the path to deprecation in near future. Only existing customers can use this model.
+   */
+  LEGACY = 'LEGACY',
+  /**
+   * Models in this stage are deprecated. These models cannot be used.
+   */
+  DEPRECATED = 'DEPRECATED',
+  /**
+   * Models in this stage are retired. These models cannot be used.
+   */
+  RETIRED = 'RETIRED',
+}
+
 /** The media resolution to use. */
 export enum MediaResolution {
   /**
@@ -850,6 +914,26 @@ export enum TuningTask {
   TUNING_TASK_R2V = 'TUNING_TASK_R2V',
 }
 
+/** Output only. Current state of the `Document`. This enum is not supported in Vertex AI. */
+export enum DocumentState {
+  /**
+   * The default value. This value is used if the state is omitted.
+   */
+  STATE_UNSPECIFIED = 'STATE_UNSPECIFIED',
+  /**
+   * Some `Chunks` of the `Document` are being processed (embedding and vector storage).
+   */
+  STATE_PENDING = 'STATE_PENDING',
+  /**
+   * All `Chunks` of the `Document` is processed and available for querying.
+   */
+  STATE_ACTIVE = 'STATE_ACTIVE',
+  /**
+   * Some `Chunks` of the `Document` failed processing.
+   */
+  STATE_FAILED = 'STATE_FAILED',
+}
+
 /** The tokenization quality used for given media. */
 export enum PartMediaResolutionLevel {
   /**
@@ -920,34 +1004,6 @@ export enum FeatureSelectionPreference {
   PRIORITIZE_QUALITY = 'PRIORITIZE_QUALITY',
   BALANCED = 'BALANCED',
   PRIORITIZE_COST = 'PRIORITIZE_COST',
-}
-
-/** The environment being operated. */
-export enum Environment {
-  /**
-   * Defaults to browser.
-   */
-  ENVIRONMENT_UNSPECIFIED = 'ENVIRONMENT_UNSPECIFIED',
-  /**
-   * Operates in a web browser.
-   */
-  ENVIRONMENT_BROWSER = 'ENVIRONMENT_BROWSER',
-}
-
-/** Enum for controlling whether the model can generate images of prominent people (celebrities). */
-export enum ProminentPeople {
-  /**
-   * Unspecified value. The model will proceed with the default behavior, which is to allow generation of prominent people.
-   */
-  PROMINENT_PEOPLE_UNSPECIFIED = 'PROMINENT_PEOPLE_UNSPECIFIED',
-  /**
-   * Allows the model to generate images of prominent people.
-   */
-  ALLOW_PROMINENT_PEOPLE = 'ALLOW_PROMINENT_PEOPLE',
-  /**
-   * Prevents the model from generating images of prominent people.
-   */
-  BLOCK_PROMINENT_PEOPLE = 'BLOCK_PROMINENT_PEOPLE',
 }
 
 /** Enum representing the Vertex embedding API to use. */
@@ -1122,14 +1178,6 @@ export enum TuningMethod {
    * Distillation tuning.
    */
   DISTILLATION = 'DISTILLATION',
-}
-
-/** State for the lifecycle of a Document. */
-export enum DocumentState {
-  STATE_UNSPECIFIED = 'STATE_UNSPECIFIED',
-  STATE_PENDING = 'STATE_PENDING',
-  STATE_ACTIVE = 'STATE_ACTIVE',
-  STATE_FAILED = 'STATE_FAILED',
 }
 
 /** State for the lifecycle of a File. */
@@ -1646,6 +1694,8 @@ export declare interface Part {
   toolCall?: ToolCall;
   /** The output from a server-side ToolCall execution. This field is populated by the client with the results of executing the corresponding ToolCall. */
   toolResponse?: ToolResponse;
+  /** Custom metadata associated with the Part. Agents using genai.Part as content representation may need to keep track of the additional information. For example it can be name of a file/source from which the Part originates or a way to multiplex multiple Part streams. This field is not supported in Vertex AI. */
+  partMetadata?: Record<string, unknown>;
 }
 /**
  * Creates a `Part` object from a `URI` string.
@@ -1856,7 +1906,7 @@ export declare interface Schema {
   anyOf?: Schema[];
   /** Optional. Default value to use if the field is not specified. */
   default?: unknown;
-  /** Optional. Description of the schema. */
+  /** Optional. Describes the data. The model uses this field to understand the purpose of the schema and how to use it. It is a best practice to provide a clear and descriptive explanation for the schema and its properties here, rather than in the prompt. */
   description?: string;
   /** Optional. Possible values of the field. This field can be used to restrict a value to a fixed set of values. To mark a field as an enum, set `format` to `enum` and provide the list of possible values in `enum`. For example: 1. To define directions: `{type:STRING, format:enum, enum:["EAST", "NORTH", "SOUTH", "WEST"]}` 2. To define apartment numbers: `{type:INTEGER, format:enum, enum:["101", "201", "301"]}` */
   enum?: string[];
@@ -1914,54 +1964,6 @@ export declare interface ComputerUse {
       1. Using a more restricted / different action space.
       2. Improving the definitions / instructions of predefined functions. */
   excludedPredefinedFunctions?: string[];
-}
-
-/** Tool to retrieve knowledge from the File Search Stores. */
-export declare interface FileSearch {
-  /** The names of the file_search_stores to retrieve from.
-      Example: `fileSearchStores/my-file-search-store-123` */
-  fileSearchStoreNames?: string[];
-  /** The number of file search retrieval chunks to retrieve. */
-  topK?: number;
-  /** Metadata filter to apply to the file search retrieval documents. See https://google.aip.dev/160 for the syntax of the filter expression. */
-  metadataFilter?: string;
-}
-
-/** Standard web search for grounding and related configurations.
-
-Only text results are returned. */
-export declare interface WebSearch {}
-
-/** Image search for grounding and related configurations. */
-export declare interface ImageSearch {}
-
-/** Tool to support computer use. */
-export declare interface SearchTypes {
-  /** Setting this field enables web search. Only text results are
-      returned. */
-  webSearch?: WebSearch;
-  /** Setting this field enables image search. Image bytes are returned. */
-  imageSearch?: ImageSearch;
-}
-
-/** Represents a time interval, encoded as a Timestamp start (inclusive) and a Timestamp end (exclusive). The start must be less than or equal to the end. When the start equals the end, the interval is empty (matches no time). When both start and end are unspecified, the interval matches any time. */
-export declare interface Interval {
-  /** Optional. Exclusive end of the interval. If specified, a Timestamp matching this interval will have to be before the end. */
-  endTime?: string;
-  /** Optional. Inclusive start of the interval. If specified, a Timestamp matching this interval will have to be the same or after the start. */
-  startTime?: string;
-}
-
-/** Tool to support web search. */
-export declare interface GoogleSearch {
-  /** Different types of search that can be enabled on the GoogleSearch tool. */
-  searchTypes?: SearchTypes;
-  /** Optional. Sites with confidence level chosen & above this value will be blocked from the search results. This field is not supported in Gemini API. */
-  blockingConfidence?: PhishBlockThreshold;
-  /** Optional. List of domains to be excluded from the search results. The default limit is 2000 domains. Example: ["amazon.com", "facebook.com"]. This field is not supported in Gemini API. */
-  excludeDomains?: string[];
-  /** Optional. Filter search results to a specific time range. If customers set a start time, they must set an end time (and vice versa). This field is not supported in Vertex AI. */
-  timeRangeFilter?: Interval;
 }
 
 /** Config for authentication with API key. This data type is not supported in Gemini API. */
@@ -2179,6 +2181,50 @@ export declare interface Retrieval {
   vertexRagStore?: VertexRagStore;
 }
 
+/** The FileSearch tool that retrieves knowledge from Semantic Retrieval corpora. Files are imported to Semantic Retrieval corpora using the ImportFile API. This data type is not supported in Vertex AI. */
+export declare interface FileSearch {
+  /** Required. The names of the file_search_stores to retrieve from. Example: `fileSearchStores/my-file-search-store-123` */
+  fileSearchStoreNames?: string[];
+  /** Optional. The number of semantic retrieval chunks to retrieve. */
+  topK?: number;
+  /** Optional. Metadata filter to apply to the semantic retrieval documents and chunks. */
+  metadataFilter?: string;
+}
+
+/** Standard web search for grounding and related configurations. Only text results are returned. */
+export declare interface WebSearch {}
+
+/** Image search for grounding and related configurations. */
+export declare interface ImageSearch {}
+
+/** Different types of search that can be enabled on the GoogleSearch tool. */
+export declare interface SearchTypes {
+  /** Optional. Setting this field enables web search. Only text results are returned. */
+  webSearch?: WebSearch;
+  /** Optional. Setting this field enables image search. Image bytes are returned. */
+  imageSearch?: ImageSearch;
+}
+
+/** Represents a time interval, encoded as a Timestamp start (inclusive) and a Timestamp end (exclusive). The start must be less than or equal to the end. When the start equals the end, the interval is empty (matches no time). When both start and end are unspecified, the interval matches any time. */
+export declare interface Interval {
+  /** Optional. Exclusive end of the interval. If specified, a Timestamp matching this interval will have to be before the end. */
+  endTime?: string;
+  /** Optional. Inclusive start of the interval. If specified, a Timestamp matching this interval will have to be the same or after the start. */
+  startTime?: string;
+}
+
+/** GoogleSearch tool type. Tool to support Google Search in Model. Powered by Google. */
+export declare interface GoogleSearch {
+  /** Optional. The set of search types to enable. If not set, web search is enabled by default. */
+  searchTypes?: SearchTypes;
+  /** Optional. Sites with confidence level chosen & above this value will be blocked from the search results. This field is not supported in Gemini API. */
+  blockingConfidence?: PhishBlockThreshold;
+  /** Optional. List of domains to be excluded from the search results. The default limit is 2000 domains. Example: ["amazon.com", "facebook.com"]. This field is not supported in Gemini API. */
+  excludeDomains?: string[];
+  /** Optional. Filter search results to a specific time range. If customers set a start time, they must set an end time (and vice versa). This field is not supported in Vertex AI. */
+  timeRangeFilter?: Interval;
+}
+
 /** Tool that executes code generated by the model, and automatically returns the result to the model. See also [ExecutableCode]and [CodeExecutionResult] which are input and output to this tool. This data type is not supported in Gemini API. */
 export declare interface ToolCodeExecution {}
 
@@ -2263,9 +2309,9 @@ export declare interface Tool {
       computer. If enabled, it automatically populates computer-use specific
       Function Declarations. */
   computerUse?: ComputerUse;
-  /** Optional. Tool to retrieve knowledge from the File Search Stores. */
+  /** Optional. FileSearch tool type. Tool to retrieve knowledge from Semantic Retrieval corpora. This field is not supported in Vertex AI. */
   fileSearch?: FileSearch;
-  /** Enables the model to execute Google Search as part of generation. */
+  /** Optional. GoogleSearch tool type. Tool to support Google Search in Model. Powered by Google. */
   googleSearch?: GoogleSearch;
   /** Optional. Tool that allows grounding the model's response with
       geospatial context related to the user's query. */
@@ -2330,12 +2376,14 @@ export declare interface ToolConfig {
   includeServerSideToolInvocations?: boolean;
 }
 
-/** ReplicatedVoiceConfig is used to configure replicated voice. */
+/** The configuration for the replicated voice to use. */
 export declare interface ReplicatedVoiceConfig {
-  /** The mime type of the replicated voice.
-   */
+  /** The mimetype of the voice sample. The only currently supported
+      value is `audio/wav`. This represents 16-bit signed little-endian wav
+      data, with a 24kHz sampling rate.
+       */
   mimeType?: string;
-  /** The sample audio of the replicated voice.
+  /** The sample of the custom voice.
       
   * @remarks Encoded as base64 string. */
   voiceSampleAudio?: string;
@@ -2347,8 +2395,11 @@ export declare interface PrebuiltVoiceConfig {
   voiceName?: string;
 }
 
+/** The configuration for the voice to use. */
 export declare interface VoiceConfig {
-  /** If true, the model will use a replicated voice for the response. */
+  /** The configuration for a replicated voice, which is a clone of a
+      user's voice that can be used for speech synthesis. If this is unset, a
+      default voice is used. */
   replicatedVoiceConfig?: ReplicatedVoiceConfig;
   /** The configuration for a prebuilt voice. */
   prebuiltVoiceConfig?: PrebuiltVoiceConfig;
@@ -2368,8 +2419,9 @@ export declare interface MultiSpeakerVoiceConfig {
   speakerVoiceConfigs?: SpeakerVoiceConfig[];
 }
 
+/** Config for speech generation and transcription. */
 export declare interface SpeechConfig {
-  /** Configuration for the voice of the response. */
+  /** The configuration in case of single-voice output. */
   voiceConfig?: VoiceConfig;
   /** Optional. The language code (ISO 639-1) for the speech synthesis. */
   languageCode?: string;
@@ -2431,11 +2483,7 @@ export declare interface ImageConfig {
   /** Controls the generation of people. Supported values are:
       ALLOW_ALL, ALLOW_ADULT, ALLOW_NONE. */
   personGeneration?: string;
-  /** Controls whether prominent people (celebrities)
-      generation is allowed. If used with personGeneration, personGeneration
-      enum would take precedence. For instance, if ALLOW_NONE is set, all person
-      generation would be blocked. If this field is unspecified, the default
-      behavior is to allow prominent people. */
+  /** Optional. Controls whether prominent people (celebrities) generation is allowed. If used with personGeneration, personGeneration enum would take precedence. For instance, if ALLOW_NONE is set, all person generation would be blocked. If this field is unspecified, the default behavior is to allow prominent people. This field is not supported in Gemini API. */
   prominentPeople?: ProminentPeople;
   /** MIME type of the generated image. This field is not
       supported in Gemini API. */
@@ -2443,7 +2491,7 @@ export declare interface ImageConfig {
   /** Compression quality of the generated image (for
       ``image/jpeg`` only). This field is not supported in Gemini API. */
   outputCompressionQuality?: number;
-  /** Optional. The image output format for generated images. */
+  /** Optional. The image output format for generated images. This field is not supported in Gemini API. */
   imageOutputOptions?: ImageConfigImageOutputOptions;
 }
 
@@ -2744,22 +2792,6 @@ export declare interface CitationMetadata {
   citations?: Citation[];
 }
 
-/** A piece of evidence that comes from an image search result.
-
-It contains the URI of the image search result and the URI of the image.
-This is used to provide the user with a link to the source of the
-information. */
-export declare interface GroundingChunkImage {
-  /** The URI of the image search result page. */
-  sourceUri?: string;
-  /** The URI of the image. */
-  imageUri?: string;
-  /** The title of the image search result page. */
-  title?: string;
-  /** The domain of the image search result page. */
-  domain?: string;
-}
-
 /** Author attribution for a photo or review. */
 export declare interface GroundingChunkMapsPlaceAnswerSourcesAuthorAttribution {
   /** Name of the author of the Photo or Review. */
@@ -2801,6 +2833,16 @@ export declare interface GroundingChunkMapsPlaceAnswerSources {
   reviewSnippets?: GroundingChunkMapsPlaceAnswerSourcesReviewSnippet[];
 }
 
+/** Route information from Google Maps. This data type is not supported in Gemini API. */
+export declare interface GroundingChunkMapsRoute {
+  /** The total distance of the route, in meters. */
+  distanceMeters?: number;
+  /** The total duration of the route. */
+  duration?: string;
+  /** An encoded polyline of the route. See https://developers.google.com/maps/documentation/utilities/polylinealgorithm */
+  encodedPolyline?: string;
+}
+
 /** A `Maps` chunk is a piece of evidence that comes from Google Maps.
 
 It contains information about a place, such as its name, address, and reviews.
@@ -2821,6 +2863,20 @@ export declare interface GroundingChunkMaps {
   title?: string;
   /** The URI of the place. */
   uri?: string;
+  /** Output only. Route information. */
+  route?: GroundingChunkMapsRoute;
+}
+
+/** An `Image` chunk is a piece of evidence that comes from an image search result. It contains the URI of the image search result and the URI of the image. This is used to provide the user with a link to the source of the information. */
+export declare interface GroundingChunkImage {
+  /** The URI of the image search result page. */
+  sourceUri?: string;
+  /** The URI of the image. */
+  imageUri?: string;
+  /** The title of the image search result page. */
+  title?: string;
+  /** The domain of the image search result page. */
+  domain?: string;
 }
 
 /** Represents where the chunk starts and ends in the document. This data type is not supported in Gemini API. */
@@ -2839,11 +2895,29 @@ export declare interface RagChunk {
   text?: string;
 }
 
-/** Context retrieved from a data source to ground the model's response. This is used when a retrieval tool fetches information from a user-provided corpus or a public dataset. This data type is not supported in Gemini API. */
+/** A list of string values. This data type is not supported in Vertex AI. */
+export declare interface GroundingChunkStringList {
+  /** The string values of the list. */
+  values?: string[];
+}
+
+/** User provided metadata about the GroundingFact. This data type is not supported in Vertex AI. */
+export declare interface GroundingChunkCustomMetadata {
+  /** The key of the metadata. */
+  key?: string;
+  /** Optional. The numeric value of the metadata. The expected range for this value depends on the specific `key` used. */
+  numericValue?: number;
+  /** Optional. A list of string values for the metadata. */
+  stringListValue?: GroundingChunkStringList;
+  /** Optional. The string value of the metadata. */
+  stringValue?: string;
+}
+
+/** Context retrieved from a data source to ground the model's response. This is used when a retrieval tool fetches information from a user-provided corpus or a public dataset. */
 export declare interface GroundingChunkRetrievedContext {
-  /** Output only. The full resource name of the referenced Vertex AI Search document. This is used to identify the specific document that was retrieved. The format is `projects/{project}/locations/{location}/collections/{collection}/dataStores/{data_store}/branches/{branch}/documents/{document}`. */
+  /** Output only. The full resource name of the referenced Vertex AI Search document. This is used to identify the specific document that was retrieved. The format is `projects/{project}/locations/{location}/collections/{collection}/dataStores/{data_store}/branches/{branch}/documents/{document}`. This field is not supported in Gemini API. */
   documentName?: string;
-  /** Additional context for a Retrieval-Augmented Generation (RAG) retrieval result. This is populated only when the RAG retrieval tool is used. */
+  /** Additional context for a Retrieval-Augmented Generation (RAG) retrieval result. This is populated only when the RAG retrieval tool is used. This field is not supported in Gemini API. */
   ragChunk?: RagChunk;
   /** The content of the retrieved data source. */
   text?: string;
@@ -2851,6 +2925,10 @@ export declare interface GroundingChunkRetrievedContext {
   title?: string;
   /** The URI of the retrieved data source. */
   uri?: string;
+  /** Optional. User-provided metadata about the retrieved context. This field is not supported in Vertex AI. */
+  customMetadata?: GroundingChunkCustomMetadata[];
+  /** Optional. Name of the `FileSearchStore` containing the document. Example: `fileSearchStores/123`. This field is not supported in Vertex AI. */
+  fileSearchStore?: string;
 }
 
 /** A `Web` chunk is a piece of evidence that comes from a web page. It contains the URI of the web page, the title of the page, and the domain of the page. This is used to provide the user with a link to the source of the information. */
@@ -2869,9 +2947,7 @@ This is used to show a citation for a claim made by the model. When grounding
 is enabled, the model returns a `GroundingChunk` that contains a reference to
 the source of the information. */
 export declare interface GroundingChunk {
-  /** A grounding chunk from an image search result. See the `Image`
-      message for details.
-       */
+  /** A grounding chunk from an image search result. See the `Image` message for details. */
   image?: GroundingChunkImage;
   /** A `Maps` chunk is a piece of evidence that comes from Google Maps.
 
@@ -2879,7 +2955,7 @@ export declare interface GroundingChunk {
       reviews. This is used to provide the user with rich, location-based
       information. */
   maps?: GroundingChunkMaps;
-  /** A grounding chunk from a data source retrieved by a retrieval tool, such as Vertex AI Search. See the `RetrievedContext` message for details. This field is not supported in Gemini API. */
+  /** A grounding chunk from a data source retrieved by a retrieval tool, such as Vertex AI Search. See the `RetrievedContext` message for details */
   retrievedContext?: GroundingChunkRetrievedContext;
   /** A grounding chunk from a web page, typically from Google Search. See the `Web` message for details. */
   web?: GroundingChunkWeb;
@@ -2917,6 +2993,8 @@ export declare interface GroundingSupport {
   groundingChunkIndices?: number[];
   /** Segment of the content this support belongs to. */
   segment?: Segment;
+  /** Indices into the `rendered_parts` field of the `GroundingMetadata` message. These indices specify which rendered parts are associated with this support message. */
+  renderedParts?: number[];
 }
 
 /** Metadata returned to client when grounding is enabled. */
@@ -2950,10 +3028,7 @@ export declare interface GroundingMetadataSourceFlaggingUri {
 
 /** Information for various kinds of grounding. */
 export declare interface GroundingMetadata {
-  /** Optional. The image search queries that were used to generate the
-      content. This field is populated only when the grounding source is Google
-      Search with the Image Search search_type enabled.
-       */
+  /** Optional. The image search queries that were used to generate the content. This field is populated only when the grounding source is Google Search with the Image Search search_type enabled. */
   imageSearchQueries?: string[];
   /** A list of supporting references retrieved from the grounding
       source. This field is populated when the grounding source is Google
@@ -2969,7 +3044,7 @@ export declare interface GroundingMetadata {
   searchEntryPoint?: SearchEntryPoint;
   /** Web search queries for the following-up web search. */
   webSearchQueries?: string[];
-  /** Optional. Output only. A token that can be used to render a Google Maps widget with the contextual data. This field is populated only when the grounding source is Google Maps. This field is not supported in Gemini API. */
+  /** Optional. Output only. A token that can be used to render a Google Maps widget with the contextual data. This field is populated only when the grounding source is Google Maps. */
   googleMapsWidgetContextToken?: string;
   /** Optional. The queries that were executed by the retrieval tools. This field is populated only when the grounding source is a retrieval tool, such as Vertex AI Search. This field is not supported in Gemini API. */
   retrievalQueries?: string[];
@@ -2999,6 +3074,8 @@ export declare interface LogprobsResult {
   chosenCandidates?: LogprobsResultCandidate[];
   /** A list of the top candidate tokens at each decoding step. The length of this list is equal to the total number of decoding steps. */
   topCandidates?: LogprobsResultTopCandidates[];
+  /** Sum of log probabilities for all tokens. This field is not supported in Vertex AI. */
+  logProbabilitySum?: number;
 }
 
 /** A safety rating for a piece of content. The safety rating contains the harm category and the harm probability level. */
@@ -3111,6 +3188,16 @@ export class GenerateContentResponseUsageMetadata {
   trafficType?: TrafficType;
 }
 
+/** The status of the underlying model. This is used to indicate the stage of the underlying model and the retirement time if applicable. This data type is not supported in Vertex AI. */
+export declare interface ModelStatus {
+  /** A message explaining the model status. */
+  message?: string;
+  /** The stage of the underlying model. */
+  modelStage?: ModelStage;
+  /** The time at which the model will be retired. */
+  retirementTime?: string;
+}
+
 /** Response message for PredictionService.GenerateContent. */
 export class GenerateContentResponse {
   /** Used to retain the full HTTP response. */
@@ -3132,6 +3219,8 @@ export class GenerateContentResponse {
   responseId?: string;
   /** Usage metadata about the response(s). */
   usageMetadata?: GenerateContentResponseUsageMetadata;
+  /** Output only. The current model status of this model. This field is not supported in Vertex AI. */
+  modelStatus?: ModelStatus;
   /**
    * Returns the concatenation of all text parts from the first candidate in the response.
    *
@@ -4914,7 +5003,7 @@ export declare interface EvaluateDatasetRun {
   evaluateDatasetResponse?: EvaluateDatasetResponse;
   /** Output only. The resource name of the evaluation run. Format: `projects/{project}/locations/{location}/evaluationRuns/{evaluation_run_id}`. */
   evaluationRun?: string;
-  /** Output only. The operation ID of the evaluation run. Format: `projects/{project}/locations/{location}/operations/{operation_id}`. */
+  /** Output only. Deprecated: The updated architecture uses evaluation_run instead. */
   operationName?: string;
 }
 
@@ -4948,6 +5037,24 @@ export declare interface VeoTuningSpec {
   trainingDatasetUri?: string;
   /** Optional. Validation dataset used for tuning. The dataset can be specified as either a Cloud Storage path to a JSONL file or as the resource name of a Vertex Multimodal Dataset. */
   validationDatasetUri?: string;
+}
+
+/** Spec for creating a distilled dataset in Vertex Dataset. This data type is not supported in Gemini API. */
+export declare interface DistillationSamplingSpec {
+  /** Optional. The base teacher model that is being distilled. See [Supported models](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/tuning#supported_models). */
+  baseTeacherModel?: string;
+  /** Optional. The resource name of the Tuned teacher model. Format: `projects/{project}/locations/{location}/models/{model}`. */
+  tunedTeacherModelSource?: string;
+  /** Optional. Cloud Storage path to file containing validation dataset for distillation. The dataset must be formatted as a JSONL file. */
+  validationDatasetUri?: string;
+}
+
+/** Tuning job metadata. This data type is not supported in Gemini API. */
+export declare interface TuningJobMetadata {
+  /** Output only. The number of epochs that have been completed. */
+  completedEpochCount?: string;
+  /** Output only. The number of steps that have been completed. Set for Multi-Step RL. */
+  completedStepCount?: string;
 }
 
 /** A tuning job. */
@@ -5010,6 +5117,10 @@ export declare interface TuningJob {
   tuningJobState?: TuningJobState;
   /** Tuning Spec for Veo Tuning. */
   veoTuningSpec?: VeoTuningSpec;
+  /** Optional. Spec for creating a distillation dataset. */
+  distillationSamplingSpec?: DistillationSamplingSpec;
+  /** Output only. Tuning Job metadata. */
+  tuningJobMetadata?: TuningJobMetadata;
 }
 
 /** Configuration for the list tuning jobs method. */
@@ -5408,16 +5519,15 @@ export declare interface CustomMetadata {
 
 /** A Document is a collection of Chunks. */
 export declare interface Document {
-  /** The resource name of the Document.
-      Example: fileSearchStores/file-search-store-foo/documents/documents-bar */
+  /** Immutable. Identifier. The `Document` resource name. The ID (name excluding the "fileSearchStores/&#42;/documents/" prefix) can contain up to 40 characters that are lowercase alphanumeric or dashes (-). The ID cannot start or end with a dash. If the name is empty on create, a unique name will be derived from `display_name` along with a 12 character random suffix. Example: `fileSearchStores/{file_search_store_id}/documents/my-awesome-doc-123a456b789c` */
   name?: string;
-  /** The human-readable display name for the Document. */
+  /** Optional. The human-readable display name for the `Document`. The display name must be no more than 512 characters in length, including spaces. Example: "Semantic Retriever Documentation". */
   displayName?: string;
-  /** The current state of the Document. */
+  /** Output only. Current state of the `Document`. */
   state?: DocumentState;
-  /** The size of the Document in bytes. */
+  /** Output only. The size of raw bytes ingested into the Document. */
   sizeBytes?: string;
-  /** The MIME type of the Document. */
+  /** Output only. The mime type of the Document. */
   mimeType?: string;
   /** Output only. The Timestamp of when the `Document` was created. */
   createTime?: string;
@@ -5601,6 +5711,7 @@ export declare interface ListFileSearchStoresParameters {
 export class ListFileSearchStoresResponse {
   /** Used to retain the full HTTP response. */
   sdkHttpResponse?: HttpResponse;
+  /** A token, which can be sent as `page_token` to retrieve the next page. If this field is omitted, there are no more pages. */
   nextPageToken?: string;
   /** The returned file search stores. */
   fileSearchStores?: FileSearchStore[];
@@ -5975,12 +6086,12 @@ export class SingleEmbedContentResponse {
 
 /** Config for `inlined_embedding_responses` parameter. */
 export class InlinedEmbedContentResponse {
-  /** The response to the request.
-   */
+  /** Output only. The response to the request. */
   response?: SingleEmbedContentResponse;
-  /** The error encountered while processing the request.
-   */
+  /** Output only. The error encountered while processing the request. */
   error?: JobError;
+  /** Output only. The metadata associated with the request. */
+  metadata?: Record<string, unknown>;
 }
 
 /** Config for `des` parameter. */
@@ -6618,11 +6729,9 @@ export declare interface LiveServerSetupComplete {
 
 /** Audio transcription in Server Conent. */
 export declare interface Transcription {
-  /** Transcription text.
-   */
+  /** Optional. Transcription text. */
   text?: string;
-  /** The bool indicates the end of the transcription.
-   */
+  /** Optional. The bool indicates the end of the transcription. */
   finished?: boolean;
 }
 
