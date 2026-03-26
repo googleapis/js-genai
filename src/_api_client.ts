@@ -220,6 +220,12 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
       ) {
         // Vertex Express or global endpoint case.
         initHttpOptions.baseUrl = 'https://aiplatform.googleapis.com/';
+      } else if (
+        this.clientOptions.project &&
+        this.clientOptions.location &&
+        this.clientOptions.location === 'us'
+      ) {
+        initHttpOptions.baseUrl = `https://aiplatform.${this.clientOptions.location}.rep.googleapis.com/`;
       } else if (this.clientOptions.project && this.clientOptions.location) {
         initHttpOptions.baseUrl = `https://${this.clientOptions.location}-aiplatform.googleapis.com/`;
       }
