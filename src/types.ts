@@ -1338,6 +1338,10 @@ export enum TurnCoverage {
    * The users turn includes all realtime input since the last turn, including inactivity (e.g. silence on the audio stream).
    */
   TURN_INCLUDES_ALL_INPUT = 'TURN_INCLUDES_ALL_INPUT',
+  /**
+   * Includes audio activity and all video since the last turn. With automatic activity detection, audio activity means speech and excludes silence.
+   */
+  TURN_INCLUDES_AUDIO_ACTIVITY_AND_ALL_VIDEO = 'TURN_INCLUDES_AUDIO_ACTIVITY_AND_ALL_VIDEO',
 }
 
 /** Scale of the generated music. */
