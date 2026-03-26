@@ -213,7 +213,7 @@ export interface CodeExecutionCallArguments {
  */
 export interface CodeExecutionCallContent {
   /**
-   * A unique ID for this specific tool call.
+   * Required. A unique ID for this specific tool call.
    */
   id: string;
 
@@ -235,7 +235,7 @@ export interface CodeExecutionCallContent {
  */
 export interface CodeExecutionResultContent {
   /**
-   * ID to match the ID from the code execution call block.
+   * Required. ID to match the ID from the function call block.
    */
   call_id: string;
 
@@ -428,7 +428,7 @@ export namespace ContentDelta {
 
   export interface FunctionCall {
     /**
-     * A unique ID for this specific tool call.
+     * Required. A unique ID for this specific tool call.
      */
     id: string;
 
@@ -446,7 +446,7 @@ export namespace ContentDelta {
 
   export interface CodeExecutionCall {
     /**
-     * A unique ID for this specific tool call.
+     * Required. A unique ID for this specific tool call.
      */
     id: string;
 
@@ -465,7 +465,7 @@ export namespace ContentDelta {
 
   export interface URLContextCall {
     /**
-     * A unique ID for this specific tool call.
+     * Required. A unique ID for this specific tool call.
      */
     id: string;
 
@@ -484,7 +484,7 @@ export namespace ContentDelta {
 
   export interface GoogleSearchCall {
     /**
-     * A unique ID for this specific tool call.
+     * Required. A unique ID for this specific tool call.
      */
     id: string;
 
@@ -503,7 +503,7 @@ export namespace ContentDelta {
 
   export interface MCPServerToolCall {
     /**
-     * A unique ID for this specific tool call.
+     * Required. A unique ID for this specific tool call.
      */
     id: string;
 
@@ -523,7 +523,7 @@ export namespace ContentDelta {
 
   export interface FileSearchCall {
     /**
-     * A unique ID for this specific tool call.
+     * Required. A unique ID for this specific tool call.
      */
     id: string;
 
@@ -537,7 +537,7 @@ export namespace ContentDelta {
 
   export interface GoogleMapsCall {
     /**
-     * A unique ID for this specific tool call.
+     * Required. A unique ID for this specific tool call.
      */
     id: string;
 
@@ -556,7 +556,7 @@ export namespace ContentDelta {
 
   export interface FunctionResult {
     /**
-     * ID to match the ID from the function call block.
+     * Required. ID to match the ID from the function call block.
      */
     call_id: string;
 
@@ -576,7 +576,7 @@ export namespace ContentDelta {
 
   export interface CodeExecutionResult {
     /**
-     * ID to match the ID from the function call block.
+     * Required. ID to match the ID from the function call block.
      */
     call_id: string;
 
@@ -594,7 +594,7 @@ export namespace ContentDelta {
 
   export interface URLContextResult {
     /**
-     * ID to match the ID from the function call block.
+     * Required. ID to match the ID from the function call block.
      */
     call_id: string;
 
@@ -612,7 +612,7 @@ export namespace ContentDelta {
 
   export interface GoogleSearchResult {
     /**
-     * ID to match the ID from the function call block.
+     * Required. ID to match the ID from the function call block.
      */
     call_id: string;
 
@@ -630,7 +630,7 @@ export namespace ContentDelta {
 
   export interface MCPServerToolResult {
     /**
-     * ID to match the ID from the function call block.
+     * Required. ID to match the ID from the function call block.
      */
     call_id: string;
 
@@ -650,7 +650,7 @@ export namespace ContentDelta {
 
   export interface FileSearchResult {
     /**
-     * ID to match the ID from the function call block.
+     * Required. ID to match the ID from the function call block.
      */
     call_id: string;
 
@@ -678,7 +678,7 @@ export namespace ContentDelta {
 
   export interface GoogleMapsResult {
     /**
-     * ID to match the ID from the function call block.
+     * Required. ID to match the ID from the function call block.
      */
     call_id: string;
 
@@ -839,7 +839,7 @@ export interface FileCitation {
  */
 export interface FileSearchCallContent {
   /**
-   * A unique ID for this specific tool call.
+   * Required. A unique ID for this specific tool call.
    */
   id: string;
 
@@ -856,7 +856,7 @@ export interface FileSearchCallContent {
  */
 export interface FileSearchResultContent {
   /**
-   * ID to match the ID from the file search call block.
+   * Required. ID to match the ID from the function call block.
    */
   call_id: string;
 
@@ -912,7 +912,7 @@ export interface Function {
  */
 export interface FunctionCallContent {
   /**
-   * A unique ID for this specific tool call.
+   * Required. A unique ID for this specific tool call.
    */
   id: string;
 
@@ -939,7 +939,7 @@ export interface FunctionCallContent {
  */
 export interface FunctionResultContent {
   /**
-   * ID to match the ID from the function call block.
+   * Required. ID to match the ID from the function call block.
    */
   call_id: string;
 
@@ -1036,7 +1036,7 @@ export interface GoogleMapsCallArguments {
  */
 export interface GoogleMapsCallContent {
   /**
-   * A unique ID for this specific tool call.
+   * Required. A unique ID for this specific tool call.
    */
   id: string;
 
@@ -1121,7 +1121,7 @@ export namespace GoogleMapsResult {
  */
 export interface GoogleMapsResultContent {
   /**
-   * ID to match the ID from the google maps call block.
+   * Required. ID to match the ID from the function call block.
    */
   call_id: string;
 
@@ -1153,7 +1153,7 @@ export interface GoogleSearchCallArguments {
  */
 export interface GoogleSearchCallContent {
   /**
-   * A unique ID for this specific tool call.
+   * Required. A unique ID for this specific tool call.
    */
   id: string;
 
@@ -1190,7 +1190,7 @@ export interface GoogleSearchResult {
  */
 export interface GoogleSearchResultContent {
   /**
-   * ID to match the ID from the google search call block.
+   * Required. ID to match the ID from the function call block.
    */
   call_id: string;
 
@@ -1446,7 +1446,7 @@ export interface InteractionStatusUpdate {
  */
 export interface MCPServerToolCallContent {
   /**
-   * A unique ID for this specific tool call.
+   * Required. A unique ID for this specific tool call.
    */
   id: string;
 
@@ -1478,7 +1478,7 @@ export interface MCPServerToolCallContent {
  */
 export interface MCPServerToolResultContent {
   /**
-   * ID to match the ID from the MCP server tool call block.
+   * Required. ID to match the ID from the function call block.
    */
   call_id: string;
 
@@ -1841,7 +1841,7 @@ export interface URLContextCallArguments {
  */
 export interface URLContextCallContent {
   /**
-   * A unique ID for this specific tool call.
+   * Required. A unique ID for this specific tool call.
    */
   id: string;
 
@@ -1878,7 +1878,7 @@ export interface URLContextResult {
  */
 export interface URLContextResultContent {
   /**
-   * ID to match the ID from the url context call block.
+   * Required. ID to match the ID from the function call block.
    */
   call_id: string;
 
