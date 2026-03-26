@@ -2697,6 +2697,10 @@ export function generateVideosConfigToMldev(
     );
   }
 
+  if (common.getValueByPath(fromObject, ['labels']) !== undefined) {
+    throw new Error('labels parameter is not supported in Gemini API.');
+  }
+
   return toObject;
 }
 
@@ -2863,6 +2867,11 @@ export function generateVideosConfigToVertex(
       ['parameters', 'compressionQuality'],
       fromCompressionQuality,
     );
+  }
+
+  const fromLabels = common.getValueByPath(fromObject, ['labels']);
+  if (parentObject !== undefined && fromLabels != null) {
+    common.setValueByPath(parentObject, ['labels'], fromLabels);
   }
 
   return toObject;

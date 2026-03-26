@@ -4398,6 +4398,8 @@ export declare interface GenerateVideosConfig {
   mask?: VideoGenerationMask;
   /** Compression quality of the generated videos. */
   compressionQuality?: VideoCompressionQuality;
+  /** User specified labels to track billing usage. */
+  labels?: Record<string, string>;
 }
 
 /** Class that represents the parameters for generating videos. */

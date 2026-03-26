@@ -1549,6 +1549,7 @@ export interface GenerateVideosConfig {
     fps?: number;
     generateAudio?: boolean;
     httpOptions?: HttpOptions;
+    labels?: Record<string, string>;
     lastFrame?: Image_2;
     mask?: VideoGenerationMask;
     negativePrompt?: string;
