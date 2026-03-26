@@ -3677,13 +3677,26 @@ export declare interface GenerateAudioConfig {
 export declare interface GenerateAudioParameters {
   /** ID of the model to use. */
   model: string;
-  /** Text prompt that describes the audio to output. */
+  /** Text prompt that describes the audio to output.
+   *
+   * For Lyria 3 models, use `models.generateContent()` for advanced multimodal
+   * requests such as image-conditioned music generation.
+   */
   prompt: string;
-  /** Description of what to discourage in the generated audio. */
+  /** Description of what to discourage in the generated audio.
+   *
+   * Only supported by predict-based audio models such as `lyria-002`.
+   */
   negativePrompt?: string;
-  /** Number of audio samples to generate. */
+  /** Number of audio samples to generate.
+   *
+   * Only supported by predict-based audio models such as `lyria-002`.
+   */
   sampleCount?: number;
-  /** Random seed for audio generation. Cannot be used with sample_count. */
+  /** Random seed for audio generation. Cannot be used with sample_count.
+   *
+   * Only supported by predict-based audio models such as `lyria-002`.
+   */
   seed?: number;
   /** Configuration for generating audio. */
   config?: GenerateAudioConfig;
