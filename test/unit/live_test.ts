@@ -932,6 +932,65 @@ describe('live', () => {
     expect(session).toBeDefined();
   });
 
+  it('connect Gemini should send setup message with history config', async () => {
+    const apiClient = new ApiClient({
+      auth: new FakeAuth(),
+      apiKey: 'test-api-key',
+      uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
+    });
+    const websocketFactory = new FakeWebSocketFactory();
+    const live = new Live(apiClient, new FakeAuth(), websocketFactory);
+
+    let websocket = new FakeWebSocket(
+      '',
+      {},
+      {
+        onopen: function () {},
+        onmessage: function (_e: MessageEvent) {},
+        onerror: function (_e: ErrorEvent) {},
+        onclose: function (_e: CloseEvent) {},
+      },
+    );
+    spyOn(websocket, 'connect').and.callThrough();
+    let websocketSpy = spyOn(websocket, 'send').and.callThrough();
+    spyOn(websocketFactory, 'create').and.callFake(
+      (url, headers, callbacks) => {
+        // Update the websocket spy instance with callbacks provided by
+        // the websocket factory.
+        websocket = new FakeWebSocket(url, headers, callbacks);
+        spyOn(websocket, 'connect').and.callThrough();
+        websocketSpy = spyOn(websocket, 'send').and.callThrough();
+        return websocket;
+      },
+    );
+
+    const session = await live.connect({
+      model: 'models/gemini-live-2.5-flash-preview',
+      config: {
+        historyConfig: {
+          initialHistoryInClientContent: true,
+        },
+      },
+      callbacks: {
+        onmessage: function (e: types.LiveServerMessage) {
+          void e;
+        },
+      },
+    });
+
+    const websocketSpyCall = websocketSpy.calls.all()[0];
+    expect(JSON.parse(websocketSpyCall.args[0])).toEqual({
+      setup: {
+        model: 'models/gemini-live-2.5-flash-preview',
+        historyConfig: {
+          initialHistoryInClientContent: true,
+        },
+      },
+    });
+    expect(session).toBeDefined();
+  });
+
   it('session should return session resumption update message', async () => {
     const apiClient = new ApiClient({
       auth: new FakeAuth(),

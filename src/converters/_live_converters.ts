@@ -809,6 +809,13 @@ export function liveClientSetupToMldev(
     common.setValueByPath(toObject, ['proactivity'], fromProactivity);
   }
 
+  const fromHistoryConfig = common.getValueByPath(fromObject, [
+    'historyConfig',
+  ]);
+  if (fromHistoryConfig != null) {
+    common.setValueByPath(toObject, ['historyConfig'], fromHistoryConfig);
+  }
+
   if (common.getValueByPath(fromObject, ['explicitVadSignal']) !== undefined) {
     throw new Error(
       'explicitVadSignal parameter is not supported in Gemini API.',
@@ -1135,6 +1142,17 @@ export function liveConnectConfigToMldev(
       parentObject,
       ['setup', 'proactivity'],
       fromProactivity,
+    );
+  }
+
+  const fromHistoryConfig = common.getValueByPath(fromObject, [
+    'historyConfig',
+  ]);
+  if (parentObject !== undefined && fromHistoryConfig != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'historyConfig'],
+      fromHistoryConfig,
     );
   }
 
