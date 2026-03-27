@@ -998,6 +998,26 @@ export enum ResourceScope {
   COLLECTION = 'COLLECTION',
 }
 
+/** Pricing and performance service tier. */
+export enum ServiceTier {
+  /**
+   * Default service tier, which is standard.
+   */
+  SERVICE_TIER_UNSPECIFIED = 'SERVICE_TIER_UNSPECIFIED',
+  /**
+   * Flex service tier.
+   */
+  SERVICE_TIER_FLEX = 'SERVICE_TIER_FLEX',
+  /**
+   * Standard service tier.
+   */
+  SERVICE_TIER_STANDARD = 'SERVICE_TIER_STANDARD',
+  /**
+   * Priority service tier.
+   */
+  SERVICE_TIER_PRIORITY = 'SERVICE_TIER_PRIORITY',
+}
+
 /** Options for feature selection preference. */
 export enum FeatureSelectionPreference {
   FEATURE_SELECTION_PREFERENCE_UNSPECIFIED = 'FEATURE_SELECTION_PREFERENCE_UNSPECIFIED',
@@ -2700,6 +2720,8 @@ export declare interface GenerateContentConfig {
       service. If supplied, safety_settings must not be supplied.
        */
   modelArmorConfig?: ModelArmorConfig;
+  /** The service tier to use for the request. For example, SERVICE_TIER_FLEX. */
+  serviceTier?: ServiceTier;
 }
 
 /** Config for models.generate_content parameters. */

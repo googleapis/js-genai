@@ -1428,6 +1428,7 @@ export interface GenerateContentConfig {
     routingConfig?: GenerationConfigRoutingConfig;
     safetySettings?: SafetySetting[];
     seed?: number;
+    serviceTier?: ServiceTier;
     speechConfig?: SpeechConfigUnion;
     stopSequences?: string[];
     systemInstruction?: ContentUnion;
@@ -3414,6 +3415,14 @@ export enum SegmentMode {
 export interface SendMessageParameters {
     config?: GenerateContentConfig;
     message: PartListUnion;
+}
+
+// @public
+export enum ServiceTier {
+    SERVICE_TIER_FLEX = "SERVICE_TIER_FLEX",
+    SERVICE_TIER_PRIORITY = "SERVICE_TIER_PRIORITY",
+    SERVICE_TIER_STANDARD = "SERVICE_TIER_STANDARD",
+    SERVICE_TIER_UNSPECIFIED = "SERVICE_TIER_UNSPECIFIED"
 }
 
 // @public

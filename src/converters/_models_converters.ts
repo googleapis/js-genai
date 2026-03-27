@@ -1647,6 +1647,11 @@ export function generateContentConfigToMldev(
     );
   }
 
+  const fromServiceTier = common.getValueByPath(fromObject, ['serviceTier']);
+  if (parentObject !== undefined && fromServiceTier != null) {
+    common.setValueByPath(parentObject, ['serviceTier'], fromServiceTier);
+  }
+
   return toObject;
 }
 
@@ -1896,6 +1901,10 @@ export function generateContentConfigToVertex(
       ['modelArmorConfig'],
       fromModelArmorConfig,
     );
+  }
+
+  if (common.getValueByPath(fromObject, ['serviceTier']) !== undefined) {
+    throw new Error('serviceTier parameter is not supported in Vertex AI.');
   }
 
   return toObject;

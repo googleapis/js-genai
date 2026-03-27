@@ -1280,6 +1280,11 @@ export function generateContentConfigToMldev(
     );
   }
 
+  const fromServiceTier = common.getValueByPath(fromObject, ['serviceTier']);
+  if (parentObject !== undefined && fromServiceTier != null) {
+    common.setValueByPath(parentObject, ['serviceTier'], fromServiceTier);
+  }
+
   return toObject;
 }
 
