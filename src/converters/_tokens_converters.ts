@@ -526,6 +526,17 @@ export function liveConnectConfigToMldev(
     );
   }
 
+  const fromHistoryConfig = common.getValueByPath(fromObject, [
+    'historyConfig',
+  ]);
+  if (parentObject !== undefined && fromHistoryConfig != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'historyConfig'],
+      fromHistoryConfig,
+    );
+  }
+
   if (common.getValueByPath(fromObject, ['explicitVadSignal']) !== undefined) {
     throw new Error(
       'explicitVadSignal parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
