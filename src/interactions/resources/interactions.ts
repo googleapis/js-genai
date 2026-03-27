@@ -25,7 +25,7 @@ export class BaseInteractions extends APIResource {
    * const interaction = await client.interactions.create({
    *   api_version: 'api_version',
    *   input: [{ text: 'text', type: 'text' }],
-   *   model: 'gemini-2.5-flash',
+   *   model: 'gemini-2.5-computer-use-preview-10-2025',
    * });
    * ```
    */
@@ -1509,6 +1509,7 @@ export interface MCPServerToolResultContent {
  * The model that will complete your prompt.\n\nSee [models](https://ai.google.dev/gemini-api/docs/models) for additional details.
  */
 export type Model =
+  | 'gemini-2.5-computer-use-preview-10-2025'
   | 'gemini-2.5-flash'
   | 'gemini-2.5-flash-image'
   | 'gemini-2.5-flash-lite'
@@ -1523,6 +1524,9 @@ export type Model =
   | 'gemini-3-pro-preview'
   | 'gemini-3.1-pro-preview'
   | 'gemini-3.1-flash-image-preview'
+  | 'gemini-3.1-flash-lite-preview'
+  | 'lyria-3-clip-preview'
+  | 'lyria-3-pro-preview'
   | (string & {});
 
 /**
