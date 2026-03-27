@@ -1,6 +1,30 @@
 # Changelog
 
 
+## [1.47.0](https://github.com/googleapis/js-genai/compare/v1.46.0...v1.47.0) (2026-03-27)
+
+
+### Features
+
+* [Python] Add consent_audio and voice_consent_signature and AsyncSession.setup_complete ([61e5551](https://github.com/googleapis/js-genai/commit/61e5551a4e60f7d41a29bc2955d6b993ee365f11))
+* Add custom_metadata to FileSearchResult. ([083a1e3](https://github.com/googleapis/js-genai/commit/083a1e3c22731c1712d7caab2f5d1323ca8779ad))
+* Add labels field to Veo configs ([930c9c3](https://github.com/googleapis/js-genai/commit/930c9c351fa7b126401ac8781f333c3647f2eb9b))
+* Add mime type for Audio content ([1ad80c6](https://github.com/googleapis/js-genai/commit/1ad80c6a0ba17359a94cc8e5a21132917faaebc8))
+* Add model_status to GenerateContentResponse (Gemini API only) ([5e1110d](https://github.com/googleapis/js-genai/commit/5e1110d9cb3856116378ab101ad19631043edf8f))
+* Add part_metadata in Part (Gemini API only) ([5e1110d](https://github.com/googleapis/js-genai/commit/5e1110d9cb3856116378ab101ad19631043edf8f))
+* Add service tier for interactions. ([406de38](https://github.com/googleapis/js-genai/commit/406de389d89fc858c87ed0c9109e970eefb0896b))
+* Add service tier to GenerateContent. ([0bfe800](https://github.com/googleapis/js-genai/commit/0bfe8002b3342f7fce6b4e127599244807c0f427))
+* Add support for more image and audio MIME types in Interactions content ([baadbfd](https://github.com/googleapis/js-genai/commit/baadbfdb2e0a88e6817743b94d3c415c65fb7a2b))
+* Add supported models to the ModelOptions ([94642b6](https://github.com/googleapis/js-genai/commit/94642b6cb49b9d256c17bc66ccb8147dd5517d56))
+* **genai:** add TURN_INCLUDES_AUDIO_ACTIVITY_AND_ALL_VIDEO to TurnCoverage ([fdacac2](https://github.com/googleapis/js-genai/commit/fdacac271688ca03d6b942a3eb9440c7f6e272ea))
+* support hyperparameters in distillation tuning ([716e021](https://github.com/googleapis/js-genai/commit/716e02112698f884e6e707286c826b7dcc8453ce))
+* Support rendered_parts in GroundingSupport ([5e1110d](https://github.com/googleapis/js-genai/commit/5e1110d9cb3856116378ab101ad19631043edf8f))
+
+
+### Bug Fixes
+
+* support us region routing ([d391cff](https://github.com/googleapis/js-genai/commit/d391cff084b2fb433ae7f93b808d47f66a2bc488))
+
 ## [1.46.0](https://github.com/googleapis/js-genai/compare/v1.45.0...v1.46.0) (2026-03-17)
 
 ### Breaking changes
