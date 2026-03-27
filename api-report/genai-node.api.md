@@ -889,7 +889,9 @@ export interface DistillationDataStats {
 // @public
 export interface DistillationHyperParameters {
     adapterSize?: AdapterSize;
+    batchSize?: number;
     epochCount?: string;
+    learningRate?: number;
     learningRateMultiplier?: number;
 }
 
@@ -909,6 +911,7 @@ export interface DistillationSpec {
     studentModel?: string;
     trainingDatasetUri?: string;
     tunedTeacherModelSource?: string;
+    tuningMode?: TuningMode;
     validationDatasetUri?: string;
 }
 

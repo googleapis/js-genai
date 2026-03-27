@@ -450,6 +450,15 @@ export function createTuningJobConfigToVertex(
         fromTuningMode,
       );
     }
+  } else if (discriminatorTuningMode === 'DISTILLATION') {
+    const fromTuningMode = common.getValueByPath(fromObject, ['tuningMode']);
+    if (parentObject !== undefined && fromTuningMode != null) {
+      common.setValueByPath(
+        parentObject,
+        ['distillationSpec', 'tuningMode'],
+        fromTuningMode,
+      );
+    }
   }
 
   const fromCustomBaseModel = common.getValueByPath(fromObject, [
@@ -479,6 +488,15 @@ export function createTuningJobConfigToVertex(
         fromBatchSize,
       );
     }
+  } else if (discriminatorBatchSize === 'DISTILLATION') {
+    const fromBatchSize = common.getValueByPath(fromObject, ['batchSize']);
+    if (parentObject !== undefined && fromBatchSize != null) {
+      common.setValueByPath(
+        parentObject,
+        ['distillationSpec', 'hyperParameters', 'batchSize'],
+        fromBatchSize,
+      );
+    }
   }
 
   let discriminatorLearningRate = common.getValueByPath(rootObject, [
@@ -496,6 +514,17 @@ export function createTuningJobConfigToVertex(
       common.setValueByPath(
         parentObject,
         ['supervisedTuningSpec', 'hyperParameters', 'learningRate'],
+        fromLearningRate,
+      );
+    }
+  } else if (discriminatorLearningRate === 'DISTILLATION') {
+    const fromLearningRate = common.getValueByPath(fromObject, [
+      'learningRate',
+    ]);
+    if (parentObject !== undefined && fromLearningRate != null) {
+      common.setValueByPath(
+        parentObject,
+        ['distillationSpec', 'hyperParameters', 'learningRate'],
         fromLearningRate,
       );
     }

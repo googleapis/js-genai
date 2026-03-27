@@ -4609,7 +4609,7 @@ export declare interface PreferenceOptimizationSpec {
   validationDatasetUri?: string;
 }
 
-/** Hyperparameters for Distillation. This data type is not supported in Gemini API. */
+/** Hyperparameters for distillation. */
 export declare interface DistillationHyperParameters {
   /** Optional. Adapter size for distillation. */
   adapterSize?: AdapterSize;
@@ -4617,6 +4617,11 @@ export declare interface DistillationHyperParameters {
   epochCount?: string;
   /** Optional. Multiplier for adjusting the default learning rate. */
   learningRateMultiplier?: number;
+  /** The batch size hyperparameter for tuning.
+      This is only supported for OSS models in Vertex. */
+  batchSize?: number;
+  /** The learning rate for tuning. OSS models only. */
+  learningRate?: number;
 }
 
 /** Distillation tuning spec for tuning. */
@@ -4637,6 +4642,8 @@ export declare interface DistillationSpec {
   tunedTeacherModelSource?: string;
   /** Optional. Cloud Storage path to file containing validation dataset for tuning. The dataset must be formatted as a JSONL file. */
   validationDatasetUri?: string;
+  /** Tuning mode for tuning. */
+  tuningMode?: TuningMode;
 }
 
 /** The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors). This data type is not supported in Gemini API. */
@@ -5203,7 +5210,7 @@ export declare interface CreateTuningJobConfig {
   preTunedModelCheckpointId?: string;
   /** Adapter size for tuning. */
   adapterSize?: AdapterSize;
-  /** Tuning mode for SFT tuning. */
+  /** Tuning mode for tuning. */
   tuningMode?: TuningMode;
   /** Custom base model for tuning. This is only supported for OSS models in Vertex. */
   customBaseModel?: string;
