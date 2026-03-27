@@ -343,7 +343,6 @@ export namespace ContentDelta {
       | 'image/webp'
       | 'image/heic'
       | 'image/heif'
-      | 'image/jpg'
       | 'image/gif'
       | 'image/bmp'
       | 'image/tiff';
@@ -1255,7 +1254,6 @@ export interface ImageContent {
     | 'image/webp'
     | 'image/heic'
     | 'image/heif'
-    | 'image/jpg'
     | 'image/gif'
     | 'image/bmp'
     | 'image/tiff';
