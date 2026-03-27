@@ -1370,6 +1370,11 @@ export interface Interaction {
   role?: string;
 
   /**
+   * The service tier for the interaction.
+   */
+  service_tier?: 'flex' | 'standard' | 'priority';
+
+  /**
    * System instruction for the interaction.
    */
   system_instruction?: string;
@@ -2135,6 +2140,11 @@ export interface BaseCreateModelInteractionParams {
   response_modalities?: Array<'text' | 'image' | 'audio'>;
 
   /**
+   * Body param: The service tier for the interaction.
+   */
+  service_tier?: 'flex' | 'standard' | 'priority';
+
+  /**
    * Body param: Input only. Whether to store the response and request for later retrieval.
    */
   store?: boolean;
@@ -2224,6 +2234,11 @@ export interface BaseCreateAgentInteractionParams {
    * Body param: The requested modalities of the response (TEXT, IMAGE, AUDIO).
    */
   response_modalities?: Array<'text' | 'image' | 'audio'>;
+
+  /**
+   * Body param: The service tier for the interaction.
+   */
+  service_tier?: 'flex' | 'standard' | 'priority';
 
   /**
    * Body param: Input only. Whether to store the response and request for later retrieval.
