@@ -6,7 +6,6 @@
 
 ### Features
 
-* [Python] Add consent_audio and voice_consent_signature and AsyncSession.setup_complete ([61e5551](https://github.com/googleapis/js-genai/commit/61e5551a4e60f7d41a29bc2955d6b993ee365f11))
 * Add custom_metadata to FileSearchResult. ([083a1e3](https://github.com/googleapis/js-genai/commit/083a1e3c22731c1712d7caab2f5d1323ca8779ad))
 * Add labels field to Veo configs ([930c9c3](https://github.com/googleapis/js-genai/commit/930c9c351fa7b126401ac8781f333c3647f2eb9b))
 * Add mime type for Audio content ([1ad80c6](https://github.com/googleapis/js-genai/commit/1ad80c6a0ba17359a94cc8e5a21132917faaebc8))
