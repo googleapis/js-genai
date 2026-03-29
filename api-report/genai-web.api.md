@@ -115,6 +115,7 @@ export interface AudioChunk {
 
 // @public
 export interface AudioTranscriptionConfig {
+    languageCodes?: string[];
 }
 
 // @public
@@ -416,6 +417,7 @@ export interface CitationMetadata {
 
 // @public
 export interface CodeExecutionResult {
+    id?: string;
     outcome?: Outcome;
     output?: string;
 }
@@ -887,8 +889,17 @@ export interface DistillationDataStats {
 // @public
 export interface DistillationHyperParameters {
     adapterSize?: AdapterSize;
+    batchSize?: number;
     epochCount?: string;
+    learningRate?: number;
     learningRateMultiplier?: number;
+}
+
+// @public
+export interface DistillationSamplingSpec {
+    baseTeacherModel?: string;
+    tunedTeacherModelSource?: string;
+    validationDatasetUri?: string;
 }
 
 // @public
@@ -900,6 +911,7 @@ export interface DistillationSpec {
     studentModel?: string;
     trainingDatasetUri?: string;
     tunedTeacherModelSource?: string;
+    tuningMode?: TuningMode;
     validationDatasetUri?: string;
 }
 
@@ -918,13 +930,9 @@ export { Document_2 as Document }
 
 // @public
 export enum DocumentState {
-    // (undocumented)
     STATE_ACTIVE = "STATE_ACTIVE",
-    // (undocumented)
     STATE_FAILED = "STATE_FAILED",
-    // (undocumented)
     STATE_PENDING = "STATE_PENDING",
-    // (undocumented)
     STATE_UNSPECIFIED = "STATE_UNSPECIFIED"
 }
 
@@ -1135,6 +1143,7 @@ export interface ExactMatchMetricValue {
 // @public
 export interface ExecutableCode {
     code?: string;
+    id?: string;
     language?: Language;
 }
 
@@ -1419,6 +1428,7 @@ export interface GenerateContentConfig {
     routingConfig?: GenerationConfigRoutingConfig;
     safetySettings?: SafetySetting[];
     seed?: number;
+    serviceTier?: ServiceTier;
     speechConfig?: SpeechConfigUnion;
     stopSequences?: string[];
     systemInstruction?: ContentUnion;
@@ -1446,6 +1456,7 @@ export class GenerateContentResponse {
     get data(): string | undefined;
     get executableCode(): string | undefined;
     get functionCalls(): FunctionCall[] | undefined;
+    modelStatus?: ModelStatus;
     modelVersion?: string;
     promptFeedback?: GenerateContentResponsePromptFeedback;
     responseId?: string;
@@ -1542,6 +1553,7 @@ export interface GenerateVideosConfig {
     fps?: number;
     generateAudio?: boolean;
     httpOptions?: HttpOptions;
+    labels?: Record<string, string>;
     lastFrame?: Image_2;
     mask?: VideoGenerationMask;
     negativePrompt?: string;
@@ -1558,7 +1570,6 @@ export interface GenerateVideosConfig {
 export class GenerateVideosOperation implements Operation<GenerateVideosResponse> {
     done?: boolean;
     error?: Record<string, unknown>;
-    // @internal
     _fromAPIResponse({ apiResponse, _isVertexAI, }: OperationFromAPIResponseParameters): Operation<GenerateVideosResponse>;
     metadata?: Record<string, unknown>;
     name?: string;
@@ -1823,6 +1834,14 @@ export interface GroundingChunk {
 }
 
 // @public
+export interface GroundingChunkCustomMetadata {
+    key?: string;
+    numericValue?: number;
+    stringListValue?: GroundingChunkStringList;
+    stringValue?: string;
+}
+
+// @public
 export interface GroundingChunkImage {
     domain?: string;
     imageUri?: string;
@@ -1834,6 +1853,7 @@ export interface GroundingChunkImage {
 export interface GroundingChunkMaps {
     placeAnswerSources?: GroundingChunkMapsPlaceAnswerSources;
     placeId?: string;
+    route?: GroundingChunkMapsRoute;
     text?: string;
     title?: string;
     uri?: string;
@@ -1865,12 +1885,26 @@ export interface GroundingChunkMapsPlaceAnswerSourcesReviewSnippet {
 }
 
 // @public
+export interface GroundingChunkMapsRoute {
+    distanceMeters?: number;
+    duration?: string;
+    encodedPolyline?: string;
+}
+
+// @public
 export interface GroundingChunkRetrievedContext {
+    customMetadata?: GroundingChunkCustomMetadata[];
     documentName?: string;
+    fileSearchStore?: string;
     ragChunk?: RagChunk;
     text?: string;
     title?: string;
     uri?: string;
+}
+
+// @public
+export interface GroundingChunkStringList {
+    values?: string[];
 }
 
 // @public
@@ -1903,6 +1937,7 @@ export interface GroundingMetadataSourceFlaggingUri {
 export interface GroundingSupport {
     confidenceScores?: number[];
     groundingChunkIndices?: number[];
+    renderedParts?: number[];
     segment?: Segment;
 }
 
@@ -2045,7 +2080,6 @@ export interface ImportFileConfig {
 export class ImportFileOperation implements Operation<ImportFileResponse> {
     done?: boolean;
     error?: Record<string, unknown>;
-    // @internal
     _fromAPIResponse({ apiResponse, _isVertexAI, }: OperationFromAPIResponseParameters): Operation<ImportFileResponse>;
     metadata?: Record<string, unknown>;
     name?: string;
@@ -2070,6 +2104,7 @@ export class ImportFileResponse {
 // @public
 export class InlinedEmbedContentResponse {
     error?: JobError;
+    metadata?: Record<string, unknown>;
     response?: SingleEmbedContentResponse;
 }
 
@@ -2096,7 +2131,7 @@ export class Interactions extends BaseInteractions {
 
 // @public (undocumented)
 export namespace Interactions {
-        { export type AllowedTools as AllowedTools, export type Annotation as Annotation, export type AudioContent as AudioContent, export type CodeExecutionCallArguments as CodeExecutionCallArguments, export type CodeExecutionCallContent as CodeExecutionCallContent, export type CodeExecutionResultContent as CodeExecutionResultContent, export type Content as Content, export type ContentDelta as ContentDelta, export type ContentStart as ContentStart, export type ContentStop as ContentStop, export type DeepResearchAgentConfig as DeepResearchAgentConfig, export type DocumentContent as DocumentContent, export type DynamicAgentConfig as DynamicAgentConfig, export type ErrorEvent as ErrorEvent, export type FileSearchCallContent as FileSearchCallContent, export type FileSearchResultContent as FileSearchResultContent, export type Function as Function, export type FunctionCallContent as FunctionCallContent, export type FunctionResultContent as FunctionResultContent, export type GenerationConfig as GenerationConfig, export type GoogleSearchCallArguments as GoogleSearchCallArguments, export type GoogleSearchCallContent as GoogleSearchCallContent, export type GoogleSearchResult as GoogleSearchResult, export type GoogleSearchResultContent as GoogleSearchResultContent, export type ImageConfig as ImageConfig, export type ImageContent as ImageContent, export type Interaction as Interaction, export type InteractionCompleteEvent as InteractionCompleteEvent, export type InteractionSSEEvent as InteractionSSEEvent, export type InteractionStartEvent as InteractionStartEvent, export type InteractionStatusUpdate as InteractionStatusUpdate, export type MCPServerToolCallContent as MCPServerToolCallContent, export type MCPServerToolResultContent as MCPServerToolResultContent, export type Model as Model, export type SpeechConfig as SpeechConfig, export type TextContent as TextContent, export type ThinkingLevel as ThinkingLevel, export type ThoughtContent as ThoughtContent, export type Tool as Tool, export type ToolChoiceConfig as ToolChoiceConfig, export type ToolChoiceType as ToolChoiceType, export type Turn as Turn, export type URLContextCallArguments as URLContextCallArguments, export type URLContextCallContent as URLContextCallContent, export type URLContextResult as URLContextResult, export type URLContextResultContent as URLContextResultContent, export type Usage as Usage, export type VideoContent as VideoContent, export type InteractionDeleteResponse as InteractionDeleteResponse, export type InteractionCreateParams as InteractionCreateParams, export type CreateModelInteractionParamsNonStreaming as CreateModelInteractionParamsNonStreaming, export type CreateModelInteractionParamsStreaming as CreateModelInteractionParamsStreaming, export type CreateAgentInteractionParamsNonStreaming as CreateAgentInteractionParamsNonStreaming, export type CreateAgentInteractionParamsStreaming as CreateAgentInteractionParamsStreaming, export type InteractionDeleteParams as InteractionDeleteParams, export type InteractionCancelParams as InteractionCancelParams, export type InteractionGetParams as InteractionGetParams, export type InteractionGetParamsNonStreaming as InteractionGetParamsNonStreaming, export type InteractionGetParamsStreaming as InteractionGetParamsStreaming, };
+        { export type AllowedTools as AllowedTools, export type Annotation as Annotation, export type AudioContent as AudioContent, export type CodeExecutionCallArguments as CodeExecutionCallArguments, export type CodeExecutionCallContent as CodeExecutionCallContent, export type CodeExecutionResultContent as CodeExecutionResultContent, export type Content as Content, export type ContentDelta as ContentDelta, export type ContentStart as ContentStart, export type ContentStop as ContentStop, export type DeepResearchAgentConfig as DeepResearchAgentConfig, export type DocumentContent as DocumentContent, export type DynamicAgentConfig as DynamicAgentConfig, export type ErrorEvent as ErrorEvent, export type FileCitation as FileCitation, export type FileSearchCallContent as FileSearchCallContent, export type FileSearchResultContent as FileSearchResultContent, export type Function as Function, export type FunctionCallContent as FunctionCallContent, export type FunctionResultContent as FunctionResultContent, export type GenerationConfig as GenerationConfig, export type GoogleMapsCallArguments as GoogleMapsCallArguments, export type GoogleMapsCallContent as GoogleMapsCallContent, export type GoogleMapsResult as GoogleMapsResult, export type GoogleMapsResultContent as GoogleMapsResultContent, export type GoogleSearchCallArguments as GoogleSearchCallArguments, export type GoogleSearchCallContent as GoogleSearchCallContent, export type GoogleSearchResult as GoogleSearchResult, export type GoogleSearchResultContent as GoogleSearchResultContent, export type ImageConfig as ImageConfig, export type ImageContent as ImageContent, export type Interaction as Interaction, export type InteractionCompleteEvent as InteractionCompleteEvent, export type InteractionSSEEvent as InteractionSSEEvent, export type InteractionStartEvent as InteractionStartEvent, export type InteractionStatusUpdate as InteractionStatusUpdate, export type MCPServerToolCallContent as MCPServerToolCallContent, export type MCPServerToolResultContent as MCPServerToolResultContent, export type Model as Model, export type PlaceCitation as PlaceCitation, export type SpeechConfig as SpeechConfig, export type TextContent as TextContent, export type ThinkingLevel as ThinkingLevel, export type ThoughtContent as ThoughtContent, export type Tool as Tool, export type ToolChoiceConfig as ToolChoiceConfig, export type ToolChoiceType as ToolChoiceType, export type Turn as Turn, export type URLCitation as URLCitation, export type URLContextCallArguments as URLContextCallArguments, export type URLContextCallContent as URLContextCallContent, export type URLContextResult as URLContextResult, export type URLContextResultContent as URLContextResultContent, export type Usage as Usage, export type VideoContent as VideoContent, export type InteractionDeleteResponse as InteractionDeleteResponse, export type InteractionCreateParams as InteractionCreateParams, export type CreateModelInteractionParamsNonStreaming as CreateModelInteractionParamsNonStreaming, export type CreateModelInteractionParamsStreaming as CreateModelInteractionParamsStreaming, export type CreateAgentInteractionParamsNonStreaming as CreateAgentInteractionParamsNonStreaming, export type CreateAgentInteractionParamsStreaming as CreateAgentInteractionParamsStreaming, export type InteractionDeleteParams as InteractionDeleteParams, export type InteractionCancelParams as InteractionCancelParams, export type InteractionGetParams as InteractionGetParams, export type InteractionGetParamsNonStreaming as InteractionGetParamsNonStreaming, export type InteractionGetParamsStreaming as InteractionGetParamsStreaming, };
 }
 
 // @public
@@ -2248,7 +2283,6 @@ export interface ListFileSearchStoresParameters {
 // @public
 export class ListFileSearchStoresResponse {
     fileSearchStores?: FileSearchStore[];
-    // (undocumented)
     nextPageToken?: string;
     sdkHttpResponse?: HttpResponse;
 }
@@ -2614,6 +2648,7 @@ export interface LiveServerToolCallCancellation {
 // @public
 export interface LogprobsResult {
     chosenCandidates?: LogprobsResultCandidate[];
+    logProbabilitySum?: number;
     topCandidates?: LogprobsResultTopCandidates[];
 }
 
@@ -2754,6 +2789,25 @@ export interface ModelSelectionConfig {
 }
 
 // @public
+export enum ModelStage {
+    DEPRECATED = "DEPRECATED",
+    EXPERIMENTAL = "EXPERIMENTAL",
+    LEGACY = "LEGACY",
+    MODEL_STAGE_UNSPECIFIED = "MODEL_STAGE_UNSPECIFIED",
+    PREVIEW = "PREVIEW",
+    RETIRED = "RETIRED",
+    STABLE = "STABLE",
+    UNSTABLE_EXPERIMENTAL = "UNSTABLE_EXPERIMENTAL"
+}
+
+// @public
+export interface ModelStatus {
+    message?: string;
+    modelStage?: ModelStage;
+    retirementTime?: string;
+}
+
+// @public
 export interface MultiSpeakerVoiceConfig {
     speakerVoiceConfigs?: SpeakerVoiceConfig[];
 }
@@ -2770,7 +2824,6 @@ export enum MusicGenerationMode {
 export interface Operation<T> {
     done?: boolean;
     error?: Record<string, unknown>;
-    // @internal
     _fromAPIResponse({ apiResponse, _isVertexAI, }: OperationFromAPIResponseParameters): Operation<T>;
     metadata?: Record<string, unknown>;
     name?: string;
@@ -2873,9 +2926,12 @@ export interface Part {
     functionResponse?: FunctionResponse;
     inlineData?: Blob_2;
     mediaResolution?: PartMediaResolution;
+    partMetadata?: Record<string, unknown>;
     text?: string;
     thought?: boolean;
     thoughtSignature?: string;
+    toolCall?: ToolCall;
+    toolResponse?: ToolResponse;
     videoMetadata?: VideoMetadata;
 }
 
@@ -3362,6 +3418,14 @@ export interface SendMessageParameters {
 }
 
 // @public
+export enum ServiceTier {
+    SERVICE_TIER_FLEX = "SERVICE_TIER_FLEX",
+    SERVICE_TIER_PRIORITY = "SERVICE_TIER_PRIORITY",
+    SERVICE_TIER_STANDARD = "SERVICE_TIER_STANDARD",
+    SERVICE_TIER_UNSPECIFIED = "SERVICE_TIER_UNSPECIFIED"
+}
+
+// @public
 export class Session {
     constructor(conn: WebSocket_2, apiClient: ApiClient);
     close(): void;
@@ -3398,7 +3462,7 @@ export interface SpeakerVoiceConfig {
     voiceConfig?: VoiceConfig;
 }
 
-// @public (undocumented)
+// @public
 export interface SpeechConfig {
     languageCode?: string;
     multiSpeakerVoiceConfig?: MultiSpeakerVoiceConfig;
@@ -3595,12 +3659,20 @@ export interface Tool {
 }
 
 // @public
+export interface ToolCall {
+    args?: Record<string, unknown>;
+    id?: string;
+    toolType?: ToolType;
+}
+
+// @public
 export interface ToolCodeExecution {
 }
 
 // @public
 export interface ToolConfig {
     functionCallingConfig?: FunctionCallingConfig;
+    includeServerSideToolInvocations?: boolean;
     retrievalConfig?: RetrievalConfig;
 }
 
@@ -3611,6 +3683,23 @@ export type ToolListUnion = ToolUnion[];
 export interface ToolParallelAiSearch {
     apiKey?: string;
     customConfigs?: Record<string, unknown>;
+}
+
+// @public
+export class ToolResponse {
+    id?: string;
+    response?: Record<string, unknown>;
+    toolType?: ToolType;
+}
+
+// @public
+export enum ToolType {
+    FILE_SEARCH = "FILE_SEARCH",
+    GOOGLE_MAPS = "GOOGLE_MAPS",
+    GOOGLE_SEARCH_IMAGE = "GOOGLE_SEARCH_IMAGE",
+    GOOGLE_SEARCH_WEB = "GOOGLE_SEARCH_WEB",
+    TOOL_TYPE_UNSPECIFIED = "TOOL_TYPE_UNSPECIFIED",
+    URL_CONTEXT = "URL_CONTEXT"
 }
 
 // @public (undocumented)
@@ -3679,6 +3768,7 @@ export interface TuningJob {
     createTime?: string;
     customBaseModel?: string;
     description?: string;
+    distillationSamplingSpec?: DistillationSamplingSpec;
     distillationSpec?: DistillationSpec;
     encryptionSpec?: EncryptionSpec;
     endTime?: string;
@@ -3701,9 +3791,16 @@ export interface TuningJob {
     tunedModel?: TunedModel;
     tunedModelDisplayName?: string;
     tuningDataStats?: TuningDataStats;
+    tuningJobMetadata?: TuningJobMetadata;
     tuningJobState?: TuningJobState;
     updateTime?: string;
     veoTuningSpec?: VeoTuningSpec;
+}
+
+// @public
+export interface TuningJobMetadata {
+    completedEpochCount?: string;
+    completedStepCount?: string;
 }
 
 // @public
@@ -3765,6 +3862,7 @@ export enum TurnCompleteReason {
 export enum TurnCoverage {
     TURN_COVERAGE_UNSPECIFIED = "TURN_COVERAGE_UNSPECIFIED",
     TURN_INCLUDES_ALL_INPUT = "TURN_INCLUDES_ALL_INPUT",
+    TURN_INCLUDES_AUDIO_ACTIVITY_AND_ALL_VIDEO = "TURN_INCLUDES_AUDIO_ACTIVITY_AND_ALL_VIDEO",
     TURN_INCLUDES_ONLY_ACTIVITY = "TURN_INCLUDES_ONLY_ACTIVITY"
 }
 
@@ -3843,7 +3941,6 @@ export interface UploadToFileSearchStoreConfig {
 export class UploadToFileSearchStoreOperation implements Operation<UploadToFileSearchStoreResponse> {
     done?: boolean;
     error?: Record<string, unknown>;
-    // @internal
     _fromAPIResponse({ apiResponse, _isVertexAI, }: OperationFromAPIResponseParameters): Operation<UploadToFileSearchStoreResponse>;
     metadata?: Record<string, unknown>;
     name?: string;
@@ -4060,7 +4157,7 @@ export enum VoiceActivityType {
     TYPE_UNSPECIFIED = "TYPE_UNSPECIFIED"
 }
 
-// @public (undocumented)
+// @public
 export interface VoiceConfig {
     prebuiltVoiceConfig?: PrebuiltVoiceConfig;
     replicatedVoiceConfig?: ReplicatedVoiceConfig;

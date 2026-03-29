@@ -450,6 +450,15 @@ export function createTuningJobConfigToVertex(
         fromTuningMode,
       );
     }
+  } else if (discriminatorTuningMode === 'DISTILLATION') {
+    const fromTuningMode = common.getValueByPath(fromObject, ['tuningMode']);
+    if (parentObject !== undefined && fromTuningMode != null) {
+      common.setValueByPath(
+        parentObject,
+        ['distillationSpec', 'tuningMode'],
+        fromTuningMode,
+      );
+    }
   }
 
   const fromCustomBaseModel = common.getValueByPath(fromObject, [
@@ -479,6 +488,15 @@ export function createTuningJobConfigToVertex(
         fromBatchSize,
       );
     }
+  } else if (discriminatorBatchSize === 'DISTILLATION') {
+    const fromBatchSize = common.getValueByPath(fromObject, ['batchSize']);
+    if (parentObject !== undefined && fromBatchSize != null) {
+      common.setValueByPath(
+        parentObject,
+        ['distillationSpec', 'hyperParameters', 'batchSize'],
+        fromBatchSize,
+      );
+    }
   }
 
   let discriminatorLearningRate = common.getValueByPath(rootObject, [
@@ -496,6 +514,17 @@ export function createTuningJobConfigToVertex(
       common.setValueByPath(
         parentObject,
         ['supervisedTuningSpec', 'hyperParameters', 'learningRate'],
+        fromLearningRate,
+      );
+    }
+  } else if (discriminatorLearningRate === 'DISTILLATION') {
+    const fromLearningRate = common.getValueByPath(fromObject, [
+      'learningRate',
+    ]);
+    if (parentObject !== undefined && fromLearningRate != null) {
+      common.setValueByPath(
+        parentObject,
+        ['distillationSpec', 'hyperParameters', 'learningRate'],
         fromLearningRate,
       );
     }
@@ -798,7 +827,7 @@ export function generationConfigFromVertex(
 
 export function generationConfigToVertex(
   fromObject: types.GenerationConfig,
-  _rootObject?: unknown,
+  rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -924,7 +953,11 @@ export function generationConfigToVertex(
 
   const fromSpeechConfig = common.getValueByPath(fromObject, ['speechConfig']);
   if (fromSpeechConfig != null) {
-    common.setValueByPath(toObject, ['speechConfig'], fromSpeechConfig);
+    common.setValueByPath(
+      toObject,
+      ['speechConfig'],
+      speechConfigToVertex(fromSpeechConfig, rootObject),
+    );
   }
 
   const fromStopSequences = common.getValueByPath(fromObject, [
@@ -1137,6 +1170,106 @@ export function listTuningJobsResponseFromVertex(
       });
     }
     common.setValueByPath(toObject, ['tuningJobs'], transformedList);
+  }
+
+  return toObject;
+}
+
+export function multiSpeakerVoiceConfigToVertex(
+  fromObject: types.MultiSpeakerVoiceConfig,
+  rootObject?: unknown,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromSpeakerVoiceConfigs = common.getValueByPath(fromObject, [
+    'speakerVoiceConfigs',
+  ]);
+  if (fromSpeakerVoiceConfigs != null) {
+    let transformedList = fromSpeakerVoiceConfigs;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return speakerVoiceConfigToVertex(item, rootObject);
+      });
+    }
+    common.setValueByPath(toObject, ['speakerVoiceConfigs'], transformedList);
+  }
+
+  return toObject;
+}
+
+export function replicatedVoiceConfigToVertex(
+  fromObject: types.ReplicatedVoiceConfig,
+  _rootObject?: unknown,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+  if (fromMimeType != null) {
+    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+  }
+
+  const fromVoiceSampleAudio = common.getValueByPath(fromObject, [
+    'voiceSampleAudio',
+  ]);
+  if (fromVoiceSampleAudio != null) {
+    common.setValueByPath(toObject, ['voiceSampleAudio'], fromVoiceSampleAudio);
+  }
+
+  return toObject;
+}
+
+export function speakerVoiceConfigToVertex(
+  fromObject: types.SpeakerVoiceConfig,
+  rootObject?: unknown,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromSpeaker = common.getValueByPath(fromObject, ['speaker']);
+  if (fromSpeaker != null) {
+    common.setValueByPath(toObject, ['speaker'], fromSpeaker);
+  }
+
+  const fromVoiceConfig = common.getValueByPath(fromObject, ['voiceConfig']);
+  if (fromVoiceConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['voiceConfig'],
+      voiceConfigToVertex(fromVoiceConfig, rootObject),
+    );
+  }
+
+  return toObject;
+}
+
+export function speechConfigToVertex(
+  fromObject: types.SpeechConfig,
+  rootObject?: unknown,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromVoiceConfig = common.getValueByPath(fromObject, ['voiceConfig']);
+  if (fromVoiceConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['voiceConfig'],
+      voiceConfigToVertex(fromVoiceConfig, rootObject),
+    );
+  }
+
+  const fromLanguageCode = common.getValueByPath(fromObject, ['languageCode']);
+  if (fromLanguageCode != null) {
+    common.setValueByPath(toObject, ['languageCode'], fromLanguageCode);
+  }
+
+  const fromMultiSpeakerVoiceConfig = common.getValueByPath(fromObject, [
+    'multiSpeakerVoiceConfig',
+  ]);
+  if (fromMultiSpeakerVoiceConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['multiSpeakerVoiceConfig'],
+      multiSpeakerVoiceConfigToVertex(fromMultiSpeakerVoiceConfig, rootObject),
+    );
   }
 
   return toObject;
@@ -1562,6 +1695,28 @@ export function tuningJobFromVertex(
     common.setValueByPath(toObject, ['veoTuningSpec'], fromVeoTuningSpec);
   }
 
+  const fromDistillationSamplingSpec = common.getValueByPath(fromObject, [
+    'distillationSamplingSpec',
+  ]);
+  if (fromDistillationSamplingSpec != null) {
+    common.setValueByPath(
+      toObject,
+      ['distillationSamplingSpec'],
+      fromDistillationSamplingSpec,
+    );
+  }
+
+  const fromTuningJobMetadata = common.getValueByPath(fromObject, [
+    'tuningJobMetadata',
+  ]);
+  if (fromTuningJobMetadata != null) {
+    common.setValueByPath(
+      toObject,
+      ['tuningJobMetadata'],
+      fromTuningJobMetadata,
+    );
+  }
+
   return toObject;
 }
 
@@ -1620,6 +1775,37 @@ export function tuningValidationDatasetToVertex(
       toObject,
       ['validationDatasetUri'],
       fromVertexDatasetResource,
+    );
+  }
+
+  return toObject;
+}
+
+export function voiceConfigToVertex(
+  fromObject: types.VoiceConfig,
+  rootObject?: unknown,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromReplicatedVoiceConfig = common.getValueByPath(fromObject, [
+    'replicatedVoiceConfig',
+  ]);
+  if (fromReplicatedVoiceConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['replicatedVoiceConfig'],
+      replicatedVoiceConfigToVertex(fromReplicatedVoiceConfig, rootObject),
+    );
+  }
+
+  const fromPrebuiltVoiceConfig = common.getValueByPath(fromObject, [
+    'prebuiltVoiceConfig',
+  ]);
+  if (fromPrebuiltVoiceConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['prebuiltVoiceConfig'],
+      fromPrebuiltVoiceConfig,
     );
   }
 

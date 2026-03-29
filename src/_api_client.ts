@@ -18,7 +18,7 @@ const CONTENT_TYPE_HEADER = 'Content-Type';
 const SERVER_TIMEOUT_HEADER = 'X-Server-Timeout';
 const USER_AGENT_HEADER = 'User-Agent';
 export const GOOGLE_API_CLIENT_HEADER = 'x-goog-api-client';
-export const SDK_VERSION = '1.44.0'; // x-release-please-version
+export const SDK_VERSION = '1.47.0'; // x-release-please-version
 const LIBRARY_LABEL = `google-genai-sdk/${SDK_VERSION}`;
 const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
 const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';
@@ -222,6 +222,12 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
       ) {
         // Vertex Express or global endpoint case.
         initHttpOptions.baseUrl = 'https://aiplatform.googleapis.com/';
+      } else if (
+        this.clientOptions.project &&
+        this.clientOptions.location &&
+        this.clientOptions.location === 'us'
+      ) {
+        initHttpOptions.baseUrl = `https://aiplatform.${this.clientOptions.location}.rep.googleapis.com/`;
       } else if (this.clientOptions.project && this.clientOptions.location) {
         initHttpOptions.baseUrl = `https://${this.clientOptions.location}-aiplatform.googleapis.com/`;
       }

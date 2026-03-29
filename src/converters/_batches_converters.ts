@@ -1280,6 +1280,11 @@ export function generateContentConfigToMldev(
     );
   }
 
+  const fromServiceTier = common.getValueByPath(fromObject, ['serviceTier']);
+  if (parentObject !== undefined && fromServiceTier != null) {
+    common.setValueByPath(parentObject, ['serviceTier'], fromServiceTier);
+  }
+
   return toObject;
 }
 
@@ -1328,6 +1333,11 @@ export function generateContentResponseFromMldev(
   ]);
   if (fromUsageMetadata != null) {
     common.setValueByPath(toObject, ['usageMetadata'], fromUsageMetadata);
+  }
+
+  const fromModelStatus = common.getValueByPath(fromObject, ['modelStatus']);
+  if (fromModelStatus != null) {
+    common.setValueByPath(toObject, ['modelStatus'], fromModelStatus);
   }
 
   return toObject;
@@ -1776,6 +1786,21 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
     common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
   }
 
+  const fromToolCall = common.getValueByPath(fromObject, ['toolCall']);
+  if (fromToolCall != null) {
+    common.setValueByPath(toObject, ['toolCall'], fromToolCall);
+  }
+
+  const fromToolResponse = common.getValueByPath(fromObject, ['toolResponse']);
+  if (fromToolResponse != null) {
+    common.setValueByPath(toObject, ['toolResponse'], fromToolResponse);
+  }
+
+  const fromPartMetadata = common.getValueByPath(fromObject, ['partMetadata']);
+  if (fromPartMetadata != null) {
+    common.setValueByPath(toObject, ['partMetadata'], fromPartMetadata);
+  }
+
   return toObject;
 }
 
@@ -1821,6 +1846,18 @@ export function toolConfigToMldev(
       toObject,
       ['functionCallingConfig'],
       functionCallingConfigToMldev(fromFunctionCallingConfig),
+    );
+  }
+
+  const fromIncludeServerSideToolInvocations = common.getValueByPath(
+    fromObject,
+    ['includeServerSideToolInvocations'],
+  );
+  if (fromIncludeServerSideToolInvocations != null) {
+    common.setValueByPath(
+      toObject,
+      ['includeServerSideToolInvocations'],
+      fromIncludeServerSideToolInvocations,
     );
   }
 

@@ -192,7 +192,7 @@ export function citationMetadataFromMldev(
 export function computeTokensParametersToVertex(
   apiClient: ApiClient,
   fromObject: types.ComputeTokensParameters,
-  _rootObject?: unknown,
+  rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -210,7 +210,7 @@ export function computeTokensParametersToVertex(
     let transformedList = t.tContents(fromContents);
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return item;
+        return contentToVertex(item, rootObject);
       });
     }
     common.setValueByPath(toObject, ['contents'], transformedList);
@@ -313,6 +313,31 @@ export function contentToMldev(
   return toObject;
 }
 
+export function contentToVertex(
+  fromObject: types.Content,
+  rootObject?: unknown,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromParts = common.getValueByPath(fromObject, ['parts']);
+  if (fromParts != null) {
+    let transformedList = fromParts;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return partToVertex(item, rootObject);
+      });
+    }
+    common.setValueByPath(toObject, ['parts'], transformedList);
+  }
+
+  const fromRole = common.getValueByPath(fromObject, ['role']);
+  if (fromRole != null) {
+    common.setValueByPath(toObject, ['role'], fromRole);
+  }
+
+  return toObject;
+}
+
 export function controlReferenceConfigToVertex(
   fromObject: types.ControlReferenceConfig,
   _rootObject?: unknown,
@@ -377,7 +402,7 @@ export function countTokensConfigToVertex(
     common.setValueByPath(
       parentObject,
       ['systemInstruction'],
-      t.tContent(fromSystemInstruction),
+      contentToVertex(t.tContent(fromSystemInstruction), rootObject),
     );
   }
 
@@ -462,7 +487,7 @@ export function countTokensParametersToVertex(
     let transformedList = t.tContents(fromContents);
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return item;
+        return contentToVertex(item, rootObject);
       });
     }
     common.setValueByPath(toObject, ['contents'], transformedList);
@@ -1110,7 +1135,11 @@ export function embedContentParametersPrivateToVertex(
   if (discriminatorContent === 'EMBED_CONTENT') {
     const fromContent = common.getValueByPath(fromObject, ['content']);
     if (fromContent != null) {
-      common.setValueByPath(toObject, ['content'], t.tContent(fromContent));
+      common.setValueByPath(
+        toObject,
+        ['content'],
+        contentToVertex(t.tContent(fromContent), rootObject),
+      );
     }
   }
 
@@ -1618,6 +1647,11 @@ export function generateContentConfigToMldev(
     );
   }
 
+  const fromServiceTier = common.getValueByPath(fromObject, ['serviceTier']);
+  if (parentObject !== undefined && fromServiceTier != null) {
+    common.setValueByPath(parentObject, ['serviceTier'], fromServiceTier);
+  }
+
   return toObject;
 }
 
@@ -1636,7 +1670,7 @@ export function generateContentConfigToVertex(
     common.setValueByPath(
       parentObject,
       ['systemInstruction'],
-      t.tContent(fromSystemInstruction),
+      contentToVertex(t.tContent(fromSystemInstruction), rootObject),
     );
   }
 
@@ -1776,7 +1810,11 @@ export function generateContentConfigToVertex(
 
   const fromToolConfig = common.getValueByPath(fromObject, ['toolConfig']);
   if (parentObject !== undefined && fromToolConfig != null) {
-    common.setValueByPath(parentObject, ['toolConfig'], fromToolConfig);
+    common.setValueByPath(
+      parentObject,
+      ['toolConfig'],
+      toolConfigToVertex(fromToolConfig, rootObject),
+    );
   }
 
   const fromLabels = common.getValueByPath(fromObject, ['labels']);
@@ -1818,7 +1856,7 @@ export function generateContentConfigToVertex(
     common.setValueByPath(
       toObject,
       ['speechConfig'],
-      t.tSpeechConfig(fromSpeechConfig),
+      speechConfigToVertex(t.tSpeechConfig(fromSpeechConfig), rootObject),
     );
   }
 
@@ -1863,6 +1901,10 @@ export function generateContentConfigToVertex(
       ['modelArmorConfig'],
       fromModelArmorConfig,
     );
+  }
+
+  if (common.getValueByPath(fromObject, ['serviceTier']) !== undefined) {
+    throw new Error('serviceTier parameter is not supported in Vertex AI.');
   }
 
   return toObject;
@@ -1928,7 +1970,7 @@ export function generateContentParametersToVertex(
     let transformedList = t.tContents(fromContents);
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return item;
+        return contentToVertex(item, rootObject);
       });
     }
     common.setValueByPath(toObject, ['contents'], transformedList);
@@ -1997,6 +2039,11 @@ export function generateContentResponseFromMldev(
   ]);
   if (fromUsageMetadata != null) {
     common.setValueByPath(toObject, ['usageMetadata'], fromUsageMetadata);
+  }
+
+  const fromModelStatus = common.getValueByPath(fromObject, ['modelStatus']);
+  if (fromModelStatus != null) {
+    common.setValueByPath(toObject, ['modelStatus'], fromModelStatus);
   }
 
   return toObject;
@@ -2659,6 +2706,10 @@ export function generateVideosConfigToMldev(
     );
   }
 
+  if (common.getValueByPath(fromObject, ['labels']) !== undefined) {
+    throw new Error('labels parameter is not supported in Gemini API.');
+  }
+
   return toObject;
 }
 
@@ -2825,6 +2876,11 @@ export function generateVideosConfigToVertex(
       ['parameters', 'compressionQuality'],
       fromCompressionQuality,
     );
+  }
+
+  const fromLabels = common.getValueByPath(fromObject, ['labels']);
+  if (parentObject !== undefined && fromLabels != null) {
+    common.setValueByPath(parentObject, ['labels'], fromLabels);
   }
 
   return toObject;
@@ -3313,7 +3369,7 @@ export function generatedVideoFromVertex(
 
 export function generationConfigToVertex(
   fromObject: types.GenerationConfig,
-  _rootObject?: unknown,
+  rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3439,7 +3495,11 @@ export function generationConfigToVertex(
 
   const fromSpeechConfig = common.getValueByPath(fromObject, ['speechConfig']);
   if (fromSpeechConfig != null) {
-    common.setValueByPath(toObject, ['speechConfig'], fromSpeechConfig);
+    common.setValueByPath(
+      toObject,
+      ['speechConfig'],
+      speechConfigToVertex(fromSpeechConfig, rootObject),
+    );
   }
 
   const fromStopSequences = common.getValueByPath(fromObject, [
@@ -4149,6 +4209,28 @@ export function modelFromVertex(
   return toObject;
 }
 
+export function multiSpeakerVoiceConfigToVertex(
+  fromObject: types.MultiSpeakerVoiceConfig,
+  rootObject?: unknown,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromSpeakerVoiceConfigs = common.getValueByPath(fromObject, [
+    'speakerVoiceConfigs',
+  ]);
+  if (fromSpeakerVoiceConfigs != null) {
+    let transformedList = fromSpeakerVoiceConfigs;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return speakerVoiceConfigToVertex(item, rootObject);
+      });
+    }
+    common.setValueByPath(toObject, ['speakerVoiceConfigs'], transformedList);
+  }
+
+  return toObject;
+}
+
 export function partToMldev(
   fromObject: types.Part,
   rootObject?: unknown,
@@ -4236,6 +4318,113 @@ export function partToMldev(
   ]);
   if (fromVideoMetadata != null) {
     common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
+  }
+
+  const fromToolCall = common.getValueByPath(fromObject, ['toolCall']);
+  if (fromToolCall != null) {
+    common.setValueByPath(toObject, ['toolCall'], fromToolCall);
+  }
+
+  const fromToolResponse = common.getValueByPath(fromObject, ['toolResponse']);
+  if (fromToolResponse != null) {
+    common.setValueByPath(toObject, ['toolResponse'], fromToolResponse);
+  }
+
+  const fromPartMetadata = common.getValueByPath(fromObject, ['partMetadata']);
+  if (fromPartMetadata != null) {
+    common.setValueByPath(toObject, ['partMetadata'], fromPartMetadata);
+  }
+
+  return toObject;
+}
+
+export function partToVertex(
+  fromObject: types.Part,
+  _rootObject?: unknown,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromMediaResolution = common.getValueByPath(fromObject, [
+    'mediaResolution',
+  ]);
+  if (fromMediaResolution != null) {
+    common.setValueByPath(toObject, ['mediaResolution'], fromMediaResolution);
+  }
+
+  const fromCodeExecutionResult = common.getValueByPath(fromObject, [
+    'codeExecutionResult',
+  ]);
+  if (fromCodeExecutionResult != null) {
+    common.setValueByPath(
+      toObject,
+      ['codeExecutionResult'],
+      fromCodeExecutionResult,
+    );
+  }
+
+  const fromExecutableCode = common.getValueByPath(fromObject, [
+    'executableCode',
+  ]);
+  if (fromExecutableCode != null) {
+    common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
+  }
+
+  const fromFileData = common.getValueByPath(fromObject, ['fileData']);
+  if (fromFileData != null) {
+    common.setValueByPath(toObject, ['fileData'], fromFileData);
+  }
+
+  const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
+  if (fromFunctionCall != null) {
+    common.setValueByPath(toObject, ['functionCall'], fromFunctionCall);
+  }
+
+  const fromFunctionResponse = common.getValueByPath(fromObject, [
+    'functionResponse',
+  ]);
+  if (fromFunctionResponse != null) {
+    common.setValueByPath(toObject, ['functionResponse'], fromFunctionResponse);
+  }
+
+  const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
+  if (fromInlineData != null) {
+    common.setValueByPath(toObject, ['inlineData'], fromInlineData);
+  }
+
+  const fromText = common.getValueByPath(fromObject, ['text']);
+  if (fromText != null) {
+    common.setValueByPath(toObject, ['text'], fromText);
+  }
+
+  const fromThought = common.getValueByPath(fromObject, ['thought']);
+  if (fromThought != null) {
+    common.setValueByPath(toObject, ['thought'], fromThought);
+  }
+
+  const fromThoughtSignature = common.getValueByPath(fromObject, [
+    'thoughtSignature',
+  ]);
+  if (fromThoughtSignature != null) {
+    common.setValueByPath(toObject, ['thoughtSignature'], fromThoughtSignature);
+  }
+
+  const fromVideoMetadata = common.getValueByPath(fromObject, [
+    'videoMetadata',
+  ]);
+  if (fromVideoMetadata != null) {
+    common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
+  }
+
+  if (common.getValueByPath(fromObject, ['toolCall']) !== undefined) {
+    throw new Error('toolCall parameter is not supported in Vertex AI.');
+  }
+
+  if (common.getValueByPath(fromObject, ['toolResponse']) !== undefined) {
+    throw new Error('toolResponse parameter is not supported in Vertex AI.');
+  }
+
+  if (common.getValueByPath(fromObject, ['partMetadata']) !== undefined) {
+    throw new Error('partMetadata parameter is not supported in Vertex AI.');
   }
 
   return toObject;
@@ -4536,6 +4725,27 @@ export function referenceImageAPIInternalToVertex(
   return toObject;
 }
 
+export function replicatedVoiceConfigToVertex(
+  fromObject: types.ReplicatedVoiceConfig,
+  _rootObject?: unknown,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+  if (fromMimeType != null) {
+    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+  }
+
+  const fromVoiceSampleAudio = common.getValueByPath(fromObject, [
+    'voiceSampleAudio',
+  ]);
+  if (fromVoiceSampleAudio != null) {
+    common.setValueByPath(toObject, ['voiceSampleAudio'], fromVoiceSampleAudio);
+  }
+
+  return toObject;
+}
+
 export function safetyAttributesFromMldev(
   fromObject: types.SafetyAttributes,
   _rootObject?: unknown,
@@ -4783,6 +4993,63 @@ export function segmentImageSourceToVertex(
   return toObject;
 }
 
+export function speakerVoiceConfigToVertex(
+  fromObject: types.SpeakerVoiceConfig,
+  rootObject?: unknown,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromSpeaker = common.getValueByPath(fromObject, ['speaker']);
+  if (fromSpeaker != null) {
+    common.setValueByPath(toObject, ['speaker'], fromSpeaker);
+  }
+
+  const fromVoiceConfig = common.getValueByPath(fromObject, ['voiceConfig']);
+  if (fromVoiceConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['voiceConfig'],
+      voiceConfigToVertex(fromVoiceConfig, rootObject),
+    );
+  }
+
+  return toObject;
+}
+
+export function speechConfigToVertex(
+  fromObject: types.SpeechConfig,
+  rootObject?: unknown,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromVoiceConfig = common.getValueByPath(fromObject, ['voiceConfig']);
+  if (fromVoiceConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['voiceConfig'],
+      voiceConfigToVertex(fromVoiceConfig, rootObject),
+    );
+  }
+
+  const fromLanguageCode = common.getValueByPath(fromObject, ['languageCode']);
+  if (fromLanguageCode != null) {
+    common.setValueByPath(toObject, ['languageCode'], fromLanguageCode);
+  }
+
+  const fromMultiSpeakerVoiceConfig = common.getValueByPath(fromObject, [
+    'multiSpeakerVoiceConfig',
+  ]);
+  if (fromMultiSpeakerVoiceConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['multiSpeakerVoiceConfig'],
+      multiSpeakerVoiceConfigToVertex(fromMultiSpeakerVoiceConfig, rootObject),
+    );
+  }
+
+  return toObject;
+}
+
 export function toolConfigToMldev(
   fromObject: types.ToolConfig,
   rootObject?: unknown,
@@ -4804,6 +5071,54 @@ export function toolConfigToMldev(
       toObject,
       ['functionCallingConfig'],
       functionCallingConfigToMldev(fromFunctionCallingConfig, rootObject),
+    );
+  }
+
+  const fromIncludeServerSideToolInvocations = common.getValueByPath(
+    fromObject,
+    ['includeServerSideToolInvocations'],
+  );
+  if (fromIncludeServerSideToolInvocations != null) {
+    common.setValueByPath(
+      toObject,
+      ['includeServerSideToolInvocations'],
+      fromIncludeServerSideToolInvocations,
+    );
+  }
+
+  return toObject;
+}
+
+export function toolConfigToVertex(
+  fromObject: types.ToolConfig,
+  _rootObject?: unknown,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromRetrievalConfig = common.getValueByPath(fromObject, [
+    'retrievalConfig',
+  ]);
+  if (fromRetrievalConfig != null) {
+    common.setValueByPath(toObject, ['retrievalConfig'], fromRetrievalConfig);
+  }
+
+  const fromFunctionCallingConfig = common.getValueByPath(fromObject, [
+    'functionCallingConfig',
+  ]);
+  if (fromFunctionCallingConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['functionCallingConfig'],
+      fromFunctionCallingConfig,
+    );
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['includeServerSideToolInvocations']) !==
+    undefined
+  ) {
+    throw new Error(
+      'includeServerSideToolInvocations parameter is not supported in Vertex AI.',
     );
   }
 
@@ -5524,6 +5839,37 @@ export function videoToVertex(
   const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
   if (fromMimeType != null) {
     common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+  }
+
+  return toObject;
+}
+
+export function voiceConfigToVertex(
+  fromObject: types.VoiceConfig,
+  rootObject?: unknown,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromReplicatedVoiceConfig = common.getValueByPath(fromObject, [
+    'replicatedVoiceConfig',
+  ]);
+  if (fromReplicatedVoiceConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['replicatedVoiceConfig'],
+      replicatedVoiceConfigToVertex(fromReplicatedVoiceConfig, rootObject),
+    );
+  }
+
+  const fromPrebuiltVoiceConfig = common.getValueByPath(fromObject, [
+    'prebuiltVoiceConfig',
+  ]);
+  if (fromPrebuiltVoiceConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['prebuiltVoiceConfig'],
+      fromPrebuiltVoiceConfig,
+    );
   }
 
   return toObject;

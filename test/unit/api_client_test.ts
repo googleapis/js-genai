@@ -464,6 +464,49 @@ describe('ApiClient', () => {
       expect(client.getApiVersion()).toBe('v1beta1');
     });
 
+    it('should initialize with Vertex AI and US multi-regional location', () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        project: 'vertex-project',
+        location: 'us',
+        vertexai: true,
+        apiVersion: 'v1beta1',
+        apiKey: 'apikey-from-opts',
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+
+      expect(client.isVertexAI()).toBe(true);
+      expect(client.getProject()).toBe('vertex-project');
+      expect(client.getLocation()).toBe('us');
+      expect(client.getApiKey()).toBeUndefined();
+      expect(client.getRequestUrl()).toBe(
+        'https://aiplatform.us.rep.googleapis.com/v1beta1',
+      );
+      expect(client.getApiVersion()).toBe('v1beta1');
+    });
+
+    it('should initialize with Vertex AI and US location and custom base URL', () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        project: 'vertex-project',
+        location: 'us',
+        vertexai: true,
+        apiVersion: 'v1beta1',
+        httpOptions: {baseUrl: 'https://my-custom-url.com/'},
+        apiKey: 'apikey-from-opts',
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+
+      expect(client.isVertexAI()).toBe(true);
+      expect(client.getProject()).toBe('vertex-project');
+      expect(client.getLocation()).toBe('us');
+      expect(client.getApiKey()).toBeUndefined();
+      expect(client.getRequestUrl()).toBe('https://my-custom-url.com/v1beta1');
+      expect(client.getApiVersion()).toBe('v1beta1');
+    });
+
     it('should not have api key if project/location is provided for vertexai', () => {
       const client = new ApiClient({
         auth: new FakeAuth(),

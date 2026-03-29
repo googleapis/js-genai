@@ -11,6 +11,18 @@ import * as common from '../_common.js';
 import * as t from '../_transformers.js';
 import type * as types from '../types.js';
 
+export function audioTranscriptionConfigToMldev(
+  fromObject: types.AudioTranscriptionConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  if (common.getValueByPath(fromObject, ['languageCodes']) !== undefined) {
+    throw new Error('languageCodes parameter is not supported in Gemini API.');
+  }
+
+  return toObject;
+}
+
 export function authConfigToMldev(
   fromObject: types.AuthConfig,
 ): Record<string, unknown> {
@@ -446,7 +458,7 @@ export function liveConnectConfigToMldev(
     common.setValueByPath(
       parentObject,
       ['setup', 'inputAudioTranscription'],
-      fromInputAudioTranscription,
+      audioTranscriptionConfigToMldev(fromInputAudioTranscription),
     );
   }
 
@@ -457,7 +469,7 @@ export function liveConnectConfigToMldev(
     common.setValueByPath(
       parentObject,
       ['setup', 'outputAudioTranscription'],
-      fromOutputAudioTranscription,
+      audioTranscriptionConfigToMldev(fromOutputAudioTranscription),
     );
   }
 
@@ -612,6 +624,21 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
   ]);
   if (fromVideoMetadata != null) {
     common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
+  }
+
+  const fromToolCall = common.getValueByPath(fromObject, ['toolCall']);
+  if (fromToolCall != null) {
+    common.setValueByPath(toObject, ['toolCall'], fromToolCall);
+  }
+
+  const fromToolResponse = common.getValueByPath(fromObject, ['toolResponse']);
+  if (fromToolResponse != null) {
+    common.setValueByPath(toObject, ['toolResponse'], fromToolResponse);
+  }
+
+  const fromPartMetadata = common.getValueByPath(fromObject, ['partMetadata']);
+  if (fromPartMetadata != null) {
+    common.setValueByPath(toObject, ['partMetadata'], fromPartMetadata);
   }
 
   return toObject;
