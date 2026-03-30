@@ -307,7 +307,8 @@ export interface ContentDelta {
     | ContentDelta.GoogleSearchResult
     | ContentDelta.MCPServerToolResult
     | ContentDelta.FileSearchResult
-    | ContentDelta.GoogleMapsResult;
+    | ContentDelta.GoogleMapsResult
+    | ContentDelta.TextAnnotation;
 
   event_type: 'content.delta';
 
@@ -325,11 +326,6 @@ export namespace ContentDelta {
     text: string;
 
     type: 'text';
-
-    /**
-     * Citation information for model-generated content.
-     */
-    annotations?: Array<InteractionsAPI.Annotation>;
   }
 
   export interface Image {
@@ -692,6 +688,15 @@ export namespace ContentDelta {
      * A signature hash for backend validation.
      */
     signature?: string;
+  }
+
+  export interface TextAnnotation {
+    type: 'text_annotation';
+
+    /**
+     * Citation information for model-generated content.
+     */
+    annotations?: Array<InteractionsAPI.Annotation>;
   }
 }
 
