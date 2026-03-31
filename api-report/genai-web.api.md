@@ -3419,10 +3419,10 @@ export interface SendMessageParameters {
 
 // @public
 export enum ServiceTier {
-    SERVICE_TIER_FLEX = "SERVICE_TIER_FLEX",
-    SERVICE_TIER_PRIORITY = "SERVICE_TIER_PRIORITY",
-    SERVICE_TIER_STANDARD = "SERVICE_TIER_STANDARD",
-    SERVICE_TIER_UNSPECIFIED = "SERVICE_TIER_UNSPECIFIED"
+    FLEX = "flex",
+    PRIORITY = "priority",
+    STANDARD = "standard",
+    UNSPECIFIED = "unspecified"
 }
 
 // @public

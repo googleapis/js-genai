@@ -1903,8 +1903,9 @@ export function generateContentConfigToVertex(
     );
   }
 
-  if (common.getValueByPath(fromObject, ['serviceTier']) !== undefined) {
-    throw new Error('serviceTier parameter is not supported in Vertex AI.');
+  const fromServiceTier = common.getValueByPath(fromObject, ['serviceTier']);
+  if (parentObject !== undefined && fromServiceTier != null) {
+    common.setValueByPath(parentObject, ['serviceTier'], fromServiceTier);
   }
 
   return toObject;

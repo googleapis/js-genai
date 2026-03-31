@@ -1003,19 +1003,19 @@ export enum ServiceTier {
   /**
    * Default service tier, which is standard.
    */
-  SERVICE_TIER_UNSPECIFIED = 'SERVICE_TIER_UNSPECIFIED',
+  UNSPECIFIED = 'unspecified',
   /**
    * Flex service tier.
    */
-  SERVICE_TIER_FLEX = 'SERVICE_TIER_FLEX',
+  FLEX = 'flex',
   /**
    * Standard service tier.
    */
-  SERVICE_TIER_STANDARD = 'SERVICE_TIER_STANDARD',
+  STANDARD = 'standard',
   /**
    * Priority service tier.
    */
-  SERVICE_TIER_PRIORITY = 'SERVICE_TIER_PRIORITY',
+  PRIORITY = 'priority',
 }
 
 /** Options for feature selection preference. */
@@ -2720,7 +2720,7 @@ export declare interface GenerateContentConfig {
       service. If supplied, safety_settings must not be supplied.
        */
   modelArmorConfig?: ModelArmorConfig;
-  /** The service tier to use for the request. For example, SERVICE_TIER_FLEX. */
+  /** The service tier to use for the request. For example, ServiceTier.FLEX. */
   serviceTier?: ServiceTier;
 }
 
