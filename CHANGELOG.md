@@ -1,18 +1,6 @@
 # Changelog
 
 
-## [1.48.0](https://github.com/googleapis/js-genai/compare/v1.47.0...v1.48.0) (2026-03-31)
-
-
-### Features
-
-* Support dedicated TextAnnotationDelta for streaming tool responses ([89552ba](https://github.com/googleapis/js-genai/commit/89552baa732f41a8d733893ccccb8dd00cd9d27f))
-
-
-### Bug Fixes
-
-* Fix service_tier enums. ([9bdc2ae](https://github.com/googleapis/js-genai/commit/9bdc2ae519e7e34af48593b69093b703f3871f15))
-
 ## [1.47.0](https://github.com/googleapis/js-genai/compare/v1.46.0...v1.47.0) (2026-03-27)
 
 

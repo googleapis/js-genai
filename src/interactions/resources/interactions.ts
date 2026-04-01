@@ -85,7 +85,8 @@ export class BaseInteractions extends APIResource {
   }
 
   /**
-   * Cancels an interaction by id. This only applies to background interactions that are still running.
+   * Cancels an interaction by id. This only applies to background interactions that
+   * are still running.
    *
    * @example
    * ```ts
@@ -104,7 +105,8 @@ export class BaseInteractions extends APIResource {
   }
 
   /**
-   * Retrieves the full details of a single interaction based on its `Interaction.id`.
+   * Retrieves the full details of a single interaction based on its
+   * `Interaction.id`.
    *
    * @example
    * ```ts
@@ -315,8 +317,7 @@ export interface ContentDelta {
   index: number;
 
   /**
-   * The event_id token to be used to resume the interaction stream, from
-   * this event.
+   * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
 }
@@ -711,8 +712,7 @@ export interface ContentStart {
   index: number;
 
   /**
-   * The event_id token to be used to resume the interaction stream, from
-   * this event.
+   * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
 }
@@ -723,8 +723,7 @@ export interface ContentStop {
   index: number;
 
   /**
-   * The event_id token to be used to resume the interaction stream, from
-   * this event.
+   * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
 }
@@ -781,8 +780,7 @@ export interface ErrorEvent {
   error?: ErrorEvent.Error;
 
   /**
-   * The event_id token to be used to resume the interaction stream, from
-   * this event.
+   * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
 }
@@ -1085,8 +1083,8 @@ export namespace GoogleMapsResult {
     place_id?: string;
 
     /**
-     * Snippets of reviews that are used to generate answers about the
-     * features of a given place in Google Maps.
+     * Snippets of reviews that are used to generate answers about the features of a
+     * given place in Google Maps.
      */
     review_snippets?: Array<Place.ReviewSnippet>;
 
@@ -1098,8 +1096,8 @@ export namespace GoogleMapsResult {
 
   export namespace Place {
     /**
-     * Encapsulates a snippet of a user review that answers a question about
-     * the features of a specific place in Google Maps.
+     * Encapsulates a snippet of a user review that answers a question about the
+     * features of a specific place in Google Maps.
      */
     export interface ReviewSnippet {
       /**
@@ -1284,8 +1282,8 @@ export interface Interaction {
   id: string;
 
   /**
-   * Required. Output only. The time at which the response was created in ISO 8601 format
-   * (YYYY-MM-DDThh:mm:ssZ).
+   * Required. Output only. The time at which the response was created in ISO 8601
+   * format (YYYY-MM-DDThh:mm:ssZ).
    */
   created: string;
 
@@ -1295,8 +1293,8 @@ export interface Interaction {
   status: 'in_progress' | 'requires_action' | 'completed' | 'failed' | 'cancelled' | 'incomplete';
 
   /**
-   * Required. Output only. The time at which the response was last updated in ISO 8601 format
-   * (YYYY-MM-DDThh:mm:ssZ).
+   * Required. Output only. The time at which the response was last updated in ISO
+   * 8601 format (YYYY-MM-DDThh:mm:ssZ).
    */
   updated: string;
 
@@ -1354,8 +1352,8 @@ export interface Interaction {
   previous_interaction_id?: string;
 
   /**
-   * Enforces that the generated response is a JSON object that complies with
-   * the JSON schema specified in this field.
+   * Enforces that the generated response is a JSON object that complies with the
+   * JSON schema specified in this field.
    */
   response_format?: unknown;
 
@@ -1399,14 +1397,13 @@ export interface InteractionCompleteEvent {
   event_type: 'interaction.complete';
 
   /**
-   * Required. The completed interaction with empty outputs to reduce the payload size.
-   * Use the preceding ContentDelta events for the actual output.
+   * Required. The completed interaction with empty outputs to reduce the payload
+   * size. Use the preceding ContentDelta events for the actual output.
    */
   interaction: Interaction;
 
   /**
-   * The event_id token to be used to resume the interaction stream, from
-   * this event.
+   * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
 }
@@ -1429,8 +1426,7 @@ export interface InteractionStartEvent {
   interaction: Interaction;
 
   /**
-   * The event_id token to be used to resume the interaction stream, from
-   * this event.
+   * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
 }
@@ -1443,8 +1439,7 @@ export interface InteractionStatusUpdate {
   status: 'in_progress' | 'requires_action' | 'completed' | 'failed' | 'cancelled' | 'incomplete';
 
   /**
-   * The event_id token to be used to resume the interaction stream, from
-   * this event.
+   * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
 }
@@ -1514,7 +1509,8 @@ export interface MCPServerToolResultContent {
 }
 
 /**
- * The model that will complete your prompt.\n\nSee [models](https://ai.google.dev/gemini-api/docs/models) for additional details.
+ * The model that will complete your prompt.\n\nSee
+ * [models](https://ai.google.dev/gemini-api/docs/models) for additional details.
  */
 export type Model =
   | 'gemini-2.5-computer-use-preview-10-2025'
@@ -1559,8 +1555,8 @@ export interface PlaceCitation {
   place_id?: string;
 
   /**
-   * Snippets of reviews that are used to generate answers about the
-   * features of a given place in Google Maps.
+   * Snippets of reviews that are used to generate answers about the features of a
+   * given place in Google Maps.
    */
   review_snippets?: Array<PlaceCitation.ReviewSnippet>;
 
@@ -1579,8 +1575,8 @@ export interface PlaceCitation {
 
 export namespace PlaceCitation {
   /**
-   * Encapsulates a snippet of a user review that answers a question about
-   * the features of a specific place in Google Maps.
+   * Encapsulates a snippet of a user review that answers a question about the
+   * features of a specific place in Google Maps.
    */
   export interface ReviewSnippet {
     /**
@@ -1723,8 +1719,7 @@ export namespace Tool {
     name?: string;
 
     /**
-     * The full URL for the MCPServer endpoint.
-     * Example: "https://api.example.com/mcp"
+     * The full URL for the MCPServer endpoint. Example: "https://api.example.com/mcp"
      */
     url?: string;
   }
@@ -1803,8 +1798,7 @@ export interface Turn {
   content?: Array<Content> | string;
 
   /**
-   * The originator of this turn. Must be user for input or model for
-   * model output.
+   * The originator of this turn. Must be user for input or model for model output.
    */
   role?: string;
 }
@@ -2129,13 +2123,14 @@ export interface BaseCreateModelInteractionParams {
   previous_interaction_id?: string;
 
   /**
-   * Body param: Enforces that the generated response is a JSON object that complies with
-   * the JSON schema specified in this field.
+   * Body param: Enforces that the generated response is a JSON object that complies
+   * with the JSON schema specified in this field.
    */
   response_format?: unknown;
 
   /**
-   * Body param: The mime type of the response. This is required if response_format is set.
+   * Body param: The mime type of the response. This is required if response_format
+   * is set.
    */
   response_mime_type?: string;
 
@@ -2150,7 +2145,8 @@ export interface BaseCreateModelInteractionParams {
   service_tier?: 'flex' | 'standard' | 'priority';
 
   /**
-   * Body param: Input only. Whether to store the response and request for later retrieval.
+   * Body param: Input only. Whether to store the response and request for later
+   * retrieval.
    */
   store?: boolean;
 
@@ -2225,13 +2221,14 @@ export interface BaseCreateAgentInteractionParams {
   previous_interaction_id?: string;
 
   /**
-   * Body param: Enforces that the generated response is a JSON object that complies with
-   * the JSON schema specified in this field.
+   * Body param: Enforces that the generated response is a JSON object that complies
+   * with the JSON schema specified in this field.
    */
   response_format?: unknown;
 
   /**
-   * Body param: The mime type of the response. This is required if response_format is set.
+   * Body param: The mime type of the response. This is required if response_format
+   * is set.
    */
   response_mime_type?: string;
 
@@ -2246,7 +2243,8 @@ export interface BaseCreateAgentInteractionParams {
   service_tier?: 'flex' | 'standard' | 'priority';
 
   /**
-   * Body param: Input only. Whether to store the response and request for later retrieval.
+   * Body param: Input only. Whether to store the response and request for later
+   * retrieval.
    */
   store?: boolean;
 
@@ -2322,12 +2320,15 @@ export interface InteractionGetParamsBase {
   include_input?: boolean;
 
   /**
-   * Query param: Optional. If set, resumes the interaction stream from the next chunk after the event marked by the event id. Can only be used if `stream` is true.
+   * Query param: Optional. If set, resumes the interaction stream from the next
+   * chunk after the event marked by the event id. Can only be used if `stream` is
+   * true.
    */
   last_event_id?: string;
 
   /**
-   * Query param: If set to true, the generated content will be streamed incrementally.
+   * Query param: If set to true, the generated content will be streamed
+   * incrementally.
    */
   stream?: boolean;
 }
@@ -2339,14 +2340,16 @@ export namespace InteractionGetParams {
 
 export interface InteractionGetParamsNonStreaming extends InteractionGetParamsBase {
   /**
-   * Query param: If set to true, the generated content will be streamed incrementally.
+   * Query param: If set to true, the generated content will be streamed
+   * incrementally.
    */
   stream?: false;
 }
 
 export interface InteractionGetParamsStreaming extends InteractionGetParamsBase {
   /**
-   * Query param: If set to true, the generated content will be streamed incrementally.
+   * Query param: If set to true, the generated content will be streamed
+   * incrementally.
    */
   stream: true;
 }
