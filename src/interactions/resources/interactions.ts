@@ -1365,7 +1365,7 @@ export interface Interaction {
   /**
    * The requested modalities of the response (TEXT, IMAGE, AUDIO).
    */
-  response_modalities?: Array<'text' | 'image' | 'audio'>;
+  response_modalities?: Array<'text' | 'image' | 'audio' | 'video' | 'document'>;
 
   /**
    * Output only. The role of the interaction.
@@ -1970,7 +1970,7 @@ export namespace Usage {
     /**
      * The modality associated with the token count.
      */
-    modality?: 'text' | 'image' | 'audio';
+    modality?: 'text' | 'image' | 'audio' | 'video' | 'document';
 
     /**
      * Number of tokens for the modality.
@@ -1985,7 +1985,7 @@ export namespace Usage {
     /**
      * The modality associated with the token count.
      */
-    modality?: 'text' | 'image' | 'audio';
+    modality?: 'text' | 'image' | 'audio' | 'video' | 'document';
 
     /**
      * Number of tokens for the modality.
@@ -2000,7 +2000,7 @@ export namespace Usage {
     /**
      * The modality associated with the token count.
      */
-    modality?: 'text' | 'image' | 'audio';
+    modality?: 'text' | 'image' | 'audio' | 'video' | 'document';
 
     /**
      * Number of tokens for the modality.
@@ -2015,7 +2015,7 @@ export namespace Usage {
     /**
      * The modality associated with the token count.
      */
-    modality?: 'text' | 'image' | 'audio';
+    modality?: 'text' | 'image' | 'audio' | 'video' | 'document';
 
     /**
      * Number of tokens for the modality.
@@ -2137,7 +2137,7 @@ export interface BaseCreateModelInteractionParams {
   /**
    * Body param: The requested modalities of the response (TEXT, IMAGE, AUDIO).
    */
-  response_modalities?: Array<'text' | 'image' | 'audio'>;
+  response_modalities?: Array<'text' | 'image' | 'audio' | 'video' | 'document'>;
 
   /**
    * Body param: The service tier for the interaction.
@@ -2235,7 +2235,7 @@ export interface BaseCreateAgentInteractionParams {
   /**
    * Body param: The requested modalities of the response (TEXT, IMAGE, AUDIO).
    */
-  response_modalities?: Array<'text' | 'image' | 'audio'>;
+  response_modalities?: Array<'text' | 'image' | 'audio' | 'video' | 'document'>;
 
   /**
    * Body param: The service tier for the interaction.
