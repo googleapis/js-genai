@@ -172,6 +172,11 @@ export interface AudioContent {
   type: 'audio';
 
   /**
+   * The number of audio channels.
+   */
+  channels?: number;
+
+  /**
    * The audio content.
    */
   data?: string;
@@ -187,7 +192,13 @@ export interface AudioContent {
     | 'audio/ogg'
     | 'audio/flac'
     | 'audio/mpeg'
-    | 'audio/m4a';
+    | 'audio/m4a'
+    | 'audio/l16';
+
+  /**
+   * The sample rate of the audio.
+   */
+  rate?: number;
 
   /**
    * The URI of the audio.
@@ -355,6 +366,11 @@ export namespace ContentDelta {
   export interface Audio {
     type: 'audio';
 
+    /**
+     * The number of audio channels.
+     */
+    channels?: number;
+
     data?: string;
 
     mime_type?:
@@ -365,7 +381,13 @@ export namespace ContentDelta {
       | 'audio/ogg'
       | 'audio/flac'
       | 'audio/mpeg'
-      | 'audio/m4a';
+      | 'audio/m4a'
+      | 'audio/l16';
+
+    /**
+     * The sample rate of the audio.
+     */
+    rate?: number;
 
     uri?: string;
   }
