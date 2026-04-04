@@ -149,12 +149,6 @@ export class GoogleGenAI {
       'GoogleGenAI.interactions: Interactions usage is experimental and may change in future versions.',
     );
 
-    if (this.vertexai) {
-      throw new Error(
-        'This version of the GenAI SDK does not support Vertex AI API for interactions.',
-      );
-    }
-
     const httpOpts = this.httpOptions;
 
     // Unsupported Options Warnings
