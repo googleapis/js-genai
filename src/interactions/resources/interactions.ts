@@ -1191,7 +1191,7 @@ export interface GoogleSearchCallContent {
   /**
    * The type of search grounding enabled.
    */
-  search_type?: 'web_search' | 'image_search';
+  search_type?: 'web_search' | 'image_search' | 'enterprise_web_search';
 
   /**
    * A signature hash for backend validation.
@@ -1685,7 +1685,8 @@ export type Tool =
   | Tool.MCPServer
   | Tool.GoogleSearch
   | Tool.FileSearch
-  | Tool.GoogleMaps;
+  | Tool.GoogleMaps
+  | Tool.Retrieval;
 
 export namespace Tool {
   /**
@@ -1755,7 +1756,7 @@ export namespace Tool {
     /**
      * The types of search grounding to enable.
      */
-    search_types?: Array<'web_search' | 'image_search'>;
+    search_types?: Array<'web_search' | 'image_search' | 'enterprise_web_search'>;
   }
 
   /**
@@ -1801,6 +1802,40 @@ export namespace Tool {
      * The longitude of the user's location.
      */
     longitude?: number;
+  }
+
+  /**
+   * A tool that can be used by the model to retrieve files.
+   */
+  export interface Retrieval {
+    type: 'retrieval';
+
+    /**
+     * The types of file retrieval to enable.
+     */
+    retrieval_types?: Array<'vertex_ai_search'>;
+
+    /**
+     * Used to specify configuration for VertexAISearch.
+     */
+    vertex_ai_search_config?: Retrieval.VertexAISearchConfig;
+  }
+
+  export namespace Retrieval {
+    /**
+     * Used to specify configuration for VertexAISearch.
+     */
+    export interface VertexAISearchConfig {
+      /**
+       * Optional. Used to specify Vertex AI Search datastores.
+       */
+      datastores?: Array<string>;
+
+      /**
+       * Optional. Used to specify Vertex AI Search engine.
+       */
+      engine?: string;
+    }
   }
 }
 
