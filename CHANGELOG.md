@@ -1,6 +1,13 @@
 # Changelog
 
 
+## [1.49.0](https://github.com/googleapis/js-genai/compare/v1.48.0...v1.49.0) (2026-04-08)
+
+
+### Features
+
+* Introduce TYPE_L16 audio content and optional fields. ([c62cb9a](https://github.com/googleapis/js-genai/commit/c62cb9a1025990ef52adf3fb5d379e180c27eb36))
+
 ## [1.48.0](https://github.com/googleapis/js-genai/compare/v1.47.0...v1.48.0) (2026-03-31)
 
 
