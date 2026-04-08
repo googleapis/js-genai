@@ -193,7 +193,10 @@ export interface AudioContent {
     | 'audio/flac'
     | 'audio/mpeg'
     | 'audio/m4a'
-    | 'audio/l16';
+    | 'audio/l16'
+    | 'audio/opus'
+    | 'audio/alaw'
+    | 'audio/mulaw';
 
   /**
    * The sample rate of the audio.
@@ -382,7 +385,10 @@ export namespace ContentDelta {
       | 'audio/flac'
       | 'audio/mpeg'
       | 'audio/m4a'
-      | 'audio/l16';
+      | 'audio/l16'
+      | 'audio/opus'
+      | 'audio/alaw'
+      | 'audio/mulaw';
 
     /**
      * The sample rate of the audio.
