@@ -640,6 +640,10 @@ export enum Modality {
    * Indicates the model should return audio.
    */
   AUDIO = 'AUDIO',
+  /**
+   * Indicates the model should return video.
+   */
+  VIDEO = 'VIDEO',
 }
 
 /** The stage of the underlying model. This enum is not supported in Vertex AI. */
@@ -1234,6 +1238,102 @@ export enum TurnCompleteReason {
    * Needs more input from the user.
    */
   NEED_MORE_INPUT = 'NEED_MORE_INPUT',
+  /**
+   * Input content is prohibited.
+   */
+  PROHIBITED_INPUT_CONTENT = 'PROHIBITED_INPUT_CONTENT',
+  /**
+   * Input image contains prohibited content.
+   */
+  IMAGE_PROHIBITED_INPUT_CONTENT = 'IMAGE_PROHIBITED_INPUT_CONTENT',
+  /**
+   * Input text contains prominent person reference.
+   */
+  INPUT_TEXT_CONTAIN_PROMINENT_PERSON_PROHIBITED = 'INPUT_TEXT_CONTAIN_PROMINENT_PERSON_PROHIBITED',
+  /**
+   * Input image contains celebrity.
+   */
+  INPUT_IMAGE_CELEBRITY = 'INPUT_IMAGE_CELEBRITY',
+  /**
+   * Input image contains photo realistic child.
+   */
+  INPUT_IMAGE_PHOTO_REALISTIC_CHILD_PROHIBITED = 'INPUT_IMAGE_PHOTO_REALISTIC_CHILD_PROHIBITED',
+  /**
+   * Input text contains NCII content.
+   */
+  INPUT_TEXT_NCII_PROHIBITED = 'INPUT_TEXT_NCII_PROHIBITED',
+  /**
+   * Other input safety issue.
+   */
+  INPUT_OTHER = 'INPUT_OTHER',
+  /**
+   * Input contains IP violation.
+   */
+  INPUT_IP_PROHIBITED = 'INPUT_IP_PROHIBITED',
+  /**
+   * Input matched blocklist.
+   */
+  BLOCKLIST = 'BLOCKLIST',
+  /**
+   * Input is unsafe for image generation.
+   */
+  UNSAFE_PROMPT_FOR_IMAGE_GENERATION = 'UNSAFE_PROMPT_FOR_IMAGE_GENERATION',
+  /**
+   * Generated image failed safety check.
+   */
+  GENERATED_IMAGE_SAFETY = 'GENERATED_IMAGE_SAFETY',
+  /**
+   * Generated content failed safety check.
+   */
+  GENERATED_CONTENT_SAFETY = 'GENERATED_CONTENT_SAFETY',
+  /**
+   * Generated audio failed safety check.
+   */
+  GENERATED_AUDIO_SAFETY = 'GENERATED_AUDIO_SAFETY',
+  /**
+   * Generated video failed safety check.
+   */
+  GENERATED_VIDEO_SAFETY = 'GENERATED_VIDEO_SAFETY',
+  /**
+   * Generated content is prohibited.
+   */
+  GENERATED_CONTENT_PROHIBITED = 'GENERATED_CONTENT_PROHIBITED',
+  /**
+   * Generated content matched blocklist.
+   */
+  GENERATED_CONTENT_BLOCKLIST = 'GENERATED_CONTENT_BLOCKLIST',
+  /**
+   * Generated image is prohibited.
+   */
+  GENERATED_IMAGE_PROHIBITED = 'GENERATED_IMAGE_PROHIBITED',
+  /**
+   * Generated image contains celebrity.
+   */
+  GENERATED_IMAGE_CELEBRITY = 'GENERATED_IMAGE_CELEBRITY',
+  /**
+   * Generated image contains prominent people detected by rewriter.
+   */
+  GENERATED_IMAGE_PROMINENT_PEOPLE_DETECTED_BY_REWRITER = 'GENERATED_IMAGE_PROMINENT_PEOPLE_DETECTED_BY_REWRITER',
+  /**
+   * Generated image contains identifiable people.
+   */
+  GENERATED_IMAGE_IDENTIFIABLE_PEOPLE = 'GENERATED_IMAGE_IDENTIFIABLE_PEOPLE',
+  /**
+   * Generated image contains minors.
+   */
+  GENERATED_IMAGE_MINORS = 'GENERATED_IMAGE_MINORS',
+  /**
+   * Generated image contains IP violation.
+   */
+  OUTPUT_IMAGE_IP_PROHIBITED = 'OUTPUT_IMAGE_IP_PROHIBITED',
+  /**
+   * Other generated content issue.
+   */
+  GENERATED_OTHER = 'GENERATED_OTHER',
+  /**
+   * Max regeneration attempts reached.
+   */
+  MAX_REGENERATION_REACHED = 'MAX_REGENERATION_REACHED',
 }
 
 /** Server content modalities. */
@@ -7042,6 +7142,28 @@ export declare interface ProactivityConfig {
   proactiveAudio?: boolean;
 }
 
+/** Configures the customized avatar to be used in the session. */
+export declare interface CustomizedAvatar {
+  /** The mime type of the reference image, e.g., "image/jpeg". */
+  imageMimeType?: string;
+  /** The data of the reference image. The dimensions of the reference
+      image should be 9:16 (portrait) with a minimum resolution of 704x1280.
+  * @remarks Encoded as base64 string. */
+  imageData?: string;
+}
+
+/** Configures the avatar to be used in the session. */
+export declare interface AvatarConfig {
+  /** Pre-built avatar id. */
+  avatarName?: string;
+  /** Customized avatar appearance with a reference image. */
+  customizedAvatar?: CustomizedAvatar;
+  /** The bitrate of compressed audio. */
+  audioBitrateBps?: number;
+  /** The bitrate of compressed video output. */
+  videoBitrateBps?: number;
+}
+
 /** Message contains configuration that will apply for the duration of the streaming session. */
 export declare interface LiveClientSetup {
   /** 
@@ -7087,6 +7209,12 @@ export declare interface LiveClientSetup {
       vad_signal to indicate the start and end of speech. This allows the server
       to process the audio more efficiently. */
   explicitVadSignal?: boolean;
+  /** Configures the avatar model behavior. */
+  avatarConfig?: AvatarConfig;
+  /** Safety settings in the request to block unsafe content in the
+      response.
+       */
+  safetySettings?: SafetySetting[];
 }
 
 /** Incremental update of the current conversation delivered from the client.
@@ -7276,6 +7404,12 @@ If included the server will send SessionResumptionUpdate messages. */
       vad_signal to indicate the start and end of speech. This allows the server
       to process the audio more efficiently. */
   explicitVadSignal?: boolean;
+  /** Configures the avatar model behavior. */
+  avatarConfig?: AvatarConfig;
+  /** Safety settings in the request to block unsafe content in the
+      response.
+       */
+  safetySettings?: SafetySetting[];
 }
 
 /** Parameters for connecting to the live API. */

@@ -185,6 +185,14 @@ export interface AutomaticFunctionCallingConfig {
 }
 
 // @public
+export interface AvatarConfig {
+    audioBitrateBps?: number;
+    avatarName?: string;
+    customizedAvatar?: CustomizedAvatar;
+    videoBitrateBps?: number;
+}
+
+// @public
 export interface BaseUrlParameters {
     // (undocumented)
     geminiUrl?: string;
@@ -732,6 +740,12 @@ export function createUserContent(partOrString: PartListUnion | string): Content
 // @public
 export interface CustomCodeExecutionResult {
     score?: number;
+}
+
+// @public
+export interface CustomizedAvatar {
+    imageData?: string;
+    imageMimeType?: string;
 }
 
 // @public
@@ -2399,6 +2413,7 @@ export interface LiveClientRealtimeInput {
 
 // @public
 export interface LiveClientSetup {
+    avatarConfig?: AvatarConfig;
     contextWindowCompression?: ContextWindowCompressionConfig;
     explicitVadSignal?: boolean;
     generationConfig?: GenerationConfig;
@@ -2407,6 +2422,7 @@ export interface LiveClientSetup {
     outputAudioTranscription?: AudioTranscriptionConfig;
     proactivity?: ProactivityConfig;
     realtimeInputConfig?: RealtimeInputConfig;
+    safetySettings?: SafetySetting[];
     sessionResumption?: SessionResumptionConfig;
     systemInstruction?: ContentUnion;
     tools?: ToolListUnion;
@@ -2420,6 +2436,7 @@ export class LiveClientToolResponse {
 // @public
 export interface LiveConnectConfig {
     abortSignal?: AbortSignal;
+    avatarConfig?: AvatarConfig;
     contextWindowCompression?: ContextWindowCompressionConfig;
     enableAffectiveDialog?: boolean;
     explicitVadSignal?: boolean;
@@ -2432,6 +2449,7 @@ export interface LiveConnectConfig {
     proactivity?: ProactivityConfig;
     realtimeInputConfig?: RealtimeInputConfig;
     responseModalities?: Modality[];
+    safetySettings?: SafetySetting[];
     seed?: number;
     sessionResumption?: SessionResumptionConfig;
     speechConfig?: SpeechConfig;
@@ -2726,7 +2744,8 @@ export enum Modality {
     AUDIO = "AUDIO",
     IMAGE = "IMAGE",
     MODALITY_UNSPECIFIED = "MODALITY_UNSPECIFIED",
-    TEXT = "TEXT"
+    TEXT = "TEXT",
+    VIDEO = "VIDEO"
 }
 
 // @public
@@ -3852,10 +3871,34 @@ export interface TuningValidationDataset {
 
 // @public
 export enum TurnCompleteReason {
+    BLOCKLIST = "BLOCKLIST",
+    GENERATED_AUDIO_SAFETY = "GENERATED_AUDIO_SAFETY",
+    GENERATED_CONTENT_BLOCKLIST = "GENERATED_CONTENT_BLOCKLIST",
+    GENERATED_CONTENT_PROHIBITED = "GENERATED_CONTENT_PROHIBITED",
+    GENERATED_CONTENT_SAFETY = "GENERATED_CONTENT_SAFETY",
+    GENERATED_IMAGE_CELEBRITY = "GENERATED_IMAGE_CELEBRITY",
+    GENERATED_IMAGE_IDENTIFIABLE_PEOPLE = "GENERATED_IMAGE_IDENTIFIABLE_PEOPLE",
+    GENERATED_IMAGE_MINORS = "GENERATED_IMAGE_MINORS",
+    GENERATED_IMAGE_PROHIBITED = "GENERATED_IMAGE_PROHIBITED",
+    GENERATED_IMAGE_PROMINENT_PEOPLE_DETECTED_BY_REWRITER = "GENERATED_IMAGE_PROMINENT_PEOPLE_DETECTED_BY_REWRITER",
+    GENERATED_IMAGE_SAFETY = "GENERATED_IMAGE_SAFETY",
+    GENERATED_OTHER = "GENERATED_OTHER",
+    GENERATED_VIDEO_SAFETY = "GENERATED_VIDEO_SAFETY",
+    IMAGE_PROHIBITED_INPUT_CONTENT = "IMAGE_PROHIBITED_INPUT_CONTENT",
+    INPUT_IMAGE_CELEBRITY = "INPUT_IMAGE_CELEBRITY",
+    INPUT_IMAGE_PHOTO_REALISTIC_CHILD_PROHIBITED = "INPUT_IMAGE_PHOTO_REALISTIC_CHILD_PROHIBITED",
+    INPUT_IP_PROHIBITED = "INPUT_IP_PROHIBITED",
+    INPUT_OTHER = "INPUT_OTHER",
+    INPUT_TEXT_CONTAIN_PROMINENT_PERSON_PROHIBITED = "INPUT_TEXT_CONTAIN_PROMINENT_PERSON_PROHIBITED",
+    INPUT_TEXT_NCII_PROHIBITED = "INPUT_TEXT_NCII_PROHIBITED",
     MALFORMED_FUNCTION_CALL = "MALFORMED_FUNCTION_CALL",
+    MAX_REGENERATION_REACHED = "MAX_REGENERATION_REACHED",
     NEED_MORE_INPUT = "NEED_MORE_INPUT",
+    OUTPUT_IMAGE_IP_PROHIBITED = "OUTPUT_IMAGE_IP_PROHIBITED",
+    PROHIBITED_INPUT_CONTENT = "PROHIBITED_INPUT_CONTENT",
     RESPONSE_REJECTED = "RESPONSE_REJECTED",
-    TURN_COMPLETE_REASON_UNSPECIFIED = "TURN_COMPLETE_REASON_UNSPECIFIED"
+    TURN_COMPLETE_REASON_UNSPECIFIED = "TURN_COMPLETE_REASON_UNSPECIFIED",
+    UNSAFE_PROMPT_FOR_IMAGE_GENERATION = "UNSAFE_PROMPT_FOR_IMAGE_GENERATION"
 }
 
 // @public

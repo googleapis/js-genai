@@ -811,6 +811,24 @@ export function liveClientSetupToMldev(
     );
   }
 
+  const fromAvatarConfig = common.getValueByPath(fromObject, ['avatarConfig']);
+  if (fromAvatarConfig != null) {
+    common.setValueByPath(toObject, ['avatarConfig'], fromAvatarConfig);
+  }
+
+  const fromSafetySettings = common.getValueByPath(fromObject, [
+    'safetySettings',
+  ]);
+  if (fromSafetySettings != null) {
+    let transformedList = fromSafetySettings;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return safetySettingToMldev(item);
+      });
+    }
+    common.setValueByPath(toObject, ['safetySettings'], transformedList);
+  }
+
   return toObject;
 }
 
@@ -926,6 +944,24 @@ export function liveClientSetupToVertex(
       ['explicitVadSignal'],
       fromExplicitVadSignal,
     );
+  }
+
+  const fromAvatarConfig = common.getValueByPath(fromObject, ['avatarConfig']);
+  if (fromAvatarConfig != null) {
+    common.setValueByPath(toObject, ['avatarConfig'], fromAvatarConfig);
+  }
+
+  const fromSafetySettings = common.getValueByPath(fromObject, [
+    'safetySettings',
+  ]);
+  if (fromSafetySettings != null) {
+    let transformedList = fromSafetySettings;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return item;
+      });
+    }
+    common.setValueByPath(toObject, ['safetySettings'], transformedList);
   }
 
   return toObject;
@@ -1137,6 +1173,32 @@ export function liveConnectConfigToMldev(
   if (common.getValueByPath(fromObject, ['explicitVadSignal']) !== undefined) {
     throw new Error(
       'explicitVadSignal parameter is not supported in Gemini API.',
+    );
+  }
+
+  const fromAvatarConfig = common.getValueByPath(fromObject, ['avatarConfig']);
+  if (parentObject !== undefined && fromAvatarConfig != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'avatarConfig'],
+      fromAvatarConfig,
+    );
+  }
+
+  const fromSafetySettings = common.getValueByPath(fromObject, [
+    'safetySettings',
+  ]);
+  if (parentObject !== undefined && fromSafetySettings != null) {
+    let transformedList = fromSafetySettings;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return safetySettingToMldev(item);
+      });
+    }
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'safetySettings'],
+      transformedList,
     );
   }
 
@@ -1354,6 +1416,32 @@ export function liveConnectConfigToVertex(
       parentObject,
       ['setup', 'explicitVadSignal'],
       fromExplicitVadSignal,
+    );
+  }
+
+  const fromAvatarConfig = common.getValueByPath(fromObject, ['avatarConfig']);
+  if (parentObject !== undefined && fromAvatarConfig != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'avatarConfig'],
+      fromAvatarConfig,
+    );
+  }
+
+  const fromSafetySettings = common.getValueByPath(fromObject, [
+    'safetySettings',
+  ]);
+  if (parentObject !== undefined && fromSafetySettings != null) {
+    let transformedList = fromSafetySettings;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return item;
+      });
+    }
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'safetySettings'],
+      transformedList,
     );
   }
 
@@ -2016,6 +2104,28 @@ export function partToVertex(fromObject: types.Part): Record<string, unknown> {
 
   if (common.getValueByPath(fromObject, ['partMetadata']) !== undefined) {
     throw new Error('partMetadata parameter is not supported in Vertex AI.');
+  }
+
+  return toObject;
+}
+
+export function safetySettingToMldev(
+  fromObject: types.SafetySetting,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromCategory = common.getValueByPath(fromObject, ['category']);
+  if (fromCategory != null) {
+    common.setValueByPath(toObject, ['category'], fromCategory);
+  }
+
+  if (common.getValueByPath(fromObject, ['method']) !== undefined) {
+    throw new Error('method parameter is not supported in Gemini API.');
+  }
+
+  const fromThreshold = common.getValueByPath(fromObject, ['threshold']);
+  if (fromThreshold != null) {
+    common.setValueByPath(toObject, ['threshold'], fromThreshold);
   }
 
   return toObject;
