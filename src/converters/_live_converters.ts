@@ -371,11 +371,7 @@ export function generationConfigToVertex(
 
   const fromSpeechConfig = common.getValueByPath(fromObject, ['speechConfig']);
   if (fromSpeechConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['speechConfig'],
-      speechConfigToVertex(fromSpeechConfig),
-    );
+    common.setValueByPath(toObject, ['speechConfig'], fromSpeechConfig);
   }
 
   const fromStopSequences = common.getValueByPath(fromObject, [
@@ -1238,7 +1234,7 @@ export function liveConnectConfigToVertex(
     common.setValueByPath(
       parentObject,
       ['setup', 'generationConfig', 'speechConfig'],
-      speechConfigToVertex(t.tLiveSpeechConfig(fromSpeechConfig)),
+      t.tLiveSpeechConfig(fromSpeechConfig),
     );
   }
 
@@ -1832,27 +1828,6 @@ export function liveServerMessageFromVertex(
   return toObject;
 }
 
-export function multiSpeakerVoiceConfigToVertex(
-  fromObject: types.MultiSpeakerVoiceConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromSpeakerVoiceConfigs = common.getValueByPath(fromObject, [
-    'speakerVoiceConfigs',
-  ]);
-  if (fromSpeakerVoiceConfigs != null) {
-    let transformedList = fromSpeakerVoiceConfigs;
-    if (Array.isArray(transformedList)) {
-      transformedList = transformedList.map((item) => {
-        return speakerVoiceConfigToVertex(item);
-      });
-    }
-    common.setValueByPath(toObject, ['speakerVoiceConfigs'], transformedList);
-  }
-
-  return toObject;
-}
-
 export function partToMldev(fromObject: types.Part): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2046,26 +2021,6 @@ export function partToVertex(fromObject: types.Part): Record<string, unknown> {
   return toObject;
 }
 
-export function replicatedVoiceConfigToVertex(
-  fromObject: types.ReplicatedVoiceConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
-  if (fromMimeType != null) {
-    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
-  }
-
-  const fromVoiceSampleAudio = common.getValueByPath(fromObject, [
-    'voiceSampleAudio',
-  ]);
-  if (fromVoiceSampleAudio != null) {
-    common.setValueByPath(toObject, ['voiceSampleAudio'], fromVoiceSampleAudio);
-  }
-
-  return toObject;
-}
-
 export function sessionResumptionConfigToMldev(
   fromObject: types.SessionResumptionConfig,
 ): Record<string, unknown> {
@@ -2078,61 +2033,6 @@ export function sessionResumptionConfigToMldev(
 
   if (common.getValueByPath(fromObject, ['transparent']) !== undefined) {
     throw new Error('transparent parameter is not supported in Gemini API.');
-  }
-
-  return toObject;
-}
-
-export function speakerVoiceConfigToVertex(
-  fromObject: types.SpeakerVoiceConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromSpeaker = common.getValueByPath(fromObject, ['speaker']);
-  if (fromSpeaker != null) {
-    common.setValueByPath(toObject, ['speaker'], fromSpeaker);
-  }
-
-  const fromVoiceConfig = common.getValueByPath(fromObject, ['voiceConfig']);
-  if (fromVoiceConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['voiceConfig'],
-      voiceConfigToVertex(fromVoiceConfig),
-    );
-  }
-
-  return toObject;
-}
-
-export function speechConfigToVertex(
-  fromObject: types.SpeechConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromVoiceConfig = common.getValueByPath(fromObject, ['voiceConfig']);
-  if (fromVoiceConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['voiceConfig'],
-      voiceConfigToVertex(fromVoiceConfig),
-    );
-  }
-
-  const fromLanguageCode = common.getValueByPath(fromObject, ['languageCode']);
-  if (fromLanguageCode != null) {
-    common.setValueByPath(toObject, ['languageCode'], fromLanguageCode);
-  }
-
-  const fromMultiSpeakerVoiceConfig = common.getValueByPath(fromObject, [
-    'multiSpeakerVoiceConfig',
-  ]);
-  if (fromMultiSpeakerVoiceConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['multiSpeakerVoiceConfig'],
-      multiSpeakerVoiceConfigToVertex(fromMultiSpeakerVoiceConfig),
-    );
   }
 
   return toObject;
@@ -2480,36 +2380,6 @@ export function voiceActivityFromVertex(
       toObject,
       ['voiceActivityType'],
       fromVoiceActivityType,
-    );
-  }
-
-  return toObject;
-}
-
-export function voiceConfigToVertex(
-  fromObject: types.VoiceConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromReplicatedVoiceConfig = common.getValueByPath(fromObject, [
-    'replicatedVoiceConfig',
-  ]);
-  if (fromReplicatedVoiceConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['replicatedVoiceConfig'],
-      replicatedVoiceConfigToVertex(fromReplicatedVoiceConfig),
-    );
-  }
-
-  const fromPrebuiltVoiceConfig = common.getValueByPath(fromObject, [
-    'prebuiltVoiceConfig',
-  ]);
-  if (fromPrebuiltVoiceConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['prebuiltVoiceConfig'],
-      fromPrebuiltVoiceConfig,
     );
   }
 
