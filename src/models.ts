@@ -47,6 +47,11 @@ export class Models extends BaseModule {
     params: types.EmbedContentParameters,
   ): Promise<types.EmbedContentResponse> => {
     if (!this.apiClient.isVertexAI()) {
+      const isGeminiEmbedding2Model =
+        params.model.includes('gemini-embedding-2');
+      if (isGeminiEmbedding2Model) {
+        params.contents = tContents(params.contents);
+      }
       return await this.embedContentInternal(params);
     }
     const isVertexEmbedContentModel =
