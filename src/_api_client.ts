@@ -23,6 +23,8 @@ const LIBRARY_LABEL = `google-genai-sdk/${SDK_VERSION}`;
 const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
 const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';
 
+const MULTI_REGIONAL_LOCATIONS = new Set<string>(['us', 'eu']);
+
 /**
  * Partial definiion of the NodeJS.Timeout.
  * https://nodejs.org/api/timers.html#timeoutunref
@@ -223,7 +225,7 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
       } else if (
         this.clientOptions.project &&
         this.clientOptions.location &&
-        this.clientOptions.location === 'us'
+        MULTI_REGIONAL_LOCATIONS.has(this.clientOptions.location)
       ) {
         initHttpOptions.baseUrl = `https://aiplatform.${this.clientOptions.location}.rep.googleapis.com/`;
       } else if (this.clientOptions.project && this.clientOptions.location) {
