@@ -184,7 +184,7 @@ export interface ClientOptions {
   /**
    * The adapter to the parent API client instance (for accessing auth, project, location)
    */
-  clientAdapter: GeminiNextGenAPIClientAdapter;
+  clientAdapter?: GeminiNextGenAPIClientAdapter | undefined;
 }
 
 /**
@@ -205,7 +205,7 @@ export class BaseGeminiNextGenAPIClient {
   private encoder: Opts.RequestEncoder;
   protected idempotencyHeader?: string;
   private _options: ClientOptions;
-  private clientAdapter: GeminiNextGenAPIClientAdapter;
+  private clientAdapter: GeminiNextGenAPIClientAdapter | undefined;
 
   /**
    * API Client for interfacing with the Gemini Next Gen API API.
@@ -314,7 +314,7 @@ export class BaseGeminiNextGenAPIClient {
       return buildHeaders([{ 'x-goog-api-key': this.apiKey }]);
     }
 
-    if (this.clientAdapter.isVertexAI()) {
+    if (this.clientAdapter && this.clientAdapter.isVertexAI()) {
       return buildHeaders([await this.clientAdapter.getAuthHeaders()]);
     }
 

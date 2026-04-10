@@ -486,6 +486,28 @@ describe('ApiClient', () => {
       expect(client.getApiVersion()).toBe('v1beta1');
     });
 
+    it('should initialize with Vertex AI and EU multi-regional location', () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        project: 'vertex-project',
+        location: 'eu',
+        vertexai: true,
+        apiVersion: 'v1beta1',
+        apiKey: 'apikey-from-opts',
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+
+      expect(client.isVertexAI()).toBe(true);
+      expect(client.getProject()).toBe('vertex-project');
+      expect(client.getLocation()).toBe('eu');
+      expect(client.getApiKey()).toBeUndefined();
+      expect(client.getRequestUrl()).toBe(
+        'https://aiplatform.eu.rep.googleapis.com/v1beta1',
+      );
+      expect(client.getApiVersion()).toBe('v1beta1');
+    });
+
     it('should initialize with Vertex AI and US location and custom base URL', () => {
       const client = new ApiClient({
         auth: new FakeAuth(),

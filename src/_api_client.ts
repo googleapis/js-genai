@@ -18,10 +18,12 @@ const CONTENT_TYPE_HEADER = 'Content-Type';
 const SERVER_TIMEOUT_HEADER = 'X-Server-Timeout';
 const USER_AGENT_HEADER = 'User-Agent';
 export const GOOGLE_API_CLIENT_HEADER = 'x-goog-api-client';
-export const SDK_VERSION = '1.47.0'; // x-release-please-version
+export const SDK_VERSION = '1.49.0'; // x-release-please-version
 const LIBRARY_LABEL = `google-genai-sdk/${SDK_VERSION}`;
 const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
 const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';
+
+const MULTI_REGIONAL_LOCATIONS = new Set<string>(['us', 'eu']);
 
 /**
  * Partial definiion of the NodeJS.Timeout.
@@ -225,7 +227,7 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
       } else if (
         this.clientOptions.project &&
         this.clientOptions.location &&
-        this.clientOptions.location === 'us'
+        MULTI_REGIONAL_LOCATIONS.has(this.clientOptions.location)
       ) {
         initHttpOptions.baseUrl = `https://aiplatform.${this.clientOptions.location}.rep.googleapis.com/`;
       } else if (this.clientOptions.project && this.clientOptions.location) {

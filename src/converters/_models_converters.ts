@@ -912,6 +912,18 @@ export function embedContentConfigToMldev(
     throw new Error('autoTruncate parameter is not supported in Gemini API.');
   }
 
+  if (common.getValueByPath(fromObject, ['documentOcr']) !== undefined) {
+    throw new Error('documentOcr parameter is not supported in Gemini API.');
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['audioTrackExtraction']) !== undefined
+  ) {
+    throw new Error(
+      'audioTrackExtraction parameter is not supported in Gemini API.',
+    );
+  }
+
   return toObject;
 }
 
@@ -940,7 +952,11 @@ export function embedContentConfigToVertex(
   } else if (discriminatorTaskType === 'EMBED_CONTENT') {
     const fromTaskType = common.getValueByPath(fromObject, ['taskType']);
     if (parentObject !== undefined && fromTaskType != null) {
-      common.setValueByPath(parentObject, ['taskType'], fromTaskType);
+      common.setValueByPath(
+        parentObject,
+        ['embedContentConfig', 'taskType'],
+        fromTaskType,
+      );
     }
   }
 
@@ -958,7 +974,11 @@ export function embedContentConfigToVertex(
   } else if (discriminatorTitle === 'EMBED_CONTENT') {
     const fromTitle = common.getValueByPath(fromObject, ['title']);
     if (parentObject !== undefined && fromTitle != null) {
-      common.setValueByPath(parentObject, ['title'], fromTitle);
+      common.setValueByPath(
+        parentObject,
+        ['embedContentConfig', 'title'],
+        fromTitle,
+      );
     }
   }
 
@@ -986,7 +1006,7 @@ export function embedContentConfigToVertex(
     if (parentObject !== undefined && fromOutputDimensionality != null) {
       common.setValueByPath(
         parentObject,
-        ['outputDimensionality'],
+        ['embedContentConfig', 'outputDimensionality'],
         fromOutputDimensionality,
       );
     }
@@ -1031,7 +1051,47 @@ export function embedContentConfigToVertex(
       'autoTruncate',
     ]);
     if (parentObject !== undefined && fromAutoTruncate != null) {
-      common.setValueByPath(parentObject, ['autoTruncate'], fromAutoTruncate);
+      common.setValueByPath(
+        parentObject,
+        ['embedContentConfig', 'autoTruncate'],
+        fromAutoTruncate,
+      );
+    }
+  }
+
+  let discriminatorDocumentOcr = common.getValueByPath(rootObject, [
+    'embeddingApiType',
+  ]);
+  if (discriminatorDocumentOcr === undefined) {
+    discriminatorDocumentOcr = 'PREDICT';
+  }
+  if (discriminatorDocumentOcr === 'EMBED_CONTENT') {
+    const fromDocumentOcr = common.getValueByPath(fromObject, ['documentOcr']);
+    if (parentObject !== undefined && fromDocumentOcr != null) {
+      common.setValueByPath(
+        parentObject,
+        ['embedContentConfig', 'documentOcr'],
+        fromDocumentOcr,
+      );
+    }
+  }
+
+  let discriminatorAudioTrackExtraction = common.getValueByPath(rootObject, [
+    'embeddingApiType',
+  ]);
+  if (discriminatorAudioTrackExtraction === undefined) {
+    discriminatorAudioTrackExtraction = 'PREDICT';
+  }
+  if (discriminatorAudioTrackExtraction === 'EMBED_CONTENT') {
+    const fromAudioTrackExtraction = common.getValueByPath(fromObject, [
+      'audioTrackExtraction',
+    ]);
+    if (parentObject !== undefined && fromAudioTrackExtraction != null) {
+      common.setValueByPath(
+        parentObject,
+        ['embedContentConfig', 'audioTrackExtraction'],
+        fromAudioTrackExtraction,
+      );
     }
   }
 
@@ -1856,7 +1916,7 @@ export function generateContentConfigToVertex(
     common.setValueByPath(
       toObject,
       ['speechConfig'],
-      speechConfigToVertex(t.tSpeechConfig(fromSpeechConfig), rootObject),
+      t.tSpeechConfig(fromSpeechConfig),
     );
   }
 
@@ -1903,8 +1963,9 @@ export function generateContentConfigToVertex(
     );
   }
 
-  if (common.getValueByPath(fromObject, ['serviceTier']) !== undefined) {
-    throw new Error('serviceTier parameter is not supported in Vertex AI.');
+  const fromServiceTier = common.getValueByPath(fromObject, ['serviceTier']);
+  if (parentObject !== undefined && fromServiceTier != null) {
+    common.setValueByPath(parentObject, ['serviceTier'], fromServiceTier);
   }
 
   return toObject;
@@ -3369,7 +3430,7 @@ export function generatedVideoFromVertex(
 
 export function generationConfigToVertex(
   fromObject: types.GenerationConfig,
-  rootObject?: unknown,
+  _rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3495,11 +3556,7 @@ export function generationConfigToVertex(
 
   const fromSpeechConfig = common.getValueByPath(fromObject, ['speechConfig']);
   if (fromSpeechConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['speechConfig'],
-      speechConfigToVertex(fromSpeechConfig, rootObject),
-    );
+    common.setValueByPath(toObject, ['speechConfig'], fromSpeechConfig);
   }
 
   const fromStopSequences = common.getValueByPath(fromObject, [
@@ -4209,28 +4266,6 @@ export function modelFromVertex(
   return toObject;
 }
 
-export function multiSpeakerVoiceConfigToVertex(
-  fromObject: types.MultiSpeakerVoiceConfig,
-  rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromSpeakerVoiceConfigs = common.getValueByPath(fromObject, [
-    'speakerVoiceConfigs',
-  ]);
-  if (fromSpeakerVoiceConfigs != null) {
-    let transformedList = fromSpeakerVoiceConfigs;
-    if (Array.isArray(transformedList)) {
-      transformedList = transformedList.map((item) => {
-        return speakerVoiceConfigToVertex(item, rootObject);
-      });
-    }
-    common.setValueByPath(toObject, ['speakerVoiceConfigs'], transformedList);
-  }
-
-  return toObject;
-}
-
 export function partToMldev(
   fromObject: types.Part,
   rootObject?: unknown,
@@ -4725,27 +4760,6 @@ export function referenceImageAPIInternalToVertex(
   return toObject;
 }
 
-export function replicatedVoiceConfigToVertex(
-  fromObject: types.ReplicatedVoiceConfig,
-  _rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
-  if (fromMimeType != null) {
-    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
-  }
-
-  const fromVoiceSampleAudio = common.getValueByPath(fromObject, [
-    'voiceSampleAudio',
-  ]);
-  if (fromVoiceSampleAudio != null) {
-    common.setValueByPath(toObject, ['voiceSampleAudio'], fromVoiceSampleAudio);
-  }
-
-  return toObject;
-}
-
 export function safetyAttributesFromMldev(
   fromObject: types.SafetyAttributes,
   _rootObject?: unknown,
@@ -4987,63 +5001,6 @@ export function segmentImageSourceToVertex(
       parentObject,
       ['instances[0]', 'scribble'],
       scribbleImageToVertex(fromScribbleImage, rootObject),
-    );
-  }
-
-  return toObject;
-}
-
-export function speakerVoiceConfigToVertex(
-  fromObject: types.SpeakerVoiceConfig,
-  rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromSpeaker = common.getValueByPath(fromObject, ['speaker']);
-  if (fromSpeaker != null) {
-    common.setValueByPath(toObject, ['speaker'], fromSpeaker);
-  }
-
-  const fromVoiceConfig = common.getValueByPath(fromObject, ['voiceConfig']);
-  if (fromVoiceConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['voiceConfig'],
-      voiceConfigToVertex(fromVoiceConfig, rootObject),
-    );
-  }
-
-  return toObject;
-}
-
-export function speechConfigToVertex(
-  fromObject: types.SpeechConfig,
-  rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromVoiceConfig = common.getValueByPath(fromObject, ['voiceConfig']);
-  if (fromVoiceConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['voiceConfig'],
-      voiceConfigToVertex(fromVoiceConfig, rootObject),
-    );
-  }
-
-  const fromLanguageCode = common.getValueByPath(fromObject, ['languageCode']);
-  if (fromLanguageCode != null) {
-    common.setValueByPath(toObject, ['languageCode'], fromLanguageCode);
-  }
-
-  const fromMultiSpeakerVoiceConfig = common.getValueByPath(fromObject, [
-    'multiSpeakerVoiceConfig',
-  ]);
-  if (fromMultiSpeakerVoiceConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['multiSpeakerVoiceConfig'],
-      multiSpeakerVoiceConfigToVertex(fromMultiSpeakerVoiceConfig, rootObject),
     );
   }
 
@@ -5839,37 +5796,6 @@ export function videoToVertex(
   const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
   if (fromMimeType != null) {
     common.setValueByPath(toObject, ['mimeType'], fromMimeType);
-  }
-
-  return toObject;
-}
-
-export function voiceConfigToVertex(
-  fromObject: types.VoiceConfig,
-  rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromReplicatedVoiceConfig = common.getValueByPath(fromObject, [
-    'replicatedVoiceConfig',
-  ]);
-  if (fromReplicatedVoiceConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['replicatedVoiceConfig'],
-      replicatedVoiceConfigToVertex(fromReplicatedVoiceConfig, rootObject),
-    );
-  }
-
-  const fromPrebuiltVoiceConfig = common.getValueByPath(fromObject, [
-    'prebuiltVoiceConfig',
-  ]);
-  if (fromPrebuiltVoiceConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['prebuiltVoiceConfig'],
-      fromPrebuiltVoiceConfig,
-    );
   }
 
   return toObject;

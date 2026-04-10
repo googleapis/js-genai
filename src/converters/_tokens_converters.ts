@@ -510,6 +510,32 @@ export function liveConnectConfigToMldev(
     );
   }
 
+  const fromAvatarConfig = common.getValueByPath(fromObject, ['avatarConfig']);
+  if (parentObject !== undefined && fromAvatarConfig != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'avatarConfig'],
+      fromAvatarConfig,
+    );
+  }
+
+  const fromSafetySettings = common.getValueByPath(fromObject, [
+    'safetySettings',
+  ]);
+  if (parentObject !== undefined && fromSafetySettings != null) {
+    let transformedList = fromSafetySettings;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return safetySettingToMldev(item);
+      });
+    }
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'safetySettings'],
+      transformedList,
+    );
+  }
+
   return toObject;
 }
 
@@ -639,6 +665,28 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
   const fromPartMetadata = common.getValueByPath(fromObject, ['partMetadata']);
   if (fromPartMetadata != null) {
     common.setValueByPath(toObject, ['partMetadata'], fromPartMetadata);
+  }
+
+  return toObject;
+}
+
+export function safetySettingToMldev(
+  fromObject: types.SafetySetting,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromCategory = common.getValueByPath(fromObject, ['category']);
+  if (fromCategory != null) {
+    common.setValueByPath(toObject, ['category'], fromCategory);
+  }
+
+  if (common.getValueByPath(fromObject, ['method']) !== undefined) {
+    throw new Error('method parameter is not supported in Gemini API.');
+  }
+
+  const fromThreshold = common.getValueByPath(fromObject, ['threshold']);
+  if (fromThreshold != null) {
+    common.setValueByPath(toObject, ['threshold'], fromThreshold);
   }
 
   return toObject;

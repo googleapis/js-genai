@@ -47,6 +47,11 @@ export class Models extends BaseModule {
     params: types.EmbedContentParameters,
   ): Promise<types.EmbedContentResponse> => {
     if (!this.apiClient.isVertexAI()) {
+      const isGeminiEmbedding2Model =
+        params.model.includes('gemini-embedding-2');
+      if (isGeminiEmbedding2Model) {
+        params.contents = tContents(params.contents);
+      }
       return await this.embedContentInternal(params);
     }
     const isVertexEmbedContentModel =
@@ -1195,29 +1200,15 @@ export class Models extends BaseModule {
   /**
    * Recontextualizes an image.
    *
-   * There are two types of recontextualization currently supported:
-   * 1) Imagen Product Recontext - Generate images of products in new scenes
-   *    and contexts.
-   * 2) Virtual Try-On: Generate images of persons modeling fashion products.
+   * There is one type of recontextualization currently supported:
+   * 1) Virtual Try-On: Generate images of persons modeling fashion products.
    *
    * @param params - The parameters for recontextualizing an image.
    * @return The response from the API.
    *
    * @example
    * ```ts
-   * const response1 = await ai.models.recontextImage({
-   *  model: 'imagen-product-recontext-preview-06-30',
-   *  source: {
-   *    prompt: 'In a modern kitchen setting.',
-   *    productImages: [productImage],
-   *  },
-   *  config: {
-   *    numberOfImages: 1,
-   *  },
-   * });
-   * console.log(response1?.generatedImages?.[0]?.image?.imageBytes);
-   *
-   * const response2 = await ai.models.recontextImage({
+   * const response = await ai.models.recontextImage({
    *  model: 'virtual-try-on-001',
    *  source: {
    *    personImage: personImage,
@@ -1227,7 +1218,7 @@ export class Models extends BaseModule {
    *    numberOfImages: 1,
    *  },
    * });
-   * console.log(response2?.generatedImages?.[0]?.image?.imageBytes);
+   * console.log(response?.generatedImages?.[0]?.image?.imageBytes);
    * ```
    */
   async recontextImage(

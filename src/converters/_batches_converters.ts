@@ -928,6 +928,18 @@ export function embedContentConfigToMldev(
     throw new Error('autoTruncate parameter is not supported in Gemini API.');
   }
 
+  if (common.getValueByPath(fromObject, ['documentOcr']) !== undefined) {
+    throw new Error('documentOcr parameter is not supported in Gemini API.');
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['audioTrackExtraction']) !== undefined
+  ) {
+    throw new Error(
+      'audioTrackExtraction parameter is not supported in Gemini API.',
+    );
+  }
+
   return toObject;
 }
 

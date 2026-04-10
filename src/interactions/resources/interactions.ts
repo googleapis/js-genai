@@ -85,7 +85,8 @@ export class BaseInteractions extends APIResource {
   }
 
   /**
-   * Cancels an interaction by id. This only applies to background interactions that are still running.
+   * Cancels an interaction by id. This only applies to background interactions that
+   * are still running.
    *
    * @example
    * ```ts
@@ -104,7 +105,8 @@ export class BaseInteractions extends APIResource {
   }
 
   /**
-   * Retrieves the full details of a single interaction based on its `Interaction.id`.
+   * Retrieves the full details of a single interaction based on its
+   * `Interaction.id`.
    *
    * @example
    * ```ts
@@ -170,6 +172,11 @@ export interface AudioContent {
   type: 'audio';
 
   /**
+   * The number of audio channels.
+   */
+  channels?: number;
+
+  /**
    * The audio content.
    */
   data?: string;
@@ -185,7 +192,16 @@ export interface AudioContent {
     | 'audio/ogg'
     | 'audio/flac'
     | 'audio/mpeg'
-    | 'audio/m4a';
+    | 'audio/m4a'
+    | 'audio/l16'
+    | 'audio/opus'
+    | 'audio/alaw'
+    | 'audio/mulaw';
+
+  /**
+   * The sample rate of the audio.
+   */
+  rate?: number;
 
   /**
    * The URI of the audio.
@@ -307,15 +323,15 @@ export interface ContentDelta {
     | ContentDelta.GoogleSearchResult
     | ContentDelta.MCPServerToolResult
     | ContentDelta.FileSearchResult
-    | ContentDelta.GoogleMapsResult;
+    | ContentDelta.GoogleMapsResult
+    | ContentDelta.TextAnnotation;
 
   event_type: 'content.delta';
 
   index: number;
 
   /**
-   * The event_id token to be used to resume the interaction stream, from
-   * this event.
+   * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
 }
@@ -325,11 +341,6 @@ export namespace ContentDelta {
     text: string;
 
     type: 'text';
-
-    /**
-     * Citation information for model-generated content.
-     */
-    annotations?: Array<InteractionsAPI.Annotation>;
   }
 
   export interface Image {
@@ -358,6 +369,11 @@ export namespace ContentDelta {
   export interface Audio {
     type: 'audio';
 
+    /**
+     * The number of audio channels.
+     */
+    channels?: number;
+
     data?: string;
 
     mime_type?:
@@ -368,7 +384,16 @@ export namespace ContentDelta {
       | 'audio/ogg'
       | 'audio/flac'
       | 'audio/mpeg'
-      | 'audio/m4a';
+      | 'audio/m4a'
+      | 'audio/l16'
+      | 'audio/opus'
+      | 'audio/alaw'
+      | 'audio/mulaw';
+
+    /**
+     * The sample rate of the audio.
+     */
+    rate?: number;
 
     uri?: string;
   }
@@ -693,6 +718,15 @@ export namespace ContentDelta {
      */
     signature?: string;
   }
+
+  export interface TextAnnotation {
+    type: 'text_annotation';
+
+    /**
+     * Citation information for model-generated content.
+     */
+    annotations?: Array<InteractionsAPI.Annotation>;
+  }
 }
 
 export interface ContentStart {
@@ -706,8 +740,7 @@ export interface ContentStart {
   index: number;
 
   /**
-   * The event_id token to be used to resume the interaction stream, from
-   * this event.
+   * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
 }
@@ -718,8 +751,7 @@ export interface ContentStop {
   index: number;
 
   /**
-   * The event_id token to be used to resume the interaction stream, from
-   * this event.
+   * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
 }
@@ -731,9 +763,22 @@ export interface DeepResearchAgentConfig {
   type: 'deep-research';
 
   /**
+   * Enables human-in-the-loop planning for the Deep Research agent. If set to true,
+   * the Deep Research agent will provide a research plan in its response. The agent
+   * will then proceed only if the user confirms the plan in the next turn. Relevant
+   * issue: b/482352502.
+   */
+  collaborative_planning?: boolean;
+
+  /**
    * Whether to include thought summaries in the response.
    */
   thinking_summaries?: 'auto' | 'none';
+
+  /**
+   * Whether to include visualizations in the response.
+   */
+  visualization?: 'off' | 'auto';
 }
 
 /**
@@ -776,8 +821,7 @@ export interface ErrorEvent {
   error?: ErrorEvent.Error;
 
   /**
-   * The event_id token to be used to resume the interaction stream, from
-   * this event.
+   * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
 }
@@ -1080,8 +1124,8 @@ export namespace GoogleMapsResult {
     place_id?: string;
 
     /**
-     * Snippets of reviews that are used to generate answers about the
-     * features of a given place in Google Maps.
+     * Snippets of reviews that are used to generate answers about the features of a
+     * given place in Google Maps.
      */
     review_snippets?: Array<Place.ReviewSnippet>;
 
@@ -1093,8 +1137,8 @@ export namespace GoogleMapsResult {
 
   export namespace Place {
     /**
-     * Encapsulates a snippet of a user review that answers a question about
-     * the features of a specific place in Google Maps.
+     * Encapsulates a snippet of a user review that answers a question about the
+     * features of a specific place in Google Maps.
      */
     export interface ReviewSnippet {
       /**
@@ -1166,7 +1210,7 @@ export interface GoogleSearchCallContent {
   /**
    * The type of search grounding enabled.
    */
-  search_type?: 'web_search' | 'image_search';
+  search_type?: 'web_search' | 'image_search' | 'enterprise_web_search';
 
   /**
    * A signature hash for backend validation.
@@ -1279,8 +1323,8 @@ export interface Interaction {
   id: string;
 
   /**
-   * Required. Output only. The time at which the response was created in ISO 8601 format
-   * (YYYY-MM-DDThh:mm:ssZ).
+   * Required. Output only. The time at which the response was created in ISO 8601
+   * format (YYYY-MM-DDThh:mm:ssZ).
    */
   created: string;
 
@@ -1290,8 +1334,8 @@ export interface Interaction {
   status: 'in_progress' | 'requires_action' | 'completed' | 'failed' | 'cancelled' | 'incomplete';
 
   /**
-   * Required. Output only. The time at which the response was last updated in ISO 8601 format
-   * (YYYY-MM-DDThh:mm:ssZ).
+   * Required. Output only. The time at which the response was last updated in ISO
+   * 8601 format (YYYY-MM-DDThh:mm:ssZ).
    */
   updated: string;
 
@@ -1349,8 +1393,8 @@ export interface Interaction {
   previous_interaction_id?: string;
 
   /**
-   * Enforces that the generated response is a JSON object that complies with
-   * the JSON schema specified in this field.
+   * Enforces that the generated response is a JSON object that complies with the
+   * JSON schema specified in this field.
    */
   response_format?: unknown;
 
@@ -1362,7 +1406,7 @@ export interface Interaction {
   /**
    * The requested modalities of the response (TEXT, IMAGE, AUDIO).
    */
-  response_modalities?: Array<'text' | 'image' | 'audio'>;
+  response_modalities?: Array<'text' | 'image' | 'audio' | 'video' | 'document'>;
 
   /**
    * Output only. The role of the interaction.
@@ -1394,14 +1438,13 @@ export interface InteractionCompleteEvent {
   event_type: 'interaction.complete';
 
   /**
-   * Required. The completed interaction with empty outputs to reduce the payload size.
-   * Use the preceding ContentDelta events for the actual output.
+   * Required. The completed interaction with empty outputs to reduce the payload
+   * size. Use the preceding ContentDelta events for the actual output.
    */
   interaction: Interaction;
 
   /**
-   * The event_id token to be used to resume the interaction stream, from
-   * this event.
+   * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
 }
@@ -1424,8 +1467,7 @@ export interface InteractionStartEvent {
   interaction: Interaction;
 
   /**
-   * The event_id token to be used to resume the interaction stream, from
-   * this event.
+   * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
 }
@@ -1438,8 +1480,7 @@ export interface InteractionStatusUpdate {
   status: 'in_progress' | 'requires_action' | 'completed' | 'failed' | 'cancelled' | 'incomplete';
 
   /**
-   * The event_id token to be used to resume the interaction stream, from
-   * this event.
+   * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
 }
@@ -1509,7 +1550,8 @@ export interface MCPServerToolResultContent {
 }
 
 /**
- * The model that will complete your prompt.\n\nSee [models](https://ai.google.dev/gemini-api/docs/models) for additional details.
+ * The model that will complete your prompt.\n\nSee
+ * [models](https://ai.google.dev/gemini-api/docs/models) for additional details.
  */
 export type Model =
   | 'gemini-2.5-computer-use-preview-10-2025'
@@ -1554,8 +1596,8 @@ export interface PlaceCitation {
   place_id?: string;
 
   /**
-   * Snippets of reviews that are used to generate answers about the
-   * features of a given place in Google Maps.
+   * Snippets of reviews that are used to generate answers about the features of a
+   * given place in Google Maps.
    */
   review_snippets?: Array<PlaceCitation.ReviewSnippet>;
 
@@ -1574,8 +1616,8 @@ export interface PlaceCitation {
 
 export namespace PlaceCitation {
   /**
-   * Encapsulates a snippet of a user review that answers a question about
-   * the features of a specific place in Google Maps.
+   * Encapsulates a snippet of a user review that answers a question about the
+   * features of a specific place in Google Maps.
    */
   export interface ReviewSnippet {
     /**
@@ -1662,7 +1704,8 @@ export type Tool =
   | Tool.MCPServer
   | Tool.GoogleSearch
   | Tool.FileSearch
-  | Tool.GoogleMaps;
+  | Tool.GoogleMaps
+  | Tool.Retrieval;
 
 export namespace Tool {
   /**
@@ -1718,8 +1761,7 @@ export namespace Tool {
     name?: string;
 
     /**
-     * The full URL for the MCPServer endpoint.
-     * Example: "https://api.example.com/mcp"
+     * The full URL for the MCPServer endpoint. Example: "https://api.example.com/mcp"
      */
     url?: string;
   }
@@ -1733,7 +1775,7 @@ export namespace Tool {
     /**
      * The types of search grounding to enable.
      */
-    search_types?: Array<'web_search' | 'image_search'>;
+    search_types?: Array<'web_search' | 'image_search' | 'enterprise_web_search'>;
   }
 
   /**
@@ -1780,6 +1822,40 @@ export namespace Tool {
      */
     longitude?: number;
   }
+
+  /**
+   * A tool that can be used by the model to retrieve files.
+   */
+  export interface Retrieval {
+    type: 'retrieval';
+
+    /**
+     * The types of file retrieval to enable.
+     */
+    retrieval_types?: Array<'vertex_ai_search'>;
+
+    /**
+     * Used to specify configuration for VertexAISearch.
+     */
+    vertex_ai_search_config?: Retrieval.VertexAISearchConfig;
+  }
+
+  export namespace Retrieval {
+    /**
+     * Used to specify configuration for VertexAISearch.
+     */
+    export interface VertexAISearchConfig {
+      /**
+       * Optional. Used to specify Vertex AI Search datastores.
+       */
+      datastores?: Array<string>;
+
+      /**
+       * Optional. Used to specify Vertex AI Search engine.
+       */
+      engine?: string;
+    }
+  }
 }
 
 /**
@@ -1798,8 +1874,7 @@ export interface Turn {
   content?: Array<Content> | string;
 
   /**
-   * The originator of this turn. Must be user for input or model for
-   * model output.
+   * The originator of this turn. Must be user for input or model for model output.
    */
   role?: string;
 }
@@ -1971,7 +2046,7 @@ export namespace Usage {
     /**
      * The modality associated with the token count.
      */
-    modality?: 'text' | 'image' | 'audio';
+    modality?: 'text' | 'image' | 'audio' | 'video' | 'document';
 
     /**
      * Number of tokens for the modality.
@@ -1986,7 +2061,7 @@ export namespace Usage {
     /**
      * The modality associated with the token count.
      */
-    modality?: 'text' | 'image' | 'audio';
+    modality?: 'text' | 'image' | 'audio' | 'video' | 'document';
 
     /**
      * Number of tokens for the modality.
@@ -2001,7 +2076,7 @@ export namespace Usage {
     /**
      * The modality associated with the token count.
      */
-    modality?: 'text' | 'image' | 'audio';
+    modality?: 'text' | 'image' | 'audio' | 'video' | 'document';
 
     /**
      * Number of tokens for the modality.
@@ -2016,7 +2091,7 @@ export namespace Usage {
     /**
      * The modality associated with the token count.
      */
-    modality?: 'text' | 'image' | 'audio';
+    modality?: 'text' | 'image' | 'audio' | 'video' | 'document';
 
     /**
      * Number of tokens for the modality.
@@ -2124,20 +2199,21 @@ export interface BaseCreateModelInteractionParams {
   previous_interaction_id?: string;
 
   /**
-   * Body param: Enforces that the generated response is a JSON object that complies with
-   * the JSON schema specified in this field.
+   * Body param: Enforces that the generated response is a JSON object that complies
+   * with the JSON schema specified in this field.
    */
   response_format?: unknown;
 
   /**
-   * Body param: The mime type of the response. This is required if response_format is set.
+   * Body param: The mime type of the response. This is required if response_format
+   * is set.
    */
   response_mime_type?: string;
 
   /**
    * Body param: The requested modalities of the response (TEXT, IMAGE, AUDIO).
    */
-  response_modalities?: Array<'text' | 'image' | 'audio'>;
+  response_modalities?: Array<'text' | 'image' | 'audio' | 'video' | 'document'>;
 
   /**
    * Body param: The service tier for the interaction.
@@ -2145,7 +2221,8 @@ export interface BaseCreateModelInteractionParams {
   service_tier?: 'flex' | 'standard' | 'priority';
 
   /**
-   * Body param: Input only. Whether to store the response and request for later retrieval.
+   * Body param: Input only. Whether to store the response and request for later
+   * retrieval.
    */
   store?: boolean;
 
@@ -2220,20 +2297,21 @@ export interface BaseCreateAgentInteractionParams {
   previous_interaction_id?: string;
 
   /**
-   * Body param: Enforces that the generated response is a JSON object that complies with
-   * the JSON schema specified in this field.
+   * Body param: Enforces that the generated response is a JSON object that complies
+   * with the JSON schema specified in this field.
    */
   response_format?: unknown;
 
   /**
-   * Body param: The mime type of the response. This is required if response_format is set.
+   * Body param: The mime type of the response. This is required if response_format
+   * is set.
    */
   response_mime_type?: string;
 
   /**
    * Body param: The requested modalities of the response (TEXT, IMAGE, AUDIO).
    */
-  response_modalities?: Array<'text' | 'image' | 'audio'>;
+  response_modalities?: Array<'text' | 'image' | 'audio' | 'video' | 'document'>;
 
   /**
    * Body param: The service tier for the interaction.
@@ -2241,7 +2319,8 @@ export interface BaseCreateAgentInteractionParams {
   service_tier?: 'flex' | 'standard' | 'priority';
 
   /**
-   * Body param: Input only. Whether to store the response and request for later retrieval.
+   * Body param: Input only. Whether to store the response and request for later
+   * retrieval.
    */
   store?: boolean;
 
@@ -2317,12 +2396,15 @@ export interface InteractionGetParamsBase {
   include_input?: boolean;
 
   /**
-   * Query param: Optional. If set, resumes the interaction stream from the next chunk after the event marked by the event id. Can only be used if `stream` is true.
+   * Query param: Optional. If set, resumes the interaction stream from the next
+   * chunk after the event marked by the event id. Can only be used if `stream` is
+   * true.
    */
   last_event_id?: string;
 
   /**
-   * Query param: If set to true, the generated content will be streamed incrementally.
+   * Query param: If set to true, the generated content will be streamed
+   * incrementally.
    */
   stream?: boolean;
 }
@@ -2334,14 +2416,16 @@ export namespace InteractionGetParams {
 
 export interface InteractionGetParamsNonStreaming extends InteractionGetParamsBase {
   /**
-   * Query param: If set to true, the generated content will be streamed incrementally.
+   * Query param: If set to true, the generated content will be streamed
+   * incrementally.
    */
   stream?: false;
 }
 
 export interface InteractionGetParamsStreaming extends InteractionGetParamsBase {
   /**
-   * Query param: If set to true, the generated content will be streamed incrementally.
+   * Query param: If set to true, the generated content will be streamed
+   * incrementally.
    */
   stream: true;
 }
