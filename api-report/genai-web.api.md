@@ -1795,6 +1795,8 @@ export class GoogleGenAI {
     readonly tunings: Tunings;
     // (undocumented)
     readonly vertexai: boolean;
+    // (undocumented)
+    get webhooks(): Webhooks;
 }
 
 // @public
@@ -4206,6 +4208,17 @@ export enum VoiceActivityType {
 export interface VoiceConfig {
     prebuiltVoiceConfig?: PrebuiltVoiceConfig;
     replicatedVoiceConfig?: ReplicatedVoiceConfig;
+}
+
+// Warning: (ae-forgotten-export) The symbol "BaseWebhooks" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export class Webhooks extends BaseWebhooks {
+}
+
+// @public (undocumented)
+export namespace Webhooks {
+        { export type WebhookCreateResponse as WebhookCreateResponse, export type WebhookRetrieveResponse as WebhookRetrieveResponse, export type WebhookUpdateResponse as WebhookUpdateResponse, export type WebhookListResponse as WebhookListResponse, export type WebhookDeleteResponse as WebhookDeleteResponse, export type WebhookPingResponse as WebhookPingResponse, export type WebhookRotateSigningSecretResponse as WebhookRotateSigningSecretResponse, export type WebhookCreateParams as WebhookCreateParams, export type WebhookRetrieveParams as WebhookRetrieveParams, export type WebhookUpdateParams as WebhookUpdateParams, export type WebhookListParams as WebhookListParams, export type WebhookDeleteParams as WebhookDeleteParams, export type WebhookPingParams as WebhookPingParams, export type WebhookRotateSigningSecretParams as WebhookRotateSigningSecretParams, };
 }
 
 // @public
