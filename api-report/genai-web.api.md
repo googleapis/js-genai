@@ -1044,7 +1044,9 @@ export interface EmbedContentBatch {
 // @public
 export interface EmbedContentConfig {
     abortSignal?: AbortSignal;
+    audioTrackExtraction?: boolean;
     autoTruncate?: boolean;
+    documentOcr?: boolean;
     httpOptions?: HttpOptions;
     mimeType?: string;
     outputDimensionality?: number;

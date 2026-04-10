@@ -3659,6 +3659,14 @@ export declare interface EmbedContentConfig {
       will lead to an INVALID_ARGUMENT error, similar to other text APIs.
        */
   autoTruncate?: boolean;
+  /** Vertex API only. Whether to enable OCR for document content.
+      Only applicable to Gemini Embedding 2 models.
+       */
+  documentOcr?: boolean;
+  /** Vertex API only. Whether to extract audio from video content.
+      Only applicable to Gemini Embedding 2 models.
+       */
+  audioTrackExtraction?: boolean;
 }
 
 /** Parameters for the _embed_content method. */

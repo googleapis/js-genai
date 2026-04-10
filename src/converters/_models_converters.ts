@@ -912,6 +912,18 @@ export function embedContentConfigToMldev(
     throw new Error('autoTruncate parameter is not supported in Gemini API.');
   }
 
+  if (common.getValueByPath(fromObject, ['documentOcr']) !== undefined) {
+    throw new Error('documentOcr parameter is not supported in Gemini API.');
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['audioTrackExtraction']) !== undefined
+  ) {
+    throw new Error(
+      'audioTrackExtraction parameter is not supported in Gemini API.',
+    );
+  }
+
   return toObject;
 }
 
@@ -940,7 +952,11 @@ export function embedContentConfigToVertex(
   } else if (discriminatorTaskType === 'EMBED_CONTENT') {
     const fromTaskType = common.getValueByPath(fromObject, ['taskType']);
     if (parentObject !== undefined && fromTaskType != null) {
-      common.setValueByPath(parentObject, ['taskType'], fromTaskType);
+      common.setValueByPath(
+        parentObject,
+        ['embedContentConfig', 'taskType'],
+        fromTaskType,
+      );
     }
   }
 
@@ -958,7 +974,11 @@ export function embedContentConfigToVertex(
   } else if (discriminatorTitle === 'EMBED_CONTENT') {
     const fromTitle = common.getValueByPath(fromObject, ['title']);
     if (parentObject !== undefined && fromTitle != null) {
-      common.setValueByPath(parentObject, ['title'], fromTitle);
+      common.setValueByPath(
+        parentObject,
+        ['embedContentConfig', 'title'],
+        fromTitle,
+      );
     }
   }
 
@@ -986,7 +1006,7 @@ export function embedContentConfigToVertex(
     if (parentObject !== undefined && fromOutputDimensionality != null) {
       common.setValueByPath(
         parentObject,
-        ['outputDimensionality'],
+        ['embedContentConfig', 'outputDimensionality'],
         fromOutputDimensionality,
       );
     }
@@ -1031,7 +1051,47 @@ export function embedContentConfigToVertex(
       'autoTruncate',
     ]);
     if (parentObject !== undefined && fromAutoTruncate != null) {
-      common.setValueByPath(parentObject, ['autoTruncate'], fromAutoTruncate);
+      common.setValueByPath(
+        parentObject,
+        ['embedContentConfig', 'autoTruncate'],
+        fromAutoTruncate,
+      );
+    }
+  }
+
+  let discriminatorDocumentOcr = common.getValueByPath(rootObject, [
+    'embeddingApiType',
+  ]);
+  if (discriminatorDocumentOcr === undefined) {
+    discriminatorDocumentOcr = 'PREDICT';
+  }
+  if (discriminatorDocumentOcr === 'EMBED_CONTENT') {
+    const fromDocumentOcr = common.getValueByPath(fromObject, ['documentOcr']);
+    if (parentObject !== undefined && fromDocumentOcr != null) {
+      common.setValueByPath(
+        parentObject,
+        ['embedContentConfig', 'documentOcr'],
+        fromDocumentOcr,
+      );
+    }
+  }
+
+  let discriminatorAudioTrackExtraction = common.getValueByPath(rootObject, [
+    'embeddingApiType',
+  ]);
+  if (discriminatorAudioTrackExtraction === undefined) {
+    discriminatorAudioTrackExtraction = 'PREDICT';
+  }
+  if (discriminatorAudioTrackExtraction === 'EMBED_CONTENT') {
+    const fromAudioTrackExtraction = common.getValueByPath(fromObject, [
+      'audioTrackExtraction',
+    ]);
+    if (parentObject !== undefined && fromAudioTrackExtraction != null) {
+      common.setValueByPath(
+        parentObject,
+        ['embedContentConfig', 'audioTrackExtraction'],
+        fromAudioTrackExtraction,
+      );
     }
   }
 
