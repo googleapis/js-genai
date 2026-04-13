@@ -584,6 +584,7 @@ export interface CreateBatchJobConfig {
     dest?: BatchJobDestinationUnion;
     displayName?: string;
     httpOptions?: HttpOptions;
+    webhookConfig?: WebhookConfig;
 }
 
 // @public
@@ -1580,6 +1581,7 @@ export interface GenerateVideosConfig {
     referenceImages?: VideoGenerationReferenceImage[];
     resolution?: string;
     seed?: number;
+    webhookConfig?: WebhookConfig;
 }
 
 // @public
@@ -4208,6 +4210,12 @@ export enum VoiceActivityType {
 export interface VoiceConfig {
     prebuiltVoiceConfig?: PrebuiltVoiceConfig;
     replicatedVoiceConfig?: ReplicatedVoiceConfig;
+}
+
+// @public
+export interface WebhookConfig {
+    uris?: string[];
+    userMetadata?: Record<string, unknown>;
 }
 
 // Warning: (ae-forgotten-export) The symbol "BaseWebhooks" needs to be exported by the entry point index.d.ts

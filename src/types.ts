@@ -4476,6 +4476,20 @@ export declare interface VideoGenerationMask {
   maskMode?: VideoGenerationMaskMode;
 }
 
+/** Configuration for webhook notifications.
+
+Used to configure webhook endpoints that will receive notifications
+when long-running operations (e.g., batch jobs, video generation) complete. */
+export declare interface WebhookConfig {
+  /** The webhook URIs to receive notifications. If set, these
+      webhook URIs will be used instead of the registered webhooks. */
+  uris?: string[];
+  /** User metadata that will be included in each webhook event
+      notification. Use this to attach custom key-value data to correlate
+      webhook events with your internal systems. */
+  userMetadata?: Record<string, unknown>;
+}
+
 /** Configuration for generating videos. */
 export declare interface GenerateVideosConfig {
   /** Used to override HTTP request options. */
@@ -4534,6 +4548,9 @@ export declare interface GenerateVideosConfig {
   compressionQuality?: VideoCompressionQuality;
   /** User specified labels to track billing usage. */
   labels?: Record<string, string>;
+  /** Webhook configuration for receiving notifications when the
+      video generation operation completes. */
+  webhookConfig?: WebhookConfig;
 }
 
 /** Class that represents the parameters for generating videos. */
@@ -6248,6 +6265,10 @@ export declare interface CreateBatchJobConfig {
       "gs://path/to/output/data" or "bq://projectId.bqDatasetId.bqTableId".
        */
   dest?: BatchJobDestinationUnion;
+  /** Webhook configuration for receiving notifications when the batch
+      operation completes.
+       */
+  webhookConfig?: WebhookConfig;
 }
 
 /** Config for batches.create parameters. */

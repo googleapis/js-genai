@@ -2771,6 +2771,13 @@ export function generateVideosConfigToMldev(
     throw new Error('labels parameter is not supported in Gemini API.');
   }
 
+  const fromWebhookConfig = common.getValueByPath(fromObject, [
+    'webhookConfig',
+  ]);
+  if (parentObject !== undefined && fromWebhookConfig != null) {
+    common.setValueByPath(parentObject, ['webhookConfig'], fromWebhookConfig);
+  }
+
   return toObject;
 }
 
@@ -2942,6 +2949,10 @@ export function generateVideosConfigToVertex(
   const fromLabels = common.getValueByPath(fromObject, ['labels']);
   if (parentObject !== undefined && fromLabels != null) {
     common.setValueByPath(parentObject, ['labels'], fromLabels);
+  }
+
+  if (common.getValueByPath(fromObject, ['webhookConfig']) !== undefined) {
+    throw new Error('webhookConfig parameter is not supported in Vertex AI.');
   }
 
   return toObject;
