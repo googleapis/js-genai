@@ -24,7 +24,7 @@ export class BaseInteractions extends APIResource {
    * ```ts
    * const interaction = await client.interactions.create({
    *   api_version: 'api_version',
-   *   input: [{ text: 'text', type: 'text' }],
+   *   input: { text: 'text', type: 'text' },
    *   model: 'gemini-2.5-computer-use-preview-10-2025',
    * });
    * ```
