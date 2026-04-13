@@ -4,23 +4,56 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import pRetry, {AbortError} from 'p-retry';
 import {Auth} from './_auth.js';
 import * as common from './_common.js';
 import {Downloader} from './_downloader.js';
 import {Uploader} from './_uploader.js';
 import {uploadToFileSearchStoreConfigToMldev} from './converters/_filesearchstores_converters.js';
 import {ApiError} from './errors.js';
+import {GeminiNextGenAPIClientAdapter} from './interactions/client-adapter.js';
 import * as types from './types.js';
 
 const CONTENT_TYPE_HEADER = 'Content-Type';
 const SERVER_TIMEOUT_HEADER = 'X-Server-Timeout';
 const USER_AGENT_HEADER = 'User-Agent';
 export const GOOGLE_API_CLIENT_HEADER = 'x-goog-api-client';
-export const SDK_VERSION = '1.31.0'; // x-release-please-version
+export const SDK_VERSION = '1.49.0'; // x-release-please-version
 const LIBRARY_LABEL = `google-genai-sdk/${SDK_VERSION}`;
 const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
 const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';
-const responseLineRE = /^\s*data: (.*)(?:\n\n|\r\r|\r\n\r\n)/;
+
+const MULTI_REGIONAL_LOCATIONS = new Set<string>(['us', 'eu']);
+
+/**
+ * Partial definiion of the NodeJS.Timeout.
+ * https://nodejs.org/api/timers.html#timeoutunref
+ *
+ * Importing the full nodejs typings rewrites setTimeout / clearTimeout
+ * signatures on web builds. This causes compile errors in code that stores the
+ * timeout handle in an explicitly typed variable. E.g.:
+ * ```
+ * let timeoutHandle = 0;
+ * timeoutHandle = setTimeout(() => {}, 1000);
+ * ```
+ */
+declare interface NodeJSTimeout {
+  unref(): this;
+}
+
+// Default retry options.
+// The config is based on https://cloud.google.com/storage/docs/retry-strategy.
+const DEFAULT_RETRY_ATTEMPTS = 5; // Including the initial call
+// LINT.IfChange
+const DEFAULT_RETRY_HTTP_STATUS_CODES = [
+  408, // Request timeout
+  429, // Too many requests
+  500, // Internal server error
+  502, // Bad gateway
+  503, // Service unavailable
+  504, // Gateway timeout
+];
+// LINT.ThenChange(//depot/google3/third_party/py/google/genai/_api_client.py)
 
 /**
  * Options for initializing the ApiClient. The ApiClient uses the parameters
@@ -132,28 +165,80 @@ export interface HttpRequest {
 /**
  * The ApiClient class is used to send requests to the Gemini API or Vertex AI
  * endpoints.
+ *
+ * WARNING: This is an internal API and may change without notice. Direct usage
+ * is not supported and may break your application.
  */
-export class ApiClient {
+export class ApiClient implements GeminiNextGenAPIClientAdapter {
   readonly clientOptions: ApiClientInitOptions;
-
+  private readonly customBaseUrl?: string;
   constructor(opts: ApiClientInitOptions) {
     this.clientOptions = {
       ...opts,
-      project: opts.project,
-      location: opts.location,
-      apiKey: opts.apiKey,
-      vertexai: opts.vertexai,
     };
+
+    this.customBaseUrl = opts.httpOptions?.baseUrl;
+
+    if (this.clientOptions.vertexai) {
+      if (this.clientOptions.project && this.clientOptions.location) {
+        this.clientOptions.apiKey = undefined;
+      } else if (this.clientOptions.apiKey) {
+        this.clientOptions.project = undefined;
+        this.clientOptions.location = undefined;
+      }
+    }
 
     const initHttpOptions: types.HttpOptions = {};
 
     if (this.clientOptions.vertexai) {
+      if (
+        !this.clientOptions.location &&
+        !this.clientOptions.apiKey &&
+        !this.customBaseUrl
+      ) {
+        this.clientOptions.location = 'global';
+      }
+
+      const hasSufficientAuth =
+        (this.clientOptions.project && this.clientOptions.location) ||
+        this.clientOptions.apiKey;
+
+      if (!hasSufficientAuth && !this.customBaseUrl) {
+        throw new Error(
+          'Authentication is not set up. Please provide either a project and location, or an API key, or a custom base URL.',
+        );
+      }
+
+      const hasConstructorAuth =
+        (opts.project && opts.location) || !!opts.apiKey;
+
+      if (this.customBaseUrl && !hasConstructorAuth) {
+        initHttpOptions.baseUrl = this.customBaseUrl;
+        this.clientOptions.project = undefined;
+        this.clientOptions.location = undefined;
+      } else if (
+        this.clientOptions.apiKey ||
+        this.clientOptions.location === 'global'
+      ) {
+        // Vertex Express or global endpoint case.
+        initHttpOptions.baseUrl = 'https://aiplatform.googleapis.com/';
+      } else if (
+        this.clientOptions.project &&
+        this.clientOptions.location &&
+        MULTI_REGIONAL_LOCATIONS.has(this.clientOptions.location)
+      ) {
+        initHttpOptions.baseUrl = `https://aiplatform.${this.clientOptions.location}.rep.googleapis.com/`;
+      } else if (this.clientOptions.project && this.clientOptions.location) {
+        initHttpOptions.baseUrl = `https://${this.clientOptions.location}-aiplatform.googleapis.com/`;
+      }
+
       initHttpOptions.apiVersion =
         this.clientOptions.apiVersion ?? VERTEX_AI_API_DEFAULT_VERSION;
-      initHttpOptions.baseUrl = this.baseUrlFromProjectLocation();
-      this.normalizeAuthParameters();
     } else {
       // Gemini API
+      if (!this.clientOptions.apiKey) {
+        console.warn('API key should be set when using the Gemini API.');
+      }
       initHttpOptions.apiVersion =
         this.clientOptions.apiVersion ?? GOOGLE_AI_API_DEFAULT_VERSION;
       initHttpOptions.baseUrl = `https://generativelanguage.googleapis.com/`;
@@ -171,43 +256,6 @@ export class ApiClient {
     }
   }
 
-  /**
-   * Determines the base URL for Vertex AI based on project and location.
-   * Uses the global endpoint if location is 'global' or if project/location
-   * are not specified (implying API key usage).
-   * @private
-   */
-  private baseUrlFromProjectLocation(): string {
-    if (
-      this.clientOptions.project &&
-      this.clientOptions.location &&
-      this.clientOptions.location !== 'global'
-    ) {
-      // Regional endpoint
-      return `https://${this.clientOptions.location}-aiplatform.googleapis.com/`;
-    }
-    // Global endpoint (covers 'global' location and API key usage)
-    return `https://aiplatform.googleapis.com/`;
-  }
-
-  /**
-   * Normalizes authentication parameters for Vertex AI.
-   * If project and location are provided, API key is cleared.
-   * If project and location are not provided (implying API key usage),
-   * project and location are cleared.
-   * @private
-   */
-  private normalizeAuthParameters(): void {
-    if (this.clientOptions.project && this.clientOptions.location) {
-      // Using project/location for auth, clear potential API key
-      this.clientOptions.apiKey = undefined;
-      return;
-    }
-    // Using API key for auth (or no auth provided yet), clear project/location
-    this.clientOptions.project = undefined;
-    this.clientOptions.location = undefined;
-  }
-
   isVertexAI(): boolean {
     return this.clientOptions.vertexai ?? false;
   }
@@ -218,6 +266,16 @@ export class ApiClient {
 
   getLocation() {
     return this.clientOptions.location;
+  }
+
+  getCustomBaseUrl(): string | undefined {
+    return this.customBaseUrl;
+  }
+
+  async getAuthHeaders(): Promise<Headers> {
+    const headers = new Headers();
+    await this.clientOptions.auth.addAuthHeaders(headers);
+    return headers;
   }
 
   getApiVersion() {
@@ -315,7 +373,16 @@ export class ApiClient {
     return url;
   }
 
-  private shouldPrependVertexProjectPath(request: HttpRequest): boolean {
+  private shouldPrependVertexProjectPath(
+    request: HttpRequest,
+    httpOptions: types.HttpOptions,
+  ): boolean {
+    if (
+      httpOptions.baseUrl &&
+      httpOptions.baseUrlResourceScope === types.ResourceScope.COLLECTION
+    ) {
+      return false;
+    }
     if (this.clientOptions.apiKey) {
       return false;
     }
@@ -348,7 +415,10 @@ export class ApiClient {
       );
     }
 
-    const prependProjectLocation = this.shouldPrependVertexProjectPath(request);
+    const prependProjectLocation = this.shouldPrependVertexProjectPath(
+      request,
+      patchedHttpOptions,
+    );
     const url = this.constructUrl(
       request.path,
       patchedHttpOptions,
@@ -418,7 +488,10 @@ export class ApiClient {
       );
     }
 
-    const prependProjectLocation = this.shouldPrependVertexProjectPath(request);
+    const prependProjectLocation = this.shouldPrependVertexProjectPath(
+      request,
+      patchedHttpOptions,
+    );
     const url = this.constructUrl(
       request.path,
       patchedHttpOptions,
@@ -454,12 +527,12 @@ export class ApiClient {
         );
         if (
           timeoutHandle &&
-          typeof (timeoutHandle as unknown as NodeJS.Timeout).unref ===
+          typeof (timeoutHandle as unknown as NodeJSTimeout).unref ===
             'function'
         ) {
           // call unref to prevent nodejs process from hanging, see
           // https://nodejs.org/api/timers.html#timeoutunref
-          timeoutHandle.unref();
+          (timeoutHandle as unknown as NodeJSTimeout).unref();
         }
       }
       if (abortSignal) {
@@ -539,6 +612,9 @@ export class ApiClient {
 
     try {
       let buffer = '';
+      const dataPrefix = 'data:';
+      const delimiters = ['\n\n', '\r\r', '\r\n\r\n'];
+
       while (true) {
         const {done, value} = await reader.read();
         if (done) {
@@ -576,22 +652,50 @@ export class ApiClient {
           }
         }
         buffer += chunkString;
-        let match = buffer.match(responseLineRE);
-        while (match) {
-          const processedChunkString = match[1];
-          try {
-            const partialResponse = new Response(processedChunkString, {
-              headers: response?.headers,
-              status: response?.status,
-              statusText: response?.statusText,
-            });
-            yield new types.HttpResponse(partialResponse);
-            buffer = buffer.slice(match[0].length);
-            match = buffer.match(responseLineRE);
-          } catch (e) {
-            throw new Error(
-              `exception parsing stream chunk ${processedChunkString}. ${e}`,
-            );
+
+        let delimiterIndex = -1;
+        let delimiterLength = 0;
+
+        while (true) {
+          delimiterIndex = -1;
+          delimiterLength = 0;
+
+          for (const delimiter of delimiters) {
+            const index = buffer.indexOf(delimiter);
+            if (
+              index !== -1 &&
+              (delimiterIndex === -1 || index < delimiterIndex)
+            ) {
+              delimiterIndex = index;
+              delimiterLength = delimiter.length;
+            }
+          }
+
+          if (delimiterIndex === -1) {
+            break; // No complete event in buffer
+          }
+
+          const eventString = buffer.substring(0, delimiterIndex);
+          buffer = buffer.substring(delimiterIndex + delimiterLength);
+
+          const trimmedEvent = eventString.trim();
+
+          if (trimmedEvent.startsWith(dataPrefix)) {
+            const processedChunkString = trimmedEvent
+              .substring(dataPrefix.length)
+              .trim();
+            try {
+              const partialResponse = new Response(processedChunkString, {
+                headers: response?.headers,
+                status: response?.status,
+                statusText: response?.statusText,
+              });
+              yield new types.HttpResponse(partialResponse);
+            } catch (e) {
+              throw new Error(
+                `exception parsing stream chunk ${processedChunkString}. ${e}`,
+              );
+            }
           }
         }
       }
@@ -603,8 +707,33 @@ export class ApiClient {
     url: string,
     requestInit: RequestInit,
   ): Promise<Response> {
-    return fetch(url, requestInit).catch((e) => {
-      throw new Error(`exception ${e} sending request`);
+    if (
+      !this.clientOptions.httpOptions ||
+      !this.clientOptions.httpOptions.retryOptions
+    ) {
+      return fetch(url, requestInit);
+    }
+
+    const retryOptions = this.clientOptions.httpOptions.retryOptions;
+    const runFetch = async () => {
+      const response = await fetch(url, requestInit);
+
+      if (response.ok) {
+        return response;
+      }
+
+      if (DEFAULT_RETRY_HTTP_STATUS_CODES.includes(response.status)) {
+        throw new Error(`Retryable HTTP Error: ${response.statusText}`);
+      }
+
+      throw new AbortError(
+        `Non-retryable exception ${response.statusText} sending request`,
+      );
+    };
+
+    return pRetry(runFetch, {
+      // Retry attempts is one less than the number of total attempts.
+      retries: (retryOptions.attempts ?? DEFAULT_RETRY_ATTEMPTS) - 1,
     });
   }
 

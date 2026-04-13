@@ -40,6 +40,29 @@ const mockResponse = new Response(
 );
 
 describe('Node uploader', () => {
+  let originalGeminiBaseUrl: string | undefined;
+  let originalVertexBaseUrl: string | undefined;
+
+  beforeEach(() => {
+    originalGeminiBaseUrl = process.env['GOOGLE_GEMINI_BASE_URL'];
+    originalVertexBaseUrl = process.env['GOOGLE_VERTEX_BASE_URL'];
+    delete process.env['GOOGLE_GEMINI_BASE_URL'];
+    delete process.env['GOOGLE_VERTEX_BASE_URL'];
+  });
+
+  afterEach(() => {
+    if (originalGeminiBaseUrl !== undefined) {
+      process.env['GOOGLE_GEMINI_BASE_URL'] = originalGeminiBaseUrl;
+    } else {
+      delete process.env['GOOGLE_GEMINI_BASE_URL'];
+    }
+    if (originalVertexBaseUrl !== undefined) {
+      process.env['GOOGLE_VERTEX_BASE_URL'] = originalVertexBaseUrl;
+    } else {
+      delete process.env['GOOGLE_VERTEX_BASE_URL'];
+    }
+  });
+
   describe('Input is a string path', () => {
     let filePath: string;
     const fileSize = TEST_FILE_SIZE;
@@ -97,6 +120,46 @@ describe('Node uploader', () => {
       expect(byteProcessed).toBe(fileSize);
       console.log(`byteProcessed: ${byteProcessed}, fileSize: ${fileSize}`);
     });
+  });
+
+  it('should rewrite the upload URL when httpOptions.baseUrl is provided', async () => {
+    const filePath = await createZeroFilledTempFile(TEST_FILE_SIZE);
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const numRequests = Math.ceil(TEST_FILE_SIZE / DEFAULT_CHUNK_SIZE);
+
+    const mockResponses = [];
+    for (let i = 0; i < numRequests - 1; i++) {
+      mockResponses.push(Promise.resolve(mockResponse));
+    }
+    mockResponses.push(
+      Promise.resolve(
+        new Response(
+          JSON.stringify({
+            data: 'data_last',
+          }),
+          lastCorrectFetchOkOptions,
+        ),
+      ),
+    );
+    const fetchSpy = spyOn(global, 'fetch').and.returnValues(...mockResponses);
+
+    const uploader = client['apiClient'].clientOptions.uploader;
+    if (uploader === undefined) {
+      throw new Error('Uploader is not set.');
+    }
+    const customHttpOptions = {baseUrl: 'https://my-proxy.company.com'};
+    await uploader.upload(
+      filePath,
+      TEST_UPLOAD_URL,
+      client['apiClient'],
+      customHttpOptions,
+    );
+    expect(fetchSpy).toHaveBeenCalledTimes(numRequests);
+    const allArgs = fetchSpy.calls.allArgs();
+    const rewrittenUrl = allArgs[0][0] as string;
+    expect(rewrittenUrl).toContain(
+      'https://my-proxy.company.com/upload/v1beta/files',
+    );
   });
 
   describe('Input is a blob', () => {

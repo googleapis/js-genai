@@ -30,6 +30,11 @@ const externalDeps = [
   '@modelcontextprotocol/sdk/client/index.js',
   '@modelcontextprotocol/sdk/types.js',
   'path',
+  'crypto',
+  'os',
+  'protobufjs/minimal',
+  'protobufjs/minimal.js',
+  'p-retry',
 ];
 
 export default [
@@ -87,6 +92,52 @@ export default [
     output: {
       file: pkg.exports['./web']['import'],
       format: 'es',
+      sourcemap: true,
+    },
+    plugins: rollupPlugins,
+    external: externalDeps,
+  },
+
+  // The `tokenizer/node` ES module (dist/tokenizer/node.mjs)
+  {
+    input: 'src/tokenizer/node.ts',
+    output: {
+      file: 'dist/tokenizer/node.mjs',
+      format: 'es',
+      sourcemap: true,
+    },
+    plugins: rollupPlugins,
+    external: externalDeps,
+  },
+
+  // The `tokenizer/node` CJS module (dist/tokenizer/node.cjs)
+  {
+    input: 'src/tokenizer/node.ts',
+    output: {
+      file: 'dist/tokenizer/node.cjs',
+      format: 'cjs',
+      sourcemap: true,
+    },
+    plugins: rollupPlugins,
+    external: externalDeps,
+  },
+
+  // Internal module, only for use by Vertex SDK
+  {
+    input: 'src/vertex_internal/index.ts',
+    output: {
+      file: 'dist/vertex_internal/index.js',
+      format: 'es',
+      sourcemap: true,
+    },
+    plugins: rollupPlugins,
+    external: externalDeps,
+  },
+  {
+    input: 'src/vertex_internal/index.ts',
+    output: {
+      file: 'dist/vertex_internal/index.cjs',
+      format: 'cjs',
       sourcemap: true,
     },
     plugins: rollupPlugins,

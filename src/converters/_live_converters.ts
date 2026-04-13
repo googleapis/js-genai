@@ -11,6 +11,64 @@ import * as common from '../_common.js';
 import * as t from '../_transformers.js';
 import type * as types from '../types.js';
 
+export function audioTranscriptionConfigToMldev(
+  fromObject: types.AudioTranscriptionConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  if (common.getValueByPath(fromObject, ['languageCodes']) !== undefined) {
+    throw new Error('languageCodes parameter is not supported in Gemini API.');
+  }
+
+  return toObject;
+}
+
+export function authConfigToMldev(
+  fromObject: types.AuthConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromApiKey = common.getValueByPath(fromObject, ['apiKey']);
+  if (fromApiKey != null) {
+    common.setValueByPath(toObject, ['apiKey'], fromApiKey);
+  }
+
+  if (common.getValueByPath(fromObject, ['apiKeyConfig']) !== undefined) {
+    throw new Error('apiKeyConfig parameter is not supported in Gemini API.');
+  }
+
+  if (common.getValueByPath(fromObject, ['authType']) !== undefined) {
+    throw new Error('authType parameter is not supported in Gemini API.');
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['googleServiceAccountConfig']) !==
+    undefined
+  ) {
+    throw new Error(
+      'googleServiceAccountConfig parameter is not supported in Gemini API.',
+    );
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['httpBasicAuthConfig']) !== undefined
+  ) {
+    throw new Error(
+      'httpBasicAuthConfig parameter is not supported in Gemini API.',
+    );
+  }
+
+  if (common.getValueByPath(fromObject, ['oauthConfig']) !== undefined) {
+    throw new Error('oauthConfig parameter is not supported in Gemini API.');
+  }
+
+  if (common.getValueByPath(fromObject, ['oidcConfig']) !== undefined) {
+    throw new Error('oidcConfig parameter is not supported in Gemini API.');
+  }
+
+  return toObject;
+}
+
 export function blobToMldev(fromObject: types.Blob): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -42,6 +100,30 @@ export function contentToMldev(
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
         return partToMldev(item);
+      });
+    }
+    common.setValueByPath(toObject, ['parts'], transformedList);
+  }
+
+  const fromRole = common.getValueByPath(fromObject, ['role']);
+  if (fromRole != null) {
+    common.setValueByPath(toObject, ['role'], fromRole);
+  }
+
+  return toObject;
+}
+
+export function contentToVertex(
+  fromObject: types.Content,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromParts = common.getValueByPath(fromObject, ['parts']);
+  if (fromParts != null) {
+    let transformedList = fromParts;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return partToVertex(item);
       });
     }
     common.setValueByPath(toObject, ['parts'], transformedList);
@@ -113,10 +195,6 @@ export function functionDeclarationToVertex(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  if (common.getValueByPath(fromObject, ['behavior']) !== undefined) {
-    throw new Error('behavior parameter is not supported in Vertex AI.');
-  }
-
   const fromDescription = common.getValueByPath(fromObject, ['description']);
   if (fromDescription != null) {
     common.setValueByPath(toObject, ['description'], fromDescription);
@@ -157,6 +235,10 @@ export function functionDeclarationToVertex(
       ['responseJsonSchema'],
       fromResponseJsonSchema,
     );
+  }
+
+  if (common.getValueByPath(fromObject, ['behavior']) !== undefined) {
+    throw new Error('behavior parameter is not supported in Vertex AI.');
   }
 
   return toObject;
@@ -289,11 +371,7 @@ export function generationConfigToVertex(
 
   const fromSpeechConfig = common.getValueByPath(fromObject, ['speechConfig']);
   if (fromSpeechConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['speechConfig'],
-      speechConfigToVertex(fromSpeechConfig),
-    );
+    common.setValueByPath(toObject, ['speechConfig'], fromSpeechConfig);
   }
 
   const fromStopSequences = common.getValueByPath(fromObject, [
@@ -342,8 +420,13 @@ export function googleMapsToMldev(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  if (common.getValueByPath(fromObject, ['authConfig']) !== undefined) {
-    throw new Error('authConfig parameter is not supported in Gemini API.');
+  const fromAuthConfig = common.getValueByPath(fromObject, ['authConfig']);
+  if (fromAuthConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['authConfig'],
+      authConfigToMldev(fromAuthConfig),
+    );
   }
 
   const fromEnableWidget = common.getValueByPath(fromObject, ['enableWidget']);
@@ -359,14 +442,19 @@ export function googleSearchToMldev(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  if (common.getValueByPath(fromObject, ['excludeDomains']) !== undefined) {
-    throw new Error('excludeDomains parameter is not supported in Gemini API.');
+  const fromSearchTypes = common.getValueByPath(fromObject, ['searchTypes']);
+  if (fromSearchTypes != null) {
+    common.setValueByPath(toObject, ['searchTypes'], fromSearchTypes);
   }
 
   if (common.getValueByPath(fromObject, ['blockingConfidence']) !== undefined) {
     throw new Error(
       'blockingConfidence parameter is not supported in Gemini API.',
     );
+  }
+
+  if (common.getValueByPath(fromObject, ['excludeDomains']) !== undefined) {
+    throw new Error('excludeDomains parameter is not supported in Gemini API.');
   }
 
   const fromTimeRangeFilter = common.getValueByPath(fromObject, [
@@ -390,6 +478,30 @@ export function liveClientContentToMldev(
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
         return contentToMldev(item);
+      });
+    }
+    common.setValueByPath(toObject, ['turns'], transformedList);
+  }
+
+  const fromTurnComplete = common.getValueByPath(fromObject, ['turnComplete']);
+  if (fromTurnComplete != null) {
+    common.setValueByPath(toObject, ['turnComplete'], fromTurnComplete);
+  }
+
+  return toObject;
+}
+
+export function liveClientContentToVertex(
+  fromObject: types.LiveClientContent,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromTurns = common.getValueByPath(fromObject, ['turns']);
+  if (fromTurns != null) {
+    let transformedList = fromTurns;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return contentToVertex(item);
       });
     }
     common.setValueByPath(toObject, ['turns'], transformedList);
@@ -465,7 +577,11 @@ export function liveClientMessageToVertex(
     'clientContent',
   ]);
   if (fromClientContent != null) {
-    common.setValueByPath(toObject, ['clientContent'], fromClientContent);
+    common.setValueByPath(
+      toObject,
+      ['clientContent'],
+      liveClientContentToVertex(fromClientContent),
+    );
   }
 
   const fromRealtimeInput = common.getValueByPath(fromObject, [
@@ -669,7 +785,7 @@ export function liveClientSetupToMldev(
     common.setValueByPath(
       toObject,
       ['inputAudioTranscription'],
-      fromInputAudioTranscription,
+      audioTranscriptionConfigToMldev(fromInputAudioTranscription),
     );
   }
 
@@ -680,13 +796,37 @@ export function liveClientSetupToMldev(
     common.setValueByPath(
       toObject,
       ['outputAudioTranscription'],
-      fromOutputAudioTranscription,
+      audioTranscriptionConfigToMldev(fromOutputAudioTranscription),
     );
   }
 
   const fromProactivity = common.getValueByPath(fromObject, ['proactivity']);
   if (fromProactivity != null) {
     common.setValueByPath(toObject, ['proactivity'], fromProactivity);
+  }
+
+  if (common.getValueByPath(fromObject, ['explicitVadSignal']) !== undefined) {
+    throw new Error(
+      'explicitVadSignal parameter is not supported in Gemini API.',
+    );
+  }
+
+  const fromAvatarConfig = common.getValueByPath(fromObject, ['avatarConfig']);
+  if (fromAvatarConfig != null) {
+    common.setValueByPath(toObject, ['avatarConfig'], fromAvatarConfig);
+  }
+
+  const fromSafetySettings = common.getValueByPath(fromObject, [
+    'safetySettings',
+  ]);
+  if (fromSafetySettings != null) {
+    let transformedList = fromSafetySettings;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return safetySettingToMldev(item);
+      });
+    }
+    common.setValueByPath(toObject, ['safetySettings'], transformedList);
   }
 
   return toObject;
@@ -720,7 +860,7 @@ export function liveClientSetupToVertex(
     common.setValueByPath(
       toObject,
       ['systemInstruction'],
-      t.tContent(fromSystemInstruction),
+      contentToVertex(t.tContent(fromSystemInstruction)),
     );
   }
 
@@ -793,6 +933,35 @@ export function liveClientSetupToVertex(
   const fromProactivity = common.getValueByPath(fromObject, ['proactivity']);
   if (fromProactivity != null) {
     common.setValueByPath(toObject, ['proactivity'], fromProactivity);
+  }
+
+  const fromExplicitVadSignal = common.getValueByPath(fromObject, [
+    'explicitVadSignal',
+  ]);
+  if (fromExplicitVadSignal != null) {
+    common.setValueByPath(
+      toObject,
+      ['explicitVadSignal'],
+      fromExplicitVadSignal,
+    );
+  }
+
+  const fromAvatarConfig = common.getValueByPath(fromObject, ['avatarConfig']);
+  if (fromAvatarConfig != null) {
+    common.setValueByPath(toObject, ['avatarConfig'], fromAvatarConfig);
+  }
+
+  const fromSafetySettings = common.getValueByPath(fromObject, [
+    'safetySettings',
+  ]);
+  if (fromSafetySettings != null) {
+    let transformedList = fromSafetySettings;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return item;
+      });
+    }
+    common.setValueByPath(toObject, ['safetySettings'], transformedList);
   }
 
   return toObject;
@@ -955,7 +1124,7 @@ export function liveConnectConfigToMldev(
     common.setValueByPath(
       parentObject,
       ['setup', 'inputAudioTranscription'],
-      fromInputAudioTranscription,
+      audioTranscriptionConfigToMldev(fromInputAudioTranscription),
     );
   }
 
@@ -966,7 +1135,7 @@ export function liveConnectConfigToMldev(
     common.setValueByPath(
       parentObject,
       ['setup', 'outputAudioTranscription'],
-      fromOutputAudioTranscription,
+      audioTranscriptionConfigToMldev(fromOutputAudioTranscription),
     );
   }
 
@@ -998,6 +1167,38 @@ export function liveConnectConfigToMldev(
       parentObject,
       ['setup', 'proactivity'],
       fromProactivity,
+    );
+  }
+
+  if (common.getValueByPath(fromObject, ['explicitVadSignal']) !== undefined) {
+    throw new Error(
+      'explicitVadSignal parameter is not supported in Gemini API.',
+    );
+  }
+
+  const fromAvatarConfig = common.getValueByPath(fromObject, ['avatarConfig']);
+  if (parentObject !== undefined && fromAvatarConfig != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'avatarConfig'],
+      fromAvatarConfig,
+    );
+  }
+
+  const fromSafetySettings = common.getValueByPath(fromObject, [
+    'safetySettings',
+  ]);
+  if (parentObject !== undefined && fromSafetySettings != null) {
+    let transformedList = fromSafetySettings;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return safetySettingToMldev(item);
+      });
+    }
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'safetySettings'],
+      transformedList,
     );
   }
 
@@ -1095,7 +1296,7 @@ export function liveConnectConfigToVertex(
     common.setValueByPath(
       parentObject,
       ['setup', 'generationConfig', 'speechConfig'],
-      speechConfigToVertex(t.tLiveSpeechConfig(fromSpeechConfig)),
+      t.tLiveSpeechConfig(fromSpeechConfig),
     );
   }
 
@@ -1128,7 +1329,7 @@ export function liveConnectConfigToVertex(
     common.setValueByPath(
       parentObject,
       ['setup', 'systemInstruction'],
-      t.tContent(fromSystemInstruction),
+      contentToVertex(t.tContent(fromSystemInstruction)),
     );
   }
 
@@ -1204,6 +1405,43 @@ export function liveConnectConfigToVertex(
       parentObject,
       ['setup', 'proactivity'],
       fromProactivity,
+    );
+  }
+
+  const fromExplicitVadSignal = common.getValueByPath(fromObject, [
+    'explicitVadSignal',
+  ]);
+  if (parentObject !== undefined && fromExplicitVadSignal != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'explicitVadSignal'],
+      fromExplicitVadSignal,
+    );
+  }
+
+  const fromAvatarConfig = common.getValueByPath(fromObject, ['avatarConfig']);
+  if (parentObject !== undefined && fromAvatarConfig != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'avatarConfig'],
+      fromAvatarConfig,
+    );
+  }
+
+  const fromSafetySettings = common.getValueByPath(fromObject, [
+    'safetySettings',
+  ]);
+  if (parentObject !== undefined && fromSafetySettings != null) {
+    let transformedList = fromSafetySettings;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return item;
+      });
+    }
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'safetySettings'],
+      transformedList,
     );
   }
 
@@ -1508,6 +1746,89 @@ export function liveSendRealtimeInputParametersToVertex(
   return toObject;
 }
 
+export function liveServerMessageFromMldev(
+  fromObject: types.LiveServerMessage,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromSetupComplete = common.getValueByPath(fromObject, [
+    'setupComplete',
+  ]);
+  if (fromSetupComplete != null) {
+    common.setValueByPath(toObject, ['setupComplete'], fromSetupComplete);
+  }
+
+  const fromServerContent = common.getValueByPath(fromObject, [
+    'serverContent',
+  ]);
+  if (fromServerContent != null) {
+    common.setValueByPath(toObject, ['serverContent'], fromServerContent);
+  }
+
+  const fromToolCall = common.getValueByPath(fromObject, ['toolCall']);
+  if (fromToolCall != null) {
+    common.setValueByPath(toObject, ['toolCall'], fromToolCall);
+  }
+
+  const fromToolCallCancellation = common.getValueByPath(fromObject, [
+    'toolCallCancellation',
+  ]);
+  if (fromToolCallCancellation != null) {
+    common.setValueByPath(
+      toObject,
+      ['toolCallCancellation'],
+      fromToolCallCancellation,
+    );
+  }
+
+  const fromUsageMetadata = common.getValueByPath(fromObject, [
+    'usageMetadata',
+  ]);
+  if (fromUsageMetadata != null) {
+    common.setValueByPath(toObject, ['usageMetadata'], fromUsageMetadata);
+  }
+
+  const fromGoAway = common.getValueByPath(fromObject, ['goAway']);
+  if (fromGoAway != null) {
+    common.setValueByPath(toObject, ['goAway'], fromGoAway);
+  }
+
+  const fromSessionResumptionUpdate = common.getValueByPath(fromObject, [
+    'sessionResumptionUpdate',
+  ]);
+  if (fromSessionResumptionUpdate != null) {
+    common.setValueByPath(
+      toObject,
+      ['sessionResumptionUpdate'],
+      fromSessionResumptionUpdate,
+    );
+  }
+
+  const fromVoiceActivityDetectionSignal = common.getValueByPath(fromObject, [
+    'voiceActivityDetectionSignal',
+  ]);
+  if (fromVoiceActivityDetectionSignal != null) {
+    common.setValueByPath(
+      toObject,
+      ['voiceActivityDetectionSignal'],
+      fromVoiceActivityDetectionSignal,
+    );
+  }
+
+  const fromVoiceActivity = common.getValueByPath(fromObject, [
+    'voiceActivity',
+  ]);
+  if (fromVoiceActivity != null) {
+    common.setValueByPath(
+      toObject,
+      ['voiceActivity'],
+      voiceActivityFromMldev(fromVoiceActivity),
+    );
+  }
+
+  return toObject;
+}
+
 export function liveServerMessageFromVertex(
   fromObject: types.LiveServerMessage,
 ): Record<string, unknown> {
@@ -1567,6 +1888,28 @@ export function liveServerMessageFromVertex(
       toObject,
       ['sessionResumptionUpdate'],
       fromSessionResumptionUpdate,
+    );
+  }
+
+  const fromVoiceActivityDetectionSignal = common.getValueByPath(fromObject, [
+    'voiceActivityDetectionSignal',
+  ]);
+  if (fromVoiceActivityDetectionSignal != null) {
+    common.setValueByPath(
+      toObject,
+      ['voiceActivityDetectionSignal'],
+      fromVoiceActivityDetectionSignal,
+    );
+  }
+
+  const fromVoiceActivity = common.getValueByPath(fromObject, [
+    'voiceActivity',
+  ]);
+  if (fromVoiceActivity != null) {
+    common.setValueByPath(
+      toObject,
+      ['voiceActivity'],
+      voiceActivityFromVertex(fromVoiceActivity),
     );
   }
 
@@ -1659,6 +2002,132 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
     common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
   }
 
+  const fromToolCall = common.getValueByPath(fromObject, ['toolCall']);
+  if (fromToolCall != null) {
+    common.setValueByPath(toObject, ['toolCall'], fromToolCall);
+  }
+
+  const fromToolResponse = common.getValueByPath(fromObject, ['toolResponse']);
+  if (fromToolResponse != null) {
+    common.setValueByPath(toObject, ['toolResponse'], fromToolResponse);
+  }
+
+  const fromPartMetadata = common.getValueByPath(fromObject, ['partMetadata']);
+  if (fromPartMetadata != null) {
+    common.setValueByPath(toObject, ['partMetadata'], fromPartMetadata);
+  }
+
+  return toObject;
+}
+
+export function partToVertex(fromObject: types.Part): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromMediaResolution = common.getValueByPath(fromObject, [
+    'mediaResolution',
+  ]);
+  if (fromMediaResolution != null) {
+    common.setValueByPath(toObject, ['mediaResolution'], fromMediaResolution);
+  }
+
+  const fromCodeExecutionResult = common.getValueByPath(fromObject, [
+    'codeExecutionResult',
+  ]);
+  if (fromCodeExecutionResult != null) {
+    common.setValueByPath(
+      toObject,
+      ['codeExecutionResult'],
+      fromCodeExecutionResult,
+    );
+  }
+
+  const fromExecutableCode = common.getValueByPath(fromObject, [
+    'executableCode',
+  ]);
+  if (fromExecutableCode != null) {
+    common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
+  }
+
+  const fromFileData = common.getValueByPath(fromObject, ['fileData']);
+  if (fromFileData != null) {
+    common.setValueByPath(toObject, ['fileData'], fromFileData);
+  }
+
+  const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
+  if (fromFunctionCall != null) {
+    common.setValueByPath(toObject, ['functionCall'], fromFunctionCall);
+  }
+
+  const fromFunctionResponse = common.getValueByPath(fromObject, [
+    'functionResponse',
+  ]);
+  if (fromFunctionResponse != null) {
+    common.setValueByPath(toObject, ['functionResponse'], fromFunctionResponse);
+  }
+
+  const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
+  if (fromInlineData != null) {
+    common.setValueByPath(toObject, ['inlineData'], fromInlineData);
+  }
+
+  const fromText = common.getValueByPath(fromObject, ['text']);
+  if (fromText != null) {
+    common.setValueByPath(toObject, ['text'], fromText);
+  }
+
+  const fromThought = common.getValueByPath(fromObject, ['thought']);
+  if (fromThought != null) {
+    common.setValueByPath(toObject, ['thought'], fromThought);
+  }
+
+  const fromThoughtSignature = common.getValueByPath(fromObject, [
+    'thoughtSignature',
+  ]);
+  if (fromThoughtSignature != null) {
+    common.setValueByPath(toObject, ['thoughtSignature'], fromThoughtSignature);
+  }
+
+  const fromVideoMetadata = common.getValueByPath(fromObject, [
+    'videoMetadata',
+  ]);
+  if (fromVideoMetadata != null) {
+    common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
+  }
+
+  if (common.getValueByPath(fromObject, ['toolCall']) !== undefined) {
+    throw new Error('toolCall parameter is not supported in Vertex AI.');
+  }
+
+  if (common.getValueByPath(fromObject, ['toolResponse']) !== undefined) {
+    throw new Error('toolResponse parameter is not supported in Vertex AI.');
+  }
+
+  if (common.getValueByPath(fromObject, ['partMetadata']) !== undefined) {
+    throw new Error('partMetadata parameter is not supported in Vertex AI.');
+  }
+
+  return toObject;
+}
+
+export function safetySettingToMldev(
+  fromObject: types.SafetySetting,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromCategory = common.getValueByPath(fromObject, ['category']);
+  if (fromCategory != null) {
+    common.setValueByPath(toObject, ['category'], fromCategory);
+  }
+
+  if (common.getValueByPath(fromObject, ['method']) !== undefined) {
+    throw new Error('method parameter is not supported in Gemini API.');
+  }
+
+  const fromThreshold = common.getValueByPath(fromObject, ['threshold']);
+  if (fromThreshold != null) {
+    common.setValueByPath(toObject, ['threshold'], fromThreshold);
+  }
+
   return toObject;
 }
 
@@ -1679,61 +2148,11 @@ export function sessionResumptionConfigToMldev(
   return toObject;
 }
 
-export function speechConfigToVertex(
-  fromObject: types.SpeechConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromLanguageCode = common.getValueByPath(fromObject, ['languageCode']);
-  if (fromLanguageCode != null) {
-    common.setValueByPath(toObject, ['languageCode'], fromLanguageCode);
-  }
-
-  const fromVoiceConfig = common.getValueByPath(fromObject, ['voiceConfig']);
-  if (fromVoiceConfig != null) {
-    common.setValueByPath(toObject, ['voiceConfig'], fromVoiceConfig);
-  }
-
-  if (
-    common.getValueByPath(fromObject, ['multiSpeakerVoiceConfig']) !== undefined
-  ) {
-    throw new Error(
-      'multiSpeakerVoiceConfig parameter is not supported in Vertex AI.',
-    );
-  }
-
-  return toObject;
-}
-
 export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromFunctionDeclarations = common.getValueByPath(fromObject, [
-    'functionDeclarations',
-  ]);
-  if (fromFunctionDeclarations != null) {
-    let transformedList = fromFunctionDeclarations;
-    if (Array.isArray(transformedList)) {
-      transformedList = transformedList.map((item) => {
-        return item;
-      });
-    }
-    common.setValueByPath(toObject, ['functionDeclarations'], transformedList);
-  }
-
   if (common.getValueByPath(fromObject, ['retrieval']) !== undefined) {
     throw new Error('retrieval parameter is not supported in Gemini API.');
-  }
-
-  const fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
-    'googleSearchRetrieval',
-  ]);
-  if (fromGoogleSearchRetrieval != null) {
-    common.setValueByPath(
-      toObject,
-      ['googleSearchRetrieval'],
-      fromGoogleSearchRetrieval,
-    );
   }
 
   const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
@@ -1744,6 +2163,24 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
   const fromFileSearch = common.getValueByPath(fromObject, ['fileSearch']);
   if (fromFileSearch != null) {
     common.setValueByPath(toObject, ['fileSearch'], fromFileSearch);
+  }
+
+  const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
+  if (fromGoogleSearch != null) {
+    common.setValueByPath(
+      toObject,
+      ['googleSearch'],
+      googleSearchToMldev(fromGoogleSearch),
+    );
+  }
+
+  const fromGoogleMaps = common.getValueByPath(fromObject, ['googleMaps']);
+  if (fromGoogleMaps != null) {
+    common.setValueByPath(
+      toObject,
+      ['googleMaps'],
+      googleMapsToMldev(fromGoogleMaps),
+    );
   }
 
   const fromCodeExecution = common.getValueByPath(fromObject, [
@@ -1761,35 +2198,6 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
     );
   }
 
-  const fromGoogleMaps = common.getValueByPath(fromObject, ['googleMaps']);
-  if (fromGoogleMaps != null) {
-    common.setValueByPath(
-      toObject,
-      ['googleMaps'],
-      googleMapsToMldev(fromGoogleMaps),
-    );
-  }
-
-  const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
-  if (fromGoogleSearch != null) {
-    common.setValueByPath(
-      toObject,
-      ['googleSearch'],
-      googleSearchToMldev(fromGoogleSearch),
-    );
-  }
-
-  const fromUrlContext = common.getValueByPath(fromObject, ['urlContext']);
-  if (fromUrlContext != null) {
-    common.setValueByPath(toObject, ['urlContext'], fromUrlContext);
-  }
-
-  return toObject;
-}
-
-export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
   const fromFunctionDeclarations = common.getValueByPath(fromObject, [
     'functionDeclarations',
   ]);
@@ -1797,15 +2205,10 @@ export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
     let transformedList = fromFunctionDeclarations;
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return functionDeclarationToVertex(item);
+        return item;
       });
     }
     common.setValueByPath(toObject, ['functionDeclarations'], transformedList);
-  }
-
-  const fromRetrieval = common.getValueByPath(fromObject, ['retrieval']);
-  if (fromRetrieval != null) {
-    common.setValueByPath(toObject, ['retrieval'], fromRetrieval);
   }
 
   const fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
@@ -1819,6 +2222,39 @@ export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
     );
   }
 
+  if (common.getValueByPath(fromObject, ['parallelAiSearch']) !== undefined) {
+    throw new Error(
+      'parallelAiSearch parameter is not supported in Gemini API.',
+    );
+  }
+
+  const fromUrlContext = common.getValueByPath(fromObject, ['urlContext']);
+  if (fromUrlContext != null) {
+    common.setValueByPath(toObject, ['urlContext'], fromUrlContext);
+  }
+
+  const fromMcpServers = common.getValueByPath(fromObject, ['mcpServers']);
+  if (fromMcpServers != null) {
+    let transformedList = fromMcpServers;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return item;
+      });
+    }
+    common.setValueByPath(toObject, ['mcpServers'], transformedList);
+  }
+
+  return toObject;
+}
+
+export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromRetrieval = common.getValueByPath(fromObject, ['retrieval']);
+  if (fromRetrieval != null) {
+    common.setValueByPath(toObject, ['retrieval'], fromRetrieval);
+  }
+
   const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
   if (fromComputerUse != null) {
     common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
@@ -1826,6 +2262,16 @@ export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
 
   if (common.getValueByPath(fromObject, ['fileSearch']) !== undefined) {
     throw new Error('fileSearch parameter is not supported in Vertex AI.');
+  }
+
+  const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
+  if (fromGoogleSearch != null) {
+    common.setValueByPath(toObject, ['googleSearch'], fromGoogleSearch);
+  }
+
+  const fromGoogleMaps = common.getValueByPath(fromObject, ['googleMaps']);
+  if (fromGoogleMaps != null) {
+    common.setValueByPath(toObject, ['googleMaps'], fromGoogleMaps);
   }
 
   const fromCodeExecution = common.getValueByPath(fromObject, [
@@ -1846,19 +2292,44 @@ export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
     );
   }
 
-  const fromGoogleMaps = common.getValueByPath(fromObject, ['googleMaps']);
-  if (fromGoogleMaps != null) {
-    common.setValueByPath(toObject, ['googleMaps'], fromGoogleMaps);
+  const fromFunctionDeclarations = common.getValueByPath(fromObject, [
+    'functionDeclarations',
+  ]);
+  if (fromFunctionDeclarations != null) {
+    let transformedList = fromFunctionDeclarations;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return functionDeclarationToVertex(item);
+      });
+    }
+    common.setValueByPath(toObject, ['functionDeclarations'], transformedList);
   }
 
-  const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
-  if (fromGoogleSearch != null) {
-    common.setValueByPath(toObject, ['googleSearch'], fromGoogleSearch);
+  const fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
+    'googleSearchRetrieval',
+  ]);
+  if (fromGoogleSearchRetrieval != null) {
+    common.setValueByPath(
+      toObject,
+      ['googleSearchRetrieval'],
+      fromGoogleSearchRetrieval,
+    );
+  }
+
+  const fromParallelAiSearch = common.getValueByPath(fromObject, [
+    'parallelAiSearch',
+  ]);
+  if (fromParallelAiSearch != null) {
+    common.setValueByPath(toObject, ['parallelAiSearch'], fromParallelAiSearch);
   }
 
   const fromUrlContext = common.getValueByPath(fromObject, ['urlContext']);
   if (fromUrlContext != null) {
     common.setValueByPath(toObject, ['urlContext'], fromUrlContext);
+  }
+
+  if (common.getValueByPath(fromObject, ['mcpServers']) !== undefined) {
+    throw new Error('mcpServers parameter is not supported in Vertex AI.');
   }
 
   return toObject;
@@ -1986,6 +2457,40 @@ export function usageMetadataFromVertex(
   const fromTrafficType = common.getValueByPath(fromObject, ['trafficType']);
   if (fromTrafficType != null) {
     common.setValueByPath(toObject, ['trafficType'], fromTrafficType);
+  }
+
+  return toObject;
+}
+
+export function voiceActivityFromMldev(
+  fromObject: types.VoiceActivity,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromVoiceActivityType = common.getValueByPath(fromObject, ['type']);
+  if (fromVoiceActivityType != null) {
+    common.setValueByPath(
+      toObject,
+      ['voiceActivityType'],
+      fromVoiceActivityType,
+    );
+  }
+
+  return toObject;
+}
+
+export function voiceActivityFromVertex(
+  fromObject: types.VoiceActivity,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromVoiceActivityType = common.getValueByPath(fromObject, ['type']);
+  if (fromVoiceActivityType != null) {
+    common.setValueByPath(
+      toObject,
+      ['voiceActivityType'],
+      fromVoiceActivityType,
+    );
   }
 
   return toObject;

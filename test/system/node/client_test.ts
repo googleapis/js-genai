@@ -20,7 +20,7 @@ import {
 import {createZeroFilledTempFile} from '../../_generate_test_file.js';
 import {setupTestServer, shutdownTestServer} from '../test_server.js';
 
-const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY || 'test-api-key';
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
 const MODEL = 'gemini-2.5-flash';
@@ -1238,6 +1238,92 @@ describe('Client Tests', () => {
         'Vertex AI should compute tokens with specified parameters\n',
         JSON.stringify(response),
       );
+    });
+  });
+
+  describe('server side MCP server', () => {
+    it('ML Dev should call server side MCP server', async () => {
+      const client = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+        httpOptions,
+      });
+
+      const response = await client.models.generateContent({
+        model: MODEL,
+        contents: 'What is the weather like in New York ON 02/02/2026?',
+        config: {
+          tools: [
+            {
+              mcpServers: [
+                {
+                  streamableHttpTransport: {
+                    url: 'https://gemini-api-demos.uc.r.appspot.com/mcp',
+                    headers: {
+                      'AUTHORIZATION': 'Bearer github_pat_XXXX',
+                    },
+                    timeout: '10s',
+                  },
+                  name: 'weather_server',
+                },
+              ],
+            },
+          ],
+        },
+      });
+      expect(response.functionCalls?.[0]?.name).toBe(
+        'weather_server_get_weather',
+      );
+      expect(
+        response.candidates?.[0]?.content?.parts?.[1]?.functionResponse?.name,
+      ).toBe('weather_server_get_weather');
+    });
+    it('ML Dev should call server side MCP server, stream', async () => {
+      const client = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+        httpOptions,
+      });
+
+      const response = await client.models.generateContentStream({
+        model: MODEL,
+        contents: 'What is the weather like in New York ON 02/02/2026?',
+        config: {
+          tools: [
+            {
+              mcpServers: [
+                {
+                  streamableHttpTransport: {
+                    url: 'https://gemini-api-demos.uc.r.appspot.com/mcp',
+                    headers: {
+                      'AUTHORIZATION': 'Bearer github_pat_XXXX',
+                    },
+                    timeout: '10s',
+                  },
+                  name: 'weather_server',
+                },
+              ],
+            },
+          ],
+        },
+      });
+      let seen_function_call = false;
+      let seen_function_response = false;
+      for await (const chunk of response) {
+        const parts = chunk.candidates?.[0]?.content?.parts;
+        if (Array.isArray(parts)) {
+          for (const part of parts) {
+            if (part.functionCall?.name === 'weather_server_get_weather') {
+              seen_function_call = true;
+            }
+            if (part.functionResponse?.name === 'weather_server_get_weather') {
+              seen_function_response = true;
+            }
+          }
+        }
+      }
+      expect(seen_function_call).toBeTrue();
+      expect(seen_function_response).toBeTrue();
     });
   });
 

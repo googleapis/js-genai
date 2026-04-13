@@ -9,6 +9,8 @@ import * as types from '../../src/types.js';
 
 describe('Batch Embedding', () => {
   let client: GoogleGenAI;
+  let originalGeminiBaseUrl: string | undefined;
+  let originalVertexBaseUrl: string | undefined;
 
   // Constants mirroring python tests
   const MLDEV_EMBEDDING_BATCH_INLINE_OPERATION_NAME =
@@ -28,7 +30,25 @@ describe('Batch Embedding', () => {
   };
 
   beforeEach(() => {
+    originalGeminiBaseUrl = process.env['GOOGLE_GEMINI_BASE_URL'];
+    originalVertexBaseUrl = process.env['GOOGLE_VERTEX_BASE_URL'];
+    delete process.env['GOOGLE_GEMINI_BASE_URL'];
+    delete process.env['GOOGLE_VERTEX_BASE_URL'];
+
     client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+  });
+
+  afterEach(() => {
+    if (originalGeminiBaseUrl !== undefined) {
+      process.env['GOOGLE_GEMINI_BASE_URL'] = originalGeminiBaseUrl;
+    } else {
+      delete process.env['GOOGLE_GEMINI_BASE_URL'];
+    }
+    if (originalVertexBaseUrl !== undefined) {
+      process.env['GOOGLE_VERTEX_BASE_URL'] = originalVertexBaseUrl;
+    } else {
+      delete process.env['GOOGLE_VERTEX_BASE_URL'];
+    }
   });
 
   // Mock response helpers

@@ -68,6 +68,7 @@ const mockGenerateContentResponse: types.GenerateContentResponse =
 describe('processStreamResponse', () => {
   const apiClient = new ApiClient({
     auth: new FakeAuth(),
+    apiKey: 'test-api-key',
     uploader: new CrossUploader(),
     downloader: new CrossDownloader(),
   });
@@ -380,10 +381,44 @@ describe('processStreamResponse', () => {
     const result = await resultHttpResponse.value.json();
     expect(result).toEqual(expectedResponse);
   });
+
+  it('should handle large fragmented payloads correctly (regression for $O(n^2)$)', async () => {
+    const largeData = 'A'.repeat(10 * 1024);
+    const jsonPayload = JSON.stringify({data: largeData});
+    const ssePayload = `data: ${jsonPayload}\n\n`;
+
+    const stream = new Readable();
+    const chunkSize = 1024;
+    for (let i = 0; i < ssePayload.length; i += chunkSize) {
+      stream.push(ssePayload.substring(i, i + chunkSize));
+    }
+    stream.push(null);
+
+    const readableStream = new ReadableStream({
+      start(controller) {
+        stream.on('data', (chunk) =>
+          controller.enqueue(new TextEncoder().encode(chunk)),
+        );
+        stream.on('end', () => controller.close());
+      },
+    });
+    const response = new Response(readableStream);
+
+    const generator = apiClient.processStreamResponse(response);
+    const result = await generator.next();
+    expect(result.done).toBeFalse();
+    const json = await result.value.json();
+    expect(json.data).toBe(largeData);
+
+    const final = await generator.next();
+    expect(final.done).toBeTrue();
+  });
 });
 
 describe('ApiClient', () => {
   describe('constructor', () => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 60000; // 60 seconds.
+
     it('should initialize with provided values', () => {
       const client = new ApiClient({
         auth: new FakeAuth(),
@@ -428,6 +463,71 @@ describe('ApiClient', () => {
       expect(client.getApiVersion()).toBe('v1beta1');
     });
 
+    it('should initialize with Vertex AI and US multi-regional location', () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        project: 'vertex-project',
+        location: 'us',
+        vertexai: true,
+        apiVersion: 'v1beta1',
+        apiKey: 'apikey-from-opts',
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+
+      expect(client.isVertexAI()).toBe(true);
+      expect(client.getProject()).toBe('vertex-project');
+      expect(client.getLocation()).toBe('us');
+      expect(client.getApiKey()).toBeUndefined();
+      expect(client.getRequestUrl()).toBe(
+        'https://aiplatform.us.rep.googleapis.com/v1beta1',
+      );
+      expect(client.getApiVersion()).toBe('v1beta1');
+    });
+
+    it('should initialize with Vertex AI and EU multi-regional location', () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        project: 'vertex-project',
+        location: 'eu',
+        vertexai: true,
+        apiVersion: 'v1beta1',
+        apiKey: 'apikey-from-opts',
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+
+      expect(client.isVertexAI()).toBe(true);
+      expect(client.getProject()).toBe('vertex-project');
+      expect(client.getLocation()).toBe('eu');
+      expect(client.getApiKey()).toBeUndefined();
+      expect(client.getRequestUrl()).toBe(
+        'https://aiplatform.eu.rep.googleapis.com/v1beta1',
+      );
+      expect(client.getApiVersion()).toBe('v1beta1');
+    });
+
+    it('should initialize with Vertex AI and US location and custom base URL', () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        project: 'vertex-project',
+        location: 'us',
+        vertexai: true,
+        apiVersion: 'v1beta1',
+        httpOptions: {baseUrl: 'https://my-custom-url.com/'},
+        apiKey: 'apikey-from-opts',
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+
+      expect(client.isVertexAI()).toBe(true);
+      expect(client.getProject()).toBe('vertex-project');
+      expect(client.getLocation()).toBe('us');
+      expect(client.getApiKey()).toBeUndefined();
+      expect(client.getRequestUrl()).toBe('https://my-custom-url.com/v1beta1');
+      expect(client.getApiVersion()).toBe('v1beta1');
+    });
+
     it('should not have api key if project/location is provided for vertexai', () => {
       const client = new ApiClient({
         auth: new FakeAuth(),
@@ -451,6 +551,7 @@ describe('ApiClient', () => {
     it('should use default value if not provided', () => {
       const client = new ApiClient({
         auth: new FakeAuth(),
+        apiKey: 'test-api-key',
         project: 'env-project',
         uploader: new CrossUploader(),
         downloader: new CrossDownloader(),
@@ -458,6 +559,44 @@ describe('ApiClient', () => {
       // baseUrl is based on apiVersion
       expect(client.getRequestUrl()).toContain('/v1');
       expect(client.isVertexAI()).toBeFalse();
+    });
+
+    it('should initialize with custom base URL and no auth', () => {
+      const originalGeminiApiKey = process.env['GEMINI_API_KEY'];
+      const originalGoogleApiKey = process.env['GOOGLE_API_KEY'];
+      const originalProject = process.env['GOOGLE_CLOUD_PROJECT'];
+      const originalLocation = process.env['GOOGLE_CLOUD_LOCATION'];
+
+      delete process.env['GEMINI_API_KEY'];
+      delete process.env['GOOGLE_API_KEY'];
+      delete process.env['GOOGLE_CLOUD_PROJECT'];
+      delete process.env['GOOGLE_CLOUD_LOCATION'];
+
+      try {
+        const client = new ApiClient({
+          auth: new FakeAuth(),
+          vertexai: true,
+          httpOptions: {
+            baseUrl: 'https://custom-gateway.com',
+          },
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        });
+
+        expect(client.isVertexAI()).toBe(true);
+        expect(client.getProject()).toBeUndefined();
+        expect(client.getLocation()).toBeUndefined();
+        expect(client.getApiKey()).toBeUndefined();
+        expect(client.getRequestUrl()).toBe(
+          'https://custom-gateway.com/v1beta1',
+        );
+        expect(client.getApiVersion()).toBe('v1beta1');
+      } finally {
+        process.env['GEMINI_API_KEY'] = originalGeminiApiKey;
+        process.env['GOOGLE_API_KEY'] = originalGoogleApiKey;
+        process.env['GOOGLE_CLOUD_PROJECT'] = originalProject;
+        process.env['GOOGLE_CLOUD_LOCATION'] = originalLocation;
+      }
     });
 
     it('should set websocket protocol to ws when base URL is http', () => {
@@ -593,6 +732,7 @@ describe('ApiClient', () => {
         auth: new FakeAuth(),
         project: 'project-from-opts',
         location: 'location-from-opts',
+        apiKey: 'test-api-key',
         vertexai: false,
         apiVersion: 'v1beta',
         httpOptions: httpOptions,
@@ -680,6 +820,94 @@ describe('ApiClient', () => {
       expect(headers['x-goog-api-client']).toContain('google-genai-sdk/');
       expect(client.getApiVersion()).toBe('v1beta1');
     });
+
+    it('should retry requests if retry options are set', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        project: 'vertex-project',
+        location: 'vertex-location',
+        vertexai: true,
+        apiVersion: 'v1beta1',
+        httpOptions: {
+          retryOptions: {
+            attempts: 2,
+          },
+        },
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(
+            JSON.stringify({'error': 'Internal Server Error'}),
+            fetch500Options,
+          ),
+        ),
+      );
+      await client
+        .request({path: 'test-path', httpMethod: 'POST'})
+        .catch((e) => {
+          console.log(e);
+        });
+      expect(fetchSpy).toHaveBeenCalledTimes(2);
+    });
+
+    it('should not retry requests if retry options are not set', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        project: 'vertex-project',
+        location: 'vertex-location',
+        vertexai: true,
+        apiVersion: 'v1beta1',
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(
+            JSON.stringify({'error': 'Internal Server Error'}),
+            fetch500Options,
+          ),
+        ),
+      );
+      await client
+        .request({path: 'test-path', httpMethod: 'POST'})
+        .catch((e) => {
+          expect(e.name).toEqual('ApiError');
+          expect(e.message).toContain('Internal Server Error');
+          expect(e.status).toEqual(500);
+        });
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should retry requests with default retry options if retry options are not set', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        project: 'vertex-project',
+        location: 'vertex-location',
+        vertexai: true,
+        apiVersion: 'v1beta1',
+        httpOptions: {
+          retryOptions: {},
+        },
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(
+            JSON.stringify({'error': 'Internal Server Error'}),
+            fetch500Options,
+          ),
+        ),
+      );
+      await client
+        .request({path: 'test-path', httpMethod: 'POST'})
+        .catch((e) => {
+          console.log(e);
+        });
+      expect(fetchSpy).toHaveBeenCalledTimes(5); // Default retry attempts is 5.
+    });
   });
 
   describe('post/get methods', () => {
@@ -687,6 +915,8 @@ describe('ApiClient', () => {
       const client = new ApiClient({
         auth: new FakeAuth(),
         vertexai: true,
+        project: 'test-project',
+        location: 'test-location',
         uploader: new CrossUploader(),
         downloader: new CrossDownloader(),
       });
@@ -706,6 +936,8 @@ describe('ApiClient', () => {
         body: JSON.stringify({data: 'test'}),
         httpMethod: 'POST',
       });
+      const fetchArgs = (global.fetch as jasmine.Spy).calls.first().args;
+      expect(fetchArgs[0]).toContain('base-resource-path');
       expect(client.getBaseResourcePath).toHaveBeenCalled();
     });
     it('should append query parameters to URL', async () => {

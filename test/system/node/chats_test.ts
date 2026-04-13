@@ -21,7 +21,7 @@ import {
 } from '../../unit/test_mcp_server.js';
 import {setupTestServer, shutdownTestServer} from '../test_server.js';
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'test-api-key';
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 
 const function_calling: Tool = {
@@ -199,6 +199,34 @@ describe('Chats Tests', () => {
         messages: [
           'Tell me a story in 100 words?',
           'What is the title of the story?',
+        ],
+      },
+      {
+        name: 'multiple messages with server side MCP tools',
+        clientParams: {vertexai: false, apiKey: GEMINI_API_KEY},
+        model: 'gemini-2.5-flash',
+        config: {
+          tools: [
+            {
+              mcpServers: [
+                {
+                  streamableHttpTransport: {
+                    url: 'https://gemini-api-demos.uc.r.appspot.com/mcp',
+                    headers: {
+                      'AUTHORIZATION': 'Bearer github_pat_XXXX',
+                    },
+                    timeout: '10s',
+                  },
+                  name: 'weather_server',
+                },
+              ],
+            },
+          ],
+        },
+        history: [],
+        messages: [
+          'What is the weather in San Francisco on 02/02/2026?',
+          'What is the weather in Boston on 02/02/2026?',
         ],
       },
     ];

@@ -19,7 +19,7 @@ export async function createZeroFilledTempFile(size: number): Promise<string> {
   const fileHandle = await fs.promises.open(tempFilePath, 'w');
 
   try {
-    const buffer = Buffer.alloc(chunkSize, 0);
+    const buffer = new Uint8Array(chunkSize);
     let remainingSize = size;
 
     while (remainingSize > 0) {

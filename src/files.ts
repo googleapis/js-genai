@@ -121,6 +121,23 @@ export class Files extends BaseModule {
     await this.apiClient.downloadFile(params);
   }
 
+  /**
+   * Registers Google Cloud Storage files for use with the API.
+   * This method is only available in Node.js environments.
+   */
+  async registerFiles(
+    params: types.RegisterFilesParameters,
+  ): Promise<types.RegisterFilesResponse> {
+    void params;
+    throw new Error('registerFiles is only supported in Node.js environments.');
+  }
+
+  protected async _registerFiles(
+    params: types.InternalRegisterFilesParameters,
+  ): Promise<types.RegisterFilesResponse> {
+    return this.registerFilesInternal(params);
+  }
+
   private async listInternal(
     params: types.ListFilesParameters,
   ): Promise<types.ListFilesResponse> {
@@ -319,6 +336,49 @@ export class Files extends BaseModule {
       return response.then((apiResponse) => {
         const resp = converters.deleteFileResponseFromMldev(apiResponse);
         const typedResp = new types.DeleteFileResponse();
+        Object.assign(typedResp, resp);
+        return typedResp;
+      });
+    }
+  }
+
+  private async registerFilesInternal(
+    params: types.InternalRegisterFilesParameters,
+  ): Promise<types.RegisterFilesResponse> {
+    let response: Promise<types.RegisterFilesResponse>;
+
+    let path: string = '';
+    let queryParams: Record<string, string> = {};
+    if (this.apiClient.isVertexAI()) {
+      throw new Error(
+        'This method is only supported by the Gemini Developer API.',
+      );
+    } else {
+      const body = converters.internalRegisterFilesParametersToMldev(params);
+      path = common.formatMap(
+        'files:register',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
+      delete body['_url'];
+      delete body['_query'];
+
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json();
+        }) as Promise<types.RegisterFilesResponse>;
+
+      return response.then((apiResponse) => {
+        const resp = converters.registerFilesResponseFromMldev(apiResponse);
+        const typedResp = new types.RegisterFilesResponse();
         Object.assign(typedResp, resp);
         return typedResp;
       });

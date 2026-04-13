@@ -1,0 +1,17 @@
+{
+  "name": "local-tokenizer-node-examples",
+  "version": "1.0.0",
+  "description": "Node.js examples for using LocalTokenizer from @google/genai/tokenizer",
+  "type": "module",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@google/genai": "file:../../.."
+  },
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}

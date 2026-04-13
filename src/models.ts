@@ -11,7 +11,7 @@ import {ApiClient} from './_api_client.js';
 import * as common from './_common.js';
 import {BaseModule} from './_common.js';
 import * as _internal_types from './_internal_types.js';
-import {tContents} from './_transformers.js';
+import {tContents, tIsVertexEmbedContentModel} from './_transformers.js';
 import * as converters from './converters/_models_converters.js';
 import * as mcp from './mcp/_mcp.js';
 import {PagedItem, Pager} from './pagers.js';
@@ -21,6 +21,65 @@ export class Models extends BaseModule {
   constructor(private readonly apiClient: ApiClient) {
     super();
   }
+
+  /**
+   * Calculates embeddings for the given contents.
+   *
+   * @param params - The parameters for embedding contents.
+   * @return The response from the API.
+   *
+   * @example
+   * ```ts
+   * const response = await ai.models.embedContent({
+   *  model: 'text-embedding-004',
+   *  contents: [
+   *    'What is your name?',
+   *    'What is your favorite color?',
+   *  ],
+   *  config: {
+   *    outputDimensionality: 64,
+   *  },
+   * });
+   * console.log(response);
+   * ```
+   */
+  embedContent = async (
+    params: types.EmbedContentParameters,
+  ): Promise<types.EmbedContentResponse> => {
+    if (!this.apiClient.isVertexAI()) {
+      const isGeminiEmbedding2Model =
+        params.model.includes('gemini-embedding-2');
+      if (isGeminiEmbedding2Model) {
+        params.contents = tContents(params.contents);
+      }
+      return await this.embedContentInternal(params);
+    }
+    const isVertexEmbedContentModel =
+      (params.model.includes('gemini') &&
+        params.model !== 'gemini-embedding-001') ||
+      params.model.includes('maas');
+
+    if (isVertexEmbedContentModel) {
+      const contents = tContents(params.contents);
+      if (contents.length > 1) {
+        throw new Error(
+          'The embedContent API for this model only supports one content at a time.',
+        );
+      }
+      const paramsPrivate: types.EmbedContentParametersPrivate = {
+        ...params,
+        content: contents[0],
+        embeddingApiType: types.EmbeddingApiType.EMBED_CONTENT,
+      };
+      return await this.embedContentInternal(paramsPrivate);
+    } else {
+      const paramsPrivate: types.EmbedContentParametersPrivate = {
+        ...params,
+        embeddingApiType: types.EmbeddingApiType.PREDICT,
+      };
+      return await this.embedContentInternal(paramsPrivate);
+    }
+  };
 
   /**
    * Makes an API request to generate content with a given model.
@@ -75,7 +134,9 @@ export class Models extends BaseModule {
         .map((index: number) => `tools[${index}]`)
         .join(', ');
       throw new Error(
-        `Automatic function calling with CallableTools (or MCP objects) and basic FunctionDeclarations is not yet supported. Incompatible tools found at ${formattedIndexes}.`,
+        `Automatic function calling with CallableTools (or MCP objects) and basic FunctionDeclarations is not yet supported. Incompatible tools found at ${
+          formattedIndexes
+        }.`,
       );
     }
 
@@ -206,7 +267,9 @@ export class Models extends BaseModule {
         .map((index: number) => `tools[${index}]`)
         .join(', ');
       throw new Error(
-        `Incompatible tools found at ${formattedIndexes}. Automatic function calling with CallableTools (or MCP objects) and basic FunctionDeclarations" is not yet supported.`,
+        `Incompatible tools found at ${
+          formattedIndexes
+        }. Automatic function calling with CallableTools (or MCP objects) and basic FunctionDeclarations" is not yet supported.`,
       );
     }
 
@@ -401,7 +464,7 @@ export class Models extends BaseModule {
    * @example
    * ```ts
    * const response = await client.models.generateImages({
-   *  model: 'imagen-3.0-generate-002',
+   *  model: 'imagen-4.0-generate-001',
    *  prompt: 'Robot holding a red skateboard',
    *  config: {
    *    numberOfImages: 1,
@@ -532,7 +595,7 @@ export class Models extends BaseModule {
    * @example
    * ```ts
    * const response = await client.models.upscaleImage({
-   *  model: 'imagen-3.0-generate-002',
+   *  model: 'imagen-4.0-upscale-preview',
    *  image: image,
    *  upscaleFactor: 'x2',
    *  config: {
@@ -628,43 +691,6 @@ export class Models extends BaseModule {
       const body = converters.generateContentParametersToVertex(
         this.apiClient,
         params,
-      );
-      path = common.formatMap(
-        '{model}:generateContent',
-        body['_url'] as Record<string, unknown>,
-      );
-      queryParams = body['_query'] as Record<string, string>;
-      delete body['_url'];
-      delete body['_query'];
-
-      response = this.apiClient
-        .request({
-          path: path,
-          queryParams: queryParams,
-          body: JSON.stringify(body),
-          httpMethod: 'POST',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
-        })
-        .then((httpResponse) => {
-          return httpResponse.json().then((jsonResponse) => {
-            const response = jsonResponse as types.GenerateContentResponse;
-            response.sdkHttpResponse = {
-              headers: httpResponse.headers,
-            } as types.HttpResponse;
-            return response;
-          });
-        }) as Promise<types.GenerateContentResponse>;
-
-      return response.then((apiResponse) => {
-        const resp = converters.generateContentResponseFromVertex(apiResponse);
-        const typedResp = new types.GenerateContentResponse();
-        Object.assign(typedResp, resp);
-        return typedResp;
-      });
-    } else {
-      const body = converters.generateContentParametersToMldev(
-        this.apiClient,
         params,
       );
       path = common.formatMap(
@@ -695,7 +721,52 @@ export class Models extends BaseModule {
         }) as Promise<types.GenerateContentResponse>;
 
       return response.then((apiResponse) => {
-        const resp = converters.generateContentResponseFromMldev(apiResponse);
+        const resp = converters.generateContentResponseFromVertex(
+          apiResponse,
+          params,
+        );
+        const typedResp = new types.GenerateContentResponse();
+        Object.assign(typedResp, resp);
+        return typedResp;
+      });
+    } else {
+      const body = converters.generateContentParametersToMldev(
+        this.apiClient,
+        params,
+        params,
+      );
+      path = common.formatMap(
+        '{model}:generateContent',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
+      delete body['_url'];
+      delete body['_query'];
+
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.GenerateContentResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
+        }) as Promise<types.GenerateContentResponse>;
+
+      return response.then((apiResponse) => {
+        const resp = converters.generateContentResponseFromMldev(
+          apiResponse,
+          params,
+        );
         const typedResp = new types.GenerateContentResponse();
         Object.assign(typedResp, resp);
         return typedResp;
@@ -713,6 +784,7 @@ export class Models extends BaseModule {
     if (this.apiClient.isVertexAI()) {
       const body = converters.generateContentParametersToVertex(
         this.apiClient,
+        params,
         params,
       );
       path = common.formatMap(
@@ -739,6 +811,7 @@ export class Models extends BaseModule {
         for await (const chunk of apiResponse) {
           const resp = converters.generateContentResponseFromVertex(
             (await chunk.json()) as types.GenerateContentResponse,
+            params,
           );
 
           resp['sdkHttpResponse'] = {
@@ -753,6 +826,7 @@ export class Models extends BaseModule {
     } else {
       const body = converters.generateContentParametersToMldev(
         this.apiClient,
+        params,
         params,
       );
       path = common.formatMap(
@@ -779,6 +853,7 @@ export class Models extends BaseModule {
         for await (const chunk of apiResponse) {
           const resp = converters.generateContentResponseFromMldev(
             (await chunk.json()) as types.GenerateContentResponse,
+            params,
           );
 
           resp['sdkHttpResponse'] = {
@@ -814,20 +889,24 @@ export class Models extends BaseModule {
    * console.log(response);
    * ```
    */
-  async embedContent(
-    params: types.EmbedContentParameters,
+  private async embedContentInternal(
+    params: types.EmbedContentParametersPrivate,
   ): Promise<types.EmbedContentResponse> {
     let response: Promise<types.EmbedContentResponse>;
 
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      const body = converters.embedContentParametersToVertex(
+      const body = converters.embedContentParametersPrivateToVertex(
         this.apiClient,
         params,
+        params,
       );
+      const endpointUrl = tIsVertexEmbedContentModel(params.model)
+        ? '{model}:embedContent'
+        : '{model}:predict';
       path = common.formatMap(
-        '{model}:predict',
+        endpointUrl,
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;
@@ -854,14 +933,18 @@ export class Models extends BaseModule {
         }) as Promise<types.EmbedContentResponse>;
 
       return response.then((apiResponse) => {
-        const resp = converters.embedContentResponseFromVertex(apiResponse);
+        const resp = converters.embedContentResponseFromVertex(
+          apiResponse,
+          params,
+        );
         const typedResp = new types.EmbedContentResponse();
         Object.assign(typedResp, resp);
         return typedResp;
       });
     } else {
-      const body = converters.embedContentParametersToMldev(
+      const body = converters.embedContentParametersPrivateToMldev(
         this.apiClient,
+        params,
         params,
       );
       path = common.formatMap(
@@ -892,7 +975,10 @@ export class Models extends BaseModule {
         }) as Promise<types.EmbedContentResponse>;
 
       return response.then((apiResponse) => {
-        const resp = converters.embedContentResponseFromMldev(apiResponse);
+        const resp = converters.embedContentResponseFromMldev(
+          apiResponse,
+          params,
+        );
         const typedResp = new types.EmbedContentResponse();
         Object.assign(typedResp, resp);
         return typedResp;
@@ -914,43 +1000,6 @@ export class Models extends BaseModule {
       const body = converters.generateImagesParametersToVertex(
         this.apiClient,
         params,
-      );
-      path = common.formatMap(
-        '{model}:predict',
-        body['_url'] as Record<string, unknown>,
-      );
-      queryParams = body['_query'] as Record<string, string>;
-      delete body['_url'];
-      delete body['_query'];
-
-      response = this.apiClient
-        .request({
-          path: path,
-          queryParams: queryParams,
-          body: JSON.stringify(body),
-          httpMethod: 'POST',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
-        })
-        .then((httpResponse) => {
-          return httpResponse.json().then((jsonResponse) => {
-            const response = jsonResponse as types.GenerateImagesResponse;
-            response.sdkHttpResponse = {
-              headers: httpResponse.headers,
-            } as types.HttpResponse;
-            return response;
-          });
-        }) as Promise<types.GenerateImagesResponse>;
-
-      return response.then((apiResponse) => {
-        const resp = converters.generateImagesResponseFromVertex(apiResponse);
-        const typedResp = new types.GenerateImagesResponse();
-        Object.assign(typedResp, resp);
-        return typedResp;
-      });
-    } else {
-      const body = converters.generateImagesParametersToMldev(
-        this.apiClient,
         params,
       );
       path = common.formatMap(
@@ -981,7 +1030,52 @@ export class Models extends BaseModule {
         }) as Promise<types.GenerateImagesResponse>;
 
       return response.then((apiResponse) => {
-        const resp = converters.generateImagesResponseFromMldev(apiResponse);
+        const resp = converters.generateImagesResponseFromVertex(
+          apiResponse,
+          params,
+        );
+        const typedResp = new types.GenerateImagesResponse();
+        Object.assign(typedResp, resp);
+        return typedResp;
+      });
+    } else {
+      const body = converters.generateImagesParametersToMldev(
+        this.apiClient,
+        params,
+        params,
+      );
+      path = common.formatMap(
+        '{model}:predict',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
+      delete body['_url'];
+      delete body['_query'];
+
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.GenerateImagesResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
+        }) as Promise<types.GenerateImagesResponse>;
+
+      return response.then((apiResponse) => {
+        const resp = converters.generateImagesResponseFromMldev(
+          apiResponse,
+          params,
+        );
         const typedResp = new types.GenerateImagesResponse();
         Object.assign(typedResp, resp);
         return typedResp;
@@ -1002,6 +1096,7 @@ export class Models extends BaseModule {
     if (this.apiClient.isVertexAI()) {
       const body = converters.editImageParametersInternalToVertex(
         this.apiClient,
+        params,
         params,
       );
       path = common.formatMap(
@@ -1032,7 +1127,10 @@ export class Models extends BaseModule {
         }) as Promise<types.EditImageResponse>;
 
       return response.then((apiResponse) => {
-        const resp = converters.editImageResponseFromVertex(apiResponse);
+        const resp = converters.editImageResponseFromVertex(
+          apiResponse,
+          params,
+        );
         const typedResp = new types.EditImageResponse();
         Object.assign(typedResp, resp);
         return typedResp;
@@ -1055,6 +1153,7 @@ export class Models extends BaseModule {
     if (this.apiClient.isVertexAI()) {
       const body = converters.upscaleImageAPIParametersInternalToVertex(
         this.apiClient,
+        params,
         params,
       );
       path = common.formatMap(
@@ -1085,7 +1184,10 @@ export class Models extends BaseModule {
         }) as Promise<types.UpscaleImageResponse>;
 
       return response.then((apiResponse) => {
-        const resp = converters.upscaleImageResponseFromVertex(apiResponse);
+        const resp = converters.upscaleImageResponseFromVertex(
+          apiResponse,
+          params,
+        );
         const typedResp = new types.UpscaleImageResponse();
         Object.assign(typedResp, resp);
         return typedResp;
@@ -1098,30 +1200,16 @@ export class Models extends BaseModule {
   /**
    * Recontextualizes an image.
    *
-   * There are two types of recontextualization currently supported:
-   * 1) Imagen Product Recontext - Generate images of products in new scenes
-   *    and contexts.
-   * 2) Virtual Try-On: Generate images of persons modeling fashion products.
+   * There is one type of recontextualization currently supported:
+   * 1) Virtual Try-On: Generate images of persons modeling fashion products.
    *
    * @param params - The parameters for recontextualizing an image.
    * @return The response from the API.
    *
    * @example
    * ```ts
-   * const response1 = await ai.models.recontextImage({
-   *  model: 'imagen-product-recontext-preview-06-30',
-   *  source: {
-   *    prompt: 'In a modern kitchen setting.',
-   *    productImages: [productImage],
-   *  },
-   *  config: {
-   *    numberOfImages: 1,
-   *  },
-   * });
-   * console.log(response1?.generatedImages?.[0]?.image?.imageBytes);
-   *
-   * const response2 = await ai.models.recontextImage({
-   *  model: 'virtual-try-on-preview-08-04',
+   * const response = await ai.models.recontextImage({
+   *  model: 'virtual-try-on-001',
    *  source: {
    *    personImage: personImage,
    *    productImages: [productImage],
@@ -1130,7 +1218,7 @@ export class Models extends BaseModule {
    *    numberOfImages: 1,
    *  },
    * });
-   * console.log(response2?.generatedImages?.[0]?.image?.imageBytes);
+   * console.log(response?.generatedImages?.[0]?.image?.imageBytes);
    * ```
    */
   async recontextImage(
@@ -1143,6 +1231,7 @@ export class Models extends BaseModule {
     if (this.apiClient.isVertexAI()) {
       const body = converters.recontextImageParametersToVertex(
         this.apiClient,
+        params,
         params,
       );
       path = common.formatMap(
@@ -1167,7 +1256,10 @@ export class Models extends BaseModule {
         }) as Promise<types.RecontextImageResponse>;
 
       return response.then((apiResponse) => {
-        const resp = converters.recontextImageResponseFromVertex(apiResponse);
+        const resp = converters.recontextImageResponseFromVertex(
+          apiResponse,
+          params,
+        );
         const typedResp = new types.RecontextImageResponse();
         Object.assign(typedResp, resp);
         return typedResp;
@@ -1208,6 +1300,7 @@ export class Models extends BaseModule {
       const body = converters.segmentImageParametersToVertex(
         this.apiClient,
         params,
+        params,
       );
       path = common.formatMap(
         '{model}:predict',
@@ -1231,7 +1324,10 @@ export class Models extends BaseModule {
         }) as Promise<types.SegmentImageResponse>;
 
       return response.then((apiResponse) => {
-        const resp = converters.segmentImageResponseFromVertex(apiResponse);
+        const resp = converters.segmentImageResponseFromVertex(
+          apiResponse,
+          params,
+        );
         const typedResp = new types.SegmentImageResponse();
         Object.assign(typedResp, resp);
         return typedResp;
@@ -1258,6 +1354,7 @@ export class Models extends BaseModule {
       const body = converters.getModelParametersToVertex(
         this.apiClient,
         params,
+        params,
       );
       path = common.formatMap(
         '{name}',
@@ -1281,12 +1378,16 @@ export class Models extends BaseModule {
         }) as Promise<types.Model>;
 
       return response.then((apiResponse) => {
-        const resp = converters.modelFromVertex(apiResponse);
+        const resp = converters.modelFromVertex(apiResponse, params);
 
         return resp as types.Model;
       });
     } else {
-      const body = converters.getModelParametersToMldev(this.apiClient, params);
+      const body = converters.getModelParametersToMldev(
+        this.apiClient,
+        params,
+        params,
+      );
       path = common.formatMap(
         '{name}',
         body['_url'] as Record<string, unknown>,
@@ -1309,7 +1410,7 @@ export class Models extends BaseModule {
         }) as Promise<types.Model>;
 
       return response.then((apiResponse) => {
-        const resp = converters.modelFromMldev(apiResponse);
+        const resp = converters.modelFromMldev(apiResponse, params);
 
         return resp as types.Model;
       });
@@ -1327,43 +1428,6 @@ export class Models extends BaseModule {
       const body = converters.listModelsParametersToVertex(
         this.apiClient,
         params,
-      );
-      path = common.formatMap(
-        '{models_url}',
-        body['_url'] as Record<string, unknown>,
-      );
-      queryParams = body['_query'] as Record<string, string>;
-      delete body['_url'];
-      delete body['_query'];
-
-      response = this.apiClient
-        .request({
-          path: path,
-          queryParams: queryParams,
-          body: JSON.stringify(body),
-          httpMethod: 'GET',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
-        })
-        .then((httpResponse) => {
-          return httpResponse.json().then((jsonResponse) => {
-            const response = jsonResponse as types.ListModelsResponse;
-            response.sdkHttpResponse = {
-              headers: httpResponse.headers,
-            } as types.HttpResponse;
-            return response;
-          });
-        }) as Promise<types.ListModelsResponse>;
-
-      return response.then((apiResponse) => {
-        const resp = converters.listModelsResponseFromVertex(apiResponse);
-        const typedResp = new types.ListModelsResponse();
-        Object.assign(typedResp, resp);
-        return typedResp;
-      });
-    } else {
-      const body = converters.listModelsParametersToMldev(
-        this.apiClient,
         params,
       );
       path = common.formatMap(
@@ -1394,7 +1458,52 @@ export class Models extends BaseModule {
         }) as Promise<types.ListModelsResponse>;
 
       return response.then((apiResponse) => {
-        const resp = converters.listModelsResponseFromMldev(apiResponse);
+        const resp = converters.listModelsResponseFromVertex(
+          apiResponse,
+          params,
+        );
+        const typedResp = new types.ListModelsResponse();
+        Object.assign(typedResp, resp);
+        return typedResp;
+      });
+    } else {
+      const body = converters.listModelsParametersToMldev(
+        this.apiClient,
+        params,
+        params,
+      );
+      path = common.formatMap(
+        '{models_url}',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
+      delete body['_url'];
+      delete body['_query'];
+
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'GET',
+          httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.ListModelsResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
+        }) as Promise<types.ListModelsResponse>;
+
+      return response.then((apiResponse) => {
+        const resp = converters.listModelsResponseFromMldev(
+          apiResponse,
+          params,
+        );
         const typedResp = new types.ListModelsResponse();
         Object.assign(typedResp, resp);
         return typedResp;
@@ -1428,6 +1537,7 @@ export class Models extends BaseModule {
       const body = converters.updateModelParametersToVertex(
         this.apiClient,
         params,
+        params,
       );
       path = common.formatMap(
         '{model}',
@@ -1451,13 +1561,14 @@ export class Models extends BaseModule {
         }) as Promise<types.Model>;
 
       return response.then((apiResponse) => {
-        const resp = converters.modelFromVertex(apiResponse);
+        const resp = converters.modelFromVertex(apiResponse, params);
 
         return resp as types.Model;
       });
     } else {
       const body = converters.updateModelParametersToMldev(
         this.apiClient,
+        params,
         params,
       );
       path = common.formatMap(
@@ -1482,7 +1593,7 @@ export class Models extends BaseModule {
         }) as Promise<types.Model>;
 
       return response.then((apiResponse) => {
-        const resp = converters.modelFromMldev(apiResponse);
+        const resp = converters.modelFromMldev(apiResponse, params);
 
         return resp as types.Model;
       });
@@ -1511,43 +1622,6 @@ export class Models extends BaseModule {
       const body = converters.deleteModelParametersToVertex(
         this.apiClient,
         params,
-      );
-      path = common.formatMap(
-        '{name}',
-        body['_url'] as Record<string, unknown>,
-      );
-      queryParams = body['_query'] as Record<string, string>;
-      delete body['_url'];
-      delete body['_query'];
-
-      response = this.apiClient
-        .request({
-          path: path,
-          queryParams: queryParams,
-          body: JSON.stringify(body),
-          httpMethod: 'DELETE',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
-        })
-        .then((httpResponse) => {
-          return httpResponse.json().then((jsonResponse) => {
-            const response = jsonResponse as types.DeleteModelResponse;
-            response.sdkHttpResponse = {
-              headers: httpResponse.headers,
-            } as types.HttpResponse;
-            return response;
-          });
-        }) as Promise<types.DeleteModelResponse>;
-
-      return response.then((apiResponse) => {
-        const resp = converters.deleteModelResponseFromVertex(apiResponse);
-        const typedResp = new types.DeleteModelResponse();
-        Object.assign(typedResp, resp);
-        return typedResp;
-      });
-    } else {
-      const body = converters.deleteModelParametersToMldev(
-        this.apiClient,
         params,
       );
       path = common.formatMap(
@@ -1578,7 +1652,52 @@ export class Models extends BaseModule {
         }) as Promise<types.DeleteModelResponse>;
 
       return response.then((apiResponse) => {
-        const resp = converters.deleteModelResponseFromMldev(apiResponse);
+        const resp = converters.deleteModelResponseFromVertex(
+          apiResponse,
+          params,
+        );
+        const typedResp = new types.DeleteModelResponse();
+        Object.assign(typedResp, resp);
+        return typedResp;
+      });
+    } else {
+      const body = converters.deleteModelParametersToMldev(
+        this.apiClient,
+        params,
+        params,
+      );
+      path = common.formatMap(
+        '{name}',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
+      delete body['_url'];
+      delete body['_query'];
+
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'DELETE',
+          httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.DeleteModelResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
+        }) as Promise<types.DeleteModelResponse>;
+
+      return response.then((apiResponse) => {
+        const resp = converters.deleteModelResponseFromMldev(
+          apiResponse,
+          params,
+        );
         const typedResp = new types.DeleteModelResponse();
         Object.assign(typedResp, resp);
         return typedResp;
@@ -1613,43 +1732,6 @@ export class Models extends BaseModule {
       const body = converters.countTokensParametersToVertex(
         this.apiClient,
         params,
-      );
-      path = common.formatMap(
-        '{model}:countTokens',
-        body['_url'] as Record<string, unknown>,
-      );
-      queryParams = body['_query'] as Record<string, string>;
-      delete body['_url'];
-      delete body['_query'];
-
-      response = this.apiClient
-        .request({
-          path: path,
-          queryParams: queryParams,
-          body: JSON.stringify(body),
-          httpMethod: 'POST',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
-        })
-        .then((httpResponse) => {
-          return httpResponse.json().then((jsonResponse) => {
-            const response = jsonResponse as types.CountTokensResponse;
-            response.sdkHttpResponse = {
-              headers: httpResponse.headers,
-            } as types.HttpResponse;
-            return response;
-          });
-        }) as Promise<types.CountTokensResponse>;
-
-      return response.then((apiResponse) => {
-        const resp = converters.countTokensResponseFromVertex(apiResponse);
-        const typedResp = new types.CountTokensResponse();
-        Object.assign(typedResp, resp);
-        return typedResp;
-      });
-    } else {
-      const body = converters.countTokensParametersToMldev(
-        this.apiClient,
         params,
       );
       path = common.formatMap(
@@ -1680,7 +1762,52 @@ export class Models extends BaseModule {
         }) as Promise<types.CountTokensResponse>;
 
       return response.then((apiResponse) => {
-        const resp = converters.countTokensResponseFromMldev(apiResponse);
+        const resp = converters.countTokensResponseFromVertex(
+          apiResponse,
+          params,
+        );
+        const typedResp = new types.CountTokensResponse();
+        Object.assign(typedResp, resp);
+        return typedResp;
+      });
+    } else {
+      const body = converters.countTokensParametersToMldev(
+        this.apiClient,
+        params,
+        params,
+      );
+      path = common.formatMap(
+        '{model}:countTokens',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
+      delete body['_url'];
+      delete body['_query'];
+
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.CountTokensResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
+        }) as Promise<types.CountTokensResponse>;
+
+      return response.then((apiResponse) => {
+        const resp = converters.countTokensResponseFromMldev(
+          apiResponse,
+          params,
+        );
         const typedResp = new types.CountTokensResponse();
         Object.assign(typedResp, resp);
         return typedResp;
@@ -1717,6 +1844,7 @@ export class Models extends BaseModule {
       const body = converters.computeTokensParametersToVertex(
         this.apiClient,
         params,
+        params,
       );
       path = common.formatMap(
         '{model}:computeTokens',
@@ -1746,7 +1874,10 @@ export class Models extends BaseModule {
         }) as Promise<types.ComputeTokensResponse>;
 
       return response.then((apiResponse) => {
-        const resp = converters.computeTokensResponseFromVertex(apiResponse);
+        const resp = converters.computeTokensResponseFromVertex(
+          apiResponse,
+          params,
+        );
         const typedResp = new types.ComputeTokensResponse();
         Object.assign(typedResp, resp);
         return typedResp;
@@ -1770,37 +1901,6 @@ export class Models extends BaseModule {
       const body = converters.generateVideosParametersToVertex(
         this.apiClient,
         params,
-      );
-      path = common.formatMap(
-        '{model}:predictLongRunning',
-        body['_url'] as Record<string, unknown>,
-      );
-      queryParams = body['_query'] as Record<string, string>;
-      delete body['_url'];
-      delete body['_query'];
-
-      response = this.apiClient
-        .request({
-          path: path,
-          queryParams: queryParams,
-          body: JSON.stringify(body),
-          httpMethod: 'POST',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
-        })
-        .then((httpResponse) => {
-          return httpResponse.json();
-        }) as Promise<types.GenerateVideosOperation>;
-
-      return response.then((apiResponse) => {
-        const resp = converters.generateVideosOperationFromVertex(apiResponse);
-        const typedResp = new types.GenerateVideosOperation();
-        Object.assign(typedResp, resp);
-        return typedResp;
-      });
-    } else {
-      const body = converters.generateVideosParametersToMldev(
-        this.apiClient,
         params,
       );
       path = common.formatMap(
@@ -1825,7 +1925,46 @@ export class Models extends BaseModule {
         }) as Promise<types.GenerateVideosOperation>;
 
       return response.then((apiResponse) => {
-        const resp = converters.generateVideosOperationFromMldev(apiResponse);
+        const resp = converters.generateVideosOperationFromVertex(
+          apiResponse,
+          params,
+        );
+        const typedResp = new types.GenerateVideosOperation();
+        Object.assign(typedResp, resp);
+        return typedResp;
+      });
+    } else {
+      const body = converters.generateVideosParametersToMldev(
+        this.apiClient,
+        params,
+        params,
+      );
+      path = common.formatMap(
+        '{model}:predictLongRunning',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
+      delete body['_url'];
+      delete body['_query'];
+
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json();
+        }) as Promise<types.GenerateVideosOperation>;
+
+      return response.then((apiResponse) => {
+        const resp = converters.generateVideosOperationFromMldev(
+          apiResponse,
+          params,
+        );
         const typedResp = new types.GenerateVideosOperation();
         Object.assign(typedResp, resp);
         return typedResp;

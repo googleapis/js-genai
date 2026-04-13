@@ -140,6 +140,16 @@ export function createTuningJobConfigToMldev(
     throw new Error('adapterSize parameter is not supported in Gemini API.');
   }
 
+  if (common.getValueByPath(fromObject, ['tuningMode']) !== undefined) {
+    throw new Error('tuningMode parameter is not supported in Gemini API.');
+  }
+
+  if (common.getValueByPath(fromObject, ['customBaseModel']) !== undefined) {
+    throw new Error(
+      'customBaseModel parameter is not supported in Gemini API.',
+    );
+  }
+
   const fromBatchSize = common.getValueByPath(fromObject, ['batchSize']);
   if (parentObject !== undefined && fromBatchSize != null) {
     common.setValueByPath(
@@ -164,6 +174,36 @@ export function createTuningJobConfigToMldev(
 
   if (common.getValueByPath(fromObject, ['beta']) !== undefined) {
     throw new Error('beta parameter is not supported in Gemini API.');
+  }
+
+  if (common.getValueByPath(fromObject, ['baseTeacherModel']) !== undefined) {
+    throw new Error(
+      'baseTeacherModel parameter is not supported in Gemini API.',
+    );
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['tunedTeacherModelSource']) !== undefined
+  ) {
+    throw new Error(
+      'tunedTeacherModelSource parameter is not supported in Gemini API.',
+    );
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['sftLossWeightMultiplier']) !== undefined
+  ) {
+    throw new Error(
+      'sftLossWeightMultiplier parameter is not supported in Gemini API.',
+    );
+  }
+
+  if (common.getValueByPath(fromObject, ['outputUri']) !== undefined) {
+    throw new Error('outputUri parameter is not supported in Gemini API.');
+  }
+
+  if (common.getValueByPath(fromObject, ['encryptionSpec']) !== undefined) {
+    throw new Error('encryptionSpec parameter is not supported in Gemini API.');
   }
 
   return toObject;
@@ -202,6 +242,17 @@ export function createTuningJobConfigToVertex(
       common.setValueByPath(
         parentObject,
         ['preferenceOptimizationSpec'],
+        tuningValidationDatasetToVertex(fromValidationDataset, rootObject),
+      );
+    }
+  } else if (discriminatorValidationDataset === 'DISTILLATION') {
+    const fromValidationDataset = common.getValueByPath(fromObject, [
+      'validationDataset',
+    ]);
+    if (parentObject !== undefined && fromValidationDataset != null) {
+      common.setValueByPath(
+        parentObject,
+        ['distillationSpec'],
         tuningValidationDatasetToVertex(fromValidationDataset, rootObject),
       );
     }
@@ -248,6 +299,15 @@ export function createTuningJobConfigToVertex(
         fromEpochCount,
       );
     }
+  } else if (discriminatorEpochCount === 'DISTILLATION') {
+    const fromEpochCount = common.getValueByPath(fromObject, ['epochCount']);
+    if (parentObject !== undefined && fromEpochCount != null) {
+      common.setValueByPath(
+        parentObject,
+        ['distillationSpec', 'hyperParameters', 'epochCount'],
+        fromEpochCount,
+      );
+    }
   }
 
   let discriminatorLearningRateMultiplier = common.getValueByPath(rootObject, [
@@ -283,6 +343,17 @@ export function createTuningJobConfigToVertex(
         fromLearningRateMultiplier,
       );
     }
+  } else if (discriminatorLearningRateMultiplier === 'DISTILLATION') {
+    const fromLearningRateMultiplier = common.getValueByPath(fromObject, [
+      'learningRateMultiplier',
+    ]);
+    if (parentObject !== undefined && fromLearningRateMultiplier != null) {
+      common.setValueByPath(
+        parentObject,
+        ['distillationSpec', 'hyperParameters', 'learningRateMultiplier'],
+        fromLearningRateMultiplier,
+      );
+    }
   }
 
   let discriminatorExportLastCheckpointOnly = common.getValueByPath(
@@ -314,6 +385,17 @@ export function createTuningJobConfigToVertex(
         fromExportLastCheckpointOnly,
       );
     }
+  } else if (discriminatorExportLastCheckpointOnly === 'DISTILLATION') {
+    const fromExportLastCheckpointOnly = common.getValueByPath(fromObject, [
+      'exportLastCheckpointOnly',
+    ]);
+    if (parentObject !== undefined && fromExportLastCheckpointOnly != null) {
+      common.setValueByPath(
+        parentObject,
+        ['distillationSpec', 'exportLastCheckpointOnly'],
+        fromExportLastCheckpointOnly,
+      );
+    }
   }
 
   let discriminatorAdapterSize = common.getValueByPath(rootObject, [
@@ -341,13 +423,111 @@ export function createTuningJobConfigToVertex(
         fromAdapterSize,
       );
     }
-  }
-  if (common.getValueByPath(fromObject, ['batchSize']) !== undefined) {
-    throw new Error('batchSize parameter is not supported in Vertex AI.');
+  } else if (discriminatorAdapterSize === 'DISTILLATION') {
+    const fromAdapterSize = common.getValueByPath(fromObject, ['adapterSize']);
+    if (parentObject !== undefined && fromAdapterSize != null) {
+      common.setValueByPath(
+        parentObject,
+        ['distillationSpec', 'hyperParameters', 'adapterSize'],
+        fromAdapterSize,
+      );
+    }
   }
 
-  if (common.getValueByPath(fromObject, ['learningRate']) !== undefined) {
-    throw new Error('learningRate parameter is not supported in Vertex AI.');
+  let discriminatorTuningMode = common.getValueByPath(rootObject, [
+    'config',
+    'method',
+  ]);
+  if (discriminatorTuningMode === undefined) {
+    discriminatorTuningMode = 'SUPERVISED_FINE_TUNING';
+  }
+  if (discriminatorTuningMode === 'SUPERVISED_FINE_TUNING') {
+    const fromTuningMode = common.getValueByPath(fromObject, ['tuningMode']);
+    if (parentObject !== undefined && fromTuningMode != null) {
+      common.setValueByPath(
+        parentObject,
+        ['supervisedTuningSpec', 'tuningMode'],
+        fromTuningMode,
+      );
+    }
+  } else if (discriminatorTuningMode === 'DISTILLATION') {
+    const fromTuningMode = common.getValueByPath(fromObject, ['tuningMode']);
+    if (parentObject !== undefined && fromTuningMode != null) {
+      common.setValueByPath(
+        parentObject,
+        ['distillationSpec', 'tuningMode'],
+        fromTuningMode,
+      );
+    }
+  }
+
+  const fromCustomBaseModel = common.getValueByPath(fromObject, [
+    'customBaseModel',
+  ]);
+  if (parentObject !== undefined && fromCustomBaseModel != null) {
+    common.setValueByPath(
+      parentObject,
+      ['customBaseModel'],
+      fromCustomBaseModel,
+    );
+  }
+
+  let discriminatorBatchSize = common.getValueByPath(rootObject, [
+    'config',
+    'method',
+  ]);
+  if (discriminatorBatchSize === undefined) {
+    discriminatorBatchSize = 'SUPERVISED_FINE_TUNING';
+  }
+  if (discriminatorBatchSize === 'SUPERVISED_FINE_TUNING') {
+    const fromBatchSize = common.getValueByPath(fromObject, ['batchSize']);
+    if (parentObject !== undefined && fromBatchSize != null) {
+      common.setValueByPath(
+        parentObject,
+        ['supervisedTuningSpec', 'hyperParameters', 'batchSize'],
+        fromBatchSize,
+      );
+    }
+  } else if (discriminatorBatchSize === 'DISTILLATION') {
+    const fromBatchSize = common.getValueByPath(fromObject, ['batchSize']);
+    if (parentObject !== undefined && fromBatchSize != null) {
+      common.setValueByPath(
+        parentObject,
+        ['distillationSpec', 'hyperParameters', 'batchSize'],
+        fromBatchSize,
+      );
+    }
+  }
+
+  let discriminatorLearningRate = common.getValueByPath(rootObject, [
+    'config',
+    'method',
+  ]);
+  if (discriminatorLearningRate === undefined) {
+    discriminatorLearningRate = 'SUPERVISED_FINE_TUNING';
+  }
+  if (discriminatorLearningRate === 'SUPERVISED_FINE_TUNING') {
+    const fromLearningRate = common.getValueByPath(fromObject, [
+      'learningRate',
+    ]);
+    if (parentObject !== undefined && fromLearningRate != null) {
+      common.setValueByPath(
+        parentObject,
+        ['supervisedTuningSpec', 'hyperParameters', 'learningRate'],
+        fromLearningRate,
+      );
+    }
+  } else if (discriminatorLearningRate === 'DISTILLATION') {
+    const fromLearningRate = common.getValueByPath(fromObject, [
+      'learningRate',
+    ]);
+    if (parentObject !== undefined && fromLearningRate != null) {
+      common.setValueByPath(
+        parentObject,
+        ['distillationSpec', 'hyperParameters', 'learningRate'],
+        fromLearningRate,
+      );
+    }
   }
 
   const fromLabels = common.getValueByPath(fromObject, ['labels']);
@@ -362,6 +542,51 @@ export function createTuningJobConfigToVertex(
       ['preferenceOptimizationSpec', 'hyperParameters', 'beta'],
       fromBeta,
     );
+  }
+
+  const fromBaseTeacherModel = common.getValueByPath(fromObject, [
+    'baseTeacherModel',
+  ]);
+  if (parentObject !== undefined && fromBaseTeacherModel != null) {
+    common.setValueByPath(
+      parentObject,
+      ['distillationSpec', 'baseTeacherModel'],
+      fromBaseTeacherModel,
+    );
+  }
+
+  const fromTunedTeacherModelSource = common.getValueByPath(fromObject, [
+    'tunedTeacherModelSource',
+  ]);
+  if (parentObject !== undefined && fromTunedTeacherModelSource != null) {
+    common.setValueByPath(
+      parentObject,
+      ['distillationSpec', 'tunedTeacherModelSource'],
+      fromTunedTeacherModelSource,
+    );
+  }
+
+  const fromSftLossWeightMultiplier = common.getValueByPath(fromObject, [
+    'sftLossWeightMultiplier',
+  ]);
+  if (parentObject !== undefined && fromSftLossWeightMultiplier != null) {
+    common.setValueByPath(
+      parentObject,
+      ['distillationSpec', 'hyperParameters', 'sftLossWeightMultiplier'],
+      fromSftLossWeightMultiplier,
+    );
+  }
+
+  const fromOutputUri = common.getValueByPath(fromObject, ['outputUri']);
+  if (parentObject !== undefined && fromOutputUri != null) {
+    common.setValueByPath(parentObject, ['outputUri'], fromOutputUri);
+  }
+
+  const fromEncryptionSpec = common.getValueByPath(fromObject, [
+    'encryptionSpec',
+  ]);
+  if (parentObject !== undefined && fromEncryptionSpec != null) {
+    common.setValueByPath(parentObject, ['encryptionSpec'], fromEncryptionSpec);
   }
 
   return toObject;
@@ -690,6 +915,15 @@ export function tuningDatasetToVertex(
         fromGcsUri,
       );
     }
+  } else if (discriminatorGcsUri === 'DISTILLATION') {
+    const fromGcsUri = common.getValueByPath(fromObject, ['gcsUri']);
+    if (parentObject !== undefined && fromGcsUri != null) {
+      common.setValueByPath(
+        parentObject,
+        ['distillationSpec', 'promptDatasetUri'],
+        fromGcsUri,
+      );
+    }
   }
 
   let discriminatorVertexDatasetResource = common.getValueByPath(rootObject, [
@@ -718,6 +952,17 @@ export function tuningDatasetToVertex(
       common.setValueByPath(
         parentObject,
         ['preferenceOptimizationSpec', 'trainingDatasetUri'],
+        fromVertexDatasetResource,
+      );
+    }
+  } else if (discriminatorVertexDatasetResource === 'DISTILLATION') {
+    const fromVertexDatasetResource = common.getValueByPath(fromObject, [
+      'vertexDatasetResource',
+    ]);
+    if (parentObject !== undefined && fromVertexDatasetResource != null) {
+      common.setValueByPath(
+        parentObject,
+        ['distillationSpec', 'promptDatasetUri'],
         fromVertexDatasetResource,
       );
     }
@@ -892,6 +1137,13 @@ export function tuningJobFromVertex(
     );
   }
 
+  const fromDistillationSpec = common.getValueByPath(fromObject, [
+    'distillationSpec',
+  ]);
+  if (fromDistillationSpec != null) {
+    common.setValueByPath(toObject, ['distillationSpec'], fromDistillationSpec);
+  }
+
   const fromTuningDataStats = common.getValueByPath(fromObject, [
     'tuningDataStats',
   ]);
@@ -924,9 +1176,33 @@ export function tuningJobFromVertex(
     common.setValueByPath(toObject, ['customBaseModel'], fromCustomBaseModel);
   }
 
+  const fromEvaluateDatasetRuns = common.getValueByPath(fromObject, [
+    'evaluateDatasetRuns',
+  ]);
+  if (fromEvaluateDatasetRuns != null) {
+    let transformedList = fromEvaluateDatasetRuns;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return item;
+      });
+    }
+    common.setValueByPath(toObject, ['evaluateDatasetRuns'], transformedList);
+  }
+
   const fromExperiment = common.getValueByPath(fromObject, ['experiment']);
   if (fromExperiment != null) {
     common.setValueByPath(toObject, ['experiment'], fromExperiment);
+  }
+
+  const fromFullFineTuningSpec = common.getValueByPath(fromObject, [
+    'fullFineTuningSpec',
+  ]);
+  if (fromFullFineTuningSpec != null) {
+    common.setValueByPath(
+      toObject,
+      ['fullFineTuningSpec'],
+      fromFullFineTuningSpec,
+    );
   }
 
   const fromLabels = common.getValueByPath(fromObject, ['labels']);
@@ -962,11 +1238,40 @@ export function tuningJobFromVertex(
     );
   }
 
+  const fromTuningJobState = common.getValueByPath(fromObject, [
+    'tuningJobState',
+  ]);
+  if (fromTuningJobState != null) {
+    common.setValueByPath(toObject, ['tuningJobState'], fromTuningJobState);
+  }
+
   const fromVeoTuningSpec = common.getValueByPath(fromObject, [
     'veoTuningSpec',
   ]);
   if (fromVeoTuningSpec != null) {
     common.setValueByPath(toObject, ['veoTuningSpec'], fromVeoTuningSpec);
+  }
+
+  const fromDistillationSamplingSpec = common.getValueByPath(fromObject, [
+    'distillationSamplingSpec',
+  ]);
+  if (fromDistillationSamplingSpec != null) {
+    common.setValueByPath(
+      toObject,
+      ['distillationSamplingSpec'],
+      fromDistillationSamplingSpec,
+    );
+  }
+
+  const fromTuningJobMetadata = common.getValueByPath(fromObject, [
+    'tuningJobMetadata',
+  ]);
+  if (fromTuningJobMetadata != null) {
+    common.setValueByPath(
+      toObject,
+      ['tuningJobMetadata'],
+      fromTuningJobMetadata,
+    );
   }
 
   return toObject;

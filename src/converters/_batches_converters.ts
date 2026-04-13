@@ -11,6 +11,52 @@ import * as common from '../_common.js';
 import * as t from '../_transformers.js';
 import type * as types from '../types.js';
 
+export function authConfigToMldev(
+  fromObject: types.AuthConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromApiKey = common.getValueByPath(fromObject, ['apiKey']);
+  if (fromApiKey != null) {
+    common.setValueByPath(toObject, ['apiKey'], fromApiKey);
+  }
+
+  if (common.getValueByPath(fromObject, ['apiKeyConfig']) !== undefined) {
+    throw new Error('apiKeyConfig parameter is not supported in Gemini API.');
+  }
+
+  if (common.getValueByPath(fromObject, ['authType']) !== undefined) {
+    throw new Error('authType parameter is not supported in Gemini API.');
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['googleServiceAccountConfig']) !==
+    undefined
+  ) {
+    throw new Error(
+      'googleServiceAccountConfig parameter is not supported in Gemini API.',
+    );
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['httpBasicAuthConfig']) !== undefined
+  ) {
+    throw new Error(
+      'httpBasicAuthConfig parameter is not supported in Gemini API.',
+    );
+  }
+
+  if (common.getValueByPath(fromObject, ['oauthConfig']) !== undefined) {
+    throw new Error('oauthConfig parameter is not supported in Gemini API.');
+  }
+
+  if (common.getValueByPath(fromObject, ['oidcConfig']) !== undefined) {
+    throw new Error('oidcConfig parameter is not supported in Gemini API.');
+  }
+
+  return toObject;
+}
+
 export function batchJobDestinationFromMldev(
   fromObject: types.BatchJobDestination,
 ): Record<string, unknown> {
@@ -460,11 +506,6 @@ export function candidateFromMldev(
     common.setValueByPath(toObject, ['finishReason'], fromFinishReason);
   }
 
-  const fromAvgLogprobs = common.getValueByPath(fromObject, ['avgLogprobs']);
-  if (fromAvgLogprobs != null) {
-    common.setValueByPath(toObject, ['avgLogprobs'], fromAvgLogprobs);
-  }
-
   const fromGroundingMetadata = common.getValueByPath(fromObject, [
     'groundingMetadata',
   ]);
@@ -474,6 +515,11 @@ export function candidateFromMldev(
       ['groundingMetadata'],
       fromGroundingMetadata,
     );
+  }
+
+  const fromAvgLogprobs = common.getValueByPath(fromObject, ['avgLogprobs']);
+  if (fromAvgLogprobs != null) {
+    common.setValueByPath(toObject, ['avgLogprobs'], fromAvgLogprobs);
   }
 
   const fromIndex = common.getValueByPath(fromObject, ['index']);
@@ -882,6 +928,18 @@ export function embedContentConfigToMldev(
     throw new Error('autoTruncate parameter is not supported in Gemini API.');
   }
 
+  if (common.getValueByPath(fromObject, ['documentOcr']) !== undefined) {
+    throw new Error('documentOcr parameter is not supported in Gemini API.');
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['audioTrackExtraction']) !== undefined
+  ) {
+    throw new Error(
+      'audioTrackExtraction parameter is not supported in Gemini API.',
+    );
+  }
+
   return toObject;
 }
 
@@ -968,11 +1026,6 @@ export function functionCallingConfigToMldev(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromMode = common.getValueByPath(fromObject, ['mode']);
-  if (fromMode != null) {
-    common.setValueByPath(toObject, ['mode'], fromMode);
-  }
-
   const fromAllowedFunctionNames = common.getValueByPath(fromObject, [
     'allowedFunctionNames',
   ]);
@@ -982,6 +1035,11 @@ export function functionCallingConfigToMldev(
       ['allowedFunctionNames'],
       fromAllowedFunctionNames,
     );
+  }
+
+  const fromMode = common.getValueByPath(fromObject, ['mode']);
+  if (fromMode != null) {
+    common.setValueByPath(toObject, ['mode'], fromMode);
   }
 
   if (
@@ -1217,6 +1275,28 @@ export function generateContentConfigToMldev(
     );
   }
 
+  const fromEnableEnhancedCivicAnswers = common.getValueByPath(fromObject, [
+    'enableEnhancedCivicAnswers',
+  ]);
+  if (fromEnableEnhancedCivicAnswers != null) {
+    common.setValueByPath(
+      toObject,
+      ['enableEnhancedCivicAnswers'],
+      fromEnableEnhancedCivicAnswers,
+    );
+  }
+
+  if (common.getValueByPath(fromObject, ['modelArmorConfig']) !== undefined) {
+    throw new Error(
+      'modelArmorConfig parameter is not supported in Gemini API.',
+    );
+  }
+
+  const fromServiceTier = common.getValueByPath(fromObject, ['serviceTier']);
+  if (parentObject !== undefined && fromServiceTier != null) {
+    common.setValueByPath(parentObject, ['serviceTier'], fromServiceTier);
+  }
+
   return toObject;
 }
 
@@ -1267,6 +1347,11 @@ export function generateContentResponseFromMldev(
     common.setValueByPath(toObject, ['usageMetadata'], fromUsageMetadata);
   }
 
+  const fromModelStatus = common.getValueByPath(fromObject, ['modelStatus']);
+  if (fromModelStatus != null) {
+    common.setValueByPath(toObject, ['modelStatus'], fromModelStatus);
+  }
+
   return toObject;
 }
 
@@ -1311,8 +1396,13 @@ export function googleMapsToMldev(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  if (common.getValueByPath(fromObject, ['authConfig']) !== undefined) {
-    throw new Error('authConfig parameter is not supported in Gemini API.');
+  const fromAuthConfig = common.getValueByPath(fromObject, ['authConfig']);
+  if (fromAuthConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['authConfig'],
+      authConfigToMldev(fromAuthConfig),
+    );
   }
 
   const fromEnableWidget = common.getValueByPath(fromObject, ['enableWidget']);
@@ -1328,14 +1418,19 @@ export function googleSearchToMldev(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  if (common.getValueByPath(fromObject, ['excludeDomains']) !== undefined) {
-    throw new Error('excludeDomains parameter is not supported in Gemini API.');
+  const fromSearchTypes = common.getValueByPath(fromObject, ['searchTypes']);
+  if (fromSearchTypes != null) {
+    common.setValueByPath(toObject, ['searchTypes'], fromSearchTypes);
   }
 
   if (common.getValueByPath(fromObject, ['blockingConfidence']) !== undefined) {
     throw new Error(
       'blockingConfidence parameter is not supported in Gemini API.',
     );
+  }
+
+  if (common.getValueByPath(fromObject, ['excludeDomains']) !== undefined) {
+    throw new Error('excludeDomains parameter is not supported in Gemini API.');
   }
 
   const fromTimeRangeFilter = common.getValueByPath(fromObject, [
@@ -1363,6 +1458,18 @@ export function imageConfigToMldev(
     common.setValueByPath(toObject, ['imageSize'], fromImageSize);
   }
 
+  if (common.getValueByPath(fromObject, ['personGeneration']) !== undefined) {
+    throw new Error(
+      'personGeneration parameter is not supported in Gemini API.',
+    );
+  }
+
+  if (common.getValueByPath(fromObject, ['prominentPeople']) !== undefined) {
+    throw new Error(
+      'prominentPeople parameter is not supported in Gemini API.',
+    );
+  }
+
   if (common.getValueByPath(fromObject, ['outputMimeType']) !== undefined) {
     throw new Error('outputMimeType parameter is not supported in Gemini API.');
   }
@@ -1373,6 +1480,12 @@ export function imageConfigToMldev(
   ) {
     throw new Error(
       'outputCompressionQuality parameter is not supported in Gemini API.',
+    );
+  }
+
+  if (common.getValueByPath(fromObject, ['imageOutputOptions']) !== undefined) {
+    throw new Error(
+      'imageOutputOptions parameter is not supported in Gemini API.',
     );
   }
 
@@ -1443,6 +1556,11 @@ export function inlinedResponseFromMldev(
         fromResponse as types.GenerateContentResponse,
       ),
     );
+  }
+
+  const fromMetadata = common.getValueByPath(fromObject, ['metadata']);
+  if (fromMetadata != null) {
+    common.setValueByPath(toObject, ['metadata'], fromMetadata);
   }
 
   const fromError = common.getValueByPath(fromObject, ['error']);
@@ -1680,6 +1798,21 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
     common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
   }
 
+  const fromToolCall = common.getValueByPath(fromObject, ['toolCall']);
+  if (fromToolCall != null) {
+    common.setValueByPath(toObject, ['toolCall'], fromToolCall);
+  }
+
+  const fromToolResponse = common.getValueByPath(fromObject, ['toolResponse']);
+  if (fromToolResponse != null) {
+    common.setValueByPath(toObject, ['toolResponse'], fromToolResponse);
+  }
+
+  const fromPartMetadata = common.getValueByPath(fromObject, ['partMetadata']);
+  if (fromPartMetadata != null) {
+    common.setValueByPath(toObject, ['partMetadata'], fromPartMetadata);
+  }
+
   return toObject;
 }
 
@@ -1710,6 +1843,13 @@ export function toolConfigToMldev(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
+  const fromRetrievalConfig = common.getValueByPath(fromObject, [
+    'retrievalConfig',
+  ]);
+  if (fromRetrievalConfig != null) {
+    common.setValueByPath(toObject, ['retrievalConfig'], fromRetrievalConfig);
+  }
+
   const fromFunctionCallingConfig = common.getValueByPath(fromObject, [
     'functionCallingConfig',
   ]);
@@ -1721,11 +1861,16 @@ export function toolConfigToMldev(
     );
   }
 
-  const fromRetrievalConfig = common.getValueByPath(fromObject, [
-    'retrievalConfig',
-  ]);
-  if (fromRetrievalConfig != null) {
-    common.setValueByPath(toObject, ['retrievalConfig'], fromRetrievalConfig);
+  const fromIncludeServerSideToolInvocations = common.getValueByPath(
+    fromObject,
+    ['includeServerSideToolInvocations'],
+  );
+  if (fromIncludeServerSideToolInvocations != null) {
+    common.setValueByPath(
+      toObject,
+      ['includeServerSideToolInvocations'],
+      fromIncludeServerSideToolInvocations,
+    );
   }
 
   return toObject;
@@ -1734,32 +1879,8 @@ export function toolConfigToMldev(
 export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromFunctionDeclarations = common.getValueByPath(fromObject, [
-    'functionDeclarations',
-  ]);
-  if (fromFunctionDeclarations != null) {
-    let transformedList = fromFunctionDeclarations;
-    if (Array.isArray(transformedList)) {
-      transformedList = transformedList.map((item) => {
-        return item;
-      });
-    }
-    common.setValueByPath(toObject, ['functionDeclarations'], transformedList);
-  }
-
   if (common.getValueByPath(fromObject, ['retrieval']) !== undefined) {
     throw new Error('retrieval parameter is not supported in Gemini API.');
-  }
-
-  const fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
-    'googleSearchRetrieval',
-  ]);
-  if (fromGoogleSearchRetrieval != null) {
-    common.setValueByPath(
-      toObject,
-      ['googleSearchRetrieval'],
-      fromGoogleSearchRetrieval,
-    );
   }
 
   const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
@@ -1770,6 +1891,24 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
   const fromFileSearch = common.getValueByPath(fromObject, ['fileSearch']);
   if (fromFileSearch != null) {
     common.setValueByPath(toObject, ['fileSearch'], fromFileSearch);
+  }
+
+  const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
+  if (fromGoogleSearch != null) {
+    common.setValueByPath(
+      toObject,
+      ['googleSearch'],
+      googleSearchToMldev(fromGoogleSearch),
+    );
+  }
+
+  const fromGoogleMaps = common.getValueByPath(fromObject, ['googleMaps']);
+  if (fromGoogleMaps != null) {
+    common.setValueByPath(
+      toObject,
+      ['googleMaps'],
+      googleMapsToMldev(fromGoogleMaps),
+    );
   }
 
   const fromCodeExecution = common.getValueByPath(fromObject, [
@@ -1787,27 +1926,50 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
     );
   }
 
-  const fromGoogleMaps = common.getValueByPath(fromObject, ['googleMaps']);
-  if (fromGoogleMaps != null) {
+  const fromFunctionDeclarations = common.getValueByPath(fromObject, [
+    'functionDeclarations',
+  ]);
+  if (fromFunctionDeclarations != null) {
+    let transformedList = fromFunctionDeclarations;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return item;
+      });
+    }
+    common.setValueByPath(toObject, ['functionDeclarations'], transformedList);
+  }
+
+  const fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
+    'googleSearchRetrieval',
+  ]);
+  if (fromGoogleSearchRetrieval != null) {
     common.setValueByPath(
       toObject,
-      ['googleMaps'],
-      googleMapsToMldev(fromGoogleMaps),
+      ['googleSearchRetrieval'],
+      fromGoogleSearchRetrieval,
     );
   }
 
-  const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
-  if (fromGoogleSearch != null) {
-    common.setValueByPath(
-      toObject,
-      ['googleSearch'],
-      googleSearchToMldev(fromGoogleSearch),
+  if (common.getValueByPath(fromObject, ['parallelAiSearch']) !== undefined) {
+    throw new Error(
+      'parallelAiSearch parameter is not supported in Gemini API.',
     );
   }
 
   const fromUrlContext = common.getValueByPath(fromObject, ['urlContext']);
   if (fromUrlContext != null) {
     common.setValueByPath(toObject, ['urlContext'], fromUrlContext);
+  }
+
+  const fromMcpServers = common.getValueByPath(fromObject, ['mcpServers']);
+  if (fromMcpServers != null) {
+    let transformedList = fromMcpServers;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return item;
+      });
+    }
+    common.setValueByPath(toObject, ['mcpServers'], transformedList);
   }
 
   return toObject;

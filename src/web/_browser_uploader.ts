@@ -10,31 +10,38 @@ import {
   uploadBlob,
   uploadBlobToFileSearchStore,
 } from '../cross/_cross_uploader.js';
-import {File, UploadToFileSearchStoreOperation} from '../types.js';
+import {File, HttpOptions, UploadToFileSearchStoreOperation} from '../types.js';
 
 export class BrowserUploader implements Uploader {
   async upload(
     file: string | Blob,
     uploadUrl: string,
     apiClient: ApiClient,
+    httpOptions?: HttpOptions,
   ): Promise<File> {
     if (typeof file === 'string') {
       throw new Error('File path is not supported in browser uploader.');
     }
 
-    return await uploadBlob(file, uploadUrl, apiClient);
+    return await uploadBlob(file, uploadUrl, apiClient, httpOptions);
   }
 
   async uploadToFileSearchStore(
     file: string | Blob,
     uploadUrl: string,
     apiClient: ApiClient,
+    httpOptions?: HttpOptions,
   ): Promise<UploadToFileSearchStoreOperation> {
     if (typeof file === 'string') {
       throw new Error('File path is not supported in browser uploader.');
     }
 
-    return await uploadBlobToFileSearchStore(file, uploadUrl, apiClient);
+    return await uploadBlobToFileSearchStore(
+      file,
+      uploadUrl,
+      apiClient,
+      httpOptions,
+    );
   }
 
   async stat(file: string | Blob): Promise<FileStat> {

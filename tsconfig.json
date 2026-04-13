@@ -12,7 +12,11 @@
     "lib": ["es2022", "dom", "dom.iterable"]
   },
   "include": ["src/**/*.ts", "test/**/*.ts"],
-  "exclude": ["test/packaging/**/*", "src/private/**/*"],
+  "exclude": [
+    "test/packaging/**/*",
+    "src/private/**/*",
+    "src/interactions-private/**/*"
+  ],
   "ts-node": {
     "compilerOptions": {
       "module": "ES2020"
