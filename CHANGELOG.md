@@ -1,6 +1,19 @@
 # Changelog
 
 
+## [1.50.0](https://github.com/googleapis/js-genai/compare/v1.49.0...v1.50.0) (2026-04-13)
+
+
+### Features
+
+* Add "eu" as a supported service location for Vertex AI platform. ([2493f9c](https://github.com/googleapis/js-genai/commit/2493f9c6d10817766a22bb45eb65468b95f7ae87))
+* Add DeepResearchAgentConfig fields ([3615ca2](https://github.com/googleapis/js-genai/commit/3615ca2063f65b313f9963b6f47a67be320a0edd))
+* Add Live Avatar new fields ([6a0ff96](https://github.com/googleapis/js-genai/commit/6a0ff9699ebea6cd517834e43d23bcb362f04aa8))
+* Add support for new audio MIME types: opus, alaw, and mulaw ([7137f13](https://github.com/googleapis/js-genai/commit/7137f13069bb65501b7816efb96924c40c2977cd))
+* add webhook and webhookConfig for js and python sdk ([0f89605](https://github.com/googleapis/js-genai/commit/0f8960591f5f6359558bd9aedd868e4747eb6834))
+* Add webhook_config to batches.create() and models.generate_videos() ([894bc93](https://github.com/googleapis/js-genai/commit/894bc937de0fdacc018bbf585cdbb75daaa7f943))
+* Wire the webhook into python and js client. ([b6c5d18](https://github.com/googleapis/js-genai/commit/b6c5d189bc0ae98550c45333c5e7a9bc43648dd3))
+
 ## [1.49.0](https://github.com/googleapis/js-genai/compare/v1.48.0...v1.49.0) (2026-04-08)
 
 
