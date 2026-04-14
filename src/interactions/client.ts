@@ -93,8 +93,9 @@ import {
   WebhookConfig,
 } from './resources/interactions.js';
 import {
+  SigningSecret,
+  Webhook,
   WebhookCreateParams,
-  WebhookCreateResponse,
   WebhookDeleteParams,
   WebhookDeleteResponse,
   WebhookListParams,
@@ -102,11 +103,9 @@ import {
   WebhookPingParams,
   WebhookPingResponse,
   WebhookRetrieveParams,
-  WebhookRetrieveResponse,
   WebhookRotateSigningSecretParams,
   WebhookRotateSigningSecretResponse,
   WebhookUpdateParams,
-  WebhookUpdateResponse,
   Webhooks,
 } from './resources/webhooks.js';
 import { type Fetch } from './internal/builtin-types.js';
@@ -943,9 +942,8 @@ export declare namespace GeminiNextGenAPIClient {
 
   export {
     Webhooks as Webhooks,
-    type WebhookCreateResponse as WebhookCreateResponse,
-    type WebhookRetrieveResponse as WebhookRetrieveResponse,
-    type WebhookUpdateResponse as WebhookUpdateResponse,
+    type SigningSecret as SigningSecret,
+    type Webhook as Webhook,
     type WebhookListResponse as WebhookListResponse,
     type WebhookDeleteResponse as WebhookDeleteResponse,
     type WebhookPingResponse as WebhookPingResponse,

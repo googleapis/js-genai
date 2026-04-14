@@ -80,9 +80,8 @@ export {
 export {
   Webhooks,
   BaseWebhooks,
-  type WebhookCreateResponse,
-  type WebhookRetrieveResponse,
-  type WebhookUpdateResponse,
+  type SigningSecret,
+  type Webhook,
   type WebhookListResponse,
   type WebhookDeleteResponse,
   type WebhookPingResponse,

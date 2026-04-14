@@ -17,7 +17,7 @@ export class BaseWebhooks extends APIResource {
   /**
    * Creates a new Webhook.
    */
-  create(params: WebhookCreateParams, options?: RequestOptions): APIPromise<WebhookCreateResponse> {
+  create(params: WebhookCreateParams, options?: RequestOptions): APIPromise<Webhook> {
     const { api_version = this._client.apiVersion, webhook_id, ...body } = params;
     return this._client.post(path`/${api_version}/webhooks`, { query: { webhook_id }, body, ...options });
   }
@@ -29,7 +29,7 @@ export class BaseWebhooks extends APIResource {
     id: string,
     params: WebhookRetrieveParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<WebhookRetrieveResponse> {
+  ): APIPromise<Webhook> {
     const { api_version = this._client.apiVersion } = params ?? {};
     return this._client.get(path`/${api_version}/webhooks/${id}`, options);
   }
@@ -37,11 +37,7 @@ export class BaseWebhooks extends APIResource {
   /**
    * Updates an existing Webhook.
    */
-  update(
-    id: string,
-    params: WebhookUpdateParams,
-    options?: RequestOptions,
-  ): APIPromise<WebhookUpdateResponse> {
+  update(id: string, params: WebhookUpdateParams, options?: RequestOptions): APIPromise<Webhook> {
     const { api_version = this._client.apiVersion, update_mask, ...body } = params;
     return this._client.patch(path`/${api_version}/webhooks/${id}`, {
       query: { update_mask },
@@ -100,92 +96,24 @@ export class BaseWebhooks extends APIResource {
 export class Webhooks extends BaseWebhooks {}
 
 /**
- * A Webhook resource.
+ * Represents a signing secret used to verify webhook payloads.
  */
-export interface WebhookCreateResponse {
+export interface SigningSecret {
   /**
-   * Required. The events that the webhook is subscribed to. Available events:
-   *
-   * - batch.succeeded
-   * - batch.cancelled
-   * - batch.expired
-   * - batch.failed
-   * - interaction.requires_action
-   * - interaction.completed
-   * - interaction.failed
-   * - interaction.cancelled
-   * - video.generated
+   * Output only. The expiration date of the signing secret.
    */
-  subscribed_events: Array<
-    | 'batch.succeeded'
-    | 'batch.cancelled'
-    | 'batch.expired'
-    | 'batch.failed'
-    | 'interaction.requires_action'
-    | 'interaction.completed'
-    | 'interaction.failed'
-    | 'interaction.cancelled'
-    | 'video.generated'
-    | (string & {})
-  >;
+  expire_time?: string;
 
   /**
-   * Required. The URI to which webhook events will be sent.
+   * Output only. The truncated version of the signing secret.
    */
-  uri: string;
-
-  /**
-   * Output only. The timestamp when the webhook was created.
-   */
-  create_time?: string;
-
-  /**
-   * Identifier. The name of the webhook. Format: `webhooks/{webhook_id}`
-   */
-  name?: string;
-
-  /**
-   * Output only. The new signing secret for the webhook. Only populated on create.
-   */
-  new_signing_secret?: string;
-
-  /**
-   * Output only. The signing secrets associated with this webhook.
-   */
-  signing_secrets?: Array<WebhookCreateResponse.SigningSecret>;
-
-  /**
-   * The state of the webhook.
-   */
-  state?: 'enabled' | 'disabled' | 'disabled_due_to_failed_deliveries';
-
-  /**
-   * Output only. The timestamp when the webhook was last updated.
-   */
-  update_time?: string;
-}
-
-export namespace WebhookCreateResponse {
-  /**
-   * Represents a signing secret used to verify webhook payloads.
-   */
-  export interface SigningSecret {
-    /**
-     * Output only. The expiration date of the signing secret.
-     */
-    expire_time?: string;
-
-    /**
-     * Output only. The truncated version of the signing secret.
-     */
-    truncated_secret?: string;
-  }
+  truncated_secret?: string;
 }
 
 /**
  * A Webhook resource.
  */
-export interface WebhookRetrieveResponse {
+export interface Webhook {
   /**
    * Required. The events that the webhook is subscribed to. Available events:
    *
@@ -235,7 +163,7 @@ export interface WebhookRetrieveResponse {
   /**
    * Output only. The signing secrets associated with this webhook.
    */
-  signing_secrets?: Array<WebhookRetrieveResponse.SigningSecret>;
+  signing_secrets?: Array<SigningSecret>;
 
   /**
    * The state of the webhook.
@@ -246,106 +174,6 @@ export interface WebhookRetrieveResponse {
    * Output only. The timestamp when the webhook was last updated.
    */
   update_time?: string;
-}
-
-export namespace WebhookRetrieveResponse {
-  /**
-   * Represents a signing secret used to verify webhook payloads.
-   */
-  export interface SigningSecret {
-    /**
-     * Output only. The expiration date of the signing secret.
-     */
-    expire_time?: string;
-
-    /**
-     * Output only. The truncated version of the signing secret.
-     */
-    truncated_secret?: string;
-  }
-}
-
-/**
- * A Webhook resource.
- */
-export interface WebhookUpdateResponse {
-  /**
-   * Required. The events that the webhook is subscribed to. Available events:
-   *
-   * - batch.succeeded
-   * - batch.cancelled
-   * - batch.expired
-   * - batch.failed
-   * - interaction.requires_action
-   * - interaction.completed
-   * - interaction.failed
-   * - interaction.cancelled
-   * - video.generated
-   */
-  subscribed_events: Array<
-    | 'batch.succeeded'
-    | 'batch.cancelled'
-    | 'batch.expired'
-    | 'batch.failed'
-    | 'interaction.requires_action'
-    | 'interaction.completed'
-    | 'interaction.failed'
-    | 'interaction.cancelled'
-    | 'video.generated'
-    | (string & {})
-  >;
-
-  /**
-   * Required. The URI to which webhook events will be sent.
-   */
-  uri: string;
-
-  /**
-   * Output only. The timestamp when the webhook was created.
-   */
-  create_time?: string;
-
-  /**
-   * Identifier. The name of the webhook. Format: `webhooks/{webhook_id}`
-   */
-  name?: string;
-
-  /**
-   * Output only. The new signing secret for the webhook. Only populated on create.
-   */
-  new_signing_secret?: string;
-
-  /**
-   * Output only. The signing secrets associated with this webhook.
-   */
-  signing_secrets?: Array<WebhookUpdateResponse.SigningSecret>;
-
-  /**
-   * The state of the webhook.
-   */
-  state?: 'enabled' | 'disabled' | 'disabled_due_to_failed_deliveries';
-
-  /**
-   * Output only. The timestamp when the webhook was last updated.
-   */
-  update_time?: string;
-}
-
-export namespace WebhookUpdateResponse {
-  /**
-   * Represents a signing secret used to verify webhook payloads.
-   */
-  export interface SigningSecret {
-    /**
-     * Output only. The expiration date of the signing secret.
-     */
-    expire_time?: string;
-
-    /**
-     * Output only. The truncated version of the signing secret.
-     */
-    truncated_secret?: string;
-  }
 }
 
 /**
@@ -361,92 +189,7 @@ export interface WebhookListResponse {
   /**
    * The webhooks.
    */
-  webhooks?: Array<WebhookListResponse.Webhook>;
-}
-
-export namespace WebhookListResponse {
-  /**
-   * A Webhook resource.
-   */
-  export interface Webhook {
-    /**
-     * Required. The events that the webhook is subscribed to. Available events:
-     *
-     * - batch.succeeded
-     * - batch.cancelled
-     * - batch.expired
-     * - batch.failed
-     * - interaction.requires_action
-     * - interaction.completed
-     * - interaction.failed
-     * - interaction.cancelled
-     * - video.generated
-     */
-    subscribed_events: Array<
-      | 'batch.succeeded'
-      | 'batch.cancelled'
-      | 'batch.expired'
-      | 'batch.failed'
-      | 'interaction.requires_action'
-      | 'interaction.completed'
-      | 'interaction.failed'
-      | 'interaction.cancelled'
-      | 'video.generated'
-      | (string & {})
-    >;
-
-    /**
-     * Required. The URI to which webhook events will be sent.
-     */
-    uri: string;
-
-    /**
-     * Output only. The timestamp when the webhook was created.
-     */
-    create_time?: string;
-
-    /**
-     * Identifier. The name of the webhook. Format: `webhooks/{webhook_id}`
-     */
-    name?: string;
-
-    /**
-     * Output only. The new signing secret for the webhook. Only populated on create.
-     */
-    new_signing_secret?: string;
-
-    /**
-     * Output only. The signing secrets associated with this webhook.
-     */
-    signing_secrets?: Array<Webhook.SigningSecret>;
-
-    /**
-     * The state of the webhook.
-     */
-    state?: 'enabled' | 'disabled' | 'disabled_due_to_failed_deliveries';
-
-    /**
-     * Output only. The timestamp when the webhook was last updated.
-     */
-    update_time?: string;
-  }
-
-  export namespace Webhook {
-    /**
-     * Represents a signing secret used to verify webhook payloads.
-     */
-    export interface SigningSecret {
-      /**
-       * Output only. The expiration date of the signing secret.
-       */
-      expire_time?: string;
-
-      /**
-       * Output only. The truncated version of the signing secret.
-       */
-      truncated_secret?: string;
-    }
-  }
+  webhooks?: Array<Webhook>;
 }
 
 /**
@@ -651,9 +394,8 @@ export interface WebhookRotateSigningSecretParams {
 
 export declare namespace Webhooks {
   export {
-    type WebhookCreateResponse as WebhookCreateResponse,
-    type WebhookRetrieveResponse as WebhookRetrieveResponse,
-    type WebhookUpdateResponse as WebhookUpdateResponse,
+    type SigningSecret as SigningSecret,
+    type Webhook as Webhook,
     type WebhookListResponse as WebhookListResponse,
     type WebhookDeleteResponse as WebhookDeleteResponse,
     type WebhookPingResponse as WebhookPingResponse,

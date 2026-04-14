@@ -4226,7 +4226,7 @@ export class Webhooks extends BaseWebhooks {
 
 // @public (undocumented)
 export namespace Webhooks {
-        { export type WebhookCreateResponse as WebhookCreateResponse, export type WebhookRetrieveResponse as WebhookRetrieveResponse, export type WebhookUpdateResponse as WebhookUpdateResponse, export type WebhookListResponse as WebhookListResponse, export type WebhookDeleteResponse as WebhookDeleteResponse, export type WebhookPingResponse as WebhookPingResponse, export type WebhookRotateSigningSecretResponse as WebhookRotateSigningSecretResponse, export type WebhookCreateParams as WebhookCreateParams, export type WebhookRetrieveParams as WebhookRetrieveParams, export type WebhookUpdateParams as WebhookUpdateParams, export type WebhookListParams as WebhookListParams, export type WebhookDeleteParams as WebhookDeleteParams, export type WebhookPingParams as WebhookPingParams, export type WebhookRotateSigningSecretParams as WebhookRotateSigningSecretParams, };
+        { export type SigningSecret as SigningSecret, export type Webhook as Webhook, export type WebhookListResponse as WebhookListResponse, export type WebhookDeleteResponse as WebhookDeleteResponse, export type WebhookPingResponse as WebhookPingResponse, export type WebhookRotateSigningSecretResponse as WebhookRotateSigningSecretResponse, export type WebhookCreateParams as WebhookCreateParams, export type WebhookRetrieveParams as WebhookRetrieveParams, export type WebhookUpdateParams as WebhookUpdateParams, export type WebhookListParams as WebhookListParams, export type WebhookDeleteParams as WebhookDeleteParams, export type WebhookPingParams as WebhookPingParams, export type WebhookRotateSigningSecretParams as WebhookRotateSigningSecretParams, };
 }
 
 // @public
