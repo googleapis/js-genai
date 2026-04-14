@@ -128,6 +128,10 @@ export class GoogleGenAI {
       return this._webhooks;
     }
 
+    console.warn(
+      'GoogleGenAI.webhooks: Webhooks usage is preview and may change in future versions.',
+    );
+
     this._webhooks = this.getNextGenClient().webhooks;
     return this._webhooks;
   }
