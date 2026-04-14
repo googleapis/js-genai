@@ -87,10 +87,10 @@ export {
   type WebhookPingResponse,
   type WebhookRotateSigningSecretResponse,
   type WebhookCreateParams,
-  type WebhookRetrieveParams,
   type WebhookUpdateParams,
   type WebhookListParams,
   type WebhookDeleteParams,
+  type WebhookGetParams,
   type WebhookPingParams,
   type WebhookRotateSigningSecretParams,
 } from './webhooks.js';

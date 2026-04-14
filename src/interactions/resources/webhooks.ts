@@ -23,18 +23,6 @@ export class BaseWebhooks extends APIResource {
   }
 
   /**
-   * Gets a specific Webhook.
-   */
-  retrieve(
-    id: string,
-    params: WebhookRetrieveParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<Webhook> {
-    const { api_version = this._client.apiVersion } = params ?? {};
-    return this._client.get(path`/${api_version}/webhooks/${id}`, options);
-  }
-
-  /**
    * Updates an existing Webhook.
    */
   update(id: string, params: WebhookUpdateParams, options?: RequestOptions): APIPromise<Webhook> {
@@ -67,6 +55,18 @@ export class BaseWebhooks extends APIResource {
   ): APIPromise<WebhookDeleteResponse> {
     const { api_version = this._client.apiVersion } = params ?? {};
     return this._client.delete(path`/${api_version}/webhooks/${id}`, options);
+  }
+
+  /**
+   * Gets a specific Webhook.
+   */
+  get(
+    id: string,
+    params: WebhookGetParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<Webhook> {
+    const { api_version = this._client.apiVersion } = params ?? {};
+    return this._client.get(path`/${api_version}/webhooks/${id}`, options);
   }
 
   /**
@@ -273,13 +273,6 @@ export interface WebhookCreateParams {
   state?: 'enabled' | 'disabled' | 'disabled_due_to_failed_deliveries';
 }
 
-export interface WebhookRetrieveParams {
-  /**
-   * Which version of the API to use.
-   */
-  api_version?: string;
-}
-
 export interface WebhookUpdateParams {
   /**
    * Path param: Which version of the API to use.
@@ -361,6 +354,13 @@ export interface WebhookDeleteParams {
   api_version?: string;
 }
 
+export interface WebhookGetParams {
+  /**
+   * Which version of the API to use.
+   */
+  api_version?: string;
+}
+
 export interface WebhookPingParams {
   /**
    * Path param: Which version of the API to use.
@@ -401,10 +401,10 @@ export declare namespace Webhooks {
     type WebhookPingResponse as WebhookPingResponse,
     type WebhookRotateSigningSecretResponse as WebhookRotateSigningSecretResponse,
     type WebhookCreateParams as WebhookCreateParams,
-    type WebhookRetrieveParams as WebhookRetrieveParams,
     type WebhookUpdateParams as WebhookUpdateParams,
     type WebhookListParams as WebhookListParams,
     type WebhookDeleteParams as WebhookDeleteParams,
+    type WebhookGetParams as WebhookGetParams,
     type WebhookPingParams as WebhookPingParams,
     type WebhookRotateSigningSecretParams as WebhookRotateSigningSecretParams,
   };
