@@ -1,6 +1,14 @@
 # Changelog
 
 
+## [1.50.1](https://github.com/googleapis/js-genai/compare/v1.50.0...v1.50.1) (2026-04-14)
+
+
+### Bug Fixes
+
+* Refactor Webhook types in GenAI SDKs for easier useage ([5100abc](https://github.com/googleapis/js-genai/commit/5100abc2cec39c29a297545fe89a22b9ba2149bf))
+* Rename `webhooks.retrieve` to `webhooks.get`. ([db6e771](https://github.com/googleapis/js-genai/commit/db6e771cc3b6da984e7fe71ca7cc722303ee6a3b))
+
 ## [1.50.0](https://github.com/googleapis/js-genai/compare/v1.49.0...v1.50.0) (2026-04-13)
 
 
