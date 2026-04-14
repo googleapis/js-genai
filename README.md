@@ -11,7 +11,7 @@
 The Google Gen AI JavaScript SDK is designed for
 TypeScript and JavaScript developers to build applications powered by Gemini. The SDK
 supports both the [Gemini Developer API](https://ai.google.dev/gemini-api/docs)
-and [Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/overview).
+and [Gemini Enterprise Agent Platform](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/overview).
 
 The Google Gen AI SDK is designed to work with Gemini 2.0+ features.
 
