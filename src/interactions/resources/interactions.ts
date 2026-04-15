@@ -1576,6 +1576,7 @@ export type Model =
   | 'gemini-3.1-pro-preview'
   | 'gemini-3.1-flash-image-preview'
   | 'gemini-3.1-flash-lite-preview'
+  | 'gemini-3.1-flash-tts-preview'
   | 'lyria-3-clip-preview'
   | 'lyria-3-pro-preview'
   | (string & {});
