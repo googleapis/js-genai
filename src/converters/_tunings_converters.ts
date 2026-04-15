@@ -686,31 +686,6 @@ export function getTuningJobParametersToVertex(
   return toObject;
 }
 
-export function listTuningJobsConfigToMldev(
-  fromObject: types.ListTuningJobsConfig,
-  parentObject: Record<string, unknown>,
-  _rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
-  if (parentObject !== undefined && fromPageSize != null) {
-    common.setValueByPath(parentObject, ['_query', 'pageSize'], fromPageSize);
-  }
-
-  const fromPageToken = common.getValueByPath(fromObject, ['pageToken']);
-  if (parentObject !== undefined && fromPageToken != null) {
-    common.setValueByPath(parentObject, ['_query', 'pageToken'], fromPageToken);
-  }
-
-  const fromFilter = common.getValueByPath(fromObject, ['filter']);
-  if (parentObject !== undefined && fromFilter != null) {
-    common.setValueByPath(parentObject, ['_query', 'filter'], fromFilter);
-  }
-
-  return toObject;
-}
-
 export function listTuningJobsConfigToVertex(
   fromObject: types.ListTuningJobsConfig,
   parentObject: Record<string, unknown>,
@@ -736,20 +711,6 @@ export function listTuningJobsConfigToVertex(
   return toObject;
 }
 
-export function listTuningJobsParametersToMldev(
-  fromObject: types.ListTuningJobsParameters,
-  rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    listTuningJobsConfigToMldev(fromConfig, toObject, rootObject);
-  }
-
-  return toObject;
-}
-
 export function listTuningJobsParametersToVertex(
   fromObject: types.ListTuningJobsParameters,
   rootObject?: unknown,
@@ -759,40 +720,6 @@ export function listTuningJobsParametersToVertex(
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
     listTuningJobsConfigToVertex(fromConfig, toObject, rootObject);
-  }
-
-  return toObject;
-}
-
-export function listTuningJobsResponseFromMldev(
-  fromObject: types.ListTuningJobsResponse,
-  rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromSdkHttpResponse = common.getValueByPath(fromObject, [
-    'sdkHttpResponse',
-  ]);
-  if (fromSdkHttpResponse != null) {
-    common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
-  }
-
-  const fromNextPageToken = common.getValueByPath(fromObject, [
-    'nextPageToken',
-  ]);
-  if (fromNextPageToken != null) {
-    common.setValueByPath(toObject, ['nextPageToken'], fromNextPageToken);
-  }
-
-  const fromTuningJobs = common.getValueByPath(fromObject, ['tunedModels']);
-  if (fromTuningJobs != null) {
-    let transformedList = fromTuningJobs;
-    if (Array.isArray(transformedList)) {
-      transformedList = transformedList.map((item) => {
-        return tuningJobFromMldev(item, rootObject);
-      });
-    }
-    common.setValueByPath(toObject, ['tuningJobs'], transformedList);
   }
 
   return toObject;
