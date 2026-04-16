@@ -25,13 +25,9 @@ export class BaseWebhooks extends APIResource {
   /**
    * Updates an existing Webhook.
    */
-  update(id: string, params: WebhookUpdateParams, options?: RequestOptions): APIPromise<Webhook> {
+  update(name: string, params: WebhookUpdateParams, options?: RequestOptions): APIPromise<Webhook> {
     const { api_version = this._client.apiVersion, update_mask, ...body } = params;
-    return this._client.patch(path`/${api_version}/webhooks/${id}`, {
-      query: { update_mask },
-      body,
-      ...options,
-    });
+    return this._client.patch(path`/${api_version}/${name}`, { query: { update_mask }, body, ...options });
   }
 
   /**
@@ -49,48 +45,48 @@ export class BaseWebhooks extends APIResource {
    * Deletes a Webhook.
    */
   delete(
-    id: string,
+    name: string,
     params: WebhookDeleteParams | null | undefined = {},
     options?: RequestOptions,
   ): APIPromise<WebhookDeleteResponse> {
     const { api_version = this._client.apiVersion } = params ?? {};
-    return this._client.delete(path`/${api_version}/webhooks/${id}`, options);
+    return this._client.delete(path`/${api_version}/${name}`, options);
   }
 
   /**
    * Gets a specific Webhook.
    */
   get(
-    id: string,
+    name: string,
     params: WebhookGetParams | null | undefined = {},
     options?: RequestOptions,
   ): APIPromise<Webhook> {
     const { api_version = this._client.apiVersion } = params ?? {};
-    return this._client.get(path`/${api_version}/webhooks/${id}`, options);
+    return this._client.get(path`/${api_version}/${name}`, options);
   }
 
   /**
    * Sends a ping event to a Webhook.
    */
   ping(
-    id: string,
+    name: string,
     params: WebhookPingParams | null | undefined = undefined,
     options?: RequestOptions,
   ): APIPromise<WebhookPingResponse> {
     const { api_version = this._client.apiVersion, body } = params ?? {};
-    return this._client.post(path`/${api_version}/webhooks/${id}:ping`, { body: body, ...options });
+    return this._client.post(path`/${api_version}/${name}:ping`, { body: body, ...options });
   }
 
   /**
    * Generates a new signing secret for a Webhook.
    */
   rotateSigningSecret(
-    id: string,
+    name: string,
     params: WebhookRotateSigningSecretParams | null | undefined = {},
     options?: RequestOptions,
   ): APIPromise<WebhookRotateSigningSecretResponse> {
     const { api_version = this._client.apiVersion, ...body } = params ?? {};
-    return this._client.post(path`/${api_version}/webhooks/${id}:rotateSigningSecret`, { body, ...options });
+    return this._client.post(path`/${api_version}/${name}:rotateSigningSecret`, { body, ...options });
   }
 }
 export class Webhooks extends BaseWebhooks {}
@@ -151,7 +147,8 @@ export interface Webhook {
   create_time?: string;
 
   /**
-   * Identifier. The name of the webhook. Format: `webhooks/{webhook_id}`
+   * Output only. Identifier. The name of the webhook. Format:
+   * `webhooks/{webhook_id}`
    */
   name?: string;
 
@@ -263,11 +260,6 @@ export interface WebhookCreateParams {
   webhook_id?: string;
 
   /**
-   * Body param: Identifier. The name of the webhook. Format: `webhooks/{webhook_id}`
-   */
-  name?: string;
-
-  /**
    * Body param: The state of the webhook.
    */
   state?: 'enabled' | 'disabled' | 'disabled_due_to_failed_deliveries';
@@ -315,11 +307,6 @@ export interface WebhookUpdateParams {
    * Query param: Optional. The list of fields to update.
    */
   update_mask?: string;
-
-  /**
-   * Body param: Identifier. The name of the webhook. Format: `webhooks/{webhook_id}`
-   */
-  name?: string;
 
   /**
    * Body param: The state of the webhook.
