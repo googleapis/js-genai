@@ -2835,6 +2835,9 @@ export declare interface GenerateContentParameters {
   /** Configuration that contains optional model parameters.
    */
   config?: GenerateContentConfig;
+  /** The body of the request.
+   */
+  body?: Record<string, unknown>;
 }
 
 /** A wrapper class for the http response. */

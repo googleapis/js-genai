@@ -688,11 +688,11 @@ export class Models extends BaseModule {
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      const body = converters.generateContentParametersToVertex(
+      const body = { ...converters.generateContentParametersToVertex(
         this.apiClient,
         params,
         params,
-      );
+      ), ...params.body };
       path = common.formatMap(
         '{model}:generateContent',
         body['_url'] as Record<string, unknown>,
@@ -730,11 +730,11 @@ export class Models extends BaseModule {
         return typedResp;
       });
     } else {
-      const body = converters.generateContentParametersToMldev(
+      const body = { ...converters.generateContentParametersToMldev(
         this.apiClient,
         params,
         params,
-      );
+      ), ...params.body };
       path = common.formatMap(
         '{model}:generateContent',
         body['_url'] as Record<string, unknown>,
@@ -782,11 +782,11 @@ export class Models extends BaseModule {
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      const body = converters.generateContentParametersToVertex(
+      const body = { ...converters.generateContentParametersToVertex(
         this.apiClient,
         params,
         params,
-      );
+      ), ...params.body };
       path = common.formatMap(
         '{model}:streamGenerateContent?alt=sse',
         body['_url'] as Record<string, unknown>,
@@ -824,11 +824,11 @@ export class Models extends BaseModule {
         }
       });
     } else {
-      const body = converters.generateContentParametersToMldev(
+      const body = { ...converters.generateContentParametersToMldev(
         this.apiClient,
         params,
         params,
-      );
+      ), ...params.body };
       path = common.formatMap(
         '{model}:streamGenerateContent?alt=sse',
         body['_url'] as Record<string, unknown>,
