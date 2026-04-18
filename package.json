@@ -60,8 +60,11 @@
     }
   },
   "scripts": {
+    "preinstall": "echo 'preinstall: no-op'",
     "prepare": "node scripts/prepare.js",
+    "prebuild": "echo 'prebuild: no-op'",
     "build": "patch-package && rollup -c && npm-run-all --parallel api-extractor:dev:* && node scripts/ignore_missing_mcp_dep.js",
+    "prebuild-prod": "echo 'prebuild-prod: no-op'",
     "build-prod": "patch-package && rollup -c && npm-run-all --parallel api-extractor:prod:* && node scripts/ignore_missing_mcp_dep.js",
     "api-extractor:dev:main": "api-extractor run --local --verbose",
     "api-extractor:dev:node": "api-extractor run -c api-extractor.node.json --local --verbose",
