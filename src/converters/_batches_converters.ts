@@ -623,6 +623,17 @@ export function createBatchJobConfigToMldev(
     throw new Error('dest parameter is not supported in Gemini API.');
   }
 
+  const fromWebhookConfig = common.getValueByPath(fromObject, [
+    'webhookConfig',
+  ]);
+  if (parentObject !== undefined && fromWebhookConfig != null) {
+    common.setValueByPath(
+      parentObject,
+      ['batch', 'webhookConfig'],
+      fromWebhookConfig,
+    );
+  }
+
   return toObject;
 }
 
@@ -644,6 +655,10 @@ export function createBatchJobConfigToVertex(
       ['outputConfig'],
       batchJobDestinationToVertex(t.tBatchJobDestination(fromDest)),
     );
+  }
+
+  if (common.getValueByPath(fromObject, ['webhookConfig']) !== undefined) {
+    throw new Error('webhookConfig parameter is not supported in Vertex AI.');
   }
 
   return toObject;

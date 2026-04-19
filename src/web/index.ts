@@ -12,6 +12,7 @@ export {GoogleGenAIOptions} from '../client.js';
 export * from '../errors.js';
 export {Files} from '../files.js';
 export type {Interactions} from '../interactions/resources/interactions.js';
+export type {Webhooks} from '../interactions/resources/webhooks.js';
 export * from '../live.js';
 export {mcpToTool} from '../mcp/_mcp';
 export {Models} from '../models.js';

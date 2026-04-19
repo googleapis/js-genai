@@ -240,43 +240,7 @@ export class Tunings extends BaseModule {
         return typedResp;
       });
     } else {
-      const body = converters.listTuningJobsParametersToMldev(params, params);
-      path = common.formatMap(
-        'tunedModels',
-        body['_url'] as Record<string, unknown>,
-      );
-      queryParams = body['_query'] as Record<string, string>;
-      delete body['_url'];
-      delete body['_query'];
-
-      response = this.apiClient
-        .request({
-          path: path,
-          queryParams: queryParams,
-          body: JSON.stringify(body),
-          httpMethod: 'GET',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
-        })
-        .then((httpResponse) => {
-          return httpResponse.json().then((jsonResponse) => {
-            const response = jsonResponse as types.ListTuningJobsResponse;
-            response.sdkHttpResponse = {
-              headers: httpResponse.headers,
-            } as types.HttpResponse;
-            return response;
-          });
-        }) as Promise<types.ListTuningJobsResponse>;
-
-      return response.then((apiResponse) => {
-        const resp = converters.listTuningJobsResponseFromMldev(
-          apiResponse,
-          params,
-        );
-        const typedResp = new types.ListTuningJobsResponse();
-        Object.assign(typedResp, resp);
-        return typedResp;
-      });
+      throw new Error('This method is only supported by the Vertex AI.');
     }
   }
 

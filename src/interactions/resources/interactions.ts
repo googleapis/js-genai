@@ -24,7 +24,7 @@ export class BaseInteractions extends APIResource {
    * ```ts
    * const interaction = await client.interactions.create({
    *   api_version: 'api_version',
-   *   input: [{ text: 'text', type: 'text' }],
+   *   input: { text: 'text', type: 'text' },
    *   model: 'gemini-2.5-computer-use-preview-10-2025',
    * });
    * ```
@@ -1432,6 +1432,12 @@ export interface Interaction {
    * Output only. Statistics on the interaction request's token usage.
    */
   usage?: Usage;
+
+  /**
+   * Optional. Webhook configuration for receiving notifications when the interaction
+   * completes.
+   */
+  webhook_config?: WebhookConfig;
 }
 
 export interface InteractionCompleteEvent {
@@ -1570,6 +1576,7 @@ export type Model =
   | 'gemini-3.1-pro-preview'
   | 'gemini-3.1-flash-image-preview'
   | 'gemini-3.1-flash-lite-preview'
+  | 'gemini-3.1-flash-tts-preview'
   | 'lyria-3-clip-preview'
   | 'lyria-3-pro-preview'
   | (string & {});
@@ -2136,6 +2143,23 @@ export interface VideoContent {
   uri?: string;
 }
 
+/**
+ * Message for configuring webhook events for a request.
+ */
+export interface WebhookConfig {
+  /**
+   * Optional. If set, these webhook URIs will be used for webhook events instead of
+   * the registered webhooks.
+   */
+  uris?: Array<string>;
+
+  /**
+   * Optional. The user metadata that will be returned on each event emission to the
+   * webhooks.
+   */
+  user_metadata?: { [key: string]: unknown };
+}
+
 export type InteractionDeleteResponse = unknown;
 
 export type InteractionCreateParams =
@@ -2240,6 +2264,12 @@ export interface BaseCreateModelInteractionParams {
    * Body param: A list of tool declarations the model may call during interaction.
    */
   tools?: Array<Tool>;
+
+  /**
+   * Body param: Optional. Webhook configuration for receiving notifications when the
+   * interaction completes.
+   */
+  webhook_config?: WebhookConfig;
 }
 
 export interface BaseCreateAgentInteractionParams {
@@ -2338,6 +2368,12 @@ export interface BaseCreateAgentInteractionParams {
    * Body param: A list of tool declarations the model may call during interaction.
    */
   tools?: Array<Tool>;
+
+  /**
+   * Body param: Optional. Webhook configuration for receiving notifications when the
+   * interaction completes.
+   */
+  webhook_config?: WebhookConfig;
 }
 
 export interface CreateModelInteractionParamsNonStreaming extends BaseCreateModelInteractionParams {
@@ -2487,6 +2523,7 @@ export declare namespace Interactions {
     type URLContextResultContent as URLContextResultContent,
     type Usage as Usage,
     type VideoContent as VideoContent,
+    type WebhookConfig as WebhookConfig,
     type InteractionDeleteResponse as InteractionDeleteResponse,
     type InteractionCreateParams as InteractionCreateParams,
     type CreateModelInteractionParamsNonStreaming as CreateModelInteractionParamsNonStreaming,

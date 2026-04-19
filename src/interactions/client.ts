@@ -90,7 +90,24 @@ import {
   URLContextResultContent,
   Usage,
   VideoContent,
+  WebhookConfig,
 } from './resources/interactions.js';
+import {
+  SigningSecret,
+  Webhook,
+  WebhookCreateParams,
+  WebhookDeleteParams,
+  WebhookDeleteResponse,
+  WebhookGetParams,
+  WebhookListParams,
+  WebhookListResponse,
+  WebhookPingParams,
+  WebhookPingResponse,
+  WebhookRotateSigningSecretParams,
+  WebhookRotateSigningSecretResponse,
+  WebhookUpdateParams,
+  Webhooks,
+} from './resources/webhooks.js';
 import { type Fetch } from './internal/builtin-types.js';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers.js';
 import { FinalRequestOptions, RequestOptions } from './internal/request-options.js';
@@ -843,9 +860,11 @@ export class GeminiNextGenAPIClient extends BaseGeminiNextGenAPIClient {
   static toFile = Uploads.toFile;
 
   interactions: API.Interactions = new API.Interactions(this);
+  webhooks: API.Webhooks = new API.Webhooks(this);
 }
 
 GeminiNextGenAPIClient.Interactions = Interactions;
+GeminiNextGenAPIClient.Webhooks = Webhooks;
 
 export declare namespace GeminiNextGenAPIClient {
   export type RequestOptions = Opts.RequestOptions;
@@ -907,6 +926,7 @@ export declare namespace GeminiNextGenAPIClient {
     type URLContextResultContent as URLContextResultContent,
     type Usage as Usage,
     type VideoContent as VideoContent,
+    type WebhookConfig as WebhookConfig,
     type InteractionDeleteResponse as InteractionDeleteResponse,
     type InteractionCreateParams as InteractionCreateParams,
     type CreateModelInteractionParamsNonStreaming as CreateModelInteractionParamsNonStreaming,
@@ -918,5 +938,22 @@ export declare namespace GeminiNextGenAPIClient {
     type InteractionGetParams as InteractionGetParams,
     type InteractionGetParamsNonStreaming as InteractionGetParamsNonStreaming,
     type InteractionGetParamsStreaming as InteractionGetParamsStreaming,
+  };
+
+  export {
+    Webhooks as Webhooks,
+    type SigningSecret as SigningSecret,
+    type Webhook as Webhook,
+    type WebhookListResponse as WebhookListResponse,
+    type WebhookDeleteResponse as WebhookDeleteResponse,
+    type WebhookPingResponse as WebhookPingResponse,
+    type WebhookRotateSigningSecretResponse as WebhookRotateSigningSecretResponse,
+    type WebhookCreateParams as WebhookCreateParams,
+    type WebhookUpdateParams as WebhookUpdateParams,
+    type WebhookListParams as WebhookListParams,
+    type WebhookDeleteParams as WebhookDeleteParams,
+    type WebhookGetParams as WebhookGetParams,
+    type WebhookPingParams as WebhookPingParams,
+    type WebhookRotateSigningSecretParams as WebhookRotateSigningSecretParams,
   };
 }
