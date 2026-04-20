@@ -128,6 +128,17 @@ export function batchJobDestinationFromVertex(
     common.setValueByPath(toObject, ['bigqueryUri'], fromBigqueryUri);
   }
 
+  const fromVertexDataset = common.getValueByPath(fromObject, [
+    'vertexMultimodalDatasetDestination',
+  ]);
+  if (fromVertexDataset != null) {
+    common.setValueByPath(
+      toObject,
+      ['vertexDataset'],
+      vertexMultimodalDatasetDestinationFromVertex(fromVertexDataset),
+    );
+  }
+
   return toObject;
 }
 
@@ -175,6 +186,17 @@ export function batchJobDestinationToVertex(
   ) {
     throw new Error(
       'inlinedEmbedContentResponses parameter is not supported in Vertex AI.',
+    );
+  }
+
+  const fromVertexDataset = common.getValueByPath(fromObject, [
+    'vertexDataset',
+  ]);
+  if (fromVertexDataset != null) {
+    common.setValueByPath(
+      toObject,
+      ['vertexMultimodalDatasetDestination'],
+      vertexMultimodalDatasetDestinationToVertex(fromVertexDataset),
     );
   }
 
@@ -342,6 +364,18 @@ export function batchJobSourceFromVertex(
     common.setValueByPath(toObject, ['bigqueryUri'], fromBigqueryUri);
   }
 
+  const fromVertexDatasetName = common.getValueByPath(fromObject, [
+    'vertexMultimodalDatasetSource',
+    'datasetName',
+  ]);
+  if (fromVertexDatasetName != null) {
+    common.setValueByPath(
+      toObject,
+      ['vertexDatasetName'],
+      fromVertexDatasetName,
+    );
+  }
+
   return toObject;
 }
 
@@ -381,6 +415,12 @@ export function batchJobSourceToMldev(
     common.setValueByPath(toObject, ['requests', 'requests'], transformedList);
   }
 
+  if (common.getValueByPath(fromObject, ['vertexDatasetName']) !== undefined) {
+    throw new Error(
+      'vertexDatasetName parameter is not supported in Gemini API.',
+    );
+  }
+
   return toObject;
 }
 
@@ -414,6 +454,17 @@ export function batchJobSourceToVertex(
 
   if (common.getValueByPath(fromObject, ['inlinedRequests']) !== undefined) {
     throw new Error('inlinedRequests parameter is not supported in Vertex AI.');
+  }
+
+  const fromVertexDatasetName = common.getValueByPath(fromObject, [
+    'vertexDatasetName',
+  ]);
+  if (fromVertexDatasetName != null) {
+    common.setValueByPath(
+      toObject,
+      ['vertexMultimodalDatasetSource', 'datasetName'],
+      fromVertexDatasetName,
+    );
   }
 
   return toObject;
@@ -1985,6 +2036,55 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
       });
     }
     common.setValueByPath(toObject, ['mcpServers'], transformedList);
+  }
+
+  return toObject;
+}
+
+export function vertexMultimodalDatasetDestinationFromVertex(
+  fromObject: types.VertexMultimodalDatasetDestination,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromBigqueryDestination = common.getValueByPath(fromObject, [
+    'bigqueryDestination',
+    'outputUri',
+  ]);
+  if (fromBigqueryDestination != null) {
+    common.setValueByPath(
+      toObject,
+      ['bigqueryDestination'],
+      fromBigqueryDestination,
+    );
+  }
+
+  const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
+  if (fromDisplayName != null) {
+    common.setValueByPath(toObject, ['displayName'], fromDisplayName);
+  }
+
+  return toObject;
+}
+
+export function vertexMultimodalDatasetDestinationToVertex(
+  fromObject: types.VertexMultimodalDatasetDestination,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromBigqueryDestination = common.getValueByPath(fromObject, [
+    'bigqueryDestination',
+  ]);
+  if (fromBigqueryDestination != null) {
+    common.setValueByPath(
+      toObject,
+      ['bigqueryDestination', 'outputUri'],
+      fromBigqueryDestination,
+    );
+  }
+
+  const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
+  if (fromDisplayName != null) {
+    common.setValueByPath(toObject, ['displayName'], fromDisplayName);
   }
 
   return toObject;

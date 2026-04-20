@@ -239,6 +239,7 @@ export interface BatchJobDestination {
     gcsUri?: string;
     inlinedEmbedContentResponses?: InlinedEmbedContentResponse[];
     inlinedResponses?: InlinedResponse[];
+    vertexDataset?: VertexMultimodalDatasetDestination;
 }
 
 // @public (undocumented)
@@ -251,6 +252,7 @@ export interface BatchJobSource {
     format?: string;
     gcsUri?: string[];
     inlinedRequests?: InlinedRequest[];
+    vertexDatasetName?: string;
 }
 
 // @public (undocumented)
@@ -4125,6 +4127,12 @@ export interface VertexAISearch {
 export interface VertexAISearchDataStoreSpec {
     dataStore?: string;
     filter?: string;
+}
+
+// @public
+export interface VertexMultimodalDatasetDestination {
+    bigqueryDestination?: string;
+    displayName?: string;
 }
 
 // @public

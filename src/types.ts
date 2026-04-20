@@ -6156,7 +6156,7 @@ export declare interface InlinedRequest {
 /** Config for `src` parameter. */
 export declare interface BatchJobSource {
   /** Storage format of the input files. Must be one of:
-      'jsonl', 'bigquery'.
+      'jsonl', 'bigquery', 'vertex-dataset'.
        */
   format?: string;
   /** The Google Cloud Storage URIs to input files.
@@ -6172,6 +6172,19 @@ export declare interface BatchJobSource {
   /** The Gemini Developer API's inlined input data to run batch job.
    */
   inlinedRequests?: InlinedRequest[];
+  /** This field is experimental and may change in future versions. The Vertex AI dataset resource name to use as input. Must be of type multimodal.
+   */
+  vertexDatasetName?: string;
+}
+
+/** This class is experimental and may change in future versions.
+
+The specification for an output Vertex AI multimodal dataset. */
+export declare interface VertexMultimodalDatasetDestination {
+  /** The BigQuery destination for the multimodal dataset. */
+  bigqueryDestination?: string;
+  /** The display name of the multimodal dataset. */
+  displayName?: string;
 }
 
 /** Job error. */
@@ -6219,7 +6232,7 @@ export class InlinedEmbedContentResponse {
 /** Config for `des` parameter. */
 export declare interface BatchJobDestination {
   /** Storage format of the output files. Must be one of:
-      'jsonl', 'bigquery'.
+      'jsonl', 'bigquery', 'vertex-dataset'.
        */
   format?: string;
   /** The Google Cloud Storage URI to the output file.
@@ -6245,6 +6258,9 @@ export declare interface BatchJobDestination {
       the input requests.
        */
   inlinedEmbedContentResponses?: InlinedEmbedContentResponse[];
+  /** This field is experimental and may change in future versions. The Vertex AI dataset destination.
+   */
+  vertexDataset?: VertexMultimodalDatasetDestination;
 }
 
 /** Config for optional parameters. */
