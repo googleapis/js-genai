@@ -101,6 +101,61 @@ export class FileSearchStores extends BaseModule {
   }
 
   /**
+   * Downloads media using a Media ID or URI.
+   * This method is only supported in the Gemini Developer client.
+   *
+   * @param uri - The URI or Media ID of the blob.
+   * @param config - Optional configuration for the download.
+   * @returns A promise that resolves to the blob data as a Uint8Array.
+   */
+  async downloadMedia(
+    uri: string,
+    config?: types.DownloadMediaConfig,
+  ): Promise<Uint8Array> {
+    if (this.apiClient.isVertexAI()) {
+      throw new Error(
+        'This method is only supported in the Gemini Developer client.',
+      );
+    }
+
+    const parsedUri = new URL(uri, 'http://dummy.com');
+    let pathname = parsedUri.pathname;
+    if (pathname.startsWith('/')) {
+      pathname = pathname.slice(1);
+    }
+
+    if (!pathname.includes('/media/')) {
+      throw new Error(
+        `Invalid uri format: ${uri}. Expected to contain /media/`,
+      );
+    }
+
+    const queryParams: Record<string, string> = {};
+    parsedUri.searchParams.forEach((value, key) => {
+      queryParams[key] = value;
+    });
+    queryParams['alt'] = 'media';
+
+    const httpOptions: types.HttpOptions = {
+      ...config?.httpOptions,
+    };
+
+    const response = await this.apiClient.request({
+      path: pathname,
+      httpMethod: 'GET',
+      queryParams: queryParams,
+      httpOptions: httpOptions,
+    });
+
+    if (response instanceof types.HttpResponse) {
+      const arrayBuffer = await response.responseInternal.arrayBuffer();
+      return new Uint8Array(arrayBuffer);
+    } else {
+      throw new Error('Unexpected response type from downloadMedia');
+    }
+  }
+
+  /**
    * Creates a File Search Store.
    *
    * @param params - The parameters for creating a File Search Store.
@@ -119,7 +174,10 @@ export class FileSearchStores extends BaseModule {
         'This method is only supported by the Gemini Developer API.',
       );
     } else {
-      const body = converters.createFileSearchStoreParametersToMldev(params);
+      const body = converters.createFileSearchStoreParametersToMldev(
+        this.apiClient,
+        params,
+      );
       path = common.formatMap(
         'fileSearchStores',
         body['_url'] as Record<string, unknown>,
