@@ -1342,7 +1342,11 @@ export interface Interaction {
   /**
    * The name of the `Agent` used for generating the interaction.
    */
-  agent?: (string & {}) | 'deep-research-pro-preview-12-2025';
+  agent?:
+    | 'deep-research-pro-preview-12-2025'
+    | 'deep-research-preview-04-2026'
+    | 'deep-research-max-preview-04-2026'
+    | (string & {});
 
   /**
    * Configuration parameters for the agent interaction.
@@ -2281,7 +2285,11 @@ export interface BaseCreateAgentInteractionParams {
   /**
    * Body param: The name of the `Agent` used for generating the interaction.
    */
-  agent: (string & {}) | 'deep-research-pro-preview-12-2025';
+  agent:
+    | 'deep-research-pro-preview-12-2025'
+    | 'deep-research-preview-04-2026'
+    | 'deep-research-max-preview-04-2026'
+    | (string & {});
 
   /**
    * Body param: The input for the interaction.
