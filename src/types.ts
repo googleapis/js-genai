@@ -1030,7 +1030,7 @@ export enum FeatureSelectionPreference {
   PRIORITIZE_COST = 'PRIORITIZE_COST',
 }
 
-/** Enum representing the Vertex embedding API to use. */
+/** Enum representing the Gemini Enterprise Agent Platform embedding API to use. */
 export enum EmbeddingApiType {
   /**
    * predict API endpoint (default)
@@ -2013,7 +2013,7 @@ export declare interface HttpOptions {
   timeout?: number;
   /** Extra parameters to add to the request body.
       The structure must match the backend API's request structure.
-      - VertexAI backend API docs: https://cloud.google.com/vertex-ai/docs/reference/rest
+      - Gemini Enterprise Agent Platform backend API docs: https://cloud.google.com/vertex-ai/docs/reference/rest
       - GeminiAPI backend API docs: https://ai.google.dev/api/rest */
   extraBody?: Record<string, unknown>;
   /** HTTP retry options for the request. */
@@ -2813,7 +2813,7 @@ export declare interface GenerateContentConfig {
    */
   imageConfig?: ImageConfig;
   /** Enables enhanced civic answers. It may not be available for all
-      models. This field is not supported in Vertex AI.
+      models. This field is not supported in Gemini Enterprise Agent Platform.
        */
   enableEnhancedCivicAnswers?: boolean;
   /** Settings for prompt and response sanitization using the Model Armor
@@ -3651,19 +3651,19 @@ export declare interface EmbedContentConfig {
       using the earlier model (`models/embedding-001`).
        */
   outputDimensionality?: number;
-  /** Vertex API only. The MIME type of the input.
+  /** Gemini Enterprise Agent Platform only. The MIME type of the input.
    */
   mimeType?: string;
-  /** Vertex API only. Whether to silently truncate inputs longer than
+  /** Gemini Enterprise Agent Platform only. Whether to silently truncate inputs longer than
       the max sequence length. If this option is set to false, oversized inputs
       will lead to an INVALID_ARGUMENT error, similar to other text APIs.
        */
   autoTruncate?: boolean;
-  /** Vertex API only. Whether to enable OCR for document content.
+  /** Gemini Enterprise Agent Platform only. Whether to enable OCR for document content.
       Only applicable to Gemini Embedding 2 models.
        */
   documentOcr?: boolean;
-  /** Vertex API only. Whether to extract audio from video content.
+  /** Gemini Enterprise Agent Platform only. Whether to extract audio from video content.
       Only applicable to Gemini Embedding 2 models.
        */
   audioTrackExtraction?: boolean;
@@ -3680,7 +3680,7 @@ export declare interface EmbedContentParametersPrivate {
   /** The single content to embed. Only the `parts.text` fields will be counted.
    */
   content?: ContentUnion;
-  /** The Vertex embedding API to use.
+  /** The Gemini Enterprise Agent Platform embedding API to use.
    */
   embeddingApiType?: EmbeddingApiType;
   /** Configuration that contains optional parameters.
@@ -3690,11 +3690,11 @@ export declare interface EmbedContentParametersPrivate {
 
 /** Statistics of the input text associated with the result of content embedding. */
 export declare interface ContentEmbeddingStatistics {
-  /** Vertex API only. If the input text was truncated due to having
+  /** Gemini Enterprise Agent Platform only. If the input text was truncated due to having
       a length longer than the allowed maximum input.
        */
   truncated?: boolean;
-  /** Vertex API only. Number of tokens of the input text.
+  /** Gemini Enterprise Agent Platform only. Number of tokens of the input text.
    */
   tokenCount?: number;
 }
@@ -3704,15 +3704,15 @@ export declare interface ContentEmbedding {
   /** A list of floats representing an embedding.
    */
   values?: number[];
-  /** Vertex API only. Statistics of the input text associated with this
+  /** Gemini Enterprise Agent Platform only. Statistics of the input text associated with this
       embedding.
        */
   statistics?: ContentEmbeddingStatistics;
 }
 
-/** Request-level metadata for the Vertex Embed Content API. */
+/** Request-level metadata for the Gemini Enterprise Agent Platform Embed Content API. */
 export declare interface EmbedContentMetadata {
-  /** Vertex API only. The total number of billable characters included
+  /** Gemini Enterprise Agent Platform only. The total number of billable characters included
       in the request.
        */
   billableCharacterCount?: number;
@@ -3726,7 +3726,7 @@ export class EmbedContentResponse {
       the batch request.
        */
   embeddings?: ContentEmbedding[];
-  /** Vertex API only. Metadata about the request.
+  /** Gemini Enterprise Agent Platform only. Metadata about the request.
    */
   metadata?: EmbedContentMetadata;
 }
@@ -4765,7 +4765,8 @@ export declare interface DistillationHyperParameters {
   /** Optional. Multiplier for adjusting the default learning rate. */
   learningRateMultiplier?: number;
   /** The batch size hyperparameter for tuning.
-      This is only supported for OSS models in Vertex. */
+      This is only supported for OSS models in Gemini Enterprise Agent Platform.
+       */
   batchSize?: number;
   /** The learning rate for tuning. OSS models only. */
   learningRate?: number;
@@ -5315,7 +5316,7 @@ export declare interface TuningExample {
 export declare interface TuningDataset {
   /** GCS URI of the file containing training dataset in JSONL format. */
   gcsUri?: string;
-  /** The resource name of the Vertex Multimodal Dataset that is used as training dataset. Example: 'projects/my-project-id-or-number/locations/my-location/datasets/my-dataset-id'. */
+  /** The resource name of the Gemini Enterprise Agent Platform (previously known as Vertex AI) Multimodal Dataset that is used as training dataset. Example: 'projects/my-project-id-or-number/locations/my-location/datasets/my-dataset-id'. */
   vertexDatasetResource?: string;
   /** Inline examples with simple input/output text. */
   examples?: TuningExample[];
@@ -5324,7 +5325,7 @@ export declare interface TuningDataset {
 export declare interface TuningValidationDataset {
   /** GCS URI of the file containing validation dataset in JSONL format. */
   gcsUri?: string;
-  /** The resource name of the Vertex Multimodal Dataset that is used as validation dataset. Example: 'projects/my-project-id-or-number/locations/my-location/datasets/my-dataset-id'. */
+  /** The resource name of the Gemini Enterprise Agent Platform (previously known as Vertex AI) Multimodal Dataset that is used as validation dataset. Example: 'projects/my-project-id-or-number/locations/my-location/datasets/my-dataset-id'. */
   vertexDatasetResource?: string;
 }
 
@@ -5359,9 +5360,9 @@ export declare interface CreateTuningJobConfig {
   adapterSize?: AdapterSize;
   /** Tuning mode for tuning. */
   tuningMode?: TuningMode;
-  /** Custom base model for tuning. This is only supported for OSS models in Vertex. */
+  /** Custom base model for tuning. This is only supported for OSS models in Gemini Enterprise Agent Platform. */
   customBaseModel?: string;
-  /** The batch size hyperparameter for tuning. This is only supported for OSS models in Vertex. */
+  /** The batch size hyperparameter for tuning. This is only supported for OSS models in Gemini Enterprise Agent Platform. */
   batchSize?: number;
   /** The learning rate for tuning. OSS models only. Mutually exclusive with learning_rate_multiplier. */
   learningRate?: number;
@@ -6331,7 +6332,7 @@ export declare interface BatchJob {
   createTime?: string;
   /** Output only. Time when the Job for the first time entered the `JOB_STATE_RUNNING` state. */
   startTime?: string;
-  /** The time when the BatchJob was completed. This field is for Vertex AI only.
+  /** The time when the BatchJob was completed. This field is for Gemini Enterprise Agent Platform only.
    */
   endTime?: string;
   /** The time when the BatchJob was last updated.
@@ -6340,13 +6341,13 @@ export declare interface BatchJob {
   /** The name of the model that produces the predictions via the BatchJob.
    */
   model?: string;
-  /** Configuration for the input data. This field is for Vertex AI only.
+  /** Configuration for the input data. This field is for Gemini Enterprise Agent Platform only.
    */
   src?: BatchJobSource;
   /** Configuration for the output data.
    */
   dest?: BatchJobDestination;
-  /** Statistics on completed and failed prediction instances. This field is for Vertex AI only.
+  /** Statistics on completed and failed prediction instances. This field is for Gemini Enterprise Agent Platform only.
    */
   completionStats?: CompletionStats;
 }

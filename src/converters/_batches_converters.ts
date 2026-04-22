@@ -171,12 +171,14 @@ export function batchJobDestinationToVertex(
   }
 
   if (common.getValueByPath(fromObject, ['fileName']) !== undefined) {
-    throw new Error('fileName parameter is not supported in Vertex AI.');
+    throw new Error(
+      'fileName parameter is not supported in Gemini Enterprise Agent Platform (previously known as Vertex AI).',
+    );
   }
 
   if (common.getValueByPath(fromObject, ['inlinedResponses']) !== undefined) {
     throw new Error(
-      'inlinedResponses parameter is not supported in Vertex AI.',
+      'inlinedResponses parameter is not supported in Gemini Enterprise Agent Platform (previously known as Vertex AI).',
     );
   }
 
@@ -185,7 +187,7 @@ export function batchJobDestinationToVertex(
     undefined
   ) {
     throw new Error(
-      'inlinedEmbedContentResponses parameter is not supported in Vertex AI.',
+      'inlinedEmbedContentResponses parameter is not supported in Gemini Enterprise Agent Platform (previously known as Vertex AI).',
     );
   }
 
@@ -449,11 +451,15 @@ export function batchJobSourceToVertex(
   }
 
   if (common.getValueByPath(fromObject, ['fileName']) !== undefined) {
-    throw new Error('fileName parameter is not supported in Vertex AI.');
+    throw new Error(
+      'fileName parameter is not supported in Gemini Enterprise Agent Platform (previously known as Vertex AI).',
+    );
   }
 
   if (common.getValueByPath(fromObject, ['inlinedRequests']) !== undefined) {
-    throw new Error('inlinedRequests parameter is not supported in Vertex AI.');
+    throw new Error(
+      'inlinedRequests parameter is not supported in Gemini Enterprise Agent Platform (previously known as Vertex AI).',
+    );
   }
 
   const fromVertexDatasetName = common.getValueByPath(fromObject, [
@@ -709,7 +715,9 @@ export function createBatchJobConfigToVertex(
   }
 
   if (common.getValueByPath(fromObject, ['webhookConfig']) !== undefined) {
-    throw new Error('webhookConfig parameter is not supported in Vertex AI.');
+    throw new Error(
+      'webhookConfig parameter is not supported in Gemini Enterprise Agent Platform (previously known as Vertex AI).',
+    );
   }
 
   return toObject;

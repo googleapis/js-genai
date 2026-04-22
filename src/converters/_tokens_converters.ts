@@ -190,7 +190,9 @@ export function createAuthTokenParametersToVertex(
   const toObject: Record<string, unknown> = {};
 
   if (common.getValueByPath(fromObject, ['config']) !== undefined) {
-    throw new Error('config parameter is not supported in Vertex AI.');
+    throw new Error(
+      'config parameter is not supported in Gemini Enterprise Agent Platform (previously known as Vertex AI).',
+    );
   }
 
   return toObject;

@@ -50,7 +50,7 @@ export class FileSearchStores extends BaseModule {
 
   /**
    * Uploads a file asynchronously to a given File Search Store.
-   * This method is not available in Vertex AI.
+   * This method is not available in Gemini Enterprise Agent Platform (previously known as Vertex AI).
    * Supported upload sources:
    * - Node.js: File path (string) or Blob object.
    * - Browser: Blob object (e.g., File).
@@ -69,7 +69,7 @@ export class FileSearchStores extends BaseModule {
    *         @see {@link types.UploadToFileSearchStoreParameters#config} for the optional
    *         config in the parameters.
    * @return A promise that resolves to a long running operation.
-   * @throws An error if called on a Vertex AI client.
+   * @throws An error if called on a Gemini Enterprise Agent Platform (previously known as Vertex AI) client.
    * @throws An error if the `mimeType` is not provided and can not be inferred,
    * the `mimeType` can be provided in the `params.config` parameter.
    * @throws An error occurs if a suitable upload location cannot be established.
@@ -89,7 +89,7 @@ export class FileSearchStores extends BaseModule {
   ): Promise<types.UploadToFileSearchStoreOperation> {
     if (this.apiClient.isVertexAI()) {
       throw new Error(
-        'Vertex AI does not support uploading files to a file search store.',
+        'Gemini Enterprise Agent Platform (previously known as Vertex AI) does not support uploading files to a file search store.',
       );
     }
 

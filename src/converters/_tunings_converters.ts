@@ -895,7 +895,9 @@ export function tuningDatasetToVertex(
     }
   }
   if (common.getValueByPath(fromObject, ['examples']) !== undefined) {
-    throw new Error('examples parameter is not supported in Vertex AI.');
+    throw new Error(
+      'examples parameter is not supported in Gemini Enterprise Agent Platform (previously known as Vertex AI).',
+    );
   }
 
   return toObject;
