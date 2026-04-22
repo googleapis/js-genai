@@ -18,8 +18,8 @@ export class BaseWebhooks extends APIResource {
    * Creates a new Webhook.
    */
   create(params: WebhookCreateParams, options?: RequestOptions): APIPromise<Webhook> {
-    const { api_version = this._client.apiVersion, webhook_id, ...body } = params;
-    return this._client.post(path`/${api_version}/webhooks`, { query: { webhook_id }, body, ...options });
+    const { api_version = this._client.apiVersion, ...body } = params;
+    return this._client.post(path`/${api_version}/webhooks`, { body, ...options });
   }
 
   /**
@@ -146,12 +146,17 @@ export interface Webhook {
   uri: string;
 
   /**
+   * Output only. The ID of the webhook.
+   */
+  id?: string;
+
+  /**
    * Output only. The timestamp when the webhook was created.
    */
   create_time?: string;
 
   /**
-   * Identifier. The name of the webhook. Format: `webhooks/{webhook_id}`
+   * Optional. The user-provided name of the webhook.
    */
   name?: string;
 
@@ -257,13 +262,7 @@ export interface WebhookCreateParams {
   uri: string;
 
   /**
-   * Query param: Optional. The webhook_id to use for the webhook. If not specified,
-   * the server will generate a unique ID.
-   */
-  webhook_id?: string;
-
-  /**
-   * Body param: Identifier. The name of the webhook. Format: `webhooks/{webhook_id}`
+   * Body param: Optional. The user-provided name of the webhook.
    */
   name?: string;
 
@@ -317,7 +316,7 @@ export interface WebhookUpdateParams {
   update_mask?: string;
 
   /**
-   * Body param: Identifier. The name of the webhook. Format: `webhooks/{webhook_id}`
+   * Body param: Optional. The user-provided name of the webhook.
    */
   name?: string;
 
