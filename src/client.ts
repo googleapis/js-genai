@@ -39,8 +39,23 @@ export interface GoogleGenAIOptions {
    * Optional. Determines whether to use the Vertex AI or the Gemini API.
    *
    * @remarks
+   * When true, the {@link https://cloud.google.com/vertex-ai/docs/reference/rest | Gemini Enterprise Agent Platform API} will used.
+   * When false, the {@link https://ai.google.dev/api | Gemini API} will be used.
+   * When both enterprise and vertexai are set, and they have different values,
+   * an Error will be thrown.
+   *
+   * If unset, default SDK behavior is to use the Gemini API service.
+   */
+  enterprise?: boolean;
+  /**
+   * Optional. Determines whether to use the Vertex AI (now Gemini Enterprise Agent Platform) or the Gemini API.
+   * The `enterprise` flag is recommended instead.
+   *
+   * @remarks
    * When true, the {@link https://cloud.google.com/vertex-ai/docs/reference/rest | Vertex AI API} will used.
    * When false, the {@link https://ai.google.dev/api | Gemini API} will be used.
+   * When both enterprise and vertexai are set, and they have different values,
+   * an Error will be thrown.
    *
    * If unset, default SDK behavior is to use the Gemini API service.
    */
@@ -195,7 +210,16 @@ export class GoogleGenAI {
         `An API Key must be set when running in an unspecified environment.\n + ${crossError().message}`,
       );
     }
-    this.vertexai = options.vertexai ?? false;
+    if (
+      options.enterprise !== undefined &&
+      options.vertexai !== undefined &&
+      options.enterprise !== options.vertexai
+    ) {
+      throw new Error(
+        'enterprise and vertexAI flags have conflicting values, please set enterprise value only.',
+      );
+    }
+    this.vertexai = options.enterprise ?? options.vertexai ?? false;
     this.apiKey = options.apiKey;
     this.apiVersion = options.apiVersion;
     this.httpOptions = options.httpOptions;

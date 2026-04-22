@@ -15,6 +15,7 @@ describe('Client', () => {
   beforeEach(() => {
     delete process.env['GOOGLE_API_KEY'];
     delete process.env['GEMINI_API_KEY'];
+    delete process.env['GOOGLE_GENAI_USE_ENTERPRISE'];
     delete process.env['GOOGLE_GENAI_USE_VERTEXAI'];
     delete process.env['GOOGLE_CLOUD_PROJECT'];
     delete process.env['GOOGLE_CLOUD_LOCATION'];
@@ -487,6 +488,162 @@ describe('Client', () => {
       const actualUrl: URL = args[0];
       expect(actualUrl.toString()).toBe(
         'https://custom-base-url.com/v1beta1/publishers/google/models/gemini-3-pro-preview:generateContent',
+      );
+    });
+  });
+
+  describe('Enterprise Flag Resolution', () => {
+    it('should default to false if nothing is set', () => {
+      const client = new GoogleGenAI({apiKey: 'key'});
+      expect(client.vertexai).toBeFalse();
+    });
+
+    // Tests for constructor options
+    it('should use enterprise:true from options', () => {
+      const client = new GoogleGenAI({
+        enterprise: true,
+        project: 'p',
+        location: 'l',
+      });
+      expect(client.vertexai).toBeTrue();
+    });
+
+    it('should use enterprise:false from options', () => {
+      const client = new GoogleGenAI({enterprise: false, apiKey: 'key'});
+      expect(client.vertexai).toBeFalse();
+    });
+
+    it('should fall back to vertexai:true from options', () => {
+      const client = new GoogleGenAI({
+        vertexai: true,
+        project: 'p',
+        location: 'l',
+      });
+      expect(client.vertexai).toBeTrue();
+    });
+
+    // Tests for environment variables
+    it('should use enterprise:true from environment variable', () => {
+      process.env['GOOGLE_GENAI_USE_ENTERPRISE'] = 'true';
+      const client = new GoogleGenAI({project: 'p', location: 'l'});
+      expect(client.vertexai).toBeTrue();
+    });
+
+    it('should fall back to vertexai:true from environment variable', () => {
+      process.env['GOOGLE_GENAI_USE_VERTEXAI'] = 'true';
+      const client = new GoogleGenAI({project: 'p', location: 'l'});
+      expect(client.vertexai).toBeTrue();
+    });
+
+    // Tests for conflict handling
+    it('should throw error if enterprise and vertexai options conflict (true/false)', () => {
+      expect(() => {
+        new GoogleGenAI({
+          enterprise: true,
+          vertexai: false,
+          project: 'p',
+          location: 'l',
+        });
+      }).toThrowError(
+        'enterprise and vertexAI flags have conflicting values, please set enterprise value only.',
+      );
+    });
+
+    it('should throw error if enterprise and vertexai options conflict (false/true)', () => {
+      expect(() => {
+        new GoogleGenAI({
+          enterprise: false,
+          vertexai: true,
+          project: 'p',
+          location: 'l',
+        });
+      }).toThrowError(
+        'enterprise and vertexAI flags have conflicting values, please set enterprise value only.',
+      );
+    });
+
+    it('should not throw error if enterprise and vertexai options are the same', () => {
+      expect(() => {
+        new GoogleGenAI({
+          enterprise: true,
+          vertexai: true,
+          project: 'p',
+          location: 'l',
+        });
+      }).not.toThrow();
+    });
+
+    // Tests for precedence and short-circuiting
+    it('options.enterprise should take precedence over all other sources', () => {
+      process.env['GOOGLE_GENAI_USE_ENTERPRISE'] = 'true';
+      process.env['GOOGLE_GENAI_USE_VERTEXAI'] = 'true';
+      const client = new GoogleGenAI({enterprise: false, apiKey: 'key'});
+      expect(client.vertexai).toBeFalse();
+    });
+
+    it('options.vertexai should take precedence over environment variables', () => {
+      process.env['GOOGLE_GENAI_USE_ENTERPRISE'] = 'true';
+      process.env['GOOGLE_GENAI_USE_VERTEXAI'] = 'false';
+      const client = new GoogleGenAI({
+        vertexai: true,
+        project: 'p',
+        location: 'l',
+      });
+      expect(client.vertexai).toBeTrue();
+    });
+
+    it('env enterprise should take precedence over env vertexai', () => {
+      process.env['GOOGLE_GENAI_USE_ENTERPRISE'] = 'false';
+      process.env['GOOGLE_GENAI_USE_VERTEXAI'] = 'true';
+      const client = new GoogleGenAI({project: 'p', location: 'l'});
+      expect(client.vertexai).toBeFalse();
+    });
+
+    // Tests for warning logic
+    it('should warn on conflicting environment variables if options are not set', () => {
+      const warnSpy = spyOn(console, 'warn');
+      process.env['GOOGLE_GENAI_USE_ENTERPRISE'] = 'true';
+      process.env['GOOGLE_GENAI_USE_VERTEXAI'] = 'false';
+      const client = new GoogleGenAI({project: 'p', location: 'l'});
+      expect(warnSpy).toHaveBeenCalledWith(
+        'Warning: Both GOOGLE_GENAI_USE_ENTERPRISE and GOOGLE_GENAI_USE_VERTEXAI are set with conflicting values. The value of GOOGLE_GENAI_USE_ENTERPRISE will be used.',
+      );
+      expect(client.vertexai).toBeTrue();
+    });
+
+    it('should not warn if constructor options are set, even if env vars conflict', () => {
+      const warnSpy = spyOn(console, 'warn');
+      process.env['GOOGLE_GENAI_USE_ENTERPRISE'] = 'true';
+      process.env['GOOGLE_GENAI_USE_VERTEXAI'] = 'false';
+      const client = new GoogleGenAI({enterprise: false, apiKey: 'key'});
+      // Get rid of other potential warnings for this test
+      warnSpy.calls.reset();
+      // Expect that the specific warning was not called.
+      expect(warnSpy).not.toHaveBeenCalledWith(
+        jasmine.stringMatching(/Both GOOGLE_GENAI_USE_ENTERPRISE/),
+      );
+      expect(client.vertexai).toBeFalse();
+    });
+
+    it('should not warn if env vars have the same value', () => {
+      const warnSpy = spyOn(console, 'warn');
+      process.env['GOOGLE_GENAI_USE_ENTERPRISE'] = 'true';
+      process.env['GOOGLE_GENAI_USE_VERTEXAI'] = 'true';
+      new GoogleGenAI({project: 'p', location: 'l'});
+      expect(warnSpy).not.toHaveBeenCalledWith(
+        jasmine.stringMatching(/Both GOOGLE_GENAI_USE_ENTERPRISE/),
+      );
+    });
+
+    // Test downstream effects
+    it('should use vertex base url when GOOGLE_GENAI_USE_ENTERPRISE is true', () => {
+      process.env['GOOGLE_GENAI_USE_ENTERPRISE'] = 'true';
+      // This URL is the default vertex URL used in _api_client
+      process.env['GOOGLE_VERTEX_BASE_URL'] =
+        'https://vertex-base-url.googleapis.com';
+      const client = new GoogleGenAI({project: 'p', location: 'l'});
+      expect(client['apiClient'].getBaseUrl()).toBe(
+        'https://vertex-base-url.googleapis.com',
       );
     });
   });

@@ -1807,6 +1807,7 @@ export class GoogleGenAI {
 export interface GoogleGenAIOptions {
     apiKey?: string;
     apiVersion?: string;
+    enterprise?: boolean;
     googleAuthOptions?: GoogleAuthOptions;
     httpOptions?: HttpOptions;
     location?: string;

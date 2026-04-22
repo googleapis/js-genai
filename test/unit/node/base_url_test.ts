@@ -11,6 +11,8 @@ describe('setDefaultBaseUrls', () => {
   afterEach(() => {
     delete process.env['GOOGLE_GEMINI_BASE_URL'];
     delete process.env['GOOGLE_VERTEX_BASE_URL'];
+    delete process.env['GOOGLE_GENAI_USE_ENTERPRISE'];
+    delete process.env['GOOGLE_GENAI_USE_VERTEXAI'];
 
     setDefaultBaseUrls({});
   });
