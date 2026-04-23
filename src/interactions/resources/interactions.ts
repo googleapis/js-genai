@@ -678,7 +678,7 @@ export namespace ContentDelta {
      */
     call_id: string;
 
-    result: Array<FileSearchResult.Result>;
+    result: Array<unknown>;
 
     type: 'file_search_result';
 
@@ -686,18 +686,6 @@ export namespace ContentDelta {
      * A signature hash for backend validation.
      */
     signature?: string;
-  }
-
-  export namespace FileSearchResult {
-    /**
-     * The result of the File Search.
-     */
-    export interface Result {
-      /**
-       * User provided metadata about the FileSearchResult.
-       */
-      custom_metadata?: Array<unknown>;
-    }
   }
 
   export interface GoogleMapsResult {
@@ -850,6 +838,11 @@ export interface FileCitation {
   type: 'file_citation';
 
   /**
+   * User provided metadata about the retrieved context.
+   */
+  custom_metadata?: { [key: string]: unknown };
+
+  /**
    * The URI of the file.
    */
   document_uri?: string;
@@ -863,6 +856,16 @@ export interface FileCitation {
    * The name of the file.
    */
   file_name?: string;
+
+  /**
+   * Media ID in-case of image citations, if applicable.
+   */
+  media_id?: string;
+
+  /**
+   * Page number of the cited document, if applicable.
+   */
+  page_number?: number;
 
   /**
    * Source attributed for a portion of the text.
@@ -903,29 +906,17 @@ export interface FileSearchResultContent {
    */
   call_id: string;
 
-  /**
-   * Required. The results of the File Search.
-   */
-  result: Array<FileSearchResultContent.Result>;
-
   type: 'file_search_result';
+
+  /**
+   * Optional. The results of the File Search.
+   */
+  result?: Array<unknown>;
 
   /**
    * A signature hash for backend validation.
    */
   signature?: string;
-}
-
-export namespace FileSearchResultContent {
-  /**
-   * The result of the File Search.
-   */
-  export interface Result {
-    /**
-     * User provided metadata about the FileSearchResult.
-     */
-    custom_metadata?: Array<unknown>;
-  }
 }
 
 /**
