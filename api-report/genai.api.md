@@ -225,6 +225,7 @@ export interface BatchJob {
     error?: JobError;
     model?: string;
     name?: string;
+    outputInfo?: BatchJobOutputInfo;
     src?: BatchJobSource;
     startTime?: string;
     state?: JobState;
@@ -244,6 +245,13 @@ export interface BatchJobDestination {
 
 // @public (undocumented)
 export type BatchJobDestinationUnion = BatchJobDestination | string;
+
+// @public
+export interface BatchJobOutputInfo {
+    bigqueryOutputTable?: string;
+    gcsOutputDirectory?: string;
+    vertexMultimodalDatasetName?: string;
+}
 
 // @public
 export interface BatchJobSource {

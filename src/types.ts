@@ -6302,6 +6302,16 @@ export declare interface CreateBatchJobParameters {
   config?: CreateBatchJobConfig;
 }
 
+/** Represents the `output_info` field in batch jobs. */
+export declare interface BatchJobOutputInfo {
+  /** This field is experimental and may change in future versions. The Vertex AI dataset name containing the output data. */
+  vertexMultimodalDatasetName?: string;
+  /** The full path of the Cloud Storage directory created, into which the prediction output is written. */
+  gcsOutputDirectory?: string;
+  /** The name of the BigQuery table created, in `predictions_<timestamp>` format, into which the prediction output is written. */
+  bigqueryOutputTable?: string;
+}
+
 /** Success and error statistics of processing multiple entities (for example, DataItems or structured data rows) in batch. This data type is not supported in Gemini API. */
 export declare interface CompletionStats {
   /** Output only. The number of entities for which any error was encountered. */
@@ -6350,6 +6360,9 @@ export declare interface BatchJob {
   /** Statistics on completed and failed prediction instances. This field is for Gemini Enterprise Agent Platform only.
    */
   completionStats?: CompletionStats;
+  /** Information further describing the output of this job. Output only.
+   */
+  outputInfo?: BatchJobOutputInfo;
 }
 
 /** Parameters for the embed_content method. */

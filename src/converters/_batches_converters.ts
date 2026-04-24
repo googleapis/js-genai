@@ -340,6 +340,11 @@ export function batchJobFromVertex(
     common.setValueByPath(toObject, ['completionStats'], fromCompletionStats);
   }
 
+  const fromOutputInfo = common.getValueByPath(fromObject, ['outputInfo']);
+  if (fromOutputInfo != null) {
+    common.setValueByPath(toObject, ['outputInfo'], fromOutputInfo);
+  }
+
   return toObject;
 }
 
