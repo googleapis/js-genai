@@ -2780,6 +2780,10 @@ export function generateVideosConfigToMldev(
     common.setValueByPath(parentObject, ['webhookConfig'], fromWebhookConfig);
   }
 
+  if (common.getValueByPath(fromObject, ['resizeMode']) !== undefined) {
+    throw new Error('resizeMode parameter is not supported in Gemini API.');
+  }
+
   return toObject;
 }
 
@@ -2956,6 +2960,15 @@ export function generateVideosConfigToVertex(
   if (common.getValueByPath(fromObject, ['webhookConfig']) !== undefined) {
     throw new Error(
       'webhookConfig parameter is not supported in Gemini Enterprise Agent Platform (previously known as Vertex AI).',
+    );
+  }
+
+  const fromResizeMode = common.getValueByPath(fromObject, ['resizeMode']);
+  if (parentObject !== undefined && fromResizeMode != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'resizeMode'],
+      fromResizeMode,
     );
   }
 

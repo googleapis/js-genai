@@ -1589,6 +1589,7 @@ export interface GenerateVideosConfig {
     personGeneration?: string;
     pubsubTopic?: string;
     referenceImages?: VideoGenerationReferenceImage[];
+    resizeMode?: ImageResizeMode;
     resolution?: string;
     seed?: number;
     webhookConfig?: WebhookConfig;
@@ -2093,6 +2094,12 @@ export enum ImagePromptLanguage {
     ko = "ko",
     pt = "pt",
     zh = "zh"
+}
+
+// @public
+export enum ImageResizeMode {
+    CROP = "CROP",
+    PAD = "PAD"
 }
 
 // @public

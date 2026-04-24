@@ -1188,6 +1188,20 @@ export enum VideoCompressionQuality {
   LOSSLESS = 'LOSSLESS',
 }
 
+/** Resize mode for the image input for video generation. */
+export enum ImageResizeMode {
+  /**
+   * Crop the image to fit the correct aspect ratio (so we lose parts
+      of the image in the process).
+   */
+  CROP = 'CROP',
+  /**
+   * Pad the image to fit the correct aspect ratio (so we don't lose
+      any parts of the image in the process).
+   */
+  PAD = 'PAD',
+}
+
 /** Enum representing the tuning method. */
 export enum TuningMethod {
   /**
@@ -4551,6 +4565,8 @@ export declare interface GenerateVideosConfig {
   /** Webhook configuration for receiving notifications when the
       video generation operation completes. */
   webhookConfig?: WebhookConfig;
+  /** Resize mode of the image input for video generation. */
+  resizeMode?: ImageResizeMode;
 }
 
 /** Class that represents the parameters for generating videos. */
