@@ -201,7 +201,7 @@ export interface AudioContent {
   /**
    * The sample rate of the audio.
    */
-  rate?: number;
+  sample_rate?: number;
 
   /**
    * The URI of the audio.
@@ -391,9 +391,14 @@ export namespace ContentDelta {
       | 'audio/mulaw';
 
     /**
-     * The sample rate of the audio.
+     * @deprecated Deprecated. Use sample_rate instead. The value is ignored.
      */
     rate?: number;
+
+    /**
+     * The sample rate of the audio.
+     */
+    sample_rate?: number;
 
     uri?: string;
   }
