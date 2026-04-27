@@ -1999,6 +1999,11 @@ export interface Usage {
   cached_tokens_by_modality?: Array<Usage.CachedTokensByModality>;
 
   /**
+   * Grounding tool count.
+   */
+  grounding_tool_count?: Array<Usage.GroundingToolCount>;
+
+  /**
    * A breakdown of input token usage by modality.
    */
   input_tokens_by_modality?: Array<Usage.InputTokensByModality>;
@@ -2059,6 +2064,21 @@ export namespace Usage {
      * Number of tokens for the modality.
      */
     tokens?: number;
+  }
+
+  /**
+   * The number of grounding tool counts.
+   */
+  export interface GroundingToolCount {
+    /**
+     * The number of grounding tool counts.
+     */
+    count?: number;
+
+    /**
+     * The grounding tool type associated with the count.
+     */
+    type?: 'google_search' | 'google_maps' | 'retrieval';
   }
 
   /**
