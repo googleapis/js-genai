@@ -391,7 +391,7 @@ export namespace ContentDelta {
       | 'audio/mulaw';
 
     /**
-     * @deprecated Deprecated. Use sample_rate instead. The value is ignored.
+     * Deprecated. Use sample_rate instead. The value is ignored.
      */
     rate?: number;
 
