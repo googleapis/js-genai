@@ -3069,6 +3069,8 @@ export declare interface GroundingChunkRetrievedContext {
   customMetadata?: GroundingChunkCustomMetadata[];
   /** Optional. Name of the `FileSearchStore` containing the document. Example: `fileSearchStores/123`. This field is not supported in Vertex AI. */
   fileSearchStore?: string;
+  /** Optional. Page number of the retrieved context. This field is not supported in Vertex AI. */
+  pageNumber?: number;
 }
 
 /** A `Web` chunk is a piece of evidence that comes from a web page. It contains the URI of the web page, the title of the page, and the domain of the page. This is used to provide the user with a link to the source of the information. */
