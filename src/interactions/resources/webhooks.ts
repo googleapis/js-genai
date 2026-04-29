@@ -25,8 +25,12 @@ export class BaseWebhooks extends APIResource {
   /**
    * Updates an existing Webhook.
    */
-  update(id: string, params: WebhookUpdateParams, options?: RequestOptions): APIPromise<Webhook> {
-    const { api_version = this._client.apiVersion, update_mask, ...body } = params;
+  update(
+    id: string,
+    params: WebhookUpdateParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<Webhook> {
+    const { api_version = this._client.apiVersion, update_mask, ...body } = params ?? {};
     return this._client.patch(path`/${api_version}/webhooks/${id}`, {
       query: { update_mask },
       body,
@@ -118,24 +122,20 @@ export interface Webhook {
    * Required. The events that the webhook is subscribed to. Available events:
    *
    * - batch.succeeded
-   * - batch.cancelled
    * - batch.expired
    * - batch.failed
    * - interaction.requires_action
    * - interaction.completed
    * - interaction.failed
-   * - interaction.cancelled
    * - video.generated
    */
   subscribed_events: Array<
     | 'batch.succeeded'
-    | 'batch.cancelled'
     | 'batch.expired'
     | 'batch.failed'
     | 'interaction.requires_action'
     | 'interaction.completed'
     | 'interaction.failed'
-    | 'interaction.cancelled'
     | 'video.generated'
     | (string & {})
   >;
@@ -171,7 +171,7 @@ export interface Webhook {
   signing_secrets?: Array<SigningSecret>;
 
   /**
-   * The state of the webhook.
+   * Output only. The state of the webhook.
    */
   state?: 'enabled' | 'disabled' | 'disabled_due_to_failed_deliveries';
 
@@ -234,24 +234,20 @@ export interface WebhookCreateParams {
    * events:
    *
    * - batch.succeeded
-   * - batch.cancelled
    * - batch.expired
    * - batch.failed
    * - interaction.requires_action
    * - interaction.completed
    * - interaction.failed
-   * - interaction.cancelled
    * - video.generated
    */
   subscribed_events: Array<
     | 'batch.succeeded'
-    | 'batch.cancelled'
     | 'batch.expired'
     | 'batch.failed'
     | 'interaction.requires_action'
     | 'interaction.completed'
     | 'interaction.failed'
-    | 'interaction.cancelled'
     | 'video.generated'
     | (string & {})
   >;
@@ -265,11 +261,6 @@ export interface WebhookCreateParams {
    * Body param: Optional. The user-provided name of the webhook.
    */
   name?: string;
-
-  /**
-   * Body param: The state of the webhook.
-   */
-  state?: 'enabled' | 'disabled' | 'disabled_due_to_failed_deliveries';
 }
 
 export interface WebhookUpdateParams {
@@ -277,38 +268,6 @@ export interface WebhookUpdateParams {
    * Path param: Which version of the API to use.
    */
   api_version?: string;
-
-  /**
-   * Body param: Required. The events that the webhook is subscribed to. Available
-   * events:
-   *
-   * - batch.succeeded
-   * - batch.cancelled
-   * - batch.expired
-   * - batch.failed
-   * - interaction.requires_action
-   * - interaction.completed
-   * - interaction.failed
-   * - interaction.cancelled
-   * - video.generated
-   */
-  subscribed_events: Array<
-    | 'batch.succeeded'
-    | 'batch.cancelled'
-    | 'batch.expired'
-    | 'batch.failed'
-    | 'interaction.requires_action'
-    | 'interaction.completed'
-    | 'interaction.failed'
-    | 'interaction.cancelled'
-    | 'video.generated'
-    | (string & {})
-  >;
-
-  /**
-   * Body param: Required. The URI to which webhook events will be sent.
-   */
-  uri: string;
 
   /**
    * Query param: Optional. The list of fields to update.
@@ -321,9 +280,37 @@ export interface WebhookUpdateParams {
   name?: string;
 
   /**
-   * Body param: The state of the webhook.
+   * Body param: Optional. The state of the webhook.
    */
   state?: 'enabled' | 'disabled' | 'disabled_due_to_failed_deliveries';
+
+  /**
+   * Body param: Optional. The events that the webhook is subscribed to. Available
+   * events:
+   *
+   * - batch.succeeded
+   * - batch.expired
+   * - batch.failed
+   * - interaction.requires_action
+   * - interaction.completed
+   * - interaction.failed
+   * - video.generated
+   */
+  subscribed_events?: Array<
+    | 'batch.succeeded'
+    | 'batch.expired'
+    | 'batch.failed'
+    | 'interaction.requires_action'
+    | 'interaction.completed'
+    | 'interaction.failed'
+    | 'video.generated'
+    | (string & {})
+  >;
+
+  /**
+   * Body param: Optional. The URI to which webhook events will be sent.
+   */
+  uri?: string;
 }
 
 export interface WebhookListParams {
