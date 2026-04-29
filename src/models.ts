@@ -47,6 +47,11 @@ export class Models extends BaseModule {
     params: types.EmbedContentParameters,
   ): Promise<types.EmbedContentResponse> => {
     if (!this.apiClient.isVertexAI()) {
+      const isGeminiEmbedding2Model =
+        params.model.includes('gemini-embedding-2');
+      if (isGeminiEmbedding2Model) {
+        params.contents = tContents(params.contents);
+      }
       return await this.embedContentInternal(params);
     }
     const isVertexEmbedContentModel =
@@ -79,7 +84,7 @@ export class Models extends BaseModule {
   /**
    * Makes an API request to generate content with a given model.
    *
-   * For the `model` parameter, supported formats for Vertex AI API include:
+   * For the `model` parameter, supported formats for Gemini Enterprise Agent Platform API include:
    * - The Gemini model ID, for example: 'gemini-2.0-flash'
    * - The full resource name starts with 'projects/', for example:
    *  'projects/my-project-id/locations/us-central1/publishers/google/models/gemini-2.0-flash'
@@ -210,7 +215,7 @@ export class Models extends BaseModule {
    * Makes an API request to generate content with a given model and yields the
    * response in chunks.
    *
-   * For the `model` parameter, supported formats for Vertex AI API include:
+   * For the `model` parameter, supported formats for Gemini Enterprise Agent Platform API include:
    * - The Gemini model ID, for example: 'gemini-2.0-flash'
    * - The full resource name starts with 'projects/', for example:
    *  'projects/my-project-id/locations/us-central1/publishers/google/models/gemini-2.0-flash'
@@ -525,7 +530,7 @@ export class Models extends BaseModule {
       if (!actualParams.config!.queryBase) {
         if (actualParams.config?.filter) {
           throw new Error(
-            'Filtering tuned models list for Vertex AI is not currently supported',
+            'Filtering tuned models list for Gemini Enterprise Agent Platform (previously known as Vertex AI) is not currently supported',
           );
         } else {
           actualParams.config!.filter = 'labels.tune-type:*';
@@ -582,7 +587,7 @@ export class Models extends BaseModule {
 
   /**
    * Upscales an image based on an image, upscale factor, and configuration.
-   * Only supported in Vertex AI currently.
+   * Only supported in Gemini Enterprise Agent Platform currently.
    *
    * @param params - The parameters for upscaling an image.
    * @return The response from the API.
@@ -1131,7 +1136,9 @@ export class Models extends BaseModule {
         return typedResp;
       });
     } else {
-      throw new Error('This method is only supported by the Vertex AI.');
+      throw new Error(
+        'This method is only supported by the Gemini Enterprise Agent Platform (previously known as Vertex AI).',
+      );
     }
   }
 
@@ -1188,36 +1195,24 @@ export class Models extends BaseModule {
         return typedResp;
       });
     } else {
-      throw new Error('This method is only supported by the Vertex AI.');
+      throw new Error(
+        'This method is only supported by the Gemini Enterprise Agent Platform (previously known as Vertex AI).',
+      );
     }
   }
 
   /**
    * Recontextualizes an image.
    *
-   * There are two types of recontextualization currently supported:
-   * 1) Imagen Product Recontext - Generate images of products in new scenes
-   *    and contexts.
-   * 2) Virtual Try-On: Generate images of persons modeling fashion products.
+   * There is one type of recontextualization currently supported:
+   * 1) Virtual Try-On: Generate images of persons modeling fashion products.
    *
    * @param params - The parameters for recontextualizing an image.
    * @return The response from the API.
    *
    * @example
    * ```ts
-   * const response1 = await ai.models.recontextImage({
-   *  model: 'imagen-product-recontext-preview-06-30',
-   *  source: {
-   *    prompt: 'In a modern kitchen setting.',
-   *    productImages: [productImage],
-   *  },
-   *  config: {
-   *    numberOfImages: 1,
-   *  },
-   * });
-   * console.log(response1?.generatedImages?.[0]?.image?.imageBytes);
-   *
-   * const response2 = await ai.models.recontextImage({
+   * const response = await ai.models.recontextImage({
    *  model: 'virtual-try-on-001',
    *  source: {
    *    personImage: personImage,
@@ -1227,7 +1222,7 @@ export class Models extends BaseModule {
    *    numberOfImages: 1,
    *  },
    * });
-   * console.log(response2?.generatedImages?.[0]?.image?.imageBytes);
+   * console.log(response?.generatedImages?.[0]?.image?.imageBytes);
    * ```
    */
   async recontextImage(
@@ -1274,7 +1269,9 @@ export class Models extends BaseModule {
         return typedResp;
       });
     } else {
-      throw new Error('This method is only supported by the Vertex AI.');
+      throw new Error(
+        'This method is only supported by the Gemini Enterprise Agent Platform (previously known as Vertex AI).',
+      );
     }
   }
 
@@ -1342,7 +1339,9 @@ export class Models extends BaseModule {
         return typedResp;
       });
     } else {
-      throw new Error('This method is only supported by the Vertex AI.');
+      throw new Error(
+        'This method is only supported by the Gemini Enterprise Agent Platform (previously known as Vertex AI).',
+      );
     }
   }
 
@@ -1892,7 +1891,9 @@ export class Models extends BaseModule {
         return typedResp;
       });
     } else {
-      throw new Error('This method is only supported by the Vertex AI.');
+      throw new Error(
+        'This method is only supported by the Gemini Enterprise Agent Platform (previously known as Vertex AI).',
+      );
     }
   }
 

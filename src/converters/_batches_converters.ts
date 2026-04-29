@@ -128,6 +128,17 @@ export function batchJobDestinationFromVertex(
     common.setValueByPath(toObject, ['bigqueryUri'], fromBigqueryUri);
   }
 
+  const fromVertexDataset = common.getValueByPath(fromObject, [
+    'vertexMultimodalDatasetDestination',
+  ]);
+  if (fromVertexDataset != null) {
+    common.setValueByPath(
+      toObject,
+      ['vertexDataset'],
+      vertexMultimodalDatasetDestinationFromVertex(fromVertexDataset),
+    );
+  }
+
   return toObject;
 }
 
@@ -160,12 +171,14 @@ export function batchJobDestinationToVertex(
   }
 
   if (common.getValueByPath(fromObject, ['fileName']) !== undefined) {
-    throw new Error('fileName parameter is not supported in Vertex AI.');
+    throw new Error(
+      'fileName parameter is not supported in Gemini Enterprise Agent Platform (previously known as Vertex AI).',
+    );
   }
 
   if (common.getValueByPath(fromObject, ['inlinedResponses']) !== undefined) {
     throw new Error(
-      'inlinedResponses parameter is not supported in Vertex AI.',
+      'inlinedResponses parameter is not supported in Gemini Enterprise Agent Platform (previously known as Vertex AI).',
     );
   }
 
@@ -174,7 +187,18 @@ export function batchJobDestinationToVertex(
     undefined
   ) {
     throw new Error(
-      'inlinedEmbedContentResponses parameter is not supported in Vertex AI.',
+      'inlinedEmbedContentResponses parameter is not supported in Gemini Enterprise Agent Platform (previously known as Vertex AI).',
+    );
+  }
+
+  const fromVertexDataset = common.getValueByPath(fromObject, [
+    'vertexDataset',
+  ]);
+  if (fromVertexDataset != null) {
+    common.setValueByPath(
+      toObject,
+      ['vertexMultimodalDatasetDestination'],
+      vertexMultimodalDatasetDestinationToVertex(fromVertexDataset),
     );
   }
 
@@ -316,6 +340,11 @@ export function batchJobFromVertex(
     common.setValueByPath(toObject, ['completionStats'], fromCompletionStats);
   }
 
+  const fromOutputInfo = common.getValueByPath(fromObject, ['outputInfo']);
+  if (fromOutputInfo != null) {
+    common.setValueByPath(toObject, ['outputInfo'], fromOutputInfo);
+  }
+
   return toObject;
 }
 
@@ -340,6 +369,18 @@ export function batchJobSourceFromVertex(
   ]);
   if (fromBigqueryUri != null) {
     common.setValueByPath(toObject, ['bigqueryUri'], fromBigqueryUri);
+  }
+
+  const fromVertexDatasetName = common.getValueByPath(fromObject, [
+    'vertexMultimodalDatasetSource',
+    'datasetName',
+  ]);
+  if (fromVertexDatasetName != null) {
+    common.setValueByPath(
+      toObject,
+      ['vertexDatasetName'],
+      fromVertexDatasetName,
+    );
   }
 
   return toObject;
@@ -381,6 +422,12 @@ export function batchJobSourceToMldev(
     common.setValueByPath(toObject, ['requests', 'requests'], transformedList);
   }
 
+  if (common.getValueByPath(fromObject, ['vertexDatasetName']) !== undefined) {
+    throw new Error(
+      'vertexDatasetName parameter is not supported in Gemini API.',
+    );
+  }
+
   return toObject;
 }
 
@@ -409,11 +456,26 @@ export function batchJobSourceToVertex(
   }
 
   if (common.getValueByPath(fromObject, ['fileName']) !== undefined) {
-    throw new Error('fileName parameter is not supported in Vertex AI.');
+    throw new Error(
+      'fileName parameter is not supported in Gemini Enterprise Agent Platform (previously known as Vertex AI).',
+    );
   }
 
   if (common.getValueByPath(fromObject, ['inlinedRequests']) !== undefined) {
-    throw new Error('inlinedRequests parameter is not supported in Vertex AI.');
+    throw new Error(
+      'inlinedRequests parameter is not supported in Gemini Enterprise Agent Platform (previously known as Vertex AI).',
+    );
+  }
+
+  const fromVertexDatasetName = common.getValueByPath(fromObject, [
+    'vertexDatasetName',
+  ]);
+  if (fromVertexDatasetName != null) {
+    common.setValueByPath(
+      toObject,
+      ['vertexMultimodalDatasetSource', 'datasetName'],
+      fromVertexDatasetName,
+    );
   }
 
   return toObject;
@@ -623,6 +685,17 @@ export function createBatchJobConfigToMldev(
     throw new Error('dest parameter is not supported in Gemini API.');
   }
 
+  const fromWebhookConfig = common.getValueByPath(fromObject, [
+    'webhookConfig',
+  ]);
+  if (parentObject !== undefined && fromWebhookConfig != null) {
+    common.setValueByPath(
+      parentObject,
+      ['batch', 'webhookConfig'],
+      fromWebhookConfig,
+    );
+  }
+
   return toObject;
 }
 
@@ -643,6 +716,12 @@ export function createBatchJobConfigToVertex(
       parentObject,
       ['outputConfig'],
       batchJobDestinationToVertex(t.tBatchJobDestination(fromDest)),
+    );
+  }
+
+  if (common.getValueByPath(fromObject, ['webhookConfig']) !== undefined) {
+    throw new Error(
+      'webhookConfig parameter is not supported in Gemini Enterprise Agent Platform (previously known as Vertex AI).',
     );
   }
 
@@ -926,6 +1005,18 @@ export function embedContentConfigToMldev(
 
   if (common.getValueByPath(fromObject, ['autoTruncate']) !== undefined) {
     throw new Error('autoTruncate parameter is not supported in Gemini API.');
+  }
+
+  if (common.getValueByPath(fromObject, ['documentOcr']) !== undefined) {
+    throw new Error('documentOcr parameter is not supported in Gemini API.');
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['audioTrackExtraction']) !== undefined
+  ) {
+    throw new Error(
+      'audioTrackExtraction parameter is not supported in Gemini API.',
+    );
   }
 
   return toObject;
@@ -1958,6 +2049,55 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
       });
     }
     common.setValueByPath(toObject, ['mcpServers'], transformedList);
+  }
+
+  return toObject;
+}
+
+export function vertexMultimodalDatasetDestinationFromVertex(
+  fromObject: types.VertexMultimodalDatasetDestination,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromBigqueryDestination = common.getValueByPath(fromObject, [
+    'bigqueryDestination',
+    'outputUri',
+  ]);
+  if (fromBigqueryDestination != null) {
+    common.setValueByPath(
+      toObject,
+      ['bigqueryDestination'],
+      fromBigqueryDestination,
+    );
+  }
+
+  const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
+  if (fromDisplayName != null) {
+    common.setValueByPath(toObject, ['displayName'], fromDisplayName);
+  }
+
+  return toObject;
+}
+
+export function vertexMultimodalDatasetDestinationToVertex(
+  fromObject: types.VertexMultimodalDatasetDestination,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromBigqueryDestination = common.getValueByPath(fromObject, [
+    'bigqueryDestination',
+  ]);
+  if (fromBigqueryDestination != null) {
+    common.setValueByPath(
+      toObject,
+      ['bigqueryDestination', 'outputUri'],
+      fromBigqueryDestination,
+    );
+  }
+
+  const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
+  if (fromDisplayName != null) {
+    common.setValueByPath(toObject, ['displayName'], fromDisplayName);
   }
 
   return toObject;

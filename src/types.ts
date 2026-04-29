@@ -640,6 +640,10 @@ export enum Modality {
    * Indicates the model should return audio.
    */
   AUDIO = 'AUDIO',
+  /**
+   * Indicates the model should return video.
+   */
+  VIDEO = 'VIDEO',
 }
 
 /** The stage of the underlying model. This enum is not supported in Vertex AI. */
@@ -1003,19 +1007,19 @@ export enum ServiceTier {
   /**
    * Default service tier, which is standard.
    */
-  SERVICE_TIER_UNSPECIFIED = 'SERVICE_TIER_UNSPECIFIED',
+  UNSPECIFIED = 'unspecified',
   /**
    * Flex service tier.
    */
-  SERVICE_TIER_FLEX = 'SERVICE_TIER_FLEX',
+  FLEX = 'flex',
   /**
    * Standard service tier.
    */
-  SERVICE_TIER_STANDARD = 'SERVICE_TIER_STANDARD',
+  STANDARD = 'standard',
   /**
    * Priority service tier.
    */
-  SERVICE_TIER_PRIORITY = 'SERVICE_TIER_PRIORITY',
+  PRIORITY = 'priority',
 }
 
 /** Options for feature selection preference. */
@@ -1026,7 +1030,7 @@ export enum FeatureSelectionPreference {
   PRIORITIZE_COST = 'PRIORITIZE_COST',
 }
 
-/** Enum representing the Vertex embedding API to use. */
+/** Enum representing the Gemini Enterprise Agent Platform embedding API to use. */
 export enum EmbeddingApiType {
   /**
    * predict API endpoint (default)
@@ -1184,6 +1188,20 @@ export enum VideoCompressionQuality {
   LOSSLESS = 'LOSSLESS',
 }
 
+/** Resize mode for the image input for video generation. */
+export enum ImageResizeMode {
+  /**
+   * Crop the image to fit the correct aspect ratio (so we lose parts
+      of the image in the process).
+   */
+  CROP = 'CROP',
+  /**
+   * Pad the image to fit the correct aspect ratio (so we don't lose
+      any parts of the image in the process).
+   */
+  PAD = 'PAD',
+}
+
 /** Enum representing the tuning method. */
 export enum TuningMethod {
   /**
@@ -1234,6 +1252,102 @@ export enum TurnCompleteReason {
    * Needs more input from the user.
    */
   NEED_MORE_INPUT = 'NEED_MORE_INPUT',
+  /**
+   * Input content is prohibited.
+   */
+  PROHIBITED_INPUT_CONTENT = 'PROHIBITED_INPUT_CONTENT',
+  /**
+   * Input image contains prohibited content.
+   */
+  IMAGE_PROHIBITED_INPUT_CONTENT = 'IMAGE_PROHIBITED_INPUT_CONTENT',
+  /**
+   * Input text contains prominent person reference.
+   */
+  INPUT_TEXT_CONTAIN_PROMINENT_PERSON_PROHIBITED = 'INPUT_TEXT_CONTAIN_PROMINENT_PERSON_PROHIBITED',
+  /**
+   * Input image contains celebrity.
+   */
+  INPUT_IMAGE_CELEBRITY = 'INPUT_IMAGE_CELEBRITY',
+  /**
+   * Input image contains photo realistic child.
+   */
+  INPUT_IMAGE_PHOTO_REALISTIC_CHILD_PROHIBITED = 'INPUT_IMAGE_PHOTO_REALISTIC_CHILD_PROHIBITED',
+  /**
+   * Input text contains NCII content.
+   */
+  INPUT_TEXT_NCII_PROHIBITED = 'INPUT_TEXT_NCII_PROHIBITED',
+  /**
+   * Other input safety issue.
+   */
+  INPUT_OTHER = 'INPUT_OTHER',
+  /**
+   * Input contains IP violation.
+   */
+  INPUT_IP_PROHIBITED = 'INPUT_IP_PROHIBITED',
+  /**
+   * Input matched blocklist.
+   */
+  BLOCKLIST = 'BLOCKLIST',
+  /**
+   * Input is unsafe for image generation.
+   */
+  UNSAFE_PROMPT_FOR_IMAGE_GENERATION = 'UNSAFE_PROMPT_FOR_IMAGE_GENERATION',
+  /**
+   * Generated image failed safety check.
+   */
+  GENERATED_IMAGE_SAFETY = 'GENERATED_IMAGE_SAFETY',
+  /**
+   * Generated content failed safety check.
+   */
+  GENERATED_CONTENT_SAFETY = 'GENERATED_CONTENT_SAFETY',
+  /**
+   * Generated audio failed safety check.
+   */
+  GENERATED_AUDIO_SAFETY = 'GENERATED_AUDIO_SAFETY',
+  /**
+   * Generated video failed safety check.
+   */
+  GENERATED_VIDEO_SAFETY = 'GENERATED_VIDEO_SAFETY',
+  /**
+   * Generated content is prohibited.
+   */
+  GENERATED_CONTENT_PROHIBITED = 'GENERATED_CONTENT_PROHIBITED',
+  /**
+   * Generated content matched blocklist.
+   */
+  GENERATED_CONTENT_BLOCKLIST = 'GENERATED_CONTENT_BLOCKLIST',
+  /**
+   * Generated image is prohibited.
+   */
+  GENERATED_IMAGE_PROHIBITED = 'GENERATED_IMAGE_PROHIBITED',
+  /**
+   * Generated image contains celebrity.
+   */
+  GENERATED_IMAGE_CELEBRITY = 'GENERATED_IMAGE_CELEBRITY',
+  /**
+   * Generated image contains prominent people detected by rewriter.
+   */
+  GENERATED_IMAGE_PROMINENT_PEOPLE_DETECTED_BY_REWRITER = 'GENERATED_IMAGE_PROMINENT_PEOPLE_DETECTED_BY_REWRITER',
+  /**
+   * Generated image contains identifiable people.
+   */
+  GENERATED_IMAGE_IDENTIFIABLE_PEOPLE = 'GENERATED_IMAGE_IDENTIFIABLE_PEOPLE',
+  /**
+   * Generated image contains minors.
+   */
+  GENERATED_IMAGE_MINORS = 'GENERATED_IMAGE_MINORS',
+  /**
+   * Generated image contains IP violation.
+   */
+  OUTPUT_IMAGE_IP_PROHIBITED = 'OUTPUT_IMAGE_IP_PROHIBITED',
+  /**
+   * Other generated content issue.
+   */
+  GENERATED_OTHER = 'GENERATED_OTHER',
+  /**
+   * Max regeneration attempts reached.
+   */
+  MAX_REGENERATION_REACHED = 'MAX_REGENERATION_REACHED',
 }
 
 /** Server content modalities. */
@@ -1913,7 +2027,7 @@ export declare interface HttpOptions {
   timeout?: number;
   /** Extra parameters to add to the request body.
       The structure must match the backend API's request structure.
-      - VertexAI backend API docs: https://cloud.google.com/vertex-ai/docs/reference/rest
+      - Gemini Enterprise Agent Platform backend API docs: https://cloud.google.com/vertex-ai/docs/reference/rest
       - GeminiAPI backend API docs: https://ai.google.dev/api/rest */
   extraBody?: Record<string, unknown>;
   /** HTTP retry options for the request. */
@@ -2713,14 +2827,14 @@ export declare interface GenerateContentConfig {
    */
   imageConfig?: ImageConfig;
   /** Enables enhanced civic answers. It may not be available for all
-      models. This field is not supported in Vertex AI.
+      models. This field is not supported in Gemini Enterprise Agent Platform.
        */
   enableEnhancedCivicAnswers?: boolean;
   /** Settings for prompt and response sanitization using the Model Armor
       service. If supplied, safety_settings must not be supplied.
        */
   modelArmorConfig?: ModelArmorConfig;
-  /** The service tier to use for the request. For example, SERVICE_TIER_FLEX. */
+  /** The service tier to use for the request. For example, ServiceTier.FLEX. */
   serviceTier?: ServiceTier;
 }
 
@@ -2955,6 +3069,8 @@ export declare interface GroundingChunkRetrievedContext {
   customMetadata?: GroundingChunkCustomMetadata[];
   /** Optional. Name of the `FileSearchStore` containing the document. Example: `fileSearchStores/123`. This field is not supported in Vertex AI. */
   fileSearchStore?: string;
+  /** Optional. Page number of the retrieved context. This field is not supported in Vertex AI. */
+  pageNumber?: number;
 }
 
 /** A `Web` chunk is a piece of evidence that comes from a web page. It contains the URI of the web page, the title of the page, and the domain of the page. This is used to provide the user with a link to the source of the information. */
@@ -3551,14 +3667,22 @@ export declare interface EmbedContentConfig {
       using the earlier model (`models/embedding-001`).
        */
   outputDimensionality?: number;
-  /** Vertex API only. The MIME type of the input.
+  /** Gemini Enterprise Agent Platform only. The MIME type of the input.
    */
   mimeType?: string;
-  /** Vertex API only. Whether to silently truncate inputs longer than
+  /** Gemini Enterprise Agent Platform only. Whether to silently truncate inputs longer than
       the max sequence length. If this option is set to false, oversized inputs
       will lead to an INVALID_ARGUMENT error, similar to other text APIs.
        */
   autoTruncate?: boolean;
+  /** Gemini Enterprise Agent Platform only. Whether to enable OCR for document content.
+      Only applicable to Gemini Embedding 2 models.
+       */
+  documentOcr?: boolean;
+  /** Gemini Enterprise Agent Platform only. Whether to extract audio from video content.
+      Only applicable to Gemini Embedding 2 models.
+       */
+  audioTrackExtraction?: boolean;
 }
 
 /** Parameters for the _embed_content method. */
@@ -3572,7 +3696,7 @@ export declare interface EmbedContentParametersPrivate {
   /** The single content to embed. Only the `parts.text` fields will be counted.
    */
   content?: ContentUnion;
-  /** The Vertex embedding API to use.
+  /** The Gemini Enterprise Agent Platform embedding API to use.
    */
   embeddingApiType?: EmbeddingApiType;
   /** Configuration that contains optional parameters.
@@ -3582,11 +3706,11 @@ export declare interface EmbedContentParametersPrivate {
 
 /** Statistics of the input text associated with the result of content embedding. */
 export declare interface ContentEmbeddingStatistics {
-  /** Vertex API only. If the input text was truncated due to having
+  /** Gemini Enterprise Agent Platform only. If the input text was truncated due to having
       a length longer than the allowed maximum input.
        */
   truncated?: boolean;
-  /** Vertex API only. Number of tokens of the input text.
+  /** Gemini Enterprise Agent Platform only. Number of tokens of the input text.
    */
   tokenCount?: number;
 }
@@ -3596,15 +3720,15 @@ export declare interface ContentEmbedding {
   /** A list of floats representing an embedding.
    */
   values?: number[];
-  /** Vertex API only. Statistics of the input text associated with this
+  /** Gemini Enterprise Agent Platform only. Statistics of the input text associated with this
       embedding.
        */
   statistics?: ContentEmbeddingStatistics;
 }
 
-/** Request-level metadata for the Vertex Embed Content API. */
+/** Request-level metadata for the Gemini Enterprise Agent Platform Embed Content API. */
 export declare interface EmbedContentMetadata {
-  /** Vertex API only. The total number of billable characters included
+  /** Gemini Enterprise Agent Platform only. The total number of billable characters included
       in the request.
        */
   billableCharacterCount?: number;
@@ -3618,7 +3742,7 @@ export class EmbedContentResponse {
       the batch request.
        */
   embeddings?: ContentEmbedding[];
-  /** Vertex API only. Metadata about the request.
+  /** Gemini Enterprise Agent Platform only. Metadata about the request.
    */
   metadata?: EmbedContentMetadata;
 }
@@ -4368,6 +4492,20 @@ export declare interface VideoGenerationMask {
   maskMode?: VideoGenerationMaskMode;
 }
 
+/** Configuration for webhook notifications.
+
+Used to configure webhook endpoints that will receive notifications
+when long-running operations (e.g., batch jobs, video generation) complete. */
+export declare interface WebhookConfig {
+  /** The webhook URIs to receive notifications. If set, these
+      webhook URIs will be used instead of the registered webhooks. */
+  uris?: string[];
+  /** User metadata that will be included in each webhook event
+      notification. Use this to attach custom key-value data to correlate
+      webhook events with your internal systems. */
+  userMetadata?: Record<string, unknown>;
+}
+
 /** Configuration for generating videos. */
 export declare interface GenerateVideosConfig {
   /** Used to override HTTP request options. */
@@ -4426,6 +4564,11 @@ export declare interface GenerateVideosConfig {
   compressionQuality?: VideoCompressionQuality;
   /** User specified labels to track billing usage. */
   labels?: Record<string, string>;
+  /** Webhook configuration for receiving notifications when the
+      video generation operation completes. */
+  webhookConfig?: WebhookConfig;
+  /** Resize mode of the image input for video generation. */
+  resizeMode?: ImageResizeMode;
 }
 
 /** Class that represents the parameters for generating videos. */
@@ -4640,7 +4783,8 @@ export declare interface DistillationHyperParameters {
   /** Optional. Multiplier for adjusting the default learning rate. */
   learningRateMultiplier?: number;
   /** The batch size hyperparameter for tuning.
-      This is only supported for OSS models in Vertex. */
+      This is only supported for OSS models in Gemini Enterprise Agent Platform.
+       */
   batchSize?: number;
   /** The learning rate for tuning. OSS models only. */
   learningRate?: number;
@@ -5190,7 +5334,7 @@ export declare interface TuningExample {
 export declare interface TuningDataset {
   /** GCS URI of the file containing training dataset in JSONL format. */
   gcsUri?: string;
-  /** The resource name of the Vertex Multimodal Dataset that is used as training dataset. Example: 'projects/my-project-id-or-number/locations/my-location/datasets/my-dataset-id'. */
+  /** The resource name of the Gemini Enterprise Agent Platform (previously known as Vertex AI) Multimodal Dataset that is used as training dataset. Example: 'projects/my-project-id-or-number/locations/my-location/datasets/my-dataset-id'. */
   vertexDatasetResource?: string;
   /** Inline examples with simple input/output text. */
   examples?: TuningExample[];
@@ -5199,7 +5343,7 @@ export declare interface TuningDataset {
 export declare interface TuningValidationDataset {
   /** GCS URI of the file containing validation dataset in JSONL format. */
   gcsUri?: string;
-  /** The resource name of the Vertex Multimodal Dataset that is used as validation dataset. Example: 'projects/my-project-id-or-number/locations/my-location/datasets/my-dataset-id'. */
+  /** The resource name of the Gemini Enterprise Agent Platform (previously known as Vertex AI) Multimodal Dataset that is used as validation dataset. Example: 'projects/my-project-id-or-number/locations/my-location/datasets/my-dataset-id'. */
   vertexDatasetResource?: string;
 }
 
@@ -5234,9 +5378,9 @@ export declare interface CreateTuningJobConfig {
   adapterSize?: AdapterSize;
   /** Tuning mode for tuning. */
   tuningMode?: TuningMode;
-  /** Custom base model for tuning. This is only supported for OSS models in Vertex. */
+  /** Custom base model for tuning. This is only supported for OSS models in Gemini Enterprise Agent Platform. */
   customBaseModel?: string;
-  /** The batch size hyperparameter for tuning. This is only supported for OSS models in Vertex. */
+  /** The batch size hyperparameter for tuning. This is only supported for OSS models in Gemini Enterprise Agent Platform. */
   batchSize?: number;
   /** The learning rate for tuning. OSS models only. Mutually exclusive with learning_rate_multiplier. */
   learningRate?: number;
@@ -6031,7 +6175,7 @@ export declare interface InlinedRequest {
 /** Config for `src` parameter. */
 export declare interface BatchJobSource {
   /** Storage format of the input files. Must be one of:
-      'jsonl', 'bigquery'.
+      'jsonl', 'bigquery', 'vertex-dataset'.
        */
   format?: string;
   /** The Google Cloud Storage URIs to input files.
@@ -6047,6 +6191,19 @@ export declare interface BatchJobSource {
   /** The Gemini Developer API's inlined input data to run batch job.
    */
   inlinedRequests?: InlinedRequest[];
+  /** This field is experimental and may change in future versions. The Vertex AI dataset resource name to use as input. Must be of type multimodal.
+   */
+  vertexDatasetName?: string;
+}
+
+/** This class is experimental and may change in future versions.
+
+The specification for an output Vertex AI multimodal dataset. */
+export declare interface VertexMultimodalDatasetDestination {
+  /** The BigQuery destination for the multimodal dataset. */
+  bigqueryDestination?: string;
+  /** The display name of the multimodal dataset. */
+  displayName?: string;
 }
 
 /** Job error. */
@@ -6094,7 +6251,7 @@ export class InlinedEmbedContentResponse {
 /** Config for `des` parameter. */
 export declare interface BatchJobDestination {
   /** Storage format of the output files. Must be one of:
-      'jsonl', 'bigquery'.
+      'jsonl', 'bigquery', 'vertex-dataset'.
        */
   format?: string;
   /** The Google Cloud Storage URI to the output file.
@@ -6120,6 +6277,9 @@ export declare interface BatchJobDestination {
       the input requests.
        */
   inlinedEmbedContentResponses?: InlinedEmbedContentResponse[];
+  /** This field is experimental and may change in future versions. The Vertex AI dataset destination.
+   */
+  vertexDataset?: VertexMultimodalDatasetDestination;
 }
 
 /** Config for optional parameters. */
@@ -6140,6 +6300,10 @@ export declare interface CreateBatchJobConfig {
       "gs://path/to/output/data" or "bq://projectId.bqDatasetId.bqTableId".
        */
   dest?: BatchJobDestinationUnion;
+  /** Webhook configuration for receiving notifications when the batch
+      operation completes.
+       */
+  webhookConfig?: WebhookConfig;
 }
 
 /** Config for batches.create parameters. */
@@ -6154,6 +6318,16 @@ export declare interface CreateBatchJobParameters {
   /** Optional parameters for creating a BatchJob.
    */
   config?: CreateBatchJobConfig;
+}
+
+/** Represents the `output_info` field in batch jobs. */
+export declare interface BatchJobOutputInfo {
+  /** This field is experimental and may change in future versions. The Vertex AI dataset name containing the output data. */
+  vertexMultimodalDatasetName?: string;
+  /** The full path of the Cloud Storage directory created, into which the prediction output is written. */
+  gcsOutputDirectory?: string;
+  /** The name of the BigQuery table created, in `predictions_<timestamp>` format, into which the prediction output is written. */
+  bigqueryOutputTable?: string;
 }
 
 /** Success and error statistics of processing multiple entities (for example, DataItems or structured data rows) in batch. This data type is not supported in Gemini API. */
@@ -6186,7 +6360,7 @@ export declare interface BatchJob {
   createTime?: string;
   /** Output only. Time when the Job for the first time entered the `JOB_STATE_RUNNING` state. */
   startTime?: string;
-  /** The time when the BatchJob was completed. This field is for Vertex AI only.
+  /** The time when the BatchJob was completed. This field is for Gemini Enterprise Agent Platform only.
    */
   endTime?: string;
   /** The time when the BatchJob was last updated.
@@ -6195,15 +6369,18 @@ export declare interface BatchJob {
   /** The name of the model that produces the predictions via the BatchJob.
    */
   model?: string;
-  /** Configuration for the input data. This field is for Vertex AI only.
+  /** Configuration for the input data. This field is for Gemini Enterprise Agent Platform only.
    */
   src?: BatchJobSource;
   /** Configuration for the output data.
    */
   dest?: BatchJobDestination;
-  /** Statistics on completed and failed prediction instances. This field is for Vertex AI only.
+  /** Statistics on completed and failed prediction instances. This field is for Gemini Enterprise Agent Platform only.
    */
   completionStats?: CompletionStats;
+  /** Information further describing the output of this job. Output only.
+   */
+  outputInfo?: BatchJobOutputInfo;
 }
 
 /** Parameters for the embed_content method. */
@@ -7042,6 +7219,28 @@ export declare interface ProactivityConfig {
   proactiveAudio?: boolean;
 }
 
+/** Configures the customized avatar to be used in the session. */
+export declare interface CustomizedAvatar {
+  /** The mime type of the reference image, e.g., "image/jpeg". */
+  imageMimeType?: string;
+  /** The data of the reference image. The dimensions of the reference
+      image should be 9:16 (portrait) with a minimum resolution of 704x1280.
+  * @remarks Encoded as base64 string. */
+  imageData?: string;
+}
+
+/** Configures the avatar to be used in the session. */
+export declare interface AvatarConfig {
+  /** Pre-built avatar id. */
+  avatarName?: string;
+  /** Customized avatar appearance with a reference image. */
+  customizedAvatar?: CustomizedAvatar;
+  /** The bitrate of compressed audio. */
+  audioBitrateBps?: number;
+  /** The bitrate of compressed video output. */
+  videoBitrateBps?: number;
+}
+
 /** Message contains configuration that will apply for the duration of the streaming session. */
 export declare interface LiveClientSetup {
   /** 
@@ -7087,6 +7286,12 @@ export declare interface LiveClientSetup {
       vad_signal to indicate the start and end of speech. This allows the server
       to process the audio more efficiently. */
   explicitVadSignal?: boolean;
+  /** Configures the avatar model behavior. */
+  avatarConfig?: AvatarConfig;
+  /** Safety settings in the request to block unsafe content in the
+      response.
+       */
+  safetySettings?: SafetySetting[];
 }
 
 /** Incremental update of the current conversation delivered from the client.
@@ -7172,32 +7377,6 @@ messages. */
 export class LiveClientToolResponse {
   /** The response to the function calls. */
   functionResponses?: FunctionResponse[];
-}
-
-/** Parameters for sending realtime input to the live API. */
-export declare interface LiveSendRealtimeInputParameters {
-  /** Realtime input to send to the session. */
-  media?: BlobImageUnion;
-  /** The realtime audio input stream. */
-  audio?: Blob;
-  /** 
-Indicates that the audio stream has ended, e.g. because the microphone was
-turned off.
-
-This should only be sent when automatic activity detection is enabled
-(which is the default).
-
-The client can reopen the stream by sending an audio message.
- */
-  audioStreamEnd?: boolean;
-  /** The realtime video input stream. */
-  video?: BlobImageUnion;
-  /** The realtime text input stream. */
-  text?: string;
-  /** Marks the start of user activity. */
-  activityStart?: ActivityStart;
-  /** Marks the end of user activity. */
-  activityEnd?: ActivityEnd;
 }
 
 /** Messages sent by the client in the API call. */
@@ -7302,6 +7481,12 @@ If included the server will send SessionResumptionUpdate messages. */
       vad_signal to indicate the start and end of speech. This allows the server
       to process the audio more efficiently. */
   explicitVadSignal?: boolean;
+  /** Configures the avatar model behavior. */
+  avatarConfig?: AvatarConfig;
+  /** Safety settings in the request to block unsafe content in the
+      response.
+       */
+  safetySettings?: SafetySetting[];
 }
 
 /** Parameters for connecting to the live API. */
@@ -7370,6 +7555,32 @@ export declare interface LiveSendClientContentParameters {
   the currently accumulated prompt. Otherwise, the server will await
   additional messages before starting generation. */
   turnComplete?: boolean;
+}
+
+/** Parameters for sending realtime input to the live API. */
+export declare interface LiveSendRealtimeInputParameters {
+  /** Realtime input to send to the session. */
+  media?: BlobImageUnion;
+  /** The realtime audio input stream. */
+  audio?: Blob;
+  /** 
+Indicates that the audio stream has ended, e.g. because the microphone was
+turned off.
+
+This should only be sent when automatic activity detection is enabled
+(which is the default).
+
+The client can reopen the stream by sending an audio message.
+ */
+  audioStreamEnd?: boolean;
+  /** The realtime video input stream. */
+  video?: BlobImageUnion;
+  /** The realtime text input stream. */
+  text?: string;
+  /** Marks the start of user activity. */
+  activityStart?: ActivityStart;
+  /** Marks the end of user activity. */
+  activityEnd?: ActivityEnd;
 }
 
 /** Parameters for sending tool responses to the live API. */

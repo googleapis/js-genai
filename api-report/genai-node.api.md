@@ -185,6 +185,14 @@ export interface AutomaticFunctionCallingConfig {
 }
 
 // @public
+export interface AvatarConfig {
+    audioBitrateBps?: number;
+    avatarName?: string;
+    customizedAvatar?: CustomizedAvatar;
+    videoBitrateBps?: number;
+}
+
+// @public
 export interface BaseUrlParameters {
     // (undocumented)
     geminiUrl?: string;
@@ -217,6 +225,7 @@ export interface BatchJob {
     error?: JobError;
     model?: string;
     name?: string;
+    outputInfo?: BatchJobOutputInfo;
     src?: BatchJobSource;
     startTime?: string;
     state?: JobState;
@@ -231,10 +240,18 @@ export interface BatchJobDestination {
     gcsUri?: string;
     inlinedEmbedContentResponses?: InlinedEmbedContentResponse[];
     inlinedResponses?: InlinedResponse[];
+    vertexDataset?: VertexMultimodalDatasetDestination;
 }
 
 // @public (undocumented)
 export type BatchJobDestinationUnion = BatchJobDestination | string;
+
+// @public
+export interface BatchJobOutputInfo {
+    bigqueryOutputTable?: string;
+    gcsOutputDirectory?: string;
+    vertexMultimodalDatasetName?: string;
+}
 
 // @public
 export interface BatchJobSource {
@@ -243,6 +260,7 @@ export interface BatchJobSource {
     format?: string;
     gcsUri?: string[];
     inlinedRequests?: InlinedRequest[];
+    vertexDatasetName?: string;
 }
 
 // @public (undocumented)
@@ -576,6 +594,7 @@ export interface CreateBatchJobConfig {
     dest?: BatchJobDestinationUnion;
     displayName?: string;
     httpOptions?: HttpOptions;
+    webhookConfig?: WebhookConfig;
 }
 
 // @public
@@ -732,6 +751,12 @@ export function createUserContent(partOrString: PartListUnion | string): Content
 // @public
 export interface CustomCodeExecutionResult {
     score?: number;
+}
+
+// @public
+export interface CustomizedAvatar {
+    imageData?: string;
+    imageMimeType?: string;
 }
 
 // @public
@@ -1030,7 +1055,9 @@ export interface EmbedContentBatch {
 // @public
 export interface EmbedContentConfig {
     abortSignal?: AbortSignal;
+    audioTrackExtraction?: boolean;
     autoTruncate?: boolean;
+    documentOcr?: boolean;
     httpOptions?: HttpOptions;
     mimeType?: string;
     outputDimensionality?: number;
@@ -1562,8 +1589,10 @@ export interface GenerateVideosConfig {
     personGeneration?: string;
     pubsubTopic?: string;
     referenceImages?: VideoGenerationReferenceImage[];
+    resizeMode?: ImageResizeMode;
     resolution?: string;
     seed?: number;
+    webhookConfig?: WebhookConfig;
 }
 
 // @public
@@ -1779,12 +1808,15 @@ export class GoogleGenAI {
     readonly tunings: Tunings;
     // (undocumented)
     readonly vertexai: boolean;
+    // (undocumented)
+    get webhooks(): Webhooks;
 }
 
 // @public
 export interface GoogleGenAIOptions {
     apiKey?: string;
     apiVersion?: string;
+    enterprise?: boolean;
     googleAuthOptions?: GoogleAuthOptions;
     httpOptions?: HttpOptions;
     location?: string;
@@ -1896,6 +1928,7 @@ export interface GroundingChunkRetrievedContext {
     customMetadata?: GroundingChunkCustomMetadata[];
     documentName?: string;
     fileSearchStore?: string;
+    pageNumber?: number;
     ragChunk?: RagChunk;
     text?: string;
     title?: string;
@@ -2065,6 +2098,12 @@ export enum ImagePromptLanguage {
 }
 
 // @public
+export enum ImageResizeMode {
+    CROP = "CROP",
+    PAD = "PAD"
+}
+
+// @public
 export interface ImageSearch {
 }
 
@@ -2131,7 +2170,7 @@ export class Interactions extends BaseInteractions {
 
 // @public (undocumented)
 export namespace Interactions {
-        { export type AllowedTools as AllowedTools, export type Annotation as Annotation, export type AudioContent as AudioContent, export type CodeExecutionCallArguments as CodeExecutionCallArguments, export type CodeExecutionCallContent as CodeExecutionCallContent, export type CodeExecutionResultContent as CodeExecutionResultContent, export type Content as Content, export type ContentDelta as ContentDelta, export type ContentStart as ContentStart, export type ContentStop as ContentStop, export type DeepResearchAgentConfig as DeepResearchAgentConfig, export type DocumentContent as DocumentContent, export type DynamicAgentConfig as DynamicAgentConfig, export type ErrorEvent as ErrorEvent, export type FileCitation as FileCitation, export type FileSearchCallContent as FileSearchCallContent, export type FileSearchResultContent as FileSearchResultContent, export type Function as Function, export type FunctionCallContent as FunctionCallContent, export type FunctionResultContent as FunctionResultContent, export type GenerationConfig as GenerationConfig, export type GoogleMapsCallArguments as GoogleMapsCallArguments, export type GoogleMapsCallContent as GoogleMapsCallContent, export type GoogleMapsResult as GoogleMapsResult, export type GoogleMapsResultContent as GoogleMapsResultContent, export type GoogleSearchCallArguments as GoogleSearchCallArguments, export type GoogleSearchCallContent as GoogleSearchCallContent, export type GoogleSearchResult as GoogleSearchResult, export type GoogleSearchResultContent as GoogleSearchResultContent, export type ImageConfig as ImageConfig, export type ImageContent as ImageContent, export type Interaction as Interaction, export type InteractionCompleteEvent as InteractionCompleteEvent, export type InteractionSSEEvent as InteractionSSEEvent, export type InteractionStartEvent as InteractionStartEvent, export type InteractionStatusUpdate as InteractionStatusUpdate, export type MCPServerToolCallContent as MCPServerToolCallContent, export type MCPServerToolResultContent as MCPServerToolResultContent, export type Model as Model, export type PlaceCitation as PlaceCitation, export type SpeechConfig as SpeechConfig, export type TextContent as TextContent, export type ThinkingLevel as ThinkingLevel, export type ThoughtContent as ThoughtContent, export type Tool as Tool, export type ToolChoiceConfig as ToolChoiceConfig, export type ToolChoiceType as ToolChoiceType, export type Turn as Turn, export type URLCitation as URLCitation, export type URLContextCallArguments as URLContextCallArguments, export type URLContextCallContent as URLContextCallContent, export type URLContextResult as URLContextResult, export type URLContextResultContent as URLContextResultContent, export type Usage as Usage, export type VideoContent as VideoContent, export type InteractionDeleteResponse as InteractionDeleteResponse, export type InteractionCreateParams as InteractionCreateParams, export type CreateModelInteractionParamsNonStreaming as CreateModelInteractionParamsNonStreaming, export type CreateModelInteractionParamsStreaming as CreateModelInteractionParamsStreaming, export type CreateAgentInteractionParamsNonStreaming as CreateAgentInteractionParamsNonStreaming, export type CreateAgentInteractionParamsStreaming as CreateAgentInteractionParamsStreaming, export type InteractionDeleteParams as InteractionDeleteParams, export type InteractionCancelParams as InteractionCancelParams, export type InteractionGetParams as InteractionGetParams, export type InteractionGetParamsNonStreaming as InteractionGetParamsNonStreaming, export type InteractionGetParamsStreaming as InteractionGetParamsStreaming, };
+        { export type AllowedTools as AllowedTools, export type Annotation as Annotation, export type AudioContent as AudioContent, export type CodeExecutionCallArguments as CodeExecutionCallArguments, export type CodeExecutionCallContent as CodeExecutionCallContent, export type CodeExecutionResultContent as CodeExecutionResultContent, export type Content as Content, export type ContentDelta as ContentDelta, export type ContentStart as ContentStart, export type ContentStop as ContentStop, export type DeepResearchAgentConfig as DeepResearchAgentConfig, export type DocumentContent as DocumentContent, export type DynamicAgentConfig as DynamicAgentConfig, export type ErrorEvent as ErrorEvent, export type FileCitation as FileCitation, export type FileSearchCallContent as FileSearchCallContent, export type FileSearchResultContent as FileSearchResultContent, export type Function as Function, export type FunctionCallContent as FunctionCallContent, export type FunctionResultContent as FunctionResultContent, export type GenerationConfig as GenerationConfig, export type GoogleMapsCallArguments as GoogleMapsCallArguments, export type GoogleMapsCallContent as GoogleMapsCallContent, export type GoogleMapsResult as GoogleMapsResult, export type GoogleMapsResultContent as GoogleMapsResultContent, export type GoogleSearchCallArguments as GoogleSearchCallArguments, export type GoogleSearchCallContent as GoogleSearchCallContent, export type GoogleSearchResult as GoogleSearchResult, export type GoogleSearchResultContent as GoogleSearchResultContent, export type ImageConfig as ImageConfig, export type ImageContent as ImageContent, export type Interaction as Interaction, export type InteractionCompleteEvent as InteractionCompleteEvent, export type InteractionSSEEvent as InteractionSSEEvent, export type InteractionStartEvent as InteractionStartEvent, export type InteractionStatusUpdate as InteractionStatusUpdate, export type MCPServerToolCallContent as MCPServerToolCallContent, export type MCPServerToolResultContent as MCPServerToolResultContent, export type Model as Model, export type PlaceCitation as PlaceCitation, export type SpeechConfig as SpeechConfig, export type TextContent as TextContent, export type ThinkingLevel as ThinkingLevel, export type ThoughtContent as ThoughtContent, export type Tool as Tool, export type ToolChoiceConfig as ToolChoiceConfig, export type ToolChoiceType as ToolChoiceType, export type Turn as Turn, export type URLCitation as URLCitation, export type URLContextCallArguments as URLContextCallArguments, export type URLContextCallContent as URLContextCallContent, export type URLContextResult as URLContextResult, export type URLContextResultContent as URLContextResultContent, export type Usage as Usage, export type VideoContent as VideoContent, export type WebhookConfig as WebhookConfig, export type InteractionDeleteResponse as InteractionDeleteResponse, export type InteractionCreateParams as InteractionCreateParams, export type CreateModelInteractionParamsNonStreaming as CreateModelInteractionParamsNonStreaming, export type CreateModelInteractionParamsStreaming as CreateModelInteractionParamsStreaming, export type CreateAgentInteractionParamsNonStreaming as CreateAgentInteractionParamsNonStreaming, export type CreateAgentInteractionParamsStreaming as CreateAgentInteractionParamsStreaming, export type InteractionDeleteParams as InteractionDeleteParams, export type InteractionCancelParams as InteractionCancelParams, export type InteractionGetParams as InteractionGetParams, export type InteractionGetParamsNonStreaming as InteractionGetParamsNonStreaming, export type InteractionGetParamsStreaming as InteractionGetParamsStreaming, };
 }
 
 // @public
@@ -2399,6 +2438,7 @@ export interface LiveClientRealtimeInput {
 
 // @public
 export interface LiveClientSetup {
+    avatarConfig?: AvatarConfig;
     contextWindowCompression?: ContextWindowCompressionConfig;
     explicitVadSignal?: boolean;
     generationConfig?: GenerationConfig;
@@ -2407,6 +2447,7 @@ export interface LiveClientSetup {
     outputAudioTranscription?: AudioTranscriptionConfig;
     proactivity?: ProactivityConfig;
     realtimeInputConfig?: RealtimeInputConfig;
+    safetySettings?: SafetySetting[];
     sessionResumption?: SessionResumptionConfig;
     systemInstruction?: ContentUnion;
     tools?: ToolListUnion;
@@ -2420,6 +2461,7 @@ export class LiveClientToolResponse {
 // @public
 export interface LiveConnectConfig {
     abortSignal?: AbortSignal;
+    avatarConfig?: AvatarConfig;
     contextWindowCompression?: ContextWindowCompressionConfig;
     enableAffectiveDialog?: boolean;
     explicitVadSignal?: boolean;
@@ -2432,6 +2474,7 @@ export interface LiveConnectConfig {
     proactivity?: ProactivityConfig;
     realtimeInputConfig?: RealtimeInputConfig;
     responseModalities?: Modality[];
+    safetySettings?: SafetySetting[];
     seed?: number;
     sessionResumption?: SessionResumptionConfig;
     speechConfig?: SpeechConfig;
@@ -2726,7 +2769,8 @@ export enum Modality {
     AUDIO = "AUDIO",
     IMAGE = "IMAGE",
     MODALITY_UNSPECIFIED = "MODALITY_UNSPECIFIED",
-    TEXT = "TEXT"
+    TEXT = "TEXT",
+    VIDEO = "VIDEO"
 }
 
 // @public
@@ -3419,10 +3463,10 @@ export interface SendMessageParameters {
 
 // @public
 export enum ServiceTier {
-    SERVICE_TIER_FLEX = "SERVICE_TIER_FLEX",
-    SERVICE_TIER_PRIORITY = "SERVICE_TIER_PRIORITY",
-    SERVICE_TIER_STANDARD = "SERVICE_TIER_STANDARD",
-    SERVICE_TIER_UNSPECIFIED = "SERVICE_TIER_UNSPECIFIED"
+    FLEX = "flex",
+    PRIORITY = "priority",
+    STANDARD = "standard",
+    UNSPECIFIED = "unspecified"
 }
 
 // @public
@@ -3852,10 +3896,34 @@ export interface TuningValidationDataset {
 
 // @public
 export enum TurnCompleteReason {
+    BLOCKLIST = "BLOCKLIST",
+    GENERATED_AUDIO_SAFETY = "GENERATED_AUDIO_SAFETY",
+    GENERATED_CONTENT_BLOCKLIST = "GENERATED_CONTENT_BLOCKLIST",
+    GENERATED_CONTENT_PROHIBITED = "GENERATED_CONTENT_PROHIBITED",
+    GENERATED_CONTENT_SAFETY = "GENERATED_CONTENT_SAFETY",
+    GENERATED_IMAGE_CELEBRITY = "GENERATED_IMAGE_CELEBRITY",
+    GENERATED_IMAGE_IDENTIFIABLE_PEOPLE = "GENERATED_IMAGE_IDENTIFIABLE_PEOPLE",
+    GENERATED_IMAGE_MINORS = "GENERATED_IMAGE_MINORS",
+    GENERATED_IMAGE_PROHIBITED = "GENERATED_IMAGE_PROHIBITED",
+    GENERATED_IMAGE_PROMINENT_PEOPLE_DETECTED_BY_REWRITER = "GENERATED_IMAGE_PROMINENT_PEOPLE_DETECTED_BY_REWRITER",
+    GENERATED_IMAGE_SAFETY = "GENERATED_IMAGE_SAFETY",
+    GENERATED_OTHER = "GENERATED_OTHER",
+    GENERATED_VIDEO_SAFETY = "GENERATED_VIDEO_SAFETY",
+    IMAGE_PROHIBITED_INPUT_CONTENT = "IMAGE_PROHIBITED_INPUT_CONTENT",
+    INPUT_IMAGE_CELEBRITY = "INPUT_IMAGE_CELEBRITY",
+    INPUT_IMAGE_PHOTO_REALISTIC_CHILD_PROHIBITED = "INPUT_IMAGE_PHOTO_REALISTIC_CHILD_PROHIBITED",
+    INPUT_IP_PROHIBITED = "INPUT_IP_PROHIBITED",
+    INPUT_OTHER = "INPUT_OTHER",
+    INPUT_TEXT_CONTAIN_PROMINENT_PERSON_PROHIBITED = "INPUT_TEXT_CONTAIN_PROMINENT_PERSON_PROHIBITED",
+    INPUT_TEXT_NCII_PROHIBITED = "INPUT_TEXT_NCII_PROHIBITED",
     MALFORMED_FUNCTION_CALL = "MALFORMED_FUNCTION_CALL",
+    MAX_REGENERATION_REACHED = "MAX_REGENERATION_REACHED",
     NEED_MORE_INPUT = "NEED_MORE_INPUT",
+    OUTPUT_IMAGE_IP_PROHIBITED = "OUTPUT_IMAGE_IP_PROHIBITED",
+    PROHIBITED_INPUT_CONTENT = "PROHIBITED_INPUT_CONTENT",
     RESPONSE_REJECTED = "RESPONSE_REJECTED",
-    TURN_COMPLETE_REASON_UNSPECIFIED = "TURN_COMPLETE_REASON_UNSPECIFIED"
+    TURN_COMPLETE_REASON_UNSPECIFIED = "TURN_COMPLETE_REASON_UNSPECIFIED",
+    UNSAFE_PROMPT_FOR_IMAGE_GENERATION = "UNSAFE_PROMPT_FOR_IMAGE_GENERATION"
 }
 
 // @public
@@ -4079,6 +4147,12 @@ export interface VertexAISearchDataStoreSpec {
 }
 
 // @public
+export interface VertexMultimodalDatasetDestination {
+    bigqueryDestination?: string;
+    displayName?: string;
+}
+
+// @public
 export interface VertexRagStore {
     ragCorpora?: string[];
     ragResources?: VertexRagStoreRagResource[];
@@ -4161,6 +4235,23 @@ export enum VoiceActivityType {
 export interface VoiceConfig {
     prebuiltVoiceConfig?: PrebuiltVoiceConfig;
     replicatedVoiceConfig?: ReplicatedVoiceConfig;
+}
+
+// @public
+export interface WebhookConfig {
+    uris?: string[];
+    userMetadata?: Record<string, unknown>;
+}
+
+// Warning: (ae-forgotten-export) The symbol "BaseWebhooks" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export class Webhooks extends BaseWebhooks {
+}
+
+// @public (undocumented)
+export namespace Webhooks {
+        { export type SigningSecret as SigningSecret, export type Webhook as Webhook, export type WebhookListResponse as WebhookListResponse, export type WebhookDeleteResponse as WebhookDeleteResponse, export type WebhookPingResponse as WebhookPingResponse, export type WebhookRotateSigningSecretResponse as WebhookRotateSigningSecretResponse, export type WebhookCreateParams as WebhookCreateParams, export type WebhookUpdateParams as WebhookUpdateParams, export type WebhookListParams as WebhookListParams, export type WebhookDeleteParams as WebhookDeleteParams, export type WebhookGetParams as WebhookGetParams, export type WebhookPingParams as WebhookPingParams, export type WebhookRotateSigningSecretParams as WebhookRotateSigningSecretParams, };
 }
 
 // @public

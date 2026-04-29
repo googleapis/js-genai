@@ -1,6 +1,46 @@
 # Changelog
 
 
+## [1.50.1](https://github.com/googleapis/js-genai/compare/v1.50.0...v1.50.1) (2026-04-14)
+
+
+### Bug Fixes
+
+* Refactor Webhook types in GenAI SDKs for easier useage ([5100abc](https://github.com/googleapis/js-genai/commit/5100abc2cec39c29a297545fe89a22b9ba2149bf))
+* Rename `webhooks.retrieve` to `webhooks.get`. ([db6e771](https://github.com/googleapis/js-genai/commit/db6e771cc3b6da984e7fe71ca7cc722303ee6a3b))
+
+## [1.50.0](https://github.com/googleapis/js-genai/compare/v1.49.0...v1.50.0) (2026-04-13)
+
+
+### Features
+
+* Add "eu" as a supported service location for Vertex AI platform. ([2493f9c](https://github.com/googleapis/js-genai/commit/2493f9c6d10817766a22bb45eb65468b95f7ae87))
+* Add DeepResearchAgentConfig fields ([3615ca2](https://github.com/googleapis/js-genai/commit/3615ca2063f65b313f9963b6f47a67be320a0edd))
+* Add Live Avatar new fields ([6a0ff96](https://github.com/googleapis/js-genai/commit/6a0ff9699ebea6cd517834e43d23bcb362f04aa8))
+* Add support for new audio MIME types: opus, alaw, and mulaw ([7137f13](https://github.com/googleapis/js-genai/commit/7137f13069bb65501b7816efb96924c40c2977cd))
+* add webhook and webhookConfig for js and python sdk ([0f89605](https://github.com/googleapis/js-genai/commit/0f8960591f5f6359558bd9aedd868e4747eb6834))
+* Add webhook_config to batches.create() and models.generate_videos() ([894bc93](https://github.com/googleapis/js-genai/commit/894bc937de0fdacc018bbf585cdbb75daaa7f943))
+* Wire the webhook into python and js client. ([b6c5d18](https://github.com/googleapis/js-genai/commit/b6c5d189bc0ae98550c45333c5e7a9bc43648dd3))
+
+## [1.49.0](https://github.com/googleapis/js-genai/compare/v1.48.0...v1.49.0) (2026-04-08)
+
+
+### Features
+
+* Introduce TYPE_L16 audio content and optional fields. ([c62cb9a](https://github.com/googleapis/js-genai/commit/c62cb9a1025990ef52adf3fb5d379e180c27eb36))
+
+## [1.48.0](https://github.com/googleapis/js-genai/compare/v1.47.0...v1.48.0) (2026-03-31)
+
+
+### Features
+
+* Support dedicated TextAnnotationDelta for streaming tool responses ([89552ba](https://github.com/googleapis/js-genai/commit/89552baa732f41a8d733893ccccb8dd00cd9d27f))
+
+
+### Bug Fixes
+
+* Fix service_tier enums. ([9bdc2ae](https://github.com/googleapis/js-genai/commit/9bdc2ae519e7e34af48593b69093b703f3871f15))
+
 ## [1.47.0](https://github.com/googleapis/js-genai/compare/v1.46.0...v1.47.0) (2026-03-27)
 
 

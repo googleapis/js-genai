@@ -16,6 +16,7 @@ import {Files} from '../files.js';
 import {FileSearchStores} from '../filesearchstores.js';
 import GeminiNextGenAPI from '../interactions/index.js';
 import {Interactions as GeminiNextGenInteractions} from '../interactions/resources/interactions.js';
+import {Webhooks as GeminiNextGenWebhooks} from '../interactions/resources/webhooks.js';
 import {Live} from '../live.js';
 import {Models} from '../models.js';
 import {NodeAuth} from '../node/_node_auth.js';
@@ -30,6 +31,45 @@ import {NodeUploader} from './_node_uploader.js';
 import {NodeFiles} from './node_files.js';
 
 const LANGUAGE_LABEL_PREFIX = 'gl-node/';
+
+function resolveCloudFlag(options: GoogleGenAIOptions): boolean {
+  if (options.enterprise !== undefined || options.vertexai !== undefined) {
+    if (
+      options.enterprise !== undefined &&
+      options.vertexai !== undefined &&
+      options.enterprise !== options.vertexai
+    ) {
+      throw new Error(
+        'enterprise and vertexAI flags have conflicting values, please set enterprise value only.',
+      );
+    }
+    return options.enterprise ?? options.vertexai!;
+  }
+
+  const envEnterpriseStr = getEnv('GOOGLE_GENAI_USE_ENTERPRISE');
+  const envVertexaiStr = getEnv('GOOGLE_GENAI_USE_VERTEXAI');
+  const useEnterpriseEnv = stringToBoolean(envEnterpriseStr);
+  const useVertexaiEnv = stringToBoolean(envVertexaiStr);
+
+  if (
+    envEnterpriseStr !== undefined &&
+    envVertexaiStr !== undefined &&
+    useEnterpriseEnv !== useVertexaiEnv
+  ) {
+    console.warn(
+      'Warning: Both GOOGLE_GENAI_USE_ENTERPRISE and GOOGLE_GENAI_USE_VERTEXAI are set with conflicting values. The value of GOOGLE_GENAI_USE_ENTERPRISE will be used.',
+    );
+  }
+
+  if (envEnterpriseStr !== undefined) {
+    return useEnterpriseEnv;
+  }
+  if (envVertexaiStr !== undefined) {
+    return useVertexaiEnv;
+  }
+
+  return false;
+}
 
 /**
  * The Google GenAI SDK.
@@ -91,6 +131,32 @@ export class GoogleGenAI {
   readonly tunings: Tunings;
   readonly fileSearchStores: FileSearchStores;
   private _interactions: GeminiNextGenInteractions | undefined;
+  private _webhooks: GeminiNextGenWebhooks | undefined;
+  private _nextGenClient: GeminiNextGenAPI | undefined;
+
+  private getNextGenClient(): GeminiNextGenAPI {
+    const httpOpts = this.httpOptions;
+    if (this._nextGenClient === undefined) {
+      this._nextGenClient = new GeminiNextGenAPI({
+        baseURL: this.apiClient.getBaseUrl(),
+        apiKey: this.apiKey,
+        apiVersion: this.apiClient.getApiVersion(),
+        clientAdapter: this.apiClient,
+        defaultHeaders: this.apiClient.getDefaultHeaders(),
+        timeout: httpOpts?.timeout,
+        maxRetries: httpOpts?.retryOptions?.attempts,
+      });
+    }
+
+    // Unsupported Options Warnings
+    if (httpOpts?.extraBody) {
+      console.warn(
+        'GoogleGenAI.interactions: Client level httpOptions.extraBody is not supported by the interactions client and will be ignored.',
+      );
+    }
+
+    return this._nextGenClient;
+  }
 
   get interactions(): GeminiNextGenInteractions {
     if (this._interactions !== undefined) {
@@ -101,27 +167,17 @@ export class GoogleGenAI {
       'GoogleGenAI.interactions: Interactions usage is experimental and may change in future versions.',
     );
 
-    const httpOpts = this.httpOptions;
+    this._interactions = this.getNextGenClient().interactions;
+    return this._interactions;
+  }
 
-    // Unsupported Options Warnings
-    if (httpOpts?.extraBody) {
-      console.warn(
-        'GoogleGenAI.interactions: Client level httpOptions.extraBody is not supported by the interactions client and will be ignored.',
-      );
+  get webhooks(): GeminiNextGenWebhooks {
+    if (this._webhooks !== undefined) {
+      return this._webhooks;
     }
 
-    const nextGenClient = new GeminiNextGenAPI({
-      baseURL: this.apiClient.getBaseUrl(),
-      apiKey: this.apiKey,
-      apiVersion: this.apiClient.getApiVersion(),
-      clientAdapter: this.apiClient,
-      defaultHeaders: this.apiClient.getDefaultHeaders(),
-      timeout: httpOpts?.timeout,
-      maxRetries: httpOpts?.retryOptions?.attempts,
-    });
-    this._interactions = nextGenClient.interactions;
-
-    return this._interactions;
+    this._webhooks = this.getNextGenClient().webhooks;
+    return this._webhooks;
   }
   constructor(options: GoogleGenAIOptions) {
     // Validate explicitly set initializer values.
@@ -131,8 +187,7 @@ export class GoogleGenAI {
       );
     }
 
-    this.vertexai =
-      options.vertexai ?? getBooleanEnv('GOOGLE_GENAI_USE_VERTEXAI') ?? false;
+    this.vertexai = resolveCloudFlag(options);
     const envApiKey = getApiKeyFromEnv();
     const envProject = getEnv('GOOGLE_CLOUD_PROJECT');
     const envLocation = getEnv('GOOGLE_CLOUD_LOCATION');
@@ -146,7 +201,7 @@ export class GoogleGenAI {
     }
 
     // Handle when to use Vertex AI in express mode (api key)
-    if (options.vertexai) {
+    if (this.vertexai) {
       if (options.googleAuthOptions?.credentials) {
         // Explicit credentials take precedence over implicit api_key.
         console.debug(
@@ -187,7 +242,7 @@ export class GoogleGenAI {
 
     const baseUrl = getBaseUrl(
       options.httpOptions,
-      options.vertexai,
+      this.vertexai,
       getEnv('GOOGLE_VERTEX_BASE_URL'),
       getEnv('GOOGLE_GEMINI_BASE_URL'),
     );
@@ -232,10 +287,6 @@ export class GoogleGenAI {
 
 function getEnv(env: string): string | undefined {
   return process?.env?.[env]?.trim() ?? undefined;
-}
-
-function getBooleanEnv(env: string): boolean {
-  return stringToBoolean(getEnv(env));
 }
 
 function stringToBoolean(str?: string): boolean {

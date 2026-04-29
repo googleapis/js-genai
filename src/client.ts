@@ -18,6 +18,7 @@ import {Files} from './files.js';
 import {FileSearchStores} from './filesearchstores.js';
 import GeminiNextGenAPI from './interactions/index.js';
 import {Interactions as GeminiNextGenInteractions} from './interactions/resources/interactions.js';
+import {Webhooks as GeminiNextGenWebhooks} from './interactions/resources/webhooks.js';
 import {Live} from './live.js';
 import {Models} from './models.js';
 import {Operations} from './operations.js';
@@ -38,8 +39,23 @@ export interface GoogleGenAIOptions {
    * Optional. Determines whether to use the Vertex AI or the Gemini API.
    *
    * @remarks
+   * When true, the {@link https://cloud.google.com/vertex-ai/docs/reference/rest | Gemini Enterprise Agent Platform API} will used.
+   * When false, the {@link https://ai.google.dev/api | Gemini API} will be used.
+   * When both enterprise and vertexai are set, and they have different values,
+   * an Error will be thrown.
+   *
+   * If unset, default SDK behavior is to use the Gemini API service.
+   */
+  enterprise?: boolean;
+  /**
+   * Optional. Determines whether to use the Vertex AI (now Gemini Enterprise Agent Platform) or the Gemini API.
+   * The `enterprise` flag is recommended instead.
+   *
+   * @remarks
    * When true, the {@link https://cloud.google.com/vertex-ai/docs/reference/rest | Vertex AI API} will used.
    * When false, the {@link https://ai.google.dev/api | Gemini API} will be used.
+   * When both enterprise and vertexai are set, and they have different values,
+   * an Error will be thrown.
    *
    * If unset, default SDK behavior is to use the Gemini API service.
    */
@@ -139,6 +155,32 @@ export class GoogleGenAI {
   readonly tunings: Tunings;
   readonly fileSearchStores: FileSearchStores;
   private _interactions: GeminiNextGenInteractions | undefined;
+  private _webhooks: GeminiNextGenWebhooks | undefined;
+  private _nextGenClient: GeminiNextGenAPI | undefined;
+
+  private getNextGenClient(): GeminiNextGenAPI {
+    const httpOpts = this.httpOptions;
+    if (this._nextGenClient === undefined) {
+      this._nextGenClient = new GeminiNextGenAPI({
+        baseURL: this.apiClient.getBaseUrl(),
+        apiKey: this.apiKey,
+        apiVersion: this.apiClient.getApiVersion(),
+        clientAdapter: this.apiClient,
+        defaultHeaders: this.apiClient.getDefaultHeaders(),
+        timeout: httpOpts?.timeout,
+        maxRetries: httpOpts?.retryOptions?.attempts,
+      });
+    }
+
+    // Unsupported Options Warnings
+    if (httpOpts?.extraBody) {
+      console.warn(
+        'GoogleGenAI.interactions: Client level httpOptions.extraBody is not supported by the interactions client and will be ignored.',
+      );
+    }
+
+    return this._nextGenClient;
+  }
 
   get interactions(): GeminiNextGenInteractions {
     if (this._interactions !== undefined) {
@@ -149,33 +191,17 @@ export class GoogleGenAI {
       'GoogleGenAI.interactions: Interactions usage is experimental and may change in future versions.',
     );
 
-    if (this.vertexai) {
-      throw new Error(
-        'This version of the GenAI SDK does not support Vertex AI API for interactions.',
-      );
-    }
-
-    const httpOpts = this.httpOptions;
-
-    // Unsupported Options Warnings
-    if (httpOpts?.extraBody) {
-      console.warn(
-        'GoogleGenAI.interactions: Client level httpOptions.extraBody is not supported by the interactions client and will be ignored.',
-      );
-    }
-
-    const nextGenClient = new GeminiNextGenAPI({
-      baseURL: this.apiClient.getBaseUrl(),
-      apiKey: this.apiKey,
-      apiVersion: this.apiClient.getApiVersion(),
-      clientAdapter: this.apiClient,
-      defaultHeaders: this.apiClient.getDefaultHeaders(),
-      timeout: httpOpts?.timeout,
-      maxRetries: httpOpts?.retryOptions?.attempts,
-    });
-    this._interactions = nextGenClient.interactions;
-
+    this._interactions = this.getNextGenClient().interactions;
     return this._interactions;
+  }
+
+  get webhooks(): GeminiNextGenWebhooks {
+    if (this._webhooks !== undefined) {
+      return this._webhooks;
+    }
+
+    this._webhooks = this.getNextGenClient().webhooks;
+    return this._webhooks;
   }
 
   constructor(options: GoogleGenAIOptions) {
@@ -184,7 +210,16 @@ export class GoogleGenAI {
         `An API Key must be set when running in an unspecified environment.\n + ${crossError().message}`,
       );
     }
-    this.vertexai = options.vertexai ?? false;
+    if (
+      options.enterprise !== undefined &&
+      options.vertexai !== undefined &&
+      options.enterprise !== options.vertexai
+    ) {
+      throw new Error(
+        'enterprise and vertexAI flags have conflicting values, please set enterprise value only.',
+      );
+    }
+    this.vertexai = options.enterprise ?? options.vertexai ?? false;
     this.apiKey = options.apiKey;
     this.apiVersion = options.apiVersion;
     this.httpOptions = options.httpOptions;

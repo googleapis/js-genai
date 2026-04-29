@@ -45,7 +45,7 @@ export class Files extends BaseModule {
 
   /**
    * Uploads a file asynchronously to the Gemini API.
-   * This method is not available in Vertex AI.
+   * This method is not available in Gemini Enterprise Agent Platform (previously known as Vertex AI).
    * Supported upload sources:
    * - Node.js: File path (string) or Blob object.
    * - Browser: Blob object (e.g., File).
@@ -71,7 +71,7 @@ export class Files extends BaseModule {
    *         @see {@link types.UploadFileParameters#config} for the optional
    *         config in the parameters.
    * @return A promise that resolves to a `types.File` object.
-   * @throws An error if called on a Vertex AI client.
+   * @throws An error if called on a Gemini Enterprise Agent Platform (previously known as Vertex AI) client.
    * @throws An error if the `mimeType` is not provided and can not be inferred,
    * the `mimeType` can be provided in the `params.config` parameter.
    * @throws An error occurs if a suitable upload location cannot be established.
@@ -89,7 +89,7 @@ export class Files extends BaseModule {
   async upload(params: types.UploadFileParameters): Promise<types.File> {
     if (this.apiClient.isVertexAI()) {
       throw new Error(
-        'Vertex AI does not support uploading files. You can share files through a GCS bucket.',
+        'Gemini Enterprise Agent Platform (previously known as Vertex AI) does not support uploading files. You can share files through a GCS bucket.',
       );
     }
 

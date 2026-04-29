@@ -98,7 +98,9 @@ export class Batches extends BaseModule {
     );
 
     if (this.apiClient.isVertexAI()) {
-      throw new Error('Vertex AI does not support batches.createEmbeddings.');
+      throw new Error(
+        'Gemini Enterprise Agent Platform (previously known as Vertex AI) does not support batches.createEmbeddings.',
+      );
     }
 
     return this.createEmbeddingsInternal(params);
@@ -201,7 +203,7 @@ export class Batches extends BaseModule {
         newConfig.dest = `${bigqueryUri}_dest_${timestampStr}`;
       } else {
         throw new Error(
-          'Unsupported source for Vertex AI: No GCS or BigQuery URI found.',
+          'Unsupported source for Gemini Enterprise Agent Platform (previously known as Vertex AI): No GCS or BigQuery URI found.',
         );
       }
     }

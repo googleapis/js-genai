@@ -6,6 +6,8 @@
   "author": "",
   "license": "Apache-2.0",
   "scripts": {
+    "preinstall": "echo 'preinstall: no-op'",
+    "prebuild": "echo 'prebuild: no-op'",
     "build": "tsc"
   },
   "dependencies": {

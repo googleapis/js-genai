@@ -64,6 +64,7 @@ export {
   type URLContextResultContent,
   type Usage,
   type VideoContent,
+  type WebhookConfig,
   type InteractionDeleteResponse,
   type InteractionCreateParams,
   type CreateModelInteractionParamsNonStreaming,
@@ -76,3 +77,20 @@ export {
   type InteractionGetParamsNonStreaming,
   type InteractionGetParamsStreaming,
 } from './interactions.js';
+export {
+  Webhooks,
+  BaseWebhooks,
+  type SigningSecret,
+  type Webhook,
+  type WebhookListResponse,
+  type WebhookDeleteResponse,
+  type WebhookPingResponse,
+  type WebhookRotateSigningSecretResponse,
+  type WebhookCreateParams,
+  type WebhookUpdateParams,
+  type WebhookListParams,
+  type WebhookDeleteParams,
+  type WebhookGetParams,
+  type WebhookPingParams,
+  type WebhookRotateSigningSecretParams,
+} from './webhooks.js';

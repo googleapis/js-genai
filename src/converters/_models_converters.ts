@@ -912,6 +912,18 @@ export function embedContentConfigToMldev(
     throw new Error('autoTruncate parameter is not supported in Gemini API.');
   }
 
+  if (common.getValueByPath(fromObject, ['documentOcr']) !== undefined) {
+    throw new Error('documentOcr parameter is not supported in Gemini API.');
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['audioTrackExtraction']) !== undefined
+  ) {
+    throw new Error(
+      'audioTrackExtraction parameter is not supported in Gemini API.',
+    );
+  }
+
   return toObject;
 }
 
@@ -940,7 +952,11 @@ export function embedContentConfigToVertex(
   } else if (discriminatorTaskType === 'EMBED_CONTENT') {
     const fromTaskType = common.getValueByPath(fromObject, ['taskType']);
     if (parentObject !== undefined && fromTaskType != null) {
-      common.setValueByPath(parentObject, ['taskType'], fromTaskType);
+      common.setValueByPath(
+        parentObject,
+        ['embedContentConfig', 'taskType'],
+        fromTaskType,
+      );
     }
   }
 
@@ -958,7 +974,11 @@ export function embedContentConfigToVertex(
   } else if (discriminatorTitle === 'EMBED_CONTENT') {
     const fromTitle = common.getValueByPath(fromObject, ['title']);
     if (parentObject !== undefined && fromTitle != null) {
-      common.setValueByPath(parentObject, ['title'], fromTitle);
+      common.setValueByPath(
+        parentObject,
+        ['embedContentConfig', 'title'],
+        fromTitle,
+      );
     }
   }
 
@@ -986,7 +1006,7 @@ export function embedContentConfigToVertex(
     if (parentObject !== undefined && fromOutputDimensionality != null) {
       common.setValueByPath(
         parentObject,
-        ['outputDimensionality'],
+        ['embedContentConfig', 'outputDimensionality'],
         fromOutputDimensionality,
       );
     }
@@ -1031,7 +1051,47 @@ export function embedContentConfigToVertex(
       'autoTruncate',
     ]);
     if (parentObject !== undefined && fromAutoTruncate != null) {
-      common.setValueByPath(parentObject, ['autoTruncate'], fromAutoTruncate);
+      common.setValueByPath(
+        parentObject,
+        ['embedContentConfig', 'autoTruncate'],
+        fromAutoTruncate,
+      );
+    }
+  }
+
+  let discriminatorDocumentOcr = common.getValueByPath(rootObject, [
+    'embeddingApiType',
+  ]);
+  if (discriminatorDocumentOcr === undefined) {
+    discriminatorDocumentOcr = 'PREDICT';
+  }
+  if (discriminatorDocumentOcr === 'EMBED_CONTENT') {
+    const fromDocumentOcr = common.getValueByPath(fromObject, ['documentOcr']);
+    if (parentObject !== undefined && fromDocumentOcr != null) {
+      common.setValueByPath(
+        parentObject,
+        ['embedContentConfig', 'documentOcr'],
+        fromDocumentOcr,
+      );
+    }
+  }
+
+  let discriminatorAudioTrackExtraction = common.getValueByPath(rootObject, [
+    'embeddingApiType',
+  ]);
+  if (discriminatorAudioTrackExtraction === undefined) {
+    discriminatorAudioTrackExtraction = 'PREDICT';
+  }
+  if (discriminatorAudioTrackExtraction === 'EMBED_CONTENT') {
+    const fromAudioTrackExtraction = common.getValueByPath(fromObject, [
+      'audioTrackExtraction',
+    ]);
+    if (parentObject !== undefined && fromAudioTrackExtraction != null) {
+      common.setValueByPath(
+        parentObject,
+        ['embedContentConfig', 'audioTrackExtraction'],
+        fromAudioTrackExtraction,
+      );
     }
   }
 
@@ -1402,7 +1462,9 @@ export function functionDeclarationToVertex(
   }
 
   if (common.getValueByPath(fromObject, ['behavior']) !== undefined) {
-    throw new Error('behavior parameter is not supported in Vertex AI.');
+    throw new Error(
+      'behavior parameter is not supported in Gemini Enterprise Agent Platform (previously known as Vertex AI).',
+    );
   }
 
   return toObject;
@@ -1856,7 +1918,7 @@ export function generateContentConfigToVertex(
     common.setValueByPath(
       toObject,
       ['speechConfig'],
-      speechConfigToVertex(t.tSpeechConfig(fromSpeechConfig), rootObject),
+      t.tSpeechConfig(fromSpeechConfig),
     );
   }
 
@@ -1888,7 +1950,7 @@ export function generateContentConfigToVertex(
     undefined
   ) {
     throw new Error(
-      'enableEnhancedCivicAnswers parameter is not supported in Vertex AI.',
+      'enableEnhancedCivicAnswers parameter is not supported in Gemini Enterprise Agent Platform (previously known as Vertex AI).',
     );
   }
 
@@ -1903,8 +1965,9 @@ export function generateContentConfigToVertex(
     );
   }
 
-  if (common.getValueByPath(fromObject, ['serviceTier']) !== undefined) {
-    throw new Error('serviceTier parameter is not supported in Vertex AI.');
+  const fromServiceTier = common.getValueByPath(fromObject, ['serviceTier']);
+  if (parentObject !== undefined && fromServiceTier != null) {
+    common.setValueByPath(parentObject, ['serviceTier'], fromServiceTier);
   }
 
   return toObject;
@@ -2710,6 +2773,17 @@ export function generateVideosConfigToMldev(
     throw new Error('labels parameter is not supported in Gemini API.');
   }
 
+  const fromWebhookConfig = common.getValueByPath(fromObject, [
+    'webhookConfig',
+  ]);
+  if (parentObject !== undefined && fromWebhookConfig != null) {
+    common.setValueByPath(parentObject, ['webhookConfig'], fromWebhookConfig);
+  }
+
+  if (common.getValueByPath(fromObject, ['resizeMode']) !== undefined) {
+    throw new Error('resizeMode parameter is not supported in Gemini API.');
+  }
+
   return toObject;
 }
 
@@ -2881,6 +2955,21 @@ export function generateVideosConfigToVertex(
   const fromLabels = common.getValueByPath(fromObject, ['labels']);
   if (parentObject !== undefined && fromLabels != null) {
     common.setValueByPath(parentObject, ['labels'], fromLabels);
+  }
+
+  if (common.getValueByPath(fromObject, ['webhookConfig']) !== undefined) {
+    throw new Error(
+      'webhookConfig parameter is not supported in Gemini Enterprise Agent Platform (previously known as Vertex AI).',
+    );
+  }
+
+  const fromResizeMode = common.getValueByPath(fromObject, ['resizeMode']);
+  if (parentObject !== undefined && fromResizeMode != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'resizeMode'],
+      fromResizeMode,
+    );
   }
 
   return toObject;
@@ -3369,7 +3458,7 @@ export function generatedVideoFromVertex(
 
 export function generationConfigToVertex(
   fromObject: types.GenerationConfig,
-  rootObject?: unknown,
+  _rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3495,11 +3584,7 @@ export function generationConfigToVertex(
 
   const fromSpeechConfig = common.getValueByPath(fromObject, ['speechConfig']);
   if (fromSpeechConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['speechConfig'],
-      speechConfigToVertex(fromSpeechConfig, rootObject),
-    );
+    common.setValueByPath(toObject, ['speechConfig'], fromSpeechConfig);
   }
 
   const fromStopSequences = common.getValueByPath(fromObject, [
@@ -3536,7 +3621,7 @@ export function generationConfigToVertex(
     undefined
   ) {
     throw new Error(
-      'enableEnhancedCivicAnswers parameter is not supported in Vertex AI.',
+      'enableEnhancedCivicAnswers parameter is not supported in Gemini Enterprise Agent Platform (previously known as Vertex AI).',
     );
   }
 
@@ -4209,28 +4294,6 @@ export function modelFromVertex(
   return toObject;
 }
 
-export function multiSpeakerVoiceConfigToVertex(
-  fromObject: types.MultiSpeakerVoiceConfig,
-  rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromSpeakerVoiceConfigs = common.getValueByPath(fromObject, [
-    'speakerVoiceConfigs',
-  ]);
-  if (fromSpeakerVoiceConfigs != null) {
-    let transformedList = fromSpeakerVoiceConfigs;
-    if (Array.isArray(transformedList)) {
-      transformedList = transformedList.map((item) => {
-        return speakerVoiceConfigToVertex(item, rootObject);
-      });
-    }
-    common.setValueByPath(toObject, ['speakerVoiceConfigs'], transformedList);
-  }
-
-  return toObject;
-}
-
 export function partToMldev(
   fromObject: types.Part,
   rootObject?: unknown,
@@ -4416,15 +4479,21 @@ export function partToVertex(
   }
 
   if (common.getValueByPath(fromObject, ['toolCall']) !== undefined) {
-    throw new Error('toolCall parameter is not supported in Vertex AI.');
+    throw new Error(
+      'toolCall parameter is not supported in Gemini Enterprise Agent Platform (previously known as Vertex AI).',
+    );
   }
 
   if (common.getValueByPath(fromObject, ['toolResponse']) !== undefined) {
-    throw new Error('toolResponse parameter is not supported in Vertex AI.');
+    throw new Error(
+      'toolResponse parameter is not supported in Gemini Enterprise Agent Platform (previously known as Vertex AI).',
+    );
   }
 
   if (common.getValueByPath(fromObject, ['partMetadata']) !== undefined) {
-    throw new Error('partMetadata parameter is not supported in Vertex AI.');
+    throw new Error(
+      'partMetadata parameter is not supported in Gemini Enterprise Agent Platform (previously known as Vertex AI).',
+    );
   }
 
   return toObject;
@@ -4725,27 +4794,6 @@ export function referenceImageAPIInternalToVertex(
   return toObject;
 }
 
-export function replicatedVoiceConfigToVertex(
-  fromObject: types.ReplicatedVoiceConfig,
-  _rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
-  if (fromMimeType != null) {
-    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
-  }
-
-  const fromVoiceSampleAudio = common.getValueByPath(fromObject, [
-    'voiceSampleAudio',
-  ]);
-  if (fromVoiceSampleAudio != null) {
-    common.setValueByPath(toObject, ['voiceSampleAudio'], fromVoiceSampleAudio);
-  }
-
-  return toObject;
-}
-
 export function safetyAttributesFromMldev(
   fromObject: types.SafetyAttributes,
   _rootObject?: unknown,
@@ -4993,63 +5041,6 @@ export function segmentImageSourceToVertex(
   return toObject;
 }
 
-export function speakerVoiceConfigToVertex(
-  fromObject: types.SpeakerVoiceConfig,
-  rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromSpeaker = common.getValueByPath(fromObject, ['speaker']);
-  if (fromSpeaker != null) {
-    common.setValueByPath(toObject, ['speaker'], fromSpeaker);
-  }
-
-  const fromVoiceConfig = common.getValueByPath(fromObject, ['voiceConfig']);
-  if (fromVoiceConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['voiceConfig'],
-      voiceConfigToVertex(fromVoiceConfig, rootObject),
-    );
-  }
-
-  return toObject;
-}
-
-export function speechConfigToVertex(
-  fromObject: types.SpeechConfig,
-  rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromVoiceConfig = common.getValueByPath(fromObject, ['voiceConfig']);
-  if (fromVoiceConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['voiceConfig'],
-      voiceConfigToVertex(fromVoiceConfig, rootObject),
-    );
-  }
-
-  const fromLanguageCode = common.getValueByPath(fromObject, ['languageCode']);
-  if (fromLanguageCode != null) {
-    common.setValueByPath(toObject, ['languageCode'], fromLanguageCode);
-  }
-
-  const fromMultiSpeakerVoiceConfig = common.getValueByPath(fromObject, [
-    'multiSpeakerVoiceConfig',
-  ]);
-  if (fromMultiSpeakerVoiceConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['multiSpeakerVoiceConfig'],
-      multiSpeakerVoiceConfigToVertex(fromMultiSpeakerVoiceConfig, rootObject),
-    );
-  }
-
-  return toObject;
-}
-
 export function toolConfigToMldev(
   fromObject: types.ToolConfig,
   rootObject?: unknown,
@@ -5118,7 +5109,7 @@ export function toolConfigToVertex(
     undefined
   ) {
     throw new Error(
-      'includeServerSideToolInvocations parameter is not supported in Vertex AI.',
+      'includeServerSideToolInvocations parameter is not supported in Gemini Enterprise Agent Platform (previously known as Vertex AI).',
     );
   }
 
@@ -5244,7 +5235,9 @@ export function toolToVertex(
   }
 
   if (common.getValueByPath(fromObject, ['fileSearch']) !== undefined) {
-    throw new Error('fileSearch parameter is not supported in Vertex AI.');
+    throw new Error(
+      'fileSearch parameter is not supported in Gemini Enterprise Agent Platform (previously known as Vertex AI).',
+    );
   }
 
   const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
@@ -5312,7 +5305,9 @@ export function toolToVertex(
   }
 
   if (common.getValueByPath(fromObject, ['mcpServers']) !== undefined) {
-    throw new Error('mcpServers parameter is not supported in Vertex AI.');
+    throw new Error(
+      'mcpServers parameter is not supported in Gemini Enterprise Agent Platform (previously known as Vertex AI).',
+    );
   }
 
   return toObject;
@@ -5839,37 +5834,6 @@ export function videoToVertex(
   const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
   if (fromMimeType != null) {
     common.setValueByPath(toObject, ['mimeType'], fromMimeType);
-  }
-
-  return toObject;
-}
-
-export function voiceConfigToVertex(
-  fromObject: types.VoiceConfig,
-  rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromReplicatedVoiceConfig = common.getValueByPath(fromObject, [
-    'replicatedVoiceConfig',
-  ]);
-  if (fromReplicatedVoiceConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['replicatedVoiceConfig'],
-      replicatedVoiceConfigToVertex(fromReplicatedVoiceConfig, rootObject),
-    );
-  }
-
-  const fromPrebuiltVoiceConfig = common.getValueByPath(fromObject, [
-    'prebuiltVoiceConfig',
-  ]);
-  if (fromPrebuiltVoiceConfig != null) {
-    common.setValueByPath(
-      toObject,
-      ['prebuiltVoiceConfig'],
-      fromPrebuiltVoiceConfig,
-    );
   }
 
   return toObject;

@@ -11,7 +11,7 @@
 The Google Gen AI JavaScript SDK is designed for
 TypeScript and JavaScript developers to build applications powered by Gemini. The SDK
 supports both the [Gemini Developer API](https://ai.google.dev/gemini-api/docs)
-and [Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/overview).
+and [Gemini Enterprise Agent Platform](https://docs.cloud.google.com/gemini-enterprise-agent-platform).
 
 The Google Gen AI SDK is designed to work with Gemini 2.0+ features.
 
@@ -29,7 +29,7 @@ We recommend using our Code Generation instructions [`codegen_instructions.md`](
 
 1. Node.js version 20 or later
 
-### The following are required for Vertex AI users (excluding Vertex AI Studio)
+### The following are required for Gemini Enterprise Agent Platform users (excluding Vertex AI Studio)
 1.  [Select](https://console.cloud.google.com/project) or [create](https://cloud.google.com/resource-manager/docs/creating-managing-projects#creating_a_project) a Google Cloud project.
 1.  [Enable billing for your project](https://cloud.google.com/billing/docs/how-to/modify-project).
 1.  [Enable the Vertex AI API](https://console.cloud.google.com/flows/enableapi?apiid=aiplatform.googleapis.com).
@@ -77,7 +77,7 @@ main();
 
 The Google Gen AI SDK provides support for both the
 [Google AI Studio](https://ai.google.dev/gemini-api/docs) and
-[Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/overview)
+[Gemini Enterprise Agent Platform](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/overview)
  implementations of the Gemini API.
 
 ### Gemini Developer API
@@ -104,15 +104,15 @@ import { GoogleGenAI } from '@google/genai';
 const ai = new GoogleGenAI({apiKey: 'GEMINI_API_KEY'});
 ```
 
-### Vertex AI
+### Gemini Enterprise Agent Platform
 
-Sample code for VertexAI initialization:
+Sample code for Gemini Enterprise Agent Platform initialization:
 
 ```typescript
 import { GoogleGenAI } from '@google/genai';
 
 const ai = new GoogleGenAI({
-    vertexai: true,
+    enterprise: true,
     project: 'your_project',
     location: 'your_location',
 });
@@ -122,7 +122,7 @@ const ai = new GoogleGenAI({
 
 For NodeJS environments, you can create a client by configuring the necessary
 environment variables. Configuration setup instructions depends on whether
-you're using the Gemini Developer API or the Gemini API in Vertex AI.
+you're using the Gemini Developer API or the Gemini Enterprise Agent Platform.
 
 **Gemini Developer API:** Set `GOOGLE_API_KEY` as shown below:
 
@@ -130,11 +130,11 @@ you're using the Gemini Developer API or the Gemini API in Vertex AI.
 export GOOGLE_API_KEY='your-api-key'
 ```
 
-**Gemini API on Vertex AI:** Set `GOOGLE_GENAI_USE_VERTEXAI`,
+**Gemini Enterprise Agent Platform:** Set `GOOGLE_GENAI_USE_ENTERPRISE`,
 `GOOGLE_CLOUD_PROJECT` and `GOOGLE_CLOUD_LOCATION`, as shown below:
 
 ```bash
-export GOOGLE_GENAI_USE_VERTEXAI=true
+export GOOGLE_GENAI_USE_ENTERPRISE=true
 export GOOGLE_CLOUD_PROJECT='your-project-id'
 export GOOGLE_CLOUD_LOCATION='us-central1'
 ```
@@ -152,11 +152,11 @@ preview features in the APIs. The stable API endpoints can be selected by
 setting the API version to `v1`.
 
 To set the API version use `apiVersion`. For example, to set the API version to
-`v1` for Vertex AI:
+`v1` for Gemini Enterprise Agent Platform:
 
 ```typescript
 const ai = new GoogleGenAI({
-    vertexai: true,
+    enterprise: true,
     project: 'your_project',
     location: 'your_location',
     apiVersion: 'v1'
@@ -600,7 +600,7 @@ for (const output of interaction.outputs!) {
 This SDK (`@google/genai`) is Google Deepmind’s "vanilla" SDK for its generative
 AI offerings, and is where Google Deepmind adds new AI features.
 
-Models hosted either on the [Vertex AI platform](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/overview) or the [Gemini Developer platform](https://ai.google.dev/gemini-api/docs) are accessible through this SDK.
+Models hosted either on the [Gemini Enterprise Agent Platform](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/overview) or the [Gemini Developer platform](https://ai.google.dev/gemini-api/docs) are accessible through this SDK.
 
 Other SDKs may be offering additional AI frameworks on top of this SDK, or may
 be targeting specific project environments (like Firebase).
