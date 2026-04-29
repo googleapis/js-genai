@@ -1,6 +1,21 @@
 # Changelog
 
 
+## [1.51.0](https://github.com/googleapis/js-genai/compare/v1.50.1...v1.51.0) (2026-04-29)
+
+
+### Features
+
+* [Interactions] Add FileCitation.{custom_metadata,media_id,page_number} ([9e08ba9](https://github.com/googleapis/js-genai/commit/9e08ba923452a7028931ba4d054290115514578e))
+* Add `output_info` to `BatchJob` ([5327c60](https://github.com/googleapis/js-genai/commit/5327c605960c1e06ff987d488082704bdbae597a))
+* Add gemini-3.1-flash-tts-preview model to options ([35c941b](https://github.com/googleapis/js-genai/commit/35c941b024f7bff50fdcf155dda409d977b1cfcb))
+* Add ImageResizeMode for GenerateVideos ([faa1088](https://github.com/googleapis/js-genai/commit/faa1088785f0a733b9b65af9f78229f464a9f4c3))
+* Add new Gemini Deep Research agent models ([6f83a05](https://github.com/googleapis/js-genai/commit/6f83a0533f6c9ea7cd97e218f313ebfbd77323ad))
+* Add Vertex Dataset input and output options for batch jobs ([6aa848e](https://github.com/googleapis/js-genai/commit/6aa848e9be75843821ba44db1e9947e4ee9cf899))
+* **interaction-api:** Add grounding tool usage breakdown to Interaction Usage. ([e1c31ad](https://github.com/googleapis/js-genai/commit/e1c31ad0853be56ba0cddabe8eceb208eaf5c2a4))
+* introduce enterprise flag and GOOGLE_GENAI_USE_ENTERPRISE env var ([cf7ad52](https://github.com/googleapis/js-genai/commit/cf7ad529f2b0d5b228ea238660f88df61305eacd))
+* Replace the more ambiguous rate field with sample_rate. ([6c80464](https://github.com/googleapis/js-genai/commit/6c804649ec721d9e8ac20922252183eec5b57dc9))
+
 ## [1.50.1](https://github.com/googleapis/js-genai/compare/v1.50.0...v1.50.1) (2026-04-14)
 
 
