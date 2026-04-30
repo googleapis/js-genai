@@ -1392,10 +1392,6 @@ export interface Interaction {
    */
   previous_interaction_id?: string;
 
-  /**
-   * Enforces that the generated response is a JSON object that complies with the
-   * JSON schema specified in this field.
-   */
   response_format?: unknown;
 
   /**
@@ -2243,8 +2239,7 @@ export interface BaseCreateModelInteractionParams {
   previous_interaction_id?: string;
 
   /**
-   * Body param: Enforces that the generated response is a JSON object that complies
-   * with the JSON schema specified in this field.
+   * Body param
    */
   response_format?: unknown;
 
@@ -2351,8 +2346,7 @@ export interface BaseCreateAgentInteractionParams {
   previous_interaction_id?: string;
 
   /**
-   * Body param: Enforces that the generated response is a JSON object that complies
-   * with the JSON schema specified in this field.
+   * Body param
    */
   response_format?: unknown;
 
