@@ -19,6 +19,23 @@ The Google Gen AI SDK is designed to work with Gemini 2.0+ features.
 > **API Key Security:** Avoid exposing API keys in client-side code.
 > Use server-side implementations in production environments.
 
+## AWS Workload Identity Federation (Known Issue)
+
+When using AWS → GCP Workload Identity Federation (WIF) with the JavaScript SDK
+(`@google/genai`), authentication may fail when `google-auth-library` v10.x is used.
+
+**Symptoms**
+- `invalid_grant`
+- `InvalidClientTokenId`
+- Token exchange failure from AWS STS to GCP
+
+**Workarounds**
+- Use `@google/genai <= 1.25.0` (uses google-auth-library v9.x), or
+- Use the Python SDK, which is not affected
+
+Tracking issue: https://github.com/googleapis/js-genai/issues/1216
+
+
 ## Code Generation
 
 Generative models are often unaware of recent API and SDK updates and may suggest outdated or legacy code.
