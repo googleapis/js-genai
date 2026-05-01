@@ -2676,6 +2676,7 @@ export interface LiveServerSessionResumptionUpdate {
 // @public
 export interface LiveServerSetupComplete {
     sessionId?: string;
+    voiceConsentSignature?: VoiceConsentSignature;
 }
 
 // @public
@@ -3269,7 +3270,9 @@ export class ReplayResponse {
 
 // @public
 export interface ReplicatedVoiceConfig {
+    consentAudio?: string;
     mimeType?: string;
+    voiceConsentSignature?: VoiceConsentSignature;
     voiceSampleAudio?: string;
 }
 
@@ -3478,6 +3481,8 @@ export class Session {
     sendClientContent(params: types.LiveSendClientContentParameters): void;
     sendRealtimeInput(params: types.LiveSendRealtimeInputParameters): void;
     sendToolResponse(params: types.LiveSendToolResponseParameters): void;
+    // (undocumented)
+    setupComplete?: types.LiveServerSetupComplete;
 }
 
 // @public
@@ -4235,6 +4240,11 @@ export enum VoiceActivityType {
 export interface VoiceConfig {
     prebuiltVoiceConfig?: PrebuiltVoiceConfig;
     replicatedVoiceConfig?: ReplicatedVoiceConfig;
+}
+
+// @public
+export interface VoiceConsentSignature {
+    signature?: string;
 }
 
 // @public

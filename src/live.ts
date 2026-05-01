@@ -202,7 +202,16 @@ export class Live {
     const websocketCallbacks: WebSocketCallbacks = {
       onopen: onopenAwaitedCallback,
       onmessage: (event: MessageEvent) => {
-        void handleWebSocketMessage(apiClient, callbacks.onmessage, event);
+        void handleWebSocketMessage(
+          apiClient,
+          (msg: types.LiveServerMessage) => {
+            if (msg.setupComplete && !session.setupComplete) {
+              session.setupComplete = msg.setupComplete;
+            }
+            callbacks.onmessage(msg);
+          },
+          event,
+        );
       },
       onerror:
         callbacks?.onerror ??
@@ -288,7 +297,8 @@ export class Live {
     }
     delete clientMessage['config'];
     conn.send(JSON.stringify(clientMessage));
-    return new Session(conn, this.apiClient);
+    const session = new Session(conn, this.apiClient);
+    return session;
   }
 
   // TODO: b/416041229 - Abstract this method to a common place.
@@ -308,6 +318,8 @@ const defaultLiveSendClientContentParamerters: types.LiveSendClientContentParame
    @experimental
   */
 export class Session {
+  setupComplete?: types.LiveServerSetupComplete;
+
   constructor(
     readonly conn: WebSocket,
     private readonly apiClient: ApiClient,
