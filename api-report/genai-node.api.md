@@ -1928,6 +1928,7 @@ export interface GroundingChunkRetrievedContext {
     customMetadata?: GroundingChunkCustomMetadata[];
     documentName?: string;
     fileSearchStore?: string;
+    mediaId?: string;
     pageNumber?: number;
     ragChunk?: RagChunk;
     text?: string;

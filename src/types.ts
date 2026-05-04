@@ -3071,6 +3071,8 @@ export declare interface GroundingChunkRetrievedContext {
   fileSearchStore?: string;
   /** Optional. Page number of the retrieved context. This field is not supported in Vertex AI. */
   pageNumber?: number;
+  /** Optional. Media ID. This field is not supported in Vertex AI. */
+  mediaId?: string;
 }
 
 /** A `Web` chunk is a piece of evidence that comes from a web page. It contains the URI of the web page, the title of the page, and the domain of the page. This is used to provide the user with a link to the source of the information. */
