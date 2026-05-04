@@ -1,6 +1,14 @@
 # Changelog
 
 
+## [1.52.0](https://github.com/googleapis/js-genai/compare/v1.51.0...v1.52.0) (2026-05-04)
+
+
+### Features
+
+* [Python] Multimodal file search ([e626bef](https://github.com/googleapis/js-genai/commit/e626bef1a780a54b5b3fe04f062adf708335bd58))
+* Multimodal file search ([54caf6b](https://github.com/googleapis/js-genai/commit/54caf6bd4683939f3f3b6844252e5a19a90e7e9a))
+
 ## [1.51.0](https://github.com/googleapis/js-genai/compare/v1.50.1...v1.51.0) (2026-04-29)
 
 
