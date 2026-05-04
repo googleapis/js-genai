@@ -5752,6 +5752,10 @@ export declare interface CreateFileSearchStoreConfig {
   /** The human-readable display name for the file search store.
    */
   displayName?: string;
+  /** The embedding model to use for the FileSearchStore.
+      Format: `models/{model}`. If not specified, the default embedding model will be used.
+       */
+  embeddingModel?: string;
 }
 
 /** Config for file_search_stores.create parameters. */
@@ -7954,6 +7958,19 @@ export class UploadToFileSearchStoreOperation
   }
   /** The full HTTP response. */
   sdkHttpResponse?: HttpResponse;
+}
+
+/** Used to override the default configuration. */
+export declare interface DownloadMediaConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
 }
 
 export type BlobImageUnion = Blob;

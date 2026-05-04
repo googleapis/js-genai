@@ -666,6 +666,7 @@ export class CreateFileResponse {
 export interface CreateFileSearchStoreConfig {
     abortSignal?: AbortSignal;
     displayName?: string;
+    embeddingModel?: string;
     httpOptions?: HttpOptions;
 }
 
@@ -975,6 +976,12 @@ export interface DownloadFileParameters {
     config?: DownloadFileConfig;
     downloadPath: string;
     file: DownloadableFileUnion;
+}
+
+// @public
+export interface DownloadMediaConfig {
+    abortSignal?: AbortSignal;
+    httpOptions?: HttpOptions;
 }
 
 // @public
