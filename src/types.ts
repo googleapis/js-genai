@@ -5784,6 +5784,8 @@ export declare interface FileSearchStore {
   /** The size of raw bytes ingested into the FileSearchStore. This is the
       total size of all the documents in the FileSearchStore. */
   sizeBytes?: string;
+  /** The embedding model used by the FileSearchStore. */
+  embeddingModel?: string;
 }
 
 /** Optional parameters for getting a FileSearchStore. */

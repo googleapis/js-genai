@@ -1279,6 +1279,7 @@ export interface FileSearchStore {
     activeDocumentsCount?: string;
     createTime?: string;
     displayName?: string;
+    embeddingModel?: string;
     failedDocumentsCount?: string;
     name?: string;
     pendingDocumentsCount?: string;

@@ -29,7 +29,7 @@ export function createFileSearchStoreConfigToMldev(
   if (parentObject !== undefined && fromEmbeddingModel != null) {
     common.setValueByPath(
       parentObject,
-      ['_query', 'embeddingModel'],
+      ['embeddingModel'],
       t.tModel(apiClient, fromEmbeddingModel),
     );
   }
