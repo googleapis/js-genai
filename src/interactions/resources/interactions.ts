@@ -225,9 +225,9 @@ export interface CodeExecutionCallArguments {
 }
 
 /**
- * Code execution content.
+ * Code execution call step.
  */
-export interface CodeExecutionCallContent {
+export interface CodeExecutionCallStep {
   /**
    * Required. A unique ID for this specific tool call.
    */
@@ -236,7 +236,7 @@ export interface CodeExecutionCallContent {
   /**
    * Required. The arguments to pass to the code execution.
    */
-  arguments: CodeExecutionCallArguments;
+  arguments: CodeExecutionCallStep.Arguments;
 
   type: 'code_execution_call';
 
@@ -246,10 +246,27 @@ export interface CodeExecutionCallContent {
   signature?: string;
 }
 
+export namespace CodeExecutionCallStep {
+  /**
+   * Required. The arguments to pass to the code execution.
+   */
+  export interface Arguments {
+    /**
+     * The code to be executed.
+     */
+    code?: string;
+
+    /**
+     * Programming language of the `code`.
+     */
+    language?: 'python';
+  }
+}
+
 /**
- * Code execution result content.
+ * Code execution result step.
  */
-export interface CodeExecutionResultContent {
+export interface CodeExecutionResultStep {
   /**
    * Required. ID to match the ID from the function call block.
    */
@@ -276,27 +293,7 @@ export interface CodeExecutionResultContent {
 /**
  * The content of the response.
  */
-export type Content =
-  | TextContent
-  | ImageContent
-  | AudioContent
-  | DocumentContent
-  | VideoContent
-  | ThoughtContent
-  | FunctionCallContent
-  | CodeExecutionCallContent
-  | URLContextCallContent
-  | MCPServerToolCallContent
-  | GoogleSearchCallContent
-  | FileSearchCallContent
-  | GoogleMapsCallContent
-  | FunctionResultContent
-  | CodeExecutionResultContent
-  | URLContextResultContent
-  | GoogleSearchResultContent
-  | MCPServerToolResultContent
-  | FileSearchResultContent
-  | GoogleMapsResultContent;
+export type Content = TextContent | ImageContent | AudioContent | DocumentContent | VideoContent;
 
 export interface ContentDelta {
   /**
@@ -324,7 +321,7 @@ export interface ContentDelta {
     | ContentDelta.MCPServerToolResult
     | ContentDelta.FileSearchResult
     | ContentDelta.GoogleMapsResult
-    | ContentDelta.TextAnnotation;
+    | ContentDelta.TextAnnotationDelta;
 
   event_type: 'content.delta';
 
@@ -712,8 +709,8 @@ export namespace ContentDelta {
     signature?: string;
   }
 
-  export interface TextAnnotation {
-    type: 'text_annotation';
+  export interface TextAnnotationDelta {
+    type: 'text_annotation_delta';
 
     /**
      * Citation information for model-generated content.
@@ -886,9 +883,9 @@ export interface FileCitation {
 }
 
 /**
- * File Search content.
+ * File Search call step.
  */
-export interface FileSearchCallContent {
+export interface FileSearchCallStep {
   /**
    * Required. A unique ID for this specific tool call.
    */
@@ -903,20 +900,15 @@ export interface FileSearchCallContent {
 }
 
 /**
- * File Search result content.
+ * File Search result step.
  */
-export interface FileSearchResultContent {
+export interface FileSearchResultStep {
   /**
    * Required. ID to match the ID from the function call block.
    */
   call_id: string;
 
   type: 'file_search_result';
-
-  /**
-   * Optional. The results of the File Search.
-   */
-  result?: Array<unknown>;
 
   /**
    * A signature hash for backend validation.
@@ -947,9 +939,9 @@ export interface Function {
 }
 
 /**
- * A function tool call content block.
+ * A function tool call step.
  */
-export interface FunctionCallContent {
+export interface FunctionCallStep {
   /**
    * Required. A unique ID for this specific tool call.
    */
@@ -974,9 +966,9 @@ export interface FunctionCallContent {
 }
 
 /**
- * A function tool result content block.
+ * Result of a function tool call.
  */
-export interface FunctionResultContent {
+export interface FunctionResultStep {
   /**
    * Required. ID to match the ID from the function call block.
    */
@@ -1071,9 +1063,9 @@ export interface GoogleMapsCallArguments {
 }
 
 /**
- * Google Maps content.
+ * Google Maps call step.
  */
-export interface GoogleMapsCallContent {
+export interface GoogleMapsCallStep {
   /**
    * Required. A unique ID for this specific tool call.
    */
@@ -1084,12 +1076,24 @@ export interface GoogleMapsCallContent {
   /**
    * The arguments to pass to the Google Maps tool.
    */
-  arguments?: GoogleMapsCallArguments;
+  arguments?: GoogleMapsCallStep.Arguments;
 
   /**
    * A signature hash for backend validation.
    */
   signature?: string;
+}
+
+export namespace GoogleMapsCallStep {
+  /**
+   * The arguments to pass to the Google Maps tool.
+   */
+  export interface Arguments {
+    /**
+     * The queries to be executed.
+     */
+    queries?: Array<string>;
+  }
 }
 
 /**
@@ -1156,18 +1160,15 @@ export namespace GoogleMapsResult {
 }
 
 /**
- * Google Maps result content.
+ * Google Maps result step.
  */
-export interface GoogleMapsResultContent {
+export interface GoogleMapsResultStep {
   /**
    * Required. ID to match the ID from the function call block.
    */
   call_id: string;
 
-  /**
-   * Required. The results of the Google Maps.
-   */
-  result: Array<GoogleMapsResult>;
+  result: Array<GoogleMapsResultStep.Result>;
 
   type: 'google_maps_result';
 
@@ -1175,6 +1176,52 @@ export interface GoogleMapsResultContent {
    * A signature hash for backend validation.
    */
   signature?: string;
+}
+
+export namespace GoogleMapsResultStep {
+  /**
+   * The result of the Google Maps.
+   */
+  export interface Result {
+    places?: Array<Result.Place>;
+
+    widget_context_token?: string;
+  }
+
+  export namespace Result {
+    export interface Place {
+      name?: string;
+
+      place_id?: string;
+
+      review_snippets?: Array<Place.ReviewSnippet>;
+
+      url?: string;
+    }
+
+    export namespace Place {
+      /**
+       * Encapsulates a snippet of a user review that answers a question about the
+       * features of a specific place in Google Maps.
+       */
+      export interface ReviewSnippet {
+        /**
+         * The ID of the review snippet.
+         */
+        review_id?: string;
+
+        /**
+         * Title of the review.
+         */
+        title?: string;
+
+        /**
+         * A link that corresponds to the user review on Google Maps.
+         */
+        url?: string;
+      }
+    }
+  }
 }
 
 /**
@@ -1188,9 +1235,9 @@ export interface GoogleSearchCallArguments {
 }
 
 /**
- * Google Search content.
+ * Google Search call step.
  */
-export interface GoogleSearchCallContent {
+export interface GoogleSearchCallStep {
   /**
    * Required. A unique ID for this specific tool call.
    */
@@ -1199,7 +1246,7 @@ export interface GoogleSearchCallContent {
   /**
    * Required. The arguments to pass to Google Search.
    */
-  arguments: GoogleSearchCallArguments;
+  arguments: GoogleSearchCallStep.Arguments;
 
   type: 'google_search_call';
 
@@ -1214,6 +1261,18 @@ export interface GoogleSearchCallContent {
   signature?: string;
 }
 
+export namespace GoogleSearchCallStep {
+  /**
+   * Required. The arguments to pass to Google Search.
+   */
+  export interface Arguments {
+    /**
+     * Web search queries for the following-up web search.
+     */
+    queries?: Array<string>;
+  }
+}
+
 /**
  * The result of the Google Search.
  */
@@ -1225,9 +1284,9 @@ export interface GoogleSearchResult {
 }
 
 /**
- * Google Search result content.
+ * Google Search result step.
  */
-export interface GoogleSearchResultContent {
+export interface GoogleSearchResultStep {
   /**
    * Required. ID to match the ID from the function call block.
    */
@@ -1236,7 +1295,7 @@ export interface GoogleSearchResultContent {
   /**
    * Required. The results of the Google Search.
    */
-  result: Array<GoogleSearchResult>;
+  result: Array<GoogleSearchResultStep.Result>;
 
   type: 'google_search_result';
 
@@ -1249,6 +1308,18 @@ export interface GoogleSearchResultContent {
    * A signature hash for backend validation.
    */
   signature?: string;
+}
+
+export namespace GoogleSearchResultStep {
+  /**
+   * The result of the Google Search.
+   */
+  export interface Result {
+    /**
+     * Web content snippet that can be embedded in a web page or an app webview.
+     */
+    search_suggestions?: string;
+  }
 }
 
 /**
@@ -1353,39 +1424,19 @@ export interface Interaction {
    * The input for the interaction.
    */
   input?:
-    | Array<Content>
     | string
-    | Array<Turn>
+    | Array<Step>
+    | Array<Content>
     | TextContent
     | ImageContent
     | AudioContent
     | DocumentContent
-    | VideoContent
-    | ThoughtContent
-    | FunctionCallContent
-    | CodeExecutionCallContent
-    | URLContextCallContent
-    | MCPServerToolCallContent
-    | GoogleSearchCallContent
-    | FileSearchCallContent
-    | GoogleMapsCallContent
-    | FunctionResultContent
-    | CodeExecutionResultContent
-    | URLContextResultContent
-    | GoogleSearchResultContent
-    | MCPServerToolResultContent
-    | FileSearchResultContent
-    | GoogleMapsResultContent;
+    | VideoContent;
 
   /**
    * The name of the `Model` used for generating the interaction.
    */
   model?: Model;
-
-  /**
-   * Output only. Responses from the model.
-   */
-  outputs?: Array<Content>;
 
   /**
    * The ID of the previous interaction, if any.
@@ -1409,7 +1460,7 @@ export interface Interaction {
   response_modalities?: Array<'text' | 'image' | 'audio' | 'video' | 'document'>;
 
   /**
-   * Output only. The role of the interaction.
+   * @deprecated Output only. The role of the interaction.
    */
   role?: string;
 
@@ -1417,6 +1468,11 @@ export interface Interaction {
    * The service tier for the interaction.
    */
   service_tier?: 'flex' | 'standard' | 'priority';
+
+  /**
+   * Output only. The steps that make up the interaction.
+   */
+  steps?: Array<Step>;
 
   /**
    * System instruction for the interaction.
@@ -1462,7 +1518,196 @@ export type InteractionSSEEvent =
   | ContentStart
   | ContentDelta
   | ContentStop
-  | ErrorEvent;
+  | ErrorEvent
+  | InteractionSSEEvent.StepStart
+  | InteractionSSEEvent.StepDelta
+  | InteractionSSEEvent.StepStop;
+
+export namespace InteractionSSEEvent {
+  export interface StepStart {
+    event_type: 'step.start';
+
+    index: number;
+
+    /**
+     * A step in the interaction.
+     */
+    step: InteractionsAPI.Step;
+
+    /**
+     * The event_id token to be used to resume the interaction stream, from this event.
+     */
+    event_id?: string;
+  }
+
+  export interface StepDelta {
+    delta:
+      | StepDelta.Text
+      | StepDelta.Image
+      | StepDelta.Audio
+      | StepDelta.Document
+      | StepDelta.Video
+      | StepDelta.ThoughtSummary
+      | StepDelta.ThoughtSignature
+      | StepDelta.TextAnnotationDelta
+      | StepDelta.ArgumentsDelta;
+
+    event_type: 'step.delta';
+
+    index: number;
+
+    /**
+     * The event_id token to be used to resume the interaction stream, from this event.
+     */
+    event_id?: string;
+  }
+
+  export namespace StepDelta {
+    export interface Text {
+      text: string;
+
+      type: 'text';
+    }
+
+    export interface Image {
+      type: 'image';
+
+      data?: string;
+
+      mime_type?:
+        | 'image/png'
+        | 'image/jpeg'
+        | 'image/webp'
+        | 'image/heic'
+        | 'image/heif'
+        | 'image/gif'
+        | 'image/bmp'
+        | 'image/tiff';
+
+      /**
+       * The resolution of the media.
+       */
+      resolution?: 'low' | 'medium' | 'high' | 'ultra_high';
+
+      uri?: string;
+    }
+
+    export interface Audio {
+      type: 'audio';
+
+      /**
+       * The number of audio channels.
+       */
+      channels?: number;
+
+      data?: string;
+
+      mime_type?:
+        | 'audio/wav'
+        | 'audio/mp3'
+        | 'audio/aiff'
+        | 'audio/aac'
+        | 'audio/ogg'
+        | 'audio/flac'
+        | 'audio/mpeg'
+        | 'audio/m4a'
+        | 'audio/l16'
+        | 'audio/opus'
+        | 'audio/alaw'
+        | 'audio/mulaw';
+
+      /**
+       * @deprecated Deprecated. Use sample_rate instead. The value is ignored.
+       */
+      rate?: number;
+
+      /**
+       * The sample rate of the audio.
+       */
+      sample_rate?: number;
+
+      uri?: string;
+    }
+
+    export interface Document {
+      type: 'document';
+
+      data?: string;
+
+      mime_type?: 'application/pdf';
+
+      uri?: string;
+    }
+
+    export interface Video {
+      type: 'video';
+
+      data?: string;
+
+      mime_type?:
+        | 'video/mp4'
+        | 'video/mpeg'
+        | 'video/mpg'
+        | 'video/mov'
+        | 'video/avi'
+        | 'video/x-flv'
+        | 'video/webm'
+        | 'video/wmv'
+        | 'video/3gpp';
+
+      /**
+       * The resolution of the media.
+       */
+      resolution?: 'low' | 'medium' | 'high' | 'ultra_high';
+
+      uri?: string;
+    }
+
+    export interface ThoughtSummary {
+      type: 'thought_summary';
+
+      /**
+       * A new summary item to be added to the thought.
+       */
+      content?: InteractionsAPI.TextContent | InteractionsAPI.ImageContent;
+    }
+
+    export interface ThoughtSignature {
+      type: 'thought_signature';
+
+      /**
+       * Signature to match the backend source to be part of the generation.
+       */
+      signature?: string;
+    }
+
+    export interface TextAnnotationDelta {
+      type: 'text_annotation_delta';
+
+      /**
+       * Citation information for model-generated content.
+       */
+      annotations?: Array<InteractionsAPI.Annotation>;
+    }
+
+    export interface ArgumentsDelta {
+      type: 'arguments_delta';
+
+      partial_arguments?: string;
+    }
+  }
+
+  export interface StepStop {
+    event_type: 'step.stop';
+
+    index: number;
+
+    /**
+     * The event_id token to be used to resume the interaction stream, from this event.
+     */
+    event_id?: string;
+  }
+}
 
 export interface InteractionStartEvent {
   event_type: 'interaction.start';
@@ -1492,9 +1737,9 @@ export interface InteractionStatusUpdate {
 }
 
 /**
- * MCPServer tool call content.
+ * MCPServer tool call step.
  */
-export interface MCPServerToolCallContent {
+export interface MCPServerToolCallStep {
   /**
    * Required. A unique ID for this specific tool call.
    */
@@ -1524,9 +1769,9 @@ export interface MCPServerToolCallContent {
 }
 
 /**
- * MCPServer tool result content.
+ * MCPServer tool result step.
  */
-export interface MCPServerToolResultContent {
+export interface MCPServerToolResultStep {
   /**
    * Required. ID to match the ID from the function call block.
    */
@@ -1535,7 +1780,7 @@ export interface MCPServerToolResultContent {
   /**
    * The output from the MCP server call. Can be simple text or rich content.
    */
-  result: unknown | Array<TextContent | ImageContent> | string;
+  result: unknown | string | Array<TextContent | ImageContent>;
 
   type: 'mcp_server_tool_result';
 
@@ -1580,6 +1825,15 @@ export type Model =
   | 'lyria-3-clip-preview'
   | 'lyria-3-pro-preview'
   | (string & {});
+
+/**
+ * Output generated by the model.
+ */
+export interface ModelOutputStep {
+  type: 'model_output';
+
+  content?: Array<Content>;
+}
 
 /**
  * A place citation annotation.
@@ -1665,6 +1919,28 @@ export interface SpeechConfig {
 }
 
 /**
+ * A step in the interaction.
+ */
+export type Step =
+  | UserInputStep
+  | ModelOutputStep
+  | ThoughtStep
+  | FunctionCallStep
+  | CodeExecutionCallStep
+  | URLContextCallStep
+  | MCPServerToolCallStep
+  | GoogleSearchCallStep
+  | FileSearchCallStep
+  | GoogleMapsCallStep
+  | FunctionResultStep
+  | CodeExecutionResultStep
+  | URLContextResultStep
+  | GoogleSearchResultStep
+  | MCPServerToolResultStep
+  | FileSearchResultStep
+  | GoogleMapsResultStep;
+
+/**
  * A text content block.
  */
 export interface TextContent {
@@ -1684,13 +1960,13 @@ export interface TextContent {
 export type ThinkingLevel = 'minimal' | 'low' | 'medium' | 'high';
 
 /**
- * A thought content block.
+ * A thought step.
  */
-export interface ThoughtContent {
+export interface ThoughtStep {
   type: 'thought';
 
   /**
-   * Signature to match the backend source to be part of the generation.
+   * A signature hash for backend validation.
    */
   signature?: string;
 
@@ -1877,15 +2153,6 @@ export interface ToolChoiceConfig {
 
 export type ToolChoiceType = 'auto' | 'any' | 'none' | 'validated';
 
-export interface Turn {
-  content?: Array<Content> | string;
-
-  /**
-   * The originator of this turn. Must be user for input or model for model output.
-   */
-  role?: string;
-}
-
 /**
  * A URL citation annotation.
  */
@@ -1926,9 +2193,9 @@ export interface URLContextCallArguments {
 }
 
 /**
- * URL context content.
+ * URL context call step.
  */
-export interface URLContextCallContent {
+export interface URLContextCallStep {
   /**
    * Required. A unique ID for this specific tool call.
    */
@@ -1937,7 +2204,7 @@ export interface URLContextCallContent {
   /**
    * Required. The arguments to pass to the URL context.
    */
-  arguments: URLContextCallArguments;
+  arguments: URLContextCallStep.Arguments;
 
   type: 'url_context_call';
 
@@ -1945,6 +2212,18 @@ export interface URLContextCallContent {
    * A signature hash for backend validation.
    */
   signature?: string;
+}
+
+export namespace URLContextCallStep {
+  /**
+   * Required. The arguments to pass to the URL context.
+   */
+  export interface Arguments {
+    /**
+     * The URLs to fetch.
+     */
+    urls?: Array<string>;
+  }
 }
 
 /**
@@ -1963,9 +2242,9 @@ export interface URLContextResult {
 }
 
 /**
- * URL context result content.
+ * URL context result step.
  */
-export interface URLContextResultContent {
+export interface URLContextResultStep {
   /**
    * Required. ID to match the ID from the function call block.
    */
@@ -1974,7 +2253,7 @@ export interface URLContextResultContent {
   /**
    * Required. The results of the URL context.
    */
-  result: Array<URLContextResult>;
+  result: Array<URLContextResultStep.Result>;
 
   type: 'url_context_result';
 
@@ -1987,6 +2266,23 @@ export interface URLContextResultContent {
    * A signature hash for backend validation.
    */
   signature?: string;
+}
+
+export namespace URLContextResultStep {
+  /**
+   * The result of the URL context.
+   */
+  export interface Result {
+    /**
+     * The status of the URL retrieval.
+     */
+    status?: 'success' | 'error' | 'paywall' | 'unsafe';
+
+    /**
+     * The URL that was fetched.
+     */
+    url?: string;
+  }
 }
 
 /**
@@ -2128,6 +2424,15 @@ export namespace Usage {
 }
 
 /**
+ * Input provided by the user.
+ */
+export interface UserInputStep {
+  type: 'user_input';
+
+  content?: Array<Content>;
+}
+
+/**
  * A video content block.
  */
 export interface VideoContent {
@@ -2198,29 +2503,14 @@ export interface BaseCreateModelInteractionParams {
    * Body param: The input for the interaction.
    */
   input:
-    | Array<Content>
     | string
-    | Array<Turn>
+    | Array<Step>
+    | Array<Content>
     | TextContent
     | ImageContent
     | AudioContent
     | DocumentContent
-    | VideoContent
-    | ThoughtContent
-    | FunctionCallContent
-    | CodeExecutionCallContent
-    | URLContextCallContent
-    | MCPServerToolCallContent
-    | GoogleSearchCallContent
-    | FileSearchCallContent
-    | GoogleMapsCallContent
-    | FunctionResultContent
-    | CodeExecutionResultContent
-    | URLContextResultContent
-    | GoogleSearchResultContent
-    | MCPServerToolResultContent
-    | FileSearchResultContent
-    | GoogleMapsResultContent;
+    | VideoContent;
 
   /**
    * Body param: The name of the `Model` used for generating the interaction.
@@ -2311,29 +2601,14 @@ export interface BaseCreateAgentInteractionParams {
    * Body param: The input for the interaction.
    */
   input:
-    | Array<Content>
     | string
-    | Array<Turn>
+    | Array<Step>
+    | Array<Content>
     | TextContent
     | ImageContent
     | AudioContent
     | DocumentContent
-    | VideoContent
-    | ThoughtContent
-    | FunctionCallContent
-    | CodeExecutionCallContent
-    | URLContextCallContent
-    | MCPServerToolCallContent
-    | GoogleSearchCallContent
-    | FileSearchCallContent
-    | GoogleMapsCallContent
-    | FunctionResultContent
-    | CodeExecutionResultContent
-    | URLContextResultContent
-    | GoogleSearchResultContent
-    | MCPServerToolResultContent
-    | FileSearchResultContent
-    | GoogleMapsResultContent;
+    | VideoContent;
 
   /**
    * Body param: Configuration parameters for the agent interaction.
@@ -2496,8 +2771,8 @@ export declare namespace Interactions {
     type Annotation as Annotation,
     type AudioContent as AudioContent,
     type CodeExecutionCallArguments as CodeExecutionCallArguments,
-    type CodeExecutionCallContent as CodeExecutionCallContent,
-    type CodeExecutionResultContent as CodeExecutionResultContent,
+    type CodeExecutionCallStep as CodeExecutionCallStep,
+    type CodeExecutionResultStep as CodeExecutionResultStep,
     type Content as Content,
     type ContentDelta as ContentDelta,
     type ContentStart as ContentStart,
@@ -2507,20 +2782,20 @@ export declare namespace Interactions {
     type DynamicAgentConfig as DynamicAgentConfig,
     type ErrorEvent as ErrorEvent,
     type FileCitation as FileCitation,
-    type FileSearchCallContent as FileSearchCallContent,
-    type FileSearchResultContent as FileSearchResultContent,
+    type FileSearchCallStep as FileSearchCallStep,
+    type FileSearchResultStep as FileSearchResultStep,
     type Function as Function,
-    type FunctionCallContent as FunctionCallContent,
-    type FunctionResultContent as FunctionResultContent,
+    type FunctionCallStep as FunctionCallStep,
+    type FunctionResultStep as FunctionResultStep,
     type GenerationConfig as GenerationConfig,
     type GoogleMapsCallArguments as GoogleMapsCallArguments,
-    type GoogleMapsCallContent as GoogleMapsCallContent,
+    type GoogleMapsCallStep as GoogleMapsCallStep,
     type GoogleMapsResult as GoogleMapsResult,
-    type GoogleMapsResultContent as GoogleMapsResultContent,
+    type GoogleMapsResultStep as GoogleMapsResultStep,
     type GoogleSearchCallArguments as GoogleSearchCallArguments,
-    type GoogleSearchCallContent as GoogleSearchCallContent,
+    type GoogleSearchCallStep as GoogleSearchCallStep,
     type GoogleSearchResult as GoogleSearchResult,
-    type GoogleSearchResultContent as GoogleSearchResultContent,
+    type GoogleSearchResultStep as GoogleSearchResultStep,
     type ImageConfig as ImageConfig,
     type ImageContent as ImageContent,
     type Interaction as Interaction,
@@ -2528,24 +2803,26 @@ export declare namespace Interactions {
     type InteractionSSEEvent as InteractionSSEEvent,
     type InteractionStartEvent as InteractionStartEvent,
     type InteractionStatusUpdate as InteractionStatusUpdate,
-    type MCPServerToolCallContent as MCPServerToolCallContent,
-    type MCPServerToolResultContent as MCPServerToolResultContent,
+    type MCPServerToolCallStep as MCPServerToolCallStep,
+    type MCPServerToolResultStep as MCPServerToolResultStep,
     type Model as Model,
+    type ModelOutputStep as ModelOutputStep,
     type PlaceCitation as PlaceCitation,
     type SpeechConfig as SpeechConfig,
+    type Step as Step,
     type TextContent as TextContent,
     type ThinkingLevel as ThinkingLevel,
-    type ThoughtContent as ThoughtContent,
+    type ThoughtStep as ThoughtStep,
     type Tool as Tool,
     type ToolChoiceConfig as ToolChoiceConfig,
     type ToolChoiceType as ToolChoiceType,
-    type Turn as Turn,
     type URLCitation as URLCitation,
     type URLContextCallArguments as URLContextCallArguments,
-    type URLContextCallContent as URLContextCallContent,
+    type URLContextCallStep as URLContextCallStep,
     type URLContextResult as URLContextResult,
-    type URLContextResultContent as URLContextResultContent,
+    type URLContextResultStep as URLContextResultStep,
     type Usage as Usage,
+    type UserInputStep as UserInputStep,
     type VideoContent as VideoContent,
     type WebhookConfig as WebhookConfig,
     type InteractionDeleteResponse as InteractionDeleteResponse,
