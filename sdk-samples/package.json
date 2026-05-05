@@ -11,10 +11,11 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.25.2",
     "@google/genai": "file:..",
+    "@modelcontextprotocol/sdk": "^1.25.2",
     "cors": "^2.8.5",
     "express": "^4.21.2",
+    "google-auth-library": "^10.6.2",
     "socket.io": "^4.8.1",
     "zod": "^3.25.0"
   },

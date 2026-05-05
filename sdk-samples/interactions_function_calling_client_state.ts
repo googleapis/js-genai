@@ -13,11 +13,15 @@ async function createInteractionsFromMLDev() {
     apiKey: GEMINI_API_KEY,
   });
 
-  const fcConversationHistory: Interactions.Turn[] = [
+  const fcConversationHistory: Interactions.Step[] = [
     {
-      content:
-        'Schedule a meeting for 2025-11-01 at 10 am with Peter and Amir about the Next Gen API.',
-      role: 'user',
+      type: 'user_input',
+      content: [
+        {
+          type: 'text',
+          text: 'Schedule a meeting for 2025-11-01 at 10 am with Peter and Amir about the Next Gen API.',
+        },
+      ],
     },
   ];
 
@@ -59,32 +63,28 @@ async function createInteractionsFromMLDev() {
   });
 
   // add model response back to history
-  fcConversationHistory.push({
-    content: response.outputs,
-    role: 'model',
-  });
+  if (response.steps) {
+    fcConversationHistory.push(...response.steps);
+  }
 
-  for (const output of response.outputs ?? []) {
-    if (output.type == 'function_call') {
+  for (const step of response.steps ?? []) {
+    if (step.type == 'function_call') {
       console.log(
-        `Function call: ${output.name} with arguments ${output.arguments}`,
+        `Function call: ${step.name} with arguments ${JSON.stringify(
+          step.arguments,
+        )}`,
       );
 
       // 2. Execute the function and get a result
       // In a real app, you would call your function here.
-      // const call_result = schedule_meeting(output.arguments);
+      // const call_result = schedule_meeting(step.arguments);
 
       // 3. Send the result back to the model
       fcConversationHistory.push({
-        content: [
-          {
-            type: 'function_result',
-            name: output.name!,
-            call_id: output.id!,
-            result: 'Meeting scheduled successfully.',
-          },
-        ],
-        role: 'user',
+        type: 'function_result',
+        name: step.name!,
+        call_id: step.id!,
+        result: 'Meeting scheduled successfully.',
       });
 
       const response2 = await ai.interactions.create({
@@ -93,7 +93,7 @@ async function createInteractionsFromMLDev() {
       });
       console.log(`Final response: ${response2}`);
     } else {
-      console.log(`Output: ${output}`);
+      console.log(`Output: ${step}`);
     }
   }
 }
