@@ -15,6 +15,7 @@ import {
   MAX_CHUNK_SIZE,
   MAX_RETRY_COUNT,
   X_GOOG_UPLOAD_STATUS_HEADER_FIELD,
+  discardResponseBody,
   getBlobStat,
   sleep,
   uploadBlob,
@@ -313,6 +314,7 @@ export class NodeUploader implements Uploader {
         ) {
           break;
         }
+        await discardResponseBody(response);
         if (fileSize <= offset) {
           throw new Error(
             'All content has been uploaded, but the upload status is not finalized.',
