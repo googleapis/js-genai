@@ -51,15 +51,17 @@ async function createInteractionsFromMLDev() {
     ],
   });
 
-  for (const output of response.outputs ?? []) {
-    if (output.type == 'function_call') {
+  for (const step of response.steps ?? []) {
+    if (step.type == 'function_call') {
       console.log(
-        `Function call: ${output.name} with arguments ${output.arguments}`,
+        `Function call: ${step.name} with arguments ${JSON.stringify(
+          step.arguments,
+        )}`,
       );
 
       // 2. Execute the function and get a result
       // In a real app, you would call your function here.
-      // const call_result = schedule_meeting(output.arguments);
+      // const call_result = schedule_meeting(step.arguments);
 
       // 3. Send the result back to the model
       const response2 = await ai.interactions.create({
@@ -68,15 +70,15 @@ async function createInteractionsFromMLDev() {
         input: [
           {
             type: 'function_result',
-            name: output.name,
-            call_id: output.id,
+            name: step.name,
+            call_id: step.id,
             result: 'Meeting scheduled successfully.',
           },
         ],
       });
       console.log(`Final response: ${response2}`);
     } else {
-      console.log(`Output: ${output}`);
+      console.log(`Output: ${step}`);
     }
   }
 }

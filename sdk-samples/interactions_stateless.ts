@@ -13,10 +13,15 @@ async function createInteractionsFromMLDev() {
     apiKey: GEMINI_API_KEY,
   });
 
-  const conversationHistory: Interactions.Turn[] = [
+  const conversationHistory: Interactions.Step[] = [
     {
-      content: 'What are the three largest cities in Spain?',
-      role: 'user',
+      type: 'user_input',
+      content: [
+        {
+          type: 'text',
+          text: 'What are the three largest cities in Spain?',
+        },
+      ],
     },
   ];
 
@@ -28,11 +33,18 @@ async function createInteractionsFromMLDev() {
   });
   console.log('Model: ', response1);
 
-  conversationHistory.push({content: response1.outputs, role: 'model'});
+  if (response1.steps) {
+    conversationHistory.push(...response1.steps);
+  }
 
   conversationHistory.push({
-    content: 'What is the most famous landmark in the second one?',
-    role: 'user',
+    type: 'user_input',
+    content: [
+      {
+        type: 'text',
+        text: 'What is the most famous landmark in the second one?',
+      },
+    ],
   });
 
   console.log('\nUser: What is the most famous landmark in the second one?');

@@ -21,11 +21,15 @@ async function createInteractionsFromMLDev() {
     },
   });
 
-  interaction.outputs?.forEach((output, index) => {
-    if (output.type === 'audio') {
-      console.log(`Audio output ${index + 1}:`, output);
-    } else {
-      console.log(`Output ${index + 1}: ${output}`);
+  interaction.steps?.forEach((step, index) => {
+    if (step.type === 'model_output') {
+      step.content?.forEach((content) => {
+        if (content.type === 'audio') {
+          console.log(`Audio output in step ${index + 1}:`, content);
+        } else {
+          console.log(`Output in step ${index + 1}:`, content);
+        }
+      });
     }
   });
 }
