@@ -210,34 +210,6 @@ export interface AudioContent {
 }
 
 /**
- * Configuration for audio output format.
- */
-export interface AudioResponseFormat {
-  type: 'audio';
-
-  /**
-   * Bit rate in bits per second (bps). Only applicable for compressed formats (MP3,
-   * Opus).
-   */
-  bitRate?: number;
-
-  /**
-   * The delivery mode for the audio output.
-   */
-  delivery?: 'inline' | 'url';
-
-  /**
-   * The MIME type of the audio output.
-   */
-  mimeType?: 'audio/mp3' | 'audio/ogg_opus' | 'audio/l16' | 'audio/wav' | 'audio/alaw' | 'audio/mulaw';
-
-  /**
-   * Sample rate in Hz.
-   */
-  sampleRate?: number;
-}
-
-/**
  * The arguments to pass to the code execution.
  */
 export interface CodeExecutionCallArguments {
@@ -1409,47 +1381,6 @@ export interface ImageContent {
 }
 
 /**
- * Configuration for image output format.
- */
-export interface ImageResponseFormat {
-  type: 'image';
-
-  /**
-   * The aspect ratio for the image output.
-   */
-  aspectRatio?:
-    | '1:1'
-    | '2:3'
-    | '3:2'
-    | '3:4'
-    | '4:3'
-    | '4:5'
-    | '5:4'
-    | '9:16'
-    | '16:9'
-    | '21:9'
-    | '1:8'
-    | '8:1'
-    | '1:4'
-    | '4:1';
-
-  /**
-   * The delivery mode for the image output.
-   */
-  delivery?: 'inline' | 'url';
-
-  /**
-   * The size of the image output.
-   */
-  imageSize?: '512' | '1K' | '2K' | '4K';
-
-  /**
-   * The MIME type of the image output.
-   */
-  mimeType?: 'image/jpeg';
-}
-
-/**
  * The Interaction resource.
  */
 export interface Interaction {
@@ -1516,13 +1447,7 @@ export interface Interaction {
    * Enforces that the generated response is a JSON object that complies with the
    * JSON schema specified in this field.
    */
-  response_format?:
-    | Array<AudioResponseFormat | TextResponseFormat | ImageResponseFormat | VideoResponseFormat | unknown>
-    | AudioResponseFormat
-    | TextResponseFormat
-    | ImageResponseFormat
-    | VideoResponseFormat
-    | unknown;
+  response_format?: unknown;
 
   /**
    * The mime type of the response. This is required if response_format is set.
@@ -2028,24 +1953,6 @@ export interface TextContent {
    * Citation information for model-generated content.
    */
   annotations?: Array<Annotation>;
-}
-
-/**
- * Configuration for text output format.
- */
-export interface TextResponseFormat {
-  type: 'text';
-
-  /**
-   * The MIME type of the text output.
-   */
-  mimeType?: 'application/json' | 'text/plain';
-
-  /**
-   * The JSON schema that the output should conform to. Only applicable when
-   * mime_type is application/json.
-   */
-  schema?: { [key: string]: unknown };
 }
 
 export type ThinkingLevel = 'minimal' | 'low' | 'medium' | 'high';
@@ -2560,13 +2467,6 @@ export interface VideoContent {
 }
 
 /**
- * Configuration for video output format.
- */
-export interface VideoResponseFormat {
-  type: 'video';
-}
-
-/**
  * Message for configuring webhook events for a request.
  */
 export interface WebhookConfig {
@@ -2634,13 +2534,7 @@ export interface BaseCreateModelInteractionParams {
    * Body param: Enforces that the generated response is a JSON object that complies
    * with the JSON schema specified in this field.
    */
-  response_format?:
-    | Array<AudioResponseFormat | TextResponseFormat | ImageResponseFormat | VideoResponseFormat | unknown>
-    | AudioResponseFormat
-    | TextResponseFormat
-    | ImageResponseFormat
-    | VideoResponseFormat
-    | unknown;
+  response_format?: unknown;
 
   /**
    * Body param: The mime type of the response. This is required if response_format
@@ -2733,13 +2627,7 @@ export interface BaseCreateAgentInteractionParams {
    * Body param: Enforces that the generated response is a JSON object that complies
    * with the JSON schema specified in this field.
    */
-  response_format?:
-    | Array<AudioResponseFormat | TextResponseFormat | ImageResponseFormat | VideoResponseFormat | unknown>
-    | AudioResponseFormat
-    | TextResponseFormat
-    | ImageResponseFormat
-    | VideoResponseFormat
-    | unknown;
+  response_format?: unknown;
 
   /**
    * Body param: The mime type of the response. This is required if response_format
@@ -2880,7 +2768,6 @@ export declare namespace Interactions {
     type AllowedTools as AllowedTools,
     type Annotation as Annotation,
     type AudioContent as AudioContent,
-    type AudioResponseFormat as AudioResponseFormat,
     type CodeExecutionCallArguments as CodeExecutionCallArguments,
     type CodeExecutionCallStep as CodeExecutionCallStep,
     type CodeExecutionResultStep as CodeExecutionResultStep,
@@ -2909,7 +2796,6 @@ export declare namespace Interactions {
     type GoogleSearchResultStep as GoogleSearchResultStep,
     type ImageConfig as ImageConfig,
     type ImageContent as ImageContent,
-    type ImageResponseFormat as ImageResponseFormat,
     type Interaction as Interaction,
     type InteractionCompleteEvent as InteractionCompleteEvent,
     type InteractionSSEEvent as InteractionSSEEvent,
@@ -2926,7 +2812,6 @@ export declare namespace Interactions {
     type StepStart as StepStart,
     type StepStop as StepStop,
     type TextContent as TextContent,
-    type TextResponseFormat as TextResponseFormat,
     type ThinkingLevel as ThinkingLevel,
     type ThoughtStep as ThoughtStep,
     type Tool as Tool,
@@ -2940,7 +2825,6 @@ export declare namespace Interactions {
     type Usage as Usage,
     type UserInputStep as UserInputStep,
     type VideoContent as VideoContent,
-    type VideoResponseFormat as VideoResponseFormat,
     type WebhookConfig as WebhookConfig,
     type InteractionDeleteResponse as InteractionDeleteResponse,
     type InteractionCreateParams as InteractionCreateParams,
