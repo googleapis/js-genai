@@ -2609,6 +2609,8 @@ export declare interface ImageConfigImageOutputOptions {
   mimeType?: string;
 }
 
+export declare type ImageSizeConfig = '1K' | '2K' | '4K';
+
 /** The image generation configuration to be used in GenerateContentConfig. */
 export declare interface ImageConfig {
   /** Aspect ratio of the generated images. Supported values are
@@ -2617,7 +2619,7 @@ export declare interface ImageConfig {
   /** Optional. Specifies the size of generated images. Supported
       values are `1K`, `2K`, `4K`. If not specified, the model will use default
       value `1K`. */
-  imageSize?: string;
+  imageSize?: ImageSizeConfig;
   /** Controls the generation of people. Supported values are:
       ALLOW_ALL, ALLOW_ADULT, ALLOW_NONE. */
   personGeneration?: string;
@@ -3799,7 +3801,7 @@ export declare interface GenerateImagesConfig {
   labels?: Record<string, string>;
   /** The size of the largest dimension of the generated image.
       Supported sizes are 1K and 2K (not supported for Imagen 3 models). */
-  imageSize?: string;
+  imageSize?: Omit<ImageSizeConfig, '4K'>;
   /** Whether to use the prompt rewriting logic. */
   enhancePrompt?: boolean;
 }
