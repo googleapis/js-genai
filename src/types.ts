@@ -2030,6 +2030,9 @@ export declare interface HttpOptions {
       - Gemini Enterprise Agent Platform backend API docs: https://cloud.google.com/vertex-ai/docs/reference/rest
       - GeminiAPI backend API docs: https://ai.google.dev/api/rest */
   extraBody?: Record<string, unknown>;
+  /** Undici dispatcher for custom HTTP agent configuration (Node.js only).
+      This can be used to configure mTLS with client certificates. */
+  dispatcher?: unknown;
   /** HTTP retry options for the request. */
   retryOptions?: HttpRetryOptions;
 }

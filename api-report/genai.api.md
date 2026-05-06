@@ -2048,6 +2048,7 @@ export enum HttpElementLocation {
 export interface HttpOptions {
     apiVersion?: string;
     baseUrl?: string;
+    dispatcher?: unknown;
     baseUrlResourceScope?: ResourceScope;
     extraBody?: Record<string, unknown>;
     headers?: Record<string, string>;
