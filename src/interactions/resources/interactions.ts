@@ -433,7 +433,7 @@ export namespace ContentDelta {
 
     data?: string;
 
-    mime_type?: 'application/pdf';
+    mime_type?: 'application/pdf' | 'text/html';
 
     uri?: string;
   }
@@ -813,7 +813,7 @@ export interface DocumentContent {
   /**
    * The mime type of the document.
    */
-  mime_type?: 'application/pdf';
+  mime_type?: 'application/pdf' | 'text/html';
 
   /**
    * The URI of the document.
