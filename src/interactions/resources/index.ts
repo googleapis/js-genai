@@ -47,6 +47,7 @@ export {
   type MCPServerToolCallStep,
   type MCPServerToolResultStep,
   type Model,
+  type ModelArmorConfig,
   type ModelOutputStep,
   type PlaceCitation,
   type SpeechConfig,
