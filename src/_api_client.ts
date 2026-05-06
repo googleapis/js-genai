@@ -517,6 +517,33 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
       const abortController = new AbortController();
       const signal = abortController.signal;
       if (httpOptions.timeout && httpOptions?.timeout > 0) {
+        // In Node > 18, the built-in fetch is backed by Undici. Undici sets a global
+        // dispatcher on the global scope which tracks its internal headersTimeout and
+        // bodyTimeout using Symbol properties.
+        const dispatcherSymbol = Symbol.for('undici.globalDispatcher.1');
+        const globalDispatcher = (globalThis as Record<symbol, unknown>)[
+          dispatcherSymbol
+        ] as Record<symbol, unknown> | undefined;
+
+        if (globalDispatcher) {
+          const symbols = Object.getOwnPropertySymbols(globalDispatcher);
+          for (const sym of symbols) {
+            const desc = sym.description;
+            if (
+              desc?.includes('headers timeout') ||
+              desc?.includes('body timeout')
+            ) {
+              const currentTimeout = globalDispatcher[sym];
+              if (typeof currentTimeout === 'number') {
+                globalDispatcher[sym] = Math.max(
+                  currentTimeout,
+                  httpOptions.timeout,
+                );
+              }
+            }
+          }
+        }
+
         const timeoutHandle = setTimeout(
           () => abortController.abort(),
           httpOptions.timeout,
@@ -565,7 +592,7 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
         if (e instanceof Error) {
           throw e;
         } else {
-          throw new Error(JSON.stringify(e));
+          throw new Error(`exception ${e} sending request`, {cause: e});
         }
       });
   }
@@ -587,7 +614,7 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
         if (e instanceof Error) {
           throw e;
         } else {
-          throw new Error(JSON.stringify(e));
+          throw new Error(`exception ${e} sending request`, {cause: e});
         }
       });
   }
@@ -750,14 +777,17 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
       for (const [key, value] of Object.entries(httpOptions.headers)) {
         headers.append(key, value);
       }
-      // Append a timeout header if it is set, note that the timeout option is
-      // in milliseconds but the header is in seconds.
-      if (httpOptions.timeout && httpOptions.timeout > 0) {
-        headers.append(
-          SERVER_TIMEOUT_HEADER,
-          String(Math.ceil(httpOptions.timeout / 1000)),
-        );
-      }
+    }
+    // Append a timeout header if it is set, note that the timeout option is
+    // in milliseconds but the header is in seconds.
+    // NOTE: This is intentionally outside the httpOptions.headers guard above
+    // so that the X-Server-Timeout header is always sent whenever a timeout
+    // is configured, even if the caller did not supply any custom headers.
+    if (httpOptions?.timeout && httpOptions.timeout > 0) {
+      headers.append(
+        SERVER_TIMEOUT_HEADER,
+        String(Math.ceil(httpOptions.timeout / 1000)),
+      );
     }
     await this.clientOptions.auth.addAuthHeaders(headers, url);
     return headers;

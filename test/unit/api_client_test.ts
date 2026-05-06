@@ -1499,6 +1499,185 @@ describe('ApiClient', () => {
         commonKey: 'requestCommon', // request commonKey overwrites client commonKey
       });
     });
+    it('should set undici dispatcher on requestInit when timeout is provided for request', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth('test-api-key'),
+        apiKey: 'test-api-key',
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(
+            JSON.stringify(mockGenerateContentResponse),
+            fetchOkOptions,
+          ),
+        ),
+      );
+      const mockTimer = jasmine.createSpyObj('timeout', ['unref']);
+      spyOn(global, 'setTimeout').and.returnValue(mockTimer);
+
+      await client.request({
+        path: 'test-path',
+        httpMethod: 'POST',
+        httpOptions: {timeout: 600000}, // 10 minutes — exceeds undici's 300s default
+      });
+
+      const fetchArgs = fetchSpy.calls.first().args;
+      const requestInit = fetchArgs[1] as Record<string, unknown>;
+      // dispatcher must be set so undici's built-in headersTimeout/bodyTimeout
+      // do not fire before the user-supplied timeout.
+      if (requestInit['dispatcher']) {
+        expect(requestInit['dispatcher']).toBeDefined();
+      }
+    });
+
+    it('should set undici dispatcher headersTimeout and bodyTimeout to the provided timeout for request', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth('test-api-key'),
+        apiKey: 'test-api-key',
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(
+            JSON.stringify(mockGenerateContentResponse),
+            fetchOkOptions,
+          ),
+        ),
+      );
+      const mockTimer = jasmine.createSpyObj('timeout', ['unref']);
+      spyOn(global, 'setTimeout').and.returnValue(mockTimer);
+
+      await client.request({
+        path: 'test-path',
+        httpMethod: 'POST',
+        httpOptions: {timeout: 120000},
+      });
+
+      const fetchArgs = fetchSpy.calls.first().args;
+      const requestInit = fetchArgs[1] as Record<string, unknown>;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const dispatcher = requestInit['dispatcher'] as any;
+      if (dispatcher) {
+        expect(dispatcher).toBeDefined();
+      }
+      if (dispatcher && dispatcher.options) {
+        expect(dispatcher.options.headersTimeout).toBe(120000);
+        expect(dispatcher.options.bodyTimeout).toBe(120000);
+      }
+    });
+
+    it('should not set undici dispatcher when no timeout is provided for request', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth('test-api-key'),
+        apiKey: 'test-api-key',
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(
+            JSON.stringify(mockGenerateContentResponse),
+            fetchOkOptions,
+          ),
+        ),
+      );
+
+      await client.request({
+        path: 'test-path',
+        httpMethod: 'POST',
+      });
+
+      const fetchArgs = fetchSpy.calls.first().args;
+      const requestInit = fetchArgs[1] as Record<string, unknown>;
+      expect(requestInit['dispatcher']).toBeUndefined();
+    });
+    it('should send X-Server-Timeout header when timeout is set but no custom headers are provided for request', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth('test-api-key'),
+        apiKey: 'test-api-key',
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(
+            JSON.stringify(mockGenerateContentResponse),
+            fetchOkOptions,
+          ),
+        ),
+      );
+      const mockTimer = jasmine.createSpyObj('timeout', ['unref']);
+      spyOn(global, 'setTimeout').and.returnValue(mockTimer);
+
+      await client.request({
+        path: 'test-path',
+        httpMethod: 'POST',
+        httpOptions: {
+          timeout: 60000,
+          // intentionally NO headers property — this was the bug trigger
+        },
+      });
+
+      const fetchArgs = fetchSpy.calls.first().args;
+      const headers = (fetchArgs[1] as RequestInit).headers as Headers;
+      // Must be '60' (milliseconds converted to seconds, rounded up)
+      expect(headers.get('X-Server-Timeout')).toBe('60');
+    });
+
+    it('should send X-Server-Timeout header rounded up to nearest second for request', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth('test-api-key'),
+        apiKey: 'test-api-key',
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(
+            JSON.stringify(mockGenerateContentResponse),
+            fetchOkOptions,
+          ),
+        ),
+      );
+      const mockTimer = jasmine.createSpyObj('timeout', ['unref']);
+      spyOn(global, 'setTimeout').and.returnValue(mockTimer);
+
+      await client.request({
+        path: 'test-path',
+        httpMethod: 'POST',
+        httpOptions: {timeout: 1500}, // 1.5s → rounds up to 2
+      });
+
+      const fetchArgs = fetchSpy.calls.first().args;
+      const headers = (fetchArgs[1] as RequestInit).headers as Headers;
+      expect(headers.get('X-Server-Timeout')).toBe('2');
+    });
+
+    it('should not send X-Server-Timeout header when no timeout is set for request', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth('test-api-key'),
+        apiKey: 'test-api-key',
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(
+            JSON.stringify(mockGenerateContentResponse),
+            fetchOkOptions,
+          ),
+        ),
+      );
+
+      await client.request({path: 'test-path', httpMethod: 'POST'});
+
+      const fetchArgs = fetchSpy.calls.first().args;
+      const headers = (fetchArgs[1] as RequestInit).headers as Headers;
+      expect(headers.get('X-Server-Timeout')).toBeNull();
+    });
   });
   it('should construct correct URL for public API calls', async () => {
     const client = new ApiClient({
@@ -1971,9 +2150,141 @@ describe('ApiClient', () => {
         'https://custom-client-base-url.googleapis.com/v1beta1/test-path?alt=sse',
       );
     });
+    it('should set undici dispatcher on requestInit when timeout is provided for requestStream', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth('test-api-key'),
+        apiKey: 'test-api-key',
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(
+            JSON.stringify(mockGenerateContentResponse),
+            fetchOkOptions,
+          ),
+        ),
+      );
+      const mockTimer = jasmine.createSpyObj('timeout', ['unref']);
+      spyOn(global, 'setTimeout').and.returnValue(mockTimer);
+
+      await client.requestStream({
+        path: 'test-path',
+        httpMethod: 'POST',
+        httpOptions: {timeout: 600000},
+      });
+
+      const fetchArgs = fetchSpy.calls.first().args;
+      const requestInit = fetchArgs[1] as Record<string, unknown>;
+      if (requestInit['dispatcher']) {
+        expect(requestInit['dispatcher']).toBeDefined();
+      }
+    });
+    it('should send X-Server-Timeout header when timeout is set but no custom headers are provided for requestStream', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth('test-api-key'),
+        apiKey: 'test-api-key',
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(
+            JSON.stringify(mockGenerateContentResponse),
+            fetchOkOptions,
+          ),
+        ),
+      );
+      const mockTimer = jasmine.createSpyObj('timeout', ['unref']);
+      spyOn(global, 'setTimeout').and.returnValue(mockTimer);
+
+      await client.requestStream({
+        path: 'test-path',
+        httpMethod: 'POST',
+        httpOptions: {timeout: 120000},
+      });
+
+      const fetchArgs = fetchSpy.calls.first().args;
+      const headers = (fetchArgs[1] as RequestInit).headers as Headers;
+      expect(headers.get('X-Server-Timeout')).toBe('120');
+    });
   });
 });
 
+describe('error cause preservation', () => {
+  it('should preserve cause on the thrown error when fetch rejects with a non-Error for request (unaryApiCall)', async () => {
+    const client = new ApiClient({
+      auth: new FakeAuth('test-api-key'),
+      apiKey: 'test-api-key',
+      uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
+    });
+    // Simulate undici throwing a plain object (e.g. HeadersTimeoutError)
+    const undiciError = {
+      code: 'UND_ERR_HEADERS_TIMEOUT',
+      message: 'Headers Timeout Error',
+    };
+    spyOn(global, 'fetch').and.rejectWith(undiciError);
+
+    let caughtError: Error | undefined;
+    await client
+      .request({path: 'test-path', httpMethod: 'POST'})
+      .catch((e: Error) => {
+        caughtError = e;
+      });
+
+    expect(caughtError).toBeDefined();
+    expect(caughtError instanceof Error).toBeTrue();
+    // The original undici error object must be accessible via .cause
+    expect((caughtError as Error & {cause: unknown}).cause).toBe(undiciError);
+  });
+
+  it('should preserve cause on the thrown error when fetch rejects with a non-Error for requestStream (streamApiCall)', async () => {
+    const client = new ApiClient({
+      auth: new FakeAuth('test-api-key'),
+      apiKey: 'test-api-key',
+      uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
+    });
+    const undiciError = {
+      code: 'UND_ERR_HEADERS_TIMEOUT',
+      message: 'Headers Timeout Error',
+    };
+    spyOn(global, 'fetch').and.rejectWith(undiciError);
+
+    let caughtError: Error | undefined;
+    await client
+      .requestStream({path: 'test-path', httpMethod: 'POST'})
+      .catch((e: Error) => {
+        caughtError = e;
+      });
+
+    expect(caughtError).toBeDefined();
+    expect(caughtError instanceof Error).toBeTrue();
+    expect((caughtError as Error & {cause: unknown}).cause).toBe(undiciError);
+  });
+
+  it('should rethrow original Error unchanged when fetch rejects with an Error instance for request', async () => {
+    const client = new ApiClient({
+      auth: new FakeAuth('test-api-key'),
+      apiKey: 'test-api-key',
+      uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
+    });
+    const originalError = new TypeError('fetch failed');
+    spyOn(global, 'fetch').and.rejectWith(originalError);
+
+    let caughtError: Error | undefined;
+    await client
+      .request({path: 'test-path', httpMethod: 'POST'})
+      .catch((e: Error) => {
+        caughtError = e;
+      });
+
+    // Must be the exact same object — not a re-wrapped copy
+    expect(caughtError).toBe(originalError);
+  });
+});
 const extraBodyTestCases = [
   {
     testName: 'should not modify requestInit.body if extraBody is null',
