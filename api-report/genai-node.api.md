@@ -1438,6 +1438,28 @@ export interface GeminiPreferenceExampleCompletion {
 }
 
 // @public
+export interface GenerateAudioConfig {
+    abortSignal?: AbortSignal;
+    httpOptions?: HttpOptions;
+}
+
+// @public
+export interface GenerateAudioParameters {
+    config?: GenerateAudioConfig;
+    model: string;
+    negativePrompt?: string;
+    prompt: string;
+    sampleCount?: number;
+    seed?: number;
+}
+
+// @public
+export class GenerateAudioResponse {
+    predictions?: GeneratedAudio[];
+    sdkHttpResponse?: HttpResponse;
+}
+
+// @public
 export interface GenerateContentConfig {
     abortSignal?: AbortSignal;
     audioTimestamp?: boolean;
@@ -1520,6 +1542,11 @@ export class GenerateContentResponseUsageMetadata {
     toolUsePromptTokensDetails?: ModalityTokenCount[];
     totalTokenCount?: number;
     trafficType?: TrafficType;
+}
+
+// @public
+export interface GeneratedAudio {
+    bytesBase64Encoded?: string;
 }
 
 // @public
@@ -2823,6 +2850,7 @@ export class Models extends BaseModule {
     delete(params: types.DeleteModelParameters): Promise<types.DeleteModelResponse>;
     editImage: (params: types.EditImageParameters) => Promise<types.EditImageResponse>;
     embedContent: (params: types.EmbedContentParameters) => Promise<types.EmbedContentResponse>;
+    generateAudio: (params: types.GenerateAudioParameters) => Promise<types.GenerateAudioResponse>;
     generateContent: (params: types.GenerateContentParameters) => Promise<types.GenerateContentResponse>;
     generateContentStream: (params: types.GenerateContentParameters) => Promise<AsyncGenerator<types.GenerateContentResponse>>;
     generateImages: (params: types.GenerateImagesParameters) => Promise<types.GenerateImagesResponse>;

@@ -17,6 +17,14 @@ import * as mcp from './mcp/_mcp.js';
 import {PagedItem, Pager} from './pagers.js';
 import * as types from './types.js';
 
+function getAudioModelId(model: string): string {
+  return model.split('/').pop() ?? model;
+}
+
+function isLyriaThreeAudioModel(model: string): boolean {
+  return getAudioModelId(model).startsWith('lyria-3-');
+}
+
 export class Models extends BaseModule {
   constructor(private readonly apiClient: ApiClient) {
     super();
@@ -454,6 +462,32 @@ export class Models extends BaseModule {
       }
     })(this, afcToolsMap, params);
   }
+
+  /**
+   * Generates audio based on a text description and configuration.
+   *
+   * Supports Vertex AI predict-based audio models such as `lyria-002` and
+   * Lyria 3 models such as `lyria-3-clip-preview` and
+   * `lyria-3-pro-preview`. Lyria 3 models are available through both
+   * Vertex AI and the Gemini API.
+   *
+   * @param params - The parameters for generating audio.
+   * @return The response from the API.
+   *
+   * @example
+   * ```ts
+   * const response = await client.models.generateAudio({
+   *  model: 'lyria-002',
+   *  prompt: 'A gentle piano melody',
+   * });
+   * console.log(response?.predictions?.[0]?.bytesBase64Encoded);
+   * ```
+   */
+  generateAudio = async (
+    params: types.GenerateAudioParameters,
+  ): Promise<types.GenerateAudioResponse> => {
+    return await this.generateAudioInternal(params);
+  };
 
   /**
    * Generates an image based on a text description and configuration.
@@ -984,6 +1018,112 @@ export class Models extends BaseModule {
         return typedResp;
       });
     }
+  }
+
+  /**
+   * Private method for generating audio.
+   */
+  private async generateAudioInternal(
+    params: types.GenerateAudioParameters,
+  ): Promise<types.GenerateAudioResponse> {
+    if (isLyriaThreeAudioModel(params.model)) {
+      const unsupportedParameters: string[] = [];
+      if (params.negativePrompt !== undefined) {
+        unsupportedParameters.push('negativePrompt');
+      }
+      if (params.sampleCount !== undefined) {
+        unsupportedParameters.push('sampleCount');
+      }
+      if (params.seed !== undefined) {
+        unsupportedParameters.push('seed');
+      }
+
+      if (unsupportedParameters.length > 0) {
+        throw new Error(
+          `generateAudio() with Lyria 3 models does not support ${
+            unsupportedParameters.join(', ')
+          }. Use models.generateContent() for advanced Lyria 3 requests.`,
+        );
+      }
+
+      const response = await this.generateContentInternal({
+        model: params.model,
+        contents: params.prompt,
+        config: {
+          responseModalities: [types.Modality.AUDIO, types.Modality.TEXT],
+          httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
+        },
+      });
+
+      const predictions = (response.candidates ?? []).flatMap((candidate) =>
+        (candidate.content?.parts ?? [])
+          .filter(
+            (part) =>
+              part.inlineData?.mimeType?.startsWith('audio/') &&
+              typeof part.inlineData.data === 'string',
+          )
+          .map((part) => ({
+            bytesBase64Encoded: part.inlineData!.data,
+          })),
+      );
+
+      if (predictions.length === 0) {
+        throw new Error('No audio was returned by the model.');
+      }
+
+      const typedResp = new types.GenerateAudioResponse();
+      typedResp.sdkHttpResponse = response.sdkHttpResponse;
+      typedResp.predictions = predictions;
+      return typedResp;
+    }
+
+    if (!this.apiClient.isVertexAI()) {
+      throw new Error(
+        'generateAudio() with the Gemini API only supports Lyria 3 models.',
+      );
+    }
+    const body = converters.generateAudioParametersToVertex(
+      this.apiClient,
+      params,
+      params,
+    );
+    const path = common.formatMap(
+      '{model}:predict',
+      body['_url'] as Record<string, unknown>,
+    );
+    const queryParams = body['_query'] as Record<string, string>;
+    delete body['_url'];
+    delete body['_query'];
+
+    const response = this.apiClient
+      .request({
+        path: path,
+        queryParams: queryParams || {},
+        body: JSON.stringify(body),
+        httpMethod: 'POST',
+        httpOptions: params.config?.httpOptions,
+        abortSignal: params.config?.abortSignal,
+      })
+      .then((httpResponse) => {
+        return httpResponse.json().then((jsonResponse) => {
+          const response = jsonResponse as types.GenerateAudioResponse;
+          response.sdkHttpResponse = {
+            headers: httpResponse.headers,
+          } as types.HttpResponse;
+          return response;
+        });
+      }) as Promise<types.GenerateAudioResponse>;
+
+    return response.then((apiResponse) => {
+      const resp = converters.generateAudioResponseFromVertex(
+        apiResponse,
+        params,
+      );
+      const typedResp = new types.GenerateAudioResponse();
+      Object.assign(typedResp, resp);
+      return typedResp;
+    });
   }
 
   /**

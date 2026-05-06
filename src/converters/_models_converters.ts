@@ -2633,6 +2633,78 @@ export function generateImagesResponseFromVertex(
   return toObject;
 }
 
+export function generateAudioConfigToVertex(
+  _fromObject: types.GenerateAudioConfig,
+  _parentObject: Record<string, unknown>,
+  _rootObject?: unknown,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+  return toObject;
+}
+
+export function generateAudioParametersToVertex(
+  apiClient: ApiClient,
+  fromObject: types.GenerateAudioParameters,
+  rootObject?: unknown,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromModel = common.getValueByPath(fromObject, ['model']);
+  if (fromModel != null) {
+    common.setValueByPath(
+      toObject,
+      ['_url', 'model'],
+      t.tModel(apiClient, fromModel),
+    );
+  }
+
+  const fromPrompt = common.getValueByPath(fromObject, ['prompt']);
+  if (fromPrompt != null) {
+    common.setValueByPath(toObject, ['instances[0]', 'prompt'], fromPrompt);
+  }
+
+  const fromNegativePrompt = common.getValueByPath(fromObject, ['negativePrompt']);
+  if (fromNegativePrompt != null) {
+    common.setValueByPath(toObject, ['instances[0]', 'negative_prompt'], fromNegativePrompt);
+  }
+
+  const fromSampleCount = common.getValueByPath(fromObject, ['sampleCount']);
+  if (fromSampleCount != null) {
+    common.setValueByPath(toObject, ['instances[0]', 'sample_count'], fromSampleCount);
+  }
+
+  const fromSeed = common.getValueByPath(fromObject, ['seed']);
+  if (fromSeed != null) {
+    common.setValueByPath(toObject, ['instances[0]', 'seed'], fromSeed);
+  }
+
+  const fromConfig = common.getValueByPath(fromObject, ['config']);
+  if (fromConfig != null) {
+    generateAudioConfigToVertex(fromConfig, toObject, rootObject);
+  }
+
+  return toObject;
+}
+
+export function generateAudioResponseFromVertex(
+  fromObject: types.GenerateAudioResponse,
+  _rootObject?: unknown,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromSdkHttpResponse = common.getValueByPath(fromObject, ['sdkHttpResponse']);
+  if (fromSdkHttpResponse != null) {
+    common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
+  }
+
+  const fromPredictions = common.getValueByPath(fromObject, ['predictions']);
+  if (fromPredictions != null) {
+    common.setValueByPath(toObject, ['predictions'], fromPredictions);
+  }
+
+  return toObject;
+}
+
 export function generateVideosConfigToMldev(
   fromObject: types.GenerateVideosConfig,
   parentObject: Record<string, unknown>,

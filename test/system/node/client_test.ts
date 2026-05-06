@@ -1123,6 +1123,83 @@ describe('Client Tests', () => {
     });
   });
 
+  describe('generateAudio', () => {
+    let originalTimeout: number;
+
+    beforeEach(function () {
+      originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+      jasmine.DEFAULT_TIMEOUT_INTERVAL = 40000; // 40 seconds (audio generation takes longer)
+    });
+
+    it('Vertex AI should generate audio with specified parameters', async () => {
+      const client = new GoogleGenAI({
+        vertexai: true,
+        project: GOOGLE_CLOUD_PROJECT,
+        location: GOOGLE_CLOUD_LOCATION,
+        httpOptions,
+      });
+      const response = await client.models.generateAudio({
+        model: 'lyria-002',
+        prompt: 'a simple 8-bit retro video game melody',
+      });
+      expect(response?.predictions!.length).toBe(
+        1,
+        'Expected 1 generated audio prediction got ' + response?.predictions!.length,
+      );
+      expect(response?.predictions?.[0]?.bytesBase64Encoded).toEqual(
+        jasmine.anything(),
+        'Expected audio bytes to be non-empty',
+      );
+    });
+
+    it('ML Dev should generate audio with Lyria 3 clip', async () => {
+      const client = new GoogleGenAI({
+        vertexai: false,
+        apiKey: GOOGLE_API_KEY,
+        httpOptions,
+      });
+      const response = await client.models.generateAudio({
+        model: 'lyria-3-clip-preview',
+        prompt:
+          'Create a short lo-fi instrumental loop. Instrumental only, no vocals.',
+      });
+      expect(response?.predictions!.length).toBeGreaterThan(
+        0,
+        'Expected at least 1 generated audio prediction',
+      );
+      expect(response?.predictions?.[0]?.bytesBase64Encoded).toEqual(
+        jasmine.anything(),
+        'Expected audio bytes to be non-empty',
+      );
+    });
+
+    it('Vertex AI should generate audio with Lyria 3 clip', async () => {
+      const client = new GoogleGenAI({
+        vertexai: true,
+        project: GOOGLE_CLOUD_PROJECT,
+        location: GOOGLE_CLOUD_LOCATION,
+        httpOptions,
+      });
+      const response = await client.models.generateAudio({
+        model: 'lyria-3-clip-preview',
+        prompt:
+          'Create a short lo-fi instrumental loop. Instrumental only, no vocals.',
+      });
+      expect(response?.predictions!.length).toBeGreaterThan(
+        0,
+        'Expected at least 1 generated audio prediction',
+      );
+      expect(response?.predictions?.[0]?.bytesBase64Encoded).toEqual(
+        jasmine.anything(),
+        'Expected audio bytes to be non-empty',
+      );
+    });
+
+    afterEach(function () {
+      jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
+    });
+  });
+
   describe('test thinking', () => {
     it('generate content should return thought field', async () => {
       const client = new GoogleGenAI({
