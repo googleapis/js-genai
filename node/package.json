@@ -1,4 +1,4 @@
 {
   "name": "@google/genai/node",
-  "main": "../dist/node/index.js"
+  "main": "../dist/node/index.mjs"
 }
