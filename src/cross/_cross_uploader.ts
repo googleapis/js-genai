@@ -20,6 +20,16 @@ export const INITIAL_RETRY_DELAY_MS = 1000;
 export const DELAY_MULTIPLIER = 2;
 export const X_GOOG_UPLOAD_STATUS_HEADER_FIELD = 'x-goog-upload-status';
 
+export async function discardResponseBody(
+  response: HttpResponse | undefined,
+): Promise<void> {
+  const body = response?.responseInternal?.body;
+  if (!body || response?.responseInternal?.bodyUsed) {
+    return;
+  }
+  await body.cancel();
+}
+
 export class CrossUploader implements Uploader {
   async upload(
     file: string | Blob,
@@ -160,6 +170,7 @@ async function uploadBlobInternal(
       if (response?.headers?.[X_GOOG_UPLOAD_STATUS_HEADER_FIELD]) {
         break;
       }
+      await discardResponseBody(response);
       retryCount++;
       await sleep(currentDelayMs);
       currentDelayMs = currentDelayMs * DELAY_MULTIPLIER;
@@ -177,6 +188,7 @@ async function uploadBlobInternal(
         'All content has been uploaded, but the upload status is not finalized.',
       );
     }
+    await discardResponseBody(response);
   }
 
   return response;
