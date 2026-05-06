@@ -10,6 +10,7 @@ export default [
       'dist/**',
       'src/interactions/**',
       'src/interactions-private/**',
+      'test/unit/interactions/**',
     ],
   },
   {

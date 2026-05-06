@@ -1,0 +1,421 @@
+Run npm run test:interactions
+
+> @google/genai@2.2.0 test:interactions
+> jest
+
+ts-jest[config] (WARN) message TS151001: If you have issues related to imports, you should consider setting `esModuleInterop` to `true` in your TypeScript configuration file (usually `tsconfig.json`). See https://blogs.msdn.microsoft.com/typescript/2018/01/31/announcing-typescript-2-7/#easier-ecmascript-module-interoperability for more information.
+ts-jest[config] (WARN) message TS151001: If you have issues related to imports, you should consider setting `esModuleInterop` to `true` in your TypeScript configuration file (usually `tsconfig.json`). See https://blogs.msdn.microsoft.com/typescript/2018/01/31/announcing-typescript-2-7/#easier-ecmascript-module-interoperability for more information.
+ts-jest[config] (WARN) message TS151001: If you have issues related to imports, you should consider setting `esModuleInterop` to `true` in your TypeScript configuration file (usually `tsconfig.json`). See https://blogs.msdn.microsoft.com/typescript/2018/01/31/announcing-typescript-2-7/#easier-ecmascript-module-interoperability for more information.
+FAIL test/unit/interactions/path.test.ts
+  ● Test suite failed to run
+
+    test/unit/interactions/path.test.ts:192:21 - error TS2339: Property 'toMatchObject' does not exist on type 'Matchers<{ [pathParts: string]: { [params: string]: { valid: boolean; result?: string | undefined; error?: string | undefined; }; }; }>'.
+
+    192     expect(results).toMatchObject({
+                            ~~~~~~~~~~~~~
+
+FAIL test/unit/interactions/index.test.ts
+  ● Test suite failed to run
+
+    test/unit/interactions/index.test.ts:11:8 - error TS1192: Module '"node:util"' has no default export.
+
+    11 import util from 'node:util';
+              ~~~~
+    test/unit/interactions/index.test.ts:12:36 - error TS2307: Cannot find module 'gemini-next-gen-api' or its corresponding type declarations.
+
+    12 import GeminiNextGenAPIClient from 'gemini-next-gen-api';
+                                          ~~~~~~~~~~~~~~~~~~~~~
+    test/unit/interactions/index.test.ts:13:35 - error TS2307: Cannot find module 'gemini-next-gen-api' or its corresponding type declarations.
+
+    13 import { APIUserAbortError } from 'gemini-next-gen-api';
+                                         ~~~~~~~~~~~~~~~~~~~~~
+    test/unit/interactions/index.test.ts:20:5 - error TS2304: Cannot find name 'jest'.
+
+    20     jest.resetModules();
+           ~~~~
+    test/unit/interactions/index.test.ts:94:25 - error TS2304: Cannot find name 'jest'.
+
+    94       const debugMock = jest.fn();
+                               ~~~~
+    test/unit/interactions/index.test.ts:97:15 - error TS2304: Cannot find name 'jest'.
+
+    97         info: jest.fn(),
+                     ~~~~
+    test/unit/interactions/index.test.ts:98:15 - error TS2304: Cannot find name 'jest'.
+
+    98         warn: jest.fn(),
+                     ~~~~
+    test/unit/interactions/index.test.ts:99:16 - error TS2304: Cannot find name 'jest'.
+
+    99         error: jest.fn(),
+                      ~~~~
+    test/unit/interactions/index.test.ts:132:25 - error TS2304: Cannot find name 'jest'.
+
+    132       const debugMock = jest.fn();
+                                ~~~~
+    test/unit/interactions/index.test.ts:135:15 - error TS2304: Cannot find name 'jest'.
+
+    135         info: jest.fn(),
+                      ~~~~
+    test/unit/interactions/index.test.ts:136:15 - error TS2304: Cannot find name 'jest'.
+
+    136         warn: jest.fn(),
+                      ~~~~
+    test/unit/interactions/index.test.ts:137:16 - error TS2304: Cannot find name 'jest'.
+
+    137         error: jest.fn(),
+                       ~~~~
+    test/unit/interactions/index.test.ts:157:25 - error TS2304: Cannot find name 'jest'.
+
+    157       const debugMock = jest.fn();
+                                ~~~~
+    test/unit/interactions/index.test.ts:160:15 - error TS2304: Cannot find name 'jest'.
+
+    160         info: jest.fn(),
+                      ~~~~
+    test/unit/interactions/index.test.ts:161:15 - error TS2304: Cannot find name 'jest'.
+
+    161         warn: jest.fn(),
+                      ~~~~
+    test/unit/interactions/index.test.ts:162:16 - error TS2304: Cannot find name 'jest'.
+
+    162         error: jest.fn(),
+                       ~~~~
+    test/unit/interactions/index.test.ts:183:24 - error TS2304: Cannot find name 'jest'.
+
+    183       const warnMock = jest.fn();
+                               ~~~~
+    test/unit/interactions/index.test.ts:185:16 - error TS2304: Cannot find name 'jest'.
+
+    185         debug: jest.fn(),
+                       ~~~~
+    test/unit/interactions/index.test.ts:186:15 - error TS2304: Cannot find name 'jest'.
+
+    186         info: jest.fn(),
+                      ~~~~
+    test/unit/interactions/index.test.ts:188:16 - error TS2304: Cannot find name 'jest'.
+
+    188         error: jest.fn(),
+                       ~~~~
+    test/unit/interactions/index.test.ts:209:25 - error TS2304: Cannot find name 'jest'.
+
+    209       const debugMock = jest.fn();
+                                ~~~~
+    test/unit/interactions/index.test.ts:212:15 - error TS2304: Cannot find name 'jest'.
+
+    212         info: jest.fn(),
+                      ~~~~
+    test/unit/interactions/index.test.ts:213:15 - error TS2304: Cannot find name 'jest'.
+
+    213         warn: jest.fn(),
+                      ~~~~
+    test/unit/interactions/index.test.ts:214:16 - error TS2304: Cannot find name 'jest'.
+
+    214         error: jest.fn(),
+                       ~~~~
+    test/unit/interactions/index.test.ts:235:24 - error TS2304: Cannot find name 'jest'.
+
+    235       const warnMock = jest.fn();
+                               ~~~~
+    test/unit/interactions/index.test.ts:237:16 - error TS2304: Cannot find name 'jest'.
+
+    237         debug: jest.fn(),
+                       ~~~~
+    test/unit/interactions/index.test.ts:238:15 - error TS2304: Cannot find name 'jest'.
+
+    238         info: jest.fn(),
+                      ~~~~
+    test/unit/interactions/index.test.ts:240:16 - error TS2304: Cannot find name 'jest'.
+
+    240         error: jest.fn(),
+                       ~~~~
+    test/unit/interactions/index.test.ts:317:15 - error TS7006: Parameter 'url' implicitly has an 'any' type.
+
+    317       fetch: (url) => {
+                      ~~~
+    test/unit/interactions/index.test.ts:355:15 - error TS7019: Rest parameter 'args' implicitly has an 'any[]' type.
+
+    355       fetch: (...args) => {
+                      ~~~~~~~
+    test/unit/interactions/index.test.ts:359:28 - error TS2556: A spread argument must either have a tuple type or be passed to a rest parameter.
+
+    359               defaultFetch(...args)
+                                   ~~~~~~~
+    test/unit/interactions/index.test.ts:371:17 - error TS2304: Cannot find name 'jest'.
+
+    371     const spy = jest.spyOn(client, 'request');
+                        ~~~~
+    test/unit/interactions/index.test.ts:373:69 - error TS2339: Property 'rejects' does not exist on type 'FunctionMatchers<any>'.
+
+    373     await expect(client.get('/foo', { signal: controller.signal })).rejects.toThrowError(APIUserAbortError);
+                                                                            ~~~~~~~
+    test/unit/interactions/index.test.ts:826:16 - error TS7006: Parameter 'r' implicitly has an 'any' type.
+
+    826         .then((r) => r.text()),
+                       ~
+    test/unit/interactions/index.test.ts:865:16 - error TS7006: Parameter 'r' implicitly has an 'any' type.
+
+    865         .then((r) => r.text()),
+                       ~
+    test/unit/interactions/index.test.ts:904:16 - error TS7006: Parameter 'r' implicitly has an 'any' type.
+
+    904         .then((r) => r.text()),
+                       ~
+
+FAIL test/unit/interactions/api-resources/webhooks.test.ts
+  ● Test suite failed to run
+
+    test/unit/interactions/api-resources/webhooks.test.ts:9:30 - error TS2307: Cannot find module '../../../src/interactions/resources/webhooks.js' or its corresponding type declarations.
+
+    9 import { BaseWebhooks } from '../../../src/interactions/resources/webhooks.js';
+                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    test/unit/interactions/api-resources/webhooks.test.ts:11:36 - error TS2307: Cannot find module 'gemini-next-gen-api' or its corresponding type declarations.
+
+    11 import GeminiNextGenAPIClient from 'gemini-next-gen-api';
+                                          ~~~~~~~~~~~~~~~~~~~~~
+    test/unit/interactions/api-resources/webhooks.test.ts:12:66 - error TS2307: Cannot find module '../../../src/interactions/tree-shakable.js' or its corresponding type declarations.
+
+    12 import { createClient, type PartialGeminiNextGenAPIClient } from '../../../src/interactions/tree-shakable.js';
+                                                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    test/unit/interactions/api-resources/webhooks.test.ts:27:3 - error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+
+    27   test.skip('create: only required params', async () => {
+         ~~~~
+    test/unit/interactions/api-resources/webhooks.test.ts:43:3 - error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+
+    43   test.skip('create: required and optional params', async () => {
+         ~~~~
+    test/unit/interactions/api-resources/webhooks.test.ts:53:3 - error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+
+    53   test.skip('update: only required params', async () => {
+         ~~~~
+    test/unit/interactions/api-resources/webhooks.test.ts:65:3 - error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+
+    65   test.skip('update: required and optional params', async () => {
+         ~~~~
+    test/unit/interactions/api-resources/webhooks.test.ts:77:3 - error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+
+    77   test.skip('list: only required params', async () => {
+         ~~~~
+    test/unit/interactions/api-resources/webhooks.test.ts:89:3 - error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+
+    89   test.skip('list: required and optional params', async () => {
+         ~~~~
+    test/unit/interactions/api-resources/webhooks.test.ts:98:3 - error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+
+    98   test.skip('delete: only required params', async () => {
+         ~~~~
+    test/unit/interactions/api-resources/webhooks.test.ts:110:3 - error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+
+    110   test.skip('delete: required and optional params', async () => {
+          ~~~~
+    test/unit/interactions/api-resources/webhooks.test.ts:115:3 - error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+
+    115   test.skip('get: only required params', async () => {
+          ~~~~
+    test/unit/interactions/api-resources/webhooks.test.ts:127:3 - error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+
+    127   test.skip('get: required and optional params', async () => {
+          ~~~~
+    test/unit/interactions/api-resources/webhooks.test.ts:132:3 - error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+
+    132   test.skip('ping: only required params', async () => {
+          ~~~~
+    test/unit/interactions/api-resources/webhooks.test.ts:144:3 - error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+
+    144   test.skip('ping: required and optional params', async () => {
+          ~~~~
+    test/unit/interactions/api-resources/webhooks.test.ts:152:3 - error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+
+    152   test.skip('rotateSigningSecret: only required params', async () => {
+          ~~~~
+    test/unit/interactions/api-resources/webhooks.test.ts:164:3 - error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+
+    164   test.skip('rotateSigningSecret: required and optional params', async () => {
+          ~~~~
+
+FAIL test/unit/interactions/streaming.test.ts
+  ● Test suite failed to run
+
+    test/unit/interactions/streaming.test.ts:7:8 - error TS1259: Module '"assert"' can only be default-imported using the 'esModuleInterop' flag
+
+    7 import assert from 'assert';
+             ~~~~~~
+
+      node_modules/@types/node/assert.d.ts:1057:5
+        1057     export = assert;
+                 ~~~~~~~~~~~~~~~~
+        This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+FAIL test/unit/interactions/internal/decoders/line.test.ts
+  ● Test suite failed to run
+
+    test/unit/interactions/internal/decoders/line.test.ts:7:53 - error TS2307: Cannot find module '../../../src/interactions/internal/decoders/line.js' or its corresponding type declarations.
+
+    7 import { findDoubleNewlineIndex, LineDecoder } from '../../../src/interactions/internal/decoders/line.js';
+                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    test/unit/interactions/internal/decoders/line.test.ts:82:52 - error TS2339: Property 'toHaveLength' does not exist on type 'FunctionMatchers<any>'.
+
+    82     expect(decoder.decode(new Uint8Array([0xd0]))).toHaveLength(0);
+                                                          ~~~~~~~~~~~~
+    test/unit/interactions/internal/decoders/line.test.ts:83:70 - error TS2339: Property 'toHaveLength' does not exist on type 'FunctionMatchers<any>'.
+
+    83     expect(decoder.decode(new Uint8Array([0xb8, 0xd0, 0xb7, 0xd0]))).toHaveLength(0);
+                                                                            ~~~~~~~~~~~~
+    test/unit/interactions/internal/decoders/line.test.ts:86:7 - error TS2339: Property 'toHaveLength' does not exist on type 'FunctionMatchers<any>'.
+
+    86     ).toHaveLength(0);
+             ~~~~~~~~~~~~
+
+FAIL test/unit/interactions/api-resources/interactions.test.ts
+  ● Test suite failed to run
+
+    test/unit/interactions/api-resources/interactions.test.ts:9:34 - error TS2307: Cannot find module '../../../src/interactions/resources/interactions.js' or its corresponding type declarations.
+
+    9 import { BaseInteractions } from '../../../src/interactions/resources/interactions.js';
+                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    test/unit/interactions/api-resources/interactions.test.ts:11:36 - error TS2307: Cannot find module 'gemini-next-gen-api' or its corresponding type declarations.
+
+    11 import GeminiNextGenAPIClient from 'gemini-next-gen-api';
+                                          ~~~~~~~~~~~~~~~~~~~~~
+    test/unit/interactions/api-resources/interactions.test.ts:12:66 - error TS2307: Cannot find module '../../../src/interactions/tree-shakable.js' or its corresponding type declarations.
+
+    12 import { createClient, type PartialGeminiNextGenAPIClient } from '../../../src/interactions/tree-shakable.js';
+                                                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    test/unit/interactions/api-resources/interactions.test.ts:39:3 - error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+
+    39   test.skip('create: only required params', async () => {
+         ~~~~
+    test/unit/interactions/api-resources/interactions.test.ts:55:3 - error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+
+    55   test.skip('create: required and optional params', async () => {
+         ~~~~
+    test/unit/interactions/api-resources/interactions.test.ts:124:3 - error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+
+    124   test.skip('delete: only required params', async () => {
+          ~~~~
+    test/unit/interactions/api-resources/interactions.test.ts:136:3 - error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+
+    136   test.skip('delete: required and optional params', async () => {
+          ~~~~
+    test/unit/interactions/api-resources/interactions.test.ts:141:3 - error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+
+    141   test.skip('cancel: only required params', async () => {
+          ~~~~
+    test/unit/interactions/api-resources/interactions.test.ts:153:3 - error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+
+    153   test.skip('cancel: required and optional params', async () => {
+          ~~~~
+    test/unit/interactions/api-resources/interactions.test.ts:158:3 - error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+
+    158   test.skip('get: only required params', async () => {
+          ~~~~
+    test/unit/interactions/api-resources/interactions.test.ts:170:3 - error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+
+    170   test.skip('get: required and optional params', async () => {
+          ~~~~
+
+FAIL test/unit/interactions/base64.test.ts
+  ● Test suite failed to run
+
+    test/unit/interactions/base64.test.ts:9:10 - error TS2339: Property 'each' does not exist on type '(description: string, specDefinitions: () => void) => void'.
+
+    9 describe.each(['Buffer', 'atob'])('with %s', (mode) => {
+               ~~~~
+    test/unit/interactions/base64.test.ts:9:47 - error TS7006: Parameter 'mode' implicitly has an 'any' type.
+
+    9 describe.each(['Buffer', 'atob'])('with %s', (mode) => {
+                                                    ~~~~
+
+FAIL test/unit/interactions/uploads.test.ts
+  ● Test suite failed to run
+
+    test/unit/interactions/uploads.test.ts:7:8 - error TS1192: Module '"fs"' has no default export.
+
+    7 import fs from 'fs';
+             ~~
+    test/unit/interactions/uploads.test.ts:28:7 - error TS2339: Property 'rejects' does not exist on type 'Matchers<Promise<File>>'.
+
+    28     ).rejects.toThrowErrorMatchingInlineSnapshot(
+             ~~~~~~~
+    test/unit/interactions/uploads.test.ts:35:7 - error TS2339: Property 'rejects' does not exist on type 'Matchers<Promise<File>>'.
+
+    35     ).rejects.toThrowErrorMatchingInlineSnapshot(
+             ~~~~~~~
+    test/unit/interactions/uploads.test.ts:44:25 - error TS2339: Property 'resolves' does not exist on type 'Matchers<Promise<string>>'.
+
+    44     expect(file.text()).resolves.toEqual('contents');
+                               ~~~~~~~~
+    test/unit/interactions/uploads.test.ts:68:23 - error TS2345: Argument of type 'File' is not assignable to parameter of type 'Expected<File>'.
+      Property 'webkitRelativePath' is missing in type 'File' but required in type '{ readonly lastModified: ExpectedRecursive<number>; readonly name: ExpectedRecursive<string>; readonly webkitRelativePath: ExpectedRecursive<string>; ... 5 more ...; text: ExpectedRecursive<...>; }'.
+
+    68     expect(file).toBe(input);
+                             ~~~~~
+
+      node_modules/typescript/lib/lib.dom.d.ts:8313:14
+        8313     readonly webkitRelativePath: string;
+                          ~~~~~~~~~~~~~~~~~~
+        'webkitRelativePath' is declared here.
+    test/unit/interactions/uploads.test.ts:76:11 - error TS2739: Type 'File' is missing the following properties from type 'File': [Symbol.toStringTag], bytes
+
+    76     const file: File = result;
+                 ~~~~
+    test/unit/interactions/uploads.test.ts:88:5 - error TS2304: Cannot find name 'jest'.
+
+    88     jest.resetModules();
+           ~~~~
+    test/unit/interactions/uploads.test.ts:102:5 - error TS2304: Cannot find name 'jest'.
+
+    102     jest.resetModules();
+            ~~~~
+    test/unit/interactions/uploads.test.ts:109:7 - error TS2339: Property 'rejects' does not exist on type 'Matchers<Promise<File>>'.
+
+    109     ).rejects.toMatchInlineSnapshot(
+              ~~~~~~~
+
+FAIL test/unit/interactions/buildHeaders.test.ts
+  ● Test suite failed to run
+
+    Cannot find module '../../../src/interactions/internal/headers.js' from 'test/unit/interactions/buildHeaders.test.ts'
+
+       6 |
+       7 | import { inspect } from 'node:util';
+    >  8 | import { buildHeaders, type HeadersLike, type NullableHeaders } from '../../../src/interactions/internal/headers.js';
+         | ^
+       9 |
+      10 | function inspectNullableHeaders(headers: NullableHeaders) {
+      11 |   return `NullableHeaders {${[
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/resolver.js:427:11)
+      at Object.<anonymous> (test/unit/interactions/buildHeaders.test.ts:8:1)
+
+FAIL test/unit/interactions/form.test.ts
+  ● Test suite failed to run
+
+    test/unit/interactions/form.test.ts:36:7 - error TS2339: Property 'rejects' does not exist on type 'FunctionMatchers<() => Promise<RequestOptions>>'.
+
+    36     ).rejects.toThrow(TypeError);
+             ~~~~~~~
+
+FAIL test/unit/interactions/stringifyQuery.test.ts
+  ● Test suite failed to run
+
+    Cannot find module '../../../src/interactions/internal/utils/query.js' from 'test/unit/interactions/stringifyQuery.test.ts'
+
+       7 | // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+       8 |
+    >  9 | import { stringifyQuery } from '../../../src/interactions/internal/utils/query.js';
+         | ^
+      10 |
+      11 | describe('stringifyQuery', () => {
+      12 |   for (const [input, expected] of [
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/resolver.js:427:11)
+      at Object.<anonymous> (test/unit/interactions/stringifyQuery.test.ts:9:1)
+
+Test Suites: 11 failed, 11 total
+Tests:       0 total
+Snapshots:   0 total
+Time:        7.529 s
+Ran all test suites.
+Error: Process completed with exit code 1.

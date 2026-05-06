@@ -26,6 +26,7 @@ jobs:
     - run: USE_LOCAL_BUILD=true npm ci
     - run: npm run build
     - run: npm run unit-test
+    - run: npm run test:interactions
     - run: npm run test-server-tests
     - run: |
         cd sdk-samples

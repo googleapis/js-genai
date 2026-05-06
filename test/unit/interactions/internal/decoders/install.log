@@ -1,0 +1,186 @@
+$ npm install --registry=https://registry.npmjs.org
+Running 'npm run preinstall' in /google/src/cloud/markdaoust/interactions-js/google3/third_party/javascript/google_genai...
+
+
+> @google/genai@1.52.0 preinstall
+> node scripts/google_check_citc_install.cjs
+
+Syncing package.json to /usr/local/google/home/markdaoust/node_modules_cache/interactions-js/third_party/javascript/google_genai...
+Running npm install in /usr/local/google/home/markdaoust/node_modules_cache/interactions-js/third_party/javascript/google_genai with --ignore-scripts...
+npm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+npm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+npm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+npm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+
+added 141 packages, and audited 932 packages in 7s
+
+213 packages are looking for funding
+  run `npm fund` for details
+
+30 vulnerabilities (2 low, 10 moderate, 17 high, 1 critical)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+Some issues need review, and may require choosing
+a different dependency.
+
+Run `npm audit` for details.
+Syncing updated package files back to /google/src/cloud/markdaoust/interactions-js/google3/third_party/javascript/google_genai...
+Setting up symlink for node_modules in /google/src/cloud/markdaoust/interactions-js/google3/third_party/javascript/google_genai...
+Custom 'npm install' complete. node_modules symlinked.
+Running 'npm run prepare' in /google/src/cloud/markdaoust/interactions-js/google3/third_party/javascript/google_genai...
+
+> @google/genai@1.52.0 prepare
+> node scripts/prepare.js
+
+> Ensuring CitC symlink for dist...
+Symlink for dist is already correct.
+> Executing: npm run build
+
+> @google/genai@1.52.0 prebuild
+> node scripts/google_ensure_citc_symlink.cjs dist
+
+Symlink for dist is already correct.
+
+> @google/genai@1.52.0 build
+> patch-package && rollup -c && npm-run-all --parallel api-extractor:dev:* && node scripts/ignore_missing_mcp_dep.js
+
+patch-package 8.0.1
+Applying patches...
+@microsoft/api-extractor@7.52.15 ✔
+
+Warning: patch-package detected a patch file version mismatch
+
+  Don't worry! This is probably fine. The patch was still applied
+  successfully. Here's the deets:
+
+  Patch file created for
+
+    @microsoft/api-extractor@7.52.15
+
+  applied to
+
+    @microsoft/api-extractor@7.55.2
+
+  At path
+
+    node_modules/@microsoft/api-extractor
+
+  This warning is just to give you a heads-up. There is a small chance of
+  breakage even though the patch was applied successfully. Make sure the package
+  still behaves like you expect (you wrote tests, right?) and then run
+
+    patch-package @microsoft/api-extractor
+
+  to update the version in the patch file name and make this warning go away.
+
+---
+patch-package finished with 1 warning(s).
+
+src/index.ts → ./dist/index.mjs...
+created ./dist/index.mjs in 20.3s
+
+src/index.ts → ./dist/index.cjs...
+created ./dist/index.cjs in 6.2s
+
+src/node/index.ts → ./dist/node/index.mjs...
+created ./dist/node/index.mjs in 5.7s
+
+src/node/index.ts → ./dist/node/index.cjs...
+created ./dist/node/index.cjs in 5.7s
+
+src/web/index.ts → ./dist/web/index.mjs...
+created ./dist/web/index.mjs in 6.2s
+
+src/tokenizer/node.ts → dist/tokenizer/node.mjs...
+created dist/tokenizer/node.mjs in 3.1s
+
+src/tokenizer/node.ts → dist/tokenizer/node.cjs...
+created dist/tokenizer/node.cjs in 3.2s
+
+src/vertex_internal/index.ts → dist/vertex_internal/index.js...
+created dist/vertex_internal/index.js in 3.2s
+
+src/vertex_internal/index.ts → dist/vertex_internal/index.cjs...
+created dist/vertex_internal/index.cjs in 3s
+
+> @google/genai@1.52.0 api-extractor:dev:node
+> api-extractor run -c api-extractor.node.json --local --verbose
+
+
+> @google/genai@1.52.0 api-extractor:dev:web
+> api-extractor run -c api-extractor.web.json --local --verbose
+
+
+> @google/genai@1.52.0 api-extractor:dev:main
+> api-extractor run --local --verbose
+
+
+> @google/genai@1.52.0 api-extractor:dev:vertex_internal
+> api-extractor run -c api-extractor.vertex_internal.json --local --verbose
+
+
+> @google/genai@1.52.0 api-extractor:dev:tokenizer-node
+> api-extractor run -c api-extractor.tokenizer-node.json --local --verbose
+
+
+api-extractor 7.55.2  - https://api-extractor.com/
+
+
+api-extractor 7.55.2  - https://api-extractor.com/
+
+
+api-extractor 7.55.2  - https://api-extractor.com/
+
+
+api-extractor 7.55.2  - https://api-extractor.com/
+
+
+api-extractor 7.55.2  - https://api-extractor.com/
+
+Using configuration from ./api-extractor.json
+Analysis will use the bundled TypeScript version 5.8.2
+Analysis will use the bundled TypeScript version 5.8.2
+Analysis will use the bundled TypeScript version 5.8.2
+Analysis will use the bundled TypeScript version 5.8.2
+Analysis will use the bundled TypeScript version 5.8.2
+Writing: /google/src/cloud/markdaoust/interactions-js/google3/third_party/javascript/google_genai/temp/vertex_internal/genai.api.json
+Generating complete API report: /google/src/cloud/markdaoust/interactions-js/google3/third_party/javascript/google_genai/api-report/genai-vertex-internal.api.md
+The API report is up to date: temp/genai-vertex-internal.api.md
+Writing package typings: /google/src/cloud/markdaoust/interactions-js/google3/third_party/javascript/google_genai/dist/vertex_internal/index.d.ts
+
+API Extractor completed successfully
+Writing: /google/src/cloud/markdaoust/interactions-js/google3/third_party/javascript/google_genai/temp/tokenizer-node/genai.api.json
+Generating complete API report: /google/src/cloud/markdaoust/interactions-js/google3/third_party/javascript/google_genai/api-report/genai-tokenizer-node.api.md
+The API report is up to date: temp/genai-tokenizer-node.api.md
+Writing package typings: /google/src/cloud/markdaoust/interactions-js/google3/third_party/javascript/google_genai/dist/tokenizer/node.d.ts
+
+API Extractor completed successfully
+Writing: /google/src/cloud/markdaoust/interactions-js/google3/third_party/javascript/google_genai/temp/web/genai.api.json
+Writing: /google/src/cloud/markdaoust/interactions-js/google3/third_party/javascript/google_genai/temp/node/genai.api.json
+Writing: /google/src/cloud/markdaoust/interactions-js/google3/third_party/javascript/google_genai/temp/genai.api.json
+Generating complete API report: /google/src/cloud/markdaoust/interactions-js/google3/third_party/javascript/google_genai/api-report/genai-web.api.md
+Generating complete API report: /google/src/cloud/markdaoust/interactions-js/google3/third_party/javascript/google_genai/api-report/genai-node.api.md
+Generating complete API report: /google/src/cloud/markdaoust/interactions-js/google3/third_party/javascript/google_genai/api-report/genai.api.md
+The API report is up to date: temp/genai-web.api.md
+Writing package typings: /google/src/cloud/markdaoust/interactions-js/google3/third_party/javascript/google_genai/dist/web/web.d.ts
+The API report is up to date: temp/genai-node.api.md
+Writing package typings: /google/src/cloud/markdaoust/interactions-js/google3/third_party/javascript/google_genai/dist/node/node.d.ts
+The API report is up to date: temp/genai.api.md
+Writing package typings: /google/src/cloud/markdaoust/interactions-js/google3/third_party/javascript/google_genai/dist/genai.d.ts
+
+API Extractor completed successfully
+
+API Extractor completed successfully
+
+API Extractor completed successfully
+Editing rolled up .d.ts files for optional type dependency...
+Processing file: dist/node/node.d.ts
+Successfully modified dist/node/node.d.ts
+Processing file: dist/web/web.d.ts
+Successfully modified dist/web/web.d.ts
+Processing file: dist/genai.d.ts
+Successfully modified dist/genai.d.ts
+Processing file: dist-private/index.d.ts
+File not found: /google/src/cloud/markdaoust/interactions-js/google3/third_party/javascript/google_genai/dist-private/index.d.ts. Skipping.
