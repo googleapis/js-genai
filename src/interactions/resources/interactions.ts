@@ -1508,6 +1508,11 @@ export interface Interaction {
   model?: Model;
 
   /**
+   * Settings for prompt and response sanitization using the Model Armor service.
+   */
+  model_armor_config?: Interaction.ModelArmorConfig;
+
+  /**
    * The ID of the previous interaction, if any.
    */
   previous_interaction_id?: string;
@@ -1569,6 +1574,39 @@ export interface Interaction {
    * completes.
    */
   webhook_config?: WebhookConfig;
+}
+
+export namespace Interaction {
+  /**
+   * Settings for prompt and response sanitization using the Model Armor service.
+   */
+  export interface ModelArmorConfig {
+    /**
+     * The resource name of the Model Armor template to use for prompt screening.
+     *
+     * A Model Armor template is a set of customized filters and thresholds that define
+     * how Model Armor screens content. If specified, Model Armor will use this
+     * template to check the user's prompt for safety and security risks before it is
+     * sent to the model.
+     *
+     * The name must be in the format
+     * `projects/{project}/locations/{location}/templates/{template}`.
+     */
+    promptTemplateName?: string;
+
+    /**
+     * The resource name of the Model Armor template to use for response screening.
+     *
+     * A Model Armor template is a set of customized filters and thresholds that define
+     * how Model Armor screens content. If specified, Model Armor will use this
+     * template to check the model's response for safety and security risks before it
+     * is returned to the user.
+     *
+     * The name must be in the format
+     * `projects/{project}/locations/{location}/templates/{template}`.
+     */
+    responseTemplateName?: string;
+  }
 }
 
 export interface InteractionCompleteEvent {
@@ -2626,6 +2664,12 @@ export interface BaseCreateModelInteractionParams {
   generation_config?: GenerationConfig;
 
   /**
+   * Body param: Settings for prompt and response sanitization using the Model Armor
+   * service.
+   */
+  model_armor_config?: ModelArmorConfig;
+
+  /**
    * Body param: The ID of the previous interaction, if any.
    */
   previous_interaction_id?: string;
@@ -2686,6 +2730,39 @@ export interface BaseCreateModelInteractionParams {
   webhook_config?: WebhookConfig;
 }
 
+export namespace BaseCreateModelInteractionParams {
+  /**
+   * Settings for prompt and response sanitization using the Model Armor service.
+   */
+  export interface ModelArmorConfig {
+    /**
+     * The resource name of the Model Armor template to use for prompt screening.
+     *
+     * A Model Armor template is a set of customized filters and thresholds that define
+     * how Model Armor screens content. If specified, Model Armor will use this
+     * template to check the user's prompt for safety and security risks before it is
+     * sent to the model.
+     *
+     * The name must be in the format
+     * `projects/{project}/locations/{location}/templates/{template}`.
+     */
+    promptTemplateName?: string;
+
+    /**
+     * The resource name of the Model Armor template to use for response screening.
+     *
+     * A Model Armor template is a set of customized filters and thresholds that define
+     * how Model Armor screens content. If specified, Model Armor will use this
+     * template to check the model's response for safety and security risks before it
+     * is returned to the user.
+     *
+     * The name must be in the format
+     * `projects/{project}/locations/{location}/templates/{template}`.
+     */
+    responseTemplateName?: string;
+  }
+}
+
 export interface BaseCreateAgentInteractionParams {
   /**
    * Path param: Which version of the API to use.
@@ -2723,6 +2800,12 @@ export interface BaseCreateAgentInteractionParams {
    * Body param: Input only. Whether to run the model interaction in the background.
    */
   background?: boolean;
+
+  /**
+   * Body param: Settings for prompt and response sanitization using the Model Armor
+   * service.
+   */
+  model_armor_config?: ModelArmorConfig;
 
   /**
    * Body param: The ID of the previous interaction, if any.
@@ -2783,6 +2866,39 @@ export interface BaseCreateAgentInteractionParams {
    * interaction completes.
    */
   webhook_config?: WebhookConfig;
+}
+
+export namespace BaseCreateAgentInteractionParams {
+  /**
+   * Settings for prompt and response sanitization using the Model Armor service.
+   */
+  export interface ModelArmorConfig {
+    /**
+     * The resource name of the Model Armor template to use for prompt screening.
+     *
+     * A Model Armor template is a set of customized filters and thresholds that define
+     * how Model Armor screens content. If specified, Model Armor will use this
+     * template to check the user's prompt for safety and security risks before it is
+     * sent to the model.
+     *
+     * The name must be in the format
+     * `projects/{project}/locations/{location}/templates/{template}`.
+     */
+    promptTemplateName?: string;
+
+    /**
+     * The resource name of the Model Armor template to use for response screening.
+     *
+     * A Model Armor template is a set of customized filters and thresholds that define
+     * how Model Armor screens content. If specified, Model Armor will use this
+     * template to check the model's response for safety and security risks before it
+     * is returned to the user.
+     *
+     * The name must be in the format
+     * `projects/{project}/locations/{location}/templates/{template}`.
+     */
+    responseTemplateName?: string;
+  }
 }
 
 export interface CreateModelInteractionParamsNonStreaming extends BaseCreateModelInteractionParams {
