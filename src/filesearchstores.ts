@@ -192,8 +192,12 @@ export class FileSearchStores extends BaseModule {
           queryParams: queryParams,
           body: JSON.stringify(body),
           httpMethod: 'POST',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
+          httpOptions: params.config?.['httpOptions'] as
+            | types.HttpOptions
+            | undefined,
+          abortSignal: params.config?.['abortSignal'] as
+            | AbortSignal
+            | undefined,
         })
         .then((httpResponse) => {
           return httpResponse.json();
@@ -239,8 +243,12 @@ export class FileSearchStores extends BaseModule {
           queryParams: queryParams,
           body: JSON.stringify(body),
           httpMethod: 'GET',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
+          httpOptions: params.config?.['httpOptions'] as
+            | types.HttpOptions
+            | undefined,
+          abortSignal: params.config?.['abortSignal'] as
+            | AbortSignal
+            | undefined,
         })
         .then((httpResponse) => {
           return httpResponse.json();
@@ -280,8 +288,10 @@ export class FileSearchStores extends BaseModule {
         queryParams: queryParams,
         body: JSON.stringify(body),
         httpMethod: 'DELETE',
-        httpOptions: params.config?.httpOptions,
-        abortSignal: params.config?.abortSignal,
+        httpOptions: params.config?.['httpOptions'] as
+          | types.HttpOptions
+          | undefined,
+        abortSignal: params.config?.['abortSignal'] as AbortSignal | undefined,
       });
     }
   }
@@ -313,8 +323,12 @@ export class FileSearchStores extends BaseModule {
           queryParams: queryParams,
           body: JSON.stringify(body),
           httpMethod: 'GET',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
+          httpOptions: params.config?.['httpOptions'] as
+            | types.HttpOptions
+            | undefined,
+          abortSignal: params.config?.['abortSignal'] as
+            | AbortSignal
+            | undefined,
         })
         .then((httpResponse) => {
           return httpResponse.json();
@@ -357,8 +371,12 @@ export class FileSearchStores extends BaseModule {
           queryParams: queryParams,
           body: JSON.stringify(body),
           httpMethod: 'POST',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
+          httpOptions: params.config?.['httpOptions'] as
+            | types.HttpOptions
+            | undefined,
+          abortSignal: params.config?.['abortSignal'] as
+            | AbortSignal
+            | undefined,
         })
         .then((httpResponse) => {
           return httpResponse.json();
@@ -412,8 +430,12 @@ export class FileSearchStores extends BaseModule {
           queryParams: queryParams,
           body: JSON.stringify(body),
           httpMethod: 'POST',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
+          httpOptions: params.config?.['httpOptions'] as
+            | types.HttpOptions
+            | undefined,
+          abortSignal: params.config?.['abortSignal'] as
+            | AbortSignal
+            | undefined,
         })
         .then((httpResponse) => {
           return httpResponse.json();

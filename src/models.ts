@@ -707,8 +707,12 @@ export class Models extends BaseModule {
           queryParams: queryParams,
           body: JSON.stringify(body),
           httpMethod: 'POST',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
+          httpOptions: params.config?.['httpOptions'] as
+            | types.HttpOptions
+            | undefined,
+          abortSignal: params.config?.['abortSignal'] as
+            | AbortSignal
+            | undefined,
         })
         .then((httpResponse) => {
           return httpResponse.json().then((jsonResponse) => {
@@ -749,8 +753,12 @@ export class Models extends BaseModule {
           queryParams: queryParams,
           body: JSON.stringify(body),
           httpMethod: 'POST',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
+          httpOptions: params.config?.['httpOptions'] as
+            | types.HttpOptions
+            | undefined,
+          abortSignal: params.config?.['abortSignal'] as
+            | AbortSignal
+            | undefined,
         })
         .then((httpResponse) => {
           return httpResponse.json().then((jsonResponse) => {
@@ -801,8 +809,10 @@ export class Models extends BaseModule {
         queryParams: queryParams,
         body: JSON.stringify(body),
         httpMethod: 'POST',
-        httpOptions: params.config?.httpOptions,
-        abortSignal: params.config?.abortSignal,
+        httpOptions: params.config?.['httpOptions'] as
+          | types.HttpOptions
+          | undefined,
+        abortSignal: params.config?.['abortSignal'] as AbortSignal | undefined,
       }) as Promise<AsyncGenerator<types.HttpResponse>>;
 
       return response.then(async function* (
@@ -843,8 +853,10 @@ export class Models extends BaseModule {
         queryParams: queryParams,
         body: JSON.stringify(body),
         httpMethod: 'POST',
-        httpOptions: params.config?.httpOptions,
-        abortSignal: params.config?.abortSignal,
+        httpOptions: params.config?.['httpOptions'] as
+          | types.HttpOptions
+          | undefined,
+        abortSignal: params.config?.['abortSignal'] as AbortSignal | undefined,
       }) as Promise<AsyncGenerator<types.HttpResponse>>;
 
       return response.then(async function* (
@@ -919,8 +931,12 @@ export class Models extends BaseModule {
           queryParams: queryParams,
           body: JSON.stringify(body),
           httpMethod: 'POST',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
+          httpOptions: params.config?.['httpOptions'] as
+            | types.HttpOptions
+            | undefined,
+          abortSignal: params.config?.['abortSignal'] as
+            | AbortSignal
+            | undefined,
         })
         .then((httpResponse) => {
           return httpResponse.json().then((jsonResponse) => {
@@ -961,8 +977,12 @@ export class Models extends BaseModule {
           queryParams: queryParams,
           body: JSON.stringify(body),
           httpMethod: 'POST',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
+          httpOptions: params.config?.['httpOptions'] as
+            | types.HttpOptions
+            | undefined,
+          abortSignal: params.config?.['abortSignal'] as
+            | AbortSignal
+            | undefined,
         })
         .then((httpResponse) => {
           return httpResponse.json().then((jsonResponse) => {
@@ -1016,8 +1036,12 @@ export class Models extends BaseModule {
           queryParams: queryParams,
           body: JSON.stringify(body),
           httpMethod: 'POST',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
+          httpOptions: params.config?.['httpOptions'] as
+            | types.HttpOptions
+            | undefined,
+          abortSignal: params.config?.['abortSignal'] as
+            | AbortSignal
+            | undefined,
         })
         .then((httpResponse) => {
           return httpResponse.json().then((jsonResponse) => {
@@ -1058,8 +1082,12 @@ export class Models extends BaseModule {
           queryParams: queryParams,
           body: JSON.stringify(body),
           httpMethod: 'POST',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
+          httpOptions: params.config?.['httpOptions'] as
+            | types.HttpOptions
+            | undefined,
+          abortSignal: params.config?.['abortSignal'] as
+            | AbortSignal
+            | undefined,
         })
         .then((httpResponse) => {
           return httpResponse.json().then((jsonResponse) => {
@@ -1113,8 +1141,12 @@ export class Models extends BaseModule {
           queryParams: queryParams,
           body: JSON.stringify(body),
           httpMethod: 'POST',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
+          httpOptions: params.config?.['httpOptions'] as
+            | types.HttpOptions
+            | undefined,
+          abortSignal: params.config?.['abortSignal'] as
+            | AbortSignal
+            | undefined,
         })
         .then((httpResponse) => {
           return httpResponse.json().then((jsonResponse) => {
@@ -1172,8 +1204,12 @@ export class Models extends BaseModule {
           queryParams: queryParams,
           body: JSON.stringify(body),
           httpMethod: 'POST',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
+          httpOptions: params.config?.['httpOptions'] as
+            | types.HttpOptions
+            | undefined,
+          abortSignal: params.config?.['abortSignal'] as
+            | AbortSignal
+            | undefined,
         })
         .then((httpResponse) => {
           return httpResponse.json().then((jsonResponse) => {
@@ -1252,8 +1288,12 @@ export class Models extends BaseModule {
           queryParams: queryParams,
           body: JSON.stringify(body),
           httpMethod: 'POST',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
+          httpOptions: params.config?.['httpOptions'] as
+            | types.HttpOptions
+            | undefined,
+          abortSignal: params.config?.['abortSignal'] as
+            | AbortSignal
+            | undefined,
         })
         .then((httpResponse) => {
           return httpResponse.json();
@@ -1322,8 +1362,12 @@ export class Models extends BaseModule {
           queryParams: queryParams,
           body: JSON.stringify(body),
           httpMethod: 'POST',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
+          httpOptions: params.config?.['httpOptions'] as
+            | types.HttpOptions
+            | undefined,
+          abortSignal: params.config?.['abortSignal'] as
+            | AbortSignal
+            | undefined,
         })
         .then((httpResponse) => {
           return httpResponse.json();
@@ -1378,8 +1422,12 @@ export class Models extends BaseModule {
           queryParams: queryParams,
           body: JSON.stringify(body),
           httpMethod: 'GET',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
+          httpOptions: params.config?.['httpOptions'] as
+            | types.HttpOptions
+            | undefined,
+          abortSignal: params.config?.['abortSignal'] as
+            | AbortSignal
+            | undefined,
         })
         .then((httpResponse) => {
           return httpResponse.json();
@@ -1410,8 +1458,12 @@ export class Models extends BaseModule {
           queryParams: queryParams,
           body: JSON.stringify(body),
           httpMethod: 'GET',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
+          httpOptions: params.config?.['httpOptions'] as
+            | types.HttpOptions
+            | undefined,
+          abortSignal: params.config?.['abortSignal'] as
+            | AbortSignal
+            | undefined,
         })
         .then((httpResponse) => {
           return httpResponse.json();
@@ -1452,8 +1504,12 @@ export class Models extends BaseModule {
           queryParams: queryParams,
           body: JSON.stringify(body),
           httpMethod: 'GET',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
+          httpOptions: params.config?.['httpOptions'] as
+            | types.HttpOptions
+            | undefined,
+          abortSignal: params.config?.['abortSignal'] as
+            | AbortSignal
+            | undefined,
         })
         .then((httpResponse) => {
           return httpResponse.json().then((jsonResponse) => {
@@ -1494,8 +1550,12 @@ export class Models extends BaseModule {
           queryParams: queryParams,
           body: JSON.stringify(body),
           httpMethod: 'GET',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
+          httpOptions: params.config?.['httpOptions'] as
+            | types.HttpOptions
+            | undefined,
+          abortSignal: params.config?.['abortSignal'] as
+            | AbortSignal
+            | undefined,
         })
         .then((httpResponse) => {
           return httpResponse.json().then((jsonResponse) => {
@@ -1561,8 +1621,12 @@ export class Models extends BaseModule {
           queryParams: queryParams,
           body: JSON.stringify(body),
           httpMethod: 'PATCH',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
+          httpOptions: params.config?.['httpOptions'] as
+            | types.HttpOptions
+            | undefined,
+          abortSignal: params.config?.['abortSignal'] as
+            | AbortSignal
+            | undefined,
         })
         .then((httpResponse) => {
           return httpResponse.json();
@@ -1593,8 +1657,12 @@ export class Models extends BaseModule {
           queryParams: queryParams,
           body: JSON.stringify(body),
           httpMethod: 'PATCH',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
+          httpOptions: params.config?.['httpOptions'] as
+            | types.HttpOptions
+            | undefined,
+          abortSignal: params.config?.['abortSignal'] as
+            | AbortSignal
+            | undefined,
         })
         .then((httpResponse) => {
           return httpResponse.json();
@@ -1646,8 +1714,12 @@ export class Models extends BaseModule {
           queryParams: queryParams,
           body: JSON.stringify(body),
           httpMethod: 'DELETE',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
+          httpOptions: params.config?.['httpOptions'] as
+            | types.HttpOptions
+            | undefined,
+          abortSignal: params.config?.['abortSignal'] as
+            | AbortSignal
+            | undefined,
         })
         .then((httpResponse) => {
           return httpResponse.json().then((jsonResponse) => {
@@ -1688,8 +1760,12 @@ export class Models extends BaseModule {
           queryParams: queryParams,
           body: JSON.stringify(body),
           httpMethod: 'DELETE',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
+          httpOptions: params.config?.['httpOptions'] as
+            | types.HttpOptions
+            | undefined,
+          abortSignal: params.config?.['abortSignal'] as
+            | AbortSignal
+            | undefined,
         })
         .then((httpResponse) => {
           return httpResponse.json().then((jsonResponse) => {
@@ -1756,8 +1832,12 @@ export class Models extends BaseModule {
           queryParams: queryParams,
           body: JSON.stringify(body),
           httpMethod: 'POST',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
+          httpOptions: params.config?.['httpOptions'] as
+            | types.HttpOptions
+            | undefined,
+          abortSignal: params.config?.['abortSignal'] as
+            | AbortSignal
+            | undefined,
         })
         .then((httpResponse) => {
           return httpResponse.json().then((jsonResponse) => {
@@ -1798,8 +1878,12 @@ export class Models extends BaseModule {
           queryParams: queryParams,
           body: JSON.stringify(body),
           httpMethod: 'POST',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
+          httpOptions: params.config?.['httpOptions'] as
+            | types.HttpOptions
+            | undefined,
+          abortSignal: params.config?.['abortSignal'] as
+            | AbortSignal
+            | undefined,
         })
         .then((httpResponse) => {
           return httpResponse.json().then((jsonResponse) => {
@@ -1868,8 +1952,12 @@ export class Models extends BaseModule {
           queryParams: queryParams,
           body: JSON.stringify(body),
           httpMethod: 'POST',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
+          httpOptions: params.config?.['httpOptions'] as
+            | types.HttpOptions
+            | undefined,
+          abortSignal: params.config?.['abortSignal'] as
+            | AbortSignal
+            | undefined,
         })
         .then((httpResponse) => {
           return httpResponse.json().then((jsonResponse) => {
@@ -1927,8 +2015,12 @@ export class Models extends BaseModule {
           queryParams: queryParams,
           body: JSON.stringify(body),
           httpMethod: 'POST',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
+          httpOptions: params.config?.['httpOptions'] as
+            | types.HttpOptions
+            | undefined,
+          abortSignal: params.config?.['abortSignal'] as
+            | AbortSignal
+            | undefined,
         })
         .then((httpResponse) => {
           return httpResponse.json();
@@ -1963,8 +2055,12 @@ export class Models extends BaseModule {
           queryParams: queryParams,
           body: JSON.stringify(body),
           httpMethod: 'POST',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
+          httpOptions: params.config?.['httpOptions'] as
+            | types.HttpOptions
+            | undefined,
+          abortSignal: params.config?.['abortSignal'] as
+            | AbortSignal
+            | undefined,
         })
         .then((httpResponse) => {
           return httpResponse.json();
