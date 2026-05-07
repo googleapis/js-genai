@@ -20,7 +20,7 @@ async function createInteractionsFromMLDev() {
 
   for await (const event of stream) {
     switch (event.event_type) {
-      case 'content.delta':
+      case 'step.delta':
         switch (event.delta?.type) {
           case 'text':
             process.stdout.write(event.delta.text ?? '');

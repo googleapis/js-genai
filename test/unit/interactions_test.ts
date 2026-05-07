@@ -213,9 +213,9 @@ describe('Interactions resource', () => {
     it('should handle large fragmented SSE payloads correctly', async () => {
       const largeData = 'A'.repeat(10 * 1024);
       const mockSSE =
-        `data: {"event_type": "content.delta", "delta": {"type": "text", "text": "${
+        `data: {"event_type": "step.delta", "delta": {"type": "text", "text": "${
           largeData
-        }"}}\n\n` + `data: [DONE]\n\n`;
+        }"}, "index": 0}\n\n` + `data: [DONE]\n\n`;
       const sseBytes = new TextEncoder().encode(mockSSE);
 
       const readableStream = new ReadableStream({
@@ -238,10 +238,7 @@ describe('Interactions resource', () => {
 
       let received = '';
       for await (const event of stream) {
-        if (
-          event.event_type === 'content.delta' &&
-          event.delta?.type === 'text'
-        ) {
+        if (event.event_type === 'step.delta' && event.delta?.type === 'text') {
           received += event.delta.text;
         }
       }
