@@ -115,10 +115,6 @@ export class GoogleGenAI {
       return this._interactions;
     }
 
-    console.warn(
-      'GoogleGenAI.interactions: Interactions usage is experimental and may change in future versions.',
-    );
-
     this._interactions = this.getNextGenClient().interactions;
     return this._interactions;
   }
