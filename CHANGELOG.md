@@ -1,6 +1,19 @@
 # Changelog
 
 
+## [1.53.0](https://github.com/googleapis/js-genai/compare/v1.52.0...v1.53.0) (2026-05-07)
+
+
+### Features
+
+* add steps for interactions ([c0814c4](https://github.com/googleapis/js-genai/commit/c0814c4ab1cfe7cdfc7bf77e3c9ceec79695dc37))
+* Deprecate legacy response_format and publish new polymorphic field. ([68a6809](https://github.com/googleapis/js-genai/commit/68a68093288c6ac505c32ee0aed0ec013aa4f7a5))
+
+
+### Bug Fixes
+
+* timeout not functioning ([850f680](https://github.com/googleapis/js-genai/commit/850f680d1c6430495f4ab8fc98dde70a0fc49ca8))
+
 ## [1.52.0](https://github.com/googleapis/js-genai/compare/v1.51.0...v1.52.0) (2026-05-04)
 
 
