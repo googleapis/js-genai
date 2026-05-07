@@ -777,7 +777,7 @@ export class BaseGeminiNextGenAPIClient {
 
     let headers = buildHeaders([
       idempotencyHeaders,
-      { Accept: 'application/json', 'User-Agent': this.getUserAgent(), 'Api-Revision': '2026-05-20' },
+      { Accept: 'application/json', 'User-Agent': this.getUserAgent(), 'Api-Revision': '2026-05-26' },
       this._options.defaultHeaders,
       bodyHeaders,
       options.headers,
