@@ -1120,8 +1120,8 @@ export interface Interaction {
   webhook_config?: WebhookConfig;
 }
 
-export interface InteractionCompleteEvent {
-  event_type: 'interaction.complete';
+export interface InteractionCompletedEvent {
+  event_type: 'interaction.completed';
 
   /**
    * Required. The completed interaction with empty outputs to reduce the payload
@@ -1135,17 +1135,8 @@ export interface InteractionCompleteEvent {
   event_id?: string;
 }
 
-export type InteractionSSEEvent =
-  | InteractionStartEvent
-  | InteractionCompleteEvent
-  | InteractionStatusUpdate
-  | ErrorEvent
-  | StepStart
-  | StepDelta
-  | StepStop;
-
-export interface InteractionStartEvent {
-  event_type: 'interaction.start';
+export interface InteractionCreatedEvent {
+  event_type: 'interaction.created';
 
   /**
    * The Interaction resource.
@@ -1157,6 +1148,15 @@ export interface InteractionStartEvent {
    */
   event_id?: string;
 }
+
+export type InteractionSSEEvent =
+  | InteractionCreatedEvent
+  | InteractionCompletedEvent
+  | InteractionStatusUpdate
+  | ErrorEvent
+  | StepStart
+  | StepDelta
+  | StepStop;
 
 export interface InteractionStatusUpdate {
   event_type: 'interaction.status_update';
@@ -2454,9 +2454,9 @@ export declare namespace Interactions {
     type ImageContent as ImageContent,
     type ImageResponseFormat as ImageResponseFormat,
     type Interaction as Interaction,
-    type InteractionCompleteEvent as InteractionCompleteEvent,
+    type InteractionCompletedEvent as InteractionCompletedEvent,
+    type InteractionCreatedEvent as InteractionCreatedEvent,
     type InteractionSSEEvent as InteractionSSEEvent,
-    type InteractionStartEvent as InteractionStartEvent,
     type InteractionStatusUpdate as InteractionStatusUpdate,
     type MCPServerToolCallStep as MCPServerToolCallStep,
     type MCPServerToolResultStep as MCPServerToolResultStep,
