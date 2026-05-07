@@ -1,19 +1,18 @@
 # Changelog
 
 
+
 ## [2.0.0](https://github.com/googleapis/js-genai/compare/v1.52.0...v2.0.0) (2026-05-07)
 
 
-### ⚠ BREAKING CHANGES
+### ⚠ BREAKING CHANGES - Interactions Only
 
-* Rename SSE events to interaction.created and interaction.completed
+Note: The breaking changes are only in interactions. `GenerateContent` usage in unaffected.
+Refer to https://ai.google.dev/gemini-api/docs/interactions-breaking-changes-may-2026 for details
 
-### Features
-
-* add steps for interactions ([c0814c4](https://github.com/googleapis/js-genai/commit/c0814c4ab1cfe7cdfc7bf77e3c9ceec79695dc37))
+* Add steps for interactions ([c0814c4](https://github.com/googleapis/js-genai/commit/c0814c4ab1cfe7cdfc7bf77e3c9ceec79695dc37))
 * Deprecate legacy response_format and publish new polymorphic field. ([68a6809](https://github.com/googleapis/js-genai/commit/68a68093288c6ac505c32ee0aed0ec013aa4f7a5))
 * Rename SSE events to interaction.created and interaction.completed ([d1b836b](https://github.com/googleapis/js-genai/commit/d1b836bb8407e38908f8894c673c5f70e6af86d8))
-
 
 ### Bug Fixes
 
