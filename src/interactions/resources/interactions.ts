@@ -2065,7 +2065,7 @@ export namespace Usage {
 export interface UserInputStep {
   type: 'user_input';
 
-  content?: Array<Content>;
+  content?: Array<Content> | string;
 }
 
 /**
