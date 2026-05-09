@@ -11,6 +11,12 @@ import * as Errors from '../core/error.js';
 import * as InteractionsAPI from './interactions.js';
 import { APIPromise } from '../core/api-promise.js';
 import { Stream } from '../core/streaming.js';
+import {
+  LegacyLyriaStream,
+  coerceLegacyInteractionResponse,
+  isLegacyLyriaRequest,
+  isVertexClient,
+} from '../internal/legacy-lyria.js';
 import { RequestOptions } from '../internal/request-options.js';
 import { path } from '../internal/utils/path.js';
 
@@ -58,11 +64,23 @@ export class BaseInteractions extends APIResource {
         `Invalid request: specified \`agent\` and \`generation_config\`. If specifying \`agent\`, use \`agent_config\`.`,
       );
     }
-    return this._client.post(path`/${api_version}/interactions`, {
+    const needsLegacyLyriaShim = isLegacyLyriaRequest({
+      isVertex: isVertexClient(this._client),
+      model: 'model' in body ? body.model : undefined,
+    });
+    const isStreaming = params.stream ?? false;
+    const promise = this._client.post(path`/${api_version}/interactions`, {
       body,
       ...options,
-      stream: params.stream ?? false,
+      stream: isStreaming,
+      ...(needsLegacyLyriaShim && isStreaming ? { __streamClass: LegacyLyriaStream } : {}),
     }) as APIPromise<Interaction> | APIPromise<Stream<InteractionSSEEvent>>;
+    if (needsLegacyLyriaShim && !isStreaming) {
+      return (promise as APIPromise<Interaction>)._thenUnwrap(
+        (data) => coerceLegacyInteractionResponse(data) as Interaction,
+      );
+    }
+    return promise;
   }
 
   /**
