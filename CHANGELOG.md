@@ -2,6 +2,13 @@
 
 
 
+## [2.0.1](https://github.com/googleapis/js-genai/compare/v2.0.0...v2.0.1) (2026-05-09)
+
+
+### Bug Fixes
+
+* Update response_format field names to snake_case. ([26af549](https://github.com/googleapis/js-genai/commit/26af54931a5881c125324df23d1834f7cba6fac8))
+
 ## [2.0.0](https://github.com/googleapis/js-genai/compare/v1.52.0...v2.0.0) (2026-05-07)
 
 
