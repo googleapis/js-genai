@@ -242,7 +242,7 @@ export interface AudioResponseFormat {
   /**
    * The delivery mode for the audio output.
    */
-  delivery?: 'inline' | 'uri';
+  delivery?: 'inline' | 'url';
 
   /**
    * The MIME type of the audio output.
@@ -1002,7 +1002,7 @@ export interface ImageResponseFormat {
   /**
    * The delivery mode for the image output.
    */
-  delivery?: 'inline' | 'uri';
+  delivery?: 'inline' | 'url';
 
   /**
    * The size of the image output.
@@ -1034,11 +1034,6 @@ export interface Interaction {
    * Required. Output only. The status of the interaction.
    */
   status: 'in_progress' | 'requires_action' | 'completed' | 'failed' | 'cancelled' | 'incomplete';
-
-  /**
-   * Required. Output only. The steps that make up the interaction.
-   */
-  steps: Array<Step>;
 
   /**
    * Required. Output only. The time at which the response was last updated in ISO
@@ -1114,6 +1109,11 @@ export interface Interaction {
    * The service tier for the interaction.
    */
   service_tier?: 'flex' | 'standard' | 'priority';
+
+  /**
+   * Output only. The steps that make up the interaction.
+   */
+  steps?: Array<Step>;
 
   /**
    * System instruction for the interaction.
@@ -1272,7 +1272,6 @@ export type Model =
   | 'gemini-3-pro-preview'
   | 'gemini-3.1-pro-preview'
   | 'gemini-3.1-flash-image-preview'
-  | 'gemini-3.1-flash-lite'
   | 'gemini-3.1-flash-lite-preview'
   | 'gemini-3.1-flash-tts-preview'
   | 'lyria-3-clip-preview'
@@ -1403,19 +1402,7 @@ export interface StepDelta {
     | StepDelta.ThoughtSummary
     | StepDelta.ThoughtSignature
     | StepDelta.TextAnnotationDelta
-    | StepDelta.ArgumentsDelta
-    | StepDelta.CodeExecutionCall
-    | StepDelta.URLContextCall
-    | StepDelta.GoogleSearchCall
-    | StepDelta.MCPServerToolCall
-    | StepDelta.FileSearchCall
-    | StepDelta.GoogleMapsCall
-    | StepDelta.CodeExecutionResult
-    | StepDelta.URLContextResult
-    | StepDelta.GoogleSearchResult
-    | StepDelta.MCPServerToolResult
-    | StepDelta.FileSearchResult
-    | StepDelta.GoogleMapsResult;
+    | StepDelta.ArgumentsDelta;
 
   event_type: 'step.delta';
 
@@ -1557,165 +1544,8 @@ export namespace StepDelta {
 
   export interface ArgumentsDelta {
     type: 'arguments_delta';
-  }
 
-  export interface CodeExecutionCall {
-    /**
-     * The arguments to pass to the code execution.
-     */
-    arguments: InteractionsAPI.CodeExecutionCallArguments;
-
-    type: 'code_execution_call';
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface URLContextCall {
-    /**
-     * The arguments to pass to the URL context.
-     */
-    arguments: InteractionsAPI.URLContextCallArguments;
-
-    type: 'url_context_call';
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface GoogleSearchCall {
-    /**
-     * The arguments to pass to Google Search.
-     */
-    arguments: InteractionsAPI.GoogleSearchCallArguments;
-
-    type: 'google_search_call';
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface MCPServerToolCall {
-    arguments: { [key: string]: unknown };
-
-    name: string;
-
-    server_name: string;
-
-    type: 'mcp_server_tool_call';
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface FileSearchCall {
-    type: 'file_search_call';
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface GoogleMapsCall {
-    type: 'google_maps_call';
-
-    /**
-     * The arguments to pass to the Google Maps tool.
-     */
-    arguments?: InteractionsAPI.GoogleMapsCallArguments;
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface CodeExecutionResult {
-    result: string;
-
-    type: 'code_execution_result';
-
-    is_error?: boolean;
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface URLContextResult {
-    result: Array<InteractionsAPI.URLContextResult>;
-
-    type: 'url_context_result';
-
-    is_error?: boolean;
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface GoogleSearchResult {
-    result: Array<InteractionsAPI.GoogleSearchResult>;
-
-    type: 'google_search_result';
-
-    is_error?: boolean;
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface MCPServerToolResult {
-    result: unknown | Array<InteractionsAPI.TextContent | InteractionsAPI.ImageContent> | string;
-
-    type: 'mcp_server_tool_result';
-
-    name?: string;
-
-    server_name?: string;
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface FileSearchResult {
-    result: Array<unknown>;
-
-    type: 'file_search_result';
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface GoogleMapsResult {
-    type: 'google_maps_result';
-
-    /**
-     * The results of the Google Maps.
-     */
-    result?: Array<InteractionsAPI.GoogleMapsResult>;
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
+    partial_arguments?: string;
   }
 }
 
@@ -2297,27 +2127,6 @@ export interface VideoContent {
  */
 export interface VideoResponseFormat {
   type: 'video';
-
-  /**
-   * The aspect ratio for the video output.
-   */
-  aspectRatio?: '16:9' | '9:16';
-
-  /**
-   * The delivery mode for the video output.
-   */
-  delivery?: 'inline' | 'uri';
-
-  /**
-   * The duration for the video output.
-   */
-  duration?: string;
-
-  /**
-   * The GCS URI to store the video output. Required for Vertex if delivery mode is
-   * URI.
-   */
-  gcsUri?: string;
 }
 
 /**
