@@ -2,6 +2,21 @@
 
 
 
+## [2.1.0](https://github.com/googleapis/js-genai/compare/v2.0.1...v2.1.0) (2026-05-12)
+
+
+### Features
+
+* Add gemini-3.1-flash-lite to model options ([b0664e1](https://github.com/googleapis/js-genai/commit/b0664e105ef1c52643066d7e1b10080573daff89))
+* Add parameters to video response_format. ([207c8f8](https://github.com/googleapis/js-genai/commit/207c8f8b7c4823e5fc43a3e347784bc16e599a4e))
+* Introduce Server Side tools deltas ([2e56d41](https://github.com/googleapis/js-genai/commit/2e56d41124066c154fbade2750c32a29fd73aa08))
+* support Blocking FunctionCall in Live API in AgentPlatform (Vertex) ([6bd8e7d](https://github.com/googleapis/js-genai/commit/6bd8e7d4ec95ed0e7f445ee05e97cea54dcb421a))
+
+
+### Bug Fixes
+
+* Steps is not optional ([6fb5386](https://github.com/googleapis/js-genai/commit/6fb5386892879a7b88e93cf413c127c12c9888fd))
+
 ## [2.0.1](https://github.com/googleapis/js-genai/compare/v2.0.0...v2.0.1) (2026-05-09)
 
 
