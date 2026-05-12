@@ -63,9 +63,11 @@ async function createInteractionsFromMLDev() {
   });
 
   // add model response back to history
-  fcConversationHistory.push(...response.steps);
+  if (response.steps) {
+    fcConversationHistory.push(...response.steps);
+  }
 
-  for (const step of response.steps) {
+  for (const step of response.steps ?? []) {
     if (step.type == 'function_call') {
       console.log(
         `Function call: ${step.name} with arguments ${JSON.stringify(

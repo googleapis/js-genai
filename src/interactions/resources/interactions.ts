@@ -1036,11 +1036,6 @@ export interface Interaction {
   status: 'in_progress' | 'requires_action' | 'completed' | 'failed' | 'cancelled' | 'incomplete';
 
   /**
-   * Required. Output only. The steps that make up the interaction.
-   */
-  steps: Array<Step>;
-
-  /**
    * Required. Output only. The time at which the response was last updated in ISO
    * 8601 format (YYYY-MM-DDThh:mm:ssZ).
    */
@@ -1114,6 +1109,11 @@ export interface Interaction {
    * The service tier for the interaction.
    */
   service_tier?: 'flex' | 'standard' | 'priority';
+
+  /**
+   * Output only. The steps that make up the interaction.
+   */
+  steps?: Array<Step>;
 
   /**
    * System instruction for the interaction.
