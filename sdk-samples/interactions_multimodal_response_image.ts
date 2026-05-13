@@ -18,7 +18,7 @@ async function createInteractionsFromMLDev() {
     input: 'Generate an image of a futuristic cityscape at sunset.',
   });
 
-  interaction.steps?.forEach((step, index) => {
+  interaction.steps.forEach((step, index) => {
     if (step.type === 'model_output') {
       step.content?.forEach((content) => {
         if (content.type === 'image') {

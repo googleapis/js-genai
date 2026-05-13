@@ -216,10 +216,10 @@ export enum PhishBlockThreshold {
   BLOCK_ONLY_EXTREMELY_HIGH = 'BLOCK_ONLY_EXTREMELY_HIGH',
 }
 
-/** Specifies the function Behavior. Currently only supported by the BidiGenerateContent method. This enum is not supported in Vertex AI. */
+/** Specifies the function Behavior. Currently only non-blocking functions are supported. If not specified, the system keeps the current function call behavior. This field is currently only supported by the BidiGenerateContent method. */
 export enum Behavior {
   /**
-   * This value is unused.
+   * This value is unspecified.
    */
   UNSPECIFIED = 'UNSPECIFIED',
   /**
@@ -2388,7 +2388,7 @@ export declare interface FunctionDeclaration {
   response?: Schema;
   /** Optional. Describes the output from this function in JSON Schema format. The value specified by the schema is the response value of the function. This field is mutually exclusive with `response`. */
   responseJsonSchema?: unknown;
-  /** Optional. Specifies the function Behavior. Currently only supported by the BidiGenerateContent method. This field is not supported in Vertex AI. */
+  /** Optional. Specifies the function Behavior. Currently only non-blocking functions are supported. If not specified, the system keeps the current function call behavior. This field is currently only supported by the BidiGenerateContent method. */
   behavior?: Behavior;
 }
 
@@ -7399,6 +7399,17 @@ export declare interface LiveClientMessage {
   toolResponse?: LiveClientToolResponse;
 }
 
+/** Config for stream translation. */
+export declare interface StreamTranslationConfig {
+  /** If true, the model will generate audio when the target language is
+      spoken, essentially it will parrot the input. If false, we will not produce
+      audio for the target language. */
+  echoTargetLanguage?: boolean;
+  /** The target language for translation. Supported values are BCP-47
+      language codes (e.g. "en", "es", "fr"). */
+  targetLanguageCode?: string;
+}
+
 /** Session config for the API connection. */
 export declare interface LiveConnectConfig {
   /** Used to override HTTP request options. */
@@ -7495,6 +7506,8 @@ If included the server will send SessionResumptionUpdate messages. */
       response.
        */
   safetySettings?: SafetySetting[];
+  /** Config for stream translation. */
+  streamTranslationConfig?: StreamTranslationConfig;
 }
 
 /** Parameters for connecting to the live API. */

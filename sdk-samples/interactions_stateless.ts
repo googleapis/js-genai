@@ -33,9 +33,7 @@ async function createInteractionsFromMLDev() {
   });
   console.log('Model: ', response1);
 
-  if (response1.steps) {
-    conversationHistory.push(...response1.steps);
-  }
+  conversationHistory.push(...response1.steps);
 
   conversationHistory.push({
     type: 'user_input',

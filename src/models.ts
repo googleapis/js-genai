@@ -530,7 +530,7 @@ export class Models extends BaseModule {
       if (!actualParams.config!.queryBase) {
         if (actualParams.config?.filter) {
           throw new Error(
-            'Filtering tuned models list for Gemini Enterprise Agent Platform (previously known as Vertex AI) is not currently supported',
+            'Filtering tuned models list is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
           );
         } else {
           actualParams.config!.filter = 'labels.tune-type:*';

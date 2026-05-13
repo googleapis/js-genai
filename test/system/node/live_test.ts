@@ -140,7 +140,7 @@ async function make_session_with_queue(
   return session;
 }
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 10 * 1000; // 10 seconds
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 20 * 1000; // 20 seconds
 
 describe('live', () => {
   let testName: string = '';

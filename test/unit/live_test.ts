@@ -337,7 +337,7 @@ describe('live', () => {
     } catch (e: unknown) {
       if (e instanceof Error) {
         expect(e.message).toBe(
-          'transparent parameter is not supported in Gemini API.',
+          'transparent parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
         );
       }
     }

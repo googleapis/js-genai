@@ -51,7 +51,7 @@ async function createInteractionsFromMLDev() {
     ],
   });
 
-  for (const step of response.steps ?? []) {
+  for (const step of response.steps) {
     if (step.type == 'function_call') {
       console.log(
         `Function call: ${step.name} with arguments ${JSON.stringify(

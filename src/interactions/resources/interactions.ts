@@ -11,6 +11,12 @@ import * as Errors from '../core/error.js';
 import * as InteractionsAPI from './interactions.js';
 import { APIPromise } from '../core/api-promise.js';
 import { Stream } from '../core/streaming.js';
+import {
+  LegacyLyriaStream,
+  coerceLegacyInteractionResponse,
+  isLegacyLyriaRequest,
+  isVertexClient,
+} from '../internal/legacy-lyria.js';
 import { RequestOptions } from '../internal/request-options.js';
 import { path } from '../internal/utils/path.js';
 
@@ -58,11 +64,23 @@ export class BaseInteractions extends APIResource {
         `Invalid request: specified \`agent\` and \`generation_config\`. If specifying \`agent\`, use \`agent_config\`.`,
       );
     }
-    return this._client.post(path`/${api_version}/interactions`, {
+    const needsLegacyLyriaShim = isLegacyLyriaRequest({
+      isVertex: isVertexClient(this._client),
+      model: 'model' in body ? body.model : undefined,
+    });
+    const isStreaming = params.stream ?? false;
+    const promise = this._client.post(path`/${api_version}/interactions`, {
       body,
       ...options,
-      stream: params.stream ?? false,
+      stream: isStreaming,
+      ...(needsLegacyLyriaShim && isStreaming ? { __streamClass: LegacyLyriaStream } : {}),
     }) as APIPromise<Interaction> | APIPromise<Stream<InteractionSSEEvent>>;
+    if (needsLegacyLyriaShim && !isStreaming) {
+      return (promise as APIPromise<Interaction>)._thenUnwrap(
+        (data) => coerceLegacyInteractionResponse(data) as Interaction,
+      );
+    }
+    return promise;
   }
 
   /**
@@ -219,22 +237,22 @@ export interface AudioResponseFormat {
    * Bit rate in bits per second (bps). Only applicable for compressed formats (MP3,
    * Opus).
    */
-  bitRate?: number;
+  bit_rate?: number;
 
   /**
    * The delivery mode for the audio output.
    */
-  delivery?: 'inline' | 'url';
+  delivery?: 'inline' | 'uri';
 
   /**
    * The MIME type of the audio output.
    */
-  mimeType?: 'audio/mp3' | 'audio/ogg_opus' | 'audio/l16' | 'audio/wav' | 'audio/alaw' | 'audio/mulaw';
+  mime_type?: 'audio/mp3' | 'audio/ogg_opus' | 'audio/l16' | 'audio/wav' | 'audio/alaw' | 'audio/mulaw';
 
   /**
    * Sample rate in Hz.
    */
-  sampleRate?: number;
+  sample_rate?: number;
 }
 
 /**
@@ -323,457 +341,6 @@ export interface CodeExecutionResultStep {
  */
 export type Content = TextContent | ImageContent | AudioContent | DocumentContent | VideoContent;
 
-export interface ContentDelta {
-  /**
-   * The delta content data for a content block.
-   */
-  delta:
-    | ContentDelta.Text
-    | ContentDelta.Image
-    | ContentDelta.Audio
-    | ContentDelta.Document
-    | ContentDelta.Video
-    | ContentDelta.ThoughtSummary
-    | ContentDelta.ThoughtSignature
-    | ContentDelta.FunctionCall
-    | ContentDelta.CodeExecutionCall
-    | ContentDelta.URLContextCall
-    | ContentDelta.GoogleSearchCall
-    | ContentDelta.MCPServerToolCall
-    | ContentDelta.FileSearchCall
-    | ContentDelta.GoogleMapsCall
-    | ContentDelta.FunctionResult
-    | ContentDelta.CodeExecutionResult
-    | ContentDelta.URLContextResult
-    | ContentDelta.GoogleSearchResult
-    | ContentDelta.MCPServerToolResult
-    | ContentDelta.FileSearchResult
-    | ContentDelta.GoogleMapsResult
-    | ContentDelta.TextAnnotationDelta;
-
-  event_type: 'content.delta';
-
-  index: number;
-
-  /**
-   * The event_id token to be used to resume the interaction stream, from this event.
-   */
-  event_id?: string;
-}
-
-export namespace ContentDelta {
-  export interface Text {
-    text: string;
-
-    type: 'text';
-  }
-
-  export interface Image {
-    type: 'image';
-
-    data?: string;
-
-    mime_type?:
-      | 'image/png'
-      | 'image/jpeg'
-      | 'image/webp'
-      | 'image/heic'
-      | 'image/heif'
-      | 'image/gif'
-      | 'image/bmp'
-      | 'image/tiff';
-
-    /**
-     * The resolution of the media.
-     */
-    resolution?: 'low' | 'medium' | 'high' | 'ultra_high';
-
-    uri?: string;
-  }
-
-  export interface Audio {
-    type: 'audio';
-
-    /**
-     * The number of audio channels.
-     */
-    channels?: number;
-
-    data?: string;
-
-    mime_type?:
-      | 'audio/wav'
-      | 'audio/mp3'
-      | 'audio/aiff'
-      | 'audio/aac'
-      | 'audio/ogg'
-      | 'audio/flac'
-      | 'audio/mpeg'
-      | 'audio/m4a'
-      | 'audio/l16'
-      | 'audio/opus'
-      | 'audio/alaw'
-      | 'audio/mulaw';
-
-    /**
-     * @deprecated Deprecated. Use sample_rate instead. The value is ignored.
-     */
-    rate?: number;
-
-    /**
-     * The sample rate of the audio.
-     */
-    sample_rate?: number;
-
-    uri?: string;
-  }
-
-  export interface Document {
-    type: 'document';
-
-    data?: string;
-
-    mime_type?: 'application/pdf';
-
-    uri?: string;
-  }
-
-  export interface Video {
-    type: 'video';
-
-    data?: string;
-
-    mime_type?:
-      | 'video/mp4'
-      | 'video/mpeg'
-      | 'video/mpg'
-      | 'video/mov'
-      | 'video/avi'
-      | 'video/x-flv'
-      | 'video/webm'
-      | 'video/wmv'
-      | 'video/3gpp';
-
-    /**
-     * The resolution of the media.
-     */
-    resolution?: 'low' | 'medium' | 'high' | 'ultra_high';
-
-    uri?: string;
-  }
-
-  export interface ThoughtSummary {
-    type: 'thought_summary';
-
-    /**
-     * A new summary item to be added to the thought.
-     */
-    content?: InteractionsAPI.TextContent | InteractionsAPI.ImageContent;
-  }
-
-  export interface ThoughtSignature {
-    type: 'thought_signature';
-
-    /**
-     * Signature to match the backend source to be part of the generation.
-     */
-    signature?: string;
-  }
-
-  export interface FunctionCall {
-    /**
-     * Required. A unique ID for this specific tool call.
-     */
-    id: string;
-
-    arguments: { [key: string]: unknown };
-
-    name: string;
-
-    type: 'function_call';
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface CodeExecutionCall {
-    /**
-     * Required. A unique ID for this specific tool call.
-     */
-    id: string;
-
-    /**
-     * The arguments to pass to the code execution.
-     */
-    arguments: InteractionsAPI.CodeExecutionCallArguments;
-
-    type: 'code_execution_call';
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface URLContextCall {
-    /**
-     * Required. A unique ID for this specific tool call.
-     */
-    id: string;
-
-    /**
-     * The arguments to pass to the URL context.
-     */
-    arguments: InteractionsAPI.URLContextCallArguments;
-
-    type: 'url_context_call';
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface GoogleSearchCall {
-    /**
-     * Required. A unique ID for this specific tool call.
-     */
-    id: string;
-
-    /**
-     * The arguments to pass to Google Search.
-     */
-    arguments: InteractionsAPI.GoogleSearchCallArguments;
-
-    type: 'google_search_call';
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface MCPServerToolCall {
-    /**
-     * Required. A unique ID for this specific tool call.
-     */
-    id: string;
-
-    arguments: { [key: string]: unknown };
-
-    name: string;
-
-    server_name: string;
-
-    type: 'mcp_server_tool_call';
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface FileSearchCall {
-    /**
-     * Required. A unique ID for this specific tool call.
-     */
-    id: string;
-
-    type: 'file_search_call';
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface GoogleMapsCall {
-    /**
-     * Required. A unique ID for this specific tool call.
-     */
-    id: string;
-
-    type: 'google_maps_call';
-
-    /**
-     * The arguments to pass to the Google Maps tool.
-     */
-    arguments?: InteractionsAPI.GoogleMapsCallArguments;
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface FunctionResult {
-    /**
-     * Required. ID to match the ID from the function call block.
-     */
-    call_id: string;
-
-    result: unknown | Array<InteractionsAPI.TextContent | InteractionsAPI.ImageContent> | string;
-
-    type: 'function_result';
-
-    is_error?: boolean;
-
-    name?: string;
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface CodeExecutionResult {
-    /**
-     * Required. ID to match the ID from the function call block.
-     */
-    call_id: string;
-
-    result: string;
-
-    type: 'code_execution_result';
-
-    is_error?: boolean;
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface URLContextResult {
-    /**
-     * Required. ID to match the ID from the function call block.
-     */
-    call_id: string;
-
-    result: Array<InteractionsAPI.URLContextResult>;
-
-    type: 'url_context_result';
-
-    is_error?: boolean;
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface GoogleSearchResult {
-    /**
-     * Required. ID to match the ID from the function call block.
-     */
-    call_id: string;
-
-    result: Array<InteractionsAPI.GoogleSearchResult>;
-
-    type: 'google_search_result';
-
-    is_error?: boolean;
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface MCPServerToolResult {
-    /**
-     * Required. ID to match the ID from the function call block.
-     */
-    call_id: string;
-
-    result: unknown | Array<InteractionsAPI.TextContent | InteractionsAPI.ImageContent> | string;
-
-    type: 'mcp_server_tool_result';
-
-    name?: string;
-
-    server_name?: string;
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface FileSearchResult {
-    /**
-     * Required. ID to match the ID from the function call block.
-     */
-    call_id: string;
-
-    result: Array<unknown>;
-
-    type: 'file_search_result';
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface GoogleMapsResult {
-    /**
-     * Required. ID to match the ID from the function call block.
-     */
-    call_id: string;
-
-    type: 'google_maps_result';
-
-    /**
-     * The results of the Google Maps.
-     */
-    result?: Array<InteractionsAPI.GoogleMapsResult>;
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface TextAnnotationDelta {
-    type: 'text_annotation_delta';
-
-    /**
-     * Citation information for model-generated content.
-     */
-    annotations?: Array<InteractionsAPI.Annotation>;
-  }
-}
-
-export interface ContentStart {
-  /**
-   * The content of the response.
-   */
-  content: Content;
-
-  event_type: 'content.start';
-
-  index: number;
-
-  /**
-   * The event_id token to be used to resume the interaction stream, from this event.
-   */
-  event_id?: string;
-}
-
-export interface ContentStop {
-  event_type: 'content.stop';
-
-  index: number;
-
-  /**
-   * The event_id token to be used to resume the interaction stream, from this event.
-   */
-  event_id?: string;
-}
-
 /**
  * Configuration for the Deep Research agent.
  */
@@ -783,8 +350,7 @@ export interface DeepResearchAgentConfig {
   /**
    * Enables human-in-the-loop planning for the Deep Research agent. If set to true,
    * the Deep Research agent will provide a research plan in its response. The agent
-   * will then proceed only if the user confirms the plan in the next turn. Relevant
-   * issue: b/482352502.
+   * will then proceed only if the user confirms the plan in the next turn.
    */
   collaborative_planning?: boolean;
 
@@ -1417,7 +983,7 @@ export interface ImageResponseFormat {
   /**
    * The aspect ratio for the image output.
    */
-  aspectRatio?:
+  aspect_ratio?:
     | '1:1'
     | '2:3'
     | '3:2'
@@ -1436,17 +1002,17 @@ export interface ImageResponseFormat {
   /**
    * The delivery mode for the image output.
    */
-  delivery?: 'inline' | 'url';
+  delivery?: 'inline' | 'uri';
 
   /**
    * The size of the image output.
    */
-  imageSize?: '512' | '1K' | '2K' | '4K';
+  image_size?: '512' | '1K' | '2K' | '4K';
 
   /**
    * The MIME type of the image output.
    */
-  mimeType?: 'image/jpeg';
+  mime_type?: 'image/jpeg';
 }
 
 /**
@@ -1468,6 +1034,11 @@ export interface Interaction {
    * Required. Output only. The status of the interaction.
    */
   status: 'in_progress' | 'requires_action' | 'completed' | 'failed' | 'cancelled' | 'incomplete';
+
+  /**
+   * Required. Output only. The steps that make up the interaction.
+   */
+  steps: Array<Step>;
 
   /**
    * Required. Output only. The time at which the response was last updated in ISO
@@ -1517,11 +1088,10 @@ export interface Interaction {
    * JSON schema specified in this field.
    */
   response_format?:
-    | Array<AudioResponseFormat | TextResponseFormat | ImageResponseFormat | VideoResponseFormat | unknown>
+    | Array<AudioResponseFormat | TextResponseFormat | ImageResponseFormat | unknown>
     | AudioResponseFormat
     | TextResponseFormat
     | ImageResponseFormat
-    | VideoResponseFormat
     | unknown;
 
   /**
@@ -1545,11 +1115,6 @@ export interface Interaction {
   service_tier?: 'flex' | 'standard' | 'priority';
 
   /**
-   * Output only. The steps that make up the interaction.
-   */
-  steps?: Array<Step>;
-
-  /**
    * System instruction for the interaction.
    */
   system_instruction?: string;
@@ -1571,8 +1136,8 @@ export interface Interaction {
   webhook_config?: WebhookConfig;
 }
 
-export interface InteractionCompleteEvent {
-  event_type: 'interaction.complete';
+export interface InteractionCompletedEvent {
+  event_type: 'interaction.completed';
 
   /**
    * Required. The completed interaction with empty outputs to reduce the payload
@@ -1586,20 +1151,8 @@ export interface InteractionCompleteEvent {
   event_id?: string;
 }
 
-export type InteractionSSEEvent =
-  | InteractionStartEvent
-  | InteractionCompleteEvent
-  | InteractionStatusUpdate
-  | ContentStart
-  | ContentDelta
-  | ContentStop
-  | ErrorEvent
-  | StepStart
-  | StepDelta
-  | StepStop;
-
-export interface InteractionStartEvent {
-  event_type: 'interaction.start';
+export interface InteractionCreatedEvent {
+  event_type: 'interaction.created';
 
   /**
    * The Interaction resource.
@@ -1611,6 +1164,15 @@ export interface InteractionStartEvent {
    */
   event_id?: string;
 }
+
+export type InteractionSSEEvent =
+  | InteractionCreatedEvent
+  | InteractionCompletedEvent
+  | InteractionStatusUpdate
+  | ErrorEvent
+  | StepStart
+  | StepDelta
+  | StepStop;
 
 export interface InteractionStatusUpdate {
   event_type: 'interaction.status_update';
@@ -1709,6 +1271,7 @@ export type Model =
   | 'gemini-3-pro-preview'
   | 'gemini-3.1-pro-preview'
   | 'gemini-3.1-flash-image-preview'
+  | 'gemini-3.1-flash-lite'
   | 'gemini-3.1-flash-lite-preview'
   | 'gemini-3.1-flash-tts-preview'
   | 'lyria-3-clip-preview'
@@ -1839,7 +1402,20 @@ export interface StepDelta {
     | StepDelta.ThoughtSummary
     | StepDelta.ThoughtSignature
     | StepDelta.TextAnnotationDelta
-    | StepDelta.ArgumentsDelta;
+    | StepDelta.ArgumentsDelta
+    | StepDelta.CodeExecutionCall
+    | StepDelta.URLContextCall
+    | StepDelta.GoogleSearchCall
+    | StepDelta.MCPServerToolCall
+    | StepDelta.FileSearchCall
+    | StepDelta.GoogleMapsCall
+    | StepDelta.CodeExecutionResult
+    | StepDelta.URLContextResult
+    | StepDelta.GoogleSearchResult
+    | StepDelta.MCPServerToolResult
+    | StepDelta.FileSearchResult
+    | StepDelta.GoogleMapsResult
+    | StepDelta.FunctionResult;
 
   event_type: 'step.delta';
 
@@ -1982,7 +1558,181 @@ export namespace StepDelta {
   export interface ArgumentsDelta {
     type: 'arguments_delta';
 
-    partial_arguments?: string;
+    arguments?: string;
+  }
+
+  export interface CodeExecutionCall {
+    /**
+     * The arguments to pass to the code execution.
+     */
+    arguments: InteractionsAPI.CodeExecutionCallArguments;
+
+    type: 'code_execution_call';
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+  }
+
+  export interface URLContextCall {
+    /**
+     * The arguments to pass to the URL context.
+     */
+    arguments: InteractionsAPI.URLContextCallArguments;
+
+    type: 'url_context_call';
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+  }
+
+  export interface GoogleSearchCall {
+    /**
+     * The arguments to pass to Google Search.
+     */
+    arguments: InteractionsAPI.GoogleSearchCallArguments;
+
+    type: 'google_search_call';
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+  }
+
+  export interface MCPServerToolCall {
+    arguments: { [key: string]: unknown };
+
+    name: string;
+
+    server_name: string;
+
+    type: 'mcp_server_tool_call';
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+  }
+
+  export interface FileSearchCall {
+    type: 'file_search_call';
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+  }
+
+  export interface GoogleMapsCall {
+    type: 'google_maps_call';
+
+    /**
+     * The arguments to pass to the Google Maps tool.
+     */
+    arguments?: InteractionsAPI.GoogleMapsCallArguments;
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+  }
+
+  export interface CodeExecutionResult {
+    result: string;
+
+    type: 'code_execution_result';
+
+    is_error?: boolean;
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+  }
+
+  export interface URLContextResult {
+    result: Array<InteractionsAPI.URLContextResult>;
+
+    type: 'url_context_result';
+
+    is_error?: boolean;
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+  }
+
+  export interface GoogleSearchResult {
+    result: Array<InteractionsAPI.GoogleSearchResult>;
+
+    type: 'google_search_result';
+
+    is_error?: boolean;
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+  }
+
+  export interface MCPServerToolResult {
+    result: unknown | Array<InteractionsAPI.TextContent | InteractionsAPI.ImageContent> | string;
+
+    type: 'mcp_server_tool_result';
+
+    name?: string;
+
+    server_name?: string;
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+  }
+
+  export interface FileSearchResult {
+    result: Array<unknown>;
+
+    type: 'file_search_result';
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+  }
+
+  export interface GoogleMapsResult {
+    type: 'google_maps_result';
+
+    /**
+     * The results of the Google Maps.
+     */
+    result?: Array<InteractionsAPI.GoogleMapsResult>;
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+  }
+
+  export interface FunctionResult {
+    /**
+     * Required. ID to match the ID from the function call block.
+     */
+    call_id: string;
+
+    result: unknown | Array<InteractionsAPI.TextContent | InteractionsAPI.ImageContent> | string;
+
+    type: 'function_result';
+
+    is_error?: boolean;
+
+    name?: string;
   }
 }
 
@@ -2039,7 +1789,7 @@ export interface TextResponseFormat {
   /**
    * The MIME type of the text output.
    */
-  mimeType?: 'application/json' | 'text/plain';
+  mime_type?: 'application/json' | 'text/plain';
 
   /**
    * The JSON schema that the output should conform to. Only applicable when
@@ -2110,7 +1860,7 @@ export namespace Tool {
     /**
      * The list of predefined functions that are excluded from the model call.
      */
-    excludedPredefinedFunctions?: Array<string>;
+    excluded_predefined_functions?: Array<string>;
   }
 
   /**
@@ -2560,13 +2310,6 @@ export interface VideoContent {
 }
 
 /**
- * Configuration for video output format.
- */
-export interface VideoResponseFormat {
-  type: 'video';
-}
-
-/**
  * Message for configuring webhook events for a request.
  */
 export interface WebhookConfig {
@@ -2635,11 +2378,10 @@ export interface BaseCreateModelInteractionParams {
    * with the JSON schema specified in this field.
    */
   response_format?:
-    | Array<AudioResponseFormat | TextResponseFormat | ImageResponseFormat | VideoResponseFormat | unknown>
+    | Array<AudioResponseFormat | TextResponseFormat | ImageResponseFormat | unknown>
     | AudioResponseFormat
     | TextResponseFormat
     | ImageResponseFormat
-    | VideoResponseFormat
     | unknown;
 
   /**
@@ -2734,11 +2476,10 @@ export interface BaseCreateAgentInteractionParams {
    * with the JSON schema specified in this field.
    */
   response_format?:
-    | Array<AudioResponseFormat | TextResponseFormat | ImageResponseFormat | VideoResponseFormat | unknown>
+    | Array<AudioResponseFormat | TextResponseFormat | ImageResponseFormat | unknown>
     | AudioResponseFormat
     | TextResponseFormat
     | ImageResponseFormat
-    | VideoResponseFormat
     | unknown;
 
   /**
@@ -2885,9 +2626,6 @@ export declare namespace Interactions {
     type CodeExecutionCallStep as CodeExecutionCallStep,
     type CodeExecutionResultStep as CodeExecutionResultStep,
     type Content as Content,
-    type ContentDelta as ContentDelta,
-    type ContentStart as ContentStart,
-    type ContentStop as ContentStop,
     type DeepResearchAgentConfig as DeepResearchAgentConfig,
     type DocumentContent as DocumentContent,
     type DynamicAgentConfig as DynamicAgentConfig,
@@ -2911,9 +2649,9 @@ export declare namespace Interactions {
     type ImageContent as ImageContent,
     type ImageResponseFormat as ImageResponseFormat,
     type Interaction as Interaction,
-    type InteractionCompleteEvent as InteractionCompleteEvent,
+    type InteractionCompletedEvent as InteractionCompletedEvent,
+    type InteractionCreatedEvent as InteractionCreatedEvent,
     type InteractionSSEEvent as InteractionSSEEvent,
-    type InteractionStartEvent as InteractionStartEvent,
     type InteractionStatusUpdate as InteractionStatusUpdate,
     type MCPServerToolCallStep as MCPServerToolCallStep,
     type MCPServerToolResultStep as MCPServerToolResultStep,
@@ -2940,7 +2678,6 @@ export declare namespace Interactions {
     type Usage as Usage,
     type UserInputStep as UserInputStep,
     type VideoContent as VideoContent,
-    type VideoResponseFormat as VideoResponseFormat,
     type WebhookConfig as WebhookConfig,
     type InteractionDeleteResponse as InteractionDeleteResponse,
     type InteractionCreateParams as InteractionCreateParams,

@@ -79,7 +79,7 @@ export function createTuningJobConfigToMldev(
 
   if (common.getValueByPath(fromObject, ['validationDataset']) !== undefined) {
     throw new Error(
-      'validationDataset parameter is not supported in Gemini API.',
+      'validationDataset parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
     );
   }
 
@@ -95,7 +95,9 @@ export function createTuningJobConfigToMldev(
   }
 
   if (common.getValueByPath(fromObject, ['description']) !== undefined) {
-    throw new Error('description parameter is not supported in Gemini API.');
+    throw new Error(
+      'description parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
   }
 
   const fromEpochCount = common.getValueByPath(fromObject, ['epochCount']);
@@ -123,7 +125,7 @@ export function createTuningJobConfigToMldev(
     undefined
   ) {
     throw new Error(
-      'exportLastCheckpointOnly parameter is not supported in Gemini API.',
+      'exportLastCheckpointOnly parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
     );
   }
 
@@ -132,21 +134,25 @@ export function createTuningJobConfigToMldev(
     undefined
   ) {
     throw new Error(
-      'preTunedModelCheckpointId parameter is not supported in Gemini API.',
+      'preTunedModelCheckpointId parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
     );
   }
 
   if (common.getValueByPath(fromObject, ['adapterSize']) !== undefined) {
-    throw new Error('adapterSize parameter is not supported in Gemini API.');
+    throw new Error(
+      'adapterSize parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
   }
 
   if (common.getValueByPath(fromObject, ['tuningMode']) !== undefined) {
-    throw new Error('tuningMode parameter is not supported in Gemini API.');
+    throw new Error(
+      'tuningMode parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
   }
 
   if (common.getValueByPath(fromObject, ['customBaseModel']) !== undefined) {
     throw new Error(
-      'customBaseModel parameter is not supported in Gemini API.',
+      'customBaseModel parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
     );
   }
 
@@ -169,16 +175,20 @@ export function createTuningJobConfigToMldev(
   }
 
   if (common.getValueByPath(fromObject, ['labels']) !== undefined) {
-    throw new Error('labels parameter is not supported in Gemini API.');
+    throw new Error(
+      'labels parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
   }
 
   if (common.getValueByPath(fromObject, ['beta']) !== undefined) {
-    throw new Error('beta parameter is not supported in Gemini API.');
+    throw new Error(
+      'beta parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
   }
 
   if (common.getValueByPath(fromObject, ['baseTeacherModel']) !== undefined) {
     throw new Error(
-      'baseTeacherModel parameter is not supported in Gemini API.',
+      'baseTeacherModel parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
     );
   }
 
@@ -186,7 +196,7 @@ export function createTuningJobConfigToMldev(
     common.getValueByPath(fromObject, ['tunedTeacherModelSource']) !== undefined
   ) {
     throw new Error(
-      'tunedTeacherModelSource parameter is not supported in Gemini API.',
+      'tunedTeacherModelSource parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
     );
   }
 
@@ -194,16 +204,20 @@ export function createTuningJobConfigToMldev(
     common.getValueByPath(fromObject, ['sftLossWeightMultiplier']) !== undefined
   ) {
     throw new Error(
-      'sftLossWeightMultiplier parameter is not supported in Gemini API.',
+      'sftLossWeightMultiplier parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
     );
   }
 
   if (common.getValueByPath(fromObject, ['outputUri']) !== undefined) {
-    throw new Error('outputUri parameter is not supported in Gemini API.');
+    throw new Error(
+      'outputUri parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
   }
 
   if (common.getValueByPath(fromObject, ['encryptionSpec']) !== undefined) {
-    throw new Error('encryptionSpec parameter is not supported in Gemini API.');
+    throw new Error(
+      'encryptionSpec parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
   }
 
   return toObject;
@@ -785,14 +799,16 @@ export function tuningDatasetToMldev(
   const toObject: Record<string, unknown> = {};
 
   if (common.getValueByPath(fromObject, ['gcsUri']) !== undefined) {
-    throw new Error('gcsUri parameter is not supported in Gemini API.');
+    throw new Error(
+      'gcsUri parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
   }
 
   if (
     common.getValueByPath(fromObject, ['vertexDatasetResource']) !== undefined
   ) {
     throw new Error(
-      'vertexDatasetResource parameter is not supported in Gemini API.',
+      'vertexDatasetResource parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
     );
   }
 
@@ -896,7 +912,7 @@ export function tuningDatasetToVertex(
   }
   if (common.getValueByPath(fromObject, ['examples']) !== undefined) {
     throw new Error(
-      'examples parameter is not supported in Gemini Enterprise Agent Platform (previously known as Vertex AI).',
+      'examples parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
     );
   }
 

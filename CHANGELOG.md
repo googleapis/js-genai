@@ -1,6 +1,52 @@
 # Changelog
 
 
+
+## [2.2.0](https://github.com/googleapis/js-genai/compare/v2.1.0...v2.2.0) (2026-05-12)
+
+
+### Features
+
+* Added missing FunctionCallResultDelta type and `arguments` field to the ArgumentDelta type ([f76138b](https://github.com/googleapis/js-genai/commit/f76138b5368fa3f6418e84214493fb874e748fea))
+
+## [2.1.0](https://github.com/googleapis/js-genai/compare/v2.0.1...v2.1.0) (2026-05-12)
+
+
+### Features
+
+* Add gemini-3.1-flash-lite to model options ([b0664e1](https://github.com/googleapis/js-genai/commit/b0664e105ef1c52643066d7e1b10080573daff89))
+* Add parameters to video response_format. ([207c8f8](https://github.com/googleapis/js-genai/commit/207c8f8b7c4823e5fc43a3e347784bc16e599a4e))
+* Introduce Server Side tools deltas ([2e56d41](https://github.com/googleapis/js-genai/commit/2e56d41124066c154fbade2750c32a29fd73aa08))
+* support Blocking FunctionCall in Live API in AgentPlatform (Vertex) ([6bd8e7d](https://github.com/googleapis/js-genai/commit/6bd8e7d4ec95ed0e7f445ee05e97cea54dcb421a))
+* Add support for Vertex-lyria models lyria-3-pro-preview & lyria-3-clip-preview ([f9af7410](https://github.com/googleapis/js-genai/commit/f9af7410e1a601b5bf685d05f317458aaf6de419))
+
+### Bug Fixes
+
+* Steps is not optional ([6fb5386](https://github.com/googleapis/js-genai/commit/6fb5386892879a7b88e93cf413c127c12c9888fd))
+
+## [2.0.1](https://github.com/googleapis/js-genai/compare/v2.0.0...v2.0.1) (2026-05-09)
+
+
+### Bug Fixes
+
+* Update response_format field names to snake_case. ([26af549](https://github.com/googleapis/js-genai/commit/26af54931a5881c125324df23d1834f7cba6fac8))
+
+## [2.0.0](https://github.com/googleapis/js-genai/compare/v1.52.0...v2.0.0) (2026-05-07)
+
+
+### ⚠ BREAKING CHANGES - Interactions Only
+
+Note: The breaking changes are only in interactions. `GenerateContent` usage in unaffected.
+Refer to https://ai.google.dev/gemini-api/docs/interactions-breaking-changes-may-2026 for details
+
+* Add steps for interactions ([c0814c4](https://github.com/googleapis/js-genai/commit/c0814c4ab1cfe7cdfc7bf77e3c9ceec79695dc37))
+* Deprecate legacy response_format and publish new polymorphic field. ([68a6809](https://github.com/googleapis/js-genai/commit/68a68093288c6ac505c32ee0aed0ec013aa4f7a5))
+* Rename SSE events to interaction.created and interaction.completed ([d1b836b](https://github.com/googleapis/js-genai/commit/d1b836bb8407e38908f8894c673c5f70e6af86d8))
+
+### Bug Fixes
+
+* timeout not functioning ([850f680](https://github.com/googleapis/js-genai/commit/850f680d1c6430495f4ab8fc98dde70a0fc49ca8))
+
 ## [1.52.0](https://github.com/googleapis/js-genai/compare/v1.51.0...v1.52.0) (2026-05-04)
 
 

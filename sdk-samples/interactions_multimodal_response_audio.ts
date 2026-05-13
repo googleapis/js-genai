@@ -21,7 +21,7 @@ async function createInteractionsFromMLDev() {
     },
   });
 
-  interaction.steps?.forEach((step, index) => {
+  interaction.steps.forEach((step, index) => {
     if (step.type === 'model_output') {
       step.content?.forEach((content) => {
         if (content.type === 'audio') {

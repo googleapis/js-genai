@@ -17,7 +17,9 @@ export function audioTranscriptionConfigToMldev(
   const toObject: Record<string, unknown> = {};
 
   if (common.getValueByPath(fromObject, ['languageCodes']) !== undefined) {
-    throw new Error('languageCodes parameter is not supported in Gemini API.');
+    throw new Error(
+      'languageCodes parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
   }
 
   return toObject;
@@ -34,11 +36,15 @@ export function authConfigToMldev(
   }
 
   if (common.getValueByPath(fromObject, ['apiKeyConfig']) !== undefined) {
-    throw new Error('apiKeyConfig parameter is not supported in Gemini API.');
+    throw new Error(
+      'apiKeyConfig parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
   }
 
   if (common.getValueByPath(fromObject, ['authType']) !== undefined) {
-    throw new Error('authType parameter is not supported in Gemini API.');
+    throw new Error(
+      'authType parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
   }
 
   if (
@@ -46,7 +52,7 @@ export function authConfigToMldev(
     undefined
   ) {
     throw new Error(
-      'googleServiceAccountConfig parameter is not supported in Gemini API.',
+      'googleServiceAccountConfig parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
     );
   }
 
@@ -54,16 +60,20 @@ export function authConfigToMldev(
     common.getValueByPath(fromObject, ['httpBasicAuthConfig']) !== undefined
   ) {
     throw new Error(
-      'httpBasicAuthConfig parameter is not supported in Gemini API.',
+      'httpBasicAuthConfig parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
     );
   }
 
   if (common.getValueByPath(fromObject, ['oauthConfig']) !== undefined) {
-    throw new Error('oauthConfig parameter is not supported in Gemini API.');
+    throw new Error(
+      'oauthConfig parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
   }
 
   if (common.getValueByPath(fromObject, ['oidcConfig']) !== undefined) {
-    throw new Error('oidcConfig parameter is not supported in Gemini API.');
+    throw new Error(
+      'oidcConfig parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
   }
 
   return toObject;
@@ -78,7 +88,9 @@ export function blobToMldev(fromObject: types.Blob): Record<string, unknown> {
   }
 
   if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
-    throw new Error('displayName parameter is not supported in Gemini API.');
+    throw new Error(
+      'displayName parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
   }
 
   const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
@@ -191,7 +203,7 @@ export function createAuthTokenParametersToVertex(
 
   if (common.getValueByPath(fromObject, ['config']) !== undefined) {
     throw new Error(
-      'config parameter is not supported in Gemini Enterprise Agent Platform (previously known as Vertex AI).',
+      'config parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
     );
   }
 
@@ -204,7 +216,9 @@ export function fileDataToMldev(
   const toObject: Record<string, unknown> = {};
 
   if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
-    throw new Error('displayName parameter is not supported in Gemini API.');
+    throw new Error(
+      'displayName parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
   }
 
   const fromFileUri = common.getValueByPath(fromObject, ['fileUri']);
@@ -241,11 +255,15 @@ export function functionCallToMldev(
   }
 
   if (common.getValueByPath(fromObject, ['partialArgs']) !== undefined) {
-    throw new Error('partialArgs parameter is not supported in Gemini API.');
+    throw new Error(
+      'partialArgs parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
   }
 
   if (common.getValueByPath(fromObject, ['willContinue']) !== undefined) {
-    throw new Error('willContinue parameter is not supported in Gemini API.');
+    throw new Error(
+      'willContinue parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
   }
 
   return toObject;
@@ -285,12 +303,14 @@ export function googleSearchToMldev(
 
   if (common.getValueByPath(fromObject, ['blockingConfidence']) !== undefined) {
     throw new Error(
-      'blockingConfidence parameter is not supported in Gemini API.',
+      'blockingConfidence parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
     );
   }
 
   if (common.getValueByPath(fromObject, ['excludeDomains']) !== undefined) {
-    throw new Error('excludeDomains parameter is not supported in Gemini API.');
+    throw new Error(
+      'excludeDomains parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
   }
 
   const fromTimeRangeFilter = common.getValueByPath(fromObject, [
@@ -508,7 +528,7 @@ export function liveConnectConfigToMldev(
 
   if (common.getValueByPath(fromObject, ['explicitVadSignal']) !== undefined) {
     throw new Error(
-      'explicitVadSignal parameter is not supported in Gemini API.',
+      'explicitVadSignal parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
     );
   }
 
@@ -535,6 +555,17 @@ export function liveConnectConfigToMldev(
       parentObject,
       ['setup', 'safetySettings'],
       transformedList,
+    );
+  }
+
+  const fromStreamTranslationConfig = common.getValueByPath(fromObject, [
+    'streamTranslationConfig',
+  ]);
+  if (parentObject !== undefined && fromStreamTranslationConfig != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'generationConfig', 'streamTranslationConfig'],
+      fromStreamTranslationConfig,
     );
   }
 
@@ -683,7 +714,9 @@ export function safetySettingToMldev(
   }
 
   if (common.getValueByPath(fromObject, ['method']) !== undefined) {
-    throw new Error('method parameter is not supported in Gemini API.');
+    throw new Error(
+      'method parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
   }
 
   const fromThreshold = common.getValueByPath(fromObject, ['threshold']);
@@ -705,7 +738,9 @@ export function sessionResumptionConfigToMldev(
   }
 
   if (common.getValueByPath(fromObject, ['transparent']) !== undefined) {
-    throw new Error('transparent parameter is not supported in Gemini API.');
+    throw new Error(
+      'transparent parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
   }
 
   return toObject;
@@ -715,7 +750,9 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   if (common.getValueByPath(fromObject, ['retrieval']) !== undefined) {
-    throw new Error('retrieval parameter is not supported in Gemini API.');
+    throw new Error(
+      'retrieval parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
   }
 
   const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
@@ -757,7 +794,7 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
     common.getValueByPath(fromObject, ['enterpriseWebSearch']) !== undefined
   ) {
     throw new Error(
-      'enterpriseWebSearch parameter is not supported in Gemini API.',
+      'enterpriseWebSearch parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
     );
   }
 
@@ -787,7 +824,7 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
 
   if (common.getValueByPath(fromObject, ['parallelAiSearch']) !== undefined) {
     throw new Error(
-      'parallelAiSearch parameter is not supported in Gemini API.',
+      'parallelAiSearch parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
     );
   }
 
