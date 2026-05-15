@@ -80,6 +80,22 @@ The Google Gen AI SDK provides support for both the
 [Gemini Enterprise Agent Platform](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/overview)
  implementations of the Gemini API.
 
+<details>
+<summary>Gemini Developer API vs Gemini Enterprise Agent Platform</summary>
+
+Use the **Gemini Developer API** when you want the simplest path for prototypes
+or applications that authenticate with an API key from Google AI Studio.
+
+Use **Gemini Enterprise Agent Platform** when your application should run on
+Google Cloud infrastructure, use Google Cloud authentication, and be associated
+with a specific Google Cloud project and location. This path requires setting
+`enterprise: true` when you initialize the SDK.
+
+Both paths use the same `GoogleGenAI` client and SDK methods; the main
+difference is how the client is initialized and authenticated.
+
+</details>
+
 ### Gemini Developer API
 
 For server-side applications, initialize using an API key, which can
