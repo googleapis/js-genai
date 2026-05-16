@@ -852,6 +852,75 @@ describe('ApiClient', () => {
       expect(fetchSpy).toHaveBeenCalledTimes(2);
     });
 
+    it('should retry requests if retry options are set on the request', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        project: 'vertex-project',
+        location: 'vertex-location',
+        vertexai: true,
+        apiVersion: 'v1beta1',
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(
+            JSON.stringify({'error': 'Internal Server Error'}),
+            fetch500Options,
+          ),
+        ),
+      );
+      await client
+        .request({
+          path: 'test-path',
+          httpMethod: 'POST',
+          httpOptions: {
+            retryOptions: {
+              attempts: 2,
+            },
+          },
+        })
+        .catch(() => {});
+      expect(fetchSpy).toHaveBeenCalledTimes(2);
+    });
+
+    it('should let request retry options override client retry options', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        project: 'vertex-project',
+        location: 'vertex-location',
+        vertexai: true,
+        apiVersion: 'v1beta1',
+        httpOptions: {
+          retryOptions: {
+            attempts: 3,
+          },
+        },
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(
+            JSON.stringify({'error': 'Internal Server Error'}),
+            fetch500Options,
+          ),
+        ),
+      );
+      await client
+        .request({
+          path: 'test-path',
+          httpMethod: 'POST',
+          httpOptions: {
+            retryOptions: {
+              attempts: 1,
+            },
+          },
+        })
+        .catch(() => {});
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+    });
+
     it('should not retry requests if retry options are not set', async () => {
       const client = new ApiClient({
         auth: new FakeAuth(),
@@ -1997,6 +2066,36 @@ describe('ApiClient', () => {
       expect(fetchArgs[0]).toEqual(
         'https://custom-request-base-url.googleapis.com/v1alpha/test-path?alt=sse',
       );
+    });
+    it('should retry requestStream if retry options are set on the request', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth('test-api-key'),
+        apiKey: 'test-api-key',
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(
+            JSON.stringify({'error': 'Internal Server Error'}),
+            fetch500Options,
+          ),
+        ),
+      );
+
+      await client
+        .requestStream({
+          path: 'test-path',
+          httpMethod: 'POST',
+          httpOptions: {
+            retryOptions: {
+              attempts: 2,
+            },
+          },
+        })
+        .catch(() => {});
+
+      expect(fetchSpy).toHaveBeenCalledTimes(2);
     });
     it('should set bearer token for vertexai', async () => {
       const client = new ApiClient({

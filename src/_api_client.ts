@@ -445,7 +445,12 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
       url.toString(),
       request.abortSignal,
     );
-    return this.unaryApiCall(url, requestInit, request.httpMethod);
+    return this.unaryApiCall(
+      url,
+      requestInit,
+      request.httpMethod,
+      patchedHttpOptions,
+    );
   }
 
   private patchHttpOptions(
@@ -504,7 +509,12 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
       url.toString(),
       request.abortSignal,
     );
-    return this.streamApiCall(url, requestInit, request.httpMethod);
+    return this.streamApiCall(
+      url,
+      requestInit,
+      request.httpMethod,
+      patchedHttpOptions,
+    );
   }
 
   private async includeExtraHttpOptionsToRequestInit(
@@ -579,11 +589,16 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
     url: URL,
     requestInit: RequestInit,
     httpMethod: 'GET' | 'POST' | 'PATCH' | 'DELETE',
+    httpOptions: types.HttpOptions,
   ): Promise<types.HttpResponse> {
-    return this.apiCall(url.toString(), {
-      ...requestInit,
-      method: httpMethod,
-    })
+    return this.apiCall(
+      url.toString(),
+      {
+        ...requestInit,
+        method: httpMethod,
+      },
+      httpOptions,
+    )
       .then(async (response) => {
         await throwErrorIfNotOK(response);
         return new types.HttpResponse(response);
@@ -601,11 +616,16 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
     url: URL,
     requestInit: RequestInit,
     httpMethod: 'GET' | 'POST' | 'PATCH' | 'DELETE',
+    httpOptions: types.HttpOptions,
   ): Promise<AsyncGenerator<types.HttpResponse>> {
-    return this.apiCall(url.toString(), {
-      ...requestInit,
-      method: httpMethod,
-    })
+    return this.apiCall(
+      url.toString(),
+      {
+        ...requestInit,
+        method: httpMethod,
+      },
+      httpOptions,
+    )
       .then(async (response) => {
         await throwErrorIfNotOK(response);
         return this.processStreamResponse(response);
@@ -724,15 +744,13 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
   private async apiCall(
     url: string,
     requestInit: RequestInit,
+    httpOptions: types.HttpOptions,
   ): Promise<Response> {
-    if (
-      !this.clientOptions.httpOptions ||
-      !this.clientOptions.httpOptions.retryOptions
-    ) {
+    if (!httpOptions.retryOptions) {
       return fetch(url, requestInit);
     }
 
-    const retryOptions = this.clientOptions.httpOptions.retryOptions;
+    const retryOptions = httpOptions.retryOptions;
     const runFetch = async () => {
       const response = await fetch(url, requestInit);
 
