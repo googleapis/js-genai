@@ -493,6 +493,11 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
       patchedHttpOptions,
       prependProjectLocation,
     );
+    if (request.queryParams) {
+      for (const [key, value] of Object.entries(request.queryParams)) {
+        url.searchParams.append(key, String(value));
+      }
+    }
     if (!url.searchParams.has('alt') || url.searchParams.get('alt') !== 'sse') {
       url.searchParams.set('alt', 'sse');
     }
