@@ -562,6 +562,11 @@ export interface ErrorEvent {
    * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
+
+  /**
+   * Optional metadata accompanying ANY streamed event.
+   */
+  metadata?: ErrorEvent.Metadata;
 }
 
 export namespace ErrorEvent {
@@ -578,6 +583,16 @@ export namespace ErrorEvent {
      * A human-readable error message.
      */
     message?: string;
+  }
+
+  /**
+   * Optional metadata accompanying ANY streamed event.
+   */
+  export interface Metadata {
+    /**
+     * Statistics on the interaction request's token usage.
+     */
+    usage?: InteractionsAPI.Usage;
   }
 }
 
@@ -1351,6 +1366,23 @@ export interface InteractionCompletedEvent {
    * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
+
+  /**
+   * Optional metadata accompanying ANY streamed event.
+   */
+  metadata?: InteractionCompletedEvent.Metadata;
+}
+
+export namespace InteractionCompletedEvent {
+  /**
+   * Optional metadata accompanying ANY streamed event.
+   */
+  export interface Metadata {
+    /**
+     * Statistics on the interaction request's token usage.
+     */
+    usage?: InteractionsAPI.Usage;
+  }
 }
 
 export interface InteractionCreatedEvent {
@@ -1365,6 +1397,23 @@ export interface InteractionCreatedEvent {
    * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
+
+  /**
+   * Optional metadata accompanying ANY streamed event.
+   */
+  metadata?: InteractionCreatedEvent.Metadata;
+}
+
+export namespace InteractionCreatedEvent {
+  /**
+   * Optional metadata accompanying ANY streamed event.
+   */
+  export interface Metadata {
+    /**
+     * Statistics on the interaction request's token usage.
+     */
+    usage?: InteractionsAPI.Usage;
+  }
 }
 
 export type InteractionSSEEvent =
@@ -1394,6 +1443,23 @@ export interface InteractionStatusUpdate {
    * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
+
+  /**
+   * Optional metadata accompanying ANY streamed event.
+   */
+  metadata?: InteractionStatusUpdate.Metadata;
+}
+
+export namespace InteractionStatusUpdate {
+  /**
+   * Optional metadata accompanying ANY streamed event.
+   */
+  export interface Metadata {
+    /**
+     * Statistics on the interaction request's token usage.
+     */
+    usage?: InteractionsAPI.Usage;
+  }
 }
 
 /**
@@ -1635,6 +1701,11 @@ export interface StepDelta {
    * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
+
+  /**
+   * Optional metadata accompanying ANY streamed event.
+   */
+  metadata?: StepDelta.Metadata;
 }
 
 export namespace StepDelta {
@@ -1944,6 +2015,16 @@ export namespace StepDelta {
 
     name?: string;
   }
+
+  /**
+   * Optional metadata accompanying ANY streamed event.
+   */
+  export interface Metadata {
+    /**
+     * Statistics on the interaction request's token usage.
+     */
+    usage?: InteractionsAPI.Usage;
+  }
 }
 
 export interface StepStart {
@@ -1960,6 +2041,23 @@ export interface StepStart {
    * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
+
+  /**
+   * Optional metadata accompanying ANY streamed event.
+   */
+  metadata?: StepStart.Metadata;
+}
+
+export namespace StepStart {
+  /**
+   * Optional metadata accompanying ANY streamed event.
+   */
+  export interface Metadata {
+    /**
+     * Statistics on the interaction request's token usage.
+     */
+    usage?: InteractionsAPI.Usage;
+  }
 }
 
 export interface StepStop {
@@ -1971,6 +2069,23 @@ export interface StepStop {
    * The event_id token to be used to resume the interaction stream, from this event.
    */
   event_id?: string;
+
+  /**
+   * Optional metadata accompanying ANY streamed event.
+   */
+  metadata?: StepStop.Metadata;
+}
+
+export namespace StepStop {
+  /**
+   * Optional metadata accompanying ANY streamed event.
+   */
+  export interface Metadata {
+    /**
+     * Statistics on the interaction request's token usage.
+     */
+    usage?: InteractionsAPI.Usage;
+  }
 }
 
 /**
