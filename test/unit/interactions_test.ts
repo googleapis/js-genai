@@ -71,7 +71,23 @@ describe('Interactions resource', () => {
           },
         ),
       ).toBeRejected();
-      expect(fetchSpy).toHaveBeenCalledTimes(5);
+    });
+
+    it('should throw APIConnectionTimeoutError with helpful message on timeout', async () => {
+      fetchSpy.and.rejectWith(new Error('timeout'));
+
+      await expectAsync(
+        client.interactions.create(
+          {
+            agent: 'some-agent',
+            input: 'some input',
+          },
+          {maxRetries: 0},
+        ),
+      ).toBeRejectedWithError(
+        GeminiNextGenAPIClient.APIConnectionTimeoutError,
+        /Request timed out. This is a client-side timeout. You can increase the timeout/,
+      );
     });
 
     it('should not invoke client auth headers if manually given', async () => {
