@@ -2,6 +2,18 @@
 
 
 
+## [2.4.0](https://github.com/googleapis/js-genai/compare/v2.3.0...v2.4.0) (2026-05-17)
+
+
+### Features
+
+* support Agent and Environment APIs. ([b0d9d2b](https://github.com/googleapis/js-genai/commit/b0d9d2b84b3f94ba710b30b8a993cb7d23a10d35))
+
+
+### Bug Fixes
+
+* output_text for turns that don't end with text. ([1a3d94f](https://github.com/googleapis/js-genai/commit/1a3d94f81574256e2f9e72af6bd5273f44d9fe2f))
+
 ## [2.3.0](https://github.com/googleapis/js-genai/compare/v2.2.0...v2.3.0) (2026-05-15)
 
 
