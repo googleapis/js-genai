@@ -7,6 +7,17 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 export {
+  Agents,
+  BaseAgents,
+  type Agent,
+  type AgentListResponse,
+  type AgentDeleteResponse,
+  type AgentCreateParams,
+  type AgentListParams,
+  type AgentDeleteParams,
+  type AgentGetParams,
+} from './agents.js';
+export {
   Interactions,
   BaseInteractions,
   type AllowedTools,
@@ -20,6 +31,7 @@ export {
   type DeepResearchAgentConfig,
   type DocumentContent,
   type DynamicAgentConfig,
+  type Environment,
   type ErrorEvent,
   type FileCitation,
   type FileSearchCallStep,

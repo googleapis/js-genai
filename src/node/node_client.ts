@@ -15,6 +15,7 @@ import {GoogleGenAIOptions} from '../client.js';
 import {Files} from '../files.js';
 import {FileSearchStores} from '../filesearchstores.js';
 import GeminiNextGenAPI from '../interactions/index.js';
+import {Agents as GeminiNextGenAgents} from '../interactions/resources/agents.js';
 import {Interactions as GeminiNextGenInteractions} from '../interactions/resources/interactions.js';
 import {Webhooks as GeminiNextGenWebhooks} from '../interactions/resources/webhooks.js';
 import {Live} from '../live.js';
@@ -132,6 +133,7 @@ export class GoogleGenAI {
   readonly fileSearchStores: FileSearchStores;
   private _interactions: GeminiNextGenInteractions | undefined;
   private _webhooks: GeminiNextGenWebhooks | undefined;
+  private _agents: GeminiNextGenAgents | undefined;
   private _nextGenClient: GeminiNextGenAPI | undefined;
 
   private getNextGenClient(): GeminiNextGenAPI {
@@ -178,6 +180,19 @@ export class GoogleGenAI {
 
     this._webhooks = this.getNextGenClient().webhooks;
     return this._webhooks;
+  }
+
+  get agents(): GeminiNextGenAgents {
+    if (this._agents !== undefined) {
+      return this._agents;
+    }
+
+    console.warn(
+      'GoogleGenAI.agents: Agents usage is experimental and may change in future versions.',
+    );
+
+    this._agents = this.getNextGenClient().agents;
+    return this._agents;
   }
   constructor(options: GoogleGenAIOptions) {
     // Validate explicitly set initializer values.

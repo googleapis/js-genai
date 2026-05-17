@@ -12,6 +12,7 @@ export * from '../chats.js';
 export type {GoogleGenAIOptions} from '../client.js';
 export * from '../errors.js';
 export {Files} from '../files.js';
+export type {Agents} from '../interactions/resources/agents.js';
 export type {Interactions} from '../interactions/resources/interactions.js';
 export type {Webhooks} from '../interactions/resources/webhooks.js';
 export * from '../live.js';

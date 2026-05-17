@@ -472,6 +472,84 @@ export interface DynamicAgentConfig {
   [k: string]: unknown;
 }
 
+/**
+ * Configuration for a custom environment.
+ */
+export interface Environment {
+  type: 'remote';
+
+  /**
+   * Network configuration for the environment.
+   */
+  network?: 'disabled' | Environment.Allowlist;
+
+  sources?: Array<Environment.Source>;
+}
+
+export namespace Environment {
+  /**
+   * Outbound networking configuration for the sandbox. When specified, restricts
+   * which external domains the sandbox can reach. Omit entirely to allow all
+   * outbound traffic with no header injection.
+   */
+  export interface Allowlist {
+    /**
+     * List of allowed outbound domains. Only requests to listed domains are permitted.
+     * Use [{'domain': '*'}] to allow all domains while still injecting headers on
+     * specific ones.
+     */
+    allowlist?: Array<Allowlist.Allowlist>;
+  }
+
+  export namespace Allowlist {
+    /**
+     * A single domain allowlist rule with optional header injection.
+     */
+    export interface Allowlist {
+      /**
+       * Domain to allow outbound requests to. Supports wildcards (e.g.
+       * '_.googleapis.com'). Use '_' to allow all domains.
+       */
+      domain: string;
+
+      /**
+       * Headers to inject on all outbound requests matching this domain. Each entry is a
+       * flat {header_name: header_value} object. The egress proxy injects these
+       * automatically.
+       */
+      transform?: Array<{ [key: string]: string }>;
+    }
+  }
+
+  /**
+   * A source to be mounted into the environment.
+   */
+  export interface Source {
+    /**
+     * The inline content if `type` is `INLINE`.
+     */
+    content?: string;
+
+    /**
+     * Optional encoding for inline content (e.g. `base64`).
+     */
+    encoding?: string;
+
+    /**
+     * The source of the environment. For GCS, this is the GCS path. For GitHub, this
+     * is the GitHub path.
+     */
+    source?: string;
+
+    /**
+     * Where the source should appear in the environment.
+     */
+    target?: string;
+
+    type?: 'gcs' | 'inline' | 'repository' | 'skill_registry';
+  }
+}
+
 export interface ErrorEvent {
   event_type: 'error';
 
@@ -1135,6 +1213,18 @@ export interface Interaction {
    * Configuration parameters for the agent interaction.
    */
   agent_config?: DynamicAgentConfig | DeepResearchAgentConfig;
+
+  /**
+   * The environment configuration for the interaction. Can be an object specifying
+   * remote environment sources or a string referencing an existing environment ID.
+   */
+  environment?: string | Environment;
+
+  /**
+   * Output only. The environment ID for the interaction. Only populated if
+   * environment config is set in the request.
+   */
+  environment_id?: string;
 
   /**
    * The input for the interaction.
@@ -2469,6 +2559,13 @@ export interface BaseCreateModelInteractionParams {
   background?: boolean;
 
   /**
+   * Body param: The environment configuration for the interaction. Can be an object
+   * specifying remote environment sources or a string referencing an existing
+   * environment ID.
+   */
+  environment?: string | Environment;
+
+  /**
    * Body param: Input only. Configuration parameters for the model interaction.
    */
   generation_config?: GenerationConfig;
@@ -2570,6 +2667,13 @@ export interface BaseCreateAgentInteractionParams {
    * Body param: Input only. Whether to run the model interaction in the background.
    */
   background?: boolean;
+
+  /**
+   * Body param: The environment configuration for the interaction. Can be an object
+   * specifying remote environment sources or a string referencing an existing
+   * environment ID.
+   */
+  environment?: string | Environment;
 
   /**
    * Body param: The ID of the previous interaction, if any.
@@ -2734,6 +2838,7 @@ export declare namespace Interactions {
     type DeepResearchAgentConfig as DeepResearchAgentConfig,
     type DocumentContent as DocumentContent,
     type DynamicAgentConfig as DynamicAgentConfig,
+    type Environment as Environment,
     type ErrorEvent as ErrorEvent,
     type FileCitation as FileCitation,
     type FileSearchCallStep as FileSearchCallStep,

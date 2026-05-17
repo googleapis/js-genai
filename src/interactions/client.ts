@@ -23,6 +23,16 @@ import * as Uploads from './core/uploads.js';
 import * as API from './resources/index.js';
 import { APIPromise } from './core/api-promise.js';
 import {
+  Agent,
+  AgentCreateParams,
+  AgentDeleteParams,
+  AgentDeleteResponse,
+  AgentGetParams,
+  AgentListParams,
+  AgentListResponse,
+  Agents,
+} from './resources/agents.js';
+import {
   AllowedTools,
   Annotation,
   AudioContent,
@@ -38,6 +48,7 @@ import {
   DeepResearchAgentConfig,
   DocumentContent,
   DynamicAgentConfig,
+  Environment,
   ErrorEvent,
   FileCitation,
   FileSearchCallStep,
@@ -866,10 +877,12 @@ export class GeminiNextGenAPIClient extends BaseGeminiNextGenAPIClient {
 
   interactions: API.Interactions = new API.Interactions(this);
   webhooks: API.Webhooks = new API.Webhooks(this);
+  agents: API.Agents = new API.Agents(this);
 }
 
 GeminiNextGenAPIClient.Interactions = Interactions;
 GeminiNextGenAPIClient.Webhooks = Webhooks;
+GeminiNextGenAPIClient.Agents = Agents;
 
 export declare namespace GeminiNextGenAPIClient {
   export type RequestOptions = Opts.RequestOptions;
@@ -887,6 +900,7 @@ export declare namespace GeminiNextGenAPIClient {
     type DeepResearchAgentConfig as DeepResearchAgentConfig,
     type DocumentContent as DocumentContent,
     type DynamicAgentConfig as DynamicAgentConfig,
+    type Environment as Environment,
     type ErrorEvent as ErrorEvent,
     type FileCitation as FileCitation,
     type FileSearchCallStep as FileSearchCallStep,
@@ -965,5 +979,16 @@ export declare namespace GeminiNextGenAPIClient {
     type WebhookGetParams as WebhookGetParams,
     type WebhookPingParams as WebhookPingParams,
     type WebhookRotateSigningSecretParams as WebhookRotateSigningSecretParams,
+  };
+
+  export {
+    Agents as Agents,
+    type Agent as Agent,
+    type AgentListResponse as AgentListResponse,
+    type AgentDeleteResponse as AgentDeleteResponse,
+    type AgentCreateParams as AgentCreateParams,
+    type AgentListParams as AgentListParams,
+    type AgentDeleteParams as AgentDeleteParams,
+    type AgentGetParams as AgentGetParams,
   };
 }

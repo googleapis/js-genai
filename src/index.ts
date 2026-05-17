@@ -13,6 +13,7 @@ export {GoogleGenAI} from './client';
 export type {GoogleGenAIOptions} from './client';
 export * from './errors';
 export {Files} from './files';
+export type {Agents} from './interactions/resources/agents.js';
 export type {Interactions} from './interactions/resources/interactions.js';
 export type {Webhooks} from './interactions/resources/webhooks.js';
 export * from './live';
