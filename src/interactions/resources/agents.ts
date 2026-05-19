@@ -95,7 +95,7 @@ export interface Agent {
   /**
    * The tools available to the agent.
    */
-  tools?: Array<Agent.CodeExecution | Agent.GoogleSearch | Agent.MCPServer | Agent.URLContext>;
+  tools?: Array<Agent.CodeExecution | Agent.GoogleSearch | Agent.URLContext>;
 }
 
 export namespace Agent {
@@ -116,33 +116,6 @@ export namespace Agent {
      * The types of search grounding to enable.
      */
     search_types?: Array<'web_search' | 'image_search' | 'enterprise_web_search'>;
-  }
-
-  /**
-   * A MCPServer is a server that can be called by the model to perform actions.
-   */
-  export interface MCPServer {
-    type: 'mcp_server';
-
-    /**
-     * The allowed tools.
-     */
-    allowed_tools?: Array<InteractionsAPI.AllowedTools>;
-
-    /**
-     * Optional: Fields for authentication headers, timeouts, etc., if needed.
-     */
-    headers?: { [key: string]: string };
-
-    /**
-     * The name of the MCPServer.
-     */
-    name?: string;
-
-    /**
-     * The full URL for the MCPServer endpoint. Example: "https://api.example.com/mcp"
-     */
-    url?: string;
   }
 
   /**
@@ -205,10 +178,7 @@ export interface AgentCreateParams {
    * Body param: The tools available to the agent.
    */
   tools?: Array<
-    | AgentCreateParams.CodeExecution
-    | AgentCreateParams.GoogleSearch
-    | AgentCreateParams.MCPServer
-    | AgentCreateParams.URLContext
+    AgentCreateParams.CodeExecution | AgentCreateParams.GoogleSearch | AgentCreateParams.URLContext
   >;
 }
 
@@ -230,33 +200,6 @@ export namespace AgentCreateParams {
      * The types of search grounding to enable.
      */
     search_types?: Array<'web_search' | 'image_search' | 'enterprise_web_search'>;
-  }
-
-  /**
-   * A MCPServer is a server that can be called by the model to perform actions.
-   */
-  export interface MCPServer {
-    type: 'mcp_server';
-
-    /**
-     * The allowed tools.
-     */
-    allowed_tools?: Array<InteractionsAPI.AllowedTools>;
-
-    /**
-     * Optional: Fields for authentication headers, timeouts, etc., if needed.
-     */
-    headers?: { [key: string]: string };
-
-    /**
-     * The name of the MCPServer.
-     */
-    name?: string;
-
-    /**
-     * The full URL for the MCPServer endpoint. Example: "https://api.example.com/mcp"
-     */
-    url?: string;
   }
 
   /**
