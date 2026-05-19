@@ -1187,7 +1187,14 @@ export interface Interaction {
   /**
    * Required. Output only. The status of the interaction.
    */
-  status: 'in_progress' | 'requires_action' | 'completed' | 'failed' | 'cancelled' | 'incomplete';
+  status:
+    | 'in_progress'
+    | 'requires_action'
+    | 'completed'
+    | 'failed'
+    | 'cancelled'
+    | 'incomplete'
+    | 'budget_exceeded';
 
   /**
    * Required. Output only. The steps that make up the interaction.
@@ -1374,7 +1381,14 @@ export interface InteractionStatusUpdate {
 
   interaction_id: string;
 
-  status: 'in_progress' | 'requires_action' | 'completed' | 'failed' | 'cancelled' | 'incomplete';
+  status:
+    | 'in_progress'
+    | 'requires_action'
+    | 'completed'
+    | 'failed'
+    | 'cancelled'
+    | 'incomplete'
+    | 'budget_exceeded';
 
   /**
    * The event_id token to be used to resume the interaction stream, from this event.
