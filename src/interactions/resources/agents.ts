@@ -80,7 +80,7 @@ export interface Agent {
   /**
    * The environment configuration for the agent.
    */
-  base_environment?: string | InteractionsAPI.Environment;
+  base_environment?: InteractionsAPI.Environment | string;
 
   /**
    * Agent description for developers to quickly read and understand.
@@ -189,7 +189,7 @@ export interface AgentCreateParams {
   /**
    * Body param: The environment configuration for the agent.
    */
-  base_environment?: string | InteractionsAPI.Environment;
+  base_environment?: InteractionsAPI.Environment | string;
 
   /**
    * Body param: Agent description for developers to quickly read and understand.
