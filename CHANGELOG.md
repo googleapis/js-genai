@@ -2,6 +2,13 @@
 
 
 
+## [2.5.0](https://github.com/googleapis/js-genai/compare/v2.4.0...v2.5.0) (2026-05-20)
+
+
+### Features
+
+* Add Gemini 3.5 Flash model to options ([fcf26e3](https://github.com/googleapis/js-genai/commit/fcf26e386d4c8586047b64ecb0f01705d7a0a43e))
+
 ## [2.4.0](https://github.com/googleapis/js-genai/compare/v2.3.0...v2.4.0) (2026-05-17)
 
 
