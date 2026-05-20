@@ -6334,7 +6334,7 @@ export declare interface BatchJobOutputInfo {
   vertexMultimodalDatasetName?: string;
   /** The full path of the Cloud Storage directory created, into which the prediction output is written. */
   gcsOutputDirectory?: string;
-  /** The name of the BigQuery table created, in `predictions_<timestamp>` format, into which the prediction output is written. */
+  /** The name of the BigQuery table created, in `predictions_TIMESTAMP` format, into which the prediction output is written. */
   bigqueryOutputTable?: string;
 }
 
