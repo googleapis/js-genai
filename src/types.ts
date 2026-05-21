@@ -112,6 +112,14 @@ export enum Environment {
    * Operates in a web browser.
    */
   ENVIRONMENT_BROWSER = 'ENVIRONMENT_BROWSER',
+  /**
+   * Operates in a mobile environment.
+   */
+  ENVIRONMENT_MOBILE = 'ENVIRONMENT_MOBILE',
+  /**
+   * Operates in a desktop environment.
+   */
+  ENVIRONMENT_DESKTOP = 'ENVIRONMENT_DESKTOP',
 }
 
 /** Type of auth scheme. This enum is not supported in Gemini API. */
@@ -2128,6 +2136,9 @@ export declare interface ComputerUse {
       1. Using a more restricted / different action space.
       2. Improving the definitions / instructions of predefined functions. */
   excludedPredefinedFunctions?: string[];
+  /** Optional. Whether enable the prompt injection detection check on computer-use request.
+   */
+  enablePromptInjectionDetection?: boolean;
 }
 
 /** Config for authentication with API key. This data type is not supported in Gemini API. */

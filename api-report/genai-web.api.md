@@ -461,6 +461,7 @@ export interface CompletionStats {
 
 // @public
 export interface ComputerUse {
+    enablePromptInjectionDetection?: boolean;
     environment?: Environment;
     excludedPredefinedFunctions?: string[];
 }
@@ -1159,6 +1160,8 @@ export interface EntityLabel {
 // @public
 export enum Environment {
     ENVIRONMENT_BROWSER = "ENVIRONMENT_BROWSER",
+    ENVIRONMENT_DESKTOP = "ENVIRONMENT_DESKTOP",
+    ENVIRONMENT_MOBILE = "ENVIRONMENT_MOBILE",
     ENVIRONMENT_UNSPECIFIED = "ENVIRONMENT_UNSPECIFIED"
 }
 

@@ -281,6 +281,40 @@ export function computeTokensResponseFromVertex(
   return toObject;
 }
 
+export function computerUseToVertex(
+  fromObject: types.ComputerUse,
+  _rootObject?: unknown,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromEnvironment = common.getValueByPath(fromObject, ['environment']);
+  if (fromEnvironment != null) {
+    common.setValueByPath(toObject, ['environment'], fromEnvironment);
+  }
+
+  const fromExcludedPredefinedFunctions = common.getValueByPath(fromObject, [
+    'excludedPredefinedFunctions',
+  ]);
+  if (fromExcludedPredefinedFunctions != null) {
+    common.setValueByPath(
+      toObject,
+      ['excludedPredefinedFunctions'],
+      fromExcludedPredefinedFunctions,
+    );
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['enablePromptInjectionDetection']) !==
+    undefined
+  ) {
+    throw new Error(
+      'enablePromptInjectionDetection parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+    );
+  }
+
+  return toObject;
+}
+
 export function contentEmbeddingFromVertex(
   fromObject: types.ContentEmbedding,
   rootObject?: unknown,
@@ -5285,7 +5319,7 @@ export function toolToMldev(
 
 export function toolToVertex(
   fromObject: types.Tool,
-  _rootObject?: unknown,
+  rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -5296,7 +5330,11 @@ export function toolToVertex(
 
   const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
   if (fromComputerUse != null) {
-    common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
+    common.setValueByPath(
+      toObject,
+      ['computerUse'],
+      computerUseToVertex(fromComputerUse, rootObject),
+    );
   }
 
   if (common.getValueByPath(fromObject, ['fileSearch']) !== undefined) {
