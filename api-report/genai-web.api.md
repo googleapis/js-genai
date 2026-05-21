@@ -928,6 +928,7 @@ export interface DistillationHyperParameters {
     adapterSize?: AdapterSize;
     batchSize?: number;
     epochCount?: string;
+    generationConfig?: GenerationConfig;
     learningRate?: number;
     learningRateMultiplier?: number;
 }
@@ -935,6 +936,8 @@ export interface DistillationHyperParameters {
 // @public
 export interface DistillationSamplingSpec {
     baseTeacherModel?: string;
+    hyperparameters?: DistillationHyperParameters;
+    promptDatasetUri?: string;
     tunedTeacherModelSource?: string;
     validationDatasetUri?: string;
 }
@@ -3126,6 +3129,8 @@ export enum ProminentPeople {
 
 // @public
 export interface RagChunk {
+    chunkId?: string;
+    fileId?: string;
     pageSpan?: RagChunkPageSpan;
     text?: string;
 }
@@ -3841,6 +3846,7 @@ export interface TuningJob {
     createTime?: string;
     customBaseModel?: string;
     description?: string;
+    // (undocumented)
     distillationSamplingSpec?: DistillationSamplingSpec;
     distillationSpec?: DistillationSpec;
     encryptionSpec?: EncryptionSpec;
@@ -3867,6 +3873,7 @@ export interface TuningJob {
     tuningJobMetadata?: TuningJobMetadata;
     tuningJobState?: TuningJobState;
     updateTime?: string;
+    veoLoraTuningSpec?: VeoLoraTuningSpec;
     veoTuningSpec?: VeoTuningSpec;
 }
 
@@ -3907,6 +3914,13 @@ export interface TuningOperation {
     metadata?: Record<string, unknown>;
     name?: string;
     sdkHttpResponse?: HttpResponse;
+}
+
+// @public
+export enum TuningSpeed {
+    FAST = "FAST",
+    REGULAR = "REGULAR",
+    TUNING_SPEED_UNSPECIFIED = "TUNING_SPEED_UNSPECIFIED"
 }
 
 // @public
@@ -4147,10 +4161,20 @@ export enum VadSignalType {
 
 // @public
 export interface VeoHyperParameters {
+    adapterSize?: AdapterSize;
     epochCount?: string;
     learningRateMultiplier?: number;
+    tuningSpeed?: TuningSpeed;
     tuningTask?: TuningTask;
     veoDataMixtureRatio?: number;
+}
+
+// @public
+export interface VeoLoraTuningSpec {
+    hyperParameters?: VeoHyperParameters;
+    trainingDatasetUri?: string;
+    validationDatasetUri?: string;
+    videoOrientation?: VideoOrientation;
 }
 
 // @public
@@ -4241,6 +4265,13 @@ export interface VideoMetadata {
     endOffset?: string;
     fps?: number;
     startOffset?: string;
+}
+
+// @public
+export enum VideoOrientation {
+    LANDSCAPE = "LANDSCAPE",
+    PORTRAIT = "PORTRAIT",
+    VIDEO_ORIENTATION_UNSPECIFIED = "VIDEO_ORIENTATION_UNSPECIFIED"
 }
 
 // @public

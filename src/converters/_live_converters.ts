@@ -101,6 +101,30 @@ export function blobToMldev(fromObject: types.Blob): Record<string, unknown> {
   return toObject;
 }
 
+export function codeExecutionResultToVertex(
+  fromObject: types.CodeExecutionResult,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromOutcome = common.getValueByPath(fromObject, ['outcome']);
+  if (fromOutcome != null) {
+    common.setValueByPath(toObject, ['outcome'], fromOutcome);
+  }
+
+  const fromOutput = common.getValueByPath(fromObject, ['output']);
+  if (fromOutput != null) {
+    common.setValueByPath(toObject, ['output'], fromOutput);
+  }
+
+  if (common.getValueByPath(fromObject, ['id']) !== undefined) {
+    throw new Error(
+      'id parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+    );
+  }
+
+  return toObject;
+}
+
 export function contentToMldev(
   fromObject: types.Content,
 ): Record<string, unknown> {
@@ -144,6 +168,30 @@ export function contentToVertex(
   const fromRole = common.getValueByPath(fromObject, ['role']);
   if (fromRole != null) {
     common.setValueByPath(toObject, ['role'], fromRole);
+  }
+
+  return toObject;
+}
+
+export function executableCodeToVertex(
+  fromObject: types.ExecutableCode,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromCode = common.getValueByPath(fromObject, ['code']);
+  if (fromCode != null) {
+    common.setValueByPath(toObject, ['code'], fromCode);
+  }
+
+  const fromLanguage = common.getValueByPath(fromObject, ['language']);
+  if (fromLanguage != null) {
+    common.setValueByPath(toObject, ['language'], fromLanguage);
+  }
+
+  if (common.getValueByPath(fromObject, ['id']) !== undefined) {
+    throw new Error(
+      'id parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+    );
   }
 
   return toObject;
@@ -2036,7 +2084,7 @@ export function partToVertex(fromObject: types.Part): Record<string, unknown> {
     common.setValueByPath(
       toObject,
       ['codeExecutionResult'],
-      fromCodeExecutionResult,
+      codeExecutionResultToVertex(fromCodeExecutionResult),
     );
   }
 
@@ -2044,7 +2092,11 @@ export function partToVertex(fromObject: types.Part): Record<string, unknown> {
     'executableCode',
   ]);
   if (fromExecutableCode != null) {
-    common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
+    common.setValueByPath(
+      toObject,
+      ['executableCode'],
+      executableCodeToVertex(fromExecutableCode),
+    );
   }
 
   const fromFileData = common.getValueByPath(fromObject, ['fileData']);

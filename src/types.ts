@@ -14,6 +14,26 @@ import {
   uploadToFileSearchStoreOperationFromMldev,
 } from './converters/_operations_converters.js';
 
+/** Outcome of the code execution. */
+export enum Outcome {
+  /**
+   * Unspecified status. This value should not be used.
+   */
+  OUTCOME_UNSPECIFIED = 'OUTCOME_UNSPECIFIED',
+  /**
+   * Code execution completed successfully. `output` contains the stdout, if any.
+   */
+  OUTCOME_OK = 'OUTCOME_OK',
+  /**
+   * Code execution failed. `output` contains the stderr and stdout, if any.
+   */
+  OUTCOME_FAILED = 'OUTCOME_FAILED',
+  /**
+   * Code execution ran for too long, and was cancelled. There may or may not be a partial `output` present.
+   */
+  OUTCOME_DEADLINE_EXCEEDED = 'OUTCOME_DEADLINE_EXCEEDED',
+}
+
 /** Programming language of the `code`. */
 export enum Language {
   /**
@@ -24,26 +44,6 @@ export enum Language {
    * Python >= 3.10, with numpy and simpy available.
    */
   PYTHON = 'PYTHON',
-}
-
-/** Outcome of the code execution. */
-export enum Outcome {
-  /**
-   * Unspecified status. This value should not be used.
-   */
-  OUTCOME_UNSPECIFIED = 'OUTCOME_UNSPECIFIED',
-  /**
-   * Code execution completed successfully.
-   */
-  OUTCOME_OK = 'OUTCOME_OK',
-  /**
-   * Code execution finished but with a failure. `stderr` should contain the reason.
-   */
-  OUTCOME_FAILED = 'OUTCOME_FAILED',
-  /**
-   * Code execution ran for too long, and was cancelled. There may or may not be a partial output present.
-   */
-  OUTCOME_DEADLINE_EXCEEDED = 'OUTCOME_DEADLINE_EXCEEDED',
 }
 
 /** Specifies how the response should be scheduled in the conversation. */
@@ -898,7 +898,23 @@ export enum PairwiseChoice {
   TIE = 'TIE',
 }
 
-/** The tuning task. Either I2V or T2V. This enum is not supported in Gemini API. */
+/** The speed of the tuning job. Only supported for Veo 3.0 models. This enum is not supported in Gemini API. */
+export enum TuningSpeed {
+  /**
+   * The default / unset value. For Veo 3.0 models, this defaults to FAST.
+   */
+  TUNING_SPEED_UNSPECIFIED = 'TUNING_SPEED_UNSPECIFIED',
+  /**
+   * Regular tuning speed.
+   */
+  REGULAR = 'REGULAR',
+  /**
+   * Fast tuning speed.
+   */
+  FAST = 'FAST',
+}
+
+/** The tuning task for Veo. This enum is not supported in Gemini API. */
 export enum TuningTask {
   /**
    * Default value. This value is unused.
@@ -916,6 +932,22 @@ export enum TuningTask {
    * Tuning task for reference to video.
    */
   TUNING_TASK_R2V = 'TUNING_TASK_R2V',
+}
+
+/** The orientation of the video. Defaults to LANDSCAPE. This enum is not supported in Gemini API. */
+export enum VideoOrientation {
+  /**
+   * Unspecified video orientation. Defaults to landscape.
+   */
+  VIDEO_ORIENTATION_UNSPECIFIED = 'VIDEO_ORIENTATION_UNSPECIFIED',
+  /**
+   * Landscape orientation (e.g. 16:9, 1280x720).
+   */
+  LANDSCAPE = 'LANDSCAPE',
+  /**
+   * Portrait orientation (e.g. 9:16, 720x1280).
+   */
+  PORTRAIT = 'PORTRAIT',
 }
 
 /** Output only. Current state of the `Document`. This enum is not supported in Vertex AI. */
@@ -1583,32 +1615,6 @@ export enum LiveMusicPlaybackControl {
   RESET_CONTEXT = 'RESET_CONTEXT',
 }
 
-/** Model-generated code executed server-side, results returned to the model.
-
-Only generated when using the `CodeExecution` tool, in which the code will
-be automatically executed, and a corresponding `CodeExecutionResult` will
-also be generated. */
-export declare interface ExecutableCode {
-  /** Required. The code to be executed. */
-  code?: string;
-  /** Required. Programming language of the `code`. */
-  language?: Language;
-  /** Unique identifier of the `ExecutableCode` part. The server returns the `CodeExecutionResult` with the matching `id`. */
-  id?: string;
-}
-
-/** Result of executing the `ExecutableCode`.
-
-Generated only when the `CodeExecution` tool is used. */
-export declare interface CodeExecutionResult {
-  /** Required. Outcome of the code execution. */
-  outcome?: Outcome;
-  /** Optional. Contains stdout when code execution is successful, stderr or other description otherwise. */
-  output?: string;
-  /** The identifier of the `ExecutableCode` part this result is for. Only populated if the corresponding `ExecutableCode` has an id. */
-  id?: string;
-}
-
 /** Media resolution for the input media. */
 export declare interface PartMediaResolution {
   /** The tokenization quality used for given media.
@@ -1649,6 +1655,26 @@ export class ToolResponse {
   response?: Record<string, unknown>;
 }
 
+/** Result of executing the ExecutableCode. Generated only when the `CodeExecution` tool is used. */
+export declare interface CodeExecutionResult {
+  /** Required. Outcome of the code execution. */
+  outcome?: Outcome;
+  /** Optional. Contains stdout when code execution is successful, stderr or other description otherwise. */
+  output?: string;
+  /** Optional. The identifier of the `ExecutableCode` part this result is for. Only populated if the corresponding `ExecutableCode` has an id. This field is not supported in Vertex AI. */
+  id?: string;
+}
+
+/** Code generated by the model that is meant to be executed, and the result returned to the model. Generated when using the `CodeExecution` tool, in which the code will be automatically executed, and a corresponding CodeExecutionResult will also be generated. */
+export declare interface ExecutableCode {
+  /** Required. The code to be executed. */
+  code?: string;
+  /** Required. Programming language of the `code`. */
+  language?: Language;
+  /** Optional. Unique identifier of the `ExecutableCode` part. The server returns the `CodeExecutionResult` with the matching `id`. This field is not supported in Vertex AI. */
+  id?: string;
+}
+
 /** URI-based data. A FileData message contains a URI pointing to data of a specific media type. It is used to represent images, audio, and video stored in Google Cloud Storage. */
 export declare interface FileData {
   /** Optional. The display name of the file. Used to provide a label or filename to distinguish files. This field is only returned in `PromptMessage` for prompt management. It is used in the Gemini calls only when server side tools (`code_execution`, `google_search`, and `url_context`) are enabled. This field is not supported in Gemini API. */
@@ -1680,9 +1706,9 @@ export declare interface FunctionCall {
   /** The unique id of the function call. If populated, the client to execute the
    `function_call` and return the response with the matching `id`. */
   id?: string;
-  /** Optional. The function parameters and values in JSON object format. See [FunctionDeclaration.parameters] for parameter details. */
+  /** Optional. The function parameters and values in JSON object format. See FunctionDeclaration.parameters for parameter details. */
   args?: Record<string, unknown>;
-  /** Optional. The name of the function to call. Matches [FunctionDeclaration.name]. */
+  /** Optional. The name of the function to call. Matches FunctionDeclaration.name. */
   name?: string;
   /** Optional. The partial argument value of the function call. If provided, represents the arguments/fields that are streamed incrementally. This field is not supported in Gemini API. */
   partialArgs?: PartialArg[];
@@ -1771,7 +1797,7 @@ export class FunctionResponse {
   parts?: FunctionResponsePart[];
   /** Optional. The id of the function call this response is for. Populated by the client to match the corresponding function call `id`. */
   id?: string;
-  /** Required. The name of the function to call. Matches [FunctionDeclaration.name] and [FunctionCall.name]. */
+  /** Required. The name of the function to call. Matches FunctionDeclaration.name and FunctionCall.name. */
   name?: string;
   /** Required. The function response in JSON object format. Use "output" key to specify function output and "error" key to specify error details (if any). If "output" and "error" keys are not specified, then whole "response" is treated as function output. */
   response?: Record<string, unknown>;
@@ -2363,7 +2389,7 @@ export declare interface GoogleSearch {
   timeRangeFilter?: Interval;
 }
 
-/** Tool that executes code generated by the model, and automatically returns the result to the model. See also [ExecutableCode]and [CodeExecutionResult] which are input and output to this tool. This data type is not supported in Gemini API. */
+/** Tool that executes code generated by the model, and automatically returns the result to the model. See also ExecutableCode and CodeExecutionResult, which are input and output to this tool. This data type is not supported in Gemini API. */
 export declare interface ToolCodeExecution {}
 
 /** Tool to search public web data, powered by Vertex AI Search and Sec4 compliance. This data type is not supported in Gemini API. */
@@ -2378,7 +2404,7 @@ export declare interface EnterpriseWebSearch {
 export declare interface FunctionDeclaration {
   /** Optional. Description and purpose of the function. Model uses it to decide how and whether to call the function. */
   description?: string;
-  /** Required. The name of the function to call. Must start with a letter or an underscore. Must be a-z, A-Z, 0-9, or contain underscores, dots, colons and dashes, with a maximum length of 64. */
+  /** Required. The name of the function to call. Must start with a letter or an underscore. Must be a-z, A-Z, 0-9, or contain underscores, dots, colons and dashes, with a maximum length of 128. */
   name?: string;
   /** Optional. Describes the parameters to this function in JSON Schema Object format. Reflects the Open API 3.03 Parameter Object. string Key: the name of the parameter. Parameter names are case sensitive. Schema Value: the Schema defining the type used for the parameter. For function with no parameters, this can be left unset. Parameter names must start with a letter or an underscore and must only contain chars a-z, A-Z, 0-9, or underscores with a maximum length of 64. Example with 1 required and 1 optional parameter: type: OBJECT properties: param1: type: STRING param2: type: INTEGER required: - param1 */
   parameters?: Schema;
@@ -2431,7 +2457,7 @@ export declare interface StreamableHttpTransport {
   url?: string;
 }
 
-/** A MCPServer is a server that can be called by the model to perform actions. It is a server that implements the MCP protocol. Next ID: 5. This data type is not supported in Vertex AI. */
+/** A MCPServer is a server that can be called by the model to perform actions. It is a server that implements the MCP protocol. Next ID: 6. This data type is not supported in Vertex AI. */
 export declare interface McpServer {
   /** The name of the MCPServer. */
   name?: string;
@@ -2494,11 +2520,11 @@ export declare interface RetrievalConfig {
 
 /** Function calling config. */
 export declare interface FunctionCallingConfig {
-  /** Optional. Function names to call. Only set when the Mode is ANY. Function names should match [FunctionDeclaration.name]. With mode set to ANY, model will predict a function call from the set of function names provided. */
+  /** Optional. Function names to call. Only set when the Mode is ANY. Function names should match FunctionDeclaration.name. With mode set to ANY, model will predict a function call from the set of function names provided. */
   allowedFunctionNames?: string[];
   /** Optional. Function calling mode. */
   mode?: FunctionCallingConfigMode;
-  /** Optional. When set to true, arguments of a single function call will be streamed out in multiple parts/contents/responses. Partial parameter results will be returned in the [FunctionCall.partial_args] field. This field is not supported in Gemini API. */
+  /** Optional. When set to true, arguments of a single function call will be streamed out in multiple parts/contents/responses. Partial parameter results will be returned in the `FunctionCall.partial_args` field. This field is not supported in Gemini API. */
   streamFunctionCallArguments?: boolean;
 }
 
@@ -3033,6 +3059,10 @@ export declare interface RagChunk {
   pageSpan?: RagChunkPageSpan;
   /** The content of the chunk. */
   text?: string;
+  /** The ID of the chunk. */
+  chunkId?: string;
+  /** The ID of the file that the chunk belongs to. */
+  fileId?: string;
 }
 
 /** A list of string values. This data type is not supported in Vertex AI. */
@@ -3069,9 +3099,9 @@ export declare interface GroundingChunkRetrievedContext {
   customMetadata?: GroundingChunkCustomMetadata[];
   /** Optional. Name of the `FileSearchStore` containing the document. Example: `fileSearchStores/123`. This field is not supported in Vertex AI. */
   fileSearchStore?: string;
-  /** Optional. Page number of the retrieved context. This field is not supported in Vertex AI. */
+  /** Optional. Page number of the retrieved context, if applicable. This field is not supported in Vertex AI. */
   pageNumber?: number;
-  /** Optional. Media ID. This field is not supported in Vertex AI. */
+  /** Optional. The media blob resource name for multimodal file search results. Format: fileSearchStores/{file_search_store_id}/media/{blob_id}. This field is not supported in Vertex AI. */
   mediaId?: string;
 }
 
@@ -3647,15 +3677,6 @@ export declare interface EditImageParameters {
 
 /** Optional parameters for the embed_content method. */
 export declare interface EmbedContentConfig {
-  /** Used to override HTTP request options. */
-  httpOptions?: HttpOptions;
-  /** Abort signal which can be used to cancel the request.
-
-  NOTE: AbortSignal is a client-only operation. Using it to cancel an
-  operation will not cancel the request in the service. You will still
-  be charged usage for any applicable operations.
-       */
-  abortSignal?: AbortSignal;
   /** Type of task for which the embedding will be used.
    */
   taskType?: string;
@@ -3685,6 +3706,15 @@ export declare interface EmbedContentConfig {
       Only applicable to Gemini Embedding 2 models.
        */
   audioTrackExtraction?: boolean;
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
 }
 
 /** Parameters for the _embed_content method. */
@@ -4336,7 +4366,7 @@ export declare interface GenerationConfig {
   presencePenalty?: number;
   /** Optional. If set to true, the log probabilities of the output tokens are returned. Log probabilities are the logarithm of the probability of a token appearing in the output. A higher log probability means the token is more likely to be generated. This can be useful for analyzing the model's confidence in its own output and for debugging. */
   responseLogprobs?: boolean;
-  /** Optional. The IANA standard MIME type of the response. The model will generate output that conforms to this MIME type. Supported values include 'text/plain' (default) and 'application/json'. The model needs to be prompted to output the appropriate response type, otherwise the behavior is undefined. This is a preview feature. */
+  /** Optional. The IANA standard MIME type of the response. The model will generate output that conforms to this MIME type. Supported values include 'text/plain' (default) and 'application/json'. The model needs to be prompted to output the appropriate response type, otherwise the behavior is undefined. */
   responseMimeType?: string;
   /** Optional. The modalities of the response. The model will generate a response that includes all the specified modalities. For example, if this is set to `[TEXT, IMAGE]`, the response will include both text and an image. */
   responseModalities?: Modality[];
@@ -4776,25 +4806,51 @@ export declare interface PreferenceOptimizationSpec {
   validationDatasetUri?: string;
 }
 
-/** Hyperparameters for distillation. */
+/** Distillation hyperparameters for tuning. */
 export declare interface DistillationHyperParameters {
-  /** Optional. Adapter size for distillation. */
+  /** The size of the adapter. Can be 'small', 'medium', or 'large'. */
   adapterSize?: AdapterSize;
-  /** Optional. Number of complete passes the model makes over the entire training dataset during training. */
+  /** Number of complete passes the model makes over the entire training dataset
+      during training. */
   epochCount?: string;
-  /** Optional. Multiplier for adjusting the default learning rate. */
+  /** Multiplier for adjusting the default learning rate. */
   learningRateMultiplier?: number;
-  /** The batch size hyperparameter for tuning.
-      This is only supported for OSS models in Gemini Enterprise Agent Platform.
-       */
-  batchSize?: number;
-  /** The learning rate for tuning. OSS models only. */
+  /** Generation config for Distillation teacher model sampling. Only the
+      following fields are supported for distillation teacher samplings:
+      - temperature
+      - top_p
+      - top_k
+      - candidate_count
+      - thinking_config */
+  generationConfig?: GenerationConfig;
+  /** The learning rate for distillation tuning. */
   learningRate?: number;
+  /** Batch size for tuning. This feature is only available for open
+      source models. */
+  batchSize?: number;
+}
+
+/** Distillation sampling spec for tuning. */
+export declare interface DistillationSamplingSpec {
+  /** The base teacher model that is being distilled. See [Supported
+       models](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/tuning#supported_models). */
+  baseTeacherModel?: string;
+  /** The resource name of the Tuned teacher model. Format:
+      `projects/{project}/locations/{location}/models/{model}`. */
+  tunedTeacherModelSource?: string;
+  /** Cloud Storage path to file containing validation dataset for distillation.
+     The dataset must be formatted as a JSONL file. */
+  validationDatasetUri?: string;
+  /** Cloud Storage path to file containing prompt dataset for distillation.
+      The dataset must be formatted as a JSONL file. */
+  promptDatasetUri?: string;
+  /** Hyperparameters for distillation tuning. */
+  hyperparameters?: DistillationHyperParameters;
 }
 
 /** Distillation tuning spec for tuning. */
 export declare interface DistillationSpec {
-  /** The GCS URI of the prompt dataset to use during distillation. */
+  /** Optional. Cloud Storage path to file containing prompt dataset for distillation. The dataset must be formatted as a JSONL file. */
   promptDatasetUri?: string;
   /** The base teacher model that is being distilled. See [Supported models](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/tuning#supported_models). */
   baseTeacherModel?: string;
@@ -4810,7 +4866,7 @@ export declare interface DistillationSpec {
   tunedTeacherModelSource?: string;
   /** Optional. Cloud Storage path to file containing validation dataset for tuning. The dataset must be formatted as a JSONL file. */
   validationDatasetUri?: string;
-  /** Tuning mode for tuning. */
+  /** Optional. Specifies the tuning mode for distillation (sft part). This feature is only available for open source models. */
   tuningMode?: TuningMode;
 }
 
@@ -5166,10 +5222,14 @@ export declare interface VeoHyperParameters {
   epochCount?: string;
   /** Optional. Multiplier for adjusting the default learning rate. */
   learningRateMultiplier?: number;
-  /** Optional. The tuning task. Either I2V or T2V. */
+  /** The tuning task for Veo. */
   tuningTask?: TuningTask;
   /** Optional. The ratio of Google internal dataset to use in the training mixture, in range of `[0, 1)`. If `0.2`, it means 20% of Google internal dataset and 80% of user dataset will be used for training. If not set, the default value is 0.1. */
   veoDataMixtureRatio?: number;
+  /** Optional. The adapter size for LoRA tuning. */
+  adapterSize?: AdapterSize;
+  /** The speed of the tuning job. Only supported for Veo 3.0 models. */
+  tuningSpeed?: TuningSpeed;
 }
 
 /** Tuning Spec for Veo Model Tuning. This data type is not supported in Gemini API. */
@@ -5182,22 +5242,24 @@ export declare interface VeoTuningSpec {
   validationDatasetUri?: string;
 }
 
-/** Spec for creating a distilled dataset in Vertex Dataset. This data type is not supported in Gemini API. */
-export declare interface DistillationSamplingSpec {
-  /** Optional. The base teacher model that is being distilled. See [Supported models](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/tuning#supported_models). */
-  baseTeacherModel?: string;
-  /** Optional. The resource name of the Tuned teacher model. Format: `projects/{project}/locations/{location}/models/{model}`. */
-  tunedTeacherModelSource?: string;
-  /** Optional. Cloud Storage path to file containing validation dataset for distillation. The dataset must be formatted as a JSONL file. */
-  validationDatasetUri?: string;
-}
-
 /** Tuning job metadata. This data type is not supported in Gemini API. */
 export declare interface TuningJobMetadata {
   /** Output only. The number of epochs that have been completed. */
   completedEpochCount?: string;
   /** Output only. The number of steps that have been completed. Set for Multi-Step RL. */
   completedStepCount?: string;
+}
+
+/** Tuning Spec for Veo LoRA Model Tuning. This data type is not supported in Gemini API. */
+export declare interface VeoLoraTuningSpec {
+  /** Optional. Hyperparameters for Veo LoRA. */
+  hyperParameters?: VeoHyperParameters;
+  /** Required. Training dataset used for tuning. The dataset can be specified as either a Cloud Storage path to a JSONL file or as the resource name of a Vertex Multimodal Dataset. */
+  trainingDatasetUri?: string;
+  /** Optional. Validation dataset used for tuning. The dataset can be specified as either a Cloud Storage path to a JSONL file or as the resource name of a Vertex Multimodal Dataset. */
+  validationDatasetUri?: string;
+  /** Optional. The orientation of the video. Defaults to LANDSCAPE. */
+  videoOrientation?: VideoOrientation;
 }
 
 /** A tuning job. */
@@ -5260,10 +5322,11 @@ export declare interface TuningJob {
   tuningJobState?: TuningJobState;
   /** Tuning Spec for Veo Tuning. */
   veoTuningSpec?: VeoTuningSpec;
-  /** Optional. Spec for creating a distillation dataset. */
-  distillationSamplingSpec?: DistillationSamplingSpec;
   /** Output only. Tuning Job metadata. */
   tuningJobMetadata?: TuningJobMetadata;
+  /** Tuning Spec for Veo LoRA Tuning. */
+  veoLoraTuningSpec?: VeoLoraTuningSpec;
+  distillationSamplingSpec?: DistillationSamplingSpec;
 }
 
 /** Configuration for the list tuning jobs method. */
@@ -5767,22 +5830,21 @@ export declare interface CreateFileSearchStoreParameters {
 
 /** A collection of Documents. */
 export declare interface FileSearchStore {
-  /** The resource name of the FileSearchStore. Example: `fileSearchStores/my-file-search-store-123` */
+  /** Output only. Immutable. Identifier. The `FileSearchStore` resource name. It is an ID (name excluding the "fileSearchStores/" prefix) that can contain up to 40 characters that are lowercase alphanumeric or dashes (-). It is output only. The unique name will be derived from `display_name` along with a 12 character random suffix. Example: `fileSearchStores/my-awesome-file-search-store-123a456b789c` If `display_name` is not provided, the name will be randomly generated. */
   name?: string;
-  /** The human-readable display name for the FileSearchStore. */
+  /** Optional. The human-readable display name for the `FileSearchStore`. The display name must be no more than 512 characters in length, including spaces. Example: "Docs on Semantic Retriever". */
   displayName?: string;
-  /** The Timestamp of when the FileSearchStore was created. */
+  /** Output only. The Timestamp of when the `FileSearchStore` was created. */
   createTime?: string;
-  /** The Timestamp of when the FileSearchStore was last updated. */
+  /** Output only. The Timestamp of when the `FileSearchStore` was last updated. */
   updateTime?: string;
-  /** The number of documents in the FileSearchStore that are active and ready for retrieval. */
+  /** Output only. The number of documents in the `FileSearchStore` that are active and ready for retrieval. */
   activeDocumentsCount?: string;
-  /** The number of documents in the FileSearchStore that are being processed. */
+  /** Output only. The number of documents in the `FileSearchStore` that are being processed. */
   pendingDocumentsCount?: string;
-  /** The number of documents in the FileSearchStore that have failed processing. */
+  /** Output only. The number of documents in the `FileSearchStore` that have failed processing. */
   failedDocumentsCount?: string;
-  /** The size of raw bytes ingested into the FileSearchStore. This is the
-      total size of all the documents in the FileSearchStore. */
+  /** Output only. The size of raw bytes ingested into the `FileSearchStore`. This is the total size of all the documents in the `FileSearchStore`. */
   sizeBytes?: string;
   /** The embedding model used by the FileSearchStore. */
   embeddingModel?: string;

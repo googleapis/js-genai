@@ -672,6 +672,368 @@ export function createTuningJobParametersPrivateToVertex(
   return toObject;
 }
 
+export function distillationHyperParametersFromVertex(
+  fromObject: types.DistillationHyperParameters,
+  rootObject?: unknown,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromAdapterSize = common.getValueByPath(fromObject, ['adapterSize']);
+  if (fromAdapterSize != null) {
+    common.setValueByPath(toObject, ['adapterSize'], fromAdapterSize);
+  }
+
+  const fromEpochCount = common.getValueByPath(fromObject, ['epochCount']);
+  if (fromEpochCount != null) {
+    common.setValueByPath(toObject, ['epochCount'], fromEpochCount);
+  }
+
+  const fromLearningRateMultiplier = common.getValueByPath(fromObject, [
+    'learningRateMultiplier',
+  ]);
+  if (fromLearningRateMultiplier != null) {
+    common.setValueByPath(
+      toObject,
+      ['learningRateMultiplier'],
+      fromLearningRateMultiplier,
+    );
+  }
+
+  const fromGenerationConfig = common.getValueByPath(fromObject, [
+    'generationConfig',
+  ]);
+  if (fromGenerationConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['generationConfig'],
+      generationConfigFromVertex(fromGenerationConfig, rootObject),
+    );
+  }
+
+  const fromLearningRate = common.getValueByPath(fromObject, ['learningRate']);
+  if (fromLearningRate != null) {
+    common.setValueByPath(toObject, ['learningRate'], fromLearningRate);
+  }
+
+  const fromBatchSize = common.getValueByPath(fromObject, ['batchSize']);
+  if (fromBatchSize != null) {
+    common.setValueByPath(toObject, ['batchSize'], fromBatchSize);
+  }
+
+  return toObject;
+}
+
+export function distillationSamplingSpecFromVertex(
+  fromObject: types.DistillationSamplingSpec,
+  rootObject?: unknown,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromBaseTeacherModel = common.getValueByPath(fromObject, [
+    'baseTeacherModel',
+  ]);
+  if (fromBaseTeacherModel != null) {
+    common.setValueByPath(toObject, ['baseTeacherModel'], fromBaseTeacherModel);
+  }
+
+  const fromTunedTeacherModelSource = common.getValueByPath(fromObject, [
+    'tunedTeacherModelSource',
+  ]);
+  if (fromTunedTeacherModelSource != null) {
+    common.setValueByPath(
+      toObject,
+      ['tunedTeacherModelSource'],
+      fromTunedTeacherModelSource,
+    );
+  }
+
+  const fromValidationDatasetUri = common.getValueByPath(fromObject, [
+    'validationDatasetUri',
+  ]);
+  if (fromValidationDatasetUri != null) {
+    common.setValueByPath(
+      toObject,
+      ['validationDatasetUri'],
+      fromValidationDatasetUri,
+    );
+  }
+
+  const fromPromptDatasetUri = common.getValueByPath(fromObject, [
+    'promptDatasetUri',
+  ]);
+  if (fromPromptDatasetUri != null) {
+    common.setValueByPath(toObject, ['promptDatasetUri'], fromPromptDatasetUri);
+  }
+
+  const fromHyperparameters = common.getValueByPath(fromObject, [
+    'hyperparameters',
+  ]);
+  if (fromHyperparameters != null) {
+    common.setValueByPath(
+      toObject,
+      ['hyperparameters'],
+      distillationHyperParametersFromVertex(fromHyperparameters, rootObject),
+    );
+  }
+
+  return toObject;
+}
+
+export function distillationSpecFromVertex(
+  fromObject: types.DistillationSpec,
+  rootObject?: unknown,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromPromptDatasetUri = common.getValueByPath(fromObject, [
+    'promptDatasetUri',
+  ]);
+  if (fromPromptDatasetUri != null) {
+    common.setValueByPath(toObject, ['promptDatasetUri'], fromPromptDatasetUri);
+  }
+
+  const fromBaseTeacherModel = common.getValueByPath(fromObject, [
+    'baseTeacherModel',
+  ]);
+  if (fromBaseTeacherModel != null) {
+    common.setValueByPath(toObject, ['baseTeacherModel'], fromBaseTeacherModel);
+  }
+
+  const fromHyperParameters = common.getValueByPath(fromObject, [
+    'hyperParameters',
+  ]);
+  if (fromHyperParameters != null) {
+    common.setValueByPath(
+      toObject,
+      ['hyperParameters'],
+      distillationHyperParametersFromVertex(fromHyperParameters, rootObject),
+    );
+  }
+
+  const fromPipelineRootDirectory = common.getValueByPath(fromObject, [
+    'pipelineRootDirectory',
+  ]);
+  if (fromPipelineRootDirectory != null) {
+    common.setValueByPath(
+      toObject,
+      ['pipelineRootDirectory'],
+      fromPipelineRootDirectory,
+    );
+  }
+
+  const fromStudentModel = common.getValueByPath(fromObject, ['studentModel']);
+  if (fromStudentModel != null) {
+    common.setValueByPath(toObject, ['studentModel'], fromStudentModel);
+  }
+
+  const fromTrainingDatasetUri = common.getValueByPath(fromObject, [
+    'trainingDatasetUri',
+  ]);
+  if (fromTrainingDatasetUri != null) {
+    common.setValueByPath(
+      toObject,
+      ['trainingDatasetUri'],
+      fromTrainingDatasetUri,
+    );
+  }
+
+  const fromTunedTeacherModelSource = common.getValueByPath(fromObject, [
+    'tunedTeacherModelSource',
+  ]);
+  if (fromTunedTeacherModelSource != null) {
+    common.setValueByPath(
+      toObject,
+      ['tunedTeacherModelSource'],
+      fromTunedTeacherModelSource,
+    );
+  }
+
+  const fromValidationDatasetUri = common.getValueByPath(fromObject, [
+    'validationDatasetUri',
+  ]);
+  if (fromValidationDatasetUri != null) {
+    common.setValueByPath(
+      toObject,
+      ['validationDatasetUri'],
+      fromValidationDatasetUri,
+    );
+  }
+
+  const fromTuningMode = common.getValueByPath(fromObject, ['tuningMode']);
+  if (fromTuningMode != null) {
+    common.setValueByPath(toObject, ['tuningMode'], fromTuningMode);
+  }
+
+  return toObject;
+}
+
+export function generationConfigFromVertex(
+  fromObject: types.GenerationConfig,
+  _rootObject?: unknown,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromModelSelectionConfig = common.getValueByPath(fromObject, [
+    'modelConfig',
+  ]);
+  if (fromModelSelectionConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['modelSelectionConfig'],
+      fromModelSelectionConfig,
+    );
+  }
+
+  const fromResponseJsonSchema = common.getValueByPath(fromObject, [
+    'responseJsonSchema',
+  ]);
+  if (fromResponseJsonSchema != null) {
+    common.setValueByPath(
+      toObject,
+      ['responseJsonSchema'],
+      fromResponseJsonSchema,
+    );
+  }
+
+  const fromAudioTimestamp = common.getValueByPath(fromObject, [
+    'audioTimestamp',
+  ]);
+  if (fromAudioTimestamp != null) {
+    common.setValueByPath(toObject, ['audioTimestamp'], fromAudioTimestamp);
+  }
+
+  const fromCandidateCount = common.getValueByPath(fromObject, [
+    'candidateCount',
+  ]);
+  if (fromCandidateCount != null) {
+    common.setValueByPath(toObject, ['candidateCount'], fromCandidateCount);
+  }
+
+  const fromEnableAffectiveDialog = common.getValueByPath(fromObject, [
+    'enableAffectiveDialog',
+  ]);
+  if (fromEnableAffectiveDialog != null) {
+    common.setValueByPath(
+      toObject,
+      ['enableAffectiveDialog'],
+      fromEnableAffectiveDialog,
+    );
+  }
+
+  const fromFrequencyPenalty = common.getValueByPath(fromObject, [
+    'frequencyPenalty',
+  ]);
+  if (fromFrequencyPenalty != null) {
+    common.setValueByPath(toObject, ['frequencyPenalty'], fromFrequencyPenalty);
+  }
+
+  const fromLogprobs = common.getValueByPath(fromObject, ['logprobs']);
+  if (fromLogprobs != null) {
+    common.setValueByPath(toObject, ['logprobs'], fromLogprobs);
+  }
+
+  const fromMaxOutputTokens = common.getValueByPath(fromObject, [
+    'maxOutputTokens',
+  ]);
+  if (fromMaxOutputTokens != null) {
+    common.setValueByPath(toObject, ['maxOutputTokens'], fromMaxOutputTokens);
+  }
+
+  const fromMediaResolution = common.getValueByPath(fromObject, [
+    'mediaResolution',
+  ]);
+  if (fromMediaResolution != null) {
+    common.setValueByPath(toObject, ['mediaResolution'], fromMediaResolution);
+  }
+
+  const fromPresencePenalty = common.getValueByPath(fromObject, [
+    'presencePenalty',
+  ]);
+  if (fromPresencePenalty != null) {
+    common.setValueByPath(toObject, ['presencePenalty'], fromPresencePenalty);
+  }
+
+  const fromResponseLogprobs = common.getValueByPath(fromObject, [
+    'responseLogprobs',
+  ]);
+  if (fromResponseLogprobs != null) {
+    common.setValueByPath(toObject, ['responseLogprobs'], fromResponseLogprobs);
+  }
+
+  const fromResponseMimeType = common.getValueByPath(fromObject, [
+    'responseMimeType',
+  ]);
+  if (fromResponseMimeType != null) {
+    common.setValueByPath(toObject, ['responseMimeType'], fromResponseMimeType);
+  }
+
+  const fromResponseModalities = common.getValueByPath(fromObject, [
+    'responseModalities',
+  ]);
+  if (fromResponseModalities != null) {
+    common.setValueByPath(
+      toObject,
+      ['responseModalities'],
+      fromResponseModalities,
+    );
+  }
+
+  const fromResponseSchema = common.getValueByPath(fromObject, [
+    'responseSchema',
+  ]);
+  if (fromResponseSchema != null) {
+    common.setValueByPath(toObject, ['responseSchema'], fromResponseSchema);
+  }
+
+  const fromRoutingConfig = common.getValueByPath(fromObject, [
+    'routingConfig',
+  ]);
+  if (fromRoutingConfig != null) {
+    common.setValueByPath(toObject, ['routingConfig'], fromRoutingConfig);
+  }
+
+  const fromSeed = common.getValueByPath(fromObject, ['seed']);
+  if (fromSeed != null) {
+    common.setValueByPath(toObject, ['seed'], fromSeed);
+  }
+
+  const fromSpeechConfig = common.getValueByPath(fromObject, ['speechConfig']);
+  if (fromSpeechConfig != null) {
+    common.setValueByPath(toObject, ['speechConfig'], fromSpeechConfig);
+  }
+
+  const fromStopSequences = common.getValueByPath(fromObject, [
+    'stopSequences',
+  ]);
+  if (fromStopSequences != null) {
+    common.setValueByPath(toObject, ['stopSequences'], fromStopSequences);
+  }
+
+  const fromTemperature = common.getValueByPath(fromObject, ['temperature']);
+  if (fromTemperature != null) {
+    common.setValueByPath(toObject, ['temperature'], fromTemperature);
+  }
+
+  const fromThinkingConfig = common.getValueByPath(fromObject, [
+    'thinkingConfig',
+  ]);
+  if (fromThinkingConfig != null) {
+    common.setValueByPath(toObject, ['thinkingConfig'], fromThinkingConfig);
+  }
+
+  const fromTopK = common.getValueByPath(fromObject, ['topK']);
+  if (fromTopK != null) {
+    common.setValueByPath(toObject, ['topK'], fromTopK);
+  }
+
+  const fromTopP = common.getValueByPath(fromObject, ['topP']);
+  if (fromTopP != null) {
+    common.setValueByPath(toObject, ['topP'], fromTopP);
+  }
+
+  return toObject;
+}
+
 export function getTuningJobParametersToMldev(
   fromObject: types.GetTuningJobParameters,
   _rootObject?: unknown,
@@ -992,7 +1354,7 @@ export function tuningJobFromMldev(
 
 export function tuningJobFromVertex(
   fromObject: types.TuningJob,
-  _rootObject?: unknown,
+  rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1086,7 +1448,11 @@ export function tuningJobFromVertex(
     'distillationSpec',
   ]);
   if (fromDistillationSpec != null) {
-    common.setValueByPath(toObject, ['distillationSpec'], fromDistillationSpec);
+    common.setValueByPath(
+      toObject,
+      ['distillationSpec'],
+      distillationSpecFromVertex(fromDistillationSpec, rootObject),
+    );
   }
 
   const fromTuningDataStats = common.getValueByPath(fromObject, [
@@ -1197,17 +1563,6 @@ export function tuningJobFromVertex(
     common.setValueByPath(toObject, ['veoTuningSpec'], fromVeoTuningSpec);
   }
 
-  const fromDistillationSamplingSpec = common.getValueByPath(fromObject, [
-    'distillationSamplingSpec',
-  ]);
-  if (fromDistillationSamplingSpec != null) {
-    common.setValueByPath(
-      toObject,
-      ['distillationSamplingSpec'],
-      fromDistillationSamplingSpec,
-    );
-  }
-
   const fromTuningJobMetadata = common.getValueByPath(fromObject, [
     'tuningJobMetadata',
   ]);
@@ -1216,6 +1571,31 @@ export function tuningJobFromVertex(
       toObject,
       ['tuningJobMetadata'],
       fromTuningJobMetadata,
+    );
+  }
+
+  const fromVeoLoraTuningSpec = common.getValueByPath(fromObject, [
+    'veoLoraTuningSpec',
+  ]);
+  if (fromVeoLoraTuningSpec != null) {
+    common.setValueByPath(
+      toObject,
+      ['veoLoraTuningSpec'],
+      fromVeoLoraTuningSpec,
+    );
+  }
+
+  const fromDistillationSamplingSpec = common.getValueByPath(fromObject, [
+    'distillationSamplingSpec',
+  ]);
+  if (fromDistillationSamplingSpec != null) {
+    common.setValueByPath(
+      toObject,
+      ['distillationSamplingSpec'],
+      distillationSamplingSpecFromVertex(
+        fromDistillationSamplingSpec,
+        rootObject,
+      ),
     );
   }
 
