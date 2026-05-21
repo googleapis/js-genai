@@ -2,6 +2,16 @@
 
 
 
+## [2.6.0](https://github.com/googleapis/js-genai/compare/v2.5.0...v2.6.0) (2026-05-21)
+
+
+### Features
+
+* add `enable_prompt_injection_detection` for Computer Use feature for the Gemini API. ([f780f3c](https://github.com/googleapis/js-genai/commit/f780f3c6dcbf311b8712a8d2bda2b1cee38d3067))
+* Add budget_exceeded status ([1e97bd0](https://github.com/googleapis/js-genai/commit/1e97bd0ab7791f6140b24d3a4457c097dd2d48a0))
+* Add gemini-3.5-flash ([1e97bd0](https://github.com/googleapis/js-genai/commit/1e97bd0ab7791f6140b24d3a4457c097dd2d48a0))
+* add new fields ([b78eeee](https://github.com/googleapis/js-genai/commit/b78eeee55607797a1bb14d41e648dacab863a7d2))
+
 ## [2.5.0](https://github.com/googleapis/js-genai/compare/v2.4.0...v2.5.0) (2026-05-20)
 
 
