@@ -252,30 +252,6 @@ export enum DynamicRetrievalConfigMode {
   MODE_DYNAMIC = 'MODE_DYNAMIC',
 }
 
-/** Function calling mode. */
-export enum FunctionCallingConfigMode {
-  /**
-   * Unspecified function calling mode. This value should not be used.
-   */
-  MODE_UNSPECIFIED = 'MODE_UNSPECIFIED',
-  /**
-   * Default model behavior, model decides to predict either function calls or natural language response.
-   */
-  AUTO = 'AUTO',
-  /**
-   * Model is constrained to always predicting function calls only. If "allowed_function_names" are set, the predicted function calls will be limited to any one of "allowed_function_names", else the predicted function calls will be any one of the provided "function_declarations".
-   */
-  ANY = 'ANY',
-  /**
-   * Model will not predict any function calls. Model behavior is same as when not passing any function declarations.
-   */
-  NONE = 'NONE',
-  /**
-   * Model is constrained to predict either function calls or natural language response. If "allowed_function_names" are set, the predicted function calls will be limited to any one of "allowed_function_names", else the predicted function calls will be any one of the provided "function_declarations".
-   */
-  VALIDATED = 'VALIDATED',
-}
-
 /** The number of thoughts tokens that the model should generate. */
 export enum ThinkingLevel {
   /**
@@ -422,6 +398,30 @@ export enum HarmBlockThreshold {
    * Turn off the safety filter entirely.
    */
   OFF = 'OFF',
+}
+
+/** Function calling mode. */
+export enum FunctionCallingConfigMode {
+  /**
+   * Unspecified function calling mode. This value should not be used.
+   */
+  MODE_UNSPECIFIED = 'MODE_UNSPECIFIED',
+  /**
+   * Default model behavior, model decides to predict either function calls or natural language response.
+   */
+  AUTO = 'AUTO',
+  /**
+   * Model is constrained to always predicting function calls only. If "allowed_function_names" are set, the predicted function calls will be limited to any one of "allowed_function_names", else the predicted function calls will be any one of the provided "function_declarations".
+   */
+  ANY = 'ANY',
+  /**
+   * Model will not predict any function calls. Model behavior is same as when not passing any function declarations.
+   */
+  NONE = 'NONE',
+  /**
+   * Model is constrained to predict either function calls or natural language response. If "allowed_function_names" are set, the predicted function calls will be limited to any one of "allowed_function_names", else the predicted function calls will be any one of the provided "function_declarations".
+   */
+  VALIDATED = 'VALIDATED',
 }
 
 /** Output only. The reason why the model stopped generating tokens.
@@ -1713,10 +1713,9 @@ export declare interface PartialArg {
   willContinue?: boolean;
 }
 
-/** A function call. */
+/** A predicted FunctionCall returned from the model that contains a string representing the FunctionDeclaration.name and a structured JSON object containing the parameters and their values. */
 export declare interface FunctionCall {
-  /** The unique id of the function call. If populated, the client to execute the
-   `function_call` and return the response with the matching `id`. */
+  /** Optional. The unique id of the function call. If populated, the client to execute the `function_call` and return the response with the matching `id`. */
   id?: string;
   /** Optional. The function parameters and values in JSON object format. See FunctionDeclaration.parameters for parameter details. */
   args?: Record<string, unknown>;
@@ -2511,50 +2510,6 @@ export declare interface Tool {
   mcpServers?: McpServer[];
 }
 
-/** An object that represents a latitude/longitude pair.
-
-This is expressed as a pair of doubles to represent degrees latitude and
-degrees longitude. Unless specified otherwise, this object must conform to the
-<a href="https://en.wikipedia.org/wiki/World_Geodetic_System#1984_version">
-WGS84 standard</a>. Values must be within normalized ranges. */
-export declare interface LatLng {
-  /** The latitude in degrees. It must be in the range [-90.0, +90.0]. */
-  latitude?: number;
-  /** The longitude in degrees. It must be in the range [-180.0, +180.0] */
-  longitude?: number;
-}
-
-/** Retrieval config.
- */
-export declare interface RetrievalConfig {
-  /** Optional. The location of the user. */
-  latLng?: LatLng;
-  /** The language code of the user. */
-  languageCode?: string;
-}
-
-/** Function calling config. */
-export declare interface FunctionCallingConfig {
-  /** Optional. Function names to call. Only set when the Mode is ANY. Function names should match FunctionDeclaration.name. With mode set to ANY, model will predict a function call from the set of function names provided. */
-  allowedFunctionNames?: string[];
-  /** Optional. Function calling mode. */
-  mode?: FunctionCallingConfigMode;
-  /** Optional. When set to true, arguments of a single function call will be streamed out in multiple parts/contents/responses. Partial parameter results will be returned in the `FunctionCall.partial_args` field. This field is not supported in Gemini API. */
-  streamFunctionCallArguments?: boolean;
-}
-
-/** Tool config.
-
-This config is shared for all tools provided in the request. */
-export declare interface ToolConfig {
-  /** Optional. Retrieval config. */
-  retrievalConfig?: RetrievalConfig;
-  /** Optional. Function calling config. */
-  functionCallingConfig?: FunctionCallingConfig;
-  /** If true, the API response will include the server-side tool calls and responses within the `Content` message. This allows clients to observe the server's tool invocations. */
-  includeServerSideToolInvocations?: boolean;
-}
-
 /** The configuration for the replicated voice to use. */
 export declare interface ReplicatedVoiceConfig {
   /** The mimetype of the voice sample. The only currently supported
@@ -2706,6 +2661,42 @@ export declare interface SafetySetting {
   method?: HarmBlockMethod;
   /** Required. The threshold for blocking content. If the harm probability exceeds this threshold, the content will be blocked. */
   threshold?: HarmBlockThreshold;
+}
+
+/** An object that represents a latitude/longitude pair. This is expressed as a pair of doubles to represent degrees latitude and degrees longitude. Unless specified otherwise, this object must conform to the WGS84 standard. Values must be within normalized ranges. */
+export declare interface LatLng {
+  /** The latitude in degrees. It must be in the range [-90.0, +90.0]. */
+  latitude?: number;
+  /** The longitude in degrees. It must be in the range [-180.0, +180.0]. */
+  longitude?: number;
+}
+
+/** Retrieval config. */
+export declare interface RetrievalConfig {
+  /** The location of the user. */
+  latLng?: LatLng;
+  /** The language code of the user. */
+  languageCode?: string;
+}
+
+/** Function calling config. */
+export declare interface FunctionCallingConfig {
+  /** Optional. Function names to call. Only set when the Mode is ANY. Function names should match FunctionDeclaration.name. With mode set to ANY, model will predict a function call from the set of function names provided. */
+  allowedFunctionNames?: string[];
+  /** Optional. Function calling mode. */
+  mode?: FunctionCallingConfigMode;
+  /** Optional. When set to true, arguments of a single function call will be streamed out in multiple parts/contents/responses. Partial parameter results will be returned in the `FunctionCall.partial_args` field. This field is not supported in Gemini API. */
+  streamFunctionCallArguments?: boolean;
+}
+
+/** Tool config. This config is shared for all tools provided in the request. */
+export declare interface ToolConfig {
+  /** Optional. Retrieval config. */
+  retrievalConfig?: RetrievalConfig;
+  /** Optional. Function calling config. */
+  functionCallingConfig?: FunctionCallingConfig;
+  /** Optional. If true, the API response will include the server-side tool calls and responses within the `Content` message. This allows clients to observe the server's tool interactions. This field is not supported in Vertex AI. */
+  includeServerSideToolInvocations?: boolean;
 }
 
 /** Configuration for Model Armor. Model Armor is a Google Cloud service that provides safety and security filtering for prompts and responses. It helps protect your AI applications from risks such as harmful content, sensitive data leakage, and prompt injection attacks. This data type is not supported in Gemini API. */
