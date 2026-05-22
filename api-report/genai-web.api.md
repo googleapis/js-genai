@@ -196,6 +196,14 @@ export interface AutomaticFunctionCallingConfig {
 }
 
 // @public
+export interface AutoraterConfig {
+    autoraterModel?: string;
+    flipEnabled?: boolean;
+    generationConfig?: GenerationConfig;
+    samplingCount?: number;
+}
+
+// @public
 export interface AvatarConfig {
     audioBitrateBps?: number;
     avatarName?: string;
@@ -457,6 +465,19 @@ export interface CompletionStats {
     incompleteCount?: string;
     successfulCount?: string;
     successfulForecastPointCount?: string;
+}
+
+// @public
+export interface CompositeReinforcementTuningRewardConfig {
+    // (undocumented)
+    weightedRewardConfigs?: CompositeReinforcementTuningRewardConfigWeightedRewardConfig[];
+}
+
+// @public
+export interface CompositeReinforcementTuningRewardConfigWeightedRewardConfig {
+    // (undocumented)
+    rewardConfig?: SingleReinforcementTuningRewardConfig;
+    weight?: number;
 }
 
 // @public
@@ -724,18 +745,24 @@ export interface CreateTuningJobConfig {
     baseTeacherModel?: string;
     batchSize?: number;
     beta?: number;
+    checkpointInterval?: number;
+    compositeRewardConfig?: CompositeReinforcementTuningRewardConfig;
     customBaseModel?: string;
     description?: string;
     encryptionSpec?: EncryptionSpec;
     epochCount?: number;
+    evaluateInterval?: number;
     exportLastCheckpointOnly?: boolean;
     httpOptions?: HttpOptions;
     labels?: Record<string, string>;
     learningRate?: number;
     learningRateMultiplier?: number;
+    maxOutputTokens?: number;
     method?: TuningMethod;
     outputUri?: string;
     preTunedModelCheckpointId?: string;
+    rewardConfig?: SingleReinforcementTuningRewardConfig;
+    samplesPerPrompt?: number;
     sftLossWeightMultiplier?: number;
     tunedModelDisplayName?: string;
     tunedTeacherModelSource?: string;
@@ -3259,6 +3286,11 @@ export class RegisterFilesResponse {
 }
 
 // @public
+export interface ReinforcementTuningAutoraterScorer {
+    autoraterConfig?: AutoraterConfig;
+}
+
+// @public
 export interface ReplayFile {
     // (undocumented)
     interactions?: ReplayInteraction[];
@@ -3524,6 +3556,12 @@ export function setDefaultBaseUrls(baseUrlParams: BaseUrlParameters): void;
 export class SingleEmbedContentResponse {
     embedding?: ContentEmbedding;
     tokenCount?: string;
+}
+
+// @public
+export interface SingleReinforcementTuningRewardConfig {
+    // (undocumented)
+    autoraterScorer?: ReinforcementTuningAutoraterScorer;
 }
 
 // @public
@@ -3900,6 +3938,7 @@ export enum TuningJobState {
 export enum TuningMethod {
     DISTILLATION = "DISTILLATION",
     PREFERENCE_TUNING = "PREFERENCE_TUNING",
+    REINFORCEMENT_TUNING = "REINFORCEMENT_TUNING",
     SUPERVISED_FINE_TUNING = "SUPERVISED_FINE_TUNING"
 }
 

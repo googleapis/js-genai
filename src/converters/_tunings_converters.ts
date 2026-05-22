@@ -220,6 +220,44 @@ export function createTuningJobConfigToMldev(
     );
   }
 
+  if (common.getValueByPath(fromObject, ['rewardConfig']) !== undefined) {
+    throw new Error(
+      'rewardConfig parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['compositeRewardConfig']) !== undefined
+  ) {
+    throw new Error(
+      'compositeRewardConfig parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
+  }
+
+  if (common.getValueByPath(fromObject, ['samplesPerPrompt']) !== undefined) {
+    throw new Error(
+      'samplesPerPrompt parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
+  }
+
+  if (common.getValueByPath(fromObject, ['evaluateInterval']) !== undefined) {
+    throw new Error(
+      'evaluateInterval parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
+  }
+
+  if (common.getValueByPath(fromObject, ['checkpointInterval']) !== undefined) {
+    throw new Error(
+      'checkpointInterval parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
+  }
+
+  if (common.getValueByPath(fromObject, ['maxOutputTokens']) !== undefined) {
+    throw new Error(
+      'maxOutputTokens parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
+  }
+
   return toObject;
 }
 
@@ -267,6 +305,17 @@ export function createTuningJobConfigToVertex(
       common.setValueByPath(
         parentObject,
         ['distillationSpec'],
+        tuningValidationDatasetToVertex(fromValidationDataset, rootObject),
+      );
+    }
+  } else if (discriminatorValidationDataset === 'REINFORCEMENT_TUNING') {
+    const fromValidationDataset = common.getValueByPath(fromObject, [
+      'validationDataset',
+    ]);
+    if (parentObject !== undefined && fromValidationDataset != null) {
+      common.setValueByPath(
+        parentObject,
+        ['reinforcementTuningSpec'],
         tuningValidationDatasetToVertex(fromValidationDataset, rootObject),
       );
     }
@@ -322,6 +371,15 @@ export function createTuningJobConfigToVertex(
         fromEpochCount,
       );
     }
+  } else if (discriminatorEpochCount === 'REINFORCEMENT_TUNING') {
+    const fromEpochCount = common.getValueByPath(fromObject, ['epochCount']);
+    if (parentObject !== undefined && fromEpochCount != null) {
+      common.setValueByPath(
+        parentObject,
+        ['reinforcementTuningSpec', 'hyperParameters', 'epochCount'],
+        fromEpochCount,
+      );
+    }
   }
 
   let discriminatorLearningRateMultiplier = common.getValueByPath(rootObject, [
@@ -365,6 +423,21 @@ export function createTuningJobConfigToVertex(
       common.setValueByPath(
         parentObject,
         ['distillationSpec', 'hyperParameters', 'learningRateMultiplier'],
+        fromLearningRateMultiplier,
+      );
+    }
+  } else if (discriminatorLearningRateMultiplier === 'REINFORCEMENT_TUNING') {
+    const fromLearningRateMultiplier = common.getValueByPath(fromObject, [
+      'learningRateMultiplier',
+    ]);
+    if (parentObject !== undefined && fromLearningRateMultiplier != null) {
+      common.setValueByPath(
+        parentObject,
+        [
+          'reinforcementTuningSpec',
+          'hyperParameters',
+          'learningRateMultiplier',
+        ],
         fromLearningRateMultiplier,
       );
     }
@@ -446,6 +519,15 @@ export function createTuningJobConfigToVertex(
         fromAdapterSize,
       );
     }
+  } else if (discriminatorAdapterSize === 'REINFORCEMENT_TUNING') {
+    const fromAdapterSize = common.getValueByPath(fromObject, ['adapterSize']);
+    if (parentObject !== undefined && fromAdapterSize != null) {
+      common.setValueByPath(
+        parentObject,
+        ['reinforcementTuningSpec', 'hyperParameters', 'adapterSize'],
+        fromAdapterSize,
+      );
+    }
   }
 
   let discriminatorTuningMode = common.getValueByPath(rootObject, [
@@ -508,6 +590,15 @@ export function createTuningJobConfigToVertex(
       common.setValueByPath(
         parentObject,
         ['distillationSpec', 'hyperParameters', 'batchSize'],
+        fromBatchSize,
+      );
+    }
+  } else if (discriminatorBatchSize === 'REINFORCEMENT_TUNING') {
+    const fromBatchSize = common.getValueByPath(fromObject, ['batchSize']);
+    if (parentObject !== undefined && fromBatchSize != null) {
+      common.setValueByPath(
+        parentObject,
+        ['reinforcementTuningSpec', 'hyperParameters', 'batchSize'],
         fromBatchSize,
       );
     }
@@ -601,6 +692,70 @@ export function createTuningJobConfigToVertex(
   ]);
   if (parentObject !== undefined && fromEncryptionSpec != null) {
     common.setValueByPath(parentObject, ['encryptionSpec'], fromEncryptionSpec);
+  }
+
+  const fromRewardConfig = common.getValueByPath(fromObject, ['rewardConfig']);
+  if (parentObject !== undefined && fromRewardConfig != null) {
+    common.setValueByPath(
+      parentObject,
+      ['reinforcementTuningSpec', 'singleRewardConfig'],
+      fromRewardConfig,
+    );
+  }
+
+  const fromCompositeRewardConfig = common.getValueByPath(fromObject, [
+    'compositeRewardConfig',
+  ]);
+  if (parentObject !== undefined && fromCompositeRewardConfig != null) {
+    common.setValueByPath(
+      parentObject,
+      ['reinforcementTuningSpec', 'compositeRewardConfig'],
+      fromCompositeRewardConfig,
+    );
+  }
+
+  const fromSamplesPerPrompt = common.getValueByPath(fromObject, [
+    'samplesPerPrompt',
+  ]);
+  if (parentObject !== undefined && fromSamplesPerPrompt != null) {
+    common.setValueByPath(
+      parentObject,
+      ['reinforcementTuningSpec', 'hyperParameters', 'samplesPerPrompt'],
+      fromSamplesPerPrompt,
+    );
+  }
+
+  const fromEvaluateInterval = common.getValueByPath(fromObject, [
+    'evaluateInterval',
+  ]);
+  if (parentObject !== undefined && fromEvaluateInterval != null) {
+    common.setValueByPath(
+      parentObject,
+      ['reinforcementTuningSpec', 'hyperParameters', 'evaluateInterval'],
+      fromEvaluateInterval,
+    );
+  }
+
+  const fromCheckpointInterval = common.getValueByPath(fromObject, [
+    'checkpointInterval',
+  ]);
+  if (parentObject !== undefined && fromCheckpointInterval != null) {
+    common.setValueByPath(
+      parentObject,
+      ['reinforcementTuningSpec', 'hyperParameters', 'checkpointInterval'],
+      fromCheckpointInterval,
+    );
+  }
+
+  const fromMaxOutputTokens = common.getValueByPath(fromObject, [
+    'maxOutputTokens',
+  ]);
+  if (parentObject !== undefined && fromMaxOutputTokens != null) {
+    common.setValueByPath(
+      parentObject,
+      ['reinforcementTuningSpec', 'hyperParameters', 'maxOutputTokens'],
+      fromMaxOutputTokens,
+    );
   }
 
   return toObject;
@@ -1229,6 +1384,15 @@ export function tuningDatasetToVertex(
         fromGcsUri,
       );
     }
+  } else if (discriminatorGcsUri === 'REINFORCEMENT_TUNING') {
+    const fromGcsUri = common.getValueByPath(fromObject, ['gcsUri']);
+    if (parentObject !== undefined && fromGcsUri != null) {
+      common.setValueByPath(
+        parentObject,
+        ['reinforcementTuningSpec', 'trainingDatasetUri'],
+        fromGcsUri,
+      );
+    }
   }
 
   let discriminatorVertexDatasetResource = common.getValueByPath(rootObject, [
@@ -1268,6 +1432,17 @@ export function tuningDatasetToVertex(
       common.setValueByPath(
         parentObject,
         ['distillationSpec', 'promptDatasetUri'],
+        fromVertexDatasetResource,
+      );
+    }
+  } else if (discriminatorVertexDatasetResource === 'REINFORCEMENT_TUNING') {
+    const fromVertexDatasetResource = common.getValueByPath(fromObject, [
+      'vertexDatasetResource',
+    ]);
+    if (parentObject !== undefined && fromVertexDatasetResource != null) {
+      common.setValueByPath(
+        parentObject,
+        ['reinforcementTuningSpec', 'trainingDatasetUri'],
         fromVertexDatasetResource,
       );
     }

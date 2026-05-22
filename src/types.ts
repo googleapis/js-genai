@@ -1256,6 +1256,10 @@ export enum TuningMethod {
    * Distillation tuning.
    */
   DISTILLATION = 'DISTILLATION',
+  /**
+   * Reinforcement tuning.
+   */
+  REINFORCEMENT_TUNING = 'REINFORCEMENT_TUNING',
 }
 
 /** State for the lifecycle of a File. */
@@ -5423,6 +5427,55 @@ export declare interface TuningValidationDataset {
   vertexDatasetResource?: string;
 }
 
+/** Autorater config used for evaluation. */
+export declare interface AutoraterConfig {
+  /** Number of samples for each instance in the dataset.
+  If not specified, the default is 4. Minimum value is 1, maximum value
+  is 32. */
+  samplingCount?: number;
+  /** Optional. Default is true. Whether to flip the candidate and baseline
+  responses. This is only applicable to the pairwise metric. If enabled, also
+  provide PairwiseMetricSpec.candidate_response_field_name and
+  PairwiseMetricSpec.baseline_response_field_name. When rendering
+  PairwiseMetricSpec.metric_prompt_template, the candidate and baseline
+  fields will be flipped for half of the samples to reduce bias. */
+  flipEnabled?: boolean;
+  /** The fully qualified name of the publisher model or tuned autorater
+  endpoint to use.
+
+  Publisher model format:
+  `projects/{project}/locations/{location}/publishers/{publisher}/models/{model}`
+
+  Tuned model endpoint format:
+  `projects/{project}/locations/{location}/endpoints/{endpoint}` */
+  autoraterModel?: string;
+  /** Configuration options for model generation and outputs. */
+  generationConfig?: GenerationConfig;
+}
+
+/** Reinforcement tuning autorater scorer. */
+export declare interface ReinforcementTuningAutoraterScorer {
+  /** Autorater config for evaluation. */
+  autoraterConfig?: AutoraterConfig;
+}
+
+/** Single reinforcement tuning reward config. */
+export declare interface SingleReinforcementTuningRewardConfig {
+  autoraterScorer?: ReinforcementTuningAutoraterScorer;
+}
+
+/** Composite reinforcement tuning reward config weighted reward config. */
+export declare interface CompositeReinforcementTuningRewardConfigWeightedRewardConfig {
+  rewardConfig?: SingleReinforcementTuningRewardConfig;
+  /** How much this single reward contributes to the total overall reward. */
+  weight?: number;
+}
+
+/** Composite reinforcement tuning reward config. */
+export declare interface CompositeReinforcementTuningRewardConfig {
+  weightedRewardConfigs?: CompositeReinforcementTuningRewardConfigWeightedRewardConfig[];
+}
+
 /** Fine-tuning job creation request - optional fields. */
 export declare interface CreateTuningJobConfig {
   /** Used to override HTTP request options. */
@@ -5434,7 +5487,7 @@ export declare interface CreateTuningJobConfig {
   be charged usage for any applicable operations.
        */
   abortSignal?: AbortSignal;
-  /** The method to use for tuning (SUPERVISED_FINE_TUNING or PREFERENCE_TUNING or DISTILLATION). If not set, the default method (SFT) will be used. */
+  /** The method to use for tuning (SUPERVISED_FINE_TUNING or PREFERENCE_TUNING or DISTILLATION or REINFORCEMENT_TUNING). If not set, the default method (SFT) will be used. */
   method?: TuningMethod;
   /** Validation dataset for tuning. The dataset must be formatted as a JSONL file. */
   validationDataset?: TuningValidationDataset;
@@ -5474,6 +5527,18 @@ export declare interface CreateTuningJobConfig {
   outputUri?: string;
   /** The encryption spec of the tuning job. Customer-managed encryption key options for a TuningJob. If this is set, then all resources created by the TuningJob will be encrypted with provided encryption key. */
   encryptionSpec?: EncryptionSpec;
+  /** Reward function configuration for reinforcement tuning. Reinforcement tuning only. */
+  rewardConfig?: SingleReinforcementTuningRewardConfig;
+  /** Composite reward function configuration for reinforcement tuning. Reinforcement tuning only. */
+  compositeRewardConfig?: CompositeReinforcementTuningRewardConfig;
+  /** Number of different responses to generate per prompt during tuning. Reinforcement tuning only. */
+  samplesPerPrompt?: number;
+  /** How often at steps to evaluate the tuning job during training. Reinforcement tuning only. */
+  evaluateInterval?: number;
+  /** How often at steps to save checkpoints during training. Reinforcement tuning only. */
+  checkpointInterval?: number;
+  /** The maximum number of tokens to generate per prompt. Reinforcement tuning only. */
+  maxOutputTokens?: number;
 }
 
 /** Fine-tuning job creation parameters - optional fields. */
