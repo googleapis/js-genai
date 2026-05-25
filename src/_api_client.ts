@@ -172,8 +172,7 @@ export interface HttpRequest {
 export class ApiClient implements GeminiNextGenAPIClientAdapter {
   readonly clientOptions: ApiClientInitOptions;
   private readonly customBaseUrl?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private cachedNodeAgent?: any;
+  private readonly cachedNodeAgents = new Map<number, unknown>();
   constructor(opts: ApiClientInitOptions) {
     this.clientOptions = {
       ...opts,
@@ -519,33 +518,6 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
       const abortController = new AbortController();
       const signal = abortController.signal;
       if (httpOptions.timeout && httpOptions?.timeout > 0) {
-        // In Node > 18, the built-in fetch is backed by Undici. Undici sets a global
-        // dispatcher on the global scope which tracks its internal headersTimeout and
-        // bodyTimeout using Symbol properties.
-        const dispatcherSymbol = Symbol.for('undici.globalDispatcher.1');
-        const globalDispatcher = (globalThis as Record<symbol, unknown>)[
-          dispatcherSymbol
-        ] as Record<symbol, unknown> | undefined;
-
-        if (globalDispatcher) {
-          const symbols = Object.getOwnPropertySymbols(globalDispatcher);
-          for (const sym of symbols) {
-            const desc = sym.description;
-            if (
-              desc?.includes('headers timeout') ||
-              desc?.includes('body timeout')
-            ) {
-              const currentTimeout = globalDispatcher[sym];
-              if (typeof currentTimeout === 'number') {
-                globalDispatcher[sym] = Math.max(
-                  currentTimeout,
-                  httpOptions.timeout,
-                );
-              }
-            }
-          }
-        }
-
         const timeoutHandle = setTimeout(
           () => abortController.abort(),
           httpOptions.timeout,
@@ -562,16 +534,18 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
 
         const isNode = typeof process !== 'undefined' && process.versions?.node;
         if (isNode && httpOptions.timeout > 300_000) {
-          // For Node.js, use undici agent when timeout > 300s to handle long timeouts properly.
+          // Node's built-in fetch is backed by Undici, whose default
+          // headers/body timeout is 300s. Use a per-request dispatcher for
+          // longer SDK timeouts instead of mutating Undici's global dispatcher.
           const timeout = httpOptions.timeout;
-          // Cache undici agent
-          if (!this.cachedNodeAgent) {
+          if (!this.cachedNodeAgents.has(timeout)) {
             try {
               const {Agent} = await import('undici');
-              this.cachedNodeAgent = new Agent({
+              const agent = new Agent({
                 headersTimeout: timeout,
                 bodyTimeout: timeout,
               });
+              this.cachedNodeAgents.set(timeout, agent);
             } catch (e) {
               console.warn(
                 'undici is not available. Long timeouts (>300s) may not work properly in Node.js. Install undici as a peer dependency if needed.',
@@ -579,8 +553,9 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
               );
             }
           }
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (requestInit as any).dispatcher = this.cachedNodeAgent;
+          // See github https://github.com/nodejs/undici/blob/f51afa05ed964cb6b0996371cb5f2081c1611ec9/types/fetch.d.ts#L145
+          (requestInit as RequestInit & {dispatcher?: unknown}).dispatcher =
+            this.cachedNodeAgents.get(timeout);
         }
       }
       if (abortSignal) {
