@@ -8,6 +8,7 @@ import {FileStat, Uploader} from '../_uploader.js';
 import * as _converters from '../converters/_operations_converters.js';
 import {
   File,
+  HttpOptions,
   HttpResponse,
   UploadToFileSearchStoreOperation,
 } from '../types.js';
@@ -24,11 +25,12 @@ export class CrossUploader implements Uploader {
     file: string | Blob,
     uploadUrl: string,
     apiClient: ApiClient,
+    httpOptions?: HttpOptions,
   ): Promise<File> {
     if (typeof file === 'string') {
       throw crossError();
     } else {
-      return uploadBlob(file, uploadUrl, apiClient);
+      return uploadBlob(file, uploadUrl, apiClient, httpOptions);
     }
   }
 
@@ -36,11 +38,17 @@ export class CrossUploader implements Uploader {
     file: string | Blob,
     uploadUrl: string,
     apiClient: ApiClient,
+    httpOptions?: HttpOptions,
   ): Promise<UploadToFileSearchStoreOperation> {
     if (typeof file === 'string') {
       throw crossError();
     } else {
-      return uploadBlobToFileSearchStore(file, uploadUrl, apiClient);
+      return uploadBlobToFileSearchStore(
+        file,
+        uploadUrl,
+        apiClient,
+        httpOptions,
+      );
     }
   }
 
@@ -57,8 +65,14 @@ export async function uploadBlob(
   file: Blob,
   uploadUrl: string,
   apiClient: ApiClient,
+  httpOptions?: HttpOptions,
 ): Promise<File> {
-  const response = await uploadBlobInternal(file, uploadUrl, apiClient);
+  const response = await uploadBlobInternal(
+    file,
+    uploadUrl,
+    apiClient,
+    httpOptions,
+  );
   const responseJson = (await response?.json()) as Record<
     string,
     File | unknown
@@ -73,8 +87,14 @@ export async function uploadBlobToFileSearchStore(
   file: Blob,
   uploadUrl: string,
   apiClient: ApiClient,
+  httpOptions?: HttpOptions,
 ): Promise<UploadToFileSearchStoreOperation> {
-  const response = await uploadBlobInternal(file, uploadUrl, apiClient);
+  const response = await uploadBlobInternal(
+    file,
+    uploadUrl,
+    apiClient,
+    httpOptions,
+  );
   const responseJson =
     (await response?.json()) as UploadToFileSearchStoreOperation;
   if (response?.headers?.[X_GOOG_UPLOAD_STATUS_HEADER_FIELD] !== 'final') {
@@ -91,7 +111,20 @@ async function uploadBlobInternal(
   file: Blob,
   uploadUrl: string,
   apiClient: ApiClient,
+  httpOptions?: HttpOptions,
 ): Promise<HttpResponse> {
+  let finalUrl = uploadUrl;
+  const effectiveBaseUrl =
+    httpOptions?.baseUrl || apiClient.clientOptions.httpOptions?.baseUrl;
+  if (effectiveBaseUrl) {
+    const baseUri = new URL(effectiveBaseUrl);
+    const uploadUri = new URL(uploadUrl);
+    uploadUri.protocol = baseUri.protocol;
+    uploadUri.host = baseUri.host;
+    uploadUri.port = baseUri.port;
+    finalUrl = uploadUri.toString();
+  }
+
   let fileSize = 0;
   let offset = 0;
   let response: HttpResponse = new HttpResponse(new Response());
@@ -106,18 +139,22 @@ async function uploadBlobInternal(
     let retryCount = 0;
     let currentDelayMs = INITIAL_RETRY_DELAY_MS;
     while (retryCount < MAX_RETRY_COUNT) {
+      const mergedHeaders = {
+        ...(httpOptions?.headers || {}),
+        'X-Goog-Upload-Command': uploadCommand,
+        'X-Goog-Upload-Offset': String(offset),
+        'Content-Length': String(chunkSize),
+      };
+
       response = await apiClient.request({
         path: '',
         body: chunk,
         httpMethod: 'POST',
         httpOptions: {
+          ...httpOptions,
           apiVersion: '',
-          baseUrl: uploadUrl,
-          headers: {
-            'X-Goog-Upload-Command': uploadCommand,
-            'X-Goog-Upload-Offset': String(offset),
-            'Content-Length': String(chunkSize),
-          },
+          baseUrl: finalUrl,
+          headers: mergedHeaders,
         },
       });
       if (response?.headers?.[X_GOOG_UPLOAD_STATUS_HEADER_FIELD]) {

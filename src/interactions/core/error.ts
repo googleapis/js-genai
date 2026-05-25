@@ -115,7 +115,11 @@ export class APIConnectionError extends APIError<undefined, undefined, undefined
 
 export class APIConnectionTimeoutError extends APIConnectionError {
   constructor({ message }: { message?: string } = {}) {
-    super({ message: message ?? 'Request timed out.' });
+    super({
+      message:
+        message ??
+        'Request timed out. This is a client-side timeout. You can increase the timeout by setting the `timeout` argument in your request or client http options.',
+    });
   }
 }
 

@@ -6,7 +6,8 @@
     "src/web/**",
     "src/node/**",
     "src/g3_node/**",
-    "src/g3_web/**"
+    "src/g3_web/**",
+    "src/vertex_internal/**"
   ],
   "excludePrivate": true,
   "excludeProtected": true,

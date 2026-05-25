@@ -16,15 +16,21 @@ export function fetchPredictOperationParametersToMldev(
   const toObject: Record<string, unknown> = {};
 
   if (common.getValueByPath(fromObject, ['operationName']) !== undefined) {
-    throw new Error('operationName parameter is not supported in Gemini API.');
+    throw new Error(
+      'operationName parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
   }
 
   if (common.getValueByPath(fromObject, ['resourceName']) !== undefined) {
-    throw new Error('resourceName parameter is not supported in Gemini API.');
+    throw new Error(
+      'resourceName parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
   }
 
   if (common.getValueByPath(fromObject, ['config']) !== undefined) {
-    throw new Error('config parameter is not supported in Gemini API.');
+    throw new Error(
+      'config parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
   }
 
   return toObject;

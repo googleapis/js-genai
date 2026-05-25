@@ -8,9 +8,28 @@ import {setDefaultBaseUrls} from '../../../src/_base_url.js';
 import {GoogleGenAI} from '../../../src/node/node_client.js';
 
 describe('setDefaultBaseUrls', () => {
-  afterEach(() => {
+  beforeEach(() => {
+    delete process.env['GOOGLE_API_KEY'];
+    delete process.env['GEMINI_API_KEY'];
     delete process.env['GOOGLE_GEMINI_BASE_URL'];
     delete process.env['GOOGLE_VERTEX_BASE_URL'];
+    delete process.env['GOOGLE_GENAI_USE_ENTERPRISE'];
+    delete process.env['GOOGLE_GENAI_USE_VERTEXAI'];
+    delete process.env['GOOGLE_CLOUD_PROJECT'];
+    delete process.env['GOOGLE_CLOUD_LOCATION'];
+
+    setDefaultBaseUrls({});
+  });
+
+  afterEach(() => {
+    delete process.env['GOOGLE_API_KEY'];
+    delete process.env['GEMINI_API_KEY'];
+    delete process.env['GOOGLE_GEMINI_BASE_URL'];
+    delete process.env['GOOGLE_VERTEX_BASE_URL'];
+    delete process.env['GOOGLE_GENAI_USE_ENTERPRISE'];
+    delete process.env['GOOGLE_GENAI_USE_VERTEXAI'];
+    delete process.env['GOOGLE_CLOUD_PROJECT'];
+    delete process.env['GOOGLE_CLOUD_LOCATION'];
 
     setDefaultBaseUrls({});
   });

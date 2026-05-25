@@ -8,6 +8,10 @@ import {setDefaultBaseUrls} from '../../../src/_base_url.js';
 import {GoogleGenAI} from '../../../src/web/web_client.js';
 
 describe('setDefaultBaseUrls', () => {
+  beforeEach(() => {
+    setDefaultBaseUrls({});
+  });
+
   afterEach(() => {
     setDefaultBaseUrls({});
   });

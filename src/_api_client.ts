@@ -18,10 +18,12 @@ const CONTENT_TYPE_HEADER = 'Content-Type';
 const SERVER_TIMEOUT_HEADER = 'X-Server-Timeout';
 const USER_AGENT_HEADER = 'User-Agent';
 export const GOOGLE_API_CLIENT_HEADER = 'x-goog-api-client';
-export const SDK_VERSION = '1.44.0'; // x-release-please-version
+export const SDK_VERSION = '2.6.0'; // x-release-please-version
 const LIBRARY_LABEL = `google-genai-sdk/${SDK_VERSION}`;
 const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
 const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';
+
+const MULTI_REGIONAL_LOCATIONS = new Set<string>(['us', 'eu']);
 
 /**
  * Partial definiion of the NodeJS.Timeout.
@@ -222,6 +224,12 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
       ) {
         // Vertex Express or global endpoint case.
         initHttpOptions.baseUrl = 'https://aiplatform.googleapis.com/';
+      } else if (
+        this.clientOptions.project &&
+        this.clientOptions.location &&
+        MULTI_REGIONAL_LOCATIONS.has(this.clientOptions.location)
+      ) {
+        initHttpOptions.baseUrl = `https://aiplatform.${this.clientOptions.location}.rep.googleapis.com/`;
       } else if (this.clientOptions.project && this.clientOptions.location) {
         initHttpOptions.baseUrl = `https://${this.clientOptions.location}-aiplatform.googleapis.com/`;
       }
@@ -511,6 +519,33 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
       const abortController = new AbortController();
       const signal = abortController.signal;
       if (httpOptions.timeout && httpOptions?.timeout > 0) {
+        // In Node > 18, the built-in fetch is backed by Undici. Undici sets a global
+        // dispatcher on the global scope which tracks its internal headersTimeout and
+        // bodyTimeout using Symbol properties.
+        const dispatcherSymbol = Symbol.for('undici.globalDispatcher.1');
+        const globalDispatcher = (globalThis as Record<symbol, unknown>)[
+          dispatcherSymbol
+        ] as Record<symbol, unknown> | undefined;
+
+        if (globalDispatcher) {
+          const symbols = Object.getOwnPropertySymbols(globalDispatcher);
+          for (const sym of symbols) {
+            const desc = sym.description;
+            if (
+              desc?.includes('headers timeout') ||
+              desc?.includes('body timeout')
+            ) {
+              const currentTimeout = globalDispatcher[sym];
+              if (typeof currentTimeout === 'number') {
+                globalDispatcher[sym] = Math.max(
+                  currentTimeout,
+                  httpOptions.timeout,
+                );
+              }
+            }
+          }
+        }
+
         const timeoutHandle = setTimeout(
           () => abortController.abort(),
           httpOptions.timeout,
@@ -582,7 +617,7 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
         if (e instanceof Error) {
           throw e;
         } else {
-          throw new Error(JSON.stringify(e));
+          throw new Error(`exception ${e} sending request`, {cause: e});
         }
       });
   }
@@ -604,7 +639,7 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
         if (e instanceof Error) {
           throw e;
         } else {
-          throw new Error(JSON.stringify(e));
+          throw new Error(`exception ${e} sending request`, {cause: e});
         }
       });
   }
@@ -767,14 +802,17 @@ export class ApiClient implements GeminiNextGenAPIClientAdapter {
       for (const [key, value] of Object.entries(httpOptions.headers)) {
         headers.append(key, value);
       }
-      // Append a timeout header if it is set, note that the timeout option is
-      // in milliseconds but the header is in seconds.
-      if (httpOptions.timeout && httpOptions.timeout > 0) {
-        headers.append(
-          SERVER_TIMEOUT_HEADER,
-          String(Math.ceil(httpOptions.timeout / 1000)),
-        );
-      }
+    }
+    // Append a timeout header if it is set, note that the timeout option is
+    // in milliseconds but the header is in seconds.
+    // NOTE: This is intentionally outside the httpOptions.headers guard above
+    // so that the X-Server-Timeout header is always sent whenever a timeout
+    // is configured, even if the caller did not supply any custom headers.
+    if (httpOptions?.timeout && httpOptions.timeout > 0) {
+      headers.append(
+        SERVER_TIMEOUT_HEADER,
+        String(Math.ceil(httpOptions.timeout / 1000)),
+      );
     }
     await this.clientOptions.auth.addAuthHeaders(headers, url);
     return headers;

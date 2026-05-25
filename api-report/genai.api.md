@@ -36,6 +36,17 @@ export enum AdapterSize {
     ADAPTER_SIZE_UNSPECIFIED = "ADAPTER_SIZE_UNSPECIFIED"
 }
 
+// Warning: (ae-forgotten-export) The symbol "BaseAgents" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export class Agents extends BaseAgents {
+}
+
+// @public (undocumented)
+export namespace Agents {
+    export { export type Agent as Agent, export type AgentListResponse as AgentListResponse, export type AgentDeleteResponse as AgentDeleteResponse, export type AgentCreateParams as AgentCreateParams, export type AgentListParams as AgentListParams, export type AgentDeleteParams as AgentDeleteParams, export type AgentGetParams as AgentGetParams, };
+}
+
 // @public
 export enum AggregationMetric {
     AGGREGATION_METRIC_UNSPECIFIED = "AGGREGATION_METRIC_UNSPECIFIED",
@@ -115,6 +126,7 @@ export interface AudioChunk {
 
 // @public
 export interface AudioTranscriptionConfig {
+    languageCodes?: string[];
 }
 
 // @public
@@ -184,6 +196,22 @@ export interface AutomaticFunctionCallingConfig {
 }
 
 // @public
+export interface AutoraterConfig {
+    autoraterModel?: string;
+    flipEnabled?: boolean;
+    generationConfig?: GenerationConfig;
+    samplingCount?: number;
+}
+
+// @public
+export interface AvatarConfig {
+    audioBitrateBps?: number;
+    avatarName?: string;
+    customizedAvatar?: CustomizedAvatar;
+    videoBitrateBps?: number;
+}
+
+// @public
 export interface BaseUrlParameters {
     // (undocumented)
     geminiUrl?: string;
@@ -216,6 +244,7 @@ export interface BatchJob {
     error?: JobError;
     model?: string;
     name?: string;
+    outputInfo?: BatchJobOutputInfo;
     src?: BatchJobSource;
     startTime?: string;
     state?: JobState;
@@ -230,10 +259,18 @@ export interface BatchJobDestination {
     gcsUri?: string;
     inlinedEmbedContentResponses?: InlinedEmbedContentResponse[];
     inlinedResponses?: InlinedResponse[];
+    vertexDataset?: VertexMultimodalDatasetDestination;
 }
 
 // @public (undocumented)
 export type BatchJobDestinationUnion = BatchJobDestination | string;
+
+// @public
+export interface BatchJobOutputInfo {
+    bigqueryOutputTable?: string;
+    gcsOutputDirectory?: string;
+    vertexMultimodalDatasetName?: string;
+}
 
 // @public
 export interface BatchJobSource {
@@ -242,6 +279,7 @@ export interface BatchJobSource {
     format?: string;
     gcsUri?: string[];
     inlinedRequests?: InlinedRequest[];
+    vertexDatasetName?: string;
 }
 
 // @public (undocumented)
@@ -416,6 +454,7 @@ export interface CitationMetadata {
 
 // @public
 export interface CodeExecutionResult {
+    id?: string;
     outcome?: Outcome;
     output?: string;
 }
@@ -429,7 +468,21 @@ export interface CompletionStats {
 }
 
 // @public
+export interface CompositeReinforcementTuningRewardConfig {
+    // (undocumented)
+    weightedRewardConfigs?: CompositeReinforcementTuningRewardConfigWeightedRewardConfig[];
+}
+
+// @public
+export interface CompositeReinforcementTuningRewardConfigWeightedRewardConfig {
+    // (undocumented)
+    rewardConfig?: SingleReinforcementTuningRewardConfig;
+    weight?: number;
+}
+
+// @public
 export interface ComputerUse {
+    enablePromptInjectionDetection?: boolean;
     environment?: Environment;
     excludedPredefinedFunctions?: string[];
 }
@@ -574,6 +627,7 @@ export interface CreateBatchJobConfig {
     dest?: BatchJobDestinationUnion;
     displayName?: string;
     httpOptions?: HttpOptions;
+    webhookConfig?: WebhookConfig;
 }
 
 // @public
@@ -645,6 +699,7 @@ export class CreateFileResponse {
 export interface CreateFileSearchStoreConfig {
     abortSignal?: AbortSignal;
     displayName?: string;
+    embeddingModel?: string;
     httpOptions?: HttpOptions;
 }
 
@@ -690,18 +745,24 @@ export interface CreateTuningJobConfig {
     baseTeacherModel?: string;
     batchSize?: number;
     beta?: number;
+    checkpointInterval?: number;
+    compositeRewardConfig?: CompositeReinforcementTuningRewardConfig;
     customBaseModel?: string;
     description?: string;
     encryptionSpec?: EncryptionSpec;
     epochCount?: number;
+    evaluateInterval?: number;
     exportLastCheckpointOnly?: boolean;
     httpOptions?: HttpOptions;
     labels?: Record<string, string>;
     learningRate?: number;
     learningRateMultiplier?: number;
+    maxOutputTokens?: number;
     method?: TuningMethod;
     outputUri?: string;
     preTunedModelCheckpointId?: string;
+    rewardConfig?: SingleReinforcementTuningRewardConfig;
+    samplesPerPrompt?: number;
     sftLossWeightMultiplier?: number;
     tunedModelDisplayName?: string;
     tunedTeacherModelSource?: string;
@@ -730,6 +791,12 @@ export function createUserContent(partOrString: PartListUnion | string): Content
 // @public
 export interface CustomCodeExecutionResult {
     score?: number;
+}
+
+// @public
+export interface CustomizedAvatar {
+    imageData?: string;
+    imageMimeType?: string;
 }
 
 // @public
@@ -887,8 +954,20 @@ export interface DistillationDataStats {
 // @public
 export interface DistillationHyperParameters {
     adapterSize?: AdapterSize;
+    batchSize?: number;
     epochCount?: string;
+    generationConfig?: GenerationConfig;
+    learningRate?: number;
     learningRateMultiplier?: number;
+}
+
+// @public
+export interface DistillationSamplingSpec {
+    baseTeacherModel?: string;
+    hyperparameters?: DistillationHyperParameters;
+    promptDatasetUri?: string;
+    tunedTeacherModelSource?: string;
+    validationDatasetUri?: string;
 }
 
 // @public
@@ -900,6 +979,7 @@ export interface DistillationSpec {
     studentModel?: string;
     trainingDatasetUri?: string;
     tunedTeacherModelSource?: string;
+    tuningMode?: TuningMode;
     validationDatasetUri?: string;
 }
 
@@ -918,13 +998,9 @@ export { Document_2 as Document }
 
 // @public
 export enum DocumentState {
-    // (undocumented)
     STATE_ACTIVE = "STATE_ACTIVE",
-    // (undocumented)
     STATE_FAILED = "STATE_FAILED",
-    // (undocumented)
     STATE_PENDING = "STATE_PENDING",
-    // (undocumented)
     STATE_UNSPECIFIED = "STATE_UNSPECIFIED"
 }
 
@@ -942,6 +1018,12 @@ export interface DownloadFileParameters {
     config?: DownloadFileConfig;
     downloadPath: string;
     file: DownloadableFileUnion;
+}
+
+// @public
+export interface DownloadMediaConfig {
+    abortSignal?: AbortSignal;
+    httpOptions?: HttpOptions;
 }
 
 // @public
@@ -1022,7 +1104,9 @@ export interface EmbedContentBatch {
 // @public
 export interface EmbedContentConfig {
     abortSignal?: AbortSignal;
+    audioTrackExtraction?: boolean;
     autoTruncate?: boolean;
+    documentOcr?: boolean;
     httpOptions?: HttpOptions;
     mimeType?: string;
     outputDimensionality?: number;
@@ -1103,6 +1187,8 @@ export interface EntityLabel {
 // @public
 export enum Environment {
     ENVIRONMENT_BROWSER = "ENVIRONMENT_BROWSER",
+    ENVIRONMENT_DESKTOP = "ENVIRONMENT_DESKTOP",
+    ENVIRONMENT_MOBILE = "ENVIRONMENT_MOBILE",
     ENVIRONMENT_UNSPECIFIED = "ENVIRONMENT_UNSPECIFIED"
 }
 
@@ -1135,6 +1221,7 @@ export interface ExactMatchMetricValue {
 // @public
 export interface ExecutableCode {
     code?: string;
+    id?: string;
     language?: Language;
 }
 
@@ -1236,6 +1323,7 @@ export interface FileSearchStore {
     activeDocumentsCount?: string;
     createTime?: string;
     displayName?: string;
+    embeddingModel?: string;
     failedDocumentsCount?: string;
     name?: string;
     pendingDocumentsCount?: string;
@@ -1419,6 +1507,7 @@ export interface GenerateContentConfig {
     routingConfig?: GenerationConfigRoutingConfig;
     safetySettings?: SafetySetting[];
     seed?: number;
+    serviceTier?: ServiceTier;
     speechConfig?: SpeechConfigUnion;
     stopSequences?: string[];
     systemInstruction?: ContentUnion;
@@ -1446,6 +1535,7 @@ export class GenerateContentResponse {
     get data(): string | undefined;
     get executableCode(): string | undefined;
     get functionCalls(): FunctionCall[] | undefined;
+    modelStatus?: ModelStatus;
     modelVersion?: string;
     promptFeedback?: GenerateContentResponsePromptFeedback;
     responseId?: string;
@@ -1542,6 +1632,7 @@ export interface GenerateVideosConfig {
     fps?: number;
     generateAudio?: boolean;
     httpOptions?: HttpOptions;
+    labels?: Record<string, string>;
     lastFrame?: Image_2;
     mask?: VideoGenerationMask;
     negativePrompt?: string;
@@ -1550,16 +1641,17 @@ export interface GenerateVideosConfig {
     personGeneration?: string;
     pubsubTopic?: string;
     referenceImages?: VideoGenerationReferenceImage[];
+    resizeMode?: ImageResizeMode;
     resolution?: string;
     seed?: number;
+    webhookConfig?: WebhookConfig;
 }
 
 // @public
 export class GenerateVideosOperation implements Operation<GenerateVideosResponse> {
     done?: boolean;
     error?: Record<string, unknown>;
-    // @internal
-    _fromAPIResponse({ apiResponse, _isVertexAI, }: OperationFromAPIResponseParameters): Operation<GenerateVideosResponse>;
+    _fromAPIResponse(input: OperationFromAPIResponseParameters): Operation<GenerateVideosResponse>;
     metadata?: Record<string, unknown>;
     name?: string;
     response?: GenerateVideosResponse;
@@ -1739,6 +1831,8 @@ export interface GetTuningJobParameters {
 export class GoogleGenAI {
     constructor(options: GoogleGenAIOptions);
     // (undocumented)
+    get agents(): Agents;
+    // (undocumented)
     protected readonly apiClient: ApiClient;
     // (undocumented)
     readonly authTokens: Tokens;
@@ -1768,12 +1862,15 @@ export class GoogleGenAI {
     readonly tunings: Tunings;
     // (undocumented)
     readonly vertexai: boolean;
+    // (undocumented)
+    get webhooks(): Webhooks;
 }
 
 // @public
 export interface GoogleGenAIOptions {
     apiKey?: string;
     apiVersion?: string;
+    enterprise?: boolean;
     googleAuthOptions?: GoogleAuthOptions;
     httpOptions?: HttpOptions;
     location?: string;
@@ -1823,6 +1920,14 @@ export interface GroundingChunk {
 }
 
 // @public
+export interface GroundingChunkCustomMetadata {
+    key?: string;
+    numericValue?: number;
+    stringListValue?: GroundingChunkStringList;
+    stringValue?: string;
+}
+
+// @public
 export interface GroundingChunkImage {
     domain?: string;
     imageUri?: string;
@@ -1834,6 +1939,7 @@ export interface GroundingChunkImage {
 export interface GroundingChunkMaps {
     placeAnswerSources?: GroundingChunkMapsPlaceAnswerSources;
     placeId?: string;
+    route?: GroundingChunkMapsRoute;
     text?: string;
     title?: string;
     uri?: string;
@@ -1865,12 +1971,28 @@ export interface GroundingChunkMapsPlaceAnswerSourcesReviewSnippet {
 }
 
 // @public
+export interface GroundingChunkMapsRoute {
+    distanceMeters?: number;
+    duration?: string;
+    encodedPolyline?: string;
+}
+
+// @public
 export interface GroundingChunkRetrievedContext {
+    customMetadata?: GroundingChunkCustomMetadata[];
     documentName?: string;
+    fileSearchStore?: string;
+    mediaId?: string;
+    pageNumber?: number;
     ragChunk?: RagChunk;
     text?: string;
     title?: string;
     uri?: string;
+}
+
+// @public
+export interface GroundingChunkStringList {
+    values?: string[];
 }
 
 // @public
@@ -1903,6 +2025,7 @@ export interface GroundingMetadataSourceFlaggingUri {
 export interface GroundingSupport {
     confidenceScores?: number[];
     groundingChunkIndices?: number[];
+    renderedParts?: number[];
     segment?: Segment;
 }
 
@@ -2030,6 +2153,12 @@ export enum ImagePromptLanguage {
 }
 
 // @public
+export enum ImageResizeMode {
+    CROP = "CROP",
+    PAD = "PAD"
+}
+
+// @public
 export interface ImageSearch {
 }
 
@@ -2045,8 +2174,7 @@ export interface ImportFileConfig {
 export class ImportFileOperation implements Operation<ImportFileResponse> {
     done?: boolean;
     error?: Record<string, unknown>;
-    // @internal
-    _fromAPIResponse({ apiResponse, _isVertexAI, }: OperationFromAPIResponseParameters): Operation<ImportFileResponse>;
+    _fromAPIResponse(input: OperationFromAPIResponseParameters): Operation<ImportFileResponse>;
     metadata?: Record<string, unknown>;
     name?: string;
     response?: ImportFileResponse;
@@ -2070,6 +2198,7 @@ export class ImportFileResponse {
 // @public
 export class InlinedEmbedContentResponse {
     error?: JobError;
+    metadata?: Record<string, unknown>;
     response?: SingleEmbedContentResponse;
 }
 
@@ -2096,7 +2225,7 @@ export class Interactions extends BaseInteractions {
 
 // @public (undocumented)
 export namespace Interactions {
-        { export type AllowedTools as AllowedTools, export type Annotation as Annotation, export type AudioContent as AudioContent, export type CodeExecutionCallArguments as CodeExecutionCallArguments, export type CodeExecutionCallContent as CodeExecutionCallContent, export type CodeExecutionResultContent as CodeExecutionResultContent, export type Content as Content, export type ContentDelta as ContentDelta, export type ContentStart as ContentStart, export type ContentStop as ContentStop, export type DeepResearchAgentConfig as DeepResearchAgentConfig, export type DocumentContent as DocumentContent, export type DynamicAgentConfig as DynamicAgentConfig, export type ErrorEvent as ErrorEvent, export type FileSearchCallContent as FileSearchCallContent, export type FileSearchResultContent as FileSearchResultContent, export type Function as Function, export type FunctionCallContent as FunctionCallContent, export type FunctionResultContent as FunctionResultContent, export type GenerationConfig as GenerationConfig, export type GoogleSearchCallArguments as GoogleSearchCallArguments, export type GoogleSearchCallContent as GoogleSearchCallContent, export type GoogleSearchResult as GoogleSearchResult, export type GoogleSearchResultContent as GoogleSearchResultContent, export type ImageConfig as ImageConfig, export type ImageContent as ImageContent, export type Interaction as Interaction, export type InteractionCompleteEvent as InteractionCompleteEvent, export type InteractionSSEEvent as InteractionSSEEvent, export type InteractionStartEvent as InteractionStartEvent, export type InteractionStatusUpdate as InteractionStatusUpdate, export type MCPServerToolCallContent as MCPServerToolCallContent, export type MCPServerToolResultContent as MCPServerToolResultContent, export type Model as Model, export type SpeechConfig as SpeechConfig, export type TextContent as TextContent, export type ThinkingLevel as ThinkingLevel, export type ThoughtContent as ThoughtContent, export type Tool as Tool, export type ToolChoiceConfig as ToolChoiceConfig, export type ToolChoiceType as ToolChoiceType, export type Turn as Turn, export type URLContextCallArguments as URLContextCallArguments, export type URLContextCallContent as URLContextCallContent, export type URLContextResult as URLContextResult, export type URLContextResultContent as URLContextResultContent, export type Usage as Usage, export type VideoContent as VideoContent, export type InteractionDeleteResponse as InteractionDeleteResponse, export type InteractionCreateParams as InteractionCreateParams, export type CreateModelInteractionParamsNonStreaming as CreateModelInteractionParamsNonStreaming, export type CreateModelInteractionParamsStreaming as CreateModelInteractionParamsStreaming, export type CreateAgentInteractionParamsNonStreaming as CreateAgentInteractionParamsNonStreaming, export type CreateAgentInteractionParamsStreaming as CreateAgentInteractionParamsStreaming, export type InteractionDeleteParams as InteractionDeleteParams, export type InteractionCancelParams as InteractionCancelParams, export type InteractionGetParams as InteractionGetParams, export type InteractionGetParamsNonStreaming as InteractionGetParamsNonStreaming, export type InteractionGetParamsStreaming as InteractionGetParamsStreaming, };
+    export { export type AllowedTools as AllowedTools, export type Annotation as Annotation, export type AudioContent as AudioContent, export type AudioResponseFormat as AudioResponseFormat, export type CodeExecutionCallArguments as CodeExecutionCallArguments, export type CodeExecutionCallStep as CodeExecutionCallStep, export type CodeExecutionResultStep as CodeExecutionResultStep, export type Content as Content, export type DeepResearchAgentConfig as DeepResearchAgentConfig, export type DocumentContent as DocumentContent, export type DynamicAgentConfig as DynamicAgentConfig, export type Environment as Environment, export type ErrorEvent as ErrorEvent, export type FileCitation as FileCitation, export type FileSearchCallStep as FileSearchCallStep, export type FileSearchResultStep as FileSearchResultStep, export type Function as Function, export type FunctionCallStep as FunctionCallStep, export type FunctionResultStep as FunctionResultStep, export type GenerationConfig as GenerationConfig, export type GoogleMapsCallArguments as GoogleMapsCallArguments, export type GoogleMapsCallStep as GoogleMapsCallStep, export type GoogleMapsResult as GoogleMapsResult, export type GoogleMapsResultStep as GoogleMapsResultStep, export type GoogleSearchCallArguments as GoogleSearchCallArguments, export type GoogleSearchCallStep as GoogleSearchCallStep, export type GoogleSearchResult as GoogleSearchResult, export type GoogleSearchResultStep as GoogleSearchResultStep, export type ImageConfig as ImageConfig, export type ImageContent as ImageContent, export type ImageResponseFormat as ImageResponseFormat, export type Interaction as Interaction, export type InteractionCompletedEvent as InteractionCompletedEvent, export type InteractionCreatedEvent as InteractionCreatedEvent, export type InteractionSSEEvent as InteractionSSEEvent, export type InteractionStatusUpdate as InteractionStatusUpdate, export type MCPServerToolCallStep as MCPServerToolCallStep, export type MCPServerToolResultStep as MCPServerToolResultStep, export type Model as Model, export type ModelOutputStep as ModelOutputStep, export type PlaceCitation as PlaceCitation, export type SpeechConfig as SpeechConfig, export type Step as Step, export type StepDelta as StepDelta, export type StepStart as StepStart, export type StepStop as StepStop, export type TextContent as TextContent, export type TextResponseFormat as TextResponseFormat, export type ThinkingLevel as ThinkingLevel, export type ThoughtStep as ThoughtStep, export type Tool as Tool, export type ToolChoiceConfig as ToolChoiceConfig, export type ToolChoiceType as ToolChoiceType, export type URLCitation as URLCitation, export type URLContextCallArguments as URLContextCallArguments, export type URLContextCallStep as URLContextCallStep, export type URLContextResult as URLContextResult, export type URLContextResultStep as URLContextResultStep, export type Usage as Usage, export type UserInputStep as UserInputStep, export type VideoContent as VideoContent, export type WebhookConfig as WebhookConfig, export type InteractionDeleteResponse as InteractionDeleteResponse, export type InteractionCreateParams as InteractionCreateParams, export type CreateModelInteractionParamsNonStreaming as CreateModelInteractionParamsNonStreaming, export type CreateModelInteractionParamsStreaming as CreateModelInteractionParamsStreaming, export type CreateAgentInteractionParamsNonStreaming as CreateAgentInteractionParamsNonStreaming, export type CreateAgentInteractionParamsStreaming as CreateAgentInteractionParamsStreaming, export type InteractionDeleteParams as InteractionDeleteParams, export type InteractionCancelParams as InteractionCancelParams, export type InteractionGetParams as InteractionGetParams, export type InteractionGetParamsNonStreaming as InteractionGetParamsNonStreaming, export type InteractionGetParamsStreaming as InteractionGetParamsStreaming, };
 }
 
 // @public
@@ -2248,7 +2377,6 @@ export interface ListFileSearchStoresParameters {
 // @public
 export class ListFileSearchStoresResponse {
     fileSearchStores?: FileSearchStore[];
-    // (undocumented)
     nextPageToken?: string;
     sdkHttpResponse?: HttpResponse;
 }
@@ -2365,6 +2493,7 @@ export interface LiveClientRealtimeInput {
 
 // @public
 export interface LiveClientSetup {
+    avatarConfig?: AvatarConfig;
     contextWindowCompression?: ContextWindowCompressionConfig;
     explicitVadSignal?: boolean;
     generationConfig?: GenerationConfig;
@@ -2373,6 +2502,7 @@ export interface LiveClientSetup {
     outputAudioTranscription?: AudioTranscriptionConfig;
     proactivity?: ProactivityConfig;
     realtimeInputConfig?: RealtimeInputConfig;
+    safetySettings?: SafetySetting[];
     sessionResumption?: SessionResumptionConfig;
     systemInstruction?: ContentUnion;
     tools?: ToolListUnion;
@@ -2386,6 +2516,7 @@ export class LiveClientToolResponse {
 // @public
 export interface LiveConnectConfig {
     abortSignal?: AbortSignal;
+    avatarConfig?: AvatarConfig;
     contextWindowCompression?: ContextWindowCompressionConfig;
     enableAffectiveDialog?: boolean;
     explicitVadSignal?: boolean;
@@ -2398,9 +2529,11 @@ export interface LiveConnectConfig {
     proactivity?: ProactivityConfig;
     realtimeInputConfig?: RealtimeInputConfig;
     responseModalities?: Modality[];
+    safetySettings?: SafetySetting[];
     seed?: number;
     sessionResumption?: SessionResumptionConfig;
     speechConfig?: SpeechConfig;
+    streamTranslationConfig?: StreamTranslationConfig;
     systemInstruction?: ContentUnion;
     temperature?: number;
     thinkingConfig?: ThinkingConfig;
@@ -2614,6 +2747,7 @@ export interface LiveServerToolCallCancellation {
 // @public
 export interface LogprobsResult {
     chosenCandidates?: LogprobsResultCandidate[];
+    logProbabilitySum?: number;
     topCandidates?: LogprobsResultTopCandidates[];
 }
 
@@ -2691,7 +2825,8 @@ export enum Modality {
     AUDIO = "AUDIO",
     IMAGE = "IMAGE",
     MODALITY_UNSPECIFIED = "MODALITY_UNSPECIFIED",
-    TEXT = "TEXT"
+    TEXT = "TEXT",
+    VIDEO = "VIDEO"
 }
 
 // @public
@@ -2754,6 +2889,25 @@ export interface ModelSelectionConfig {
 }
 
 // @public
+export enum ModelStage {
+    DEPRECATED = "DEPRECATED",
+    EXPERIMENTAL = "EXPERIMENTAL",
+    LEGACY = "LEGACY",
+    MODEL_STAGE_UNSPECIFIED = "MODEL_STAGE_UNSPECIFIED",
+    PREVIEW = "PREVIEW",
+    RETIRED = "RETIRED",
+    STABLE = "STABLE",
+    UNSTABLE_EXPERIMENTAL = "UNSTABLE_EXPERIMENTAL"
+}
+
+// @public
+export interface ModelStatus {
+    message?: string;
+    modelStage?: ModelStage;
+    retirementTime?: string;
+}
+
+// @public
 export interface MultiSpeakerVoiceConfig {
     speakerVoiceConfigs?: SpeakerVoiceConfig[];
 }
@@ -2770,8 +2924,7 @@ export enum MusicGenerationMode {
 export interface Operation<T> {
     done?: boolean;
     error?: Record<string, unknown>;
-    // @internal
-    _fromAPIResponse({ apiResponse, _isVertexAI, }: OperationFromAPIResponseParameters): Operation<T>;
+    _fromAPIResponse(input: OperationFromAPIResponseParameters): Operation<T>;
     metadata?: Record<string, unknown>;
     name?: string;
     response?: T;
@@ -2873,9 +3026,12 @@ export interface Part {
     functionResponse?: FunctionResponse;
     inlineData?: Blob_2;
     mediaResolution?: PartMediaResolution;
+    partMetadata?: Record<string, unknown>;
     text?: string;
     thought?: boolean;
     thoughtSignature?: string;
+    toolCall?: ToolCall;
+    toolResponse?: ToolResponse;
     videoMetadata?: VideoMetadata;
 }
 
@@ -3003,6 +3159,8 @@ export enum ProminentPeople {
 
 // @public
 export interface RagChunk {
+    chunkId?: string;
+    fileId?: string;
     pageSpan?: RagChunkPageSpan;
     text?: string;
 }
@@ -3125,6 +3283,11 @@ export interface RegisterFilesParameters {
 export class RegisterFilesResponse {
     files?: File_2[];
     sdkHttpResponse?: HttpResponse;
+}
+
+// @public
+export interface ReinforcementTuningAutoraterScorer {
+    autoraterConfig?: AutoraterConfig;
 }
 
 // @public
@@ -3362,6 +3525,14 @@ export interface SendMessageParameters {
 }
 
 // @public
+export enum ServiceTier {
+    FLEX = "flex",
+    PRIORITY = "priority",
+    STANDARD = "standard",
+    UNSPECIFIED = "unspecified"
+}
+
+// @public
 export class Session {
     constructor(conn: WebSocket_2, apiClient: ApiClient);
     close(): void;
@@ -3388,6 +3559,12 @@ export class SingleEmbedContentResponse {
 }
 
 // @public
+export interface SingleReinforcementTuningRewardConfig {
+    // (undocumented)
+    autoraterScorer?: ReinforcementTuningAutoraterScorer;
+}
+
+// @public
 export interface SlidingWindow {
     targetTokens?: string;
 }
@@ -3398,7 +3575,7 @@ export interface SpeakerVoiceConfig {
     voiceConfig?: VoiceConfig;
 }
 
-// @public (undocumented)
+// @public
 export interface SpeechConfig {
     languageCode?: string;
     multiSpeakerVoiceConfig?: MultiSpeakerVoiceConfig;
@@ -3422,6 +3599,12 @@ export interface StreamableHttpTransport {
     terminateOnClose?: boolean;
     timeout?: string;
     url?: string;
+}
+
+// @public
+export interface StreamTranslationConfig {
+    echoTargetLanguage?: boolean;
+    targetLanguageCode?: string;
 }
 
 // @public
@@ -3595,12 +3778,20 @@ export interface Tool {
 }
 
 // @public
+export interface ToolCall {
+    args?: Record<string, unknown>;
+    id?: string;
+    toolType?: ToolType;
+}
+
+// @public
 export interface ToolCodeExecution {
 }
 
 // @public
 export interface ToolConfig {
     functionCallingConfig?: FunctionCallingConfig;
+    includeServerSideToolInvocations?: boolean;
     retrievalConfig?: RetrievalConfig;
 }
 
@@ -3611,6 +3802,23 @@ export type ToolListUnion = ToolUnion[];
 export interface ToolParallelAiSearch {
     apiKey?: string;
     customConfigs?: Record<string, unknown>;
+}
+
+// @public
+export class ToolResponse {
+    id?: string;
+    response?: Record<string, unknown>;
+    toolType?: ToolType;
+}
+
+// @public
+export enum ToolType {
+    FILE_SEARCH = "FILE_SEARCH",
+    GOOGLE_MAPS = "GOOGLE_MAPS",
+    GOOGLE_SEARCH_IMAGE = "GOOGLE_SEARCH_IMAGE",
+    GOOGLE_SEARCH_WEB = "GOOGLE_SEARCH_WEB",
+    TOOL_TYPE_UNSPECIFIED = "TOOL_TYPE_UNSPECIFIED",
+    URL_CONTEXT = "URL_CONTEXT"
 }
 
 // @public (undocumented)
@@ -3679,6 +3887,8 @@ export interface TuningJob {
     createTime?: string;
     customBaseModel?: string;
     description?: string;
+    // (undocumented)
+    distillationSamplingSpec?: DistillationSamplingSpec;
     distillationSpec?: DistillationSpec;
     encryptionSpec?: EncryptionSpec;
     endTime?: string;
@@ -3701,9 +3911,17 @@ export interface TuningJob {
     tunedModel?: TunedModel;
     tunedModelDisplayName?: string;
     tuningDataStats?: TuningDataStats;
+    tuningJobMetadata?: TuningJobMetadata;
     tuningJobState?: TuningJobState;
     updateTime?: string;
+    veoLoraTuningSpec?: VeoLoraTuningSpec;
     veoTuningSpec?: VeoTuningSpec;
+}
+
+// @public
+export interface TuningJobMetadata {
+    completedEpochCount?: string;
+    completedStepCount?: string;
 }
 
 // @public
@@ -3720,6 +3938,7 @@ export enum TuningJobState {
 export enum TuningMethod {
     DISTILLATION = "DISTILLATION",
     PREFERENCE_TUNING = "PREFERENCE_TUNING",
+    REINFORCEMENT_TUNING = "REINFORCEMENT_TUNING",
     SUPERVISED_FINE_TUNING = "SUPERVISED_FINE_TUNING"
 }
 
@@ -3740,6 +3959,13 @@ export interface TuningOperation {
 }
 
 // @public
+export enum TuningSpeed {
+    FAST = "FAST",
+    REGULAR = "REGULAR",
+    TUNING_SPEED_UNSPECIFIED = "TUNING_SPEED_UNSPECIFIED"
+}
+
+// @public
 export enum TuningTask {
     TUNING_TASK_I2V = "TUNING_TASK_I2V",
     TUNING_TASK_R2V = "TUNING_TASK_R2V",
@@ -3755,16 +3981,41 @@ export interface TuningValidationDataset {
 
 // @public
 export enum TurnCompleteReason {
+    BLOCKLIST = "BLOCKLIST",
+    GENERATED_AUDIO_SAFETY = "GENERATED_AUDIO_SAFETY",
+    GENERATED_CONTENT_BLOCKLIST = "GENERATED_CONTENT_BLOCKLIST",
+    GENERATED_CONTENT_PROHIBITED = "GENERATED_CONTENT_PROHIBITED",
+    GENERATED_CONTENT_SAFETY = "GENERATED_CONTENT_SAFETY",
+    GENERATED_IMAGE_CELEBRITY = "GENERATED_IMAGE_CELEBRITY",
+    GENERATED_IMAGE_IDENTIFIABLE_PEOPLE = "GENERATED_IMAGE_IDENTIFIABLE_PEOPLE",
+    GENERATED_IMAGE_MINORS = "GENERATED_IMAGE_MINORS",
+    GENERATED_IMAGE_PROHIBITED = "GENERATED_IMAGE_PROHIBITED",
+    GENERATED_IMAGE_PROMINENT_PEOPLE_DETECTED_BY_REWRITER = "GENERATED_IMAGE_PROMINENT_PEOPLE_DETECTED_BY_REWRITER",
+    GENERATED_IMAGE_SAFETY = "GENERATED_IMAGE_SAFETY",
+    GENERATED_OTHER = "GENERATED_OTHER",
+    GENERATED_VIDEO_SAFETY = "GENERATED_VIDEO_SAFETY",
+    IMAGE_PROHIBITED_INPUT_CONTENT = "IMAGE_PROHIBITED_INPUT_CONTENT",
+    INPUT_IMAGE_CELEBRITY = "INPUT_IMAGE_CELEBRITY",
+    INPUT_IMAGE_PHOTO_REALISTIC_CHILD_PROHIBITED = "INPUT_IMAGE_PHOTO_REALISTIC_CHILD_PROHIBITED",
+    INPUT_IP_PROHIBITED = "INPUT_IP_PROHIBITED",
+    INPUT_OTHER = "INPUT_OTHER",
+    INPUT_TEXT_CONTAIN_PROMINENT_PERSON_PROHIBITED = "INPUT_TEXT_CONTAIN_PROMINENT_PERSON_PROHIBITED",
+    INPUT_TEXT_NCII_PROHIBITED = "INPUT_TEXT_NCII_PROHIBITED",
     MALFORMED_FUNCTION_CALL = "MALFORMED_FUNCTION_CALL",
+    MAX_REGENERATION_REACHED = "MAX_REGENERATION_REACHED",
     NEED_MORE_INPUT = "NEED_MORE_INPUT",
+    OUTPUT_IMAGE_IP_PROHIBITED = "OUTPUT_IMAGE_IP_PROHIBITED",
+    PROHIBITED_INPUT_CONTENT = "PROHIBITED_INPUT_CONTENT",
     RESPONSE_REJECTED = "RESPONSE_REJECTED",
-    TURN_COMPLETE_REASON_UNSPECIFIED = "TURN_COMPLETE_REASON_UNSPECIFIED"
+    TURN_COMPLETE_REASON_UNSPECIFIED = "TURN_COMPLETE_REASON_UNSPECIFIED",
+    UNSAFE_PROMPT_FOR_IMAGE_GENERATION = "UNSAFE_PROMPT_FOR_IMAGE_GENERATION"
 }
 
 // @public
 export enum TurnCoverage {
     TURN_COVERAGE_UNSPECIFIED = "TURN_COVERAGE_UNSPECIFIED",
     TURN_INCLUDES_ALL_INPUT = "TURN_INCLUDES_ALL_INPUT",
+    TURN_INCLUDES_AUDIO_ACTIVITY_AND_ALL_VIDEO = "TURN_INCLUDES_AUDIO_ACTIVITY_AND_ALL_VIDEO",
     TURN_INCLUDES_ONLY_ACTIVITY = "TURN_INCLUDES_ONLY_ACTIVITY"
 }
 
@@ -3843,8 +4094,7 @@ export interface UploadToFileSearchStoreConfig {
 export class UploadToFileSearchStoreOperation implements Operation<UploadToFileSearchStoreResponse> {
     done?: boolean;
     error?: Record<string, unknown>;
-    // @internal
-    _fromAPIResponse({ apiResponse, _isVertexAI, }: OperationFromAPIResponseParameters): Operation<UploadToFileSearchStoreResponse>;
+    _fromAPIResponse(input: OperationFromAPIResponseParameters): Operation<UploadToFileSearchStoreResponse>;
     metadata?: Record<string, unknown>;
     name?: string;
     response?: UploadToFileSearchStoreResponse;
@@ -3953,10 +4203,20 @@ export enum VadSignalType {
 
 // @public
 export interface VeoHyperParameters {
+    adapterSize?: AdapterSize;
     epochCount?: string;
     learningRateMultiplier?: number;
+    tuningSpeed?: TuningSpeed;
     tuningTask?: TuningTask;
     veoDataMixtureRatio?: number;
+}
+
+// @public
+export interface VeoLoraTuningSpec {
+    hyperParameters?: VeoHyperParameters;
+    trainingDatasetUri?: string;
+    validationDatasetUri?: string;
+    videoOrientation?: VideoOrientation;
 }
 
 // @public
@@ -3979,6 +4239,12 @@ export interface VertexAISearch {
 export interface VertexAISearchDataStoreSpec {
     dataStore?: string;
     filter?: string;
+}
+
+// @public
+export interface VertexMultimodalDatasetDestination {
+    bigqueryDestination?: string;
+    displayName?: string;
 }
 
 // @public
@@ -4044,6 +4310,13 @@ export interface VideoMetadata {
 }
 
 // @public
+export enum VideoOrientation {
+    LANDSCAPE = "LANDSCAPE",
+    PORTRAIT = "PORTRAIT",
+    VIDEO_ORIENTATION_UNSPECIFIED = "VIDEO_ORIENTATION_UNSPECIFIED"
+}
+
+// @public
 export interface VoiceActivity {
     voiceActivityType?: VoiceActivityType;
 }
@@ -4060,10 +4333,27 @@ export enum VoiceActivityType {
     TYPE_UNSPECIFIED = "TYPE_UNSPECIFIED"
 }
 
-// @public (undocumented)
+// @public
 export interface VoiceConfig {
     prebuiltVoiceConfig?: PrebuiltVoiceConfig;
     replicatedVoiceConfig?: ReplicatedVoiceConfig;
+}
+
+// @public
+export interface WebhookConfig {
+    uris?: string[];
+    userMetadata?: Record<string, unknown>;
+}
+
+// Warning: (ae-forgotten-export) The symbol "BaseWebhooks" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export class Webhooks extends BaseWebhooks {
+}
+
+// @public (undocumented)
+export namespace Webhooks {
+    export { export type SigningSecret as SigningSecret, export type Webhook as Webhook, export type WebhookListResponse as WebhookListResponse, export type WebhookDeleteResponse as WebhookDeleteResponse, export type WebhookPingResponse as WebhookPingResponse, export type WebhookRotateSigningSecretResponse as WebhookRotateSigningSecretResponse, export type WebhookCreateParams as WebhookCreateParams, export type WebhookUpdateParams as WebhookUpdateParams, export type WebhookListParams as WebhookListParams, export type WebhookDeleteParams as WebhookDeleteParams, export type WebhookGetParams as WebhookGetParams, export type WebhookPingParams as WebhookPingParams, export type WebhookRotateSigningSecretParams as WebhookRotateSigningSecretParams, };
 }
 
 // @public

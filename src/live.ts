@@ -376,7 +376,7 @@ export class Session {
     }
 
     const clientMessage: types.LiveClientMessage = {
-      toolResponse: {functionResponses: functionResponses},
+      toolResponse: {'functionResponses': functionResponses},
     };
     return clientMessage;
   }

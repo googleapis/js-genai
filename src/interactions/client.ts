@@ -23,16 +23,24 @@ import * as Uploads from './core/uploads.js';
 import * as API from './resources/index.js';
 import { APIPromise } from './core/api-promise.js';
 import {
+  Agent,
+  AgentCreateParams,
+  AgentDeleteParams,
+  AgentDeleteResponse,
+  AgentGetParams,
+  AgentListParams,
+  AgentListResponse,
+  Agents,
+} from './resources/agents.js';
+import {
   AllowedTools,
   Annotation,
   AudioContent,
+  AudioResponseFormat,
   CodeExecutionCallArguments,
-  CodeExecutionCallContent,
-  CodeExecutionResultContent,
+  CodeExecutionCallStep,
+  CodeExecutionResultStep,
   Content,
-  ContentDelta,
-  ContentStart,
-  ContentStop,
   CreateAgentInteractionParamsNonStreaming,
   CreateAgentInteractionParamsStreaming,
   CreateModelInteractionParamsNonStreaming,
@@ -40,50 +48,82 @@ import {
   DeepResearchAgentConfig,
   DocumentContent,
   DynamicAgentConfig,
+  Environment,
   ErrorEvent,
-  FileSearchCallContent,
-  FileSearchResultContent,
+  FileCitation,
+  FileSearchCallStep,
+  FileSearchResultStep,
   Function,
-  FunctionCallContent,
-  FunctionResultContent,
+  FunctionCallStep,
+  FunctionResultStep,
   GenerationConfig,
+  GoogleMapsCallArguments,
+  GoogleMapsCallStep,
+  GoogleMapsResult,
+  GoogleMapsResultStep,
   GoogleSearchCallArguments,
-  GoogleSearchCallContent,
+  GoogleSearchCallStep,
   GoogleSearchResult,
-  GoogleSearchResultContent,
+  GoogleSearchResultStep,
   ImageConfig,
   ImageContent,
+  ImageResponseFormat,
   Interaction,
   InteractionCancelParams,
-  InteractionCompleteEvent,
+  InteractionCompletedEvent,
   InteractionCreateParams,
+  InteractionCreatedEvent,
   InteractionDeleteParams,
   InteractionDeleteResponse,
   InteractionGetParams,
   InteractionGetParamsNonStreaming,
   InteractionGetParamsStreaming,
   InteractionSSEEvent,
-  InteractionStartEvent,
   InteractionStatusUpdate,
   Interactions,
-  MCPServerToolCallContent,
-  MCPServerToolResultContent,
+  MCPServerToolCallStep,
+  MCPServerToolResultStep,
   Model,
+  ModelOutputStep,
+  PlaceCitation,
   SpeechConfig,
+  Step,
+  StepDelta,
+  StepStart,
+  StepStop,
   TextContent,
+  TextResponseFormat,
   ThinkingLevel,
-  ThoughtContent,
+  ThoughtStep,
   Tool,
   ToolChoiceConfig,
   ToolChoiceType,
-  Turn,
+  URLCitation,
   URLContextCallArguments,
-  URLContextCallContent,
+  URLContextCallStep,
   URLContextResult,
-  URLContextResultContent,
+  URLContextResultStep,
   Usage,
+  UserInputStep,
   VideoContent,
+  WebhookConfig,
 } from './resources/interactions.js';
+import {
+  SigningSecret,
+  Webhook,
+  WebhookCreateParams,
+  WebhookDeleteParams,
+  WebhookDeleteResponse,
+  WebhookGetParams,
+  WebhookListParams,
+  WebhookListResponse,
+  WebhookPingParams,
+  WebhookPingResponse,
+  WebhookRotateSigningSecretParams,
+  WebhookRotateSigningSecretResponse,
+  WebhookUpdateParams,
+  Webhooks,
+} from './resources/webhooks.js';
 import { type Fetch } from './internal/builtin-types.js';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers.js';
 import { FinalRequestOptions, RequestOptions } from './internal/request-options.js';
@@ -177,7 +217,7 @@ export interface ClientOptions {
   /**
    * The adapter to the parent API client instance (for accessing auth, project, location)
    */
-  clientAdapter: GeminiNextGenAPIClientAdapter;
+  clientAdapter?: GeminiNextGenAPIClientAdapter | undefined;
 }
 
 /**
@@ -198,7 +238,7 @@ export class BaseGeminiNextGenAPIClient {
   private encoder: Opts.RequestEncoder;
   protected idempotencyHeader?: string;
   private _options: ClientOptions;
-  private clientAdapter: GeminiNextGenAPIClientAdapter;
+  private clientAdapter: GeminiNextGenAPIClientAdapter | undefined;
 
   /**
    * API Client for interfacing with the Gemini Next Gen API API.
@@ -307,7 +347,7 @@ export class BaseGeminiNextGenAPIClient {
       return buildHeaders([{ 'x-goog-api-key': this.apiKey }]);
     }
 
-    if (this.clientAdapter.isVertexAI()) {
+    if (this.clientAdapter && this.clientAdapter.isVertexAI()) {
       return buildHeaders([await this.clientAdapter.getAuthHeaders()]);
     }
 
@@ -747,7 +787,7 @@ export class BaseGeminiNextGenAPIClient {
 
     let headers = buildHeaders([
       idempotencyHeaders,
-      { Accept: 'application/json', 'User-Agent': this.getUserAgent() },
+      { Accept: 'application/json', 'User-Agent': this.getUserAgent(), 'Api-Revision': '2026-05-20' },
       this._options.defaultHeaders,
       bodyHeaders,
       options.headers,
@@ -836,9 +876,13 @@ export class GeminiNextGenAPIClient extends BaseGeminiNextGenAPIClient {
   static toFile = Uploads.toFile;
 
   interactions: API.Interactions = new API.Interactions(this);
+  webhooks: API.Webhooks = new API.Webhooks(this);
+  agents: API.Agents = new API.Agents(this);
 }
 
 GeminiNextGenAPIClient.Interactions = Interactions;
+GeminiNextGenAPIClient.Webhooks = Webhooks;
+GeminiNextGenAPIClient.Agents = Agents;
 
 export declare namespace GeminiNextGenAPIClient {
   export type RequestOptions = Opts.RequestOptions;
@@ -848,51 +892,65 @@ export declare namespace GeminiNextGenAPIClient {
     type AllowedTools as AllowedTools,
     type Annotation as Annotation,
     type AudioContent as AudioContent,
+    type AudioResponseFormat as AudioResponseFormat,
     type CodeExecutionCallArguments as CodeExecutionCallArguments,
-    type CodeExecutionCallContent as CodeExecutionCallContent,
-    type CodeExecutionResultContent as CodeExecutionResultContent,
+    type CodeExecutionCallStep as CodeExecutionCallStep,
+    type CodeExecutionResultStep as CodeExecutionResultStep,
     type Content as Content,
-    type ContentDelta as ContentDelta,
-    type ContentStart as ContentStart,
-    type ContentStop as ContentStop,
     type DeepResearchAgentConfig as DeepResearchAgentConfig,
     type DocumentContent as DocumentContent,
     type DynamicAgentConfig as DynamicAgentConfig,
+    type Environment as Environment,
     type ErrorEvent as ErrorEvent,
-    type FileSearchCallContent as FileSearchCallContent,
-    type FileSearchResultContent as FileSearchResultContent,
+    type FileCitation as FileCitation,
+    type FileSearchCallStep as FileSearchCallStep,
+    type FileSearchResultStep as FileSearchResultStep,
     type Function as Function,
-    type FunctionCallContent as FunctionCallContent,
-    type FunctionResultContent as FunctionResultContent,
+    type FunctionCallStep as FunctionCallStep,
+    type FunctionResultStep as FunctionResultStep,
     type GenerationConfig as GenerationConfig,
+    type GoogleMapsCallArguments as GoogleMapsCallArguments,
+    type GoogleMapsCallStep as GoogleMapsCallStep,
+    type GoogleMapsResult as GoogleMapsResult,
+    type GoogleMapsResultStep as GoogleMapsResultStep,
     type GoogleSearchCallArguments as GoogleSearchCallArguments,
-    type GoogleSearchCallContent as GoogleSearchCallContent,
+    type GoogleSearchCallStep as GoogleSearchCallStep,
     type GoogleSearchResult as GoogleSearchResult,
-    type GoogleSearchResultContent as GoogleSearchResultContent,
+    type GoogleSearchResultStep as GoogleSearchResultStep,
     type ImageConfig as ImageConfig,
     type ImageContent as ImageContent,
+    type ImageResponseFormat as ImageResponseFormat,
     type Interaction as Interaction,
-    type InteractionCompleteEvent as InteractionCompleteEvent,
+    type InteractionCompletedEvent as InteractionCompletedEvent,
+    type InteractionCreatedEvent as InteractionCreatedEvent,
     type InteractionSSEEvent as InteractionSSEEvent,
-    type InteractionStartEvent as InteractionStartEvent,
     type InteractionStatusUpdate as InteractionStatusUpdate,
-    type MCPServerToolCallContent as MCPServerToolCallContent,
-    type MCPServerToolResultContent as MCPServerToolResultContent,
+    type MCPServerToolCallStep as MCPServerToolCallStep,
+    type MCPServerToolResultStep as MCPServerToolResultStep,
     type Model as Model,
+    type ModelOutputStep as ModelOutputStep,
+    type PlaceCitation as PlaceCitation,
     type SpeechConfig as SpeechConfig,
+    type Step as Step,
+    type StepDelta as StepDelta,
+    type StepStart as StepStart,
+    type StepStop as StepStop,
     type TextContent as TextContent,
+    type TextResponseFormat as TextResponseFormat,
     type ThinkingLevel as ThinkingLevel,
-    type ThoughtContent as ThoughtContent,
+    type ThoughtStep as ThoughtStep,
     type Tool as Tool,
     type ToolChoiceConfig as ToolChoiceConfig,
     type ToolChoiceType as ToolChoiceType,
-    type Turn as Turn,
+    type URLCitation as URLCitation,
     type URLContextCallArguments as URLContextCallArguments,
-    type URLContextCallContent as URLContextCallContent,
+    type URLContextCallStep as URLContextCallStep,
     type URLContextResult as URLContextResult,
-    type URLContextResultContent as URLContextResultContent,
+    type URLContextResultStep as URLContextResultStep,
     type Usage as Usage,
+    type UserInputStep as UserInputStep,
     type VideoContent as VideoContent,
+    type WebhookConfig as WebhookConfig,
     type InteractionDeleteResponse as InteractionDeleteResponse,
     type InteractionCreateParams as InteractionCreateParams,
     type CreateModelInteractionParamsNonStreaming as CreateModelInteractionParamsNonStreaming,
@@ -904,5 +962,33 @@ export declare namespace GeminiNextGenAPIClient {
     type InteractionGetParams as InteractionGetParams,
     type InteractionGetParamsNonStreaming as InteractionGetParamsNonStreaming,
     type InteractionGetParamsStreaming as InteractionGetParamsStreaming,
+  };
+
+  export {
+    Webhooks as Webhooks,
+    type SigningSecret as SigningSecret,
+    type Webhook as Webhook,
+    type WebhookListResponse as WebhookListResponse,
+    type WebhookDeleteResponse as WebhookDeleteResponse,
+    type WebhookPingResponse as WebhookPingResponse,
+    type WebhookRotateSigningSecretResponse as WebhookRotateSigningSecretResponse,
+    type WebhookCreateParams as WebhookCreateParams,
+    type WebhookUpdateParams as WebhookUpdateParams,
+    type WebhookListParams as WebhookListParams,
+    type WebhookDeleteParams as WebhookDeleteParams,
+    type WebhookGetParams as WebhookGetParams,
+    type WebhookPingParams as WebhookPingParams,
+    type WebhookRotateSigningSecretParams as WebhookRotateSigningSecretParams,
+  };
+
+  export {
+    Agents as Agents,
+    type Agent as Agent,
+    type AgentListResponse as AgentListResponse,
+    type AgentDeleteResponse as AgentDeleteResponse,
+    type AgentCreateParams as AgentCreateParams,
+    type AgentListParams as AgentListParams,
+    type AgentDeleteParams as AgentDeleteParams,
+    type AgentGetParams as AgentGetParams,
   };
 }

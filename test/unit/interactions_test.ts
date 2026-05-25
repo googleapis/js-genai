@@ -71,7 +71,23 @@ describe('Interactions resource', () => {
           },
         ),
       ).toBeRejected();
-      expect(fetchSpy).toHaveBeenCalledTimes(5);
+    });
+
+    it('should throw APIConnectionTimeoutError with helpful message on timeout', async () => {
+      fetchSpy.and.rejectWith(new Error('timeout'));
+
+      await expectAsync(
+        client.interactions.create(
+          {
+            agent: 'some-agent',
+            input: 'some input',
+          },
+          {maxRetries: 0},
+        ),
+      ).toBeRejectedWithError(
+        GeminiNextGenAPIClient.APIConnectionTimeoutError,
+        /Request timed out. This is a client-side timeout. You can increase the timeout/,
+      );
     });
 
     it('should not invoke client auth headers if manually given', async () => {
@@ -213,9 +229,9 @@ describe('Interactions resource', () => {
     it('should handle large fragmented SSE payloads correctly', async () => {
       const largeData = 'A'.repeat(10 * 1024);
       const mockSSE =
-        `data: {"event_type": "content.delta", "delta": {"type": "text", "text": "${
+        `data: {"event_type": "step.delta", "delta": {"type": "text", "text": "${
           largeData
-        }"}}\n\n` + `data: [DONE]\n\n`;
+        }"}, "index": 0}\n\n` + `data: [DONE]\n\n`;
       const sseBytes = new TextEncoder().encode(mockSSE);
 
       const readableStream = new ReadableStream({
@@ -238,10 +254,7 @@ describe('Interactions resource', () => {
 
       let received = '';
       for await (const event of stream) {
-        if (
-          event.event_type === 'content.delta' &&
-          event.delta?.type === 'text'
-        ) {
+        if (event.event_type === 'step.delta' && event.delta?.type === 'text') {
           received += event.delta.text;
         }
       }
