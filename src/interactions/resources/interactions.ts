@@ -431,6 +431,11 @@ export interface DeepResearchAgentConfig {
   collaborative_planning?: boolean;
 
   /**
+   * Enables bigquery tool for the Deep Research agent.
+   */
+  enable_bigquery_tool?: boolean;
+
+  /**
    * Whether to include thought summaries in the response.
    */
   thinking_summaries?: 'auto' | 'none';
