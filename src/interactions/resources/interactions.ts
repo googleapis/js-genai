@@ -770,6 +770,13 @@ export interface FunctionResultStep {
  */
 export interface GenerationConfig {
   /**
+   * Penalizes tokens based on their frequency in the generated text. A positive
+   * value helps to reduce the repetition of words and phrases. Valid values can
+   * range from [-2.0, 2.0].
+   */
+  frequency_penalty?: number;
+
+  /**
    * @deprecated Configuration for image interaction.
    */
   image_config?: ImageConfig;
@@ -778,6 +785,13 @@ export interface GenerationConfig {
    * The maximum number of tokens to include in the response.
    */
   max_output_tokens?: number;
+
+  /**
+   * Penalizes tokens that have already appeared in the generated text. A positive
+   * value encourages the model to generate more diverse and less repetitive text.
+   * Valid values can range from [-2.0, 2.0].
+   */
+  presence_penalty?: number;
 
   /**
    * Seed used in decoding for reproducibility.
@@ -1240,6 +1254,14 @@ export interface Interaction {
    * Configuration parameters for the agent interaction.
    */
   agent_config?: DynamicAgentConfig | DeepResearchAgentConfig;
+
+  /**
+   * The name of the cached content used as context to serve the prediction. Note:
+   * only used in explicit caching, where users can have control over caching (e.g.
+   * what content to cache) and enjoy guaranteed cost savings. Format:
+   * `projects/{project}/locations/{location}/cachedContents/{cachedContent}`
+   */
+  cached_content?: string;
 
   /**
    * The environment configuration for the interaction. Can be an object specifying
@@ -2692,6 +2714,14 @@ export interface BaseCreateModelInteractionParams {
    * Body param: Input only. Whether to run the model interaction in the background.
    */
   background?: boolean;
+
+  /**
+   * Body param: The name of the cached content used as context to serve the
+   * prediction. Note: only used in explicit caching, where users can have control
+   * over caching (e.g. what content to cache) and enjoy guaranteed cost savings.
+   * Format: `projects/{project}/locations/{location}/cachedContents/{cachedContent}`
+   */
+  cached_content?: string;
 
   /**
    * Body param: The environment configuration for the interaction. Can be an object
