@@ -18,6 +18,7 @@ export enum PagedItem {
   PAGED_ITEM_CACHED_CONTENTS = 'cachedContents',
   PAGED_ITEM_FILE_SEARCH_STORES = 'fileSearchStores',
   PAGED_ITEM_DOCUMENTS = 'documents',
+  PAGED_ITEM_SKILLS = 'skills',
 }
 
 export interface PagedItemConfig {
@@ -38,6 +39,7 @@ interface PagedItemResponse<T> {
   cachedContents?: T[];
   fileSearchStores?: T[];
   documents?: T[];
+  skills?: T[];
 }
 
 /**

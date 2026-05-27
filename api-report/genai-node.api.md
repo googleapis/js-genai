@@ -2977,6 +2977,8 @@ export enum PagedItem {
     // (undocumented)
     PAGED_ITEM_MODELS = "models",
     // (undocumented)
+    PAGED_ITEM_SKILLS = "skills",
+    // (undocumented)
     PAGED_ITEM_TUNING_JOBS = "tuningJobs"
 }
 
