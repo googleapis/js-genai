@@ -2,6 +2,17 @@
 
 
 
+## [2.7.0](https://github.com/googleapis/js-genai/compare/v2.6.0...v2.7.0) (2026-05-27)
+
+
+### Features
+
+* Add Skill Registry ListSkills and DeleteSkill to SDK ([d75582a](https://github.com/googleapis/js-genai/commit/d75582ad9bd04b071c4eea003df80b417070fd87))
+* additional computer_use field support for vertex. ([54a692b](https://github.com/googleapis/js-genai/commit/54a692b372fe6d5ab1340cd3ae4ea02a3a59e85c))
+* **interaction-api:** Allow "text/csv" as a supported document mime type for Interaction API. ([3cc830e](https://github.com/googleapis/js-genai/commit/3cc830e592d9c3185f0b9c15ed36de7581e0a5d5))
+* **interaction-api:** Enable BigQuery tool in Deep Research config. ([58c8c7e](https://github.com/googleapis/js-genai/commit/58c8c7e57b8454469e0f33a873432b892ef3ffc1))
+* Support Reinforcement Tuning in GenAI SDK ([418cc35](https://github.com/googleapis/js-genai/commit/418cc35c62af073dc41169df09884bfdcd25b4b8))
+
 ## [2.6.0](https://github.com/googleapis/js-genai/compare/v2.5.0...v2.6.0) (2026-05-21)
 
 
