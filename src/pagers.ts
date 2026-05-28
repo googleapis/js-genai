@@ -8,7 +8,7 @@
  * Pagers for the GenAI List APIs.
  */
 
-import * as types from '../src/types';
+import * as types from './types.js';
 
 export enum PagedItem {
   PAGED_ITEM_BATCH_JOBS = 'batchJobs',
