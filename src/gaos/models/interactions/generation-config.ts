@@ -22,7 +22,7 @@ import { VideoConfig } from "./video-config.js";
 /**
  * The tool choice configuration.
  */
-export type ToolChoice = ToolChoiceType | ToolChoiceConfig;
+export type ToolChoice = ToolChoiceConfig | ToolChoiceType;
 
 /**
  * Configuration parameters for model interactions.
@@ -55,7 +55,7 @@ export type GenerationConfig = {
   /**
    * The tool choice configuration.
    */
-  tool_choice?: ToolChoiceType | ToolChoiceConfig | undefined;
+  tool_choice?: ToolChoiceConfig | ToolChoiceType | undefined;
   /**
    * Configuration for speech recognition (transcription).
    */
