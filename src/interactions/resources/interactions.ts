@@ -1239,7 +1239,7 @@ export interface Interaction {
   /**
    * Configuration parameters for the agent interaction.
    */
-  agent_config?: DynamicAgentConfig | DeepResearchAgentConfig;
+  agent_config?: DynamicAgentConfig | DeepResearchAgentConfig | Interaction.CodeMender;
 
   /**
    * The environment configuration for the interaction. Can be an object specifying
@@ -1356,6 +1356,143 @@ export interface Interaction {
    * Note: this is added by the SDK.
    */
   output_video?: VideoContent;
+}
+
+export namespace Interaction {
+  /**
+   * Configuration for the CodeMender agent.
+   */
+  export interface CodeMender {
+    type: 'code-mender';
+
+    /**
+     * Parameters for finding vulnerabilities. This field is only applicable when
+     * session_type is SESSION_TYPE_FIND.
+     */
+    find_request?: CodeMender.FindRequest;
+
+    /**
+     * Parameters for fixing vulnerabilities. This field is only applicable when
+     * session_type is SESSION_TYPE_FIX.
+     */
+    fix_request?: CodeMender.FixRequest;
+
+    /**
+     * Optional session-specific configurations to override default agent behavior.
+     */
+    session_config?: CodeMender.SessionConfig;
+
+    /**
+     * The session type of a CodeMender session.
+     */
+    session_type?: 'find' | 'fix';
+  }
+
+  export namespace CodeMender {
+    /**
+     * Parameters for finding vulnerabilities. This field is only applicable when
+     * session_type is SESSION_TYPE_FIND.
+     */
+    export interface FindRequest {
+      /**
+       * Additional context or custom instructions provided by the user to guide the
+       * vulnerability analysis.
+       */
+      description?: string;
+
+      /**
+       * The identifier of a specific finding to verify. This is primarily used in VERIFY
+       * mode to focus the agent's execution-based validation on a single vulnerability.
+       */
+      finding_id?: string;
+
+      /**
+       * A list of source files to provide as context for the scan.
+       */
+      source_files?: Array<FindRequest.SourceFile>;
+    }
+
+    export namespace FindRequest {
+      /**
+       * Content of a single file in the codebase.
+       */
+      export interface SourceFile {
+        /**
+         * The UTF-8 encoded text content of the file.
+         */
+        content?: string;
+
+        /**
+         * The relative path of the file from the project root.
+         */
+        path?: string;
+      }
+    }
+
+    /**
+     * Parameters for fixing vulnerabilities. This field is only applicable when
+     * session_type is SESSION_TYPE_FIX.
+     */
+    export interface FixRequest {
+      /**
+       * Additional context or custom instructions provided by the user to guide the
+       * patch generation process.
+       */
+      description?: string;
+
+      /**
+       * The identifier of the specific security finding to be remediated. This ID maps
+       * to a previously discovered vulnerability.
+       */
+      finding_id?: string;
+
+      /**
+       * A list of source files providing context for the remediation. These files are
+       * typically the ones containing the identified vulnerability.
+       */
+      source_files?: Array<FixRequest.SourceFile>;
+    }
+
+    export namespace FixRequest {
+      /**
+       * Content of a single file in the codebase.
+       */
+      export interface SourceFile {
+        /**
+         * The UTF-8 encoded text content of the file.
+         */
+        content?: string;
+
+        /**
+         * The relative path of the file from the project root.
+         */
+        path?: string;
+      }
+    }
+
+    /**
+     * Optional session-specific configurations to override default agent behavior.
+     */
+    export interface SessionConfig {
+      /**
+       * The maximum number of interaction rounds the agent is allowed to perform before
+       * reaching a timeout.
+       */
+      max_rounds?: number;
+
+      /**
+       * The pipeline mode of a CodeMender session. It can only be used for a find
+       * session.
+       */
+      pipeline_mode?: 'scan' | 'find' | 'full' | 'verify';
+
+      /**
+       * The cognitive architecture or "thinking" topology used by the agent (e.g.
+       * "default", "deep").
+       */
+      topology?: string;
+    }
+  }
 }
 
 export interface InteractionCompletedEvent {
@@ -2796,7 +2933,7 @@ export interface BaseCreateAgentInteractionParams {
   /**
    * Body param: Configuration parameters for the agent interaction.
    */
-  agent_config?: DynamicAgentConfig | DeepResearchAgentConfig;
+  agent_config?: DynamicAgentConfig | DeepResearchAgentConfig | CodeMender;
 
   /**
    * Body param: Input only. Whether to run the model interaction in the background.
@@ -2868,6 +3005,143 @@ export interface BaseCreateAgentInteractionParams {
    * interaction completes.
    */
   webhook_config?: WebhookConfig;
+}
+
+export namespace BaseCreateAgentInteractionParams {
+  /**
+   * Configuration for the CodeMender agent.
+   */
+  export interface CodeMender {
+    type: 'code-mender';
+
+    /**
+     * Parameters for finding vulnerabilities. This field is only applicable when
+     * session_type is SESSION_TYPE_FIND.
+     */
+    find_request?: CodeMender.FindRequest;
+
+    /**
+     * Parameters for fixing vulnerabilities. This field is only applicable when
+     * session_type is SESSION_TYPE_FIX.
+     */
+    fix_request?: CodeMender.FixRequest;
+
+    /**
+     * Optional session-specific configurations to override default agent behavior.
+     */
+    session_config?: CodeMender.SessionConfig;
+
+    /**
+     * The session type of a CodeMender session.
+     */
+    session_type?: 'find' | 'fix';
+  }
+
+  export namespace CodeMender {
+    /**
+     * Parameters for finding vulnerabilities. This field is only applicable when
+     * session_type is SESSION_TYPE_FIND.
+     */
+    export interface FindRequest {
+      /**
+       * Additional context or custom instructions provided by the user to guide the
+       * vulnerability analysis.
+       */
+      description?: string;
+
+      /**
+       * The identifier of a specific finding to verify. This is primarily used in VERIFY
+       * mode to focus the agent's execution-based validation on a single vulnerability.
+       */
+      finding_id?: string;
+
+      /**
+       * A list of source files to provide as context for the scan.
+       */
+      source_files?: Array<FindRequest.SourceFile>;
+    }
+
+    export namespace FindRequest {
+      /**
+       * Content of a single file in the codebase.
+       */
+      export interface SourceFile {
+        /**
+         * The UTF-8 encoded text content of the file.
+         */
+        content?: string;
+
+        /**
+         * The relative path of the file from the project root.
+         */
+        path?: string;
+      }
+    }
+
+    /**
+     * Parameters for fixing vulnerabilities. This field is only applicable when
+     * session_type is SESSION_TYPE_FIX.
+     */
+    export interface FixRequest {
+      /**
+       * Additional context or custom instructions provided by the user to guide the
+       * patch generation process.
+       */
+      description?: string;
+
+      /**
+       * The identifier of the specific security finding to be remediated. This ID maps
+       * to a previously discovered vulnerability.
+       */
+      finding_id?: string;
+
+      /**
+       * A list of source files providing context for the remediation. These files are
+       * typically the ones containing the identified vulnerability.
+       */
+      source_files?: Array<FixRequest.SourceFile>;
+    }
+
+    export namespace FixRequest {
+      /**
+       * Content of a single file in the codebase.
+       */
+      export interface SourceFile {
+        /**
+         * The UTF-8 encoded text content of the file.
+         */
+        content?: string;
+
+        /**
+         * The relative path of the file from the project root.
+         */
+        path?: string;
+      }
+    }
+
+    /**
+     * Optional session-specific configurations to override default agent behavior.
+     */
+    export interface SessionConfig {
+      /**
+       * The maximum number of interaction rounds the agent is allowed to perform before
+       * reaching a timeout.
+       */
+      max_rounds?: number;
+
+      /**
+       * The pipeline mode of a CodeMender session. It can only be used for a find
+       * session.
+       */
+      pipeline_mode?: 'scan' | 'find' | 'full' | 'verify';
+
+      /**
+       * The cognitive architecture or "thinking" topology used by the agent (e.g.
+       * "default", "deep").
+       */
+      topology?: string;
+    }
+  }
 }
 
 export interface CreateModelInteractionParamsNonStreaming extends BaseCreateModelInteractionParams {
