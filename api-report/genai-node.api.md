@@ -2533,7 +2533,7 @@ export interface LiveConnectConfig {
     seed?: number;
     sessionResumption?: SessionResumptionConfig;
     speechConfig?: SpeechConfig;
-    streamTranslationConfig?: StreamTranslationConfig;
+    streamingTranslationConfig?: StreamingTranslationConfig;
     systemInstruction?: ContentUnion;
     temperature?: number;
     thinkingConfig?: ThinkingConfig;
@@ -3604,7 +3604,7 @@ export interface StreamableHttpTransport {
 }
 
 // @public
-export interface StreamTranslationConfig {
+export interface StreamingTranslationConfig {
     echoTargetLanguage?: boolean;
     targetLanguageCode?: string;
 }

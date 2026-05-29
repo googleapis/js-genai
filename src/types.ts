@@ -7529,7 +7529,7 @@ export declare interface LiveClientMessage {
 }
 
 /** Config for stream translation. */
-export declare interface StreamTranslationConfig {
+export declare interface StreamingTranslationConfig {
   /** If true, the model will generate audio when the target language is
       spoken, essentially it will parrot the input. If false, we will not produce
       audio for the target language. */
@@ -7635,8 +7635,8 @@ If included the server will send SessionResumptionUpdate messages. */
       response.
        */
   safetySettings?: SafetySetting[];
-  /** Config for stream translation. */
-  streamTranslationConfig?: StreamTranslationConfig;
+  /** Config for streaming translation. */
+  streamingTranslationConfig?: StreamingTranslationConfig;
 }
 
 /** Parameters for connecting to the live API. */
