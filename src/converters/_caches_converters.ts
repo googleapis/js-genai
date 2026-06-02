@@ -758,6 +758,28 @@ export function listCachedContentsResponseFromVertex(
   return toObject;
 }
 
+export function mcpServerToVertex(
+  fromObject: types.McpServer,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  if (common.getValueByPath(fromObject, ['name']) !== undefined) {
+    throw new Error(
+      'name parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+    );
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['streamableHttpTransport']) !== undefined
+  ) {
+    throw new Error(
+      'streamableHttpTransport parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+    );
+  }
+
+  return toObject;
+}
+
 export function partToMldev(fromObject: types.Part): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1218,10 +1240,15 @@ export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
     common.setValueByPath(toObject, ['urlContext'], fromUrlContext);
   }
 
-  if (common.getValueByPath(fromObject, ['mcpServers']) !== undefined) {
-    throw new Error(
-      'mcpServers parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
-    );
+  const fromMcpServers = common.getValueByPath(fromObject, ['mcpServers']);
+  if (fromMcpServers != null) {
+    let transformedList = fromMcpServers;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return mcpServerToVertex(item);
+      });
+    }
+    common.setValueByPath(toObject, ['mcpServers'], transformedList);
   }
 
   return toObject;
