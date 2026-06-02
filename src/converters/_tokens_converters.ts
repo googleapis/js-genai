@@ -558,14 +558,14 @@ export function liveConnectConfigToMldev(
     );
   }
 
-  const fromStreamTranslationConfig = common.getValueByPath(fromObject, [
-    'streamTranslationConfig',
+  const fromTranslationConfig = common.getValueByPath(fromObject, [
+    'translationConfig',
   ]);
-  if (parentObject !== undefined && fromStreamTranslationConfig != null) {
+  if (parentObject !== undefined && fromTranslationConfig != null) {
     common.setValueByPath(
       parentObject,
-      ['setup', 'generationConfig', 'streamTranslationConfig'],
-      fromStreamTranslationConfig,
+      ['setup', 'generationConfig', 'translationConfig'],
+      fromTranslationConfig,
     );
   }
 

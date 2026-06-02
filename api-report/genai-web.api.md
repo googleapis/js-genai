@@ -2533,13 +2533,13 @@ export interface LiveConnectConfig {
     seed?: number;
     sessionResumption?: SessionResumptionConfig;
     speechConfig?: SpeechConfig;
-    streamTranslationConfig?: StreamTranslationConfig;
     systemInstruction?: ContentUnion;
     temperature?: number;
     thinkingConfig?: ThinkingConfig;
     tools?: ToolListUnion;
     topK?: number;
     topP?: number;
+    translationConfig?: TranslationConfig;
 }
 
 // @public
@@ -3604,12 +3604,6 @@ export interface StreamableHttpTransport {
 }
 
 // @public
-export interface StreamTranslationConfig {
-    echoTargetLanguage?: boolean;
-    targetLanguageCode?: string;
-}
-
-// @public
 export interface StringList {
     values?: string[];
 }
@@ -3839,6 +3833,12 @@ export enum TrafficType {
 export interface Transcription {
     finished?: boolean;
     text?: string;
+}
+
+// @public
+export interface TranslationConfig {
+    echoTargetLanguage?: boolean;
+    targetLanguageCode?: string;
 }
 
 // @public

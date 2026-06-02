@@ -1218,14 +1218,14 @@ export function liveConnectConfigToMldev(
     );
   }
 
-  const fromStreamTranslationConfig = common.getValueByPath(fromObject, [
-    'streamTranslationConfig',
+  const fromTranslationConfig = common.getValueByPath(fromObject, [
+    'translationConfig',
   ]);
-  if (parentObject !== undefined && fromStreamTranslationConfig != null) {
+  if (parentObject !== undefined && fromTranslationConfig != null) {
     common.setValueByPath(
       parentObject,
-      ['setup', 'generationConfig', 'streamTranslationConfig'],
-      fromStreamTranslationConfig,
+      ['setup', 'generationConfig', 'translationConfig'],
+      fromTranslationConfig,
     );
   }
 
@@ -1472,11 +1472,9 @@ export function liveConnectConfigToVertex(
     );
   }
 
-  if (
-    common.getValueByPath(fromObject, ['streamTranslationConfig']) !== undefined
-  ) {
+  if (common.getValueByPath(fromObject, ['translationConfig']) !== undefined) {
     throw new Error(
-      'streamTranslationConfig parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+      'translationConfig parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
     );
   }
 
