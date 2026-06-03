@@ -2,6 +2,16 @@
 
 
 
+## [2.8.0](https://github.com/googleapis/js-genai/compare/v2.7.0...v2.8.0) (2026-06-03)
+
+
+### Features
+
+* Add Agent Platform MCP support to async generate_content ([baeaeaa](https://github.com/googleapis/js-genai/commit/baeaeaa5ae89f9f0a987a8cac5ef61703593fbc4))
+* Add transcription language code. ([d2981d6](https://github.com/googleapis/js-genai/commit/d2981d6c94e10f4b65d225e637e605b533c9a9d7))
+* Add TranslationConfig for live translation. ([8c44240](https://github.com/googleapis/js-genai/commit/8c44240f961708cfde6f2201af2175a0239ef490))
+* Support ReinforcementTuning in GenAI SDK including ValidateReward API method. ([36f0bfb](https://github.com/googleapis/js-genai/commit/36f0bfb710ba954983de1fd786c89ed8fe887ce9))
+
 ## [2.7.0](https://github.com/googleapis/js-genai/compare/v2.6.0...v2.7.0) (2026-05-27)
 
 
