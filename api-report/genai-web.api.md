@@ -3832,6 +3832,7 @@ export enum TrafficType {
 // @public
 export interface Transcription {
     finished?: boolean;
+    languageCode?: string;
     text?: string;
 }
 
