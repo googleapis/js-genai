@@ -1242,6 +1242,58 @@ export enum ImageResizeMode {
   PAD = 'PAD',
 }
 
+/** Defines how to parse sample response. */
+export enum ResponseParseType {
+  /**
+   * Default value. This value is unused.
+   */
+  RESPONSE_PARSE_TYPE_UNSPECIFIED = 'RESPONSE_PARSE_TYPE_UNSPECIFIED',
+  /**
+   * Use the sample response as is.
+   */
+  IDENTITY = 'IDENTITY',
+  /**
+   * Use regex to extract the important part of sample response.
+   */
+  REGEX_EXTRACT = 'REGEX_EXTRACT',
+}
+
+/** Match operation to use for evaluation. */
+export enum MatchOperation {
+  /**
+   * Default value. This value is unused.
+   */
+  MATCH_OPERATION_UNSPECIFIED = 'MATCH_OPERATION_UNSPECIFIED',
+  /**
+   * Equivalent to GoogleSQL `REGEX_CONTAINS(target, expression)`.
+   */
+  REGEX_CONTAINS = 'REGEX_CONTAINS',
+  /**
+   * `expression` is a substring of target.
+   */
+  PARTIAL_MATCH = 'PARTIAL_MATCH',
+  /**
+   * `expression` is an exact match of target.
+   */
+  EXACT_MATCH = 'EXACT_MATCH',
+}
+
+/** Represents how much to think for the tuning job. */
+export enum ReinforcementTuningThinkingLevel {
+  /**
+   * Unspecified thinking level.
+   */
+  REINFORCEMENT_TUNING_THINKING_LEVEL_UNSPECIFIED = 'REINFORCEMENT_TUNING_THINKING_LEVEL_UNSPECIFIED',
+  /**
+   * Little to no thinking.
+   */
+  MINIMAL = 'MINIMAL',
+  /**
+   * High thinking level.
+   */
+  HIGH = 'HIGH',
+}
+
 /** Enum representing the tuning method. */
 export enum TuningMethod {
   /**
@@ -4862,6 +4914,170 @@ export declare interface DistillationSpec {
   tuningMode?: TuningMode;
 }
 
+/** Autorater config used for evaluation. */
+export declare interface AutoraterConfig {
+  /** Number of samples for each instance in the dataset.
+  If not specified, the default is 4. Minimum value is 1, maximum value
+  is 32. */
+  samplingCount?: number;
+  /** Optional. Default is true. Whether to flip the candidate and baseline
+  responses. This is only applicable to the pairwise metric. If enabled, also
+  provide PairwiseMetricSpec.candidate_response_field_name and
+  PairwiseMetricSpec.baseline_response_field_name. When rendering
+  PairwiseMetricSpec.metric_prompt_template, the candidate and baseline
+  fields will be flipped for half of the samples to reduce bias. */
+  flipEnabled?: boolean;
+  /** The fully qualified name of the publisher model or tuned autorater
+  endpoint to use.
+
+  Publisher model format:
+  `projects/{project}/locations/{location}/publishers/{publisher}/models/{model}`
+
+  Tuned model endpoint format:
+  `projects/{project}/locations/{location}/endpoints/{endpoint}` */
+  autoraterModel?: string;
+  /** Configuration options for model generation and outputs. */
+  generationConfig?: GenerationConfig;
+}
+
+/** Defines how to parse sample response for reinforcement tuning. */
+export class ReinforcementTuningParseResponseConfig {
+  /** Defines how to parse sample response. */
+  parseType?: ResponseParseType;
+  /** Defines the regex to extract the important part of sample response. This field is only used when `parse_type` is `REGEX_EXTRACT`. */
+  regexExtractExpression?: string;
+}
+
+/** Scores responses by directly converting parsed autorater response to float reward (reward is clipped to be within [-1, 1]). */
+export class ReinforcementTuningAutoraterScorerParsedResponseConversionScorer {}
+
+/** Scores autorater responses by using exact string match reward scorer. */
+export declare interface ReinforcementTuningAutoraterScorerExactMatchScorer {
+  /** Assigns this reward score if parsed response string equals the expression. */
+  correctAnswerReward?: number;
+  /** Assigns this reward score if parsed reward value does not equal the expression. */
+  wrongAnswerReward?: number;
+  /** The string expression to match against. Supports substitution in the format of `references.reference` (wrapped in double curly braces) before matching. No regex support. */
+  expression?: string;
+}
+
+/** Reinforcement tuning autorater scorer. */
+export declare interface ReinforcementTuningAutoraterScorer {
+  /** Autorater config for evaluation. */
+  autoraterConfig?: AutoraterConfig;
+  /** Allows substituting `prompt`, `response`, `system_instruction` and `references.reference` (each wrapped in double curly braces) into the autorater prompt. */
+  autoraterPrompt?: string;
+  /** Parses autorater returned response. */
+  autoraterResponseParseConfig?: ReinforcementTuningParseResponseConfig;
+  /** Scores autorater responses by directly converting parsed autorater response to float reward. */
+  parsedResponseConversionScorer?: ReinforcementTuningAutoraterScorerParsedResponseConversionScorer;
+  /** Scores autorater responses by using exact string match reward scorer. */
+  exactMatchScorer?: ReinforcementTuningAutoraterScorerExactMatchScorer;
+}
+
+/** Scores parsed responses for code execution use cases. */
+export declare interface ReinforcementTuningCodeExecutionRewardScorer {
+  /** Example python code snippet which assigns reward of 1 to answer matching user provided reference answer in per prompt references map. */
+  pythonCodeSnippet?: string;
+}
+
+/** Evaluates parsed response using match type against expression. */
+export declare interface ReinforcementTuningStringMatchRewardScorerStringMatchExpression {
+  /** Match operation to use for evaluation. */
+  matchOperation?: MatchOperation;
+  /** String or regular expression to match against. Customer can also provide a references map (key/value pairs) whose value will be substituted into the expression by referencing `references.key_name` (wrapped in double curly braces). */
+  expression?: string;
+}
+
+/** Converts parsed responses to JSON format, finds the first-level matching key, then performs StringMatchExpression on the value. */
+export declare interface ReinforcementTuningStringMatchRewardScorerJsonMatchExpression {
+  /** Json key name to find the value to match against. */
+  keyName?: string;
+  /** String match expression to match against the value of json key. */
+  valueStringMatchExpression?: ReinforcementTuningStringMatchRewardScorerStringMatchExpression;
+}
+
+/** Scores parsed responses for string matching use cases. */
+export declare interface ReinforcementTuningStringMatchRewardScorer {
+  /** Wrong answer reward is returned if evaluator evaluates to `false`. All wrong answers get the same reward. */
+  wrongAnswerReward?: number;
+  /** Correct answer reward is returned if evaluator evaluates to `true`. All correct answers get the same reward. */
+  correctAnswerReward?: number;
+  /** Uses string match expression to evaluate parsed response. */
+  stringMatchExpression?: ReinforcementTuningStringMatchRewardScorerStringMatchExpression;
+  /** Uses json match expression to evaluate parsed response. */
+  jsonMatchExpression?: ReinforcementTuningStringMatchRewardScorerJsonMatchExpression;
+}
+
+/** Scores parsed responses by calling a Cloud Run service. */
+export declare interface ReinforcementTuningCloudRunRewardScorer {
+  /** URI of the Cloud Run service that will be used to compute the reward. The Vertex AI Secure Fine Tuning Service Agent (`service-PROJECT_NUMBER@gcp-sa-vertex-tune.iam.gserviceaccount.com`, where `PROJECT_NUMBER` is the numeric project number) must be granted the permission (e.g. by granting `roles/run.invoker` in IAM) to invoke the Cloud Run service. */
+  cloudRunUri?: string;
+}
+
+/** Single reinforcement tuning reward config. */
+export declare interface SingleReinforcementTuningRewardConfig {
+  /** Scores parsed responses for autorater use cases by using a model to compute the reward. */
+  autoraterScorer?: ReinforcementTuningAutoraterScorer;
+  /** A unique reward name used to identify each single reinforcement tuning reward. */
+  rewardName?: string;
+  /** Defines how to parse sample response. */
+  parseResponseConfig?: ReinforcementTuningParseResponseConfig;
+  /** Scores parsed responses for code execution use cases. */
+  codeExecutionRewardScorer?: ReinforcementTuningCodeExecutionRewardScorer;
+  /** Scores parsed responses for simple string matching use cases against reference answer without writing python code. */
+  stringMatchRewardScorer?: ReinforcementTuningStringMatchRewardScorer;
+  /** Scores parsed responses by calling a Cloud Run service. */
+  cloudRunRewardScorer?: ReinforcementTuningCloudRunRewardScorer;
+}
+
+/** Composite reinforcement tuning reward config weighted reward config. */
+export declare interface CompositeReinforcementTuningRewardConfigWeightedRewardConfig {
+  rewardConfig?: SingleReinforcementTuningRewardConfig;
+  /** How much this single reward contributes to the total overall reward. */
+  weight?: number;
+}
+
+/** Composite reinforcement tuning reward config. */
+export declare interface CompositeReinforcementTuningRewardConfig {
+  weightedRewardConfigs?: CompositeReinforcementTuningRewardConfigWeightedRewardConfig[];
+}
+
+/** Hyperparameters for Reinforcement Tuning. */
+export declare interface ReinforcementTuningHyperParameters {
+  /** Number of training epochs for the tuning job. */
+  epochCount?: string;
+  /** Learning rate multiplier for Reinforcement Learning. */
+  learningRateMultiplier?: number;
+  /** Adapter size for Reinforcement Tuning. */
+  adapterSize?: AdapterSize;
+  /** Number of different responses to generate per prompt during tuning. */
+  samplesPerPrompt?: number;
+  /** Batch size for the tuning job. How many prompts to process at a train step. If not set, the batch size will be determined automatically. */
+  batchSize?: number;
+  /** How often (in steps) to evaluate the tuning job during training. If not set, evaluation will run per epoch. */
+  evaluateInterval?: number;
+  /** How often (in steps) to save checkpoints during training. If not set, one checkpoint per epoch will be saved. */
+  checkpointInterval?: number;
+  /** The maximum number of tokens to generate per prompt. If not set, defaults to 32768. */
+  maxOutputTokens?: number;
+  /** Indicates the maximum thinking depth. Use with earlier models shall result in error. */
+  thinkingLevel?: ReinforcementTuningThinkingLevel;
+}
+
+/** Reinforcement tuning spec for tuning. */
+export declare interface ReinforcementTuningSpec {
+  compositeRewardConfig?: CompositeReinforcementTuningRewardConfig;
+  /** Cloud Storage path to file containing training dataset for tuning. The dataset must be formatted as a JSONL file. */
+  trainingDatasetUri?: string;
+  /** Cloud Storage path to file containing validation dataset for tuning. The dataset must be formatted as a JSONL file. If no validation dataset is provided, by default the API splits 25% of the training dataset or 50 examples, whichever is larger, as the validation dataset. */
+  validationDatasetUri?: string;
+  /** Additional hyper-parameters to use during tuning. */
+  hyperParameters?: ReinforcementTuningHyperParameters;
+  /** Single reward function configuration for reinforcement tuning. */
+  singleRewardConfig?: SingleReinforcementTuningRewardConfig;
+}
+
 /** The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors). This data type is not supported in Gemini API. */
 export declare interface GoogleRpcStatus {
   /** The status code, which should be an enum value of google.rpc.Code. */
@@ -5286,6 +5502,7 @@ export declare interface TuningJob {
   preferenceOptimizationSpec?: PreferenceOptimizationSpec;
   /** Tuning Spec for Distillation. */
   distillationSpec?: DistillationSpec;
+  reinforcementTuningSpec?: ReinforcementTuningSpec;
   /** Output only. The tuning data statistics associated with this TuningJob. */
   tuningDataStats?: TuningDataStats;
   /** Customer-managed encryption key options for a TuningJob. If this is set, then all resources created by the TuningJob will be encrypted with the provided encryption key. */
@@ -5404,55 +5621,6 @@ export declare interface TuningValidationDataset {
   vertexDatasetResource?: string;
 }
 
-/** Autorater config used for evaluation. */
-export declare interface AutoraterConfig {
-  /** Number of samples for each instance in the dataset.
-  If not specified, the default is 4. Minimum value is 1, maximum value
-  is 32. */
-  samplingCount?: number;
-  /** Optional. Default is true. Whether to flip the candidate and baseline
-  responses. This is only applicable to the pairwise metric. If enabled, also
-  provide PairwiseMetricSpec.candidate_response_field_name and
-  PairwiseMetricSpec.baseline_response_field_name. When rendering
-  PairwiseMetricSpec.metric_prompt_template, the candidate and baseline
-  fields will be flipped for half of the samples to reduce bias. */
-  flipEnabled?: boolean;
-  /** The fully qualified name of the publisher model or tuned autorater
-  endpoint to use.
-
-  Publisher model format:
-  `projects/{project}/locations/{location}/publishers/{publisher}/models/{model}`
-
-  Tuned model endpoint format:
-  `projects/{project}/locations/{location}/endpoints/{endpoint}` */
-  autoraterModel?: string;
-  /** Configuration options for model generation and outputs. */
-  generationConfig?: GenerationConfig;
-}
-
-/** Reinforcement tuning autorater scorer. */
-export declare interface ReinforcementTuningAutoraterScorer {
-  /** Autorater config for evaluation. */
-  autoraterConfig?: AutoraterConfig;
-}
-
-/** Single reinforcement tuning reward config. */
-export declare interface SingleReinforcementTuningRewardConfig {
-  autoraterScorer?: ReinforcementTuningAutoraterScorer;
-}
-
-/** Composite reinforcement tuning reward config weighted reward config. */
-export declare interface CompositeReinforcementTuningRewardConfigWeightedRewardConfig {
-  rewardConfig?: SingleReinforcementTuningRewardConfig;
-  /** How much this single reward contributes to the total overall reward. */
-  weight?: number;
-}
-
-/** Composite reinforcement tuning reward config. */
-export declare interface CompositeReinforcementTuningRewardConfig {
-  weightedRewardConfigs?: CompositeReinforcementTuningRewardConfigWeightedRewardConfig[];
-}
-
 /** Fine-tuning job creation request - optional fields. */
 export declare interface CreateTuningJobConfig {
   /** Used to override HTTP request options. */
@@ -5516,6 +5684,10 @@ export declare interface CreateTuningJobConfig {
   checkpointInterval?: number;
   /** The maximum number of tokens to generate per prompt. Reinforcement tuning only. */
   maxOutputTokens?: number;
+  /** Indicates the maximum thinking depth. Use with earlier models shall result in error. Reinforcement tuning only. */
+  thinkingLevel?: ReinforcementTuningThinkingLevel;
+  /** Cloud Storage path to file containing validation dataset for tuning. The dataset must be formatted as a JSONL file. If no validation dataset is provided, by default the API splits 25% of the training dataset or 50 examples, whichever is larger, as the validation dataset. Reinforcement tuning only. */
+  validationDatasetUri?: string;
 }
 
 /** Fine-tuning job creation parameters - optional fields. */
@@ -5542,6 +5714,71 @@ export declare interface TuningOperation {
   done?: boolean;
   /** The error result of the operation in case of failure or cancellation. */
   error?: Record<string, unknown>;
+}
+
+/** User-facing format for Gemini Reinforcement Tuning examples on Vertex. */
+export declare interface ReinforcementTuningExample {
+  /** Multi-turn contents that represents the Prompt. */
+  contents?: Content[];
+  /** References for the given prompt. The key is the name of the reference, and the value is the reference itself. */
+  references?: Record<string, string>;
+  /** Corresponds to `system_instruction` in user-facing GenerateContentRequest. */
+  systemInstruction?: Content;
+}
+
+/** Optional parameters for tunings.validate_reward. */
+export declare interface ValidateRewardConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
+}
+
+/** Parameters for the validate_reward method.
+
+Validates a reinforcement tuning reward configuration against a sample
+response and example before creating a reinforcement tuning job. */
+export declare interface ValidateRewardParameters {
+  /** Required. The resource name of the Location to validate the reward in, e.g. `projects/{project}/locations/{location}`. */
+  parent: string;
+  /** Required. The sample response for validating the reward configuration. */
+  sampleResponse: Content;
+  /** Required. The example to validate the reward configuration. */
+  example: ReinforcementTuningExample;
+  /** Single reward function configuration for reinforcement tuning. Mutually exclusive with composite_reward_config. */
+  singleRewardConfig?: SingleReinforcementTuningRewardConfig;
+  /** Composite reward function configuration for reinforcement tuning. Mutually exclusive with single_reward_config. */
+  compositeRewardConfig?: CompositeReinforcementTuningRewardConfig;
+  /** Optional parameters for the request. */
+  config?: ValidateRewardConfig;
+}
+
+/** The reward info for a reward function. */
+export declare interface ReinforcementTuningRewardInfo {
+  /** Output only. The calculated reward for the reward function. */
+  reward?: number;
+  /** Output only. The user-requested auxiliary info for the reward function. */
+  userRequestedAuxInfo?: string;
+}
+
+/** Response for the validate_reward method.
+
+Contains the computed reward for a reinforcement tuning reward
+configuration. */
+export class ValidateRewardResponse {
+  /** Used to retain the full HTTP response. */
+  sdkHttpResponse?: HttpResponse;
+  /** Output only. The overall weighted reward. For a `CompositeReinforcementTuningRewardConfig`, this is the weighted average of all rewards. For a `SingleReinforcementTuningRewardConfig`, this will be the value of the single reward. */
+  overallReward?: number;
+  /** Output only. In case of an error, this field will be populated with a detailed error message to help with debugging. */
+  error?: string;
+  /** A map from reward name to reward info. */
+  rewardInfoDetails?: Record<string, ReinforcementTuningRewardInfo>;
 }
 
 /** Optional configuration for cached content creation. */

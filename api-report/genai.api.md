@@ -764,10 +764,12 @@ export interface CreateTuningJobConfig {
     rewardConfig?: SingleReinforcementTuningRewardConfig;
     samplesPerPrompt?: number;
     sftLossWeightMultiplier?: number;
+    thinkingLevel?: ReinforcementTuningThinkingLevel;
     tunedModelDisplayName?: string;
     tunedTeacherModelSource?: string;
     tuningMode?: TuningMode;
     validationDataset?: TuningValidationDataset;
+    validationDatasetUri?: string;
 }
 
 // @public
@@ -2794,6 +2796,14 @@ export enum MaskReferenceMode {
 }
 
 // @public
+export enum MatchOperation {
+    EXACT_MATCH = "EXACT_MATCH",
+    MATCH_OPERATION_UNSPECIFIED = "MATCH_OPERATION_UNSPECIFIED",
+    PARTIAL_MATCH = "PARTIAL_MATCH",
+    REGEX_CONTAINS = "REGEX_CONTAINS"
+}
+
+// @public
 export interface McpServer {
     name?: string;
     streamableHttpTransport?: StreamableHttpTransport;
@@ -3290,6 +3300,100 @@ export class RegisterFilesResponse {
 // @public
 export interface ReinforcementTuningAutoraterScorer {
     autoraterConfig?: AutoraterConfig;
+    autoraterPrompt?: string;
+    autoraterResponseParseConfig?: ReinforcementTuningParseResponseConfig;
+    exactMatchScorer?: ReinforcementTuningAutoraterScorerExactMatchScorer;
+    parsedResponseConversionScorer?: ReinforcementTuningAutoraterScorerParsedResponseConversionScorer;
+}
+
+// @public
+export interface ReinforcementTuningAutoraterScorerExactMatchScorer {
+    correctAnswerReward?: number;
+    expression?: string;
+    wrongAnswerReward?: number;
+}
+
+// @public
+export class ReinforcementTuningAutoraterScorerParsedResponseConversionScorer {
+}
+
+// @public
+export interface ReinforcementTuningCloudRunRewardScorer {
+    cloudRunUri?: string;
+}
+
+// @public
+export interface ReinforcementTuningCodeExecutionRewardScorer {
+    pythonCodeSnippet?: string;
+}
+
+// @public
+export interface ReinforcementTuningExample {
+    contents?: Content[];
+    references?: Record<string, string>;
+    systemInstruction?: Content;
+}
+
+// @public
+export interface ReinforcementTuningHyperParameters {
+    adapterSize?: AdapterSize;
+    batchSize?: number;
+    checkpointInterval?: number;
+    epochCount?: string;
+    evaluateInterval?: number;
+    learningRateMultiplier?: number;
+    maxOutputTokens?: number;
+    samplesPerPrompt?: number;
+    thinkingLevel?: ReinforcementTuningThinkingLevel;
+}
+
+// @public
+export class ReinforcementTuningParseResponseConfig {
+    parseType?: ResponseParseType;
+    regexExtractExpression?: string;
+}
+
+// @public
+export interface ReinforcementTuningRewardInfo {
+    reward?: number;
+    userRequestedAuxInfo?: string;
+}
+
+// @public
+export interface ReinforcementTuningSpec {
+    // (undocumented)
+    compositeRewardConfig?: CompositeReinforcementTuningRewardConfig;
+    hyperParameters?: ReinforcementTuningHyperParameters;
+    singleRewardConfig?: SingleReinforcementTuningRewardConfig;
+    trainingDatasetUri?: string;
+    validationDatasetUri?: string;
+}
+
+// @public
+export interface ReinforcementTuningStringMatchRewardScorer {
+    correctAnswerReward?: number;
+    jsonMatchExpression?: ReinforcementTuningStringMatchRewardScorerJsonMatchExpression;
+    stringMatchExpression?: ReinforcementTuningStringMatchRewardScorerStringMatchExpression;
+    wrongAnswerReward?: number;
+}
+
+// @public
+export interface ReinforcementTuningStringMatchRewardScorerJsonMatchExpression {
+    keyName?: string;
+    valueStringMatchExpression?: ReinforcementTuningStringMatchRewardScorerStringMatchExpression;
+}
+
+// @public
+export interface ReinforcementTuningStringMatchRewardScorerStringMatchExpression {
+    expression?: string;
+    matchOperation?: MatchOperation;
+}
+
+// @public
+export enum ReinforcementTuningThinkingLevel {
+    HIGH = "HIGH",
+    MINIMAL = "MINIMAL",
+    REINFORCEMENT_TUNING_THINKING_LEVEL_UNSPECIFIED = "REINFORCEMENT_TUNING_THINKING_LEVEL_UNSPECIFIED"
 }
 
 // @public
@@ -3341,6 +3445,13 @@ export interface ReplicatedVoiceConfig {
 // @public
 export enum ResourceScope {
     COLLECTION = "COLLECTION"
+}
+
+// @public
+export enum ResponseParseType {
+    IDENTITY = "IDENTITY",
+    REGEX_EXTRACT = "REGEX_EXTRACT",
+    RESPONSE_PARSE_TYPE_UNSPECIFIED = "RESPONSE_PARSE_TYPE_UNSPECIFIED"
 }
 
 // @public
@@ -3562,8 +3673,12 @@ export class SingleEmbedContentResponse {
 
 // @public
 export interface SingleReinforcementTuningRewardConfig {
-    // (undocumented)
     autoraterScorer?: ReinforcementTuningAutoraterScorer;
+    cloudRunRewardScorer?: ReinforcementTuningCloudRunRewardScorer;
+    codeExecutionRewardScorer?: ReinforcementTuningCodeExecutionRewardScorer;
+    parseResponseConfig?: ReinforcementTuningParseResponseConfig;
+    rewardName?: string;
+    stringMatchRewardScorer?: ReinforcementTuningStringMatchRewardScorer;
 }
 
 // @public
@@ -3906,6 +4021,8 @@ export interface TuningJob {
     pipelineJob?: string;
     preferenceOptimizationSpec?: PreferenceOptimizationSpec;
     preTunedModel?: PreTunedModel;
+    // (undocumented)
+    reinforcementTuningSpec?: ReinforcementTuningSpec;
     sdkHttpResponse?: HttpResponse;
     serviceAccount?: string;
     startTime?: string;
@@ -4202,6 +4319,30 @@ export enum VadSignalType {
     VAD_SIGNAL_TYPE_EOS = "VAD_SIGNAL_TYPE_EOS",
     VAD_SIGNAL_TYPE_SOS = "VAD_SIGNAL_TYPE_SOS",
     VAD_SIGNAL_TYPE_UNSPECIFIED = "VAD_SIGNAL_TYPE_UNSPECIFIED"
+}
+
+// @public
+export interface ValidateRewardConfig {
+    abortSignal?: AbortSignal;
+    httpOptions?: HttpOptions;
+}
+
+// @public
+export interface ValidateRewardParameters {
+    compositeRewardConfig?: CompositeReinforcementTuningRewardConfig;
+    config?: ValidateRewardConfig;
+    example: ReinforcementTuningExample;
+    parent: string;
+    sampleResponse: Content;
+    singleRewardConfig?: SingleReinforcementTuningRewardConfig;
+}
+
+// @public
+export class ValidateRewardResponse {
+    error?: string;
+    overallReward?: number;
+    rewardInfoDetails?: Record<string, ReinforcementTuningRewardInfo>;
+    sdkHttpResponse?: HttpResponse;
 }
 
 // @public
