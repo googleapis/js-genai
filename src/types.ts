@@ -630,28 +630,32 @@ export enum TrafficType {
   PROVISIONED_THROUGHPUT = 'PROVISIONED_THROUGHPUT',
 }
 
-/** Server content modalities. */
-export enum Modality {
+/** The modality that this token count applies to. */
+export enum MediaModality {
   /**
-   * The modality is unspecified.
+   * When a modality is not specified, it is treated as `TEXT`.
    */
   MODALITY_UNSPECIFIED = 'MODALITY_UNSPECIFIED',
   /**
-   * Indicates the model should return text
+   * The `Part` contains plain text.
    */
   TEXT = 'TEXT',
   /**
-   * Indicates the model should return images.
+   * The `Part` contains an image.
    */
   IMAGE = 'IMAGE',
   /**
-   * Indicates the model should return audio.
+   * The `Part` contains a video.
+   */
+  VIDEO = 'VIDEO',
+  /**
+   * The `Part` contains audio.
    */
   AUDIO = 'AUDIO',
   /**
-   * Indicates the model should return video.
+   * The `Part` contains a document, such as a PDF.
    */
-  VIDEO = 'VIDEO',
+  DOCUMENT = 'DOCUMENT',
 }
 
 /** The stage of the underlying model. This enum is not supported in Vertex AI. */
@@ -708,6 +712,30 @@ export enum MediaResolution {
    * Media resolution set to high (zoomed reframing with 256 tokens).
    */
   MEDIA_RESOLUTION_HIGH = 'MEDIA_RESOLUTION_HIGH',
+}
+
+/** Server content modalities. */
+export enum Modality {
+  /**
+   * The modality is unspecified.
+   */
+  MODALITY_UNSPECIFIED = 'MODALITY_UNSPECIFIED',
+  /**
+   * Indicates the model should return text
+   */
+  TEXT = 'TEXT',
+  /**
+   * Indicates the model should return images.
+   */
+  IMAGE = 'IMAGE',
+  /**
+   * Indicates the model should return audio.
+   */
+  AUDIO = 'AUDIO',
+  /**
+   * Indicates the model should return video.
+   */
+  VIDEO = 'VIDEO',
 }
 
 /** Tuning mode. This enum is not supported in Gemini API. */
@@ -978,6 +1006,26 @@ export enum DocumentState {
   STATE_FAILED = 'STATE_FAILED',
 }
 
+/** Pricing and performance service tier. */
+export enum ServiceTier {
+  /**
+   * Default service tier, which is standard.
+   */
+  UNSPECIFIED = 'unspecified',
+  /**
+   * Flex service tier.
+   */
+  FLEX = 'flex',
+  /**
+   * Standard service tier.
+   */
+  STANDARD = 'standard',
+  /**
+   * Priority service tier.
+   */
+  PRIORITY = 'priority',
+}
+
 /** The tokenization quality used for given media. */
 export enum PartMediaResolutionLevel {
   /**
@@ -1040,26 +1088,6 @@ export enum ResourceScope {
       "https://aiplatform.googleapis.com/publishers/google/models/gemini-3-pro-preview
    */
   COLLECTION = 'COLLECTION',
-}
-
-/** Pricing and performance service tier. */
-export enum ServiceTier {
-  /**
-   * Default service tier, which is standard.
-   */
-  UNSPECIFIED = 'unspecified',
-  /**
-   * Flex service tier.
-   */
-  FLEX = 'flex',
-  /**
-   * Standard service tier.
-   */
-  STANDARD = 'standard',
-  /**
-   * Priority service tier.
-   */
-  PRIORITY = 'priority',
 }
 
 /** Options for feature selection preference. */
@@ -1444,34 +1472,6 @@ export enum TurnCompleteReason {
    * Max regeneration attempts reached.
    */
   MAX_REGENERATION_REACHED = 'MAX_REGENERATION_REACHED',
-}
-
-/** Server content modalities. */
-export enum MediaModality {
-  /**
-   * The modality is unspecified.
-   */
-  MODALITY_UNSPECIFIED = 'MODALITY_UNSPECIFIED',
-  /**
-   * Plain text.
-   */
-  TEXT = 'TEXT',
-  /**
-   * Images.
-   */
-  IMAGE = 'IMAGE',
-  /**
-   * Video.
-   */
-  VIDEO = 'VIDEO',
-  /**
-   * Audio.
-   */
-  AUDIO = 'AUDIO',
-  /**
-   * Document, e.g. PDF.
-   */
-  DOCUMENT = 'DOCUMENT',
 }
 
 /** The type of the VAD signal. */
@@ -3372,9 +3372,9 @@ export class GenerateContentResponsePromptFeedback {
   safetyRatings?: SafetyRating[];
 }
 
-/** Represents token counting info for a single modality. */
+/** Represents a breakdown of token usage by modality. This message is used in CountTokensResponse and GenerateContentResponse.UsageMetadata to provide a detailed view of how many tokens are used by each modality (e.g., text, image, video) in a request. This is particularly useful for multimodal models, allowing you to track and manage token consumption for billing and quota purposes. */
 export declare interface ModalityTokenCount {
-  /** The modality associated with this token count. */
+  /** The modality that this token count applies to. */
   modality?: MediaModality;
   /** The number of tokens counted for this modality. */
   tokenCount?: number;
@@ -7330,29 +7330,30 @@ export declare interface LiveServerToolCallCancellation {
 
 /** Usage metadata about response(s). */
 export declare interface UsageMetadata {
-  /** Number of tokens in the prompt. When `cached_content` is set, this is still the total effective prompt size meaning this includes the number of tokens in the cached content. */
+  /** The total number of tokens in the prompt. This includes any text, images, or other media provided in the request. When `cached_content` is set, this also includes the number of tokens in the cached content. */
   promptTokenCount?: number;
-  /** Number of tokens in the cached part of the prompt (the cached content). */
+  /** Output only. The number of tokens in the cached content that was used for this request. */
   cachedContentTokenCount?: number;
   /** Total number of tokens across all the generated response candidates. */
   responseTokenCount?: number;
-  /** Number of tokens present in tool-use prompt(s). */
+  /** Output only. The number of tokens in the results from tool executions, which are provided back to the model as input, if applicable. */
   toolUsePromptTokenCount?: number;
-  /** Number of tokens of thoughts for thinking models. */
+  /** Output only. The number of tokens that were part of the model's generated "thoughts" output, if applicable. */
   thoughtsTokenCount?: number;
-  /** Total token count for prompt, response candidates, and tool-use prompts(if present). */
+  /** The total number of tokens for the entire request. This is the sum of `prompt_token_count`, `candidates_token_count`, `tool_use_prompt_token_count`, and `thoughts_token_count`. */
   totalTokenCount?: number;
-  /** List of modalities that were processed in the request input. */
+  /** Output only. A detailed breakdown of the token count for each modality in the prompt. */
   promptTokensDetails?: ModalityTokenCount[];
-  /** List of modalities that were processed in the cache input. */
+  /** Output only. A detailed breakdown of the token count for each modality in the cached content. */
   cacheTokensDetails?: ModalityTokenCount[];
   /** List of modalities that were returned in the response. */
   responseTokensDetails?: ModalityTokenCount[];
-  /** List of modalities that were processed in the tool-use prompt. */
+  /** Output only. A detailed breakdown by modality of the token counts from the results of tool executions, which are provided back to the model as input. */
   toolUsePromptTokensDetails?: ModalityTokenCount[];
-  /** Traffic type. This shows whether a request consumes Pay-As-You-Go
- or Provisioned Throughput quota. */
+  /** Output only. The traffic type for this request. This field is not supported in Gemini API. */
   trafficType?: TrafficType;
+  /** Output only. Service tier of the request. This field is not supported in Vertex AI. */
+  serviceTier?: ServiceTier;
 }
 
 /** Server will not be able to service client soon. */

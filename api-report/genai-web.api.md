@@ -4307,6 +4307,7 @@ export interface UsageMetadata {
     promptTokensDetails?: ModalityTokenCount[];
     responseTokenCount?: number;
     responseTokensDetails?: ModalityTokenCount[];
+    serviceTier?: ServiceTier;
     thoughtsTokenCount?: number;
     toolUsePromptTokenCount?: number;
     toolUsePromptTokensDetails?: ModalityTokenCount[];
