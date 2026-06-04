@@ -95,7 +95,7 @@ export interface Agent {
   /**
    * The tools available to the agent.
    */
-  tools?: Array<Agent.CodeExecution | Agent.GoogleSearch | Agent.URLContext | Agent.MCPServer>;
+  tools?: Array<Agent.CodeExecution | Agent.GoogleSearch | Agent.MCPServer | Agent.URLContext>;
 }
 
 export namespace Agent {
@@ -116,13 +116,6 @@ export namespace Agent {
      * The types of search grounding to enable.
      */
     search_types?: Array<'web_search' | 'image_search' | 'enterprise_web_search'>;
-  }
-
-  /**
-   * A tool that can be used by the model to fetch URL context.
-   */
-  export interface URLContext {
-    type: 'url_context';
   }
 
   /**
@@ -151,12 +144,19 @@ export namespace Agent {
      */
     url?: string;
   }
+
+  /**
+   * A tool that can be used by the model to fetch URL context.
+   */
+  export interface URLContext {
+    type: 'url_context';
+  }
 }
 
 export interface AgentListResponse {
   agents?: Array<Agent>;
 
-  nextPageToken?: string;
+  next_page_token?: string;
 }
 
 /**
@@ -207,8 +207,8 @@ export interface AgentCreateParams {
   tools?: Array<
     | AgentCreateParams.CodeExecution
     | AgentCreateParams.GoogleSearch
-    | AgentCreateParams.URLContext
     | AgentCreateParams.MCPServer
+    | AgentCreateParams.URLContext
   >;
 }
 
@@ -230,13 +230,6 @@ export namespace AgentCreateParams {
      * The types of search grounding to enable.
      */
     search_types?: Array<'web_search' | 'image_search' | 'enterprise_web_search'>;
-  }
-
-  /**
-   * A tool that can be used by the model to fetch URL context.
-   */
-  export interface URLContext {
-    type: 'url_context';
   }
 
   /**
@@ -265,6 +258,13 @@ export namespace AgentCreateParams {
      */
     url?: string;
   }
+
+  /**
+   * A tool that can be used by the model to fetch URL context.
+   */
+  export interface URLContext {
+    type: 'url_context';
+  }
 }
 
 export interface AgentListParams {
@@ -276,12 +276,12 @@ export interface AgentListParams {
   /**
    * Query param
    */
-  pageSize?: number;
+  page_size?: number;
 
   /**
    * Query param
    */
-  pageToken?: string;
+  page_token?: string;
 
   /**
    * Query param

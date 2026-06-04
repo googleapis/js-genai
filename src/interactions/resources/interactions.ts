@@ -257,7 +257,7 @@ export interface AllowedTools {
 /**
  * Citation information for model-generated content.
  */
-export type Annotation = URLCitation | FileCitation | PlaceCitation;
+export type Annotation = FileCitation | PlaceCitation | URLCitation;
 
 /**
  * An audio content block.
@@ -745,7 +745,7 @@ export interface FunctionResultStep {
   /**
    * The result of the tool call.
    */
-  result: unknown | Array<TextContent | ImageContent> | string;
+  result: Array<Content> | Array<ImageContent | TextContent> | string;
 
   type: 'function_result';
 
@@ -812,7 +812,7 @@ export interface GenerationConfig {
   /**
    * The tool choice configuration.
    */
-  tool_choice?: ToolChoiceType | ToolChoiceConfig;
+  tool_choice?: ToolChoiceConfig | ToolChoiceType;
 
   /**
    * The maximum cumulative probability of tokens to consider when sampling.
@@ -1239,13 +1239,13 @@ export interface Interaction {
   /**
    * Configuration parameters for the agent interaction.
    */
-  agent_config?: DynamicAgentConfig | DeepResearchAgentConfig;
+  agent_config?: DeepResearchAgentConfig | DynamicAgentConfig;
 
   /**
    * The environment configuration for the interaction. Can be an object specifying
    * remote environment sources or a string referencing an existing environment ID.
    */
-  environment?: string | Environment;
+  environment?: Environment | string;
 
   /**
    * Output only. The environment ID for the interaction. Only populated if
@@ -1281,10 +1281,10 @@ export interface Interaction {
    * JSON schema specified in this field.
    */
   response_format?:
-    | Array<AudioResponseFormat | TextResponseFormat | ImageResponseFormat | unknown>
+    | Array<AudioResponseFormat | ImageResponseFormat | TextResponseFormat | unknown>
     | AudioResponseFormat
-    | TextResponseFormat
     | ImageResponseFormat
+    | TextResponseFormat
     | unknown;
 
   /**
@@ -1511,7 +1511,7 @@ export interface MCPServerToolResultStep {
   /**
    * The output from the MCP server call. Can be simple text or rich content.
    */
-  result: unknown | string | Array<TextContent | ImageContent>;
+  result: Array<Content> | unknown | Array<ImageContent | TextContent>;
 
   type: 'mcp_server_tool_result';
 
@@ -1675,28 +1675,28 @@ export type Step =
 
 export interface StepDelta {
   delta:
-    | StepDelta.Text
-    | StepDelta.Image
-    | StepDelta.Audio
-    | StepDelta.Document
-    | StepDelta.Video
-    | StepDelta.ThoughtSummary
-    | StepDelta.ThoughtSignature
-    | StepDelta.TextAnnotationDelta
     | StepDelta.ArgumentsDelta
+    | StepDelta.Audio
     | StepDelta.CodeExecutionCall
-    | StepDelta.URLContextCall
-    | StepDelta.GoogleSearchCall
-    | StepDelta.MCPServerToolCall
-    | StepDelta.FileSearchCall
-    | StepDelta.GoogleMapsCall
     | StepDelta.CodeExecutionResult
-    | StepDelta.URLContextResult
-    | StepDelta.GoogleSearchResult
-    | StepDelta.MCPServerToolResult
+    | StepDelta.Document
+    | StepDelta.FileSearchCall
     | StepDelta.FileSearchResult
+    | StepDelta.FunctionResult
+    | StepDelta.GoogleMapsCall
     | StepDelta.GoogleMapsResult
-    | StepDelta.FunctionResult;
+    | StepDelta.GoogleSearchCall
+    | StepDelta.GoogleSearchResult
+    | StepDelta.Image
+    | StepDelta.MCPServerToolCall
+    | StepDelta.MCPServerToolResult
+    | StepDelta.TextAnnotationDelta
+    | StepDelta.Text
+    | StepDelta.ThoughtSignature
+    | StepDelta.ThoughtSummary
+    | StepDelta.URLContextCall
+    | StepDelta.URLContextResult
+    | StepDelta.Video;
 
   event_type: 'step.delta';
 
@@ -1714,33 +1714,10 @@ export interface StepDelta {
 }
 
 export namespace StepDelta {
-  export interface Text {
-    text: string;
+  export interface ArgumentsDelta {
+    type: 'arguments_delta';
 
-    type: 'text';
-  }
-
-  export interface Image {
-    type: 'image';
-
-    data?: string;
-
-    mime_type?:
-      | 'image/png'
-      | 'image/jpeg'
-      | 'image/webp'
-      | 'image/heic'
-      | 'image/heif'
-      | 'image/gif'
-      | 'image/bmp'
-      | 'image/tiff';
-
-    /**
-     * The resolution of the media.
-     */
-    resolution?: 'low' | 'medium' | 'high' | 'ultra_high';
-
-    uri?: string;
+    arguments?: string;
   }
 
   export interface Audio {
@@ -1780,6 +1757,33 @@ export namespace StepDelta {
     uri?: string;
   }
 
+  export interface CodeExecutionCall {
+    /**
+     * The arguments to pass to the code execution.
+     */
+    arguments: InteractionsAPI.CodeExecutionCallArguments;
+
+    type: 'code_execution_call';
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+  }
+
+  export interface CodeExecutionResult {
+    result: string;
+
+    type: 'code_execution_result';
+
+    is_error?: boolean;
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+  }
+
   export interface Document {
     type: 'document';
 
@@ -1788,6 +1792,215 @@ export namespace StepDelta {
     mime_type?: 'application/pdf' | 'text/csv';
 
     uri?: string;
+  }
+
+  export interface FileSearchCall {
+    type: 'file_search_call';
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+  }
+
+  export interface FileSearchResult {
+    result: Array<unknown>;
+
+    type: 'file_search_result';
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+  }
+
+  export interface FunctionResult {
+    /**
+     * Required. ID to match the ID from the function call block.
+     */
+    call_id: string;
+
+    result:
+      | Array<InteractionsAPI.Content>
+      | Array<InteractionsAPI.ImageContent | InteractionsAPI.TextContent>
+      | string;
+
+    type: 'function_result';
+
+    is_error?: boolean;
+
+    name?: string;
+  }
+
+  export interface GoogleMapsCall {
+    type: 'google_maps_call';
+
+    /**
+     * The arguments to pass to the Google Maps tool.
+     */
+    arguments?: InteractionsAPI.GoogleMapsCallArguments;
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+  }
+
+  export interface GoogleMapsResult {
+    type: 'google_maps_result';
+
+    /**
+     * The results of the Google Maps.
+     */
+    result?: Array<InteractionsAPI.GoogleMapsResult>;
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+  }
+
+  export interface GoogleSearchCall {
+    /**
+     * The arguments to pass to Google Search.
+     */
+    arguments: InteractionsAPI.GoogleSearchCallArguments;
+
+    type: 'google_search_call';
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+  }
+
+  export interface GoogleSearchResult {
+    result: Array<InteractionsAPI.GoogleSearchResult>;
+
+    type: 'google_search_result';
+
+    is_error?: boolean;
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+  }
+
+  export interface Image {
+    type: 'image';
+
+    data?: string;
+
+    mime_type?:
+      | 'image/png'
+      | 'image/jpeg'
+      | 'image/webp'
+      | 'image/heic'
+      | 'image/heif'
+      | 'image/gif'
+      | 'image/bmp'
+      | 'image/tiff';
+
+    /**
+     * The resolution of the media.
+     */
+    resolution?: 'low' | 'medium' | 'high' | 'ultra_high';
+
+    uri?: string;
+  }
+
+  export interface MCPServerToolCall {
+    arguments: { [key: string]: unknown };
+
+    name: string;
+
+    server_name: string;
+
+    type: 'mcp_server_tool_call';
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+  }
+
+  export interface MCPServerToolResult {
+    result:
+      | Array<InteractionsAPI.Content>
+      | Array<InteractionsAPI.ImageContent | InteractionsAPI.TextContent>
+      | string;
+
+    type: 'mcp_server_tool_result';
+
+    name?: string;
+
+    server_name?: string;
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+  }
+
+  export interface TextAnnotationDelta {
+    type: 'text_annotation_delta';
+
+    /**
+     * Citation information for model-generated content.
+     */
+    annotations?: Array<InteractionsAPI.Annotation>;
+  }
+
+  export interface Text {
+    text: string;
+
+    type: 'text';
+  }
+
+  export interface ThoughtSignature {
+    type: 'thought_signature';
+
+    /**
+     * Signature to match the backend source to be part of the generation.
+     */
+    signature?: string;
+  }
+
+  export interface ThoughtSummary {
+    type: 'thought_summary';
+
+    /**
+     * A new summary item to be added to the thought.
+     */
+    content?: InteractionsAPI.Content;
+  }
+
+  export interface URLContextCall {
+    /**
+     * The arguments to pass to the URL context.
+     */
+    arguments: InteractionsAPI.URLContextCallArguments;
+
+    type: 'url_context_call';
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
+  }
+
+  export interface URLContextResult {
+    result: Array<InteractionsAPI.URLContextResult>;
+
+    type: 'url_context_result';
+
+    is_error?: boolean;
+
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string;
   }
 
   export interface Video {
@@ -1812,213 +2025,6 @@ export namespace StepDelta {
     resolution?: 'low' | 'medium' | 'high' | 'ultra_high';
 
     uri?: string;
-  }
-
-  export interface ThoughtSummary {
-    type: 'thought_summary';
-
-    /**
-     * A new summary item to be added to the thought.
-     */
-    content?: InteractionsAPI.TextContent | InteractionsAPI.ImageContent;
-  }
-
-  export interface ThoughtSignature {
-    type: 'thought_signature';
-
-    /**
-     * Signature to match the backend source to be part of the generation.
-     */
-    signature?: string;
-  }
-
-  export interface TextAnnotationDelta {
-    type: 'text_annotation_delta';
-
-    /**
-     * Citation information for model-generated content.
-     */
-    annotations?: Array<InteractionsAPI.Annotation>;
-  }
-
-  export interface ArgumentsDelta {
-    type: 'arguments_delta';
-
-    arguments?: string;
-  }
-
-  export interface CodeExecutionCall {
-    /**
-     * The arguments to pass to the code execution.
-     */
-    arguments: InteractionsAPI.CodeExecutionCallArguments;
-
-    type: 'code_execution_call';
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface URLContextCall {
-    /**
-     * The arguments to pass to the URL context.
-     */
-    arguments: InteractionsAPI.URLContextCallArguments;
-
-    type: 'url_context_call';
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface GoogleSearchCall {
-    /**
-     * The arguments to pass to Google Search.
-     */
-    arguments: InteractionsAPI.GoogleSearchCallArguments;
-
-    type: 'google_search_call';
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface MCPServerToolCall {
-    arguments: { [key: string]: unknown };
-
-    name: string;
-
-    server_name: string;
-
-    type: 'mcp_server_tool_call';
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface FileSearchCall {
-    type: 'file_search_call';
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface GoogleMapsCall {
-    type: 'google_maps_call';
-
-    /**
-     * The arguments to pass to the Google Maps tool.
-     */
-    arguments?: InteractionsAPI.GoogleMapsCallArguments;
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface CodeExecutionResult {
-    result: string;
-
-    type: 'code_execution_result';
-
-    is_error?: boolean;
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface URLContextResult {
-    result: Array<InteractionsAPI.URLContextResult>;
-
-    type: 'url_context_result';
-
-    is_error?: boolean;
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface GoogleSearchResult {
-    result: Array<InteractionsAPI.GoogleSearchResult>;
-
-    type: 'google_search_result';
-
-    is_error?: boolean;
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface MCPServerToolResult {
-    result: unknown | Array<InteractionsAPI.TextContent | InteractionsAPI.ImageContent> | string;
-
-    type: 'mcp_server_tool_result';
-
-    name?: string;
-
-    server_name?: string;
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface FileSearchResult {
-    result: Array<unknown>;
-
-    type: 'file_search_result';
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface GoogleMapsResult {
-    type: 'google_maps_result';
-
-    /**
-     * The results of the Google Maps.
-     */
-    result?: Array<InteractionsAPI.GoogleMapsResult>;
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-  }
-
-  export interface FunctionResult {
-    /**
-     * Required. ID to match the ID from the function call block.
-     */
-    call_id: string;
-
-    result: unknown | Array<InteractionsAPI.TextContent | InteractionsAPI.ImageContent> | string;
-
-    type: 'function_result';
-
-    is_error?: boolean;
-
-    name?: string;
   }
 
   /**
@@ -2144,22 +2150,22 @@ export interface ThoughtStep {
   /**
    * A summary of the thought.
    */
-  summary?: Array<TextContent | ImageContent>;
+  summary?: Array<ImageContent | TextContent>;
 }
 
 /**
  * A tool that can be used by the model.
  */
 export type Tool =
-  | Function
   | Tool.CodeExecution
-  | Tool.URLContext
   | Tool.ComputerUse
-  | Tool.MCPServer
-  | Tool.GoogleSearch
   | Tool.FileSearch
+  | Function
   | Tool.GoogleMaps
-  | Tool.Retrieval;
+  | Tool.GoogleSearch
+  | Tool.MCPServer
+  | Tool.Retrieval
+  | Tool.URLContext;
 
 export namespace Tool {
   /**
@@ -2167,13 +2173,6 @@ export namespace Tool {
    */
   export interface CodeExecution {
     type: 'code_execution';
-  }
-
-  /**
-   * A tool that can be used by the model to fetch URL context.
-   */
-  export interface URLContext {
-    type: 'url_context';
   }
 
   /**
@@ -2191,45 +2190,6 @@ export namespace Tool {
      * The list of predefined functions that are excluded from the model call.
      */
     excluded_predefined_functions?: Array<string>;
-  }
-
-  /**
-   * A MCPServer is a server that can be called by the model to perform actions.
-   */
-  export interface MCPServer {
-    type: 'mcp_server';
-
-    /**
-     * The allowed tools.
-     */
-    allowed_tools?: Array<InteractionsAPI.AllowedTools>;
-
-    /**
-     * Optional: Fields for authentication headers, timeouts, etc., if needed.
-     */
-    headers?: { [key: string]: string };
-
-    /**
-     * The name of the MCPServer.
-     */
-    name?: string;
-
-    /**
-     * The full URL for the MCPServer endpoint. Example: "https://api.example.com/mcp"
-     */
-    url?: string;
-  }
-
-  /**
-   * A tool that can be used by the model to search Google.
-   */
-  export interface GoogleSearch {
-    type: 'google_search';
-
-    /**
-     * The types of search grounding to enable.
-     */
-    search_types?: Array<'web_search' | 'image_search' | 'enterprise_web_search'>;
   }
 
   /**
@@ -2278,6 +2238,45 @@ export namespace Tool {
   }
 
   /**
+   * A tool that can be used by the model to search Google.
+   */
+  export interface GoogleSearch {
+    type: 'google_search';
+
+    /**
+     * The types of search grounding to enable.
+     */
+    search_types?: Array<'web_search' | 'image_search' | 'enterprise_web_search'>;
+  }
+
+  /**
+   * A MCPServer is a server that can be called by the model to perform actions.
+   */
+  export interface MCPServer {
+    type: 'mcp_server';
+
+    /**
+     * The allowed tools.
+     */
+    allowed_tools?: Array<InteractionsAPI.AllowedTools>;
+
+    /**
+     * Optional: Fields for authentication headers, timeouts, etc., if needed.
+     */
+    headers?: { [key: string]: string };
+
+    /**
+     * The name of the MCPServer.
+     */
+    name?: string;
+
+    /**
+     * The full URL for the MCPServer endpoint. Example: "https://api.example.com/mcp"
+     */
+    url?: string;
+  }
+
+  /**
    * A tool that can be used by the model to retrieve files.
    */
   export interface Retrieval {
@@ -2309,6 +2308,13 @@ export namespace Tool {
        */
       engine?: string;
     }
+  }
+
+  /**
+   * A tool that can be used by the model to fetch URL context.
+   */
+  export interface URLContext {
+    type: 'url_context';
   }
 }
 
@@ -2698,7 +2704,7 @@ export interface BaseCreateModelInteractionParams {
    * specifying remote environment sources or a string referencing an existing
    * environment ID.
    */
-  environment?: string | Environment;
+  environment?: Environment | string;
 
   /**
    * Body param: Input only. Configuration parameters for the model interaction.
@@ -2715,10 +2721,10 @@ export interface BaseCreateModelInteractionParams {
    * with the JSON schema specified in this field.
    */
   response_format?:
-    | Array<AudioResponseFormat | TextResponseFormat | ImageResponseFormat | unknown>
+    | Array<AudioResponseFormat | ImageResponseFormat | TextResponseFormat | unknown>
     | AudioResponseFormat
-    | TextResponseFormat
     | ImageResponseFormat
+    | TextResponseFormat
     | unknown;
 
   /**
@@ -2796,7 +2802,7 @@ export interface BaseCreateAgentInteractionParams {
   /**
    * Body param: Configuration parameters for the agent interaction.
    */
-  agent_config?: DynamicAgentConfig | DeepResearchAgentConfig;
+  agent_config?: DeepResearchAgentConfig | DynamicAgentConfig;
 
   /**
    * Body param: Input only. Whether to run the model interaction in the background.
@@ -2808,7 +2814,7 @@ export interface BaseCreateAgentInteractionParams {
    * specifying remote environment sources or a string referencing an existing
    * environment ID.
    */
-  environment?: string | Environment;
+  environment?: Environment | string;
 
   /**
    * Body param: The ID of the previous interaction, if any.
@@ -2820,10 +2826,10 @@ export interface BaseCreateAgentInteractionParams {
    * with the JSON schema specified in this field.
    */
   response_format?:
-    | Array<AudioResponseFormat | TextResponseFormat | ImageResponseFormat | unknown>
+    | Array<AudioResponseFormat | ImageResponseFormat | TextResponseFormat | unknown>
     | AudioResponseFormat
-    | TextResponseFormat
     | ImageResponseFormat
+    | TextResponseFormat
     | unknown;
 
   /**
