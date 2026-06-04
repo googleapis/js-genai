@@ -2283,9 +2283,24 @@ export namespace Tool {
     type: 'retrieval';
 
     /**
+     * Used to specify configuration for ExaAISearch.
+     */
+    exa_ai_search_config?: Retrieval.ExaAISearchConfig;
+
+    /**
+     * Used to specify configuration for ParallelAISearch.
+     */
+    parallel_ai_search_config?: Retrieval.ParallelAISearchConfig;
+
+    /**
+     * Used to specify configuration for RagStore.
+     */
+    rag_store_config?: Retrieval.RagStoreConfig;
+
+    /**
      * The types of file retrieval to enable.
      */
-    retrieval_types?: Array<'vertex_ai_search'>;
+    retrieval_types?: Array<'vertex_ai_search' | 'rag_store' | 'exa_ai_search' | 'parallel_ai_search'>;
 
     /**
      * Used to specify configuration for VertexAISearch.
@@ -2294,6 +2309,153 @@ export namespace Tool {
   }
 
   export namespace Retrieval {
+    /**
+     * Used to specify configuration for ExaAISearch.
+     */
+    export interface ExaAISearchConfig {
+      /**
+       * Required. The API key for ExaAiSearch.
+       */
+      api_key: string;
+
+      /**
+       * Optional. This field can be used to pass any parameter from the Exa.ai Search
+       * API.
+       */
+      custom_config?: { [key: string]: unknown };
+    }
+
+    /**
+     * Used to specify configuration for ParallelAISearch.
+     */
+    export interface ParallelAISearchConfig {
+      /**
+       * Optional. The API key for ParallelAiSearch.
+       */
+      api_key?: string;
+
+      /**
+       * Optional. Custom configs for ParallelAiSearch.
+       */
+      custom_config?: { [key: string]: unknown };
+    }
+
+    /**
+     * Used to specify configuration for RagStore.
+     */
+    export interface RagStoreConfig {
+      /**
+       * Optional. The representation of the rag source.
+       */
+      rag_resources?: Array<RagStoreConfig.RagResource>;
+
+      /**
+       * Optional. The retrieval config for the Rag query.
+       */
+      rag_retrieval_config?: RagStoreConfig.RagRetrievalConfig;
+
+      /**
+       * @deprecated Optional. Number of top k results to return from the selected
+       * corpora.
+       */
+      similarity_top_k?: number;
+
+      /**
+       * @deprecated Optional. Only return results with vector distance smaller than the
+       * threshold.
+       */
+      vector_distance_threshold?: number;
+    }
+
+    export namespace RagStoreConfig {
+      /**
+       * The definition of the Rag resource.
+       */
+      export interface RagResource {
+        /**
+         * Optional. RagCorpora resource name.
+         */
+        rag_corpus?: string;
+
+        /**
+         * Optional. rag_file_id. The files should be in the same rag_corpus set in
+         * rag_corpus field.
+         */
+        rag_file_ids?: Array<string>;
+      }
+
+      /**
+       * Optional. The retrieval config for the Rag query.
+       */
+      export interface RagRetrievalConfig {
+        /**
+         * Optional. Config for filters.
+         */
+        filter?: RagRetrievalConfig.Filter;
+
+        /**
+         * Optional. Config for Hybrid Search.
+         */
+        hybrid_search?: RagRetrievalConfig.HybridSearch;
+
+        /**
+         * Optional. Config for ranking and reranking.
+         */
+        ranking?: RagRetrievalConfig.Ranking;
+
+        /**
+         * Optional. The number of contexts to retrieve.
+         */
+        top_k?: number;
+      }
+
+      export namespace RagRetrievalConfig {
+        /**
+         * Optional. Config for filters.
+         */
+        export interface Filter {
+          /**
+           * Optional. String for metadata filtering.
+           */
+          metadata_filter?: string;
+
+          /**
+           * Optional. Only returns contexts with vector distance smaller than the threshold.
+           */
+          vector_distance_threshold?: number;
+
+          /**
+           * Optional. Only returns contexts with vector similarity larger than the
+           * threshold.
+           */
+          vector_similarity_threshold?: number;
+        }
+
+        /**
+         * Optional. Config for Hybrid Search.
+         */
+        export interface HybridSearch {
+          /**
+           * Optional. Alpha value controls the weight between dense and sparse vector search
+           * results.
+           */
+          alpha?: number;
+        }
+
+        /**
+         * Optional. Config for ranking and reranking.
+         */
+        export interface Ranking {
+          ranking_config: 'rank_service';
+
+          /**
+           * Optional. The model name of the rank service.
+           */
+          model_name?: string;
+        }
+      }
+    }
+
     /**
      * Used to specify configuration for VertexAISearch.
      */
