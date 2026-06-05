@@ -726,11 +726,6 @@ export interface FunctionCallStep {
   name: string;
 
   type: 'function_call';
-
-  /**
-   * A signature hash for backend validation.
-   */
-  signature?: string;
 }
 
 /**
@@ -758,11 +753,6 @@ export interface FunctionResultStep {
    * The name of the tool that was called.
    */
   name?: string;
-
-  /**
-   * A signature hash for backend validation.
-   */
-  signature?: string;
 }
 
 /**
@@ -1493,11 +1483,6 @@ export interface MCPServerToolCallStep {
   server_name: string;
 
   type: 'mcp_server_tool_call';
-
-  /**
-   * A signature hash for backend validation.
-   */
-  signature?: string;
 }
 
 /**
@@ -1525,11 +1510,6 @@ export interface MCPServerToolResultStep {
    * The name of the used MCP server.
    */
   server_name?: string;
-
-  /**
-   * A signature hash for backend validation.
-   */
-  signature?: string;
 }
 
 /**
@@ -1919,11 +1899,6 @@ export namespace StepDelta {
     server_name: string;
 
     type: 'mcp_server_tool_call';
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
   }
 
   export interface MCPServerToolResult {
@@ -1937,11 +1912,6 @@ export namespace StepDelta {
     name?: string;
 
     server_name?: string;
-
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
   }
 
   export interface TextAnnotationDelta {
