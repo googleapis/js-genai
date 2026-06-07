@@ -597,7 +597,7 @@ export namespace ErrorEvent {
     /**
      * Statistics on the interaction request's token usage.
      */
-    usage?: InteractionsAPI.Usage;
+    total_usage?: InteractionsAPI.Usage;
   }
 }
 
@@ -1558,7 +1558,7 @@ export namespace InteractionCompletedEvent {
     /**
      * Statistics on the interaction request's token usage.
      */
-    usage?: InteractionsAPI.Usage;
+    total_usage?: InteractionsAPI.Usage;
   }
 }
 
@@ -1589,7 +1589,7 @@ export namespace InteractionCreatedEvent {
     /**
      * Statistics on the interaction request's token usage.
      */
-    usage?: InteractionsAPI.Usage;
+    total_usage?: InteractionsAPI.Usage;
   }
 }
 
@@ -1635,7 +1635,7 @@ export namespace InteractionStatusUpdate {
     /**
      * Statistics on the interaction request's token usage.
      */
-    usage?: InteractionsAPI.Usage;
+    total_usage?: InteractionsAPI.Usage;
   }
 }
 
@@ -2186,7 +2186,7 @@ export namespace StepDelta {
     /**
      * Statistics on the interaction request's token usage.
      */
-    usage?: InteractionsAPI.Usage;
+    total_usage?: InteractionsAPI.Usage;
   }
 }
 
@@ -2219,7 +2219,7 @@ export namespace StepStart {
     /**
      * Statistics on the interaction request's token usage.
      */
-    usage?: InteractionsAPI.Usage;
+    total_usage?: InteractionsAPI.Usage;
   }
 }
 
@@ -2247,7 +2247,7 @@ export namespace StepStop {
     /**
      * Statistics on the interaction request's token usage.
      */
-    usage?: InteractionsAPI.Usage;
+    total_usage?: InteractionsAPI.Usage;
   }
 }
 
