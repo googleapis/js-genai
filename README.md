@@ -51,6 +51,14 @@ To install the SDK, run the following command:
 npm install @google/genai
 ```
 
+### Optional Dependencies
+
+The SDK has optional peer dependencies that enhance functionality in specific scenarios:
+
+- **`undici`** (Node.js only): Required for handling HTTP timeouts longer than 300 seconds. If not installed, long-running requests may fail. Install with `npm install undici`.
+
+- **`@modelcontextprotocol/sdk`**: Required for Model Context Protocol (MCP) server functionality. If not installed, MCP features will not be available.
+
 ## Quickstart
 
 The simplest way to get started is to use an API key from
