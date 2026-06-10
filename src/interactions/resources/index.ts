@@ -36,6 +36,8 @@ export {
   type FileCitation,
   type FileSearchCallStep,
   type FileSearchResultStep,
+  type FindRequest,
+  type FixRequest,
   type Function,
   type FunctionCallStep,
   type FunctionResultStep,
