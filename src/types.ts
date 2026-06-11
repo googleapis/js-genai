@@ -1509,7 +1509,7 @@ export enum VoiceActivityType {
 /** Start of speech sensitivity. */
 export enum StartSensitivity {
   /**
-   * The default is START_SENSITIVITY_LOW.
+   * The default is START_SENSITIVITY_LOW for Gemini Enterprise Agent Platform and START_SENSITIVITY_HIGH for Gemini Live.
    */
   START_SENSITIVITY_UNSPECIFIED = 'START_SENSITIVITY_UNSPECIFIED',
   /**
@@ -1525,7 +1525,7 @@ export enum StartSensitivity {
 /** End of speech sensitivity. */
 export enum EndSensitivity {
   /**
-   * The default is END_SENSITIVITY_LOW.
+   * The default is END_SENSITIVITY_LOW for Gemini Enterprise Agent Platform and END_SENSITIVITY_HIGH for Gemini Live.
    */
   END_SENSITIVITY_UNSPECIFIED = 'END_SENSITIVITY_UNSPECIFIED',
   /**
