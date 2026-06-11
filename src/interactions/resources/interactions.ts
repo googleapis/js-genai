@@ -1396,6 +1396,12 @@ export namespace Interaction {
     finding_id?: string;
 
     /**
+     * The name of the model to use for the CodeMender agent. One CodeMender session
+     * will only use one model.
+     */
+    model?: string;
+
+    /**
      * Optional session-specific configurations to override default agent behavior.
      */
     session_config?: FindRequest.SessionConfig;
@@ -1470,6 +1476,12 @@ export namespace Interaction {
      * to a previously discovered vulnerability.
      */
     finding_id?: string;
+
+    /**
+     * The name of the model to use for the CodeMender agent. One CodeMender session
+     * will only use one model.
+     */
+    model?: string;
 
     /**
      * Optional session-specific configurations to override default agent behavior.
@@ -3224,6 +3236,12 @@ export namespace BaseCreateAgentInteractionParams {
     finding_id?: string;
 
     /**
+     * The name of the model to use for the CodeMender agent. One CodeMender session
+     * will only use one model.
+     */
+    model?: string;
+
+    /**
      * Optional session-specific configurations to override default agent behavior.
      */
     session_config?: FindRequest.SessionConfig;
@@ -3298,6 +3316,12 @@ export namespace BaseCreateAgentInteractionParams {
      * to a previously discovered vulnerability.
      */
     finding_id?: string;
+
+    /**
+     * The name of the model to use for the CodeMender agent. One CodeMender session
+     * will only use one model.
+     */
+    model?: string;
 
     /**
      * Optional session-specific configurations to override default agent behavior.
