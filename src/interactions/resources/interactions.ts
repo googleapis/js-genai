@@ -1284,6 +1284,17 @@ export interface Interaction {
     | VideoContent;
 
   /**
+   * Optional. The labels with user-defined metadata for the request. It is used for
+   * billing and reporting only.
+   *
+   * Label keys and values can be no longer than 63 characters (Unicode codepoints)
+   * and can only contain lowercase letters, numeric characters, underscores, and
+   * dashes. International characters are allowed. Label values are optional. Label
+   * keys must start with a letter.
+   */
+  labels?: { [key: string]: string };
+
+  /**
    * The name of the `Model` used for generating the interaction.
    */
   model?: Model;
@@ -1319,6 +1330,11 @@ export interface Interaction {
    * @deprecated Output only. The role of the interaction.
    */
   role?: string;
+
+  /**
+   * Safety settings for the interaction.
+   */
+  safety_settings?: Array<Interaction.SafetySetting>;
 
   /**
    * The service tier for the interaction.
@@ -1539,6 +1555,40 @@ export namespace Interaction {
        */
       path?: string;
     }
+  }
+
+  /**
+   * A safety setting that affects the safety-blocking behavior.
+   *
+   * A SafetySetting consists of a harm category and a threshold for that category.
+   */
+  export interface SafetySetting {
+    /**
+     * Required. The harm category to be blocked.
+     */
+    category:
+      | 'hate_speech'
+      | 'dangerous_content'
+      | 'harassment'
+      | 'sexually_explicit'
+      | 'civic_integrity'
+      | 'image_hate'
+      | 'image_dangerous_content'
+      | 'image_harassment'
+      | 'image_sexually_explicit'
+      | 'jailbreak';
+
+    /**
+     * Required. The threshold for blocking content. If the harm probability exceeds
+     * this threshold, the content will be blocked.
+     */
+    threshold: 'block_low_and_above' | 'block_medium_and_above' | 'block_only_high' | 'block_none' | 'off';
+
+    /**
+     * Optional. The method for blocking content. If not specified, the default
+     * behavior is to use the probability score.
+     */
+    method?: 'severity' | 'probability';
   }
 }
 
@@ -3051,6 +3101,17 @@ export interface BaseCreateModelInteractionParams {
   generation_config?: GenerationConfig;
 
   /**
+   * Body param: Optional. The labels with user-defined metadata for the request. It
+   * is used for billing and reporting only.
+   *
+   * Label keys and values can be no longer than 63 characters (Unicode codepoints)
+   * and can only contain lowercase letters, numeric characters, underscores, and
+   * dashes. International characters are allowed. Label values are optional. Label
+   * keys must start with a letter.
+   */
+  labels?: { [key: string]: string };
+
+  /**
    * Body param: The ID of the previous interaction, if any.
    */
   previous_interaction_id?: string;
@@ -3076,6 +3137,11 @@ export interface BaseCreateModelInteractionParams {
    * Body param: The requested modalities of the response (TEXT, IMAGE, AUDIO).
    */
   response_modalities?: Array<'text' | 'image' | 'audio' | 'video' | 'document'>;
+
+  /**
+   * Body param: Safety settings for the interaction.
+   */
+  safety_settings?: Array<BaseCreateModelInteractionParams.SafetySetting>;
 
   /**
    * Body param: The service tier for the interaction.
@@ -3108,6 +3174,42 @@ export interface BaseCreateModelInteractionParams {
    * interaction completes.
    */
   webhook_config?: WebhookConfig;
+}
+
+export namespace BaseCreateModelInteractionParams {
+  /**
+   * A safety setting that affects the safety-blocking behavior.
+   *
+   * A SafetySetting consists of a harm category and a threshold for that category.
+   */
+  export interface SafetySetting {
+    /**
+     * Required. The harm category to be blocked.
+     */
+    category:
+      | 'hate_speech'
+      | 'dangerous_content'
+      | 'harassment'
+      | 'sexually_explicit'
+      | 'civic_integrity'
+      | 'image_hate'
+      | 'image_dangerous_content'
+      | 'image_harassment'
+      | 'image_sexually_explicit'
+      | 'jailbreak';
+
+    /**
+     * Required. The threshold for blocking content. If the harm probability exceeds
+     * this threshold, the content will be blocked.
+     */
+    threshold: 'block_low_and_above' | 'block_medium_and_above' | 'block_only_high' | 'block_none' | 'off';
+
+    /**
+     * Optional. The method for blocking content. If not specified, the default
+     * behavior is to use the probability score.
+     */
+    method?: 'severity' | 'probability';
+  }
 }
 
 export interface BaseCreateAgentInteractionParams {
@@ -3161,6 +3263,17 @@ export interface BaseCreateAgentInteractionParams {
   environment?: Environment | string;
 
   /**
+   * Body param: Optional. The labels with user-defined metadata for the request. It
+   * is used for billing and reporting only.
+   *
+   * Label keys and values can be no longer than 63 characters (Unicode codepoints)
+   * and can only contain lowercase letters, numeric characters, underscores, and
+   * dashes. International characters are allowed. Label values are optional. Label
+   * keys must start with a letter.
+   */
+  labels?: { [key: string]: string };
+
+  /**
    * Body param: The ID of the previous interaction, if any.
    */
   previous_interaction_id?: string;
@@ -3186,6 +3299,11 @@ export interface BaseCreateAgentInteractionParams {
    * Body param: The requested modalities of the response (TEXT, IMAGE, AUDIO).
    */
   response_modalities?: Array<'text' | 'image' | 'audio' | 'video' | 'document'>;
+
+  /**
+   * Body param: Safety settings for the interaction.
+   */
+  safety_settings?: Array<BaseCreateAgentInteractionParams.SafetySetting>;
 
   /**
    * Body param: The service tier for the interaction.
@@ -3384,6 +3502,40 @@ export namespace BaseCreateAgentInteractionParams {
        */
       path?: string;
     }
+  }
+
+  /**
+   * A safety setting that affects the safety-blocking behavior.
+   *
+   * A SafetySetting consists of a harm category and a threshold for that category.
+   */
+  export interface SafetySetting {
+    /**
+     * Required. The harm category to be blocked.
+     */
+    category:
+      | 'hate_speech'
+      | 'dangerous_content'
+      | 'harassment'
+      | 'sexually_explicit'
+      | 'civic_integrity'
+      | 'image_hate'
+      | 'image_dangerous_content'
+      | 'image_harassment'
+      | 'image_sexually_explicit'
+      | 'jailbreak';
+
+    /**
+     * Required. The threshold for blocking content. If the harm probability exceeds
+     * this threshold, the content will be blocked.
+     */
+    threshold: 'block_low_and_above' | 'block_medium_and_above' | 'block_only_high' | 'block_none' | 'off';
+
+    /**
+     * Optional. The method for blocking content. If not specified, the default
+     * behavior is to use the probability score.
+     */
+    method?: 'severity' | 'probability';
   }
 }
 
