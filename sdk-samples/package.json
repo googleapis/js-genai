@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@google/genai": "file:..",
-    "@modelcontextprotocol/sdk": "^1.29.0",
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "google-auth-library": "^10.6.2",
@@ -24,7 +23,6 @@
     "tsx": "^4.19.0"
   },
   "overrides": {
-    "@modelcontextprotocol/sdk": "$@modelcontextprotocol/sdk",
     "zod": "$zod"
   }
 }
