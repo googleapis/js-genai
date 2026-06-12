@@ -10,8 +10,6 @@ export default [
       'dist/**',
       'src/interactions/**',
       'src/interactions-private/**',
-      'src/gaos/**',
-      'src/gaos-private/**',
     ],
   },
   {

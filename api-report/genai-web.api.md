@@ -4,6 +4,8 @@
 
 ```ts
 
+/// <reference types="node" />
+
 import type { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { GoogleAuthOptions } from 'google-auth-library';
 import { ReadableStream as ReadableStream_2 } from 'stream/web';

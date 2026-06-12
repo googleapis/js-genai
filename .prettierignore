@@ -11,5 +11,3 @@ dist-private/**
 # Ignore interactions files:
 src/interactions/**
 src/interactions-private/**
-src/gaos/**
-src/gaos-private/**
