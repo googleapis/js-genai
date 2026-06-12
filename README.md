@@ -13,6 +13,13 @@ TypeScript and JavaScript developers to build applications powered by Gemini. Th
 supports both the [Gemini Developer API](https://ai.google.dev/gemini-api/docs)
 and [Gemini Enterprise Agent Platform](https://docs.cloud.google.com/gemini-enterprise-agent-platform).
 
+> [!WARNING]
+> **Upcoming Breaking Change to Automatic Function Calling (AFC):**
+> We will introduce a breaking change to the Automatic Function Calling (AFC)
+> feature in the next major version. Specifically, users will not be able to
+> invoke AFC from direct calls to `Models.generate_content` or its stream
+> variants. Instead, users should invoke AFC from `chats` modules.
+
 The Google Gen AI SDK is designed to work with Gemini 2.0+ features.
 
 > [!CAUTION]
