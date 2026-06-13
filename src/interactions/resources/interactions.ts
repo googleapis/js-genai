@@ -2346,9 +2346,14 @@ export namespace Tool {
     type: 'computer_use';
 
     /**
+     * Whether enable the prompt injection detection check on computer-use request.
+     */
+    enable_prompt_injection_detection?: boolean;
+
+    /**
      * The environment being operated.
      */
-    environment?: 'browser';
+    environment?: 'browser' | 'mobile' | 'desktop';
 
     /**
      * The list of predefined functions that are excluded from the model call.
