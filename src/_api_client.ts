@@ -11,7 +11,6 @@ import {Downloader} from './_downloader.js';
 import {Uploader} from './_uploader.js';
 import {uploadToFileSearchStoreConfigToMldev} from './converters/_filesearchstores_converters.js';
 import {ApiError} from './errors.js';
-import {GeminiNextGenAPIClientAdapter} from './interactions/client-adapter.js';
 import * as types from './types.js';
 
 const CONTENT_TYPE_HEADER = 'Content-Type';
@@ -169,7 +168,7 @@ export interface HttpRequest {
  * WARNING: This is an internal API and may change without notice. Direct usage
  * is not supported and may break your application.
  */
-export class ApiClient implements GeminiNextGenAPIClientAdapter {
+export class ApiClient {
   readonly clientOptions: ApiClientInitOptions;
   private readonly customBaseUrl?: string;
   constructor(opts: ApiClientInitOptions) {

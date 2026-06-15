@@ -6,10 +6,8 @@
 
 import { GoogleAuthOptions } from 'google-auth-library';
 
-// Warning: (ae-forgotten-export) The symbol "GeminiNextGenAPIClientAdapter" needs to be exported by the entry point index.d.ts
-//
 // @public
-export class ApiClient implements GeminiNextGenAPIClientAdapter {
+export class ApiClient {
     constructor(opts: ApiClientInitOptions);
     // (undocumented)
     readonly clientOptions: ApiClientInitOptions;

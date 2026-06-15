@@ -6,7 +6,6 @@
 
 import type { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { GoogleAuthOptions } from 'google-auth-library';
-import { ReadableStream as ReadableStream_2 } from 'stream/web';
 
 // @public
 export interface ActivityEnd {
@@ -34,15 +33,40 @@ export enum AdapterSize {
     ADAPTER_SIZE_UNSPECIFIED = "ADAPTER_SIZE_UNSPECIFIED"
 }
 
-// Warning: (ae-forgotten-export) The symbol "BaseAgents" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export class Agents extends BaseAgents {
-}
-
 // @public (undocumented)
 export namespace Agents {
-    export { export type Agent as Agent, export type AgentListResponse as AgentListResponse, export type AgentDeleteResponse as AgentDeleteResponse, export type AgentCreateParams as AgentCreateParams, export type AgentListParams as AgentListParams, export type AgentDeleteParams as AgentDeleteParams, export type AgentGetParams as AgentGetParams, };
+    // Warning: (ae-forgotten-export) The symbol "Agent$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type Agent = Agent$;
+    // Warning: (ae-forgotten-export) The symbol "AgentCreateParams$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type AgentCreateParams = AgentCreateParams$;
+    // Warning: (ae-forgotten-export) The symbol "AgentDeleteParams$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type AgentDeleteParams = AgentDeleteParams$;
+    // Warning: (ae-forgotten-export) The symbol "AgentDeleteResponse$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type AgentDeleteResponse = AgentDeleteResponse$;
+    // Warning: (ae-forgotten-export) The symbol "AgentGetParams$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type AgentGetParams = AgentGetParams$;
+    // Warning: (ae-forgotten-export) The symbol "AgentListParams$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type AgentListParams = AgentListParams$;
+    // Warning: (ae-forgotten-export) The symbol "AgentListResponse$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type AgentListResponse = AgentListResponse$;
+    // Warning: (ae-forgotten-export) The symbol "AgentTool$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type AgentTool = AgentTool$;
 }
 
 // @public
@@ -1830,8 +1854,10 @@ export interface GetTuningJobParameters {
 // @public
 export class GoogleGenAI {
     constructor(options: GoogleGenAIOptions);
+    // Warning: (ae-forgotten-export) The symbol "GeminiNextGenAgents" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    get agents(): Agents;
+    get agents(): GeminiNextGenAgents;
     // (undocumented)
     protected readonly apiClient: ApiClient;
     // (undocumented)
@@ -1848,8 +1874,10 @@ export class GoogleGenAI {
     //
     // (undocumented)
     readonly fileSearchStores: FileSearchStores;
+    // Warning: (ae-forgotten-export) The symbol "GeminiNextGenInteractions" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    get interactions(): Interactions;
+    get interactions(): GeminiNextGenInteractions;
     // (undocumented)
     readonly live: Live;
     // (undocumented)
@@ -1862,8 +1890,10 @@ export class GoogleGenAI {
     readonly tunings: Tunings;
     // (undocumented)
     readonly vertexai: boolean;
+    // Warning: (ae-forgotten-export) The symbol "GeminiNextGenWebhooks" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    get webhooks(): Webhooks;
+    get webhooks(): GeminiNextGenWebhooks;
 }
 
 // @public
@@ -2217,15 +2247,628 @@ export class InlinedResponse {
     response?: GenerateContentResponse;
 }
 
-// Warning: (ae-forgotten-export) The symbol "BaseInteractions" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export class Interactions extends BaseInteractions {
-}
-
 // @public (undocumented)
 export namespace Interactions {
-    export { export type AllowedTools as AllowedTools, export type Annotation as Annotation, export type AudioContent as AudioContent, export type AudioResponseFormat as AudioResponseFormat, export type CodeExecutionCallArguments as CodeExecutionCallArguments, export type CodeExecutionCallStep as CodeExecutionCallStep, export type CodeExecutionResultStep as CodeExecutionResultStep, export type Content as Content, export type DeepResearchAgentConfig as DeepResearchAgentConfig, export type DocumentContent as DocumentContent, export type DynamicAgentConfig as DynamicAgentConfig, export type Environment as Environment, export type ErrorEvent as ErrorEvent, export type FileCitation as FileCitation, export type FileSearchCallStep as FileSearchCallStep, export type FileSearchResultStep as FileSearchResultStep, export type Function as Function, export type FunctionCallStep as FunctionCallStep, export type FunctionResultStep as FunctionResultStep, export type GenerationConfig as GenerationConfig, export type GoogleMapsCallArguments as GoogleMapsCallArguments, export type GoogleMapsCallStep as GoogleMapsCallStep, export type GoogleMapsResult as GoogleMapsResult, export type GoogleMapsResultStep as GoogleMapsResultStep, export type GoogleSearchCallArguments as GoogleSearchCallArguments, export type GoogleSearchCallStep as GoogleSearchCallStep, export type GoogleSearchResult as GoogleSearchResult, export type GoogleSearchResultStep as GoogleSearchResultStep, export type ImageConfig as ImageConfig, export type ImageContent as ImageContent, export type ImageResponseFormat as ImageResponseFormat, export type Interaction as Interaction, export type InteractionCompletedEvent as InteractionCompletedEvent, export type InteractionCreatedEvent as InteractionCreatedEvent, export type InteractionSSEEvent as InteractionSSEEvent, export type InteractionStatusUpdate as InteractionStatusUpdate, export type MCPServerToolCallStep as MCPServerToolCallStep, export type MCPServerToolResultStep as MCPServerToolResultStep, export type Model as Model, export type ModelOutputStep as ModelOutputStep, export type PlaceCitation as PlaceCitation, export type SpeechConfig as SpeechConfig, export type Step as Step, export type StepDelta as StepDelta, export type StepStart as StepStart, export type StepStop as StepStop, export type TextContent as TextContent, export type TextResponseFormat as TextResponseFormat, export type ThinkingLevel as ThinkingLevel, export type ThoughtStep as ThoughtStep, export type Tool as Tool, export type ToolChoiceConfig as ToolChoiceConfig, export type ToolChoiceType as ToolChoiceType, export type URLCitation as URLCitation, export type URLContextCallArguments as URLContextCallArguments, export type URLContextCallStep as URLContextCallStep, export type URLContextResult as URLContextResult, export type URLContextResultStep as URLContextResultStep, export type Usage as Usage, export type UserInputStep as UserInputStep, export type VideoContent as VideoContent, export type WebhookConfig as WebhookConfig, export type InteractionDeleteResponse as InteractionDeleteResponse, export type InteractionCreateParams as InteractionCreateParams, export type CreateModelInteractionParamsNonStreaming as CreateModelInteractionParamsNonStreaming, export type CreateModelInteractionParamsStreaming as CreateModelInteractionParamsStreaming, export type CreateAgentInteractionParamsNonStreaming as CreateAgentInteractionParamsNonStreaming, export type CreateAgentInteractionParamsStreaming as CreateAgentInteractionParamsStreaming, export type InteractionDeleteParams as InteractionDeleteParams, export type InteractionCancelParams as InteractionCancelParams, export type InteractionGetParams as InteractionGetParams, export type InteractionGetParamsNonStreaming as InteractionGetParamsNonStreaming, export type InteractionGetParamsStreaming as InteractionGetParamsStreaming, };
+    // Warning: (ae-forgotten-export) The symbol "Agent$2" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type Agent = Agent$2;
+    // Warning: (ae-forgotten-export) The symbol "AgentCreateParams$2" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type AgentCreateParams = AgentCreateParams$2;
+    // Warning: (ae-forgotten-export) The symbol "AgentDeleteResponse$2" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type AgentDeleteResponse = AgentDeleteResponse$2;
+    // Warning: (ae-forgotten-export) The symbol "AgentListParams$2" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type AgentListParams = AgentListParams$2;
+    // Warning: (ae-forgotten-export) The symbol "AgentListResponse$2" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type AgentListResponse = AgentListResponse$2;
+    // Warning: (ae-forgotten-export) The symbol "AgentOption$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type AgentOption = AgentOption$;
+    // Warning: (ae-forgotten-export) The symbol "AllowedTools$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type AllowedTools = AllowedTools$;
+    // Warning: (ae-forgotten-export) The symbol "AllowlistEntry$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type AllowlistEntry = AllowlistEntry$;
+    // Warning: (ae-forgotten-export) The symbol "Annotation$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type Annotation = Annotation$;
+    // Warning: (ae-forgotten-export) The symbol "Arguments$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type Arguments = Arguments$;
+    // Warning: (ae-forgotten-export) The symbol "ArgumentsDelta$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type ArgumentsDelta = ArgumentsDelta$;
+    // Warning: (ae-forgotten-export) The symbol "AudioContent$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type AudioContent = AudioContent$;
+    // Warning: (ae-forgotten-export) The symbol "AudioContentParam$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type AudioContentParam = AudioContentParam$;
+    // Warning: (ae-forgotten-export) The symbol "AudioDelta$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type AudioDelta = AudioDelta$;
+    // Warning: (ae-forgotten-export) The symbol "AudioResponseFormat$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type AudioResponseFormat = AudioResponseFormat$;
+    // Warning: (ae-forgotten-export) The symbol "CodeExecution$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type CodeExecution = CodeExecution$;
+    // Warning: (ae-forgotten-export) The symbol "CodeExecutionCallArguments$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type CodeExecutionCallArguments = CodeExecutionCallArguments$;
+    // Warning: (ae-forgotten-export) The symbol "CodeExecutionCallDelta$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type CodeExecutionCallDelta = CodeExecutionCallDelta$;
+    // Warning: (ae-forgotten-export) The symbol "CodeExecutionCallStep$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type CodeExecutionCallStep = CodeExecutionCallStep$;
+    // Warning: (ae-forgotten-export) The symbol "CodeExecutionResultDelta$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type CodeExecutionResultDelta = CodeExecutionResultDelta$;
+    // Warning: (ae-forgotten-export) The symbol "CodeExecutionResultStep$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type CodeExecutionResultStep = CodeExecutionResultStep$;
+    // Warning: (ae-forgotten-export) The symbol "ComputerUse$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type ComputerUse = ComputerUse$;
+    // Warning: (ae-forgotten-export) The symbol "Content$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type Content = Content$;
+    // Warning: (ae-forgotten-export) The symbol "CreateAgentInteraction$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type CreateAgentInteraction = CreateAgentInteraction$;
+    // Warning: (ae-forgotten-export) The symbol "CreateModelInteraction$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type CreateModelInteraction = CreateModelInteraction$;
+    // Warning: (ae-forgotten-export) The symbol "DeepResearchAgentConfig$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type DeepResearchAgentConfig = DeepResearchAgentConfig$;
+    // Warning: (ae-forgotten-export) The symbol "DocumentContent$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type DocumentContent = DocumentContent$;
+    // Warning: (ae-forgotten-export) The symbol "DocumentDelta$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type DocumentDelta = DocumentDelta$;
+    // Warning: (ae-forgotten-export) The symbol "DynamicAgentConfig$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type DynamicAgentConfig = DynamicAgentConfig$;
+    // Warning: (ae-forgotten-export) The symbol "Empty$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type Empty = Empty$;
+    // Warning: (ae-forgotten-export) The symbol "Environment$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type Environment = Environment$;
+    // Warning: (ae-forgotten-export) The symbol "EnvironmentNetworkEgressAllowlist$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type EnvironmentNetworkEgressAllowlist = EnvironmentNetworkEgressAllowlist$;
+    // Warning: (ae-forgotten-export) The symbol "ErrorEvent$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type ErrorEvent = ErrorEvent$;
+    // Warning: (ae-forgotten-export) The symbol "ErrorT$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type ErrorT = ErrorT$;
+    // Warning: (ae-forgotten-export) The symbol "ExaAISearchConfig$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type ExaAISearchConfig = ExaAISearchConfig$;
+    // Warning: (ae-forgotten-export) The symbol "FileCitation$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type FileCitation = FileCitation$;
+    // Warning: (ae-forgotten-export) The symbol "FileSearch$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type FileSearch = FileSearch$;
+    // Warning: (ae-forgotten-export) The symbol "FileSearchCallDelta$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type FileSearchCallDelta = FileSearchCallDelta$;
+    // Warning: (ae-forgotten-export) The symbol "FileSearchCallStep$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type FileSearchCallStep = FileSearchCallStep$;
+    // Warning: (ae-forgotten-export) The symbol "FileSearchResult$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type FileSearchResult = FileSearchResult$;
+    // Warning: (ae-forgotten-export) The symbol "FileSearchResultDelta$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type FileSearchResultDelta = FileSearchResultDelta$;
+    // Warning: (ae-forgotten-export) The symbol "FileSearchResultStep$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type FileSearchResultStep = FileSearchResultStep$;
+    // Warning: (ae-forgotten-export) The symbol "Filter$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type Filter = Filter$;
+    // Warning: (ae-forgotten-export) The symbol "FunctionCallStep$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type FunctionCallStep = FunctionCallStep$;
+    // Warning: (ae-forgotten-export) The symbol "FunctionResultDelta$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type FunctionResultDelta = FunctionResultDelta$;
+    // Warning: (ae-forgotten-export) The symbol "FunctionResultStep$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type FunctionResultStep = FunctionResultStep$;
+    // Warning: (ae-forgotten-export) The symbol "FunctionResultSubcontent$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type FunctionResultSubcontent = FunctionResultSubcontent$;
+    // Warning: (ae-forgotten-export) The symbol "FunctionT$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type FunctionT = FunctionT$;
+    // Warning: (ae-forgotten-export) The symbol "GenerationConfig$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type GenerationConfig = GenerationConfig$;
+    // Warning: (ae-forgotten-export) The symbol "GoogleMaps$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type GoogleMaps = GoogleMaps$;
+    // Warning: (ae-forgotten-export) The symbol "GoogleMapsCallArguments$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type GoogleMapsCallArguments = GoogleMapsCallArguments$;
+    // Warning: (ae-forgotten-export) The symbol "GoogleMapsCallDelta$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type GoogleMapsCallDelta = GoogleMapsCallDelta$;
+    // Warning: (ae-forgotten-export) The symbol "GoogleMapsCallStep$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type GoogleMapsCallStep = GoogleMapsCallStep$;
+    // Warning: (ae-forgotten-export) The symbol "GoogleMapsResult$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type GoogleMapsResult = GoogleMapsResult$;
+    // Warning: (ae-forgotten-export) The symbol "GoogleMapsResultDelta$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type GoogleMapsResultDelta = GoogleMapsResultDelta$;
+    // Warning: (ae-forgotten-export) The symbol "GoogleMapsResultPlaces$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type GoogleMapsResultPlaces = GoogleMapsResultPlaces$;
+    // Warning: (ae-forgotten-export) The symbol "GoogleMapsResultStep$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type GoogleMapsResultStep = GoogleMapsResultStep$;
+    // Warning: (ae-forgotten-export) The symbol "GoogleSearch$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type GoogleSearch = GoogleSearch$;
+    // Warning: (ae-forgotten-export) The symbol "GoogleSearchCallArguments$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type GoogleSearchCallArguments = GoogleSearchCallArguments$;
+    // Warning: (ae-forgotten-export) The symbol "GoogleSearchCallDelta$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type GoogleSearchCallDelta = GoogleSearchCallDelta$;
+    // Warning: (ae-forgotten-export) The symbol "GoogleSearchCallStep$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type GoogleSearchCallStep = GoogleSearchCallStep$;
+    // Warning: (ae-forgotten-export) The symbol "GoogleSearchResult$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type GoogleSearchResult = GoogleSearchResult$;
+    // Warning: (ae-forgotten-export) The symbol "GoogleSearchResultDelta$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type GoogleSearchResultDelta = GoogleSearchResultDelta$;
+    // Warning: (ae-forgotten-export) The symbol "GoogleSearchResultStep$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type GoogleSearchResultStep = GoogleSearchResultStep$;
+    // Warning: (ae-forgotten-export) The symbol "GroundingToolCount$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type GroundingToolCount = GroundingToolCount$;
+    // Warning: (ae-forgotten-export) The symbol "HybridSearch$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type HybridSearch = HybridSearch$;
+    // Warning: (ae-forgotten-export) The symbol "ImageConfig$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type ImageConfig = ImageConfig$;
+    // Warning: (ae-forgotten-export) The symbol "ImageContent$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type ImageContent = ImageContent$;
+    // Warning: (ae-forgotten-export) The symbol "ImageDelta$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type ImageDelta = ImageDelta$;
+    // Warning: (ae-forgotten-export) The symbol "ImageResponseFormat$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type ImageResponseFormat = ImageResponseFormat$;
+    // Warning: (ae-forgotten-export) The symbol "Interaction$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type Interaction = Interaction$;
+    // Warning: (ae-forgotten-export) The symbol "InteractionCompletedEvent$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type InteractionCompletedEvent = InteractionCompletedEvent$;
+    // Warning: (ae-forgotten-export) The symbol "InteractionCreatedEvent$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type InteractionCreatedEvent = InteractionCreatedEvent$;
+    // Warning: (ae-forgotten-export) The symbol "InteractionCreateParams$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type InteractionCreateParams = InteractionCreateParams$;
+    // Warning: (ae-forgotten-export) The symbol "InteractionCreateParamsNonStreaming$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type InteractionCreateParamsNonStreaming = InteractionCreateParamsNonStreaming$;
+    // Warning: (ae-forgotten-export) The symbol "InteractionCreateParamsStreaming$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type InteractionCreateParamsStreaming = InteractionCreateParamsStreaming$;
+    // Warning: (ae-forgotten-export) The symbol "InteractionDeleteParams$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type InteractionDeleteParams = InteractionDeleteParams$;
+    // Warning: (ae-forgotten-export) The symbol "InteractionGetParams$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type InteractionGetParams = InteractionGetParams$;
+    // Warning: (ae-forgotten-export) The symbol "InteractionGetParamsNonStreaming$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type InteractionGetParamsNonStreaming = InteractionGetParamsNonStreaming$;
+    // Warning: (ae-forgotten-export) The symbol "InteractionGetParamsStreaming$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type InteractionGetParamsStreaming = InteractionGetParamsStreaming$;
+    // Warning: (ae-forgotten-export) The symbol "InteractionsInput$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type InteractionsInput = InteractionsInput$;
+    // Warning: (ae-forgotten-export) The symbol "InteractionSSEEvent$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type InteractionSSEEvent = InteractionSSEEvent$;
+    // Warning: (ae-forgotten-export) The symbol "InteractionSseEventInteraction$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type InteractionSseEventInteraction = InteractionSseEventInteraction$;
+    // Warning: (ae-forgotten-export) The symbol "InteractionSSEStreamEvent$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type InteractionSSEStreamEvent = InteractionSSEStreamEvent$;
+    // Warning: (ae-forgotten-export) The symbol "InteractionStatusUpdate$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type InteractionStatusUpdate = InteractionStatusUpdate$;
+    // Warning: (ae-forgotten-export) The symbol "MCPServer$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type MCPServer = MCPServer$;
+    // Warning: (ae-forgotten-export) The symbol "MCPServerToolCallDelta$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type MCPServerToolCallDelta = MCPServerToolCallDelta$;
+    // Warning: (ae-forgotten-export) The symbol "MCPServerToolCallStep$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type MCPServerToolCallStep = MCPServerToolCallStep$;
+    // Warning: (ae-forgotten-export) The symbol "MCPServerToolResultDelta$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type MCPServerToolResultDelta = MCPServerToolResultDelta$;
+    // Warning: (ae-forgotten-export) The symbol "MCPServerToolResultStep$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type MCPServerToolResultStep = MCPServerToolResultStep$;
+    // Warning: (ae-forgotten-export) The symbol "MediaResolution$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type MediaResolution = MediaResolution$;
+    // Warning: (ae-forgotten-export) The symbol "ModalityTokens$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type ModalityTokens = ModalityTokens$;
+    // Warning: (ae-forgotten-export) The symbol "Model$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type Model = Model$;
+    // Warning: (ae-forgotten-export) The symbol "ModelOutputStep$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type ModelOutputStep = ModelOutputStep$;
+    // Warning: (ae-forgotten-export) The symbol "ModelParam$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type ModelParam = ModelParam$;
+    // Warning: (ae-forgotten-export) The symbol "ParallelAISearchConfig$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type ParallelAISearchConfig = ParallelAISearchConfig$;
+    // Warning: (ae-forgotten-export) The symbol "PlaceCitation$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type PlaceCitation = PlaceCitation$;
+    // Warning: (ae-forgotten-export) The symbol "RagResource$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type RagResource = RagResource$;
+    // Warning: (ae-forgotten-export) The symbol "RagRetrievalConfig$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type RagRetrievalConfig = RagRetrievalConfig$;
+    // Warning: (ae-forgotten-export) The symbol "RagStoreConfig$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type RagStoreConfig = RagStoreConfig$;
+    // Warning: (ae-forgotten-export) The symbol "Ranking$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type Ranking = Ranking$;
+    // Warning: (ae-forgotten-export) The symbol "ResponseFormat$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type ResponseFormat = ResponseFormat$;
+    // Warning: (ae-forgotten-export) The symbol "ResponseModality$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type ResponseModality = ResponseModality$;
+    // Warning: (ae-forgotten-export) The symbol "Retrieval$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type Retrieval = Retrieval$;
+    // Warning: (ae-forgotten-export) The symbol "ReviewSnippet$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type ReviewSnippet = ReviewSnippet$;
+    // Warning: (ae-forgotten-export) The symbol "ServiceTier$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type ServiceTier = ServiceTier$;
+    // Warning: (ae-forgotten-export) The symbol "SigningSecret$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type SigningSecret = SigningSecret$;
+    // Warning: (ae-forgotten-export) The symbol "Source$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type Source = Source$;
+    // Warning: (ae-forgotten-export) The symbol "SpeechConfig$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type SpeechConfig = SpeechConfig$;
+    // Warning: (ae-forgotten-export) The symbol "Step$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type Step = Step$;
+    // Warning: (ae-forgotten-export) The symbol "StepDelta$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type StepDelta = StepDelta$;
+    // Warning: (ae-forgotten-export) The symbol "StepDeltaData$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type StepDeltaData = StepDeltaData$;
+    // Warning: (ae-forgotten-export) The symbol "StepDeltaMetadata$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type StepDeltaMetadata = StepDeltaMetadata$;
+    // Warning: (ae-forgotten-export) The symbol "StepStart$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type StepStart = StepStart$;
+    // Warning: (ae-forgotten-export) The symbol "StepStop$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type StepStop = StepStop$;
+    // Warning: (ae-forgotten-export) The symbol "StreamMetadata$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type StreamMetadata = StreamMetadata$;
+    // Warning: (ae-forgotten-export) The symbol "TextAnnotationDelta$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type TextAnnotationDelta = TextAnnotationDelta$;
+    // Warning: (ae-forgotten-export) The symbol "TextContent$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type TextContent = TextContent$;
+    // Warning: (ae-forgotten-export) The symbol "TextDelta$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type TextDelta = TextDelta$;
+    // Warning: (ae-forgotten-export) The symbol "TextResponseFormat$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type TextResponseFormat = TextResponseFormat$;
+    // Warning: (ae-forgotten-export) The symbol "ThinkingLevel$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type ThinkingLevel = ThinkingLevel$;
+    // Warning: (ae-forgotten-export) The symbol "ThinkingSummaries$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type ThinkingSummaries = ThinkingSummaries$;
+    // Warning: (ae-forgotten-export) The symbol "ThoughtSignatureDelta$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type ThoughtSignatureDelta = ThoughtSignatureDelta$;
+    // Warning: (ae-forgotten-export) The symbol "ThoughtStep$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type ThoughtStep = ThoughtStep$;
+    // Warning: (ae-forgotten-export) The symbol "ThoughtSummaryContent$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type ThoughtSummaryContent = ThoughtSummaryContent$;
+    // Warning: (ae-forgotten-export) The symbol "ThoughtSummaryDelta$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type ThoughtSummaryDelta = ThoughtSummaryDelta$;
+    // Warning: (ae-forgotten-export) The symbol "Tool$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type Tool = Tool$;
+    // Warning: (ae-forgotten-export) The symbol "ToolChoiceConfig$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type ToolChoiceConfig = ToolChoiceConfig$;
+    // Warning: (ae-forgotten-export) The symbol "ToolChoiceType$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type ToolChoiceType = ToolChoiceType$;
+    // Warning: (ae-forgotten-export) The symbol "Turn$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type Turn = Turn$;
+    // Warning: (ae-forgotten-export) The symbol "URLCitation$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type URLCitation = URLCitation$;
+    // Warning: (ae-forgotten-export) The symbol "URLContext$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type URLContext = URLContext$;
+    // Warning: (ae-forgotten-export) The symbol "URLContextCallArguments$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type URLContextCallArguments = URLContextCallArguments$;
+    // Warning: (ae-forgotten-export) The symbol "URLContextCallDelta$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type URLContextCallDelta = URLContextCallDelta$;
+    // Warning: (ae-forgotten-export) The symbol "URLContextCallStep$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type URLContextCallStep = URLContextCallStep$;
+    // Warning: (ae-forgotten-export) The symbol "URLContextResult$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type URLContextResult = URLContextResult$;
+    // Warning: (ae-forgotten-export) The symbol "URLContextResultDelta$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type URLContextResultDelta = URLContextResultDelta$;
+    // Warning: (ae-forgotten-export) The symbol "URLContextResultStep$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type URLContextResultStep = URLContextResultStep$;
+    // Warning: (ae-forgotten-export) The symbol "Usage$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type Usage = Usage$;
+    // Warning: (ae-forgotten-export) The symbol "UserInputStep$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type UserInputStep = UserInputStep$;
+    // Warning: (ae-forgotten-export) The symbol "VertexAISearchConfig$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type VertexAISearchConfig = VertexAISearchConfig$;
+    // Warning: (ae-forgotten-export) The symbol "VideoContent$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type VideoContent = VideoContent$;
+    // Warning: (ae-forgotten-export) The symbol "VideoContentParam$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type VideoContentParam = VideoContentParam$;
+    // Warning: (ae-forgotten-export) The symbol "VideoDelta$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type VideoDelta = VideoDelta$;
+    // Warning: (ae-forgotten-export) The symbol "Webhook$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type Webhook = Webhook$;
+    // Warning: (ae-forgotten-export) The symbol "WebhookConfig$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type WebhookConfig = WebhookConfig$;
+    // Warning: (ae-forgotten-export) The symbol "WebhookCreateParams$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type WebhookCreateParams = WebhookCreateParams$;
+    // Warning: (ae-forgotten-export) The symbol "WebhookDeleteResponse$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type WebhookDeleteResponse = WebhookDeleteResponse$;
+    // Warning: (ae-forgotten-export) The symbol "WebhookListParams$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type WebhookListParams = WebhookListParams$;
+    // Warning: (ae-forgotten-export) The symbol "WebhookListResponse$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type WebhookListResponse = WebhookListResponse$;
+    // Warning: (ae-forgotten-export) The symbol "WebhookPingParams$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type WebhookPingParams = WebhookPingParams$;
+    // Warning: (ae-forgotten-export) The symbol "WebhookPingResponse$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type WebhookPingResponse = WebhookPingResponse$;
+    // Warning: (ae-forgotten-export) The symbol "WebhookRotateSigningSecretParams$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type WebhookRotateSigningSecretParams = WebhookRotateSigningSecretParams$;
+    // Warning: (ae-forgotten-export) The symbol "WebhookRotateSigningSecretResponse$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type WebhookRotateSigningSecretResponse = WebhookRotateSigningSecretResponse$;
+    // Warning: (ae-forgotten-export) The symbol "WebhookUpdateParams$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type WebhookUpdateParams = WebhookUpdateParams$;
 }
 
 // @public
@@ -3700,11 +4343,28 @@ export interface SpeechConfig {
 // @public (undocumented)
 export type SpeechConfigUnion = SpeechConfig | string;
 
+// @public (undocumented)
+export type SseMessage<T> = {
+    data?: T | undefined;
+    event?: string | null | undefined;
+    id?: string | null | undefined;
+    retry?: number | null | undefined;
+};
+
 // @public
 export enum StartSensitivity {
     START_SENSITIVITY_HIGH = "START_SENSITIVITY_HIGH",
     START_SENSITIVITY_LOW = "START_SENSITIVITY_LOW",
     START_SENSITIVITY_UNSPECIFIED = "START_SENSITIVITY_UNSPECIFIED"
+}
+
+// @public (undocumented)
+export class Stream<T> extends ReadableStream<T> {
+    // (undocumented)
+    [Symbol.asyncIterator](): any;
+    constructor(responseBody: ReadableStream<Uint8Array>, parse: (x: SseMessage<string>) => IteratorResult<T, undefined>, opts?: {
+        dataRequired?: boolean;
+    });
 }
 
 // @public
@@ -4488,15 +5148,76 @@ export interface WebhookConfig {
     userMetadata?: Record<string, unknown>;
 }
 
-// Warning: (ae-forgotten-export) The symbol "BaseWebhooks" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export class Webhooks extends BaseWebhooks {
-}
-
 // @public (undocumented)
 export namespace Webhooks {
-    export { export type SigningSecret as SigningSecret, export type Webhook as Webhook, export type WebhookListResponse as WebhookListResponse, export type WebhookDeleteResponse as WebhookDeleteResponse, export type WebhookPingResponse as WebhookPingResponse, export type WebhookRotateSigningSecretResponse as WebhookRotateSigningSecretResponse, export type WebhookCreateParams as WebhookCreateParams, export type WebhookUpdateParams as WebhookUpdateParams, export type WebhookListParams as WebhookListParams, export type WebhookDeleteParams as WebhookDeleteParams, export type WebhookGetParams as WebhookGetParams, export type WebhookPingParams as WebhookPingParams, export type WebhookRotateSigningSecretParams as WebhookRotateSigningSecretParams, };
+    // Warning: (ae-forgotten-export) The symbol "PingWebhookRequest$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type PingWebhookRequest = PingWebhookRequest$;
+    // Warning: (ae-forgotten-export) The symbol "RotateSigningSecretRequest$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type RotateSigningSecretRequest = RotateSigningSecretRequest$;
+    // Warning: (ae-forgotten-export) The symbol "SigningSecret$2" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type SigningSecret = SigningSecret$2;
+    // Warning: (ae-forgotten-export) The symbol "Webhook$2" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type Webhook = Webhook$2;
+    // Warning: (ae-forgotten-export) The symbol "WebhookCreateParams$2" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type WebhookCreateParams = WebhookCreateParams$2;
+    // Warning: (ae-forgotten-export) The symbol "WebhookDeleteParams$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type WebhookDeleteParams = WebhookDeleteParams$;
+    // Warning: (ae-forgotten-export) The symbol "WebhookDeleteResponse$2" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type WebhookDeleteResponse = WebhookDeleteResponse$2;
+    // Warning: (ae-forgotten-export) The symbol "WebhookGetParams$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type WebhookGetParams = WebhookGetParams$;
+    // Warning: (ae-forgotten-export) The symbol "WebhookInput$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type WebhookInput = WebhookInput$;
+    // Warning: (ae-forgotten-export) The symbol "WebhookListParams$2" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type WebhookListParams = WebhookListParams$2;
+    // Warning: (ae-forgotten-export) The symbol "WebhookListResponse$2" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type WebhookListResponse = WebhookListResponse$2;
+    // Warning: (ae-forgotten-export) The symbol "WebhookPingParams$2" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type WebhookPingParams = WebhookPingParams$2;
+    // Warning: (ae-forgotten-export) The symbol "WebhookPingResponse$2" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type WebhookPingResponse = WebhookPingResponse$2;
+    // Warning: (ae-forgotten-export) The symbol "WebhookRotateSigningSecretParams$2" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type WebhookRotateSigningSecretParams = WebhookRotateSigningSecretParams$2;
+    // Warning: (ae-forgotten-export) The symbol "WebhookRotateSigningSecretResponse$2" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type WebhookRotateSigningSecretResponse = WebhookRotateSigningSecretResponse$2;
+    // Warning: (ae-forgotten-export) The symbol "WebhookUpdate$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type WebhookUpdate = WebhookUpdate$;
+    // Warning: (ae-forgotten-export) The symbol "WebhookUpdateParams$2" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type WebhookUpdateParams = WebhookUpdateParams$2;
 }
 
 // @public

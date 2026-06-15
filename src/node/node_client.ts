@@ -14,10 +14,18 @@ import {Chats} from '../chats.js';
 import {GoogleGenAIOptions} from '../client.js';
 import {Files} from '../files.js';
 import {FileSearchStores} from '../filesearchstores.js';
-import GeminiNextGenAPI from '../interactions/index.js';
-import {Agents as GeminiNextGenAgents} from '../interactions/resources/agents.js';
-import {Interactions as GeminiNextGenInteractions} from '../interactions/resources/interactions.js';
-import {Webhooks as GeminiNextGenWebhooks} from '../interactions/resources/webhooks.js';
+import type {
+  GeminiNextGenAgents as Agents,
+  GeminiNextGenInteractions as Interactions,
+  GeminiNextGenWebhooks as Webhooks,
+} from '../gaos/google-genai.js';
+import {
+  buildGoogleGenAIClient,
+  GeminiNextGenAgents,
+  GeminiNextGenInteractions,
+  GeminiNextGenWebhooks,
+} from '../gaos/google-genai.js';
+import type {GoogleGenAI as GeminiNextGenAPI} from '../gaos/sdk/sdk.js';
 import {Live} from '../live.js';
 import {Models} from '../models.js';
 import {NodeAuth} from '../node/_node_auth.js';
@@ -139,28 +147,21 @@ export class GoogleGenAI {
   private getNextGenClient(): GeminiNextGenAPI {
     const httpOpts = this.httpOptions;
     if (this._nextGenClient === undefined) {
-      this._nextGenClient = new GeminiNextGenAPI({
-        baseURL: this.apiClient.getBaseUrl(),
-        apiKey: this.apiKey,
-        apiVersion: this.apiClient.getApiVersion(),
-        clientAdapter: this.apiClient,
-        defaultHeaders: this.apiClient.getDefaultHeaders(),
-        timeout: httpOpts?.timeout,
-        maxRetries: httpOpts?.retryOptions?.attempts,
+      this._nextGenClient = buildGoogleGenAIClient(this.apiClient, {
+        timeout_ms: httpOpts?.timeout,
       });
     }
 
-    // Unsupported Options Warnings
     if (httpOpts?.extraBody) {
       console.warn(
-        'GoogleGenAI.interactions: Client level httpOptions.extraBody is not supported by the interactions client and will be ignored.',
+        'GoogleGenAI: Client level httpOptions.extraBody is not supported by the Gemini NextGen client and will be ignored.',
       );
     }
 
     return this._nextGenClient;
   }
 
-  get interactions(): GeminiNextGenInteractions {
+  get interactions(): Interactions {
     if (this._interactions !== undefined) {
       return this._interactions;
     }
@@ -169,20 +170,20 @@ export class GoogleGenAI {
       'GoogleGenAI.interactions: Interactions usage is experimental and may change in future versions.',
     );
 
-    this._interactions = this.getNextGenClient().interactions;
+    this._interactions = new GeminiNextGenInteractions(this.apiClient);
     return this._interactions;
   }
 
-  get webhooks(): GeminiNextGenWebhooks {
+  get webhooks(): Webhooks {
     if (this._webhooks !== undefined) {
       return this._webhooks;
     }
 
-    this._webhooks = this.getNextGenClient().webhooks;
+    this._webhooks = new GeminiNextGenWebhooks(this.apiClient);
     return this._webhooks;
   }
 
-  get agents(): GeminiNextGenAgents {
+  get agents(): Agents {
     if (this._agents !== undefined) {
       return this._agents;
     }
@@ -191,7 +192,7 @@ export class GoogleGenAI {
       'GoogleGenAI.agents: Agents usage is experimental and may change in future versions.',
     );
 
-    this._agents = this.getNextGenClient().agents;
+    this._agents = new GeminiNextGenAgents(this.apiClient);
     return this._agents;
   }
   constructor(options: GoogleGenAIOptions) {
