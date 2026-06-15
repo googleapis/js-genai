@@ -17,4 +17,4 @@ import { URLCitation } from "./url-citation.js";
 /**
  * Citation information for model-generated content.
  */
-export type Annotation = FileCitation | PlaceCitation | URLCitation;
+export type Annotation = URLCitation | FileCitation | PlaceCitation;

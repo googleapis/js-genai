@@ -34,25 +34,25 @@ import { URLContextResultDelta } from "./url-context-result-delta.js";
 import { VideoDelta } from "./video-delta.js";
 
 export type StepDeltaData =
-  | ArgumentsDelta
-  | AudioDelta
-  | CodeExecutionCallDelta
-  | CodeExecutionResultDelta
-  | DocumentDelta
-  | FileSearchCallDelta
-  | FileSearchResultDelta
-  | FunctionResultDelta
-  | GoogleMapsCallDelta
-  | GoogleMapsResultDelta
-  | GoogleSearchCallDelta
-  | GoogleSearchResultDelta
-  | ImageDelta
-  | MCPServerToolCallDelta
-  | MCPServerToolResultDelta
-  | TextAnnotationDelta
   | TextDelta
-  | ThoughtSignatureDelta
+  | ImageDelta
+  | AudioDelta
+  | DocumentDelta
+  | VideoDelta
   | ThoughtSummaryDelta
+  | ThoughtSignatureDelta
+  | TextAnnotationDelta
+  | ArgumentsDelta
+  | CodeExecutionCallDelta
   | URLContextCallDelta
+  | GoogleSearchCallDelta
+  | MCPServerToolCallDelta
+  | FileSearchCallDelta
+  | GoogleMapsCallDelta
+  | CodeExecutionResultDelta
   | URLContextResultDelta
-  | VideoDelta;
+  | GoogleSearchResultDelta
+  | MCPServerToolResultDelta
+  | FileSearchResultDelta
+  | GoogleMapsResultDelta
+  | FunctionResultDelta;

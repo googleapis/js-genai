@@ -13,7 +13,7 @@
 /**
  * The environment being operated.
  */
-export type EnvironmentEnum = "browser";
+export type EnvironmentEnum = "browser" | "mobile" | "desktop" | (string & {});
 
 /**
  * A tool that can be used by the model to interact with the computer.
@@ -28,4 +28,11 @@ export type ComputerUse = {
    * The list of predefined functions that are excluded from the model call.
    */
   excluded_predefined_functions?: Array<string> | undefined;
+  /**
+   * Whether enable the prompt injection detection check on computer-use
+   *
+   * @remarks
+   * request.
+   */
+  enable_prompt_injection_detection?: boolean | undefined;
 };

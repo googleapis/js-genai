@@ -13,4 +13,4 @@
 import { ImageContent } from "./image-content.js";
 import { TextContent } from "./text-content.js";
 
-export type ThoughtSummaryContent = ImageContent | TextContent;
+export type ThoughtSummaryContent = TextContent | ImageContent;

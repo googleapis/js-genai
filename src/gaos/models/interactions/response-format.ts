@@ -16,6 +16,6 @@ import { TextResponseFormat } from "./text-response-format.js";
 
 export type ResponseFormat =
   | AudioResponseFormat
-  | ImageResponseFormat
   | TextResponseFormat
+  | ImageResponseFormat
   | { [k: string]: any };

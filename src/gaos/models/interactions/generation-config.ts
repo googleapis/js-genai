@@ -20,7 +20,7 @@ import { ToolChoiceType } from "./tool-choice-type.js";
 /**
  * The tool choice configuration.
  */
-export type ToolChoice = ToolChoiceConfig | ToolChoiceType;
+export type ToolChoice = ToolChoiceType | ToolChoiceConfig;
 
 /**
  * Configuration parameters for model interactions.
@@ -75,5 +75,5 @@ export type GenerationConfig = {
   /**
    * The tool choice configuration.
    */
-  tool_choice?: ToolChoiceConfig | ToolChoiceType | undefined;
+  tool_choice?: ToolChoiceType | ToolChoiceConfig | undefined;
 };
