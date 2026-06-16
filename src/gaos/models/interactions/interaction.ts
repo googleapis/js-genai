@@ -55,8 +55,8 @@ export type InteractionEnvironment = Environment | string;
  * Configuration parameters for the agent interaction.
  */
 export type InteractionAgentConfig =
-  | DeepResearchAgentConfig
-  | DynamicAgentConfig;
+  | DynamicAgentConfig
+  | DeepResearchAgentConfig;
 
 /**
  * The Interaction resource.
@@ -159,7 +159,7 @@ export type Interaction = {
   /**
    * Configuration parameters for the agent interaction.
    */
-  agent_config?: DeepResearchAgentConfig | DynamicAgentConfig | undefined;
+  agent_config?: DynamicAgentConfig | DeepResearchAgentConfig | undefined;
   /**
    * The input for the interaction.
    */
