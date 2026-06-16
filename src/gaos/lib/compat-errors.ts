@@ -14,18 +14,26 @@ import {
 } from "../models/errors/http-client-errors.js";
 import { GoogleGenAiError } from "../models/errors/google-gen-ai-error.js";
 
-export class GeminiNextGenAPIClientError extends Error {
-  static override [Symbol.hasInstance](instance: unknown): boolean {
-    if (Function.prototype[Symbol.hasInstance].call(this, instance)) {
-      return true;
-    }
+export class GeminiNextGenAPIClientError extends Error {}
 
-    if (this === GeminiNextGenAPIClientError) {
-      return isKnownLegacyErrorLike(instance);
-    }
+try {
+  Object.defineProperty(GeminiNextGenAPIClientError, Symbol.hasInstance, {
+    value(instance: unknown) {
+      if (Function.prototype[Symbol.hasInstance].call(this, instance)) {
+        return true;
+      }
 
-    return isNamedLegacyErrorLike(instance, this.name);
-  }
+      if (this === GeminiNextGenAPIClientError) {
+        return isKnownLegacyErrorLike(instance);
+      }
+
+      return isNamedLegacyErrorLike(instance, this.name);
+    },
+    configurable: true,
+    writable: true,
+  });
+} catch (e) {
+  // Ignore environments where Symbol.hasInstance cannot be overridden
 }
 
 /** General errors raised by the GenAI API. */
