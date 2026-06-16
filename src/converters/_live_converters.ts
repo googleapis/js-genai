@@ -22,6 +22,29 @@ export function audioTranscriptionConfigToMldev(
     );
   }
 
+  const fromLanguageAuto = common.getValueByPath(fromObject, ['languageAuto']);
+  if (fromLanguageAuto != null) {
+    common.setValueByPath(toObject, ['languageAuto'], fromLanguageAuto);
+  }
+
+  const fromLanguageHints = common.getValueByPath(fromObject, [
+    'languageHints',
+  ]);
+  if (fromLanguageHints != null) {
+    common.setValueByPath(toObject, ['languageHints'], fromLanguageHints);
+  }
+
+  const fromAdaptationPhrases = common.getValueByPath(fromObject, [
+    'adaptationPhrases',
+  ]);
+  if (fromAdaptationPhrases != null) {
+    common.setValueByPath(
+      toObject,
+      ['adaptationPhrases'],
+      fromAdaptationPhrases,
+    );
+  }
+
   return toObject;
 }
 
@@ -2568,6 +2591,11 @@ export function voiceActivityFromMldev(
     );
   }
 
+  const fromAudioOffset = common.getValueByPath(fromObject, ['audioOffset']);
+  if (fromAudioOffset != null) {
+    common.setValueByPath(toObject, ['audioOffset'], fromAudioOffset);
+  }
+
   return toObject;
 }
 
@@ -2583,6 +2611,11 @@ export function voiceActivityFromVertex(
       ['voiceActivityType'],
       fromVoiceActivityType,
     );
+  }
+
+  const fromAudioOffset = common.getValueByPath(fromObject, ['audioOffset']);
+  if (fromAudioOffset != null) {
+    common.setValueByPath(toObject, ['audioOffset'], fromAudioOffset);
   }
 
   return toObject;

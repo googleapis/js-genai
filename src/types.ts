@@ -7261,7 +7261,7 @@ export declare interface LiveServerSetupComplete {
   sessionId?: string;
 }
 
-/** Audio transcription in Server Conent. */
+/** Audio transcription in Server Content. */
 export declare interface Transcription {
   /** Optional. Transcription text. */
   text?: string;
@@ -7310,6 +7310,8 @@ export declare interface LiveServerContent {
       it is waiting for more input from the user, e.g. because it expects the
       user to continue talking. */
   waitingForInput?: boolean;
+  /** Low latency transcription updated while the user is speaking. */
+  interimInputTranscription?: Transcription;
 }
 
 /** Request for the client to execute the `function_calls` and return the responses with the matching `id`s. */
@@ -7387,6 +7389,8 @@ export declare interface VoiceActivityDetectionSignal {
 export declare interface VoiceActivity {
   /** The type of the voice activity signal. */
   voiceActivityType?: VoiceActivityType;
+  /** The time voice activity detected in audio time, relative to the start of the audio stream. */
+  audioOffset?: string;
 }
 
 /** Response message for API call. */
@@ -7567,11 +7571,25 @@ export declare interface ContextWindowCompressionConfig {
   slidingWindow?: SlidingWindow;
 }
 
+/** Indicates the language of the audio should be automatically detected. */
+export declare interface LanguageAuto {}
+
+/** Provides hints to the model about possible languages present in the audio. */
+export declare interface LanguageHints {
+  /** BCP-47 language codes. At least one must be specified. */
+  languageCodes?: string[];
+}
+
 /** The audio transcription configuration in Setup. */
 export declare interface AudioTranscriptionConfig {
-  /** The language codes of the audio. BCP-47 language code. If not set, the transcription will be in the language detected by the model. If set, the server will use the language code specified in the model config as a hint for the language of the audio
-   */
+  /** Deprecated: use LanguageAuto or LanguageHints instead. */
   languageCodes?: string[];
+  /** The model will detect the language automatically. Do not use together with LanguageHints. */
+  languageAuto?: LanguageAuto;
+  /** Specifies one or more languages in the audio. Do not use together with LanguageAuto. */
+  languageHints?: LanguageHints;
+  /** A list of phrases used for speech adaptation, which biases the ASR model to improve recognition of these specific terms. */
+  adaptationPhrases?: string[];
 }
 
 /** Config for proactivity features. */

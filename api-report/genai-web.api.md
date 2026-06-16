@@ -148,7 +148,10 @@ export interface AudioChunk {
 
 // @public
 export interface AudioTranscriptionConfig {
+    adaptationPhrases?: string[];
+    languageAuto?: LanguageAuto;
     languageCodes?: string[];
+    languageHints?: LanguageHints;
 }
 
 // @public
@@ -2913,6 +2916,15 @@ export enum Language {
 }
 
 // @public
+export interface LanguageAuto {
+}
+
+// @public
+export interface LanguageHints {
+    languageCodes?: string[];
+}
+
+// @public
 export interface LatLng {
     latitude?: number;
     longitude?: number;
@@ -3336,6 +3348,7 @@ export interface LiveServerContent {
     generationComplete?: boolean;
     groundingMetadata?: GroundingMetadata;
     inputTranscription?: Transcription;
+    interimInputTranscription?: Transcription;
     interrupted?: boolean;
     modelTurn?: Content;
     outputTranscription?: Transcription;
@@ -5121,6 +5134,7 @@ export enum VideoOrientation {
 
 // @public
 export interface VoiceActivity {
+    audioOffset?: string;
     voiceActivityType?: VoiceActivityType;
 }
 
