@@ -5,7 +5,9 @@
       "release-type": "node",
       "bump-minor-pre-major": true,
       "draft": false,
-      "prerelease": false,
+      "versioning": "prerelease",
+      "prerelease": true,
+      "prerelease-type": "rc",
       "extra-files": ["src/_api_client.ts"]
     }
   },
