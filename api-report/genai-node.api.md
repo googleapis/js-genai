@@ -4508,10 +4508,12 @@ export interface TestTableItem {
     exceptionIfVertex?: string;
     hasUnion?: boolean;
     ignoreKeys?: string[];
+    mldevModel?: string;
     name?: string;
     overrideReplayId?: string;
     parameters?: Record<string, unknown>;
     skipInApiMode?: string;
+    vertexModel?: string;
 }
 
 // @public

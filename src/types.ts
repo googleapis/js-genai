@@ -6960,6 +6960,10 @@ export declare interface TestTableItem {
   skipInApiMode?: string;
   /** Keys to ignore when comparing the request and response. This is useful for tests that are not deterministic. */
   ignoreKeys?: string[];
+  /** Model to use when running against Vertex. */
+  vertexModel?: string;
+  /** Model to use when running against MLDev. */
+  mldevModel?: string;
 }
 
 export declare interface TestTableFile {
