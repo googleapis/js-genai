@@ -15,7 +15,8 @@
   "exclude": [
     "test/packaging/**/*",
     "src/private/**/*",
-    "src/interactions-private/**/*"
+    "src/interactions-private/**/*",
+    "src/interactions-deprecated/**/*"
   ],
   "ts-node": {
     "compilerOptions": {

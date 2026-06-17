@@ -13,3 +13,4 @@ src/interactions/**
 src/interactions-private/**
 src/gaos/**
 src/gaos-private/**
+src/interactions-deprecated/**
