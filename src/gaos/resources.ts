@@ -91,7 +91,10 @@ import type { MCPServerToolResultStep as MCPServerToolResultStep$Import } from "
 import type { MCPServer as MCPServer$Import } from "./models/interactions/mcp-server.js";
 import type { MediaResolution as MediaResolution$Import } from "./models/interactions/media-resolution.js";
 import type { ModalityTokens as ModalityTokens$Import } from "./models/interactions/modality-tokens.js";
-import type { ModelOutputStep as ModelOutputStep$Import } from "./models/interactions/model-output-step.js";
+import type {
+  ModelOutputStep as ModelOutputStep$Import,
+  ModelOutputStepError as ModelOutputStepError$Import,
+} from "./models/interactions/model-output-step.js";
 import type { Model as Model$Import } from "./models/interactions/model.js";
 import type { ParallelAISearchConfig as ParallelAISearchConfig$Import } from "./models/interactions/parallel-ai-search-config.js";
 import type { PlaceCitation as PlaceCitation$Import } from "./models/interactions/place-citation.js";
@@ -276,6 +279,7 @@ type MCPServerToolResultStep$ = MCPServerToolResultStep$Import;
 type MediaResolution$ = MediaResolution$Import;
 type ModalityTokens$ = ModalityTokens$Import;
 type ModelOutputStep$ = ModelOutputStep$Import;
+type ModelOutputStepError$ = ModelOutputStepError$Import;
 type ParallelAISearchConfig$ = ParallelAISearchConfig$Import;
 type PlaceCitation$ = PlaceCitation$Import;
 type RagResource$ = RagResource$Import;
@@ -460,6 +464,7 @@ export type MCPServerToolResultStep = MCPServerToolResultStep$;
 export type MediaResolution = MediaResolution$;
 export type ModalityTokens = ModalityTokens$;
 export type ModelOutputStep = ModelOutputStep$;
+export type ModelOutputStepError = ModelOutputStepError$;
 export type ParallelAISearchConfig = ParallelAISearchConfig$;
 export type PlaceCitation = PlaceCitation$;
 export type RagResource = RagResource$;
@@ -637,6 +642,7 @@ export declare namespace Interactions {
   export type MediaResolution = MediaResolution$;
   export type ModalityTokens = ModalityTokens$;
   export type ModelOutputStep = ModelOutputStep$;
+  export type ModelOutputStepError = ModelOutputStepError$;
   export type ParallelAISearchConfig = ParallelAISearchConfig$;
   export type PlaceCitation = PlaceCitation$;
   export type RagResource = RagResource$;
