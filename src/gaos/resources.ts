@@ -81,7 +81,10 @@ import type { MCPServerToolResultDelta as MCPServerToolResultDelta$Import } from
 import type { MCPServerToolResultStep as MCPServerToolResultStep$Import } from "./models/interactions/mcp-server-tool-result-step.js";
 import type { MCPServer as MCPServer$Import } from "./models/interactions/mcp-server.js";
 import type { ModalityTokens as ModalityTokens$Import } from "./models/interactions/modality-tokens.js";
-import type { ModelOutputStep as ModelOutputStep$Import } from "./models/interactions/model-output-step.js";
+import type {
+  ModelOutputStep as ModelOutputStep$Import,
+  ModelOutputStepError as ModelOutputStepError$Import,
+} from "./models/interactions/model-output-step.js";
 import type { Model as Model$Import } from "./models/interactions/model.js";
 import type { PlaceCitation as PlaceCitation$Import } from "./models/interactions/place-citation.js";
 import type { Retrieval as Retrieval$Import } from "./models/interactions/retrieval.js";
@@ -252,6 +255,7 @@ type Result$2 = GoogleSearchResult$Import;
 type Metadata$2 = StreamMetadata$Import;
 type Metadata$3 = StreamMetadata$Import;
 type Metadata$4 = StreamMetadata$Import;
+type Error$2 = ModelOutputStepError$Import;
 type ReviewSnippet$3 = ReviewSnippet$Import;
 type ArgumentsDelta$ = ArgumentsDelta$Import;
 type Audio$ = AudioDelta$Import;
@@ -526,7 +530,7 @@ export declare namespace Interactions {
   export type MCPServerToolCallStep = MCPServerToolCallStep$;
   export type MCPServerToolResultStep = MCPServerToolResultStep$;
   export type Model = Model$;
-  export type ModelOutputStep = ModelOutputStep$;
+  export interface ModelOutputStep extends ModelOutputStep$ {}
   export interface PlaceCitation extends PlaceCitation$ {}
   export type SpeechConfig = SpeechConfig$;
   export type Step = Step$;
@@ -600,6 +604,9 @@ export declare namespace Interactions {
   }
   export namespace InteractionStatusUpdate {
     export type Metadata = Metadata$4;
+  }
+  export namespace ModelOutputStep {
+    export type Error = Error$2;
   }
   export namespace PlaceCitation {
     export type ReviewSnippet = ReviewSnippet$3;
