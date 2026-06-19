@@ -14,8 +14,6 @@
 * expose Computer Use API fields ([da54ea4](https://github.com/googleapis/js-genai/commit/da54ea4c5ac918b7e2039156ef08bf8825c3930d))
 * **interaction-api:** Add presence_penalty, frequency_penalty, and cached_content to models.proto ([2740a42](https://github.com/googleapis/js-genai/commit/2740a4298ccb0bc5bad7b81afdd70affe52ebbe2))
 * **interaction-api:** Rename usage to total_usage in StreamMetadata. ([b72db47](https://github.com/googleapis/js-genai/commit/b72db47154cfafd68d0d68aa73a1d73a6a95dd02))
-* introduce gaos sdk libs ([f2cb0d2](https://github.com/googleapis/js-genai/commit/f2cb0d29476aaf9c3f46735caa8da8f59f19b840))
-* introduce gaos sdk libs ([72ed90c](https://github.com/googleapis/js-genai/commit/72ed90ce1c71cf2a75ba4b24f8608fc31badfe2a))
 * introduce gaos sdk libs ([bfac5d4](https://github.com/googleapis/js-genai/commit/bfac5d4945081f121e8023a67acbb21a0b5a7a2a))
 
 
