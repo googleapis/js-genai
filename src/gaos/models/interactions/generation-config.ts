@@ -54,6 +54,8 @@ export type GenerationConfig = {
   speech_config?: Array<SpeechConfig> | undefined;
   /**
    * The configuration for image interaction.
+   *
+   * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
    */
   image_config?: ImageConfig | undefined;
   /**

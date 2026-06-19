@@ -29,7 +29,7 @@ export type GoogleSearchCallStep = {
   /**
    * The arguments to pass to Google Search.
    */
-  arguments?: GoogleSearchCallArguments | undefined;
+  arguments: GoogleSearchCallArguments;
   /**
    * The type of search grounding enabled.
    */

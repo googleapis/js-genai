@@ -36,5 +36,5 @@ export type URLContextCallStep = {
   /**
    * The arguments to pass to the URL context.
    */
-  arguments?: Arguments | undefined;
+  arguments: Arguments;
 };

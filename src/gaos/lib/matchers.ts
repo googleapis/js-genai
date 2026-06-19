@@ -244,7 +244,15 @@ export function match<T, E>(
     switch (encoding) {
       case "json":
         body = await response.text();
-        raw = JSON.parse(body);
+        try {
+          raw = JSON.parse(body);
+        } catch (err) {
+          // Passthrough for malformed error bodies; success bodies must be valid.
+          if (!("err" in matcher)) {
+            throw err;
+          }
+          raw = body;
+        }
         break;
       case "jsonl":
         raw = response.body;

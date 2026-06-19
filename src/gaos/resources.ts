@@ -13,7 +13,6 @@
 import type { AgentListResponse as AgentListResponse$Import } from "./models/agents/agent-list-response.js";
 import type { AgentTool as AgentTool$Import } from "./models/agents/agent-tool.js";
 import type { Agent as Agent$Import } from "./models/agents/agent.js";
-import type { AgentOption as AgentOption$Import } from "./models/interactions/agent-option.js";
 import type { AllowedTools as AllowedTools$Import } from "./models/interactions/allowed-tools.js";
 import type { AllowlistEntry as AllowlistEntry$Import } from "./models/interactions/allowlist-entry.js";
 import type { Annotation as Annotation$Import } from "./models/interactions/annotation.js";
@@ -36,23 +35,19 @@ import type { DocumentContent as DocumentContent$Import } from "./models/interac
 import type { DocumentDelta as DocumentDelta$Import } from "./models/interactions/document-delta.js";
 import type { DynamicAgentConfig as DynamicAgentConfig$Import } from "./models/interactions/dynamic-agent-config.js";
 import type { Empty as Empty$Import } from "./models/interactions/empty.js";
-import type { EnvironmentNetworkEgressAllowlist as EnvironmentNetworkEgressAllowlist$Import } from "./models/interactions/environment-network-egress-allowlist.js";
+import type { Allowlist as Allowlist$Import } from "./models/interactions/environment-network-egress-allowlist.js";
 import type { Environment as Environment$Import } from "./models/interactions/environment.js";
 import type { ErrorEvent as ErrorEvent$Import } from "./models/interactions/error-event.js";
 import type { ErrorT as ErrorT$Import } from "./models/interactions/error.js";
-import type { ExaAISearchConfig as ExaAISearchConfig$Import } from "./models/interactions/exa-ai-search-config.js";
 import type { FileCitation as FileCitation$Import } from "./models/interactions/file-citation.js";
 import type { FileSearchCallDelta as FileSearchCallDelta$Import } from "./models/interactions/file-search-call-delta.js";
 import type { FileSearchCallStep as FileSearchCallStep$Import } from "./models/interactions/file-search-call-step.js";
 import type { FileSearchResultDelta as FileSearchResultDelta$Import } from "./models/interactions/file-search-result-delta.js";
 import type { FileSearchResultStep as FileSearchResultStep$Import } from "./models/interactions/file-search-result-step.js";
-import type { FileSearchResult as FileSearchResult$Import } from "./models/interactions/file-search-result.js";
 import type { FileSearch as FileSearch$Import } from "./models/interactions/file-search.js";
-import type { Filter as Filter$Import } from "./models/interactions/filter.js";
 import type { FunctionCallStep as FunctionCallStep$Import } from "./models/interactions/function-call-step.js";
 import type { FunctionResultDelta as FunctionResultDelta$Import } from "./models/interactions/function-result-delta.js";
 import type { FunctionResultStep as FunctionResultStep$Import } from "./models/interactions/function-result-step.js";
-import type { FunctionResultSubcontent as FunctionResultSubcontent$Import } from "./models/interactions/function-result-subcontent.js";
 import type { FunctionT as FunctionT$Import } from "./models/interactions/function.js";
 import type { GenerationConfig as GenerationConfig$Import } from "./models/interactions/generation-config.js";
 import type { GoogleMapsCallArguments as GoogleMapsCallArguments$Import } from "./models/interactions/google-maps-call-arguments.js";
@@ -71,42 +66,28 @@ import type { GoogleSearchResultStep as GoogleSearchResultStep$Import } from "./
 import type { GoogleSearchResult as GoogleSearchResult$Import } from "./models/interactions/google-search-result.js";
 import type { GoogleSearch as GoogleSearch$Import } from "./models/interactions/google-search.js";
 import type { GroundingToolCount as GroundingToolCount$Import } from "./models/interactions/grounding-tool-count.js";
-import type { HybridSearch as HybridSearch$Import } from "./models/interactions/hybrid-search.js";
 import type { ImageConfig as ImageConfig$Import } from "./models/interactions/image-config.js";
 import type { ImageContent as ImageContent$Import } from "./models/interactions/image-content.js";
 import type { ImageDelta as ImageDelta$Import } from "./models/interactions/image-delta.js";
 import type { ImageResponseFormat as ImageResponseFormat$Import } from "./models/interactions/image-response-format.js";
 import type { InteractionCompletedEvent as InteractionCompletedEvent$Import } from "./models/interactions/interaction-completed-event.js";
 import type { InteractionCreatedEvent as InteractionCreatedEvent$Import } from "./models/interactions/interaction-created-event.js";
-import type { InteractionSseEventInteraction as InteractionSseEventInteraction$Import } from "./models/interactions/interaction-sse-event-interaction.js";
 import type { InteractionSSEEvent as InteractionSSEEvent$Import } from "./models/interactions/interaction-sse-event.js";
-import type { InteractionSSEStreamEvent as InteractionSSEStreamEvent$Import } from "./models/interactions/interaction-sse-stream-event.js";
 import type { InteractionStatusUpdate as InteractionStatusUpdate$Import } from "./models/interactions/interaction-status-update.js";
 import type { Interaction as Interaction$Import } from "./models/interactions/interaction.js";
-import type { InteractionsInput as InteractionsInput$Import } from "./models/interactions/interactions-input.js";
 import type { MCPServerToolCallDelta as MCPServerToolCallDelta$Import } from "./models/interactions/mcp-server-tool-call-delta.js";
 import type { MCPServerToolCallStep as MCPServerToolCallStep$Import } from "./models/interactions/mcp-server-tool-call-step.js";
 import type { MCPServerToolResultDelta as MCPServerToolResultDelta$Import } from "./models/interactions/mcp-server-tool-result-delta.js";
 import type { MCPServerToolResultStep as MCPServerToolResultStep$Import } from "./models/interactions/mcp-server-tool-result-step.js";
 import type { MCPServer as MCPServer$Import } from "./models/interactions/mcp-server.js";
-import type { MediaResolution as MediaResolution$Import } from "./models/interactions/media-resolution.js";
 import type { ModalityTokens as ModalityTokens$Import } from "./models/interactions/modality-tokens.js";
 import type { ModelOutputStep as ModelOutputStep$Import } from "./models/interactions/model-output-step.js";
 import type { Model as Model$Import } from "./models/interactions/model.js";
-import type { ParallelAISearchConfig as ParallelAISearchConfig$Import } from "./models/interactions/parallel-ai-search-config.js";
 import type { PlaceCitation as PlaceCitation$Import } from "./models/interactions/place-citation.js";
-import type { RagResource as RagResource$Import } from "./models/interactions/rag-resource.js";
-import type { RagRetrievalConfig as RagRetrievalConfig$Import } from "./models/interactions/rag-retrieval-config.js";
-import type { RagStoreConfig as RagStoreConfig$Import } from "./models/interactions/rag-store-config.js";
-import type { Ranking as Ranking$Import } from "./models/interactions/ranking.js";
-import type { ResponseFormat as ResponseFormat$Import } from "./models/interactions/response-format.js";
-import type { ResponseModality as ResponseModality$Import } from "./models/interactions/response-modality.js";
 import type { Retrieval as Retrieval$Import } from "./models/interactions/retrieval.js";
 import type { ReviewSnippet as ReviewSnippet$Import } from "./models/interactions/review-snippet.js";
-import type { ServiceTier as ServiceTier$Import } from "./models/interactions/service-tier.js";
 import type { Source as Source$Import } from "./models/interactions/source.js";
 import type { SpeechConfig as SpeechConfig$Import } from "./models/interactions/speech-config.js";
-import type { StepDeltaData as StepDeltaData$Import } from "./models/interactions/step-delta-data.js";
 import type { StepDeltaMetadata as StepDeltaMetadata$Import } from "./models/interactions/step-delta-metadata.js";
 import type { StepDelta as StepDelta$Import } from "./models/interactions/step-delta.js";
 import type { StepStart as StepStart$Import } from "./models/interactions/step-start.js";
@@ -118,15 +99,12 @@ import type { TextContent as TextContent$Import } from "./models/interactions/te
 import type { TextDelta as TextDelta$Import } from "./models/interactions/text-delta.js";
 import type { TextResponseFormat as TextResponseFormat$Import } from "./models/interactions/text-response-format.js";
 import type { ThinkingLevel as ThinkingLevel$Import } from "./models/interactions/thinking-level.js";
-import type { ThinkingSummaries as ThinkingSummaries$Import } from "./models/interactions/thinking-summaries.js";
 import type { ThoughtSignatureDelta as ThoughtSignatureDelta$Import } from "./models/interactions/thought-signature-delta.js";
 import type { ThoughtStep as ThoughtStep$Import } from "./models/interactions/thought-step.js";
-import type { ThoughtSummaryContent as ThoughtSummaryContent$Import } from "./models/interactions/thought-summary-content.js";
 import type { ThoughtSummaryDelta as ThoughtSummaryDelta$Import } from "./models/interactions/thought-summary-delta.js";
 import type { ToolChoiceConfig as ToolChoiceConfig$Import } from "./models/interactions/tool-choice-config.js";
 import type { ToolChoiceType as ToolChoiceType$Import } from "./models/interactions/tool-choice-type.js";
 import type { Tool as Tool$Import } from "./models/interactions/tool.js";
-import type { Turn as Turn$Import } from "./models/interactions/turn.js";
 import type { URLCitation as URLCitation$Import } from "./models/interactions/url-citation.js";
 import type { URLContextCallArguments as URLContextCallArguments$Import } from "./models/interactions/url-context-call-arguments.js";
 import type { URLContextCallDelta as URLContextCallDelta$Import } from "./models/interactions/url-context-call-delta.js";
@@ -145,11 +123,9 @@ import type { VideoContent as VideoContent$Import } from "./models/interactions/
 import type { VideoDelta as VideoDelta$Import } from "./models/interactions/video-delta.js";
 import type { WebhookConfig as WebhookConfig$Import } from "./models/interactions/webhook-config.js";
 import type {
+  CancelInteractionByIdParams as CancelInteractionByIdParams$Import,
   CreateAgentParams as CreateAgentParams$Import,
   CreateInteractionParams as CreateInteractionParams$Import,
-  CreateInteractionParamsNonStreaming
-    as CreateInteractionParamsNonStreaming$Import,
-  CreateInteractionParamsStreaming as CreateInteractionParamsStreaming$Import,
   CreateWebhookParams as CreateWebhookParams$Import,
   DeleteAgentParams as DeleteAgentParams$Import,
   DeleteInteractionParams as DeleteInteractionParams$Import,
@@ -162,10 +138,7 @@ import type {
   GetWebhookParams as GetWebhookParams$Import,
   ListAgentsParams as ListAgentsParams$Import,
   ListWebhooksParams as ListWebhooksParams$Import,
-  UpdateWebhookParams as UpdateWebhookParams$Import,
 } from "./models/operations/method-params.js";
-import type { PingWebhookRequest as PingWebhookRequest$Import2 } from "./models/operations/ping-webhook.js";
-import type { RotateSigningSecretRequest as RotateSigningSecretRequest$Import2 } from "./models/operations/rotate-signing-secret.js";
 import type { PingWebhookRequest as PingWebhookRequest$Import } from "./models/webhooks/ping-webhook-request.js";
 import type { RotateSigningSecretRequest as RotateSigningSecretRequest$Import } from "./models/webhooks/rotate-signing-secret-request.js";
 import type { SigningSecret as SigningSecret$Import } from "./models/webhooks/signing-secret.js";
@@ -185,184 +158,160 @@ type AgentGetParams$ = GetAgentParams$Import;
 type AgentListParams$ = ListAgentsParams$Import;
 type AgentListResponse$ = AgentListResponse$Import;
 type AgentTool$ = AgentTool$Import;
-type AgentDeleteResponse$2 = Empty$Import;
-type AgentListParams$2 = ListAgentsParams$Import;
-type AgentOption$ = AgentOption$Import;
 type AllowedTools$ = AllowedTools$Import;
-type AllowlistEntry$ = AllowlistEntry$Import;
 type Annotation$ = Annotation$Import;
-type ArgumentsDelta$ = ArgumentsDelta$Import;
 type AudioContent$ = AudioContent$Import;
-type AudioDelta$ = AudioDelta$Import;
 type AudioResponseFormat$ = AudioResponseFormat$Import;
-type CodeExecution$ = CodeExecution$Import;
 type CodeExecutionCallArguments$ = CodeExecutionCallArguments$Import;
-type CodeExecutionCallDelta$ = CodeExecutionCallDelta$Import;
 type CodeExecutionCallStep$ = CodeExecutionCallStep$Import;
-type CodeExecutionResultDelta$ = CodeExecutionResultDelta$Import;
 type CodeExecutionResultStep$ = CodeExecutionResultStep$Import;
-type ComputerUse$ = ComputerUse$Import;
 type Content$ = Content$Import;
-type CreateAgentInteraction$ = CreateAgentInteraction$Import;
-type CreateModelInteraction$ = CreateModelInteraction$Import;
+type CreateAgentInteractionParamsNonStreaming$ = CreateAgentInteraction$Import;
+type CreateAgentInteractionParamsStreaming$ = CreateAgentInteraction$Import;
+type CreateModelInteractionParamsNonStreaming$ = CreateModelInteraction$Import;
+type CreateModelInteractionParamsStreaming$ = CreateModelInteraction$Import;
 type DeepResearchAgentConfig$ = DeepResearchAgentConfig$Import;
 type DocumentContent$ = DocumentContent$Import;
-type DocumentDelta$ = DocumentDelta$Import;
 type DynamicAgentConfig$ = DynamicAgentConfig$Import;
-type Empty$ = Empty$Import;
-type EnvironmentNetworkEgressAllowlist$ =
-  EnvironmentNetworkEgressAllowlist$Import;
-type ErrorT$ = ErrorT$Import;
+type Environment$ = Environment$Import;
 type ErrorEvent$ = ErrorEvent$Import;
-type ExaAISearchConfig$ = ExaAISearchConfig$Import;
 type FileCitation$ = FileCitation$Import;
-type FileSearch$ = FileSearch$Import;
-type FileSearchCallDelta$ = FileSearchCallDelta$Import;
 type FileSearchCallStep$ = FileSearchCallStep$Import;
-type FileSearchResult$ = FileSearchResult$Import;
-type FileSearchResultDelta$ = FileSearchResultDelta$Import;
 type FileSearchResultStep$ = FileSearchResultStep$Import;
-type Filter$ = Filter$Import;
-type FunctionT$ = FunctionT$Import;
+type Function$ = FunctionT$Import;
 type FunctionCallStep$ = FunctionCallStep$Import;
-type FunctionResultDelta$ = FunctionResultDelta$Import;
 type FunctionResultStep$ = FunctionResultStep$Import;
-type FunctionResultSubcontent$ = FunctionResultSubcontent$Import;
 type GenerationConfig$ = GenerationConfig$Import;
-type GoogleMaps$ = GoogleMaps$Import;
 type GoogleMapsCallArguments$ = GoogleMapsCallArguments$Import;
-type GoogleMapsCallDelta$ = GoogleMapsCallDelta$Import;
 type GoogleMapsCallStep$ = GoogleMapsCallStep$Import;
 type GoogleMapsResult$ = GoogleMapsResult$Import;
-type GoogleMapsResultDelta$ = GoogleMapsResultDelta$Import;
-type GoogleMapsResultPlaces$ = GoogleMapsResultPlaces$Import;
 type GoogleMapsResultStep$ = GoogleMapsResultStep$Import;
-type GoogleSearch$ = GoogleSearch$Import;
 type GoogleSearchCallArguments$ = GoogleSearchCallArguments$Import;
-type GoogleSearchCallDelta$ = GoogleSearchCallDelta$Import;
 type GoogleSearchCallStep$ = GoogleSearchCallStep$Import;
 type GoogleSearchResult$ = GoogleSearchResult$Import;
-type GoogleSearchResultDelta$ = GoogleSearchResultDelta$Import;
 type GoogleSearchResultStep$ = GoogleSearchResultStep$Import;
-type GroundingToolCount$ = GroundingToolCount$Import;
-type HybridSearch$ = HybridSearch$Import;
 type ImageConfig$ = ImageConfig$Import;
 type ImageContent$ = ImageContent$Import;
-type ImageDelta$ = ImageDelta$Import;
 type ImageResponseFormat$ = ImageResponseFormat$Import;
 type Interaction$ = Interaction$Import;
+type InteractionCancelParams$ = CancelInteractionByIdParams$Import;
 type InteractionCompletedEvent$ = InteractionCompletedEvent$Import;
 type InteractionCreateParams$ = CreateInteractionParams$Import;
-type InteractionCreateParamsNonStreaming$ =
-  CreateInteractionParamsNonStreaming$Import;
-type InteractionCreateParamsStreaming$ =
-  CreateInteractionParamsStreaming$Import;
 type InteractionCreatedEvent$ = InteractionCreatedEvent$Import;
 type InteractionDeleteParams$ = DeleteInteractionParams$Import;
+type InteractionDeleteResponse$ = Empty$Import;
 type InteractionGetParams$ = GetInteractionByIdParams$Import;
 type InteractionGetParamsNonStreaming$ =
   GetInteractionByIdParamsNonStreaming$Import;
+type InteractionGetParamsNonStreaming$2 =
+  GetInteractionByIdParamsNonStreaming$Import;
 type InteractionGetParamsStreaming$ = GetInteractionByIdParamsStreaming$Import;
+type InteractionGetParamsStreaming$2 = GetInteractionByIdParamsStreaming$Import;
 type InteractionSSEEvent$ = InteractionSSEEvent$Import;
-type InteractionSSEStreamEvent$ = InteractionSSEStreamEvent$Import;
-type InteractionSseEventInteraction$ = InteractionSseEventInteraction$Import;
 type InteractionStatusUpdate$ = InteractionStatusUpdate$Import;
-type InteractionsInput$ = InteractionsInput$Import;
-type MCPServer$ = MCPServer$Import;
-type MCPServerToolCallDelta$ = MCPServerToolCallDelta$Import;
 type MCPServerToolCallStep$ = MCPServerToolCallStep$Import;
-type MCPServerToolResultDelta$ = MCPServerToolResultDelta$Import;
 type MCPServerToolResultStep$ = MCPServerToolResultStep$Import;
-type MediaResolution$ = MediaResolution$Import;
-type ModalityTokens$ = ModalityTokens$Import;
+type Model$ = Model$Import;
 type ModelOutputStep$ = ModelOutputStep$Import;
-type ParallelAISearchConfig$ = ParallelAISearchConfig$Import;
 type PlaceCitation$ = PlaceCitation$Import;
-type RagResource$ = RagResource$Import;
-type RagRetrievalConfig$ = RagRetrievalConfig$Import;
-type RagStoreConfig$ = RagStoreConfig$Import;
-type Ranking$ = Ranking$Import;
-type ResponseFormat$ = ResponseFormat$Import;
-type ResponseModality$ = ResponseModality$Import;
-type Retrieval$ = Retrieval$Import;
-type ReviewSnippet$ = ReviewSnippet$Import;
-type ServiceTier$ = ServiceTier$Import;
-type Source$ = Source$Import;
 type SpeechConfig$ = SpeechConfig$Import;
 type Step$ = Step$Import;
 type StepDelta$ = StepDelta$Import;
-type StepDeltaData$ = StepDeltaData$Import;
-type StepDeltaMetadata$ = StepDeltaMetadata$Import;
 type StepStart$ = StepStart$Import;
 type StepStop$ = StepStop$Import;
-type StreamMetadata$ = StreamMetadata$Import;
-type TextAnnotationDelta$ = TextAnnotationDelta$Import;
 type TextContent$ = TextContent$Import;
-type TextDelta$ = TextDelta$Import;
 type TextResponseFormat$ = TextResponseFormat$Import;
 type ThinkingLevel$ = ThinkingLevel$Import;
-type ThinkingSummaries$ = ThinkingSummaries$Import;
-type ThoughtSignatureDelta$ = ThoughtSignatureDelta$Import;
 type ThoughtStep$ = ThoughtStep$Import;
-type ThoughtSummaryContent$ = ThoughtSummaryContent$Import;
-type ThoughtSummaryDelta$ = ThoughtSummaryDelta$Import;
 type Tool$ = Tool$Import;
 type ToolChoiceConfig$ = ToolChoiceConfig$Import;
 type ToolChoiceType$ = ToolChoiceType$Import;
-type Turn$ = Turn$Import;
 type URLCitation$ = URLCitation$Import;
-type URLContext$ = URLContext$Import;
 type URLContextCallArguments$ = URLContextCallArguments$Import;
-type URLContextCallDelta$ = URLContextCallDelta$Import;
 type URLContextCallStep$ = URLContextCallStep$Import;
 type URLContextResult$ = URLContextResult$Import;
-type URLContextResultDelta$ = URLContextResultDelta$Import;
 type URLContextResultStep$ = URLContextResultStep$Import;
 type Usage$ = Usage$Import;
 type UserInputStep$ = UserInputStep$Import;
-type VertexAISearchConfig$ = VertexAISearchConfig$Import;
 type VideoContent$ = VideoContent$Import;
-type VideoDelta$ = VideoDelta$Import;
 type WebhookConfig$ = WebhookConfig$Import;
-type WebhookDeleteResponse$ = Empty$Import;
-type WebhookListParams$ = ListWebhooksParams$Import;
-type Agent$2 = Agent$Import;
-type AgentCreateParams$2 = Agent$Import;
-type AgentListResponse$2 = AgentListResponse$Import;
-type Arguments$ = Arguments$Import;
-type AudioContentParam$ = AudioContent$Import;
-type Environment$ = Environment$Import;
-type Model$ = Model$Import;
-type ModelParam$ = Model$Import;
+type Arguments$ = CodeExecutionCallArguments$Import;
+type Allowlist$ = Allowlist$Import;
+type Source$ = Source$Import;
+type Allowlist$2 = AllowlistEntry$Import;
+type Error$ = ErrorT$Import;
+type Metadata$ = StreamMetadata$Import;
+type Arguments$2 = GoogleMapsCallArguments$Import;
+type Place$ = GoogleMapsResultPlaces$Import;
+type ReviewSnippet$ = ReviewSnippet$Import;
+type Result$ = GoogleMapsResult$Import;
+type Place$2 = GoogleMapsResultPlaces$Import;
+type ReviewSnippet$2 = ReviewSnippet$Import;
+type Arguments$3 = GoogleSearchCallArguments$Import;
+type Result$2 = GoogleSearchResult$Import;
+type Metadata$2 = StreamMetadata$Import;
+type Metadata$3 = StreamMetadata$Import;
+type Metadata$4 = StreamMetadata$Import;
+type ReviewSnippet$3 = ReviewSnippet$Import;
+type ArgumentsDelta$ = ArgumentsDelta$Import;
+type Audio$ = AudioDelta$Import;
+type CodeExecutionCall$ = CodeExecutionCallDelta$Import;
+type CodeExecutionResult$ = CodeExecutionResultDelta$Import;
+type Document$ = DocumentDelta$Import;
+type FileSearchCall$ = FileSearchCallDelta$Import;
+type FileSearchResult$ = FileSearchResultDelta$Import;
+type FunctionResult$ = FunctionResultDelta$Import;
+type GoogleMapsCall$ = GoogleMapsCallDelta$Import;
+type GoogleMapsResult$2 = GoogleMapsResultDelta$Import;
+type GoogleSearchCall$ = GoogleSearchCallDelta$Import;
+type GoogleSearchResult$2 = GoogleSearchResultDelta$Import;
+type Image$ = ImageDelta$Import;
+type MCPServerToolCall$ = MCPServerToolCallDelta$Import;
+type MCPServerToolResult$ = MCPServerToolResultDelta$Import;
+type Metadata$5 = StepDeltaMetadata$Import;
+type Text$ = TextDelta$Import;
+type TextAnnotationDelta$ = TextAnnotationDelta$Import;
+type ThoughtSignature$ = ThoughtSignatureDelta$Import;
+type ThoughtSummary$ = ThoughtSummaryDelta$Import;
+type URLContextCall$ = URLContextCallDelta$Import;
+type URLContextResult$2 = URLContextResultDelta$Import;
+type Video$ = VideoDelta$Import;
+type Metadata$6 = StreamMetadata$Import;
+type Metadata$7 = StreamMetadata$Import;
+type CodeExecution$ = CodeExecution$Import;
+type ComputerUse$ = ComputerUse$Import;
+type FileSearch$ = FileSearch$Import;
+type GoogleMaps$ = GoogleMaps$Import;
+type GoogleSearch$ = GoogleSearch$Import;
+type MCPServer$ = MCPServer$Import;
+type Retrieval$ = Retrieval$Import;
+type URLContext$ = URLContext$Import;
+type VertexAISearchConfig$ = VertexAISearchConfig$Import;
+type Arguments$4 = Arguments$Import;
+type Result$3 = URLContextResult$Import;
+type CachedTokensByModality$ = ModalityTokens$Import;
+type GroundingToolCount$ = GroundingToolCount$Import;
+type InputTokensByModality$ = ModalityTokens$Import;
+type OutputTokensByModality$ = ModalityTokens$Import;
+type ToolUseTokensByModality$ = ModalityTokens$Import;
+type PingWebhookRequest$ = PingWebhookRequest$Import;
+type RotateSigningSecretRequest$ = RotateSigningSecretRequest$Import;
 type SigningSecret$ = SigningSecret$Import;
-type VideoContentParam$ = VideoContent$Import;
 type Webhook$ = Webhook$Import;
-type WebhookCreateParams$ = WebhookInput$Import;
+type WebhookCreateParams$ = CreateWebhookParams$Import;
+type WebhookDeleteParams$ = DeleteWebhookParams$Import;
+type WebhookDeleteResponse$ = Empty$Import;
+type WebhookGetParams$ = GetWebhookParams$Import;
+type WebhookInput$ = WebhookInput$Import;
+type WebhookListParams$ = ListWebhooksParams$Import;
 type WebhookListResponse$ = WebhookListResponse$Import;
 type WebhookPingParams$ = PingWebhookRequest$Import;
 type WebhookPingResponse$ = WebhookPingResponse$Import;
 type WebhookRotateSigningSecretParams$ = RotateSigningSecretRequest$Import;
 type WebhookRotateSigningSecretResponse$ =
   WebhookRotateSigningSecretResponse$Import;
-type WebhookUpdateParams$ = WebhookUpdate$Import;
-type PingWebhookRequest$ = PingWebhookRequest$Import;
-type RotateSigningSecretRequest$ = RotateSigningSecretRequest$Import;
-type SigningSecret$2 = SigningSecret$Import;
-type Webhook$2 = Webhook$Import;
-type WebhookCreateParams$2 = CreateWebhookParams$Import;
-type WebhookDeleteParams$ = DeleteWebhookParams$Import;
-type WebhookDeleteResponse$2 = Empty$Import;
-type WebhookGetParams$ = GetWebhookParams$Import;
-type WebhookListParams$2 = ListWebhooksParams$Import;
-type WebhookListResponse$2 = WebhookListResponse$Import;
-type WebhookPingParams$2 = PingWebhookRequest$Import2;
-type WebhookPingResponse$2 = WebhookPingResponse$Import;
-type WebhookRotateSigningSecretParams$2 = RotateSigningSecretRequest$Import2;
-type WebhookRotateSigningSecretResponse$2 =
-  WebhookRotateSigningSecretResponse$Import;
 type WebhookUpdate$ = WebhookUpdate$Import;
-type WebhookUpdateParams$2 = UpdateWebhookParams$Import;
-type WebhookInput$ = WebhookInput$Import;
+type WebhookUpdateParams$ = WebhookUpdate$Import;
 export type Agent = Agent$;
 export type AgentCreateParams = AgentCreateParams$;
 export type AgentDeleteParams = AgentDeleteParams$;
@@ -371,154 +320,135 @@ export type AgentGetParams = AgentGetParams$;
 export type AgentListParams = AgentListParams$;
 export type AgentListResponse = AgentListResponse$;
 export type AgentTool = AgentTool$;
-export type AgentOption = AgentOption$;
 export type AllowedTools = AllowedTools$;
-export type AllowlistEntry = AllowlistEntry$;
+export type Allowlist = Allowlist$;
 export type Annotation = Annotation$;
+export type Arguments = Arguments$;
 export type ArgumentsDelta = ArgumentsDelta$;
+export type Audio = Audio$;
 export type AudioContent = AudioContent$;
-export type AudioDelta = AudioDelta$;
 export type AudioResponseFormat = AudioResponseFormat$;
+export type CachedTokensByModality = CachedTokensByModality$;
 export type CodeExecution = CodeExecution$;
+export type CodeExecutionCall = CodeExecutionCall$;
 export type CodeExecutionCallArguments = CodeExecutionCallArguments$;
-export type CodeExecutionCallDelta = CodeExecutionCallDelta$;
 export type CodeExecutionCallStep = CodeExecutionCallStep$;
-export type CodeExecutionResultDelta = CodeExecutionResultDelta$;
+export type CodeExecutionResult = CodeExecutionResult$;
 export type CodeExecutionResultStep = CodeExecutionResultStep$;
 export type ComputerUse = ComputerUse$;
 export type Content = Content$;
-export type CreateAgentInteraction = CreateAgentInteraction$;
-export type CreateModelInteraction = CreateModelInteraction$;
+export type CreateAgentInteractionParamsNonStreaming =
+  CreateAgentInteractionParamsNonStreaming$;
+export type CreateAgentInteractionParamsStreaming =
+  CreateAgentInteractionParamsStreaming$;
+export type CreateModelInteractionParamsNonStreaming =
+  CreateModelInteractionParamsNonStreaming$;
+export type CreateModelInteractionParamsStreaming =
+  CreateModelInteractionParamsStreaming$;
 export type DeepResearchAgentConfig = DeepResearchAgentConfig$;
+export type Document = Document$;
 export type DocumentContent = DocumentContent$;
-export type DocumentDelta = DocumentDelta$;
 export type DynamicAgentConfig = DynamicAgentConfig$;
-export type Empty = Empty$;
-export type EnvironmentNetworkEgressAllowlist =
-  EnvironmentNetworkEgressAllowlist$;
-export type ErrorT = ErrorT$;
+export type Environment = Environment$;
+export type Error = Error$;
 export type ErrorEvent = ErrorEvent$;
-export type ExaAISearchConfig = ExaAISearchConfig$;
 export type FileCitation = FileCitation$;
 export type FileSearch = FileSearch$;
-export type FileSearchCallDelta = FileSearchCallDelta$;
+export type FileSearchCall = FileSearchCall$;
 export type FileSearchCallStep = FileSearchCallStep$;
 export type FileSearchResult = FileSearchResult$;
-export type FileSearchResultDelta = FileSearchResultDelta$;
 export type FileSearchResultStep = FileSearchResultStep$;
-export type Filter = Filter$;
-export type FunctionT = FunctionT$;
+export type Function = Function$;
 export type FunctionCallStep = FunctionCallStep$;
-export type FunctionResultDelta = FunctionResultDelta$;
+export type FunctionResult = FunctionResult$;
 export type FunctionResultStep = FunctionResultStep$;
-export type FunctionResultSubcontent = FunctionResultSubcontent$;
 export type GenerationConfig = GenerationConfig$;
 export type GoogleMaps = GoogleMaps$;
+export type GoogleMapsCall = GoogleMapsCall$;
 export type GoogleMapsCallArguments = GoogleMapsCallArguments$;
-export type GoogleMapsCallDelta = GoogleMapsCallDelta$;
 export type GoogleMapsCallStep = GoogleMapsCallStep$;
 export type GoogleMapsResult = GoogleMapsResult$;
-export type GoogleMapsResultDelta = GoogleMapsResultDelta$;
-export type GoogleMapsResultPlaces = GoogleMapsResultPlaces$;
 export type GoogleMapsResultStep = GoogleMapsResultStep$;
 export type GoogleSearch = GoogleSearch$;
+export type GoogleSearchCall = GoogleSearchCall$;
 export type GoogleSearchCallArguments = GoogleSearchCallArguments$;
-export type GoogleSearchCallDelta = GoogleSearchCallDelta$;
 export type GoogleSearchCallStep = GoogleSearchCallStep$;
 export type GoogleSearchResult = GoogleSearchResult$;
-export type GoogleSearchResultDelta = GoogleSearchResultDelta$;
 export type GoogleSearchResultStep = GoogleSearchResultStep$;
 export type GroundingToolCount = GroundingToolCount$;
-export type HybridSearch = HybridSearch$;
+export type Image = Image$;
 export type ImageConfig = ImageConfig$;
 export type ImageContent = ImageContent$;
-export type ImageDelta = ImageDelta$;
 export type ImageResponseFormat = ImageResponseFormat$;
+export type InputTokensByModality = InputTokensByModality$;
 export type Interaction = Interaction$;
+export type InteractionCancelParams = InteractionCancelParams$;
 export type InteractionCompletedEvent = InteractionCompletedEvent$;
-export type InteractionCreateParams = InteractionCreateParams$;
-export type InteractionCreateParamsNonStreaming =
-  InteractionCreateParamsNonStreaming$;
-export type InteractionCreateParamsStreaming =
-  InteractionCreateParamsStreaming$;
 export type InteractionCreatedEvent = InteractionCreatedEvent$;
+export type InteractionCreateParams = InteractionCreateParams$;
 export type InteractionDeleteParams = InteractionDeleteParams$;
+export type InteractionDeleteResponse = InteractionDeleteResponse$;
 export type InteractionGetParams = InteractionGetParams$;
 export type InteractionGetParamsNonStreaming =
   InteractionGetParamsNonStreaming$;
 export type InteractionGetParamsStreaming = InteractionGetParamsStreaming$;
 export type InteractionSSEEvent = InteractionSSEEvent$;
-export type InteractionSSEStreamEvent = InteractionSSEStreamEvent$;
-export type InteractionSseEventInteraction = InteractionSseEventInteraction$;
 export type InteractionStatusUpdate = InteractionStatusUpdate$;
-export type InteractionsInput = InteractionsInput$;
 export type MCPServer = MCPServer$;
-export type MCPServerToolCallDelta = MCPServerToolCallDelta$;
+export type MCPServerToolCall = MCPServerToolCall$;
 export type MCPServerToolCallStep = MCPServerToolCallStep$;
-export type MCPServerToolResultDelta = MCPServerToolResultDelta$;
+export type MCPServerToolResult = MCPServerToolResult$;
 export type MCPServerToolResultStep = MCPServerToolResultStep$;
-export type MediaResolution = MediaResolution$;
-export type ModalityTokens = ModalityTokens$;
+export type Metadata = Metadata$;
+export type Model = Model$;
 export type ModelOutputStep = ModelOutputStep$;
-export type ParallelAISearchConfig = ParallelAISearchConfig$;
+export type OutputTokensByModality = OutputTokensByModality$;
+export type PingWebhookRequest = PingWebhookRequest$;
+export type Place = Place$;
 export type PlaceCitation = PlaceCitation$;
-export type RagResource = RagResource$;
-export type RagRetrievalConfig = RagRetrievalConfig$;
-export type RagStoreConfig = RagStoreConfig$;
-export type Ranking = Ranking$;
-export type ResponseFormat = ResponseFormat$;
-export type ResponseModality = ResponseModality$;
+export type Result = Result$;
 export type Retrieval = Retrieval$;
 export type ReviewSnippet = ReviewSnippet$;
-export type ServiceTier = ServiceTier$;
+export type RotateSigningSecretRequest = RotateSigningSecretRequest$;
+export type SigningSecret = SigningSecret$;
 export type Source = Source$;
 export type SpeechConfig = SpeechConfig$;
 export type Step = Step$;
 export type StepDelta = StepDelta$;
-export type StepDeltaData = StepDeltaData$;
-export type StepDeltaMetadata = StepDeltaMetadata$;
 export type StepStart = StepStart$;
 export type StepStop = StepStop$;
-export type StreamMetadata = StreamMetadata$;
+export type Text = Text$;
 export type TextAnnotationDelta = TextAnnotationDelta$;
 export type TextContent = TextContent$;
-export type TextDelta = TextDelta$;
 export type TextResponseFormat = TextResponseFormat$;
 export type ThinkingLevel = ThinkingLevel$;
-export type ThinkingSummaries = ThinkingSummaries$;
-export type ThoughtSignatureDelta = ThoughtSignatureDelta$;
+export type ThoughtSignature = ThoughtSignature$;
 export type ThoughtStep = ThoughtStep$;
-export type ThoughtSummaryContent = ThoughtSummaryContent$;
-export type ThoughtSummaryDelta = ThoughtSummaryDelta$;
+export type ThoughtSummary = ThoughtSummary$;
 export type Tool = Tool$;
 export type ToolChoiceConfig = ToolChoiceConfig$;
 export type ToolChoiceType = ToolChoiceType$;
-export type Turn = Turn$;
+export type ToolUseTokensByModality = ToolUseTokensByModality$;
 export type URLCitation = URLCitation$;
 export type URLContext = URLContext$;
+export type URLContextCall = URLContextCall$;
 export type URLContextCallArguments = URLContextCallArguments$;
-export type URLContextCallDelta = URLContextCallDelta$;
 export type URLContextCallStep = URLContextCallStep$;
 export type URLContextResult = URLContextResult$;
-export type URLContextResultDelta = URLContextResultDelta$;
 export type URLContextResultStep = URLContextResultStep$;
 export type Usage = Usage$;
 export type UserInputStep = UserInputStep$;
 export type VertexAISearchConfig = VertexAISearchConfig$;
+export type Video = Video$;
 export type VideoContent = VideoContent$;
-export type VideoDelta = VideoDelta$;
-export type WebhookConfig = WebhookConfig$;
-export type WebhookDeleteResponse = WebhookDeleteResponse$;
-export type WebhookListParams = WebhookListParams$;
-export type Arguments = Arguments$;
-export type AudioContentParam = AudioContentParam$;
-export type Environment = Environment$;
-export type Model = Model$;
-export type ModelParam = ModelParam$;
-export type SigningSecret = SigningSecret$;
-export type VideoContentParam = VideoContentParam$;
 export type Webhook = Webhook$;
+export type WebhookConfig = WebhookConfig$;
 export type WebhookCreateParams = WebhookCreateParams$;
+export type WebhookDeleteParams = WebhookDeleteParams$;
+export type WebhookDeleteResponse = WebhookDeleteResponse$;
+export type WebhookGetParams = WebhookGetParams$;
+export type WebhookInput = WebhookInput$;
+export type WebhookListParams = WebhookListParams$;
 export type WebhookListResponse = WebhookListResponse$;
 export type WebhookPingParams = WebhookPingParams$;
 export type WebhookPingResponse = WebhookPingResponse$;
@@ -526,14 +456,8 @@ export type WebhookRotateSigningSecretParams =
   WebhookRotateSigningSecretParams$;
 export type WebhookRotateSigningSecretResponse =
   WebhookRotateSigningSecretResponse$;
-export type WebhookUpdateParams = WebhookUpdateParams$;
-export type PingWebhookRequest = PingWebhookRequest$;
-export type RotateSigningSecretRequest = RotateSigningSecretRequest$;
-export type WebhookDeleteParams = WebhookDeleteParams$;
-export type WebhookGetParams = WebhookGetParams$;
 export type WebhookUpdate = WebhookUpdate$;
-export type WebhookInput = WebhookInput$;
-
+export type WebhookUpdateParams = WebhookUpdateParams$;
 export declare namespace Agents {
   export type Agent = Agent$;
   export type AgentCreateParams = AgentCreateParams$;
@@ -544,161 +468,211 @@ export declare namespace Agents {
   export type AgentListResponse = AgentListResponse$;
   export type AgentTool = AgentTool$;
 }
-
 export declare namespace Interactions {
-  export type AgentDeleteResponse = AgentDeleteResponse$2;
-  export type AgentListParams = AgentListParams$2;
-  export type AgentOption = AgentOption$;
   export type AllowedTools = AllowedTools$;
-  export type AllowlistEntry = AllowlistEntry$;
   export type Annotation = Annotation$;
-  export type ArgumentsDelta = ArgumentsDelta$;
   export type AudioContent = AudioContent$;
-  export type AudioDelta = AudioDelta$;
   export type AudioResponseFormat = AudioResponseFormat$;
-  export type CodeExecution = CodeExecution$;
   export type CodeExecutionCallArguments = CodeExecutionCallArguments$;
-  export type CodeExecutionCallDelta = CodeExecutionCallDelta$;
-  export type CodeExecutionCallStep = CodeExecutionCallStep$;
-  export type CodeExecutionResultDelta = CodeExecutionResultDelta$;
+  export interface CodeExecutionCallStep extends CodeExecutionCallStep$ {}
   export type CodeExecutionResultStep = CodeExecutionResultStep$;
-  export type ComputerUse = ComputerUse$;
   export type Content = Content$;
-  export type CreateAgentInteraction = CreateAgentInteraction$;
-  export type CreateModelInteraction = CreateModelInteraction$;
+  export type CreateAgentInteractionParamsNonStreaming =
+    CreateAgentInteractionParamsNonStreaming$;
+  export type CreateAgentInteractionParamsStreaming =
+    CreateAgentInteractionParamsStreaming$;
+  export type CreateModelInteractionParamsNonStreaming =
+    CreateModelInteractionParamsNonStreaming$;
+  export type CreateModelInteractionParamsStreaming =
+    CreateModelInteractionParamsStreaming$;
   export type DeepResearchAgentConfig = DeepResearchAgentConfig$;
   export type DocumentContent = DocumentContent$;
-  export type DocumentDelta = DocumentDelta$;
   export type DynamicAgentConfig = DynamicAgentConfig$;
-  export type Empty = Empty$;
-  export type EnvironmentNetworkEgressAllowlist =
-    EnvironmentNetworkEgressAllowlist$;
-  export type ErrorT = ErrorT$;
-  export type ErrorEvent = ErrorEvent$;
-  export type ExaAISearchConfig = ExaAISearchConfig$;
+  export interface Environment extends Environment$ {}
+  export interface ErrorEvent extends ErrorEvent$ {}
   export type FileCitation = FileCitation$;
-  export type FileSearch = FileSearch$;
-  export type FileSearchCallDelta = FileSearchCallDelta$;
   export type FileSearchCallStep = FileSearchCallStep$;
-  export type FileSearchResult = FileSearchResult$;
-  export type FileSearchResultDelta = FileSearchResultDelta$;
   export type FileSearchResultStep = FileSearchResultStep$;
-  export type Filter = Filter$;
-  export type FunctionT = FunctionT$;
+  export type Function = Function$;
   export type FunctionCallStep = FunctionCallStep$;
-  export type FunctionResultDelta = FunctionResultDelta$;
   export type FunctionResultStep = FunctionResultStep$;
-  export type FunctionResultSubcontent = FunctionResultSubcontent$;
   export type GenerationConfig = GenerationConfig$;
-  export type GoogleMaps = GoogleMaps$;
   export type GoogleMapsCallArguments = GoogleMapsCallArguments$;
-  export type GoogleMapsCallDelta = GoogleMapsCallDelta$;
-  export type GoogleMapsCallStep = GoogleMapsCallStep$;
-  export type GoogleMapsResult = GoogleMapsResult$;
-  export type GoogleMapsResultDelta = GoogleMapsResultDelta$;
-  export type GoogleMapsResultPlaces = GoogleMapsResultPlaces$;
-  export type GoogleMapsResultStep = GoogleMapsResultStep$;
-  export type GoogleSearch = GoogleSearch$;
+  export interface GoogleMapsCallStep extends GoogleMapsCallStep$ {}
+  export interface GoogleMapsResult extends GoogleMapsResult$ {}
+  export interface GoogleMapsResultStep extends GoogleMapsResultStep$ {}
   export type GoogleSearchCallArguments = GoogleSearchCallArguments$;
-  export type GoogleSearchCallDelta = GoogleSearchCallDelta$;
-  export type GoogleSearchCallStep = GoogleSearchCallStep$;
+  export interface GoogleSearchCallStep extends GoogleSearchCallStep$ {}
   export type GoogleSearchResult = GoogleSearchResult$;
-  export type GoogleSearchResultDelta = GoogleSearchResultDelta$;
-  export type GoogleSearchResultStep = GoogleSearchResultStep$;
-  export type GroundingToolCount = GroundingToolCount$;
-  export type HybridSearch = HybridSearch$;
+  export interface GoogleSearchResultStep extends GoogleSearchResultStep$ {}
   export type ImageConfig = ImageConfig$;
   export type ImageContent = ImageContent$;
-  export type ImageDelta = ImageDelta$;
   export type ImageResponseFormat = ImageResponseFormat$;
   export type Interaction = Interaction$;
-  export type InteractionCompletedEvent = InteractionCompletedEvent$;
+  export type InteractionCancelParams = InteractionCancelParams$;
+  export interface InteractionCompletedEvent
+    extends InteractionCompletedEvent$
+  {}
+  export interface InteractionCreatedEvent extends InteractionCreatedEvent$ {}
   export type InteractionCreateParams = InteractionCreateParams$;
-  export type InteractionCreateParamsNonStreaming =
-    InteractionCreateParamsNonStreaming$;
-  export type InteractionCreateParamsStreaming =
-    InteractionCreateParamsStreaming$;
-  export type InteractionCreatedEvent = InteractionCreatedEvent$;
   export type InteractionDeleteParams = InteractionDeleteParams$;
+  export type InteractionDeleteResponse = InteractionDeleteResponse$;
   export type InteractionGetParams = InteractionGetParams$;
   export type InteractionGetParamsNonStreaming =
     InteractionGetParamsNonStreaming$;
   export type InteractionGetParamsStreaming = InteractionGetParamsStreaming$;
   export type InteractionSSEEvent = InteractionSSEEvent$;
-  export type InteractionSSEStreamEvent = InteractionSSEStreamEvent$;
-  export type InteractionSseEventInteraction = InteractionSseEventInteraction$;
-  export type InteractionStatusUpdate = InteractionStatusUpdate$;
-  export type InteractionsInput = InteractionsInput$;
-  export type MCPServer = MCPServer$;
-  export type MCPServerToolCallDelta = MCPServerToolCallDelta$;
+  export interface InteractionStatusUpdate extends InteractionStatusUpdate$ {}
   export type MCPServerToolCallStep = MCPServerToolCallStep$;
-  export type MCPServerToolResultDelta = MCPServerToolResultDelta$;
   export type MCPServerToolResultStep = MCPServerToolResultStep$;
-  export type MediaResolution = MediaResolution$;
-  export type ModalityTokens = ModalityTokens$;
+  export type Model = Model$;
   export type ModelOutputStep = ModelOutputStep$;
-  export type ParallelAISearchConfig = ParallelAISearchConfig$;
-  export type PlaceCitation = PlaceCitation$;
-  export type RagResource = RagResource$;
-  export type RagRetrievalConfig = RagRetrievalConfig$;
-  export type RagStoreConfig = RagStoreConfig$;
-  export type Ranking = Ranking$;
-  export type ResponseFormat = ResponseFormat$;
-  export type ResponseModality = ResponseModality$;
-  export type Retrieval = Retrieval$;
-  export type ReviewSnippet = ReviewSnippet$;
-  export type ServiceTier = ServiceTier$;
-  export type Source = Source$;
+  export interface PlaceCitation extends PlaceCitation$ {}
   export type SpeechConfig = SpeechConfig$;
   export type Step = Step$;
-  export type StepDelta = StepDelta$;
-  export type StepDeltaData = StepDeltaData$;
-  export type StepDeltaMetadata = StepDeltaMetadata$;
-  export type StepStart = StepStart$;
-  export type StepStop = StepStop$;
-  export type StreamMetadata = StreamMetadata$;
-  export type TextAnnotationDelta = TextAnnotationDelta$;
+  export interface StepDelta extends StepDelta$ {}
+  export interface StepStart extends StepStart$ {}
+  export interface StepStop extends StepStop$ {}
   export type TextContent = TextContent$;
-  export type TextDelta = TextDelta$;
   export type TextResponseFormat = TextResponseFormat$;
   export type ThinkingLevel = ThinkingLevel$;
-  export type ThinkingSummaries = ThinkingSummaries$;
-  export type ThoughtSignatureDelta = ThoughtSignatureDelta$;
   export type ThoughtStep = ThoughtStep$;
-  export type ThoughtSummaryContent = ThoughtSummaryContent$;
-  export type ThoughtSummaryDelta = ThoughtSummaryDelta$;
   export type Tool = Tool$;
   export type ToolChoiceConfig = ToolChoiceConfig$;
   export type ToolChoiceType = ToolChoiceType$;
-  export type Turn = Turn$;
   export type URLCitation = URLCitation$;
-  export type URLContext = URLContext$;
   export type URLContextCallArguments = URLContextCallArguments$;
-  export type URLContextCallDelta = URLContextCallDelta$;
-  export type URLContextCallStep = URLContextCallStep$;
+  export interface URLContextCallStep extends URLContextCallStep$ {}
   export type URLContextResult = URLContextResult$;
-  export type URLContextResultDelta = URLContextResultDelta$;
-  export type URLContextResultStep = URLContextResultStep$;
-  export type Usage = Usage$;
+  export interface URLContextResultStep extends URLContextResultStep$ {}
+  export interface Usage extends Usage$ {}
   export type UserInputStep = UserInputStep$;
-  export type VertexAISearchConfig = VertexAISearchConfig$;
   export type VideoContent = VideoContent$;
-  export type VideoDelta = VideoDelta$;
   export type WebhookConfig = WebhookConfig$;
-  export type WebhookDeleteResponse = WebhookDeleteResponse$;
-  export type WebhookListParams = WebhookListParams$;
-  export type Agent = Agent$2;
-  export type AgentCreateParams = AgentCreateParams$2;
-  export type AgentListResponse = AgentListResponse$2;
-  export type Arguments = Arguments$;
-  export type AudioContentParam = AudioContentParam$;
-  export type Environment = Environment$;
-  export type Model = Model$;
-  export type ModelParam = ModelParam$;
+  export namespace CodeExecutionCallStep {
+    export type Arguments = Arguments$;
+  }
+  export namespace Environment {
+    export interface Allowlist extends Allowlist$ {}
+    export type Source = Source$;
+    export namespace Allowlist {
+      export type Allowlist = Allowlist$2;
+    }
+  }
+  export namespace ErrorEvent {
+    export type Error = Error$;
+    export type Metadata = Metadata$;
+  }
+  export namespace GoogleMapsCallStep {
+    export type Arguments = Arguments$2;
+  }
+  export namespace GoogleMapsResult {
+    export interface Place extends Place$ {}
+    export namespace Place {
+      export type ReviewSnippet = ReviewSnippet$;
+    }
+  }
+  export namespace GoogleMapsResultStep {
+    export interface Result extends Result$ {}
+    export namespace Result {
+      export interface Place extends Place$2 {}
+      export namespace Place {
+        export type ReviewSnippet = ReviewSnippet$2;
+      }
+    }
+  }
+  export namespace GoogleSearchCallStep {
+    export type Arguments = Arguments$3;
+  }
+  export namespace GoogleSearchResultStep {
+    export type Result = Result$2;
+  }
+  export namespace InteractionCompletedEvent {
+    export type Metadata = Metadata$2;
+  }
+  export namespace InteractionCreatedEvent {
+    export type Metadata = Metadata$3;
+  }
+  export namespace InteractionGetParams {
+    export type InteractionGetParamsNonStreaming =
+      InteractionGetParamsNonStreaming$2;
+    export type InteractionGetParamsStreaming = InteractionGetParamsStreaming$2;
+  }
+  export namespace InteractionStatusUpdate {
+    export type Metadata = Metadata$4;
+  }
+  export namespace PlaceCitation {
+    export type ReviewSnippet = ReviewSnippet$3;
+  }
+  export namespace StepDelta {
+    export type ArgumentsDelta = ArgumentsDelta$;
+    export type Audio = Audio$;
+    export type CodeExecutionCall = CodeExecutionCall$;
+    export type CodeExecutionResult = CodeExecutionResult$;
+    export type Document = Document$;
+    export type FileSearchCall = FileSearchCall$;
+    export type FileSearchResult = FileSearchResult$;
+    export type FunctionResult = FunctionResult$;
+    export type GoogleMapsCall = GoogleMapsCall$;
+    export type GoogleMapsResult = GoogleMapsResult$2;
+    export type GoogleSearchCall = GoogleSearchCall$;
+    export type GoogleSearchResult = GoogleSearchResult$2;
+    export type Image = Image$;
+    export type MCPServerToolCall = MCPServerToolCall$;
+    export type MCPServerToolResult = MCPServerToolResult$;
+    export type Metadata = Metadata$5;
+    export type Text = Text$;
+    export type TextAnnotationDelta = TextAnnotationDelta$;
+    export type ThoughtSignature = ThoughtSignature$;
+    export type ThoughtSummary = ThoughtSummary$;
+    export type URLContextCall = URLContextCall$;
+    export type URLContextResult = URLContextResult$2;
+    export type Video = Video$;
+  }
+  export namespace StepStart {
+    export type Metadata = Metadata$6;
+  }
+  export namespace StepStop {
+    export type Metadata = Metadata$7;
+  }
+  export namespace Tool {
+    export type CodeExecution = CodeExecution$;
+    export type ComputerUse = ComputerUse$;
+    export type FileSearch = FileSearch$;
+    export type GoogleMaps = GoogleMaps$;
+    export type GoogleSearch = GoogleSearch$;
+    export type MCPServer = MCPServer$;
+    export interface Retrieval extends Retrieval$ {}
+    export type URLContext = URLContext$;
+    export namespace Retrieval {
+      export type VertexAISearchConfig = VertexAISearchConfig$;
+    }
+  }
+  export namespace URLContextCallStep {
+    export type Arguments = Arguments$4;
+  }
+  export namespace URLContextResultStep {
+    export type Result = Result$3;
+  }
+  export namespace Usage {
+    export type CachedTokensByModality = CachedTokensByModality$;
+    export type GroundingToolCount = GroundingToolCount$;
+    export type InputTokensByModality = InputTokensByModality$;
+    export type OutputTokensByModality = OutputTokensByModality$;
+    export type ToolUseTokensByModality = ToolUseTokensByModality$;
+  }
+}
+export declare namespace Webhooks {
+  export type PingWebhookRequest = PingWebhookRequest$;
+  export type RotateSigningSecretRequest = RotateSigningSecretRequest$;
   export type SigningSecret = SigningSecret$;
-  export type VideoContentParam = VideoContentParam$;
   export type Webhook = Webhook$;
   export type WebhookCreateParams = WebhookCreateParams$;
+  export type WebhookDeleteParams = WebhookDeleteParams$;
+  export type WebhookDeleteResponse = WebhookDeleteResponse$;
+  export type WebhookGetParams = WebhookGetParams$;
+  export type WebhookInput = WebhookInput$;
+  export type WebhookListParams = WebhookListParams$;
   export type WebhookListResponse = WebhookListResponse$;
   export type WebhookPingParams = WebhookPingParams$;
   export type WebhookPingResponse = WebhookPingResponse$;
@@ -706,27 +680,6 @@ export declare namespace Interactions {
     WebhookRotateSigningSecretParams$;
   export type WebhookRotateSigningSecretResponse =
     WebhookRotateSigningSecretResponse$;
-  export type WebhookUpdateParams = WebhookUpdateParams$;
-}
-
-export declare namespace Webhooks {
-  export type PingWebhookRequest = PingWebhookRequest$;
-  export type RotateSigningSecretRequest = RotateSigningSecretRequest$;
-  export type SigningSecret = SigningSecret$2;
-  export type Webhook = Webhook$2;
-  export type WebhookCreateParams = WebhookCreateParams$2;
-  export type WebhookDeleteParams = WebhookDeleteParams$;
-  export type WebhookDeleteResponse = WebhookDeleteResponse$2;
-  export type WebhookGetParams = WebhookGetParams$;
-  export type WebhookListParams = WebhookListParams$2;
-  export type WebhookListResponse = WebhookListResponse$2;
-  export type WebhookPingParams = WebhookPingParams$2;
-  export type WebhookPingResponse = WebhookPingResponse$2;
-  export type WebhookRotateSigningSecretParams =
-    WebhookRotateSigningSecretParams$2;
-  export type WebhookRotateSigningSecretResponse =
-    WebhookRotateSigningSecretResponse$2;
   export type WebhookUpdate = WebhookUpdate$;
-  export type WebhookUpdateParams = WebhookUpdateParams$2;
-  export type WebhookInput = WebhookInput$;
+  export type WebhookUpdateParams = WebhookUpdateParams$;
 }

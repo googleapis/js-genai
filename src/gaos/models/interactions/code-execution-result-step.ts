@@ -16,9 +16,9 @@
 export type CodeExecutionResultStep = {
   type: "code_execution_result";
   /**
-   * The output of the code execution.
+   * Required. The output of the code execution.
    */
-  result?: string | undefined;
+  result: string;
   /**
    * Whether the code execution resulted in an error.
    */

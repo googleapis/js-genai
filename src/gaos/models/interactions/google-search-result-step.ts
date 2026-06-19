@@ -18,9 +18,9 @@ import { GoogleSearchResult } from "./google-search-result.js";
 export type GoogleSearchResultStep = {
   type: "google_search_result";
   /**
-   * The results of the Google Search.
+   * Required. The results of the Google Search.
    */
-  result?: Array<GoogleSearchResult> | undefined;
+  result: Array<GoogleSearchResult>;
   /**
    * Whether the Google Search resulted in an error.
    */
