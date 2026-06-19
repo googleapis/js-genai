@@ -18,9 +18,9 @@ import { URLContextResult } from "./url-context-result.js";
 export type URLContextResultStep = {
   type: "url_context_result";
   /**
-   * The results of the URL context.
+   * Required. The results of the URL context.
    */
-  result?: Array<URLContextResult> | undefined;
+  result: Array<URLContextResult>;
   /**
    * Whether the URL context resulted in an error.
    */

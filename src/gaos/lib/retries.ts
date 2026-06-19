@@ -32,6 +32,12 @@ export type RetryConfig =
       strategy: "backoff";
       backoff?: BackoffStrategy;
       retryConnectionErrors?: boolean;
+    }
+  | {
+      strategy: "attempt-count-backoff";
+      maxRetries: number;
+      backoff?: Partial<BackoffStrategy>;
+      retryConnectionErrors?: boolean;
     };
 
 /**
@@ -78,7 +84,7 @@ export class TemporaryError extends Error {
 }
 
 export async function retry(
-  fetchFn: () => Promise<Response>,
+  fetchFn: (attempt: number) => Promise<Response>,
   options: {
     config: RetryConfig;
     statusCodes: string[];
@@ -93,21 +99,30 @@ export async function retry(
         }),
         options.config.backoff ?? defaultBackoff,
       );
+    case "attempt-count-backoff":
+      return retryAttemptCountBackoff(
+        wrapFetcher(fetchFn, {
+          statusCodes: options.statusCodes,
+          retryConnectionErrors: !!options.config.retryConnectionErrors,
+        }),
+        { ...defaultBackoff, ...options.config.backoff },
+        options.config,
+      );
     default:
-      return await fetchFn();
+      return await fetchFn(0);
   }
 }
 
 function wrapFetcher(
-  fn: () => Promise<Response>,
+  fn: (attempt: number) => Promise<Response>,
   options: {
     statusCodes: string[];
     retryConnectionErrors: boolean;
   },
-): () => Promise<Response> {
-  return async () => {
+): (attempt: number) => Promise<Response> {
+  return async (attempt: number) => {
     try {
-      const res = await fn();
+      const res = await fn(attempt);
       if (isRetryableResponse(res, options.statusCodes)) {
         throw new TemporaryError(
           "Response failed with retryable status code",
@@ -158,7 +173,7 @@ function isRetryableResponse(res: Response, statusCodes: string[]): boolean {
 }
 
 async function retryBackoff(
-  fn: () => Promise<Response>,
+  fn: (attempt: number) => Promise<Response>,
   strategy: BackoffStrategy,
 ): Promise<Response> {
   const { maxElapsedTime, initialInterval, exponent, maxInterval } = strategy;
@@ -168,7 +183,7 @@ async function retryBackoff(
 
   while (true) {
     try {
-      const res = await fn();
+      const res = await fn(x);
       return res;
     } catch (err: unknown) {
       if (err instanceof PermanentError) {
@@ -201,7 +216,58 @@ async function retryBackoff(
   }
 }
 
+async function retryAttemptCountBackoff(
+  fn: (attempt: number) => Promise<Response>,
+  strategy: BackoffStrategy,
+  config: Extract<RetryConfig, { strategy: "attempt-count-backoff" }>,
+): Promise<Response> {
+  let attempt = 0;
+
+  while (true) {
+    try {
+      return await fn(attempt);
+    } catch (err: unknown) {
+      if (err instanceof PermanentError) {
+        throw err.cause;
+      }
+
+      if (attempt >= config.maxRetries) {
+        if (err instanceof TemporaryError) {
+          return err.response;
+        }
+
+        throw err;
+      }
+
+      let retryInterval = 0;
+      if (err instanceof TemporaryError) {
+        retryInterval = retryIntervalFromResponse(err.response);
+      }
+
+      if (retryInterval <= 0) {
+        retryInterval =
+          strategy.initialInterval *
+          Math.pow(strategy.exponent, attempt) *
+          (1 - Math.random() * 0.25);
+      }
+
+      const d = Math.min(retryInterval, strategy.maxInterval);
+
+      await delay(d);
+      attempt++;
+    }
+  }
+}
+
 function retryIntervalFromResponse(res: Response): number {
+  const retryAfterMsVal = res.headers.get("retry-after-ms");
+  if (retryAfterMsVal) {
+    const parsedMs = Number(retryAfterMsVal);
+    if (Number.isFinite(parsedMs) && parsedMs >= 0) {
+      return parsedMs;
+    }
+  }
+
   const retryVal = res.headers.get("retry-after") || "";
   if (!retryVal) {
     return 0;

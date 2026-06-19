@@ -166,10 +166,6 @@ export class GoogleGenAI {
       return this._interactions;
     }
 
-    console.warn(
-      'GoogleGenAI.interactions: Interactions usage is experimental and may change in future versions.',
-    );
-
     this._interactions = new GeminiNextGenInteractions(this.apiClient);
     return this._interactions;
   }

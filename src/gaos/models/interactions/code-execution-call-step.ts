@@ -20,7 +20,7 @@ export type CodeExecutionCallStep = {
   /**
    * The arguments to pass to the code execution.
    */
-  arguments?: CodeExecutionCallArguments | undefined;
+  arguments: CodeExecutionCallArguments;
   /**
    * Required. A unique ID for this specific tool call.
    */

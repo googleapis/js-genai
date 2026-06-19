@@ -210,16 +210,18 @@ export class GeminiNextGenInteractions {
     params: CreateAgentInteractionParamsStreaming,
     options?: GoogleGenAIRequestOptions,
   ): Promise<Stream<GoogleGenAIInteractionSSEEvent>>;
-  // The catch-all narrows on the inferred `stream` member so call sites
-  // that overload resolution routes here still get a precise return type.
-  create<TParams extends InteractionCreateParams>(
-    params: TParams,
+  create(
+    params: InteractionCreateParamsStreaming,
     options?: GoogleGenAIRequestOptions,
-  ): Promise<
-    TParams extends { stream: true }
-      ? Stream<GoogleGenAIInteractionSSEEvent>
-      : GoogleGenAIInteraction
-  >;
+  ): Promise<Stream<GoogleGenAIInteractionSSEEvent>>;
+  create(
+    params: InteractionCreateParamsNonStreaming,
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<GoogleGenAIInteraction>;
+  create(
+    params: InteractionCreateParams,
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<GoogleGenAIInteraction | Stream<GoogleGenAIInteractionSSEEvent>>;
   async create(
     params: InteractionCreateParams,
     options?: GoogleGenAIRequestOptions,
@@ -567,7 +569,7 @@ function toGoogleGenAIRequestOptions(
 
   const {
     timeout,
-    maxRetries: _maxRetries,
+    maxRetries,
     defaultBaseURL,
     query,
     body,
@@ -601,6 +603,13 @@ function toGoogleGenAIRequestOptions(
   const timeout_ms = rest.timeout_ms ?? timeout;
   if (timeout_ms !== undefined) {
     nextOptions.timeout_ms = timeout_ms;
+  }
+  if (maxRetries !== undefined) {
+    nextOptions.retries = {
+      strategy: "attempt-count-backoff",
+      retryConnectionErrors: true,
+      maxRetries,
+    };
   }
   if (streaming) {
     const headers = new Headers(nextOptions.headers ?? fetch_options?.headers);

@@ -18,7 +18,6 @@ import { ResponseFormat } from "./response-format.js";
 import { ResponseModality } from "./response-modality.js";
 import { ServiceTier } from "./service-tier.js";
 import { Tool } from "./tool.js";
-import { Usage } from "./usage.js";
 import { WebhookConfig } from "./webhook-config.js";
 
 /**
@@ -61,10 +60,6 @@ export type CreateModelInteraction = {
    * A list of tool declarations the model may call during interaction.
    */
   tools?: Array<Tool> | undefined;
-  /**
-   * Statistics on the interaction request's token usage.
-   */
-  usage?: Usage | undefined;
   /**
    * The requested modalities of the response (TEXT, IMAGE, AUDIO).
    */

@@ -42,9 +42,8 @@ export type MCPServerToolResultStep = {
   /**
    * The output from the MCP server call. Can be simple text or rich content.
    */
-  result?:
+  result:
     | MCPServerToolResultStepResult
     | string
-    | Array<FunctionResultSubcontent>
-    | undefined;
+    | Array<FunctionResultSubcontent>;
 };

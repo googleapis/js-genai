@@ -31,6 +31,8 @@ export type ImageConfigImageSize = "1K" | "2K" | "4K" | "512" | (string & {});
 
 /**
  * The configuration for image interaction.
+ *
+ * @deprecated class: This will be removed in a future release, please migrate away from it as soon as possible.
  */
 export type ImageConfig = {
   aspect_ratio?: ImageConfigAspectRatio | undefined;
