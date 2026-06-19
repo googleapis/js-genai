@@ -127,7 +127,7 @@ async function $do(
     retry_config: options?.retries
       || client._options.retry_config
       || {
-        strategy: "backoff",
+        strategy: "attempt-count-backoff",
         backoff: {
           initialInterval: 500,
           maxInterval: 8000,
@@ -135,6 +135,7 @@ async function $do(
           maxElapsedTime: 30000,
         },
         retryConnectionErrors: true,
+        maxRetries: 4,
       }
       || { strategy: "none" },
     retry_codes: options?.retry_codes || ["408", "409", "429", "5XX"],

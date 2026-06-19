@@ -17,7 +17,7 @@ import { GoogleMapsResult } from "./google-maps-result.js";
  */
 export type GoogleMapsResultStep = {
   type: "google_maps_result";
-  result?: Array<GoogleMapsResult> | undefined;
+  result: Array<GoogleMapsResult>;
   /**
    * Required. ID to match the ID from the function call block.
    */
