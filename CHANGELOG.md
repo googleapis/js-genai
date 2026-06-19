@@ -12,8 +12,6 @@
 * Add LanguageAuto, LanguageHints, and adaptationPhrases to AudioTranscriptionConfig ([3bc7d42](https://github.com/googleapis/js-genai/commit/3bc7d423019bcc19c408ffcd21193b1f06677a3e))
 * Add ServiceTier to UsageMetadata ([1f44b04](https://github.com/googleapis/js-genai/commit/1f44b04ec6572676e434c5adb4ee34f6c4be27aa))
 * expose Computer Use API fields ([da54ea4](https://github.com/googleapis/js-genai/commit/da54ea4c5ac918b7e2039156ef08bf8825c3930d))
-* **interaction-api:** Add `model` field and `CodeMenderAgentData` response message ([688f3a0](https://github.com/googleapis/js-genai/commit/688f3a03f7528160dd79d080d35694888288d4ec))
-* **interaction-api:** Add CodeMenderAgentConfig to the Interactions API AgentInteraction proto ([cb4da1f](https://github.com/googleapis/js-genai/commit/cb4da1f90dad452b0490628f47dd560659c21c67))
 * **interaction-api:** Add presence_penalty, frequency_penalty, and cached_content to models.proto ([2740a42](https://github.com/googleapis/js-genai/commit/2740a4298ccb0bc5bad7b81afdd70affe52ebbe2))
 * **interaction-api:** Rename usage to total_usage in StreamMetadata. ([b72db47](https://github.com/googleapis/js-genai/commit/b72db47154cfafd68d0d68aa73a1d73a6a95dd02))
 * introduce gaos sdk libs ([f2cb0d2](https://github.com/googleapis/js-genai/commit/f2cb0d29476aaf9c3f46735caa8da8f59f19b840))
