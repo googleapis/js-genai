@@ -15,7 +15,7 @@ import { ParallelAISearchConfig } from "./parallel-ai-search-config.js";
 import { RagStoreConfig } from "./rag-store-config.js";
 import { VertexAISearchConfig } from "./vertex-ai-search-config.js";
 
-export type RetrievalType =
+export type RetrievalRetrievalType =
   | "vertex_ai_search"
   | "rag_store"
   | "exa_ai_search"
@@ -30,7 +30,7 @@ export type Retrieval = {
   /**
    * The types of file retrieval to enable.
    */
-  retrieval_types?: Array<RetrievalType> | undefined;
+  retrieval_types?: Array<RetrievalRetrievalType> | undefined;
   /**
    * Used to specify configuration for VertexAISearch.
    */

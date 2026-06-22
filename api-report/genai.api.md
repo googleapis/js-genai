@@ -2616,6 +2616,26 @@ export namespace Interactions {
         // (undocumented)
         export type ReviewSnippet = ReviewSnippet$3;
     }
+    // Warning: (ae-forgotten-export) The symbol "RetrievalCallArguments$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type RetrievalCallArguments = RetrievalCallArguments$;
+    // Warning: (ae-forgotten-export) The symbol "RetrievalCallDelta$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export interface RetrievalCallDelta extends RetrievalCallDelta$ {
+    }
+    // (undocumented)
+    export namespace RetrievalCallDelta {
+        // Warning: (ae-forgotten-export) The symbol "Arguments$4" needs to be exported by the entry point index.d.ts
+        //
+        // (undocumented)
+        export type Arguments = Arguments$4;
+    }
+    // Warning: (ae-forgotten-export) The symbol "RetrievalResultDelta$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type RetrievalResultDelta = RetrievalResultDelta$;
     // Warning: (ae-forgotten-export) The symbol "SpeechConfig$" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -2834,10 +2854,10 @@ export namespace Interactions {
     }
     // (undocumented)
     export namespace URLContextCallStep {
-        // Warning: (ae-forgotten-export) The symbol "Arguments$4" needs to be exported by the entry point index.d.ts
+        // Warning: (ae-forgotten-export) The symbol "Arguments$5" needs to be exported by the entry point index.d.ts
         //
         // (undocumented)
-        export type Arguments = Arguments$4;
+        export type Arguments = Arguments$5;
     }
     // Warning: (ae-forgotten-export) The symbol "URLContextResult$" needs to be exported by the entry point index.d.ts
     //
