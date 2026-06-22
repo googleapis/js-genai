@@ -123,7 +123,7 @@ export class Models extends BaseModule {
     params: types.GenerateContentParameters,
   ): Promise<types.GenerateContentResponse> => {
     const transformedParams = await this.processParamsMaybeAddMcpUsage(params);
-    this.maybeMoveToResponseJsonSchem(params);
+    this.maybeMoveToResponseJsonSchema(params);
     if (!afc.hasCallableTools(params) || afc.shouldDisableAfc(params.config)) {
       return await this.generateContentInternal(transformedParams);
     }
@@ -197,7 +197,7 @@ export class Models extends BaseModule {
    * To maintain backward compatibility, we move the data that was treated as
    * JSON schema from the responseSchema field to the responseJsonSchema field.
    */
-  private maybeMoveToResponseJsonSchem(
+  private maybeMoveToResponseJsonSchema(
     params: types.GenerateContentParameters,
   ): void {
     if (params.config && params.config.responseSchema) {
@@ -255,7 +255,7 @@ export class Models extends BaseModule {
   generateContentStream = async (
     params: types.GenerateContentParameters,
   ): Promise<AsyncGenerator<types.GenerateContentResponse>> => {
-    this.maybeMoveToResponseJsonSchem(params);
+    this.maybeMoveToResponseJsonSchema(params);
     if (afc.shouldDisableAfc(params.config)) {
       const transformedParams =
         await this.processParamsMaybeAddMcpUsage(params);
@@ -408,7 +408,7 @@ export class Models extends BaseModule {
                 }
                 if (!afcTools.has(part.functionCall.name)) {
                   throw new Error(
-                    `Automatic function calling was requested, but not all the tools the model used implement the CallableTool interface. Available tools: ${afcTools.keys()}, mising tool: ${
+                    `Automatic function calling was requested, but not all the tools the model used implement the CallableTool interface. Available tools: ${afcTools.keys()}, missing tool: ${
                       part.functionCall.name
                     }`,
                   );

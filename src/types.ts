@@ -6608,7 +6608,7 @@ export class InlinedEmbedContentResponse {
   metadata?: Record<string, unknown>;
 }
 
-/** Config for `des` parameter. */
+/** Config for `dest` parameter. */
 export declare interface BatchJobDestination {
   /** Storage format of the output files. Must be one of:
       'jsonl', 'bigquery', 'vertex-dataset'.
@@ -7374,9 +7374,9 @@ export declare interface LiveServerSessionResumptionUpdate {
   resumable?: boolean;
   /** Index of last message sent by client that is included in state represented by this SessionResumptionToken. Only sent when `SessionResumptionConfig.transparent` is set.
 
-Presence of this index allows users to transparently reconnect and avoid issue of losing some part of realtime audio input/video. If client wishes to temporarily disconnect (for example as result of receiving GoAway) they can do it without losing state by buffering messages sent since last `SessionResmumptionTokenUpdate`. This field will enable them to limit buffering (avoid keeping all requests in RAM).
+Presence of this index allows users to transparently reconnect and avoid issue of losing some part of realtime audio input/video. If client wishes to temporarily disconnect (for example as result of receiving GoAway) they can do it without losing state by buffering messages sent since last `SessionResumptionTokenUpdate`. This field will enable them to limit buffering (avoid keeping all requests in RAM).
 
-Note: This should not be used for when resuming a session at some time later -- in those cases partial audio and video frames arelikely not needed. */
+Note: This should not be used for when resuming a session at some time later -- in those cases partial audio and video frames are likely not needed. */
   lastConsumedClientMessageIndex?: string;
 }
 

@@ -56,7 +56,7 @@ export class Files extends BaseModule {
    *     file extension.
    *  - For Blob object inputs, the `mimeType` will be set to the Blob's `type`
    *     property.
-   * Somex eamples for file extension to mimeType mapping:
+   * Some examples for file extension to mimeType mapping:
    * .txt -> text/plain
    * .json -> application/json
    * .jpg  -> image/jpeg
