@@ -16,6 +16,7 @@
 export type TextResponseFormatMimeType =
   | "application/json"
   | "text/plain"
+  | "application/xml"
   | (string & {});
 
 /**

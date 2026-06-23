@@ -2739,6 +2739,14 @@ export namespace Interactions {
         //
         // (undocumented)
         export type Metadata = Metadata$7;
+        // Warning: (ae-forgotten-export) The symbol "StepUsage$" needs to be exported by the entry point index.d.ts
+        //
+        // (undocumented)
+        export type StepUsage = StepUsage$;
+        // Warning: (ae-forgotten-export) The symbol "Usage$2" needs to be exported by the entry point index.d.ts
+        //
+        // (undocumented)
+        export type Usage = Usage$2;
     }
     // Warning: (ae-forgotten-export) The symbol "TextContent$" needs to be exported by the entry point index.d.ts
     //

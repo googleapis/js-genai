@@ -91,7 +91,11 @@ import type { SpeechConfig as SpeechConfig$Import } from "./models/interactions/
 import type { StepDeltaMetadata as StepDeltaMetadata$Import } from "./models/interactions/step-delta-metadata.js";
 import type { StepDelta as StepDelta$Import } from "./models/interactions/step-delta.js";
 import type { StepStart as StepStart$Import } from "./models/interactions/step-start.js";
-import type { StepStop as StepStop$Import } from "./models/interactions/step-stop.js";
+import type {
+  StepStop as StepStop$Import,
+  StepStopUsage as StepStopUsage$Import,
+  StepUsage as StepUsage$Import,
+} from "./models/interactions/step-stop.js";
 import type { Step as Step$Import } from "./models/interactions/step.js";
 import type { StreamMetadata as StreamMetadata$Import } from "./models/interactions/stream-metadata.js";
 import type { TextAnnotationDelta as TextAnnotationDelta$Import } from "./models/interactions/text-annotation-delta.js";
@@ -278,6 +282,8 @@ type URLContextResult$2 = URLContextResultDelta$Import;
 type Video$ = VideoDelta$Import;
 type Metadata$6 = StreamMetadata$Import;
 type Metadata$7 = StreamMetadata$Import;
+type Usage$2 = StepStopUsage$Import;
+type StepUsage$ = StepUsage$Import;
 type CodeExecution$ = CodeExecution$Import;
 type ComputerUse$ = ComputerUse$Import;
 type FileSearch$ = FileSearch$Import;
@@ -417,6 +423,7 @@ export type Step = Step$;
 export type StepDelta = StepDelta$;
 export type StepStart = StepStart$;
 export type StepStop = StepStop$;
+export type StepUsage = StepUsage$;
 export type Text = Text$;
 export type TextAnnotationDelta = TextAnnotationDelta$;
 export type TextContent = TextContent$;
@@ -634,6 +641,8 @@ export declare namespace Interactions {
   }
   export namespace StepStop {
     export type Metadata = Metadata$7;
+    export type StepUsage = StepUsage$;
+    export type Usage = Usage$2;
   }
   export namespace Tool {
     export type CodeExecution = CodeExecution$;
