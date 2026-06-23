@@ -507,6 +507,7 @@ export interface CompositeReinforcementTuningRewardConfigWeightedRewardConfig {
 
 // @public
 export interface ComputerUse {
+    disabledSafetyPolicies?: SafetyPolicy[];
     enablePromptInjectionDetection?: boolean;
     environment?: Environment;
     excludedPredefinedFunctions?: string[];
@@ -4163,6 +4164,18 @@ export enum SafetyFilterLevel {
     BLOCK_NONE = "BLOCK_NONE",
     // (undocumented)
     BLOCK_ONLY_HIGH = "BLOCK_ONLY_HIGH"
+}
+
+// @public
+export enum SafetyPolicy {
+    ACCOUNT_CREATION = "ACCOUNT_CREATION",
+    COMMUNICATION_TOOL = "COMMUNICATION_TOOL",
+    DATA_MODIFICATION = "DATA_MODIFICATION",
+    FINANCIAL_TRANSACTIONS = "FINANCIAL_TRANSACTIONS",
+    LEGAL_TERMS_AND_AGREEMENTS = "LEGAL_TERMS_AND_AGREEMENTS",
+    SAFETY_POLICY_UNSPECIFIED = "SAFETY_POLICY_UNSPECIFIED",
+    SENSITIVE_DATA_MODIFICATION = "SENSITIVE_DATA_MODIFICATION",
+    USER_CONSENT_MANAGEMENT = "USER_CONSENT_MANAGEMENT"
 }
 
 // @public

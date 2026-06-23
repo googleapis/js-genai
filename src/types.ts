@@ -1098,6 +1098,42 @@ export enum FeatureSelectionPreference {
   PRIORITIZE_COST = 'PRIORITIZE_COST',
 }
 
+/** Disabled safety policies for computer use. */
+export enum SafetyPolicy {
+  /**
+   * Unspecified safety policy. This value should not be used.
+   */
+  SAFETY_POLICY_UNSPECIFIED = 'SAFETY_POLICY_UNSPECIFIED',
+  /**
+   * Financial transactions safety policy.
+   */
+  FINANCIAL_TRANSACTIONS = 'FINANCIAL_TRANSACTIONS',
+  /**
+   * Sensitive data modification safety policy.
+   */
+  SENSITIVE_DATA_MODIFICATION = 'SENSITIVE_DATA_MODIFICATION',
+  /**
+   * Communication tool safety policy.
+   */
+  COMMUNICATION_TOOL = 'COMMUNICATION_TOOL',
+  /**
+   * Account creation safety policy.
+   */
+  ACCOUNT_CREATION = 'ACCOUNT_CREATION',
+  /**
+   * Data modification safety policy.
+   */
+  DATA_MODIFICATION = 'DATA_MODIFICATION',
+  /**
+   * User consent management safety policy.
+   */
+  USER_CONSENT_MANAGEMENT = 'USER_CONSENT_MANAGEMENT',
+  /**
+   * Legal terms and agreements safety policy.
+   */
+  LEGAL_TERMS_AND_AGREEMENTS = 'LEGAL_TERMS_AND_AGREEMENTS',
+}
+
 /** Enum representing the Gemini Enterprise Agent Platform embedding API to use. */
 export enum EmbeddingApiType {
   /**
@@ -2180,6 +2216,8 @@ export declare interface ComputerUse {
   /** Optional. Whether enable the prompt injection detection check on computer-use request.
    */
   enablePromptInjectionDetection?: boolean;
+  /** Optional. Disabled safety policies for computer use. */
+  disabledSafetyPolicies?: SafetyPolicy[];
 }
 
 /** Config for authentication with API key. This data type is not supported in Gemini API. */
