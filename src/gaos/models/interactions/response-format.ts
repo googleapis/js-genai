@@ -13,9 +13,11 @@
 import { AudioResponseFormat } from "./audio-response-format.js";
 import { ImageResponseFormat } from "./image-response-format.js";
 import { TextResponseFormat } from "./text-response-format.js";
+import { VideoResponseFormat } from "./video-response-format.js";
 
 export type ResponseFormat =
   | AudioResponseFormat
   | TextResponseFormat
   | ImageResponseFormat
+  | VideoResponseFormat
   | { [k: string]: any };

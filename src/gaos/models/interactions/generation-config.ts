@@ -16,6 +16,7 @@ import { ThinkingLevel } from "./thinking-level.js";
 import { ThinkingSummaries } from "./thinking-summaries.js";
 import { ToolChoiceConfig } from "./tool-choice-config.js";
 import { ToolChoiceType } from "./tool-choice-type.js";
+import { VideoConfig } from "./video-config.js";
 
 /**
  * The tool choice configuration.
@@ -58,6 +59,10 @@ export type GenerationConfig = {
    * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
    */
   image_config?: ImageConfig | undefined;
+  /**
+   * Configuration options for video generation.
+   */
+  video_config?: VideoConfig | undefined;
   /**
    * Penalizes tokens that have already appeared in the generated
    *

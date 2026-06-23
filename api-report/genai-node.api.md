@@ -2595,7 +2595,15 @@ export namespace Interactions {
     // Warning: (ae-forgotten-export) The symbol "ModelOutputStep$" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    export type ModelOutputStep = ModelOutputStep$;
+    export interface ModelOutputStep extends ModelOutputStep$ {
+    }
+    // (undocumented)
+    export namespace ModelOutputStep {
+        // Warning: (ae-forgotten-export) The symbol "Error$2" needs to be exported by the entry point index.d.ts
+        //
+        // (undocumented)
+        export type Error = Error$2;
+    }
     // Warning: (ae-forgotten-export) The symbol "PlaceCitation$" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -2879,10 +2887,18 @@ export namespace Interactions {
     //
     // (undocumented)
     export type UserInputStep = UserInputStep$;
+    // Warning: (ae-forgotten-export) The symbol "VideoConfig$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type VideoConfig = VideoConfig$;
     // Warning: (ae-forgotten-export) The symbol "VideoContent$" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
     export type VideoContent = VideoContent$;
+    // Warning: (ae-forgotten-export) The symbol "VideoResponseFormat$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type VideoResponseFormat = VideoResponseFormat$;
     // Warning: (ae-forgotten-export) The symbol "WebhookConfig$" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)

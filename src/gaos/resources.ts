@@ -88,6 +88,7 @@ import type { Retrieval as Retrieval$Import } from "./models/interactions/retrie
 import type { ReviewSnippet as ReviewSnippet$Import } from "./models/interactions/review-snippet.js";
 import type { Source as Source$Import } from "./models/interactions/source.js";
 import type { SpeechConfig as SpeechConfig$Import } from "./models/interactions/speech-config.js";
+import type { Status as Status$Import } from "./models/interactions/status.js";
 import type { StepDeltaMetadata as StepDeltaMetadata$Import } from "./models/interactions/step-delta-metadata.js";
 import type { StepDelta as StepDelta$Import } from "./models/interactions/step-delta.js";
 import type { StepStart as StepStart$Import } from "./models/interactions/step-start.js";
@@ -119,8 +120,10 @@ import type { URLContext as URLContext$Import } from "./models/interactions/url-
 import type { Usage as Usage$Import } from "./models/interactions/usage.js";
 import type { UserInputStep as UserInputStep$Import } from "./models/interactions/user-input-step.js";
 import type { VertexAISearchConfig as VertexAISearchConfig$Import } from "./models/interactions/vertex-ai-search-config.js";
+import type { VideoConfig as VideoConfig$Import } from "./models/interactions/video-config.js";
 import type { VideoContent as VideoContent$Import } from "./models/interactions/video-content.js";
 import type { VideoDelta as VideoDelta$Import } from "./models/interactions/video-delta.js";
+import type { VideoResponseFormat as VideoResponseFormat$Import } from "./models/interactions/video-response-format.js";
 import type { WebhookConfig as WebhookConfig$Import } from "./models/interactions/webhook-config.js";
 import type {
   CancelInteractionByIdParams as CancelInteractionByIdParams$Import,
@@ -233,7 +236,9 @@ type URLContextResult$ = URLContextResult$Import;
 type URLContextResultStep$ = URLContextResultStep$Import;
 type Usage$ = Usage$Import;
 type UserInputStep$ = UserInputStep$Import;
+type VideoConfig$ = VideoConfig$Import;
 type VideoContent$ = VideoContent$Import;
+type VideoResponseFormat$ = VideoResponseFormat$Import;
 type WebhookConfig$ = WebhookConfig$Import;
 type Arguments$ = CodeExecutionCallArguments$Import;
 type Allowlist$ = Allowlist$Import;
@@ -252,6 +257,7 @@ type Result$2 = GoogleSearchResult$Import;
 type Metadata$2 = StreamMetadata$Import;
 type Metadata$3 = StreamMetadata$Import;
 type Metadata$4 = StreamMetadata$Import;
+type Error$2 = Status$Import;
 type ReviewSnippet$3 = ReviewSnippet$Import;
 type ArgumentsDelta$ = ArgumentsDelta$Import;
 type Audio$ = AudioDelta$Import;
@@ -440,7 +446,9 @@ export type Usage = Usage$;
 export type UserInputStep = UserInputStep$;
 export type VertexAISearchConfig = VertexAISearchConfig$;
 export type Video = Video$;
+export type VideoConfig = VideoConfig$;
 export type VideoContent = VideoContent$;
+export type VideoResponseFormat = VideoResponseFormat$;
 export type Webhook = Webhook$;
 export type WebhookConfig = WebhookConfig$;
 export type WebhookCreateParams = WebhookCreateParams$;
@@ -526,7 +534,7 @@ export declare namespace Interactions {
   export type MCPServerToolCallStep = MCPServerToolCallStep$;
   export type MCPServerToolResultStep = MCPServerToolResultStep$;
   export type Model = Model$;
-  export type ModelOutputStep = ModelOutputStep$;
+  export interface ModelOutputStep extends ModelOutputStep$ {}
   export interface PlaceCitation extends PlaceCitation$ {}
   export type SpeechConfig = SpeechConfig$;
   export type Step = Step$;
@@ -547,7 +555,9 @@ export declare namespace Interactions {
   export interface URLContextResultStep extends URLContextResultStep$ {}
   export interface Usage extends Usage$ {}
   export type UserInputStep = UserInputStep$;
+  export type VideoConfig = VideoConfig$;
   export type VideoContent = VideoContent$;
+  export type VideoResponseFormat = VideoResponseFormat$;
   export type WebhookConfig = WebhookConfig$;
   export namespace CodeExecutionCallStep {
     export type Arguments = Arguments$;
@@ -600,6 +610,9 @@ export declare namespace Interactions {
   }
   export namespace InteractionStatusUpdate {
     export type Metadata = Metadata$4;
+  }
+  export namespace ModelOutputStep {
+    export type Error = Error$2;
   }
   export namespace PlaceCitation {
     export type ReviewSnippet = ReviewSnippet$3;
