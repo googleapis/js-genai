@@ -15,6 +15,16 @@
  */
 export type EnvironmentEnum = "browser" | "mobile" | "desktop" | (string & {});
 
+export type DisabledSafetyPolicy =
+  | "financial_transactions"
+  | "sensitive_data_modification"
+  | "communication_tool"
+  | "account_creation"
+  | "data_modification"
+  | "user_consent_management"
+  | "legal_terms_and_agreements"
+  | (string & {});
+
 /**
  * A tool that can be used by the model to interact with the computer.
  */
@@ -35,4 +45,8 @@ export type ComputerUse = {
    * request.
    */
   enable_prompt_injection_detection?: boolean | undefined;
+  /**
+   * Optional. Disabled safety policies for computer use.
+   */
+  disabled_safety_policies?: Array<DisabledSafetyPolicy> | undefined;
 };
