@@ -2,6 +2,16 @@
 
 
 
+## [2.10.0](https://github.com/googleapis/js-genai/compare/v2.9.0...v2.10.0) (2026-06-24)
+
+
+### Features
+
+* Add ComputerUse.disabled_safety_policies ([a2ca95c](https://github.com/googleapis/js-genai/commit/a2ca95cb81230ac371864914d2ad655c3f83c7bb))
+* Add ComputerUse.disabled_safety_policies ([3618023](https://github.com/googleapis/js-genai/commit/3618023147fe8ba63a9ecfa00253ab489e74aba8))
+* add usage fields for steps ([048db9a](https://github.com/googleapis/js-genai/commit/048db9a660d6cb7107212baab64e694db8498dfc))
+* add video generation and response format parameters. ([84e795c](https://github.com/googleapis/js-genai/commit/84e795cf4add4ca9dffe47828d6528e19d684d54))
+
 ## [2.9.0](https://github.com/googleapis/js-genai/compare/v2.8.0...v2.9.0) (2026-06-19)
 
 
