@@ -281,6 +281,50 @@ export function computeTokensResponseFromVertex(
   return toObject;
 }
 
+export function computerUseToVertex(
+  fromObject: types.ComputerUse,
+  _rootObject?: unknown,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromEnvironment = common.getValueByPath(fromObject, ['environment']);
+  if (fromEnvironment != null) {
+    common.setValueByPath(toObject, ['environment'], fromEnvironment);
+  }
+
+  const fromExcludedPredefinedFunctions = common.getValueByPath(fromObject, [
+    'excludedPredefinedFunctions',
+  ]);
+  if (fromExcludedPredefinedFunctions != null) {
+    common.setValueByPath(
+      toObject,
+      ['excludedPredefinedFunctions'],
+      fromExcludedPredefinedFunctions,
+    );
+  }
+
+  const fromEnablePromptInjectionDetection = common.getValueByPath(fromObject, [
+    'enablePromptInjectionDetection',
+  ]);
+  if (fromEnablePromptInjectionDetection != null) {
+    common.setValueByPath(
+      toObject,
+      ['enablePromptInjectionDetection'],
+      fromEnablePromptInjectionDetection,
+    );
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['disabledSafetyPolicies']) !== undefined
+  ) {
+    throw new Error(
+      'disabledSafetyPolicies parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+    );
+  }
+
+  return toObject;
+}
+
 export function contentEmbeddingFromVertex(
   fromObject: types.ContentEmbedding,
   rootObject?: unknown,
@@ -5319,7 +5363,11 @@ export function toolToVertex(
 
   const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
   if (fromComputerUse != null) {
-    common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
+    common.setValueByPath(
+      toObject,
+      ['computerUse'],
+      computerUseToVertex(fromComputerUse, rootObject),
+    );
   }
 
   if (common.getValueByPath(fromObject, ['fileSearch']) !== undefined) {

@@ -102,26 +102,6 @@ export enum Type {
   NULL = 'NULL',
 }
 
-/** The environment being operated. */
-export enum Environment {
-  /**
-   * Defaults to browser.
-   */
-  ENVIRONMENT_UNSPECIFIED = 'ENVIRONMENT_UNSPECIFIED',
-  /**
-   * Operates in a web browser.
-   */
-  ENVIRONMENT_BROWSER = 'ENVIRONMENT_BROWSER',
-  /**
-   * Operates in a mobile environment.
-   */
-  ENVIRONMENT_MOBILE = 'ENVIRONMENT_MOBILE',
-  /**
-   * Operates in a desktop environment.
-   */
-  ENVIRONMENT_DESKTOP = 'ENVIRONMENT_DESKTOP',
-}
-
 /** Type of auth scheme. This enum is not supported in Gemini API. */
 export enum AuthType {
   AUTH_TYPE_UNSPECIFIED = 'AUTH_TYPE_UNSPECIFIED',
@@ -190,6 +170,62 @@ export enum ApiSpec {
    * Elastic search API spec.
    */
   ELASTIC_SEARCH = 'ELASTIC_SEARCH',
+}
+
+/** The environment being operated. */
+export enum Environment {
+  /**
+   * Defaults to browser.
+   */
+  ENVIRONMENT_UNSPECIFIED = 'ENVIRONMENT_UNSPECIFIED',
+  /**
+   * Operates in a web browser.
+   */
+  ENVIRONMENT_BROWSER = 'ENVIRONMENT_BROWSER',
+  /**
+   * Operates in a mobile environment.
+   */
+  ENVIRONMENT_MOBILE = 'ENVIRONMENT_MOBILE',
+  /**
+   * Operates in a desktop environment.
+   */
+  ENVIRONMENT_DESKTOP = 'ENVIRONMENT_DESKTOP',
+}
+
+/** SafetyPolicy */
+export enum SafetyPolicy {
+  /**
+   * Unspecified safety policy.
+   */
+  SAFETY_POLICY_UNSPECIFIED = 'SAFETY_POLICY_UNSPECIFIED',
+  /**
+   * Safety policy for financial transactions.
+   */
+  FINANCIAL_TRANSACTIONS = 'FINANCIAL_TRANSACTIONS',
+  /**
+   * Safety policy for sensitive data modification.
+   */
+  SENSITIVE_DATA_MODIFICATION = 'SENSITIVE_DATA_MODIFICATION',
+  /**
+   * Safety policy for communication tools (e.g. Gmail, Chat, Meet).
+   */
+  COMMUNICATION_TOOL = 'COMMUNICATION_TOOL',
+  /**
+   * Safety policy for account creation.
+   */
+  ACCOUNT_CREATION = 'ACCOUNT_CREATION',
+  /**
+   * Safety policy for data modification.
+   */
+  DATA_MODIFICATION = 'DATA_MODIFICATION',
+  /**
+   * Safety policy for user consent management.
+   */
+  USER_CONSENT_MANAGEMENT = 'USER_CONSENT_MANAGEMENT',
+  /**
+   * Safety policy for legal terms and agreements.
+   */
+  LEGAL_TERMS_AND_AGREEMENTS = 'LEGAL_TERMS_AND_AGREEMENTS',
 }
 
 /** Sites with confidence level chosen & above this value will be blocked from the search results. This enum is not supported in Gemini API. */
@@ -1096,42 +1132,6 @@ export enum FeatureSelectionPreference {
   PRIORITIZE_QUALITY = 'PRIORITIZE_QUALITY',
   BALANCED = 'BALANCED',
   PRIORITIZE_COST = 'PRIORITIZE_COST',
-}
-
-/** Disabled safety policies for computer use. */
-export enum SafetyPolicy {
-  /**
-   * Unspecified safety policy. This value should not be used.
-   */
-  SAFETY_POLICY_UNSPECIFIED = 'SAFETY_POLICY_UNSPECIFIED',
-  /**
-   * Financial transactions safety policy.
-   */
-  FINANCIAL_TRANSACTIONS = 'FINANCIAL_TRANSACTIONS',
-  /**
-   * Sensitive data modification safety policy.
-   */
-  SENSITIVE_DATA_MODIFICATION = 'SENSITIVE_DATA_MODIFICATION',
-  /**
-   * Communication tool safety policy.
-   */
-  COMMUNICATION_TOOL = 'COMMUNICATION_TOOL',
-  /**
-   * Account creation safety policy.
-   */
-  ACCOUNT_CREATION = 'ACCOUNT_CREATION',
-  /**
-   * Data modification safety policy.
-   */
-  DATA_MODIFICATION = 'DATA_MODIFICATION',
-  /**
-   * User consent management safety policy.
-   */
-  USER_CONSENT_MANAGEMENT = 'USER_CONSENT_MANAGEMENT',
-  /**
-   * Legal terms and agreements safety policy.
-   */
-  LEGAL_TERMS_AND_AGREEMENTS = 'LEGAL_TERMS_AND_AGREEMENTS',
 }
 
 /** Enum representing the Gemini Enterprise Agent Platform embedding API to use. */
@@ -2203,23 +2203,6 @@ export declare interface ModelSelectionConfig {
   featureSelectionPreference?: FeatureSelectionPreference;
 }
 
-/** Tool to support computer use. */
-export declare interface ComputerUse {
-  /** Required. The environment being operated. */
-  environment?: Environment;
-  /** By default, predefined functions are included in the final model call.
-    Some of them can be explicitly excluded from being automatically included.
-    This can serve two purposes:
-      1. Using a more restricted / different action space.
-      2. Improving the definitions / instructions of predefined functions. */
-  excludedPredefinedFunctions?: string[];
-  /** Optional. Whether enable the prompt injection detection check on computer-use request.
-   */
-  enablePromptInjectionDetection?: boolean;
-  /** Optional. Disabled safety policies for computer use. */
-  disabledSafetyPolicies?: SafetyPolicy[];
-}
-
 /** Config for authentication with API key. This data type is not supported in Gemini API. */
 export declare interface ApiKeyConfig {
   /** Optional. The name of the SecretManager secret version resource storing the API key. Format: `projects/{project}/secrets/{secrete}/versions/{version}` - If both `api_key_secret` and `api_key_string` are specified, this field takes precedence over `api_key_string`. - If specified, the `secretmanager.versions.access` permission should be granted to Vertex AI Extension Service Agent (https://cloud.google.com/vertex-ai/docs/general/access-control#service-agents) on the specified resource. */
@@ -2435,6 +2418,18 @@ export declare interface Retrieval {
   vertexRagStore?: VertexRagStore;
 }
 
+/** Tool to support computer use. */
+export declare interface ComputerUse {
+  /** Required. The environment being operated. */
+  environment?: Environment;
+  /** Optional. By default, [predefined functions](https://cloud.google.com/vertex-ai/generative-ai/docs/computer-use#supported-actions) are included in the final model call. Some of them can be explicitly excluded from being automatically included. This can serve two purposes: 1. Using a more restricted / different action space. 2. Improving the definitions / instructions of predefined functions. */
+  excludedPredefinedFunctions?: string[];
+  /** Optional. Enables the prompt injection detection check on computer-use request. */
+  enablePromptInjectionDetection?: boolean;
+  /** Optional. Disabled safety policies for computer use. This field is not supported in Vertex AI. */
+  disabledSafetyPolicies?: SafetyPolicy[];
+}
+
 /** The FileSearch tool that retrieves knowledge from Semantic Retrieval corpora. Files are imported to Semantic Retrieval corpora using the ImportFile API. This data type is not supported in Vertex AI. */
 export declare interface FileSearch {
   /** Required. The names of the file_search_stores to retrieve from. Example: `fileSearchStores/my-file-search-store-123` */
@@ -2559,9 +2554,7 @@ export declare interface McpServer {
 export declare interface Tool {
   /** Optional. Retrieval tool type. System will always execute the provided retrieval tool(s) to get external knowledge to answer the prompt. Retrieval results are presented to the model for generation. This field is not supported in Gemini API. */
   retrieval?: Retrieval;
-  /** Optional. Tool to support the model interacting directly with the
-      computer. If enabled, it automatically populates computer-use specific
-      Function Declarations. */
+  /** Optional. Tool to support the model interacting directly with the computer. If enabled, it automatically populates computer-use specific Function Declarations. */
   computerUse?: ComputerUse;
   /** Optional. FileSearch tool type. Tool to retrieve knowledge from Semantic Retrieval corpora. This field is not supported in Vertex AI. */
   fileSearch?: FileSearch;
