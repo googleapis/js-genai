@@ -100,6 +100,7 @@ export * from "./response-format.js";
 export * from "./response-modality.js";
 export * from "./retrieval.js";
 export * from "./review-snippet.js";
+export * from "./safety-setting.js";
 export * from "./service-tier.js";
 export * from "./source.js";
 export * from "./speech-config.js";
