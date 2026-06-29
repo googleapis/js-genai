@@ -198,11 +198,31 @@ export class Live {
     };
 
     const apiClient = this.apiClient;
+    let sessionResolved = false;
+    const messageQueue: types.LiveServerMessage[] = [];
+    let setupCompleteResolve: (value: unknown) => void = () => {};
+    const setupCompletePromise = new Promise((resolve) => {
+      setupCompleteResolve = resolve;
+    });
 
     const websocketCallbacks: WebSocketCallbacks = {
       onopen: onopenAwaitedCallback,
       onmessage: (event: MessageEvent) => {
-        void handleWebSocketMessage(apiClient, callbacks.onmessage, event);
+        void handleWebSocketMessage(
+          apiClient,
+          (msg: types.LiveServerMessage) => {
+            if (msg.setupComplete && !session.setupComplete) {
+              session.setupComplete = msg.setupComplete;
+              setupCompleteResolve({});
+            }
+            if (sessionResolved) {
+              callbacks.onmessage(msg);
+            } else {
+              messageQueue.push(msg);
+            }
+          },
+          event,
+        );
       },
       onerror:
         callbacks?.onerror ??
@@ -287,8 +307,16 @@ export class Live {
       );
     }
     delete clientMessage['config'];
+    const session = new Session(conn, this.apiClient);
     conn.send(JSON.stringify(clientMessage));
-    return new Session(conn, this.apiClient);
+    await setupCompletePromise;
+    sessionResolved = true;
+    setTimeout(() => {
+      for (const msg of messageQueue) {
+        callbacks.onmessage(msg);
+      }
+    }, 0);
+    return session;
   }
 
   // TODO: b/416041229 - Abstract this method to a common place.
@@ -308,6 +336,8 @@ const defaultLiveSendClientContentParamerters: types.LiveSendClientContentParame
    @experimental
   */
 export class Session {
+  setupComplete?: types.LiveServerSetupComplete;
+
   constructor(
     readonly conn: WebSocket,
     private readonly apiClient: ApiClient,
