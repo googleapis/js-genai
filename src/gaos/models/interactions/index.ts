@@ -110,7 +110,6 @@ export * from "./step-delta.js";
 export * from "./step-start.js";
 export * from "./step-stop.js";
 export * from "./step.js";
-export * from "./stream-metadata.js";
 export * from "./text-annotation-delta.js";
 export * from "./text-content.js";
 export * from "./text-delta.js";
