@@ -26,6 +26,12 @@ import type { CodeExecutionCallStep as CodeExecutionCallStep$Import } from "./mo
 import type { CodeExecutionResultDelta as CodeExecutionResultDelta$Import } from "./models/interactions/code-execution-result-delta.js";
 import type { CodeExecutionResultStep as CodeExecutionResultStep$Import } from "./models/interactions/code-execution-result-step.js";
 import type { CodeExecution as CodeExecution$Import } from "./models/interactions/code-execution.js";
+import type {
+  CodeMenderAgentConfig as CodeMenderAgentConfig$Import,
+  FindRequest as FindRequest$Import,
+  FixRequest as FixRequest$Import,
+  SessionConfig as SessionConfig$Import,
+} from "./models/interactions/code-mender-agent-config.js";
 import type { ComputerUse as ComputerUse$Import } from "./models/interactions/computer-use.js";
 import type { Content as Content$Import } from "./models/interactions/content.js";
 import type { CreateAgentInteraction as CreateAgentInteraction$Import } from "./models/interactions/create-agent-interaction.js";
@@ -40,6 +46,7 @@ import type { Environment as Environment$Import } from "./models/interactions/en
 import type { ErrorEvent as ErrorEvent$Import } from "./models/interactions/error-event.js";
 import type { ErrorT as ErrorT$Import } from "./models/interactions/error.js";
 import type { FileCitation as FileCitation$Import } from "./models/interactions/file-citation.js";
+import type { FileContent as FileContent$Import } from "./models/interactions/file-content.js";
 import type { FileSearchCallDelta as FileSearchCallDelta$Import } from "./models/interactions/file-search-call-delta.js";
 import type { FileSearchCallStep as FileSearchCallStep$Import } from "./models/interactions/file-search-call-step.js";
 import type { FileSearchResultDelta as FileSearchResultDelta$Import } from "./models/interactions/file-search-result-delta.js";
@@ -168,6 +175,7 @@ type AudioResponseFormat$ = AudioResponseFormat$Import;
 type CodeExecutionCallArguments$ = CodeExecutionCallArguments$Import;
 type CodeExecutionCallStep$ = CodeExecutionCallStep$Import;
 type CodeExecutionResultStep$ = CodeExecutionResultStep$Import;
+type CodeMenderAgentConfig$ = CodeMenderAgentConfig$Import;
 type Content$ = Content$Import;
 type CreateAgentInteractionParamsNonStreaming$ = CreateAgentInteraction$Import;
 type CreateAgentInteractionParamsStreaming$ = CreateAgentInteraction$Import;
@@ -241,6 +249,11 @@ type VideoContent$ = VideoContent$Import;
 type VideoResponseFormat$ = VideoResponseFormat$Import;
 type WebhookConfig$ = WebhookConfig$Import;
 type Arguments$ = CodeExecutionCallArguments$Import;
+type FindRequest$ = FindRequest$Import;
+type FixRequest$ = FixRequest$Import;
+type SessionConfig$ = SessionConfig$Import;
+type SourceFile$ = FileContent$Import;
+type SourceFile$2 = FileContent$Import;
 type Allowlist$ = Allowlist$Import;
 type Source$ = Source$Import;
 type Allowlist$2 = AllowlistEntry$Import;
@@ -341,6 +354,7 @@ export type CodeExecutionCallArguments = CodeExecutionCallArguments$;
 export type CodeExecutionCallStep = CodeExecutionCallStep$;
 export type CodeExecutionResult = CodeExecutionResult$;
 export type CodeExecutionResultStep = CodeExecutionResultStep$;
+export type CodeMenderAgentConfig = CodeMenderAgentConfig$;
 export type ComputerUse = ComputerUse$;
 export type Content = Content$;
 export type CreateAgentInteractionParamsNonStreaming =
@@ -364,6 +378,8 @@ export type FileSearchCall = FileSearchCall$;
 export type FileSearchCallStep = FileSearchCallStep$;
 export type FileSearchResult = FileSearchResult$;
 export type FileSearchResultStep = FileSearchResultStep$;
+export type FindRequest = FindRequest$;
+export type FixRequest = FixRequest$;
 export type Function = Function$;
 export type FunctionCallStep = FunctionCallStep$;
 export type FunctionResult = FunctionResult$;
@@ -416,8 +432,10 @@ export type Result = Result$;
 export type Retrieval = Retrieval$;
 export type ReviewSnippet = ReviewSnippet$;
 export type RotateSigningSecretRequest = RotateSigningSecretRequest$;
+export type SessionConfig = SessionConfig$;
 export type SigningSecret = SigningSecret$;
 export type Source = Source$;
+export type SourceFile = SourceFile$;
 export type SpeechConfig = SpeechConfig$;
 export type Step = Step$;
 export type StepDelta = StepDelta$;
@@ -484,6 +502,7 @@ export declare namespace Interactions {
   export type CodeExecutionCallArguments = CodeExecutionCallArguments$;
   export interface CodeExecutionCallStep extends CodeExecutionCallStep$ {}
   export type CodeExecutionResultStep = CodeExecutionResultStep$;
+  export interface CodeMenderAgentConfig extends CodeMenderAgentConfig$ {}
   export type Content = Content$;
   export type CreateAgentInteractionParamsNonStreaming =
     CreateAgentInteractionParamsNonStreaming$;
@@ -561,6 +580,17 @@ export declare namespace Interactions {
   export type WebhookConfig = WebhookConfig$;
   export namespace CodeExecutionCallStep {
     export type Arguments = Arguments$;
+  }
+  export namespace CodeMenderAgentConfig {
+    export interface FindRequest extends FindRequest$ {}
+    export interface FixRequest extends FixRequest$ {}
+    export type SessionConfig = SessionConfig$;
+    export namespace FindRequest {
+      export type SourceFile = SourceFile$;
+    }
+    export namespace FixRequest {
+      export type SourceFile = SourceFile$2;
+    }
   }
   export namespace Environment {
     export interface Allowlist extends Allowlist$ {}
