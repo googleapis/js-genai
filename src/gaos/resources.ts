@@ -84,6 +84,9 @@ import type { ModalityTokens as ModalityTokens$Import } from "./models/interacti
 import type { ModelOutputStep as ModelOutputStep$Import } from "./models/interactions/model-output-step.js";
 import type { Model as Model$Import } from "./models/interactions/model.js";
 import type { PlaceCitation as PlaceCitation$Import } from "./models/interactions/place-citation.js";
+import type { RetrievalCallArguments as RetrievalCallArguments$Import } from "./models/interactions/retrieval-call-arguments.js";
+import type { RetrievalCallDelta as RetrievalCallDelta$Import } from "./models/interactions/retrieval-call-delta.js";
+import type { RetrievalResultDelta as RetrievalResultDelta$Import } from "./models/interactions/retrieval-result-delta.js";
 import type { Retrieval as Retrieval$Import } from "./models/interactions/retrieval.js";
 import type { ReviewSnippet as ReviewSnippet$Import } from "./models/interactions/review-snippet.js";
 import type { Source as Source$Import } from "./models/interactions/source.js";
@@ -109,10 +112,7 @@ import type { Tool as Tool$Import } from "./models/interactions/tool.js";
 import type { URLCitation as URLCitation$Import } from "./models/interactions/url-citation.js";
 import type { URLContextCallArguments as URLContextCallArguments$Import } from "./models/interactions/url-context-call-arguments.js";
 import type { URLContextCallDelta as URLContextCallDelta$Import } from "./models/interactions/url-context-call-delta.js";
-import type {
-  Arguments as Arguments$Import,
-  URLContextCallStep as URLContextCallStep$Import,
-} from "./models/interactions/url-context-call-step.js";
+import type { URLContextCallStep as URLContextCallStep$Import } from "./models/interactions/url-context-call-step.js";
 import type { URLContextResultDelta as URLContextResultDelta$Import } from "./models/interactions/url-context-result-delta.js";
 import type { URLContextResultStep as URLContextResultStep$Import } from "./models/interactions/url-context-result-step.js";
 import type { URLContextResult as URLContextResult$Import } from "./models/interactions/url-context-result.js";
@@ -217,6 +217,9 @@ type MCPServerToolResultStep$ = MCPServerToolResultStep$Import;
 type Model$ = Model$Import;
 type ModelOutputStep$ = ModelOutputStep$Import;
 type PlaceCitation$ = PlaceCitation$Import;
+type RetrievalCallArguments$ = RetrievalCallArguments$Import;
+type RetrievalCallDelta$ = RetrievalCallDelta$Import;
+type RetrievalResultDelta$ = RetrievalResultDelta$Import;
 type SpeechConfig$ = SpeechConfig$Import;
 type Step$ = Step$Import;
 type StepDelta$ = StepDelta$Import;
@@ -259,6 +262,7 @@ type Metadata$3 = StreamMetadata$Import;
 type Metadata$4 = StreamMetadata$Import;
 type Error$2 = Status$Import;
 type ReviewSnippet$3 = ReviewSnippet$Import;
+type Arguments$4 = RetrievalCallArguments$Import;
 type ArgumentsDelta$ = ArgumentsDelta$Import;
 type Audio$ = AudioDelta$Import;
 type CodeExecutionCall$ = CodeExecutionCallDelta$Import;
@@ -293,7 +297,7 @@ type MCPServer$ = MCPServer$Import;
 type Retrieval$ = Retrieval$Import;
 type URLContext$ = URLContext$Import;
 type VertexAISearchConfig$ = VertexAISearchConfig$Import;
-type Arguments$4 = Arguments$Import;
+type Arguments$5 = URLContextCallArguments$Import;
 type Result$3 = URLContextResult$Import;
 type CachedTokensByModality$ = ModalityTokens$Import;
 type GroundingToolCount$ = GroundingToolCount$Import;
@@ -414,6 +418,9 @@ export type Place = Place$;
 export type PlaceCitation = PlaceCitation$;
 export type Result = Result$;
 export type Retrieval = Retrieval$;
+export type RetrievalCallArguments = RetrievalCallArguments$;
+export type RetrievalCallDelta = RetrievalCallDelta$;
+export type RetrievalResultDelta = RetrievalResultDelta$;
 export type ReviewSnippet = ReviewSnippet$;
 export type RotateSigningSecretRequest = RotateSigningSecretRequest$;
 export type SigningSecret = SigningSecret$;
@@ -536,6 +543,9 @@ export declare namespace Interactions {
   export type Model = Model$;
   export interface ModelOutputStep extends ModelOutputStep$ {}
   export interface PlaceCitation extends PlaceCitation$ {}
+  export type RetrievalCallArguments = RetrievalCallArguments$;
+  export interface RetrievalCallDelta extends RetrievalCallDelta$ {}
+  export type RetrievalResultDelta = RetrievalResultDelta$;
   export type SpeechConfig = SpeechConfig$;
   export type Step = Step$;
   export interface StepDelta extends StepDelta$ {}
@@ -617,6 +627,9 @@ export declare namespace Interactions {
   export namespace PlaceCitation {
     export type ReviewSnippet = ReviewSnippet$3;
   }
+  export namespace RetrievalCallDelta {
+    export type Arguments = Arguments$4;
+  }
   export namespace StepDelta {
     export type ArgumentsDelta = ArgumentsDelta$;
     export type Audio = Audio$;
@@ -662,7 +675,7 @@ export declare namespace Interactions {
     }
   }
   export namespace URLContextCallStep {
-    export type Arguments = Arguments$4;
+    export type Arguments = Arguments$5;
   }
   export namespace URLContextResultStep {
     export type Result = Result$3;
