@@ -25,6 +25,8 @@ import { GoogleSearchResultDelta } from "./google-search-result-delta.js";
 import { ImageDelta } from "./image-delta.js";
 import { MCPServerToolCallDelta } from "./mcp-server-tool-call-delta.js";
 import { MCPServerToolResultDelta } from "./mcp-server-tool-result-delta.js";
+import { RetrievalCallDelta } from "./retrieval-call-delta.js";
+import { RetrievalResultDelta } from "./retrieval-result-delta.js";
 import { TextAnnotationDelta } from "./text-annotation-delta.js";
 import { TextDelta } from "./text-delta.js";
 import { ThoughtSignatureDelta } from "./thought-signature-delta.js";
@@ -49,10 +51,12 @@ export type StepDeltaData =
   | MCPServerToolCallDelta
   | FileSearchCallDelta
   | GoogleMapsCallDelta
+  | RetrievalCallDelta
   | CodeExecutionResultDelta
   | URLContextResultDelta
   | GoogleSearchResultDelta
   | MCPServerToolResultDelta
   | FileSearchResultDelta
   | GoogleMapsResultDelta
+  | RetrievalResultDelta
   | FunctionResultDelta;
