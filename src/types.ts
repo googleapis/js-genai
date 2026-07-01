@@ -3820,6 +3820,9 @@ export declare interface ContentEmbeddingStatistics {
   /** Gemini Enterprise Agent Platform only. Number of tokens of the input text.
    */
   tokenCount?: number;
+  /** Gemini Enterprise Agent Platform only. List of modalities and their token count for the input content.
+   */
+  tokensDetails?: ModalityTokenCount[];
 }
 
 /** The embedding generated from an input content. */

@@ -364,6 +364,19 @@ export function contentEmbeddingStatisticsFromVertex(
     common.setValueByPath(toObject, ['tokenCount'], fromTokenCount);
   }
 
+  const fromTokensDetails = common.getValueByPath(fromObject, [
+    'tokensDetails',
+  ]);
+  if (fromTokensDetails != null) {
+    let transformedList = fromTokensDetails;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return item;
+      });
+    }
+    common.setValueByPath(toObject, ['tokensDetails'], transformedList);
+  }
+
   return toObject;
 }
 
@@ -1378,6 +1391,14 @@ export function embedContentResponseFromVertex(
         stats.tokenCount = (usageMetadata as Record<string, unknown>)[
           'promptTokenCount'
         ] as number;
+      }
+      if (
+        usageMetadata &&
+        (usageMetadata as Record<string, unknown>)['promptTokensDetails']
+      ) {
+        stats.tokensDetails = (usageMetadata as Record<string, unknown>)[
+          'promptTokensDetails'
+        ] as types.ModalityTokenCount[];
       }
       if (truncated) {
         stats.truncated = truncated as boolean;
