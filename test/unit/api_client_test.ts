@@ -2068,7 +2068,7 @@ describe('ApiClient', () => {
       const timeoutArgs = timeoutSpy.calls.first().args;
       expect(timeoutArgs[1]).toEqual(1001);
       expect(fetchArgs[0]).toEqual(
-        'https://custom-client-base-url.googleapis.com/v1alpha/test-path?alt=sse',
+        'https://custom-client-base-url.googleapis.com/v1alpha/test-path?param1=value1&param2=value2&alt=sse',
       );
     });
     it('should not override the client http options permanently', async () => {
@@ -2123,7 +2123,7 @@ describe('ApiClient', () => {
       const timeoutArgs = timeoutSpy.calls.mostRecent().args;
       expect(timeoutArgs[1]).toEqual(1002);
       expect(fetchArgs[0]).toEqual(
-        'https://custom-request-base-url.googleapis.com/v1alpha/test-path?alt=sse',
+        'https://custom-request-base-url.googleapis.com/v1alpha/test-path?param1=value1&param2=value2&alt=sse',
       );
 
       await client.requestStream({
@@ -2133,7 +2133,7 @@ describe('ApiClient', () => {
       });
 
       const secondFetchArgs = fetchSpy.calls.mostRecent().args;
-      const secondRequestInit = fetchArgs[1] as RequestInit;
+      const secondRequestInit = secondFetchArgs[1] as RequestInit;
       const secondHeaders = secondRequestInit.headers as Headers;
       expect(secondHeaders.get('Content-Type')).toBe('application/json');
       expect(secondHeaders.get('x-goog-api-key')).toBe('test-api-key');
@@ -2142,12 +2142,12 @@ describe('ApiClient', () => {
         'google-genai-sdk/',
       );
       expect(secondHeaders.get('google-custom-header')).toBe(
-        'custom-header-request-value',
+        'custom-header-value',
       );
       const secondTimeoutArgs = timeoutSpy.calls.mostRecent().args;
       expect(secondTimeoutArgs[1]).toEqual(1000);
       expect(secondFetchArgs[0]).toEqual(
-        'https://custom-client-base-url.googleapis.com/v1beta1/test-path?alt=sse',
+        'https://custom-client-base-url.googleapis.com/v1beta1/test-path?param1=value1&param2=value2&alt=sse',
       );
     });
     it('should set undici dispatcher on requestInit when timeout is provided for requestStream', async () => {
