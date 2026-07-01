@@ -27,6 +27,13 @@ export type Environment = {
   type: "remote";
   sources?: Array<Source> | undefined;
   /**
+   * Optional. The environment ID for the interaction. If specified, the request will
+   *
+   * @remarks
+   * update the existing environment instead of creating a new one.
+   */
+  environment_id?: string | undefined;
+  /**
    * Network configuration for the environment.
    */
   network?: EnvironmentNetworkEgressAllowlist | NetworkEnum | undefined;
