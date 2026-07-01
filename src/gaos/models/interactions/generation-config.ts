@@ -64,22 +64,6 @@ export type GenerationConfig = {
    */
   video_config?: VideoConfig | undefined;
   /**
-   * Penalizes tokens that have already appeared in the generated
-   *
-   * @remarks
-   * text. A positive value encourages the model to generate more diverse and
-   * less repetitive text. Valid values can range from [-2.0, 2.0].
-   */
-  presence_penalty?: number | undefined;
-  /**
-   * Penalizes tokens based on their frequency in the generated text.
-   *
-   * @remarks
-   * A positive value helps to reduce the repetition of words and phrases.
-   * Valid values can range from [-2.0, 2.0].
-   */
-  frequency_penalty?: number | undefined;
-  /**
    * The tool choice configuration.
    */
   tool_choice?: ToolChoiceType | ToolChoiceConfig | undefined;

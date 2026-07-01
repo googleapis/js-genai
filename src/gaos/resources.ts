@@ -86,6 +86,7 @@ import type { Model as Model$Import } from "./models/interactions/model.js";
 import type { PlaceCitation as PlaceCitation$Import } from "./models/interactions/place-citation.js";
 import type { Retrieval as Retrieval$Import } from "./models/interactions/retrieval.js";
 import type { ReviewSnippet as ReviewSnippet$Import } from "./models/interactions/review-snippet.js";
+import type { SafetySetting as SafetySetting$Import } from "./models/interactions/safety-setting.js";
 import type { Source as Source$Import } from "./models/interactions/source.js";
 import type { SpeechConfig as SpeechConfig$Import } from "./models/interactions/speech-config.js";
 import type { Status as Status$Import } from "./models/interactions/status.js";
@@ -254,6 +255,7 @@ type Place$2 = GoogleMapsResultPlaces$Import;
 type ReviewSnippet$2 = ReviewSnippet$Import;
 type Arguments$3 = GoogleSearchCallArguments$Import;
 type Result$2 = GoogleSearchResult$Import;
+type SafetySetting$ = SafetySetting$Import;
 type Metadata$2 = StreamMetadata$Import;
 type Metadata$3 = StreamMetadata$Import;
 type Metadata$4 = StreamMetadata$Import;
@@ -416,6 +418,7 @@ export type Result = Result$;
 export type Retrieval = Retrieval$;
 export type ReviewSnippet = ReviewSnippet$;
 export type RotateSigningSecretRequest = RotateSigningSecretRequest$;
+export type SafetySetting = SafetySetting$;
 export type SigningSecret = SigningSecret$;
 export type Source = Source$;
 export type SpeechConfig = SpeechConfig$;
@@ -516,7 +519,7 @@ export declare namespace Interactions {
   export type ImageConfig = ImageConfig$;
   export type ImageContent = ImageContent$;
   export type ImageResponseFormat = ImageResponseFormat$;
-  export type Interaction = Interaction$;
+  export interface Interaction extends Interaction$ {}
   export type InteractionCancelParams = InteractionCancelParams$;
   export interface InteractionCompletedEvent
     extends InteractionCompletedEvent$
@@ -596,6 +599,9 @@ export declare namespace Interactions {
   }
   export namespace GoogleSearchResultStep {
     export type Result = Result$2;
+  }
+  export namespace Interaction {
+    export type SafetySetting = SafetySetting$;
   }
   export namespace InteractionCompletedEvent {
     export type Metadata = Metadata$2;
