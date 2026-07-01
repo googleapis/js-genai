@@ -2114,6 +2114,11 @@ export enum HarmSeverity {
 }
 
 // @public
+export interface HistoryConfig {
+    initialHistoryInClientContent?: boolean;
+}
+
+// @public
 export enum HttpElementLocation {
     HTTP_IN_BODY = "HTTP_IN_BODY",
     HTTP_IN_COOKIE = "HTTP_IN_COOKIE",
@@ -3183,6 +3188,7 @@ export interface LiveClientSetup {
     contextWindowCompression?: ContextWindowCompressionConfig;
     explicitVadSignal?: boolean;
     generationConfig?: GenerationConfig;
+    historyConfig?: HistoryConfig;
     inputAudioTranscription?: AudioTranscriptionConfig;
     model?: string;
     outputAudioTranscription?: AudioTranscriptionConfig;
@@ -3207,6 +3213,7 @@ export interface LiveConnectConfig {
     enableAffectiveDialog?: boolean;
     explicitVadSignal?: boolean;
     generationConfig?: GenerationConfig;
+    historyConfig?: HistoryConfig;
     httpOptions?: HttpOptions;
     inputAudioTranscription?: AudioTranscriptionConfig;
     maxOutputTokens?: number;
