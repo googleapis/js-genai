@@ -31,6 +31,7 @@ export class NodeDownloader implements Downloader {
         const writer = createWriteStream(params.downloadPath);
         const body = Readable.fromWeb(
           response.responseInternal.body as ReadableStream<Uint8Array>,
+
         );
         body.pipe(writer);
         await finished(writer);
