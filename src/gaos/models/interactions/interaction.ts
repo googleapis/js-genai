@@ -12,6 +12,7 @@
 
 import { AgentOption } from "./agent-option.js";
 import { AudioContent } from "./audio-content.js";
+import { CodeMenderAgentConfig } from "./code-mender-agent-config.js";
 import { DeepResearchAgentConfig } from "./deep-research-agent-config.js";
 import { DynamicAgentConfig } from "./dynamic-agent-config.js";
 import { Environment } from "./environment.js";
@@ -56,7 +57,8 @@ export type InteractionEnvironment = Environment | string;
  */
 export type InteractionAgentConfig =
   | DynamicAgentConfig
-  | DeepResearchAgentConfig;
+  | DeepResearchAgentConfig
+  | CodeMenderAgentConfig;
 
 /**
  * The Interaction resource.
@@ -159,7 +161,11 @@ export type Interaction = {
   /**
    * Configuration parameters for the agent interaction.
    */
-  agent_config?: DynamicAgentConfig | DeepResearchAgentConfig | undefined;
+  agent_config?:
+    | DynamicAgentConfig
+    | DeepResearchAgentConfig
+    | CodeMenderAgentConfig
+    | undefined;
   /**
    * The input for the interaction.
    */
