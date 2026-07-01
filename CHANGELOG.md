@@ -2,6 +2,13 @@
 
 
 
+## [2.11.0](https://github.com/googleapis/js-genai/compare/v2.10.0...v2.11.0) (2026-07-01)
+
+
+### Features
+
+* Add environment_id in network config ([85fe0a5](https://github.com/googleapis/js-genai/commit/85fe0a5bef70c507ba8641016eca5f10359cbac1))
+
 ## [2.10.0](https://github.com/googleapis/js-genai/compare/v2.9.0...v2.10.0) (2026-06-24)
 
 
