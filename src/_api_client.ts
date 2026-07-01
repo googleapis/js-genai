@@ -888,6 +888,12 @@ export class ApiClient {
     if (config != null) {
       uploadToFileSearchStoreConfigToMldev(config, body);
     }
+    if (config?.displayName){
+      body['displayName'] = config.displayName;
+    }
+    if (config?.mimeType){
+      body['mimeType'] = config.mimeType;
+    }
     const uploadUrl = await this.fetchUploadUrl(
       path,
       sizeBytes,
