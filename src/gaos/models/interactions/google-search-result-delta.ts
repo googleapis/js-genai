@@ -12,6 +12,9 @@
 
 import { GoogleSearchResult } from "./google-search-result.js";
 
+/**
+ * ToolResultDelta.type
+ */
 export type GoogleSearchResultDelta = {
   type: "google_search_result";
   result: Array<GoogleSearchResult>;

@@ -12,6 +12,9 @@
 
 import { URLContextResult } from "./url-context-result.js";
 
+/**
+ * ToolResultDelta.type
+ */
 export type URLContextResultDelta = {
   type: "url_context_result";
   result: Array<URLContextResult>;

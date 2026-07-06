@@ -12,6 +12,9 @@
 
 import { FileSearchResult } from "./file-search-result.js";
 
+/**
+ * ToolResultDelta.type
+ */
 export type FileSearchResultDelta = {
   type: "file_search_result";
   result: Array<FileSearchResult>;

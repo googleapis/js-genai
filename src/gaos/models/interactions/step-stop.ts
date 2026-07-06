@@ -13,6 +13,9 @@
 import { StreamMetadata } from "./stream-metadata.js";
 import { Usage } from "./usage.js";
 
+/**
+ * Payload.event_type
+ */
 export type StepStop = {
   event_type: "step.stop";
   index: number;

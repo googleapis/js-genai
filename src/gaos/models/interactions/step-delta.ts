@@ -13,6 +13,9 @@
 import { StepDeltaData } from "./step-delta-data.js";
 import { StepDeltaMetadata } from "./step-delta-metadata.js";
 
+/**
+ * Payload.event_type
+ */
 export type StepDelta = {
   event_type: "step.delta";
   index: number;

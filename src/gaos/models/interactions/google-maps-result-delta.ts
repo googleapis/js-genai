@@ -12,6 +12,9 @@
 
 import { GoogleMapsResult } from "./google-maps-result.js";
 
+/**
+ * ToolResultDelta.type
+ */
 export type GoogleMapsResultDelta = {
   type: "google_maps_result";
   /**
