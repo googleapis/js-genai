@@ -1648,6 +1648,8 @@ export interface GeneratedVideo {
     video?: Video;
 }
 
+export type ImageSizeConfig = '1K' | '2K' | '4K';
+
 // @public
 export interface GenerateImagesConfig {
     abortSignal?: AbortSignal;
@@ -1656,7 +1658,7 @@ export interface GenerateImagesConfig {
     enhancePrompt?: boolean;
     guidanceScale?: number;
     httpOptions?: HttpOptions;
-    imageSize?: string;
+    imageSize?: ImageSizeConfig;
     includeRaiReason?: boolean;
     includeSafetyAttributes?: boolean;
     labels?: Record<string, string>;
@@ -2198,7 +2200,7 @@ export { Image_2 as Image }
 export interface ImageConfig {
     aspectRatio?: string;
     imageOutputOptions?: ImageConfigImageOutputOptions;
-    imageSize?: string;
+    imageSize?: ImageSizeConfig;
     outputCompressionQuality?: number;
     outputMimeType?: string;
     personGeneration?: string;
