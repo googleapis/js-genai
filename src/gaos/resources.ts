@@ -97,7 +97,6 @@ import type { StepDelta as StepDelta$Import } from "./models/interactions/step-d
 import type { StepStart as StepStart$Import } from "./models/interactions/step-start.js";
 import type { StepStop as StepStop$Import } from "./models/interactions/step-stop.js";
 import type { Step as Step$Import } from "./models/interactions/step.js";
-import type { StreamMetadata as StreamMetadata$Import } from "./models/interactions/stream-metadata.js";
 import type { TextAnnotationDelta as TextAnnotationDelta$Import } from "./models/interactions/text-annotation-delta.js";
 import type { TextContent as TextContent$Import } from "./models/interactions/text-content.js";
 import type { TextDelta as TextDelta$Import } from "./models/interactions/text-delta.js";
@@ -248,7 +247,6 @@ type Allowlist$ = Allowlist$Import;
 type Source$ = Source$Import;
 type Allowlist$2 = AllowlistEntry$Import;
 type Error$ = ErrorT$Import;
-type Metadata$ = StreamMetadata$Import;
 type Arguments$2 = GoogleMapsCallArguments$Import;
 type Place$ = GoogleMapsResultPlaces$Import;
 type ReviewSnippet$ = ReviewSnippet$Import;
@@ -257,9 +255,6 @@ type Place$2 = GoogleMapsResultPlaces$Import;
 type ReviewSnippet$2 = ReviewSnippet$Import;
 type Arguments$3 = GoogleSearchCallArguments$Import;
 type Result$2 = GoogleSearchResult$Import;
-type Metadata$2 = StreamMetadata$Import;
-type Metadata$3 = StreamMetadata$Import;
-type Metadata$4 = StreamMetadata$Import;
 type Error$2 = Status$Import;
 type ReviewSnippet$3 = ReviewSnippet$Import;
 type Arguments$4 = RetrievalCallArguments$Import;
@@ -278,7 +273,7 @@ type GoogleSearchResult$2 = GoogleSearchResultDelta$Import;
 type Image$ = ImageDelta$Import;
 type MCPServerToolCall$ = MCPServerToolCallDelta$Import;
 type MCPServerToolResult$ = MCPServerToolResultDelta$Import;
-type Metadata$5 = StepDeltaMetadata$Import;
+type Metadata$ = StepDeltaMetadata$Import;
 type Text$ = TextDelta$Import;
 type TextAnnotationDelta$ = TextAnnotationDelta$Import;
 type ThoughtSignature$ = ThoughtSignatureDelta$Import;
@@ -286,8 +281,6 @@ type ThoughtSummary$ = ThoughtSummaryDelta$Import;
 type URLContextCall$ = URLContextCallDelta$Import;
 type URLContextResult$2 = URLContextResultDelta$Import;
 type Video$ = VideoDelta$Import;
-type Metadata$6 = StreamMetadata$Import;
-type Metadata$7 = StreamMetadata$Import;
 type CodeExecution$ = CodeExecution$Import;
 type ComputerUse$ = ComputerUse$Import;
 type FileSearch$ = FileSearch$Import;
@@ -525,10 +518,8 @@ export declare namespace Interactions {
   export type ImageResponseFormat = ImageResponseFormat$;
   export type Interaction = Interaction$;
   export type InteractionCancelParams = InteractionCancelParams$;
-  export interface InteractionCompletedEvent
-    extends InteractionCompletedEvent$
-  {}
-  export interface InteractionCreatedEvent extends InteractionCreatedEvent$ {}
+  export type InteractionCompletedEvent = InteractionCompletedEvent$;
+  export type InteractionCreatedEvent = InteractionCreatedEvent$;
   export type InteractionCreateParams = InteractionCreateParams$;
   export type InteractionDeleteParams = InteractionDeleteParams$;
   export type InteractionDeleteResponse = InteractionDeleteResponse$;
@@ -537,7 +528,7 @@ export declare namespace Interactions {
     InteractionGetParamsNonStreaming$;
   export type InteractionGetParamsStreaming = InteractionGetParamsStreaming$;
   export type InteractionSSEEvent = InteractionSSEEvent$;
-  export interface InteractionStatusUpdate extends InteractionStatusUpdate$ {}
+  export type InteractionStatusUpdate = InteractionStatusUpdate$;
   export type MCPServerToolCallStep = MCPServerToolCallStep$;
   export type MCPServerToolResultStep = MCPServerToolResultStep$;
   export type Model = Model$;
@@ -549,8 +540,8 @@ export declare namespace Interactions {
   export type SpeechConfig = SpeechConfig$;
   export type Step = Step$;
   export interface StepDelta extends StepDelta$ {}
-  export interface StepStart extends StepStart$ {}
-  export interface StepStop extends StepStop$ {}
+  export type StepStart = StepStart$;
+  export type StepStop = StepStop$;
   export type TextContent = TextContent$;
   export type TextResponseFormat = TextResponseFormat$;
   export type ThinkingLevel = ThinkingLevel$;
@@ -581,7 +572,6 @@ export declare namespace Interactions {
   }
   export namespace ErrorEvent {
     export type Error = Error$;
-    export type Metadata = Metadata$;
   }
   export namespace GoogleMapsCallStep {
     export type Arguments = Arguments$2;
@@ -607,19 +597,10 @@ export declare namespace Interactions {
   export namespace GoogleSearchResultStep {
     export type Result = Result$2;
   }
-  export namespace InteractionCompletedEvent {
-    export type Metadata = Metadata$2;
-  }
-  export namespace InteractionCreatedEvent {
-    export type Metadata = Metadata$3;
-  }
   export namespace InteractionGetParams {
     export type InteractionGetParamsNonStreaming =
       InteractionGetParamsNonStreaming$2;
     export type InteractionGetParamsStreaming = InteractionGetParamsStreaming$2;
-  }
-  export namespace InteractionStatusUpdate {
-    export type Metadata = Metadata$4;
   }
   export namespace ModelOutputStep {
     export type Error = Error$2;
@@ -646,7 +627,7 @@ export declare namespace Interactions {
     export type Image = Image$;
     export type MCPServerToolCall = MCPServerToolCall$;
     export type MCPServerToolResult = MCPServerToolResult$;
-    export type Metadata = Metadata$5;
+    export type Metadata = Metadata$;
     export type Text = Text$;
     export type TextAnnotationDelta = TextAnnotationDelta$;
     export type ThoughtSignature = ThoughtSignature$;
@@ -654,12 +635,6 @@ export declare namespace Interactions {
     export type URLContextCall = URLContextCall$;
     export type URLContextResult = URLContextResult$2;
     export type Video = Video$;
-  }
-  export namespace StepStart {
-    export type Metadata = Metadata$6;
-  }
-  export namespace StepStop {
-    export type Metadata = Metadata$7;
   }
   export namespace Tool {
     export type CodeExecution = CodeExecution$;

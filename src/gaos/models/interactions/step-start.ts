@@ -11,7 +11,6 @@
  */
 
 import { Step } from "./step.js";
-import { StreamMetadata } from "./stream-metadata.js";
 
 export type StepStart = {
   event_type: "step.start";
@@ -27,5 +26,4 @@ export type StepStart = {
    * this event.
    */
   event_id?: string | undefined;
-  metadata?: StreamMetadata | undefined;
 };
