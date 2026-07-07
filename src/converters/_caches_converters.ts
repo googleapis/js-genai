@@ -1197,12 +1197,6 @@ export function toolToMldev(fromObject: types.Tool): Record<string, unknown> {
     common.setValueByPath(toObject, ['mcpServers'], transformedList);
   }
 
-  if (common.getValueByPath(fromObject, ['exaAiSearch']) !== undefined) {
-    throw new Error(
-      'exaAiSearch parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
-    );
-  }
-
   return toObject;
 }
 
@@ -1302,11 +1296,6 @@ export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
       });
     }
     common.setValueByPath(toObject, ['mcpServers'], transformedList);
-  }
-
-  const fromExaAiSearch = common.getValueByPath(fromObject, ['exaAiSearch']);
-  if (fromExaAiSearch != null) {
-    common.setValueByPath(toObject, ['exaAiSearch'], fromExaAiSearch);
   }
 
   return toObject;

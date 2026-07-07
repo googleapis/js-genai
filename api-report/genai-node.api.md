@@ -140,37 +140,10 @@ export enum ApiSpec {
 }
 
 // @public
-export enum AspectRatio {
-    ASPECT_RATIO_EIGHT_BY_ONE = "ASPECT_RATIO_EIGHT_BY_ONE",
-    ASPECT_RATIO_FIVE_BY_FOUR = "ASPECT_RATIO_FIVE_BY_FOUR",
-    ASPECT_RATIO_FOUR_BY_FIVE = "ASPECT_RATIO_FOUR_BY_FIVE",
-    ASPECT_RATIO_FOUR_BY_ONE = "ASPECT_RATIO_FOUR_BY_ONE",
-    ASPECT_RATIO_FOUR_BY_THREE = "ASPECT_RATIO_FOUR_BY_THREE",
-    ASPECT_RATIO_NINE_BY_SIXTEEN = "ASPECT_RATIO_NINE_BY_SIXTEEN",
-    ASPECT_RATIO_ONE_BY_EIGHT = "ASPECT_RATIO_ONE_BY_EIGHT",
-    ASPECT_RATIO_ONE_BY_FOUR = "ASPECT_RATIO_ONE_BY_FOUR",
-    ASPECT_RATIO_ONE_BY_ONE = "ASPECT_RATIO_ONE_BY_ONE",
-    ASPECT_RATIO_SIXTEEN_BY_NINE = "ASPECT_RATIO_SIXTEEN_BY_NINE",
-    ASPECT_RATIO_THREE_BY_FOUR = "ASPECT_RATIO_THREE_BY_FOUR",
-    ASPECT_RATIO_THREE_BY_TWO = "ASPECT_RATIO_THREE_BY_TWO",
-    ASPECT_RATIO_TWENTY_ONE_BY_NINE = "ASPECT_RATIO_TWENTY_ONE_BY_NINE",
-    ASPECT_RATIO_TWO_BY_THREE = "ASPECT_RATIO_TWO_BY_THREE",
-    ASPECT_RATIO_UNSPECIFIED = "ASPECT_RATIO_UNSPECIFIED"
-}
-
-// @public
 export interface AudioChunk {
     data?: string;
     mimeType?: string;
     sourceMetadata?: LiveMusicSourceMetadata;
-}
-
-// @public
-export class AudioResponseFormat {
-    bitRate?: number;
-    delivery?: Delivery;
-    mimeType?: string;
-    sampleRate?: number;
 }
 
 // @public
@@ -521,11 +494,13 @@ export interface CompletionStats {
 
 // @public
 export interface CompositeReinforcementTuningRewardConfig {
+    // (undocumented)
     weightedRewardConfigs?: CompositeReinforcementTuningRewardConfigWeightedRewardConfig[];
 }
 
 // @public
 export interface CompositeReinforcementTuningRewardConfigWeightedRewardConfig {
+    // (undocumented)
     rewardConfig?: SingleReinforcementTuningRewardConfig;
     weight?: number;
 }
@@ -886,12 +861,9 @@ export interface DatasetDistributionDistributionBucket {
 
 // @public
 export interface DatasetStats {
-    contentsPerExampleDistribution?: DatasetDistribution;
     droppedExampleIndices?: string[];
     droppedExampleReasons?: string[];
-    reinforcementTuningUserDatasetExamples?: ReinforcementTuningUserDatasetExamples;
     totalBillableCharacterCount?: string;
-    totalBillableTokenCount?: string;
     totalTuningCharacterCount?: string;
     tuningDatasetExampleCount?: string;
     tuningStepCount?: string;
@@ -1000,13 +972,6 @@ export interface DeleteResourceJob {
     // (undocumented)
     name?: string;
     sdkHttpResponse?: HttpResponse;
-}
-
-// @public
-export enum Delivery {
-    DELIVERY_UNSPECIFIED = "DELIVERY_UNSPECIFIED",
-    INLINE = "INLINE",
-    URI = "URI"
 }
 
 // @public
@@ -1757,7 +1722,6 @@ export interface GenerationConfig {
     mediaResolution?: MediaResolution;
     modelSelectionConfig?: ModelSelectionConfig;
     presencePenalty?: number;
-    responseFormat?: ResponseFormat[];
     responseJsonSchema?: unknown;
     responseLogprobs?: boolean;
     responseMimeType?: string;
@@ -1771,7 +1735,6 @@ export interface GenerationConfig {
     thinkingConfig?: ThinkingConfig;
     topK?: number;
     topP?: number;
-    translationConfig?: TranslationConfig;
 }
 
 // @public
@@ -2230,24 +2193,7 @@ export enum ImageResizeMode {
 }
 
 // @public
-export class ImageResponseFormat {
-    aspectRatio?: AspectRatio;
-    delivery?: Delivery;
-    imageSize?: ImageSize;
-    mimeType?: string;
-}
-
-// @public
 export interface ImageSearch {
-}
-
-// @public
-export enum ImageSize {
-    IMAGE_SIZE_FIVE_TWELVE = "IMAGE_SIZE_FIVE_TWELVE",
-    IMAGE_SIZE_FOUR_K = "IMAGE_SIZE_FOUR_K",
-    IMAGE_SIZE_ONE_K = "IMAGE_SIZE_ONE_K",
-    IMAGE_SIZE_TWO_K = "IMAGE_SIZE_TWO_K",
-    IMAGE_SIZE_UNSPECIFIED = "IMAGE_SIZE_UNSPECIFIED"
 }
 
 // @public
@@ -4083,7 +4029,6 @@ export interface ReinforcementTuningHyperParameters {
     learningRateMultiplier?: number;
     maxOutputTokens?: number;
     samplesPerPrompt?: number;
-    thinkingBudget?: number;
     thinkingLevel?: ReinforcementTuningThinkingLevel;
 }
 
@@ -4101,6 +4046,7 @@ export interface ReinforcementTuningRewardInfo {
 
 // @public
 export interface ReinforcementTuningSpec {
+    // (undocumented)
     compositeRewardConfig?: CompositeReinforcementTuningRewardConfig;
     hyperParameters?: ReinforcementTuningHyperParameters;
     singleRewardConfig?: SingleReinforcementTuningRewardConfig;
@@ -4133,11 +4079,6 @@ export enum ReinforcementTuningThinkingLevel {
     HIGH = "HIGH",
     MINIMAL = "MINIMAL",
     REINFORCEMENT_TUNING_THINKING_LEVEL_UNSPECIFIED = "REINFORCEMENT_TUNING_THINKING_LEVEL_UNSPECIFIED"
-}
-
-// @public
-export interface ReinforcementTuningUserDatasetExamples {
-    userDatasetExamples?: ReinforcementTuningExample[];
 }
 
 // @public
@@ -4189,14 +4130,6 @@ export interface ReplicatedVoiceConfig {
 // @public
 export enum ResourceScope {
     COLLECTION = "COLLECTION"
-}
-
-// @public
-export class ResponseFormat {
-    audio?: AudioResponseFormat;
-    image?: ImageResponseFormat;
-    text?: TextResponseFormat;
-    video?: VideoResponseFormat;
 }
 
 // @public
@@ -4629,12 +4562,6 @@ export interface TestTableItem {
 }
 
 // @public
-export class TextResponseFormat {
-    mimeType?: string;
-    schema?: unknown;
-}
-
-// @public
 export interface ThinkingConfig {
     includeThoughts?: boolean;
     thinkingBudget?: number;
@@ -4668,7 +4595,6 @@ export interface Tool {
     codeExecution?: ToolCodeExecution;
     computerUse?: ComputerUse;
     enterpriseWebSearch?: EnterpriseWebSearch;
-    exaAiSearch?: ToolExaAiSearch;
     fileSearch?: FileSearch;
     functionDeclarations?: FunctionDeclaration[];
     googleMaps?: GoogleMaps;
@@ -4696,12 +4622,6 @@ export interface ToolConfig {
     functionCallingConfig?: FunctionCallingConfig;
     includeServerSideToolInvocations?: boolean;
     retrievalConfig?: RetrievalConfig;
-}
-
-// @public
-export interface ToolExaAiSearch {
-    apiKey?: string;
-    customConfigs?: Record<string, unknown>;
 }
 
 // @public (undocumented)
@@ -4788,7 +4708,6 @@ export interface TuningDataset {
 export interface TuningDataStats {
     distillationDataStats?: DistillationDataStats;
     preferenceOptimizationDataStats?: PreferenceOptimizationDataStats;
-    reinforcementTuningDataStats?: DatasetStats;
     supervisedTuningDataStats?: SupervisedTuningDataStats;
 }
 
@@ -4820,6 +4739,7 @@ export interface TuningJob {
     pipelineJob?: string;
     preferenceOptimizationSpec?: PreferenceOptimizationSpec;
     preTunedModel?: PreTunedModel;
+    // (undocumented)
     reinforcementTuningSpec?: ReinforcementTuningSpec;
     sdkHttpResponse?: HttpResponse;
     serviceAccount?: string;
@@ -5257,14 +5177,6 @@ export enum VideoOrientation {
     LANDSCAPE = "LANDSCAPE",
     PORTRAIT = "PORTRAIT",
     VIDEO_ORIENTATION_UNSPECIFIED = "VIDEO_ORIENTATION_UNSPECIFIED"
-}
-
-// @public
-export class VideoResponseFormat {
-    aspectRatio?: AspectRatio;
-    delivery?: Delivery;
-    duration?: string;
-    gcsUri?: string;
 }
 
 // @public
