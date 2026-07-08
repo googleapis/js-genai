@@ -6,7 +6,6 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import {fileURLToPath} from 'url';
 
 import {GoogleGenAIOptions} from '../../../src/client.js';
 import {Session} from '../../../src/live.js';
@@ -21,18 +20,10 @@ const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
 const VERTEX_MODEL = 'gemini-2.0-flash-live-preview-04-09';
 const MLDEV_MODEL = 'gemini-live-2.5-flash-preview';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 function loadFileAsBase64(filename: string): Promise<string> {
   return new Promise((resolve, reject) => {
-    // Construct the full path to the file, the test file is in dist/, while the test asset is in test/
     const filePath = path.join(
-      __dirname,
-      '..',
-      '..',
-      '..',
-      '..',
+      process.cwd(),
       'test',
       'system',
       'node',
