@@ -14,7 +14,6 @@ import type { AgentListResponse as AgentListResponse$Import } from "./models/age
 import type { AgentTool as AgentTool$Import } from "./models/agents/agent-tool.js";
 import type { Agent as Agent$Import } from "./models/agents/agent.js";
 import type { AllowedTools as AllowedTools$Import } from "./models/interactions/allowed-tools.js";
-import type { AllowlistEntry as AllowlistEntry$Import } from "./models/interactions/allowlist-entry.js";
 import type { Annotation as Annotation$Import } from "./models/interactions/annotation.js";
 import type { ArgumentsDelta as ArgumentsDelta$Import } from "./models/interactions/arguments-delta.js";
 import type { AudioContent as AudioContent$Import } from "./models/interactions/audio-content.js";
@@ -246,7 +245,6 @@ type WebhookConfig$ = WebhookConfig$Import;
 type Arguments$ = CodeExecutionCallArguments$Import;
 type Allowlist$ = Allowlist$Import;
 type Source$ = Source$Import;
-type Allowlist$2 = AllowlistEntry$Import;
 type Error$ = ErrorT$Import;
 type Metadata$ = StreamMetadata$Import;
 type Arguments$2 = GoogleMapsCallArguments$Import;
@@ -573,11 +571,8 @@ export declare namespace Interactions {
     export type Arguments = Arguments$;
   }
   export namespace Environment {
-    export interface Allowlist extends Allowlist$ {}
+    export type Allowlist = Allowlist$;
     export type Source = Source$;
-    export namespace Allowlist {
-      export type Allowlist = Allowlist$2;
-    }
   }
   export namespace ErrorEvent {
     export type Error = Error$;

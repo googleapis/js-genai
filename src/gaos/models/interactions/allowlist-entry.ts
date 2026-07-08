@@ -11,6 +11,13 @@
  */
 
 /**
+ * Headers to inject on all outbound requests matching this domain. Accepts a single dict or a list of dicts. The egress proxy injects these automatically.
+ */
+export type Transform =
+  | { [k: string]: string }
+  | Array<{ [k: string]: string }>;
+
+/**
  * A single domain allowlist rule with optional header injection.
  */
 export type AllowlistEntry = {
@@ -19,7 +26,10 @@ export type AllowlistEntry = {
    */
   domain: string;
   /**
-   * Headers to inject on all outbound requests matching this domain. Each entry is a flat {header_name: header_value} object. The egress proxy injects these automatically.
+   * Headers to inject on all outbound requests matching this domain. Accepts a single dict or a list of dicts. The egress proxy injects these automatically.
    */
-  transform?: Array<{ [k: string]: string }> | undefined;
+  transform?:
+    | { [k: string]: string }
+    | Array<{ [k: string]: string }>
+    | undefined;
 };
