@@ -1,15 +1,13 @@
 #!/bin/bash
 
-# ----------------------------------------------------------
-# @license
-# Copyright 2025 Google LLC
-# SPDX-License-Identifier: Apache-2.0
-# ----------------------------------------------------------
+# Get the directory of the script
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+cd "$DIR/.."
 
 # Define the file paths
-crossplatform="api-report/genai.api.md"
-node="api-report/genai-node.api.md"
-web="api-report/genai-web.api.md"
+crossplatform="temp/api-report/genai.api.md"
+node="temp/api-report/genai-node.api.md"
+web="temp/api-report/genai-web.api.md"
 
 
 diff1=$(diff "$crossplatform" "$node")
