@@ -23,9 +23,6 @@ export type InteractionStatusUpdateStatus =
   | (string & {});
 
 export type InteractionStatusUpdate = {
-  event_type: "interaction.status_update";
-  interaction_id: string;
-  status: InteractionStatusUpdateStatus;
   /**
    * The event_id token to be used to resume the interaction stream, from
    *
@@ -33,5 +30,8 @@ export type InteractionStatusUpdate = {
    * this event.
    */
   event_id?: string | undefined;
+  event_type: "interaction.status_update";
+  interaction_id: string;
   metadata?: StreamMetadata | undefined;
+  status: InteractionStatusUpdateStatus;
 };

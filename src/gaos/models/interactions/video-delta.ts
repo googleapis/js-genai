@@ -25,9 +25,9 @@ export type VideoDeltaMimeType =
   | (string & {});
 
 export type VideoDelta = {
-  type: "video";
   data?: string | undefined;
-  uri?: string | undefined;
   mime_type?: VideoDeltaMimeType | undefined;
   resolution?: MediaResolution | undefined;
+  type: "video";
+  uri?: string | undefined;
 };

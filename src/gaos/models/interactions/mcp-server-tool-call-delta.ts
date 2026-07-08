@@ -11,8 +11,8 @@
  */
 
 export type MCPServerToolCallDelta = {
-  type: "mcp_server_tool_call";
+  arguments: { [k: string]: any };
   name: string;
   server_name: string;
-  arguments: { [k: string]: any };
+  type: "mcp_server_tool_call";
 };

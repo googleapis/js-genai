@@ -18,6 +18,7 @@ export type TurnContent = Array<Content> | string;
  * @deprecated class: This will be removed in a future release, please migrate away from it as soon as possible.
  */
 export type Turn = {
+  content?: Array<Content> | string | undefined;
   /**
    * The originator of this turn. Must be user for input or model for
    *
@@ -25,5 +26,4 @@ export type Turn = {
    * model output.
    */
   role?: string | undefined;
-  content?: Array<Content> | string | undefined;
 };

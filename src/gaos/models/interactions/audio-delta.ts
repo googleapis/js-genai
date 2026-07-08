@@ -26,9 +26,11 @@ export type AudioDeltaMimeType =
   | (string & {});
 
 export type AudioDelta = {
-  type: "audio";
+  /**
+   * The number of audio channels.
+   */
+  channels?: number | undefined;
   data?: string | undefined;
-  uri?: string | undefined;
   mime_type?: AudioDeltaMimeType | undefined;
   /**
    * Deprecated. Use sample_rate instead. The value is ignored.
@@ -40,8 +42,6 @@ export type AudioDelta = {
    * The sample rate of the audio.
    */
   sample_rate?: number | undefined;
-  /**
-   * The number of audio channels.
-   */
-  channels?: number | undefined;
+  type: "audio";
+  uri?: string | undefined;
 };

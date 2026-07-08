@@ -18,7 +18,6 @@
  * ToolResultDelta.type
  */
 export type RetrievalResultDelta = {
-  type: "retrieval_result";
   /**
    * Whether the retrieval resulted in an error.
    */
@@ -27,4 +26,5 @@ export type RetrievalResultDelta = {
    * A signature hash for backend validation.
    */
   signature?: string | undefined;
+  type: "retrieval_result";
 };

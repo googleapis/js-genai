@@ -22,7 +22,6 @@ export type TextResponseFormatMimeType =
  * Configuration for text output format.
  */
 export type TextResponseFormat = {
-  type: "text";
   /**
    * The MIME type of the text output.
    */
@@ -34,4 +33,5 @@ export type TextResponseFormat = {
    * mime_type is application/json.
    */
   schema?: { [k: string]: any } | undefined;
+  type: "text";
 };

@@ -14,15 +14,10 @@
  * A URL citation annotation.
  */
 export type URLCitation = {
-  type: "url_citation";
   /**
-   * The URL.
+   * End of the attributed segment, exclusive.
    */
-  url?: string | undefined;
-  /**
-   * The title of the URL.
-   */
-  title?: string | undefined;
+  end_index?: number | undefined;
   /**
    * Start of segment of the response that is attributed to this source.
    *
@@ -32,7 +27,12 @@ export type URLCitation = {
    */
   start_index?: number | undefined;
   /**
-   * End of the attributed segment, exclusive.
+   * The title of the URL.
    */
-  end_index?: number | undefined;
+  title?: string | undefined;
+  type: "url_citation";
+  /**
+   * The URL.
+   */
+  url?: string | undefined;
 };

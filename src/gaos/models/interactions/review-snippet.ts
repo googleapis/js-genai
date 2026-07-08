@@ -18,6 +18,10 @@
  */
 export type ReviewSnippet = {
   /**
+   * The ID of the review snippet.
+   */
+  review_id?: string | undefined;
+  /**
    * Title of the review.
    */
   title?: string | undefined;
@@ -25,8 +29,4 @@ export type ReviewSnippet = {
    * A link that corresponds to the user review on Google Maps.
    */
   url?: string | undefined;
-  /**
-   * The ID of the review snippet.
-   */
-  review_id?: string | undefined;
 };

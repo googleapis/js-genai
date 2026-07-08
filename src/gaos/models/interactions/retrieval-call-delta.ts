@@ -29,7 +29,6 @@ export type RetrievalCallDeltaRetrievalType =
  * etc. RetrievalType decides which tool is used.
  */
 export type RetrievalCallDelta = {
-  type: "retrieval_call";
   /**
    * The arguments to pass to Retrieval tools.
    */
@@ -42,4 +41,5 @@ export type RetrievalCallDelta = {
    * A signature hash for backend validation.
    */
   signature?: string | undefined;
+  type: "retrieval_call";
 };

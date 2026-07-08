@@ -26,21 +26,21 @@ export type FunctionResultStepResultUnion =
  * Result of a function tool call.
  */
 export type FunctionResultStep = {
-  type: "function_result";
-  /**
-   * The name of the tool that was called.
-   */
-  name?: string | undefined;
-  /**
-   * Whether the tool call resulted in an error.
-   */
-  is_error?: boolean | undefined;
   /**
    * Required. ID to match the ID from the function call block.
    */
   call_id: string;
   /**
+   * Whether the tool call resulted in an error.
+   */
+  is_error?: boolean | undefined;
+  /**
+   * The name of the tool that was called.
+   */
+  name?: string | undefined;
+  /**
    * The result of the tool call.
    */
   result: FunctionResultStepResult | Array<FunctionResultSubcontent> | string;
+  type: "function_result";
 };

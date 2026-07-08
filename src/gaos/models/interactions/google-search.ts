@@ -20,9 +20,9 @@ export type GoogleSearchSearchType =
  * A tool that can be used by the model to search Google.
  */
 export type GoogleSearch = {
-  type: "google_search";
   /**
    * The types of search grounding to enable.
    */
   search_types?: Array<GoogleSearchSearchType> | undefined;
+  type: "google_search";
 };

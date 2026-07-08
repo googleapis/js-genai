@@ -20,12 +20,12 @@ export type FunctionResultDeltaResultUnion =
   | string;
 
 export type FunctionResultDelta = {
-  type: "function_result";
-  name?: string | undefined;
-  is_error?: boolean | undefined;
   /**
    * Required. ID to match the ID from the function call block.
    */
   call_id: string;
+  is_error?: boolean | undefined;
+  name?: string | undefined;
   result: FunctionResultDeltaResult | Array<FunctionResultSubcontent> | string;
+  type: "function_result";
 };

@@ -14,16 +14,6 @@ import { StreamMetadata } from "./stream-metadata.js";
 import { Usage } from "./usage.js";
 
 export type StepStop = {
-  event_type: "step.stop";
-  index: number;
-  /**
-   * Statistics on the interaction request's token usage.
-   */
-  usage?: Usage | undefined;
-  /**
-   * Statistics on the interaction request's token usage.
-   */
-  step_usage?: Usage | undefined;
   /**
    * The event_id token to be used to resume the interaction stream, from
    *
@@ -31,5 +21,15 @@ export type StepStop = {
    * this event.
    */
   event_id?: string | undefined;
+  event_type: "step.stop";
+  index: number;
   metadata?: StreamMetadata | undefined;
+  /**
+   * Statistics on the interaction request's token usage.
+   */
+  step_usage?: Usage | undefined;
+  /**
+   * Statistics on the interaction request's token usage.
+   */
+  usage?: Usage | undefined;
 };

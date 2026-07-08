@@ -14,9 +14,9 @@
  * Config for Rank Service.
  */
 export type Ranking = {
-  ranking_config: "rank_service";
   /**
    * Optional. The model name of the rank service.
    */
   model_name?: string | undefined;
+  ranking_config: "rank_service";
 };

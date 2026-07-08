@@ -16,7 +16,6 @@ import { URLContextCallArguments } from "./url-context-call-arguments.js";
  * URL context call step.
  */
 export type URLContextCallStep = {
-  type: "url_context_call";
   /**
    * The arguments to pass to the URL context.
    */
@@ -29,4 +28,5 @@ export type URLContextCallStep = {
    * A signature hash for backend validation.
    */
   signature?: string | undefined;
+  type: "url_context_call";
 };

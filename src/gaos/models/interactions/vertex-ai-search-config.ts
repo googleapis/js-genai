@@ -15,11 +15,11 @@
  */
 export type VertexAISearchConfig = {
   /**
-   * Optional. Used to specify Vertex AI Search engine.
-   */
-  engine?: string | undefined;
-  /**
    * Optional. Used to specify Vertex AI Search datastores.
    */
   datastores?: Array<string> | undefined;
+  /**
+   * Optional. Used to specify Vertex AI Search engine.
+   */
+  engine?: string | undefined;
 };

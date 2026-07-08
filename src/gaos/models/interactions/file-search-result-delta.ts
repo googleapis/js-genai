@@ -13,10 +13,10 @@
 import { FileSearchResult } from "./file-search-result.js";
 
 export type FileSearchResultDelta = {
-  type: "file_search_result";
   result: Array<FileSearchResult>;
   /**
    * A signature hash for backend validation.
    */
   signature?: string | undefined;
+  type: "file_search_result";
 };

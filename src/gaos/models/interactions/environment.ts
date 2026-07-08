@@ -24,8 +24,6 @@ export type Network = EnvironmentNetworkEgressAllowlist | NetworkEnum;
  * Configuration for a custom environment.
  */
 export type Environment = {
-  type: "remote";
-  sources?: Array<Source> | undefined;
   /**
    * Optional. The environment ID for the interaction. If specified, the request will
    *
@@ -37,4 +35,6 @@ export type Environment = {
    * Network configuration for the environment.
    */
   network?: EnvironmentNetworkEgressAllowlist | NetworkEnum | undefined;
+  sources?: Array<Source> | undefined;
+  type: "remote";
 };

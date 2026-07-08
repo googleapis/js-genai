@@ -26,15 +26,6 @@ export type RetrievalRetrievalType =
  * A tool that can be used by the model to retrieve files.
  */
 export type Retrieval = {
-  type: "retrieval";
-  /**
-   * The types of file retrieval to enable.
-   */
-  retrieval_types?: Array<RetrievalRetrievalType> | undefined;
-  /**
-   * Used to specify configuration for VertexAISearch.
-   */
-  vertex_ai_search_config?: VertexAISearchConfig | undefined;
   /**
    * Used to specify configuration for ExaAISearch.
    */
@@ -47,4 +38,13 @@ export type Retrieval = {
    * Use to specify configuration for RAG Store.
    */
   rag_store_config?: RagStoreConfig | undefined;
+  /**
+   * The types of file retrieval to enable.
+   */
+  retrieval_types?: Array<RetrievalRetrievalType> | undefined;
+  type: "retrieval";
+  /**
+   * Used to specify configuration for VertexAISearch.
+   */
+  vertex_ai_search_config?: VertexAISearchConfig | undefined;
 };

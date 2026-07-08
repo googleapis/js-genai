@@ -34,27 +34,27 @@ export type BaseEnvironment = interactions.Environment | string;
  */
 export type Agent = {
   /**
-   * The unique identifier for the agent.
-   */
-  id?: string | undefined;
-  /**
    * The base agent to extend.
    */
   base_agent?: string | undefined;
   /**
-   * System instruction for the agent.
+   * The environment configuration for the agent.
    */
-  system_instruction?: string | undefined;
+  base_environment?: interactions.Environment | string | undefined;
   /**
    * Agent description for developers to quickly read and understand.
    */
   description?: string | undefined;
   /**
+   * The unique identifier for the agent.
+   */
+  id?: string | undefined;
+  /**
+   * System instruction for the agent.
+   */
+  system_instruction?: string | undefined;
+  /**
    * The tools available to the agent.
    */
   tools?: Array<AgentTool> | undefined;
-  /**
-   * The environment configuration for the agent.
-   */
-  base_environment?: interactions.Environment | string | undefined;
 };

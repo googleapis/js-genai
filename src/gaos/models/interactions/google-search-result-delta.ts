@@ -13,11 +13,11 @@
 import { GoogleSearchResult } from "./google-search-result.js";
 
 export type GoogleSearchResultDelta = {
-  type: "google_search_result";
-  result: Array<GoogleSearchResult>;
   is_error?: boolean | undefined;
+  result: Array<GoogleSearchResult>;
   /**
    * A signature hash for backend validation.
    */
   signature?: string | undefined;
+  type: "google_search_result";
 };

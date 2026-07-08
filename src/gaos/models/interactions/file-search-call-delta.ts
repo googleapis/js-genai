@@ -11,9 +11,9 @@
  */
 
 export type FileSearchCallDelta = {
-  type: "file_search_call";
   /**
    * A signature hash for backend validation.
    */
   signature?: string | undefined;
+  type: "file_search_call";
 };

@@ -11,16 +11,6 @@
  */
 
 /**
- * The MIME type of the image output.
- */
-export type ImageResponseFormatMimeType = "image/jpeg";
-
-/**
- * The delivery mode for the image output.
- */
-export type ImageResponseFormatDelivery = "inline" | "uri" | (string & {});
-
-/**
  * The aspect ratio for the image output.
  */
 export type ImageResponseFormatAspectRatio =
@@ -41,6 +31,11 @@ export type ImageResponseFormatAspectRatio =
   | (string & {});
 
 /**
+ * The delivery mode for the image output.
+ */
+export type ImageResponseFormatDelivery = "inline" | "uri" | (string & {});
+
+/**
  * The size of the image output.
  */
 export type ImageResponseFormatImageSize =
@@ -51,24 +46,29 @@ export type ImageResponseFormatImageSize =
   | (string & {});
 
 /**
+ * The MIME type of the image output.
+ */
+export type ImageResponseFormatMimeType = "image/jpeg";
+
+/**
  * Configuration for image output format.
  */
 export type ImageResponseFormat = {
-  type: "image";
-  /**
-   * The MIME type of the image output.
-   */
-  mime_type?: ImageResponseFormatMimeType | undefined;
-  /**
-   * The delivery mode for the image output.
-   */
-  delivery?: ImageResponseFormatDelivery | undefined;
   /**
    * The aspect ratio for the image output.
    */
   aspect_ratio?: ImageResponseFormatAspectRatio | undefined;
   /**
+   * The delivery mode for the image output.
+   */
+  delivery?: ImageResponseFormatDelivery | undefined;
+  /**
    * The size of the image output.
    */
   image_size?: ImageResponseFormatImageSize | undefined;
+  /**
+   * The MIME type of the image output.
+   */
+  mime_type?: ImageResponseFormatMimeType | undefined;
+  type: "image";
 };

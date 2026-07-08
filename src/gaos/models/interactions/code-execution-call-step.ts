@@ -16,7 +16,6 @@ import { CodeExecutionCallArguments } from "./code-execution-call-arguments.js";
  * Code execution call step.
  */
 export type CodeExecutionCallStep = {
-  type: "code_execution_call";
   /**
    * The arguments to pass to the code execution.
    */
@@ -29,4 +28,5 @@ export type CodeExecutionCallStep = {
    * A signature hash for backend validation.
    */
   signature?: string | undefined;
+  type: "code_execution_call";
 };

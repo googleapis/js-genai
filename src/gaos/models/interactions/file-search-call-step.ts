@@ -14,7 +14,6 @@
  * File Search call step.
  */
 export type FileSearchCallStep = {
-  type: "file_search_call";
   /**
    * Required. A unique ID for this specific tool call.
    */
@@ -23,4 +22,5 @@ export type FileSearchCallStep = {
    * A signature hash for backend validation.
    */
   signature?: string | undefined;
+  type: "file_search_call";
 };

@@ -11,24 +11,31 @@
  */
 
 /**
- * The delivery mode for the video output.
- */
-export type VideoResponseFormatDelivery = "inline" | "uri" | (string & {});
-
-/**
  * The aspect ratio for the video output.
  */
 export type VideoResponseFormatAspectRatio = "16:9" | "9:16" | (string & {});
 
 /**
+ * The delivery mode for the video output.
+ */
+export type VideoResponseFormatDelivery = "inline" | "uri" | (string & {});
+
+/**
  * Configuration for video output format.
  */
 export type VideoResponseFormat = {
-  type: "video";
+  /**
+   * The aspect ratio for the video output.
+   */
+  aspect_ratio?: VideoResponseFormatAspectRatio | undefined;
   /**
    * The delivery mode for the video output.
    */
   delivery?: VideoResponseFormatDelivery | undefined;
+  /**
+   * The duration for the video output.
+   */
+  duration?: string | undefined;
   /**
    * The GCS URI to store the video output. Required for Vertex if delivery mode
    *
@@ -36,12 +43,5 @@ export type VideoResponseFormat = {
    * is URI.
    */
   gcs_uri?: string | undefined;
-  /**
-   * The aspect ratio for the video output.
-   */
-  aspect_ratio?: VideoResponseFormatAspectRatio | undefined;
-  /**
-   * The duration for the video output.
-   */
-  duration?: string | undefined;
+  type: "video";
 };

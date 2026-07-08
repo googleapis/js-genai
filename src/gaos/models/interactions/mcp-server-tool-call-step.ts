@@ -14,15 +14,6 @@
  * MCPServer tool call step.
  */
 export type MCPServerToolCallStep = {
-  type: "mcp_server_tool_call";
-  /**
-   * Required. The name of the tool which was called.
-   */
-  name: string;
-  /**
-   * Required. The name of the used MCP server.
-   */
-  server_name: string;
   /**
    * Required. The JSON object of arguments for the function.
    */
@@ -31,4 +22,13 @@ export type MCPServerToolCallStep = {
    * Required. A unique ID for this specific tool call.
    */
   id: string;
+  /**
+   * Required. The name of the tool which was called.
+   */
+  name: string;
+  /**
+   * Required. The name of the used MCP server.
+   */
+  server_name: string;
+  type: "mcp_server_tool_call";
 };

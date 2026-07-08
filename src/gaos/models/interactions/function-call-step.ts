@@ -14,11 +14,6 @@
  * A function tool call step.
  */
 export type FunctionCallStep = {
-  type: "function_call";
-  /**
-   * Required. The name of the tool to call.
-   */
-  name: string;
   /**
    * Required. The arguments to pass to the function.
    */
@@ -27,4 +22,9 @@ export type FunctionCallStep = {
    * Required. A unique ID for this specific tool call.
    */
   id: string;
+  /**
+   * Required. The name of the tool to call.
+   */
+  name: string;
+  type: "function_call";
 };

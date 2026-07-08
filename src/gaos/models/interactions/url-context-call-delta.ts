@@ -13,7 +13,6 @@
 import { URLContextCallArguments } from "./url-context-call-arguments.js";
 
 export type URLContextCallDelta = {
-  type: "url_context_call";
   /**
    * The arguments to pass to the URL context.
    */
@@ -22,4 +21,5 @@ export type URLContextCallDelta = {
    * A signature hash for backend validation.
    */
   signature?: string | undefined;
+  type: "url_context_call";
 };

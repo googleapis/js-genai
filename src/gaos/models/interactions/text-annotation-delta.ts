@@ -13,9 +13,9 @@
 import { Annotation } from "./annotation.js";
 
 export type TextAnnotationDelta = {
-  type: "text_annotation_delta";
   /**
    * Citation information for model-generated content.
    */
   annotations?: Array<Annotation> | undefined;
+  type: "text_annotation_delta";
 };

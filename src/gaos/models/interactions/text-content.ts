@@ -16,13 +16,13 @@ import { Annotation } from "./annotation.js";
  * A text content block.
  */
 export type TextContent = {
-  type: "text";
-  /**
-   * Required. The text content.
-   */
-  text: string;
   /**
    * Citation information for model-generated content.
    */
   annotations?: Array<Annotation> | undefined;
+  /**
+   * Required. The text content.
+   */
+  text: string;
+  type: "text";
 };

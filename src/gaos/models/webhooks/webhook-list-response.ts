@@ -17,14 +17,14 @@ import { Webhook } from "./webhook.js";
  */
 export type WebhookListResponse = {
   /**
-   * The webhooks.
-   */
-  webhooks?: Array<Webhook> | undefined;
-  /**
    * A token, which can be sent as `page_token` to retrieve the next page.
    *
    * @remarks
    * If this field is omitted, there are no subsequent pages.
    */
   next_page_token?: string | undefined;
+  /**
+   * The webhooks.
+   */
+  webhooks?: Array<Webhook> | undefined;
 };

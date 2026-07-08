@@ -28,31 +28,13 @@ export type ToolChoice = ToolChoiceType | ToolChoiceConfig;
  */
 export type GenerationConfig = {
   /**
-   * Controls the randomness of the output.
+   * Penalizes tokens based on their frequency in the generated text.
+   *
+   * @remarks
+   * A positive value helps to reduce the repetition of words and phrases.
+   * Valid values can range from [-2.0, 2.0].
    */
-  temperature?: number | undefined;
-  /**
-   * The maximum cumulative probability of tokens to consider when sampling.
-   */
-  top_p?: number | undefined;
-  /**
-   * Seed used in decoding for reproducibility.
-   */
-  seed?: number | undefined;
-  /**
-   * A list of character sequences that will stop output interaction.
-   */
-  stop_sequences?: Array<string> | undefined;
-  thinking_level?: ThinkingLevel | undefined;
-  thinking_summaries?: ThinkingSummaries | undefined;
-  /**
-   * The maximum number of tokens to include in the response.
-   */
-  max_output_tokens?: number | undefined;
-  /**
-   * Configuration for speech interaction.
-   */
-  speech_config?: Array<SpeechConfig> | undefined;
+  frequency_penalty?: number | undefined;
   /**
    * The configuration for image interaction.
    *
@@ -60,9 +42,9 @@ export type GenerationConfig = {
    */
   image_config?: ImageConfig | undefined;
   /**
-   * Configuration options for video generation.
+   * The maximum number of tokens to include in the response.
    */
-  video_config?: VideoConfig | undefined;
+  max_output_tokens?: number | undefined;
   /**
    * Penalizes tokens that have already appeared in the generated
    *
@@ -72,15 +54,33 @@ export type GenerationConfig = {
    */
   presence_penalty?: number | undefined;
   /**
-   * Penalizes tokens based on their frequency in the generated text.
-   *
-   * @remarks
-   * A positive value helps to reduce the repetition of words and phrases.
-   * Valid values can range from [-2.0, 2.0].
+   * Seed used in decoding for reproducibility.
    */
-  frequency_penalty?: number | undefined;
+  seed?: number | undefined;
+  /**
+   * Configuration for speech interaction.
+   */
+  speech_config?: Array<SpeechConfig> | undefined;
+  /**
+   * A list of character sequences that will stop output interaction.
+   */
+  stop_sequences?: Array<string> | undefined;
+  /**
+   * Controls the randomness of the output.
+   */
+  temperature?: number | undefined;
+  thinking_level?: ThinkingLevel | undefined;
+  thinking_summaries?: ThinkingSummaries | undefined;
   /**
    * The tool choice configuration.
    */
   tool_choice?: ToolChoiceType | ToolChoiceConfig | undefined;
+  /**
+   * The maximum cumulative probability of tokens to consider when sampling.
+   */
+  top_p?: number | undefined;
+  /**
+   * Configuration options for video generation.
+   */
+  video_config?: VideoConfig | undefined;
 };
