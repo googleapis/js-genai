@@ -5,10 +5,6 @@
 ## [2.11.0](https://github.com/googleapis/js-genai/compare/v2.10.0...v2.11.0) (2026-07-09)
 
 
-### ⚠ BREAKING CHANGES
-
-* **interactions:** Not supporting `cached_content`, `presence_penalty`, `frequency_penalty`.
-
 ### Features
 
 * Add environment_id in network config ([85fe0a5](https://github.com/googleapis/js-genai/commit/85fe0a5bef70c507ba8641016eca5f10359cbac1))
@@ -22,12 +18,6 @@
 ### Bug Fixes
 
 * **interactions:** accept both dict and list[dict] for transform ([67d2f68](https://github.com/googleapis/js-genai/commit/67d2f683643946e512875065f98bf9b8d628bc61))
-
-
-### Miscellaneous Chores
-
-* release 2.11.0 ([43c5380](https://github.com/googleapis/js-genai/commit/43c53804bf01d0f4af960c4c55efb2690b901087))
-* update the release.txt ([3bf5090](https://github.com/googleapis/js-genai/commit/3bf5090a86104ed73bb7d68207a2a3f7481b9c03))
 
 
 ### Code Refactoring
