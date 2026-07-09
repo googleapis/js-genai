@@ -2539,6 +2539,10 @@ export namespace Interactions {
         // (undocumented)
         export type Result = Result$2;
     }
+    // Warning: (ae-forgotten-export) The symbol "HarmCategory$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type HarmCategory = HarmCategory$;
     // Warning: (ae-forgotten-export) The symbol "ImageConfig$" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -2690,6 +2694,10 @@ export namespace Interactions {
     //
     // (undocumented)
     export type RetrievalResultDelta = RetrievalResultDelta$;
+    // Warning: (ae-forgotten-export) The symbol "SafetySetting$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type SafetySetting = SafetySetting$;
     // Warning: (ae-forgotten-export) The symbol "SpeechConfig$" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)

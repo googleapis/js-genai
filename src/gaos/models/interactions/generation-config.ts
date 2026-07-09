@@ -28,14 +28,6 @@ export type ToolChoice = ToolChoiceType | ToolChoiceConfig;
  */
 export type GenerationConfig = {
   /**
-   * Penalizes tokens based on their frequency in the generated text.
-   *
-   * @remarks
-   * A positive value helps to reduce the repetition of words and phrases.
-   * Valid values can range from [-2.0, 2.0].
-   */
-  frequency_penalty?: number | undefined;
-  /**
    * The configuration for image interaction.
    *
    * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
@@ -45,14 +37,6 @@ export type GenerationConfig = {
    * The maximum number of tokens to include in the response.
    */
   max_output_tokens?: number | undefined;
-  /**
-   * Penalizes tokens that have already appeared in the generated
-   *
-   * @remarks
-   * text. A positive value encourages the model to generate more diverse and
-   * less repetitive text. Valid values can range from [-2.0, 2.0].
-   */
-  presence_penalty?: number | undefined;
   /**
    * Seed used in decoding for reproducibility.
    */

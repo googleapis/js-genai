@@ -65,6 +65,7 @@ import type { GoogleSearchResultStep as GoogleSearchResultStep$Import } from "./
 import type { GoogleSearchResult as GoogleSearchResult$Import } from "./models/interactions/google-search-result.js";
 import type { GoogleSearch as GoogleSearch$Import } from "./models/interactions/google-search.js";
 import type { GroundingToolCount as GroundingToolCount$Import } from "./models/interactions/grounding-tool-count.js";
+import type { HarmCategory as HarmCategory$Import } from "./models/interactions/harm-category.js";
 import type { ImageConfig as ImageConfig$Import } from "./models/interactions/image-config.js";
 import type { ImageContent as ImageContent$Import } from "./models/interactions/image-content.js";
 import type { ImageDelta as ImageDelta$Import } from "./models/interactions/image-delta.js";
@@ -88,6 +89,7 @@ import type { RetrievalCallDelta as RetrievalCallDelta$Import } from "./models/i
 import type { RetrievalResultDelta as RetrievalResultDelta$Import } from "./models/interactions/retrieval-result-delta.js";
 import type { Retrieval as Retrieval$Import } from "./models/interactions/retrieval.js";
 import type { ReviewSnippet as ReviewSnippet$Import } from "./models/interactions/review-snippet.js";
+import type { SafetySetting as SafetySetting$Import } from "./models/interactions/safety-setting.js";
 import type { Source as Source$Import } from "./models/interactions/source.js";
 import type { SpeechConfig as SpeechConfig$Import } from "./models/interactions/speech-config.js";
 import type { Status as Status$Import } from "./models/interactions/status.js";
@@ -192,6 +194,7 @@ type GoogleSearchCallArguments$ = GoogleSearchCallArguments$Import;
 type GoogleSearchCallStep$ = GoogleSearchCallStep$Import;
 type GoogleSearchResult$ = GoogleSearchResult$Import;
 type GoogleSearchResultStep$ = GoogleSearchResultStep$Import;
+type HarmCategory$ = HarmCategory$Import;
 type ImageConfig$ = ImageConfig$Import;
 type ImageContent$ = ImageContent$Import;
 type ImageResponseFormat$ = ImageResponseFormat$Import;
@@ -219,6 +222,7 @@ type PlaceCitation$ = PlaceCitation$Import;
 type RetrievalCallArguments$ = RetrievalCallArguments$Import;
 type RetrievalCallDelta$ = RetrievalCallDelta$Import;
 type RetrievalResultDelta$ = RetrievalResultDelta$Import;
+type SafetySetting$ = SafetySetting$Import;
 type SpeechConfig$ = SpeechConfig$Import;
 type Step$ = Step$Import;
 type StepDelta$ = StepDelta$Import;
@@ -384,6 +388,7 @@ export type GoogleSearchCallStep = GoogleSearchCallStep$;
 export type GoogleSearchResult = GoogleSearchResult$;
 export type GoogleSearchResultStep = GoogleSearchResultStep$;
 export type GroundingToolCount = GroundingToolCount$;
+export type HarmCategory = HarmCategory$;
 export type Image = Image$;
 export type ImageConfig = ImageConfig$;
 export type ImageContent = ImageContent$;
@@ -421,6 +426,7 @@ export type RetrievalCallDelta = RetrievalCallDelta$;
 export type RetrievalResultDelta = RetrievalResultDelta$;
 export type ReviewSnippet = ReviewSnippet$;
 export type RotateSigningSecretRequest = RotateSigningSecretRequest$;
+export type SafetySetting = SafetySetting$;
 export type SigningSecret = SigningSecret$;
 export type Source = Source$;
 export type SpeechConfig = SpeechConfig$;
@@ -518,6 +524,7 @@ export declare namespace Interactions {
   export interface GoogleSearchCallStep extends GoogleSearchCallStep$ {}
   export type GoogleSearchResult = GoogleSearchResult$;
   export interface GoogleSearchResultStep extends GoogleSearchResultStep$ {}
+  export type HarmCategory = HarmCategory$;
   export type ImageConfig = ImageConfig$;
   export type ImageContent = ImageContent$;
   export type ImageResponseFormat = ImageResponseFormat$;
@@ -544,6 +551,7 @@ export declare namespace Interactions {
   export type RetrievalCallArguments = RetrievalCallArguments$;
   export interface RetrievalCallDelta extends RetrievalCallDelta$ {}
   export type RetrievalResultDelta = RetrievalResultDelta$;
+  export type SafetySetting = SafetySetting$;
   export type SpeechConfig = SpeechConfig$;
   export type Step = Step$;
   export interface StepDelta extends StepDelta$ {}

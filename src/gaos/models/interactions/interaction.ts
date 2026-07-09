@@ -21,6 +21,7 @@ import { InteractionsInput } from "./interactions-input.js";
 import { Model } from "./model.js";
 import { ResponseFormat } from "./response-format.js";
 import { ResponseModality } from "./response-modality.js";
+import { SafetySetting } from "./safety-setting.js";
 import { ServiceTier } from "./service-tier.js";
 import { Step } from "./step.js";
 import { Tool } from "./tool.js";
@@ -160,6 +161,14 @@ export type Interaction = {
    * Configuration parameters for the agent interaction.
    */
   agent_config?: DynamicAgentConfig | DeepResearchAgentConfig | undefined;
+  /**
+   * Safety settings for the interaction.
+   */
+  safety_settings?: Array<SafetySetting> | undefined;
+  /**
+   * The labels with user-defined metadata for the request.
+   */
+  labels?: { [k: string]: string } | undefined;
   /**
    * The input for the interaction.
    */

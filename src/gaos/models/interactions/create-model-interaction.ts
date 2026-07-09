@@ -16,6 +16,7 @@ import { InteractionsInput } from "./interactions-input.js";
 import { Model } from "./model.js";
 import { ResponseFormat } from "./response-format.js";
 import { ResponseModality } from "./response-modality.js";
+import { SafetySetting } from "./safety-setting.js";
 import { ServiceTier } from "./service-tier.js";
 import { Tool } from "./tool.js";
 import { WebhookConfig } from "./webhook-config.js";
@@ -101,6 +102,14 @@ export type CreateModelInteraction = {
    * `projects/{project}/locations/{location}/cachedContents/{cachedContent}`
    */
   cached_content?: string | undefined;
+  /**
+   * Safety settings for the interaction.
+   */
+  safety_settings?: Array<SafetySetting> | undefined;
+  /**
+   * The labels with user-defined metadata for the request.
+   */
+  labels?: { [k: string]: string } | undefined;
   /**
    * The input for the interaction.
    */
