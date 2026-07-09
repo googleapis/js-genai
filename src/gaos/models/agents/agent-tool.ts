@@ -19,4 +19,5 @@ export type AgentTool =
   | interactions.CodeExecution
   | interactions.GoogleSearch
   | interactions.URLContext
-  | interactions.MCPServer;
+  | interactions.MCPServer
+  | interactions.FunctionT;
