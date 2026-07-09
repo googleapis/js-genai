@@ -45,6 +45,18 @@ export function audioTranscriptionConfigToMldev(
     );
   }
 
+  const fromWordTimestamp = common.getValueByPath(fromObject, [
+    'wordTimestamp',
+  ]);
+  if (fromWordTimestamp != null) {
+    common.setValueByPath(toObject, ['wordTimestamp'], fromWordTimestamp);
+  }
+
+  const fromDiarization = common.getValueByPath(fromObject, ['diarization']);
+  if (fromDiarization != null) {
+    common.setValueByPath(toObject, ['diarization'], fromDiarization);
+  }
+
   return toObject;
 }
 
@@ -721,6 +733,17 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
   const fromPartMetadata = common.getValueByPath(fromObject, ['partMetadata']);
   if (fromPartMetadata != null) {
     common.setValueByPath(toObject, ['partMetadata'], fromPartMetadata);
+  }
+
+  const fromAudioTranscription = common.getValueByPath(fromObject, [
+    'audioTranscription',
+  ]);
+  if (fromAudioTranscription != null) {
+    common.setValueByPath(
+      toObject,
+      ['audioTranscription'],
+      fromAudioTranscription,
+    );
   }
 
   return toObject;
