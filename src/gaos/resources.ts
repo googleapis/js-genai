@@ -130,7 +130,6 @@ import type {
   CancelInteractionByIdParams as CancelInteractionByIdParams$Import,
   CreateAgentParams as CreateAgentParams$Import,
   CreateInteractionParams as CreateInteractionParams$Import,
-  CreateTriggerParams as CreateTriggerParams$Import,
   CreateWebhookParams as CreateWebhookParams$Import,
   DeleteAgentParams as DeleteAgentParams$Import,
   DeleteInteractionParams as DeleteInteractionParams$Import,
@@ -152,9 +151,8 @@ import type {
 } from "./models/operations/method-params.js";
 import type { ListTriggerExecutionsResponse as ListTriggerExecutionsResponse$Import } from "./models/triggers/list-trigger-executions-response.js";
 import type { ListTriggersResponse as ListTriggersResponse$Import } from "./models/triggers/list-triggers-response.js";
+import type { TriggerCreateParams as TriggerCreateParams$Import } from "./models/triggers/trigger-create-params.js";
 import type { TriggerExecution as TriggerExecution$Import } from "./models/triggers/trigger-execution.js";
-import type { TriggerInput as TriggerInput$Import } from "./models/triggers/trigger-input.js";
-import type { TriggerInteractionRequest as TriggerInteractionRequest$Import } from "./models/triggers/trigger-interaction-request.js";
 import type { TriggerUpdate as TriggerUpdate$Import } from "./models/triggers/trigger-update.js";
 import type { Trigger as Trigger$Import } from "./models/triggers/trigger.js";
 import type { PingWebhookRequest as PingWebhookRequest$Import } from "./models/webhooks/ping-webhook-request.js";
@@ -323,21 +321,18 @@ type ToolUseTokensByModality$ = ModalityTokens$Import;
 type ListTriggerExecutionsResponse$ = ListTriggerExecutionsResponse$Import;
 type ListTriggersResponse$ = ListTriggersResponse$Import;
 type Trigger$ = Trigger$Import;
-type TriggerCreateParams$ = CreateTriggerParams$Import;
+type TriggerCreateParams$ = TriggerCreateParams$Import;
 type TriggerDeleteParams$ = DeleteTriggerParams$Import;
 type TriggerDeleteResponse$ = Empty$Import;
 type TriggerExecution$ = TriggerExecution$Import;
 type TriggerGetParams$ = GetTriggerParams$Import;
-type TriggerInteractionRequest$ = TriggerInteractionRequest$Import;
 type TriggerListExecutionsParams$ = ListTriggerExecutionsParams$Import;
 type TriggerListExecutionsResponse$ = ListTriggerExecutionsResponse$Import;
 type TriggerListParams$ = ListTriggersParams$Import;
 type TriggerListResponse$ = ListTriggersResponse$Import;
-type TriggerParam$ = TriggerInput$Import;
 type TriggerRunParams$ = RunTriggerParams$Import;
 type TriggerUpdate$ = TriggerUpdate$Import;
 type TriggerUpdateParams$ = UpdateTriggerParams$Import;
-type TriggerInput$ = TriggerInput$Import;
 type PingWebhookRequest$ = PingWebhookRequest$Import;
 type RotateSigningSecretRequest$ = RotateSigningSecretRequest$Import;
 type SigningSecret$ = SigningSecret$Import;
@@ -486,13 +481,10 @@ export type TriggerDeleteParams = TriggerDeleteParams$;
 export type TriggerDeleteResponse = TriggerDeleteResponse$;
 export type TriggerExecution = TriggerExecution$;
 export type TriggerGetParams = TriggerGetParams$;
-export type TriggerInput = TriggerInput$;
-export type TriggerInteractionRequest = TriggerInteractionRequest$;
 export type TriggerListExecutionsParams = TriggerListExecutionsParams$;
 export type TriggerListExecutionsResponse = TriggerListExecutionsResponse$;
 export type TriggerListParams = TriggerListParams$;
 export type TriggerListResponse = TriggerListResponse$;
-export type TriggerParam = TriggerParam$;
 export type TriggerRunParams = TriggerRunParams$;
 export type TriggerUpdate = TriggerUpdate$;
 export type TriggerUpdateParams = TriggerUpdateParams$;
@@ -750,13 +742,10 @@ export declare namespace Triggers {
   export type TriggerDeleteResponse = TriggerDeleteResponse$;
   export type TriggerExecution = TriggerExecution$;
   export type TriggerGetParams = TriggerGetParams$;
-  export type TriggerInput = TriggerInput$;
-  export type TriggerInteractionRequest = TriggerInteractionRequest$;
   export type TriggerListExecutionsParams = TriggerListExecutionsParams$;
   export type TriggerListExecutionsResponse = TriggerListExecutionsResponse$;
   export type TriggerListParams = TriggerListParams$;
   export type TriggerListResponse = TriggerListResponse$;
-  export type TriggerParam = TriggerParam$;
   export type TriggerRunParams = TriggerRunParams$;
   export type TriggerUpdate = TriggerUpdate$;
   export type TriggerUpdateParams = TriggerUpdateParams$;

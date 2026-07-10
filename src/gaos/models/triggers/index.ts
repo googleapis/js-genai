@@ -12,8 +12,7 @@
 
 export * from "./list-trigger-executions-response.js";
 export * from "./list-triggers-response.js";
+export * from "./trigger-create-params.js";
 export * from "./trigger-execution.js";
-export * from "./trigger-input.js";
-export * from "./trigger-interaction-request.js";
 export * from "./trigger-update.js";
 export * from "./trigger.js";

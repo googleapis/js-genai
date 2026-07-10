@@ -24,5 +24,5 @@ export type CreateTriggerRequest = {
    * Which version of the API to use.
    */
   api_version?: string | undefined;
-  body: triggers.TriggerInput;
+  body: triggers.TriggerCreateParams;
 };

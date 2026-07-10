@@ -36,7 +36,7 @@ import { Result } from "../types/fp.js";
  */
 export function triggersCreate(
   client: GoogleGenAICore,
-  body: triggers.TriggerInput,
+  body: triggers.TriggerCreateParams,
   api_version?: string | undefined,
   options?: RequestOptions,
 ): APIPromise<
@@ -60,7 +60,7 @@ export function triggersCreate(
 
 async function $do(
   client: GoogleGenAICore,
-  body: triggers.TriggerInput,
+  body: triggers.TriggerCreateParams,
   api_version?: string | undefined,
   options?: RequestOptions,
 ): Promise<
