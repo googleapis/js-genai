@@ -130,33 +130,19 @@ import type {
   CancelInteractionByIdParams as CancelInteractionByIdParams$Import,
   CreateAgentParams as CreateAgentParams$Import,
   CreateInteractionParams as CreateInteractionParams$Import,
-  CreateTriggerParams as CreateTriggerParams$Import,
   CreateWebhookParams as CreateWebhookParams$Import,
   DeleteAgentParams as DeleteAgentParams$Import,
   DeleteInteractionParams as DeleteInteractionParams$Import,
-  DeleteTriggerParams as DeleteTriggerParams$Import,
   DeleteWebhookParams as DeleteWebhookParams$Import,
   GetAgentParams as GetAgentParams$Import,
   GetInteractionByIdParams as GetInteractionByIdParams$Import,
   GetInteractionByIdParamsNonStreaming
     as GetInteractionByIdParamsNonStreaming$Import,
   GetInteractionByIdParamsStreaming as GetInteractionByIdParamsStreaming$Import,
-  GetTriggerParams as GetTriggerParams$Import,
   GetWebhookParams as GetWebhookParams$Import,
   ListAgentsParams as ListAgentsParams$Import,
-  ListTriggerExecutionsParams as ListTriggerExecutionsParams$Import,
-  ListTriggersParams as ListTriggersParams$Import,
   ListWebhooksParams as ListWebhooksParams$Import,
-  RunTriggerParams as RunTriggerParams$Import,
-  UpdateTriggerParams as UpdateTriggerParams$Import,
 } from "./models/operations/method-params.js";
-import type { ListTriggerExecutionsResponse as ListTriggerExecutionsResponse$Import } from "./models/triggers/list-trigger-executions-response.js";
-import type { ListTriggersResponse as ListTriggersResponse$Import } from "./models/triggers/list-triggers-response.js";
-import type { TriggerExecution as TriggerExecution$Import } from "./models/triggers/trigger-execution.js";
-import type { TriggerInput as TriggerInput$Import } from "./models/triggers/trigger-input.js";
-import type { TriggerInteractionRequest as TriggerInteractionRequest$Import } from "./models/triggers/trigger-interaction-request.js";
-import type { TriggerUpdate as TriggerUpdate$Import } from "./models/triggers/trigger-update.js";
-import type { Trigger as Trigger$Import } from "./models/triggers/trigger.js";
 import type { PingWebhookRequest as PingWebhookRequest$Import } from "./models/webhooks/ping-webhook-request.js";
 import type { RotateSigningSecretRequest as RotateSigningSecretRequest$Import } from "./models/webhooks/rotate-signing-secret-request.js";
 import type { SigningSecret as SigningSecret$Import } from "./models/webhooks/signing-secret.js";
@@ -320,24 +306,6 @@ type GroundingToolCount$ = GroundingToolCount$Import;
 type InputTokensByModality$ = ModalityTokens$Import;
 type OutputTokensByModality$ = ModalityTokens$Import;
 type ToolUseTokensByModality$ = ModalityTokens$Import;
-type ListTriggerExecutionsResponse$ = ListTriggerExecutionsResponse$Import;
-type ListTriggersResponse$ = ListTriggersResponse$Import;
-type Trigger$ = Trigger$Import;
-type TriggerCreateParams$ = CreateTriggerParams$Import;
-type TriggerDeleteParams$ = DeleteTriggerParams$Import;
-type TriggerDeleteResponse$ = Empty$Import;
-type TriggerExecution$ = TriggerExecution$Import;
-type TriggerGetParams$ = GetTriggerParams$Import;
-type TriggerInteractionRequest$ = TriggerInteractionRequest$Import;
-type TriggerListExecutionsParams$ = ListTriggerExecutionsParams$Import;
-type TriggerListExecutionsResponse$ = ListTriggerExecutionsResponse$Import;
-type TriggerListParams$ = ListTriggersParams$Import;
-type TriggerListResponse$ = ListTriggersResponse$Import;
-type TriggerParam$ = TriggerInput$Import;
-type TriggerRunParams$ = RunTriggerParams$Import;
-type TriggerUpdate$ = TriggerUpdate$Import;
-type TriggerUpdateParams$ = UpdateTriggerParams$Import;
-type TriggerInput$ = TriggerInput$Import;
 type PingWebhookRequest$ = PingWebhookRequest$Import;
 type RotateSigningSecretRequest$ = RotateSigningSecretRequest$Import;
 type SigningSecret$ = SigningSecret$Import;
@@ -439,8 +407,6 @@ export type InteractionGetParamsNonStreaming =
 export type InteractionGetParamsStreaming = InteractionGetParamsStreaming$;
 export type InteractionSSEEvent = InteractionSSEEvent$;
 export type InteractionStatusUpdate = InteractionStatusUpdate$;
-export type ListTriggerExecutionsResponse = ListTriggerExecutionsResponse$;
-export type ListTriggersResponse = ListTriggersResponse$;
 export type MCPServer = MCPServer$;
 export type MCPServerToolCall = MCPServerToolCall$;
 export type MCPServerToolCallStep = MCPServerToolCallStep$;
@@ -480,22 +446,6 @@ export type Tool = Tool$;
 export type ToolChoiceConfig = ToolChoiceConfig$;
 export type ToolChoiceType = ToolChoiceType$;
 export type ToolUseTokensByModality = ToolUseTokensByModality$;
-export type Trigger = Trigger$;
-export type TriggerCreateParams = TriggerCreateParams$;
-export type TriggerDeleteParams = TriggerDeleteParams$;
-export type TriggerDeleteResponse = TriggerDeleteResponse$;
-export type TriggerExecution = TriggerExecution$;
-export type TriggerGetParams = TriggerGetParams$;
-export type TriggerInput = TriggerInput$;
-export type TriggerInteractionRequest = TriggerInteractionRequest$;
-export type TriggerListExecutionsParams = TriggerListExecutionsParams$;
-export type TriggerListExecutionsResponse = TriggerListExecutionsResponse$;
-export type TriggerListParams = TriggerListParams$;
-export type TriggerListResponse = TriggerListResponse$;
-export type TriggerParam = TriggerParam$;
-export type TriggerRunParams = TriggerRunParams$;
-export type TriggerUpdate = TriggerUpdate$;
-export type TriggerUpdateParams = TriggerUpdateParams$;
 export type URLCitation = URLCitation$;
 export type URLContext = URLContext$;
 export type URLContextCall = URLContextCall$;
@@ -740,26 +690,6 @@ export declare namespace Interactions {
     export type OutputTokensByModality = OutputTokensByModality$;
     export type ToolUseTokensByModality = ToolUseTokensByModality$;
   }
-}
-export declare namespace Triggers {
-  export type ListTriggerExecutionsResponse = ListTriggerExecutionsResponse$;
-  export type ListTriggersResponse = ListTriggersResponse$;
-  export type Trigger = Trigger$;
-  export type TriggerCreateParams = TriggerCreateParams$;
-  export type TriggerDeleteParams = TriggerDeleteParams$;
-  export type TriggerDeleteResponse = TriggerDeleteResponse$;
-  export type TriggerExecution = TriggerExecution$;
-  export type TriggerGetParams = TriggerGetParams$;
-  export type TriggerInput = TriggerInput$;
-  export type TriggerInteractionRequest = TriggerInteractionRequest$;
-  export type TriggerListExecutionsParams = TriggerListExecutionsParams$;
-  export type TriggerListExecutionsResponse = TriggerListExecutionsResponse$;
-  export type TriggerListParams = TriggerListParams$;
-  export type TriggerListResponse = TriggerListResponse$;
-  export type TriggerParam = TriggerParam$;
-  export type TriggerRunParams = TriggerRunParams$;
-  export type TriggerUpdate = TriggerUpdate$;
-  export type TriggerUpdateParams = TriggerUpdateParams$;
 }
 export declare namespace Webhooks {
   export type PingWebhookRequest = PingWebhookRequest$;
