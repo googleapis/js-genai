@@ -2,28 +2,6 @@
 
 
 
-## [2.11.0](https://github.com/googleapis/js-genai/compare/v2.10.0...v2.11.0) (2026-07-09)
-
-
-### Features
-
-* Add environment_id in network config ([85fe0a5](https://github.com/googleapis/js-genai/commit/85fe0a5bef70c507ba8641016eca5f10359cbac1))
-* Add response_format and Translation_config in GenerationConfig ([3f3b7bc](https://github.com/googleapis/js-genai/commit/3f3b7bc5179d0252470e7a6e87519ff894464a7e))
-* add retrieval result step and new fields to maps and search results ([ecfdc69](https://github.com/googleapis/js-genai/commit/ecfdc69cffe071e5841c562cacac0d4574a86303))
-* Add Tool.exa_ai_search for Gemini Enterprise API ([3f3b7bc](https://github.com/googleapis/js-genai/commit/3f3b7bc5179d0252470e7a6e87519ff894464a7e))
-* support Function declarations during Agent Creation ([824badf](https://github.com/googleapis/js-genai/commit/824badf72b009e72696e3ce5bd39d99e6f17888c))
-* voice consent signature types across all SDK languages. ([5fb5354](https://github.com/googleapis/js-genai/commit/5fb5354de34e8fe394c92ad279bd07e756328005))
-
-
-### Bug Fixes
-
-* **interactions:** accept both dict and list[dict] for transform ([67d2f68](https://github.com/googleapis/js-genai/commit/67d2f683643946e512875065f98bf9b8d628bc61))
-
-
-### Code Refactoring
-
-* **interactions:** remove cached_content, presence_penalty, and frequency_penalty; expose safety_settings and labels ([0f414be](https://github.com/googleapis/js-genai/commit/0f414be2babac4e5d94a23a1880b898cfc5919d4))
-
 ## [2.10.0](https://github.com/googleapis/js-genai/compare/v2.9.0...v2.10.0) (2026-06-24)
 
 

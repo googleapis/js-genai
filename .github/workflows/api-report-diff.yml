@@ -1,0 +1,128 @@
+name: API Report Diff
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches: [ 'main' ]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  api-diff:
+    if: startsWith(github.head_ref, 'release-please--')
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout PR Branch
+      uses: actions/checkout@v4
+      with:
+        path: pr-branch
+
+    - name: Checkout Base Branch
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.base_ref }}
+        path: base-branch
+
+    - name: Setup Node.js (PR Branch)
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22.x
+        cache: 'npm'
+        cache-dependency-path: pr-branch/package-lock.json
+
+    # 1. Build and generate reports for Base Branch (Old)
+    - name: Generate Base API Reports
+      run: |
+        cd base-branch
+        npm ci
+        # Run build. If it fails (e.g. old code is incompatible), ignore it.
+        npm run build || true
+        mkdir -p /tmp/old-reports
+        cp temp/api-report/*.api.md /tmp/old-reports/ || true
+
+    # 2. Build and generate reports for PR Branch (New)
+    - name: Generate PR API Reports
+      run: |
+        cd pr-branch
+        npm ci
+        npm run build
+        mkdir -p /tmp/new-reports
+        cp temp/api-report/*.api.md /tmp/new-reports/ || true
+
+    # 3. Diff and Generate Markdown Comment
+    - name: Generate Diff Comment
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        echo "" > /tmp/api-diff-body.md
+
+        has_changes=false
+        warning_count=0
+
+        for file in genai.api.md genai-node.api.md genai-web.api.md genai-tokenizer-node.api.md genai-vertex-internal.api.md; do
+          old_file="/tmp/old-reports/$file"
+          new_file="/tmp/new-reports/$file"
+
+          if [ -f "$new_file" ]; then
+            if [ -f "$old_file" ]; then
+              diff_output=$(diff -u "$old_file" "$new_file" || true)
+            else
+              # File is new, output the entire file content as addition
+              diff_output=$(diff -u /dev/null "$new_file" || true)
+            fi
+
+            if [ -n "$diff_output" ]; then
+              has_changes=true
+              
+              # Count potential breaking changes (non-comment, non-empty, non-brace deleted lines)
+              breaking_lines=$(echo "$diff_output" | grep -E "^-[[:space:]]*[^-\/\*\}[:space:]]" | grep -vE "^---" || true)
+              if [ -n "$breaking_lines" ]; then
+                line_count=$(echo "$breaking_lines" | wc -l | xargs)
+                warning_count=$((warning_count + line_count))
+              fi
+
+              echo "<details><summary><b>📄 $file</b></summary>" >> /tmp/api-diff-body.md
+              echo "" >> /tmp/api-diff-body.md
+              echo "\`\`\`diff" >> /tmp/api-diff-body.md
+              # Strip the first two lines of diff header
+              echo "$diff_output" | tail -n +3 >> /tmp/api-diff-body.md
+              echo "\`\`\`" >> /tmp/api-diff-body.md
+              echo "</details>" >> /tmp/api-diff-body.md
+              echo "" >> /tmp/api-diff-body.md
+            fi
+          fi
+        done
+
+        # Build final markdown comment
+        echo "### 📊 Public API Changes" > /tmp/api-diff.md
+        echo "" >> /tmp/api-diff.md
+
+        if [ "$has_changes" = false ]; then
+          echo "No public API changes detected." >> /tmp/api-diff.md
+        else
+          if [ "$warning_count" -gt 0 ]; then
+            echo "⚠️ **Potential Breaking Changes**: $warning_count signature removal(s) or modification(s) detected. Please review carefully!" >> /tmp/api-diff.md
+          else
+            echo "✅ No breaking changes detected (only additions or comment updates)." >> /tmp/api-diff.md
+          fi
+          echo "" >> /tmp/api-diff.md
+          cat /tmp/api-diff-body.md >> /tmp/api-diff.md
+        fi
+
+        # Post or update the comment on the PR using gh CLI
+        cd pr-branch
+        
+        # Check if we already posted a comment to avoid duplicates
+        existing_comment_id=$(gh api repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments --jq '.[] | select(.body | startswith("### 📊 Public API Changes")) | .id' | head -n 1)
+
+        if [ -n "$existing_comment_id" ]; then
+          echo "Updating existing comment $existing_comment_id"
+          # Wait, gh CLI doesn't have a direct "comment edit" command easily, but we can do it via API
+          gh api -X PATCH repos/${{ github.repository }}/issues/comments/$existing_comment_id -F body=@/tmp/api-diff.md
+        else
+          echo "Creating new comment"
+          gh pr comment ${{ github.event.pull_request.number }} --body-file /tmp/api-diff.md
+        fi
