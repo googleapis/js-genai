@@ -15,15 +15,22 @@ import type { CreateModelInteraction } from "../interactions/create-model-intera
 import type { CancelInteractionByIdRequest } from "./cancel-interaction-by-id.js";
 import type { CreateAgentRequest } from "./create-agent.js";
 import type { CreateInteractionRequest } from "./create-interaction.js";
+import type { CreateTriggerRequest } from "./create-trigger.js";
 import type { CreateWebhookRequest } from "./create-webhook.js";
 import type { DeleteAgentRequest } from "./delete-agent.js";
 import type { DeleteInteractionRequest } from "./delete-interaction.js";
+import type { DeleteTriggerRequest } from "./delete-trigger.js";
 import type { DeleteWebhookRequest } from "./delete-webhook.js";
 import type { GetAgentRequest } from "./get-agent.js";
 import type { GetInteractionByIdRequest } from "./get-interaction-by-id.js";
+import type { GetTriggerRequest } from "./get-trigger.js";
 import type { GetWebhookRequest } from "./get-webhook.js";
 import type { ListAgentsRequest } from "./list-agents.js";
+import type { ListTriggerExecutionsRequest } from "./list-trigger-executions.js";
+import type { ListTriggersRequest } from "./list-triggers.js";
 import type { ListWebhooksRequest } from "./list-webhooks.js";
+import type { RunTriggerRequest } from "./run-trigger.js";
+import type { UpdateTriggerRequest } from "./update-trigger.js";
 import type { UpdateWebhookRequest } from "./update-webhook.js";
 
 export type CancelInteractionByIdParams = Omit<
@@ -87,6 +94,13 @@ export type CreateAgentInteractionParamsStreaming =
   & CreateAgentInteractionParams
   & { stream: true };
 
+export type CreateTriggerParams =
+  & Omit<
+    CreateTriggerRequest,
+    "body"
+  >
+  & CreateTriggerRequest["body"];
+
 export type CreateWebhookParams =
   & Omit<
     CreateWebhookRequest,
@@ -101,6 +115,11 @@ export type DeleteAgentParams = Omit<
 
 export type DeleteInteractionParams = Omit<
   DeleteInteractionRequest,
+  "id"
+>;
+
+export type DeleteTriggerParams = Omit<
+  DeleteTriggerRequest,
   "id"
 >;
 
@@ -127,6 +146,11 @@ export type GetInteractionByIdParamsStreaming = GetInteractionByIdParams & {
   stream: true;
 };
 
+export type GetTriggerParams = Omit<
+  GetTriggerRequest,
+  "id"
+>;
+
 export type GetWebhookParams = Omit<
   GetWebhookRequest,
   "id"
@@ -134,7 +158,26 @@ export type GetWebhookParams = Omit<
 
 export type ListAgentsParams = ListAgentsRequest;
 
+export type ListTriggerExecutionsParams = Omit<
+  ListTriggerExecutionsRequest,
+  "id"
+>;
+
+export type ListTriggersParams = ListTriggersRequest;
+
 export type ListWebhooksParams = ListWebhooksRequest;
+
+export type RunTriggerParams = Omit<
+  RunTriggerRequest,
+  "id"
+>;
+
+export type UpdateTriggerParams =
+  & Omit<
+    UpdateTriggerRequest,
+    "id" | "body"
+  >
+  & UpdateTriggerRequest["body"];
 
 export type UpdateWebhookParams =
   & Omit<
