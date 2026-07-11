@@ -11,6 +11,7 @@
  */
 
 import { AgentOption } from "./agent-option.js";
+import { CodeMenderAgentConfig } from "./code-mender-agent-config.js";
 import { DeepResearchAgentConfig } from "./deep-research-agent-config.js";
 import { DynamicAgentConfig } from "./dynamic-agent-config.js";
 import { Environment } from "./environment.js";
@@ -39,7 +40,8 @@ export type CreateAgentInteractionEnvironment = Environment | string;
  */
 export type CreateAgentInteractionAgentConfig =
   | DynamicAgentConfig
-  | DeepResearchAgentConfig;
+  | DeepResearchAgentConfig
+  | CodeMenderAgentConfig;
 
 /**
  * Parameters for creating agent interactions
@@ -99,7 +101,11 @@ export type CreateAgentInteraction = {
   /**
    * Configuration parameters for the agent interaction.
    */
-  agent_config?: DynamicAgentConfig | DeepResearchAgentConfig | undefined;
+  agent_config?:
+    | DynamicAgentConfig
+    | DeepResearchAgentConfig
+    | CodeMenderAgentConfig
+    | undefined;
   /**
    * Max total tokens for the agent run.
    */
