@@ -577,6 +577,7 @@ export interface ContentEmbedding {
 // @public
 export interface ContentEmbeddingStatistics {
     tokenCount?: number;
+    tokensDetails?: ModalityTokenCount[];
     truncated?: boolean;
 }
 
