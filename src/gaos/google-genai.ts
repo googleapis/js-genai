@@ -68,6 +68,7 @@ export interface GoogleGenAIParentClient {
   getBaseUrl(): string;
   getApiVersion(): string;
   getDefaultHeaders?(): Record<string, string>;
+  getHeaders?(): Record<string, string> | undefined;
   getAuthHeaders(url?: string): Headers | Promise<Headers>;
 }
 
@@ -109,7 +110,10 @@ export function buildGoogleGenAIClient(
     security:
       options.security ??
       (new GoogleGenAISecurityProvider({
-        defaultHeaders: parentClient.getDefaultHeaders?.(),
+        defaultHeaders: {
+          ...parentClient.getDefaultHeaders?.(),
+          ...parentClient.getHeaders?.(),
+        },
         getAuthHeaders: (url) => parentClient.getAuthHeaders(url),
       }) as SDKOptions["security"]),
     server_url: options.server_url ?? getGoogleGenAIServerURL(parentClient),
@@ -837,7 +841,6 @@ function addOutputProperties(interaction: Record<string, any>): unknown {
     ...(output_video ? { output_video } : {}),
   };
 }
-
 function normalizeInteractionDates(
   interaction: Record<string, any>,
 ): Record<string, any> {

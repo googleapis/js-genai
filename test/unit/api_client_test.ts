@@ -910,6 +910,39 @@ describe('ApiClient', () => {
     });
   });
 
+  describe('getHeaders', () => {
+    it('should return default headers if no custom headers are provided', () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        apiKey: 'test-key',
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const headers = client.getHeaders();
+      expect(headers).toBeDefined();
+      expect(headers['Content-Type']).toBe('application/json');
+      expect(headers['User-Agent']).toBeDefined();
+    });
+
+    it('should return merged headers if custom headers are provided', () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        apiKey: 'test-key',
+        httpOptions: {
+          headers: {
+            'X-Custom-Header': 'custom-value',
+          },
+        },
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const headers = client.getHeaders();
+      expect(headers).toBeDefined();
+      expect(headers['Content-Type']).toBe('application/json');
+      expect(headers['X-Custom-Header']).toBe('custom-value');
+    });
+  });
+
   describe('post/get methods', () => {
     it('should prepend base resource path if vertexai is true and path does not start with "projects/"', async () => {
       const client = new ApiClient({
