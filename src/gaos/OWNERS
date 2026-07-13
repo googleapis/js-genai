@@ -1,4 +1,3 @@
-file://depot/google3/third_party/javascript/google_genai/OWNERS
-
-# Interactions API developers
-file://depot/google3/labs/language/genai/interactions/OWNERS
+markdaoust
+wanlindu
+mdb-group:genai-sdk-gemini
