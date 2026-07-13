@@ -4517,6 +4517,7 @@ export declare interface UpdateModelConfig {
   displayName?: string;
   description?: string;
   defaultCheckpointId?: string;
+  updateMask?: string;
 }
 
 /** Configuration for updating a tuned model. */

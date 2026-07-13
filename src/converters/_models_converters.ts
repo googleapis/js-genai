@@ -5702,6 +5702,12 @@ export function updateModelConfigToMldev(
     );
   }
 
+  if (common.getValueByPath(fromObject, ['updateMask']) !== undefined) {
+    throw new Error(
+      'updateMask parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
+  }
+
   return toObject;
 }
 
@@ -5730,6 +5736,15 @@ export function updateModelConfigToVertex(
       parentObject,
       ['defaultCheckpointId'],
       fromDefaultCheckpointId,
+    );
+  }
+
+  const fromUpdateMask = common.getValueByPath(fromObject, ['updateMask']);
+  if (parentObject !== undefined && fromUpdateMask != null) {
+    common.setValueByPath(
+      parentObject,
+      ['_query', 'updateMask'],
+      fromUpdateMask,
     );
   }
 
