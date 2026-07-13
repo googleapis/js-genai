@@ -36,7 +36,7 @@ import { Result } from "../types/fp.js";
  */
 export function triggersListExecutions(
   client: GoogleGenAICore,
-  id: string,
+  trigger_id: string,
   api_version?: string | undefined,
   page_size?: number | undefined,
   page_token?: string | undefined,
@@ -54,7 +54,7 @@ export function triggersListExecutions(
 > {
   return new APIPromise($do(
     client,
-    id,
+    trigger_id,
     api_version,
     page_size,
     page_token,
@@ -64,7 +64,7 @@ export function triggersListExecutions(
 
 async function $do(
   client: GoogleGenAICore,
-  id: string,
+  trigger_id: string,
   api_version?: string | undefined,
   page_size?: number | undefined,
   page_token?: string | undefined,
@@ -84,7 +84,7 @@ async function $do(
   ]
 > {
   const input: operations.ListTriggerExecutionsRequest = {
-    id: id,
+    trigger_id: trigger_id,
     api_version: api_version,
     page_size: page_size,
     page_token: page_token,
@@ -99,12 +99,12 @@ async function $do(
       payload.api_version ?? client._options.api_version,
       { explode: false, charEncoding: "percent" },
     ),
-    id: encodeSimple("id", payload.id, {
+    trigger_id: encodeSimple("trigger_id", payload.trigger_id, {
       explode: false,
       charEncoding: "percent",
     }),
   };
-  const path = pathToFunc("/{api_version}/triggers/{id}/executions")(
+  const path = pathToFunc("/{api_version}/triggers/{trigger_id}/executions")(
     pathParams,
   );
 

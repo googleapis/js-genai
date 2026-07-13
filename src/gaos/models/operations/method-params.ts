@@ -160,7 +160,7 @@ export type ListAgentsParams = ListAgentsRequest;
 
 export type ListTriggerExecutionsParams = Omit<
   ListTriggerExecutionsRequest,
-  "id"
+  "trigger_id"
 >;
 
 export type ListTriggersParams = ListTriggersRequest;
@@ -169,7 +169,7 @@ export type ListWebhooksParams = ListWebhooksRequest;
 
 export type RunTriggerParams = Omit<
   RunTriggerRequest,
-  "id"
+  "trigger_id"
 >;
 
 export type UpdateTriggerParams =

@@ -25,5 +25,5 @@ export type RunTriggerRequest = {
   /**
    * Resource name of the trigger.
    */
-  id: string;
+  trigger_id: string;
 };

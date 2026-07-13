@@ -25,7 +25,7 @@ export type ListTriggerExecutionsRequest = {
   /**
    * Resource name of the trigger.
    */
-  id: string;
+  trigger_id: string;
   /**
    * Optional. The maximum number of executions to return per page.
    */

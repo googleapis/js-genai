@@ -119,13 +119,13 @@ export class Triggers extends ClientSDK {
    * Runs a trigger immediately.
    */
   run(
-    id: string,
+    trigger_id: string,
     params?: RunTriggerParams,
     options?: Omit<RequestOptions, "extra_body">,
   ): APIPromise<triggers.TriggerExecution> {
     return unwrapAsAPIPromise(triggersRun(
       this,
-      id,
+      trigger_id,
       params?.api_version,
       options,
     ));
@@ -135,13 +135,13 @@ export class Triggers extends ClientSDK {
    * Lists executions for a trigger.
    */
   listExecutions(
-    id: string,
+    trigger_id: string,
     params?: ListTriggerExecutionsParams,
     options?: Omit<RequestOptions, "extra_body">,
   ): APIPromise<triggers.ListTriggerExecutionsResponse> {
     return unwrapAsAPIPromise(triggersListExecutions(
       this,
-      id,
+      trigger_id,
       params?.api_version,
       params?.page_size,
       params?.page_token,
