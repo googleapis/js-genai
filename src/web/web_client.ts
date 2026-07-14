@@ -15,12 +15,14 @@ import {FileSearchStores} from '../filesearchstores.js';
 import type {
   GeminiNextGenAgents as Agents,
   GeminiNextGenInteractions as Interactions,
+  GeminiNextGenTriggers as Triggers,
   GeminiNextGenWebhooks as Webhooks,
 } from '../gaos/google-genai.js';
 import {
   buildGoogleGenAIClient,
   GeminiNextGenAgents,
   GeminiNextGenInteractions,
+  GeminiNextGenTriggers,
   GeminiNextGenWebhooks,
 } from '../gaos/google-genai.js';
 import type {GoogleGenAI as GeminiNextGenAPI} from '../gaos/sdk/sdk.js';
@@ -94,6 +96,7 @@ export class GoogleGenAI {
   private _webhooks: GeminiNextGenWebhooks | undefined;
   private _agents: GeminiNextGenAgents | undefined;
   private _nextGenClient: GeminiNextGenAPI | undefined;
+  private _triggers: Triggers | undefined;
 
   private getNextGenClient(): GeminiNextGenAPI {
     const httpOpts = this.httpOptions;
@@ -141,6 +144,19 @@ export class GoogleGenAI {
 
     this._agents = new GeminiNextGenAgents(this.apiClient);
     return this._agents;
+  }
+
+  get triggers(): Triggers {
+    if (this._triggers !== undefined) {
+      return this._triggers;
+    }
+
+    console.warn(
+      'GoogleGenAI.triggers: Triggers usage is experimental and may change in future versions.',
+    );
+
+    this._triggers = new GeminiNextGenTriggers(this.apiClient);
+    return this._triggers;
   }
 
   constructor(options: GoogleGenAIOptions) {

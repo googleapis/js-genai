@@ -1926,6 +1926,10 @@ export class GoogleGenAI {
     readonly models: Models;
     // (undocumented)
     readonly operations: Operations;
+    // Warning: (ae-forgotten-export) The symbol "GeminiNextGenTriggers" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    get triggers(): GeminiNextGenTriggers;
     // Warning: (ae-forgotten-export) The symbol "Tunings" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
