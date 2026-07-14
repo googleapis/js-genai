@@ -11,6 +11,7 @@
  */
 
 import { AgentOption } from "./agent-option.js";
+import { AntigravityAgentConfig } from "./antigravity-agent-config.js";
 import { AudioContent } from "./audio-content.js";
 import { CodeMenderAgentConfig } from "./code-mender-agent-config.js";
 import { DeepResearchAgentConfig } from "./deep-research-agent-config.js";
@@ -59,7 +60,8 @@ export type InteractionEnvironment = Environment | string;
 export type InteractionAgentConfig =
   | DynamicAgentConfig
   | DeepResearchAgentConfig
-  | CodeMenderAgentConfig;
+  | CodeMenderAgentConfig
+  | AntigravityAgentConfig;
 
 /**
  * The Interaction resource.
@@ -166,6 +168,7 @@ export type Interaction = {
     | DynamicAgentConfig
     | DeepResearchAgentConfig
     | CodeMenderAgentConfig
+    | AntigravityAgentConfig
     | undefined;
   /**
    * Max total tokens for the agent run.

@@ -15,6 +15,7 @@ import type { AgentTool as AgentTool$Import } from "./models/agents/agent-tool.j
 import type { Agent as Agent$Import } from "./models/agents/agent.js";
 import type { AllowedTools as AllowedTools$Import } from "./models/interactions/allowed-tools.js";
 import type { Annotation as Annotation$Import } from "./models/interactions/annotation.js";
+import type { AntigravityAgentConfig as AntigravityAgentConfig$Import } from "./models/interactions/antigravity-agent-config.js";
 import type { ArgumentsDelta as ArgumentsDelta$Import } from "./models/interactions/arguments-delta.js";
 import type { AudioContent as AudioContent$Import } from "./models/interactions/audio-content.js";
 import type { AudioDelta as AudioDelta$Import } from "./models/interactions/audio-delta.js";
@@ -181,6 +182,7 @@ type AgentListResponse$ = AgentListResponse$Import;
 type AgentTool$ = AgentTool$Import;
 type AllowedTools$ = AllowedTools$Import;
 type Annotation$ = Annotation$Import;
+type AntigravityAgentConfig$ = AntigravityAgentConfig$Import;
 type AudioContent$ = AudioContent$Import;
 type AudioResponseFormat$ = AudioResponseFormat$Import;
 type CodeExecutionCallArguments$ = CodeExecutionCallArguments$Import;
@@ -373,6 +375,7 @@ export type AgentTool = AgentTool$;
 export type AllowedTools = AllowedTools$;
 export type Allowlist = Allowlist$;
 export type Annotation = Annotation$;
+export type AntigravityAgentConfig = AntigravityAgentConfig$;
 export type Arguments = Arguments$;
 export type ArgumentsDelta = ArgumentsDelta$;
 export type Audio = Audio$;
@@ -548,6 +551,7 @@ export declare namespace Agents {
 export declare namespace Interactions {
   export type AllowedTools = AllowedTools$;
   export type Annotation = Annotation$;
+  export type AntigravityAgentConfig = AntigravityAgentConfig$;
   export type AudioContent = AudioContent$;
   export type AudioResponseFormat = AudioResponseFormat$;
   export type CodeExecutionCallArguments = CodeExecutionCallArguments$;

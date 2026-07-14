@@ -14,6 +14,7 @@ export * from "./agent-option.js";
 export * from "./allowed-tools.js";
 export * from "./allowlist-entry.js";
 export * from "./annotation.js";
+export * from "./antigravity-agent-config.js";
 export * from "./arguments-delta.js";
 export * from "./audio-content.js";
 export * from "./audio-delta.js";
