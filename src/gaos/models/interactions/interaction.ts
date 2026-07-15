@@ -171,10 +171,6 @@ export type Interaction = {
     | AntigravityAgentConfig
     | undefined;
   /**
-   * Max total tokens for the agent run.
-   */
-  max_total_tokens?: string | undefined;
-  /**
    * Safety settings for the interaction.
    */
   safety_settings?: Array<SafetySetting> | undefined;
