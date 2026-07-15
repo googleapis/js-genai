@@ -34,7 +34,7 @@ We recommend using our Code Generation instructions [`codegen_instructions.md`](
 
 ## Prerequisites
 
-1. Node.js version 20 or later
+1. Node.js version 22 or later
 
 ### The following are required for Gemini Enterprise Agent Platform users (excluding Vertex AI Studio)
 1.  [Select](https://console.cloud.google.com/project) or [create](https://cloud.google.com/resource-manager/docs/creating-managing-projects#creating_a_project) a Google Cloud project.

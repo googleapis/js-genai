@@ -50,36 +50,12 @@ export default [
     external: externalDeps,
   },
 
-  // Cross CJS module (dist/index.cjs)
-  {
-    input: 'src/index.ts',
-    output: {
-      file: pkg.exports['.']['require'],
-      format: 'cjs',
-      sourcemap: true,
-    },
-    plugins: rollupPlugins,
-    external: externalDeps,
-  },
-
   // The `node/` ES module (dist/node/index.mjs)
   {
     input: 'src/node/index.ts',
     output: {
       file: pkg.exports['./node']['import'],
       format: 'es',
-      sourcemap: true,
-    },
-    plugins: rollupPlugins,
-    external: externalDeps,
-  },
-
-  // The `node/` CJS module (dist/node/index.cjs)
-  {
-    input: 'src/node/index.ts',
-    output: {
-      file: pkg.exports['.']['node']['require'],
-      format: 'cjs',
       sourcemap: true,
     },
     plugins: rollupPlugins,
@@ -110,34 +86,12 @@ export default [
     external: externalDeps,
   },
 
-  // The `tokenizer/node` CJS module (dist/tokenizer/node.cjs)
-  {
-    input: 'src/tokenizer/node.ts',
-    output: {
-      file: 'dist/tokenizer/node.cjs',
-      format: 'cjs',
-      sourcemap: true,
-    },
-    plugins: rollupPlugins,
-    external: externalDeps,
-  },
-
   // Internal module, only for use by Vertex SDK
   {
     input: 'src/vertex_internal/index.ts',
     output: {
       file: 'dist/vertex_internal/index.js',
       format: 'es',
-      sourcemap: true,
-    },
-    plugins: rollupPlugins,
-    external: externalDeps,
-  },
-  {
-    input: 'src/vertex_internal/index.ts',
-    output: {
-      file: 'dist/vertex_internal/index.cjs',
-      format: 'cjs',
       sourcemap: true,
     },
     plugins: rollupPlugins,
