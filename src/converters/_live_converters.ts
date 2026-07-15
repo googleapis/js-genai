@@ -934,6 +934,13 @@ export function liveClientSetupToMldev(
     common.setValueByPath(toObject, ['safetySettings'], transformedList);
   }
 
+  const fromHistoryConfig = common.getValueByPath(fromObject, [
+    'historyConfig',
+  ]);
+  if (fromHistoryConfig != null) {
+    common.setValueByPath(toObject, ['historyConfig'], fromHistoryConfig);
+  }
+
   return toObject;
 }
 
@@ -1067,6 +1074,13 @@ export function liveClientSetupToVertex(
       });
     }
     common.setValueByPath(toObject, ['safetySettings'], transformedList);
+  }
+
+  const fromHistoryConfig = common.getValueByPath(fromObject, [
+    'historyConfig',
+  ]);
+  if (fromHistoryConfig != null) {
+    common.setValueByPath(toObject, ['historyConfig'], fromHistoryConfig);
   }
 
   return toObject;

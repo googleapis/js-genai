@@ -7859,6 +7859,16 @@ export declare interface ProactivityConfig {
   proactiveAudio?: boolean;
 }
 
+/** Configuration for history exchange between client and server. */
+export declare interface HistoryConfig {
+  /** If true, after sending `setup_complete`, the server will wait
+      and at first process `client_content` messages until `turn_complete` is
+      `true`. This initial history will not trigger a model call and
+      may end with model content. After `turn_complete` is `true`, the client
+      can start the realtime conversation via `realtime_input`. */
+  initialHistoryInClientContent?: boolean;
+}
+
 /** Configures the customized avatar to be used in the session. */
 export declare interface CustomizedAvatar {
   /** The mime type of the reference image, e.g., "image/jpeg". */
@@ -7932,6 +7942,8 @@ export declare interface LiveClientSetup {
       response.
        */
   safetySettings?: SafetySetting[];
+  /** Configures the exchange of history between the client and the server. */
+  historyConfig?: HistoryConfig;
 }
 
 /** Incremental update of the current conversation delivered from the client.
