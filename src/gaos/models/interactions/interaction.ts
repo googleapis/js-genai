@@ -152,16 +152,6 @@ export type Interaction = {
    */
   generation_config?: GenerationConfig | undefined;
   /**
-   * The name of the cached content used as context to serve the prediction.
-   *
-   * @remarks
-   * Note: only used in explicit caching, where users can have control over
-   * caching (e.g. what content to cache) and enjoy guaranteed cost savings.
-   * Format:
-   * `projects/{project}/locations/{location}/cachedContents/{cachedContent}`
-   */
-  cached_content?: string | undefined;
-  /**
    * Configuration parameters for the agent interaction.
    */
   agent_config?:
