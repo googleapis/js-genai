@@ -17,12 +17,10 @@
       "node": {
         "types": "./dist/node/node.d.ts",
         "import": "./dist/node/index.mjs",
-        "require": "./dist/node/index.cjs",
         "default": "./dist/node/index.mjs"
       },
       "types": "./dist/genai.d.ts",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs",
       "default": "./dist/index.mjs"
     },
     "./web": {
@@ -39,24 +37,20 @@
       "node": {
         "types": "./dist/tokenizer/node.d.ts",
         "import": "./dist/tokenizer/node.mjs",
-        "require": "./dist/tokenizer/node.cjs",
         "default": "./dist/tokenizer/node.mjs"
       },
       "types": "./dist/tokenizer/node.d.ts",
       "import": "./dist/tokenizer/node.mjs",
-      "require": "./dist/tokenizer/node.cjs",
       "default": "./dist/tokenizer/node.mjs"
     },
     "./tokenizer/node": {
       "types": "./dist/tokenizer/node.d.ts",
       "import": "./dist/tokenizer/node.mjs",
-      "require": "./dist/tokenizer/node.cjs",
       "default": "./dist/tokenizer/node.mjs"
     },
     "./vertex_internal": {
       "types": "./dist/vertex_internal/index.d.ts",
-      "import": "./dist/vertex_internal/index.js",
-      "require": "./dist/vertex_internal/index.cjs"
+      "import": "./dist/vertex_internal/index.js"
     }
   },
   "scripts": {
@@ -85,7 +79,7 @@
     "generate-proto": "pbjs -t static-module -w es6 -o src/cross/sentencepiece/sentencepiece_model.pb.js src/cross/sentencepiece/sentencepiece_model.proto && pbts -o src/cross/sentencepiece/sentencepiece_model.pb.d.ts src/cross/sentencepiece/sentencepiece_model.pb.js && sed -i.bak 's/import \\* as \\$protobuf from \"protobufjs\\/minimal\"/import \\$protobuf from \"protobufjs\\/minimal.js\"/' src/cross/sentencepiece/sentencepiece_model.pb.js && rm src/cross/sentencepiece/sentencepiece_model.pb.js.bak"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.0.0"
   },
   "overrides": {
     "tmp": "^0.2.4"
@@ -93,24 +87,19 @@
   "files": [
     "dist/genai.d.ts",
     "dist/index.mjs",
-    "dist/index.cjs",
     "dist/index.mjs.map",
     "dist/node/index.mjs",
-    "dist/node/index.cjs",
     "dist/node/index.mjs.map",
     "dist/node/node.d.ts",
     "dist/web/index.mjs",
     "dist/web/index.mjs.map",
     "dist/web/web.d.ts",
     "dist/tokenizer/node.mjs",
-    "dist/tokenizer/node.cjs",
     "dist/tokenizer/node.mjs.map",
     "dist/tokenizer/node.d.ts",
     "dist/vertex_internal/index.js",
-    "dist/vertex_internal/index.cjs",
     "dist/vertex_internal/index.d.ts",
     "dist/vertex_internal/index.js.map",
-    "dist/vertex_internal/index.cjs.map",
     "node/package.json",
     "web/package.json"
   ],
@@ -121,7 +110,7 @@
     "@modelcontextprotocol/sdk": "^1.25.2",
     "@rollup/plugin-json": "^6.1.0",
     "@types/jasmine": "^5.1.2",
-    "@types/node": "^20.9.0",
+    "@types/node": "^22.0.3",
     "@types/node-fetch": "^2.6.13",
     "@types/unist": "^3.0.3",
     "@types/ws": "^8.5.14",
