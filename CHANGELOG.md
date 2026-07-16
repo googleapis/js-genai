@@ -9,8 +9,6 @@
 
 * Add AntigravityAgentConfig to OpenAPI schema overlays and regenerate SDKs. ([872aa26](https://github.com/googleapis/js-genai/commit/872aa26613861a4b0455fdef4ab07c02004ebb73))
 * Add history config. ([8666bc2](https://github.com/googleapis/js-genai/commit/8666bc21941e440d30b8c34146168bbe9984117e))
-* Add max_total_tokens for Interaction. ([c0b64fe](https://github.com/googleapis/js-genai/commit/c0b64fe8a81f8827fd535c26e825ade09dcbf3f3))
-* Add max_total_tokens for Interaction. ([2047627](https://github.com/googleapis/js-genai/commit/2047627f7a003a40612dcd3806cfde17935a593b))
 * Add support for preserve custom headers for gaos ([f96662a](https://github.com/googleapis/js-genai/commit/f96662afee3a47c575c1b34a059c858953b83b62))
 * add trigger resource ([43e0137](https://github.com/googleapis/js-genai/commit/43e0137aa4784a04db4b413905c600118cc27eb2))
 * Add Triggers resource to GoogleGenAI client. ([8d520cd](https://github.com/googleapis/js-genai/commit/8d520cd130c2a16a6340651f16964045bb2fa544))
