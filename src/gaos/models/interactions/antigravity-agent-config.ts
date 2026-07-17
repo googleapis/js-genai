@@ -22,5 +22,9 @@ export type AntigravityAgentConfig = {
    * Max total tokens for the agent run.
    */
   max_total_tokens?: string | undefined;
+  /**
+   * The model to use for agent reasoning.
+   */
+  model?: string | undefined;
   type: "antigravity";
 };

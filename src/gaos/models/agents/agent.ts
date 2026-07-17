@@ -14,6 +14,11 @@ import * as interactions from "../interactions/index.js";
 import { AgentTool } from "./agent-tool.js";
 
 /**
+ * Configuration parameters for the agent.
+ */
+export type AgentConfig = interactions.AntigravityAgentConfig;
+
+/**
  * The environment configuration for the agent.
  */
 export type BaseEnvironment = interactions.Environment | string;
@@ -33,6 +38,10 @@ export type BaseEnvironment = interactions.Environment | string;
  *   }
  */
 export type Agent = {
+  /**
+   * Configuration parameters for the agent.
+   */
+  agent_config?: interactions.AntigravityAgentConfig | undefined;
   /**
    * The base agent to extend.
    */
