@@ -34,6 +34,13 @@ export function audioTranscriptionConfigToMldev(
     common.setValueByPath(toObject, ['languageHints'], fromLanguageHints);
   }
 
+  const fromCustomVocabulary = common.getValueByPath(fromObject, [
+    'customVocabulary',
+  ]);
+  if (fromCustomVocabulary != null) {
+    common.setValueByPath(toObject, ['customVocabulary'], fromCustomVocabulary);
+  }
+
   const fromAdaptationPhrases = common.getValueByPath(fromObject, [
     'adaptationPhrases',
   ]);

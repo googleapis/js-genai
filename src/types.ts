@@ -7847,7 +7847,9 @@ export declare interface AudioTranscriptionConfig {
   languageAuto?: LanguageAuto;
   /** Specifies one or more languages in the audio. Do not use together with LanguageAuto. */
   languageHints?: LanguageHints;
-  /** A list of phrases used for speech adaptation, which biases the ASR model to improve recognition of these specific terms. */
+  /** A list of custom vocabulary phrases, which biases the ASR model to improve recognition of these specific terms. */
+  customVocabulary?: string[];
+  /** Deprecated. A list of phrases used for speech adaptation, which biases the ASR model to improve recognition of these specific terms. */
   adaptationPhrases?: string[];
 }
 
