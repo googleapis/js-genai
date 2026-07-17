@@ -15,7 +15,7 @@ import { FunctionResultSubcontent } from "./function-result-subcontent.js";
 export type MCPServerToolResultStepResult = {};
 
 /**
- * The output from the MCP server call. Can be simple text or rich content.
+ * Required. The output from the MCP server call. Can be simple text or rich content.
  */
 export type MCPServerToolResultStepResultUnion =
   | MCPServerToolResultStepResult
@@ -35,7 +35,7 @@ export type MCPServerToolResultStep = {
    */
   name?: string | undefined;
   /**
-   * The output from the MCP server call. Can be simple text or rich content.
+   * Required. The output from the MCP server call. Can be simple text or rich content.
    */
   result:
     | MCPServerToolResultStepResult
