@@ -37,7 +37,6 @@ import type { DocumentDelta as DocumentDelta$Import } from "./models/interaction
 import type { DynamicAgentConfig as DynamicAgentConfig$Import } from "./models/interactions/dynamic-agent-config.js";
 import type { Empty as Empty$Import } from "./models/interactions/empty.js";
 import type { Allowlist as Allowlist$Import } from "./models/interactions/environment-network-egress-allowlist.js";
-import type { Environment as Environment$Import } from "./models/interactions/environment.js";
 import type { ErrorEvent as ErrorEvent$Import } from "./models/interactions/error-event.js";
 import type { ErrorT as ErrorT$Import } from "./models/interactions/error.js";
 import type { FileCitation as FileCitation$Import } from "./models/interactions/file-citation.js";
@@ -141,6 +140,7 @@ import type {
   DeleteInteractionParams as DeleteInteractionParams$Import,
   DeleteTriggerParams as DeleteTriggerParams$Import,
   DeleteWebhookParams as DeleteWebhookParams$Import,
+  EnvironmentParams as EnvironmentParams$Import,
   GetAgentParams as GetAgentParams$Import,
   GetInteractionByIdParams as GetInteractionByIdParams$Import,
   GetInteractionByIdParamsNonStreaming
@@ -197,7 +197,7 @@ type CreateModelInteractionParamsStreaming$ = CreateModelInteraction$Import;
 type DeepResearchAgentConfig$ = DeepResearchAgentConfig$Import;
 type DocumentContent$ = DocumentContent$Import;
 type DynamicAgentConfig$ = DynamicAgentConfig$Import;
-type Environment$ = Environment$Import;
+type Environment$ = EnvironmentParams$Import;
 type ErrorEvent$ = ErrorEvent$Import;
 type FileCitation$ = FileCitation$Import;
 type FileSearchCallStep$ = FileSearchCallStep$Import;
@@ -570,7 +570,7 @@ export declare namespace Interactions {
   export type DeepResearchAgentConfig = DeepResearchAgentConfig$;
   export type DocumentContent = DocumentContent$;
   export type DynamicAgentConfig = DynamicAgentConfig$;
-  export interface Environment extends Environment$ {}
+  export type Environment = Environment$;
   export interface ErrorEvent extends ErrorEvent$ {}
   export type FileCitation = FileCitation$;
   export type FileSearchCallStep = FileSearchCallStep$;
