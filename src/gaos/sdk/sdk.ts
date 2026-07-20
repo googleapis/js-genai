@@ -12,17 +12,11 @@
 
 import { ClientSDK } from "../lib/sdks.js";
 import { Agents } from "./agents.js";
-import { Environments } from "./environments.js";
 import { Interactions } from "./interactions.js";
 import { Triggers } from "./triggers.js";
 import { Webhooks } from "./webhooks.js";
 
 export class GoogleGenAI extends ClientSDK {
-  private _environments?: Environments;
-  get environments(): Environments {
-    return (this._environments ??= new Environments(this._options));
-  }
-
   private _interactions?: Interactions;
   get interactions(): Interactions {
     return (this._interactions ??= new Interactions(this._options));

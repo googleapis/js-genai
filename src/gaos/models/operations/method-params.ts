@@ -12,7 +12,6 @@
 
 import type { CreateAgentInteraction } from "../interactions/create-agent-interaction.js";
 import type { CreateModelInteraction } from "../interactions/create-model-interaction.js";
-import type { Environment } from "../interactions/environment.js";
 import type { CancelInteractionByIdRequest } from "./cancel-interaction-by-id.js";
 import type { CreateAgentRequest } from "./create-agent.js";
 import type { CreateInteractionRequest } from "./create-interaction.js";
@@ -23,12 +22,10 @@ import type { DeleteInteractionRequest } from "./delete-interaction.js";
 import type { DeleteTriggerRequest } from "./delete-trigger.js";
 import type { DeleteWebhookRequest } from "./delete-webhook.js";
 import type { GetAgentRequest } from "./get-agent.js";
-import type { GetEnvironmentFilesRequest } from "./get-environment-files.js";
 import type { GetInteractionByIdRequest } from "./get-interaction-by-id.js";
 import type { GetTriggerRequest } from "./get-trigger.js";
 import type { GetWebhookRequest } from "./get-webhook.js";
 import type { ListAgentsRequest } from "./list-agents.js";
-import type { ListEnvironmentsRequest } from "./list-environments.js";
 import type { ListTriggerExecutionsRequest } from "./list-trigger-executions.js";
 import type { ListTriggersRequest } from "./list-triggers.js";
 import type { ListWebhooksRequest } from "./list-webhooks.js";
@@ -131,16 +128,9 @@ export type DeleteWebhookParams = Omit<
   "id"
 >;
 
-export type EnvironmentParams = Environment;
-
 export type GetAgentParams = Omit<
   GetAgentRequest,
   "id"
->;
-
-export type GetEnvironmentFilesParams = Omit<
-  GetEnvironmentFilesRequest,
-  "environment" | "path"
 >;
 
 export type GetInteractionByIdParams = Omit<
@@ -167,8 +157,6 @@ export type GetWebhookParams = Omit<
 >;
 
 export type ListAgentsParams = ListAgentsRequest;
-
-export type ListEnvironmentsParams = ListEnvironmentsRequest;
 
 export type ListTriggerExecutionsParams = Omit<
   ListTriggerExecutionsRequest,
