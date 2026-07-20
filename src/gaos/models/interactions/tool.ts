@@ -18,6 +18,7 @@ import { GoogleMaps } from "./google-maps.js";
 import { GoogleSearch } from "./google-search.js";
 import { MCPServer } from "./mcp-server.js";
 import { Retrieval } from "./retrieval.js";
+import { ToolSearch } from "./tool-search.js";
 import { URLContext } from "./url-context.js";
 
 /**
@@ -32,4 +33,5 @@ export type Tool =
   | GoogleSearch
   | FileSearch
   | GoogleMaps
-  | Retrieval;
+  | Retrieval
+  | ToolSearch;
