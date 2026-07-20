@@ -115,6 +115,7 @@ import type { ThoughtStep as ThoughtStep$Import } from "./models/interactions/th
 import type { ThoughtSummaryDelta as ThoughtSummaryDelta$Import } from "./models/interactions/thought-summary-delta.js";
 import type { ToolChoiceConfig as ToolChoiceConfig$Import } from "./models/interactions/tool-choice-config.js";
 import type { ToolChoiceType as ToolChoiceType$Import } from "./models/interactions/tool-choice-type.js";
+import type { ToolSearch as ToolSearch$Import } from "./models/interactions/tool-search.js";
 import type { Tool as Tool$Import } from "./models/interactions/tool.js";
 import type { TranscriptionConfig as TranscriptionConfig$Import } from "./models/interactions/transcription-config.js";
 import type { URLCitation as URLCitation$Import } from "./models/interactions/url-citation.js";
@@ -326,6 +327,7 @@ type GoogleMaps$ = GoogleMaps$Import;
 type GoogleSearch$ = GoogleSearch$Import;
 type MCPServer$ = MCPServer$Import;
 type Retrieval$ = Retrieval$Import;
+type ToolSearch$ = ToolSearch$Import;
 type URLContext$ = URLContext$Import;
 type VertexAISearchConfig$ = VertexAISearchConfig$Import;
 type Arguments$5 = URLContextCallArguments$Import;
@@ -497,6 +499,7 @@ export type ThoughtSummary = ThoughtSummary$;
 export type Tool = Tool$;
 export type ToolChoiceConfig = ToolChoiceConfig$;
 export type ToolChoiceType = ToolChoiceType$;
+export type ToolSearch = ToolSearch$;
 export type ToolUseTokensByModality = ToolUseTokensByModality$;
 export type TranscriptionConfig = TranscriptionConfig$;
 export type Trigger = Trigger$;
@@ -754,6 +757,7 @@ export declare namespace Interactions {
     export type GoogleSearch = GoogleSearch$;
     export type MCPServer = MCPServer$;
     export interface Retrieval extends Retrieval$ {}
+    export type ToolSearch = ToolSearch$;
     export type URLContext = URLContext$;
     export namespace Retrieval {
       export type VertexAISearchConfig = VertexAISearchConfig$;

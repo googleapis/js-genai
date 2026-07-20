@@ -134,6 +134,7 @@ export * from "./thought-summary-content.js";
 export * from "./thought-summary-delta.js";
 export * from "./tool-choice-config.js";
 export * from "./tool-choice-type.js";
+export * from "./tool-search.js";
 export * from "./tool.js";
 export * from "./transcription-config.js";
 export * from "./turn.js";
