@@ -20,32 +20,14 @@ import { webhooksUpdate } from "../funcs/webhooks-update.js";
 import { ClientSDK, RequestOptions } from "../lib/sdks.js";
 import * as interactions from "../models/interactions/index.js";
 import {
-  CreateWebhookParams,
-  DeleteWebhookParams,
-  GetWebhookParams,
   ListWebhooksParams,
   UpdateWebhookParams,
+  WebhookInputParams,
 } from "../models/operations/method-params.js";
 import * as webhooks from "../models/webhooks/index.js";
 import { APIPromise, unwrapAsAPIPromise } from "../types/async.js";
 
 export class Webhooks extends ClientSDK {
-  /**
-   * Creates a new Webhook.
-   */
-  create(
-    params: CreateWebhookParams,
-    options?: RequestOptions,
-  ): APIPromise<webhooks.Webhook> {
-    const { api_version, ...body } = params;
-    return unwrapAsAPIPromise(webhooksCreate(
-      this,
-      body,
-      api_version,
-      options,
-    ));
-  }
-
   /**
    * Lists all Webhooks.
    */
@@ -55,9 +37,22 @@ export class Webhooks extends ClientSDK {
   ): APIPromise<webhooks.WebhookListResponse> {
     return unwrapAsAPIPromise(webhooksList(
       this,
-      params?.api_version,
       params?.page_size,
       params?.page_token,
+      options,
+    ));
+  }
+
+  /**
+   * Creates a new Webhook.
+   */
+  create(
+    params: WebhookInputParams,
+    options?: RequestOptions,
+  ): APIPromise<webhooks.Webhook> {
+    return unwrapAsAPIPromise(webhooksCreate(
+      this,
+      params,
       options,
     ));
   }
@@ -67,13 +62,25 @@ export class Webhooks extends ClientSDK {
    */
   get(
     id: string,
-    params?: GetWebhookParams,
     options?: Omit<RequestOptions, "extra_body">,
   ): APIPromise<webhooks.Webhook> {
     return unwrapAsAPIPromise(webhooksGet(
       this,
       id,
-      params?.api_version,
+      options,
+    ));
+  }
+
+  /**
+   * Deletes a Webhook.
+   */
+  delete(
+    id: string,
+    options?: Omit<RequestOptions, "extra_body">,
+  ): APIPromise<interactions.Empty> {
+    return unwrapAsAPIPromise(webhooksDelete(
+      this,
+      id,
       options,
     ));
   }
@@ -86,49 +93,14 @@ export class Webhooks extends ClientSDK {
     params?: UpdateWebhookParams,
     options?: RequestOptions,
   ): APIPromise<webhooks.Webhook> {
-    const { api_version, update_mask, ...body$body } = params ?? {};
+    const { update_mask, ...body$body } = params ?? {};
     const body = params === undefined || Object.keys(body$body).length === 0
       ? undefined
       : body$body;
     return unwrapAsAPIPromise(webhooksUpdate(
       this,
       id,
-      api_version,
       update_mask,
-      body,
-      options,
-    ));
-  }
-
-  /**
-   * Deletes a Webhook.
-   */
-  delete(
-    id: string,
-    params?: DeleteWebhookParams,
-    options?: Omit<RequestOptions, "extra_body">,
-  ): APIPromise<interactions.Empty> {
-    return unwrapAsAPIPromise(webhooksDelete(
-      this,
-      id,
-      params?.api_version,
-      options,
-    ));
-  }
-
-  /**
-   * Generates a new signing secret for a Webhook.
-   */
-  rotateSigningSecret(
-    id: string,
-    api_version?: string | undefined,
-    body?: webhooks.RotateSigningSecretRequest | undefined,
-    options?: RequestOptions,
-  ): APIPromise<webhooks.WebhookRotateSigningSecretResponse> {
-    return unwrapAsAPIPromise(webhooksRotateSigningSecret(
-      this,
-      id,
-      api_version,
       body,
       options,
     ));
@@ -139,14 +111,28 @@ export class Webhooks extends ClientSDK {
    */
   ping(
     id: string,
-    api_version?: string | undefined,
     body?: webhooks.PingWebhookRequest | undefined,
     options?: RequestOptions,
   ): APIPromise<webhooks.WebhookPingResponse> {
     return unwrapAsAPIPromise(webhooksPing(
       this,
       id,
-      api_version,
+      body,
+      options,
+    ));
+  }
+
+  /**
+   * Generates a new signing secret for a Webhook.
+   */
+  rotateSigningSecret(
+    id: string,
+    body?: webhooks.RotateSigningSecretRequest | undefined,
+    options?: RequestOptions,
+  ): APIPromise<webhooks.WebhookRotateSigningSecretResponse> {
+    return unwrapAsAPIPromise(webhooksRotateSigningSecret(
+      this,
+      id,
       body,
       options,
     ));

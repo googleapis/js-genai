@@ -12,26 +12,34 @@
 
 export type ListTriggersGlobals = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
 };
 
 export type ListTriggersRequest = {
   /**
-   * Which version of the API to use.
-   */
-  api_version?: string | undefined;
-  /**
-   * Optional. Filter expression (e.g., by state).
+   * Optional. Filter expression (e.g. `agent="agents/my-agent-id"`). Only
+   *
+   * @remarks
+   * equality filtering on the `agent` field is currently supported.
    */
   filter?: string | undefined;
   /**
-   * Optional. The maximum number of triggers to return per page.
+   * The maximum number of triggers to return per page.
    */
   page_size?: number | undefined;
   /**
-   * Optional. A page token from a previous ListTriggers call.
+   * A page token from a previous ListTriggers call.
    */
   page_token?: string | undefined;
+  /**
+   * Required. The parent resource to list triggers from.
+   *
+   * @remarks
+   * Format: `projects/{project}/locations/{location}`
+   *
+   * Supported only by the Vertex API only.
+   */
+  parent?: string | undefined;
 };

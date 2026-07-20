@@ -12,18 +12,17 @@
 
 export type DeleteInteractionGlobals = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
 };
 
 export type DeleteInteractionRequest = {
   /**
-   * The unique identifier of the interaction to delete.
+   * Part of `name`. Required. The name of the interaction to delete.
+   *
+   * @remarks
+   * Format: interactions/{interaction}
    */
   id: string;
-  /**
-   * Which version of the API to use.
-   */
-  api_version?: string | undefined;
 };

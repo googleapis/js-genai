@@ -15,7 +15,6 @@ export type HarmCategory =
   | "dangerous_content"
   | "harassment"
   | "sexually_explicit"
-  | "civic_integrity"
   | "image_hate"
   | "image_dangerous_content"
   | "image_harassment"

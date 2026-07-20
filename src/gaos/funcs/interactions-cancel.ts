@@ -33,15 +33,11 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Canceling an interaction
- *
- * @remarks
- * Cancels an interaction by id. This only applies to background interactions that are still running.
+ * Cancels an interaction.
  */
 export function interactionsCancel(
   client: GoogleGenAICore,
   id: string,
-  api_version?: string | undefined,
   options?: Omit<RequestOptions, "extra_body">,
 ): APIPromise<
   Result<
@@ -59,7 +55,6 @@ export function interactionsCancel(
   return new APIPromise($do(
     client,
     id,
-    api_version,
     options,
   ));
 }
@@ -67,7 +62,6 @@ export function interactionsCancel(
 async function $do(
   client: GoogleGenAICore,
   id: string,
-  api_version?: string | undefined,
   options?: Omit<RequestOptions, "extra_body">,
 ): Promise<
   [
@@ -87,26 +81,24 @@ async function $do(
 > {
   const input: operations.CancelInteractionByIdRequest = {
     id: id,
-    api_version: api_version,
   };
 
   const payload = input;
   const body = null;
 
   const pathParams = {
-    api_version: encodeSimple(
-      "api_version",
-      payload.api_version ?? client._options.api_version,
-      { explode: false, charEncoding: "percent" },
-    ),
-    id: encodeSimple("id", payload.id, {
+    api_version: encodeSimple("api_version", client._options.api_version, {
+      explode: false,
+      charEncoding: "percent",
+    }),
+    interactionsId: encodeSimple("interactionsId", payload.id, {
       explode: false,
       charEncoding: "percent",
     }),
   };
-  const path = pathToFunc("/{api_version}/interactions/{id}/cancel")(
-    pathParams,
-  );
+  const path = pathToFunc(
+    "/{api_version}/interactions/{interactionsId}/cancel",
+  )(pathParams);
 
   const headers = new Headers(compactMap({
     Accept: "application/json",
@@ -183,7 +175,6 @@ async function $do(
     | InvalidRequestError
     | UnexpectedClientError
   >(
-    M.json<interactions.Interaction>(200),
     M.jsonErr<errors.CancelInteractionByIdClientError>(
       "4XX",
       errors.CancelInteractionByIdClientError,
@@ -192,6 +183,7 @@ async function $do(
       "5XX",
       errors.CancelInteractionByIdServerError,
     ),
+    M.json<interactions.Interaction>("default"),
   )(response, req, { extraFields: responseFields });
   if (!result.ok) {
     return [result, { status: "complete", request: req, response }];

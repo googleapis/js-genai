@@ -15,12 +15,6 @@
  */
 export type TranscriptionConfig = {
   /**
-   * Optional. A list of phrases to bias the ASR model towards.
-   *
-   * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
-   */
-  adaptation_phrases?: Array<string> | undefined;
-  /**
    * Optional. A list of custom vocabulary phrases to bias the speech recognition model
    *
    * @remarks
@@ -45,4 +39,10 @@ export type TranscriptionConfig = {
    * Supported values: "word". If empty, no timestamps are generated.
    */
   timestamp_granularities?: Array<string> | undefined;
+  /**
+   * Deprecated: use language_codes. BCP-47 language codes providing hints about the languages present in the audio.
+   *
+   * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
+   */
+  language_hints?: Array<string> | undefined;
 };

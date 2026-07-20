@@ -27,22 +27,24 @@ import {
   RequestTimeoutError,
   UnexpectedClientError,
 } from "../models/errors/http-client-errors.js";
+import * as errors from "../models/errors/index.js";
 import * as operations from "../models/operations/index.js";
 import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Lists environments.
+ * Lists environments (HTTP endpoint).
  */
 export function environmentsListEnvironments(
   client: GoogleGenAICore,
-  api_version?: string | undefined,
   page_size?: number | undefined,
   page_token?: string | undefined,
   options?: Omit<RequestOptions, "extra_body">,
 ): APIPromise<
   Result<
     environments.ListEnvironmentsResponse,
+    | errors.ListEnvironmentsClientError
+    | errors.ListEnvironmentsServerError
     | GoogleGenAiError
     | ConnectionError
     | RequestAbortedError
@@ -53,7 +55,6 @@ export function environmentsListEnvironments(
 > {
   return new APIPromise($do(
     client,
-    api_version,
     page_size,
     page_token,
     options,
@@ -62,7 +63,6 @@ export function environmentsListEnvironments(
 
 async function $do(
   client: GoogleGenAICore,
-  api_version?: string | undefined,
   page_size?: number | undefined,
   page_token?: string | undefined,
   options?: Omit<RequestOptions, "extra_body">,
@@ -70,6 +70,8 @@ async function $do(
   [
     Result<
       environments.ListEnvironmentsResponse,
+      | errors.ListEnvironmentsClientError
+      | errors.ListEnvironmentsServerError
       | GoogleGenAiError
       | ConnectionError
       | RequestAbortedError
@@ -81,7 +83,6 @@ async function $do(
   ]
 > {
   const input: operations.ListEnvironmentsRequest | undefined = {
-    api_version: api_version,
     page_size: page_size,
     page_token: page_token,
   };
@@ -90,11 +91,10 @@ async function $do(
   const body = null;
 
   const pathParams = {
-    api_version: encodeSimple(
-      "api_version",
-      payload?.api_version ?? client._options.api_version,
-      { explode: false, charEncoding: "percent" },
-    ),
+    api_version: encodeSimple("api_version", client._options.api_version, {
+      explode: false,
+      charEncoding: "percent",
+    }),
   };
   const path = pathToFunc("/{api_version}/environments")(pathParams);
 
@@ -164,8 +164,14 @@ async function $do(
   }
   const response = doResult.value;
 
+  const responseFields = {
+    httpMeta: { response: response, request: req },
+  };
+
   const [result] = await M.match<
     environments.ListEnvironmentsResponse,
+    | errors.ListEnvironmentsClientError
+    | errors.ListEnvironmentsServerError
     | GoogleGenAiError
     | ConnectionError
     | RequestAbortedError
@@ -173,10 +179,16 @@ async function $do(
     | InvalidRequestError
     | UnexpectedClientError
   >(
-    M.fail("4XX"),
-    M.fail("5XX"),
+    M.jsonErr<errors.ListEnvironmentsClientError>(
+      "4XX",
+      errors.ListEnvironmentsClientError,
+    ),
+    M.jsonErr<errors.ListEnvironmentsServerError>(
+      "5XX",
+      errors.ListEnvironmentsServerError,
+    ),
     M.json<environments.ListEnvironmentsResponse>("default"),
-  )(response, req);
+  )(response, req, { extraFields: responseFields });
   if (!result.ok) {
     return [result, { status: "complete", request: req, response }];
   }

@@ -11,6 +11,7 @@
  */
 
 import { Step } from "./step.js";
+import { StreamMetadata } from "./stream-metadata.js";
 
 export type StepStart = {
   /**
@@ -26,4 +27,8 @@ export type StepStart = {
    * A step in the interaction.
    */
   step: Step;
+  /**
+   * Optional metadata accompanying ANY streamed event.
+   */
+  metadata?: StreamMetadata | undefined;
 };

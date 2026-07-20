@@ -27,21 +27,22 @@ import {
   RequestTimeoutError,
   UnexpectedClientError,
 } from "../models/errors/http-client-errors.js";
-import * as operations from "../models/operations/index.js";
+import * as errors from "../models/errors/index.js";
 import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Creates an environment.
+ * Creates an environment (HTTP endpoint).
  */
 export function environmentsCreateEnvironment(
   client: GoogleGenAICore,
-  body: environments.CreateEnvironmentRequest,
-  api_version?: string | undefined,
+  request: environments.CreateEnvironmentRequest,
   options?: RequestOptions,
 ): APIPromise<
   Result<
     environments.Environment,
+    | errors.CreateEnvironmentClientError
+    | errors.CreateEnvironmentServerError
     | GoogleGenAiError
     | ConnectionError
     | RequestAbortedError
@@ -52,21 +53,21 @@ export function environmentsCreateEnvironment(
 > {
   return new APIPromise($do(
     client,
-    body,
-    api_version,
+    request,
     options,
   ));
 }
 
 async function $do(
   client: GoogleGenAICore,
-  body: environments.CreateEnvironmentRequest,
-  api_version?: string | undefined,
+  request: environments.CreateEnvironmentRequest,
   options?: RequestOptions,
 ): Promise<
   [
     Result<
       environments.Environment,
+      | errors.CreateEnvironmentClientError
+      | errors.CreateEnvironmentServerError
       | GoogleGenAiError
       | ConnectionError
       | RequestAbortedError
@@ -77,20 +78,14 @@ async function $do(
     APICall,
   ]
 > {
-  const input: operations.CreateEnvironmentRequest = {
-    body: body,
-    api_version: api_version,
-  };
-
-  const payload = input;
-  const body$ = encodeJSON("body", payload.body, { explode: true });
+  const payload = request;
+  const body = encodeJSON("body", payload, { explode: true });
 
   const pathParams = {
-    api_version: encodeSimple(
-      "api_version",
-      payload.api_version ?? client._options.api_version,
-      { explode: false, charEncoding: "percent" },
-    ),
+    api_version: encodeSimple("api_version", client._options.api_version, {
+      explode: false,
+      charEncoding: "percent",
+    }),
   };
   const path = pathToFunc("/{api_version}/environments")(pathParams);
 
@@ -134,7 +129,7 @@ async function $do(
     baseURL: options?.server_url,
     path: path,
     headers: headers,
-    body: body$,
+    body: body,
     userAgent: client._options.user_agent,
     timeout_ms: options?.timeout_ms || client._options.timeout_ms || -1,
   }, options);
@@ -155,8 +150,14 @@ async function $do(
   }
   const response = doResult.value;
 
+  const responseFields = {
+    httpMeta: { response: response, request: req },
+  };
+
   const [result] = await M.match<
     environments.Environment,
+    | errors.CreateEnvironmentClientError
+    | errors.CreateEnvironmentServerError
     | GoogleGenAiError
     | ConnectionError
     | RequestAbortedError
@@ -164,10 +165,16 @@ async function $do(
     | InvalidRequestError
     | UnexpectedClientError
   >(
-    M.fail("4XX"),
-    M.fail("5XX"),
+    M.jsonErr<errors.CreateEnvironmentClientError>(
+      "4XX",
+      errors.CreateEnvironmentClientError,
+    ),
+    M.jsonErr<errors.CreateEnvironmentServerError>(
+      "5XX",
+      errors.CreateEnvironmentServerError,
+    ),
     M.json<environments.Environment>("default"),
-  )(response, req);
+  )(response, req, { extraFields: responseFields });
   if (!result.ok) {
     return [result, { status: "complete", request: req, response }];
   }

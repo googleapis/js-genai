@@ -12,10 +12,12 @@
 
 import { Content } from "./content.js";
 
+export type UserInputStepContent = Array<Content> | string;
+
 /**
  * Input provided by the user.
  */
 export type UserInputStep = {
-  content?: Array<Content> | undefined;
+  content?: Array<Content> | string | undefined;
   type: "user_input";
 };

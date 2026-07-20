@@ -14,7 +14,7 @@ import * as interactions from "../interactions/index.js";
 import { GoogleGenAiError } from "./google-gen-ai-error.js";
 
 /**
- * Error creating interaction
+ * Server Error
  */
 export type CreateInteractionServerErrorData = {
   /**
@@ -24,7 +24,7 @@ export type CreateInteractionServerErrorData = {
 };
 
 /**
- * Error creating interaction
+ * Server Error
  */
 export class CreateInteractionServerError extends GoogleGenAiError {
   /**
@@ -50,7 +50,7 @@ export class CreateInteractionServerError extends GoogleGenAiError {
 }
 
 /**
- * Error creating interaction
+ * Client Error
  */
 export type CreateInteractionClientErrorData = {
   /**
@@ -60,7 +60,7 @@ export type CreateInteractionClientErrorData = {
 };
 
 /**
- * Error creating interaction
+ * Client Error
  */
 export class CreateInteractionClientError extends GoogleGenAiError {
   /**

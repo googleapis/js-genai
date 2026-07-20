@@ -19,10 +19,10 @@ import { StepStart } from "./step-start.js";
 import { StepStop } from "./step-stop.js";
 
 export type InteractionSSEEvent =
-  | InteractionCreatedEvent
-  | InteractionCompletedEvent
-  | InteractionStatusUpdate
   | ErrorEvent
-  | StepStart
+  | InteractionCompletedEvent
+  | InteractionCreatedEvent
+  | InteractionStatusUpdate
   | StepDelta
+  | StepStart
   | StepStop;

@@ -14,25 +14,18 @@ import * as webhooks from "../webhooks/index.js";
 
 export type PingWebhookGlobals = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
 };
 
 export type PingWebhookRequest = {
   /**
-   * Which version of the API to use.
-   */
-  api_version?: string | undefined;
-  /**
    * Required. The ID of the webhook to ping.
-   *
-   * @remarks
-   * Format: `{webhook_id}`
    */
   id: string;
   /**
-   * The request body.
+   * Required. The HTTP body of the payload.
    */
   body?: webhooks.PingWebhookRequest | undefined;
 };

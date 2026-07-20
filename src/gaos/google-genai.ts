@@ -9,7 +9,6 @@
 import * as agents from "./models/agents/index.js";
 import * as environments from "./models/environments/index.js";
 import * as interactions from "./models/interactions/index.js";
-import * as operations from "./models/operations/index.js";
 import * as triggers from "./models/triggers/index.js";
 import * as webhooks from "./models/webhooks/index.js";
 
@@ -23,26 +22,56 @@ import { wrapSDKError } from "./lib/compat-errors.js";
 import { Stream } from "./lib/event-streams.js";
 import { GoogleGenAI } from "./sdk/sdk.js";
 import type {
-  CreateAgentInteractionParamsNonStreaming,
-  CreateAgentInteractionParamsStreaming,
-  CreateAgentParams,
-  CreateInteractionParams,
-  CreateInteractionParamsNonStreaming,
-  CreateInteractionParamsStreaming,
-  CreateModelInteractionParamsNonStreaming,
-  CreateModelInteractionParamsStreaming,
-  DeleteAgentParams,
-  GetAgentParams,
+  CreateAgentParams as _CreateAgentRequest,
   GetInteractionByIdParams,
   GetInteractionByIdParamsNonStreaming,
   GetInteractionByIdParamsStreaming,
-  ListAgentsParams as _ListAgentsRequest,
-  CreateTriggerParams,
-  DeleteTriggerParams,
-  GetTriggerParams,
-  RunTriggerParams,
-  UpdateTriggerParams,
+  CreateTriggerParams as _CreateTriggerRequest,
 } from "./models/operations/method-params.js";
+
+// api_version is a hidden global on the generated SDK (configured per client
+// instance); the bridge keeps it as a per-call routing option on its own
+// public parameter types.
+type ApiVersionParam = { api_version?: string };
+
+type CreateModelInteractionParamsNonStreaming =
+  interactions.CreateModelInteraction & ApiVersionParam & {
+    stream?: false;
+  };
+type CreateModelInteractionParamsStreaming =
+  interactions.CreateModelInteraction & ApiVersionParam & {
+    stream: true;
+  };
+type CreateAgentInteractionParamsNonStreaming =
+  interactions.CreateAgentInteraction & ApiVersionParam & {
+    stream?: false;
+  };
+type CreateAgentInteractionParamsStreaming =
+  interactions.CreateAgentInteraction & ApiVersionParam & {
+    stream: true;
+  };
+type CreateInteractionParams = (
+  | interactions.CreateModelInteraction
+  | interactions.CreateAgentInteraction
+) &
+  ApiVersionParam;
+type CreateInteractionParamsNonStreaming = CreateInteractionParams & {
+  stream?: false;
+};
+type CreateInteractionParamsStreaming = CreateInteractionParams & {
+  stream: true;
+};
+
+type CreateAgentParams = _CreateAgentRequest & ApiVersionParam;
+type GetAgentParams = ApiVersionParam;
+type DeleteAgentParams = ApiVersionParam;
+
+type CreateTriggerParams = _CreateTriggerRequest & ApiVersionParam;
+type GetTriggerParams = ApiVersionParam;
+type DeleteTriggerParams = ApiVersionParam;
+type RunTriggerParams = ApiVersionParam;
+type UpdateTriggerParams = triggers.TriggerUpdate &
+  ApiVersionParam & { update_mask?: string };
 import { RequestOptions } from "./lib/sdks.js";
 import type { Result } from "./types/fp.js";
 import { SDKOptions } from "./lib/config.js";
@@ -158,11 +187,16 @@ export type GoogleGenAIResponseWithSdkHttpResponse<T> = T & {
   sdkHttpResponse?: GoogleGenAISdkHttpResponse;
 };
 
-// `steps` is wire-optional (Vertex Lyria envelopes can omit it) but the
-// bridge normalizes every interaction response to carry an array, so the
-// public type matches the baseline SDK's required `steps`.
+// The flat Interaction resource (rebuilt by the overlays from the model and
+// agent branches) backs the facade; the bridge re-requires id/status and
+// normalizes `steps` to always be an array (Vertex Lyria envelopes can omit
+// it on the wire).
 export type GoogleGenAIInteraction = GoogleGenAIResponseWithSdkHttpResponse<
-  Omit<interactions.Interaction, "steps"> & { steps: interactions.Step[] }
+  Omit<interactions.Interaction, "steps" | "id" | "status"> & {
+    id: string;
+    status: NonNullable<interactions.Interaction["status"]>;
+    steps: interactions.Step[];
+  }
 >;
 
 export type GoogleGenAIInteractionSSEEvent = interactions.InteractionSSEEvent;
@@ -174,12 +208,13 @@ export type InteractionCreateParamsNonStreaming =
 
 export type InteractionCreateParamsStreaming = CreateInteractionParamsStreaming;
 
-export type InteractionGetParams = GetInteractionByIdParams;
+export type InteractionGetParams = GetInteractionByIdParams & ApiVersionParam;
 
 export type InteractionGetParamsNonStreaming =
-  GetInteractionByIdParamsNonStreaming;
+  GetInteractionByIdParamsNonStreaming & ApiVersionParam;
 
-export type InteractionGetParamsStreaming = GetInteractionByIdParamsStreaming;
+export type InteractionGetParamsStreaming = GetInteractionByIdParamsStreaming &
+  ApiVersionParam;
 
 export type ListAgentsParams = {
   api_version?: string;
@@ -212,8 +247,10 @@ export type WebhookUpdateParams = {
   update_mask?: string;
 } & webhooks.WebhookUpdate;
 
-export type WebhookRotateSigningSecretParams =
-  webhooks.RotateSigningSecretRequest & { api_version?: string };
+export type WebhookRotateSigningSecretParams = Omit<
+  webhooks.RotateSigningSecretRequest,
+  "id"
+> & { api_version?: string };
 
 export type WebhookPingParams = {
   api_version?: string;
@@ -266,9 +303,8 @@ export class GeminiNextGenInteractions {
       const response = await wrapSDKCall(() =>
         this.getClient(api_version).interactions.create(
           {
-            ...(request as operations.CreateInteractionRequestBody),
+            ...(request as interactions.CreateInteractionRequest),
             stream: true,
-            api_version,
           },
           toGoogleGenAIRequestOptions(options, true),
         ),
@@ -281,11 +317,15 @@ export class GeminiNextGenInteractions {
     const response = await unwrapWithSdkHttpResponse(
       interactionsCreate(
         this.getClient(api_version),
-        request as operations.CreateInteractionRequestBody,
-        api_version,
+        request as interactions.CreateInteractionRequest,
         toGoogleGenAIRequestOptions(options),
       ),
     );
+    if (response instanceof Stream) {
+      return wrapStreamErrors(
+        response as Stream<GoogleGenAIInteractionSSEEvent>,
+      );
+    }
     return addOutputPropertiesIfInteraction(response) as GoogleGenAIInteraction;
   }
 
@@ -319,7 +359,7 @@ export class GeminiNextGenInteractions {
       const response = await wrapSDKCall(() =>
         this.getClient(api_version).interactions.get(
           id,
-          { stream, last_event_id, include_input, api_version },
+          { stream, last_event_id, include_input },
           toGoogleGenAIRequestOptions(options, true),
         ),
       );
@@ -332,10 +372,9 @@ export class GeminiNextGenInteractions {
       interactionsGet(
         this.getClient(api_version),
         id,
-        stream,
-        last_event_id,
         include_input,
-        api_version,
+        last_event_id,
+        stream,
         toGoogleGenAIRequestOptions(options),
       ),
     );
@@ -350,7 +389,6 @@ export class GeminiNextGenInteractions {
     return wrapSDKCall(() =>
       this.getClient(params?.api_version).interactions.delete(
         id,
-        { api_version: params?.api_version },
         toGoogleGenAIRequestOptions(options),
       ),
     );
@@ -366,7 +404,6 @@ export class GeminiNextGenInteractions {
         interactionsCancel(
           this.getClient(params?.api_version),
           id,
-          params?.api_version,
           toGoogleGenAIRequestOptions(options),
         ),
       ),
@@ -394,12 +431,12 @@ export class GeminiNextGenAgents {
     params: CreateAgentParams | null | undefined = {},
     options?: GoogleGenAIRequestOptions,
   ): Promise<agents.Agent> {
-    const { api_version, ...body } = params ?? {};
+    const { api_version, parent, ...body } = params ?? {};
     return unwrapWithSdkHttpResponse(
       agentsCreate(
         this.getClient(api_version),
         body,
-        api_version,
+        parent,
         toGoogleGenAIRequestOptions(options),
       ),
     );
@@ -413,7 +450,6 @@ export class GeminiNextGenAgents {
     return unwrapWithSdkHttpResponse(
       agentsList(
         this.getClient(api_version),
-        api_version,
         pageSize,
         pageToken,
         parent,
@@ -431,7 +467,6 @@ export class GeminiNextGenAgents {
       agentsGet(
         this.getClient(params?.api_version),
         id,
-        params?.api_version,
         toGoogleGenAIRequestOptions(options),
       ),
     );
@@ -446,7 +481,6 @@ export class GeminiNextGenAgents {
       agentsDelete(
         this.getClient(params?.api_version),
         id,
-        params?.api_version,
         toGoogleGenAIRequestOptions(options),
       ),
     );
@@ -473,12 +507,11 @@ export class GeminiNextGenWebhooks {
     params: webhooks.WebhookInput & { api_version?: string },
     options?: GoogleGenAIRequestOptions,
   ): Promise<webhooks.Webhook> {
-    const { api_version, ...body } = params;
+    const { api_version: _api_version, ...body } = params;
     return unwrapWithSdkHttpResponse(
       webhooksCreate(
         this.getClient(),
         body,
-        api_version,
         toGoogleGenAIRequestOptions(options),
       ),
     );
@@ -488,12 +521,11 @@ export class GeminiNextGenWebhooks {
     params: WebhookListParams | null | undefined = {},
     options?: GoogleGenAIRequestOptions,
   ): Promise<webhooks.WebhookListResponse> {
-    const { api_version, page_size, page_token } = params ?? {};
+    const { page_size, page_token } = params ?? {};
 
     return unwrapWithSdkHttpResponse(
       webhooksList(
         this.getClient(),
-        api_version,
         page_size,
         page_token,
         toGoogleGenAIRequestOptions(options),
@@ -503,14 +535,13 @@ export class GeminiNextGenWebhooks {
 
   async get(
     id: string,
-    params: { api_version?: string } | null | undefined = {},
+    _params: { api_version?: string } | null | undefined = {},
     options?: GoogleGenAIRequestOptions,
   ): Promise<webhooks.Webhook> {
     return unwrapWithSdkHttpResponse(
       webhooksGet(
         this.getClient(),
         id,
-        params?.api_version,
         toGoogleGenAIRequestOptions(options),
       ),
     );
@@ -527,7 +558,6 @@ export class GeminiNextGenWebhooks {
       webhooksUpdate(
         this.getClient(),
         id,
-        api_version,
         update_mask,
         body,
         toGoogleGenAIRequestOptions(options),
@@ -537,14 +567,13 @@ export class GeminiNextGenWebhooks {
 
   async delete(
     id: string,
-    params: { api_version?: string } | null | undefined = {},
+    _params: { api_version?: string } | null | undefined = {},
     options?: GoogleGenAIRequestOptions,
   ): Promise<interactions.Empty> {
     return unwrapWithSdkHttpResponse(
       webhooksDelete(
         this.getClient(),
         id,
-        params?.api_version,
         toGoogleGenAIRequestOptions(options),
       ),
     );
@@ -555,12 +584,11 @@ export class GeminiNextGenWebhooks {
     params: WebhookRotateSigningSecretParams | null | undefined = {},
     options?: GoogleGenAIRequestOptions,
   ): Promise<webhooks.WebhookRotateSigningSecretResponse> {
-    const { api_version, ...body } = params ?? {};
+    const { api_version: _api_version, ...body } = params ?? {};
     return unwrapWithSdkHttpResponse(
       webhooksRotateSigningSecret(
         this.getClient(),
         id,
-        api_version,
         body,
         toGoogleGenAIRequestOptions(options),
       ),
@@ -572,12 +600,11 @@ export class GeminiNextGenWebhooks {
     params: WebhookPingParams | null | undefined = undefined,
     options?: GoogleGenAIRequestOptions,
   ): Promise<webhooks.WebhookPingResponse> {
-    const { api_version, body } = params ?? {};
+    const { body } = params ?? {};
     return unwrapWithSdkHttpResponse(
       webhooksPing(
         this.getClient(),
         id,
-        api_version,
         body,
         toGoogleGenAIRequestOptions(options),
       ),
@@ -599,12 +626,12 @@ export class GeminiNextGenTriggers {
     params: CreateTriggerParams,
     options?: GoogleGenAIRequestOptions,
   ): Promise<triggers.Trigger> {
-    const { api_version, ...body } = params;
+    const { api_version, parent, ...body } = params;
     return unwrapWithSdkHttpResponse(
       triggersCreate(
         this.getClient(api_version),
         body,
-        api_version,
+        parent,
         toGoogleGenAIRequestOptions(options),
       ),
     );
@@ -618,10 +645,10 @@ export class GeminiNextGenTriggers {
     return unwrapWithSdkHttpResponse(
       triggersList(
         this.getClient(api_version),
-        api_version,
         filter,
         pageSize,
         pageToken,
+        undefined,
         toGoogleGenAIRequestOptions(options),
       ),
     );
@@ -636,7 +663,6 @@ export class GeminiNextGenTriggers {
       triggersGet(
         this.getClient(params?.api_version),
         id,
-        params?.api_version,
         toGoogleGenAIRequestOptions(options),
       ),
     );
@@ -647,13 +673,12 @@ export class GeminiNextGenTriggers {
     params: UpdateTriggerParams,
     options?: GoogleGenAIRequestOptions,
   ): Promise<triggers.Trigger> {
-    const { api_version, ...body } = params;
+    const { api_version, update_mask: _update_mask, ...body } = params;
     return unwrapWithSdkHttpResponse(
       triggersUpdate(
         this.getClient(api_version),
         id,
         body,
-        api_version,
         toGoogleGenAIRequestOptions(options),
       ),
     );
@@ -668,7 +693,6 @@ export class GeminiNextGenTriggers {
       triggersDelete(
         this.getClient(params?.api_version),
         id,
-        params?.api_version,
         toGoogleGenAIRequestOptions(options),
       ),
     );
@@ -683,7 +707,6 @@ export class GeminiNextGenTriggers {
       triggersRun(
         this.getClient(params?.api_version),
         trigger_id,
-        params?.api_version,
         toGoogleGenAIRequestOptions(options),
       ),
     );
@@ -699,7 +722,7 @@ export class GeminiNextGenTriggers {
       triggersListExecutions(
         this.getClient(api_version),
         trigger_id,
-        api_version,
+        undefined,
         pageSize,
         pageToken,
         toGoogleGenAIRequestOptions(options),
@@ -1036,7 +1059,6 @@ export class GeminiNextGenEnvironments {
       environmentsCreateEnvironment(
         this.getClient(api_version),
         body,
-        api_version,
         toGoogleGenAIRequestOptions(options),
       ),
     );
@@ -1050,7 +1072,6 @@ export class GeminiNextGenEnvironments {
     return unwrapWithSdkHttpResponse(
       environmentsListEnvironments(
         this.getClient(api_version),
-        api_version,
         page_size,
         page_token,
         toGoogleGenAIRequestOptions(options),
@@ -1067,7 +1088,6 @@ export class GeminiNextGenEnvironments {
       environmentsGetEnvironment(
         this.getClient(params?.api_version),
         id,
-        params?.api_version,
         toGoogleGenAIRequestOptions(options),
       ),
     );
@@ -1082,7 +1102,6 @@ export class GeminiNextGenEnvironments {
       environmentsDeleteEnvironment(
         this.getClient(params?.api_version),
         id,
-        params?.api_version,
         toGoogleGenAIRequestOptions(options),
       ),
     );

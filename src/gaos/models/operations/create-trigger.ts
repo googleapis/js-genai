@@ -14,15 +14,23 @@ import * as triggers from "../triggers/index.js";
 
 export type CreateTriggerGlobals = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
 };
 
 export type CreateTriggerRequest = {
   /**
-   * Which version of the API to use.
+   * Required. The parent resource where this trigger will be created.
+   *
+   * @remarks
+   * Format: `projects/{project}/locations/{location}`
+   *
+   * Supported only by the Vertex API only.
    */
-  api_version?: string | undefined;
+  parent?: string | undefined;
+  /**
+   * Required. The trigger configuration to create.
+   */
   body: triggers.TriggerCreateParams;
 };

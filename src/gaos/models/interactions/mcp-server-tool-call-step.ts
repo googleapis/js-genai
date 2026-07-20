@@ -30,5 +30,9 @@ export type MCPServerToolCallStep = {
    * Required. The name of the used MCP server.
    */
   server_name: string;
+  /**
+   * A signature hash for backend validation.
+   */
+  signature?: string | undefined;
   type: "mcp_server_tool_call";
 };

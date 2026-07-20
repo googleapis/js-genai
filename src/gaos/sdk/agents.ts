@@ -19,31 +19,13 @@ import * as agents from "../models/agents/index.js";
 import * as interactions from "../models/interactions/index.js";
 import {
   CreateAgentParams,
-  DeleteAgentParams,
-  GetAgentParams,
   ListAgentsParams,
 } from "../models/operations/method-params.js";
 import { APIPromise, unwrapAsAPIPromise } from "../types/async.js";
 
 export class Agents extends ClientSDK {
   /**
-   * Creates a new Agent (Typed version for SDK).
-   */
-  create(
-    params: CreateAgentParams,
-    options?: RequestOptions,
-  ): APIPromise<agents.Agent> {
-    const { api_version, ...body } = params;
-    return unwrapAsAPIPromise(agentsCreate(
-      this,
-      body,
-      api_version,
-      options,
-    ));
-  }
-
-  /**
-   * Lists all Agents.
+   * Lists agents.
    */
   list(
     params?: ListAgentsParams,
@@ -51,7 +33,6 @@ export class Agents extends ClientSDK {
   ): APIPromise<agents.AgentListResponse> {
     return unwrapAsAPIPromise(agentsList(
       this,
-      params?.api_version,
       params?.page_size,
       params?.page_token,
       params?.parent,
@@ -60,33 +41,45 @@ export class Agents extends ClientSDK {
   }
 
   /**
-   * Gets a specific Agent.
+   * Creates or updates an agent (upsert by name).
    */
-  get(
-    id: string,
-    params?: GetAgentParams,
-    options?: Omit<RequestOptions, "extra_body">,
+  create(
+    params: CreateAgentParams,
+    options?: RequestOptions,
   ): APIPromise<agents.Agent> {
-    return unwrapAsAPIPromise(agentsGet(
+    const { parent, ...body } = params;
+    return unwrapAsAPIPromise(agentsCreate(
       this,
-      id,
-      params?.api_version,
+      body,
+      parent,
       options,
     ));
   }
 
   /**
-   * Deletes an Agent.
+   * Gets an agent (latest version).
+   */
+  get(
+    id: string,
+    options?: Omit<RequestOptions, "extra_body">,
+  ): APIPromise<agents.Agent> {
+    return unwrapAsAPIPromise(agentsGet(
+      this,
+      id,
+      options,
+    ));
+  }
+
+  /**
+   * Deletes an agent and all its versions.
    */
   delete(
     id: string,
-    params?: DeleteAgentParams,
     options?: Omit<RequestOptions, "extra_body">,
   ): APIPromise<interactions.Empty> {
     return unwrapAsAPIPromise(agentsDelete(
       this,
       id,
-      params?.api_version,
       options,
     ));
   }

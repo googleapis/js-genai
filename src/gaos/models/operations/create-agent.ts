@@ -14,18 +14,12 @@ import * as agents from "../agents/index.js";
 
 export type CreateAgentGlobals = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
 };
 
 export type CreateAgentRequest = {
-  /**
-   * Which version of the API to use.
-   */
-  api_version?: string | undefined;
-  /**
-   * The request body.
-   */
+  parent?: string | undefined;
   body: agents.Agent;
 };

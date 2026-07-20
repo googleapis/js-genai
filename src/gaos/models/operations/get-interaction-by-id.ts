@@ -15,34 +15,34 @@ import * as interactions from "../interactions/index.js";
 
 export type GetInteractionByIdGlobals = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
 };
 
 export type GetInteractionByIdRequest = {
   /**
-   * The unique identifier of the interaction to retrieve.
-   */
-  id: string;
-  /**
-   * If set to true, the generated content will be streamed incrementally.
-   */
-  stream?: boolean | undefined;
-  /**
-   * Optional. If set, resumes the interaction stream from the next chunk after the event marked by the event id. Can only be used if `stream` is true.
-   */
-  last_event_id?: string | undefined;
-  /**
-   * If set to true, includes the input in the response.
-   *
-   * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
+   * If true, includes the input in the response.
    */
   include_input?: boolean | undefined;
   /**
-   * Which version of the API to use.
+   * Part of `name`. Required. The name of the interaction to retrieve.
+   *
+   * @remarks
+   * Format: interactions/{interaction}
    */
-  api_version?: string | undefined;
+  id: string;
+  /**
+   * If set, resumes the interaction stream from the chunk after the event
+   *
+   * @remarks
+   * marked by the event id. Can only be used if `stream` is true.
+   */
+  last_event_id?: string | undefined;
+  /**
+   * If true, streams the interaction events as Server-Sent Events.
+   */
+  stream?: boolean | undefined;
 };
 
 export type GetInteractionByIdResponse =

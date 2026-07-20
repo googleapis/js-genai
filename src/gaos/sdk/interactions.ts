@@ -18,13 +18,6 @@ import { ClientSDK, RequestOptions } from "../lib/sdks.js";
 import * as interactions from "../models/interactions/index.js";
 import * as operations from "../models/operations/index.js";
 import {
-  CancelInteractionByIdParams,
-  CreateAgentInteractionParamsNonStreaming,
-  CreateAgentInteractionParamsStreaming,
-  CreateInteractionParams,
-  CreateModelInteractionParamsNonStreaming,
-  CreateModelInteractionParamsStreaming,
-  DeleteInteractionParams,
   GetInteractionByIdParams,
   GetInteractionByIdParamsNonStreaming,
   GetInteractionByIdParamsStreaming,
@@ -33,49 +26,35 @@ import { APIPromise, unwrapAsAPIPromise } from "../types/async.js";
 
 export class Interactions extends ClientSDK {
   /**
-   * Creating an interaction
-   *
-   * @remarks
-   * Creates a new interaction.
+   * Generates a set of responses from the model.
    */
   create(
-    params: CreateModelInteractionParamsNonStreaming,
+    request: interactions.CreateInteractionRequest & {
+      stream?: false | undefined;
+    },
     options?: RequestOptions,
   ): APIPromise<operations.CreateInteractionResponse>;
   create(
-    params: CreateAgentInteractionParamsNonStreaming,
+    request: interactions.CreateInteractionRequest & { stream: true },
     options?: RequestOptions,
   ): APIPromise<operations.CreateInteractionResponse>;
   create(
-    params: CreateModelInteractionParamsStreaming,
+    request: interactions.CreateInteractionRequest,
     options?: RequestOptions,
   ): APIPromise<operations.CreateInteractionResponse>;
   create(
-    params: CreateAgentInteractionParamsStreaming,
-    options?: RequestOptions,
-  ): APIPromise<operations.CreateInteractionResponse>;
-  create(
-    params: CreateInteractionParams,
-    options?: RequestOptions,
-  ): APIPromise<operations.CreateInteractionResponse>;
-  create(
-    params: CreateInteractionParams,
+    request: interactions.CreateInteractionRequest,
     options?: RequestOptions,
   ): APIPromise<operations.CreateInteractionResponse> {
-    const { api_version, ...body } = params;
     return unwrapAsAPIPromise(interactionsCreate(
       this,
-      body,
-      api_version,
+      request,
       options,
     ));
   }
 
   /**
-   * Retrieving an interaction
-   *
-   * @remarks
-   * Retrieves the full details of a single interaction based on its `Interaction.id`.
+   * Gets an interaction.
    */
   get(
     id: string,
@@ -100,48 +79,37 @@ export class Interactions extends ClientSDK {
     return unwrapAsAPIPromise(interactionsGet(
       this,
       id,
-      params?.stream,
-      params?.last_event_id,
       params?.include_input,
-      params?.api_version,
+      params?.last_event_id,
+      params?.stream,
       options,
     ));
   }
 
   /**
-   * Deleting an interaction
-   *
-   * @remarks
-   * Deletes the interaction by id.
+   * Deletes an interaction.
    */
   delete(
     id: string,
-    params?: DeleteInteractionParams,
     options?: Omit<RequestOptions, "extra_body">,
   ): APIPromise<void> {
     return unwrapAsAPIPromise(interactionsDelete(
       this,
       id,
-      params?.api_version,
       options,
     ));
   }
 
   /**
-   * Canceling an interaction
-   *
-   * @remarks
-   * Cancels an interaction by id. This only applies to background interactions that are still running.
+   * Cancels an interaction.
    */
   cancel(
     id: string,
-    params?: CancelInteractionByIdParams,
     options?: Omit<RequestOptions, "extra_body">,
   ): APIPromise<interactions.Interaction> {
     return unwrapAsAPIPromise(interactionsCancel(
       this,
       id,
-      params?.api_version,
       options,
     ));
   }
