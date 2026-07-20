@@ -16,6 +16,7 @@ import { ThinkingLevel } from "./thinking-level.js";
 import { ThinkingSummaries } from "./thinking-summaries.js";
 import { ToolChoiceConfig } from "./tool-choice-config.js";
 import { ToolChoiceType } from "./tool-choice-type.js";
+import { TranscriptionConfig } from "./transcription-config.js";
 import { VideoConfig } from "./video-config.js";
 
 /**
@@ -63,6 +64,10 @@ export type GenerationConfig = {
    * The maximum cumulative probability of tokens to consider when sampling.
    */
   top_p?: number | undefined;
+  /**
+   * Configuration for speech recognition (transcription).
+   */
+  transcription_config?: TranscriptionConfig | undefined;
   /**
    * Configuration options for video generation.
    */

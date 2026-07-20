@@ -115,6 +115,7 @@ import type { ThoughtSummaryDelta as ThoughtSummaryDelta$Import } from "./models
 import type { ToolChoiceConfig as ToolChoiceConfig$Import } from "./models/interactions/tool-choice-config.js";
 import type { ToolChoiceType as ToolChoiceType$Import } from "./models/interactions/tool-choice-type.js";
 import type { Tool as Tool$Import } from "./models/interactions/tool.js";
+import type { TranscriptionConfig as TranscriptionConfig$Import } from "./models/interactions/transcription-config.js";
 import type { URLCitation as URLCitation$Import } from "./models/interactions/url-citation.js";
 import type { URLContextCallArguments as URLContextCallArguments$Import } from "./models/interactions/url-context-call-arguments.js";
 import type { URLContextCallDelta as URLContextCallDelta$Import } from "./models/interactions/url-context-call-delta.js";
@@ -131,6 +132,7 @@ import type { VideoContent as VideoContent$Import } from "./models/interactions/
 import type { VideoDelta as VideoDelta$Import } from "./models/interactions/video-delta.js";
 import type { VideoResponseFormat as VideoResponseFormat$Import } from "./models/interactions/video-response-format.js";
 import type { WebhookConfig as WebhookConfig$Import } from "./models/interactions/webhook-config.js";
+import type { WordInfo as WordInfo$Import } from "./models/interactions/word-info.js";
 import type {
   CancelInteractionByIdParams as CancelInteractionByIdParams$Import,
   CreateAgentParams as CreateAgentParams$Import,
@@ -255,6 +257,7 @@ type ThoughtStep$ = ThoughtStep$Import;
 type Tool$ = Tool$Import;
 type ToolChoiceConfig$ = ToolChoiceConfig$Import;
 type ToolChoiceType$ = ToolChoiceType$Import;
+type TranscriptionConfig$ = TranscriptionConfig$Import;
 type URLCitation$ = URLCitation$Import;
 type URLContextCallArguments$ = URLContextCallArguments$Import;
 type URLContextCallStep$ = URLContextCallStep$Import;
@@ -266,6 +269,7 @@ type VideoConfig$ = VideoConfig$Import;
 type VideoContent$ = VideoContent$Import;
 type VideoResponseFormat$ = VideoResponseFormat$Import;
 type WebhookConfig$ = WebhookConfig$Import;
+type WordInfo$ = WordInfo$Import;
 type Arguments$ = CodeExecutionCallArguments$Import;
 type FindRequest$ = FindRequest$Import;
 type FixRequest$ = FixRequest$Import;
@@ -494,6 +498,7 @@ export type Tool = Tool$;
 export type ToolChoiceConfig = ToolChoiceConfig$;
 export type ToolChoiceType = ToolChoiceType$;
 export type ToolUseTokensByModality = ToolUseTokensByModality$;
+export type TranscriptionConfig = TranscriptionConfig$;
 export type Trigger = Trigger$;
 export type TriggerCreateParams = TriggerCreateParams$;
 export type TriggerDeleteParams = TriggerDeleteParams$;
@@ -538,6 +543,7 @@ export type WebhookRotateSigningSecretResponse =
   WebhookRotateSigningSecretResponse$;
 export type WebhookUpdate = WebhookUpdate$;
 export type WebhookUpdateParams = WebhookUpdateParams$;
+export type WordInfo = WordInfo$;
 export declare namespace Agents {
   export type Agent = Agent$;
   export type AgentCreateParams = AgentCreateParams$;
@@ -627,6 +633,7 @@ export declare namespace Interactions {
   export type Tool = Tool$;
   export type ToolChoiceConfig = ToolChoiceConfig$;
   export type ToolChoiceType = ToolChoiceType$;
+  export type TranscriptionConfig = TranscriptionConfig$;
   export type URLCitation = URLCitation$;
   export type URLContextCallArguments = URLContextCallArguments$;
   export interface URLContextCallStep extends URLContextCallStep$ {}
@@ -638,6 +645,7 @@ export declare namespace Interactions {
   export type VideoContent = VideoContent$;
   export type VideoResponseFormat = VideoResponseFormat$;
   export type WebhookConfig = WebhookConfig$;
+  export type WordInfo = WordInfo$;
   export namespace CodeExecutionCallStep {
     export type Arguments = Arguments$;
   }
