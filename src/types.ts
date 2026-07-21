@@ -7830,22 +7830,22 @@ export declare interface ContextWindowCompressionConfig {
   slidingWindow?: SlidingWindow;
 }
 
-/** Indicates the language of the audio should be automatically detected. */
+/** Deprecated: Language auto-detection is now the default when language_codes is omitted. */
 export declare interface LanguageAuto {}
 
-/** Provides hints to the model about possible languages present in the audio. */
+/** Deprecated: Use AudioTranscriptionConfig.language_codes instead. */
 export declare interface LanguageHints {
-  /** BCP-47 language codes. At least one must be specified. */
+  /** Deprecated. BCP-47 language codes. */
   languageCodes?: string[];
 }
 
 /** The audio transcription configuration in Setup. */
 export declare interface AudioTranscriptionConfig {
-  /** Deprecated: use LanguageAuto or LanguageHints instead. */
+  /** BCP-47 language codes providing hints about the languages present in the audio. If omitted or empty, defaults to automatic language detection. */
   languageCodes?: string[];
-  /** The model will detect the language automatically. Do not use together with LanguageHints. */
+  /** Deprecated: Auto-detection is now the default when language_codes is omitted. This field will be removed in a future version. */
   languageAuto?: LanguageAuto;
-  /** Specifies one or more languages in the audio. Do not use together with LanguageAuto. */
+  /** Deprecated: Use top-level language_codes instead. This field will be removed in a future version. */
   languageHints?: LanguageHints;
   /** A list of custom vocabulary phrases, which biases the ASR model to improve recognition of these specific terms. */
   customVocabulary?: string[];
