@@ -30,7 +30,7 @@ export type Environment = {
    * @remarks
    * update the existing environment instead of creating a new one.
    */
-  environment_id?: string | undefined;
+  id?: string | undefined;
   /**
    * Network configuration for the environment.
    */
