@@ -2,6 +2,16 @@
 
 
 
+## [2.13.0](https://github.com/googleapis/js-genai/compare/v2.12.0...v2.13.0) (2026-07-21)
+
+
+### Features
+
+* A new field `custom_vocabulary` is added to message `.google.cloud.aiplatform.v1beta1.BidiGenerateContentSetup` ([f32ec0a](https://github.com/googleapis/js-genai/commit/f32ec0a10d895db324c4facdd5330d8989f7564f))
+* add model selector ([b5d70da](https://github.com/googleapis/js-genai/commit/b5d70da1bd9721866611eedab05668d46a3077f6))
+* **interaction-api:** add queued status to interaction proto ([1b7dd39](https://github.com/googleapis/js-genai/commit/1b7dd395dfe167f3de89d1c7bf88af8a41f03873))
+* make ASR fields public in v1main and Interactions ([08ef3eb](https://github.com/googleapis/js-genai/commit/08ef3ebf4e13519a66c9308ad1f9ca39f24374ce))
+
 ## [2.12.0](https://github.com/googleapis/js-genai/compare/v2.11.0...v2.12.0) (2026-07-15)
 
 
