@@ -20,6 +20,7 @@ export type InteractionStatusUpdateStatus =
   | "cancelled"
   | "incomplete"
   | "budget_exceeded"
+  | "queued"
   | (string & {});
 
 export type InteractionStatusUpdate = {

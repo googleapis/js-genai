@@ -42,6 +42,7 @@ export type InteractionStatus =
   | "cancelled"
   | "incomplete"
   | "budget_exceeded"
+  | "queued"
   | (string & {});
 
 /**
