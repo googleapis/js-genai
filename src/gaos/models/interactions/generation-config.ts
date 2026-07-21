@@ -50,20 +50,12 @@ export type GenerationConfig = {
    * A list of character sequences that will stop output interaction.
    */
   stop_sequences?: Array<string> | undefined;
-  /**
-   * Controls the randomness of the output.
-   */
-  temperature?: number | undefined;
   thinking_level?: ThinkingLevel | undefined;
   thinking_summaries?: ThinkingSummaries | undefined;
   /**
    * The tool choice configuration.
    */
   tool_choice?: ToolChoiceType | ToolChoiceConfig | undefined;
-  /**
-   * The maximum cumulative probability of tokens to consider when sampling.
-   */
-  top_p?: number | undefined;
   /**
    * Configuration for speech recognition (transcription).
    */
