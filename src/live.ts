@@ -274,7 +274,7 @@ export class Live {
     if (params.config?.generationConfig) {
       // Raise deprecation warning for generationConfig.
       console.warn(
-        'Setting `LiveConnectConfig.generation_config` is deprecated, please set the fields on `LiveConnectConfig` directly. This will become an error in a future version (not before Q3 2025).',
+        'Setting `LiveConnectConfig.generation_config` is deprecated, please set the fields on `LiveConnectConfig` directly. It will be removed in the next major version (not before 7/31/2026).',
       );
     }
     const inputTools = params.config?.tools ?? [];
