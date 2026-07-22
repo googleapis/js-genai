@@ -207,15 +207,17 @@ export class GoogleGenAI {
     this._triggers = new GeminiNextGenTriggers(this.apiClient);
     return this._triggers;
   }
+
   constructor(options: GoogleGenAIOptions) {
+    this.vertexai = resolveCloudFlag(options);
+
     // Validate explicitly set initializer values.
-    if ((options.project || options.location) && options.apiKey) {
+    if ((options.project || options.location) && !this.vertexai) {
       throw new Error(
-        'Project/location and API key are mutually exclusive in the client initializer.',
+          'Project and location are not supported for Gemini API backend.',
       );
     }
 
-    this.vertexai = resolveCloudFlag(options);
     const envApiKey = getApiKeyFromEnv();
     const envProject = getEnv('GOOGLE_CLOUD_PROJECT');
     const envLocation = getEnv('GOOGLE_CLOUD_LOCATION');
@@ -238,8 +240,8 @@ export class GoogleGenAI {
         );
         this.apiKey = undefined;
       }
-      // Explicit api_key and explicit project/location already handled above.
-      if ((envProject || envLocation) && options.apiKey) {
+      if (!options.project && !options.location &&
+          (envProject || envLocation) && options.apiKey) {
         // Explicit api_key takes precedence over implicit project/location.
         console.debug(
           'The user provided Vertex AI API key will take precedence over' +
@@ -247,14 +249,18 @@ export class GoogleGenAI {
         );
         this.project = undefined;
         this.location = undefined;
-      } else if ((options.project || options.location) && envApiKey) {
+      } else if (
+          (options.project || options.location) && !options.apiKey &&
+          envApiKey) {
         // Explicit project/location takes precedence over implicit api_key.
         console.debug(
           'The user provided project/location will take precedence over' +
             ' the API key from the environment variables.',
         );
         this.apiKey = undefined;
-      } else if ((envProject || envLocation) && envApiKey) {
+      } else if (
+          !options.project && !options.location && !options.apiKey &&
+          (envProject || envLocation) && envApiKey) {
         // Implicit project/location takes precedence over implicit api_key.
         console.debug(
           'The project/location from the environment variables will take' +

@@ -123,18 +123,32 @@ describe('Client', () => {
     expect(client['project']).toBe('constructor_project');
     expect(client['location']).toBe('constructor_location');
   });
-  it('should not allow both project and apikey in constructor', () => {
+  it('should not allow project or location for Gemini API backend', () => {
     expect(() => {
       new GoogleGenAI({
         apiKey: 'constructor_api_key',
-        vertexai: true,
+        vertexai: false,
         project: 'constructor_project',
         location: 'constructor_location',
       });
-    }).toThrowError(
-      'Project/location and API key are mutually exclusive in the client initializer.',
-    );
+    })
+        .toThrowError(
+            'Project and location are not supported for Gemini API backend.',
+        );
   });
+  it('should allow explicit apiKey with project and location when vertexai is true',
+     () => {
+       const client = new GoogleGenAI({
+         apiKey: 'constructor_api_key',
+         vertexai: true,
+         project: 'constructor_project',
+         location: 'constructor_location',
+       });
+       expect(client.vertexai).toBe(true);
+       expect(client['apiKey']).toBe('constructor_api_key');
+       expect(client['project']).toBe('constructor_project');
+       expect(client['location']).toBe('constructor_location');
+     });
   it('should prioritize credentials over implicit api key', () => {
     process.env['GOOGLE_API_KEY'] = '';
 
@@ -604,7 +618,7 @@ describe('Client', () => {
     it('env enterprise should take precedence over env vertexai', () => {
       process.env['GOOGLE_GENAI_USE_ENTERPRISE'] = 'false';
       process.env['GOOGLE_GENAI_USE_VERTEXAI'] = 'true';
-      const client = new GoogleGenAI({project: 'p', location: 'l'});
+      const client = new GoogleGenAI({apiKey: 'key'});
       expect(client.vertexai).toBeFalse();
     });
 
