@@ -15,7 +15,7 @@ import { FunctionResultSubcontent } from "./function-result-subcontent.js";
 export type FunctionResultStepResult = {};
 
 /**
- * Required. The result of the tool call.
+ * The result of the tool call.
  */
 export type FunctionResultStepResultUnion =
   | FunctionResultStepResult
@@ -39,7 +39,7 @@ export type FunctionResultStep = {
    */
   name?: string | undefined;
   /**
-   * Required. The result of the tool call.
+   * The result of the tool call.
    */
   result: FunctionResultStepResult | Array<FunctionResultSubcontent> | string;
   type: "function_result";
