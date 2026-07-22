@@ -17,7 +17,7 @@ import { VideoResponseFormat } from "./video-response-format.js";
 
 export type ResponseFormat =
   | AudioResponseFormat
-  | TextResponseFormat
   | ImageResponseFormat
+  | TextResponseFormat
   | VideoResponseFormat
   | { [k: string]: any };

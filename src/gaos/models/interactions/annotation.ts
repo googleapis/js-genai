@@ -18,4 +18,4 @@ import { WordInfo } from "./word-info.js";
 /**
  * Citation information for model-generated content.
  */
-export type Annotation = URLCitation | FileCitation | PlaceCitation | WordInfo;
+export type Annotation = FileCitation | PlaceCitation | URLCitation | WordInfo;

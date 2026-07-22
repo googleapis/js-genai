@@ -13,4 +13,4 @@
 import { ImageContent } from "./image-content.js";
 import { TextContent } from "./text-content.js";
 
-export type FunctionResultSubcontent = TextContent | ImageContent;
+export type FunctionResultSubcontent = ImageContent | TextContent;
