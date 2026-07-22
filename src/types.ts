@@ -371,6 +371,10 @@ export enum HarmCategory {
    */
   HARM_CATEGORY_CIVIC_INTEGRITY = 'HARM_CATEGORY_CIVIC_INTEGRITY',
   /**
+   * Prompts designed to bypass safety filters.
+   */
+  HARM_CATEGORY_JAILBREAK = 'HARM_CATEGORY_JAILBREAK',
+  /**
    * Images that contain hate speech. This enum value is not supported in Gemini API.
    */
   HARM_CATEGORY_IMAGE_HATE = 'HARM_CATEGORY_IMAGE_HATE',
@@ -386,10 +390,6 @@ export enum HarmCategory {
    * Images that contain sexually explicit content. This enum value is not supported in Gemini API.
    */
   HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT = 'HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT',
-  /**
-   * Prompts designed to bypass safety filters. This enum value is not supported in Gemini API.
-   */
-  HARM_CATEGORY_JAILBREAK = 'HARM_CATEGORY_JAILBREAK',
 }
 
 /** The method for blocking content. If not specified, the default behavior is to use the probability score. This enum is not supported in Gemini API. */
@@ -1218,6 +1218,74 @@ export enum ServiceTier {
   PRIORITY = 'priority',
 }
 
+/** Defines what effect activity has. This enum is not supported in Vertex AI. */
+export enum ActivityHandling {
+  /**
+   * If unspecified, the default behavior is `START_OF_ACTIVITY_INTERRUPTS`.
+   */
+  ACTIVITY_HANDLING_UNSPECIFIED = 'ACTIVITY_HANDLING_UNSPECIFIED',
+  /**
+   * If true, start of activity will interrupt the model's response (also called "barge in"). The model's current response will be cut-off in the moment of the interruption. This is the default behavior.
+   */
+  START_OF_ACTIVITY_INTERRUPTS = 'START_OF_ACTIVITY_INTERRUPTS',
+  /**
+   * The model's response will not be interrupted.
+   */
+  NO_INTERRUPTION = 'NO_INTERRUPTION',
+}
+
+/** Defines which input is included in the user's turn. This enum is not supported in Vertex AI. */
+export enum TurnCoverage {
+  /**
+   * If unspecified, a default behavior is selected based on the model. E.g., for Gemini 2.5, the default is `TURN_INCLUDES_ONLY_ACTIVITY`, while for Gemini 3.1 and onwards, it's `TURN_INCLUDES_AUDIO_ACTIVITY_AND_ALL_VIDEO`.
+   */
+  TURN_COVERAGE_UNSPECIFIED = 'TURN_COVERAGE_UNSPECIFIED',
+  /**
+   * Includes activity since the last turn, excluding inactivity (e.g. silence on the audio stream).
+   */
+  TURN_INCLUDES_ONLY_ACTIVITY = 'TURN_INCLUDES_ONLY_ACTIVITY',
+  /**
+   * Includes all realtime input since the last turn, including inactivity (e.g. silence on the audio stream).
+   */
+  TURN_INCLUDES_ALL_INPUT = 'TURN_INCLUDES_ALL_INPUT',
+  /**
+   * Includes audio activity and all video since the last turn. With automatic activity detection, audio activity means speech and excludes silence.
+   */
+  TURN_INCLUDES_AUDIO_ACTIVITY_AND_ALL_VIDEO = 'TURN_INCLUDES_AUDIO_ACTIVITY_AND_ALL_VIDEO',
+}
+
+/** Determines how likely detected speech is ended. This enum is not supported in Vertex AI. */
+export enum EndSensitivity {
+  /**
+   * The default is END_SENSITIVITY_HIGH.
+   */
+  END_SENSITIVITY_UNSPECIFIED = 'END_SENSITIVITY_UNSPECIFIED',
+  /**
+   * Automatic detection ends speech more often.
+   */
+  END_SENSITIVITY_HIGH = 'END_SENSITIVITY_HIGH',
+  /**
+   * Automatic detection ends speech less often.
+   */
+  END_SENSITIVITY_LOW = 'END_SENSITIVITY_LOW',
+}
+
+/** Determines how likely speech is to be detected. This enum is not supported in Vertex AI. */
+export enum StartSensitivity {
+  /**
+   * The default is START_SENSITIVITY_HIGH.
+   */
+  START_SENSITIVITY_UNSPECIFIED = 'START_SENSITIVITY_UNSPECIFIED',
+  /**
+   * Automatic detection will detect the start of speech more often.
+   */
+  START_SENSITIVITY_HIGH = 'START_SENSITIVITY_HIGH',
+  /**
+   * Automatic detection will detect the start of speech less often.
+   */
+  START_SENSITIVITY_LOW = 'START_SENSITIVITY_LOW',
+}
+
 /** The tokenization quality used for given media. */
 export enum PartMediaResolutionLevel {
   /**
@@ -1644,74 +1712,6 @@ export enum VoiceActivityType {
    * End of sentence signal.
    */
   ACTIVITY_END = 'ACTIVITY_END',
-}
-
-/** Start of speech sensitivity. */
-export enum StartSensitivity {
-  /**
-   * The default is START_SENSITIVITY_LOW for Gemini Enterprise Agent Platform and START_SENSITIVITY_HIGH for Gemini Live.
-   */
-  START_SENSITIVITY_UNSPECIFIED = 'START_SENSITIVITY_UNSPECIFIED',
-  /**
-   * Automatic detection will detect the start of speech more often.
-   */
-  START_SENSITIVITY_HIGH = 'START_SENSITIVITY_HIGH',
-  /**
-   * Automatic detection will detect the start of speech less often.
-   */
-  START_SENSITIVITY_LOW = 'START_SENSITIVITY_LOW',
-}
-
-/** End of speech sensitivity. */
-export enum EndSensitivity {
-  /**
-   * The default is END_SENSITIVITY_LOW for Gemini Enterprise Agent Platform and END_SENSITIVITY_HIGH for Gemini Live.
-   */
-  END_SENSITIVITY_UNSPECIFIED = 'END_SENSITIVITY_UNSPECIFIED',
-  /**
-   * Automatic detection ends speech more often.
-   */
-  END_SENSITIVITY_HIGH = 'END_SENSITIVITY_HIGH',
-  /**
-   * Automatic detection ends speech less often.
-   */
-  END_SENSITIVITY_LOW = 'END_SENSITIVITY_LOW',
-}
-
-/** The different ways of handling user activity. */
-export enum ActivityHandling {
-  /**
-   * If unspecified, the default behavior is `START_OF_ACTIVITY_INTERRUPTS`.
-   */
-  ACTIVITY_HANDLING_UNSPECIFIED = 'ACTIVITY_HANDLING_UNSPECIFIED',
-  /**
-   * If true, start of activity will interrupt the model's response (also called "barge in"). The model's current response will be cut-off in the moment of the interruption. This is the default behavior.
-   */
-  START_OF_ACTIVITY_INTERRUPTS = 'START_OF_ACTIVITY_INTERRUPTS',
-  /**
-   * The model's response will not be interrupted.
-   */
-  NO_INTERRUPTION = 'NO_INTERRUPTION',
-}
-
-/** Options about which input is included in the user's turn. */
-export enum TurnCoverage {
-  /**
-   * If unspecified, the default behavior is `TURN_INCLUDES_ONLY_ACTIVITY`.
-   */
-  TURN_COVERAGE_UNSPECIFIED = 'TURN_COVERAGE_UNSPECIFIED',
-  /**
-   * The users turn only includes activity since the last turn, excluding inactivity (e.g. silence on the audio stream). This is the default behavior.
-   */
-  TURN_INCLUDES_ONLY_ACTIVITY = 'TURN_INCLUDES_ONLY_ACTIVITY',
-  /**
-   * The users turn includes all realtime input since the last turn, including inactivity (e.g. silence on the audio stream).
-   */
-  TURN_INCLUDES_ALL_INPUT = 'TURN_INCLUDES_ALL_INPUT',
-  /**
-   * Includes audio activity and all video since the last turn. With automatic activity detection, audio activity means speech and excludes silence.
-   */
-  TURN_INCLUDES_AUDIO_ACTIVITY_AND_ALL_VIDEO = 'TURN_INCLUDES_AUDIO_ACTIVITY_AND_ALL_VIDEO',
 }
 
 /** Scale of the generated music. */
@@ -2627,6 +2627,10 @@ export declare interface ToolParallelAiSearch {
   apiKey?: string;
   /** Optional. Custom configs for ParallelAiSearch. This field can be used to pass any parameter from the Parallel.ai Search API. See the Parallel.ai documentation for the full list of available parameters and their usage: https://docs.parallel.ai/api-reference/search-beta/search Currently only `source_policy`, `excerpts`, `max_results`, `mode`, `fetch_policy` can be set via this field. For example: { "source_policy": { "include_domains": ["google.com", "wikipedia.org"], "exclude_domains": ["example.com"] }, "fetch_policy": { "max_age_seconds": 3600 } } */
   customConfigs?: Record<string, unknown>;
+  /** Optional. Deprecated: Use `enable_zero_data_retention` instead. Instructs Vertex Grounding to use Parallel's Zero Data Retention Marketplace product. If this value is "false" or omitted, the Parallel Web Search for Grounding standard subscription will be used. If this value is "true", the Parallel Web Search for Grounding - ZDR subscription will be used. */
+  enableDataRetention?: boolean;
+  /** Optional. Instructs Vertex Grounding to use Parallel's Zero Data Retention Marketplace product. If this value is "false" or omitted, the Parallel Web Search for Grounding standard subscription will be used. If this value is "true", the Parallel Web Search for Grounding - ZDR subscription will be used. */
+  enableZeroDataRetention?: boolean;
 }
 
 /** Tool to support URL context. */
@@ -4626,7 +4630,7 @@ export declare interface GenerationConfig {
   audioTimestamp?: boolean;
   /** Optional. The number of candidate responses to generate. A higher `candidate_count` can provide more options to choose from, but it also consumes more resources. This can be useful for generating a variety of responses and selecting the best one. */
   candidateCount?: number;
-  /** Optional. If enabled, the model will detect emotions and adapt its responses accordingly. For example, if the model detects that the user is frustrated, it may provide a more empathetic response. This field is not supported in Gemini API. */
+  /** Optional. If enabled, the model will detect emotions and adapt its responses accordingly. For example, if the model detects that the user is frustrated, it may provide a more empathetic response. */
   enableAffectiveDialog?: boolean;
   /** Optional. Penalizes tokens based on their frequency in the generated text. A positive value helps to reduce the repetition of words and phrases. Valid values can range from [-2.0, 2.0]. */
   frequencyPenalty?: number;
@@ -5301,6 +5305,8 @@ export declare interface ReinforcementTuningHyperParameters {
   thinkingLevel?: ReinforcementTuningThinkingLevel;
   /** Optional. The thinking budget for the tuning job to optimize for (Gemini 2.5 only). * -1 means dynamic thinking * 0 means no thinking * > 0 means thinking budget in tokens If not set, default to -1 (dynamic thinking). */
   thinkingBudget?: number;
+  /** Optional. Number of steps for the tuning job (mutually exclusive with epoch_count). */
+  stepCount?: string;
 }
 
 /** Reinforcement tuning spec for tuning. */
@@ -7771,71 +7777,23 @@ export declare interface RegisterFilesParameters {
   config?: RegisterFilesConfig;
 }
 
-/** Configures automatic detection of activity. */
-export declare interface AutomaticActivityDetection {
-  /** If enabled, detected voice and text input count as activity. If disabled, the client must send activity signals. */
-  disabled?: boolean;
-  /** Determines how likely speech is to be detected. */
-  startOfSpeechSensitivity?: StartSensitivity;
-  /** Determines how likely detected speech is ended. */
-  endOfSpeechSensitivity?: EndSensitivity;
-  /** The required duration of detected speech before start-of-speech is committed. The lower this value the more sensitive the start-of-speech detection is and the shorter speech can be recognized. However, this also increases the probability of false positives. */
-  prefixPaddingMs?: number;
-  /** The required duration of detected non-speech (e.g. silence) before end-of-speech is committed. The larger this value, the longer speech gaps can be without interrupting the user's activity but this will increase the model's latency. */
-  silenceDurationMs?: number;
-}
-
-/** Marks the end of user activity.
-
-This can only be sent if automatic (i.e. server-side) activity detection is
-disabled. */
-export declare interface RealtimeInputConfig {
-  /** If not set, automatic activity detection is enabled by default. If automatic voice detection is disabled, the client must send activity signals. */
-  automaticActivityDetection?: AutomaticActivityDetection;
-  /** Defines what effect activity has. */
-  activityHandling?: ActivityHandling;
-  /** Defines which input is included in the user's turn. */
-  turnCoverage?: TurnCoverage;
-}
-
 /** Configuration of session resumption mechanism.
 
 Included in `LiveConnectConfig.session_resumption`. If included server
 will send `LiveServerSessionResumptionUpdate` messages. */
 export declare interface SessionResumptionConfig {
-  /** Session resumption handle of previous session (session to restore).
-
-If not present new session will be started. */
+  /** The handle of a previous session. If not present then a new session is created. Session handles come from `SessionResumptionUpdate.token` values in previous connections. */
   handle?: string;
   /** If set the server will send `last_consumed_client_message_index` in the `session_resumption_update` messages to allow for transparent reconnections. */
   transparent?: boolean;
 }
 
-/** Context window will be truncated by keeping only suffix of it.
-
-Context window will always be cut at start of USER role turn. System
-instructions and `BidiGenerateContentSetup.prefix_turns` will not be
-subject to the sliding window mechanism, they will always stay at the
-beginning of context window. */
-export declare interface SlidingWindow {
-  /** Session reduction target -- how many tokens we should keep. Window shortening operation has some latency costs, so we should avoid running it on every turn. Should be < trigger_tokens. If not set, trigger_tokens/2 is assumed. */
-  targetTokens?: string;
-}
-
-/** Enables context window compression -- mechanism managing model context window so it does not exceed given length. */
-export declare interface ContextWindowCompressionConfig {
-  /** Number of tokens (before running turn) that triggers context window compression mechanism. */
-  triggerTokens?: string;
-  /** Sliding window compression mechanism. */
-  slidingWindow?: SlidingWindow;
-}
-
-/** Indicates the language of the audio should be automatically detected. */
+/** Indicates the language of the audio should be automatically detected. This data type is not supported in Vertex AI. */
 export declare interface LanguageAuto {}
 
-/** Provides hints to the model about possible languages present in the audio. */
+/** Provides hints to the model about possible languages present in the audio. This data type is not supported in Vertex AI. */
 export declare interface LanguageHints {
-  /** BCP-47 language codes. At least one must be specified. */
+  /** Required. BCP-47 language codes. */
   languageCodes?: string[];
 }
 
@@ -7861,16 +7819,6 @@ export declare interface ProactivityConfig {
   proactiveAudio?: boolean;
 }
 
-/** Configuration for history exchange between client and server. */
-export declare interface HistoryConfig {
-  /** If true, after sending `setup_complete`, the server will wait
-      and at first process `client_content` messages until `turn_complete` is
-      `true`. This initial history will not trigger a model call and
-      may end with model content. After `turn_complete` is `true`, the client
-      can start the realtime conversation via `realtime_input`. */
-  initialHistoryInClientContent?: boolean;
-}
-
 /** Configures the customized avatar to be used in the session. */
 export declare interface CustomizedAvatar {
   /** The mime type of the reference image, e.g., "image/jpeg". */
@@ -7891,6 +7839,50 @@ export declare interface AvatarConfig {
   audioBitrateBps?: number;
   /** The bitrate of compressed video output. */
   videoBitrateBps?: number;
+}
+
+/** Configures automatic detection of activity. This data type is not supported in Vertex AI. */
+export declare interface AutomaticActivityDetection {
+  /** Optional. If enabled (the default), detected voice and text input count as activity. If disabled, the client must send activity signals. */
+  disabled?: boolean;
+  /** Optional. Determines how likely speech is to be detected. */
+  startOfSpeechSensitivity?: StartSensitivity;
+  /** Optional. Determines how likely detected speech is ended. */
+  endOfSpeechSensitivity?: EndSensitivity;
+  /** Optional. The required duration of detected speech before start-of-speech is committed. The lower this value, the more sensitive the start-of-speech detection is and shorter speech can be recognized. However, this also increases the probability of false positives. */
+  prefixPaddingMs?: number;
+  /** Optional. The required duration of detected non-speech (e.g. silence) before end-of-speech is committed. The larger this value, the longer speech gaps can be without interrupting the user's activity but this will increase the model's latency. */
+  silenceDurationMs?: number;
+}
+
+/** Configures the realtime input behavior in `BidiGenerateContent`. This data type is not supported in Vertex AI. */
+export declare interface RealtimeInputConfig {
+  /** Optional. If not set, automatic activity detection is enabled by default. If automatic voice detection is disabled, the client must send activity signals. */
+  automaticActivityDetection?: AutomaticActivityDetection;
+  /** Optional. Defines what effect activity has. */
+  activityHandling?: ActivityHandling;
+  /** Optional. Defines which input is included in the user's turn. */
+  turnCoverage?: TurnCoverage;
+}
+
+/** The SlidingWindow method operates by discarding content at the beginning of the context window. The resulting context will always begin at the start of a USER role turn. System instructions and any `BidiGenerateContentSetup.prefix_turns` will always remain at the beginning of the result. This data type is not supported in Vertex AI. */
+export declare interface SlidingWindow {
+  /** The target number of tokens to keep. The default value is trigger_tokens/2. Discarding parts of the context window causes a temporary latency increase so this value should be calibrated to avoid frequent compression operations. */
+  targetTokens?: string;
+}
+
+/** Enables context window compression — a mechanism for managing the model's context window so that it does not exceed a given length. This data type is not supported in Vertex AI. */
+export declare interface ContextWindowCompressionConfig {
+  /** The number of tokens (before running a turn) required to trigger a context window compression. This can be used to balance quality against latency as shorter context windows may result in faster model responses. However, any compression operation will cause a temporary latency increase, so they should not be triggered frequently. If not set, the default is 80% of the model's context window limit. This leaves 20% for the next user request/model response. */
+  triggerTokens?: string;
+  /** A sliding-window mechanism. */
+  slidingWindow?: SlidingWindow;
+}
+
+/** History configuration. This message is included in the session configuration as `BidiGenerateContentSetup.history_config`. Configures the exchange of history messages. This data type is not supported in Vertex AI. */
+export declare interface HistoryConfig {
+  /** Optional. If true, after sending `setup_complete`, the server will wait and at first process `client_content` messages until `turn_complete` is `true`. This initial history will not trigger a model call and may end with role `MODEL`. After `turn_complete` is `true`, the client can start the realtime conversation via `realtime_input`. */
+  initialHistoryInClientContent?: boolean;
 }
 
 /** Message contains configuration that will apply for the duration of the streaming session. */
@@ -8468,10 +8460,44 @@ export declare interface LiveMusicSetWeightedPromptsParameters {
   weightedPrompts: WeightedPrompt[];
 }
 
+/** Message to be sent in the first (and only in the first) `BidiGenerateContentClientMessage`. Contains configuration that will apply for the duration of the streaming RPC. Clients should wait for a `BidiGenerateContentSetupComplete` message before sending any additional messages. This data type is not supported in Vertex AI. */
+export declare interface BidiGenerateContentSetup {
+  /** Optional. Configures a context window compression mechanism. If included, the server will automatically reduce the size of the context when it exceeds the configured length. */
+  contextWindowCompression?: ContextWindowCompressionConfig;
+  /** Optional. Generation config. The following fields are not supported: - `response_logprobs` - `response_mime_type` - `logprobs` - `response_schema` - `response_json_schema` - `stop_sequence` - `skip_response_cache` - `routing_config` - `audio_timestamp` */
+  generationConfig?: GenerationConfig;
+  /** Optional. Configures the exchange of history between the client and the server. */
+  historyConfig?: HistoryConfig;
+  /** Optional. If set, enables transcription of voice input. The transcription aligns with the input audio language, if configured. */
+  inputAudioTranscription?: AudioTranscriptionConfig;
+  /** Required. The model's resource name. This serves as an ID for the Model to use. Format: `models/{model}` */
+  model?: string;
+  /** Optional. If set, enables transcription of the model's audio output. The transcription aligns with the language code specified for the output audio, if configured. */
+  outputAudioTranscription?: AudioTranscriptionConfig;
+  /** Optional. Configures the handling of realtime input. */
+  realtimeInputConfig?: RealtimeInputConfig;
+  /** Optional. Configures session resumption mechanism. If included, the server will send `SessionResumptionUpdate` messages. */
+  sessionResumption?: SessionResumptionConfig;
+  /** Optional. The user provided system instructions for the model. Note: Only text should be used in parts and content in each part will be in a separate paragraph. */
+  systemInstruction?: Content;
+  /** Optional. A list of `Tools` the model may use to generate the next response. A `Tool` is a piece of code that enables the system to interact with external systems to perform an action, or set of actions, outside of knowledge and scope of the model. */
+  tools?: Tool[];
+}
+
 /** Config for auth_tokens.create parameters. */
 export declare interface AuthToken {
-  /** The name of the auth token. */
+  /** Output only. Identifier. The token itself. */
   name?: string;
+  /** Optional. Input only. Immutable. Configuration specific to `BidiGenerateContent`. */
+  bidiGenerateContentSetup?: BidiGenerateContentSetup;
+  /** Optional. Input only. Immutable. An optional time after which, when using the resulting token, messages in BidiGenerateContent sessions will be rejected. (Gemini may preemptively close the session after this time.) If not set then this defaults to 30 minutes in the future. If set, this value must be less than 20 hours in the future. */
+  expireTime?: string;
+  /** Optional. Input only. Immutable. If field_mask is empty, and `bidi_generate_content_setup` is not present, then the effective `BidiGenerateContentSetup` message is taken from the Live API connection. If field_mask is empty, and `bidi_generate_content_setup` _is_ present, then the effective `BidiGenerateContentSetup` message is taken entirely from `bidi_generate_content_setup` in this request. The setup message from the Live API connection is ignored. If field_mask is not empty, then the corresponding fields from `bidi_generate_content_setup` will overwrite the fields from the setup message in the Live API connection. */
+  fieldMask?: string;
+  /** Optional. Input only. Immutable. The time after which new Live API sessions using the token resulting from this request will be rejected. If not set this defaults to 60 seconds in the future. If set, this value must be less than 20 hours in the future. */
+  newSessionExpireTime?: string;
+  /** Optional. Input only. Immutable. The number of times the token can be used. If this value is zero then no limit is applied. Resuming a Live API session does not count as a use. If unspecified, the default is 1. */
+  uses?: number;
 }
 
 /** Config for LiveConnectConstraints for Auth Token creation. */
