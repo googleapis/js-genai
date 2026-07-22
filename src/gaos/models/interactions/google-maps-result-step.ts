@@ -16,14 +16,14 @@ import { GoogleMapsResult } from "./google-maps-result.js";
  * Google Maps result step.
  */
 export type GoogleMapsResultStep = {
-  type: "google_maps_result";
-  result?: Array<GoogleMapsResult> | undefined;
   /**
    * Required. ID to match the ID from the function call block.
    */
   call_id: string;
+  result: Array<GoogleMapsResult>;
   /**
    * A signature hash for backend validation.
    */
   signature?: string | undefined;
+  type: "google_maps_result";
 };

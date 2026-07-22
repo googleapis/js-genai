@@ -17,6 +17,7 @@ import * as interactions from "../interactions/index.js";
  */
 export type AgentTool =
   | interactions.CodeExecution
+  | interactions.FunctionT
   | interactions.GoogleSearch
-  | interactions.URLContext
-  | interactions.MCPServer;
+  | interactions.MCPServer
+  | interactions.URLContext;

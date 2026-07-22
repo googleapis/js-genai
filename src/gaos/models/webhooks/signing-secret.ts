@@ -15,11 +15,11 @@
  */
 export type SigningSecret = {
   /**
-   * Output only. The truncated version of the signing secret.
-   */
-  truncated_secret?: string | undefined;
-  /**
    * Output only. The expiration date of the signing secret.
    */
   expire_time?: string | undefined;
+  /**
+   * Output only. The truncated version of the signing secret.
+   */
+  truncated_secret?: string | undefined;
 };

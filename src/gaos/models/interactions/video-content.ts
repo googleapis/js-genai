@@ -31,18 +31,18 @@ export type VideoContentMimeType =
  * A video content block.
  */
 export type VideoContent = {
-  type: "video";
   /**
    * The video content.
    */
   data?: string | undefined;
   /**
-   * The URI of the video.
-   */
-  uri?: string | undefined;
-  /**
    * The mime type of the video.
    */
   mime_type?: VideoContentMimeType | undefined;
   resolution?: MediaResolution | undefined;
+  type: "video";
+  /**
+   * The URI of the video.
+   */
+  uri?: string | undefined;
 };

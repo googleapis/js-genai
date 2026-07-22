@@ -22,6 +22,10 @@ export type RagStoreConfig = {
    */
   rag_resources?: Array<RagResource> | undefined;
   /**
+   * Specifies the context retrieval config.
+   */
+  rag_retrieval_config?: RagRetrievalConfig | undefined;
+  /**
    * Optional. Number of top k results to return from the selected corpora.
    *
    * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
@@ -33,8 +37,4 @@ export type RagStoreConfig = {
    * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
    */
   vector_distance_threshold?: number | undefined;
-  /**
-   * Specifies the context retrieval config.
-   */
-  rag_retrieval_config?: RagRetrievalConfig | undefined;
 };

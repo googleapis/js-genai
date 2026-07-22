@@ -11,14 +11,13 @@ import {Downloader} from './_downloader.js';
 import {Uploader} from './_uploader.js';
 import {uploadToFileSearchStoreConfigToMldev} from './converters/_filesearchstores_converters.js';
 import {ApiError} from './errors.js';
-import {GeminiNextGenAPIClientAdapter} from './interactions/client-adapter.js';
 import * as types from './types.js';
 
 const CONTENT_TYPE_HEADER = 'Content-Type';
 const SERVER_TIMEOUT_HEADER = 'X-Server-Timeout';
 const USER_AGENT_HEADER = 'User-Agent';
 export const GOOGLE_API_CLIENT_HEADER = 'x-goog-api-client';
-export const SDK_VERSION = '2.8.0'; // x-release-please-version
+export const SDK_VERSION = '2.13.0'; // x-release-please-version
 const LIBRARY_LABEL = `google-genai-sdk/${SDK_VERSION}`;
 const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
 const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';
@@ -169,7 +168,7 @@ export interface HttpRequest {
  * WARNING: This is an internal API and may change without notice. Direct usage
  * is not supported and may break your application.
  */
-export class ApiClient implements GeminiNextGenAPIClientAdapter {
+export class ApiClient {
   readonly clientOptions: ApiClientInitOptions;
   private readonly customBaseUrl?: string;
   constructor(opts: ApiClientInitOptions) {

@@ -20,11 +20,11 @@ export type Language = "python";
  */
 export type CodeExecutionCallArguments = {
   /**
-   * Programming language of the `code`.
-   */
-  language?: Language | undefined;
-  /**
    * The code to be executed.
    */
   code?: string | undefined;
+  /**
+   * Programming language of the `code`.
+   */
+  language?: Language | undefined;
 };

@@ -14,7 +14,6 @@
  * A tool that can be used by the model to call Google Maps.
  */
 export type GoogleMaps = {
-  type: "google_maps";
   /**
    * Whether to return a widget context token in the tool call result of the
    *
@@ -30,4 +29,5 @@ export type GoogleMaps = {
    * The longitude of the user's location.
    */
   longitude?: number | undefined;
+  type: "google_maps";
 };

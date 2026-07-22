@@ -14,19 +14,7 @@ import {
 } from "../models/errors/http-client-errors.js";
 import { GoogleGenAiError } from "../models/errors/google-gen-ai-error.js";
 
-export class GeminiNextGenAPIClientError extends Error {
-  static override [Symbol.hasInstance](instance: unknown): boolean {
-    if (Function.prototype[Symbol.hasInstance].call(this, instance)) {
-      return true;
-    }
-
-    if (this === GeminiNextGenAPIClientError) {
-      return isKnownLegacyErrorLike(instance);
-    }
-
-    return isNamedLegacyErrorLike(instance, this.name);
-  }
-}
+export class GeminiNextGenAPIClientError extends Error {}
 
 /** General errors raised by the GenAI API. */
 export class APIError<
@@ -67,6 +55,7 @@ export class APIError<
     this.rawResponse = undefined;
     this.cause = undefined;
     this.name = this.constructor.name;
+    Object.setPrototypeOf(this, new.target.prototype);
   }
 
   private static makeMessage(
@@ -82,18 +71,6 @@ export class APIError<
     const msg = errorMessage ?? message ?? (errorBody || "An error occurred");
     const statusText = status ? `${status} ` : "";
     return `${statusText}${msg}`;
-  }
-
-  static override [Symbol.hasInstance](instance: unknown): boolean {
-    if (Function.prototype[Symbol.hasInstance].call(this, instance)) {
-      return true;
-    }
-
-    if (this === APIError) {
-      return isAPIErrorLike(instance);
-    }
-
-    return isNamedLegacyErrorLike(instance, this.name);
   }
 
   static generate(
@@ -275,70 +252,11 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
-function isLegacyErrorLike(value: unknown): boolean {
-  if (!(value instanceof Error) || !isPlainObject(value)) {
-    return false;
-  }
-
-  return (
-    "status" in value ||
-    "statusCode" in value ||
-    "error" in value ||
-    "headers" in value
-  );
-}
-
-function isAPIErrorLike(value: unknown): boolean {
-  return isLegacyErrorLike(value) && "error" in (value as object);
-}
-
 function isCompatAPIErrorInstance(value: unknown): value is APIError {
+  // Avoid instanceof here so this guard never depends on Symbol.hasInstance.
   return typeof value === "object" && value !== null
     ? APIError.prototype.isPrototypeOf(value)
     : false;
-}
-
-const knownLegacyErrorNames = [
-  "GeminiNextGenAPIClientError",
-  "APIError",
-  "APIUserAbortError",
-  "APIConnectionError",
-  "APIConnectionTimeoutError",
-  "BadRequestError",
-  "AuthenticationError",
-  "PermissionDeniedError",
-  "NotFoundError",
-  "ConflictError",
-  "UnprocessableEntityError",
-  "RateLimitError",
-  "InternalServerError",
-] as const;
-
-const legacySubclassNamesByBaseName: Record<string, readonly string[]> = {
-  GeminiNextGenAPIClientError: knownLegacyErrorNames,
-  APIConnectionError: ["APIConnectionTimeoutError"],
-};
-
-function isKnownLegacyErrorLike(value: unknown): boolean {
-  if (!isLegacyErrorLike(value)) {
-    return false;
-  }
-
-  return knownLegacyErrorNames.includes(
-    (value as Error).name as (typeof knownLegacyErrorNames)[number],
-  );
-}
-
-function isNamedLegacyErrorLike(value: unknown, name: string): boolean {
-  if (!isLegacyErrorLike(value)) {
-    return false;
-  }
-
-  const valueName = (value as Error).name;
-  return (
-    valueName === name ||
-    (legacySubclassNamesByBaseName[name]?.includes(valueName) ?? false)
-  );
 }
 
 function defineReadonly<T extends object, K extends PropertyKey>(

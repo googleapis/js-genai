@@ -11,8 +11,9 @@
  */
 
 import { AgentOption } from "./agent-option.js";
+import { AntigravityAgentConfig } from "./antigravity-agent-config.js";
 import { AudioContent } from "./audio-content.js";
-import { Content } from "./content.js";
+import { CodeMenderAgentConfig } from "./code-mender-agent-config.js";
 import { DeepResearchAgentConfig } from "./deep-research-agent-config.js";
 import { DynamicAgentConfig } from "./dynamic-agent-config.js";
 import { Environment } from "./environment.js";
@@ -22,6 +23,7 @@ import { InteractionsInput } from "./interactions-input.js";
 import { Model } from "./model.js";
 import { ResponseFormat } from "./response-format.js";
 import { ResponseModality } from "./response-modality.js";
+import { SafetySetting } from "./safety-setting.js";
 import { ServiceTier } from "./service-tier.js";
 import { Step } from "./step.js";
 import { Tool } from "./tool.js";
@@ -40,6 +42,7 @@ export type InteractionStatus =
   | "cancelled"
   | "incomplete"
   | "budget_exceeded"
+  | "queued"
   | (string & {});
 
 /**
@@ -56,8 +59,10 @@ export type InteractionEnvironment = Environment | string;
  * Configuration parameters for the agent interaction.
  */
 export type InteractionAgentConfig =
+  | DynamicAgentConfig
   | DeepResearchAgentConfig
-  | DynamicAgentConfig;
+  | CodeMenderAgentConfig
+  | AntigravityAgentConfig;
 
 /**
  * The Interaction resource.
@@ -93,12 +98,6 @@ export type Interaction = {
    * (YYYY-MM-DDThh:mm:ssZ).
    */
   updated?: string | undefined;
-  /**
-   * Output only. The role of the interaction.
-   *
-   * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
-   */
-  role?: string | undefined;
   /**
    * System instruction for the interaction.
    */
@@ -154,29 +153,26 @@ export type Interaction = {
    */
   generation_config?: GenerationConfig | undefined;
   /**
-   * The name of the cached content used as context to serve the prediction.
-   *
-   * @remarks
-   * Note: only used in explicit caching, where users can have control over
-   * caching (e.g. what content to cache) and enjoy guaranteed cost savings.
-   * Format:
-   * `projects/{project}/locations/{location}/cachedContents/{cachedContent}`
-   */
-  cached_content?: string | undefined;
-  /**
    * Configuration parameters for the agent interaction.
    */
-  agent_config?: DeepResearchAgentConfig | DynamicAgentConfig | undefined;
+  agent_config?:
+    | DynamicAgentConfig
+    | DeepResearchAgentConfig
+    | CodeMenderAgentConfig
+    | AntigravityAgentConfig
+    | undefined;
+  /**
+   * Safety settings for the interaction.
+   */
+  safety_settings?: Array<SafetySetting> | undefined;
+  /**
+   * The labels with user-defined metadata for the request.
+   */
+  labels?: { [k: string]: string } | undefined;
   /**
    * The input for the interaction.
    */
   input?: InteractionsInput | undefined;
-  /**
-   * Output only. Legacy responses from the model.
-   *
-   * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
-   */
-  outputs?: Array<Content> | undefined;
   /**
    * Concatenated text from the last model output in response to the current request.
    *

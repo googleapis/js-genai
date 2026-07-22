@@ -13,8 +13,8 @@
 import { ReviewSnippet } from "./review-snippet.js";
 
 export type GoogleMapsResultPlaces = {
-  place_id?: string | undefined;
   name?: string | undefined;
-  url?: string | undefined;
+  place_id?: string | undefined;
   review_snippets?: Array<ReviewSnippet> | undefined;
+  url?: string | undefined;
 };

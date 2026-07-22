@@ -15,10 +15,6 @@
  */
 export type SpeechConfig = {
   /**
-   * The voice of the speaker.
-   */
-  voice?: string | undefined;
-  /**
    * The language of the speech.
    */
   language?: string | undefined;
@@ -26,4 +22,8 @@ export type SpeechConfig = {
    * The speaker's name, it should match the speaker name given in the prompt.
    */
   speaker?: string | undefined;
+  /**
+   * The voice of the speaker.
+   */
+  voice?: string | undefined;
 };

@@ -24,12 +24,12 @@ import { URLContext } from "./url-context.js";
  * A tool that can be used by the model.
  */
 export type Tool =
-  | FunctionT
   | CodeExecution
-  | URLContext
   | ComputerUse
-  | MCPServer
-  | GoogleSearch
   | FileSearch
+  | FunctionT
   | GoogleMaps
-  | Retrieval;
+  | GoogleSearch
+  | MCPServer
+  | Retrieval
+  | URLContext;

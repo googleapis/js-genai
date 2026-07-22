@@ -32,25 +32,25 @@ export type AudioContentMimeType =
  * An audio content block.
  */
 export type AudioContent = {
-  type: "audio";
-  /**
-   * The audio content.
-   */
-  data?: string | undefined;
-  /**
-   * The URI of the audio.
-   */
-  uri?: string | undefined;
-  /**
-   * The mime type of the audio.
-   */
-  mime_type?: AudioContentMimeType | undefined;
   /**
    * The number of audio channels.
    */
   channels?: number | undefined;
   /**
+   * The audio content.
+   */
+  data?: string | undefined;
+  /**
+   * The mime type of the audio.
+   */
+  mime_type?: AudioContentMimeType | undefined;
+  /**
    * The sample rate of the audio.
    */
   sample_rate?: number | undefined;
+  type: "audio";
+  /**
+   * The URI of the audio.
+   */
+  uri?: string | undefined;
 };

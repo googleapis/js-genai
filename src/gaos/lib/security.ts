@@ -21,17 +21,22 @@ type OAuth2PasswordFlow = {
   token_url: string;
 };
 
-export enum SecurityErrorCode {
-  Incomplete = "incomplete",
-  UnrecognisedSecurityType = "unrecognized_security_type",
-}
+export const SecurityErrorCode = {
+  Incomplete: "incomplete",
+  UnrecognisedSecurityType: "unrecognized_security_type",
+} as const;
+export type SecurityErrorCode =
+  (typeof SecurityErrorCode)[keyof typeof SecurityErrorCode];
 
 export class SecurityError extends Error {
+  public code: SecurityErrorCode;
+
   constructor(
-    public code: SecurityErrorCode,
+    code: SecurityErrorCode,
     message: string,
   ) {
     super(message);
+    this.code = code;
     this.name = "SecurityError";
   }
 

@@ -16,11 +16,19 @@ import { AllowedTools } from "./allowed-tools.js";
  * A MCPServer is a server that can be called by the model to perform actions.
  */
 export type MCPServer = {
-  type: "mcp_server";
+  /**
+   * The allowed tools.
+   */
+  allowed_tools?: Array<AllowedTools> | undefined;
+  /**
+   * Optional: Fields for authentication headers, timeouts, etc., if needed.
+   */
+  headers?: { [k: string]: string } | undefined;
   /**
    * The name of the MCPServer.
    */
   name?: string | undefined;
+  type: "mcp_server";
   /**
    * The full URL for the MCPServer endpoint.
    *
@@ -28,12 +36,4 @@ export type MCPServer = {
    * Example: "https://api.example.com/mcp"
    */
   url?: string | undefined;
-  /**
-   * Optional: Fields for authentication headers, timeouts, etc., if needed.
-   */
-  headers?: { [k: string]: string } | undefined;
-  /**
-   * The allowed tools.
-   */
-  allowed_tools?: Array<AllowedTools> | undefined;
 };

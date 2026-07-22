@@ -13,6 +13,7 @@
 import { ClientSDK } from "../lib/sdks.js";
 import { Agents } from "./agents.js";
 import { Interactions } from "./interactions.js";
+import { Triggers } from "./triggers.js";
 import { Webhooks } from "./webhooks.js";
 
 export class GoogleGenAI extends ClientSDK {
@@ -29,5 +30,10 @@ export class GoogleGenAI extends ClientSDK {
   private _agents?: Agents;
   get agents(): Agents {
     return (this._agents ??= new Agents(this._options));
+  }
+
+  private _triggers?: Triggers;
+  get triggers(): Triggers {
+    return (this._triggers ??= new Triggers(this._options));
   }
 }

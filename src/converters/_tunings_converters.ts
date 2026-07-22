@@ -1297,6 +1297,19 @@ export function generationConfigFromVertex(
     common.setValueByPath(toObject, ['topP'], fromTopP);
   }
 
+  const fromResponseFormat = common.getValueByPath(fromObject, [
+    'responseFormat',
+  ]);
+  if (fromResponseFormat != null) {
+    let transformedList = fromResponseFormat;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return item;
+      });
+    }
+    common.setValueByPath(toObject, ['responseFormat'], transformedList);
+  }
+
   return toObject;
 }
 

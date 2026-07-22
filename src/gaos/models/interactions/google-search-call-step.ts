@@ -25,21 +25,21 @@ export type GoogleSearchCallStepSearchType =
  * Google Search call step.
  */
 export type GoogleSearchCallStep = {
-  type: "google_search_call";
   /**
    * The arguments to pass to Google Search.
    */
-  arguments?: GoogleSearchCallArguments | undefined;
-  /**
-   * The type of search grounding enabled.
-   */
-  search_type?: GoogleSearchCallStepSearchType | undefined;
+  arguments: GoogleSearchCallArguments;
   /**
    * Required. A unique ID for this specific tool call.
    */
   id: string;
   /**
+   * The type of search grounding enabled.
+   */
+  search_type?: GoogleSearchCallStepSearchType | undefined;
+  /**
    * A signature hash for backend validation.
    */
   signature?: string | undefined;
+  type: "google_search_call";
 };

@@ -9,6 +9,7 @@
 import * as agents from "./models/agents/index.js";
 import * as interactions from "./models/interactions/index.js";
 import * as operations from "./models/operations/index.js";
+import * as triggers from "./models/triggers/index.js";
 import * as webhooks from "./models/webhooks/index.js";
 
 import type { APICall, APIPromise } from "./types/async.js";
@@ -35,6 +36,11 @@ import type {
   GetInteractionByIdParamsNonStreaming,
   GetInteractionByIdParamsStreaming,
   ListAgentsParams as _ListAgentsRequest,
+  CreateTriggerParams,
+  DeleteTriggerParams,
+  GetTriggerParams,
+  RunTriggerParams,
+  UpdateTriggerParams,
 } from "./models/operations/method-params.js";
 import { RequestOptions } from "./lib/sdks.js";
 import type { Result } from "./types/fp.js";
@@ -46,6 +52,13 @@ import { agentsList } from "./funcs/agents-list.js";
 import { interactionsCancel } from "./funcs/interactions-cancel.js";
 import { interactionsCreate } from "./funcs/interactions-create.js";
 import { interactionsGet } from "./funcs/interactions-get.js";
+import { triggersCreate } from "./funcs/triggers-create.js";
+import { triggersDelete } from "./funcs/triggers-delete.js";
+import { triggersGet } from "./funcs/triggers-get.js";
+import { triggersListExecutions } from "./funcs/triggers-list-executions.js";
+import { triggersList } from "./funcs/triggers-list.js";
+import { triggersRun } from "./funcs/triggers-run.js";
+import { triggersUpdate } from "./funcs/triggers-update.js";
 import { webhooksCreate } from "./funcs/webhooks-create.js";
 import { webhooksDelete } from "./funcs/webhooks-delete.js";
 import { webhooksGet } from "./funcs/webhooks-get.js";
@@ -68,6 +81,7 @@ export interface GoogleGenAIParentClient {
   getBaseUrl(): string;
   getApiVersion(): string;
   getDefaultHeaders?(): Record<string, string>;
+  getHeaders?(): Record<string, string> | undefined;
   getAuthHeaders(url?: string): Headers | Promise<Headers>;
 }
 
@@ -109,7 +123,10 @@ export function buildGoogleGenAIClient(
     security:
       options.security ??
       (new GoogleGenAISecurityProvider({
-        defaultHeaders: parentClient.getDefaultHeaders?.(),
+        defaultHeaders: {
+          ...parentClient.getDefaultHeaders?.(),
+          ...parentClient.getHeaders?.(),
+        },
         getAuthHeaders: (url) => parentClient.getAuthHeaders(url),
       }) as SDKOptions["security"]),
     server_url: options.server_url ?? getGoogleGenAIServerURL(parentClient),
@@ -166,6 +183,19 @@ export type ListAgentsParams = {
   parent?: string;
 };
 
+export type ListTriggersParams = {
+  api_version?: string;
+  filter?: string;
+  pageSize?: number;
+  pageToken?: string;
+};
+
+export type ListTriggerExecutionsParams = {
+  api_version?: string;
+  pageSize?: number;
+  pageToken?: string;
+};
+
 export type WebhookListParams = {
   api_version?: string;
   page_size?: number;
@@ -210,16 +240,18 @@ export class GeminiNextGenInteractions {
     params: CreateAgentInteractionParamsStreaming,
     options?: GoogleGenAIRequestOptions,
   ): Promise<Stream<GoogleGenAIInteractionSSEEvent>>;
-  // The catch-all narrows on the inferred `stream` member so call sites
-  // that overload resolution routes here still get a precise return type.
-  create<TParams extends InteractionCreateParams>(
-    params: TParams,
+  create(
+    params: InteractionCreateParamsStreaming,
     options?: GoogleGenAIRequestOptions,
-  ): Promise<
-    TParams extends { stream: true }
-      ? Stream<GoogleGenAIInteractionSSEEvent>
-      : GoogleGenAIInteraction
-  >;
+  ): Promise<Stream<GoogleGenAIInteractionSSEEvent>>;
+  create(
+    params: InteractionCreateParamsNonStreaming,
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<GoogleGenAIInteraction>;
+  create(
+    params: InteractionCreateParams,
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<GoogleGenAIInteraction | Stream<GoogleGenAIInteractionSSEEvent>>;
   async create(
     params: InteractionCreateParams,
     options?: GoogleGenAIRequestOptions,
@@ -553,6 +585,135 @@ export class GeminiNextGenWebhooks {
   }
 }
 
+export class GeminiNextGenTriggers {
+  private sdk: GoogleGenAI | undefined;
+
+  constructor(private readonly parentClient: GoogleGenAIParentClient) {}
+
+  async create(
+    params: CreateTriggerParams,
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<triggers.Trigger> {
+    const { api_version, ...body } = params;
+    return unwrapWithSdkHttpResponse(
+      triggersCreate(
+        this.getClient(api_version),
+        body,
+        api_version,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  async list(
+    params: ListTriggersParams | null | undefined = {},
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<triggers.ListTriggersResponse> {
+    const { api_version, filter, pageSize, pageToken } = params ?? {};
+    return unwrapWithSdkHttpResponse(
+      triggersList(
+        this.getClient(api_version),
+        api_version,
+        filter,
+        pageSize,
+        pageToken,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  async get(
+    id: string,
+    params: GetTriggerParams | null | undefined = {},
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<triggers.Trigger> {
+    return unwrapWithSdkHttpResponse(
+      triggersGet(
+        this.getClient(params?.api_version),
+        id,
+        params?.api_version,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  async update(
+    id: string,
+    params: UpdateTriggerParams,
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<triggers.Trigger> {
+    const { api_version, ...body } = params;
+    return unwrapWithSdkHttpResponse(
+      triggersUpdate(
+        this.getClient(api_version),
+        id,
+        body,
+        api_version,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  async delete(
+    id: string,
+    params: DeleteTriggerParams | null | undefined = {},
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<interactions.Empty> {
+    return unwrapWithSdkHttpResponse(
+      triggersDelete(
+        this.getClient(params?.api_version),
+        id,
+        params?.api_version,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  async run(
+    trigger_id: string,
+    params: RunTriggerParams | null | undefined = {},
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<triggers.TriggerExecution> {
+    return unwrapWithSdkHttpResponse(
+      triggersRun(
+        this.getClient(params?.api_version),
+        trigger_id,
+        params?.api_version,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  async listExecutions(
+    trigger_id: string,
+    params: ListTriggerExecutionsParams | null | undefined = {},
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<triggers.ListTriggerExecutionsResponse> {
+    const { api_version, pageSize, pageToken } = params ?? {};
+    return unwrapWithSdkHttpResponse(
+      triggersListExecutions(
+        this.getClient(api_version),
+        trigger_id,
+        api_version,
+        pageSize,
+        pageToken,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  private getClient(apiVersion: string | undefined): GoogleGenAI {
+    if (apiVersion) {
+      return buildGoogleGenAIClient(this.parentClient, {
+        api_version: apiVersion,
+      });
+    }
+
+    this.sdk ??= buildGoogleGenAIClient(this.parentClient);
+    return this.sdk;
+  }
+}
+
 function trimSlashes(value: string): string {
   return value.replace(/^\/+|\/+$/g, "");
 }
@@ -567,7 +728,7 @@ function toGoogleGenAIRequestOptions(
 
   const {
     timeout,
-    maxRetries: _maxRetries,
+    maxRetries,
     defaultBaseURL,
     query,
     body,
@@ -601,6 +762,13 @@ function toGoogleGenAIRequestOptions(
   const timeout_ms = rest.timeout_ms ?? timeout;
   if (timeout_ms !== undefined) {
     nextOptions.timeout_ms = timeout_ms;
+  }
+  if (maxRetries !== undefined) {
+    nextOptions.retries = {
+      strategy: "attempt-count-backoff",
+      retryConnectionErrors: true,
+      maxRetries,
+    };
   }
   if (streaming) {
     const headers = new Headers(nextOptions.headers ?? fetch_options?.headers);

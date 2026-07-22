@@ -25,11 +25,11 @@ export type URLContextResultStatus =
  */
 export type URLContextResult = {
   /**
-   * The URL that was fetched.
-   */
-  url?: string | undefined;
-  /**
    * The status of the URL retrieval.
    */
   status?: URLContextResultStatus | undefined;
+  /**
+   * The URL that was fetched.
+   */
+  url?: string | undefined;
 };

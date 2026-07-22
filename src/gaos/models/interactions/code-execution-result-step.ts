@@ -14,21 +14,21 @@
  * Code execution result step.
  */
 export type CodeExecutionResultStep = {
-  type: "code_execution_result";
-  /**
-   * The output of the code execution.
-   */
-  result?: string | undefined;
-  /**
-   * Whether the code execution resulted in an error.
-   */
-  is_error?: boolean | undefined;
   /**
    * Required. ID to match the ID from the function call block.
    */
   call_id: string;
   /**
+   * Whether the code execution resulted in an error.
+   */
+  is_error?: boolean | undefined;
+  /**
+   * Required. The output of the code execution.
+   */
+  result: string;
+  /**
    * A signature hash for backend validation.
    */
   signature?: string | undefined;
+  type: "code_execution_result";
 };

@@ -20,11 +20,11 @@ export type MCPServerToolResultDeltaResultUnion =
   | string;
 
 export type MCPServerToolResultDelta = {
-  type: "mcp_server_tool_result";
   name?: string | undefined;
-  server_name?: string | undefined;
   result:
     | MCPServerToolResultDeltaResult
     | Array<FunctionResultSubcontent>
     | string;
+  server_name?: string | undefined;
+  type: "mcp_server_tool_result";
 };

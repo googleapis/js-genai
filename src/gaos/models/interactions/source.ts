@@ -21,7 +21,14 @@ export type SourceType =
  * A source to be mounted into the environment.
  */
 export type Source = {
-  type?: SourceType | undefined;
+  /**
+   * The inline content if `type` is `INLINE`.
+   */
+  content?: string | undefined;
+  /**
+   * Optional encoding for inline content (e.g. `base64`).
+   */
+  encoding?: string | undefined;
   /**
    * The source of the environment.
    *
@@ -34,12 +41,5 @@ export type Source = {
    * Where the source should appear in the environment.
    */
   target?: string | undefined;
-  /**
-   * The inline content if `type` is `INLINE`.
-   */
-  content?: string | undefined;
-  /**
-   * Optional encoding for inline content (e.g. `base64`).
-   */
-  encoding?: string | undefined;
+  type?: SourceType | undefined;
 };

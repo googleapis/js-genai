@@ -22,6 +22,10 @@ export class Models extends BaseModule {
     super();
   }
 
+  private static loggedGenerateImagesWarning = false;
+  private static loggedEditImageWarning = false;
+  private static loggedGenerateVideosWarning = false;
+
   /**
    * Calculates embeddings for the given contents.
    *
@@ -123,7 +127,7 @@ export class Models extends BaseModule {
     params: types.GenerateContentParameters,
   ): Promise<types.GenerateContentResponse> => {
     const transformedParams = await this.processParamsMaybeAddMcpUsage(params);
-    this.maybeMoveToResponseJsonSchem(params);
+    this.maybeMoveToResponseJsonSchema(params);
     if (!afc.hasCallableTools(params) || afc.shouldDisableAfc(params.config)) {
       return await this.generateContentInternal(transformedParams);
     }
@@ -197,7 +201,7 @@ export class Models extends BaseModule {
    * To maintain backward compatibility, we move the data that was treated as
    * JSON schema from the responseSchema field to the responseJsonSchema field.
    */
-  private maybeMoveToResponseJsonSchem(
+  private maybeMoveToResponseJsonSchema(
     params: types.GenerateContentParameters,
   ): void {
     if (params.config && params.config.responseSchema) {
@@ -255,7 +259,7 @@ export class Models extends BaseModule {
   generateContentStream = async (
     params: types.GenerateContentParameters,
   ): Promise<AsyncGenerator<types.GenerateContentResponse>> => {
-    this.maybeMoveToResponseJsonSchem(params);
+    this.maybeMoveToResponseJsonSchema(params);
     if (afc.shouldDisableAfc(params.config)) {
       const transformedParams =
         await this.processParamsMaybeAddMcpUsage(params);
@@ -408,7 +412,7 @@ export class Models extends BaseModule {
                 }
                 if (!afcTools.has(part.functionCall.name)) {
                   throw new Error(
-                    `Automatic function calling was requested, but not all the tools the model used implement the CallableTool interface. Available tools: ${afcTools.keys()}, mising tool: ${
+                    `Automatic function calling was requested, but not all the tools the model used implement the CallableTool interface. Available tools: ${afcTools.keys()}, missing tool: ${
                       part.functionCall.name
                     }`,
                   );
@@ -477,6 +481,12 @@ export class Models extends BaseModule {
   generateImages = async (
     params: types.GenerateImagesParameters,
   ): Promise<types.GenerateImagesResponse> => {
+    if (!Models.loggedGenerateImagesWarning) {
+      Models.loggedGenerateImagesWarning = true;
+      console.warn(
+        'The generateImages method is deprecated and will be removed in the next major release (not before Jan. 1 2027). Please use the generateContent method with image models instead. See https://ai.google.dev/gemini-api/docs/deprecations#imagen-models and https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/capabilities/image-generation#generate-images',
+      );
+    }
     return await this.generateImagesInternal(params).then((apiResponse) => {
       let positivePromptSafetyAttributes;
       const generatedImages = [];
@@ -569,6 +579,12 @@ export class Models extends BaseModule {
   editImage = async (
     params: types.EditImageParameters,
   ): Promise<types.EditImageResponse> => {
+    if (!Models.loggedEditImageWarning) {
+      Models.loggedEditImageWarning = true;
+      console.warn(
+        'The editImage method is deprecated and will be removed in the next major release (not before Jan. 1 2027). Please use the generateContent method with image models instead. See https://ai.google.dev/gemini-api/docs/deprecations#imagen-models and https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/capabilities/gemini-edit-images#edit-an-image',
+      );
+    }
     const paramsInternal: _internal_types.EditImageParametersInternal = {
       model: params.model,
       prompt: params.prompt,
@@ -659,6 +675,14 @@ export class Models extends BaseModule {
       throw new Error(
         'Source and prompt/image/video are mutually exclusive. Please only use source.',
       );
+    }
+    if (params.prompt || params.image || params.video) {
+      if (!Models.loggedGenerateVideosWarning) {
+        Models.loggedGenerateVideosWarning = true;
+        console.warn(
+          'The generateVideos method with prompt/image/video arguments is deprecated and will be removed in a future major release (not before 2026-07-31). Please use the source argument instead.',
+        );
+      }
     }
     // Gemini API does not support video bytes.
     if (!this.apiClient.isVertexAI()) {

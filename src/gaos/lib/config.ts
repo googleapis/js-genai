@@ -38,11 +38,6 @@ export type SDKOptions = {
   api_version?: string | undefined;
 
   /**
-   * Allows setting the api_revision parameter for all supported operations
-   */
-  api_revision?: string | undefined;
-
-  /**
    * Allows setting the user_project parameter for all supported operations
    */
   user_project?: string | undefined;
@@ -89,7 +84,7 @@ export const SDK_METADATA = {
   language: "typescript",
   openapiDocVersion: "v1beta",
   sdkVersion: "2.4.1-preview.4",
-  genVersion: "2.904.2",
+  genVersion: "2.918.3",
   userAgent:
-    "speakeasy-sdk/typescript 2.4.1-preview.4 2.904.2 v1beta @google/genai",
+    "speakeasy-sdk/typescript 2.4.1-preview.4 2.918.3 v1beta @google/genai",
 } as const;

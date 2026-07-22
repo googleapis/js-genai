@@ -16,8 +16,8 @@ export type DocumentDeltaMimeType =
   | (string & {});
 
 export type DocumentDelta = {
-  type: "document";
   data?: string | undefined;
-  uri?: string | undefined;
   mime_type?: DocumentDeltaMimeType | undefined;
+  type: "document";
+  uri?: string | undefined;
 };

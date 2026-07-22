@@ -16,9 +16,9 @@ import { InteractionsInput } from "./interactions-input.js";
 import { Model } from "./model.js";
 import { ResponseFormat } from "./response-format.js";
 import { ResponseModality } from "./response-modality.js";
+import { SafetySetting } from "./safety-setting.js";
 import { ServiceTier } from "./service-tier.js";
 import { Tool } from "./tool.js";
-import { Usage } from "./usage.js";
 import { WebhookConfig } from "./webhook-config.js";
 
 /**
@@ -62,10 +62,6 @@ export type CreateModelInteraction = {
    */
   tools?: Array<Tool> | undefined;
   /**
-   * Statistics on the interaction request's token usage.
-   */
-  usage?: Usage | undefined;
-  /**
    * The requested modalities of the response (TEXT, IMAGE, AUDIO).
    */
   response_modalities?: Array<ResponseModality> | undefined;
@@ -97,15 +93,13 @@ export type CreateModelInteraction = {
    */
   generation_config?: GenerationConfig | undefined;
   /**
-   * The name of the cached content used as context to serve the prediction.
-   *
-   * @remarks
-   * Note: only used in explicit caching, where users can have control over
-   * caching (e.g. what content to cache) and enjoy guaranteed cost savings.
-   * Format:
-   * `projects/{project}/locations/{location}/cachedContents/{cachedContent}`
+   * Safety settings for the interaction.
    */
-  cached_content?: string | undefined;
+  safety_settings?: Array<SafetySetting> | undefined;
+  /**
+   * The labels with user-defined metadata for the request.
+   */
+  labels?: { [k: string]: string } | undefined;
   /**
    * The input for the interaction.
    */

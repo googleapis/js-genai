@@ -12,9 +12,13 @@ export * from '../chats.js';
 export type {GoogleGenAIOptions} from '../client.js';
 export * from '../errors.js';
 export {Files} from '../files.js';
-export type {Agents} from '../interactions/resources/agents.js';
-export type {Interactions} from '../interactions/resources/interactions.js';
-export type {Webhooks} from '../interactions/resources/webhooks.js';
+export type {SseMessage, Stream} from '../gaos/lib/event-streams.js';
+export type {
+  Agents,
+  Interactions,
+  Triggers,
+  Webhooks,
+} from '../gaos/resources.js';
 export * from '../live.js';
 export {mcpToTool} from '../mcp/_mcp.js';
 export {Models} from '../models.js';

@@ -376,10 +376,7 @@ async function main() {
 main();
 ```
 
-## Interactions (Experimental)
-
-> **Warning:** The Interactions API is in **Beta**. This is a preview of an
-experimental feature. Features and schemas are subject to **breaking changes**.
+## Interactions
 
 The Interactions API is a unified interface for interacting with Gemini models
 and agents. It simplifies state management, tool orchestration, and long-running

@@ -11,11 +11,11 @@
  */
 
 export type CodeExecutionResultDelta = {
-  type: "code_execution_result";
-  result: string;
   is_error?: boolean | undefined;
+  result: string;
   /**
    * A signature hash for backend validation.
    */
   signature?: string | undefined;
+  type: "code_execution_result";
 };

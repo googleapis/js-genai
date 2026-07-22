@@ -11,15 +11,17 @@
  */
 
 import { AgentOption } from "./agent-option.js";
+import { AntigravityAgentConfig } from "./antigravity-agent-config.js";
+import { CodeMenderAgentConfig } from "./code-mender-agent-config.js";
 import { DeepResearchAgentConfig } from "./deep-research-agent-config.js";
 import { DynamicAgentConfig } from "./dynamic-agent-config.js";
 import { Environment } from "./environment.js";
 import { InteractionsInput } from "./interactions-input.js";
 import { ResponseFormat } from "./response-format.js";
 import { ResponseModality } from "./response-modality.js";
+import { SafetySetting } from "./safety-setting.js";
 import { ServiceTier } from "./service-tier.js";
 import { Tool } from "./tool.js";
-import { Usage } from "./usage.js";
 import { WebhookConfig } from "./webhook-config.js";
 
 /**
@@ -38,8 +40,10 @@ export type CreateAgentInteractionEnvironment = Environment | string;
  * Configuration parameters for the agent interaction.
  */
 export type CreateAgentInteractionAgentConfig =
+  | DynamicAgentConfig
   | DeepResearchAgentConfig
-  | DynamicAgentConfig;
+  | CodeMenderAgentConfig
+  | AntigravityAgentConfig;
 
 /**
  * Parameters for creating agent interactions
@@ -70,10 +74,6 @@ export type CreateAgentInteraction = {
    */
   tools?: Array<Tool> | undefined;
   /**
-   * Statistics on the interaction request's token usage.
-   */
-  usage?: Usage | undefined;
-  /**
    * The requested modalities of the response (TEXT, IMAGE, AUDIO).
    */
   response_modalities?: Array<ResponseModality> | undefined;
@@ -103,7 +103,20 @@ export type CreateAgentInteraction = {
   /**
    * Configuration parameters for the agent interaction.
    */
-  agent_config?: DeepResearchAgentConfig | DynamicAgentConfig | undefined;
+  agent_config?:
+    | DynamicAgentConfig
+    | DeepResearchAgentConfig
+    | CodeMenderAgentConfig
+    | AntigravityAgentConfig
+    | undefined;
+  /**
+   * Safety settings for the interaction.
+   */
+  safety_settings?: Array<SafetySetting> | undefined;
+  /**
+   * The labels with user-defined metadata for the request.
+   */
+  labels?: { [k: string]: string } | undefined;
   /**
    * The input for the interaction.
    */

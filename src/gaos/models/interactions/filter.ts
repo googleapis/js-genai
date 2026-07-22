@@ -15,6 +15,10 @@
  */
 export type Filter = {
   /**
+   * Optional. String for metadata filtering.
+   */
+  metadata_filter?: string | undefined;
+  /**
    * Optional. Only returns contexts with vector distance smaller than the
    *
    * @remarks
@@ -28,8 +32,4 @@ export type Filter = {
    * threshold.
    */
   vector_similarity_threshold?: number | undefined;
-  /**
-   * Optional. String for metadata filtering.
-   */
-  metadata_filter?: string | undefined;
 };

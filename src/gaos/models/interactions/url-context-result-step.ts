@@ -16,21 +16,21 @@ import { URLContextResult } from "./url-context-result.js";
  * URL context result step.
  */
 export type URLContextResultStep = {
-  type: "url_context_result";
-  /**
-   * The results of the URL context.
-   */
-  result?: Array<URLContextResult> | undefined;
-  /**
-   * Whether the URL context resulted in an error.
-   */
-  is_error?: boolean | undefined;
   /**
    * Required. ID to match the ID from the function call block.
    */
   call_id: string;
   /**
+   * Whether the URL context resulted in an error.
+   */
+  is_error?: boolean | undefined;
+  /**
+   * Required. The results of the URL context.
+   */
+  result: Array<URLContextResult>;
+  /**
    * A signature hash for backend validation.
    */
   signature?: string | undefined;
+  type: "url_context_result";
 };

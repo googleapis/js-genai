@@ -19,19 +19,19 @@ import { Ranking } from "./ranking.js";
  */
 export type RagRetrievalConfig = {
   /**
-   * Optional. The number of contexts to retrieve.
+   * Config for filters.
    */
-  top_k?: number | undefined;
+  filter?: Filter | undefined;
   /**
    * Config for Hybrid Search.
    */
   hybrid_search?: HybridSearch | undefined;
   /**
-   * Config for filters.
-   */
-  filter?: Filter | undefined;
-  /**
    * Config for Rank Service.
    */
   ranking?: Ranking | undefined;
+  /**
+   * Optional. The number of contexts to retrieve.
+   */
+  top_k?: number | undefined;
 };
