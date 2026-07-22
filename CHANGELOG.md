@@ -2,6 +2,13 @@
 
 
 
+## [2.13.1](https://github.com/googleapis/js-genai/compare/v2.13.0...v2.13.1) (2026-07-22)
+
+
+### Bug Fixes
+
+* add deprecation warnings to Imagen generate_images, edit_images, generate_videos (if using prompt/text/image args), LiveConnectConfig.GenerationConfig which will be removed in the next major version ([bb66101](https://github.com/googleapis/js-genai/commit/bb6610199a76f7a99e28ed77974e6a3af21a52b1))
+
 ## [2.13.0](https://github.com/googleapis/js-genai/compare/v2.12.0...v2.13.0) (2026-07-21)
 
 
