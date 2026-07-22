@@ -1126,6 +1126,22 @@ export enum PairwiseChoice {
   TIE = 'TIE',
 }
 
+/** The orientation of the video. Defaults to LANDSCAPE. This enum is not supported in Gemini API. */
+export enum VideoOrientation {
+  /**
+   * Unspecified video orientation. Defaults to landscape.
+   */
+  VIDEO_ORIENTATION_UNSPECIFIED = 'VIDEO_ORIENTATION_UNSPECIFIED',
+  /**
+   * Landscape orientation (e.g. 16:9, 1280x720).
+   */
+  LANDSCAPE = 'LANDSCAPE',
+  /**
+   * Portrait orientation (e.g. 9:16, 720x1280).
+   */
+  PORTRAIT = 'PORTRAIT',
+}
+
 /** The speed of the tuning job. Only supported for Veo 3.0 models. This enum is not supported in Gemini API. */
 export enum TuningSpeed {
   /**
@@ -1160,22 +1176,6 @@ export enum TuningTask {
    * Tuning task for reference to video.
    */
   TUNING_TASK_R2V = 'TUNING_TASK_R2V',
-}
-
-/** The orientation of the video. Defaults to LANDSCAPE. This enum is not supported in Gemini API. */
-export enum VideoOrientation {
-  /**
-   * Unspecified video orientation. Defaults to landscape.
-   */
-  VIDEO_ORIENTATION_UNSPECIFIED = 'VIDEO_ORIENTATION_UNSPECIFIED',
-  /**
-   * Landscape orientation (e.g. 16:9, 1280x720).
-   */
-  LANDSCAPE = 'LANDSCAPE',
-  /**
-   * Portrait orientation (e.g. 9:16, 720x1280).
-   */
-  PORTRAIT = 'PORTRAIT',
 }
 
 /** Output only. Current state of the `Document`. This enum is not supported in Vertex AI. */
@@ -1859,6 +1859,35 @@ export class ToolResponse {
   response?: Record<string, unknown>;
 }
 
+/** Information about a single recognized word. */
+export declare interface WordInfo {
+  /** Transcript of the word.
+   */
+  word?: string;
+  /** Start offset in time of the word relative to the start of the audio.
+   */
+  startOffset?: string;
+  /** End offset in time of the word relative to the start of the audio.
+   */
+  endOffset?: string;
+}
+
+/** Audio transcription in Server Content. */
+export declare interface Transcription {
+  /** Optional. Transcription text. */
+  text?: string;
+  /** Optional. The bool indicates the end of the transcription. */
+  finished?: boolean;
+  /** The BCP-47 language code of the transcription. */
+  languageCode?: string;
+  /** A label identifying the speaker of this audio segment (e.g. "spk_1", "spk_2").
+   */
+  speakerLabel?: string;
+  /** Detailed word-level transcriptions and timing details.
+   */
+  words?: WordInfo[];
+}
+
 /** Result of executing the ExecutableCode. Generated only when the `CodeExecution` tool is used. */
 export declare interface CodeExecutionResult {
   /** Required. Outcome of the code execution. */
@@ -1907,10 +1936,10 @@ export declare interface PartialArg {
 
 /** A predicted FunctionCall returned from the model that contains a string representing the FunctionDeclaration.name and a structured JSON object containing the parameters and their values. */
 export declare interface FunctionCall {
-  /** Optional. The unique id of the function call. If populated, the client to execute the `function_call` and return the response with the matching `id`. */
-  id?: string;
   /** Optional. The function parameters and values in JSON object format. See FunctionDeclaration.parameters for parameter details. */
   args?: Record<string, unknown>;
+  /** Optional. The unique id of the function call. If populated, the client to execute the `function_call` and return the response with the matching `id`. */
+  id?: string;
   /** Optional. The name of the function to call. Matches FunctionDeclaration.name. */
   name?: string;
   /** Optional. The partial argument value of the function call. If provided, represents the arguments/fields that are streamed incrementally. This field is not supported in Gemini API. */
@@ -1919,33 +1948,33 @@ export declare interface FunctionCall {
   willContinue?: boolean;
 }
 
-/** Raw media bytes for function response. Text should not be sent as raw bytes, use the 'text' field. */
-export class FunctionResponseBlob {
+/** URI based data for function response. This data type is not supported in Gemini API. */
+export class FunctionResponseFileData {
+  /** Optional. Display name of the file data. Used to provide a label or filename to distinguish file datas. This field is only returned in PromptMessage for prompt management. It is currently used in the Gemini GenerateContent calls only when server side tools (code_execution, google_search, and url_context) are enabled. */
+  displayName?: string;
+  /** Required. URI. */
+  fileUri?: string;
   /** Required. The IANA standard MIME type of the source data. */
   mimeType?: string;
+}
+
+/** Raw media bytes for function response. Text should not be sent as raw bytes, use the 'text' field. */
+export class FunctionResponseBlob {
   /** Required. Raw bytes.
    * @remarks Encoded as base64 string. */
   data?: string;
   /** Optional. Display name of the blob. Used to provide a label or filename to distinguish blobs. This field is only returned in PromptMessage for prompt management. It is currently used in the Gemini GenerateContent calls only when server side tools (code_execution, google_search, and url_context) are enabled. This field is not supported in Gemini API. */
   displayName?: string;
-}
-
-/** URI based data for function response. This data type is not supported in Gemini API. */
-export class FunctionResponseFileData {
-  /** Required. URI. */
-  fileUri?: string;
   /** Required. The IANA standard MIME type of the source data. */
   mimeType?: string;
-  /** Optional. Display name of the file data. Used to provide a label or filename to distinguish file datas. This field is only returned in PromptMessage for prompt management. It is currently used in the Gemini GenerateContent calls only when server side tools (code_execution, google_search, and url_context) are enabled. */
-  displayName?: string;
 }
 
 /** A datatype containing media that is part of a `FunctionResponse` message. A `FunctionResponsePart` consists of data which has an associated datatype. A `FunctionResponsePart` can only contain one of the accepted types in `FunctionResponsePart.data`. A `FunctionResponsePart` must have a fixed IANA MIME type identifying the type and subtype of the media if the `inline_data` field is filled with raw bytes. */
 export class FunctionResponsePart {
-  /** Inline media bytes. */
-  inlineData?: FunctionResponseBlob;
   /** URI based data. This field is not supported in Gemini API. */
   fileData?: FunctionResponseFileData;
+  /** Inline media bytes. */
+  inlineData?: FunctionResponseBlob;
 }
 /**
  * Creates a `FunctionResponsePart` object from a `base64` encoded `string`.
@@ -1978,18 +2007,18 @@ export function createFunctionResponsePartFromUri(
 
 /** The result output from a FunctionCall that contains a string representing the FunctionDeclaration.name and a structured JSON object containing any output from the function is used as context to the model. This should contain the result of a `FunctionCall` made based on model prediction. */
 export class FunctionResponse {
-  /** Optional. Signals that function call continues, and more responses will be returned, turning the function call into a generator. Is only applicable to NON_BLOCKING function calls, is ignored otherwise. If set to false, future responses will not be considered. It is allowed to return empty `response` with `will_continue=False` to signal that the function call is finished. This may still trigger the model generation. To avoid triggering the generation and finish the function call, additionally set `scheduling` to `SILENT`. This field is not supported in Vertex AI. */
-  willContinue?: boolean;
-  /** Optional. Specifies how the response should be scheduled in the conversation. Only applicable to NON_BLOCKING function calls, is ignored otherwise. Defaults to WHEN_IDLE. */
-  scheduling?: FunctionResponseScheduling;
-  /** Optional. Ordered `Parts` that constitute a function response. Parts may have different IANA MIME types. */
-  parts?: FunctionResponsePart[];
   /** Optional. The id of the function call this response is for. Populated by the client to match the corresponding function call `id`. */
   id?: string;
   /** Required. The name of the function to call. Matches FunctionDeclaration.name and FunctionCall.name. */
   name?: string;
+  /** Optional. Ordered `Parts` that constitute a function response. Parts may have different IANA MIME types. */
+  parts?: FunctionResponsePart[];
   /** Required. The function response in JSON object format. Use "output" key to specify function output and "error" key to specify error details (if any). If "output" and "error" keys are not specified, then whole "response" is treated as function output. */
   response?: Record<string, unknown>;
+  /** Optional. Specifies how the response should be scheduled in the conversation. Only applicable to NON_BLOCKING function calls, is ignored otherwise. Defaults to WHEN_IDLE. */
+  scheduling?: FunctionResponseScheduling;
+  /** Optional. Signals that function call continues, and more responses will be returned, turning the function call into a generator. Is only applicable to NON_BLOCKING function calls, is ignored otherwise. If set to false, future responses will not be considered. It is allowed to return empty `response` with `will_continue=False` to signal that the function call is finished. This may still trigger the model generation. To avoid triggering the generation and finish the function call, additionally set `scheduling` to `SILENT`. This field is not supported in Vertex AI. */
+  willContinue?: boolean;
 }
 
 /** A content blob. A Blob contains data of a specific media type. It is used to represent images, audio, and video. */
@@ -2022,6 +2051,12 @@ export declare interface Part {
   /** Media resolution for the input media.
    */
   mediaResolution?: PartMediaResolution;
+  /** Server-side tool call. This field is populated when the model predicts a tool invocation that should be executed on the server. The client is expected to echo this message back to the API. */
+  toolCall?: ToolCall;
+  /** The output from a server-side ToolCall execution. This field is populated by the client with the results of executing the corresponding ToolCall. */
+  toolResponse?: ToolResponse;
+  /** Output only. The transcription of the audio part. */
+  audioTranscription?: Transcription;
   /** Optional. The result of executing the ExecutableCode. */
   codeExecutionResult?: CodeExecutionResult;
   /** Optional. Code generated by the model that is intended to be executed. */
@@ -2043,10 +2078,6 @@ export declare interface Part {
   thoughtSignature?: string;
   /** Optional. Video metadata. The metadata should only be specified while the video data is presented in inline_data or file_data. */
   videoMetadata?: VideoMetadata;
-  /** Server-side tool call. This field is populated when the model predicts a tool invocation that should be executed on the server. The client is expected to echo this message back to the API. */
-  toolCall?: ToolCall;
-  /** The output from a server-side ToolCall execution. This field is populated by the client with the results of executing the corresponding ToolCall. */
-  toolResponse?: ToolResponse;
   /** Custom metadata associated with the Part. Agents using genai.Part as content representation may need to keep track of the additional information. For example it can be name of a file/source from which the Part originates or a way to multiplex multiple Part streams. This field is not supported in Vertex AI. */
   partMetadata?: Record<string, unknown>;
 }
@@ -2522,64 +2553,42 @@ export declare interface Retrieval {
   vertexRagStore?: VertexRagStore;
 }
 
-/** Tool to support computer use. */
-export declare interface ComputerUse {
-  /** Required. The environment being operated. */
-  environment?: Environment;
-  /** Optional. By default, [predefined functions](https://cloud.google.com/vertex-ai/generative-ai/docs/computer-use#supported-actions) are included in the final model call. Some of them can be explicitly excluded from being automatically included. This can serve two purposes: 1. Using a more restricted / different action space. 2. Improving the definitions / instructions of predefined functions. */
-  excludedPredefinedFunctions?: string[];
-  /** Optional. Enables the prompt injection detection check on computer-use request. */
-  enablePromptInjectionDetection?: boolean;
-  /** Optional. Disabled safety policies for computer use. This field is not supported in Vertex AI. */
-  disabledSafetyPolicies?: SafetyPolicy[];
+/** A transport that can stream HTTP requests and responses. Next ID: 6. This data type is not supported in Vertex AI. */
+export declare interface StreamableHttpTransport {
+  /** Optional: Fields for authentication headers, timeouts, etc., if needed. */
+  headers?: Record<string, string>;
+  /** Timeout for SSE read operations. */
+  sseReadTimeout?: string;
+  /** Whether to close the client session when the transport closes. */
+  terminateOnClose?: boolean;
+  /** HTTP timeout for regular operations. */
+  timeout?: string;
+  /** The full URL for the MCPServer endpoint. Example: "https://api.example.com/mcp". */
+  url?: string;
 }
 
-/** The FileSearch tool that retrieves knowledge from Semantic Retrieval corpora. Files are imported to Semantic Retrieval corpora using the ImportFile API. This data type is not supported in Vertex AI. */
-export declare interface FileSearch {
-  /** Required. The names of the file_search_stores to retrieve from. Example: `fileSearchStores/my-file-search-store-123` */
-  fileSearchStoreNames?: string[];
-  /** Optional. The number of semantic retrieval chunks to retrieve. */
-  topK?: number;
-  /** Optional. Metadata filter to apply to the semantic retrieval documents and chunks. */
-  metadataFilter?: string;
-}
-
-/** Standard web search for grounding and related configurations. Only text results are returned. */
-export declare interface WebSearch {}
-
-/** Image search for grounding and related configurations. */
-export declare interface ImageSearch {}
-
-/** Different types of search that can be enabled on the GoogleSearch tool. */
-export declare interface SearchTypes {
-  /** Optional. Setting this field enables web search. Only text results are returned. */
-  webSearch?: WebSearch;
-  /** Optional. Setting this field enables image search. Image bytes are returned. */
-  imageSearch?: ImageSearch;
-}
-
-/** Represents a time interval, encoded as a Timestamp start (inclusive) and a Timestamp end (exclusive). The start must be less than or equal to the end. When the start equals the end, the interval is empty (matches no time). When both start and end are unspecified, the interval matches any time. */
-export declare interface Interval {
-  /** Optional. Exclusive end of the interval. If specified, a Timestamp matching this interval will have to be before the end. */
-  endTime?: string;
-  /** Optional. Inclusive start of the interval. If specified, a Timestamp matching this interval will have to be the same or after the start. */
-  startTime?: string;
-}
-
-/** GoogleSearch tool type. Tool to support Google Search in Model. Powered by Google. */
-export declare interface GoogleSearch {
-  /** Optional. The set of search types to enable. If not set, web search is enabled by default. */
-  searchTypes?: SearchTypes;
-  /** Optional. Sites with confidence level chosen & above this value will be blocked from the search results. This field is not supported in Gemini API. */
-  blockingConfidence?: PhishBlockThreshold;
-  /** Optional. List of domains to be excluded from the search results. The default limit is 2000 domains. Example: ["amazon.com", "facebook.com"]. This field is not supported in Gemini API. */
-  excludeDomains?: string[];
-  /** Optional. Filter search results to a specific time range. If customers set a start time, they must set an end time (and vice versa). This field is not supported in Vertex AI. */
-  timeRangeFilter?: Interval;
+/** A MCPServer is a server that can be called by the model to perform actions. It is a server that implements the MCP protocol. Next ID: 6. This data type is not supported in Vertex AI. */
+export declare interface McpServer {
+  /** The name of the MCPServer. */
+  name?: string;
+  /** A transport that can stream HTTP requests and responses. */
+  streamableHttpTransport?: StreamableHttpTransport;
 }
 
 /** Tool that executes code generated by the model, and automatically returns the result to the model. See also ExecutableCode and CodeExecutionResult, which are input and output to this tool. This data type is not supported in Gemini API. */
 export declare interface ToolCodeExecution {}
+
+/** Tool to support computer use. */
+export declare interface ComputerUse {
+  /** Optional. Enables the prompt injection detection check on computer-use request. */
+  enablePromptInjectionDetection?: boolean;
+  /** Required. The environment being operated. */
+  environment?: Environment;
+  /** Optional. By default, [predefined functions](https://cloud.google.com/vertex-ai/generative-ai/docs/computer-use#supported-actions) are included in the final model call. Some of them can be explicitly excluded from being automatically included. This can serve two purposes: 1. Using a more restricted / different action space. 2. Improving the definitions / instructions of predefined functions. */
+  excludedPredefinedFunctions?: string[];
+  /** Optional. Disabled safety policies for computer use. This field is not supported in Vertex AI. */
+  disabledSafetyPolicies?: SafetyPolicy[];
+}
 
 /** Tool to search public web data, powered by Vertex AI Search and Sec4 compliance. This data type is not supported in Gemini API. */
 export declare interface EnterpriseWebSearch {
@@ -2589,8 +2598,18 @@ export declare interface EnterpriseWebSearch {
   excludeDomains?: string[];
 }
 
+/** ExaAiSearch tool type. A tool that uses the Exa.ai search engine for grounding. This data type is not supported in Gemini API. */
+export declare interface ToolExaAiSearch {
+  /** Required. The API key for ExaAiSearch. */
+  apiKey?: string;
+  /** Optional. This field can be used to pass any parameter from the Exa.ai Search API. */
+  customConfigs?: Record<string, unknown>;
+}
+
 /** Structured representation of a function declaration as defined by the [OpenAPI 3.0 specification](https://spec.openapis.org/oas/v3.0.3). Included in this declaration are the function name, description, parameters and response type. This FunctionDeclaration is a representation of a block of code that can be used as a `Tool` by the model and executed by the client. */
 export declare interface FunctionDeclaration {
+  /** Optional. Specifies the function Behavior. If not specified, the system keeps the current function call behavior. This field is currently only supported by the BidiGenerateContent method. */
+  behavior?: Behavior;
   /** Optional. Description and purpose of the function. Model uses it to decide how and whether to call the function. */
   description?: string;
   /** Required. The name of the function to call. Must start with a letter or an underscore. Must be a-z, A-Z, 0-9, or contain underscores, dots, colons and dashes, with a maximum length of 128. */
@@ -2603,8 +2622,40 @@ export declare interface FunctionDeclaration {
   response?: Schema;
   /** Optional. Describes the output from this function in JSON Schema format. The value specified by the schema is the response value of the function. This field is mutually exclusive with `response`. */
   responseJsonSchema?: unknown;
-  /** Optional. Specifies the function Behavior. If not specified, the system keeps the current function call behavior. This field is currently only supported by the BidiGenerateContent method. */
-  behavior?: Behavior;
+}
+
+/** Image search for grounding and related configurations. */
+export declare interface ImageSearch {}
+
+/** Standard web search for grounding and related configurations. Only text results are returned. */
+export declare interface WebSearch {}
+
+/** Different types of search that can be enabled on the GoogleSearch tool. */
+export declare interface SearchTypes {
+  /** Optional. Setting this field enables image search. Image bytes are returned. */
+  imageSearch?: ImageSearch;
+  /** Optional. Setting this field enables web search. Only text results are returned. */
+  webSearch?: WebSearch;
+}
+
+/** Represents a time interval, encoded as a Timestamp start (inclusive) and a Timestamp end (exclusive). The start must be less than or equal to the end. When the start equals the end, the interval is empty (matches no time). When both start and end are unspecified, the interval matches any time. */
+export declare interface Interval {
+  /** Optional. Exclusive end of the interval. If specified, a Timestamp matching this interval will have to be before the end. */
+  endTime?: string;
+  /** Optional. Inclusive start of the interval. If specified, a Timestamp matching this interval will have to be the same or after the start. */
+  startTime?: string;
+}
+
+/** GoogleSearch tool type. Tool to support Google Search in Model. Powered by Google. */
+export declare interface GoogleSearch {
+  /** Optional. Sites with confidence level chosen & above this value will be blocked from the search results. This field is not supported in Gemini API. */
+  blockingConfidence?: PhishBlockThreshold;
+  /** Optional. List of domains to be excluded from the search results. The default limit is 2000 domains. Example: ["amazon.com", "facebook.com"]. This field is not supported in Gemini API. */
+  excludeDomains?: string[];
+  /** Optional. The set of search types to enable. If not set, web search is enabled by default. */
+  searchTypes?: SearchTypes;
+  /** Optional. Filter search results to a specific time range. If customers set a start time, they must set an end time (and vice versa). This field is not supported in Vertex AI. */
+  timeRangeFilter?: Interval;
 }
 
 /** Describes the options to customize dynamic retrieval. */
@@ -2632,65 +2683,45 @@ export declare interface ToolParallelAiSearch {
 /** Tool to support URL context. */
 export declare interface UrlContext {}
 
-/** A transport that can stream HTTP requests and responses. Next ID: 6. This data type is not supported in Vertex AI. */
-export declare interface StreamableHttpTransport {
-  /** Optional: Fields for authentication headers, timeouts, etc., if needed. */
-  headers?: Record<string, string>;
-  /** Timeout for SSE read operations. */
-  sseReadTimeout?: string;
-  /** Whether to close the client session when the transport closes. */
-  terminateOnClose?: boolean;
-  /** HTTP timeout for regular operations. */
-  timeout?: string;
-  /** The full URL for the MCPServer endpoint. Example: "https://api.example.com/mcp". */
-  url?: string;
-}
-
-/** A MCPServer is a server that can be called by the model to perform actions. It is a server that implements the MCP protocol. Next ID: 6. This data type is not supported in Vertex AI. */
-export declare interface McpServer {
-  /** The name of the MCPServer. */
-  name?: string;
-  /** A transport that can stream HTTP requests and responses. */
-  streamableHttpTransport?: StreamableHttpTransport;
-}
-
-/** ExaAiSearch tool type. A tool that uses the Exa.ai search engine for grounding. This data type is not supported in Gemini API. */
-export declare interface ToolExaAiSearch {
-  /** Required. The API key for ExaAiSearch. */
-  apiKey?: string;
-  /** Optional. This field can be used to pass any parameter from the Exa.ai Search API. */
-  customConfigs?: Record<string, unknown>;
+/** The FileSearch tool that retrieves knowledge from Semantic Retrieval corpora. Files are imported to Semantic Retrieval corpora using the ImportFile API. This data type is not supported in Vertex AI. */
+export declare interface FileSearch {
+  /** Required. The names of the file_search_stores to retrieve from. Example: `fileSearchStores/my-file-search-store-123` */
+  fileSearchStoreNames?: string[];
+  /** Optional. Metadata filter to apply to the semantic retrieval documents and chunks. */
+  metadataFilter?: string;
+  /** Optional. The number of semantic retrieval chunks to retrieve. */
+  topK?: number;
 }
 
 /** Tool details of a tool that the model may use to generate a response. */
 export declare interface Tool {
   /** Optional. Retrieval tool type. System will always execute the provided retrieval tool(s) to get external knowledge to answer the prompt. Retrieval results are presented to the model for generation. This field is not supported in Gemini API. */
   retrieval?: Retrieval;
-  /** Optional. Tool to support the model interacting directly with the computer. If enabled, it automatically populates computer-use specific Function Declarations. */
-  computerUse?: ComputerUse;
-  /** Optional. FileSearch tool type. Tool to retrieve knowledge from Semantic Retrieval corpora. This field is not supported in Vertex AI. */
-  fileSearch?: FileSearch;
-  /** Optional. GoogleSearch tool type. Tool to support Google Search in Model. Powered by Google. */
-  googleSearch?: GoogleSearch;
   /** Optional. Tool that allows grounding the model's response with
       geospatial context related to the user's query. */
   googleMaps?: GoogleMaps;
+  /** Optional. MCP Servers to connect to. This field is not supported in Vertex AI. */
+  mcpServers?: McpServer[];
   /** Optional. CodeExecution tool type. Enables the model to execute code as part of generation. */
   codeExecution?: ToolCodeExecution;
+  /** Optional. Tool to support the model interacting directly with the computer. If enabled, it automatically populates computer-use specific Function Declarations. */
+  computerUse?: ComputerUse;
   /** Optional. Tool to support searching public web data, powered by Vertex AI Search and Sec4 compliance. This field is not supported in Gemini API. */
   enterpriseWebSearch?: EnterpriseWebSearch;
+  /** Optional. Uses Exa.ai to search for information to answer user queries. The search results will be grounded on Exa.ai and presented to the model for response generation. This field is not supported in Gemini API. */
+  exaAiSearch?: ToolExaAiSearch;
   /** Optional. Function tool type. One or more function declarations to be passed to the model along with the current user query. Model may decide to call a subset of these functions by populating FunctionCall in the response. User should provide a FunctionResponse for each function call in the next turn. Based on the function responses, Model will generate the final response back to the user. Maximum 512 function declarations can be provided. */
   functionDeclarations?: FunctionDeclaration[];
+  /** Optional. GoogleSearch tool type. Tool to support Google Search in Model. Powered by Google. */
+  googleSearch?: GoogleSearch;
   /** Optional. Specialized retrieval tool that is powered by Google Search. */
   googleSearchRetrieval?: GoogleSearchRetrieval;
   /** Optional. If specified, Vertex AI will use Parallel.ai to search for information to answer user queries. The search results will be grounded on Parallel.ai and presented to the model for response generation. This field is not supported in Gemini API. */
   parallelAiSearch?: ToolParallelAiSearch;
   /** Optional. Tool to support URL context retrieval. */
   urlContext?: UrlContext;
-  /** Optional. MCP Servers to connect to. This field is not supported in Vertex AI. */
-  mcpServers?: McpServer[];
-  /** Optional. Uses Exa.ai to search for information to answer user queries. The search results will be grounded on Exa.ai and presented to the model for response generation. This field is not supported in Gemini API. */
-  exaAiSearch?: ToolExaAiSearch;
+  /** Optional. FileSearch tool type. Tool to retrieve knowledge from Semantic Retrieval corpora. This field is not supported in Vertex AI. */
+  fileSearch?: FileSearch;
 }
 
 /** The signature of the voice consent check. */
@@ -2818,8 +2849,6 @@ export declare interface ImageConfig {
   /** Controls the generation of people. Supported values are:
       ALLOW_ALL, ALLOW_ADULT, ALLOW_NONE. */
   personGeneration?: string;
-  /** Optional. Controls whether prominent people (celebrities) generation is allowed. If used with personGeneration, personGeneration enum would take precedence. For instance, if ALLOW_NONE is set, all person generation would be blocked. If this field is unspecified, the default behavior is to allow prominent people. This field is not supported in Gemini API. */
-  prominentPeople?: ProminentPeople;
   /** MIME type of the generated image. This field is not
       supported in Gemini API. */
   outputMimeType?: string;
@@ -2828,6 +2857,8 @@ export declare interface ImageConfig {
   outputCompressionQuality?: number;
   /** Optional. The image output format for generated images. This field is not supported in Gemini API. */
   imageOutputOptions?: ImageConfigImageOutputOptions;
+  /** Optional. Controls whether prominent people (celebrities) generation is allowed. If used with personGeneration, personGeneration enum would take precedence. For instance, if ALLOW_NONE is set, all person generation would be blocked. If this field is unspecified, the default behavior is to allow prominent people. This field is not supported in Gemini API. */
+  prominentPeople?: ProminentPeople;
 }
 
 /** The configuration for automated routing. When automated routing is specified, the routing will be determined by the pretrained routing model and customer provided model routing preference. This data type is not supported in Gemini API. */
@@ -2864,22 +2895,6 @@ export declare interface SafetySetting {
   threshold?: HarmBlockThreshold;
 }
 
-/** An object that represents a latitude/longitude pair. This is expressed as a pair of doubles to represent degrees latitude and degrees longitude. Unless specified otherwise, this object must conform to the WGS84 standard. Values must be within normalized ranges. */
-export declare interface LatLng {
-  /** The latitude in degrees. It must be in the range [-90.0, +90.0]. */
-  latitude?: number;
-  /** The longitude in degrees. It must be in the range [-180.0, +180.0]. */
-  longitude?: number;
-}
-
-/** Retrieval config. */
-export declare interface RetrievalConfig {
-  /** The location of the user. */
-  latLng?: LatLng;
-  /** The language code of the user. */
-  languageCode?: string;
-}
-
 /** Function calling config. */
 export declare interface FunctionCallingConfig {
   /** Optional. Function names to call. Only set when the Mode is ANY. Function names should match FunctionDeclaration.name. With mode set to ANY, model will predict a function call from the set of function names provided. */
@@ -2890,14 +2905,59 @@ export declare interface FunctionCallingConfig {
   streamFunctionCallArguments?: boolean;
 }
 
+/** An object that represents a latitude/longitude pair. This is expressed as a pair of doubles to represent degrees latitude and degrees longitude. Unless specified otherwise, this object must conform to the WGS84 standard. Values must be within normalized ranges. */
+export declare interface LatLng {
+  /** The latitude in degrees. It must be in the range [-90.0, +90.0]. */
+  latitude?: number;
+  /** The longitude in degrees. It must be in the range [-180.0, +180.0]. */
+  longitude?: number;
+}
+
+/** Retrieval config. */
+export declare interface RetrievalConfig {
+  /** The language code of the user. */
+  languageCode?: string;
+  /** The location of the user. */
+  latLng?: LatLng;
+}
+
 /** Tool config. This config is shared for all tools provided in the request. */
 export declare interface ToolConfig {
-  /** Optional. Retrieval config. */
-  retrievalConfig?: RetrievalConfig;
   /** Optional. Function calling config. */
   functionCallingConfig?: FunctionCallingConfig;
+  /** Optional. Retrieval config. */
+  retrievalConfig?: RetrievalConfig;
   /** Optional. If true, the API response will include the server-side tool calls and responses within the `Content` message. This allows clients to observe the server's tool interactions. This field is not supported in Vertex AI. */
   includeServerSideToolInvocations?: boolean;
+}
+
+/** Indicates the language of the audio should be automatically detected. */
+export declare interface LanguageAuto {}
+
+/** Provides hints to the model about possible languages present in the audio. */
+export declare interface LanguageHints {
+  /** BCP-47 language codes. At least one must be specified. */
+  languageCodes?: string[];
+}
+
+/** The audio transcription configuration in Setup. */
+export declare interface AudioTranscriptionConfig {
+  /** Deprecated: use LanguageAuto or LanguageHints instead. */
+  languageCodes?: string[];
+  /** The model will detect the language automatically. Do not use together with LanguageHints. */
+  languageAuto?: LanguageAuto;
+  /** Specifies one or more languages in the audio. Do not use together with LanguageAuto. */
+  languageHints?: LanguageHints;
+  /** A list of custom vocabulary phrases, which biases the ASR model to improve recognition of these specific terms. */
+  customVocabulary?: string[];
+  /** Deprecated. A list of phrases used for speech adaptation, which biases the ASR model to improve recognition of these specific terms. */
+  adaptationPhrases?: string[];
+  /** Configures word-level timestamp generation.
+   */
+  wordTimestamp?: boolean;
+  /** Configures speaker diarization.
+   */
+  diarization?: boolean;
 }
 
 /** Configuration for Model Armor. Model Armor is a Google Cloud service that provides safety and security filtering for prompts and responses. It helps protect your AI applications from risks such as harmful content, sensitive data leakage, and prompt injection attacks. This data type is not supported in Gemini API. */
@@ -2922,6 +2982,8 @@ export declare interface GenerateContentConfig {
   be charged usage for any applicable operations.
        */
   abortSignal?: AbortSignal;
+  /** The service tier to use for the request. For example, ServiceTier.FLEX. */
+  serviceTier?: ServiceTier;
   /** Instructions for the model to steer it toward better performance.
       For example, "Answer as concisely as possible" or "Don't use technical
       terms in your response".
@@ -3056,6 +3118,9 @@ export declare interface GenerateContentConfig {
   /** The thinking features configuration.
    */
   thinkingConfig?: ThinkingConfig;
+  /** Optional. Configuration for audio transcription (speech recognition).
+   */
+  audioTranscriptionConfig?: AudioTranscriptionConfig;
   /** The image generation configuration.
    */
   imageConfig?: ImageConfig;
@@ -3067,8 +3132,6 @@ export declare interface GenerateContentConfig {
       service. If supplied, safety_settings must not be supplied.
        */
   modelArmorConfig?: ModelArmorConfig;
-  /** The service tier to use for the request. For example, ServiceTier.FLEX. */
-  serviceTier?: ServiceTier;
 }
 
 /** Config for models.generate_content parameters. */
@@ -3242,14 +3305,14 @@ export declare interface GroundingChunkMaps {
 
 /** An `Image` chunk is a piece of evidence that comes from an image search result. It contains the URI of the image search result and the URI of the image. This is used to provide the user with a link to the source of the information. */
 export declare interface GroundingChunkImage {
-  /** The URI of the image search result page. */
-  sourceUri?: string;
-  /** The URI of the image. */
-  imageUri?: string;
-  /** The title of the image search result page. */
-  title?: string;
   /** The domain of the image search result page. */
   domain?: string;
+  /** The URI of the image. */
+  imageUri?: string;
+  /** The URI of the image search result page. */
+  sourceUri?: string;
+  /** The title of the image search result page. */
+  title?: string;
 }
 
 /** Represents where the chunk starts and ends in the document. This data type is not supported in Gemini API. */
@@ -3262,14 +3325,14 @@ export declare interface RagChunkPageSpan {
 
 /** A RagChunk includes the content of a chunk of a RagFile, and associated metadata. This data type is not supported in Gemini API. */
 export declare interface RagChunk {
-  /** If populated, represents where the chunk starts and ends in the document. */
-  pageSpan?: RagChunkPageSpan;
-  /** The content of the chunk. */
-  text?: string;
   /** The ID of the chunk. */
   chunkId?: string;
   /** The ID of the file that the chunk belongs to. */
   fileId?: string;
+  /** If populated, represents where the chunk starts and ends in the document. */
+  pageSpan?: RagChunkPageSpan;
+  /** The content of the chunk. */
+  text?: string;
 }
 
 /** A list of string values. This data type is not supported in Vertex AI. */
@@ -3306,10 +3369,10 @@ export declare interface GroundingChunkRetrievedContext {
   customMetadata?: GroundingChunkCustomMetadata[];
   /** Optional. Name of the `FileSearchStore` containing the document. Example: `fileSearchStores/123`. This field is not supported in Vertex AI. */
   fileSearchStore?: string;
-  /** Optional. Page number of the retrieved context, if applicable. This field is not supported in Vertex AI. */
-  pageNumber?: number;
   /** Optional. The media blob resource name for multimodal file search results. Format: fileSearchStores/{file_search_store_id}/media/{blob_id}. This field is not supported in Vertex AI. */
   mediaId?: string;
+  /** Optional. Page number of the retrieved context, if applicable. This field is not supported in Vertex AI. */
+  pageNumber?: number;
 }
 
 /** A `Web` chunk is a piece of evidence that comes from a web page. It contains the URI of the web page, the title of the page, and the domain of the page. This is used to provide the user with a link to the source of the information. */
@@ -3328,14 +3391,14 @@ This is used to show a citation for a claim made by the model. When grounding
 is enabled, the model returns a `GroundingChunk` that contains a reference to
 the source of the information. */
 export declare interface GroundingChunk {
-  /** A grounding chunk from an image search result. See the `Image` message for details. */
-  image?: GroundingChunkImage;
   /** A `Maps` chunk is a piece of evidence that comes from Google Maps.
 
       It contains information about a place, such as its name, address, and
       reviews. This is used to provide the user with rich, location-based
       information. */
   maps?: GroundingChunkMaps;
+  /** A grounding chunk from an image search result. See the `Image` message for details. */
+  image?: GroundingChunkImage;
   /** A grounding chunk from a data source retrieved by a retrieval tool, such as Vertex AI Search. See the `RetrievedContext` message for details */
   retrievedContext?: GroundingChunkRetrievedContext;
   /** A grounding chunk from a web page, typically from Google Search. See the `Web` message for details. */
@@ -3409,8 +3472,6 @@ export declare interface GroundingMetadataSourceFlaggingUri {
 
 /** Information for various kinds of grounding. */
 export declare interface GroundingMetadata {
-  /** Optional. The image search queries that were used to generate the content. This field is populated only when the grounding source is Google Search with the Image Search search_type enabled. */
-  imageSearchQueries?: string[];
   /** A list of supporting references retrieved from the grounding
       source. This field is populated when the grounding source is Google
       Search, Vertex AI Search, or Google Maps.
@@ -3427,6 +3488,8 @@ export declare interface GroundingMetadata {
   webSearchQueries?: string[];
   /** Optional. Output only. Deprecated: The Google Maps contextual widget behavior in Grounding with Google Maps is being deprecated; this field is planned for removal and will no longer be populated once removed. A token that can be used to render a Google Maps widget with the contextual data. This field is populated only when the grounding source is Google Maps. */
   googleMapsWidgetContextToken?: string;
+  /** Optional. The image search queries that were used to generate the content. This field is populated only when the grounding source is Google Search with the Image Search search_type enabled. */
+  imageSearchQueries?: string[];
   /** Optional. The queries that were executed by the retrieval tools. This field is populated only when the grounding source is a retrieval tool, such as Vertex AI Search. This field is not supported in Gemini API. */
   retrievalQueries?: string[];
   /** Optional. Output only. A list of URIs that can be used to flag a place or review for inappropriate content. This field is populated only when the grounding source is Google Maps. This field is not supported in Gemini API. */
@@ -3884,6 +3947,15 @@ export declare interface EditImageParameters {
 
 /** Optional parameters for the embed_content method. */
 export declare interface EmbedContentConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
   /** Type of task for which the embedding will be used.
    */
   taskType?: string;
@@ -3913,15 +3985,6 @@ export declare interface EmbedContentConfig {
       Only applicable to Gemini Embedding 2 models.
        */
   audioTrackExtraction?: boolean;
-  /** Used to override HTTP request options. */
-  httpOptions?: HttpOptions;
-  /** Abort signal which can be used to cancel the request.
-
-  NOTE: AbortSignal is a client-only operation. Using it to cancel an
-  operation will not cancel the request in the service. You will still
-  be charged usage for any applicable operations.
-       */
-  abortSignal?: AbortSignal;
 }
 
 /** Parameters for the _embed_content method. */
@@ -4622,6 +4685,9 @@ export declare interface GenerationConfig {
       `response_schema` that accepts [JSON Schema](https://json-schema.org/).
        */
   responseJsonSchema?: unknown;
+  /** Optional. Configuration for audio transcription (speech recognition).
+   */
+  audioTranscriptionConfig?: AudioTranscriptionConfig;
   /** Optional. If enabled, audio timestamps will be included in the request to the model. This can be useful for synchronizing audio with other modalities in the response. This field is not supported in Gemini API. */
   audioTimestamp?: boolean;
   /** Optional. The number of candidate responses to generate. A higher `candidate_count` can provide more options to choose from, but it also consumes more resources. This can be useful for generating a variety of responses and selecting the best one. */
@@ -4638,6 +4704,8 @@ export declare interface GenerationConfig {
   mediaResolution?: MediaResolution;
   /** Optional. Penalizes tokens that have already appeared in the generated text. A positive value encourages the model to generate more diverse and less repetitive text. Valid values can range from [-2.0, 2.0]. */
   presencePenalty?: number;
+  /** Optional. New response format field for the model to configure output formatting and delivery. */
+  responseFormat?: ResponseFormat[];
   /** Optional. If set to true, the log probabilities of the output tokens are returned. Log probabilities are the logarithm of the probability of a token appearing in the output. A higher log probability means the token is more likely to be generated. This can be useful for analyzing the model's confidence in its own output and for debugging. */
   responseLogprobs?: boolean;
   /** Optional. The IANA standard MIME type of the response. The model will generate output that conforms to this MIME type. Supported values include 'text/plain' (default) and 'application/json'. The model needs to be prompted to output the appropriate response type, otherwise the behavior is undefined. Deprecated: Use `response_format` instead. */
@@ -4664,8 +4732,6 @@ export declare interface GenerationConfig {
   topP?: number;
   /** Optional. Enables enhanced civic answers. It may not be available for all models. This field is not supported in Vertex AI. */
   enableEnhancedCivicAnswers?: boolean;
-  /** Optional. New response format field for the model to configure output formatting and delivery. */
-  responseFormat?: ResponseFormat[];
   /** Optional. Config for translation. This field is not supported in Vertex AI. */
   translationConfig?: TranslationConfig;
 }
@@ -5086,13 +5152,18 @@ export declare interface PreferenceOptimizationSpec {
 
 /** Distillation hyperparameters for tuning. */
 export declare interface DistillationHyperParameters {
-  /** The size of the adapter. Can be 'small', 'medium', or 'large'. */
-  adapterSize?: AdapterSize;
   /** Number of complete passes the model makes over the entire training dataset
       during training. */
   epochCount?: string;
   /** Multiplier for adjusting the default learning rate. */
   learningRateMultiplier?: number;
+  /** The size of the adapter. Can be 'small', 'medium', or 'large'. */
+  adapterSize?: AdapterSize;
+  /** Batch size for tuning. This feature is only available for open
+      source models. */
+  batchSize?: number;
+  /** The learning rate for distillation tuning. */
+  learningRate?: number;
   /** Generation config for Distillation teacher model sampling. Only the
       following fields are supported for distillation teacher samplings:
       - temperature
@@ -5101,51 +5172,46 @@ export declare interface DistillationHyperParameters {
       - candidate_count
       - thinking_config */
   generationConfig?: GenerationConfig;
-  /** The learning rate for distillation tuning. */
-  learningRate?: number;
-  /** Batch size for tuning. This feature is only available for open
-      source models. */
-  batchSize?: number;
 }
 
 /** Distillation sampling spec for tuning. */
 export declare interface DistillationSamplingSpec {
+  /** Cloud Storage path to file containing prompt dataset for distillation.
+      The dataset must be formatted as a JSONL file. */
+  promptDatasetUri?: string;
+  /** Cloud Storage path to file containing validation dataset for distillation.
+     The dataset must be formatted as a JSONL file. */
+  validationDatasetUri?: string;
   /** The base teacher model that is being distilled. See [Supported
        models](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/tuning#supported_models). */
   baseTeacherModel?: string;
   /** The resource name of the Tuned teacher model. Format:
       `projects/{project}/locations/{location}/models/{model}`. */
   tunedTeacherModelSource?: string;
-  /** Cloud Storage path to file containing validation dataset for distillation.
-     The dataset must be formatted as a JSONL file. */
-  validationDatasetUri?: string;
-  /** Cloud Storage path to file containing prompt dataset for distillation.
-      The dataset must be formatted as a JSONL file. */
-  promptDatasetUri?: string;
   /** Hyperparameters for distillation tuning. */
   hyperparameters?: DistillationHyperParameters;
 }
 
 /** Distillation tuning spec for tuning. */
 export declare interface DistillationSpec {
-  /** Optional. Cloud Storage path to file containing prompt dataset for distillation. The dataset must be formatted as a JSONL file. */
-  promptDatasetUri?: string;
   /** The base teacher model that is being distilled. See [Supported models](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/tuning#supported_models). */
   baseTeacherModel?: string;
   /** Optional. Hyperparameters for Distillation. */
   hyperParameters?: DistillationHyperParameters;
   /** Deprecated. A path in a Cloud Storage bucket, which will be treated as the root output directory of the distillation pipeline. It is used by the system to generate the paths of output artifacts. */
   pipelineRootDirectory?: string;
+  /** Optional. Cloud Storage path to file containing prompt dataset for distillation. The dataset must be formatted as a JSONL file. */
+  promptDatasetUri?: string;
   /** The student model that is being tuned, e.g., "google/gemma-2b-1.1-it". Deprecated. Use base_model instead. */
   studentModel?: string;
   /** Deprecated. Cloud Storage path to file containing training dataset for tuning. The dataset must be formatted as a JSONL file. */
   trainingDatasetUri?: string;
   /** The resource name of the Tuned teacher model. Format: `projects/{project}/locations/{location}/models/{model}`. */
   tunedTeacherModelSource?: string;
-  /** Optional. Cloud Storage path to file containing validation dataset for tuning. The dataset must be formatted as a JSONL file. */
-  validationDatasetUri?: string;
   /** Optional. Specifies the tuning mode for distillation (sft part). This feature is only available for open source models. */
   tuningMode?: TuningMode;
+  /** Optional. Cloud Storage path to file containing validation dataset for tuning. The dataset must be formatted as a JSONL file. */
+  validationDatasetUri?: string;
 }
 
 /** Autorater config used for evaluation. */
@@ -5182,18 +5248,18 @@ export class ReinforcementTuningParseResponseConfig {
   regexExtractExpression?: string;
 }
 
-/** Scores responses by directly converting the parsed autorater response to a float reward. Note: Reward is clipped to be within `[-1, 1]`, i.e., `reward = max(min(reward, 1.0), -1.0)`. This data type is not supported in Gemini API. */
-export class ReinforcementTuningAutoraterScorerParsedResponseConversionScorer {}
-
 /** Scores autorater responses by using exact string match reward scorer. This data type is not supported in Gemini API. */
 export declare interface ReinforcementTuningAutoraterScorerExactMatchScorer {
   /** Assigns this reward score if the parsed response string equals the expression. */
   correctAnswerReward?: number;
-  /** Assigns this reward score if the parsed reward value does not equal the expression. */
-  wrongAnswerReward?: number;
   /** The string expression to match against for scoring. This field supports placeholders in the format of {{references.key}} that will be replaced before matching. Regex is not supported for this expression. For example, users can define an ExactMatchScorer as follows: { "correctAnswerReward": 1.0, "wrongAnswerReward": -1.0, "expression": "{{references.concise_answer}}" } When evaluating the reward for each parsed autorater response, if the prompt references in the training/validation dataset has the following fields: ``` { "example": ..., "references": { "concise_ansser": "Yes", "verbose_answer": "The answer is Yes" } } ``` The above ExactMatchScorer will be replaced as follows for scoring: ``` { "correctAnswerReward": 1.0, "wrongAnswerReward": -1.0, "expression": "Yes" } ``` If the *parsed* autorater response is equal to the string `"Yes"`, then the reward is `1.0`, otherwise the reward is `-1.0`. */
   expression?: string;
+  /** Assigns this reward score if the parsed reward value does not equal the expression. */
+  wrongAnswerReward?: number;
 }
+
+/** Scores responses by directly converting the parsed autorater response to a float reward. Note: Reward is clipped to be within `[-1, 1]`, i.e., `reward = max(min(reward, 1.0), -1.0)`. This data type is not supported in Gemini API. */
+export class ReinforcementTuningAutoraterScorerParsedResponseConversionScorer {}
 
 /** Reinforcement tuning autorater scorer. */
 export declare interface ReinforcementTuningAutoraterScorer {
@@ -5203,10 +5269,16 @@ export declare interface ReinforcementTuningAutoraterScorer {
   autoraterPrompt?: string;
   /** Parses autorater returned response for scoring. For example, if the autorater response has reward stored in the `2.0` block, defining a parsing response config using regex `".*(.*?)"` will return a score `"2.0"`. */
   autoraterResponseParseConfig?: ReinforcementTuningParseResponseConfig;
-  /** Scores autorater responses by directly converting parsed autorater response to a float reward. Note: Reward is clipped to be within `[-1, 1]`, i.e., `reward = max(min(reward, 1.0), -1.0)`. */
-  parsedResponseConversionScorer?: ReinforcementTuningAutoraterScorerParsedResponseConversionScorer;
   /** Scores autorater responses by using string match reward scorer. */
   exactMatchScorer?: ReinforcementTuningAutoraterScorerExactMatchScorer;
+  /** Scores autorater responses by directly converting parsed autorater response to a float reward. Note: Reward is clipped to be within `[-1, 1]`, i.e., `reward = max(min(reward, 1.0), -1.0)`. */
+  parsedResponseConversionScorer?: ReinforcementTuningAutoraterScorerParsedResponseConversionScorer;
+}
+
+/** ReinforcementTuningCloudRunRewardScorer allows users to implement a reward function through GCP Cloud Run. Comparing with ReinforcementTuningCodeExecutionRewardScorer that runs in a Sandbox and has no internet access, Cloud Run reward scorer is fully controlled by users. The Cloud Run service should implement the following HTTP API: HTTP method: `POST` HTTP request body: ``` { "example": ReinforcementTuningExample, "response": Content, "metadata": { "step": int "tuning_job_id": int64 } } ``` * `example` is a ReinforcementTuningExample in ProtoJSON format, (i.e., the format is the same as as one line in the training/validation dataset except that the keys must be in camel case). System instructions (i.e., `example.get("systemInstruction")`) and references (i.e., `example.get("references")`) are also included in the `example` provided that they are set in the training/validation dataset. * `response` is a Content in ProtoJSON format (i.e., keys must be in camel case), which is the same as the Online Prediction response for Gemini models. HTTP response body: { "reward": float, "user_requested_aux_info": str // Optional } where the field "user_requested_aux_info" is any (optional) string provided by users for assisting debugging. It's in snake case. This field is mostly useful when calling the GenAiTuningService.ValidateReinforcementTuningReward API, where the proto field (not Cloud Run HTTP response body) userRequestedAuxInfo will be populated if the Cloud Run reward function sets this field in the HTTP response. The following are examples for the HTTP request and response body. Example HTTP request body: ``` { "example": { "contents": [ { "role": "user", "parts": [ { "text": "What is the capital of France?" } ] } ], "references": { "answer": "Paris" } }, "response": { "parts": [ { "text": "London" } ] }, "metadata": { "step": 1, "tuning_job_id": 123456789 } } ``` Example HTTP response body: ``` { "reward": -1.0 } ``` Note: Reward output by Cloud Run reward function is clipped to be within `[-1, 1]`, i.e., `reward = max(min(reward, 1.0), -1.0)`. This data type is not supported in Gemini API. */
+export declare interface ReinforcementTuningCloudRunRewardScorer {
+  /** URI of the Cloud Run service that will be used to compute the reward. The [Vertex AI Secure Fine Tuning Service Agent](https://docs.cloud.google.com/iam/docs/service-agents#vertex-ai-secure-fine-tuning-service-agent) (`service-@gcp-sa-vertex-tune.iam.gserviceaccount.com`) must be granted the permission (e.g. by granting `roles/run.invoker` in IAM) to invoke the Cloud Run service. */
+  cloudRunUri?: string;
 }
 
 /** ReinforcementTuningCodeExecutionRewardScorer allows users to implement a function to evaluate rewards for the sample response. The function signature is as follows: ``` def evaluate(example: dict[str, Any], response: dict[str, Any]) -> float: ... ``` `example` is a ReinforcementTuningExample in ProtoJSON format, (i.e., the format is the same as as one line in the training/validation dataset except that the keys must be in camel case). System instructions (i.e., `example.get("systemInstruction")`) and references (i.e., `example.get("references")`) are also included in the `example` provided that they are set in the training/validation dataset. `response` is a Content in ProtoJSON format (i.e., keys must be in camel case), which is the same as the Online Prediction response for Gemini models. Note: Reward output by the `evaluate` function is clipped to be within `[-1, 1]`, i.e., `reward = max(min(reward, 1.0), -1.0)`. This data type is not supported in Gemini API. */
@@ -5217,10 +5289,10 @@ export declare interface ReinforcementTuningCodeExecutionRewardScorer {
 
 /** Evaluates parsed response using match type against the expression. Returns `true` if `MatchOperation(target, expression)` evaluates to `true`, and `false` otherwise. This data type is not supported in Gemini API. */
 export declare interface ReinforcementTuningStringMatchRewardScorerStringMatchExpression {
-  /** Match operation to use for evaluating rewards. */
-  matchOperation?: MatchOperation;
   /** A string or a regular expression to match against for evaluating rewards. Users can also provide a references map of `{key: value}` whose `value` will be used to replace the placeholder {{references.key}} in the expression. For example, if the following `references` are defined in the training / validation dataset: ``` { "systemInstruction": ..., "contents": ..., "references": { "concise_answer": "Yes", "verbose_answer": "The answer is Yes" } } ``` and if users define the following StringMatchExpression: { "matchOperation": "REGEX_CONTAINS", "expression": ".*{{references.concise_answer}}.*" } On evaluating the reward for each sample response, this StringMatchExpression will be substituted as: ``` { "matchOperation": "REGEX_CONTAINS", "expression": ".*Yes.*" } ``` */
   expression?: string;
+  /** Match operation to use for evaluating rewards. */
+  matchOperation?: MatchOperation;
 }
 
 /** JsonMatchExpression supports converting the parsed responses to JSON format, finding the value in the JSON response that matches the key_name in the first level, and performing StringMatchExpression operation on the matched JSON value. This data type is not supported in Gemini API. */
@@ -5233,36 +5305,30 @@ export declare interface ReinforcementTuningStringMatchRewardScorerJsonMatchExpr
 
 /** ReinforcementTuningStringMatchRewardScorer is used to score parsed responses for string matching use cases. For example, for math problems, users can use string match scorer to check if the correct exact answer is generated. Note: Reward returned by the string match reward function is clipped to be within `[-1, 1]` if wrongAnswerReward or correctAnswerReward are beyond the range, i.e., `reward = max(min(reward, 1.0), -1.0)`. This data type is not supported in Gemini API. */
 export declare interface ReinforcementTuningStringMatchRewardScorer {
-  /** Wrong answer reward is returned if the parsed response is evaluated as `false`. All wrong answers get the same reward. */
-  wrongAnswerReward?: number;
   /** Correct answer rewawrd is returned if the parsed response is evaluated as `true`. All correct answers get the same reward. */
   correctAnswerReward?: number;
-  /** Uses string match expression to evaluate parsed response. */
-  stringMatchExpression?: ReinforcementTuningStringMatchRewardScorerStringMatchExpression;
   /** Uses json match expression to evaluate parsed response. */
   jsonMatchExpression?: ReinforcementTuningStringMatchRewardScorerJsonMatchExpression;
-}
-
-/** ReinforcementTuningCloudRunRewardScorer allows users to implement a reward function through GCP Cloud Run. Comparing with ReinforcementTuningCodeExecutionRewardScorer that runs in a Sandbox and has no internet access, Cloud Run reward scorer is fully controlled by users. The Cloud Run service should implement the following HTTP API: HTTP method: `POST` HTTP request body: ``` { "example": ReinforcementTuningExample, "response": Content, "metadata": { "step": int "tuning_job_id": int64 } } ``` * `example` is a ReinforcementTuningExample in ProtoJSON format, (i.e., the format is the same as as one line in the training/validation dataset except that the keys must be in camel case). System instructions (i.e., `example.get("systemInstruction")`) and references (i.e., `example.get("references")`) are also included in the `example` provided that they are set in the training/validation dataset. * `response` is a Content in ProtoJSON format (i.e., keys must be in camel case), which is the same as the Online Prediction response for Gemini models. HTTP response body: { "reward": float, "user_requested_aux_info": str // Optional } where the field "user_requested_aux_info" is any (optional) string provided by users for assisting debugging. It's in snake case. This field is mostly useful when calling the GenAiTuningService.ValidateReinforcementTuningReward API, where the proto field (not Cloud Run HTTP response body) userRequestedAuxInfo will be populated if the Cloud Run reward function sets this field in the HTTP response. The following are examples for the HTTP request and response body. Example HTTP request body: ``` { "example": { "contents": [ { "role": "user", "parts": [ { "text": "What is the capital of France?" } ] } ], "references": { "answer": "Paris" } }, "response": { "parts": [ { "text": "London" } ] }, "metadata": { "step": 1, "tuning_job_id": 123456789 } } ``` Example HTTP response body: ``` { "reward": -1.0 } ``` Note: Reward output by Cloud Run reward function is clipped to be within `[-1, 1]`, i.e., `reward = max(min(reward, 1.0), -1.0)`. This data type is not supported in Gemini API. */
-export declare interface ReinforcementTuningCloudRunRewardScorer {
-  /** URI of the Cloud Run service that will be used to compute the reward. The [Vertex AI Secure Fine Tuning Service Agent](https://docs.cloud.google.com/iam/docs/service-agents#vertex-ai-secure-fine-tuning-service-agent) (`service-@gcp-sa-vertex-tune.iam.gserviceaccount.com`) must be granted the permission (e.g. by granting `roles/run.invoker` in IAM) to invoke the Cloud Run service. */
-  cloudRunUri?: string;
+  /** Uses string match expression to evaluate parsed response. */
+  stringMatchExpression?: ReinforcementTuningStringMatchRewardScorerStringMatchExpression;
+  /** Wrong answer reward is returned if the parsed response is evaluated as `false`. All wrong answers get the same reward. */
+  wrongAnswerReward?: number;
 }
 
 /** Single reinforcement tuning reward config. */
 export declare interface SingleReinforcementTuningRewardConfig {
   /** Scores parsed responses for autorater use cases by using a model to compute the reward. */
   autoraterScorer?: ReinforcementTuningAutoraterScorer;
-  /** A unique reward name for identifying each single reinforcement tuning reward. */
-  rewardName?: string;
-  /** Defines how to parse sample response. For example, given a sample response for evaluating the reward, users might want to extract the text only between `` and `` in the sample response, and keeps only the last one in case there are multiple such tags. To achieve such a purpose, they can define a regex `".*(.*?)"` using the ReinforcementTuningParseResponseConfig.ResponseParseType.REGEX_EXTRACT parse type. */
-  parseResponseConfig?: ReinforcementTuningParseResponseConfig;
-  /** ReinforcementTuningCodeExecutionRewardScorer is used to score parsed responses for code execution use cases. */
-  codeExecutionRewardScorer?: ReinforcementTuningCodeExecutionRewardScorer;
-  /** ReinforcementTuningStringMatchRewardScorer is used to score parsed responses for simple string matching use cases against reference answers. */
-  stringMatchRewardScorer?: ReinforcementTuningStringMatchRewardScorer;
   /** ReinforcementTuningCloudRunRewardScorer is used to score parsed responses by calling a Cloud Run service. */
   cloudRunRewardScorer?: ReinforcementTuningCloudRunRewardScorer;
+  /** ReinforcementTuningCodeExecutionRewardScorer is used to score parsed responses for code execution use cases. */
+  codeExecutionRewardScorer?: ReinforcementTuningCodeExecutionRewardScorer;
+  /** Defines how to parse sample response. For example, given a sample response for evaluating the reward, users might want to extract the text only between `` and `` in the sample response, and keeps only the last one in case there are multiple such tags. To achieve such a purpose, they can define a regex `".*(.*?)"` using the ReinforcementTuningParseResponseConfig.ResponseParseType.REGEX_EXTRACT parse type. */
+  parseResponseConfig?: ReinforcementTuningParseResponseConfig;
+  /** A unique reward name for identifying each single reinforcement tuning reward. */
+  rewardName?: string;
+  /** ReinforcementTuningStringMatchRewardScorer is used to score parsed responses for simple string matching use cases against reference answers. */
+  stringMatchRewardScorer?: ReinforcementTuningStringMatchRewardScorer;
 }
 
 /** Composite reinforcement tuning reward config weighted reward config. */
@@ -5281,40 +5347,40 @@ export declare interface CompositeReinforcementTuningRewardConfig {
 
 /** Hyperparameters for Reinforcement Tuning. */
 export declare interface ReinforcementTuningHyperParameters {
-  /** Optional. Number of training epoches for the tuning job. */
-  epochCount?: string;
   /** Learning rate multiplier for Reinforcement Learning. */
   learningRateMultiplier?: number;
   /** Optional. Adapter size for Reinforcement Tuning. */
   adapterSize?: AdapterSize;
-  /** Optional. Number of different responses to generate per prompt during tuning. */
-  samplesPerPrompt?: number;
   /** Optional. Batch size for the tuning job. How many prompts to process at a train step. If not set, the batch size will be determined automatically. */
   batchSize?: number;
-  /** Optional. How often at steps to evaluate the tuning job during training. If not set, evel will be run per epoch. `total_steps = epoch_count * samples_per_prompt / total_prompts_in_dataset` */
-  evaluateInterval?: number;
   /** Optional. How often at steps to save checkpoints during training. If not set, one checkpoint per epoch will be set. ```total_steps = epoch_count * samples_per_prompt / total_prompts_in_dataset``` */
   checkpointInterval?: number;
+  /** Optional. Number of training epoches for the tuning job. */
+  epochCount?: string;
+  /** Optional. How often at steps to evaluate the tuning job during training. If not set, evel will be run per epoch. `total_steps = epoch_count * samples_per_prompt / total_prompts_in_dataset` */
+  evaluateInterval?: number;
   /** Optional. The maximum number of tokens to generate per prompt. Default to 32768. */
   maxOutputTokens?: number;
-  /** Indicates the maximum thinking depth during tuning. Starting from Gemini 3.5 models, the old thinking_budget will no longer be supported and will result in a user error if set. Instead, users should use the thinking_level parameter to control the maximum thinking depth. */
-  thinkingLevel?: ReinforcementTuningThinkingLevel;
+  /** Optional. Number of different responses to generate per prompt during tuning. */
+  samplesPerPrompt?: number;
   /** Optional. The thinking budget for the tuning job to optimize for (Gemini 2.5 only). * -1 means dynamic thinking * 0 means no thinking * > 0 means thinking budget in tokens If not set, default to -1 (dynamic thinking). */
   thinkingBudget?: number;
+  /** Indicates the maximum thinking depth during tuning. Starting from Gemini 3.5 models, the old thinking_budget will no longer be supported and will result in a user error if set. Instead, users should use the thinking_level parameter to control the maximum thinking depth. */
+  thinkingLevel?: ReinforcementTuningThinkingLevel;
 }
 
 /** Reinforcement tuning spec for tuning. */
 export declare interface ReinforcementTuningSpec {
   /** Composite reward function configuration for reinforcement tuning. */
   compositeRewardConfig?: CompositeReinforcementTuningRewardConfig;
+  /** Single reward function configuration for reinforcement tuning. */
+  singleRewardConfig?: SingleReinforcementTuningRewardConfig;
+  /** Additional hyper-parameters to use during tuning. */
+  hyperParameters?: ReinforcementTuningHyperParameters;
   /** Cloud Storage path to the file containing training dataset for tuning. The dataset must be formatted as a JSONL file. */
   trainingDatasetUri?: string;
   /** Cloud Storage path to the file containing validation dataset for tuning. The dataset must be formatted as a JSONL file. */
   validationDatasetUri?: string;
-  /** Additional hyper-parameters to use during tuning. */
-  hyperParameters?: ReinforcementTuningHyperParameters;
-  /** Single reward function configuration for reinforcement tuning. */
-  singleRewardConfig?: SingleReinforcementTuningRewardConfig;
 }
 
 /** The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors). This data type is not supported in Gemini API. */
@@ -5369,10 +5435,10 @@ export declare interface DatasetDistribution {
 
 /** User-facing format for Gemini Reinforcement Tuning examples on Vertex. */
 export declare interface ReinforcementTuningExample {
-  /** Multi-turn contents that represents the Prompt. */
-  contents?: Content[];
   /** References for the given prompt. The key is the name of the reference, and the value is the reference itself. */
   references?: Record<string, string>;
+  /** Multi-turn contents that represents the Prompt. */
+  contents?: Content[];
   /** Corresponds to system_instruction in user-facing GenerateContentRequest. */
   systemInstruction?: Content;
 }
@@ -5385,12 +5451,18 @@ export declare interface ReinforcementTuningUserDatasetExamples {
 
 /** Statistics computed over a tuning dataset. This data type is not supported in Gemini API. */
 export declare interface DatasetStats {
+  /** Output only. Dataset distributions for the number of contents per example. */
+  contentsPerExampleDistribution?: DatasetDistribution;
   /** Output only. A partial sample of the indices (starting from 1) of the dropped examples. */
   droppedExampleIndices?: string[];
   /** Output only. For each index in `dropped_example_indices`, the user-facing reason why the example was dropped. */
   droppedExampleReasons?: string[];
+  /** Output only. Sample user dataset examples in the training dataset uri for Reinforcement Tuning. */
+  reinforcementTuningUserDatasetExamples?: ReinforcementTuningUserDatasetExamples;
   /** Output only. Number of billable characters in the tuning dataset. */
   totalBillableCharacterCount?: string;
+  /** Output only. Number of billable tokens in the tuning dataset. */
+  totalBillableTokenCount?: string;
   /** Output only. Number of tuning characters in the tuning dataset. */
   totalTuningCharacterCount?: string;
   /** Output only. Number of examples in the tuning dataset. */
@@ -5405,12 +5477,6 @@ export declare interface DatasetStats {
   userMessagePerExampleDistribution?: DatasetDistribution;
   /** Output only. Dataset distributions for the user output tokens. */
   userOutputTokenDistribution?: DatasetDistribution;
-  /** Output only. Dataset distributions for the number of contents per example. */
-  contentsPerExampleDistribution?: DatasetDistribution;
-  /** Output only. Sample user dataset examples in the training dataset uri for Reinforcement Tuning. */
-  reinforcementTuningUserDatasetExamples?: ReinforcementTuningUserDatasetExamples;
-  /** Output only. Number of billable tokens in the tuning dataset. */
-  totalBillableTokenCount?: string;
 }
 
 /** Statistics for distillation prompt dataset. These statistics do not include the responses sampled from the teacher model. This data type is not supported in Gemini API. */
@@ -5525,10 +5591,10 @@ export declare interface TuningDataStats {
   distillationDataStats?: DistillationDataStats;
   /** Output only. Statistics for preference optimization. */
   preferenceOptimizationDataStats?: PreferenceOptimizationDataStats;
-  /** The SFT Tuning data stats. */
-  supervisedTuningDataStats?: SupervisedTuningDataStats;
   /** Output only. Statistics for reinforcement tuning. */
   reinforcementTuningDataStats?: DatasetStats;
+  /** The SFT Tuning data stats. */
+  supervisedTuningDataStats?: SupervisedTuningDataStats;
 }
 
 /** Represents a customer-managed encryption key specification that can be applied to a Vertex AI resource. This data type is not supported in Gemini API. */
@@ -5687,38 +5753,28 @@ export declare interface FullFineTuningSpec {
   validationDatasetUri?: string;
 }
 
-/** Hyperparameters for Veo. This data type is not supported in Gemini API. */
-export declare interface VeoHyperParameters {
-  /** Optional. Number of complete passes the model makes over the entire training dataset during training. */
-  epochCount?: string;
-  /** Optional. Multiplier for adjusting the default learning rate. */
-  learningRateMultiplier?: number;
-  /** The tuning task for Veo. */
-  tuningTask?: TuningTask;
-  /** Optional. The ratio of Google internal dataset to use in the training mixture, in range of `[0, 1)`. If `0.2`, it means 20% of Google internal dataset and 80% of user dataset will be used for training. If not set, the default value is 0.1. */
-  veoDataMixtureRatio?: number;
-  /** Optional. The adapter size for LoRA tuning. */
-  adapterSize?: AdapterSize;
-  /** The speed of the tuning job. Only supported for Veo 3.0 models. */
-  tuningSpeed?: TuningSpeed;
-}
-
-/** Tuning Spec for Veo Model Tuning. This data type is not supported in Gemini API. */
-export declare interface VeoTuningSpec {
-  /** Optional. Hyperparameters for Veo. */
-  hyperParameters?: VeoHyperParameters;
-  /** Required. Training dataset used for tuning. The dataset can be specified as either a Cloud Storage path to a JSONL file or as the resource name of a Vertex Multimodal Dataset. */
-  trainingDatasetUri?: string;
-  /** Optional. Validation dataset used for tuning. The dataset can be specified as either a Cloud Storage path to a JSONL file or as the resource name of a Vertex Multimodal Dataset. */
-  validationDatasetUri?: string;
-}
-
 /** Tuning job metadata. This data type is not supported in Gemini API. */
 export declare interface TuningJobMetadata {
   /** Output only. The number of epochs that have been completed. */
   completedEpochCount?: string;
   /** Output only. The number of steps that have been completed. Set for Multi-Step RL. */
   completedStepCount?: string;
+}
+
+/** Hyperparameters for Veo. This data type is not supported in Gemini API. */
+export declare interface VeoHyperParameters {
+  /** Optional. The adapter size for LoRA tuning. */
+  adapterSize?: AdapterSize;
+  /** Optional. Number of complete passes the model makes over the entire training dataset during training. */
+  epochCount?: string;
+  /** Optional. Multiplier for adjusting the default learning rate. */
+  learningRateMultiplier?: number;
+  /** The speed of the tuning job. Only supported for Veo 3.0 models. */
+  tuningSpeed?: TuningSpeed;
+  /** The tuning task for Veo. */
+  tuningTask?: TuningTask;
+  /** Optional. The ratio of Google internal dataset to use in the training mixture, in range of `[0, 1)`. If `0.2`, it means 20% of Google internal dataset and 80% of user dataset will be used for training. If not set, the default value is 0.1. */
+  veoDataMixtureRatio?: number;
 }
 
 /** Tuning Spec for Veo LoRA Model Tuning. This data type is not supported in Gemini API. */
@@ -5731,6 +5787,16 @@ export declare interface VeoLoraTuningSpec {
   validationDatasetUri?: string;
   /** Optional. The orientation of the video. Defaults to LANDSCAPE. */
   videoOrientation?: VideoOrientation;
+}
+
+/** Tuning Spec for Veo Model Tuning. This data type is not supported in Gemini API. */
+export declare interface VeoTuningSpec {
+  /** Optional. Hyperparameters for Veo. */
+  hyperParameters?: VeoHyperParameters;
+  /** Required. Training dataset used for tuning. The dataset can be specified as either a Cloud Storage path to a JSONL file or as the resource name of a Vertex Multimodal Dataset. */
+  trainingDatasetUri?: string;
+  /** Optional. Validation dataset used for tuning. The dataset can be specified as either a Cloud Storage path to a JSONL file or as the resource name of a Vertex Multimodal Dataset. */
+  validationDatasetUri?: string;
 }
 
 /** A tuning job. */
@@ -5763,6 +5829,7 @@ export declare interface TuningJob {
   supervisedTuningSpec?: SupervisedTuningSpec;
   /** Tuning Spec for Preference Optimization. */
   preferenceOptimizationSpec?: PreferenceOptimizationSpec;
+  distillationSamplingSpec?: DistillationSamplingSpec;
   /** Tuning Spec for Distillation. */
   distillationSpec?: DistillationSpec;
   /** Tuning Spec for Reinforcement Tuning. */
@@ -5791,15 +5858,14 @@ export declare interface TuningJob {
   serviceAccount?: string;
   /** Optional. The display name of the TunedModel. The name can be up to 128 characters long and can consist of any UTF-8 characters. For continuous tuning, tuned_model_display_name will by default use the same display name as the pre-tuned model. If a new display name is provided, the tuning job will create a new model instead of a new version. */
   tunedModelDisplayName?: string;
-  /** Output only. The detail state of the tuning job (while the overall `JobState` is running). */
-  tuningJobState?: TuningJobState;
-  /** Tuning Spec for Veo Tuning. */
-  veoTuningSpec?: VeoTuningSpec;
   /** Output only. Tuning Job metadata. */
   tuningJobMetadata?: TuningJobMetadata;
+  /** Output only. The detail state of the tuning job (while the overall `JobState` is running). */
+  tuningJobState?: TuningJobState;
   /** Tuning Spec for Veo LoRA Tuning. */
   veoLoraTuningSpec?: VeoLoraTuningSpec;
-  distillationSamplingSpec?: DistillationSamplingSpec;
+  /** Tuning Spec for Veo Tuning. */
+  veoTuningSpec?: VeoTuningSpec;
 }
 
 /** Configuration for the list tuning jobs method. */
@@ -5934,8 +6000,6 @@ export declare interface CreateTuningJobConfig {
   sftLossWeightMultiplier?: number;
   /** The Google Cloud Storage location where the tuning job outputs are written. */
   outputUri?: string;
-  /** The encryption spec of the tuning job. Customer-managed encryption key options for a TuningJob. If this is set, then all resources created by the TuningJob will be encrypted with provided encryption key. */
-  encryptionSpec?: EncryptionSpec;
   /** Reward function configuration for reinforcement tuning. Reinforcement tuning only. */
   rewardConfig?: SingleReinforcementTuningRewardConfig;
   /** Composite reward function configuration for reinforcement tuning. Reinforcement tuning only. */
@@ -5952,6 +6016,8 @@ export declare interface CreateTuningJobConfig {
   thinkingLevel?: ReinforcementTuningThinkingLevel;
   /** Cloud Storage path to file containing validation dataset for tuning. The dataset must be formatted as a JSONL file. If no validation dataset is provided, by default the API splits 25% of the training dataset or 50 examples, whichever is larger, as the validation dataset. Reinforcement tuning only. */
   validationDatasetUri?: string;
+  /** The encryption spec of the tuning job. Customer-managed encryption key options for a TuningJob. If this is set, then all resources created by the TuningJob will be encrypted with provided encryption key. */
+  encryptionSpec?: EncryptionSpec;
 }
 
 /** Fine-tuning job creation parameters - optional fields. */
@@ -6269,20 +6335,20 @@ export declare interface CustomMetadata {
 
 /** A Document is a collection of Chunks. */
 export declare interface Document {
-  /** Immutable. Identifier. The `Document` resource name. The ID (name excluding the "fileSearchStores/&#42;/documents/" prefix) can contain up to 40 characters that are lowercase alphanumeric or dashes (-). The ID cannot start or end with a dash. If the name is empty on create, a unique name will be derived from `display_name` along with a 12 character random suffix. Example: `fileSearchStores/{file_search_store_id}/documents/my-awesome-doc-123a456b789c` */
-  name?: string;
-  /** Optional. The human-readable display name for the `Document`. The display name must be no more than 512 characters in length, including spaces. Example: "Semantic Retriever Documentation". */
-  displayName?: string;
-  /** Output only. Current state of the `Document`. */
-  state?: DocumentState;
-  /** Output only. The size of raw bytes ingested into the Document. */
-  sizeBytes?: string;
-  /** Output only. The mime type of the Document. */
-  mimeType?: string;
   /** Output only. The Timestamp of when the `Document` was created. */
   createTime?: string;
   /** Optional. User provided custom metadata stored as key-value pairs used for querying. A `Document` can have a maximum of 20 `CustomMetadata`. */
   customMetadata?: CustomMetadata[];
+  /** Optional. The human-readable display name for the `Document`. The display name must be no more than 512 characters in length, including spaces. Example: "Semantic Retriever Documentation". */
+  displayName?: string;
+  /** Output only. The mime type of the Document. */
+  mimeType?: string;
+  /** Immutable. Identifier. The `Document` resource name. The ID (name excluding the "fileSearchStores/&#42;/documents/" prefix) can contain up to 40 characters that are lowercase alphanumeric or dashes (-). The ID cannot start or end with a dash. If the name is empty on create, a unique name will be derived from `display_name` along with a 12 character random suffix. Example: `fileSearchStores/{file_search_store_id}/documents/my-awesome-doc-123a456b789c` */
+  name?: string;
+  /** Output only. The size of raw bytes ingested into the Document. */
+  sizeBytes?: string;
+  /** Output only. Current state of the `Document`. */
+  state?: DocumentState;
   /** Output only. The Timestamp of when the `Document` was last updated. */
   updateTime?: string;
 }
@@ -6374,24 +6440,24 @@ export declare interface CreateFileSearchStoreParameters {
 
 /** A collection of Documents. */
 export declare interface FileSearchStore {
-  /** Output only. Immutable. Identifier. The `FileSearchStore` resource name. It is an ID (name excluding the "fileSearchStores/" prefix) that can contain up to 40 characters that are lowercase alphanumeric or dashes (-). It is output only. The unique name will be derived from `display_name` along with a 12 character random suffix. Example: `fileSearchStores/my-awesome-file-search-store-123a456b789c` If `display_name` is not provided, the name will be randomly generated. */
-  name?: string;
-  /** Optional. The human-readable display name for the `FileSearchStore`. The display name must be no more than 512 characters in length, including spaces. Example: "Docs on Semantic Retriever". */
-  displayName?: string;
-  /** Output only. The Timestamp of when the `FileSearchStore` was created. */
-  createTime?: string;
-  /** Output only. The Timestamp of when the `FileSearchStore` was last updated. */
-  updateTime?: string;
-  /** Output only. The number of documents in the `FileSearchStore` that are active and ready for retrieval. */
-  activeDocumentsCount?: string;
-  /** Output only. The number of documents in the `FileSearchStore` that are being processed. */
-  pendingDocumentsCount?: string;
-  /** Output only. The number of documents in the `FileSearchStore` that have failed processing. */
-  failedDocumentsCount?: string;
-  /** Output only. The size of raw bytes ingested into the `FileSearchStore`. This is the total size of all the documents in the `FileSearchStore`. */
-  sizeBytes?: string;
   /** The embedding model used by the FileSearchStore. */
   embeddingModel?: string;
+  /** Output only. The number of documents in the `FileSearchStore` that are active and ready for retrieval. */
+  activeDocumentsCount?: string;
+  /** Output only. The Timestamp of when the `FileSearchStore` was created. */
+  createTime?: string;
+  /** Optional. The human-readable display name for the `FileSearchStore`. The display name must be no more than 512 characters in length, including spaces. Example: "Docs on Semantic Retriever". */
+  displayName?: string;
+  /** Output only. The number of documents in the `FileSearchStore` that have failed processing. */
+  failedDocumentsCount?: string;
+  /** Output only. Immutable. Identifier. The `FileSearchStore` resource name. It is an ID (name excluding the "fileSearchStores/" prefix) that can contain up to 40 characters that are lowercase alphanumeric or dashes (-). It is output only. The unique name will be derived from `display_name` along with a 12 character random suffix. Example: `fileSearchStores/my-awesome-file-search-store-123a456b789c` If `display_name` is not provided, the name will be randomly generated. */
+  name?: string;
+  /** Output only. The number of documents in the `FileSearchStore` that are being processed. */
+  pendingDocumentsCount?: string;
+  /** Output only. The size of raw bytes ingested into the `FileSearchStore`. This is the total size of all the documents in the `FileSearchStore`. */
+  sizeBytes?: string;
+  /** Output only. The Timestamp of when the `FileSearchStore` was last updated. */
+  updateTime?: string;
 }
 
 /** Optional parameters for getting a FileSearchStore. */
@@ -6798,6 +6864,9 @@ export declare interface BatchJobSource {
   /** The BigQuery URI to input table.
    */
   bigqueryUri?: string;
+  /** This field is experimental and may change in future versions. The Vertex AI dataset resource name to use as input. Must be of type multimodal.
+   */
+  vertexDatasetName?: string;
   /** The Gemini Developer API's file resource name of the input data
       (e.g. "files/12345").
        */
@@ -6805,9 +6874,6 @@ export declare interface BatchJobSource {
   /** The Gemini Developer API's inlined input data to run batch job.
    */
   inlinedRequests?: InlinedRequest[];
-  /** This field is experimental and may change in future versions. The Vertex AI dataset resource name to use as input. Must be of type multimodal.
-   */
-  vertexDatasetName?: string;
 }
 
 /** This class is experimental and may change in future versions.
@@ -6874,6 +6940,9 @@ export declare interface BatchJobDestination {
   /** The BigQuery URI to the output table.
    */
   bigqueryUri?: string;
+  /** This field is experimental and may change in future versions. The Vertex AI dataset destination.
+   */
+  vertexDataset?: VertexMultimodalDatasetDestination;
   /** The Gemini Developer API's file resource name of the output data
       (e.g. "files/12345"). The file will be a JSONL file with a single response
       per line. The responses will be GenerateContentResponse messages formatted
@@ -6891,9 +6960,6 @@ export declare interface BatchJobDestination {
       the input requests.
        */
   inlinedEmbedContentResponses?: InlinedEmbedContentResponse[];
-  /** This field is experimental and may change in future versions. The Vertex AI dataset destination.
-   */
-  vertexDataset?: VertexMultimodalDatasetDestination;
 }
 
 /** Config for optional parameters. */
@@ -6936,12 +7002,12 @@ export declare interface CreateBatchJobParameters {
 
 /** Represents the `output_info` field in batch jobs. */
 export declare interface BatchJobOutputInfo {
-  /** This field is experimental and may change in future versions. The Vertex AI dataset name containing the output data. */
-  vertexMultimodalDatasetName?: string;
   /** The full path of the Cloud Storage directory created, into which the prediction output is written. */
   gcsOutputDirectory?: string;
   /** The name of the BigQuery table created, in `predictions_TIMESTAMP` format, into which the prediction output is written. */
   bigqueryOutputTable?: string;
+  /** This field is experimental and may change in future versions. The Vertex AI dataset name containing the output data. */
+  vertexMultimodalDatasetName?: string;
 }
 
 /** Success and error statistics of processing multiple entities (for example, DataItems or structured data rows) in batch. This data type is not supported in Gemini API. */
@@ -6989,12 +7055,12 @@ export declare interface BatchJob {
   /** Configuration for the output data.
    */
   dest?: BatchJobDestination;
-  /** Statistics on completed and failed prediction instances. This field is for Gemini Enterprise Agent Platform only.
-   */
-  completionStats?: CompletionStats;
   /** Information further describing the output of this job. Output only.
    */
   outputInfo?: BatchJobOutputInfo;
+  /** Statistics on completed and failed prediction instances. This field is for Gemini Enterprise Agent Platform only.
+   */
+  completionStats?: CompletionStats;
 }
 
 /** Parameters for the embed_content method. */
@@ -7520,16 +7586,6 @@ export declare interface LiveServerSetupComplete {
   voiceConsentSignature?: VoiceConsentSignature;
 }
 
-/** Audio transcription in Server Content. */
-export declare interface Transcription {
-  /** Optional. Transcription text. */
-  text?: string;
-  /** Optional. The bool indicates the end of the transcription. */
-  finished?: boolean;
-  /** The BCP-47 language code of the transcription. */
-  languageCode?: string;
-}
-
 /** Incremental server update generated by the model in response to client messages.
 
 Content is generated as quickly as possible, and not in real time. Clients
@@ -7556,6 +7612,8 @@ export declare interface LiveServerContent {
       turn which means it doesn’t imply any ordering between transcription and
       model turn. */
   inputTranscription?: Transcription;
+  /** Low latency transcription updated while the user is speaking. */
+  interimInputTranscription?: Transcription;
   /** Output transcription. The transcription is independent to the model
       turn which means it doesn’t imply any ordering between transcription and
       model turn.
@@ -7569,8 +7627,6 @@ export declare interface LiveServerContent {
       it is waiting for more input from the user, e.g. because it expects the
       user to continue talking. */
   waitingForInput?: boolean;
-  /** Low latency transcription updated while the user is speaking. */
-  interimInputTranscription?: Transcription;
 }
 
 /** Request for the client to execute the `function_calls` and return the responses with the matching `id`s. */
@@ -7591,26 +7647,26 @@ export declare interface LiveServerToolCallCancellation {
 
 /** Usage metadata about response(s). */
 export declare interface UsageMetadata {
-  /** The total number of tokens in the prompt. This includes any text, images, or other media provided in the request. When `cached_content` is set, this also includes the number of tokens in the cached content. */
-  promptTokenCount?: number;
-  /** Output only. The number of tokens in the cached content that was used for this request. */
-  cachedContentTokenCount?: number;
   /** Total number of tokens across all the generated response candidates. */
   responseTokenCount?: number;
-  /** Output only. The number of tokens in the results from tool executions, which are provided back to the model as input, if applicable. */
-  toolUsePromptTokenCount?: number;
-  /** Output only. The number of tokens that were part of the model's generated "thoughts" output, if applicable. */
-  thoughtsTokenCount?: number;
-  /** The total number of tokens for the entire request. This is the sum of `prompt_token_count`, `candidates_token_count`, `tool_use_prompt_token_count`, and `thoughts_token_count`. */
-  totalTokenCount?: number;
-  /** Output only. A detailed breakdown of the token count for each modality in the prompt. */
-  promptTokensDetails?: ModalityTokenCount[];
-  /** Output only. A detailed breakdown of the token count for each modality in the cached content. */
-  cacheTokensDetails?: ModalityTokenCount[];
   /** List of modalities that were returned in the response. */
   responseTokensDetails?: ModalityTokenCount[];
+  /** Output only. A detailed breakdown of the token count for each modality in the cached content. */
+  cacheTokensDetails?: ModalityTokenCount[];
+  /** Output only. The number of tokens in the cached content that was used for this request. */
+  cachedContentTokenCount?: number;
+  /** The total number of tokens in the prompt. This includes any text, images, or other media provided in the request. When `cached_content` is set, this also includes the number of tokens in the cached content. */
+  promptTokenCount?: number;
+  /** Output only. A detailed breakdown of the token count for each modality in the prompt. */
+  promptTokensDetails?: ModalityTokenCount[];
+  /** Output only. The number of tokens that were part of the model's generated "thoughts" output, if applicable. */
+  thoughtsTokenCount?: number;
+  /** Output only. The number of tokens in the results from tool executions, which are provided back to the model as input, if applicable. */
+  toolUsePromptTokenCount?: number;
   /** Output only. A detailed breakdown by modality of the token counts from the results of tool executions, which are provided back to the model as input. */
   toolUsePromptTokensDetails?: ModalityTokenCount[];
+  /** The total number of tokens for the entire request. This is the sum of `prompt_token_count`, `candidates_token_count`, `tool_use_prompt_token_count`, and `thoughts_token_count`. */
+  totalTokenCount?: number;
   /** Output only. The traffic type for this request. This field is not supported in Gemini API. */
   trafficType?: TrafficType;
   /** Output only. Service tier of the request. This field is not supported in Vertex AI. */
@@ -7830,29 +7886,6 @@ export declare interface ContextWindowCompressionConfig {
   slidingWindow?: SlidingWindow;
 }
 
-/** Indicates the language of the audio should be automatically detected. */
-export declare interface LanguageAuto {}
-
-/** Provides hints to the model about possible languages present in the audio. */
-export declare interface LanguageHints {
-  /** BCP-47 language codes. At least one must be specified. */
-  languageCodes?: string[];
-}
-
-/** The audio transcription configuration in Setup. */
-export declare interface AudioTranscriptionConfig {
-  /** Deprecated: use LanguageAuto or LanguageHints instead. */
-  languageCodes?: string[];
-  /** The model will detect the language automatically. Do not use together with LanguageHints. */
-  languageAuto?: LanguageAuto;
-  /** Specifies one or more languages in the audio. Do not use together with LanguageAuto. */
-  languageHints?: LanguageHints;
-  /** A list of custom vocabulary phrases, which biases the ASR model to improve recognition of these specific terms. */
-  customVocabulary?: string[];
-  /** Deprecated. A list of phrases used for speech adaptation, which biases the ASR model to improve recognition of these specific terms. */
-  adaptationPhrases?: string[];
-}
-
 /** Config for proactivity features. */
 export declare interface ProactivityConfig {
   /** If enabled, the model can reject responding to the last prompt. For
@@ -7934,6 +7967,8 @@ export declare interface LiveClientSetup {
   /** Configures the proactivity of the model. This allows the model to respond proactively to
     the input and to ignore irrelevant input. */
   proactivity?: ProactivityConfig;
+  /** Configures the exchange of history between the client and the server. */
+  historyConfig?: HistoryConfig;
   /** Configures the explicit VAD signal. If enabled, the client will send
       vad_signal to indicate the start and end of speech. This allows the server
       to process the audio more efficiently. */
@@ -7944,8 +7979,6 @@ export declare interface LiveClientSetup {
       response.
        */
   safetySettings?: SafetySetting[];
-  /** Configures the exchange of history between the client and the server. */
-  historyConfig?: HistoryConfig;
 }
 
 /** Incremental update of the current conversation delivered from the client.
