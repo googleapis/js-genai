@@ -11,7 +11,15 @@ import * as converters from './converters/_tokens_converters.js';
 import * as types from './types.js';
 
 /**
- * Returns a comma-separated list of field masks from a given object.
+ * Converts a lowerCamelCase field path to the proto snake_case field path used
+ * by FieldMask.
+ */
+function toProtoFieldPath(field: string): string {
+  return field.replace(/[A-Z]/g, (char) => `_${char.toLowerCase()}`);
+}
+
+/**
+ * Returns a comma-separated list of top-level field masks from a given object.
  *
  * @param setup The object to extract field masks from.
  * @return A comma-separated list of field masks.
@@ -21,18 +29,7 @@ function getFieldMasks(setup: Record<string, unknown>): string {
 
   for (const key in setup) {
     if (Object.prototype.hasOwnProperty.call(setup, key)) {
-      const value = setup[key];
-      // 2nd layer, recursively get field masks see TODO(b/418290100)
-      if (
-        typeof value === 'object' &&
-        value != null &&
-        Object.keys(value).length > 0
-      ) {
-        const field = Object.keys(value).map((kk) => `${key}.${kk}`);
-        fields.push(...field);
-      } else {
-        fields.push(key); // 1st layer
-      }
+      fields.push(toProtoFieldPath(key));
     }
   }
 
@@ -119,10 +116,10 @@ function convertBidiSetupToTokenSetup(
       if (preExistingFieldMask.length > 0) {
         mappedFieldsFromPreExisting = preExistingFieldMask.map((field) => {
           if (generationConfigFields.includes(field)) {
-            return `generationConfig.${field}`;
+            return `generation_config.${toProtoFieldPath(field)}`;
           }
-          return field; // Keep original field name if not in
-          // generationConfigFields
+          return toProtoFieldPath(field); // Keep original field path if not in
+          // generationConfigFields.
         });
       }
 
