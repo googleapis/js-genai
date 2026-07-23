@@ -52,6 +52,18 @@ export function audioTranscriptionConfigToMldev(
     );
   }
 
+  const fromDiarization = common.getValueByPath(fromObject, ['diarization']);
+  if (fromDiarization != null) {
+    common.setValueByPath(toObject, ['diarization'], fromDiarization);
+  }
+
+  const fromWordTimestamp = common.getValueByPath(fromObject, [
+    'wordTimestamp',
+  ]);
+  if (fromWordTimestamp != null) {
+    common.setValueByPath(toObject, ['wordTimestamp'], fromWordTimestamp);
+  }
+
   return toObject;
 }
 
@@ -517,6 +529,17 @@ export function generationConfigToVertex(
   if (common.getValueByPath(fromObject, ['translationConfig']) !== undefined) {
     throw new Error(
       'translationConfig parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+    );
+  }
+
+  const fromAudioTranscriptionConfig = common.getValueByPath(fromObject, [
+    'audioTranscriptionConfig',
+  ]);
+  if (fromAudioTranscriptionConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['audioTranscriptionConfig'],
+      fromAudioTranscriptionConfig,
     );
   }
 
@@ -2215,6 +2238,17 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
     common.setValueByPath(toObject, ['partMetadata'], fromPartMetadata);
   }
 
+  const fromAudioTranscription = common.getValueByPath(fromObject, [
+    'audioTranscription',
+  ]);
+  if (fromAudioTranscription != null) {
+    common.setValueByPath(
+      toObject,
+      ['audioTranscription'],
+      fromAudioTranscription,
+    );
+  }
+
   return toObject;
 }
 
@@ -2311,6 +2345,17 @@ export function partToVertex(fromObject: types.Part): Record<string, unknown> {
   if (common.getValueByPath(fromObject, ['partMetadata']) !== undefined) {
     throw new Error(
       'partMetadata parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+    );
+  }
+
+  const fromAudioTranscription = common.getValueByPath(fromObject, [
+    'audioTranscription',
+  ]);
+  if (fromAudioTranscription != null) {
+    common.setValueByPath(
+      toObject,
+      ['audioTranscription'],
+      fromAudioTranscription,
     );
   }
 
