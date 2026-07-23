@@ -13,6 +13,8 @@
 import type { AgentListResponse as AgentListResponse$Import } from "./models/agents/agent-list-response.js";
 import type { AgentTool as AgentTool$Import } from "./models/agents/agent-tool.js";
 import type { Agent as Agent$Import } from "./models/agents/agent.js";
+import type { Environment as Environment$Import } from "./models/environments/environment.js";
+import type { ListEnvironmentsResponse as ListEnvironmentsResponse$Import } from "./models/environments/list-environments-response.js";
 import type { AllowedTools as AllowedTools$Import } from "./models/interactions/allowed-tools.js";
 import type { Annotation as Annotation$Import } from "./models/interactions/annotation.js";
 import type { AntigravityAgentConfig as AntigravityAgentConfig$Import } from "./models/interactions/antigravity-agent-config.js";
@@ -37,7 +39,7 @@ import type { DocumentDelta as DocumentDelta$Import } from "./models/interaction
 import type { DynamicAgentConfig as DynamicAgentConfig$Import } from "./models/interactions/dynamic-agent-config.js";
 import type { Empty as Empty$Import } from "./models/interactions/empty.js";
 import type { Allowlist as Allowlist$Import } from "./models/interactions/environment-network-egress-allowlist.js";
-import type { Environment as Environment$Import } from "./models/interactions/environment.js";
+import type { Environment as Environment$Import2 } from "./models/interactions/environment.js";
 import type { ErrorEvent as ErrorEvent$Import } from "./models/interactions/error-event.js";
 import type { ErrorT as ErrorT$Import } from "./models/interactions/error.js";
 import type { FileCitation as FileCitation$Import } from "./models/interactions/file-citation.js";
@@ -182,6 +184,10 @@ type AgentGetParams$ = GetAgentParams$Import;
 type AgentListParams$ = ListAgentsParams$Import;
 type AgentListResponse$ = AgentListResponse$Import;
 type AgentTool$ = AgentTool$Import;
+type Environment$ = Environment$Import;
+type EnvironmentDeleteResponse$ = Empty$Import;
+type EnvironmentListResponse$ = ListEnvironmentsResponse$Import;
+type Allowlist$ = Allowlist$Import;
 type AllowedTools$ = AllowedTools$Import;
 type Annotation$ = Annotation$Import;
 type AntigravityAgentConfig$ = AntigravityAgentConfig$Import;
@@ -199,7 +205,7 @@ type CreateModelInteractionParamsStreaming$ = CreateModelInteraction$Import;
 type DeepResearchAgentConfig$ = DeepResearchAgentConfig$Import;
 type DocumentContent$ = DocumentContent$Import;
 type DynamicAgentConfig$ = DynamicAgentConfig$Import;
-type Environment$ = Environment$Import;
+type Environment$2 = Environment$Import2;
 type ErrorEvent$ = ErrorEvent$Import;
 type FileCitation$ = FileCitation$Import;
 type FileSearchCallStep$ = FileSearchCallStep$Import;
@@ -276,7 +282,7 @@ type FixRequest$ = FixRequest$Import;
 type SessionConfig$ = SessionConfig$Import;
 type SourceFile$ = FileContent$Import;
 type SourceFile$2 = FileContent$Import;
-type Allowlist$ = Allowlist$Import;
+type Allowlist$2 = Allowlist$Import;
 type Source$ = Source$Import;
 type Error$ = ErrorT$Import;
 type Metadata$ = StreamMetadata$Import;
@@ -408,6 +414,8 @@ export type Document = Document$;
 export type DocumentContent = DocumentContent$;
 export type DynamicAgentConfig = DynamicAgentConfig$;
 export type Environment = Environment$;
+export type EnvironmentDeleteResponse = EnvironmentDeleteResponse$;
+export type EnvironmentListResponse = EnvironmentListResponse$;
 export type Error = Error$;
 export type ErrorEvent = ErrorEvent$;
 export type FileCitation = FileCitation$;
@@ -554,6 +562,14 @@ export declare namespace Agents {
   export type AgentListResponse = AgentListResponse$;
   export type AgentTool = AgentTool$;
 }
+export declare namespace Environments {
+  export interface Environment extends Environment$ {}
+  export type EnvironmentDeleteResponse = EnvironmentDeleteResponse$;
+  export type EnvironmentListResponse = EnvironmentListResponse$;
+  export namespace Environment {
+    export type Allowlist = Allowlist$;
+  }
+}
 export declare namespace Interactions {
   export type AllowedTools = AllowedTools$;
   export type Annotation = Annotation$;
@@ -576,7 +592,7 @@ export declare namespace Interactions {
   export type DeepResearchAgentConfig = DeepResearchAgentConfig$;
   export type DocumentContent = DocumentContent$;
   export type DynamicAgentConfig = DynamicAgentConfig$;
-  export interface Environment extends Environment$ {}
+  export interface Environment extends Environment$2 {}
   export interface ErrorEvent extends ErrorEvent$ {}
   export type FileCitation = FileCitation$;
   export type FileSearchCallStep = FileSearchCallStep$;
@@ -661,7 +677,7 @@ export declare namespace Interactions {
     }
   }
   export namespace Environment {
-    export type Allowlist = Allowlist$;
+    export type Allowlist = Allowlist$2;
     export type Source = Source$;
   }
   export namespace ErrorEvent {

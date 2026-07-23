@@ -7,6 +7,7 @@
  */
 
 import * as agents from "./models/agents/index.js";
+import * as environments from "./models/environments/index.js";
 import * as interactions from "./models/interactions/index.js";
 import * as operations from "./models/operations/index.js";
 import * as triggers from "./models/triggers/index.js";
@@ -66,6 +67,10 @@ import { webhooksList } from "./funcs/webhooks-list.js";
 import { webhooksPing } from "./funcs/webhooks-ping.js";
 import { webhooksRotateSigningSecret } from "./funcs/webhooks-rotate-signing-secret.js";
 import { webhooksUpdate } from "./funcs/webhooks-update.js";
+import { environmentsCreateEnvironment } from "./funcs/environments-create-environment.js";
+import { environmentsDeleteEnvironment } from "./funcs/environments-delete-environment.js";
+import { environmentsGetEnvironment } from "./funcs/environments-get-environment.js";
+import { environmentsListEnvironments } from "./funcs/environments-list-environments.js";
 
 const LEGACY_LYRIA_MODELS: ReadonlySet<string> = new Set([
   "lyria-3-pro-preview",
@@ -1009,4 +1014,88 @@ function normalizeInteractionDates(
 
 function normalizeDateLike(value: unknown): unknown {
   return value instanceof Date ? value.toISOString() : value;
+}
+
+export type ListEnvironmentsParams = {
+  api_version?: string;
+  page_size?: number;
+  page_token?: string;
+};
+
+export class GeminiNextGenEnvironments {
+  private sdk: GoogleGenAI | undefined;
+
+  constructor(private readonly parentClient: GoogleGenAIParentClient) {}
+
+  async create(
+    params: environments.EnvironmentInput & { api_version?: string },
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<environments.Environment> {
+    const { api_version, ...body } = params;
+    return unwrapWithSdkHttpResponse(
+      environmentsCreateEnvironment(
+        this.getClient(api_version),
+        api_version,
+        body,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  async list(
+    params: ListEnvironmentsParams | null | undefined = {},
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<environments.ListEnvironmentsResponse> {
+    const { api_version, page_size, page_token } = params ?? {};
+    return unwrapWithSdkHttpResponse(
+      environmentsListEnvironments(
+        this.getClient(api_version),
+        api_version,
+        page_size,
+        page_token,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  async get(
+    id: string,
+    params: { api_version?: string } | null | undefined = {},
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<environments.Environment> {
+    return unwrapWithSdkHttpResponse(
+      environmentsGetEnvironment(
+        this.getClient(params?.api_version),
+        id,
+        params?.api_version,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  async delete(
+    id: string,
+    params: { api_version?: string } | null | undefined = {},
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<interactions.Empty> {
+    return unwrapWithSdkHttpResponse(
+      environmentsDeleteEnvironment(
+        this.getClient(params?.api_version),
+        id,
+        params?.api_version,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  private getClient(apiVersion: string | undefined): GoogleGenAI {
+    if (apiVersion) {
+      return buildGoogleGenAIClient(this.parentClient, {
+        api_version: apiVersion,
+      });
+    }
+
+    this.sdk ??= buildGoogleGenAIClient(this.parentClient);
+    return this.sdk;
+  }
 }
