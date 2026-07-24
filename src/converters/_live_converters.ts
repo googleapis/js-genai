@@ -11,50 +11,6 @@ import * as common from '../_common.js';
 import * as t from '../_transformers.js';
 import type * as types from '../types.js';
 
-export function audioTranscriptionConfigToMldev(
-  fromObject: types.AudioTranscriptionConfig,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (common.getValueByPath(fromObject, ['languageCodes']) !== undefined) {
-    throw new Error(
-      'languageCodes parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
-    );
-  }
-
-  const fromLanguageAuto = common.getValueByPath(fromObject, ['languageAuto']);
-  if (fromLanguageAuto != null) {
-    common.setValueByPath(toObject, ['languageAuto'], fromLanguageAuto);
-  }
-
-  const fromLanguageHints = common.getValueByPath(fromObject, [
-    'languageHints',
-  ]);
-  if (fromLanguageHints != null) {
-    common.setValueByPath(toObject, ['languageHints'], fromLanguageHints);
-  }
-
-  const fromCustomVocabulary = common.getValueByPath(fromObject, [
-    'customVocabulary',
-  ]);
-  if (fromCustomVocabulary != null) {
-    common.setValueByPath(toObject, ['customVocabulary'], fromCustomVocabulary);
-  }
-
-  const fromAdaptationPhrases = common.getValueByPath(fromObject, [
-    'adaptationPhrases',
-  ]);
-  if (fromAdaptationPhrases != null) {
-    common.setValueByPath(
-      toObject,
-      ['adaptationPhrases'],
-      fromAdaptationPhrases,
-    );
-  }
-
-  return toObject;
-}
-
 export function authConfigToMldev(
   fromObject: types.AuthConfig,
 ): Record<string, unknown> {
@@ -897,7 +853,7 @@ export function liveClientSetupToMldev(
     common.setValueByPath(
       toObject,
       ['inputAudioTranscription'],
-      audioTranscriptionConfigToMldev(fromInputAudioTranscription),
+      fromInputAudioTranscription,
     );
   }
 
@@ -908,7 +864,7 @@ export function liveClientSetupToMldev(
     common.setValueByPath(
       toObject,
       ['outputAudioTranscription'],
-      audioTranscriptionConfigToMldev(fromOutputAudioTranscription),
+      fromOutputAudioTranscription,
     );
   }
 
@@ -1250,7 +1206,7 @@ export function liveConnectConfigToMldev(
     common.setValueByPath(
       parentObject,
       ['setup', 'inputAudioTranscription'],
-      audioTranscriptionConfigToMldev(fromInputAudioTranscription),
+      fromInputAudioTranscription,
     );
   }
 
@@ -1261,7 +1217,7 @@ export function liveConnectConfigToMldev(
     common.setValueByPath(
       parentObject,
       ['setup', 'outputAudioTranscription'],
-      audioTranscriptionConfigToMldev(fromOutputAudioTranscription),
+      fromOutputAudioTranscription,
     );
   }
 
