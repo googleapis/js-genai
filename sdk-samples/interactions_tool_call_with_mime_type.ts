@@ -34,16 +34,19 @@ async function createInteractionsFromMLDev() {
       },
     ],
     response_format: {
-      type: 'object',
-      properties: {
-        location: {type: 'string'},
-        temperature: {type: 'number'},
-        condition: {type: 'string'},
-        recommendation: {type: 'string'},
+      type: 'text',
+      mime_type: 'application/json',
+      schema: {
+        type: 'object',
+        properties: {
+          location: {type: 'string'},
+          temperature: {type: 'number'},
+          condition: {type: 'string'},
+          recommendation: {type: 'string'},
+        },
+        required: ['location', 'temperature', 'condition', 'recommendation'],
       },
-      required: ['location', 'temperature', 'condition', 'recommendation'],
     },
-    response_mime_type: 'application/json',
   });
 
   console.debug(response);
