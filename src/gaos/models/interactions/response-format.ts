@@ -19,5 +19,4 @@ export type ResponseFormat =
   | AudioResponseFormat
   | ImageResponseFormat
   | TextResponseFormat
-  | VideoResponseFormat
-  | { [k: string]: any };
+  | VideoResponseFormat;
