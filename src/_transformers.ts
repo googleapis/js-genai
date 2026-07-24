@@ -380,10 +380,10 @@ export function processJsonSchema(
         // beginning of this function.
         continue;
       }
-      genAISchema['type'] = Object.values(types.Type).includes(
+      genAISchema['type'] = fieldValue && typeof fieldValue === 'string' && Object.values(types.Type).includes(
         fieldValue.toUpperCase() as types.Type,
       )
-        ? fieldValue.toUpperCase()
+        ? (fieldValue.toUpperCase() as types.Type)
         : types.Type.TYPE_UNSPECIFIED;
     } else if (schemaFieldNames.includes(fieldName)) {
       (genAISchema as Record<string, unknown>)[fieldName] =
@@ -774,6 +774,64 @@ export function mcpToolsToGeminiTool(
   }
 
   return {functionDeclarations: functionDeclarations};
+}
+
+// Filters the list schema field to only include fields that are supported by
+// JSONSchema.
+function filterListSchemaField(fieldValue: unknown): Record<string, unknown>[] {
+  const listSchemaFieldValue: Record<string, unknown>[] = [];
+  for (const listFieldValue of fieldValue as Record<string, unknown>[]) {
+    listSchemaFieldValue.push(filterToJsonSchema(listFieldValue));
+  }
+  return listSchemaFieldValue;
+}
+
+// Filters the dict schema field to only include fields that are supported by
+// JSONSchema.
+function filterDictSchemaField(fieldValue: unknown): Record<string, unknown> {
+  const dictSchemaFieldValue: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(
+    fieldValue as Record<string, unknown>,
+  )) {
+    const valueRecord = value as Record<string, unknown>;
+    dictSchemaFieldValue[key] = filterToJsonSchema(valueRecord);
+  }
+  return dictSchemaFieldValue;
+}
+
+// Filters the schema to only include fields that are supported by JSONSchema.
+function filterToJsonSchema(
+  schema: Record<string, unknown>,
+): Record<string, unknown> {
+  const schemaFieldNames: Set<string> = new Set(['items']); // 'additional_properties' to come
+  const listSchemaFieldNames: Set<string> = new Set(['anyOf']); // 'one_of', 'all_of', 'not' to come
+  const dictSchemaFieldNames: Set<string> = new Set(['properties']); // 'defs' to come
+  const filteredSchema: Record<string, unknown> = {};
+
+  for (const [fieldName, fieldValue] of Object.entries(schema)) {
+    if (schemaFieldNames.has(fieldName)) {
+      filteredSchema[fieldName] = filterToJsonSchema(
+        fieldValue as Record<string, unknown>,
+      );
+    } else if (listSchemaFieldNames.has(fieldName)) {
+      filteredSchema[fieldName] = filterListSchemaField(fieldValue);
+    } else if (dictSchemaFieldNames.has(fieldName)) {
+      filteredSchema[fieldName] = filterDictSchemaField(fieldValue);
+    } else if (fieldName === 'type') {
+      const typeValue = fieldValue && typeof fieldValue === 'string' 
+        ? fieldValue.toUpperCase() 
+        : '';
+      filteredSchema[fieldName] = Object.values(types.Type).includes(
+        typeValue as types.Type,
+      )
+        ? (typeValue as types.Type)
+        : types.Type.TYPE_UNSPECIFIED;
+    } else if (supportedJsonSchemaFields.has(fieldName)) {
+      filteredSchema[fieldName] = fieldValue;
+    }
+  }
+
+  return filteredSchema;
 }
 
 // Transforms a source input into a BatchJobSource object with validation.
