@@ -178,15 +178,6 @@ export class ApiClient {
 
     this.customBaseUrl = opts.httpOptions?.baseUrl;
 
-    if (this.clientOptions.vertexai) {
-      if (this.clientOptions.project && this.clientOptions.location) {
-        this.clientOptions.apiKey = undefined;
-      } else if (this.clientOptions.apiKey) {
-        this.clientOptions.project = undefined;
-        this.clientOptions.location = undefined;
-      }
-    }
-
     const initHttpOptions: types.HttpOptions = {};
 
     if (this.clientOptions.vertexai) {
@@ -216,7 +207,7 @@ export class ApiClient {
         this.clientOptions.project = undefined;
         this.clientOptions.location = undefined;
       } else if (
-        this.clientOptions.apiKey ||
+        (this.clientOptions.apiKey && !this.clientOptions.project) ||
         this.clientOptions.location === 'global'
       ) {
         // Vertex Express or global endpoint case.
@@ -382,10 +373,10 @@ export class ApiClient {
     ) {
       return false;
     }
-    if (this.clientOptions.apiKey) {
+    if (!this.clientOptions.vertexai) {
       return false;
     }
-    if (!this.clientOptions.vertexai) {
+    if (!this.clientOptions.project || !this.clientOptions.location) {
       return false;
     }
     if (request.path.startsWith('projects/')) {
