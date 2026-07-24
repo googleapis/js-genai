@@ -121,10 +121,15 @@ export class Chats {
    * @example
    * ```ts
    * const chat = ai.chats.create({
-   *   model: 'gemini-2.0-flash'
+   *   model: 'gemini-2.0-flash',
+   *   history: [
+   *     {role: 'user', parts: [{text: 'Hello!'}]},
+   *     {role: 'model', parts: [{text: 'Hi, how can I help you?'}]},
+   *   ],
    *   config: {
    *     temperature: 0.5,
    *     maxOutputTokens: 1024,
+   *     systemInstruction: 'You are a helpful assistant.',
    *   }
    * });
    * ```
