@@ -55,6 +55,55 @@ export function audioTranscriptionConfigToMldev(
   return toObject;
 }
 
+export function audioTranscriptionConfigToVertex(
+  fromObject: types.AudioTranscriptionConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromLanguageCodes = common.getValueByPath(fromObject, [
+    'languageCodes',
+  ]);
+  if (fromLanguageCodes != null) {
+    common.setValueByPath(toObject, ['languageCodes'], fromLanguageCodes);
+  }
+
+  const fromLanguageAuto = common.getValueByPath(fromObject, ['languageAuto']);
+  if (fromLanguageAuto != null) {
+    common.setValueByPath(toObject, ['languageAuto'], fromLanguageAuto);
+  }
+
+  const fromLanguageHints = common.getValueByPath(fromObject, [
+    'languageHints',
+  ]);
+  if (fromLanguageHints != null) {
+    common.setValueByPath(
+      toObject,
+      ['languageHints'],
+      languageHintsToVertex(fromLanguageHints),
+    );
+  }
+
+  const fromCustomVocabulary = common.getValueByPath(fromObject, [
+    'customVocabulary',
+  ]);
+  if (fromCustomVocabulary != null) {
+    common.setValueByPath(toObject, ['customVocabulary'], fromCustomVocabulary);
+  }
+
+  const fromAdaptationPhrases = common.getValueByPath(fromObject, [
+    'adaptationPhrases',
+  ]);
+  if (fromAdaptationPhrases != null) {
+    common.setValueByPath(
+      toObject,
+      ['adaptationPhrases'],
+      fromAdaptationPhrases,
+    );
+  }
+
+  return toObject;
+}
+
 export function authConfigToMldev(
   fromObject: types.AuthConfig,
 ): Record<string, unknown> {
@@ -241,6 +290,26 @@ export function contentToVertex(
   const fromRole = common.getValueByPath(fromObject, ['role']);
   if (fromRole != null) {
     common.setValueByPath(toObject, ['role'], fromRole);
+  }
+
+  return toObject;
+}
+
+export function contextWindowCompressionConfigToVertex(
+  fromObject: types.ContextWindowCompressionConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  if (common.getValueByPath(fromObject, ['triggerTokens']) !== undefined) {
+    throw new Error(
+      'triggerTokens parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+    );
+  }
+
+  if (common.getValueByPath(fromObject, ['slidingWindow']) !== undefined) {
+    throw new Error(
+      'slidingWindow parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+    );
   }
 
   return toObject;
@@ -572,6 +641,37 @@ export function googleSearchToMldev(
   ]);
   if (fromTimeRangeFilter != null) {
     common.setValueByPath(toObject, ['timeRangeFilter'], fromTimeRangeFilter);
+  }
+
+  return toObject;
+}
+
+export function historyConfigToVertex(
+  fromObject: types.HistoryConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  if (
+    common.getValueByPath(fromObject, ['initialHistoryInClientContent']) !==
+    undefined
+  ) {
+    throw new Error(
+      'initialHistoryInClientContent parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+    );
+  }
+
+  return toObject;
+}
+
+export function languageHintsToVertex(
+  fromObject: types.LanguageHints,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  if (common.getValueByPath(fromObject, ['languageCodes']) !== undefined) {
+    throw new Error(
+      'languageCodes parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+    );
   }
 
   return toObject;
@@ -1001,7 +1101,7 @@ export function liveClientSetupToVertex(
     common.setValueByPath(
       toObject,
       ['realtimeInputConfig'],
-      fromRealtimeInputConfig,
+      realtimeInputConfigToVertex(fromRealtimeInputConfig),
     );
   }
 
@@ -1012,7 +1112,7 @@ export function liveClientSetupToVertex(
     common.setValueByPath(
       toObject,
       ['sessionResumption'],
-      fromSessionResumption,
+      sessionResumptionConfigToVertex(fromSessionResumption),
     );
   }
 
@@ -1023,7 +1123,7 @@ export function liveClientSetupToVertex(
     common.setValueByPath(
       toObject,
       ['contextWindowCompression'],
-      fromContextWindowCompression,
+      contextWindowCompressionConfigToVertex(fromContextWindowCompression),
     );
   }
 
@@ -1034,7 +1134,7 @@ export function liveClientSetupToVertex(
     common.setValueByPath(
       toObject,
       ['inputAudioTranscription'],
-      fromInputAudioTranscription,
+      audioTranscriptionConfigToVertex(fromInputAudioTranscription),
     );
   }
 
@@ -1045,7 +1145,7 @@ export function liveClientSetupToVertex(
     common.setValueByPath(
       toObject,
       ['outputAudioTranscription'],
-      fromOutputAudioTranscription,
+      audioTranscriptionConfigToVertex(fromOutputAudioTranscription),
     );
   }
 
@@ -1087,7 +1187,11 @@ export function liveClientSetupToVertex(
     'historyConfig',
   ]);
   if (fromHistoryConfig != null) {
-    common.setValueByPath(toObject, ['historyConfig'], fromHistoryConfig);
+    common.setValueByPath(
+      toObject,
+      ['historyConfig'],
+      historyConfigToVertex(fromHistoryConfig),
+    );
   }
 
   return toObject;
@@ -1488,7 +1592,7 @@ export function liveConnectConfigToVertex(
     common.setValueByPath(
       parentObject,
       ['setup', 'sessionResumption'],
-      fromSessionResumption,
+      sessionResumptionConfigToVertex(fromSessionResumption),
     );
   }
 
@@ -1499,7 +1603,7 @@ export function liveConnectConfigToVertex(
     common.setValueByPath(
       parentObject,
       ['setup', 'inputAudioTranscription'],
-      fromInputAudioTranscription,
+      audioTranscriptionConfigToVertex(fromInputAudioTranscription),
     );
   }
 
@@ -1510,7 +1614,7 @@ export function liveConnectConfigToVertex(
     common.setValueByPath(
       parentObject,
       ['setup', 'outputAudioTranscription'],
-      fromOutputAudioTranscription,
+      audioTranscriptionConfigToVertex(fromOutputAudioTranscription),
     );
   }
 
@@ -1521,7 +1625,7 @@ export function liveConnectConfigToVertex(
     common.setValueByPath(
       parentObject,
       ['setup', 'realtimeInputConfig'],
-      fromRealtimeInputConfig,
+      realtimeInputConfigToVertex(fromRealtimeInputConfig),
     );
   }
 
@@ -1532,7 +1636,7 @@ export function liveConnectConfigToVertex(
     common.setValueByPath(
       parentObject,
       ['setup', 'contextWindowCompression'],
-      fromContextWindowCompression,
+      contextWindowCompressionConfigToVertex(fromContextWindowCompression),
     );
   }
 
@@ -2317,6 +2421,35 @@ export function partToVertex(fromObject: types.Part): Record<string, unknown> {
   return toObject;
 }
 
+export function realtimeInputConfigToVertex(
+  fromObject: types.RealtimeInputConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  if (
+    common.getValueByPath(fromObject, ['automaticActivityDetection']) !==
+    undefined
+  ) {
+    throw new Error(
+      'automaticActivityDetection parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+    );
+  }
+
+  if (common.getValueByPath(fromObject, ['activityHandling']) !== undefined) {
+    throw new Error(
+      'activityHandling parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+    );
+  }
+
+  if (common.getValueByPath(fromObject, ['turnCoverage']) !== undefined) {
+    throw new Error(
+      'turnCoverage parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+    );
+  }
+
+  return toObject;
+}
+
 export function replicatedVoiceConfigToVertex(
   fromObject: types.ReplicatedVoiceConfig,
 ): Record<string, unknown> {
@@ -2389,6 +2522,25 @@ export function sessionResumptionConfigToMldev(
     throw new Error(
       'transparent parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
     );
+  }
+
+  return toObject;
+}
+
+export function sessionResumptionConfigToVertex(
+  fromObject: types.SessionResumptionConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  if (common.getValueByPath(fromObject, ['handle']) !== undefined) {
+    throw new Error(
+      'handle parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+    );
+  }
+
+  const fromTransparent = common.getValueByPath(fromObject, ['transparent']);
+  if (fromTransparent != null) {
+    common.setValueByPath(toObject, ['transparent'], fromTransparent);
   }
 
   return toObject;

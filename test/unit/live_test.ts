@@ -419,7 +419,6 @@ describe('live', () => {
       model: 'models/gemini-2.0-flash-live-preview-04-09',
       config: {
         sessionResumption: {
-          handle: 'test_handle',
           transparent: true,
         },
       },
@@ -435,7 +434,7 @@ describe('live', () => {
       setup: {
         model: 'models/gemini-2.0-flash-live-preview-04-09',
         generationConfig: {responseModalities: ['AUDIO']},
-        sessionResumption: {handle: 'test_handle', transparent: true},
+        sessionResumption: {transparent: true},
       },
     });
     expect(session).toBeDefined();
@@ -447,9 +446,6 @@ describe('live', () => {
       apiKey: 'test-api-key',
       uploader: new CrossUploader(),
       downloader: new CrossDownloader(),
-      vertexai: true,
-      project: 'test-project',
-      location: 'test-location',
     });
     const websocketFactory = new FakeWebSocketFactory();
     const live = new Live(apiClient, new FakeAuth(), websocketFactory);
@@ -498,7 +494,6 @@ describe('live', () => {
     expect(JSON.parse(websocketSpyCall.args[0])).toEqual({
       setup: {
         model: 'models/gemini-live-2.5-flash-preview',
-        generationConfig: {responseModalities: ['AUDIO']},
         contextWindowCompression: {
           triggerTokens: '1000',
           slidingWindow: {targetTokens: '10'},
@@ -514,9 +509,6 @@ describe('live', () => {
       apiKey: 'test-api-key',
       uploader: new CrossUploader(),
       downloader: new CrossDownloader(),
-      vertexai: true,
-      project: 'test-project',
-      location: 'test-location',
     });
     const websocketFactory = new FakeWebSocketFactory();
     const live = new Live(apiClient, new FakeAuth(), websocketFactory);
@@ -568,7 +560,6 @@ describe('live', () => {
     expect(JSON.parse(websocketSpyCall.args[0])).toEqual({
       setup: {
         model: 'models/gemini-live-2.5-flash-preview',
-        generationConfig: {responseModalities: ['AUDIO']},
         realtimeInputConfig: {
           automaticActivityDetection: {
             startOfSpeechSensitivity: 'START_SENSITIVITY_HIGH',
