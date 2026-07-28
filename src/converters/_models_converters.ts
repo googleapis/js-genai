@@ -12,63 +12,6 @@ import type * as _internal_types from '../_internal_types.js';
 import * as t from '../_transformers.js';
 import type * as types from '../types.js';
 
-export function audioTranscriptionConfigToMldev(
-  fromObject: types.AudioTranscriptionConfig,
-  _rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (common.getValueByPath(fromObject, ['languageCodes']) !== undefined) {
-    throw new Error(
-      'languageCodes parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
-    );
-  }
-
-  const fromLanguageAuto = common.getValueByPath(fromObject, ['languageAuto']);
-  if (fromLanguageAuto != null) {
-    common.setValueByPath(toObject, ['languageAuto'], fromLanguageAuto);
-  }
-
-  const fromLanguageHints = common.getValueByPath(fromObject, [
-    'languageHints',
-  ]);
-  if (fromLanguageHints != null) {
-    common.setValueByPath(toObject, ['languageHints'], fromLanguageHints);
-  }
-
-  const fromCustomVocabulary = common.getValueByPath(fromObject, [
-    'customVocabulary',
-  ]);
-  if (fromCustomVocabulary != null) {
-    common.setValueByPath(toObject, ['customVocabulary'], fromCustomVocabulary);
-  }
-
-  const fromAdaptationPhrases = common.getValueByPath(fromObject, [
-    'adaptationPhrases',
-  ]);
-  if (fromAdaptationPhrases != null) {
-    common.setValueByPath(
-      toObject,
-      ['adaptationPhrases'],
-      fromAdaptationPhrases,
-    );
-  }
-
-  const fromDiarization = common.getValueByPath(fromObject, ['diarization']);
-  if (fromDiarization != null) {
-    common.setValueByPath(toObject, ['diarization'], fromDiarization);
-  }
-
-  const fromWordTimestamp = common.getValueByPath(fromObject, [
-    'wordTimestamp',
-  ]);
-  if (fromWordTimestamp != null) {
-    common.setValueByPath(toObject, ['wordTimestamp'], fromWordTimestamp);
-  }
-
-  return toObject;
-}
-
 export function authConfigToMldev(
   fromObject: types.AuthConfig,
   _rootObject?: unknown,
@@ -1866,7 +1809,7 @@ export function generateContentConfigToMldev(
     common.setValueByPath(
       toObject,
       ['audioTranscriptionConfig'],
-      audioTranscriptionConfigToMldev(fromAudioTranscriptionConfig, rootObject),
+      fromAudioTranscriptionConfig,
     );
   }
 

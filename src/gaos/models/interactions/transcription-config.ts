@@ -32,13 +32,12 @@ export type TranscriptionConfig = {
    */
   diarization_mode?: string | undefined;
   /**
-   * Required. BCP-47 language codes providing hints about the languages present in the
+   * Optional. BCP-47 language codes providing hints about the languages present in the
    *
    * @remarks
-   * audio. At least one must be specified, or set to ["auto"] to enable
-   * automatic language detection.
+   * audio. If omitted or empty, defaults to automatic language detection.
    */
-  language_hints: Array<string>;
+  language_codes?: Array<string> | undefined;
   /**
    * Optional. The granularity of timestamps to include in the transcription output.
    *
