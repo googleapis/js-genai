@@ -456,7 +456,7 @@ describe('ApiClient', () => {
       expect(client.isVertexAI()).toBe(true);
       expect(client.getProject()).toBe('vertex-project');
       expect(client.getLocation()).toBe('vertex-location');
-      expect(client.getApiKey()).toBeUndefined(); // API key is ignored when setting opts.vertexai
+      expect(client.getApiKey()).toBe('apikey-from-opts');
       expect(client.getRequestUrl()).toBe(
         'https://vertex-location-aiplatform.googleapis.com/v1beta1',
       );
@@ -478,7 +478,7 @@ describe('ApiClient', () => {
       expect(client.isVertexAI()).toBe(true);
       expect(client.getProject()).toBe('vertex-project');
       expect(client.getLocation()).toBe('us');
-      expect(client.getApiKey()).toBeUndefined();
+      expect(client.getApiKey()).toBe('apikey-from-opts');
       expect(client.getRequestUrl()).toBe(
         'https://aiplatform.us.rep.googleapis.com/v1beta1',
       );
@@ -500,7 +500,7 @@ describe('ApiClient', () => {
       expect(client.isVertexAI()).toBe(true);
       expect(client.getProject()).toBe('vertex-project');
       expect(client.getLocation()).toBe('eu');
-      expect(client.getApiKey()).toBeUndefined();
+      expect(client.getApiKey()).toBe('apikey-from-opts');
       expect(client.getRequestUrl()).toBe(
         'https://aiplatform.eu.rep.googleapis.com/v1beta1',
       );
@@ -523,12 +523,12 @@ describe('ApiClient', () => {
       expect(client.isVertexAI()).toBe(true);
       expect(client.getProject()).toBe('vertex-project');
       expect(client.getLocation()).toBe('us');
-      expect(client.getApiKey()).toBeUndefined();
+      expect(client.getApiKey()).toBe('apikey-from-opts');
       expect(client.getRequestUrl()).toBe('https://my-custom-url.com/v1beta1');
       expect(client.getApiVersion()).toBe('v1beta1');
     });
 
-    it('should not have api key if project/location is provided for vertexai', () => {
+    it('should preserve api key if project/location is provided for vertexai', () => {
       const client = new ApiClient({
         auth: new FakeAuth(),
         project: 'vertex-project',
@@ -542,7 +542,7 @@ describe('ApiClient', () => {
       expect(client.isVertexAI()).toBe(true);
       expect(client.getProject()).toBe('vertex-project');
       expect(client.getLocation()).toBe('vertex-location');
-      expect(client.getApiKey()).toBeUndefined();
+      expect(client.getApiKey()).toBe('apikey-from-opts');
       expect(client.getRequestUrl()).toBe(
         'https://vertex-location-aiplatform.googleapis.com/v1beta1',
       );
