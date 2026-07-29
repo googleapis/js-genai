@@ -2,6 +2,20 @@
 
 
 
+## [2.14.0](https://github.com/googleapis/js-genai/compare/v2.13.0...v2.14.0) (2026-07-28)
+
+
+### Features
+
+* [GenerateContentConfig] Add GenerationConfig.audio_transcription_config and Part.audio_transcription. ([4b2e67a](https://github.com/googleapis/js-genai/commit/4b2e67aebbb713321c095ccad34618f2a98fdd7d))
+* Add flat `language_codes` field to `AudioTranscriptionConfig`. ([cc808eb](https://github.com/googleapis/js-genai/commit/cc808ebcbe76beb8e54fd5ca24ac358643104853))
+* Allow api key + proj/location for enterprise mode ([9c0540a](https://github.com/googleapis/js-genai/commit/9c0540a26694e6a2896a433e43d1bac963af10e5))
+
+
+### Bug Fixes
+
+* add deprecation warnings to Imagen generate_images, edit_images, generate_videos (if using prompt/text/image args), LiveConnectConfig.GenerationConfig which will be removed in the next major version ([bb66101](https://github.com/googleapis/js-genai/commit/bb6610199a76f7a99e28ed77974e6a3af21a52b1))
+
 ## [2.13.0](https://github.com/googleapis/js-genai/compare/v2.12.0...v2.13.0) (2026-07-21)
 
 
