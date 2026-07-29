@@ -14,6 +14,7 @@ export {Files} from '../files.js';
 export type {SseMessage, Stream} from '../gaos/lib/event-streams.js';
 export type {
   Agents,
+  Environments,
   Interactions,
   Triggers,
   Webhooks,
