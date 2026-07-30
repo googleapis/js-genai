@@ -2,6 +2,16 @@
 
 
 
+## [2.15.0](https://github.com/googleapis/js-genai/compare/v2.14.0...v2.15.0) (2026-07-30)
+
+
+### Features
+
+* add environment resource ([2c911be](https://github.com/googleapis/js-genai/commit/2c911befbf839fc250a296783cbedbd3b668a9f7))
+* Support GoogleMaps Tool grounding_types places and routing ([52655c1](https://github.com/googleapis/js-genai/commit/52655c192848942d2d866c3b256de27c94583f78))
+* Support per-request retryOptions in the JS GenAI SDK API Client ([124b606](https://github.com/googleapis/js-genai/commit/124b606bc5be0d5e70673dc28e16e739c9a25d7c))
+* Wire environment service into genai sdk ([70d7938](https://github.com/googleapis/js-genai/commit/70d79389536821f1323ae5016f63ee95afa6b48a))
+
 ## [2.14.0](https://github.com/googleapis/js-genai/compare/v2.13.0...v2.14.0) (2026-07-28)
 
 
