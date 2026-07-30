@@ -35,4 +35,5 @@ export type Model =
   | "lyria-3-clip-preview"
   | "lyria-3-pro-preview"
   | "gemini-robotics-er-1.6-preview"
+  | "gemini-robotics-er-2-preview"
   | (string & {});
