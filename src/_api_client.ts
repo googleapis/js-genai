@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import pRetry, {AbortError} from 'p-retry';
+import pRetry from 'p-retry';
 import {Auth} from './_auth.js';
 import * as common from './_common.js';
 import {Downloader} from './_downloader.js';
@@ -42,8 +42,12 @@ declare interface NodeJSTimeout {
 
 // Default retry options.
 // The config is based on https://cloud.google.com/storage/docs/retry-strategy.
-const DEFAULT_RETRY_ATTEMPTS = 5; // Including the initial call
 // LINT.IfChange
+const DEFAULT_RETRY_ATTEMPTS = 5; // Including the initial call
+const DEFAULT_RETRY_INITIAL_DELAY = 1.0; // seconds
+const DEFAULT_RETRY_MAX_DELAY = 60.0; // seconds
+const DEFAULT_RETRY_EXP_BASE = 2;
+const DEFAULT_RETRY_JITTER = 1;
 const DEFAULT_RETRY_HTTP_STATUS_CODES = [
   408, // Request timeout
   429, // Too many requests
@@ -435,7 +439,12 @@ export class ApiClient {
       url.toString(),
       request.abortSignal,
     );
-    return this.unaryApiCall(url, requestInit, request.httpMethod);
+    return this.unaryApiCall(
+      url,
+      requestInit,
+      request.httpMethod,
+      patchedHttpOptions.retryOptions,
+    );
   }
 
   private patchHttpOptions(
@@ -494,7 +503,12 @@ export class ApiClient {
       url.toString(),
       request.abortSignal,
     );
-    return this.streamApiCall(url, requestInit, request.httpMethod);
+    return this.streamApiCall(
+      url,
+      requestInit,
+      request.httpMethod,
+      patchedHttpOptions.retryOptions,
+    );
   }
 
   private async includeExtraHttpOptionsToRequestInit(
@@ -569,11 +583,16 @@ export class ApiClient {
     url: URL,
     requestInit: RequestInit,
     httpMethod: 'GET' | 'POST' | 'PATCH' | 'DELETE',
+    retryOptions?: types.HttpRetryOptions,
   ): Promise<types.HttpResponse> {
-    return this.apiCall(url.toString(), {
-      ...requestInit,
-      method: httpMethod,
-    })
+    return this.apiCall(
+      url.toString(),
+      {
+        ...requestInit,
+        method: httpMethod,
+      },
+      retryOptions,
+    )
       .then(async (response) => {
         await throwErrorIfNotOK(response);
         return new types.HttpResponse(response);
@@ -591,11 +610,16 @@ export class ApiClient {
     url: URL,
     requestInit: RequestInit,
     httpMethod: 'GET' | 'POST' | 'PATCH' | 'DELETE',
+    retryOptions?: types.HttpRetryOptions,
   ): Promise<AsyncGenerator<types.HttpResponse>> {
-    return this.apiCall(url.toString(), {
-      ...requestInit,
-      method: httpMethod,
-    })
+    return this.apiCall(
+      url.toString(),
+      {
+        ...requestInit,
+        method: httpMethod,
+      },
+      retryOptions,
+    )
       .then(async (response) => {
         await throwErrorIfNotOK(response);
         return this.processStreamResponse(response);
@@ -714,34 +738,47 @@ export class ApiClient {
   private async apiCall(
     url: string,
     requestInit: RequestInit,
+    retryOptions?: types.HttpRetryOptions,
   ): Promise<Response> {
-    if (
-      !this.clientOptions.httpOptions ||
-      !this.clientOptions.httpOptions.retryOptions
-    ) {
+    if (!retryOptions) {
       return fetch(url, requestInit);
     }
 
-    const retryOptions = this.clientOptions.httpOptions.retryOptions;
+    const retryableStatusCodes =
+      retryOptions.httpStatusCodes ?? DEFAULT_RETRY_HTTP_STATUS_CODES;
     const runFetch = async () => {
       const response = await fetch(url, requestInit);
 
-      if (response.ok) {
+      if (response.ok || !retryableStatusCodes.includes(response.status)) {
+        // Either a success, or a failure that must not be retried.
         return response;
       }
 
-      if (DEFAULT_RETRY_HTTP_STATUS_CODES.includes(response.status)) {
-        throw new Error(`Retryable HTTP Error: ${response.statusText}`);
-      }
+      // Retryable failure.
+      await throwErrorIfNotOK(response);
 
-      throw new AbortError(
-        `Non-retryable exception ${response.statusText} sending request`,
-      );
+      return response;
     };
 
+    // `attempts` counts the initial call, so p-retry gets one less.
+    const attempts = Math.max(
+      1,
+      retryOptions.attempts ?? DEFAULT_RETRY_ATTEMPTS,
+    );
+    const minTimeout = Math.round(
+      (retryOptions.initialDelay ?? DEFAULT_RETRY_INITIAL_DELAY) * 1000,
+    );
+
+    const maxTimeout = Math.max(
+      minTimeout,
+      Math.round((retryOptions.maxDelay ?? DEFAULT_RETRY_MAX_DELAY) * 1000),
+    );
     return pRetry(runFetch, {
-      // Retry attempts is one less than the number of total attempts.
-      retries: (retryOptions.attempts ?? DEFAULT_RETRY_ATTEMPTS) - 1,
+      retries: attempts - 1,
+      factor: retryOptions.expBase ?? DEFAULT_RETRY_EXP_BASE,
+      minTimeout,
+      maxTimeout,
+      randomize: (retryOptions.jitter ?? DEFAULT_RETRY_JITTER) > 0,
     });
   }
 

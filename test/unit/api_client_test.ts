@@ -39,6 +39,24 @@ const fetch400Options = {
   url: 'some-url',
 };
 
+/**
+ * Returns a fetch fake that yields a *fresh* `Response` for every call.
+ *
+ * A `Response` body can only be consumed once, and the retry path reads it to
+ * build the typed `ApiError`. Handing the same `Response` instance to every
+ * attempt would therefore fail on the second attempt, which is not how a real
+ * `fetch` behaves.
+ */
+function freshResponses(
+  body: unknown,
+  options: ResponseInit,
+): () => Promise<Response> {
+  return () => Promise.resolve(new Response(JSON.stringify(body), options));
+}
+
+/** Retry options that remove all backoff, to keep unit tests fast. */
+const noBackoff = {initialDelay: 0, maxDelay: 0};
+
 const mockGenerateContentResponse: types.GenerateContentResponse =
   Object.setPrototypeOf(
     {
@@ -831,23 +849,20 @@ describe('ApiClient', () => {
         httpOptions: {
           retryOptions: {
             attempts: 2,
+            ...noBackoff,
           },
         },
         uploader: new CrossUploader(),
         downloader: new CrossDownloader(),
       });
-      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
-        Promise.resolve(
-          new Response(
-            JSON.stringify({'error': 'Internal Server Error'}),
-            fetch500Options,
-          ),
-        ),
+      const fetchSpy = spyOn(global, 'fetch').and.callFake(
+        freshResponses({'error': 'Internal Server Error'}, fetch500Options),
       );
       await client
         .request({path: 'test-path', httpMethod: 'POST'})
         .catch((e) => {
-          console.log(e);
+          expect(e.name).toEqual('ApiError');
+          expect(e.status).toEqual(500);
         });
       expect(fetchSpy).toHaveBeenCalledTimes(2);
     });
@@ -862,13 +877,8 @@ describe('ApiClient', () => {
         uploader: new CrossUploader(),
         downloader: new CrossDownloader(),
       });
-      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
-        Promise.resolve(
-          new Response(
-            JSON.stringify({'error': 'Internal Server Error'}),
-            fetch500Options,
-          ),
-        ),
+      const fetchSpy = spyOn(global, 'fetch').and.callFake(
+        freshResponses({'error': 'Internal Server Error'}, fetch500Options),
       );
       await client
         .request({path: 'test-path', httpMethod: 'POST'})
@@ -880,7 +890,34 @@ describe('ApiClient', () => {
       expect(fetchSpy).toHaveBeenCalledTimes(1);
     });
 
-    it('should retry requests with default retry options if retry options are not set', async () => {
+    it('should retry requests with the default attempt count if attempts is not set', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        project: 'vertex-project',
+        location: 'vertex-location',
+        vertexai: true,
+        apiVersion: 'v1beta1',
+        // `attempts` is intentionally unset so the default applies. The delay
+        // fields are zeroed only to keep the test fast; leaving them at their
+        // defaults would sleep 1+2+4+8s (up to 30s once jitter is applied).
+        httpOptions: {
+          retryOptions: {...noBackoff},
+        },
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.callFake(
+        freshResponses({'error': 'Internal Server Error'}, fetch500Options),
+      );
+      await client
+        .request({path: 'test-path', httpMethod: 'POST'})
+        .catch((e) => {
+          expect(e.name).toEqual('ApiError');
+        });
+      expect(fetchSpy).toHaveBeenCalledTimes(5); // Default retry attempts is 5.
+    });
+
+    it('should honor per-request retryOptions over client-level ones', async () => {
       const client = new ApiClient({
         auth: new FakeAuth(),
         project: 'vertex-project',
@@ -888,25 +925,188 @@ describe('ApiClient', () => {
         vertexai: true,
         apiVersion: 'v1beta1',
         httpOptions: {
-          retryOptions: {},
+          retryOptions: {attempts: 5, ...noBackoff},
         },
         uploader: new CrossUploader(),
         downloader: new CrossDownloader(),
       });
-      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
-        Promise.resolve(
-          new Response(
-            JSON.stringify({'error': 'Internal Server Error'}),
-            fetch500Options,
-          ),
-        ),
+      const fetchSpy = spyOn(global, 'fetch').and.callFake(
+        freshResponses({'error': 'Internal Server Error'}, fetch500Options),
+      );
+      await client
+        .request({
+          path: 'test-path',
+          httpMethod: 'POST',
+          httpOptions: {retryOptions: {attempts: 2}},
+        })
+        .catch(() => {});
+      // The per-request `attempts: 2` wins, and `initialDelay`/`maxDelay` are
+      // still inherited from the client-level options by the merge.
+      expect(fetchSpy).toHaveBeenCalledTimes(2);
+    });
+
+    it('should honor per-request retryOptions when the client sets none', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        project: 'vertex-project',
+        location: 'vertex-location',
+        vertexai: true,
+        apiVersion: 'v1beta1',
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.callFake(
+        freshResponses({'error': 'Internal Server Error'}, fetch500Options),
+      );
+      await client
+        .request({
+          path: 'test-path',
+          httpMethod: 'POST',
+          httpOptions: {retryOptions: {attempts: 3, ...noBackoff}},
+        })
+        .catch(() => {});
+      expect(fetchSpy).toHaveBeenCalledTimes(3);
+    });
+
+    it('should retry only the status codes listed in httpStatusCodes', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        project: 'vertex-project',
+        location: 'vertex-location',
+        vertexai: true,
+        apiVersion: 'v1beta1',
+        httpOptions: {
+          retryOptions: {attempts: 3, httpStatusCodes: [429], ...noBackoff},
+        },
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.callFake(
+        freshResponses({'error': 'Internal Server Error'}, fetch500Options),
       );
       await client
         .request({path: 'test-path', httpMethod: 'POST'})
         .catch((e) => {
-          console.log(e);
+          expect(e.name).toEqual('ApiError');
+          expect(e.status).toEqual(500);
         });
-      expect(fetchSpy).toHaveBeenCalledTimes(5); // Default retry attempts is 5.
+      // 500 is not in the configured list, so it must not be retried.
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should retry a non-default status code when httpStatusCodes lists it', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        project: 'vertex-project',
+        location: 'vertex-location',
+        vertexai: true,
+        apiVersion: 'v1beta1',
+        httpOptions: {
+          retryOptions: {attempts: 3, httpStatusCodes: [400], ...noBackoff},
+        },
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.callFake(
+        freshResponses({'error': 'Bad Request'}, fetch400Options),
+      );
+      await client
+        .request({path: 'test-path', httpMethod: 'POST'})
+        .catch((e) => {
+          expect(e.name).toEqual('ApiError');
+          expect(e.status).toEqual(400);
+        });
+      // 400 is not retryable by default, but the explicit list overrides that.
+      expect(fetchSpy).toHaveBeenCalledTimes(3);
+    });
+
+    it('should throw a typed ApiError for a non-retryable status when retries are configured', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        project: 'vertex-project',
+        location: 'vertex-location',
+        vertexai: true,
+        apiVersion: 'v1beta1',
+        httpOptions: {
+          retryOptions: {attempts: 3, ...noBackoff},
+        },
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.callFake(
+        freshResponses({'error': 'Bad Request'}, fetch400Options),
+      );
+      let caught: {name?: string; status?: number} | undefined;
+      await client
+        .request({path: 'test-path', httpMethod: 'POST'})
+        .catch((e) => {
+          caught = e;
+        });
+      // Regression guard: callers such as the shared table tests branch on
+      // `error.status`, which must survive the retry wrapper.
+      expect(caught?.name).toEqual('ApiError');
+      expect(caught?.status).toEqual(400);
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should make exactly one attempt when attempts is 0 or 1', async () => {
+      const fetchSpy = spyOn(global, 'fetch').and.callFake(
+        freshResponses({'error': 'Internal Server Error'}, fetch500Options),
+      );
+      for (const attempts of [0, 1]) {
+        const client = new ApiClient({
+          auth: new FakeAuth(),
+          project: 'vertex-project',
+          location: 'vertex-location',
+          vertexai: true,
+          apiVersion: 'v1beta1',
+          httpOptions: {
+            retryOptions: {attempts, ...noBackoff},
+          },
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        });
+        fetchSpy.calls.reset();
+        // `attempts: 0` must not produce `retries: -1`, which throws in
+        // p-retry v7.
+        await client
+          .request({path: 'test-path', httpMethod: 'POST'})
+          .catch((e) => {
+            expect(e.name).toEqual('ApiError');
+          });
+        expect(fetchSpy).toHaveBeenCalledTimes(1);
+      }
+    });
+
+    it('should apply initialDelay between attempts', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        project: 'vertex-project',
+        location: 'vertex-location',
+        vertexai: true,
+        apiVersion: 'v1beta1',
+        httpOptions: {
+          // 60ms base delay, no exponential growth, no jitter: two retries
+          // should sleep ~120ms in total.
+          retryOptions: {
+            attempts: 3,
+            initialDelay: 0.06,
+            maxDelay: 0.06,
+            expBase: 1,
+            jitter: 0,
+          },
+        },
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      spyOn(global, 'fetch').and.callFake(
+        freshResponses({'error': 'Internal Server Error'}, fetch500Options),
+      );
+      const start = Date.now();
+      await client
+        .request({path: 'test-path', httpMethod: 'POST'})
+        .catch(() => {});
+      expect(Date.now() - start).toBeGreaterThanOrEqual(100);
     });
   });
 

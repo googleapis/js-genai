@@ -2214,6 +2214,11 @@ export class HttpResponse {
 // @public
 export interface HttpRetryOptions {
     attempts?: number;
+    expBase?: number;
+    httpStatusCodes?: number[];
+    initialDelay?: number;
+    jitter?: number;
+    maxDelay?: number;
 }
 
 // @public
