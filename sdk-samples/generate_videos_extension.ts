@@ -21,7 +21,9 @@ async function generateVideosFromMLDev() {
   });
   let operation1 = await ai.models.generateVideos({
     model: 'veo-3.1-generate-preview',
-    prompt: 'Rain',
+    source: {
+      prompt: 'Rain',
+    },
     config: {
       numberOfVideos: 1,
     },

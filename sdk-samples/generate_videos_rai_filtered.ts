@@ -18,7 +18,9 @@ async function generateContentFromMLDev() {
   const ai = new GoogleGenAI({vertexai: false, apiKey: GEMINI_API_KEY});
   let operation = await ai.models.generateVideos({
     model: 'veo-3.1-generate-preview',
-    prompt: 'Man with a dog',
+    source: {
+      prompt: 'Man with a dog',
+    },
     config: {
       numberOfVideos: 1,
       personGeneration: 'dont_allow',
@@ -51,7 +53,9 @@ async function generateContentFromVertexAI() {
   });
   let operation = await ai.models.generateVideos({
     model: 'veo-3.1-generate-preview',
-    prompt: 'Man with a dog',
+    source: {
+      prompt: 'Man with a dog',
+    },
     config: {
       personGeneration: 'dont_allow',
     },
