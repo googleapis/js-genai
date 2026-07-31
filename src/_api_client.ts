@@ -40,6 +40,96 @@ declare interface NodeJSTimeout {
   unref(): this;
 }
 
+/**
+ * Raises Undici's internal header/body timeouts to at least `timeout` ms.
+ *
+ * In Node > 18 the built-in fetch is backed by Undici, which sets a global
+ * dispatcher tracking its own headersTimeout and bodyTimeout via Symbol
+ * properties. Those would otherwise fire before a longer caller-supplied
+ * timeout.
+ */
+function raiseUndiciTimeouts(timeout: number) {
+  const dispatcherSymbol = Symbol.for('undici.globalDispatcher.1');
+  const globalDispatcher = (globalThis as Record<symbol, unknown>)[
+    dispatcherSymbol
+  ] as Record<symbol, unknown> | undefined;
+  if (!globalDispatcher) {
+    return;
+  }
+  for (const sym of Object.getOwnPropertySymbols(globalDispatcher)) {
+    const desc = sym.description;
+    if (desc?.includes('headers timeout') || desc?.includes('body timeout')) {
+      const currentTimeout = globalDispatcher[sym];
+      if (typeof currentTimeout === 'number') {
+        globalDispatcher[sym] = Math.max(currentTimeout, timeout);
+      }
+    }
+  }
+}
+
+/** The abort plumbing for a single HTTP attempt. */
+interface AttemptSignal {
+  /** Undefined when neither a timeout nor a caller signal is in play. */
+  signal?: AbortSignal;
+  /**
+   * Clears the timeout and detaches the caller-signal listener.
+   *
+   * Only call this once the response is known to be discarded: the timeout is
+   * expected to stay armed while the caller consumes the response body.
+   */
+  dispose: () => void;
+}
+
+/**
+ * Creates the abort plumbing for one attempt.
+ *
+ * A fresh signal per attempt is what makes `HttpOptions.timeout` a per-attempt
+ * deadline rather than a budget shared across every retry and backoff.
+ */
+function createAttemptSignal(
+  timeout?: number,
+  callerSignal?: AbortSignal,
+): AttemptSignal {
+  const noop = () => {};
+  if (!(timeout && timeout > 0) && !callerSignal) {
+    return {signal: undefined, dispose: noop};
+  }
+
+  const controller = new AbortController();
+  let timeoutHandle: ReturnType<typeof setTimeout> | undefined;
+
+  if (timeout && timeout > 0) {
+    timeoutHandle = setTimeout(() => controller.abort(), timeout);
+    if (
+      timeoutHandle &&
+      typeof (timeoutHandle as unknown as NodeJSTimeout).unref === 'function'
+    ) {
+      // call unref to prevent nodejs process from hanging, see
+      // https://nodejs.org/api/timers.html#timeoutunref
+      (timeoutHandle as unknown as NodeJSTimeout).unref();
+    }
+  }
+
+  const onCallerAbort = () => controller.abort();
+  if (callerSignal) {
+    if (callerSignal.aborted) {
+      controller.abort();
+    } else {
+      callerSignal.addEventListener('abort', onCallerAbort);
+    }
+  }
+
+  return {
+    signal: controller.signal,
+    dispose: () => {
+      if (timeoutHandle !== undefined) {
+        clearTimeout(timeoutHandle);
+      }
+      callerSignal?.removeEventListener('abort', onCallerAbort);
+    },
+  };
+}
+
 // Default retry options.
 // The config is based on https://cloud.google.com/storage/docs/retry-strategy.
 // LINT.IfChange
@@ -437,13 +527,14 @@ export class ApiClient {
       requestInit,
       patchedHttpOptions,
       url.toString(),
-      request.abortSignal,
     );
     return this.unaryApiCall(
       url,
       requestInit,
       request.httpMethod,
       patchedHttpOptions.retryOptions,
+      patchedHttpOptions.timeout,
+      request.abortSignal,
     );
   }
 
@@ -501,13 +592,14 @@ export class ApiClient {
       requestInit,
       patchedHttpOptions,
       url.toString(),
-      request.abortSignal,
     );
     return this.streamApiCall(
       url,
       requestInit,
       request.httpMethod,
       patchedHttpOptions.retryOptions,
+      patchedHttpOptions.timeout,
+      request.abortSignal,
     );
   }
 
@@ -515,59 +607,9 @@ export class ApiClient {
     requestInit: RequestInit,
     httpOptions: types.HttpOptions,
     url: string,
-    abortSignal?: AbortSignal,
   ): Promise<RequestInit> {
-    if ((httpOptions && httpOptions.timeout) || abortSignal) {
-      const abortController = new AbortController();
-      const signal = abortController.signal;
-      if (httpOptions.timeout && httpOptions?.timeout > 0) {
-        // In Node > 18, the built-in fetch is backed by Undici. Undici sets a global
-        // dispatcher on the global scope which tracks its internal headersTimeout and
-        // bodyTimeout using Symbol properties.
-        const dispatcherSymbol = Symbol.for('undici.globalDispatcher.1');
-        const globalDispatcher = (globalThis as Record<symbol, unknown>)[
-          dispatcherSymbol
-        ] as Record<symbol, unknown> | undefined;
-
-        if (globalDispatcher) {
-          const symbols = Object.getOwnPropertySymbols(globalDispatcher);
-          for (const sym of symbols) {
-            const desc = sym.description;
-            if (
-              desc?.includes('headers timeout') ||
-              desc?.includes('body timeout')
-            ) {
-              const currentTimeout = globalDispatcher[sym];
-              if (typeof currentTimeout === 'number') {
-                globalDispatcher[sym] = Math.max(
-                  currentTimeout,
-                  httpOptions.timeout,
-                );
-              }
-            }
-          }
-        }
-
-        const timeoutHandle = setTimeout(
-          () => abortController.abort(),
-          httpOptions.timeout,
-        );
-        if (
-          timeoutHandle &&
-          typeof (timeoutHandle as unknown as NodeJSTimeout).unref ===
-            'function'
-        ) {
-          // call unref to prevent nodejs process from hanging, see
-          // https://nodejs.org/api/timers.html#timeoutunref
-          (timeoutHandle as unknown as NodeJSTimeout).unref();
-        }
-      }
-      if (abortSignal) {
-        abortSignal.addEventListener('abort', () => {
-          abortController.abort();
-        });
-      }
-      requestInit.signal = signal;
+    if (httpOptions?.timeout && httpOptions.timeout > 0) {
+      raiseUndiciTimeouts(httpOptions.timeout);
     }
     if (httpOptions && httpOptions.extraBody !== null) {
       includeExtraBodyToRequestInit(
@@ -584,6 +626,8 @@ export class ApiClient {
     requestInit: RequestInit,
     httpMethod: 'GET' | 'POST' | 'PATCH' | 'DELETE',
     retryOptions?: types.HttpRetryOptions,
+    timeout?: number,
+    abortSignal?: AbortSignal,
   ): Promise<types.HttpResponse> {
     return this.apiCall(
       url.toString(),
@@ -592,6 +636,8 @@ export class ApiClient {
         method: httpMethod,
       },
       retryOptions,
+      timeout,
+      abortSignal,
     )
       .then(async (response) => {
         await throwErrorIfNotOK(response);
@@ -611,6 +657,8 @@ export class ApiClient {
     requestInit: RequestInit,
     httpMethod: 'GET' | 'POST' | 'PATCH' | 'DELETE',
     retryOptions?: types.HttpRetryOptions,
+    timeout?: number,
+    abortSignal?: AbortSignal,
   ): Promise<AsyncGenerator<types.HttpResponse>> {
     return this.apiCall(
       url.toString(),
@@ -619,6 +667,8 @@ export class ApiClient {
         method: httpMethod,
       },
       retryOptions,
+      timeout,
+      abortSignal,
     )
       .then(async (response) => {
         await throwErrorIfNotOK(response);
@@ -739,26 +789,52 @@ export class ApiClient {
     url: string,
     requestInit: RequestInit,
     retryOptions?: types.HttpRetryOptions,
+    timeout?: number,
+    abortSignal?: AbortSignal,
   ): Promise<Response> {
-    if (!retryOptions) {
-      return fetch(url, requestInit);
-    }
-
     const retryableStatusCodes =
-      retryOptions.httpStatusCodes ?? DEFAULT_RETRY_HTTP_STATUS_CODES;
+      retryOptions?.httpStatusCodes ?? DEFAULT_RETRY_HTTP_STATUS_CODES;
     const runFetch = async () => {
-      const response = await fetch(url, requestInit);
+      // A fresh signal per attempt, so that `timeout` bounds this attempt
+      // rather than the whole retry sequence.
+      const attempt = createAttemptSignal(timeout, abortSignal);
+      let response: Response;
+      try {
+        response = await fetch(url, {...requestInit, signal: attempt.signal});
+      } catch (e) {
+        attempt.dispose();
+        throw e;
+      }
 
-      if (response.ok || !retryableStatusCodes.includes(response.status)) {
+      if (
+        !retryOptions ||
+        response.ok ||
+        !retryableStatusCodes.includes(response.status)
+      ) {
         // Either a success, or a failure that must not be retried.
+        //
+        // The attempt is deliberately not disposed: ownership of the response
+        // passes to the caller, and the timeout must stay armed while the body
+        // is consumed.
         return response;
       }
 
-      // Retryable failure.
-      await throwErrorIfNotOK(response);
-
+      // Retryable failure, and this response is about to be discarded, so the
+      // attempt's timeout is no longer needed.
+      try {
+        // Throw the typed `ApiError` so that callers can still rely on
+        // `error.status` once the retries are exhausted.
+        await throwErrorIfNotOK(response);
+      } finally {
+        attempt.dispose();
+      }
+      // Unreachable: throwErrorIfNotOK always throws for a non-ok response.
       return response;
     };
+
+    if (!retryOptions) {
+      return runFetch();
+    }
 
     // `attempts` counts the initial call, so p-retry gets one less.
     const attempts = Math.max(
@@ -779,6 +855,11 @@ export class ApiClient {
       minTimeout,
       maxTimeout,
       randomize: (retryOptions.jitter ?? DEFAULT_RETRY_JITTER) > 0,
+      onFailedAttempt: (info: unknown) => {
+        if (abortSignal?.aborted) {
+          throw (info as {error?: Error}).error ?? (info as Error);
+        }
+      },
     });
   }
 

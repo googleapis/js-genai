@@ -1078,6 +1078,134 @@ describe('ApiClient', () => {
       }
     });
 
+    it('should give each retry attempt its own fresh AbortSignal', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        project: 'vertex-project',
+        location: 'vertex-location',
+        vertexai: true,
+        apiVersion: 'v1beta1',
+        httpOptions: {
+          // A long timeout that will not fire during the test.
+          timeout: 10000,
+          retryOptions: {attempts: 3, ...noBackoff},
+        },
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const seenSignals: Array<AbortSignal | undefined | null> = [];
+      spyOn(global, 'fetch').and.callFake((_url, init) => {
+        seenSignals.push((init as RequestInit).signal);
+        return Promise.resolve(
+          new Response(
+            JSON.stringify({'error': 'Internal Server Error'}),
+            fetch500Options,
+          ),
+        );
+      });
+
+      await client
+        .request({path: 'test-path', httpMethod: 'POST'})
+        .catch(() => {});
+
+      expect(seenSignals.length).toBe(3);
+      // Regression guard: the timeout must bound each attempt individually.
+      // Sharing one signal made it a budget spanning every attempt plus the
+      // backoff, so once it fired the remaining attempts never left the
+      // client.
+      expect(new Set(seenSignals).size).toBe(3);
+      for (const signal of seenSignals) {
+        expect(signal?.aborted).toBeFalse();
+      }
+    });
+
+    it('should retry an attempt that hits the per-request timeout', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        project: 'vertex-project',
+        location: 'vertex-location',
+        vertexai: true,
+        apiVersion: 'v1beta1',
+        httpOptions: {
+          timeout: 30,
+          retryOptions: {attempts: 3, ...noBackoff},
+        },
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      let call = 0;
+      const fetchSpy = spyOn(global, 'fetch').and.callFake((_url, init) => {
+        const signal = (init as RequestInit).signal;
+        call++;
+        if (signal?.aborted) {
+          // Real fetch rejects straight away on an already-aborted signal.
+          // Sharing one signal across attempts meant every attempt after the
+          // timeout fired saw exactly this and never reached the network.
+          return Promise.reject(
+            new DOMException('The operation was aborted.', 'AbortError'),
+          );
+        }
+        if (call === 1) {
+          // Never settle on its own; let this attempt's timeout abort it.
+          return new Promise<Response>((_resolve, reject) => {
+            signal?.addEventListener('abort', () => {
+              reject(
+                new DOMException('The operation was aborted.', 'AbortError'),
+              );
+            });
+          });
+        }
+        return Promise.resolve(
+          new Response(JSON.stringify({'ok': true}), fetchOkOptions),
+        );
+      });
+
+      const response = await client.request({
+        path: 'test-path',
+        httpMethod: 'POST',
+      });
+
+      // A timed-out attempt is retryable, matching Python's handling of
+      // httpx.TimeoutException.
+      expect(fetchSpy).toHaveBeenCalledTimes(2);
+      expect(response).toBeDefined();
+    });
+
+    it('should stop retrying when the caller aborts', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        project: 'vertex-project',
+        location: 'vertex-location',
+        vertexai: true,
+        apiVersion: 'v1beta1',
+        httpOptions: {retryOptions: {attempts: 5, ...noBackoff}},
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const controller = new AbortController();
+      const fetchSpy = spyOn(global, 'fetch').and.callFake(() => {
+        // The caller gives up while the first attempt is in flight.
+        controller.abort();
+        return Promise.resolve(
+          new Response(
+            JSON.stringify({'error': 'Internal Server Error'}),
+            fetch500Options,
+          ),
+        );
+      });
+
+      await client
+        .request({
+          path: 'test-path',
+          httpMethod: 'POST',
+          abortSignal: controller.signal,
+        })
+        .catch(() => {});
+
+      // A caller abort is terminal even though 500 is retryable.
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+    });
+
     it('should apply initialDelay between attempts', async () => {
       const client = new ApiClient({
         auth: new FakeAuth(),
