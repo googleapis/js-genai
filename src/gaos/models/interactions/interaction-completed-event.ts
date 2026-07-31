@@ -11,7 +11,6 @@
  */
 
 import { InteractionSseEventInteraction } from "./interaction-sse-event-interaction.js";
-import { StreamMetadata } from "./stream-metadata.js";
 
 export type InteractionCompletedEvent = {
   event_type: "interaction.completed";
@@ -22,7 +21,6 @@ export type InteractionCompletedEvent = {
    * this event.
    */
   event_id?: string | undefined;
-  metadata?: StreamMetadata | undefined;
   /**
    * Partial interaction resource emitted by interaction lifecycle SSE events.
    *
