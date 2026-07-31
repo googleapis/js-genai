@@ -15,12 +15,36 @@ import {GoogleGenAI} from '../../../src/node/node_client.js';
 import type {FunctionCall, LiveServerMessage} from '../../../src/types.js';
 import {Modality, Type} from '../../../src/types.js';
 
+interface LiveBackend {
+  name: string;
+  model: string;
+  isVertex: boolean;
+  /**
+   * Pins the Vertex client to a region, overriding the GOOGLE_CLOUD_LOCATION
+   * the Agent Platform wrapper exports. Undefined means take it as-is.
+   */
+  location?: string;
+}
+
 /**
- * The only live model family currently served on the Gemini API. It is
- * audio-native and rejects a TEXT response modality, so these tests request
- * AUDIO and enable output transcription for an assertable text signal.
+ * The backends under test. Live models are backend specific, and both are
+ * audio-native and reject a TEXT response modality, so these tests request
+ * AUDIO and enable output transcription.
+ *
+ * The Vertex model is not served on the global endpoint, where setup is
+ * rejected with 1008 "Publisher model ... was not found". It is available in
+ * us-central1, us-east5 and europe-west4, so the client is pinned to a region
+ * even though the shared table tests run at global.
  */
-const LIVE_MODEL = 'gemini-3.1-flash-live-preview';
+const LIVE_BACKENDS: LiveBackend[] = [
+  {name: 'Gemini API', model: 'gemini-3.1-flash-live-preview', isVertex: false},
+  {
+    name: 'Vertex',
+    model: 'gemini-live-2.5-flash-native-audio',
+    isVertex: true,
+    location: 'us-central1',
+  },
+];
 
 /** Bounds a single model turn, which is otherwise an open-ended stream. */
 const TURN_TIMEOUT_MS = 90_000;
@@ -112,6 +136,19 @@ function isQuotaError(error: unknown): boolean {
   return error instanceof Error && /429|RESOURCE_EXHAUSTED/.test(error.message);
 }
 
+/**
+ * Whether the running job has selected this backend, via
+ * GOOGLE_GENAI_RUN_{VERTEX,GEMINI}_ONLY_IN_API_MODE. Required, not cosmetic:
+ * each live job only has credentials for its own backend.
+ */
+function backendEnabled(isVertex: boolean): boolean {
+  const vertexOnly = !!process.env['GOOGLE_GENAI_RUN_VERTEX_ONLY_IN_API_MODE'];
+  const geminiOnly = !!process.env['GOOGLE_GENAI_RUN_GEMINI_ONLY_IN_API_MODE'];
+  if (isVertex && geminiOnly) return false;
+  if (!isVertex && vertexOnly) return false;
+  return true;
+}
+
 function liveConfig(overrides: Record<string, unknown> = {}) {
   return {
     responseModalities: [Modality.AUDIO],
@@ -120,158 +157,185 @@ function liveConfig(overrides: Record<string, unknown> = {}) {
   };
 }
 
-describe('live module (API mode)', () => {
-  let ai: GoogleGenAI;
+for (const backend of LIVE_BACKENDS) {
+  // Selected at load time so a disabled backend's specs are reported as
+  // skipped rather than each spec having to call pending() at runtime.
+  const describeBackend = backendEnabled(backend.isVertex)
+    ? describe
+    : xdescribe;
 
-  beforeEach(() => {
-    ai = new GoogleGenAI({apiKey: process.env['GOOGLE_API_KEY']});
-  });
+  describeBackend(`live module (API mode, ${backend.name})`, () => {
+    let ai: GoogleGenAI;
 
-  async function connect(
-    collector: TurnCollector,
-    config: Record<string, unknown> = liveConfig(),
-    model: string = LIVE_MODEL,
-  ): Promise<Session> {
-    return await ai.live.connect({
-      model,
-      config,
-      callbacks: collector.callbacks,
+    beforeEach(() => {
+      // Passed explicitly because an API key left in the environment would
+      // otherwise take precedence and clear them. The location comes from the
+      // backend rather than GOOGLE_CLOUD_LOCATION, which the Agent Platform
+      // wrapper sets to global for the shared suite.
+      ai = backend.isVertex
+        ? new GoogleGenAI({
+            vertexai: true,
+            project: process.env['GOOGLE_CLOUD_PROJECT'],
+            location: backend.location ?? process.env['GOOGLE_CLOUD_LOCATION'],
+          })
+        : new GoogleGenAI({apiKey: process.env['GOOGLE_API_KEY']});
     });
-  }
 
-  it(
-    'produces audio and a transcription for a text turn',
-    async () => {
-      const collector = new TurnCollector();
-      const session = await connect(collector);
-      try {
-        session.sendClientContent({turns: 'Say hello.', turnComplete: true});
-        const turn = await collector.nextTurn();
+    async function connect(
+      collector: TurnCollector,
+      config: Record<string, unknown> = liveConfig(),
+      model: string = backend.model,
+    ): Promise<Session> {
+      return await ai.live.connect({
+        model,
+        config,
+        callbacks: collector.callbacks,
+      });
+    }
 
-        expect(turn.audioBytes).toBeGreaterThan(0);
-        expect(turn.transcript.trim().length).toBeGreaterThan(0);
-      } catch (error) {
-        if (isQuotaError(error)) {
-          pending(
-            `Resource exhausted (429). Skipping instead of failing: ${error}`,
-          );
-          return;
+    it(
+      'produces audio and a transcription for a text turn',
+      async () => {
+        const collector = new TurnCollector();
+        const session = await connect(collector);
+        try {
+          session.sendClientContent({turns: 'Say hello.', turnComplete: true});
+          const turn = await collector.nextTurn();
+
+          expect(turn.audioBytes).toBeGreaterThan(0);
+          expect(turn.transcript.trim().length).toBeGreaterThan(0);
+        } catch (error) {
+          if (isQuotaError(error)) {
+            pending(
+              `Resource exhausted (429). Skipping instead of failing: ${error}`,
+            );
+            return;
+          }
+          throw error;
+        } finally {
+          session.close();
         }
-        throw error;
-      } finally {
-        session.close();
-      }
-    },
-    SPEC_TIMEOUT_MS,
-  );
+      },
+      SPEC_TIMEOUT_MS,
+    );
 
-  it(
-    'retains context across turns',
-    async () => {
-      const collector = new TurnCollector();
-      const session = await connect(collector);
-      try {
-        session.sendClientContent({
-          turns: 'Remember the number 42. Just acknowledge it.',
-          turnComplete: true,
-        });
-        const first = await collector.nextTurn();
-        expect(first.transcript.trim().length).toBeGreaterThan(0);
+    it(
+      'retains context across turns',
+      async () => {
+        const collector = new TurnCollector();
+        const session = await connect(collector);
+        try {
+          session.sendClientContent({
+            turns: 'Remember the number 42. Just acknowledge it.',
+            turnComplete: true,
+          });
+          const first = await collector.nextTurn();
+          expect(first.transcript.trim().length).toBeGreaterThan(0);
 
-        session.sendClientContent({
-          turns: 'What number did I ask you to remember?',
-          turnComplete: true,
-        });
-        const second = await collector.nextTurn();
+          session.sendClientContent({
+            turns: 'What number did I ask you to remember?',
+            turnComplete: true,
+          });
+          const second = await collector.nextTurn();
 
-        expect(second.audioBytes).toBeGreaterThan(0);
-        expect(second.transcript).toContain('42');
-      } catch (error) {
-        if (isQuotaError(error)) {
-          pending(
-            `Resource exhausted (429). Skipping instead of failing: ${error}`,
-          );
-          return;
+          expect(second.audioBytes).toBeGreaterThan(0);
+          expect(second.transcript).toContain('42');
+        } catch (error) {
+          if (isQuotaError(error)) {
+            pending(
+              `Resource exhausted (429). Skipping instead of failing: ${error}`,
+            );
+            return;
+          }
+          throw error;
+        } finally {
+          session.close();
         }
-        throw error;
-      } finally {
-        session.close();
-      }
-    },
-    SPEC_TIMEOUT_MS,
-  );
+      },
+      SPEC_TIMEOUT_MS,
+    );
 
-  it(
-    'completes a function calling round trip',
-    async () => {
-      const collector = new TurnCollector();
-      const session = await connect(
-        collector,
-        liveConfig({
-          tools: [
-            {
-              functionDeclarations: [
-                {
-                  name: 'turn_on_the_lights',
-                  description: 'Turns the lights on in the room.',
-                  parameters: {type: Type.OBJECT, properties: {}},
-                },
-              ],
-            },
-          ],
-        }),
-      );
-      try {
-        session.sendClientContent({
-          turns: 'Please turn on the lights.',
-          turnComplete: true,
-        });
-        const turn = await collector.nextTurn();
-
-        expect(turn.toolCalls.length).toBeGreaterThan(0);
-        const call = turn.toolCalls[0];
-        expect(call.name).toBe('turn_on_the_lights');
-        expect(call.id).toBeTruthy();
-
-        session.sendToolResponse({
-          functionResponses: [
-            {id: call.id, name: call.name, response: {result: 'ok'}},
-          ],
-        });
-        const followUp = await collector.nextTurn();
-        expect(followUp.transcript.trim().length).toBeGreaterThan(0);
-      } catch (error) {
-        if (isQuotaError(error)) {
-          pending(
-            `Resource exhausted (429). Skipping instead of failing: ${error}`,
-          );
-          return;
-        }
-        throw error;
-      } finally {
-        session.close();
-      }
-    },
-    SPEC_TIMEOUT_MS,
-  );
-
-  it(
-    'rejects a function response without an id',
-    async () => {
-      const collector = new TurnCollector();
-      const session = await connect(collector);
-      try {
-        expect(() =>
-          session.sendToolResponse({
-            functionResponses: [
-              {name: 'turn_on_the_lights', response: {result: 'ok'}},
+    it(
+      'completes a function calling round trip',
+      async () => {
+        const collector = new TurnCollector();
+        const session = await connect(
+          collector,
+          liveConfig({
+            tools: [
+              {
+                functionDeclarations: [
+                  {
+                    name: 'turn_on_the_lights',
+                    description: 'Turns the lights on in the room.',
+                    parameters: {type: Type.OBJECT, properties: {}},
+                  },
+                ],
+              },
             ],
           }),
-        ).toThrowError(/must have an `id` field/);
-      } finally {
-        session.close();
-      }
-    },
-    SPEC_TIMEOUT_MS,
-  );
-});
+        );
+        try {
+          session.sendClientContent({
+            turns: 'Please turn on the lights.',
+            turnComplete: true,
+          });
+          const turn = await collector.nextTurn();
+
+          expect(turn.toolCalls.length).toBeGreaterThan(0);
+          const call = turn.toolCalls[0];
+          expect(call.name).toBe('turn_on_the_lights');
+          expect(call.id).toBeTruthy();
+
+          session.sendToolResponse({
+            functionResponses: [
+              {id: call.id, name: call.name, response: {result: 'ok'}},
+            ],
+          });
+          // Both backends must accept the tool result and complete the turn, but
+          // only the Gemini API returns assertable content: Vertex emits an empty
+          // transcription.
+          const followUp = await collector.nextTurn();
+          if (!backend.isVertex) {
+            expect(followUp.transcript.trim().length).toBeGreaterThan(0);
+          }
+        } catch (error) {
+          if (isQuotaError(error)) {
+            pending(
+              `Resource exhausted (429). Skipping instead of failing: ${error}`,
+            );
+            return;
+          }
+          throw error;
+        } finally {
+          session.close();
+        }
+      },
+      SPEC_TIMEOUT_MS,
+    );
+
+    // Gemini API only: this validation is guarded by `!apiClient.isVertexAI()`,
+    // so Vertex accepts an id-less FunctionResponse.
+    if (!backend.isVertex) {
+      it(
+        'rejects a function response without an id',
+        async () => {
+          const collector = new TurnCollector();
+          const session = await connect(collector);
+          try {
+            expect(() =>
+              session.sendToolResponse({
+                functionResponses: [
+                  {name: 'turn_on_the_lights', response: {result: 'ok'}},
+                ],
+              }),
+            ).toThrowError(/must have an `id` field/);
+          } finally {
+            session.close();
+          }
+        },
+        SPEC_TIMEOUT_MS,
+      );
+    }
+  });
+}
