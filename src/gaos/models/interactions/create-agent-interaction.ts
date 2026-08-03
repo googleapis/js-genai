@@ -75,6 +75,8 @@ export type CreateAgentInteraction = {
   tools?: Array<Tool> | undefined;
   /**
    * The requested modalities of the response (TEXT, IMAGE, AUDIO).
+   *
+   * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
    */
   response_modalities?: Array<ResponseModality> | undefined;
   /**
