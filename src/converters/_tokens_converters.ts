@@ -65,6 +65,171 @@ export function authConfigToMldev(
   return toObject;
 }
 
+export function authTokenFromMldev(
+  fromObject: types.AuthToken,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromName = common.getValueByPath(fromObject, ['name']);
+  if (fromName != null) {
+    common.setValueByPath(toObject, ['name'], fromName);
+  }
+
+  const fromBidiGenerateContentSetup = common.getValueByPath(fromObject, [
+    'bidiGenerateContentSetup',
+  ]);
+  if (fromBidiGenerateContentSetup != null) {
+    common.setValueByPath(
+      toObject,
+      ['bidiGenerateContentSetup'],
+      bidiGenerateContentSetupFromMldev(fromBidiGenerateContentSetup),
+    );
+  }
+
+  const fromExpireTime = common.getValueByPath(fromObject, ['expireTime']);
+  if (fromExpireTime != null) {
+    common.setValueByPath(toObject, ['expireTime'], fromExpireTime);
+  }
+
+  const fromFieldMask = common.getValueByPath(fromObject, ['fieldMask']);
+  if (fromFieldMask != null) {
+    common.setValueByPath(toObject, ['fieldMask'], fromFieldMask);
+  }
+
+  const fromInteractionId = common.getValueByPath(fromObject, [
+    'interactionId',
+  ]);
+  if (fromInteractionId != null) {
+    common.setValueByPath(toObject, ['interactionId'], fromInteractionId);
+  }
+
+  const fromNewSessionExpireTime = common.getValueByPath(fromObject, [
+    'newSessionExpireTime',
+  ]);
+  if (fromNewSessionExpireTime != null) {
+    common.setValueByPath(
+      toObject,
+      ['newSessionExpireTime'],
+      fromNewSessionExpireTime,
+    );
+  }
+
+  const fromUses = common.getValueByPath(fromObject, ['uses']);
+  if (fromUses != null) {
+    common.setValueByPath(toObject, ['uses'], fromUses);
+  }
+
+  return toObject;
+}
+
+export function bidiGenerateContentSetupFromMldev(
+  fromObject: types.BidiGenerateContentSetup,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromContextWindowCompression = common.getValueByPath(fromObject, [
+    'contextWindowCompression',
+  ]);
+  if (fromContextWindowCompression != null) {
+    common.setValueByPath(
+      toObject,
+      ['contextWindowCompression'],
+      fromContextWindowCompression,
+    );
+  }
+
+  const fromGenerationConfig = common.getValueByPath(fromObject, [
+    'generationConfig',
+  ]);
+  if (fromGenerationConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['generationConfig'],
+      generationConfigFromMldev(fromGenerationConfig),
+    );
+  }
+
+  const fromHistoryConfig = common.getValueByPath(fromObject, [
+    'historyConfig',
+  ]);
+  if (fromHistoryConfig != null) {
+    common.setValueByPath(toObject, ['historyConfig'], fromHistoryConfig);
+  }
+
+  const fromInputAudioTranscription = common.getValueByPath(fromObject, [
+    'inputAudioTranscription',
+  ]);
+  if (fromInputAudioTranscription != null) {
+    common.setValueByPath(
+      toObject,
+      ['inputAudioTranscription'],
+      fromInputAudioTranscription,
+    );
+  }
+
+  const fromModel = common.getValueByPath(fromObject, ['model']);
+  if (fromModel != null) {
+    common.setValueByPath(toObject, ['model'], fromModel);
+  }
+
+  const fromOutputAudioTranscription = common.getValueByPath(fromObject, [
+    'outputAudioTranscription',
+  ]);
+  if (fromOutputAudioTranscription != null) {
+    common.setValueByPath(
+      toObject,
+      ['outputAudioTranscription'],
+      fromOutputAudioTranscription,
+    );
+  }
+
+  const fromRealtimeInputConfig = common.getValueByPath(fromObject, [
+    'realtimeInputConfig',
+  ]);
+  if (fromRealtimeInputConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['realtimeInputConfig'],
+      fromRealtimeInputConfig,
+    );
+  }
+
+  const fromSessionResumption = common.getValueByPath(fromObject, [
+    'sessionResumption',
+  ]);
+  if (fromSessionResumption != null) {
+    common.setValueByPath(
+      toObject,
+      ['sessionResumption'],
+      fromSessionResumption,
+    );
+  }
+
+  const fromSystemInstruction = common.getValueByPath(fromObject, [
+    'systemInstruction',
+  ]);
+  if (fromSystemInstruction != null) {
+    common.setValueByPath(
+      toObject,
+      ['systemInstruction'],
+      fromSystemInstruction,
+    );
+  }
+
+  const fromTools = common.getValueByPath(fromObject, ['tools']);
+  if (fromTools != null) {
+    let transformedList = fromTools;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return item;
+      });
+    }
+    common.setValueByPath(toObject, ['tools'], transformedList);
+  }
+
+  return toObject;
+}
+
 export function blobToMldev(fromObject: types.Blob): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -249,6 +414,193 @@ export function functionCallToMldev(
   if (common.getValueByPath(fromObject, ['willContinue']) !== undefined) {
     throw new Error(
       'willContinue parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
+  }
+
+  return toObject;
+}
+
+export function generationConfigFromMldev(
+  fromObject: types.GenerationConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromResponseJsonSchema = common.getValueByPath(fromObject, [
+    'responseJsonSchema',
+  ]);
+  if (fromResponseJsonSchema != null) {
+    common.setValueByPath(
+      toObject,
+      ['responseJsonSchema'],
+      t.tJsonSchema(fromResponseJsonSchema),
+    );
+  }
+
+  const fromAudioTranscriptionConfig = common.getValueByPath(fromObject, [
+    'audioTranscriptionConfig',
+  ]);
+  if (fromAudioTranscriptionConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['audioTranscriptionConfig'],
+      fromAudioTranscriptionConfig,
+    );
+  }
+
+  const fromCandidateCount = common.getValueByPath(fromObject, [
+    'candidateCount',
+  ]);
+  if (fromCandidateCount != null) {
+    common.setValueByPath(toObject, ['candidateCount'], fromCandidateCount);
+  }
+
+  const fromEnableAffectiveDialog = common.getValueByPath(fromObject, [
+    'enableAffectiveDialog',
+  ]);
+  if (fromEnableAffectiveDialog != null) {
+    common.setValueByPath(
+      toObject,
+      ['enableAffectiveDialog'],
+      fromEnableAffectiveDialog,
+    );
+  }
+
+  const fromFrequencyPenalty = common.getValueByPath(fromObject, [
+    'frequencyPenalty',
+  ]);
+  if (fromFrequencyPenalty != null) {
+    common.setValueByPath(toObject, ['frequencyPenalty'], fromFrequencyPenalty);
+  }
+
+  const fromLogprobs = common.getValueByPath(fromObject, ['logprobs']);
+  if (fromLogprobs != null) {
+    common.setValueByPath(toObject, ['logprobs'], fromLogprobs);
+  }
+
+  const fromMaxOutputTokens = common.getValueByPath(fromObject, [
+    'maxOutputTokens',
+  ]);
+  if (fromMaxOutputTokens != null) {
+    common.setValueByPath(toObject, ['maxOutputTokens'], fromMaxOutputTokens);
+  }
+
+  const fromMediaResolution = common.getValueByPath(fromObject, [
+    'mediaResolution',
+  ]);
+  if (fromMediaResolution != null) {
+    common.setValueByPath(toObject, ['mediaResolution'], fromMediaResolution);
+  }
+
+  const fromPresencePenalty = common.getValueByPath(fromObject, [
+    'presencePenalty',
+  ]);
+  if (fromPresencePenalty != null) {
+    common.setValueByPath(toObject, ['presencePenalty'], fromPresencePenalty);
+  }
+
+  const fromResponseFormat = common.getValueByPath(fromObject, [
+    'responseFormat',
+  ]);
+  if (fromResponseFormat != null) {
+    let transformedList = fromResponseFormat;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return item;
+      });
+    }
+    common.setValueByPath(toObject, ['responseFormat'], transformedList);
+  }
+
+  const fromResponseLogprobs = common.getValueByPath(fromObject, [
+    'responseLogprobs',
+  ]);
+  if (fromResponseLogprobs != null) {
+    common.setValueByPath(toObject, ['responseLogprobs'], fromResponseLogprobs);
+  }
+
+  const fromResponseMimeType = common.getValueByPath(fromObject, [
+    'responseMimeType',
+  ]);
+  if (fromResponseMimeType != null) {
+    common.setValueByPath(toObject, ['responseMimeType'], fromResponseMimeType);
+  }
+
+  const fromResponseModalities = common.getValueByPath(fromObject, [
+    'responseModalities',
+  ]);
+  if (fromResponseModalities != null) {
+    common.setValueByPath(
+      toObject,
+      ['responseModalities'],
+      fromResponseModalities,
+    );
+  }
+
+  const fromResponseSchema = common.getValueByPath(fromObject, [
+    'responseSchema',
+  ]);
+  if (fromResponseSchema != null) {
+    common.setValueByPath(toObject, ['responseSchema'], fromResponseSchema);
+  }
+
+  const fromSeed = common.getValueByPath(fromObject, ['seed']);
+  if (fromSeed != null) {
+    common.setValueByPath(toObject, ['seed'], fromSeed);
+  }
+
+  const fromSpeechConfig = common.getValueByPath(fromObject, ['speechConfig']);
+  if (fromSpeechConfig != null) {
+    common.setValueByPath(toObject, ['speechConfig'], fromSpeechConfig);
+  }
+
+  const fromStopSequences = common.getValueByPath(fromObject, [
+    'stopSequences',
+  ]);
+  if (fromStopSequences != null) {
+    common.setValueByPath(toObject, ['stopSequences'], fromStopSequences);
+  }
+
+  const fromTemperature = common.getValueByPath(fromObject, ['temperature']);
+  if (fromTemperature != null) {
+    common.setValueByPath(toObject, ['temperature'], fromTemperature);
+  }
+
+  const fromThinkingConfig = common.getValueByPath(fromObject, [
+    'thinkingConfig',
+  ]);
+  if (fromThinkingConfig != null) {
+    common.setValueByPath(toObject, ['thinkingConfig'], fromThinkingConfig);
+  }
+
+  const fromTopK = common.getValueByPath(fromObject, ['topK']);
+  if (fromTopK != null) {
+    common.setValueByPath(toObject, ['topK'], fromTopK);
+  }
+
+  const fromTopP = common.getValueByPath(fromObject, ['topP']);
+  if (fromTopP != null) {
+    common.setValueByPath(toObject, ['topP'], fromTopP);
+  }
+
+  const fromEnableEnhancedCivicAnswers = common.getValueByPath(fromObject, [
+    'enableEnhancedCivicAnswers',
+  ]);
+  if (fromEnableEnhancedCivicAnswers != null) {
+    common.setValueByPath(
+      toObject,
+      ['enableEnhancedCivicAnswers'],
+      fromEnableEnhancedCivicAnswers,
+    );
+  }
+
+  const fromTranslationConfig = common.getValueByPath(fromObject, [
+    'translationConfig',
+  ]);
+  if (fromTranslationConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['translationConfig'],
+      fromTranslationConfig,
     );
   }
 
