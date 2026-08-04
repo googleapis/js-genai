@@ -101,7 +101,6 @@ import type { SafetySetting as SafetySetting$Import } from "./models/interaction
 import type { SessionConfig as SessionConfig$Import } from "./models/interactions/session-config.js";
 import type { Source as Source$Import } from "./models/interactions/source.js";
 import type { SpeechConfig as SpeechConfig$Import } from "./models/interactions/speech-config.js";
-import type { Status as Status$Import } from "./models/interactions/status.js";
 import type { StepDeltaMetadata as StepDeltaMetadata$Import } from "./models/interactions/step-delta-metadata.js";
 import type { StepDelta as StepDelta$Import } from "./models/interactions/step-delta.js";
 import type { StepStart as StepStart$Import } from "./models/interactions/step-start.js";
@@ -208,6 +207,7 @@ type DeepResearchAgentConfig$ = DeepResearchAgentConfig$Import;
 type DocumentContent$ = DocumentContent$Import;
 type DynamicAgentConfig$ = DynamicAgentConfig$Import;
 type Environment$2 = Environment$Import2;
+type Error$ = ErrorT$Import;
 type ErrorEvent$ = ErrorEvent$Import;
 type FileCitation$ = FileCitation$Import;
 type FileSearchCallStep$ = FileSearchCallStep$Import;
@@ -286,7 +286,7 @@ type SourceFile$ = FileContent$Import;
 type SourceFile$2 = FileContent$Import;
 type Allowlist$3 = Allowlist$Import;
 type Source$ = Source$Import;
-type Error$ = ErrorT$Import;
+type Error$2 = ErrorT$Import;
 type Arguments$2 = GoogleMapsCallArguments$Import;
 type Place$ = GoogleMapsResultPlaces$Import;
 type ReviewSnippet$ = ReviewSnippet$Import;
@@ -295,8 +295,6 @@ type Place$2 = GoogleMapsResultPlaces$Import;
 type ReviewSnippet$2 = ReviewSnippet$Import;
 type Arguments$3 = GoogleSearchCallArguments$Import;
 type Result$2 = GoogleSearchResult$Import;
-type Error$2 = ErrorT$Import;
-type Error$3 = Status$Import;
 type ReviewSnippet$3 = ReviewSnippet$Import;
 type Arguments$4 = RetrievalCallArguments$Import;
 type ArgumentsDelta$ = ArgumentsDelta$Import;
@@ -595,6 +593,7 @@ export declare namespace Interactions {
   export type DocumentContent = DocumentContent$;
   export type DynamicAgentConfig = DynamicAgentConfig$;
   export interface Environment extends Environment$2 {}
+  export type Error = Error$;
   export interface ErrorEvent extends ErrorEvent$ {}
   export type FileCitation = FileCitation$;
   export type FileSearchCallStep = FileSearchCallStep$;
@@ -615,7 +614,7 @@ export declare namespace Interactions {
   export type ImageConfig = ImageConfig$;
   export type ImageContent = ImageContent$;
   export type ImageResponseFormat = ImageResponseFormat$;
-  export interface Interaction extends Interaction$ {}
+  export type Interaction = Interaction$;
   export type InteractionCancelParams = InteractionCancelParams$;
   export type InteractionCompletedEvent = InteractionCompletedEvent$;
   export type InteractionCreatedEvent = InteractionCreatedEvent$;
@@ -631,7 +630,7 @@ export declare namespace Interactions {
   export type MCPServerToolCallStep = MCPServerToolCallStep$;
   export type MCPServerToolResultStep = MCPServerToolResultStep$;
   export type Model = Model$;
-  export interface ModelOutputStep extends ModelOutputStep$ {}
+  export type ModelOutputStep = ModelOutputStep$;
   export interface PlaceCitation extends PlaceCitation$ {}
   export type RetrievalCallArguments = RetrievalCallArguments$;
   export interface RetrievalCallDelta extends RetrievalCallDelta$ {}
@@ -681,7 +680,7 @@ export declare namespace Interactions {
     export type Source = Source$;
   }
   export namespace ErrorEvent {
-    export type Error = Error$;
+    export type Error = Error$2;
   }
   export namespace GoogleMapsCallStep {
     export type Arguments = Arguments$2;
@@ -707,16 +706,10 @@ export declare namespace Interactions {
   export namespace GoogleSearchResultStep {
     export type Result = Result$2;
   }
-  export namespace Interaction {
-    export type Error = Error$2;
-  }
   export namespace InteractionGetParams {
     export type InteractionGetParamsNonStreaming =
       InteractionGetParamsNonStreaming$2;
     export type InteractionGetParamsStreaming = InteractionGetParamsStreaming$2;
-  }
-  export namespace ModelOutputStep {
-    export type Error = Error$3;
   }
   export namespace PlaceCitation {
     export type ReviewSnippet = ReviewSnippet$3;
