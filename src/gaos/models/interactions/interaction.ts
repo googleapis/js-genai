@@ -17,6 +17,7 @@ import { CodeMenderAgentConfig } from "./code-mender-agent-config.js";
 import { DeepResearchAgentConfig } from "./deep-research-agent-config.js";
 import { DynamicAgentConfig } from "./dynamic-agent-config.js";
 import { Environment } from "./environment.js";
+import { ErrorT } from "./error.js";
 import { GenerationConfig } from "./generation-config.js";
 import { ImageContent } from "./image-content.js";
 import { InteractionsInput } from "./interactions-input.js";
@@ -106,6 +107,10 @@ export type Interaction = {
    * A list of tool declarations the model may call during interaction.
    */
   tools?: Array<Tool> | undefined;
+  /**
+   * Output only. Diagnostic faults / platform errors recorded on the interaction.
+   */
+  errors?: Array<ErrorT> | undefined;
   /**
    * Statistics on the interaction request's token usage.
    */

@@ -295,7 +295,8 @@ type Place$2 = GoogleMapsResultPlaces$Import;
 type ReviewSnippet$2 = ReviewSnippet$Import;
 type Arguments$3 = GoogleSearchCallArguments$Import;
 type Result$2 = GoogleSearchResult$Import;
-type Error$2 = Status$Import;
+type Error$2 = ErrorT$Import;
+type Error$3 = Status$Import;
 type ReviewSnippet$3 = ReviewSnippet$Import;
 type Arguments$4 = RetrievalCallArguments$Import;
 type ArgumentsDelta$ = ArgumentsDelta$Import;
@@ -614,7 +615,7 @@ export declare namespace Interactions {
   export type ImageConfig = ImageConfig$;
   export type ImageContent = ImageContent$;
   export type ImageResponseFormat = ImageResponseFormat$;
-  export type Interaction = Interaction$;
+  export interface Interaction extends Interaction$ {}
   export type InteractionCancelParams = InteractionCancelParams$;
   export type InteractionCompletedEvent = InteractionCompletedEvent$;
   export type InteractionCreatedEvent = InteractionCreatedEvent$;
@@ -706,13 +707,16 @@ export declare namespace Interactions {
   export namespace GoogleSearchResultStep {
     export type Result = Result$2;
   }
+  export namespace Interaction {
+    export type Error = Error$2;
+  }
   export namespace InteractionGetParams {
     export type InteractionGetParamsNonStreaming =
       InteractionGetParamsNonStreaming$2;
     export type InteractionGetParamsStreaming = InteractionGetParamsStreaming$2;
   }
   export namespace ModelOutputStep {
-    export type Error = Error$2;
+    export type Error = Error$3;
   }
   export namespace PlaceCitation {
     export type ReviewSnippet = ReviewSnippet$3;
