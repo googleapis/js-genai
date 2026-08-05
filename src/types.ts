@@ -517,6 +517,10 @@ export enum FinishReason {
    */
   UNEXPECTED_TOOL_CALL = 'UNEXPECTED_TOOL_CALL',
   /**
+   * Model called too many tools consecutively, thus the system exited execution.
+   */
+  TOO_MANY_TOOL_CALLS = 'TOO_MANY_TOOL_CALLS',
+  /**
    * Image generation stopped because the generated images have prohibited content.
    */
   IMAGE_PROHIBITED_CONTENT = 'IMAGE_PROHIBITED_CONTENT',
