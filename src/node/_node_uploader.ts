@@ -15,6 +15,7 @@ import {
   MAX_CHUNK_SIZE,
   MAX_RETRY_COUNT,
   X_GOOG_UPLOAD_STATUS_HEADER_FIELD,
+  discardResponseBody,
   getBlobStat,
   sleep,
   uploadBlob,
@@ -301,6 +302,7 @@ export class NodeUploader implements Uploader {
           if (response?.headers?.[X_GOOG_UPLOAD_STATUS_HEADER_FIELD]) {
             break;
           }
+          await discardResponseBody(response);
           retryCount++;
           await sleep(currentDelayMs);
           currentDelayMs = currentDelayMs * DELAY_MULTIPLIER;
@@ -318,6 +320,7 @@ export class NodeUploader implements Uploader {
             'All content has been uploaded, but the upload status is not finalized.',
           );
         }
+        await discardResponseBody(response);
       }
       return response;
     } finally {
