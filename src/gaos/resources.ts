@@ -117,6 +117,9 @@ import type { ThoughtStep as ThoughtStep$Import } from "./models/interactions/th
 import type { ThoughtSummaryDelta as ThoughtSummaryDelta$Import } from "./models/interactions/thought-summary-delta.js";
 import type { ToolChoiceConfig as ToolChoiceConfig$Import } from "./models/interactions/tool-choice-config.js";
 import type { ToolChoiceType as ToolChoiceType$Import } from "./models/interactions/tool-choice-type.js";
+import type { ToolSearchCallDelta as ToolSearchCallDelta$Import } from "./models/interactions/tool-search-call-delta.js";
+import type { ToolSearchResultDelta as ToolSearchResultDelta$Import } from "./models/interactions/tool-search-result-delta.js";
+import type { ToolSearch as ToolSearch$Import } from "./models/interactions/tool-search.js";
 import type { Tool as Tool$Import } from "./models/interactions/tool.js";
 import type { TranscriptionConfig as TranscriptionConfig$Import } from "./models/interactions/transcription-config.js";
 import type { URLCitation as URLCitation$Import } from "./models/interactions/url-citation.js";
@@ -318,6 +321,8 @@ type Text$ = TextDelta$Import;
 type TextAnnotationDelta$ = TextAnnotationDelta$Import;
 type ThoughtSignature$ = ThoughtSignatureDelta$Import;
 type ThoughtSummary$ = ThoughtSummaryDelta$Import;
+type ToolSearchCall$ = ToolSearchCallDelta$Import;
+type ToolSearchResult$ = ToolSearchResultDelta$Import;
 type URLContextCall$ = URLContextCallDelta$Import;
 type URLContextResult$2 = URLContextResultDelta$Import;
 type Video$ = VideoDelta$Import;
@@ -328,6 +333,7 @@ type GoogleMaps$ = GoogleMaps$Import;
 type GoogleSearch$ = GoogleSearch$Import;
 type MCPServer$ = MCPServer$Import;
 type Retrieval$ = Retrieval$Import;
+type ToolSearch$ = ToolSearch$Import;
 type URLContext$ = URLContext$Import;
 type VertexAISearchConfig$ = VertexAISearchConfig$Import;
 type Arguments$5 = URLContextCallArguments$Import;
@@ -504,6 +510,9 @@ export type ThoughtSummary = ThoughtSummary$;
 export type Tool = Tool$;
 export type ToolChoiceConfig = ToolChoiceConfig$;
 export type ToolChoiceType = ToolChoiceType$;
+export type ToolSearch = ToolSearch$;
+export type ToolSearchCall = ToolSearchCall$;
+export type ToolSearchResult = ToolSearchResult$;
 export type ToolUseTokensByModality = ToolUseTokensByModality$;
 export type TranscriptionConfig = TranscriptionConfig$;
 export type Trigger = Trigger$;
@@ -741,6 +750,8 @@ export declare namespace Interactions {
     export type TextAnnotationDelta = TextAnnotationDelta$;
     export type ThoughtSignature = ThoughtSignature$;
     export type ThoughtSummary = ThoughtSummary$;
+    export type ToolSearchCall = ToolSearchCall$;
+    export type ToolSearchResult = ToolSearchResult$;
     export type URLContextCall = URLContextCall$;
     export type URLContextResult = URLContextResult$2;
     export type Video = Video$;
@@ -753,6 +764,7 @@ export declare namespace Interactions {
     export type GoogleSearch = GoogleSearch$;
     export type MCPServer = MCPServer$;
     export interface Retrieval extends Retrieval$ {}
+    export type ToolSearch = ToolSearch$;
     export type URLContext = URLContext$;
     export namespace Retrieval {
       export type VertexAISearchConfig = VertexAISearchConfig$;
