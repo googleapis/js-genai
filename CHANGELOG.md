@@ -2,6 +2,21 @@
 
 
 
+## [2.16.0](https://github.com/googleapis/js-genai/compare/v2.15.0...v2.16.0) (2026-08-06)
+
+
+### Features
+
+* Add the Gemini Robotics ER 2 Preview model ([5647ced](https://github.com/googleapis/js-genai/commit/5647cedfcf3fc5f862b01fb908d6aae267d8bb91))
+* Add TOO_MANY_TOOL_CALLS to FinishReason enum. ([a7fa568](https://github.com/googleapis/js-genai/commit/a7fa5683bc86a3edce347f6259fca8face0df3a4))
+* Add top-level errors array to Interaction resource (iAPI) ([b9dfd81](https://github.com/googleapis/js-genai/commit/b9dfd814a16ae985685ebcf5cb99a82625167142))
+* Make HttpOptions.timeout a per-attempt deadline in the JS GenAI SDK. ([8268806](https://github.com/googleapis/js-genai/commit/8268806b3090834870ca6b901bdf289415425bac))
+
+
+### Bug Fixes
+
+* Add propertyOrdering auto-population for ResponseSchema and ResponseJsonSchema for Dotnet SDK ([e26542f](https://github.com/googleapis/js-genai/commit/e26542fc58f832e0b88affab5c266fd0c469d01c))
+
 ## [2.15.0](https://github.com/googleapis/js-genai/compare/v2.14.0...v2.15.0) (2026-07-30)
 
 
