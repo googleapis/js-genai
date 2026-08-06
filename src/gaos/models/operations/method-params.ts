@@ -29,6 +29,7 @@ import type { GetTriggerRequest } from "./get-trigger.js";
 import type { GetWebhookRequest } from "./get-webhook.js";
 import type { ListAgentsRequest } from "./list-agents.js";
 import type { ListEnvironmentsRequest } from "./list-environments.js";
+import type { ListInteractionsRequest } from "./list-interactions.js";
 import type { ListTriggerExecutionsRequest } from "./list-trigger-executions.js";
 import type { ListTriggersRequest } from "./list-triggers.js";
 import type { ListWebhooksRequest } from "./list-webhooks.js";
@@ -172,6 +173,8 @@ export type GetWebhookParams = Omit<
 export type ListAgentsParams = ListAgentsRequest;
 
 export type ListEnvironmentsParams = ListEnvironmentsRequest;
+
+export type ListInteractionsParams = ListInteractionsRequest;
 
 export type ListTriggerExecutionsParams = Omit<
   ListTriggerExecutionsRequest,

@@ -251,6 +251,27 @@ describe('Interactions resource', () => {
       const [request2] = fetchSpy.calls.first().args as [Request];
       expect(request2.headers.get('x-goog-api-key')).toBe('some-manual-key');
     });
+
+    it('should send requests to list interactions with client auth headers', async () => {
+      parentClient.getAuthHeaders.and.callFake(
+        () => new Headers([['Authorization', 'Bearer my-access-token']]),
+      );
+      await interactions.list({
+        page_size: 10,
+        page_token: 'token-123',
+      });
+
+      expect(fetchSpy).toHaveBeenCalled();
+      const [request] = fetchSpy.calls.first().args as [Request];
+      expect(request.url).toBe(
+        'https://my.base.host/somev1/projects/my-project/locations/my-location/interactions:list?page_size=10&page_token=token-123',
+      );
+      expect(request.method.toLowerCase()).toEqual('get');
+      expect(parentClient.getAuthHeaders).toHaveBeenCalled();
+      expect(request.headers.get('Authorization')).toBe(
+        'Bearer my-access-token',
+      );
+    });
   });
 
   describe('streaming regression', () => {

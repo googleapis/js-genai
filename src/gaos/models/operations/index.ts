@@ -28,6 +28,7 @@ export * from "./get-trigger.js";
 export * from "./get-webhook.js";
 export * from "./list-agents.js";
 export * from "./list-environments.js";
+export * from "./list-interactions.js";
 export * from "./list-trigger-executions.js";
 export * from "./list-triggers.js";
 export * from "./list-webhooks.js";
