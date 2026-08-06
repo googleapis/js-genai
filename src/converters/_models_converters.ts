@@ -1668,7 +1668,7 @@ export function generateContentConfigToMldev(
     common.setValueByPath(
       toObject,
       ['responseJsonSchema'],
-      fromResponseJsonSchema,
+      t.tJsonSchema(fromResponseJsonSchema),
     );
   }
 
@@ -1932,7 +1932,7 @@ export function generateContentConfigToVertex(
     common.setValueByPath(
       toObject,
       ['responseJsonSchema'],
-      fromResponseJsonSchema,
+      t.tJsonSchema(fromResponseJsonSchema),
     );
   }
 
@@ -3614,7 +3614,7 @@ export function generationConfigToVertex(
     common.setValueByPath(
       toObject,
       ['responseJsonSchema'],
-      fromResponseJsonSchema,
+      t.tJsonSchema(fromResponseJsonSchema),
     );
   }
 

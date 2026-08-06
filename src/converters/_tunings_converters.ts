@@ -1157,7 +1157,7 @@ export function generationConfigFromVertex(
     common.setValueByPath(
       toObject,
       ['responseJsonSchema'],
-      fromResponseJsonSchema,
+      t.tJsonSchema(fromResponseJsonSchema),
     );
   }
 
