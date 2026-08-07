@@ -2,6 +2,14 @@
 
 
 
+## [2.17.0](https://github.com/googleapis/js-genai/compare/v2.16.0...v2.17.0) (2026-08-07)
+
+
+### Features
+
+* Add interaction_status to LiveServerContent ([4489991](https://github.com/googleapis/js-genai/commit/4489991a7c40b22dff75348748048b0b14ac687e))
+* **api:** make the deferred service tier publicly available on Vertex ([9dafee9](https://github.com/googleapis/js-genai/commit/9dafee9cd0f6089221bce5269dbd53fe7fa69806))
+
 ## [2.16.0](https://github.com/googleapis/js-genai/compare/v2.15.0...v2.16.0) (2026-08-06)
 
 
