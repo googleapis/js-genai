@@ -4983,17 +4983,8 @@ export declare interface GenerateVideosParameters {
   /** ID of the model to use. For a list of models, see `Google models
     <https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models>`_. */
   model: string;
-  /** The text prompt for generating the videos.
-      Optional if image or video is provided. */
-  prompt?: string;
-  /** The input image for generating the videos.
-      Optional if prompt is provided. Not allowed if video is provided. */
-  image?: Image;
-  /** The input video for video extension use cases.
-      Optional if prompt is provided. Not allowed if image is provided. */
-  video?: Video;
   /** A set of source input(s) for video generation. */
-  source?: GenerateVideosSource;
+  source: GenerateVideosSource;
   /** Configuration for generating videos. */
   config?: GenerateVideosConfig;
 }

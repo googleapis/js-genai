@@ -3208,29 +3208,6 @@ export function generateVideosParametersToMldev(
     );
   }
 
-  const fromPrompt = common.getValueByPath(fromObject, ['prompt']);
-  if (fromPrompt != null) {
-    common.setValueByPath(toObject, ['instances[0]', 'prompt'], fromPrompt);
-  }
-
-  const fromImage = common.getValueByPath(fromObject, ['image']);
-  if (fromImage != null) {
-    common.setValueByPath(
-      toObject,
-      ['instances[0]', 'image'],
-      imageToMldev(fromImage, rootObject),
-    );
-  }
-
-  const fromVideo = common.getValueByPath(fromObject, ['video']);
-  if (fromVideo != null) {
-    common.setValueByPath(
-      toObject,
-      ['instances[0]', 'video'],
-      videoToMldev(fromVideo, rootObject),
-    );
-  }
-
   const fromSource = common.getValueByPath(fromObject, ['source']);
   if (fromSource != null) {
     generateVideosSourceToMldev(fromSource, toObject, rootObject);
@@ -3257,29 +3234,6 @@ export function generateVideosParametersToVertex(
       toObject,
       ['_url', 'model'],
       t.tModel(apiClient, fromModel),
-    );
-  }
-
-  const fromPrompt = common.getValueByPath(fromObject, ['prompt']);
-  if (fromPrompt != null) {
-    common.setValueByPath(toObject, ['instances[0]', 'prompt'], fromPrompt);
-  }
-
-  const fromImage = common.getValueByPath(fromObject, ['image']);
-  if (fromImage != null) {
-    common.setValueByPath(
-      toObject,
-      ['instances[0]', 'image'],
-      imageToVertex(fromImage, rootObject),
-    );
-  }
-
-  const fromVideo = common.getValueByPath(fromObject, ['video']);
-  if (fromVideo != null) {
-    common.setValueByPath(
-      toObject,
-      ['instances[0]', 'video'],
-      videoToVertex(fromVideo, rootObject),
     );
   }
 

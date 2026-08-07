@@ -671,30 +671,12 @@ export class Models extends BaseModule {
   generateVideos = async (
     params: types.GenerateVideosParameters,
   ): Promise<types.GenerateVideosOperation> => {
-    if ((params.prompt || params.image || params.video) && params.source) {
-      throw new Error(
-        'Source and prompt/image/video are mutually exclusive. Please only use source.',
-      );
-    }
-    if (params.prompt || params.image || params.video) {
-      if (!Models.loggedGenerateVideosWarning) {
-        Models.loggedGenerateVideosWarning = true;
-        console.warn(
-          'The generateVideos method with prompt/image/video arguments is deprecated and will be removed in a future major release (not before 2026-07-31). Please use the source argument instead.',
-        );
-      }
+    if (!params.source) {
+      throw new Error('source is required.');
     }
     // Gemini API does not support video bytes.
     if (!this.apiClient.isVertexAI()) {
-      if (params.video?.uri && params.video?.videoBytes) {
-        params.video = {
-          uri: params.video.uri,
-          mimeType: params.video.mimeType,
-        };
-      } else if (
-        params.source?.video?.uri &&
-        params.source?.video?.videoBytes
-      ) {
+      if (params.source.video?.uri && params.source.video?.videoBytes) {
         params.source.video = {
           uri: params.source.video.uri,
           mimeType: params.source.video.mimeType,
