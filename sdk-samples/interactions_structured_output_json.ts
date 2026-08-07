@@ -15,8 +15,11 @@ async function createInteractionsFromMLDev() {
   const response = await ai.interactions.create({
     model: 'gemini-2.5-flash',
     input: 'Which are the colors of a rainbow',
-    response_mime_type: 'application/json',
-    response_format: {type: 'array', description: 'A list of colors'},
+    response_format: {
+      type: 'text',
+      mime_type: 'application/json',
+      schema: {type: 'array', description: 'A list of colors'},
+    },
   });
 
   console.debug(response);
