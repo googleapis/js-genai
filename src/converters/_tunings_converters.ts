@@ -70,31 +70,6 @@ export function cancelTuningJobResponseFromVertex(
   return toObject;
 }
 
-export function codeExecutionResultToVertex(
-  fromObject: types.CodeExecutionResult,
-  _rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromOutcome = common.getValueByPath(fromObject, ['outcome']);
-  if (fromOutcome != null) {
-    common.setValueByPath(toObject, ['outcome'], fromOutcome);
-  }
-
-  const fromOutput = common.getValueByPath(fromObject, ['output']);
-  if (fromOutput != null) {
-    common.setValueByPath(toObject, ['output'], fromOutput);
-  }
-
-  if (common.getValueByPath(fromObject, ['id']) !== undefined) {
-    throw new Error(
-      'id parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
-    );
-  }
-
-  return toObject;
-}
-
 export function contentToVertex(
   fromObject: types.Content,
   rootObject?: unknown,
@@ -1108,31 +1083,6 @@ export function distillationSpecFromVertex(
   return toObject;
 }
 
-export function executableCodeToVertex(
-  fromObject: types.ExecutableCode,
-  _rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromCode = common.getValueByPath(fromObject, ['code']);
-  if (fromCode != null) {
-    common.setValueByPath(toObject, ['code'], fromCode);
-  }
-
-  const fromLanguage = common.getValueByPath(fromObject, ['language']);
-  if (fromLanguage != null) {
-    common.setValueByPath(toObject, ['language'], fromLanguage);
-  }
-
-  if (common.getValueByPath(fromObject, ['id']) !== undefined) {
-    throw new Error(
-      'id parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
-    );
-  }
-
-  return toObject;
-}
-
 export function generationConfigFromVertex(
   fromObject: types.GenerationConfig,
   _rootObject?: unknown,
@@ -1427,7 +1377,7 @@ export function listTuningJobsResponseFromVertex(
 
 export function partToVertex(
   fromObject: types.Part,
-  rootObject?: unknown,
+  _rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1468,7 +1418,7 @@ export function partToVertex(
     common.setValueByPath(
       toObject,
       ['codeExecutionResult'],
-      codeExecutionResultToVertex(fromCodeExecutionResult, rootObject),
+      fromCodeExecutionResult,
     );
   }
 
@@ -1476,11 +1426,7 @@ export function partToVertex(
     'executableCode',
   ]);
   if (fromExecutableCode != null) {
-    common.setValueByPath(
-      toObject,
-      ['executableCode'],
-      executableCodeToVertex(fromExecutableCode, rootObject),
-    );
+    common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
   }
 
   const fromFileData = common.getValueByPath(fromObject, ['fileData']);
