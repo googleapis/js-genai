@@ -211,8 +211,8 @@ export class Live {
         void handleWebSocketMessage(
           apiClient,
           (msg: types.LiveServerMessage) => {
-            if (msg.setupComplete && !session.setupComplete) {
-              session.setupComplete = msg.setupComplete;
+            if (msg['setupComplete'] && !session.setupComplete) {
+              session.setupComplete = msg['setupComplete'];
               setupCompleteResolve({});
             }
             if (sessionResolved) {
