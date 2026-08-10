@@ -113,6 +113,7 @@ export * from "./safety-setting.js";
 export * from "./service-tier.js";
 export * from "./session-config.js";
 export * from "./source.js";
+export * from "./speaker-config.js";
 export * from "./speech-config.js";
 export * from "./status.js";
 export * from "./step-delta-data.js";
