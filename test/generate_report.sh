@@ -34,6 +34,8 @@ SYSTEM=coverage-system-test
 # Generate the reports for each test suite separately to avoid covering each
 # other.
 tsc
+mkdir -p dist/src/cross/sentencepiece
+cp src/cross/sentencepiece/sentencepiece_model.pb.js dist/src/cross/sentencepiece/
 GOOGLE_API_KEY=googapikey GOOGLE_CLOUD_PROJECT=googcloudproj GOOGLE_CLOUD_LOCATION=googcloudloc
 c8  --exclude="src/private/**" --exclude="dist/src/private/**" --reporter=json --report-dir=./${WORK_DIR}/${UNIT} jasmine dist/test/unit/**/*_test.js dist/test/unit/*_test.js
 c8  --exclude="src/private/**" --exclude="dist/src/private/**" --reporter=json --report-dir=./${WORK_DIR}/${SYSTEM} jasmine dist/test/system/node/*_test.js -- --test-server
