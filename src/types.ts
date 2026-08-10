@@ -4698,7 +4698,7 @@ export class VideoResponseFormat {
   aspectRatio?: AspectRatio;
   /** Optional. Delivery mode for the generated content. */
   delivery?: Delivery;
-  /** Optional. The duration for the video output. */
+  /** Optional. The duration for the video output, e.g. "10s". */
   duration?: string;
   /** Optional. The Google Cloud Storage URI to store the video output. Required for Vertex if delivery is URI. */
   gcsUri?: string;

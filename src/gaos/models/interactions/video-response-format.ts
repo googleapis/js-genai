@@ -33,7 +33,7 @@ export type VideoResponseFormat = {
    */
   delivery?: VideoResponseFormatDelivery | undefined;
   /**
-   * The duration for the video output.
+   * The duration for the video output, e.g. "10s".
    */
   duration?: string | undefined;
   /**
