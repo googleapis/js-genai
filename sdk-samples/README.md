@@ -46,7 +46,6 @@ Now you can run the compiled samples, e.g:
 node build/generate_content_with_text.js
 ```
 
-
 ## Test Run all samples
 
 To run all samples (compiled):
@@ -57,6 +56,7 @@ bash run_samples.sh
 ```
 
 This script will:
+
 1. Generate a list of all built `.js` files in `build/` (excluding `live_server.js`) into `js_files_to_run.txt`.
 2. Execute them sequentially using `node`.
 3. Report any failures.
