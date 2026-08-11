@@ -1618,6 +1618,22 @@ export enum TurnCompleteReason {
   MAX_REGENERATION_REACHED = 'MAX_REGENERATION_REACHED',
 }
 
+/** The different activity states of the live session. */
+export enum InteractionStatus {
+  /**
+   * Unspecified interaction status.
+   */
+  INTERACTION_STATUS_UNSPECIFIED = 'INTERACTION_STATUS_UNSPECIFIED',
+  /**
+   * The server is still actively processing user input or running background reasoning. More model output may follow.
+   */
+  IN_PROGRESS = 'IN_PROGRESS',
+  /**
+   * The server has completed all processing and background reasoning.
+   */
+  REQUIRES_ACTION = 'REQUIRES_ACTION',
+}
+
 /** The type of the VAD signal. */
 export enum VadSignalType {
   /**
@@ -7658,6 +7674,8 @@ export declare interface LiveServerContent {
       it is waiting for more input from the user, e.g. because it expects the
       user to continue talking. */
   waitingForInput?: boolean;
+  /** The current activity status of the live session. Always sent alongside `turn_complete`. */
+  interactionStatus?: InteractionStatus;
 }
 
 /** Request for the client to execute the `function_calls` and return the responses with the matching `id`s. */
