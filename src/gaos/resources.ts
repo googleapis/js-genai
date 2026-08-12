@@ -101,6 +101,7 @@ import type { SafetySetting as SafetySetting$Import } from "./models/interaction
 import type { SessionConfig as SessionConfig$Import } from "./models/interactions/session-config.js";
 import type { Source as Source$Import } from "./models/interactions/source.js";
 import type { SpeechConfig as SpeechConfig$Import } from "./models/interactions/speech-config.js";
+import type { StaticMediaProcessing as StaticMediaProcessing$Import } from "./models/interactions/static-media-processing.js";
 import type { StepDeltaMetadata as StepDeltaMetadata$Import } from "./models/interactions/step-delta-metadata.js";
 import type { StepDelta as StepDelta$Import } from "./models/interactions/step-delta.js";
 import type { StepStart as StepStart$Import } from "./models/interactions/step-start.js";
@@ -336,6 +337,7 @@ type GroundingToolCount$ = GroundingToolCount$Import;
 type InputTokensByModality$ = ModalityTokens$Import;
 type OutputTokensByModality$ = ModalityTokens$Import;
 type ToolUseTokensByModality$ = ModalityTokens$Import;
+type Static$ = StaticMediaProcessing$Import;
 type ListTriggerExecutionsResponse$ = ListTriggerExecutionsResponse$Import;
 type ListTriggersResponse$ = ListTriggersResponse$Import;
 type Trigger$ = Trigger$Import;
@@ -486,6 +488,7 @@ export type SigningSecret = SigningSecret$;
 export type Source = Source$;
 export type SourceFile = SourceFile$;
 export type SpeechConfig = SpeechConfig$;
+export type Static = Static$;
 export type Step = Step$;
 export type StepDelta = StepDelta$;
 export type StepStart = StepStart$;
@@ -657,7 +660,7 @@ export declare namespace Interactions {
   export interface Usage extends Usage$ {}
   export type UserInputStep = UserInputStep$;
   export type VideoConfig = VideoConfig$;
-  export type VideoContent = VideoContent$;
+  export interface VideoContent extends VideoContent$ {}
   export type VideoResponseFormat = VideoResponseFormat$;
   export type WebhookConfig = WebhookConfig$;
   export type WordInfo = WordInfo$;
@@ -767,6 +770,9 @@ export declare namespace Interactions {
     export type InputTokensByModality = InputTokensByModality$;
     export type OutputTokensByModality = OutputTokensByModality$;
     export type ToolUseTokensByModality = ToolUseTokensByModality$;
+  }
+  export namespace VideoContent {
+    export type Static = Static$;
   }
 }
 export declare namespace Triggers {
