@@ -720,7 +720,9 @@ async function main() {
   // Video generation is an async operation
   let operation = await ai.models.generateVideos({
     model: "veo-3.0-fast-generate-001",
-    prompt: "Panning wide shot of a calico kitten sleeping in the sunshine",
+    source: {
+      prompt: "Panning wide shot of a calico kitten sleeping in the sunshine",
+    },
     config: {
       personGeneration: "dont_allow",
       aspectRatio: "16:9",
@@ -732,7 +734,7 @@ async function main() {
   // Poll for completion
   while (!operation.done) {
     await new Promise((resolve) => setTimeout(resolve, 10000)); // Sleep 10s
-    operation = await ai.operations.getVideosOperation({
+    operation = await ai.operations.get({
       operation: operation,
     });
   }

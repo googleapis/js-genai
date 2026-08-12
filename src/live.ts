@@ -198,11 +198,31 @@ export class Live {
     };
 
     const apiClient = this.apiClient;
+    let sessionResolved = false;
+    const messageQueue: types.LiveServerMessage[] = [];
+    let setupCompleteResolve: (value: unknown) => void = () => {};
+    const setupCompletePromise = new Promise((resolve) => {
+      setupCompleteResolve = resolve;
+    });
 
     const websocketCallbacks: WebSocketCallbacks = {
       onopen: onopenAwaitedCallback,
       onmessage: (event: MessageEvent) => {
-        void handleWebSocketMessage(apiClient, callbacks.onmessage, event);
+        void handleWebSocketMessage(
+          apiClient,
+          (msg: types.LiveServerMessage) => {
+            if (msg.setupComplete && !session.setupComplete) {
+              session.setupComplete = msg.setupComplete;
+              setupCompleteResolve({});
+            }
+            if (sessionResolved) {
+              callbacks.onmessage(msg);
+            } else {
+              messageQueue.push(msg);
+            }
+          },
+          event,
+        );
       },
       onerror:
         callbacks?.onerror ??
@@ -254,7 +274,7 @@ export class Live {
     if (params.config?.generationConfig) {
       // Raise deprecation warning for generationConfig.
       console.warn(
-        'Setting `LiveConnectConfig.generation_config` is deprecated, please set the fields on `LiveConnectConfig` directly. This will become an error in a future version (not before Q3 2025).',
+        'Setting `LiveConnectConfig.generation_config` is deprecated, please set the fields on `LiveConnectConfig` directly. It will be removed in the next major version (not before 7/31/2026).',
       );
     }
     const inputTools = params.config?.tools ?? [];
@@ -287,8 +307,14 @@ export class Live {
       );
     }
     delete clientMessage['config'];
+    const session = new Session(conn, this.apiClient);
     conn.send(JSON.stringify(clientMessage));
-    return new Session(conn, this.apiClient);
+    await setupCompletePromise;
+    sessionResolved = true;
+    for (const msg of messageQueue) {
+      callbacks.onmessage(msg);
+    }
+    return session;
   }
 
   // TODO: b/416041229 - Abstract this method to a common place.
@@ -308,6 +334,8 @@ const defaultLiveSendClientContentParamerters: types.LiveSendClientContentParame
    @experimental
   */
 export class Session {
+  setupComplete?: types.LiveServerSetupComplete;
+
   constructor(
     readonly conn: WebSocket,
     private readonly apiClient: ApiClient,
