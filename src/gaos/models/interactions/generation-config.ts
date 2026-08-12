@@ -11,6 +11,7 @@
  */
 
 import { ImageConfig } from "./image-config.js";
+import { SpeakerConfig } from "./speaker-config.js";
 import { SpeechConfig } from "./speech-config.js";
 import { ThinkingLevel } from "./thinking-level.js";
 import { ThinkingSummaries } from "./thinking-summaries.js";
@@ -23,6 +24,11 @@ import { VideoConfig } from "./video-config.js";
  * The tool choice configuration.
  */
 export type ToolChoice = ToolChoiceConfig | ToolChoiceType;
+
+/**
+ * Optional. Speech and multi-speaker configuration.
+ */
+export type SpeechConfigUnion = SpeakerConfig | Array<SpeechConfig>;
 
 /**
  * Configuration parameters for model interactions.
@@ -43,10 +49,6 @@ export type GenerationConfig = {
    */
   seed?: number | undefined;
   /**
-   * Configuration for speech interaction.
-   */
-  speech_config?: Array<SpeechConfig> | undefined;
-  /**
    * A list of character sequences that will stop output interaction.
    */
   stop_sequences?: Array<string> | undefined;
@@ -64,4 +66,8 @@ export type GenerationConfig = {
    * Configuration options for video generation.
    */
   video_config?: VideoConfig | undefined;
+  /**
+   * Optional. Speech and multi-speaker configuration.
+   */
+  speech_config?: SpeakerConfig | Array<SpeechConfig> | undefined;
 };
