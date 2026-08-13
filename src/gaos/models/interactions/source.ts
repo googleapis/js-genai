@@ -33,7 +33,7 @@ export type Source = {
    * The source of the environment.
    *
    * @remarks
-   * For GCS, this is the GCS path.
+   * For Cloud Storage, this is the Cloud Storage path.
    * For GitHub, this is the GitHub path.
    */
   source?: string | undefined;

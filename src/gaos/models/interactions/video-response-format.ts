@@ -37,10 +37,10 @@ export type VideoResponseFormat = {
    */
   duration?: string | undefined;
   /**
-   * The GCS URI to store the video output. Required for Vertex if delivery mode
+   * The Cloud Storage URI to store the video output. Required for Vertex if
    *
    * @remarks
-   * is URI.
+   * delivery mode is URI.
    */
   gcs_uri?: string | undefined;
   type: "video";
