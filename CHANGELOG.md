@@ -7,7 +7,7 @@
 
 ### Bug Fixes
 
-* Add gemini 3.7 ([c495e82](https://github.com/googleapis/js-genai/commit/c495e82719486d90561eeb7dc476b9fbaa26077b))
+* Add gemini-3.7-flash ([c495e82](https://github.com/googleapis/js-genai/commit/c495e82719486d90561eeb7dc476b9fbaa26077b))
 
 ## [2.17.0](https://github.com/googleapis/js-genai/compare/v2.16.0...v2.17.0) (2026-08-12)
 
