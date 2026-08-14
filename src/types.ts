@@ -371,6 +371,10 @@ export enum HarmCategory {
    */
   HARM_CATEGORY_CIVIC_INTEGRITY = 'HARM_CATEGORY_CIVIC_INTEGRITY',
   /**
+   * Prompts designed to bypass safety filters.
+   */
+  HARM_CATEGORY_JAILBREAK = 'HARM_CATEGORY_JAILBREAK',
+  /**
    * Images that contain hate speech. This enum value is not supported in Gemini API.
    */
   HARM_CATEGORY_IMAGE_HATE = 'HARM_CATEGORY_IMAGE_HATE',
@@ -386,10 +390,6 @@ export enum HarmCategory {
    * Images that contain sexually explicit content. This enum value is not supported in Gemini API.
    */
   HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT = 'HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT',
-  /**
-   * Prompts designed to bypass safety filters. This enum value is not supported in Gemini API.
-   */
-  HARM_CATEGORY_JAILBREAK = 'HARM_CATEGORY_JAILBREAK',
 }
 
 /** The method for blocking content. If not specified, the default behavior is to use the probability score. This enum is not supported in Gemini API. */
@@ -1914,7 +1914,7 @@ export declare interface CodeExecutionResult {
   outcome?: Outcome;
   /** Optional. Contains stdout when code execution is successful, stderr or other description otherwise. */
   output?: string;
-  /** Optional. The identifier of the `ExecutableCode` part this result is for. Only populated if the corresponding `ExecutableCode` has an id. This field is not supported in Vertex AI. */
+  /** Optional. The identifier of the `ExecutableCode` part this result is for. Only populated if the corresponding `ExecutableCode` has an id. */
   id?: string;
 }
 
@@ -1924,7 +1924,7 @@ export declare interface ExecutableCode {
   code?: string;
   /** Required. Programming language of the `code`. */
   language?: Language;
-  /** Optional. Unique identifier of the `ExecutableCode` part. The server returns the `CodeExecutionResult` with the matching `id`. This field is not supported in Vertex AI. */
+  /** Optional. Unique identifier of the `ExecutableCode` part. The server returns the `CodeExecutionResult` with the matching `id`. */
   id?: string;
 }
 
@@ -2447,7 +2447,7 @@ export declare interface GoogleMaps {
   authConfig?: AuthConfig;
   /** Deprecated. The Google Maps contextual widget behavior in Grounding with Google Maps is being deprecated; this field is planned for removal and no longer has any effect once removed. Optional. Whether to return a widget context token in the GroundingMetadata of the response. */
   enableWidget?: boolean;
-  /** Optional. Specifies the types of Google Maps grounding to enable. This field is not supported in Gemini API. */
+  /** Optional. Specifies the types of Google Maps grounding to enable. Defaults to `places` when unset. This field is not supported in Gemini API. */
   groundingTypes?: GoogleMapsGroundingTypes;
 }
 
@@ -2725,6 +2725,10 @@ export declare interface ToolParallelAiSearch {
   apiKey?: string;
   /** Optional. Custom configs for ParallelAiSearch. This field can be used to pass any parameter from the Parallel.ai Search API. See the Parallel.ai documentation for the full list of available parameters and their usage: https://docs.parallel.ai/api-reference/search-beta/search Currently only `source_policy`, `excerpts`, `max_results`, `mode`, `fetch_policy` can be set via this field. For example: { "source_policy": { "include_domains": ["google.com", "wikipedia.org"], "exclude_domains": ["example.com"] }, "fetch_policy": { "max_age_seconds": 3600 } } */
   customConfigs?: Record<string, unknown>;
+  /** Optional. Deprecated: Use `enable_zero_data_retention` instead. Instructs Vertex Grounding to use Parallel's Zero Data Retention Marketplace product. If this value is "false" or omitted, the Parallel Web Search for Grounding standard subscription will be used. If this value is "true", the Parallel Web Search for Grounding - ZDR subscription will be used. */
+  enableDataRetention?: boolean;
+  /** Optional. Instructs Vertex Grounding to use Parallel's Zero Data Retention Marketplace product. If this value is "false" or omitted, the Parallel Web Search for Grounding standard subscription will be used. If this value is "true", the Parallel Web Search for Grounding - ZDR subscription will be used. */
+  enableZeroDataRetention?: boolean;
 }
 
 /** Tool to support URL context. */
@@ -4739,7 +4743,7 @@ export declare interface GenerationConfig {
   audioTimestamp?: boolean;
   /** Optional. The number of candidate responses to generate. A higher `candidate_count` can provide more options to choose from, but it also consumes more resources. This can be useful for generating a variety of responses and selecting the best one. */
   candidateCount?: number;
-  /** Optional. If enabled, the model will detect emotions and adapt its responses accordingly. For example, if the model detects that the user is frustrated, it may provide a more empathetic response. This field is not supported in Gemini API. */
+  /** Optional. If enabled, the model will detect emotions and adapt its responses accordingly. For example, if the model detects that the user is frustrated, it may provide a more empathetic response. */
   enableAffectiveDialog?: boolean;
   /** Optional. Penalizes tokens based on their frequency in the generated text. A positive value helps to reduce the repetition of words and phrases. Valid values can range from [-2.0, 2.0]. */
   frequencyPenalty?: number;
@@ -5414,6 +5418,8 @@ export declare interface ReinforcementTuningHyperParameters {
   thinkingBudget?: number;
   /** Indicates the maximum thinking depth during tuning. Starting from Gemini 3.5 models, the old thinking_budget will no longer be supported and will result in a user error if set. Instead, users should use the thinking_level parameter to control the maximum thinking depth. */
   thinkingLevel?: ReinforcementTuningThinkingLevel;
+  /** Optional. Number of steps for the tuning job (mutually exclusive with epoch_count). */
+  stepCount?: string;
 }
 
 /** Reinforcement tuning spec for tuning. */
@@ -8554,6 +8560,12 @@ export declare interface LiveMusicSetWeightedPromptsParameters {
 export declare interface AuthToken {
   /** The name of the auth token. */
   name?: string;
+  /** Optional. Input only. Immutable. An optional time after which, when using the resulting token, messages in BidiGenerateContent sessions will be rejected. (Gemini may preemptively close the session after this time.) If not set then this defaults to 30 minutes in the future. If set, this value must be less than 20 hours in the future. */
+  expireTime?: string;
+  /** Optional. Input only. Immutable. The time after which new Live API sessions using the token resulting from this request will be rejected. If not set this defaults to 60 seconds in the future. If set, this value must be less than 20 hours in the future. */
+  newSessionExpireTime?: string;
+  /** Optional. Input only. Immutable. The number of times the token can be used. If this value is zero then no limit is applied. Resuming a Live API session does not count as a use. If unspecified, the default is 1. */
+  uses?: number;
 }
 
 /** Config for LiveConnectConstraints for Auth Token creation. */
