@@ -119,6 +119,7 @@ import type { ToolChoiceConfig as ToolChoiceConfig$Import } from "./models/inter
 import type { ToolChoiceType as ToolChoiceType$Import } from "./models/interactions/tool-choice-type.js";
 import type { Tool as Tool$Import } from "./models/interactions/tool.js";
 import type { TranscriptionConfig as TranscriptionConfig$Import } from "./models/interactions/transcription-config.js";
+import type { TranscriptionMode as TranscriptionMode$Import } from "./models/interactions/transcription-mode.js";
 import type { URLCitation as URLCitation$Import } from "./models/interactions/url-citation.js";
 import type { URLContextCallArguments as URLContextCallArguments$Import } from "./models/interactions/url-context-call-arguments.js";
 import type { URLContextCallDelta as URLContextCallDelta$Import } from "./models/interactions/url-context-call-delta.js";
@@ -267,6 +268,7 @@ type Tool$ = Tool$Import;
 type ToolChoiceConfig$ = ToolChoiceConfig$Import;
 type ToolChoiceType$ = ToolChoiceType$Import;
 type TranscriptionConfig$ = TranscriptionConfig$Import;
+type TranscriptionMode$ = TranscriptionMode$Import;
 type URLCitation$ = URLCitation$Import;
 type URLContextCallArguments$ = URLContextCallArguments$Import;
 type URLContextCallStep$ = URLContextCallStep$Import;
@@ -506,6 +508,7 @@ export type ToolChoiceConfig = ToolChoiceConfig$;
 export type ToolChoiceType = ToolChoiceType$;
 export type ToolUseTokensByModality = ToolUseTokensByModality$;
 export type TranscriptionConfig = TranscriptionConfig$;
+export type TranscriptionMode = TranscriptionMode$;
 export type Trigger = Trigger$;
 export type TriggerCreateParams = TriggerCreateParams$;
 export type TriggerDeleteParams = TriggerDeleteParams$;
@@ -652,6 +655,7 @@ export declare namespace Interactions {
   export type ToolChoiceConfig = ToolChoiceConfig$;
   export type ToolChoiceType = ToolChoiceType$;
   export type TranscriptionConfig = TranscriptionConfig$;
+  export type TranscriptionMode = TranscriptionMode$;
   export type URLCitation = URLCitation$;
   export type URLContextCallArguments = URLContextCallArguments$;
   export interface URLContextCallStep extends URLContextCallStep$ {}
