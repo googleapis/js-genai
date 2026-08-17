@@ -44,9 +44,7 @@ async function recontextImageProductRecontextFromVertexAI() {
 
 async function main() {
   if (GOOGLE_GENAI_USE_VERTEXAI) {
-    await recontextImageProductRecontextFromVertexAI().catch((e) =>
-      console.error('got error', e),
-    );
+    await recontextImageProductRecontextFromVertexAI();
   } else {
     console.error(
       'Product recontext is not supported in Gemini Developer API.',

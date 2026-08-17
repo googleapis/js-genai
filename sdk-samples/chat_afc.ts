@@ -8,8 +8,9 @@ import {Client} from '@modelcontextprotocol/sdk/client/index.js';
 import {InMemoryTransport} from '@modelcontextprotocol/sdk/inMemory.js';
 import {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js';
 import {z} from 'zod';
+import {MODEL_FLASH_LITE} from './constants.js';
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
 const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
@@ -19,7 +20,7 @@ async function chatAutofcSample(ai: GoogleGenAI) {
   const multiplyClient = await spinUpMultiplyServer();
 
   const chat = await ai.chats.create({
-    model: 'gemini-2.5-flash',
+    model: MODEL_FLASH_LITE,
     config: {
       tools: [mcpToTool(weatherClient, multiplyClient)],
       toolConfig: {
@@ -68,7 +69,7 @@ async function spinUpWeatherServer(): Promise<Client> {
     name: 'reporter',
     version: '1.0.0',
   });
-  client.connect(transports[1]);
+  await client.connect(transports[1]);
 
   return client;
 }
@@ -104,7 +105,7 @@ async function spinUpMultiplyServer(): Promise<Client> {
     name: 'multiplier',
     version: '1.0.0',
   });
-  client.connect(transports[1]);
+  await client.connect(transports[1]);
 
   return client;
 }
@@ -121,7 +122,7 @@ async function main() {
     ai = new GoogleGenAI({vertexai: false, apiKey: GEMINI_API_KEY});
   }
 
-  chatAutofcSample(ai);
+  await chatAutofcSample(ai);
 }
 
 main();

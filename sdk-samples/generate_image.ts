@@ -44,11 +44,9 @@ async function generateImagesFromVertexAI() {
 
 async function main() {
   if (GOOGLE_GENAI_USE_VERTEXAI) {
-    await generateImagesFromVertexAI().catch((e) =>
-      console.error('got error', e),
-    );
+    await generateImagesFromVertexAI();
   } else {
-    await generateImagesFromMLDev().catch((e) => console.error('got error', e));
+    await generateImagesFromMLDev();
   }
 }
 
