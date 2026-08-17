@@ -1774,11 +1774,6 @@ export function generateContentConfigToVertex(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromServiceTier = common.getValueByPath(fromObject, ['serviceTier']);
-  if (parentObject !== undefined && fromServiceTier != null) {
-    common.setValueByPath(parentObject, ['serviceTier'], fromServiceTier);
-  }
-
   const fromSystemInstruction = common.getValueByPath(fromObject, [
     'systemInstruction',
   ]);
