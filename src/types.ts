@@ -1629,9 +1629,13 @@ export enum InteractionStatus {
    */
   IN_PROGRESS = 'IN_PROGRESS',
   /**
-   * The server has completed all processing and background reasoning.
+   * Deprecated: Use IDLE instead.
    */
   REQUIRES_ACTION = 'REQUIRES_ACTION',
+  /**
+   * The server has completed all processing and background reasoning.
+   */
+  IDLE = 'IDLE',
 }
 
 /** The type of the VAD signal. */
