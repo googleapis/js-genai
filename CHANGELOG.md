@@ -2,6 +2,21 @@
 
 
 
+## [2.18.0](https://github.com/googleapis/js-genai/compare/v2.17.1...v2.18.0) (2026-08-19)
+
+
+### Features
+
+* Add `mode` enum (`VERBATIM`, `SMART`) to `AudioTranscriptionConfig` and `TranscriptionConfig`. ([4c5208b](https://github.com/googleapis/js-genai/commit/4c5208baa923cecea897b7b4fdc9de5e49555709))
+* Add enable_data_retention to ToolParallelAiSearch, Add step_count to ReinforcementTuningHyperParameters, Add BidiGenerateContentSetup ([f52c208](https://github.com/googleapis/js-genai/commit/f52c20858c1bf6c7892192bc41cfc027d30b57ab))
+* Add IDLE state to live connection status enum and mark REQUIRES_ACTION as deprecated. ([2f110f2](https://github.com/googleapis/js-genai/commit/2f110f23372cf2ea52452fe57ddf3a4e30833857))
+* add video resolution and extension task parameters ([39b2a2d](https://github.com/googleapis/js-genai/commit/39b2a2dea4c5ff75c1754581b213b9d480504e7d))
+
+
+### Bug Fixes
+
+* fix examples ([3f631be](https://github.com/googleapis/js-genai/commit/3f631be857d0faec43012c2510ce17caea5bffe8))
+
 ## [2.17.1](https://github.com/googleapis/js-genai/compare/v2.17.0...v2.17.1) (2026-08-13)
 
 
