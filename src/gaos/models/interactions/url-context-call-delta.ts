@@ -18,6 +18,10 @@ export type URLContextCallDelta = {
    */
   arguments: URLContextCallArguments;
   /**
+   * Required. A unique ID for this specific tool call.
+   */
+  id?: string | undefined;
+  /**
    * A signature hash for backend validation.
    */
   signature?: string | undefined;

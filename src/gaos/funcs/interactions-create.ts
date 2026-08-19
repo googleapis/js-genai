@@ -27,20 +27,17 @@ import {
   UnexpectedClientError,
 } from "../models/errors/http-client-errors.js";
 import * as errors from "../models/errors/index.js";
+import * as interactions from "../models/interactions/index.js";
 import * as operations from "../models/operations/index.js";
 import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Creating an interaction
- *
- * @remarks
- * Creates a new interaction.
+ * Generates a set of responses from the model.
  */
 export function interactionsCreate(
   client: GoogleGenAICore,
-  body: operations.CreateInteractionRequestBody & { stream?: false },
-  api_version?: string | undefined,
+  request: interactions.CreateInteractionRequest & { stream?: false },
   options?: RequestOptions,
 ): APIPromise<
   Result<
@@ -57,8 +54,7 @@ export function interactionsCreate(
 >;
 export function interactionsCreate(
   client: GoogleGenAICore,
-  body: operations.CreateInteractionRequestBody & { stream: true },
-  api_version?: string | undefined,
+  request: interactions.CreateInteractionRequest & { stream: true },
   options?: RequestOptions,
 ): APIPromise<
   Result<
@@ -75,8 +71,7 @@ export function interactionsCreate(
 >;
 export function interactionsCreate(
   client: GoogleGenAICore,
-  body: operations.CreateInteractionRequestBody,
-  api_version?: string | undefined,
+  request: interactions.CreateInteractionRequest,
   options?: RequestOptions,
 ): APIPromise<
   Result<
@@ -93,8 +88,7 @@ export function interactionsCreate(
 >;
 export function interactionsCreate(
   client: GoogleGenAICore,
-  body: operations.CreateInteractionRequestBody,
-  api_version?: string | undefined,
+  request: interactions.CreateInteractionRequest,
   options?: RequestOptions,
 ): APIPromise<
   Result<
@@ -111,16 +105,14 @@ export function interactionsCreate(
 > {
   return new APIPromise($do(
     client,
-    body,
-    api_version,
+    request,
     options,
   ));
 }
 
 async function $do(
   client: GoogleGenAICore,
-  body: operations.CreateInteractionRequestBody,
-  api_version?: string | undefined,
+  request: interactions.CreateInteractionRequest,
   options?: RequestOptions,
 ): Promise<
   [
@@ -138,26 +130,20 @@ async function $do(
     APICall,
   ]
 > {
-  const input: operations.CreateInteractionRequest = {
-    body: body,
-    api_version: api_version,
-  };
-
-  const payload = input;
-  const body$ = encodeJSON("body", payload.body, { explode: true });
+  const payload = request;
+  const body = encodeJSON("body", payload, { explode: true });
 
   const pathParams = {
-    api_version: encodeSimple(
-      "api_version",
-      payload.api_version ?? client._options.api_version,
-      { explode: false, charEncoding: "percent" },
-    ),
+    api_version: encodeSimple("api_version", client._options.api_version, {
+      explode: false,
+      charEncoding: "percent",
+    }),
   };
   const path = pathToFunc("/{api_version}/interactions")(pathParams);
 
   const headers = new Headers(compactMap({
     "Content-Type": "application/json",
-    Accept: input?.body?.stream ? "text/event-stream" : "application/json",
+    Accept: request?.stream ? "text/event-stream" : "application/json",
   }));
 
   const securityInput = await extractSecurity(client._options.security);
@@ -195,7 +181,7 @@ async function $do(
     baseURL: options?.server_url,
     path: path,
     headers: headers,
-    body: body$,
+    body: body,
     userAgent: client._options.user_agent,
     timeout_ms: options?.timeout_ms || client._options.timeout_ms || -1,
   }, options);

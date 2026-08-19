@@ -18,31 +18,14 @@ import { ClientSDK, RequestOptions } from "../lib/sdks.js";
 import * as environments from "../models/environments/index.js";
 import * as interactions from "../models/interactions/index.js";
 import {
-  DeleteEnvironmentParams,
-  GetEnvironmentParams,
+  CreateEnvironmentParams,
   ListEnvironmentsParams,
 } from "../models/operations/method-params.js";
 import { APIPromise, unwrapAsAPIPromise } from "../types/async.js";
 
 export class Environments extends ClientSDK {
   /**
-   * Creates an environment.
-   */
-  createEnvironment(
-    body: environments.CreateEnvironmentRequest,
-    api_version?: string | undefined,
-    options?: RequestOptions,
-  ): APIPromise<environments.Environment> {
-    return unwrapAsAPIPromise(environmentsCreateEnvironment(
-      this,
-      body,
-      api_version,
-      options,
-    ));
-  }
-
-  /**
-   * Lists environments.
+   * Lists environments (HTTP endpoint).
    */
   listEnvironments(
     params?: ListEnvironmentsParams,
@@ -50,7 +33,6 @@ export class Environments extends ClientSDK {
   ): APIPromise<environments.ListEnvironmentsResponse> {
     return unwrapAsAPIPromise(environmentsListEnvironments(
       this,
-      params?.api_version,
       params?.page_size,
       params?.page_token,
       options,
@@ -58,33 +40,43 @@ export class Environments extends ClientSDK {
   }
 
   /**
-   * Gets an environment.
+   * Creates an environment (HTTP endpoint).
    */
-  getEnvironment(
-    id: string,
-    params?: GetEnvironmentParams,
-    options?: Omit<RequestOptions, "extra_body">,
+  createEnvironment(
+    params: CreateEnvironmentParams,
+    options?: RequestOptions,
   ): APIPromise<environments.Environment> {
-    return unwrapAsAPIPromise(environmentsGetEnvironment(
+    return unwrapAsAPIPromise(environmentsCreateEnvironment(
       this,
-      id,
-      params?.api_version,
+      params,
       options,
     ));
   }
 
   /**
-   * Deletes an environment.
+   * Gets an environment (HTTP endpoint).
+   */
+  getEnvironment(
+    id: string,
+    options?: Omit<RequestOptions, "extra_body">,
+  ): APIPromise<environments.Environment> {
+    return unwrapAsAPIPromise(environmentsGetEnvironment(
+      this,
+      id,
+      options,
+    ));
+  }
+
+  /**
+   * Deletes an environment (HTTP endpoint).
    */
   deleteEnvironment(
     id: string,
-    params?: DeleteEnvironmentParams,
     options?: Omit<RequestOptions, "extra_body">,
   ): APIPromise<interactions.Empty> {
     return unwrapAsAPIPromise(environmentsDeleteEnvironment(
       this,
       id,
-      params?.api_version,
       options,
     ));
   }

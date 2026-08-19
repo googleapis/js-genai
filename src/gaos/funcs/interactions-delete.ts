@@ -32,15 +32,11 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Deleting an interaction
- *
- * @remarks
- * Deletes the interaction by id.
+ * Deletes an interaction.
  */
 export function interactionsDelete(
   client: GoogleGenAICore,
   id: string,
-  api_version?: string | undefined,
   options?: Omit<RequestOptions, "extra_body">,
 ): APIPromise<
   Result<
@@ -58,7 +54,6 @@ export function interactionsDelete(
   return new APIPromise($do(
     client,
     id,
-    api_version,
     options,
   ));
 }
@@ -66,7 +61,6 @@ export function interactionsDelete(
 async function $do(
   client: GoogleGenAICore,
   id: string,
-  api_version?: string | undefined,
   options?: Omit<RequestOptions, "extra_body">,
 ): Promise<
   [
@@ -86,24 +80,24 @@ async function $do(
 > {
   const input: operations.DeleteInteractionRequest = {
     id: id,
-    api_version: api_version,
   };
 
   const payload = input;
   const body = null;
 
   const pathParams = {
-    api_version: encodeSimple(
-      "api_version",
-      payload.api_version ?? client._options.api_version,
-      { explode: false, charEncoding: "percent" },
-    ),
-    id: encodeSimple("id", payload.id, {
+    api_version: encodeSimple("api_version", client._options.api_version, {
+      explode: false,
+      charEncoding: "percent",
+    }),
+    interactionsId: encodeSimple("interactionsId", payload.id, {
       explode: false,
       charEncoding: "percent",
     }),
   };
-  const path = pathToFunc("/{api_version}/interactions/{id}")(pathParams);
+  const path = pathToFunc("/{api_version}/interactions/{interactionsId}")(
+    pathParams,
+  );
 
   const headers = new Headers(compactMap({
     Accept: "application/json",

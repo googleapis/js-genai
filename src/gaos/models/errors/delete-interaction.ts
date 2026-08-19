@@ -14,7 +14,7 @@ import * as interactions from "../interactions/index.js";
 import { GoogleGenAiError } from "./google-gen-ai-error.js";
 
 /**
- * Error deleting interaction
+ * Server Error
  */
 export type DeleteInteractionServerErrorData = {
   /**
@@ -24,7 +24,7 @@ export type DeleteInteractionServerErrorData = {
 };
 
 /**
- * Error deleting interaction
+ * Server Error
  */
 export class DeleteInteractionServerError extends GoogleGenAiError {
   /**
@@ -50,7 +50,7 @@ export class DeleteInteractionServerError extends GoogleGenAiError {
 }
 
 /**
- * Error deleting interaction
+ * Client Error
  */
 export type DeleteInteractionClientErrorData = {
   /**
@@ -60,7 +60,7 @@ export type DeleteInteractionClientErrorData = {
 };
 
 /**
- * Error deleting interaction
+ * Client Error
  */
 export class DeleteInteractionClientError extends GoogleGenAiError {
   /**

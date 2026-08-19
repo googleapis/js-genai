@@ -26,6 +26,7 @@ import {
   RequestTimeoutError,
   UnexpectedClientError,
 } from "../models/errors/http-client-errors.js";
+import * as errors from "../models/errors/index.js";
 import * as operations from "../models/operations/index.js";
 import * as triggers from "../models/triggers/index.js";
 import { APICall, APIPromise } from "../types/async.js";
@@ -36,14 +37,16 @@ import { Result } from "../types/fp.js";
  */
 export function triggersList(
   client: GoogleGenAICore,
-  api_version?: string | undefined,
   filter?: string | undefined,
   page_size?: number | undefined,
   page_token?: string | undefined,
+  parent?: string | undefined,
   options?: Omit<RequestOptions, "extra_body">,
 ): APIPromise<
   Result<
     triggers.ListTriggersResponse,
+    | errors.ListTriggersClientError
+    | errors.ListTriggersServerError
     | GoogleGenAiError
     | ConnectionError
     | RequestAbortedError
@@ -54,25 +57,27 @@ export function triggersList(
 > {
   return new APIPromise($do(
     client,
-    api_version,
     filter,
     page_size,
     page_token,
+    parent,
     options,
   ));
 }
 
 async function $do(
   client: GoogleGenAICore,
-  api_version?: string | undefined,
   filter?: string | undefined,
   page_size?: number | undefined,
   page_token?: string | undefined,
+  parent?: string | undefined,
   options?: Omit<RequestOptions, "extra_body">,
 ): Promise<
   [
     Result<
       triggers.ListTriggersResponse,
+      | errors.ListTriggersClientError
+      | errors.ListTriggersServerError
       | GoogleGenAiError
       | ConnectionError
       | RequestAbortedError
@@ -84,21 +89,20 @@ async function $do(
   ]
 > {
   const input: operations.ListTriggersRequest | undefined = {
-    api_version: api_version,
     filter: filter,
     page_size: page_size,
     page_token: page_token,
+    parent: parent,
   };
 
   const payload = input;
   const body = null;
 
   const pathParams = {
-    api_version: encodeSimple(
-      "api_version",
-      payload?.api_version ?? client._options.api_version,
-      { explode: false, charEncoding: "percent" },
-    ),
+    api_version: encodeSimple("api_version", client._options.api_version, {
+      explode: false,
+      charEncoding: "percent",
+    }),
   };
   const path = pathToFunc("/{api_version}/triggers")(pathParams);
 
@@ -106,6 +110,7 @@ async function $do(
     "filter": payload?.filter,
     "page_size": payload?.page_size,
     "page_token": payload?.page_token,
+    "parent": payload?.parent,
   });
 
   const headers = new Headers(compactMap({
@@ -169,8 +174,14 @@ async function $do(
   }
   const response = doResult.value;
 
+  const responseFields = {
+    httpMeta: { response: response, request: req },
+  };
+
   const [result] = await M.match<
     triggers.ListTriggersResponse,
+    | errors.ListTriggersClientError
+    | errors.ListTriggersServerError
     | GoogleGenAiError
     | ConnectionError
     | RequestAbortedError
@@ -178,10 +189,16 @@ async function $do(
     | InvalidRequestError
     | UnexpectedClientError
   >(
-    M.json<triggers.ListTriggersResponse>(200),
-    M.fail("4XX"),
-    M.fail("5XX"),
-  )(response, req);
+    M.jsonErr<errors.ListTriggersClientError>(
+      "4XX",
+      errors.ListTriggersClientError,
+    ),
+    M.jsonErr<errors.ListTriggersServerError>(
+      "5XX",
+      errors.ListTriggersServerError,
+    ),
+    M.json<triggers.ListTriggersResponse>("default"),
+  )(response, req, { extraFields: responseFields });
   if (!result.ok) {
     return [result, { status: "complete", request: req, response }];
   }

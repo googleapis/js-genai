@@ -21,6 +21,7 @@ import { ErrorT } from "./error.js";
 import { GenerationConfig } from "./generation-config.js";
 import { ImageContent } from "./image-content.js";
 import { InteractionsInput } from "./interactions-input.js";
+import { LocalEnvironmentConfig } from "./local-environment-config.js";
 import { Model } from "./model.js";
 import { ResponseFormat } from "./response-format.js";
 import { ResponseModality } from "./response-modality.js";
@@ -31,6 +32,16 @@ import { Tool } from "./tool.js";
 import { Usage } from "./usage.js";
 import { VideoContent } from "./video-content.js";
 import { WebhookConfig } from "./webhook-config.js";
+
+/**
+ * The environment configuration for the interaction.
+ */
+export type InteractionEnvironment =
+  | Environment
+  | LocalEnvironmentConfig
+  | string;
+
+export type InteractionResponseFormat = ResponseFormat | Array<ResponseFormat>;
 
 /**
  * Required. Output only. The status of the interaction.
@@ -47,58 +58,78 @@ export type InteractionStatus =
   | (string & {});
 
 /**
- * Enforces that the generated response is a JSON object that complies with the JSON schema specified in this field.
- */
-export type InteractionResponseFormat = Array<ResponseFormat> | ResponseFormat;
-
-/**
- * The environment configuration for the interaction. Can be an object specifying remote environment sources or a string referencing an existing environment ID.
- */
-export type InteractionEnvironment = Environment | string;
-
-/**
- * Configuration parameters for the agent interaction.
+ * Parameters for the agent interaction.
  */
 export type InteractionAgentConfig =
-  | DynamicAgentConfig
-  | DeepResearchAgentConfig
+  | AntigravityAgentConfig
   | CodeMenderAgentConfig
-  | AntigravityAgentConfig;
+  | DeepResearchAgentConfig
+  | DynamicAgentConfig;
 
 /**
  * The Interaction resource.
  */
 export type Interaction = {
   /**
-   * The model that will complete your prompt.\n\nSee [models](https://ai.google.dev/gemini-api/docs/models) for additional details.
-   */
-  model?: Model | undefined;
-  /**
-   * The agent to interact with.
-   */
-  agent?: AgentOption | undefined;
-  /**
-   * Required. Output only. A unique identifier for the interaction completion.
-   */
-  id: string;
-  /**
-   * Required. Output only. The status of the interaction.
-   */
-  status: InteractionStatus;
-  /**
-   * Output only. The time at which the response was created in ISO 8601 format
+   * Required. Output only. The time at which the response was created in ISO 8601 format
    *
    * @remarks
    * (YYYY-MM-DDThh:mm:ssZ).
    */
   created?: string | undefined;
   /**
-   * Output only. The time at which the response was last updated in ISO 8601 format
+   * The environment configuration for the interaction.
+   */
+  environment?: Environment | LocalEnvironmentConfig | string | undefined;
+  /**
+   * Output only. The environment ID for the interaction. Only populated if environment
    *
    * @remarks
-   * (YYYY-MM-DDThh:mm:ssZ).
+   * config is set in the request.
    */
-  updated?: string | undefined;
+  environment_id?: string | undefined;
+  /**
+   * Output only. Diagnostic faults / platform errors recorded on the interaction.
+   */
+  errors?: Array<ErrorT> | undefined;
+  /**
+   * Configuration parameters for model interactions.
+   */
+  generation_config?: GenerationConfig | undefined;
+  /**
+   * Required. Output only. A unique identifier for the interaction completion.
+   */
+  id?: string | undefined;
+  /**
+   * The labels with user-defined metadata for the request. It is used for
+   *
+   * @remarks
+   * billing and reporting only.
+   *
+   * Label keys and values can be no longer than 63 characters
+   * (Unicode codepoints) and can only contain lowercase letters, numeric
+   * characters, underscores, and dashes. International characters are allowed.
+   * Label values are optional. Label keys must start with a letter.
+   */
+  labels?: { [k: string]: string } | undefined;
+  /**
+   * The ID of the previous interaction, if any.
+   */
+  previous_interaction_id?: string | undefined;
+  response_format?: ResponseFormat | Array<ResponseFormat> | undefined;
+  /**
+   * Safety settings for the interaction.
+   */
+  safety_settings?: Array<SafetySetting> | undefined;
+  service_tier?: ServiceTier | undefined;
+  /**
+   * Required. Output only. The status of the interaction.
+   */
+  status: InteractionStatus;
+  /**
+   * Required. Output only. The steps that make up the interaction.
+   */
+  steps?: Array<Step> | undefined;
   /**
    * System instruction for the interaction.
    */
@@ -108,13 +139,20 @@ export type Interaction = {
    */
   tools?: Array<Tool> | undefined;
   /**
-   * Output only. Diagnostic faults / platform errors recorded on the interaction.
+   * Required. Output only. The time at which the response was last updated in ISO 8601 format
+   *
+   * @remarks
+   * (YYYY-MM-DDThh:mm:ssZ).
    */
-  errors?: Array<ErrorT> | undefined;
+  updated?: string | undefined;
   /**
    * Statistics on the interaction request's token usage.
    */
   usage?: Usage | undefined;
+  /**
+   * Message for configuring webhook events for a request.
+   */
+  webhook_config?: WebhookConfig | undefined;
   /**
    * The requested modalities of the response (TEXT, IMAGE, AUDIO).
    *
@@ -128,58 +166,34 @@ export type Interaction = {
    */
   response_mime_type?: string | undefined;
   /**
-   * The ID of the previous interaction, if any.
-   */
-  previous_interaction_id?: string | undefined;
-  /**
-   * Output only. The environment ID for the interaction. Only populated if environment
-   *
-   * @remarks
-   * config is set in the request.
-   */
-  environment_id?: string | undefined;
-  service_tier?: ServiceTier | undefined;
-  /**
-   * Message for configuring webhook events for a request.
-   */
-  webhook_config?: WebhookConfig | undefined;
-  /**
-   * Output only. The steps that make up the interaction, when included in the response.
-   */
-  steps?: Array<Step> | undefined;
-  /**
-   * Enforces that the generated response is a JSON object that complies with the JSON schema specified in this field.
-   */
-  response_format?: Array<ResponseFormat> | ResponseFormat | undefined;
-  /**
-   * The environment configuration for the interaction. Can be an object specifying remote environment sources or a string referencing an existing environment ID.
-   */
-  environment?: Environment | string | undefined;
-  /**
-   * Configuration parameters for model interactions.
-   */
-  generation_config?: GenerationConfig | undefined;
-  /**
-   * Configuration parameters for the agent interaction.
-   */
-  agent_config?:
-    | DynamicAgentConfig
-    | DeepResearchAgentConfig
-    | CodeMenderAgentConfig
-    | AntigravityAgentConfig
-    | undefined;
-  /**
-   * Safety settings for the interaction.
-   */
-  safety_settings?: Array<SafetySetting> | undefined;
-  /**
-   * The labels with user-defined metadata for the request.
-   */
-  labels?: { [k: string]: string } | undefined;
-  /**
    * The input for the interaction.
    */
   input?: InteractionsInput | undefined;
+  /**
+   * The model that will complete your prompt.\n\nSee [models](https://ai.google.dev/gemini-api/docs/models) for additional details.
+   */
+  model?: Model | undefined;
+  /**
+   * The agent to interact with.
+   */
+  agent?: AgentOption | undefined;
+  /**
+   * Parameters for the agent interaction.
+   */
+  agent_config?:
+    | AntigravityAgentConfig
+    | CodeMenderAgentConfig
+    | DeepResearchAgentConfig
+    | DynamicAgentConfig
+    | undefined;
+  /**
+   * An audio content block.
+   */
+  output_audio?: AudioContent | undefined;
+  /**
+   * An image content block.
+   */
+  output_image?: ImageContent | undefined;
   /**
    * Concatenated text from the last model output in response to the current request.
    *
@@ -188,14 +202,6 @@ export type Interaction = {
    * Note: this is added by the SDK.
    */
   output_text?: string | undefined;
-  /**
-   * An image content block.
-   */
-  output_image?: ImageContent | undefined;
-  /**
-   * An audio content block.
-   */
-  output_audio?: AudioContent | undefined;
   /**
    * A video content block.
    */

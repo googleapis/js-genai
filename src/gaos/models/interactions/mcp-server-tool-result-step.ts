@@ -18,9 +18,9 @@ export type MCPServerToolResultStepResult = {};
  * Required. The output from the MCP server call. Can be simple text or rich content.
  */
 export type MCPServerToolResultStepResultUnion =
+  | Array<FunctionResultSubcontent>
   | MCPServerToolResultStepResult
-  | string
-  | Array<FunctionResultSubcontent>;
+  | string;
 
 /**
  * MCPServer tool result step.
@@ -38,12 +38,16 @@ export type MCPServerToolResultStep = {
    * Required. The output from the MCP server call. Can be simple text or rich content.
    */
   result:
+    | Array<FunctionResultSubcontent>
     | MCPServerToolResultStepResult
-    | string
-    | Array<FunctionResultSubcontent>;
+    | string;
   /**
    * The name of the used MCP server.
    */
   server_name?: string | undefined;
+  /**
+   * A signature hash for backend validation.
+   */
+  signature?: string | undefined;
   type: "mcp_server_tool_result";
 };

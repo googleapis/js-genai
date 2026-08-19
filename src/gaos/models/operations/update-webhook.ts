@@ -14,26 +14,22 @@ import * as webhooks from "../webhooks/index.js";
 
 export type UpdateWebhookGlobals = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
 };
 
 export type UpdateWebhookRequest = {
   /**
-   * Which version of the API to use.
-   */
-  api_version?: string | undefined;
-  /**
    * Required. The ID of the webhook to update.
    */
   id: string;
   /**
-   * Optional. The list of fields to update.
+   * Optional list of fields to update.
    */
   update_mask?: string | undefined;
   /**
-   * Required. The webhook to update.
+   * Required. The HTTP body of the payload.
    */
   body?: webhooks.WebhookUpdate | undefined;
 };

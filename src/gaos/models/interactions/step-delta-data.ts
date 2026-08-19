@@ -53,7 +53,8 @@ export type StepDeltaData =
   | MCPServerToolResultDelta
   | RetrievalCallDelta
   | RetrievalResultDelta
-  | TextAnnotationDelta
+  | (TextAnnotationDelta & { type: "text_annotation_delta" })
+  | (TextAnnotationDelta & { type: "text_annotation" })
   | TextDelta
   | ThoughtSignatureDelta
   | ThoughtSummaryDelta

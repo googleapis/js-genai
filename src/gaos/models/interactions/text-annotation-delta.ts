@@ -12,10 +12,15 @@
 
 import { Annotation } from "./annotation.js";
 
+export type TextAnnotationDeltaType =
+  | "text_annotation_delta"
+  | "text_annotation"
+  | (string & {});
+
 export type TextAnnotationDelta = {
   /**
    * Citation information for model-generated content.
    */
   annotations?: Array<Annotation> | undefined;
-  type: "text_annotation_delta";
+  type: TextAnnotationDeltaType;
 };

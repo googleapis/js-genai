@@ -33,15 +33,15 @@ export type AudioDelta = {
   data?: string | undefined;
   mime_type?: AudioDeltaMimeType | undefined;
   /**
-   * Deprecated. Use sample_rate instead. The value is ignored.
-   *
-   * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
-   */
-  rate?: number | undefined;
-  /**
    * The sample rate of the audio.
    */
   sample_rate?: number | undefined;
   type: "audio";
   uri?: string | undefined;
+  /**
+   * Deprecated. Use sample_rate instead. The value is ignored.
+   *
+   * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
+   */
+  rate?: number | undefined;
 };

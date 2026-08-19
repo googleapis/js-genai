@@ -15,8 +15,8 @@ import { FunctionResultSubcontent } from "./function-result-subcontent.js";
 export type FunctionResultDeltaResult = {};
 
 export type FunctionResultDeltaResultUnion =
-  | FunctionResultDeltaResult
   | Array<FunctionResultSubcontent>
+  | FunctionResultDeltaResult
   | string;
 
 export type FunctionResultDelta = {
@@ -26,6 +26,10 @@ export type FunctionResultDelta = {
   call_id: string;
   is_error?: boolean | undefined;
   name?: string | undefined;
-  result: FunctionResultDeltaResult | Array<FunctionResultSubcontent> | string;
+  result: Array<FunctionResultSubcontent> | FunctionResultDeltaResult | string;
+  /**
+   * A signature hash for backend validation.
+   */
+  signature?: string | undefined;
   type: "function_result";
 };

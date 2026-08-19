@@ -15,16 +15,24 @@ import { FunctionResultSubcontent } from "./function-result-subcontent.js";
 export type MCPServerToolResultDeltaResult = {};
 
 export type MCPServerToolResultDeltaResultUnion =
-  | MCPServerToolResultDeltaResult
   | Array<FunctionResultSubcontent>
+  | MCPServerToolResultDeltaResult
   | string;
 
 export type MCPServerToolResultDelta = {
+  /**
+   * Required. ID to match the ID from the function call block.
+   */
+  call_id?: string | undefined;
   name?: string | undefined;
   result:
-    | MCPServerToolResultDeltaResult
     | Array<FunctionResultSubcontent>
+    | MCPServerToolResultDeltaResult
     | string;
   server_name?: string | undefined;
+  /**
+   * A signature hash for backend validation.
+   */
+  signature?: string | undefined;
   type: "mcp_server_tool_result";
 };

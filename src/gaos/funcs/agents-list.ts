@@ -27,16 +27,16 @@ import {
   RequestTimeoutError,
   UnexpectedClientError,
 } from "../models/errors/http-client-errors.js";
+import * as errors from "../models/errors/index.js";
 import * as operations from "../models/operations/index.js";
 import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Lists all Agents.
+ * Lists agents.
  */
 export function agentsList(
   client: GoogleGenAICore,
-  api_version?: string | undefined,
   page_size?: number | undefined,
   page_token?: string | undefined,
   parent?: string | undefined,
@@ -44,6 +44,8 @@ export function agentsList(
 ): APIPromise<
   Result<
     agents.AgentListResponse,
+    | errors.ListAgentsClientError
+    | errors.ListAgentsServerError
     | GoogleGenAiError
     | ConnectionError
     | RequestAbortedError
@@ -54,7 +56,6 @@ export function agentsList(
 > {
   return new APIPromise($do(
     client,
-    api_version,
     page_size,
     page_token,
     parent,
@@ -64,7 +65,6 @@ export function agentsList(
 
 async function $do(
   client: GoogleGenAICore,
-  api_version?: string | undefined,
   page_size?: number | undefined,
   page_token?: string | undefined,
   parent?: string | undefined,
@@ -73,6 +73,8 @@ async function $do(
   [
     Result<
       agents.AgentListResponse,
+      | errors.ListAgentsClientError
+      | errors.ListAgentsServerError
       | GoogleGenAiError
       | ConnectionError
       | RequestAbortedError
@@ -84,7 +86,6 @@ async function $do(
   ]
 > {
   const input: operations.ListAgentsRequest | undefined = {
-    api_version: api_version,
     page_size: page_size,
     page_token: page_token,
     parent: parent,
@@ -94,11 +95,10 @@ async function $do(
   const body = null;
 
   const pathParams = {
-    api_version: encodeSimple(
-      "api_version",
-      payload?.api_version ?? client._options.api_version,
-      { explode: false, charEncoding: "percent" },
-    ),
+    api_version: encodeSimple("api_version", client._options.api_version, {
+      explode: false,
+      charEncoding: "percent",
+    }),
   };
   const path = pathToFunc("/{api_version}/agents")(pathParams);
 
@@ -169,8 +169,14 @@ async function $do(
   }
   const response = doResult.value;
 
+  const responseFields = {
+    httpMeta: { response: response, request: req },
+  };
+
   const [result] = await M.match<
     agents.AgentListResponse,
+    | errors.ListAgentsClientError
+    | errors.ListAgentsServerError
     | GoogleGenAiError
     | ConnectionError
     | RequestAbortedError
@@ -178,10 +184,16 @@ async function $do(
     | InvalidRequestError
     | UnexpectedClientError
   >(
-    M.fail("4XX"),
-    M.fail("5XX"),
+    M.jsonErr<errors.ListAgentsClientError>(
+      "4XX",
+      errors.ListAgentsClientError,
+    ),
+    M.jsonErr<errors.ListAgentsServerError>(
+      "5XX",
+      errors.ListAgentsServerError,
+    ),
     M.json<agents.AgentListResponse>("default"),
-  )(response, req);
+  )(response, req, { extraFields: responseFields });
   if (!result.ok) {
     return [result, { status: "complete", request: req, response }];
   }

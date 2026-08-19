@@ -13,6 +13,7 @@
 import { Environment } from "./environment.js";
 import { GenerationConfig } from "./generation-config.js";
 import { InteractionsInput } from "./interactions-input.js";
+import { LocalEnvironmentConfig } from "./local-environment-config.js";
 import { Model } from "./model.js";
 import { ResponseFormat } from "./response-format.js";
 import { ResponseModality } from "./response-modality.js";
@@ -22,37 +23,63 @@ import { Tool } from "./tool.js";
 import { WebhookConfig } from "./webhook-config.js";
 
 /**
- * Enforces that the generated response is a JSON object that complies with the JSON schema specified in this field.
+ * The environment configuration for the interaction.
  */
+export type CreateModelInteractionEnvironment =
+  | Environment
+  | LocalEnvironmentConfig
+  | string;
+
 export type CreateModelInteractionResponseFormat =
-  | Array<ResponseFormat>
-  | ResponseFormat;
+  | ResponseFormat
+  | Array<ResponseFormat>;
 
 /**
- * The environment configuration for the interaction. Can be an object specifying remote environment sources or a string referencing an existing environment ID.
- */
-export type CreateModelInteractionEnvironment = Environment | string;
-
-/**
- * Parameters for creating model interactions
+ * Interaction for generating the completion using models.
  */
 export type CreateModelInteraction = {
   /**
-   * The model that will complete your prompt.\n\nSee [models](https://ai.google.dev/gemini-api/docs/models) for additional details.
+   * Input only. Whether to run the model interaction in the background.
    */
-  model: Model;
+  background?: boolean | undefined;
   /**
-   * Input only. Whether the interaction will be streamed.
+   * The environment configuration for the interaction.
    */
-  stream?: boolean | undefined;
+  environment?: Environment | LocalEnvironmentConfig | string | undefined;
+  /**
+   * Configuration parameters for model interactions.
+   */
+  generation_config?: GenerationConfig | undefined;
+  /**
+   * The labels with user-defined metadata for the request. It is used for
+   *
+   * @remarks
+   * billing and reporting only.
+   *
+   * Label keys and values can be no longer than 63 characters
+   * (Unicode codepoints) and can only contain lowercase letters, numeric
+   * characters, underscores, and dashes. International characters are allowed.
+   * Label values are optional. Label keys must start with a letter.
+   */
+  labels?: { [k: string]: string } | undefined;
+  /**
+   * The ID of the previous interaction, if any.
+   */
+  previous_interaction_id?: string | undefined;
+  response_format?: ResponseFormat | Array<ResponseFormat> | undefined;
+  /**
+   * Safety settings for the interaction.
+   */
+  safety_settings?: Array<SafetySetting> | undefined;
+  service_tier?: ServiceTier | undefined;
   /**
    * Input only. Whether to store the response and request for later retrieval.
    */
   store?: boolean | undefined;
   /**
-   * Input only. Whether to run the model interaction in the background.
+   * Input only. Whether the interaction will be streamed.
    */
-  background?: boolean | undefined;
+  stream?: boolean | undefined;
   /**
    * System instruction for the interaction.
    */
@@ -61,6 +88,10 @@ export type CreateModelInteraction = {
    * A list of tool declarations the model may call during interaction.
    */
   tools?: Array<Tool> | undefined;
+  /**
+   * Message for configuring webhook events for a request.
+   */
+  webhook_config?: WebhookConfig | undefined;
   /**
    * The requested modalities of the response (TEXT, IMAGE, AUDIO).
    *
@@ -74,36 +105,11 @@ export type CreateModelInteraction = {
    */
   response_mime_type?: string | undefined;
   /**
-   * The ID of the previous interaction, if any.
-   */
-  previous_interaction_id?: string | undefined;
-  service_tier?: ServiceTier | undefined;
-  /**
-   * Message for configuring webhook events for a request.
-   */
-  webhook_config?: WebhookConfig | undefined;
-  /**
-   * Enforces that the generated response is a JSON object that complies with the JSON schema specified in this field.
-   */
-  response_format?: Array<ResponseFormat> | ResponseFormat | undefined;
-  /**
-   * The environment configuration for the interaction. Can be an object specifying remote environment sources or a string referencing an existing environment ID.
-   */
-  environment?: Environment | string | undefined;
-  /**
-   * Configuration parameters for model interactions.
-   */
-  generation_config?: GenerationConfig | undefined;
-  /**
-   * Safety settings for the interaction.
-   */
-  safety_settings?: Array<SafetySetting> | undefined;
-  /**
-   * The labels with user-defined metadata for the request.
-   */
-  labels?: { [k: string]: string } | undefined;
-  /**
    * The input for the interaction.
    */
-  input: InteractionsInput;
+  input?: InteractionsInput | undefined;
+  /**
+   * The model that will complete your prompt.\n\nSee [models](https://ai.google.dev/gemini-api/docs/models) for additional details.
+   */
+  model: Model;
 };

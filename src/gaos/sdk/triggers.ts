@@ -21,33 +21,14 @@ import { ClientSDK, RequestOptions } from "../lib/sdks.js";
 import * as interactions from "../models/interactions/index.js";
 import {
   CreateTriggerParams,
-  DeleteTriggerParams,
-  GetTriggerParams,
   ListTriggerExecutionsParams,
   ListTriggersParams,
-  RunTriggerParams,
   UpdateTriggerParams,
 } from "../models/operations/method-params.js";
 import * as triggers from "../models/triggers/index.js";
 import { APIPromise, unwrapAsAPIPromise } from "../types/async.js";
 
 export class Triggers extends ClientSDK {
-  /**
-   * Creates a new trigger that will invoke the specified agent on the given cron schedule.
-   */
-  create(
-    params: CreateTriggerParams,
-    options?: RequestOptions,
-  ): APIPromise<triggers.Trigger> {
-    const { api_version, ...body } = params;
-    return unwrapAsAPIPromise(triggersCreate(
-      this,
-      body,
-      api_version,
-      options,
-    ));
-  }
-
   /**
    * Lists triggers for a project.
    */
@@ -57,76 +38,73 @@ export class Triggers extends ClientSDK {
   ): APIPromise<triggers.ListTriggersResponse> {
     return unwrapAsAPIPromise(triggersList(
       this,
-      params?.api_version,
       params?.filter,
       params?.page_size,
       params?.page_token,
+      params?.parent,
       options,
     ));
   }
 
   /**
-   * Gets details of a single trigger.
+   * Creates a new trigger that will invoke the specified agent
+   * on the given cron schedule.
+   */
+  create(
+    params: CreateTriggerParams,
+    options?: RequestOptions,
+  ): APIPromise<triggers.Trigger> {
+    const { parent, ...body } = params;
+    return unwrapAsAPIPromise(triggersCreate(
+      this,
+      body,
+      parent,
+      options,
+    ));
+  }
+
+  /**
+   * Gets a trigger, including recent execution history.
    */
   get(
     id: string,
-    params?: GetTriggerParams,
     options?: Omit<RequestOptions, "extra_body">,
   ): APIPromise<triggers.Trigger> {
     return unwrapAsAPIPromise(triggersGet(
       this,
       id,
-      params?.api_version,
       options,
     ));
   }
 
   /**
-   * Updates a trigger.
+   * Deletes a trigger. Does not delete past interaction histories
+   * or environments created by past executions.
+   */
+  delete(
+    id: string,
+    options?: Omit<RequestOptions, "extra_body">,
+  ): APIPromise<interactions.Empty> {
+    return unwrapAsAPIPromise(triggersDelete(
+      this,
+      id,
+      options,
+    ));
+  }
+
+  /**
+   * Updates a trigger. Supports partial updates via field_mask.
    */
   update(
     id: string,
     params: UpdateTriggerParams,
     options?: RequestOptions,
   ): APIPromise<triggers.Trigger> {
-    const { api_version, ...body } = params;
+    const { ...body } = params;
     return unwrapAsAPIPromise(triggersUpdate(
       this,
       id,
       body,
-      api_version,
-      options,
-    ));
-  }
-
-  /**
-   * Deletes a trigger.
-   */
-  delete(
-    id: string,
-    params?: DeleteTriggerParams,
-    options?: Omit<RequestOptions, "extra_body">,
-  ): APIPromise<interactions.Empty> {
-    return unwrapAsAPIPromise(triggersDelete(
-      this,
-      id,
-      params?.api_version,
-      options,
-    ));
-  }
-
-  /**
-   * Runs a trigger immediately.
-   */
-  run(
-    trigger_id: string,
-    params?: RunTriggerParams,
-    options?: Omit<RequestOptions, "extra_body">,
-  ): APIPromise<triggers.TriggerExecution> {
-    return unwrapAsAPIPromise(triggersRun(
-      this,
-      trigger_id,
-      params?.api_version,
       options,
     ));
   }
@@ -142,9 +120,24 @@ export class Triggers extends ClientSDK {
     return unwrapAsAPIPromise(triggersListExecutions(
       this,
       trigger_id,
-      params?.api_version,
+      params?.filter,
       params?.page_size,
       params?.page_token,
+      options,
+    ));
+  }
+
+  /**
+   * Immediately fires a trigger, bypassing the cron schedule.
+   * Useful for testing and manual runs.
+   */
+  run(
+    trigger_id: string,
+    options?: Omit<RequestOptions, "extra_body">,
+  ): APIPromise<triggers.TriggerExecution> {
+    return unwrapAsAPIPromise(triggersRun(
+      this,
+      trigger_id,
       options,
     ));
   }

@@ -24,14 +24,6 @@ export type Interaction =
  */
 export type TriggerCreateParams = {
   /**
-   * Required. The cron schedule on which the trigger should run. Standard cron format.
-   */
-  schedule: string;
-  /**
-   * Required. Time zone in which the schedule should be interpreted.
-   */
-  time_zone: string;
-  /**
    * Optional. The display name of the trigger.
    */
   display_name?: string | undefined;
@@ -39,10 +31,6 @@ export type TriggerCreateParams = {
    * Optional. The environment ID for the trigger execution.
    */
   environment_id?: string | undefined;
-  /**
-   * Optional. The maximum number of consecutive failures allowed before the trigger is automatically paused (status becomes ERROR).
-   */
-  max_consecutive_failures?: number | undefined;
   /**
    * Optional. The execution timeout for the triggered interaction.
    */
@@ -53,4 +41,22 @@ export type TriggerCreateParams = {
   interaction:
     | interactions.CreateAgentInteraction
     | interactions.CreateModelInteraction;
+  /**
+   * Optional. The maximum number of consecutive failures allowed before
+   *
+   * @remarks
+   * the trigger is automatically paused (status becomes ERROR).
+   */
+  max_consecutive_failures?: number | undefined;
+  /**
+   * Required. The cron schedule on which the trigger should run.
+   *
+   * @remarks
+   * Standard cron format.
+   */
+  schedule: string;
+  /**
+   * Required. Time zone in which the schedule should be interpreted.
+   */
+  time_zone: string;
 };

@@ -12,7 +12,15 @@
 
 export type MCPServerToolCallDelta = {
   arguments: { [k: string]: any };
+  /**
+   * Required. A unique ID for this specific tool call.
+   */
+  id?: string | undefined;
   name: string;
   server_name: string;
+  /**
+   * A signature hash for backend validation.
+   */
+  signature?: string | undefined;
   type: "mcp_server_tool_call";
 };

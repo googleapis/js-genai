@@ -11,7 +11,7 @@
  */
 
 import { GoogleGenAICore } from "../core.js";
-import { encodeJSON, encodeSimple } from "../lib/encodings.js";
+import { encodeFormQuery, encodeJSON, encodeSimple } from "../lib/encodings.js";
 import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
@@ -26,22 +26,26 @@ import {
   RequestTimeoutError,
   UnexpectedClientError,
 } from "../models/errors/http-client-errors.js";
+import * as errors from "../models/errors/index.js";
 import * as operations from "../models/operations/index.js";
 import * as triggers from "../models/triggers/index.js";
 import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Creates a new trigger that will invoke the specified agent on the given cron schedule.
+ * Creates a new trigger that will invoke the specified agent
+ * on the given cron schedule.
  */
 export function triggersCreate(
   client: GoogleGenAICore,
   body: triggers.TriggerCreateParams,
-  api_version?: string | undefined,
+  parent?: string | undefined,
   options?: RequestOptions,
 ): APIPromise<
   Result<
     triggers.Trigger,
+    | errors.CreateTriggerClientError
+    | errors.CreateTriggerServerError
     | GoogleGenAiError
     | ConnectionError
     | RequestAbortedError
@@ -53,7 +57,7 @@ export function triggersCreate(
   return new APIPromise($do(
     client,
     body,
-    api_version,
+    parent,
     options,
   ));
 }
@@ -61,12 +65,14 @@ export function triggersCreate(
 async function $do(
   client: GoogleGenAICore,
   body: triggers.TriggerCreateParams,
-  api_version?: string | undefined,
+  parent?: string | undefined,
   options?: RequestOptions,
 ): Promise<
   [
     Result<
       triggers.Trigger,
+      | errors.CreateTriggerClientError
+      | errors.CreateTriggerServerError
       | GoogleGenAiError
       | ConnectionError
       | RequestAbortedError
@@ -79,20 +85,23 @@ async function $do(
 > {
   const input: operations.CreateTriggerRequest = {
     body: body,
-    api_version: api_version,
+    parent: parent,
   };
 
   const payload = input;
   const body$ = encodeJSON("body", payload.body, { explode: true });
 
   const pathParams = {
-    api_version: encodeSimple(
-      "api_version",
-      payload.api_version ?? client._options.api_version,
-      { explode: false, charEncoding: "percent" },
-    ),
+    api_version: encodeSimple("api_version", client._options.api_version, {
+      explode: false,
+      charEncoding: "percent",
+    }),
   };
   const path = pathToFunc("/{api_version}/triggers")(pathParams);
+
+  const query = encodeFormQuery({
+    "parent": payload.parent,
+  });
 
   const headers = new Headers(compactMap({
     "Content-Type": "application/json",
@@ -134,6 +143,7 @@ async function $do(
     baseURL: options?.server_url,
     path: path,
     headers: headers,
+    query: query,
     body: body$,
     userAgent: client._options.user_agent,
     timeout_ms: options?.timeout_ms || client._options.timeout_ms || -1,
@@ -155,8 +165,14 @@ async function $do(
   }
   const response = doResult.value;
 
+  const responseFields = {
+    httpMeta: { response: response, request: req },
+  };
+
   const [result] = await M.match<
     triggers.Trigger,
+    | errors.CreateTriggerClientError
+    | errors.CreateTriggerServerError
     | GoogleGenAiError
     | ConnectionError
     | RequestAbortedError
@@ -164,10 +180,16 @@ async function $do(
     | InvalidRequestError
     | UnexpectedClientError
   >(
-    M.json<triggers.Trigger>(200),
-    M.fail("4XX"),
-    M.fail("5XX"),
-  )(response, req);
+    M.jsonErr<errors.CreateTriggerClientError>(
+      "4XX",
+      errors.CreateTriggerClientError,
+    ),
+    M.jsonErr<errors.CreateTriggerServerError>(
+      "5XX",
+      errors.CreateTriggerServerError,
+    ),
+    M.json<triggers.Trigger>("default"),
+  )(response, req, { extraFields: responseFields });
   if (!result.ok) {
     return [result, { status: "complete", request: req, response }];
   }

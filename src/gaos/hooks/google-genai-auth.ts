@@ -71,6 +71,7 @@ export class GoogleGenAIAuthHook
       request.headers,
       getStaticDefaultHeaders(hookCtx.security_source),
     );
+    applyApiRevision(hookCtx, request.headers);
     applyUserProject(hookCtx, request.headers);
 
     if (hasAuthHeaders(request.headers)) {
@@ -259,4 +260,16 @@ function hasSecurityValue(security: GoogleGenAISecurity): boolean {
     security.access_token !== undefined ||
     security.default_headers !== undefined
   );
+}
+
+function applyApiRevision(
+  hookCtx: BeforeRequestContext,
+  headers: Headers,
+): void {
+  if (headers.get("api-revision") === null) {
+    headers.set(
+      "Api-Revision",
+      hookCtx.options.api_revision ?? GOOGLE_GENAI_API_REVISION,
+    );
+  }
 }

@@ -12,16 +12,12 @@
 
 export type GetWebhookGlobals = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
 };
 
 export type GetWebhookRequest = {
-  /**
-   * Which version of the API to use.
-   */
-  api_version?: string | undefined;
   /**
    * Required. The ID of the webhook to retrieve.
    */

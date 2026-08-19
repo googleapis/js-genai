@@ -15,29 +15,9 @@ import * as interactions from "../interactions/index.js";
 
 export type CreateInteractionGlobals = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
-};
-
-/**
- * The request body.
- */
-export type CreateInteractionRequestBody =
-  | interactions.CreateModelInteraction
-  | interactions.CreateAgentInteraction;
-
-export type CreateInteractionRequest = {
-  /**
-   * Which version of the API to use.
-   */
-  api_version?: string | undefined;
-  /**
-   * The request body.
-   */
-  body:
-    | interactions.CreateModelInteraction
-    | interactions.CreateAgentInteraction;
 };
 
 export type CreateInteractionResponse =

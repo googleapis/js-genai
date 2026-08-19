@@ -18,6 +18,7 @@ import { Status } from "./status.js";
  */
 export type ModelOutputStep = {
   content?: Array<Content> | undefined;
+  type: "model_output";
   /**
    * The `Status` type defines a logical error model that is suitable for
    *
@@ -30,5 +31,4 @@ export type ModelOutputStep = {
    * [API Design Guide](https://cloud.google.com/apis/design/errors).
    */
   error?: Status | undefined;
-  type: "model_output";
 };

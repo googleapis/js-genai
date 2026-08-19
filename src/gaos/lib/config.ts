@@ -42,6 +42,11 @@ export type SDKOptions = {
    */
   user_project?: string | undefined;
 
+  /**
+   * Allows setting the api_revision parameter for all supported operations
+   */
+  api_revision?: string | undefined;
+
   http_client?: HTTPClient;
   /**
    * Allows overriding the default server used by the SDK

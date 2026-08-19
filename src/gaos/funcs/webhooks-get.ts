@@ -26,6 +26,7 @@ import {
   RequestTimeoutError,
   UnexpectedClientError,
 } from "../models/errors/http-client-errors.js";
+import * as errors from "../models/errors/index.js";
 import * as operations from "../models/operations/index.js";
 import * as webhooks from "../models/webhooks/index.js";
 import { APICall, APIPromise } from "../types/async.js";
@@ -37,11 +38,12 @@ import { Result } from "../types/fp.js";
 export function webhooksGet(
   client: GoogleGenAICore,
   id: string,
-  api_version?: string | undefined,
   options?: Omit<RequestOptions, "extra_body">,
 ): APIPromise<
   Result<
     webhooks.Webhook,
+    | errors.GetWebhookClientError
+    | errors.GetWebhookServerError
     | GoogleGenAiError
     | ConnectionError
     | RequestAbortedError
@@ -53,7 +55,6 @@ export function webhooksGet(
   return new APIPromise($do(
     client,
     id,
-    api_version,
     options,
   ));
 }
@@ -61,12 +62,13 @@ export function webhooksGet(
 async function $do(
   client: GoogleGenAICore,
   id: string,
-  api_version?: string | undefined,
   options?: Omit<RequestOptions, "extra_body">,
 ): Promise<
   [
     Result<
       webhooks.Webhook,
+      | errors.GetWebhookClientError
+      | errors.GetWebhookServerError
       | GoogleGenAiError
       | ConnectionError
       | RequestAbortedError
@@ -79,18 +81,16 @@ async function $do(
 > {
   const input: operations.GetWebhookRequest = {
     id: id,
-    api_version: api_version,
   };
 
   const payload = input;
   const body = null;
 
   const pathParams = {
-    api_version: encodeSimple(
-      "api_version",
-      payload.api_version ?? client._options.api_version,
-      { explode: false, charEncoding: "percent" },
-    ),
+    api_version: encodeSimple("api_version", client._options.api_version, {
+      explode: false,
+      charEncoding: "percent",
+    }),
     id: encodeSimple("id", payload.id, {
       explode: false,
       charEncoding: "percent",
@@ -158,8 +158,14 @@ async function $do(
   }
   const response = doResult.value;
 
+  const responseFields = {
+    httpMeta: { response: response, request: req },
+  };
+
   const [result] = await M.match<
     webhooks.Webhook,
+    | errors.GetWebhookClientError
+    | errors.GetWebhookServerError
     | GoogleGenAiError
     | ConnectionError
     | RequestAbortedError
@@ -167,10 +173,16 @@ async function $do(
     | InvalidRequestError
     | UnexpectedClientError
   >(
-    M.fail("4XX"),
-    M.fail("5XX"),
+    M.jsonErr<errors.GetWebhookClientError>(
+      "4XX",
+      errors.GetWebhookClientError,
+    ),
+    M.jsonErr<errors.GetWebhookServerError>(
+      "5XX",
+      errors.GetWebhookServerError,
+    ),
     M.json<webhooks.Webhook>("default"),
-  )(response, req);
+  )(response, req, { extraFields: responseFields });
   if (!result.ok) {
     return [result, { status: "complete", request: req, response }];
   }
