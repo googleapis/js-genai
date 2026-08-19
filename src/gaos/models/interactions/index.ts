@@ -138,7 +138,6 @@ export * from "./tool-choice-config.js";
 export * from "./tool-choice-type.js";
 export * from "./tool.js";
 export * from "./transcription-config.js";
-export * from "./transcription-mode.js";
 export * from "./url-citation.js";
 export * from "./url-context-call-arguments.js";
 export * from "./url-context-call-delta.js";
