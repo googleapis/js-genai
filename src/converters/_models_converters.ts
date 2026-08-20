@@ -4588,6 +4588,13 @@ export function partToMldev(
     common.setValueByPath(toObject, ['partMetadata'], fromPartMetadata);
   }
 
+  const fromMediaProcessing = common.getValueByPath(fromObject, [
+    'mediaProcessing',
+  ]);
+  if (fromMediaProcessing != null) {
+    common.setValueByPath(toObject, ['mediaProcessing'], fromMediaProcessing);
+  }
+
   return toObject;
 }
 
@@ -4695,6 +4702,13 @@ export function partToVertex(
     throw new Error(
       'partMetadata parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
     );
+  }
+
+  const fromMediaProcessing = common.getValueByPath(fromObject, [
+    'mediaProcessing',
+  ]);
+  if (fromMediaProcessing != null) {
+    common.setValueByPath(toObject, ['mediaProcessing'], fromMediaProcessing);
   }
 
   return toObject;

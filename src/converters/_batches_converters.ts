@@ -1962,6 +1962,13 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
     common.setValueByPath(toObject, ['partMetadata'], fromPartMetadata);
   }
 
+  const fromMediaProcessing = common.getValueByPath(fromObject, [
+    'mediaProcessing',
+  ]);
+  if (fromMediaProcessing != null) {
+    common.setValueByPath(toObject, ['mediaProcessing'], fromMediaProcessing);
+  }
+
   return toObject;
 }
 
