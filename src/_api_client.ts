@@ -265,6 +265,7 @@ export interface HttpRequest {
 export class ApiClient {
   readonly clientOptions: ApiClientInitOptions;
   private readonly customBaseUrl?: string;
+  private readonly cachedNodeAgents = new Map<number, unknown>();
   constructor(opts: ApiClientInitOptions) {
     this.clientOptions = {
       ...opts,
