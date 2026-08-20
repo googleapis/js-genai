@@ -32,20 +32,20 @@ import { UserInputStep } from "./user-input-step.js";
  * A step in the interaction.
  */
 export type Step =
-  | UserInputStep
+  | CodeExecutionCallStep
+  | CodeExecutionResultStep
+  | FileSearchCallStep
+  | FileSearchResultStep
+  | FunctionCallStep
+  | FunctionResultStep
+  | GoogleMapsCallStep
+  | GoogleMapsResultStep
+  | GoogleSearchCallStep
+  | GoogleSearchResultStep
+  | MCPServerToolCallStep
+  | MCPServerToolResultStep
   | ModelOutputStep
   | ThoughtStep
-  | FunctionCallStep
-  | CodeExecutionCallStep
   | URLContextCallStep
-  | MCPServerToolCallStep
-  | GoogleSearchCallStep
-  | FileSearchCallStep
-  | GoogleMapsCallStep
-  | FunctionResultStep
-  | CodeExecutionResultStep
   | URLContextResultStep
-  | GoogleSearchResultStep
-  | MCPServerToolResultStep
-  | FileSearchResultStep
-  | GoogleMapsResultStep;
+  | UserInputStep;

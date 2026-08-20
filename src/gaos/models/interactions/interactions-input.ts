@@ -16,4 +16,4 @@ import { Step } from "./step.js";
 /**
  * The input for the interaction.
  */
-export type InteractionsInput = string | Array<Step> | Array<Content> | Content;
+export type InteractionsInput = Content | Array<Step> | Array<Content> | string;

@@ -33,6 +33,23 @@ import { APIPromise, unwrapAsAPIPromise } from "../types/async.js";
 
 export class Triggers extends ClientSDK {
   /**
+   * Lists triggers for a project.
+   */
+  list(
+    params?: ListTriggersParams,
+    options?: Omit<RequestOptions, "extra_body">,
+  ): APIPromise<triggers.ListTriggersResponse> {
+    return unwrapAsAPIPromise(triggersList(
+      this,
+      params?.api_version,
+      params?.filter,
+      params?.page_size,
+      params?.page_token,
+      options,
+    ));
+  }
+
+  /**
    * Creates a new trigger that will invoke the specified agent on the given cron schedule.
    */
   create(
@@ -49,18 +66,17 @@ export class Triggers extends ClientSDK {
   }
 
   /**
-   * Lists triggers for a project.
+   * Deletes a trigger.
    */
-  list(
-    params?: ListTriggersParams,
+  delete(
+    id: string,
+    params?: DeleteTriggerParams,
     options?: Omit<RequestOptions, "extra_body">,
-  ): APIPromise<triggers.ListTriggersResponse> {
-    return unwrapAsAPIPromise(triggersList(
+  ): APIPromise<interactions.Empty> {
+    return unwrapAsAPIPromise(triggersDelete(
       this,
+      id,
       params?.api_version,
-      params?.filter,
-      params?.page_size,
-      params?.page_token,
       options,
     ));
   }
@@ -100,17 +116,19 @@ export class Triggers extends ClientSDK {
   }
 
   /**
-   * Deletes a trigger.
+   * Lists executions for a trigger.
    */
-  delete(
-    id: string,
-    params?: DeleteTriggerParams,
+  listExecutions(
+    trigger_id: string,
+    params?: ListTriggerExecutionsParams,
     options?: Omit<RequestOptions, "extra_body">,
-  ): APIPromise<interactions.Empty> {
-    return unwrapAsAPIPromise(triggersDelete(
+  ): APIPromise<triggers.ListTriggerExecutionsResponse> {
+    return unwrapAsAPIPromise(triggersListExecutions(
       this,
-      id,
+      trigger_id,
       params?.api_version,
+      params?.page_size,
+      params?.page_token,
       options,
     ));
   }
@@ -127,24 +145,6 @@ export class Triggers extends ClientSDK {
       this,
       trigger_id,
       params?.api_version,
-      options,
-    ));
-  }
-
-  /**
-   * Lists executions for a trigger.
-   */
-  listExecutions(
-    trigger_id: string,
-    params?: ListTriggerExecutionsParams,
-    options?: Omit<RequestOptions, "extra_body">,
-  ): APIPromise<triggers.ListTriggerExecutionsResponse> {
-    return unwrapAsAPIPromise(triggersListExecutions(
-      this,
-      trigger_id,
-      params?.api_version,
-      params?.page_size,
-      params?.page_token,
       options,
     ));
   }

@@ -12,13 +12,13 @@
 
 export type Security = {
   /**
-   * Gemini API key sent as x-goog-api-key.
-   */
-  api_key?: string | undefined;
-  /**
    * OAuth access token sent as a bearer Authorization header.
    */
   access_token?: string | undefined;
+  /**
+   * Gemini API key sent as x-goog-api-key.
+   */
+  api_key?: string | undefined;
   /**
    * Additional default headers to apply before request-specific headers and auth.
    */

@@ -22,70 +22,25 @@ import { Tool } from "./tool.js";
 import { WebhookConfig } from "./webhook-config.js";
 
 /**
- * Enforces that the generated response is a JSON object that complies with the JSON schema specified in this field.
- */
-export type CreateModelInteractionResponseFormat =
-  | Array<ResponseFormat>
-  | ResponseFormat;
-
-/**
  * The environment configuration for the interaction. Can be an object specifying remote environment sources or a string referencing an existing environment ID.
  */
 export type CreateModelInteractionEnvironment = Environment | string;
+
+/**
+ * Enforces that the generated response is a JSON object that complies with the JSON schema specified in this field.
+ */
+export type CreateModelInteractionResponseFormat =
+  | ResponseFormat
+  | Array<ResponseFormat>;
 
 /**
  * Parameters for creating model interactions
  */
 export type CreateModelInteraction = {
   /**
-   * The model that will complete your prompt.\n\nSee [models](https://ai.google.dev/gemini-api/docs/models) for additional details.
-   */
-  model: Model;
-  /**
-   * Input only. Whether the interaction will be streamed.
-   */
-  stream?: boolean | undefined;
-  /**
-   * Input only. Whether to store the response and request for later retrieval.
-   */
-  store?: boolean | undefined;
-  /**
    * Input only. Whether to run the model interaction in the background.
    */
   background?: boolean | undefined;
-  /**
-   * System instruction for the interaction.
-   */
-  system_instruction?: string | undefined;
-  /**
-   * A list of tool declarations the model may call during interaction.
-   */
-  tools?: Array<Tool> | undefined;
-  /**
-   * The requested modalities of the response (TEXT, IMAGE, AUDIO).
-   *
-   * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
-   */
-  response_modalities?: Array<ResponseModality> | undefined;
-  /**
-   * The mime type of the response. This is required if response_format is set.
-   *
-   * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
-   */
-  response_mime_type?: string | undefined;
-  /**
-   * The ID of the previous interaction, if any.
-   */
-  previous_interaction_id?: string | undefined;
-  service_tier?: ServiceTier | undefined;
-  /**
-   * Message for configuring webhook events for a request.
-   */
-  webhook_config?: WebhookConfig | undefined;
-  /**
-   * Enforces that the generated response is a JSON object that complies with the JSON schema specified in this field.
-   */
-  response_format?: Array<ResponseFormat> | ResponseFormat | undefined;
   /**
    * The environment configuration for the interaction. Can be an object specifying remote environment sources or a string referencing an existing environment ID.
    */
@@ -95,15 +50,60 @@ export type CreateModelInteraction = {
    */
   generation_config?: GenerationConfig | undefined;
   /**
-   * Safety settings for the interaction.
+   * The input for the interaction.
    */
-  safety_settings?: Array<SafetySetting> | undefined;
+  input: InteractionsInput;
   /**
    * The labels with user-defined metadata for the request.
    */
   labels?: { [k: string]: string } | undefined;
   /**
-   * The input for the interaction.
+   * The model that will complete your prompt.\n\nSee [models](https://ai.google.dev/gemini-api/docs/models) for additional details.
    */
-  input: InteractionsInput;
+  model: Model;
+  /**
+   * The ID of the previous interaction, if any.
+   */
+  previous_interaction_id?: string | undefined;
+  /**
+   * Enforces that the generated response is a JSON object that complies with the JSON schema specified in this field.
+   */
+  response_format?: ResponseFormat | Array<ResponseFormat> | undefined;
+  /**
+   * The mime type of the response. This is required if response_format is set.
+   *
+   * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
+   */
+  response_mime_type?: string | undefined;
+  /**
+   * The requested modalities of the response (TEXT, IMAGE, AUDIO).
+   *
+   * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
+   */
+  response_modalities?: Array<ResponseModality> | undefined;
+  /**
+   * Safety settings for the interaction.
+   */
+  safety_settings?: Array<SafetySetting> | undefined;
+  service_tier?: ServiceTier | undefined;
+  /**
+   * Input only. Whether to store the response and request for later retrieval.
+   */
+  store?: boolean | undefined;
+  /**
+   * Input only. Whether the interaction will be streamed.
+   */
+  stream?: boolean | undefined;
+  /**
+   * System instruction for the interaction.
+   */
+  system_instruction?: string | undefined;
+  /**
+   * A list of tool declarations the model may call during interaction.
+   */
+  tools?: Array<Tool> | undefined;
+  /**
+   * Message for configuring webhook events for a request.
+   */
+  webhook_config?: WebhookConfig | undefined;
 };

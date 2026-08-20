@@ -18,19 +18,19 @@ import { Triggers } from "./triggers.js";
 import { Webhooks } from "./webhooks.js";
 
 export class GoogleGenAI extends ClientSDK {
-  private _interactions?: Interactions;
-  get interactions(): Interactions {
-    return (this._interactions ??= new Interactions(this._options));
-  }
-
-  private _webhooks?: Webhooks;
-  get webhooks(): Webhooks {
-    return (this._webhooks ??= new Webhooks(this._options));
-  }
-
   private _agents?: Agents;
   get agents(): Agents {
     return (this._agents ??= new Agents(this._options));
+  }
+
+  private _environments?: Environments;
+  get environments(): Environments {
+    return (this._environments ??= new Environments(this._options));
+  }
+
+  private _interactions?: Interactions;
+  get interactions(): Interactions {
+    return (this._interactions ??= new Interactions(this._options));
   }
 
   private _triggers?: Triggers;
@@ -38,8 +38,8 @@ export class GoogleGenAI extends ClientSDK {
     return (this._triggers ??= new Triggers(this._options));
   }
 
-  private _environments?: Environments;
-  get environments(): Environments {
-    return (this._environments ??= new Environments(this._options));
+  private _webhooks?: Webhooks;
+  get webhooks(): Webhooks {
+    return (this._webhooks ??= new Webhooks(this._options));
   }
 }

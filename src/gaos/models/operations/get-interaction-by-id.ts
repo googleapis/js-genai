@@ -22,17 +22,13 @@ export type GetInteractionByIdGlobals = {
 
 export type GetInteractionByIdRequest = {
   /**
+   * Which version of the API to use.
+   */
+  api_version?: string | undefined;
+  /**
    * The unique identifier of the interaction to retrieve.
    */
   id: string;
-  /**
-   * If set to true, the generated content will be streamed incrementally.
-   */
-  stream?: boolean | undefined;
-  /**
-   * Optional. If set, resumes the interaction stream from the next chunk after the event marked by the event id. Can only be used if `stream` is true.
-   */
-  last_event_id?: string | undefined;
   /**
    * If set to true, includes the input in the response.
    *
@@ -40,9 +36,13 @@ export type GetInteractionByIdRequest = {
    */
   include_input?: boolean | undefined;
   /**
-   * Which version of the API to use.
+   * Optional. If set, resumes the interaction stream from the next chunk after the event marked by the event id. Can only be used if `stream` is true.
    */
-  api_version?: string | undefined;
+  last_event_id?: string | undefined;
+  /**
+   * If set to true, the generated content will be streamed incrementally.
+   */
+  stream?: boolean | undefined;
 };
 
 export type GetInteractionByIdResponse =

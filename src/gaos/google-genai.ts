@@ -332,10 +332,10 @@ export class GeminiNextGenInteractions {
       interactionsGet(
         this.getClient(api_version),
         id,
-        stream,
-        last_event_id,
-        include_input,
         api_version,
+        include_input,
+        last_event_id,
+        stream,
         toGoogleGenAIRequestOptions(options),
       ),
     );

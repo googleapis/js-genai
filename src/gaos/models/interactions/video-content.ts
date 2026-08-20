@@ -13,13 +13,6 @@
 import { MediaProcessing } from "./media-processing.js";
 import { MediaResolution } from "./media-resolution.js";
 
-export type ProcessingEnum = "static" | "agentic" | (string & {});
-
-/**
- * How the model processes this video for understanding.
- */
-export type Processing = MediaProcessing | ProcessingEnum;
-
 /**
  * The mime type of the video.
  */
@@ -35,6 +28,13 @@ export type VideoContentMimeType =
   | "video/3gpp"
   | (string & {});
 
+export type ProcessingEnum = "static" | "agentic" | (string & {});
+
+/**
+ * How the model processes this video for understanding.
+ */
+export type Processing = MediaProcessing | ProcessingEnum;
+
 /**
  * A video content block.
  */
@@ -43,6 +43,10 @@ export type VideoContent = {
    * The video content.
    */
   data?: string | undefined;
+  /**
+   * The mime type of the video.
+   */
+  mime_type?: VideoContentMimeType | undefined;
   /**
    * How the model processes this video for understanding.
    */
@@ -53,8 +57,4 @@ export type VideoContent = {
    * The URI of the video.
    */
   uri?: string | undefined;
-  /**
-   * The mime type of the video.
-   */
-  mime_type?: VideoContentMimeType | undefined;
 };

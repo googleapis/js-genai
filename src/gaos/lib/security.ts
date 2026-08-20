@@ -258,14 +258,14 @@ export function resolveGlobalSecurity(
   let inputs: SecurityInput[][] = [
     [
       {
-        fieldName: "apiKey",
-        type: "http:custom",
-        value: security?.api_key ?? env().GOOGLE_GENAI_API_KEY,
-      },
-      {
         fieldName: "accessToken",
         type: "http:custom",
         value: security?.access_token ?? env().GOOGLE_GENAI_ACCESS_TOKEN,
+      },
+      {
+        fieldName: "apiKey",
+        type: "http:custom",
+        value: security?.api_key ?? env().GOOGLE_GENAI_API_KEY,
       },
       {
         fieldName: "defaultHeaders",

@@ -63,23 +63,6 @@ export type CreateInteractionParamsStreaming = CreateInteractionParams & {
   stream: true;
 };
 
-export type CreateModelInteractionParams =
-  & Omit<
-    CreateInteractionRequest,
-    "body"
-  >
-  & CreateModelInteraction;
-
-export type CreateModelInteractionParamsNonStreaming =
-  & CreateModelInteractionParams
-  & {
-    stream?: false | undefined;
-  };
-
-export type CreateModelInteractionParamsStreaming =
-  & CreateModelInteractionParams
-  & { stream: true };
-
 export type CreateAgentInteractionParams =
   & Omit<
     CreateInteractionRequest,
@@ -95,6 +78,23 @@ export type CreateAgentInteractionParamsNonStreaming =
 
 export type CreateAgentInteractionParamsStreaming =
   & CreateAgentInteractionParams
+  & { stream: true };
+
+export type CreateModelInteractionParams =
+  & Omit<
+    CreateInteractionRequest,
+    "body"
+  >
+  & CreateModelInteraction;
+
+export type CreateModelInteractionParamsNonStreaming =
+  & CreateModelInteractionParams
+  & {
+    stream?: false | undefined;
+  };
+
+export type CreateModelInteractionParamsStreaming =
+  & CreateModelInteractionParams
   & { stream: true };
 
 export type CreateTriggerParams =

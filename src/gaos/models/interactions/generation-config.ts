@@ -21,14 +21,14 @@ import { TranscriptionConfig } from "./transcription-config.js";
 import { VideoConfig } from "./video-config.js";
 
 /**
- * The tool choice configuration.
- */
-export type ToolChoice = ToolChoiceConfig | ToolChoiceType;
-
-/**
  * Optional. Speech and multi-speaker configuration.
  */
 export type SpeechConfigUnion = SpeakerConfig | Array<SpeechConfig>;
+
+/**
+ * The tool choice configuration.
+ */
+export type ToolChoice = ToolChoiceConfig | ToolChoiceType;
 
 /**
  * Configuration parameters for model interactions.
@@ -49,6 +49,10 @@ export type GenerationConfig = {
    */
   seed?: number | undefined;
   /**
+   * Optional. Speech and multi-speaker configuration.
+   */
+  speech_config?: SpeakerConfig | Array<SpeechConfig> | undefined;
+  /**
    * A list of character sequences that will stop output interaction.
    */
   stop_sequences?: Array<string> | undefined;
@@ -66,8 +70,4 @@ export type GenerationConfig = {
    * Configuration options for video generation.
    */
   video_config?: VideoConfig | undefined;
-  /**
-   * Optional. Speech and multi-speaker configuration.
-   */
-  speech_config?: SpeakerConfig | Array<SpeechConfig> | undefined;
 };
