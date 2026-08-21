@@ -23,8 +23,14 @@ import {
   ListEnvironmentsParams,
 } from "../models/operations/method-params.js";
 import { APIPromise, unwrapAsAPIPromise } from "../types/async.js";
+import { Files } from "./files.js";
 
 export class Environments extends ClientSDK {
+  private _files?: Files;
+  get files(): Files {
+    return (this._files ??= new Files(this._options));
+  }
+
   /**
    * Lists environments.
    */

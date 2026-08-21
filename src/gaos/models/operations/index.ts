@@ -22,6 +22,7 @@ export * from "./delete-interaction.js";
 export * from "./delete-trigger.js";
 export * from "./delete-webhook.js";
 export * from "./get-agent.js";
+export * from "./get-environment-files.js";
 export * from "./get-environment.js";
 export * from "./get-interaction-by-id.js";
 export * from "./get-trigger.js";
