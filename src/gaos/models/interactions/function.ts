@@ -15,6 +15,10 @@
  */
 export type FunctionT = {
   /**
+   * If true, the function's loading is deferred.
+   */
+  defer_loading?: boolean | undefined;
+  /**
    * A description of the function.
    */
   description?: string | undefined;
@@ -26,5 +30,12 @@ export type FunctionT = {
    * The JSON Schema for the function's parameters.
    */
   parameters?: any | undefined;
+  /**
+   * A brief description of the function, shown to the model as a
+   *
+   * @remarks
+   * short summary of functions with `defer_loading` set to true.
+   */
+  short_description?: string | undefined;
   type: "function";
 };

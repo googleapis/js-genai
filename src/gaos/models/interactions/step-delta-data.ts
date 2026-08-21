@@ -31,6 +31,8 @@ import { TextAnnotationDelta } from "./text-annotation-delta.js";
 import { TextDelta } from "./text-delta.js";
 import { ThoughtSignatureDelta } from "./thought-signature-delta.js";
 import { ThoughtSummaryDelta } from "./thought-summary-delta.js";
+import { ToolSearchCallDelta } from "./tool-search-call-delta.js";
+import { ToolSearchResultDelta } from "./tool-search-result-delta.js";
 import { URLContextCallDelta } from "./url-context-call-delta.js";
 import { URLContextResultDelta } from "./url-context-result-delta.js";
 import { VideoDelta } from "./video-delta.js";
@@ -57,6 +59,8 @@ export type StepDeltaData =
   | TextDelta
   | ThoughtSignatureDelta
   | ThoughtSummaryDelta
+  | ToolSearchCallDelta
+  | ToolSearchResultDelta
   | URLContextCallDelta
   | URLContextResultDelta
   | VideoDelta;
