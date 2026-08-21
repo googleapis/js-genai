@@ -2,6 +2,13 @@
 
 
 
+## [2.19.0](https://github.com/googleapis/js-genai/compare/v2.18.0...v2.19.0) (2026-08-21)
+
+
+### Features
+
+* Add TYPE_JPEG2000 to VideoContent.MimeType enum ([41da204](https://github.com/googleapis/js-genai/commit/41da2043cce07211f793647d57d119e04ff2ef48))
+
 ## [2.18.0](https://github.com/googleapis/js-genai/compare/v2.17.1...v2.18.0) (2026-08-19)
 
 
