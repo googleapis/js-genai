@@ -20,6 +20,16 @@ export const INITIAL_RETRY_DELAY_MS = 1000;
 export const DELAY_MULTIPLIER = 2;
 export const X_GOOG_UPLOAD_STATUS_HEADER_FIELD = 'x-goog-upload-status';
 
+export async function discardResponseBody(
+  response?: HttpResponse,
+): Promise<void> {
+  const body = response?.responseInternal?.body;
+  if (!body) {
+    return;
+  }
+  await body.cancel();
+}
+
 export class CrossUploader implements Uploader {
   async upload(
     file: string | Blob,
@@ -170,6 +180,7 @@ async function uploadBlobInternal(
     if (response?.headers?.[X_GOOG_UPLOAD_STATUS_HEADER_FIELD] !== 'active') {
       break;
     }
+    await discardResponseBody(response);
     // TODO(b/401391430) Investigate why the upload status is not finalized
     // even though all content has been uploaded.
     if (fileSize <= offset) {
