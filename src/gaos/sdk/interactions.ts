@@ -14,6 +14,7 @@ import { interactionsCancel } from "../funcs/interactions-cancel.js";
 import { interactionsCreate } from "../funcs/interactions-create.js";
 import { interactionsDelete } from "../funcs/interactions-delete.js";
 import { interactionsGet } from "../funcs/interactions-get.js";
+import { interactionsList } from "../funcs/interactions-list.js";
 import { ClientSDK, RequestOptions } from "../lib/sdks.js";
 import * as interactions from "../models/interactions/index.js";
 import * as operations from "../models/operations/index.js";
@@ -28,6 +29,7 @@ import {
   GetInteractionByIdParams,
   GetInteractionByIdParamsNonStreaming,
   GetInteractionByIdParamsStreaming,
+  ListInteractionsParams,
 } from "../models/operations/method-params.js";
 import { APIPromise, unwrapAsAPIPromise } from "../types/async.js";
 
@@ -123,6 +125,22 @@ export class Interactions extends ClientSDK {
       params?.include_input,
       params?.last_event_id,
       params?.stream,
+      options,
+    ));
+  }
+
+  /**
+   * List interactions.
+   */
+  list(
+    params?: ListInteractionsParams,
+    options?: Omit<RequestOptions, "extra_body">,
+  ): APIPromise<operations.ListInteractionsResponse> {
+    return unwrapAsAPIPromise(interactionsList(
+      this,
+      params?.page_size,
+      params?.page_token,
+      params?.api_version,
       options,
     ));
   }

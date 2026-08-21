@@ -53,6 +53,7 @@ import { agentsList } from "./funcs/agents-list.js";
 import { interactionsCancel } from "./funcs/interactions-cancel.js";
 import { interactionsCreate } from "./funcs/interactions-create.js";
 import { interactionsGet } from "./funcs/interactions-get.js";
+import { interactionsList } from "./funcs/interactions-list.js";
 import { triggersCreate } from "./funcs/triggers-create.js";
 import { triggersDelete } from "./funcs/triggers-delete.js";
 import { triggersGet } from "./funcs/triggers-get.js";
@@ -180,6 +181,12 @@ export type InteractionGetParamsNonStreaming =
   GetInteractionByIdParamsNonStreaming;
 
 export type InteractionGetParamsStreaming = GetInteractionByIdParamsStreaming;
+
+export type ListInteractionsParams = {
+  api_version?: string;
+  page_size?: number;
+  page_token?: string;
+};
 
 export type ListAgentsParams = {
   api_version?: string;
@@ -340,6 +347,22 @@ export class GeminiNextGenInteractions {
       ),
     );
     return addOutputPropertiesIfInteraction(response) as GoogleGenAIInteraction;
+  }
+
+  async list(
+    params: ListInteractionsParams | null | undefined = {},
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<operations.ListInteractionsResponse> {
+    const { api_version, page_size, page_token } = params ?? {};
+    return unwrapWithSdkHttpResponse(
+      interactionsList(
+        this.getClient(api_version),
+        page_size,
+        page_token,
+        api_version,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
   }
 
   async delete(
