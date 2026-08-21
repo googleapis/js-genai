@@ -99,6 +99,7 @@ import type { Retrieval as Retrieval$Import } from "./models/interactions/retrie
 import type { ReviewSnippet as ReviewSnippet$Import } from "./models/interactions/review-snippet.js";
 import type { SafetySetting as SafetySetting$Import } from "./models/interactions/safety-setting.js";
 import type { SessionConfig as SessionConfig$Import } from "./models/interactions/session-config.js";
+import type { SmartTranscriptionMode as SmartTranscriptionMode$Import } from "./models/interactions/smart-transcription-mode.js";
 import type { Source as Source$Import } from "./models/interactions/source.js";
 import type { SpeechConfig as SpeechConfig$Import } from "./models/interactions/speech-config.js";
 import type { StaticMediaProcessing as StaticMediaProcessing$Import } from "./models/interactions/static-media-processing.js";
@@ -119,6 +120,7 @@ import type { ToolChoiceConfig as ToolChoiceConfig$Import } from "./models/inter
 import type { ToolChoiceType as ToolChoiceType$Import } from "./models/interactions/tool-choice-type.js";
 import type { Tool as Tool$Import } from "./models/interactions/tool.js";
 import type { TranscriptionConfig as TranscriptionConfig$Import } from "./models/interactions/transcription-config.js";
+import type { TranscriptionMode as TranscriptionMode$Import } from "./models/interactions/transcription-mode.js";
 import type { URLCitation as URLCitation$Import } from "./models/interactions/url-citation.js";
 import type { URLContextCallArguments as URLContextCallArguments$Import } from "./models/interactions/url-context-call-arguments.js";
 import type { URLContextCallDelta as URLContextCallDelta$Import } from "./models/interactions/url-context-call-delta.js";
@@ -129,6 +131,7 @@ import type { URLContextResult as URLContextResult$Import } from "./models/inter
 import type { URLContext as URLContext$Import } from "./models/interactions/url-context.js";
 import type { Usage as Usage$Import } from "./models/interactions/usage.js";
 import type { UserInputStep as UserInputStep$Import } from "./models/interactions/user-input-step.js";
+import type { VerbatimTranscriptionMode as VerbatimTranscriptionMode$Import } from "./models/interactions/verbatim-transcription-mode.js";
 import type { VertexAISearchConfig as VertexAISearchConfig$Import } from "./models/interactions/vertex-ai-search-config.js";
 import type { VideoConfig as VideoConfig$Import } from "./models/interactions/video-config.js";
 import type { VideoContent as VideoContent$Import } from "./models/interactions/video-content.js";
@@ -267,6 +270,7 @@ type Tool$ = Tool$Import;
 type ToolChoiceConfig$ = ToolChoiceConfig$Import;
 type ToolChoiceType$ = ToolChoiceType$Import;
 type TranscriptionConfig$ = TranscriptionConfig$Import;
+type TranscriptionMode$ = TranscriptionMode$Import;
 type URLCitation$ = URLCitation$Import;
 type URLContextCallArguments$ = URLContextCallArguments$Import;
 type URLContextCallStep$ = URLContextCallStep$Import;
@@ -330,6 +334,8 @@ type MCPServer$ = MCPServer$Import;
 type Retrieval$ = Retrieval$Import;
 type URLContext$ = URLContext$Import;
 type VertexAISearchConfig$ = VertexAISearchConfig$Import;
+type Smart$ = SmartTranscriptionMode$Import;
+type Verbatim$ = VerbatimTranscriptionMode$Import;
 type Arguments$5 = URLContextCallArguments$Import;
 type Result$3 = URLContextResult$Import;
 type CachedTokensByModality$ = ModalityTokens$Import;
@@ -485,6 +491,7 @@ export type RotateSigningSecretRequest = RotateSigningSecretRequest$;
 export type SafetySetting = SafetySetting$;
 export type SessionConfig = SessionConfig$;
 export type SigningSecret = SigningSecret$;
+export type Smart = Smart$;
 export type Source = Source$;
 export type SourceFile = SourceFile$;
 export type SpeechConfig = SpeechConfig$;
@@ -506,6 +513,7 @@ export type ToolChoiceConfig = ToolChoiceConfig$;
 export type ToolChoiceType = ToolChoiceType$;
 export type ToolUseTokensByModality = ToolUseTokensByModality$;
 export type TranscriptionConfig = TranscriptionConfig$;
+export type TranscriptionMode = TranscriptionMode$;
 export type Trigger = Trigger$;
 export type TriggerCreateParams = TriggerCreateParams$;
 export type TriggerDeleteParams = TriggerDeleteParams$;
@@ -528,6 +536,7 @@ export type URLContextResult = URLContextResult$;
 export type URLContextResultStep = URLContextResultStep$;
 export type Usage = Usage$;
 export type UserInputStep = UserInputStep$;
+export type Verbatim = Verbatim$;
 export type VertexAISearchConfig = VertexAISearchConfig$;
 export type Video = Video$;
 export type VideoConfig = VideoConfig$;
@@ -652,6 +661,7 @@ export declare namespace Interactions {
   export type ToolChoiceConfig = ToolChoiceConfig$;
   export type ToolChoiceType = ToolChoiceType$;
   export type TranscriptionConfig = TranscriptionConfig$;
+  export type TranscriptionMode = TranscriptionMode$;
   export type URLCitation = URLCitation$;
   export type URLContextCallArguments = URLContextCallArguments$;
   export interface URLContextCallStep extends URLContextCallStep$ {}
@@ -757,6 +767,10 @@ export declare namespace Interactions {
     export namespace Retrieval {
       export type VertexAISearchConfig = VertexAISearchConfig$;
     }
+  }
+  export namespace TranscriptionMode {
+    export type Smart = Smart$;
+    export type Verbatim = Verbatim$;
   }
   export namespace URLContextCallStep {
     export type Arguments = Arguments$5;
