@@ -54,6 +54,25 @@ describe('addAuthHeaders', () => {
     expect(googleAuthMock.getRequestHeaders).toHaveBeenCalledWith(mockUrl);
   });
 
+  it('should add auth headers when google-auth-library returns a plain object', async () => {
+    const nodeAuth = new NodeAuth({});
+    (nodeAuth as unknown as NodeAuthWithGoogleAuth).googleAuth = googleAuthMock; // Inject the mock
+    // google-auth-library actually returns a plain object { [index: string]: string }
+    const mockHeaders = {
+      Authorization: 'Bearer test-token',
+      'x-goog-user-project': 'test-project',
+    };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    googleAuthMock.getRequestHeaders.and.resolveTo(mockHeaders as any);
+    const headers = new Headers();
+
+    await nodeAuth.addAuthHeaders(headers, mockUrl);
+
+    expect(headers.get('Authorization')).toBe('Bearer test-token');
+    expect(headers.get('x-goog-user-project')).toBe('test-project');
+    expect(googleAuthMock.getRequestHeaders).toHaveBeenCalledWith(mockUrl);
+  });
+
   it('should not add an Authorization header if it already exists', async () => {
     const nodeAuth = new NodeAuth({});
     (nodeAuth as unknown as NodeAuthWithGoogleAuth).googleAuth = googleAuthMock; // Inject the mock
