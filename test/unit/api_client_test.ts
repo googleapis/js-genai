@@ -710,32 +710,24 @@ describe('ApiClient', () => {
       expect(client.getApiVersion()).toBe('v1beta');
     });
 
-    it('should override API version with provided values', () => {
-      const client = new ApiClient({
-        auth: new FakeAuth(),
-        project: 'project-from-opts',
-        location: 'location-from-opts',
-        apiKey: 'apikey-from-opts',
-        vertexai: false,
-        apiVersion: 'v1beta',
-        httpOptions: {
-          apiVersion: 'v1',
-        },
-        uploader: new CrossUploader(),
-        downloader: new CrossDownloader(),
-      });
-
-      expect(client.isVertexAI()).toBe(false);
-      expect(client.getProject()).toBe('project-from-opts');
-      expect(client.getLocation()).toBe('location-from-opts');
-      expect(client.getApiKey()).toBe('apikey-from-opts');
-      expect(client.getRequestUrl()).toBe(
-        'https://generativelanguage.googleapis.com/v1',
+    it('should throw error when apiVersion is set in both client options and httpOptions', () => {
+      expect(() => {
+        new ApiClient({
+          auth: new FakeAuth(),
+          project: 'project-from-opts',
+          location: 'location-from-opts',
+          apiKey: 'apikey-from-opts',
+          vertexai: false,
+          apiVersion: 'v1beta',
+          httpOptions: {
+            apiVersion: 'v1',
+          },
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        });
+      }).toThrowError(
+        /apiVersion is set in both client options and httpOptions/,
       );
-      expect(client.getWebsocketBaseUrl()).toBe(
-        'wss://generativelanguage.googleapis.com/',
-      );
-      expect(client.getApiVersion()).toBe('v1');
     });
 
     it('should return default HTTP headers', () => {
@@ -1924,13 +1916,13 @@ describe('ApiClient', () => {
       try {
         const handler = {};
         const result = dispatcher.dispatch(
-          {path: '/v1beta/models', method: 'POST'},
+          {path: '/v1/models', method: 'POST'},
           handler,
         );
         expect(result).toBe('dispatched');
         expect(dispatchSpy).toHaveBeenCalledWith(
           {
-            path: '/v1beta/models',
+            path: '/v1/models',
             method: 'POST',
             headersTimeout: 0,
             bodyTimeout: 0,
@@ -2440,7 +2432,7 @@ describe('ApiClient', () => {
       await client.requestStream({path: 'test-path', httpMethod: 'POST'});
       const fetchArgs = fetchSpy.calls.first().args;
       expect(fetchArgs[0]).toBe(
-        'https://generativelanguage.googleapis.com/v1beta/test-path?alt=sse',
+        'https://generativelanguage.googleapis.com/v1/test-path?alt=sse',
       );
       // @ts-expect-error TS2532: Object is possibly 'undefined'.
       expect(fetchArgs[1].signal instanceof AbortSignal).toBeTrue();
@@ -2954,7 +2946,6 @@ describe('includeExtraBodyToRequestInit', () => {
     },
   );
 });
-
 describe('custom fetch', () => {
   let globalFetchSpy: jasmine.Spy;
 
@@ -2982,7 +2973,6 @@ describe('custom fetch', () => {
       downloader: new CrossDownloader(),
       httpOptions: {
         baseUrl: 'https://generativelanguage.googleapis.com',
-        apiVersion: 'v1beta',
         fetch: customFetch,
       },
     });
@@ -2997,7 +2987,7 @@ describe('custom fetch', () => {
     expect(globalFetchSpy).not.toHaveBeenCalled();
     const [callUrl, callInit] = customFetch.calls.first().args;
     expect(callUrl).toContain(
-      'https://generativelanguage.googleapis.com/v1beta/test-path',
+      'https://generativelanguage.googleapis.com/v1/test-path',
     );
     expect((callInit as RequestInit).method).toBe('POST');
     const json = (await response.json()) as Record<string, unknown>;
@@ -3142,5 +3132,33 @@ describe('custom fetch', () => {
       },
     });
     expect(clientWithoutFetch.getFetch()).toBeUndefined();
+  });
+});
+
+describe('ApiClient apiVersion initialization', () => {
+  it('initializes apiVersion from options', () => {
+    const client = new ApiClient({
+      auth: new FakeAuth(),
+      uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
+      apiKey: 'test-key',
+      apiVersion: 'v1beta',
+    });
+    expect(client.clientOptions.httpOptions?.apiVersion).toBe('v1beta');
+  });
+
+  it('throws error when apiVersion is set in both client options and httpOptions', () => {
+    expect(() => {
+      new ApiClient({
+        auth: new FakeAuth(),
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+        apiKey: 'test-key',
+        apiVersion: 'v1beta',
+        httpOptions: {apiVersion: 'v1'},
+      });
+    }).toThrowError(
+      'apiVersion is set in both client options and httpOptions. Please specify apiVersion in only one place.',
+    );
   });
 });

@@ -45,7 +45,7 @@ describe('live', () => {
 
     const websocketFactorySpyCall = websocketFactorySpy.calls.all()[0];
     expect(websocketFactorySpyCall.args[0]).toBe(
-      'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=test-api-key',
+      'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1.GenerativeService.BidiGenerateContent?key=test-api-key',
     );
     expect(websocketFactorySpyCall.args[1]).toEqual({
       'content-type': 'application/json',
@@ -92,7 +92,7 @@ describe('live', () => {
 
     const websocketFactorySpyCall = websocketFactorySpy.calls.all()[0];
     expect(websocketFactorySpyCall.args[0]).toBe(
-      'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContentConstrained?access_token=auth_tokens/test-access-token',
+      'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1.GenerativeService.BidiGenerateContentConstrained?access_token=auth_tokens/test-access-token',
     );
   });
 
@@ -122,7 +122,7 @@ describe('live', () => {
 
     const websocketFactorySpyCall = websocketFactorySpy.calls.all()[0];
     expect(websocketFactorySpyCall.args[0]).toBe(
-      'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=test-api-key',
+      'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1.GenerativeService.BidiGenerateContent?key=test-api-key',
     );
   });
 
@@ -205,7 +205,7 @@ describe('live', () => {
 
     const websocketFactorySpyCall = websocketFactorySpy.calls.all()[0];
     expect(websocketFactorySpyCall.args[0]).toBe(
-      'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=test-api-key',
+      'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1.GenerativeService.BidiGenerateContent?key=test-api-key',
     );
     expect(websocketFactorySpyCall.args[1]).toEqual({
       'content-type': 'application/json',

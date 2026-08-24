@@ -31,7 +31,7 @@ describe('Credentials Lifecycle', () => {
           }
         }
         response.setHeader('content-type', 'application/json');
-        if (request.method === 'GET' && request.url === '/v1beta/credentials') {
+        if (request.method === 'GET' && request.url === '/v1/credentials') {
           response.end(
             JSON.stringify({
               credentials: [
@@ -88,7 +88,6 @@ describe('Credentials Lifecycle', () => {
     const ai = new GoogleGenAI({
       apiKey: 'test-api-key',
       httpOptions: {
-        apiVersion: 'v1beta',
         baseUrl: `http://127.0.0.1:${address.port}`,
       },
     });
@@ -159,15 +158,15 @@ describe('Credentials Lifecycle', () => {
       await ai.credentials.delete('cred_bearer_123');
 
       expect(captured).toEqual([
-        'POST /v1beta/credentials',
-        'POST /v1beta/credentials',
-        'POST /v1beta/credentials',
-        'GET /v1beta/credentials',
-        'GET /v1beta/credentials/cred_bearer_123',
-        'PATCH /v1beta/credentials/cred_bearer_123',
-        'PATCH /v1beta/credentials/cred_env_123',
-        'PATCH /v1beta/credentials/cred_oauth_123',
-        'DELETE /v1beta/credentials/cred_bearer_123',
+        'POST /v1/credentials',
+        'POST /v1/credentials',
+        'POST /v1/credentials',
+        'GET /v1/credentials',
+        'GET /v1/credentials/cred_bearer_123',
+        'PATCH /v1/credentials/cred_bearer_123',
+        'PATCH /v1/credentials/cred_env_123',
+        'PATCH /v1/credentials/cred_oauth_123',
+        'DELETE /v1/credentials/cred_bearer_123',
       ]);
 
       // Verify request bodies

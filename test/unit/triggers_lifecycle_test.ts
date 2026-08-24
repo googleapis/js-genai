@@ -66,7 +66,6 @@ describe('Triggers Lifecycle', () => {
     const ai = new GoogleGenAI({
       apiKey: 'test-api-key',
       httpOptions: {
-        apiVersion: 'v1beta',
         baseUrl: `http://127.0.0.1:${address.port}`,
       },
     });
@@ -112,13 +111,13 @@ describe('Triggers Lifecycle', () => {
       expect(trigger.schedule).toBe('0 0 * * *');
       expect(fetched.schedule).toBe('0 0 * * *');
       expect(captured).toEqual([
-        'POST /v1beta/triggers',
-        'GET /v1beta/triggers?filter=some-filter&page_size=10',
-        'GET /v1beta/triggers/svc_abc',
-        'PATCH /v1beta/triggers/svc_abc',
-        'DELETE /v1beta/triggers/svc_abc',
-        'POST /v1beta/triggers/svc_abc/executions',
-        'GET /v1beta/triggers/svc_abc/executions?page_size=5',
+        'POST /v1/triggers',
+        'GET /v1/triggers?filter=some-filter&page_size=10',
+        'GET /v1/triggers/svc_abc',
+        'PATCH /v1/triggers/svc_abc',
+        'DELETE /v1/triggers/svc_abc',
+        'POST /v1/triggers/svc_abc/executions',
+        'GET /v1/triggers/svc_abc/executions?page_size=5',
       ]);
     } finally {
       server.close();
@@ -128,7 +127,7 @@ describe('Triggers Lifecycle', () => {
 
   it('preserves prototype chain and wraps errors in wrapSDKError', () => {
     const request = new Request(
-      'https://generativelanguage.googleapis.com/v1beta/triggers',
+      'https://generativelanguage.googleapis.com/v1/triggers',
     );
     const response400 = new Response(
       '{"error":{"message":"invalid argument"}}',

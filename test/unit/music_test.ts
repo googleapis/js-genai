@@ -60,7 +60,7 @@ describe('LiveMusic', () => {
       const websocketCreateSpy = websocketFactory.create as jasmine.Spy;
       const websocketFactorySpyCall = websocketCreateSpy.calls.all()[0];
       expect(websocketFactorySpyCall.args[0]).toBe(
-        'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateMusic?key=test-api-key',
+        'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1.GenerativeService.BidiGenerateMusic?key=test-api-key',
       );
       expect(JSON.stringify(websocketFactorySpyCall.args[1])).toBe(
         `{"content-type":"application/json","user-agent":"google-genai-sdk/${

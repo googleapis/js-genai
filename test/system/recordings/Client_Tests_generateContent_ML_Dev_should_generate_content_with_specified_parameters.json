@@ -4,8 +4,8 @@
     {
       "request": {
         "method": "POST",
-        "url": "/v1beta/models/gemini-2.5-flash:generateContent",
-        "request": "POST /v1beta/models/gemini-2.5-flash:generateContent HTTP/1.1",
+        "url": "/v1/models/gemini-2.5-flash:generateContent",
+        "request": "POST /v1/models/gemini-2.5-flash:generateContent HTTP/1.1",
         "headers": {
           "Accept": "*/*",
           "Accept-Encoding": "gzip, deflate",
@@ -42,7 +42,7 @@
         "port": 443,
         "protocol": "https"
       },
-      "shaSum": "203bc86faa4935f96c54e87bc2e8295b9ecf1327599d06a3c81474050631a77e",
+      "shaSum": "9f4d44f3a6f070647e102a83f991724497a4cf1dc8c8da46770a9531e7ef7c58",
       "response": {
         "statusCode": 200,
         "headers": {
