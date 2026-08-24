@@ -14,7 +14,9 @@ import type { AgentListResponse as AgentListResponse$Import } from "./models/age
 import type { AgentTool as AgentTool$Import } from "./models/agents/agent-tool.js";
 import type { Agent as Agent$Import } from "./models/agents/agent.js";
 import type { CreateEnvironmentRequest as CreateEnvironmentRequest$Import } from "./models/environments/create-environment-request.js";
+import type { EnvironmentFile as EnvironmentFile$Import } from "./models/environments/environment-file.js";
 import type { Environment as Environment$Import } from "./models/environments/environment.js";
+import type { GetEnvironmentFilesResponse as GetEnvironmentFilesResponse$Import } from "./models/environments/get-environment-files-response.js";
 import type { ListEnvironmentsResponse as ListEnvironmentsResponse$Import } from "./models/environments/list-environments-response.js";
 import type { AllowedTools as AllowedTools$Import } from "./models/interactions/allowed-tools.js";
 import type { Annotation as Annotation$Import } from "./models/interactions/annotation.js";
@@ -190,7 +192,9 @@ type AgentTool$ = AgentTool$Import;
 type CreateEnvironmentRequest$ = CreateEnvironmentRequest$Import;
 type Environment$ = Environment$Import;
 type EnvironmentDeleteResponse$ = Empty$Import;
+type EnvironmentFile$ = EnvironmentFile$Import;
 type EnvironmentListResponse$ = ListEnvironmentsResponse$Import;
+type GetEnvironmentFilesResponse$ = GetEnvironmentFilesResponse$Import;
 type Allowlist$ = Allowlist$Import;
 type Allowlist$2 = Allowlist$Import;
 type AllowedTools$ = AllowedTools$Import;
@@ -419,6 +423,7 @@ export type DocumentContent = DocumentContent$;
 export type DynamicAgentConfig = DynamicAgentConfig$;
 export type Environment = Environment$;
 export type EnvironmentDeleteResponse = EnvironmentDeleteResponse$;
+export type EnvironmentFile = EnvironmentFile$;
 export type EnvironmentListResponse = EnvironmentListResponse$;
 export type Error = Error$;
 export type ErrorEvent = ErrorEvent$;
@@ -435,6 +440,7 @@ export type FunctionCallStep = FunctionCallStep$;
 export type FunctionResult = FunctionResult$;
 export type FunctionResultStep = FunctionResultStep$;
 export type GenerationConfig = GenerationConfig$;
+export type GetEnvironmentFilesResponse = GetEnvironmentFilesResponse$;
 export type GoogleMaps = GoogleMaps$;
 export type GoogleMapsCall = GoogleMapsCall$;
 export type GoogleMapsCallArguments = GoogleMapsCallArguments$;
@@ -574,7 +580,9 @@ export declare namespace Environments {
   export interface CreateEnvironmentRequest extends CreateEnvironmentRequest$ {}
   export interface Environment extends Environment$ {}
   export type EnvironmentDeleteResponse = EnvironmentDeleteResponse$;
+  export type EnvironmentFile = EnvironmentFile$;
   export type EnvironmentListResponse = EnvironmentListResponse$;
+  export type GetEnvironmentFilesResponse = GetEnvironmentFilesResponse$;
   export namespace CreateEnvironmentRequest {
     export type Allowlist = Allowlist$;
   }
