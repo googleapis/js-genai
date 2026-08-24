@@ -1222,6 +1222,22 @@ export enum ServiceTier {
   PRIORITY = 'priority',
 }
 
+/** How the model processes input media for understanding. */
+export enum MediaProcessing {
+  /**
+   * Default. Uses model-specific processing
+   */
+  MEDIA_PROCESSING_UNSPECIFIED = 'MEDIA_PROCESSING_UNSPECIFIED',
+  /**
+   * Fixed-rate frame extraction. All frames placed in context.
+   */
+  STATIC = 'STATIC',
+  /**
+   * Model-driven dynamic navigation. Recommended for most use cases.
+   */
+  AGENTIC = 'AGENTIC',
+}
+
 /** The tokenization quality used for given media. */
 export enum PartMediaResolutionLevel {
   /**
@@ -1272,6 +1288,10 @@ export enum ToolType {
    * File search tool, maps to Tool.file_search.
    */
   FILE_SEARCH = 'FILE_SEARCH',
+  /**
+   * Media processing tool.
+   */
+  MEDIA_PROCESSING = 'MEDIA_PROCESSING',
 }
 
 /** Resource scope. */
@@ -2104,6 +2124,8 @@ export declare interface Part {
   videoMetadata?: VideoMetadata;
   /** Custom metadata associated with the Part. Agents using genai.Part as content representation may need to keep track of the additional information. For example it can be name of a file/source from which the Part originates or a way to multiplex multiple Part streams. This field is not supported in Vertex AI. */
   partMetadata?: Record<string, unknown>;
+  /** How the model processes this part's media for understanding. */
+  mediaProcessing?: MediaProcessing;
 }
 /**
  * Creates a `Part` object from a `URI` string.

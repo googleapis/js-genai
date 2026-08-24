@@ -1481,6 +1481,13 @@ export function partToVertex(
     );
   }
 
+  const fromMediaProcessing = common.getValueByPath(fromObject, [
+    'mediaProcessing',
+  ]);
+  if (fromMediaProcessing != null) {
+    common.setValueByPath(toObject, ['mediaProcessing'], fromMediaProcessing);
+  }
+
   return toObject;
 }
 
