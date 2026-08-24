@@ -7,6 +7,7 @@
 import {once} from 'node:events';
 import {createServer} from 'node:http';
 
+import {GOOGLE_AI_API_DEFAULT_VERSION} from '../../src/_api_client.js';
 import {GoogleGenAI} from '../../src/client.js';
 import {
   APIError,
@@ -66,7 +67,6 @@ describe('Triggers Lifecycle', () => {
     const ai = new GoogleGenAI({
       apiKey: 'test-api-key',
       httpOptions: {
-        apiVersion: 'v1beta',
         baseUrl: `http://127.0.0.1:${address.port}`,
       },
     });
@@ -112,13 +112,13 @@ describe('Triggers Lifecycle', () => {
       expect(trigger.schedule).toBe('0 0 * * *');
       expect(fetched.schedule).toBe('0 0 * * *');
       expect(captured).toEqual([
-        'POST /v1beta/triggers',
-        'GET /v1beta/triggers?filter=some-filter&page_size=10',
-        'GET /v1beta/triggers/svc_abc',
-        'PATCH /v1beta/triggers/svc_abc',
-        'DELETE /v1beta/triggers/svc_abc',
-        'POST /v1beta/triggers/svc_abc/executions',
-        'GET /v1beta/triggers/svc_abc/executions?page_size=5',
+        `POST /${GOOGLE_AI_API_DEFAULT_VERSION}/triggers`,
+        `GET /${GOOGLE_AI_API_DEFAULT_VERSION}/triggers?filter=some-filter&page_size=10`,
+        `GET /${GOOGLE_AI_API_DEFAULT_VERSION}/triggers/svc_abc`,
+        `PATCH /${GOOGLE_AI_API_DEFAULT_VERSION}/triggers/svc_abc`,
+        `DELETE /${GOOGLE_AI_API_DEFAULT_VERSION}/triggers/svc_abc`,
+        `POST /${GOOGLE_AI_API_DEFAULT_VERSION}/triggers/svc_abc/executions`,
+        `GET /${GOOGLE_AI_API_DEFAULT_VERSION}/triggers/svc_abc/executions?page_size=5`,
       ]);
     } finally {
       server.close();
@@ -128,7 +128,7 @@ describe('Triggers Lifecycle', () => {
 
   it('preserves prototype chain and wraps errors in wrapSDKError', () => {
     const request = new Request(
-      'https://generativelanguage.googleapis.com/v1beta/triggers',
+      `https://generativelanguage.googleapis.com/${GOOGLE_AI_API_DEFAULT_VERSION}/triggers`,
     );
     const response400 = new Response(
       '{"error":{"message":"invalid argument"}}',

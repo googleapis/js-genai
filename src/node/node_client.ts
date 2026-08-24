@@ -339,7 +339,11 @@ export class GoogleGenAI {
       }
     }
 
-    this.apiVersion = options.apiVersion;
+    this.apiVersion =
+      options.apiVersion ??
+      (options.httpOptions?.apiVersion !== undefined
+        ? undefined
+        : getEnv('GOOGLE_GENAI_API_VERSION') || undefined);
     this.httpOptions = options.httpOptions;
     const auth = new NodeAuth({
       apiKey: this.apiKey,

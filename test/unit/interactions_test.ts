@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {GOOGLE_AI_API_DEFAULT_VERSION} from '../../src/_api_client.js';
 import {
   GeminiNextGenInteractions,
   GoogleGenAIParentClient,
@@ -363,7 +364,9 @@ describe('Interactions resource', () => {
           options: {http_client: new HTTPClient()},
         },
         {
-          url: new URL('https://my.base.host/v1beta/interactions'),
+          url: new URL(
+            `https://my.base.host/${GOOGLE_AI_API_DEFAULT_VERSION}/interactions`,
+          ),
           options: {method: 'POST'},
         },
       );
@@ -384,13 +387,16 @@ describe('Interactions resource', () => {
       try {
         const handler = {};
         const dispatched = dispatcher.dispatch(
-          {path: '/v1beta/interactions', method: 'POST'},
+          {
+            path: `/${GOOGLE_AI_API_DEFAULT_VERSION}/interactions`,
+            method: 'POST',
+          },
           handler,
         );
         expect(dispatched).toBe('dispatched');
         expect(dispatchSpy).toHaveBeenCalledWith(
           {
-            path: '/v1beta/interactions',
+            path: `/${GOOGLE_AI_API_DEFAULT_VERSION}/interactions`,
             method: 'POST',
             headersTimeout: 0,
             bodyTimeout: 0,
@@ -415,7 +421,9 @@ describe('Interactions resource', () => {
           timeout_ms: 2400000,
         },
         {
-          url: new URL('https://my.base.host/v1beta/interactions'),
+          url: new URL(
+            `https://my.base.host/${GOOGLE_AI_API_DEFAULT_VERSION}/interactions`,
+          ),
           options: {method: 'POST'},
         },
       );
@@ -433,10 +441,13 @@ describe('Interactions resource', () => {
       globalRecord[globalDispatcherSymbol] = {dispatch: dispatchSpy};
       try {
         const handler = {};
-        dispatcher.dispatch({path: '/v1beta/interactions'}, handler);
+        dispatcher.dispatch(
+          {path: `/${GOOGLE_AI_API_DEFAULT_VERSION}/interactions`},
+          handler,
+        );
         expect(dispatchSpy).toHaveBeenCalledWith(
           {
-            path: '/v1beta/interactions',
+            path: `/${GOOGLE_AI_API_DEFAULT_VERSION}/interactions`,
             headersTimeout: 0,
             bodyTimeout: 0,
           },
@@ -462,7 +473,9 @@ describe('Interactions resource', () => {
           options: {http_client: customHttpClient},
         },
         {
-          url: new URL('https://my.base.host/v1beta/interactions'),
+          url: new URL(
+            `https://my.base.host/${GOOGLE_AI_API_DEFAULT_VERSION}/interactions`,
+          ),
           options: {method: 'POST'},
         },
       );
