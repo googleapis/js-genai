@@ -2310,7 +2310,7 @@ describe('ApiClient', () => {
       await client.requestStream({path: 'test-path', httpMethod: 'POST'});
       const fetchArgs = fetchSpy.calls.first().args;
       expect(fetchArgs[0]).toBe(
-        'https://generativelanguage.googleapis.com/v1beta/test-path?alt=sse',
+        'https://generativelanguage.googleapis.com/v1/test-path?alt=sse',
       );
       // @ts-expect-error TS2532: Object is possibly 'undefined'.
       expect(fetchArgs[1].signal instanceof AbortSignal).toBeTrue();
