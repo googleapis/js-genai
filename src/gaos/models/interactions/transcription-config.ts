@@ -17,7 +17,9 @@ export type TranscriptionConfigModeEnum = "verbatim" | "smart" | (string & {});
 /**
  * Discriminated transcription mode options or enum.
  */
-export type Mode = TranscriptionMode | TranscriptionConfigModeEnum;
+export type TranscriptionConfigMode =
+  | TranscriptionMode
+  | TranscriptionConfigModeEnum;
 
 /**
  * Configuration for speech recognition (transcription).
