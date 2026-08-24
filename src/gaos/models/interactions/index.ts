@@ -99,6 +99,8 @@ export * from "./model-output-step.js";
 export * from "./model.js";
 export * from "./parallel-ai-search-config.js";
 export * from "./place-citation.js";
+export * from "./processing-call-delta.js";
+export * from "./processing-result-delta.js";
 export * from "./rag-resource.js";
 export * from "./rag-retrieval-config.js";
 export * from "./rag-store-config.js";
