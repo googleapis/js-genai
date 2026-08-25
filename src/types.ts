@@ -14,6 +14,22 @@ import {
   uploadToFileSearchStoreOperationFromMldev,
 } from './converters/_operations_converters.js';
 
+/** How the model processes this part's media for understanding. Only meaningful for video parts (`inline_data` or `file_data` with video mime). Non-video parts ignore this field. */
+export enum MediaProcessing {
+  /**
+   * Default. Uses model-specific processing (3.5 Pro+ -> `AGENTIC`, older models -> `STATIC`).
+   */
+  MEDIA_PROCESSING_UNSPECIFIED = 'MEDIA_PROCESSING_UNSPECIFIED',
+  /**
+   * Fixed-rate frame extraction. All frames placed in context.
+   */
+  STATIC = 'STATIC',
+  /**
+   * Model-driven dynamic navigation. Recommended for most use cases.
+   */
+  AGENTIC = 'AGENTIC',
+}
+
 /** Outcome of the code execution. */
 export enum Outcome {
   /**
@@ -460,6 +476,22 @@ export enum FunctionCallingConfigMode {
   VALIDATED = 'VALIDATED',
 }
 
+/** Configures transcription mode. Supported values: `VERBATIM`, `SMART`. If unspecified, defaults to `VERBATIM` transcription. In `SMART` mode, the model performs disfluency removal (eliminating filler words, repetitions, and false starts), light grammatical cleanup, automatic formatting (paragraphs, bullet points, numbered lists), and minor user edits (inline self-corrections). Timestamps and diarization are incompatible with mode `SMART`. */
+export enum AudioTranscriptionConfigMode {
+  /**
+   * Unspecified transcription mode.
+   */
+  MODE_UNSPECIFIED = 'MODE_UNSPECIFIED',
+  /**
+   * Verbatim transcription mode.
+   */
+  VERBATIM = 'VERBATIM',
+  /**
+   * Smart transcription mode.
+   */
+  SMART = 'SMART',
+}
+
 /** Output only. The reason why the model stopped generating tokens.
 
 If empty, the model has not stopped generating the tokens. */
@@ -664,6 +696,10 @@ export enum TrafficType {
    * Type for Flex traffic.
    */
   ON_DEMAND_FLEX = 'ON_DEMAND_FLEX',
+  /**
+   * Type for Off-Peak Pay-As-You-Go traffic.
+   */
+  ON_DEMAND_OFFPEAK = 'ON_DEMAND_OFFPEAK',
   /**
    * Type for Provisioned Throughput traffic.
    */
@@ -1222,22 +1258,6 @@ export enum ServiceTier {
   PRIORITY = 'priority',
 }
 
-/** How the model processes input media for understanding. */
-export enum MediaProcessing {
-  /**
-   * Default. Uses model-specific processing
-   */
-  MEDIA_PROCESSING_UNSPECIFIED = 'MEDIA_PROCESSING_UNSPECIFIED',
-  /**
-   * Fixed-rate frame extraction. All frames placed in context.
-   */
-  STATIC = 'STATIC',
-  /**
-   * Model-driven dynamic navigation. Recommended for most use cases.
-   */
-  AGENTIC = 'AGENTIC',
-}
-
 /** The tokenization quality used for given media. */
 export enum PartMediaResolutionLevel {
   /**
@@ -1758,22 +1778,6 @@ export enum TurnCoverage {
   TURN_INCLUDES_AUDIO_ACTIVITY_AND_ALL_VIDEO = 'TURN_INCLUDES_AUDIO_ACTIVITY_AND_ALL_VIDEO',
 }
 
-/** Transcription mode. */
-export enum AudioTranscriptionConfigMode {
-  /**
-   * Unspecified transcription mode.
-   */
-  MODE_UNSPECIFIED = 'MODE_UNSPECIFIED',
-  /**
-   * Verbatim transcription mode.
-   */
-  VERBATIM = 'VERBATIM',
-  /**
-   * Smart transcription mode.
-   */
-  SMART = 'SMART',
-}
-
 /** Scale of the generated music. */
 export enum Scale {
   /**
@@ -2140,7 +2144,7 @@ export declare interface Part {
   videoMetadata?: VideoMetadata;
   /** Custom metadata associated with the Part. Agents using genai.Part as content representation may need to keep track of the additional information. For example it can be name of a file/source from which the Part originates or a way to multiplex multiple Part streams. This field is not supported in Vertex AI. */
   partMetadata?: Record<string, unknown>;
-  /** How the model processes this part's media for understanding. */
+  /** Optional. How the model processes this part's media for understanding. Only meaningful for video parts (`inline_data` or `file_data` with video mime). Non-video parts ignore this field. */
   mediaProcessing?: MediaProcessing;
 }
 /**
@@ -3035,7 +3039,7 @@ export declare interface LanguageHints {
 
 /** The audio transcription configuration in Setup. */
 export declare interface AudioTranscriptionConfig {
-  /** BCP-47 language codes providing hints about the languages present in the audio. If omitted or empty, defaults to automatic language detection. */
+  /** Optional. BCP-47 language codes providing hints about the languages present in the audio. If omitted or empty, defaults to automatic language detection. */
   languageCodes?: string[];
   /** Deprecated: Auto-detection is now the default when language_codes is omitted. This field will be removed in a future version. */
   languageAuto?: LanguageAuto;
@@ -4750,6 +4754,8 @@ export class VideoResponseFormat {
   duration?: string;
   /** Optional. The Google Cloud Storage URI to store the video output. Required for Vertex if delivery is URI. */
   gcsUri?: string;
+  /** Optional. The video output resolution. Supported values: "360p", "720p", "1080p", "4k". */
+  resolution?: string;
 }
 
 /** Configuration for the model to configure output formatting and delivery. This data type is not supported in Gemini API. */
@@ -5538,6 +5544,8 @@ export declare interface ReinforcementTuningExample {
   contents?: Content[];
   /** Corresponds to system_instruction in user-facing GenerateContentRequest. */
   systemInstruction?: Content;
+  /** Optional. Corresponds to tools in user-facing GenerateContentRequest. */
+  tools?: Tool[];
 }
 
 /** Sample reinforcement tuning user data in the training dataset. The contents are truncated for better UI showing. This data type is not supported in Gemini API. */
@@ -6181,6 +6189,8 @@ export declare interface ReinforcementTuningRewardInfo {
   reward?: number;
   /** Output only. The user-requested auxiliary info for the reward function. This field is set only if the Cloud Run reward function configured by user returns a "user_requested_aux_info". Refer to ReinforcementTuningCloudRunRewardScorer for more details. */
   userRequestedAuxInfo?: string;
+  /** Output only. In case of an error for this reward, this field will be populated with a detailed error status. */
+  errorStatus?: GoogleRpcStatus;
 }
 
 /** Response for the validate_reward method.
