@@ -17,6 +17,12 @@ const rollupPlugins = [
   }),
 ];
 
+// Every output below sets `sourcemapExcludeSources: true` alongside
+// `sourcemap: true`. `mappings` is what resolves a stack frame back to the
+// original file, line and column; `sourcesContent` only carries the source
+// text for a debugger to display, and accounts for the vast majority of the
+// published sourcemap size. Stack traces remain unaffected.
+
 const externalDeps = [
   'google-auth-library',
   'ws',
@@ -45,6 +51,7 @@ export default [
       file: pkg.exports['.']['import'],
       format: 'es',
       sourcemap: true,
+      sourcemapExcludeSources: true,
     },
     plugins: rollupPlugins,
     external: externalDeps,
@@ -57,6 +64,7 @@ export default [
       file: pkg.exports['.']['require'],
       format: 'cjs',
       sourcemap: true,
+      sourcemapExcludeSources: true,
     },
     plugins: rollupPlugins,
     external: externalDeps,
@@ -69,6 +77,7 @@ export default [
       file: pkg.exports['./node']['import'],
       format: 'es',
       sourcemap: true,
+      sourcemapExcludeSources: true,
     },
     plugins: rollupPlugins,
     external: externalDeps,
@@ -81,6 +90,7 @@ export default [
       file: pkg.exports['.']['node']['require'],
       format: 'cjs',
       sourcemap: true,
+      sourcemapExcludeSources: true,
     },
     plugins: rollupPlugins,
     external: externalDeps,
@@ -93,6 +103,7 @@ export default [
       file: pkg.exports['./web']['import'],
       format: 'es',
       sourcemap: true,
+      sourcemapExcludeSources: true,
     },
     plugins: rollupPlugins,
     external: externalDeps,
@@ -105,6 +116,7 @@ export default [
       file: 'dist/tokenizer/node.mjs',
       format: 'es',
       sourcemap: true,
+      sourcemapExcludeSources: true,
     },
     plugins: rollupPlugins,
     external: externalDeps,
@@ -117,6 +129,7 @@ export default [
       file: 'dist/tokenizer/node.cjs',
       format: 'cjs',
       sourcemap: true,
+      sourcemapExcludeSources: true,
     },
     plugins: rollupPlugins,
     external: externalDeps,
@@ -129,6 +142,7 @@ export default [
       file: 'dist/vertex_internal/index.js',
       format: 'es',
       sourcemap: true,
+      sourcemapExcludeSources: true,
     },
     plugins: rollupPlugins,
     external: externalDeps,
@@ -139,6 +153,7 @@ export default [
       file: 'dist/vertex_internal/index.cjs',
       format: 'cjs',
       sourcemap: true,
+      sourcemapExcludeSources: true,
     },
     plugins: rollupPlugins,
     external: externalDeps,
