@@ -1758,6 +1758,22 @@ export enum TurnCoverage {
   TURN_INCLUDES_AUDIO_ACTIVITY_AND_ALL_VIDEO = 'TURN_INCLUDES_AUDIO_ACTIVITY_AND_ALL_VIDEO',
 }
 
+/** Transcription mode. */
+export enum AudioTranscriptionConfigMode {
+  /**
+   * Unspecified transcription mode.
+   */
+  MODE_UNSPECIFIED = 'MODE_UNSPECIFIED',
+  /**
+   * Verbatim transcription mode.
+   */
+  VERBATIM = 'VERBATIM',
+  /**
+   * Smart transcription mode.
+   */
+  SMART = 'SMART',
+}
+
 /** Scale of the generated music. */
 export enum Scale {
   /**
@@ -3035,6 +3051,8 @@ export declare interface AudioTranscriptionConfig {
   /** Configures speaker diarization.
    */
   diarization?: boolean;
+  /** Optional. Configures transcription mode. Supported values: `VERBATIM`, `SMART`. If unspecified, defaults to `VERBATIM` transcription. In `SMART` mode, the model performs disfluency removal (eliminating filler words, repetitions, and false starts), light grammatical cleanup, automatic formatting (paragraphs, bullet points, numbered lists), and minor user edits (inline self-corrections). Timestamps and diarization are incompatible with mode `SMART`. */
+  mode?: AudioTranscriptionConfigMode;
 }
 
 /** Configuration for Model Armor. Model Armor is a Google Cloud service that provides safety and security filtering for prompts and responses. It helps protect your AI applications from risks such as harmful content, sensitive data leakage, and prompt injection attacks. This data type is not supported in Gemini API. */
