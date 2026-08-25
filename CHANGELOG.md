@@ -2,6 +2,20 @@
 
 
 
+## [2.19.0](https://github.com/googleapis/js-genai/compare/v2.18.0...v2.19.0) (2026-08-25)
+
+
+### Features
+
+* Add AudioTranscriptionConfigMode ([c0a37de](https://github.com/googleapis/js-genai/commit/c0a37de9102c1054c2bf9fa2cd3d8b6a4c41fd42))
+* add environment files support and scotty file download helper ([0d6ee9d](https://github.com/googleapis/js-genai/commit/0d6ee9d8e2690e541d12b72205272bba0c33b209))
+* Add TYPE_JPEG2000 to VideoContent.MimeType enum ([41da204](https://github.com/googleapis/js-genai/commit/41da2043cce07211f793647d57d119e04ff2ef48))
+
+
+### Performance Improvements
+
+* Keep the Buffer in the Node tokenizer platform, ~2x faster model parse ([11d804a](https://github.com/googleapis/js-genai/commit/11d804a88fc0ce260d6e4ab80ced4e54d34201ed))
+
 ## [2.18.0](https://github.com/googleapis/js-genai/compare/v2.17.1...v2.18.0) (2026-08-19)
 
 
