@@ -8275,6 +8275,28 @@ If included the server will send SessionResumptionUpdate messages. */
   safetySettings?: SafetySetting[];
   /** Config for translation. */
   translationConfig?: TranslationConfig;
+  /** Saves live audio data to session and artifact service. */
+  saveLiveBlob?: boolean;
+}
+
+/** Entry for caching realtime audio chunks. */
+export declare interface RealtimeCacheEntry {
+  /** The role of the participant ('user' or 'model'). */
+  role?: string;
+  /** The audio chunk data. */
+  data?: Blob;
+  /** Timestamp in seconds when the chunk was received or generated. */
+  timestamp?: number;
+}
+
+/** Configuration for audio caching behavior. */
+export declare interface AudioCacheConfig {
+  /** Maximum cache size in bytes before auto-flush. */
+  maxCacheSizeBytes?: number;
+  /** Maximum duration to keep data in cache. */
+  maxCacheDurationSeconds?: number;
+  /** Number of chunks that triggers auto-flush. */
+  autoFlushThreshold?: number;
 }
 
 /** Parameters for connecting to the live API. */
