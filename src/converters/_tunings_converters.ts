@@ -70,6 +70,50 @@ export function cancelTuningJobResponseFromVertex(
   return toObject;
 }
 
+export function computerUseToVertex(
+  fromObject: types.ComputerUse,
+  _rootObject?: unknown,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromEnablePromptInjectionDetection = common.getValueByPath(fromObject, [
+    'enablePromptInjectionDetection',
+  ]);
+  if (fromEnablePromptInjectionDetection != null) {
+    common.setValueByPath(
+      toObject,
+      ['enablePromptInjectionDetection'],
+      fromEnablePromptInjectionDetection,
+    );
+  }
+
+  const fromEnvironment = common.getValueByPath(fromObject, ['environment']);
+  if (fromEnvironment != null) {
+    common.setValueByPath(toObject, ['environment'], fromEnvironment);
+  }
+
+  const fromExcludedPredefinedFunctions = common.getValueByPath(fromObject, [
+    'excludedPredefinedFunctions',
+  ]);
+  if (fromExcludedPredefinedFunctions != null) {
+    common.setValueByPath(
+      toObject,
+      ['excludedPredefinedFunctions'],
+      fromExcludedPredefinedFunctions,
+    );
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['disabledSafetyPolicies']) !== undefined
+  ) {
+    throw new Error(
+      'disabledSafetyPolicies parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+    );
+  }
+
+  return toObject;
+}
+
 export function contentToVertex(
   fromObject: types.Content,
   rootObject?: unknown,
@@ -1375,6 +1419,29 @@ export function listTuningJobsResponseFromVertex(
   return toObject;
 }
 
+export function mcpServerToVertex(
+  fromObject: types.McpServer,
+  _rootObject?: unknown,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  if (common.getValueByPath(fromObject, ['name']) !== undefined) {
+    throw new Error(
+      'name parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+    );
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['streamableHttpTransport']) !== undefined
+  ) {
+    throw new Error(
+      'streamableHttpTransport parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+    );
+  }
+
+  return toObject;
+}
+
 export function partToVertex(
   fromObject: types.Part,
   _rootObject?: unknown,
@@ -1521,6 +1588,126 @@ export function reinforcementTuningExampleToVertex(
       toObject,
       ['systemInstruction'],
       contentToVertex(fromSystemInstruction, rootObject),
+    );
+  }
+
+  const fromTools = common.getValueByPath(fromObject, ['tools']);
+  if (fromTools != null) {
+    let transformedList = fromTools;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return toolToVertex(item, rootObject);
+      });
+    }
+    common.setValueByPath(toObject, ['tools'], transformedList);
+  }
+
+  return toObject;
+}
+
+export function toolToVertex(
+  fromObject: types.Tool,
+  rootObject?: unknown,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromRetrieval = common.getValueByPath(fromObject, ['retrieval']);
+  if (fromRetrieval != null) {
+    common.setValueByPath(toObject, ['retrieval'], fromRetrieval);
+  }
+
+  const fromGoogleMaps = common.getValueByPath(fromObject, ['googleMaps']);
+  if (fromGoogleMaps != null) {
+    common.setValueByPath(toObject, ['googleMaps'], fromGoogleMaps);
+  }
+
+  const fromMcpServers = common.getValueByPath(fromObject, ['mcpServers']);
+  if (fromMcpServers != null) {
+    let transformedList = fromMcpServers;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return mcpServerToVertex(item, rootObject);
+      });
+    }
+    common.setValueByPath(toObject, ['mcpServers'], transformedList);
+  }
+
+  const fromCodeExecution = common.getValueByPath(fromObject, [
+    'codeExecution',
+  ]);
+  if (fromCodeExecution != null) {
+    common.setValueByPath(toObject, ['codeExecution'], fromCodeExecution);
+  }
+
+  const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
+  if (fromComputerUse != null) {
+    common.setValueByPath(
+      toObject,
+      ['computerUse'],
+      computerUseToVertex(fromComputerUse, rootObject),
+    );
+  }
+
+  const fromEnterpriseWebSearch = common.getValueByPath(fromObject, [
+    'enterpriseWebSearch',
+  ]);
+  if (fromEnterpriseWebSearch != null) {
+    common.setValueByPath(
+      toObject,
+      ['enterpriseWebSearch'],
+      fromEnterpriseWebSearch,
+    );
+  }
+
+  const fromExaAiSearch = common.getValueByPath(fromObject, ['exaAiSearch']);
+  if (fromExaAiSearch != null) {
+    common.setValueByPath(toObject, ['exaAiSearch'], fromExaAiSearch);
+  }
+
+  const fromFunctionDeclarations = common.getValueByPath(fromObject, [
+    'functionDeclarations',
+  ]);
+  if (fromFunctionDeclarations != null) {
+    let transformedList = fromFunctionDeclarations;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return item;
+      });
+    }
+    common.setValueByPath(toObject, ['functionDeclarations'], transformedList);
+  }
+
+  const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
+  if (fromGoogleSearch != null) {
+    common.setValueByPath(toObject, ['googleSearch'], fromGoogleSearch);
+  }
+
+  const fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
+    'googleSearchRetrieval',
+  ]);
+  if (fromGoogleSearchRetrieval != null) {
+    common.setValueByPath(
+      toObject,
+      ['googleSearchRetrieval'],
+      fromGoogleSearchRetrieval,
+    );
+  }
+
+  const fromParallelAiSearch = common.getValueByPath(fromObject, [
+    'parallelAiSearch',
+  ]);
+  if (fromParallelAiSearch != null) {
+    common.setValueByPath(toObject, ['parallelAiSearch'], fromParallelAiSearch);
+  }
+
+  const fromUrlContext = common.getValueByPath(fromObject, ['urlContext']);
+  if (fromUrlContext != null) {
+    common.setValueByPath(toObject, ['urlContext'], fromUrlContext);
+  }
+
+  if (common.getValueByPath(fromObject, ['fileSearch']) !== undefined) {
+    throw new Error(
+      'fileSearch parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
     );
   }
 
