@@ -48,6 +48,13 @@ export type VideoContent = {
    */
   mime_type?: VideoContentMimeType | undefined;
   /**
+   * A user-defined name for this content block. Can be referenced by the model
+   *
+   * @remarks
+   * in the final response.
+   */
+  name?: string | undefined;
+  /**
    * How the model processes this video for understanding.
    */
   processing?: MediaProcessing | ProcessingEnum | undefined;
