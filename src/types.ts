@@ -8300,12 +8300,6 @@ export declare interface CreateChatParameters {
       docs to find the available models.
        */
   model: string;
-  /** Config for the entire chat session.
-
-      This config applies to all requests within the session
-      unless overridden by a per-request `config` in `SendMessageParameters`.
-       */
-  config?: GenerateContentConfig;
   /** The initial conversation history for the chat session.
 
       This allows you to start the chat with a pre-existing history. The history
@@ -8313,6 +8307,12 @@ export declare interface CreateChatParameters {
       It should start with a 'user' message.
        */
   history?: Content[];
+  /** Config for the entire chat session.
+
+      This config applies to all requests within the session
+      unless overridden by a per-request `config` in `SendMessageParameters`.
+       */
+  config?: GenerateContentConfig;
 }
 
 /** Parameters for sending a message within a chat session.
