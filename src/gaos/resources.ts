@@ -95,7 +95,9 @@ import type { ModelOutputStep as ModelOutputStep$Import } from "./models/interac
 import type { Model as Model$Import } from "./models/interactions/model.js";
 import type { PlaceCitation as PlaceCitation$Import } from "./models/interactions/place-citation.js";
 import type { ProcessingCallDelta as ProcessingCallDelta$Import } from "./models/interactions/processing-call-delta.js";
+import type { ProcessingCallStep as ProcessingCallStep$Import } from "./models/interactions/processing-call-step.js";
 import type { ProcessingResultDelta as ProcessingResultDelta$Import } from "./models/interactions/processing-result-delta.js";
+import type { ProcessingResultStep as ProcessingResultStep$Import } from "./models/interactions/processing-result-step.js";
 import type { RetrievalCallArguments as RetrievalCallArguments$Import } from "./models/interactions/retrieval-call-arguments.js";
 import type { RetrievalCallDelta as RetrievalCallDelta$Import } from "./models/interactions/retrieval-call-delta.js";
 import type { RetrievalResultDelta as RetrievalResultDelta$Import } from "./models/interactions/retrieval-result-delta.js";
@@ -259,6 +261,8 @@ type MCPServerToolResultStep$ = MCPServerToolResultStep$Import;
 type Model$ = Model$Import;
 type ModelOutputStep$ = ModelOutputStep$Import;
 type PlaceCitation$ = PlaceCitation$Import;
+type ProcessingCallStep$ = ProcessingCallStep$Import;
+type ProcessingResultStep$ = ProcessingResultStep$Import;
 type RetrievalCallArguments$ = RetrievalCallArguments$Import;
 type RetrievalCallDelta$ = RetrievalCallDelta$Import;
 type RetrievalResultDelta$ = RetrievalResultDelta$Import;
@@ -492,7 +496,9 @@ export type PingWebhookRequest = PingWebhookRequest$;
 export type Place = Place$;
 export type PlaceCitation = PlaceCitation$;
 export type ProcessingCall = ProcessingCall$;
+export type ProcessingCallStep = ProcessingCallStep$;
 export type ProcessingResult = ProcessingResult$;
+export type ProcessingResultStep = ProcessingResultStep$;
 export type Result = Result$;
 export type Retrieval = Retrieval$;
 export type RetrievalCallArguments = RetrievalCallArguments$;
@@ -658,6 +664,8 @@ export declare namespace Interactions {
   export type Model = Model$;
   export type ModelOutputStep = ModelOutputStep$;
   export interface PlaceCitation extends PlaceCitation$ {}
+  export type ProcessingCallStep = ProcessingCallStep$;
+  export type ProcessingResultStep = ProcessingResultStep$;
   export type RetrievalCallArguments = RetrievalCallArguments$;
   export interface RetrievalCallDelta extends RetrievalCallDelta$ {}
   export type RetrievalResultDelta = RetrievalResultDelta$;
