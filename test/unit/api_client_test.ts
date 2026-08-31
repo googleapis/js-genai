@@ -466,9 +466,7 @@ describe('createNodeFetchDispatcher', () => {
   }
 
   class FakeDispatcher1Wrapper {
-    constructor(
-      readonly dispatcher: {dispatch: (...args: unknown[]) => unknown},
-    ) {}
+    constructor(readonly dispatcher: object) {}
 
     dispatch() {}
   }
