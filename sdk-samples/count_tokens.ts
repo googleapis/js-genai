@@ -4,8 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import {GoogleGenAI} from '@google/genai';
+import {MODEL_FLASH_LITE} from './constants.js';
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
 const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
@@ -14,7 +15,7 @@ async function countTokensFromMLDev() {
   const ai = new GoogleGenAI({vertexai: false, apiKey: GEMINI_API_KEY});
 
   const response = await ai.models.countTokens({
-    model: 'gemini-2.0-flash',
+    model: MODEL_FLASH_LITE,
     contents: 'The quick brown fox jumps over the lazy dog.',
   });
 
@@ -28,16 +29,9 @@ async function countTokensFromVertexAI() {
     location: GOOGLE_CLOUD_LOCATION,
   });
 
-  // const response = await ai.models.countTokens({
-  //   model: 'gemini-2.0-flash-001',
-  //   contents: 'What is your name?',
-  // });
-
-  // console.debug(JSON.stringify(response));
-
   // Count tokens in a simple string
   const result1 = await ai.models.countTokens({
-    model: 'gemini-2.0-flash-001',
+    model: MODEL_FLASH_LITE,
     contents: 'What is your name?',
   });
   console.debug(JSON.stringify(result1));
@@ -48,7 +42,7 @@ async function countTokensFromVertexAI() {
   const longText =
     'The quick brown fox jumps over the lazy dog. This is a sample sentence for tokenization.';
   const result2 = await ai.models.countTokens({
-    model: 'gemini-2.0-flash-001',
+    model: MODEL_FLASH_LITE,
     contents: longText,
   });
   console.log(`Input: "${longText}"`);
@@ -56,7 +50,7 @@ async function countTokensFromVertexAI() {
 
   // Count tokens with structured content
   const result3 = await ai.models.countTokens({
-    model: 'gemini-2.0-flash-001',
+    model: MODEL_FLASH_LITE,
     contents: [{role: 'user', parts: [{text: 'Hello, how are you?'}]}],
   });
   console.log('Input: User message "Hello, how are you?"');
@@ -64,7 +58,7 @@ async function countTokensFromVertexAI() {
 
   // Count tokens in a multi-turn conversation
   const result4 = await ai.models.countTokens({
-    model: 'gemini-2.0-flash-001',
+    model: MODEL_FLASH_LITE,
     contents: [
       {role: 'user', parts: [{text: 'What is the capital of France?'}]},
       {role: 'model', parts: [{text: 'The capital of France is Paris.'}]},
@@ -77,9 +71,9 @@ async function countTokensFromVertexAI() {
 
 async function main() {
   if (GOOGLE_GENAI_USE_VERTEXAI) {
-    await countTokensFromVertexAI().catch((e) => console.error('got error', e));
+    await countTokensFromVertexAI();
   } else {
-    await countTokensFromMLDev().catch((e) => console.error('got error', e));
+    await countTokensFromMLDev();
   }
 }
 

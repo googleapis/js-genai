@@ -21,7 +21,9 @@ async function generateVideosFromMLDev() {
   });
   let operation1 = await ai.models.generateVideos({
     model: 'veo-3.1-generate-preview',
-    prompt: 'Rain',
+    source: {
+      prompt: 'Rain',
+    },
     config: {
       numberOfVideos: 1,
     },
@@ -78,10 +80,14 @@ async function generateVideosFromMLDev() {
 }
 
 async function generateVideosFromVertexAI() {
+  const location =
+    GOOGLE_CLOUD_LOCATION && GOOGLE_CLOUD_LOCATION !== 'global'
+      ? GOOGLE_CLOUD_LOCATION
+      : 'us-central1';
   const ai = new GoogleGenAI({
     vertexai: true,
     project: GOOGLE_CLOUD_PROJECT,
-    location: GOOGLE_CLOUD_LOCATION,
+    location,
   });
   let operation = await ai.models.generateVideos({
     model: 'veo-2.0-generate-001', // Not supported on Veo 3.1 yet.
@@ -109,12 +115,20 @@ async function generateVideosFromVertexAI() {
 }
 
 async function main() {
-  if (GOOGLE_GENAI_USE_VERTEXAI) {
-    await generateVideosFromVertexAI().catch((e) =>
-      console.error('got error', e),
-    );
-  } else {
-    await generateVideosFromMLDev().catch((e) => console.error('got error', e));
+  try {
+    if (GOOGLE_GENAI_USE_VERTEXAI) {
+      await generateVideosFromVertexAI();
+    } else {
+      await generateVideosFromMLDev();
+    }
+  } catch (e: unknown) {
+    if ((e as {status?: number})?.status === 429) {
+      console.warn(
+        'Skipping video extension due to rate limit / quota exhaustion (429).',
+      );
+      return;
+    }
+    throw e;
   }
 }
 

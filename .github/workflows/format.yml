@@ -19,7 +19,15 @@ jobs:
         node-version: 22.x
         cache: 'npm'
     - run: USE_LOCAL_BUILD=true npm ci
-    - name: Run format
-      run: npx prettier '**/*.ts' '**/*.mjs' '**/*.mjs' '**/*.json' --check
-    - name: Run linter
-      run: npm run lint
+    - name: Check code formatting (run 'npm run format' to fix)
+      run: |
+        if ! npx prettier '**/*.ts' '**/*.mjs' '**/*.json' --check; then
+          echo "::error::Code formatting check failed. Please run 'npm run format' locally to format the code."
+          exit 1
+        fi
+    - name: Check linter (run 'npm run lint' to check, 'npm run lint-fix' to fix)
+      run: |
+        if ! npm run lint; then
+          echo "::error::Linter check failed. Please run 'npm run lint' (or 'npm run lint-fix') locally to fix lint errors."
+          exit 1
+        fi

@@ -7,18 +7,15 @@
 // tslint:disable:no-default-export
 
 import {GoogleGenAI, JobState} from '@google/genai';
+import {MODEL_EMBEDDING} from './constants.js';
 
 // Get your API key from  https://aistudio.google.com/app/apikey
 // and set it as the GEMINI_API_KEY environment variable.
 const client = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY!,
-  httpOptions: {
-    // Use the staging endpoint for testing
-    baseUrl: 'https://autopush-generativelanguage.sandbox.googleapis.com',
-  },
+  apiKey: process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY,
 });
 
-const EMBEDDING_MODEL = 'models/gemini-embedding-001';
+const EMBEDDING_MODEL = MODEL_EMBEDDING;
 
 async function batchEmbedInline() {
   // This is need to allow easy smoke testing of the sample.

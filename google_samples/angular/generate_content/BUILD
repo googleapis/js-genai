@@ -22,6 +22,7 @@ ng_module(
     name = "generate_content_tests",
     testonly = True,
     srcs = ["generate_content_test.ts"],
+    legacy_optional_chaining = True,
     deps = [
         ":generate_content",
         "//javascript/angular2/testing/catalyst/async",
@@ -53,6 +54,7 @@ ng_module(
         ":generate_content_css",
         "generate_content.ng.html",
     ],
+    legacy_optional_chaining = True,
     deps = [
         "//third_party/javascript/angular2:core",
         "//third_party/javascript/angular2:forms",

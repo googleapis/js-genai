@@ -444,4 +444,56 @@ export class Tunings extends BaseModule {
       });
     }
   }
+
+  async validateReward(
+    params: types.ValidateRewardParameters,
+  ): Promise<types.ValidateRewardResponse> {
+    let response: Promise<types.ValidateRewardResponse>;
+
+    let path: string = '';
+    let queryParams: Record<string, string> = {};
+    if (this.apiClient.isVertexAI()) {
+      const body = converters.validateRewardParametersToVertex(params, params);
+      path = common.formatMap(
+        '{parent}/tuningJobs:validateReinforcementTuningReward',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
+      delete body['_url'];
+      delete body['_query'];
+
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json().then((jsonResponse) => {
+            const response = jsonResponse as types.ValidateRewardResponse;
+            response.sdkHttpResponse = {
+              headers: httpResponse.headers,
+            } as types.HttpResponse;
+            return response;
+          });
+        }) as Promise<types.ValidateRewardResponse>;
+
+      return response.then((apiResponse) => {
+        const resp = converters.validateRewardResponseFromVertex(
+          apiResponse,
+          params,
+        );
+        const typedResp = new types.ValidateRewardResponse();
+        Object.assign(typedResp, resp);
+        return typedResp;
+      });
+    } else {
+      throw new Error(
+        'This method is only supported by the Gemini Enterprise Agent Platform (previously known as Vertex AI).',
+      );
+    }
+  }
 }

@@ -20,8 +20,7 @@ if (fs.existsSync(symlinkScript)) {
 }
 
 const isCI = process.env.CI === 'true' || process.env.KOKORO_JOB_TYPE !== undefined;
-const isLocal = process.env.USE_LOCAL_BUILD === 'true' || !isCI;
-const command = isLocal ? 'npm run build' : 'npm run build-prod';
+const command = 'npm run build';
 
 console.log(`> Executing: ${command}`);
 

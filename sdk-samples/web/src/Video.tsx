@@ -29,7 +29,9 @@ export const VideoGeneration: React.FC<VideoProps> = ({apiKey, vertexai}) => {
     try {
       var operation = await ai.models.generateVideos({
         model: 'veo-2.0-generate-001',
-        prompt: videoPrompt,
+        source: {
+          prompt: videoPrompt,
+        },
         config: {
           numberOfVideos: 1,
         },

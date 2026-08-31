@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import {GoogleGenAI, Part} from '@google/genai';
+import {MODEL_FLASH_LITE} from './constants.js';
 
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
@@ -35,7 +36,7 @@ async function createCacheFromVertexAI() {
   };
 
   const cache = await ai.caches.create({
-    model: 'gemini-2.5-flash',
+    model: MODEL_FLASH_LITE,
     config: {contents: [cachedContent1, cachedContent2]},
   });
 
@@ -62,9 +63,9 @@ async function createCacheFromVertexAI() {
 
 async function main() {
   if (GOOGLE_GENAI_USE_VERTEXAI) {
-    await createCacheFromVertexAI().catch((e) => console.error('got error', e));
+    await createCacheFromVertexAI();
   } else {
-    await createCacheFromMLDev().catch((e) => console.error('got error', e));
+    await createCacheFromMLDev();
   }
 }
 

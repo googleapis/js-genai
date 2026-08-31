@@ -4,228 +4,256 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {GeminiNextGenAPIClientAdapter} from '../../src/interactions/client-adapter.js';
-import {GeminiNextGenAPIClient} from '../../src/interactions/index.js';
-import {Fetch} from '../../src/interactions/internal/builtin-types.js';
+import {
+  GeminiNextGenInteractions,
+  GoogleGenAIParentClient,
+} from '../../src/gaos/google-genai.js';
 
 describe('Interactions resource', () => {
-  let clientAdapter: jasmine.SpyObj<GeminiNextGenAPIClientAdapter>;
+  let parentClient: jasmine.SpyObj<GoogleGenAIParentClient>;
+  let interactions: GeminiNextGenInteractions;
+  let fetchSpy: jasmine.Spy;
+
+  const mockJsonResponse = (status = 200, headers: HeadersInit = []) => {
+    const h = new Headers(headers);
+    if (!h.has('Content-Type')) {
+      h.set('Content-Type', 'application/json');
+    }
+    return new Response('{}', {status, headers: h});
+  };
+
+  const flushPromises = async () => {
+    for (let i = 0; i < 20; i++) {
+      await Promise.resolve();
+    }
+  };
 
   beforeEach(() => {
-    clientAdapter = {
-      isVertexAI: jasmine.createSpy('isVertexAI').and.returnValue(false),
-      getProject: jasmine.createSpy('getProject').and.returnValue('my-project'),
-      getLocation: jasmine
-        .createSpy('getLocation')
-        .and.returnValue('my-location'),
-      getAuthHeaders: jasmine
-        .createSpy('getAuthHeaders')
-        .and.callFake(() => Promise.resolve(new Headers())),
-    };
+    parentClient = jasmine.createSpyObj<GoogleGenAIParentClient>([
+      'isVertexAI',
+      'getProject',
+      'getLocation',
+      'getBaseUrl',
+      'getApiVersion',
+      'getAuthHeaders',
+    ]);
+    parentClient.isVertexAI.and.returnValue(false);
+    parentClient.getProject.and.returnValue('my-project');
+    parentClient.getLocation.and.returnValue('my-location');
+    parentClient.getBaseUrl.and.returnValue('https://my.base.host');
+    parentClient.getApiVersion.and.returnValue('somev1');
+    parentClient.getAuthHeaders.and.callFake(() =>
+      Promise.resolve(new Headers()),
+    );
+
+    interactions = new GeminiNextGenInteractions(parentClient);
+
+    fetchSpy = spyOn(globalThis, 'fetch').and.callFake(() =>
+      Promise.resolve(mockJsonResponse()),
+    );
+  });
+
+  afterEach(() => {
+    try {
+      jasmine.clock().uninstall();
+    } catch (e) {
+      console.warn('Failed to uninstall jasmine clock', e);
+    }
   });
 
   describe('routed to Gemini', () => {
-    let client: GeminiNextGenAPIClient;
-    let fetchSpy: jasmine.Spy<Fetch>;
-
     beforeEach(() => {
-      client = new GeminiNextGenAPIClient({
-        clientAdapter,
-        baseURL: 'https://my.base.host',
-        apiKey: 'my-api-key',
-        apiVersion: 'somev1',
-      });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      fetchSpy = spyOn(client as any, 'fetch').and.resolveTo(
-        new Response(),
-      ) as jasmine.Spy<Fetch>;
+      parentClient.isVertexAI.and.returnValue(false);
     });
 
     it('should send requests to existing paths invoking client auth headers', async () => {
-      await client.interactions.create({
+      await interactions.create({
         agent: 'some-agent',
         input: 'some input',
       });
 
-      const [url, options] = fetchSpy.calls.first().args;
-      expect(url).toBe('https://my.base.host/somev1/interactions');
-      expect(options?.method?.toLowerCase()).toEqual('post');
-      expect(clientAdapter.getAuthHeaders).not.toHaveBeenCalled();
+      expect(fetchSpy).toHaveBeenCalled();
+      const [request] = fetchSpy.calls.first().args as [Request];
+      expect(request.url).toBe('https://my.base.host/somev1/interactions');
+      expect(request.method.toLowerCase()).toEqual('post');
+      expect(parentClient.getAuthHeaders).toHaveBeenCalled();
     });
 
     it('should retry the call', async () => {
+      jasmine.clock().install();
+      jasmine.clock().mockDate();
+      let callCount = 0;
       fetchSpy.and.callFake(() => {
-        return Promise.resolve(
-          new Response(null, {
-            status: 500,
-            // speed up retries for testing
-            headers: new Headers([['retry-after-ms', '1']]),
-          }),
-        );
+        callCount++;
+        return Promise.resolve(mockJsonResponse(500, [['retry-after', '1']]));
       });
-      await expectAsync(
-        client.interactions.create(
-          {agent: 'some-agent', input: 'some input'},
-          {
-            maxRetries: 4,
+      const promise = interactions.create(
+        {agent: 'some-agent', input: 'some input'},
+        {
+          retries: {
+            strategy: 'backoff',
+            backoff: {
+              initialInterval: 1000,
+              maxInterval: 1000,
+              exponent: 1,
+              maxElapsedTime: 3500,
+            },
           },
-        ),
-      ).toBeRejected();
+        },
+      );
+
+      await flushPromises();
+      for (let i = 0; i < 5; i++) {
+        jasmine.clock().tick(1000);
+        await flushPromises();
+      }
+
+      await expectAsync(promise).toBeRejected();
+      expect(callCount).toBe(5);
     });
 
-    it('should throw APIConnectionTimeoutError with helpful message on timeout', async () => {
+    it('should throw error on timeout', async () => {
       fetchSpy.and.rejectWith(new Error('timeout'));
 
       await expectAsync(
-        client.interactions.create(
+        interactions.create(
           {
             agent: 'some-agent',
             input: 'some input',
           },
-          {maxRetries: 0},
+          {maxRetries: 0, timeout: 1},
         ),
-      ).toBeRejectedWithError(
-        GeminiNextGenAPIClient.APIConnectionTimeoutError,
-        /Request timed out. This is a client-side timeout. You can increase the timeout/,
-      );
+      ).toBeRejected();
     });
 
     it('should not invoke client auth headers if manually given', async () => {
-      await client.interactions.create(
+      await interactions.create(
         {
           agent: 'some-agent',
           input: 'some input',
         },
-        {headers: [['Authorization', 'Bearer some-manual-token']]},
+        {headers: {Authorization: 'Bearer some-manual-token'}},
       );
 
-      expect(clientAdapter.getAuthHeaders).not.toHaveBeenCalled();
-      let headers = new Headers(fetchSpy.calls.allArgs()[0][1]?.headers);
-      expect(headers.get('Authorization')).toBe('Bearer some-manual-token');
-      expect(headers.has('x-goog-api-key')).toBeFalse();
+      expect(parentClient.getAuthHeaders).not.toHaveBeenCalled();
+      const [request] = fetchSpy.calls.first().args as [Request];
+      expect(request.headers.get('Authorization')).toBe(
+        'Bearer some-manual-token',
+      );
+      expect(request.headers.has('x-goog-api-key')).toBeFalse();
 
       fetchSpy.calls.reset();
-      clientAdapter.getAuthHeaders.calls.reset();
-      await client.interactions.create(
+      parentClient.getAuthHeaders.calls.reset();
+      await interactions.create(
         {
           agent: 'some-agent',
           input: 'some input',
         },
-        {headers: [['x-goog-api-key', 'some-manual-key']]},
+        {headers: {'x-goog-api-key': 'some-manual-key'}},
       );
 
-      expect(clientAdapter.getAuthHeaders).not.toHaveBeenCalled();
-      headers = new Headers(fetchSpy.calls.allArgs()[0][1]?.headers);
-      expect(headers.get('x-goog-api-key')).toBe('some-manual-key');
-      expect(headers.has('Authorization')).toBeFalse();
+      expect(parentClient.getAuthHeaders).not.toHaveBeenCalled();
+      const [request2] = fetchSpy.calls.first().args as [Request];
+      expect(request2.headers.get('x-goog-api-key')).toBe('some-manual-key');
+      expect(request2.headers.has('Authorization')).toBeFalse();
     });
   });
 
   describe('routed to Vertex', () => {
-    let client: GeminiNextGenAPIClient;
-    let fetchSpy: jasmine.Spy<Fetch>;
-
     beforeEach(() => {
-      clientAdapter.isVertexAI.and.returnValue(true);
-      clientAdapter.getAuthHeaders.and.callFake(
+      parentClient.isVertexAI.and.returnValue(true);
+      parentClient.getAuthHeaders.and.callFake(
         () => new Headers([['Authorization', 'Bearer some-token']]),
       );
-      client = new GeminiNextGenAPIClient({
-        clientAdapter,
-        apiKey: null,
-
-        baseURL: 'https://my.base.host',
-        apiVersion: 'somev1',
-      });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      fetchSpy = spyOn(client as any, 'fetch').and.resolveTo(
-        new Response(),
-      ) as jasmine.Spy<Fetch>;
     });
 
     it('should send requests to new paths with client auth headers', async () => {
-      clientAdapter.getAuthHeaders.and.callFake(
+      parentClient.getAuthHeaders.and.callFake(
         () => new Headers([['Authorization', 'Bearer my-access-token']]),
       );
-      await client.interactions.create({
+      await interactions.create({
         agent: 'some-agent',
         input: 'some input',
       });
 
-      const [url, options] = fetchSpy.calls.first().args;
-      expect(url).toBe(
+      expect(fetchSpy).toHaveBeenCalled();
+      const [request] = fetchSpy.calls.first().args as [Request];
+      expect(request.url).toBe(
         'https://my.base.host/somev1/projects/my-project/locations/my-location/interactions',
       );
-      expect(options?.method?.toLowerCase()).toEqual('post');
-      expect(clientAdapter.getAuthHeaders).toHaveBeenCalled();
-      const headers = new Headers(options?.headers);
-      expect(headers.get('Authorization')).toBe('Bearer my-access-token');
+      expect(request.method.toLowerCase()).toEqual('post');
+      expect(parentClient.getAuthHeaders).toHaveBeenCalled();
+      expect(request.headers.get('Authorization')).toBe(
+        'Bearer my-access-token',
+      );
     });
 
     it('should retry the call', async () => {
+      jasmine.clock().install();
+      jasmine.clock().mockDate();
+      let callCount = 0;
       fetchSpy.and.callFake(() => {
-        return Promise.resolve(
-          new Response(null, {
-            status: 500,
-            // speed up retries for testing
-            headers: new Headers([['retry-after-ms', '1']]),
-          }),
-        );
+        callCount++;
+        return Promise.resolve(mockJsonResponse(500, [['retry-after', '1']]));
       });
-      await expectAsync(
-        client.interactions.create(
-          {agent: 'some-agent', input: 'some input'},
-          {
-            maxRetries: 4,
+      const promise = interactions.create(
+        {agent: 'some-agent', input: 'some input'},
+        {
+          retries: {
+            strategy: 'backoff',
+            backoff: {
+              initialInterval: 1000,
+              maxInterval: 1000,
+              exponent: 1,
+              maxElapsedTime: 3500,
+            },
           },
-        ),
-      ).toBeRejected();
-      expect(fetchSpy).toHaveBeenCalledTimes(5);
-      expect(clientAdapter.getAuthHeaders).toHaveBeenCalledTimes(5);
+        },
+      );
+
+      await flushPromises();
+      for (let i = 0; i < 5; i++) {
+        jasmine.clock().tick(1000);
+        await flushPromises();
+      }
+
+      await expectAsync(promise).toBeRejected();
+      expect(callCount).toBe(5);
+      expect(parentClient.getAuthHeaders).toHaveBeenCalledTimes(5);
     });
 
     it('should not invoke client auth headers if manually given', async () => {
-      await client.interactions.create(
+      await interactions.create(
         {
           agent: 'some-agent',
           input: 'some input',
         },
-        {headers: [['Authorization', 'Bearer some-manual-token']]},
+        {headers: {Authorization: 'Bearer some-manual-token'}},
       );
 
-      expect(clientAdapter.getAuthHeaders).not.toHaveBeenCalled();
-      let headers = new Headers(fetchSpy.calls.allArgs()[0][1]?.headers);
-      expect(headers.get('Authorization')).toBe('Bearer some-manual-token');
+      expect(parentClient.getAuthHeaders).not.toHaveBeenCalled();
+      const [request] = fetchSpy.calls.first().args as [Request];
+      expect(request.headers.get('Authorization')).toBe(
+        'Bearer some-manual-token',
+      );
 
       fetchSpy.calls.reset();
-      clientAdapter.getAuthHeaders.calls.reset();
-      await client.interactions.create(
+      parentClient.getAuthHeaders.calls.reset();
+      await interactions.create(
         {
           agent: 'some-agent',
           input: 'some input',
         },
-        {headers: [['x-goog-api-key', 'some-manual-key']]},
+        {headers: {'x-goog-api-key': 'some-manual-key'}},
       );
 
-      expect(clientAdapter.getAuthHeaders).not.toHaveBeenCalled();
-      headers = new Headers(fetchSpy.calls.allArgs()[0][1]?.headers);
-      expect(headers.get('x-goog-api-key')).toBe('some-manual-key');
+      expect(parentClient.getAuthHeaders).not.toHaveBeenCalled();
+      const [request2] = fetchSpy.calls.first().args as [Request];
+      expect(request2.headers.get('x-goog-api-key')).toBe('some-manual-key');
     });
   });
 
   describe('streaming regression', () => {
-    let client: GeminiNextGenAPIClient;
-    let fetchSpy: jasmine.Spy<Fetch>;
-
-    beforeEach(() => {
-      client = new GeminiNextGenAPIClient({
-        clientAdapter,
-        apiKey: 'test-api-key',
-      });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      fetchSpy = spyOn(client as any, 'fetch');
-    });
-
     it('should handle large fragmented SSE payloads correctly', async () => {
       const largeData = 'A'.repeat(10 * 1024);
       const mockSSE =
@@ -244,10 +272,14 @@ describe('Interactions resource', () => {
         },
       });
 
-      fetchSpy.and.resolveTo(new Response(readableStream));
+      fetchSpy.and.resolveTo(
+        new Response(readableStream, {
+          headers: new Headers([['Content-Type', 'text/event-stream']]),
+        }),
+      );
 
-      const stream = await client.interactions.create({
-        model: 'gemini-pro',
+      const stream = await interactions.create({
+        agent: 'some-agent',
         input: 'test',
         stream: true,
       });
