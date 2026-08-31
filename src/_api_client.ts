@@ -40,31 +40,40 @@ declare interface NodeJSTimeout {
   unref(): this;
 }
 
+// Node's Undici-backed fetch has a five-minute headers/body timeout. A custom
+// dispatcher is only needed when the caller asks the SDK to wait longer.
+const UNDICI_DEFAULT_TIMEOUT_MS = 300_000;
+
+// Keep this structural type intentionally small. Undici is an optional peer
+// dependency loaded at runtime, and Dispatcher1Wrapper only exists in v8.
+type UndiciModule = {
+  Agent: new (options: {headersTimeout: number; bodyTimeout: number}) => object;
+  Dispatcher1Wrapper?: new (dispatcher: object) => object;
+};
+
 /**
- * Raises Undici's internal header/body timeouts to at least `timeout` ms.
+ * Creates a dispatcher compatible with Node's built-in fetch.
  *
- * In Node > 18 the built-in fetch is backed by Undici, which sets a global
- * dispatcher tracking its own headersTimeout and bodyTimeout via Symbol
- * properties. Those would otherwise fire before a longer caller-supplied
- * timeout.
+ * Undici 8 moved to a new dispatch-handler contract. Node versions which
+ * bundle an older Undici still expect the legacy contract, so Undici 8's
+ * Dispatcher1Wrapper is required when it is available.
  */
-function raiseUndiciTimeouts(timeout: number) {
-  const dispatcherSymbol = Symbol.for('undici.globalDispatcher.1');
-  const globalDispatcher = (globalThis as Record<symbol, unknown>)[
-    dispatcherSymbol
-  ] as Record<symbol, unknown> | undefined;
-  if (!globalDispatcher) {
-    return;
-  }
-  for (const sym of Object.getOwnPropertySymbols(globalDispatcher)) {
-    const desc = sym.description;
-    if (desc?.includes('headers timeout') || desc?.includes('body timeout')) {
-      const currentTimeout = globalDispatcher[sym];
-      if (typeof currentTimeout === 'number') {
-        globalDispatcher[sym] = Math.max(currentTimeout, timeout);
-      }
-    }
-  }
+export function createNodeFetchDispatcher(
+  undici: UndiciModule,
+  timeout: number,
+): object {
+  const agent = new undici.Agent({
+    headersTimeout: timeout,
+    bodyTimeout: timeout,
+  });
+  return undici.Dispatcher1Wrapper
+    ? new undici.Dispatcher1Wrapper(agent)
+    : agent;
+}
+
+function isNodeRuntime(): boolean {
+  // Avoid importing the optional Node-only dependency in web runtimes.
+  return typeof process !== 'undefined' && Boolean(process.versions?.node);
 }
 
 /** The abort plumbing for a single HTTP attempt. */
@@ -265,7 +274,10 @@ export interface HttpRequest {
 export class ApiClient {
   readonly clientOptions: ApiClientInitOptions;
   private readonly customBaseUrl?: string;
-  private readonly cachedNodeAgents = new Map<number, unknown>();
+  private readonly cachedNodeDispatchers = new Map<
+    number,
+    Promise<object | undefined>
+  >();
   constructor(opts: ApiClientInitOptions) {
     this.clientOptions = {
       ...opts,
@@ -609,8 +621,18 @@ export class ApiClient {
     httpOptions: types.HttpOptions,
     url: string,
   ): Promise<RequestInit> {
-    if (httpOptions?.timeout && httpOptions.timeout > 0) {
-      raiseUndiciTimeouts(httpOptions.timeout);
+    if (
+      isNodeRuntime() &&
+      httpOptions?.timeout &&
+      httpOptions.timeout > UNDICI_DEFAULT_TIMEOUT_MS
+    ) {
+      const dispatcher = await this.getNodeDispatcher(httpOptions.timeout);
+      if (dispatcher) {
+        // `dispatcher` is supported by Node's Undici-backed fetch but is not
+        // part of the standard DOM RequestInit type.
+        (requestInit as RequestInit & {dispatcher?: object}).dispatcher =
+          dispatcher;
+      }
     }
     if (httpOptions && httpOptions.extraBody !== null) {
       includeExtraBodyToRequestInit(
@@ -620,6 +642,33 @@ export class ApiClient {
     }
     requestInit.headers = await this.getHeadersInternal(httpOptions, url);
     return requestInit;
+  }
+
+  /**
+   * Returns a cached dispatcher configured for one timeout value.
+   *
+   * Agents own their connection pools and timeout configuration, so reusing
+   * one avoids opening a new pool for every request. The dynamic import keeps
+   * Undici optional and out of browser execution paths.
+   */
+  private getNodeDispatcher(timeout: number): Promise<object | undefined> {
+    let dispatcher = this.cachedNodeDispatchers.get(timeout);
+    if (!dispatcher) {
+      dispatcher = import('undici')
+        .then((undici) =>
+          createNodeFetchDispatcher(undici as UndiciModule, timeout),
+        )
+        .catch(() => {
+          // Preserve the existing fetch path when the optional dependency is
+          // absent, while explaining why a request over five minutes may fail.
+          console.warn(
+            `HTTP timeouts longer than ${UNDICI_DEFAULT_TIMEOUT_MS}ms in Node.js require the optional "undici" package. Install it to prevent Node's transport timeout from firing first.`,
+          );
+          return undefined;
+        });
+      this.cachedNodeDispatchers.set(timeout, dispatcher);
+    }
+    return dispatcher;
   }
 
   private async unaryApiCall(

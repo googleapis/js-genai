@@ -145,10 +145,10 @@
     "typedoc": "^0.27.0",
     "typescript": "~5.7.3",
     "typescript-eslint": "8.24.1",
-    "zod": "^3.25.0",
-    "zod-to-json-schema": "^3.25.0",
     "undici": "^7.16.0",
-    "undici-types": "^7.16.0"
+    "undici-types": "^7.16.0",
+    "zod": "^3.25.0",
+    "zod-to-json-schema": "^3.25.0"
   },
   "dependencies": {
     "google-auth-library": "^10.3.0",
@@ -158,7 +158,7 @@
   },
   "peerDependencies": {
     "@modelcontextprotocol/sdk": "^1.25.2",
-    "undici": "^7.16.0"
+    "undici": "^7.16.0 || ^8.0.0"
   },
   "peerDependenciesMeta": {
     "@modelcontextprotocol/sdk": {

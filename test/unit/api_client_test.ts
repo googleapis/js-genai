@@ -9,6 +9,7 @@ import {Readable} from 'stream';
 import {Agent} from 'undici';
 import {
   ApiClient,
+  createNodeFetchDispatcher,
   includeExtraBodyToRequestInit,
 } from '../../src/_api_client.js';
 import {CrossDownloader} from '../../src/cross/_cross_downloader.js';
@@ -39,6 +40,27 @@ const fetch400Options = {
   headers: {'Content-Type': 'application/json'},
   url: 'some-url',
 };
+
+function expectAgentTimeouts(dispatcher: unknown, timeout: number) {
+  expect(dispatcher).toBeInstanceOf(Agent);
+  const optionsSymbol = Object.getOwnPropertySymbols(dispatcher as object).find(
+    (symbol) => symbol.description === 'options',
+  );
+  expect(optionsSymbol).toBeDefined();
+  expect(
+    (
+      dispatcher as Record<
+        symbol,
+        {headersTimeout?: number; bodyTimeout?: number}
+      >
+    )[optionsSymbol!],
+  ).toEqual(
+    jasmine.objectContaining({
+      headersTimeout: timeout,
+      bodyTimeout: timeout,
+    }),
+  );
+}
 
 /**
  * Returns a fetch fake that yields a *fresh* `Response` for every call.
@@ -431,6 +453,54 @@ describe('processStreamResponse', () => {
 
     const final = await generator.next();
     expect(final.done).toBeTrue();
+  });
+});
+
+describe('createNodeFetchDispatcher', () => {
+  class FakeAgent {
+    constructor(
+      readonly options: {headersTimeout: number; bodyTimeout: number},
+    ) {}
+
+    dispatch() {}
+  }
+
+  class FakeDispatcher1Wrapper {
+    constructor(
+      readonly dispatcher: {dispatch: (...args: unknown[]) => unknown},
+    ) {}
+
+    dispatch() {}
+  }
+
+  it('uses the agent directly with the Undici 7 dispatcher contract', () => {
+    const dispatcher = createNodeFetchDispatcher(
+      {Agent: FakeAgent},
+      600_000,
+    ) as FakeAgent;
+
+    expect(dispatcher).toBeInstanceOf(FakeAgent);
+    expect(dispatcher.options).toEqual({
+      headersTimeout: 600_000,
+      bodyTimeout: 600_000,
+    });
+  });
+
+  it('adapts the agent to the Undici 8 dispatcher contract', () => {
+    const dispatcher = createNodeFetchDispatcher(
+      {
+        Agent: FakeAgent,
+        Dispatcher1Wrapper: FakeDispatcher1Wrapper,
+      },
+      600_000,
+    ) as FakeDispatcher1Wrapper;
+
+    expect(dispatcher).toBeInstanceOf(FakeDispatcher1Wrapper);
+    expect(dispatcher.dispatcher).toBeInstanceOf(FakeAgent);
+    expect((dispatcher.dispatcher as FakeAgent).options).toEqual({
+      headersTimeout: 600_000,
+      bodyTimeout: 600_000,
+    });
   });
 });
 
@@ -1425,26 +1495,9 @@ describe('ApiClient', () => {
       const requestInit = fetchArgs[1] as RequestInit & {
         dispatcher?: unknown;
       };
-      expect(requestInit.dispatcher).toBeInstanceOf(Agent);
-      const optionsSymbol = Object.getOwnPropertySymbols(
-        requestInit.dispatcher as object,
-      ).find((symbol) => symbol.description === 'options');
-      expect(optionsSymbol).toBeDefined();
-      expect(
-        (
-          requestInit.dispatcher as Record<
-            symbol,
-            {headersTimeout?: number; bodyTimeout?: number}
-          >
-        )[optionsSymbol!],
-      ).toEqual(
-        jasmine.objectContaining({
-          headersTimeout: 300_001,
-          bodyTimeout: 300_001,
-        }),
-      );
+      expectAgentTimeouts(requestInit.dispatcher, 300_001);
     });
-    it('should use a dispatcher matching each long request timeout in Node.js', async () => {
+    it('should cache a dispatcher for each long request timeout in Node.js', async () => {
       const client = new ApiClient({
         auth: new FakeAuth('test-api-key'),
         apiKey: 'test-api-key',
@@ -1472,6 +1525,11 @@ describe('ApiClient', () => {
         httpMethod: 'POST',
         httpOptions: {timeout: 600_000},
       });
+      await client.request({
+        path: 'test-path',
+        httpMethod: 'POST',
+        httpOptions: {timeout: 300_001},
+      });
 
       const firstRequestInit = fetchSpy.calls.argsFor(0)[1] as RequestInit & {
         dispatcher?: unknown;
@@ -1479,42 +1537,12 @@ describe('ApiClient', () => {
       const secondRequestInit = fetchSpy.calls.argsFor(1)[1] as RequestInit & {
         dispatcher?: unknown;
       };
-      const firstOptionsSymbol = Object.getOwnPropertySymbols(
-        firstRequestInit.dispatcher as object,
-      ).find((symbol) => symbol.description === 'options');
-      const secondOptionsSymbol = Object.getOwnPropertySymbols(
-        secondRequestInit.dispatcher as object,
-      ).find((symbol) => symbol.description === 'options');
-      expect(firstRequestInit.dispatcher).toBeInstanceOf(Agent);
-      expect(secondRequestInit.dispatcher).toBeInstanceOf(Agent);
-      expect(firstOptionsSymbol).toBeDefined();
-      expect(secondOptionsSymbol).toBeDefined();
-      expect(
-        (
-          firstRequestInit.dispatcher as Record<
-            symbol,
-            {headersTimeout?: number; bodyTimeout?: number}
-          >
-        )[firstOptionsSymbol!],
-      ).toEqual(
-        jasmine.objectContaining({
-          headersTimeout: 300_001,
-          bodyTimeout: 300_001,
-        }),
-      );
-      expect(
-        (
-          secondRequestInit.dispatcher as Record<
-            symbol,
-            {headersTimeout?: number; bodyTimeout?: number}
-          >
-        )[secondOptionsSymbol!],
-      ).toEqual(
-        jasmine.objectContaining({
-          headersTimeout: 600_000,
-          bodyTimeout: 600_000,
-        }),
-      );
+      const thirdRequestInit = fetchSpy.calls.argsFor(2)[1] as RequestInit & {
+        dispatcher?: unknown;
+      };
+      expectAgentTimeouts(firstRequestInit.dispatcher, 300_001);
+      expectAgentTimeouts(secondRequestInit.dispatcher, 600_000);
+      expect(thirdRequestInit.dispatcher).toBe(firstRequestInit.dispatcher);
     });
     it('should apply requestHttpOptions when provided', async () => {
       const client = new ApiClient({
@@ -1974,54 +2002,6 @@ describe('ApiClient', () => {
         commonKey: 'requestCommon', // request commonKey overwrites client commonKey
       });
     });
-    it('should set undici dispatcher on requestInit when long timeout is provided for request', async () => {
-      const client = new ApiClient({
-        auth: new FakeAuth('test-api-key'),
-        apiKey: 'test-api-key',
-        uploader: new CrossUploader(),
-        downloader: new CrossDownloader(),
-      });
-      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
-        Promise.resolve(
-          new Response(
-            JSON.stringify(mockGenerateContentResponse),
-            fetchOkOptions,
-          ),
-        ),
-      );
-      const mockTimer = jasmine.createSpyObj('timeout', ['unref']);
-      spyOn(global, 'setTimeout').and.returnValue(mockTimer);
-
-      await client.request({
-        path: 'test-path',
-        httpMethod: 'POST',
-        httpOptions: {timeout: 600_000},
-      });
-
-      const fetchArgs = fetchSpy.calls.first().args;
-      const requestInit = fetchArgs[1] as RequestInit & {
-        dispatcher?: unknown;
-      };
-      expect(requestInit.dispatcher).toBeInstanceOf(Agent);
-      const optionsSymbol = Object.getOwnPropertySymbols(
-        requestInit.dispatcher as object,
-      ).find((symbol) => symbol.description === 'options');
-      expect(optionsSymbol).toBeDefined();
-      expect(
-        (
-          requestInit.dispatcher as Record<
-            symbol,
-            {headersTimeout?: number; bodyTimeout?: number}
-          >
-        )[optionsSymbol!],
-      ).toEqual(
-        jasmine.objectContaining({
-          headersTimeout: 600_000,
-          bodyTimeout: 600_000,
-        }),
-      );
-    });
-
     it('should not set undici dispatcher for request timeout within undici defaults', async () => {
       const client = new ApiClient({
         auth: new FakeAuth('test-api-key'),
@@ -2636,24 +2616,7 @@ describe('ApiClient', () => {
       const requestInit = fetchArgs[1] as RequestInit & {
         dispatcher?: unknown;
       };
-      expect(requestInit.dispatcher).toBeInstanceOf(Agent);
-      const optionsSymbol = Object.getOwnPropertySymbols(
-        requestInit.dispatcher as object,
-      ).find((symbol) => symbol.description === 'options');
-      expect(optionsSymbol).toBeDefined();
-      expect(
-        (
-          requestInit.dispatcher as Record<
-            symbol,
-            {headersTimeout?: number; bodyTimeout?: number}
-          >
-        )[optionsSymbol!],
-      ).toEqual(
-        jasmine.objectContaining({
-          headersTimeout: 600_000,
-          bodyTimeout: 600_000,
-        }),
-      );
+      expectAgentTimeouts(requestInit.dispatcher, 600_000);
     });
     it('should send X-Server-Timeout header when timeout is set but no custom headers are provided for requestStream', async () => {
       const client = new ApiClient({
