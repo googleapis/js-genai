@@ -4,21 +4,28 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export {setDefaultBaseUrls} from './_base_url';
-export type {BaseUrlParameters} from './_base_url';
-export * from './batches';
-export * from './caches';
-export * from './chats';
-export {GoogleGenAI} from './client';
-export type {GoogleGenAIOptions} from './client';
-export * from './errors';
-export {Files} from './files';
-export type {Interactions} from './interactions/resources/interactions.js';
-export * from './live';
-export {mcpToTool} from './mcp/_mcp';
-export {Models} from './models';
-export type {LiveMusicSession} from './music';
-export {Operations} from './operations';
-export {PagedItem, Pager} from './pagers';
-export {Tokens} from './tokens';
-export * from './types';
+export {setDefaultBaseUrls} from './_base_url.js';
+export type {BaseUrlParameters} from './_base_url.js';
+export * from './batches.js';
+export * from './caches.js';
+export * from './chats.js';
+export {GoogleGenAI} from './client.js';
+export type {GoogleGenAIOptions} from './client.js';
+export * from './errors.js';
+export {Files} from './files.js';
+export type {SseMessage, Stream} from './gaos/lib/event-streams.js';
+export type {
+  Agents,
+  Environments,
+  Interactions,
+  Triggers,
+  Webhooks,
+} from './gaos/resources.js';
+export * from './live.js';
+export {mcpToTool} from './mcp/_mcp.js';
+export {Models} from './models.js';
+export type {LiveMusicSession} from './music.js';
+export {Operations} from './operations.js';
+export {PagedItem, Pager} from './pagers.js';
+export {Tokens} from './tokens.js';
+export * from './types.js';

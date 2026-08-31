@@ -30,6 +30,10 @@ export class Models extends BaseModule {
     super();
   }
 
+  private static loggedGenerateImagesWarning = false;
+  private static loggedEditImageWarning = false;
+  private static loggedGenerateVideosWarning = false;
+
   /**
    * Calculates embeddings for the given contents.
    *
@@ -55,6 +59,11 @@ export class Models extends BaseModule {
     params: types.EmbedContentParameters,
   ): Promise<types.EmbedContentResponse> => {
     if (!this.apiClient.isVertexAI()) {
+      const isGeminiEmbedding2Model =
+        params.model.includes('gemini-embedding-2');
+      if (isGeminiEmbedding2Model) {
+        params.contents = tContents(params.contents);
+      }
       return await this.embedContentInternal(params);
     }
     const isVertexEmbedContentModel =
@@ -87,7 +96,7 @@ export class Models extends BaseModule {
   /**
    * Makes an API request to generate content with a given model.
    *
-   * For the `model` parameter, supported formats for Vertex AI API include:
+   * For the `model` parameter, supported formats for Gemini Enterprise Agent Platform API include:
    * - The Gemini model ID, for example: 'gemini-2.0-flash'
    * - The full resource name starts with 'projects/', for example:
    *  'projects/my-project-id/locations/us-central1/publishers/google/models/gemini-2.0-flash'
@@ -126,7 +135,7 @@ export class Models extends BaseModule {
     params: types.GenerateContentParameters,
   ): Promise<types.GenerateContentResponse> => {
     const transformedParams = await this.processParamsMaybeAddMcpUsage(params);
-    this.maybeMoveToResponseJsonSchem(params);
+    this.maybeMoveToResponseJsonSchema(params);
     if (!afc.hasCallableTools(params) || afc.shouldDisableAfc(params.config)) {
       return await this.generateContentInternal(transformedParams);
     }
@@ -200,7 +209,7 @@ export class Models extends BaseModule {
    * To maintain backward compatibility, we move the data that was treated as
    * JSON schema from the responseSchema field to the responseJsonSchema field.
    */
-  private maybeMoveToResponseJsonSchem(
+  private maybeMoveToResponseJsonSchema(
     params: types.GenerateContentParameters,
   ): void {
     if (params.config && params.config.responseSchema) {
@@ -218,7 +227,7 @@ export class Models extends BaseModule {
    * Makes an API request to generate content with a given model and yields the
    * response in chunks.
    *
-   * For the `model` parameter, supported formats for Vertex AI API include:
+   * For the `model` parameter, supported formats for Gemini Enterprise Agent Platform API include:
    * - The Gemini model ID, for example: 'gemini-2.0-flash'
    * - The full resource name starts with 'projects/', for example:
    *  'projects/my-project-id/locations/us-central1/publishers/google/models/gemini-2.0-flash'
@@ -258,7 +267,7 @@ export class Models extends BaseModule {
   generateContentStream = async (
     params: types.GenerateContentParameters,
   ): Promise<AsyncGenerator<types.GenerateContentResponse>> => {
-    this.maybeMoveToResponseJsonSchem(params);
+    this.maybeMoveToResponseJsonSchema(params);
     if (afc.shouldDisableAfc(params.config)) {
       const transformedParams =
         await this.processParamsMaybeAddMcpUsage(params);
@@ -411,7 +420,7 @@ export class Models extends BaseModule {
                 }
                 if (!afcTools.has(part.functionCall.name)) {
                   throw new Error(
-                    `Automatic function calling was requested, but not all the tools the model used implement the CallableTool interface. Available tools: ${afcTools.keys()}, mising tool: ${
+                    `Automatic function calling was requested, but not all the tools the model used implement the CallableTool interface. Available tools: ${afcTools.keys()}, missing tool: ${
                       part.functionCall.name
                     }`,
                   );
@@ -506,6 +515,12 @@ export class Models extends BaseModule {
   generateImages = async (
     params: types.GenerateImagesParameters,
   ): Promise<types.GenerateImagesResponse> => {
+    if (!Models.loggedGenerateImagesWarning) {
+      Models.loggedGenerateImagesWarning = true;
+      console.warn(
+        'The generateImages method is deprecated and will be removed in the next major release (not before Jan. 1 2027). Please use the generateContent method with image models instead. See https://ai.google.dev/gemini-api/docs/deprecations#imagen-models and https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/capabilities/image-generation#generate-images',
+      );
+    }
     return await this.generateImagesInternal(params).then((apiResponse) => {
       let positivePromptSafetyAttributes;
       const generatedImages = [];
@@ -559,7 +574,7 @@ export class Models extends BaseModule {
       if (!actualParams.config!.queryBase) {
         if (actualParams.config?.filter) {
           throw new Error(
-            'Filtering tuned models list for Vertex AI is not currently supported',
+            'Filtering tuned models list is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
           );
         } else {
           actualParams.config!.filter = 'labels.tune-type:*';
@@ -598,6 +613,12 @@ export class Models extends BaseModule {
   editImage = async (
     params: types.EditImageParameters,
   ): Promise<types.EditImageResponse> => {
+    if (!Models.loggedEditImageWarning) {
+      Models.loggedEditImageWarning = true;
+      console.warn(
+        'The editImage method is deprecated and will be removed in the next major release (not before Jan. 1 2027). Please use the generateContent method with image models instead. See https://ai.google.dev/gemini-api/docs/deprecations#imagen-models and https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/capabilities/gemini-edit-images#edit-an-image',
+      );
+    }
     const paramsInternal: _internal_types.EditImageParametersInternal = {
       model: params.model,
       prompt: params.prompt,
@@ -616,7 +637,7 @@ export class Models extends BaseModule {
 
   /**
    * Upscales an image based on an image, upscale factor, and configuration.
-   * Only supported in Vertex AI currently.
+   * Only supported in Gemini Enterprise Agent Platform currently.
    *
    * @param params - The parameters for upscaling an image.
    * @return The response from the API.
@@ -688,6 +709,14 @@ export class Models extends BaseModule {
       throw new Error(
         'Source and prompt/image/video are mutually exclusive. Please only use source.',
       );
+    }
+    if (params.prompt || params.image || params.video) {
+      if (!Models.loggedGenerateVideosWarning) {
+        Models.loggedGenerateVideosWarning = true;
+        console.warn(
+          'The generateVideos method with prompt/image/video arguments is deprecated and will be removed in a future major release (not before 2026-07-31). Please use the source argument instead.',
+        );
+      }
     }
     // Gemini API does not support video bytes.
     if (!this.apiClient.isVertexAI()) {
@@ -1174,47 +1203,9 @@ export class Models extends BaseModule {
         return typedResp;
       });
     } else {
-      const body = converters.generateImagesParametersToMldev(
-        this.apiClient,
-        params,
-        params,
+      throw new Error(
+        'This method is only supported by the Gemini Enterprise Agent Platform (previously known as Vertex AI).',
       );
-      path = common.formatMap(
-        '{model}:predict',
-        body['_url'] as Record<string, unknown>,
-      );
-      queryParams = body['_query'] as Record<string, string>;
-      delete body['_url'];
-      delete body['_query'];
-
-      response = this.apiClient
-        .request({
-          path: path,
-          queryParams: queryParams,
-          body: JSON.stringify(body),
-          httpMethod: 'POST',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
-        })
-        .then((httpResponse) => {
-          return httpResponse.json().then((jsonResponse) => {
-            const response = jsonResponse as types.GenerateImagesResponse;
-            response.sdkHttpResponse = {
-              headers: httpResponse.headers,
-            } as types.HttpResponse;
-            return response;
-          });
-        }) as Promise<types.GenerateImagesResponse>;
-
-      return response.then((apiResponse) => {
-        const resp = converters.generateImagesResponseFromMldev(
-          apiResponse,
-          params,
-        );
-        const typedResp = new types.GenerateImagesResponse();
-        Object.assign(typedResp, resp);
-        return typedResp;
-      });
     }
   }
 
@@ -1271,7 +1262,9 @@ export class Models extends BaseModule {
         return typedResp;
       });
     } else {
-      throw new Error('This method is only supported by the Vertex AI.');
+      throw new Error(
+        'This method is only supported by the Gemini Enterprise Agent Platform (previously known as Vertex AI).',
+      );
     }
   }
 
@@ -1328,36 +1321,24 @@ export class Models extends BaseModule {
         return typedResp;
       });
     } else {
-      throw new Error('This method is only supported by the Vertex AI.');
+      throw new Error(
+        'This method is only supported by the Gemini Enterprise Agent Platform (previously known as Vertex AI).',
+      );
     }
   }
 
   /**
    * Recontextualizes an image.
    *
-   * There are two types of recontextualization currently supported:
-   * 1) Imagen Product Recontext - Generate images of products in new scenes
-   *    and contexts.
-   * 2) Virtual Try-On: Generate images of persons modeling fashion products.
+   * There is one type of recontextualization currently supported:
+   * 1) Virtual Try-On: Generate images of persons modeling fashion products.
    *
    * @param params - The parameters for recontextualizing an image.
    * @return The response from the API.
    *
    * @example
    * ```ts
-   * const response1 = await ai.models.recontextImage({
-   *  model: 'imagen-product-recontext-preview-06-30',
-   *  source: {
-   *    prompt: 'In a modern kitchen setting.',
-   *    productImages: [productImage],
-   *  },
-   *  config: {
-   *    numberOfImages: 1,
-   *  },
-   * });
-   * console.log(response1?.generatedImages?.[0]?.image?.imageBytes);
-   *
-   * const response2 = await ai.models.recontextImage({
+   * const response = await ai.models.recontextImage({
    *  model: 'virtual-try-on-001',
    *  source: {
    *    personImage: personImage,
@@ -1367,7 +1348,7 @@ export class Models extends BaseModule {
    *    numberOfImages: 1,
    *  },
    * });
-   * console.log(response2?.generatedImages?.[0]?.image?.imageBytes);
+   * console.log(response?.generatedImages?.[0]?.image?.imageBytes);
    * ```
    */
   async recontextImage(
@@ -1414,7 +1395,9 @@ export class Models extends BaseModule {
         return typedResp;
       });
     } else {
-      throw new Error('This method is only supported by the Vertex AI.');
+      throw new Error(
+        'This method is only supported by the Gemini Enterprise Agent Platform (previously known as Vertex AI).',
+      );
     }
   }
 
@@ -1482,7 +1465,9 @@ export class Models extends BaseModule {
         return typedResp;
       });
     } else {
-      throw new Error('This method is only supported by the Vertex AI.');
+      throw new Error(
+        'This method is only supported by the Gemini Enterprise Agent Platform (previously known as Vertex AI).',
+      );
     }
   }
 
@@ -2032,7 +2017,9 @@ export class Models extends BaseModule {
         return typedResp;
       });
     } else {
-      throw new Error('This method is only supported by the Vertex AI.');
+      throw new Error(
+        'This method is only supported by the Gemini Enterprise Agent Platform (previously known as Vertex AI).',
+      );
     }
   }
 

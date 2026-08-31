@@ -18,7 +18,9 @@ async function generateVideosFromMLDev() {
   const ai = new GoogleGenAI({vertexai: false, apiKey: GEMINI_API_KEY});
   let operation = await ai.models.generateVideos({
     model: 'veo-3.1-generate-preview',
-    prompt: 'Man with a dog',
+    source: {
+      prompt: 'Man with a dog',
+    },
     config: {
       numberOfVideos: 1,
     },
@@ -35,23 +37,29 @@ async function generateVideosFromMLDev() {
     throw new Error('No videos generated');
   }
 
-  await Promise.all(videos.map(async (video, i) => {
-    await ai.files.download({
-      file: video,
-      downloadPath: `video${i}.mp4`,
-    });
-    console.log('Downloaded video', `video${i}.mp4`);
-  })); 
+  await Promise.all(
+    videos.map(async (video, i) => {
+      await ai.files.download({
+        file: video,
+        downloadPath: `video${i}.mp4`,
+      });
+      console.log('Downloaded video', `video${i}.mp4`);
+    }),
+  );
 }
 
 async function generateVideosFromVertexAI() {
+  const location =
+    GOOGLE_CLOUD_LOCATION && GOOGLE_CLOUD_LOCATION !== 'global'
+      ? GOOGLE_CLOUD_LOCATION
+      : 'us-central1';
   const ai = new GoogleGenAI({
     vertexai: true,
     project: GOOGLE_CLOUD_PROJECT,
-    location: GOOGLE_CLOUD_LOCATION,
+    location,
   });
   let operation = await ai.models.generateVideos({
-    model: 'veo-3.1-generate-preview',
+    model: 'veo-2.0-generate-001',
     source: {prompt: 'Man with a dog'},
   });
 
@@ -66,22 +74,32 @@ async function generateVideosFromVertexAI() {
     throw new Error('No videos generated');
   }
 
-  await Promise.all(videos.map(async (video, i) => {
-    await ai.files.download({
-      file: video,
-      downloadPath: `video${i}.mp4`,
-    });
-    console.log('Downloaded video', `video${i}.mp4`);
-  })); 
+  await Promise.all(
+    videos.map(async (video, i) => {
+      await ai.files.download({
+        file: video,
+        downloadPath: `video${i}.mp4`,
+      });
+      console.log('Downloaded video', `video${i}.mp4`);
+    }),
+  );
 }
 
 async function main() {
-  if (GOOGLE_GENAI_USE_VERTEXAI) {
-    await generateVideosFromVertexAI().catch((e) =>
-      console.error('got error', e),
-    );
-  } else {
-    await generateVideosFromMLDev().catch((e) => console.error('got error', e));
+  try {
+    if (GOOGLE_GENAI_USE_VERTEXAI) {
+      await generateVideosFromVertexAI();
+    } else {
+      await generateVideosFromMLDev();
+    }
+  } catch (e: unknown) {
+    if ((e as {status?: number})?.status === 429) {
+      console.warn(
+        'Skipping video generation due to rate limit / quota exhaustion (429).',
+      );
+      return;
+    }
+    throw e;
   }
 }
 

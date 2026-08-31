@@ -437,6 +437,10 @@ export function tSchema(schema: types.Schema | unknown): types.Schema {
   return processJsonSchema(schema as types.Schema);
 }
 
+export function tJsonSchema(schema: unknown): unknown {
+  return schema;
+}
+
 export function tSpeechConfig(
   speechConfig: types.SpeechConfigUnion,
 ): types.SpeechConfig {
@@ -789,6 +793,10 @@ export function tBatchJobSource(
         sourceObj = {format: 'jsonl', gcsUri: [src]};
       } else if (src.startsWith('bq://')) {
         sourceObj = {format: 'bigquery', bigqueryUri: src};
+      } else if (
+        /^projects\/[^/]+\/locations\/[^/]+\/datasets\/[^/]+$/.test(src)
+      ) {
+        sourceObj = {format: 'vertex-dataset', vertexDatasetName: src};
       } else {
         throw new Error(`Unsupported string source for Vertex AI: ${src}`);
       }
@@ -811,9 +819,11 @@ export function tBatchJobSource(
   }
 
   // Validation logic
-  const vertexSourcesCount = [sourceObj.gcsUri, sourceObj.bigqueryUri].filter(
-    Boolean,
-  ).length;
+  const vertexSourcesCount = [
+    sourceObj.gcsUri,
+    sourceObj.bigqueryUri,
+    sourceObj.vertexDatasetName,
+  ].filter(Boolean).length;
 
   const mldevSourcesCount = [
     sourceObj.inlinedRequests,
@@ -823,7 +833,7 @@ export function tBatchJobSource(
   if (client.isVertexAI()) {
     if (mldevSourcesCount > 0 || vertexSourcesCount !== 1) {
       throw new Error(
-        'Exactly one of `gcsUri` or `bigqueryUri` must be set for Vertex AI.',
+        'Exactly one of `gcsUri`, `bigqueryUri`, or `vertexDatasetName` must be set for Vertex AI.',
       );
     }
   } else {

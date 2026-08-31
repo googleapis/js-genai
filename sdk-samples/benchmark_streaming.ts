@@ -335,10 +335,10 @@ export async function ask<TSchema extends z.ZodSchema>(
         )}`,
       );
     }
-    if (chunk.event_type === 'interaction.start') {
+    if (chunk.event_type === 'interaction.created') {
       interactionId = chunk.interaction?.id || '';
     }
-    if (chunk.event_type === 'content.delta') {
+    if (chunk.event_type === 'step.delta') {
       if (chunk.delta?.type === 'text') {
         text += chunk.delta.text ?? '';
       } else if (chunk.delta?.type === 'image') {

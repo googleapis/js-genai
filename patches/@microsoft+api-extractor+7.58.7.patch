@@ -1,0 +1,47 @@
+diff --git a/node_modules/@microsoft/api-extractor/lib-commonjs/generators/DtsEmitHelpers.js b/node_modules/@microsoft/api-extractor/lib-commonjs/generators/DtsEmitHelpers.js
+index 8f40f34..e3da939 100644
+--- a/node_modules/@microsoft/api-extractor/lib-commonjs/generators/DtsEmitHelpers.js
++++ b/node_modules/@microsoft/api-extractor/lib-commonjs/generators/DtsEmitHelpers.js
+@@ -47,6 +47,7 @@ const TypeScriptHelpers_1 = require("../analyzer/TypeScriptHelpers");
+  */
+ class DtsEmitHelpers {
+     static emitImport(writer, collectorEntity, astImport) {
++        if (astImport.modulePath.includes("node_modules")) return;
+         const importPrefix = astImport.isTypeOnlyEverywhere ? 'import type' : 'import';
+         switch (astImport.importKind) {
+             case AstImport_1.AstImportKind.DefaultImport:
+diff --git a/node_modules/@microsoft/api-extractor/lib-commonjs/generators/DtsRollupGenerator.js b/node_modules/@microsoft/api-extractor/lib-commonjs/generators/DtsRollupGenerator.js
+index d18d411..aae7236 100644
+--- a/node_modules/@microsoft/api-extractor/lib-commonjs/generators/DtsRollupGenerator.js
++++ b/node_modules/@microsoft/api-extractor/lib-commonjs/generators/DtsRollupGenerator.js
+@@ -256,6 +256,9 @@ class DtsRollupGenerator {
+             case ts.SyntaxKind.DefaultKeyword:
+             case ts.SyntaxKind.DeclareKeyword:
+                 // Delete any explicit "export" or "declare" keywords -- we will re-add them below
++                if (span.node?.parent?.kind === ts.SyntaxKind.ExportDeclaration && span.node?.parent?.exportClause?.kind === ts.SyntaxKind.NamedExports && span.node?.parent?.exportClause.elements.length) {
++                    break;
++                }
+                 span.modification.skipAll();
+                 break;
+             case ts.SyntaxKind.InterfaceKeyword:
+@@ -265,6 +268,12 @@ class DtsRollupGenerator {
+             case ts.SyntaxKind.ModuleKeyword:
+             case ts.SyntaxKind.TypeKeyword:
+             case ts.SyntaxKind.FunctionKeyword:
++                if (span.node.parent.kind === ts.SyntaxKind.ExportSpecifier) {
++                    collector.tryGetEntityForSymbol(collector.typeChecker.getAliasedSymbol(span.node.parent.symbol)).nameForEmit;
++                    const mod = span.parent.children.find(e=>e.node===span.node.parent.propertyName).modification;
++                    mod.prefix = collector.tryGetEntityForSymbol(collector.typeChecker.getAliasedSymbol(span.node.parent.symbol)).nameForEmit;
++                    break;
++                }
+                 // Replace the stuff we possibly deleted above
+                 let replacedModifiers = '';
+                 // Add a declare statement for root declarations (but not for nested declarations)
+@@ -345,6 +354,7 @@ class DtsRollupGenerator {
+                 }
+                 break;
+             case ts.SyntaxKind.ImportType:
++                if (span.node.argument.literal.text.includes("node_modules")) break;
+                 DtsEmitHelpers_1.DtsEmitHelpers.modifyImportTypeSpan(collector, span, astDeclaration, (childSpan, childAstDeclaration) => {
+                     DtsRollupGenerator._modifySpan(collector, childSpan, entity, childAstDeclaration, dtsKind);
+                 });

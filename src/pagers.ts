@@ -8,7 +8,7 @@
  * Pagers for the GenAI List APIs.
  */
 
-import * as types from '../src/types';
+import * as types from './types.js';
 
 export enum PagedItem {
   PAGED_ITEM_BATCH_JOBS = 'batchJobs',
@@ -18,6 +18,7 @@ export enum PagedItem {
   PAGED_ITEM_CACHED_CONTENTS = 'cachedContents',
   PAGED_ITEM_FILE_SEARCH_STORES = 'fileSearchStores',
   PAGED_ITEM_DOCUMENTS = 'documents',
+  PAGED_ITEM_SKILLS = 'skills',
 }
 
 export interface PagedItemConfig {
@@ -38,6 +39,7 @@ interface PagedItemResponse<T> {
   cachedContents?: T[];
   fileSearchStores?: T[];
   documents?: T[];
+  skills?: T[];
 }
 
 /**
