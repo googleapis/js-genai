@@ -437,6 +437,10 @@ export function tSchema(schema: types.Schema | unknown): types.Schema {
   return processJsonSchema(schema as types.Schema);
 }
 
+export function tJsonSchema(schema: unknown): unknown {
+  return schema;
+}
+
 export function tSpeechConfig(
   speechConfig: types.SpeechConfigUnion,
 ): types.SpeechConfig {

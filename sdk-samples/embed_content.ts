@@ -4,8 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import {GoogleGenAI} from '@google/genai';
+import {MODEL_EMBEDDING} from './constants.js';
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
 const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
@@ -14,7 +15,7 @@ async function embedContentFromMLDev() {
   const ai = new GoogleGenAI({vertexai: false, apiKey: GEMINI_API_KEY});
 
   const response = await ai.models.embedContent({
-    model: 'text-embedding-004',
+    model: MODEL_EMBEDDING,
     contents: 'Hello world!',
   });
 
@@ -25,43 +26,22 @@ async function embedContentFromVertexAI() {
   const ai = new GoogleGenAI({
     vertexai: true,
     project: GOOGLE_CLOUD_PROJECT,
-    location: GOOGLE_CLOUD_LOCATION,
+    location: GOOGLE_CLOUD_LOCATION || 'us-central1',
   });
 
   const textResponse = await ai.models.embedContent({
-    model: 'text-embedding-004',
+    model: 'text-embedding-005',
     contents: 'Hello world!',
   });
 
-  const multimodalResponse = await ai.models.embedContent({
-    model: 'gemini-embedding-2-exp-11-2025',
-    contents: [
-      {
-        parts: [
-          {text: 'Similar things to the following image:'},
-          {
-            fileData: {
-              mimeType: 'image/png',
-              fileUri:
-                'gs://cloud-samples-data/generative-ai/image/a-man-and-a-dog.png',
-            },
-          },
-        ],
-      },
-    ],
-  });
-
   console.debug(JSON.stringify(textResponse));
-  console.debug(JSON.stringify(multimodalResponse));
 }
 
 async function main() {
   if (GOOGLE_GENAI_USE_VERTEXAI) {
-    await embedContentFromVertexAI().catch((e) =>
-      console.error('got error', e),
-    );
+    await embedContentFromVertexAI();
   } else {
-    await embedContentFromMLDev().catch((e) => console.error('got error', e));
+    await embedContentFromMLDev();
   }
 }
 

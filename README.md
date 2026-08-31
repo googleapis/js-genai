@@ -13,6 +13,24 @@ TypeScript and JavaScript developers to build applications powered by Gemini. Th
 supports both the [Gemini Developer API](https://ai.google.dev/gemini-api/docs)
 and [Gemini Enterprise Agent Platform](https://docs.cloud.google.com/gemini-enterprise-agent-platform).
 
+> [!WARNING]
+> **Updates to Automatic Function Calling (AFC) in upcoming SDK version:**
+> We are changing AFC behavior in the next major version.
+> Specifically, users will not be able to
+> invoke AFC from direct calls to `Models.generateContent` or its stream
+> variants. Instead, users should invoke AFC from `Chats` modules.
+>
+> **Upcoming Change to Node.js Support:**
+> Starting from SDK version 3.0.0, Node.js version 22 or later is required.
+>
+> | Methods/fields to be removed | migration guide |
+> | --- | --- |
+> | `LiveConnectConfig.generation_config` | Set fields on `LiveConnectConfig` directly |
+> | `prompt`/`text`/`image` arguments in `Models.generate_videos` (and async variants) | Use `source` argument instead |
+> | `GenerationConfigThinkingConfig` | Use `ThinkingConfig` instead |
+>
+> To avoid unexpected updates, pin the SDK version to `< 3.0.0`.
+
 The Google Gen AI SDK is designed to work with Gemini 2.0+ features.
 
 > [!CAUTION]
@@ -369,10 +387,7 @@ async function main() {
 main();
 ```
 
-## Interactions (Experimental)
-
-> **Warning:** The Interactions API is in **Beta**. This is a preview of an
-experimental feature. Features and schemas are subject to **breaking changes**.
+## Interactions
 
 The Interactions API is a unified interface for interacting with Gemini models
 and agents. It simplifies state management, tool orchestration, and long-running
