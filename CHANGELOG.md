@@ -2,6 +2,23 @@
 
 
 
+## [2.20.0](https://github.com/googleapis/js-genai/compare/v2.19.0...v2.20.0) (2026-08-31)
+
+
+### Features
+
+* Add support for the audio/webm MIME type. ([b0e3c5f](https://github.com/googleapis/js-genai/commit/b0e3c5f54bbddd875eaa88c699f1b85d5a55918f))
+* Add translation_config SDK support for GEAP. ([3e1d923](https://github.com/googleapis/js-genai/commit/3e1d923ef914812c1d209aa2e5461a717d03a081))
+* add Video Understanding support to the Interactions API ([6ddbeba](https://github.com/googleapis/js-genai/commit/6ddbeba6c3836378f58351e6885f5141aab0c1e7))
+
+
+### Bug Fixes
+
+* Don't set redundant Content-Length on file upload requests ([2f5cc7a](https://github.com/googleapis/js-genai/commit/2f5cc7a00852608a46ffa3bd8cab5d02783810d6))
+* Don't set redundant Content-Length on file upload requests ([2f5cc7a](https://github.com/googleapis/js-genai/commit/2f5cc7a00852608a46ffa3bd8cab5d02783810d6)), refs [#1718](https://github.com/googleapis/js-genai/issues/1718)
+* expose ProcessingCallStep and ProcessingResultStep in Interactions SDK ([b6f8db5](https://github.com/googleapis/js-genai/commit/b6f8db553449199ebba1678dbb0936300e982990))
+* Quote setupComplete key in LiveClientMessage ([4467faf](https://github.com/googleapis/js-genai/commit/4467fafb08948863889f7e87917d311ed39c0884))
+
 ## [2.19.0](https://github.com/googleapis/js-genai/compare/v2.18.0...v2.19.0) (2026-08-25)
 
 
