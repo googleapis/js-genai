@@ -248,7 +248,7 @@ export class GoogleGenAI {
     return this._environments;
   }
 
-  constructor(options: GoogleGenAIOptions) {
+  constructor(options: GoogleGenAIOptions = {} as GoogleGenAIOptions) {
     if (options.apiKey == null) {
       throw new Error(
         `An API Key must be set when running in an unspecified environment.\n + ${crossError().message}`,

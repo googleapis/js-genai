@@ -23,6 +23,7 @@ import type { DeleteInteractionRequest } from "./delete-interaction.js";
 import type { DeleteTriggerRequest } from "./delete-trigger.js";
 import type { DeleteWebhookRequest } from "./delete-webhook.js";
 import type { GetAgentRequest } from "./get-agent.js";
+import type { GetEnvironmentFilesRequest } from "./get-environment-files.js";
 import type { GetEnvironmentRequest } from "./get-environment.js";
 import type { GetInteractionByIdRequest } from "./get-interaction-by-id.js";
 import type { GetTriggerRequest } from "./get-trigger.js";
@@ -63,23 +64,6 @@ export type CreateInteractionParamsStreaming = CreateInteractionParams & {
   stream: true;
 };
 
-export type CreateModelInteractionParams =
-  & Omit<
-    CreateInteractionRequest,
-    "body"
-  >
-  & CreateModelInteraction;
-
-export type CreateModelInteractionParamsNonStreaming =
-  & CreateModelInteractionParams
-  & {
-    stream?: false | undefined;
-  };
-
-export type CreateModelInteractionParamsStreaming =
-  & CreateModelInteractionParams
-  & { stream: true };
-
 export type CreateAgentInteractionParams =
   & Omit<
     CreateInteractionRequest,
@@ -95,6 +79,23 @@ export type CreateAgentInteractionParamsNonStreaming =
 
 export type CreateAgentInteractionParamsStreaming =
   & CreateAgentInteractionParams
+  & { stream: true };
+
+export type CreateModelInteractionParams =
+  & Omit<
+    CreateInteractionRequest,
+    "body"
+  >
+  & CreateModelInteraction;
+
+export type CreateModelInteractionParamsNonStreaming =
+  & CreateModelInteractionParams
+  & {
+    stream?: false | undefined;
+  };
+
+export type CreateModelInteractionParamsStreaming =
+  & CreateModelInteractionParams
   & { stream: true };
 
 export type CreateTriggerParams =
@@ -139,6 +140,11 @@ export type DeleteWebhookParams = Omit<
 export type GetAgentParams = Omit<
   GetAgentRequest,
   "id"
+>;
+
+export type GetEnvironmentFilesParams = Omit<
+  GetEnvironmentFilesRequest,
+  "environment" | "path"
 >;
 
 export type GetEnvironmentParams = Omit<

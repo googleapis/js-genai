@@ -19,11 +19,11 @@ export type CancelInteractionByIdGlobals = {
 
 export type CancelInteractionByIdRequest = {
   /**
-   * The unique identifier of the interaction to cancel.
-   */
-  id: string;
-  /**
    * Which version of the API to use.
    */
   api_version?: string | undefined;
+  /**
+   * The unique identifier of the interaction to cancel.
+   */
+  id: string;
 };

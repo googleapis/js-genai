@@ -23,22 +23,12 @@ import {
   ListEnvironmentsParams,
 } from "../models/operations/method-params.js";
 import { APIPromise, unwrapAsAPIPromise } from "../types/async.js";
+import { Files } from "./files.js";
 
 export class Environments extends ClientSDK {
-  /**
-   * Creates an environment.
-   */
-  createEnvironment(
-    body: environments.CreateEnvironmentRequest,
-    api_version?: string | undefined,
-    options?: RequestOptions,
-  ): APIPromise<environments.Environment> {
-    return unwrapAsAPIPromise(environmentsCreateEnvironment(
-      this,
-      body,
-      api_version,
-      options,
-    ));
+  private _files?: Files;
+  get files(): Files {
+    return (this._files ??= new Files(this._options));
   }
 
   /**
@@ -58,17 +48,17 @@ export class Environments extends ClientSDK {
   }
 
   /**
-   * Gets an environment.
+   * Creates an environment.
    */
-  getEnvironment(
-    id: string,
-    params?: GetEnvironmentParams,
-    options?: Omit<RequestOptions, "extra_body">,
+  createEnvironment(
+    body: environments.CreateEnvironmentRequest,
+    api_version?: string | undefined,
+    options?: RequestOptions,
   ): APIPromise<environments.Environment> {
-    return unwrapAsAPIPromise(environmentsGetEnvironment(
+    return unwrapAsAPIPromise(environmentsCreateEnvironment(
       this,
-      id,
-      params?.api_version,
+      body,
+      api_version,
       options,
     ));
   }
@@ -82,6 +72,22 @@ export class Environments extends ClientSDK {
     options?: Omit<RequestOptions, "extra_body">,
   ): APIPromise<interactions.Empty> {
     return unwrapAsAPIPromise(environmentsDeleteEnvironment(
+      this,
+      id,
+      params?.api_version,
+      options,
+    ));
+  }
+
+  /**
+   * Gets an environment.
+   */
+  getEnvironment(
+    id: string,
+    params?: GetEnvironmentParams,
+    options?: Omit<RequestOptions, "extra_body">,
+  ): APIPromise<environments.Environment> {
+    return unwrapAsAPIPromise(environmentsGetEnvironment(
       this,
       id,
       params?.api_version,

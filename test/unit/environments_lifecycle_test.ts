@@ -78,4 +78,66 @@ describe('Environments Lifecycle', () => {
       await once(server, 'close');
     }
   });
+
+  it('routes environment files requests through Google GenAI client', async () => {
+    const captured: string[] = [];
+    const server = createServer((request, response) => {
+      captured.push(`${request.method} ${request.url}`);
+      response.setHeader('content-type', 'application/json');
+      response.end(
+        JSON.stringify({
+          files: [
+            {
+              name: 'main.py',
+              path: 'workspace/main.py',
+              type: 'FILE',
+              size_bytes: '123',
+            },
+          ],
+        }),
+      );
+    });
+
+    server.listen(0, '127.0.0.1');
+    await once(server, 'listening');
+
+    const address = server.address();
+    expect(address).toBeDefined();
+    expect(typeof address).toBe('object');
+    if (!address || typeof address !== 'object') {
+      server.close();
+      return;
+    }
+
+    const ai = new GoogleGenAI({
+      apiKey: 'test-api-key',
+      httpOptions: {
+        apiVersion: 'v1beta',
+        baseUrl: `http://127.0.0.1:${address.port}`,
+      },
+    });
+
+    try {
+      const res = await ai.environments.files.list({
+        environment: 'env_abc_123',
+        path: 'main.py',
+      });
+      expect(res.files?.[0]?.name).toBe('main.py');
+
+      const listRes = await ai.environments.files.list({
+        environment: 'env_abc_123',
+        path: 'src/',
+        recursive: true,
+      });
+      expect(listRes.files?.[0]?.name).toBe('main.py');
+
+      expect(captured).toEqual([
+        'GET /v1beta/environments/env_abc_123/files/main.py',
+        'GET /v1beta/environments/env_abc_123/files/src%2F?recursive=true',
+      ]);
+    } finally {
+      server.close();
+      await once(server, 'close');
+    }
+  });
 });

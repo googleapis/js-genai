@@ -1063,47 +1063,9 @@ export class Models extends BaseModule {
         return typedResp;
       });
     } else {
-      const body = converters.generateImagesParametersToMldev(
-        this.apiClient,
-        params,
-        params,
+      throw new Error(
+        'This method is only supported by the Gemini Enterprise Agent Platform (previously known as Vertex AI).',
       );
-      path = common.formatMap(
-        '{model}:predict',
-        body['_url'] as Record<string, unknown>,
-      );
-      queryParams = body['_query'] as Record<string, string>;
-      delete body['_url'];
-      delete body['_query'];
-
-      response = this.apiClient
-        .request({
-          path: path,
-          queryParams: queryParams,
-          body: JSON.stringify(body),
-          httpMethod: 'POST',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
-        })
-        .then((httpResponse) => {
-          return httpResponse.json().then((jsonResponse) => {
-            const response = jsonResponse as types.GenerateImagesResponse;
-            response.sdkHttpResponse = {
-              headers: httpResponse.headers,
-            } as types.HttpResponse;
-            return response;
-          });
-        }) as Promise<types.GenerateImagesResponse>;
-
-      return response.then((apiResponse) => {
-        const resp = converters.generateImagesResponseFromMldev(
-          apiResponse,
-          params,
-        );
-        const typedResp = new types.GenerateImagesResponse();
-        Object.assign(typedResp, resp);
-        return typedResp;
-      });
     }
   }
 

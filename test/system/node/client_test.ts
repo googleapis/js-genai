@@ -1065,26 +1065,18 @@ describe('Client Tests', () => {
         apiKey: GOOGLE_API_KEY,
         httpOptions,
       });
-      const response = await client.models.generateImages({
-        model: 'imagen-3.0-generate-002',
-        prompt: 'Robot holding a red skateboard',
-        config: {
-          numberOfImages: 1,
-          outputMimeType: 'image/jpeg',
-          includeSafetyAttributes: true,
-        },
-      });
-      expect(response?.generatedImages!.length).toBe(
-        1,
-        'Expected 1 generated image got ' + response?.generatedImages!.length,
-      );
-      expect(response?.generatedImages?.[0]?.image?.imageBytes).toEqual(
-        jasmine.anything(),
-        'Expected image bytes to be non-empty',
-      );
-      expect(response?.positivePromptSafetyAttributes).toEqual(
-        jasmine.anything(),
-        'Expected positive prompt safety attributes to be non-empty',
+      await expectAsync(
+        client.models.generateImages({
+          model: 'imagen-3.0-generate-002',
+          prompt: 'Robot holding a red skateboard',
+          config: {
+            numberOfImages: 1,
+            outputMimeType: 'image/jpeg',
+            includeSafetyAttributes: true,
+          },
+        }),
+      ).toBeRejectedWithError(
+        /is only supported by the Gemini Enterprise Agent Platform/,
       );
     });
 

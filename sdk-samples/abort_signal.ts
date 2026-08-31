@@ -3,9 +3,11 @@
  * Copyright 2025 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
-import {GoogleGenAI} from '@google/genai';
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+import {GoogleGenAI} from '@google/genai';
+import {MODEL_FLASH_LITE} from './constants.js';
+
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
 const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
@@ -15,7 +17,7 @@ async function abortStreamingFromMLDev() {
   const abortController = new AbortController();
   const abortSignal = abortController.signal;
   const response = await ai.models.generateContentStream({
-    model: 'gemini-2.0-flash',
+    model: MODEL_FLASH_LITE,
     contents: 'Tell me a story in 300 words?',
     config: {
       abortSignal: abortSignal,
@@ -38,7 +40,7 @@ async function abortStreamingFromVertexAI() {
   const abortController = new AbortController();
   const abortSignal = abortController.signal;
   const response = await ai.models.generateContentStream({
-    model: 'gemini-2.0-flash',
+    model: MODEL_FLASH_LITE,
     contents: 'Tell me a story in 300 words?',
     config: {
       abortSignal: abortSignal,
@@ -53,14 +55,20 @@ async function abortStreamingFromVertexAI() {
 }
 
 async function main() {
+  const handleAbortError = (e: unknown) => {
+    if (
+      e instanceof Error &&
+      (e.name === 'AbortError' || e.message.toLowerCase().includes('abort'))
+    ) {
+      console.log('got expected abort error:', e.message);
+    } else {
+      throw e;
+    }
+  };
   if (GOOGLE_GENAI_USE_VERTEXAI) {
-    await abortStreamingFromVertexAI().catch((e) =>
-      console.error('got expected abort error', e),
-    );
+    await abortStreamingFromVertexAI().catch(handleAbortError);
   } else {
-    await abortStreamingFromMLDev().catch((e) =>
-      console.error('got expected abort error', e),
-    );
+    await abortStreamingFromMLDev().catch(handleAbortError);
   }
 }
 

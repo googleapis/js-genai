@@ -34,14 +34,14 @@ export type ImageContent = {
    * The image content.
    */
   data?: string | undefined;
+  /**
+   * The mime type of the image.
+   */
+  mime_type?: ImageContentMimeType | undefined;
   resolution?: MediaResolution | undefined;
   type: "image";
   /**
    * The URI of the image.
    */
   uri?: string | undefined;
-  /**
-   * The mime type of the image.
-   */
-  mime_type?: ImageContentMimeType | undefined;
 };

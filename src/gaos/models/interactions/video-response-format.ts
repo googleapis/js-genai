@@ -21,6 +21,11 @@ export type VideoResponseFormatAspectRatio = "16:9" | "9:16" | (string & {});
 export type VideoResponseFormatDelivery = "inline" | "uri" | (string & {});
 
 /**
+ * The video output resolution. Defaults to 720p.
+ */
+export type Resolution = "360p" | "720p" | "1080p" | "4k" | (string & {});
+
+/**
  * Configuration for video output format.
  */
 export type VideoResponseFormat = {
@@ -37,11 +42,15 @@ export type VideoResponseFormat = {
    */
   duration?: string | undefined;
   /**
-   * The GCS URI to store the video output. Required for Vertex if delivery mode
+   * The Cloud Storage URI to store the video output. Required for Vertex if
    *
    * @remarks
-   * is URI.
+   * delivery mode is URI.
    */
   gcs_uri?: string | undefined;
+  /**
+   * The video output resolution. Defaults to 720p.
+   */
+  resolution?: Resolution | undefined;
   type: "video";
 };

@@ -3,11 +3,13 @@
  * Copyright 2025 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
+
 import {FunctionCallingConfigMode, GoogleGenAI, mcpToTool} from '@google/genai';
 import {Client} from '@modelcontextprotocol/sdk/client/index.js';
 import {InMemoryTransport} from '@modelcontextprotocol/sdk/inMemory.js';
 import {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js';
 import {z} from 'zod';
+import {MODEL_FLASH_LITE} from './constants.js';
 
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
@@ -18,7 +20,7 @@ async function mcpSample(ai: GoogleGenAI) {
   const beepingClient = await spinUpBeepingServer();
 
   const response = await ai.models.generateContentStream({
-    model: 'gemini-3-pro-preview',
+    model: MODEL_FLASH_LITE,
     contents:
       'Use the printer to print a simple math question in red and the answer in blue, and beep with the beeper, also tell me a joke. IMPORTANT DO NOT FORGET TO BEEP AT THE END',
     config: {
@@ -29,7 +31,6 @@ async function mcpSample(ai: GoogleGenAI) {
       toolConfig: {
         functionCallingConfig: {
           mode: FunctionCallingConfigMode.AUTO,
-          streamFunctionCallArguments: true,
         },
       },
     },
@@ -90,7 +91,7 @@ async function spinUpPrintingServer(): Promise<Client> {
     name: 'printer',
     version: '1.0.0',
   });
-  client.connect(transports[1]);
+  await client.connect(transports[1]);
 
   return client;
 }
@@ -115,7 +116,7 @@ async function spinUpBeepingServer(): Promise<Client> {
     name: 'beeper',
     version: '1.0.0',
   });
-  client.connect(transports[1]);
+  await client.connect(transports[1]);
 
   return client;
 }
@@ -126,7 +127,7 @@ async function main() {
     ai = new GoogleGenAI({
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
-      location: GOOGLE_CLOUD_LOCATION,
+      location: GOOGLE_CLOUD_LOCATION || 'us-central1',
     });
   } else {
     console.log(
@@ -135,7 +136,7 @@ async function main() {
     return;
   }
 
-  mcpSample(ai);
+  await mcpSample(ai);
 }
 
 main();

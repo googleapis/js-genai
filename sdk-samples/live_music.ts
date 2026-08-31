@@ -83,7 +83,7 @@ async function main() {
       apiVersion: 'v1alpha',
     });
     const model = 'lyria-realtime-exp';
-    await liveMusic(client, model).catch((e) => console.error('got error', e));
+    await liveMusic(client, model);
   }
 }
 

@@ -39,19 +39,19 @@ export class Interactions extends ClientSDK {
    * Creates a new interaction.
    */
   create(
-    params: CreateModelInteractionParamsNonStreaming,
-    options?: RequestOptions,
-  ): APIPromise<operations.CreateInteractionResponse>;
-  create(
     params: CreateAgentInteractionParamsNonStreaming,
     options?: RequestOptions,
   ): APIPromise<operations.CreateInteractionResponse>;
   create(
-    params: CreateModelInteractionParamsStreaming,
+    params: CreateModelInteractionParamsNonStreaming,
     options?: RequestOptions,
   ): APIPromise<operations.CreateInteractionResponse>;
   create(
     params: CreateAgentInteractionParamsStreaming,
+    options?: RequestOptions,
+  ): APIPromise<operations.CreateInteractionResponse>;
+  create(
+    params: CreateModelInteractionParamsStreaming,
     options?: RequestOptions,
   ): APIPromise<operations.CreateInteractionResponse>;
   create(
@@ -67,6 +67,25 @@ export class Interactions extends ClientSDK {
       this,
       body,
       api_version,
+      options,
+    ));
+  }
+
+  /**
+   * Deleting an interaction
+   *
+   * @remarks
+   * Deletes the interaction by id.
+   */
+  delete(
+    id: string,
+    params?: DeleteInteractionParams,
+    options?: Omit<RequestOptions, "extra_body">,
+  ): APIPromise<void> {
+    return unwrapAsAPIPromise(interactionsDelete(
+      this,
+      id,
+      params?.api_version,
       options,
     ));
   }
@@ -100,29 +119,10 @@ export class Interactions extends ClientSDK {
     return unwrapAsAPIPromise(interactionsGet(
       this,
       id,
-      params?.stream,
-      params?.last_event_id,
+      params?.api_version,
       params?.include_input,
-      params?.api_version,
-      options,
-    ));
-  }
-
-  /**
-   * Deleting an interaction
-   *
-   * @remarks
-   * Deletes the interaction by id.
-   */
-  delete(
-    id: string,
-    params?: DeleteInteractionParams,
-    options?: Omit<RequestOptions, "extra_body">,
-  ): APIPromise<void> {
-    return unwrapAsAPIPromise(interactionsDelete(
-      this,
-      id,
-      params?.api_version,
+      params?.last_event_id,
+      params?.stream,
       options,
     ));
   }
