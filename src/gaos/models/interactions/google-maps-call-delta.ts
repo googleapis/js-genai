@@ -13,7 +13,6 @@
 import { GoogleMapsCallArguments } from "./google-maps-call-arguments.js";
 
 export type GoogleMapsCallDelta = {
-  type: "google_maps_call";
   /**
    * The arguments to pass to the Google Maps tool.
    */
@@ -22,4 +21,5 @@ export type GoogleMapsCallDelta = {
    * A signature hash for backend validation.
    */
   signature?: string | undefined;
+  type: "google_maps_call";
 };

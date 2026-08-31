@@ -18,37 +18,37 @@ import { ModalityTokens } from "./modality-tokens.js";
  */
 export type Usage = {
   /**
-   * Number of tokens in the prompt (context).
+   * A breakdown of cached token usage by modality.
    */
-  total_input_tokens?: number | undefined;
+  cached_tokens_by_modality?: Array<ModalityTokens> | undefined;
+  /**
+   * Grounding tool count.
+   */
+  grounding_tool_count?: Array<GroundingToolCount> | undefined;
   /**
    * A breakdown of input token usage by modality.
    */
   input_tokens_by_modality?: Array<ModalityTokens> | undefined;
   /**
-   * Number of tokens in the cached part of the prompt (the cached content).
-   */
-  total_cached_tokens?: number | undefined;
-  /**
-   * A breakdown of cached token usage by modality.
-   */
-  cached_tokens_by_modality?: Array<ModalityTokens> | undefined;
-  /**
-   * Total number of tokens across all the generated responses.
-   */
-  total_output_tokens?: number | undefined;
-  /**
    * A breakdown of output token usage by modality.
    */
   output_tokens_by_modality?: Array<ModalityTokens> | undefined;
   /**
-   * Number of tokens present in tool-use prompt(s).
-   */
-  total_tool_use_tokens?: number | undefined;
-  /**
    * A breakdown of tool-use token usage by modality.
    */
   tool_use_tokens_by_modality?: Array<ModalityTokens> | undefined;
+  /**
+   * Number of tokens in the cached part of the prompt (the cached content).
+   */
+  total_cached_tokens?: number | undefined;
+  /**
+   * Number of tokens in the prompt (context).
+   */
+  total_input_tokens?: number | undefined;
+  /**
+   * Total number of tokens across all the generated responses.
+   */
+  total_output_tokens?: number | undefined;
   /**
    * Number of tokens of thoughts for thinking models.
    */
@@ -61,7 +61,7 @@ export type Usage = {
    */
   total_tokens?: number | undefined;
   /**
-   * Grounding tool count.
+   * Number of tokens present in tool-use prompt(s).
    */
-  grounding_tool_count?: Array<GroundingToolCount> | undefined;
+  total_tool_use_tokens?: number | undefined;
 };

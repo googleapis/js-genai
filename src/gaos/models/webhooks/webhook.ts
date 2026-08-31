@@ -12,6 +12,15 @@
 
 import { SigningSecret } from "./signing-secret.js";
 
+/**
+ * Output only. The state of the webhook.
+ */
+export type WebhookState =
+  | "enabled"
+  | "disabled"
+  | "disabled_due_to_failed_deliveries"
+  | (string & {});
+
 export type WebhookSubscribedEvent =
   | "batch.succeeded"
   | "batch.expired"
@@ -23,26 +32,33 @@ export type WebhookSubscribedEvent =
   | (string & {});
 
 /**
- * Output only. The state of the webhook.
- */
-export type WebhookState =
-  | "enabled"
-  | "disabled"
-  | "disabled_due_to_failed_deliveries"
-  | (string & {});
-
-/**
  * A Webhook resource.
  */
 export type Webhook = {
+  /**
+   * Output only. The timestamp when the webhook was created.
+   */
+  create_time?: string | undefined;
+  /**
+   * Output only. The ID of the webhook.
+   */
+  id?: string | undefined;
   /**
    * Optional. The user-provided name of the webhook.
    */
   name?: string | undefined;
   /**
-   * Required. The URI to which webhook events will be sent.
+   * Output only. The new signing secret for the webhook. Only populated on create.
    */
-  uri: string;
+  new_signing_secret?: string | undefined;
+  /**
+   * Output only. The signing secrets associated with this webhook.
+   */
+  signing_secrets?: Array<SigningSecret> | undefined;
+  /**
+   * Output only. The state of the webhook.
+   */
+  state?: WebhookState | undefined;
   /**
    * Required. The events that the webhook is subscribed to.
    *
@@ -58,29 +74,13 @@ export type Webhook = {
    */
   subscribed_events: Array<WebhookSubscribedEvent>;
   /**
-   * Output only. The timestamp when the webhook was created.
-   */
-  create_time?: string | undefined;
-  /**
    * Output only. The timestamp when the webhook was last updated.
    */
   update_time?: string | undefined;
   /**
-   * Output only. The signing secrets associated with this webhook.
+   * Required. The URI to which webhook events will be sent.
    */
-  signing_secrets?: Array<SigningSecret> | undefined;
-  /**
-   * Output only. The state of the webhook.
-   */
-  state?: WebhookState | undefined;
-  /**
-   * Output only. The new signing secret for the webhook. Only populated on create.
-   */
-  new_signing_secret?: string | undefined;
-  /**
-   * Output only. The ID of the webhook.
-   */
-  id?: string | undefined;
+  uri: string;
 };
 
 /**
@@ -92,10 +92,6 @@ export type WebhookInput = {
    */
   name?: string | undefined;
   /**
-   * Required. The URI to which webhook events will be sent.
-   */
-  uri: string;
-  /**
    * Required. The events that the webhook is subscribed to.
    *
    * @remarks
@@ -109,4 +105,8 @@ export type WebhookInput = {
    * - video.generated
    */
   subscribed_events: Array<WebhookSubscribedEvent>;
+  /**
+   * Required. The URI to which webhook events will be sent.
+   */
+  uri: string;
 };

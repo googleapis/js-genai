@@ -14,7 +14,6 @@
  * File Search result step.
  */
 export type FileSearchResultStep = {
-  type: "file_search_result";
   /**
    * Required. ID to match the ID from the function call block.
    */
@@ -23,4 +22,5 @@ export type FileSearchResultStep = {
    * A signature hash for backend validation.
    */
   signature?: string | undefined;
+  type: "file_search_result";
 };

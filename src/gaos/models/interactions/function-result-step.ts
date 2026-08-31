@@ -15,32 +15,32 @@ import { FunctionResultSubcontent } from "./function-result-subcontent.js";
 export type FunctionResultStepResult = {};
 
 /**
- * The result of the tool call.
+ * Required. The result of the tool call.
  */
 export type FunctionResultStepResultUnion =
-  | FunctionResultStepResult
   | Array<FunctionResultSubcontent>
+  | FunctionResultStepResult
   | string;
 
 /**
  * Result of a function tool call.
  */
 export type FunctionResultStep = {
-  type: "function_result";
-  /**
-   * The name of the tool that was called.
-   */
-  name?: string | undefined;
-  /**
-   * Whether the tool call resulted in an error.
-   */
-  is_error?: boolean | undefined;
   /**
    * Required. ID to match the ID from the function call block.
    */
   call_id: string;
   /**
-   * The result of the tool call.
+   * Whether the tool call resulted in an error.
    */
-  result: FunctionResultStepResult | Array<FunctionResultSubcontent> | string;
+  is_error?: boolean | undefined;
+  /**
+   * The name of the tool that was called.
+   */
+  name?: string | undefined;
+  /**
+   * Required. The result of the tool call.
+   */
+  result: Array<FunctionResultSubcontent> | FunctionResultStepResult | string;
+  type: "function_result";
 };

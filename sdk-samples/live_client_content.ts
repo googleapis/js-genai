@@ -155,7 +155,7 @@ async function main() {
       location: GOOGLE_CLOUD_LOCATION,
     });
     const model = 'gemini-2.0-flash-live-preview-04-09';
-    await live(client, model).catch((e) => console.error('got error', e));
+    await live(client, model);
     return;
   }
 
@@ -191,7 +191,7 @@ async function main() {
     });
   }
 
-  await live(client, model).catch((e) => console.error('got error', e));
+  await live(client, model);
 }
 
 main();

@@ -13,7 +13,6 @@
 import { GoogleSearchCallArguments } from "./google-search-call-arguments.js";
 
 export type GoogleSearchCallDelta = {
-  type: "google_search_call";
   /**
    * The arguments to pass to Google Search.
    */
@@ -22,4 +21,5 @@ export type GoogleSearchCallDelta = {
    * A signature hash for backend validation.
    */
   signature?: string | undefined;
+  type: "google_search_call";
 };

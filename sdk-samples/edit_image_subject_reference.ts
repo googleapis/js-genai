@@ -18,7 +18,10 @@ async function editImageSubjectReferenceFromVertexAI() {
   const ai = new GoogleGenAI({
     vertexai: true,
     project: GOOGLE_CLOUD_PROJECT,
-    location: GOOGLE_CLOUD_LOCATION,
+    location:
+      GOOGLE_CLOUD_LOCATION && GOOGLE_CLOUD_LOCATION !== 'global'
+        ? GOOGLE_CLOUD_LOCATION
+        : 'us-central1',
   });
 
   // Generate an image first.
@@ -63,9 +66,17 @@ async function editImageSubjectReferenceFromVertexAI() {
 
 async function main() {
   if (GOOGLE_GENAI_USE_VERTEXAI) {
-    await editImageSubjectReferenceFromVertexAI().catch((e) =>
-      console.error('got error', e),
-    );
+    try {
+      await editImageSubjectReferenceFromVertexAI();
+    } catch (e: unknown) {
+      if ((e as {status?: number})?.status === 404) {
+        console.warn(
+          'Skipping: model not available or deprecated on this Vertex AI project.',
+        );
+        return;
+      }
+      throw e;
+    }
   } else {
     console.error('Editing an image is not supported in Gemini Developer API.');
   }

@@ -11,10 +11,8 @@
  */
 
 import { ErrorT } from "./error.js";
-import { StreamMetadata } from "./stream-metadata.js";
 
 export type ErrorEvent = {
-  event_type: "error";
   /**
    * Error message from an interaction.
    */
@@ -26,5 +24,5 @@ export type ErrorEvent = {
    * this event.
    */
   event_id?: string | undefined;
-  metadata?: StreamMetadata | undefined;
+  event_type: "error";
 };

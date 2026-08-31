@@ -21,19 +21,6 @@ export type SourceType =
  * A source to be mounted into the environment.
  */
 export type Source = {
-  type?: SourceType | undefined;
-  /**
-   * The source of the environment.
-   *
-   * @remarks
-   * For GCS, this is the GCS path.
-   * For GitHub, this is the GitHub path.
-   */
-  source?: string | undefined;
-  /**
-   * Where the source should appear in the environment.
-   */
-  target?: string | undefined;
   /**
    * The inline content if `type` is `INLINE`.
    */
@@ -42,4 +29,17 @@ export type Source = {
    * Optional encoding for inline content (e.g. `base64`).
    */
   encoding?: string | undefined;
+  /**
+   * The source of the environment.
+   *
+   * @remarks
+   * For Cloud Storage, this is the Cloud Storage path.
+   * For GitHub, this is the GitHub path.
+   */
+  source?: string | undefined;
+  /**
+   * Where the source should appear in the environment.
+   */
+  target?: string | undefined;
+  type?: SourceType | undefined;
 };

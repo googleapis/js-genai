@@ -11,48 +11,29 @@
  */
 
 import { ImageConfig } from "./image-config.js";
+import { SpeakerConfig } from "./speaker-config.js";
 import { SpeechConfig } from "./speech-config.js";
 import { ThinkingLevel } from "./thinking-level.js";
 import { ThinkingSummaries } from "./thinking-summaries.js";
 import { ToolChoiceConfig } from "./tool-choice-config.js";
 import { ToolChoiceType } from "./tool-choice-type.js";
+import { TranscriptionConfig } from "./transcription-config.js";
 import { VideoConfig } from "./video-config.js";
+
+/**
+ * Optional. Speech and multi-speaker configuration.
+ */
+export type SpeechConfigUnion = SpeakerConfig | Array<SpeechConfig>;
 
 /**
  * The tool choice configuration.
  */
-export type ToolChoice = ToolChoiceType | ToolChoiceConfig;
+export type ToolChoice = ToolChoiceConfig | ToolChoiceType;
 
 /**
  * Configuration parameters for model interactions.
  */
 export type GenerationConfig = {
-  /**
-   * Controls the randomness of the output.
-   */
-  temperature?: number | undefined;
-  /**
-   * The maximum cumulative probability of tokens to consider when sampling.
-   */
-  top_p?: number | undefined;
-  /**
-   * Seed used in decoding for reproducibility.
-   */
-  seed?: number | undefined;
-  /**
-   * A list of character sequences that will stop output interaction.
-   */
-  stop_sequences?: Array<string> | undefined;
-  thinking_level?: ThinkingLevel | undefined;
-  thinking_summaries?: ThinkingSummaries | undefined;
-  /**
-   * The maximum number of tokens to include in the response.
-   */
-  max_output_tokens?: number | undefined;
-  /**
-   * Configuration for speech interaction.
-   */
-  speech_config?: Array<SpeechConfig> | undefined;
   /**
    * The configuration for image interaction.
    *
@@ -60,27 +41,33 @@ export type GenerationConfig = {
    */
   image_config?: ImageConfig | undefined;
   /**
-   * Configuration options for video generation.
+   * The maximum number of tokens to include in the response.
    */
-  video_config?: VideoConfig | undefined;
+  max_output_tokens?: number | undefined;
   /**
-   * Penalizes tokens that have already appeared in the generated
-   *
-   * @remarks
-   * text. A positive value encourages the model to generate more diverse and
-   * less repetitive text. Valid values can range from [-2.0, 2.0].
+   * Seed used in decoding for reproducibility.
    */
-  presence_penalty?: number | undefined;
+  seed?: number | undefined;
   /**
-   * Penalizes tokens based on their frequency in the generated text.
-   *
-   * @remarks
-   * A positive value helps to reduce the repetition of words and phrases.
-   * Valid values can range from [-2.0, 2.0].
+   * Optional. Speech and multi-speaker configuration.
    */
-  frequency_penalty?: number | undefined;
+  speech_config?: SpeakerConfig | Array<SpeechConfig> | undefined;
+  /**
+   * A list of character sequences that will stop output interaction.
+   */
+  stop_sequences?: Array<string> | undefined;
+  thinking_level?: ThinkingLevel | undefined;
+  thinking_summaries?: ThinkingSummaries | undefined;
   /**
    * The tool choice configuration.
    */
-  tool_choice?: ToolChoiceType | ToolChoiceConfig | undefined;
+  tool_choice?: ToolChoiceConfig | ToolChoiceType | undefined;
+  /**
+   * Configuration for speech recognition (transcription).
+   */
+  transcription_config?: TranscriptionConfig | undefined;
+  /**
+   * Configuration options for video generation.
+   */
+  video_config?: VideoConfig | undefined;
 };

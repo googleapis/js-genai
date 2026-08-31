@@ -16,7 +16,6 @@ import { GoogleMapsCallArguments } from "./google-maps-call-arguments.js";
  * Google Maps call step.
  */
 export type GoogleMapsCallStep = {
-  type: "google_maps_call";
   /**
    * The arguments to pass to the Google Maps tool.
    */
@@ -29,4 +28,5 @@ export type GoogleMapsCallStep = {
    * A signature hash for backend validation.
    */
   signature?: string | undefined;
+  type: "google_maps_call";
 };

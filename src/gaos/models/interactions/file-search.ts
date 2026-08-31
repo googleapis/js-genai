@@ -14,17 +14,17 @@
  * A tool that can be used by the model to search files.
  */
 export type FileSearch = {
-  type: "file_search";
   /**
    * The file search store names to search.
    */
   file_search_store_names?: Array<string> | undefined;
   /**
-   * The number of semantic retrieval chunks to retrieve.
-   */
-  top_k?: number | undefined;
-  /**
    * Metadata filter to apply to the semantic retrieval documents and chunks.
    */
   metadata_filter?: string | undefined;
+  /**
+   * The number of semantic retrieval chunks to retrieve.
+   */
+  top_k?: number | undefined;
+  type: "file_search";
 };

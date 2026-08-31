@@ -13,8 +13,9 @@
 import { FileCitation } from "./file-citation.js";
 import { PlaceCitation } from "./place-citation.js";
 import { URLCitation } from "./url-citation.js";
+import { WordInfo } from "./word-info.js";
 
 /**
  * Citation information for model-generated content.
  */
-export type Annotation = URLCitation | FileCitation | PlaceCitation;
+export type Annotation = FileCitation | PlaceCitation | URLCitation | WordInfo;

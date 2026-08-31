@@ -13,18 +13,13 @@
 import { SDKOptions } from "./config.js";
 
 export interface Env {
-  GOOGLE_GENAI_API_KEY?: string | undefined;
   GOOGLE_GENAI_ACCESS_TOKEN?: string | undefined;
+  GOOGLE_GENAI_API_KEY?: string | undefined;
 
   /**
    * Sets the api_version parameter for all supported operations
    */
   GOOGLE_GENAI_API_VERSION?: string | undefined;
-
-  /**
-   * Sets the api_revision parameter for all supported operations
-   */
-  GOOGLE_GENAI_API_REVISION?: string | undefined;
 
   /**
    * Sets the user_project parameter for all supported operations
@@ -88,9 +83,6 @@ export function fillGlobals(options: SDKOptions): SDKOptions {
 
   if (typeof envVars.GOOGLE_GENAI_API_VERSION !== "undefined") {
     clone.api_version ??= envVars.GOOGLE_GENAI_API_VERSION;
-  }
-  if (typeof envVars.GOOGLE_GENAI_API_REVISION !== "undefined") {
-    clone.api_revision ??= envVars.GOOGLE_GENAI_API_REVISION;
   }
   if (typeof envVars.GOOGLE_GENAI_USER_PROJECT !== "undefined") {
     clone.user_project ??= envVars.GOOGLE_GENAI_USER_PROJECT;

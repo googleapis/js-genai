@@ -13,11 +13,11 @@
 import { URLContextResult } from "./url-context-result.js";
 
 export type URLContextResultDelta = {
-  type: "url_context_result";
-  result: Array<URLContextResult>;
   is_error?: boolean | undefined;
+  result: Array<URLContextResult>;
   /**
    * A signature hash for backend validation.
    */
   signature?: string | undefined;
+  type: "url_context_result";
 };

@@ -11,6 +11,6 @@
  */
 
 export type TextDelta = {
-  type: "text";
   text: string;
+  type: "text";
 };

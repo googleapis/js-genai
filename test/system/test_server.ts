@@ -12,13 +12,9 @@ import {
   startTestServer,
   stopTestServer,
 } from 'test-server-sdk';
-import {fileURLToPath} from 'url';
 import {setDefaultBaseUrls} from '../../src/_base_url.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const packageRoot = path.resolve(__dirname, '..', '..', '..');
+const packageRoot = process.cwd();
 const originalRequestHeaders = GoogleAuth.prototype.getRequestHeaders;
 let isPatched = false;
 

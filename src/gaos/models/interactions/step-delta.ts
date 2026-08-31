@@ -14,8 +14,6 @@ import { StepDeltaData } from "./step-delta-data.js";
 import { StepDeltaMetadata } from "./step-delta-metadata.js";
 
 export type StepDelta = {
-  event_type: "step.delta";
-  index: number;
   delta: StepDeltaData;
   /**
    * The event_id token to be used to resume the interaction stream, from
@@ -24,6 +22,8 @@ export type StepDelta = {
    * this event.
    */
   event_id?: string | undefined;
+  event_type: "step.delta";
+  index: number;
   /**
    * Optional metadata accompanying ANY streamed event.
    */

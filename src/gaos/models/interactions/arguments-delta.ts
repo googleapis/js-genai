@@ -11,6 +11,6 @@
  */
 
 export type ArgumentsDelta = {
-  type: "arguments_delta";
   arguments?: string | undefined;
+  type: "arguments_delta";
 };

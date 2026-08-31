@@ -16,13 +16,17 @@ import {Files} from '../files.js';
 import {FileSearchStores} from '../filesearchstores.js';
 import type {
   GeminiNextGenAgents as Agents,
+  GeminiNextGenEnvironments as Environments,
   GeminiNextGenInteractions as Interactions,
+  GeminiNextGenTriggers as Triggers,
   GeminiNextGenWebhooks as Webhooks,
 } from '../gaos/google-genai.js';
 import {
   buildGoogleGenAIClient,
   GeminiNextGenAgents,
+  GeminiNextGenEnvironments,
   GeminiNextGenInteractions,
+  GeminiNextGenTriggers,
   GeminiNextGenWebhooks,
 } from '../gaos/google-genai.js';
 import type {GoogleGenAI as GeminiNextGenAPI} from '../gaos/sdk/sdk.js';
@@ -41,8 +45,11 @@ import {NodeFiles} from './node_files.js';
 
 const LANGUAGE_LABEL_PREFIX = 'gl-node/';
 
-function resolveCloudFlag(options: GoogleGenAIOptions): boolean {
-  if (options.enterprise !== undefined || options.vertexai !== undefined) {
+function resolveCloudFlag(options?: GoogleGenAIOptions): boolean {
+  if (
+    options &&
+    (options.enterprise !== undefined || options.vertexai !== undefined)
+  ) {
     if (
       options.enterprise !== undefined &&
       options.vertexai !== undefined &&
@@ -142,7 +149,9 @@ export class GoogleGenAI {
   private _interactions: GeminiNextGenInteractions | undefined;
   private _webhooks: GeminiNextGenWebhooks | undefined;
   private _agents: GeminiNextGenAgents | undefined;
+  private _environments: GeminiNextGenEnvironments | undefined;
   private _nextGenClient: GeminiNextGenAPI | undefined;
+  private _triggers: Triggers | undefined;
 
   private getNextGenClient(): GeminiNextGenAPI {
     const httpOpts = this.httpOptions;
@@ -191,15 +200,43 @@ export class GoogleGenAI {
     this._agents = new GeminiNextGenAgents(this.apiClient);
     return this._agents;
   }
-  constructor(options: GoogleGenAIOptions) {
+
+  get triggers(): Triggers {
+    if (this._triggers !== undefined) {
+      return this._triggers;
+    }
+
+    console.warn(
+      'GoogleGenAI.triggers: Triggers usage is experimental and may change in future versions.',
+    );
+
+    this._triggers = new GeminiNextGenTriggers(this.apiClient);
+    return this._triggers;
+  }
+
+  get environments(): Environments {
+    if (this._environments !== undefined) {
+      return this._environments;
+    }
+
+    console.warn(
+      'GoogleGenAI.environments: Environments usage is experimental and may change in future versions.',
+    );
+
+    this._environments = new GeminiNextGenEnvironments(this.apiClient);
+    return this._environments;
+  }
+
+  constructor(options: GoogleGenAIOptions = {}) {
+    this.vertexai = resolveCloudFlag(options);
+
     // Validate explicitly set initializer values.
-    if ((options.project || options.location) && options.apiKey) {
+    if ((options.project || options.location) && !this.vertexai) {
       throw new Error(
-        'Project/location and API key are mutually exclusive in the client initializer.',
+        'Project and location are not supported for Gemini API backend.',
       );
     }
 
-    this.vertexai = resolveCloudFlag(options);
     const envApiKey = getApiKeyFromEnv();
     const envProject = getEnv('GOOGLE_CLOUD_PROJECT');
     const envLocation = getEnv('GOOGLE_CLOUD_LOCATION');
@@ -222,8 +259,12 @@ export class GoogleGenAI {
         );
         this.apiKey = undefined;
       }
-      // Explicit api_key and explicit project/location already handled above.
-      if ((envProject || envLocation) && options.apiKey) {
+      if (
+        !options.project &&
+        !options.location &&
+        (envProject || envLocation) &&
+        options.apiKey
+      ) {
         // Explicit api_key takes precedence over implicit project/location.
         console.debug(
           'The user provided Vertex AI API key will take precedence over' +
@@ -231,14 +272,24 @@ export class GoogleGenAI {
         );
         this.project = undefined;
         this.location = undefined;
-      } else if ((options.project || options.location) && envApiKey) {
+      } else if (
+        (options.project || options.location) &&
+        !options.apiKey &&
+        envApiKey
+      ) {
         // Explicit project/location takes precedence over implicit api_key.
         console.debug(
           'The user provided project/location will take precedence over' +
             ' the API key from the environment variables.',
         );
         this.apiKey = undefined;
-      } else if ((envProject || envLocation) && envApiKey) {
+      } else if (
+        !options.project &&
+        !options.location &&
+        !options.apiKey &&
+        (envProject || envLocation) &&
+        envApiKey
+      ) {
         // Implicit project/location takes precedence over implicit api_key.
         console.debug(
           'The project/location from the environment variables will take' +

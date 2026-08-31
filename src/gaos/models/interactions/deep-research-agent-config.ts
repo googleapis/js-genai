@@ -21,12 +21,6 @@ export type Visualization = "off" | "auto" | (string & {});
  * Configuration for the Deep Research agent.
  */
 export type DeepResearchAgentConfig = {
-  type: "deep-research";
-  thinking_summaries?: ThinkingSummaries | undefined;
-  /**
-   * Whether to include visualizations in the response.
-   */
-  visualization?: Visualization | undefined;
   /**
    * Enables human-in-the-loop planning for the Deep Research agent. If set to
    *
@@ -40,4 +34,10 @@ export type DeepResearchAgentConfig = {
    * Enables bigquery tool for the Deep Research agent.
    */
   enable_bigquery_tool?: boolean | undefined;
+  thinking_summaries?: ThinkingSummaries | undefined;
+  type: "deep-research";
+  /**
+   * Whether to include visualizations in the response.
+   */
+  visualization?: Visualization | undefined;
 };

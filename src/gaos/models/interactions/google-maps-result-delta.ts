@@ -13,7 +13,6 @@
 import { GoogleMapsResult } from "./google-maps-result.js";
 
 export type GoogleMapsResultDelta = {
-  type: "google_maps_result";
   /**
    * The results of the Google Maps.
    */
@@ -22,4 +21,5 @@ export type GoogleMapsResultDelta = {
    * A signature hash for backend validation.
    */
   signature?: string | undefined;
+  type: "google_maps_result";
 };

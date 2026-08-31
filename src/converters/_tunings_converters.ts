@@ -70,31 +70,6 @@ export function cancelTuningJobResponseFromVertex(
   return toObject;
 }
 
-export function codeExecutionResultToVertex(
-  fromObject: types.CodeExecutionResult,
-  _rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromOutcome = common.getValueByPath(fromObject, ['outcome']);
-  if (fromOutcome != null) {
-    common.setValueByPath(toObject, ['outcome'], fromOutcome);
-  }
-
-  const fromOutput = common.getValueByPath(fromObject, ['output']);
-  if (fromOutput != null) {
-    common.setValueByPath(toObject, ['output'], fromOutput);
-  }
-
-  if (common.getValueByPath(fromObject, ['id']) !== undefined) {
-    throw new Error(
-      'id parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
-    );
-  }
-
-  return toObject;
-}
-
 export function contentToVertex(
   fromObject: types.Content,
   rootObject?: unknown,
@@ -264,12 +239,6 @@ export function createTuningJobConfigToMldev(
     );
   }
 
-  if (common.getValueByPath(fromObject, ['encryptionSpec']) !== undefined) {
-    throw new Error(
-      'encryptionSpec parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
-    );
-  }
-
   if (common.getValueByPath(fromObject, ['rewardConfig']) !== undefined) {
     throw new Error(
       'rewardConfig parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
@@ -319,6 +288,12 @@ export function createTuningJobConfigToMldev(
   ) {
     throw new Error(
       'validationDatasetUri parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
+  }
+
+  if (common.getValueByPath(fromObject, ['encryptionSpec']) !== undefined) {
+    throw new Error(
+      'encryptionSpec parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
     );
   }
 
@@ -751,13 +726,6 @@ export function createTuningJobConfigToVertex(
     common.setValueByPath(parentObject, ['outputUri'], fromOutputUri);
   }
 
-  const fromEncryptionSpec = common.getValueByPath(fromObject, [
-    'encryptionSpec',
-  ]);
-  if (parentObject !== undefined && fromEncryptionSpec != null) {
-    common.setValueByPath(parentObject, ['encryptionSpec'], fromEncryptionSpec);
-  }
-
   const fromRewardConfig = common.getValueByPath(fromObject, ['rewardConfig']);
   if (parentObject !== undefined && fromRewardConfig != null) {
     common.setValueByPath(
@@ -844,6 +812,13 @@ export function createTuningJobConfigToVertex(
     );
   }
 
+  const fromEncryptionSpec = common.getValueByPath(fromObject, [
+    'encryptionSpec',
+  ]);
+  if (parentObject !== undefined && fromEncryptionSpec != null) {
+    common.setValueByPath(parentObject, ['encryptionSpec'], fromEncryptionSpec);
+  }
+
   return toObject;
 }
 
@@ -919,11 +894,6 @@ export function distillationHyperParametersFromVertex(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromAdapterSize = common.getValueByPath(fromObject, ['adapterSize']);
-  if (fromAdapterSize != null) {
-    common.setValueByPath(toObject, ['adapterSize'], fromAdapterSize);
-  }
-
   const fromEpochCount = common.getValueByPath(fromObject, ['epochCount']);
   if (fromEpochCount != null) {
     common.setValueByPath(toObject, ['epochCount'], fromEpochCount);
@@ -940,6 +910,21 @@ export function distillationHyperParametersFromVertex(
     );
   }
 
+  const fromAdapterSize = common.getValueByPath(fromObject, ['adapterSize']);
+  if (fromAdapterSize != null) {
+    common.setValueByPath(toObject, ['adapterSize'], fromAdapterSize);
+  }
+
+  const fromBatchSize = common.getValueByPath(fromObject, ['batchSize']);
+  if (fromBatchSize != null) {
+    common.setValueByPath(toObject, ['batchSize'], fromBatchSize);
+  }
+
+  const fromLearningRate = common.getValueByPath(fromObject, ['learningRate']);
+  if (fromLearningRate != null) {
+    common.setValueByPath(toObject, ['learningRate'], fromLearningRate);
+  }
+
   const fromGenerationConfig = common.getValueByPath(fromObject, [
     'generationConfig',
   ]);
@@ -951,16 +936,6 @@ export function distillationHyperParametersFromVertex(
     );
   }
 
-  const fromLearningRate = common.getValueByPath(fromObject, ['learningRate']);
-  if (fromLearningRate != null) {
-    common.setValueByPath(toObject, ['learningRate'], fromLearningRate);
-  }
-
-  const fromBatchSize = common.getValueByPath(fromObject, ['batchSize']);
-  if (fromBatchSize != null) {
-    common.setValueByPath(toObject, ['batchSize'], fromBatchSize);
-  }
-
   return toObject;
 }
 
@@ -969,6 +944,24 @@ export function distillationSamplingSpecFromVertex(
   rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
+
+  const fromPromptDatasetUri = common.getValueByPath(fromObject, [
+    'promptDatasetUri',
+  ]);
+  if (fromPromptDatasetUri != null) {
+    common.setValueByPath(toObject, ['promptDatasetUri'], fromPromptDatasetUri);
+  }
+
+  const fromValidationDatasetUri = common.getValueByPath(fromObject, [
+    'validationDatasetUri',
+  ]);
+  if (fromValidationDatasetUri != null) {
+    common.setValueByPath(
+      toObject,
+      ['validationDatasetUri'],
+      fromValidationDatasetUri,
+    );
+  }
 
   const fromBaseTeacherModel = common.getValueByPath(fromObject, [
     'baseTeacherModel',
@@ -986,24 +979,6 @@ export function distillationSamplingSpecFromVertex(
       ['tunedTeacherModelSource'],
       fromTunedTeacherModelSource,
     );
-  }
-
-  const fromValidationDatasetUri = common.getValueByPath(fromObject, [
-    'validationDatasetUri',
-  ]);
-  if (fromValidationDatasetUri != null) {
-    common.setValueByPath(
-      toObject,
-      ['validationDatasetUri'],
-      fromValidationDatasetUri,
-    );
-  }
-
-  const fromPromptDatasetUri = common.getValueByPath(fromObject, [
-    'promptDatasetUri',
-  ]);
-  if (fromPromptDatasetUri != null) {
-    common.setValueByPath(toObject, ['promptDatasetUri'], fromPromptDatasetUri);
   }
 
   const fromHyperparameters = common.getValueByPath(fromObject, [
@@ -1025,13 +1000,6 @@ export function distillationSpecFromVertex(
   rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
-
-  const fromPromptDatasetUri = common.getValueByPath(fromObject, [
-    'promptDatasetUri',
-  ]);
-  if (fromPromptDatasetUri != null) {
-    common.setValueByPath(toObject, ['promptDatasetUri'], fromPromptDatasetUri);
-  }
 
   const fromBaseTeacherModel = common.getValueByPath(fromObject, [
     'baseTeacherModel',
@@ -1062,6 +1030,13 @@ export function distillationSpecFromVertex(
     );
   }
 
+  const fromPromptDatasetUri = common.getValueByPath(fromObject, [
+    'promptDatasetUri',
+  ]);
+  if (fromPromptDatasetUri != null) {
+    common.setValueByPath(toObject, ['promptDatasetUri'], fromPromptDatasetUri);
+  }
+
   const fromStudentModel = common.getValueByPath(fromObject, ['studentModel']);
   if (fromStudentModel != null) {
     common.setValueByPath(toObject, ['studentModel'], fromStudentModel);
@@ -1089,6 +1064,11 @@ export function distillationSpecFromVertex(
     );
   }
 
+  const fromTuningMode = common.getValueByPath(fromObject, ['tuningMode']);
+  if (fromTuningMode != null) {
+    common.setValueByPath(toObject, ['tuningMode'], fromTuningMode);
+  }
+
   const fromValidationDatasetUri = common.getValueByPath(fromObject, [
     'validationDatasetUri',
   ]);
@@ -1097,36 +1077,6 @@ export function distillationSpecFromVertex(
       toObject,
       ['validationDatasetUri'],
       fromValidationDatasetUri,
-    );
-  }
-
-  const fromTuningMode = common.getValueByPath(fromObject, ['tuningMode']);
-  if (fromTuningMode != null) {
-    common.setValueByPath(toObject, ['tuningMode'], fromTuningMode);
-  }
-
-  return toObject;
-}
-
-export function executableCodeToVertex(
-  fromObject: types.ExecutableCode,
-  _rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromCode = common.getValueByPath(fromObject, ['code']);
-  if (fromCode != null) {
-    common.setValueByPath(toObject, ['code'], fromCode);
-  }
-
-  const fromLanguage = common.getValueByPath(fromObject, ['language']);
-  if (fromLanguage != null) {
-    common.setValueByPath(toObject, ['language'], fromLanguage);
-  }
-
-  if (common.getValueByPath(fromObject, ['id']) !== undefined) {
-    throw new Error(
-      'id parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
     );
   }
 
@@ -1157,7 +1107,18 @@ export function generationConfigFromVertex(
     common.setValueByPath(
       toObject,
       ['responseJsonSchema'],
-      fromResponseJsonSchema,
+      t.tJsonSchema(fromResponseJsonSchema),
+    );
+  }
+
+  const fromAudioTranscriptionConfig = common.getValueByPath(fromObject, [
+    'audioTranscriptionConfig',
+  ]);
+  if (fromAudioTranscriptionConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['audioTranscriptionConfig'],
+      fromAudioTranscriptionConfig,
     );
   }
 
@@ -1217,6 +1178,19 @@ export function generationConfigFromVertex(
   ]);
   if (fromPresencePenalty != null) {
     common.setValueByPath(toObject, ['presencePenalty'], fromPresencePenalty);
+  }
+
+  const fromResponseFormat = common.getValueByPath(fromObject, [
+    'responseFormat',
+  ]);
+  if (fromResponseFormat != null) {
+    let transformedList = fromResponseFormat;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return item;
+      });
+    }
+    common.setValueByPath(toObject, ['responseFormat'], transformedList);
   }
 
   const fromResponseLogprobs = common.getValueByPath(fromObject, [
@@ -1403,7 +1377,7 @@ export function listTuningJobsResponseFromVertex(
 
 export function partToVertex(
   fromObject: types.Part,
-  rootObject?: unknown,
+  _rootObject?: unknown,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1414,6 +1388,29 @@ export function partToVertex(
     common.setValueByPath(toObject, ['mediaResolution'], fromMediaResolution);
   }
 
+  if (common.getValueByPath(fromObject, ['toolCall']) !== undefined) {
+    throw new Error(
+      'toolCall parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+    );
+  }
+
+  if (common.getValueByPath(fromObject, ['toolResponse']) !== undefined) {
+    throw new Error(
+      'toolResponse parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+    );
+  }
+
+  const fromAudioTranscription = common.getValueByPath(fromObject, [
+    'audioTranscription',
+  ]);
+  if (fromAudioTranscription != null) {
+    common.setValueByPath(
+      toObject,
+      ['audioTranscription'],
+      fromAudioTranscription,
+    );
+  }
+
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
     'codeExecutionResult',
   ]);
@@ -1421,7 +1418,7 @@ export function partToVertex(
     common.setValueByPath(
       toObject,
       ['codeExecutionResult'],
-      codeExecutionResultToVertex(fromCodeExecutionResult, rootObject),
+      fromCodeExecutionResult,
     );
   }
 
@@ -1429,11 +1426,7 @@ export function partToVertex(
     'executableCode',
   ]);
   if (fromExecutableCode != null) {
-    common.setValueByPath(
-      toObject,
-      ['executableCode'],
-      executableCodeToVertex(fromExecutableCode, rootObject),
-    );
+    common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
   }
 
   const fromFileData = common.getValueByPath(fromObject, ['fileData']);
@@ -1482,22 +1475,17 @@ export function partToVertex(
     common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
   }
 
-  if (common.getValueByPath(fromObject, ['toolCall']) !== undefined) {
-    throw new Error(
-      'toolCall parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
-    );
-  }
-
-  if (common.getValueByPath(fromObject, ['toolResponse']) !== undefined) {
-    throw new Error(
-      'toolResponse parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
-    );
-  }
-
   if (common.getValueByPath(fromObject, ['partMetadata']) !== undefined) {
     throw new Error(
       'partMetadata parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
     );
+  }
+
+  const fromMediaProcessing = common.getValueByPath(fromObject, [
+    'mediaProcessing',
+  ]);
+  if (fromMediaProcessing != null) {
+    common.setValueByPath(toObject, ['mediaProcessing'], fromMediaProcessing);
   }
 
   return toObject;
@@ -1509,6 +1497,11 @@ export function reinforcementTuningExampleToVertex(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
+  const fromReferences = common.getValueByPath(fromObject, ['references']);
+  if (fromReferences != null) {
+    common.setValueByPath(toObject, ['references'], fromReferences);
+  }
+
   const fromContents = common.getValueByPath(fromObject, ['contents']);
   if (fromContents != null) {
     let transformedList = fromContents;
@@ -1518,11 +1511,6 @@ export function reinforcementTuningExampleToVertex(
       });
     }
     common.setValueByPath(toObject, ['contents'], transformedList);
-  }
-
-  const fromReferences = common.getValueByPath(fromObject, ['references']);
-  if (fromReferences != null) {
-    common.setValueByPath(toObject, ['references'], fromReferences);
   }
 
   const fromSystemInstruction = common.getValueByPath(fromObject, [
@@ -1868,6 +1856,20 @@ export function tuningJobFromVertex(
     );
   }
 
+  const fromDistillationSamplingSpec = common.getValueByPath(fromObject, [
+    'distillationSamplingSpec',
+  ]);
+  if (fromDistillationSamplingSpec != null) {
+    common.setValueByPath(
+      toObject,
+      ['distillationSamplingSpec'],
+      distillationSamplingSpecFromVertex(
+        fromDistillationSamplingSpec,
+        rootObject,
+      ),
+    );
+  }
+
   const fromDistillationSpec = common.getValueByPath(fromObject, [
     'distillationSpec',
   ]);
@@ -1984,20 +1986,6 @@ export function tuningJobFromVertex(
     );
   }
 
-  const fromTuningJobState = common.getValueByPath(fromObject, [
-    'tuningJobState',
-  ]);
-  if (fromTuningJobState != null) {
-    common.setValueByPath(toObject, ['tuningJobState'], fromTuningJobState);
-  }
-
-  const fromVeoTuningSpec = common.getValueByPath(fromObject, [
-    'veoTuningSpec',
-  ]);
-  if (fromVeoTuningSpec != null) {
-    common.setValueByPath(toObject, ['veoTuningSpec'], fromVeoTuningSpec);
-  }
-
   const fromTuningJobMetadata = common.getValueByPath(fromObject, [
     'tuningJobMetadata',
   ]);
@@ -2007,6 +1995,13 @@ export function tuningJobFromVertex(
       ['tuningJobMetadata'],
       fromTuningJobMetadata,
     );
+  }
+
+  const fromTuningJobState = common.getValueByPath(fromObject, [
+    'tuningJobState',
+  ]);
+  if (fromTuningJobState != null) {
+    common.setValueByPath(toObject, ['tuningJobState'], fromTuningJobState);
   }
 
   const fromVeoLoraTuningSpec = common.getValueByPath(fromObject, [
@@ -2020,18 +2015,11 @@ export function tuningJobFromVertex(
     );
   }
 
-  const fromDistillationSamplingSpec = common.getValueByPath(fromObject, [
-    'distillationSamplingSpec',
+  const fromVeoTuningSpec = common.getValueByPath(fromObject, [
+    'veoTuningSpec',
   ]);
-  if (fromDistillationSamplingSpec != null) {
-    common.setValueByPath(
-      toObject,
-      ['distillationSamplingSpec'],
-      distillationSamplingSpecFromVertex(
-        fromDistillationSamplingSpec,
-        rootObject,
-      ),
-    );
+  if (fromVeoTuningSpec != null) {
+    common.setValueByPath(toObject, ['veoTuningSpec'], fromVeoTuningSpec);
   }
 
   return toObject;

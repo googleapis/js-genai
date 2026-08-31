@@ -9,8 +9,6 @@ export default [
       // Ignore built files.
       'dist/**',
       'src/interactions-deprecated/**',
-      'src/interactions-private/**',
-      'src/interactions/**',
       'src/gaos/**',
       'src/gaos-private/**',
     ],

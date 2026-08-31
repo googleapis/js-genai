@@ -16,19 +16,18 @@ import { ReviewSnippet } from "./review-snippet.js";
  * A place citation annotation.
  */
 export type PlaceCitation = {
-  type: "place_citation";
   /**
-   * The ID of the place, in `places/{place_id}` format.
+   * End of the attributed segment, exclusive.
    */
-  place_id?: string | undefined;
+  end_index?: number | undefined;
   /**
    * Title of the place.
    */
   name?: string | undefined;
   /**
-   * URI reference of the place.
+   * The ID of the place, in `places/{place_id}` format.
    */
-  url?: string | undefined;
+  place_id?: string | undefined;
   /**
    * Snippets of reviews that are used to generate answers about the
    *
@@ -44,8 +43,9 @@ export type PlaceCitation = {
    * Index indicates the start of the segment, measured in bytes.
    */
   start_index?: number | undefined;
+  type: "place_citation";
   /**
-   * End of the attributed segment, exclusive.
+   * URI reference of the place.
    */
-  end_index?: number | undefined;
+  url?: string | undefined;
 };

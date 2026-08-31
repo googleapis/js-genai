@@ -22,6 +22,10 @@ export class Models extends BaseModule {
     super();
   }
 
+  private static loggedGenerateImagesWarning = false;
+  private static loggedEditImageWarning = false;
+  private static loggedGenerateVideosWarning = false;
+
   /**
    * Calculates embeddings for the given contents.
    *
@@ -477,6 +481,12 @@ export class Models extends BaseModule {
   generateImages = async (
     params: types.GenerateImagesParameters,
   ): Promise<types.GenerateImagesResponse> => {
+    if (!Models.loggedGenerateImagesWarning) {
+      Models.loggedGenerateImagesWarning = true;
+      console.warn(
+        'The generateImages method is deprecated and will be removed in the next major release (not before Jan. 1 2027). Please use the generateContent method with image models instead. See https://ai.google.dev/gemini-api/docs/deprecations#imagen-models and https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/capabilities/image-generation#generate-images',
+      );
+    }
     return await this.generateImagesInternal(params).then((apiResponse) => {
       let positivePromptSafetyAttributes;
       const generatedImages = [];
@@ -569,6 +579,12 @@ export class Models extends BaseModule {
   editImage = async (
     params: types.EditImageParameters,
   ): Promise<types.EditImageResponse> => {
+    if (!Models.loggedEditImageWarning) {
+      Models.loggedEditImageWarning = true;
+      console.warn(
+        'The editImage method is deprecated and will be removed in the next major release (not before Jan. 1 2027). Please use the generateContent method with image models instead. See https://ai.google.dev/gemini-api/docs/deprecations#imagen-models and https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/capabilities/gemini-edit-images#edit-an-image',
+      );
+    }
     const paramsInternal: _internal_types.EditImageParametersInternal = {
       model: params.model,
       prompt: params.prompt,
@@ -659,6 +675,14 @@ export class Models extends BaseModule {
       throw new Error(
         'Source and prompt/image/video are mutually exclusive. Please only use source.',
       );
+    }
+    if (params.prompt || params.image || params.video) {
+      if (!Models.loggedGenerateVideosWarning) {
+        Models.loggedGenerateVideosWarning = true;
+        console.warn(
+          'The generateVideos method with prompt/image/video arguments is deprecated and will be removed in a future major release (not before 2026-07-31). Please use the source argument instead.',
+        );
+      }
     }
     // Gemini API does not support video bytes.
     if (!this.apiClient.isVertexAI()) {
@@ -1039,47 +1063,9 @@ export class Models extends BaseModule {
         return typedResp;
       });
     } else {
-      const body = converters.generateImagesParametersToMldev(
-        this.apiClient,
-        params,
-        params,
+      throw new Error(
+        'This method is only supported by the Gemini Enterprise Agent Platform (previously known as Vertex AI).',
       );
-      path = common.formatMap(
-        '{model}:predict',
-        body['_url'] as Record<string, unknown>,
-      );
-      queryParams = body['_query'] as Record<string, string>;
-      delete body['_url'];
-      delete body['_query'];
-
-      response = this.apiClient
-        .request({
-          path: path,
-          queryParams: queryParams,
-          body: JSON.stringify(body),
-          httpMethod: 'POST',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
-        })
-        .then((httpResponse) => {
-          return httpResponse.json().then((jsonResponse) => {
-            const response = jsonResponse as types.GenerateImagesResponse;
-            response.sdkHttpResponse = {
-              headers: httpResponse.headers,
-            } as types.HttpResponse;
-            return response;
-          });
-        }) as Promise<types.GenerateImagesResponse>;
-
-      return response.then((apiResponse) => {
-        const resp = converters.generateImagesResponseFromMldev(
-          apiResponse,
-          params,
-        );
-        const typedResp = new types.GenerateImagesResponse();
-        Object.assign(typedResp, resp);
-        return typedResp;
-      });
     }
   }
 

@@ -2,6 +2,135 @@
 
 
 
+## [2.19.0](https://github.com/googleapis/js-genai/compare/v2.18.0...v2.19.0) (2026-08-25)
+
+
+### Features
+
+* Add AudioTranscriptionConfigMode ([c0a37de](https://github.com/googleapis/js-genai/commit/c0a37de9102c1054c2bf9fa2cd3d8b6a4c41fd42))
+* add environment files support and scotty file download helper ([0d6ee9d](https://github.com/googleapis/js-genai/commit/0d6ee9d8e2690e541d12b72205272bba0c33b209))
+* Add TYPE_JPEG2000 to VideoContent.MimeType enum ([41da204](https://github.com/googleapis/js-genai/commit/41da2043cce07211f793647d57d119e04ff2ef48))
+
+
+### Performance Improvements
+
+* Keep the Buffer in the Node tokenizer platform, ~2x faster model parse ([11d804a](https://github.com/googleapis/js-genai/commit/11d804a88fc0ce260d6e4ab80ced4e54d34201ed))
+
+## [2.18.0](https://github.com/googleapis/js-genai/compare/v2.17.1...v2.18.0) (2026-08-19)
+
+
+### Features
+
+* Add `mode` enum (`VERBATIM`, `SMART`) to `AudioTranscriptionConfig` and `TranscriptionConfig`. ([4c5208b](https://github.com/googleapis/js-genai/commit/4c5208baa923cecea897b7b4fdc9de5e49555709))
+* Add enable_data_retention to ToolParallelAiSearch, Add step_count to ReinforcementTuningHyperParameters, Add BidiGenerateContentSetup ([f52c208](https://github.com/googleapis/js-genai/commit/f52c20858c1bf6c7892192bc41cfc027d30b57ab))
+* Add IDLE state to live connection status enum and mark REQUIRES_ACTION as deprecated. ([2f110f2](https://github.com/googleapis/js-genai/commit/2f110f23372cf2ea52452fe57ddf3a4e30833857))
+* add video resolution and extension task parameters ([39b2a2d](https://github.com/googleapis/js-genai/commit/39b2a2dea4c5ff75c1754581b213b9d480504e7d))
+
+
+### Bug Fixes
+
+* fix examples ([3f631be](https://github.com/googleapis/js-genai/commit/3f631be857d0faec43012c2510ce17caea5bffe8))
+
+## [2.17.1](https://github.com/googleapis/js-genai/compare/v2.17.0...v2.17.1) (2026-08-13)
+
+
+### Bug Fixes
+
+* Add gemini-3.7-flash ([c495e82](https://github.com/googleapis/js-genai/commit/c495e82719486d90561eeb7dc476b9fbaa26077b))
+
+## [2.17.0](https://github.com/googleapis/js-genai/compare/v2.16.0...v2.17.0) (2026-08-12)
+
+
+### Features
+
+* Add interaction_status to LiveServerContent ([4489991](https://github.com/googleapis/js-genai/commit/4489991a7c40b22dff75348748048b0b14ac687e))
+* **api:** make the deferred service tier publicly available on Vertex ([9dafee9](https://github.com/googleapis/js-genai/commit/9dafee9cd0f6089221bce5269dbd53fe7fa69806))
+* Make speech_config a structured object. ([9c90665](https://github.com/googleapis/js-genai/commit/9c9066594a57bda7ee417d79f8ef15c8ed0b333d))
+
+## [2.16.0](https://github.com/googleapis/js-genai/compare/v2.15.0...v2.16.0) (2026-08-06)
+
+
+### Features
+
+* Add the Gemini Robotics ER 2 Preview model ([5647ced](https://github.com/googleapis/js-genai/commit/5647cedfcf3fc5f862b01fb908d6aae267d8bb91))
+* Add TOO_MANY_TOOL_CALLS to FinishReason enum. ([a7fa568](https://github.com/googleapis/js-genai/commit/a7fa5683bc86a3edce347f6259fca8face0df3a4))
+* Add top-level errors array to Interaction resource (iAPI) ([b9dfd81](https://github.com/googleapis/js-genai/commit/b9dfd814a16ae985685ebcf5cb99a82625167142))
+* Make HttpOptions.timeout a per-attempt deadline in the JS GenAI SDK. ([8268806](https://github.com/googleapis/js-genai/commit/8268806b3090834870ca6b901bdf289415425bac))
+
+
+### Bug Fixes
+
+* Add propertyOrdering auto-population for ResponseSchema and ResponseJsonSchema for Dotnet SDK ([e26542f](https://github.com/googleapis/js-genai/commit/e26542fc58f832e0b88affab5c266fd0c469d01c))
+
+## [2.15.0](https://github.com/googleapis/js-genai/compare/v2.14.0...v2.15.0) (2026-07-30)
+
+
+### Features
+
+* add environment resource ([2c911be](https://github.com/googleapis/js-genai/commit/2c911befbf839fc250a296783cbedbd3b668a9f7))
+* Support GoogleMaps Tool grounding_types places and routing ([52655c1](https://github.com/googleapis/js-genai/commit/52655c192848942d2d866c3b256de27c94583f78))
+* Support per-request retryOptions in the JS GenAI SDK API Client ([124b606](https://github.com/googleapis/js-genai/commit/124b606bc5be0d5e70673dc28e16e739c9a25d7c))
+* Wire environment service into genai sdk ([70d7938](https://github.com/googleapis/js-genai/commit/70d79389536821f1323ae5016f63ee95afa6b48a))
+
+## [2.14.0](https://github.com/googleapis/js-genai/compare/v2.13.0...v2.14.0) (2026-07-28)
+
+
+### Features
+
+* [GenerateContentConfig] Add GenerationConfig.audio_transcription_config and Part.audio_transcription. ([4b2e67a](https://github.com/googleapis/js-genai/commit/4b2e67aebbb713321c095ccad34618f2a98fdd7d))
+* Add flat `language_codes` field to `AudioTranscriptionConfig`. ([cc808eb](https://github.com/googleapis/js-genai/commit/cc808ebcbe76beb8e54fd5ca24ac358643104853))
+* Allow api key + proj/location for enterprise mode ([9c0540a](https://github.com/googleapis/js-genai/commit/9c0540a26694e6a2896a433e43d1bac963af10e5))
+
+
+### Bug Fixes
+
+* add deprecation warnings to Imagen generate_images, edit_images, generate_videos (if using prompt/text/image args), LiveConnectConfig.GenerationConfig which will be removed in the next major version ([bb66101](https://github.com/googleapis/js-genai/commit/bb6610199a76f7a99e28ed77974e6a3af21a52b1))
+
+## [2.13.0](https://github.com/googleapis/js-genai/compare/v2.12.0...v2.13.0) (2026-07-21)
+
+
+### Features
+
+* A new field `custom_vocabulary` is added to message `.google.cloud.aiplatform.v1beta1.BidiGenerateContentSetup` ([f32ec0a](https://github.com/googleapis/js-genai/commit/f32ec0a10d895db324c4facdd5330d8989f7564f))
+* add model selector ([b5d70da](https://github.com/googleapis/js-genai/commit/b5d70da1bd9721866611eedab05668d46a3077f6))
+* **interaction-api:** add queued status to interaction proto ([1b7dd39](https://github.com/googleapis/js-genai/commit/1b7dd395dfe167f3de89d1c7bf88af8a41f03873))
+* make ASR fields public in v1main and Interactions ([08ef3eb](https://github.com/googleapis/js-genai/commit/08ef3ebf4e13519a66c9308ad1f9ca39f24374ce))
+
+## [2.12.0](https://github.com/googleapis/js-genai/compare/v2.11.0...v2.12.0) (2026-07-15)
+
+
+### Features
+
+* Add AntigravityAgentConfig to OpenAPI schema overlays and regenerate SDKs. ([872aa26](https://github.com/googleapis/js-genai/commit/872aa26613861a4b0455fdef4ab07c02004ebb73))
+* Add history config. ([8666bc2](https://github.com/googleapis/js-genai/commit/8666bc21941e440d30b8c34146168bbe9984117e))
+* Add support for preserve custom headers for gaos ([f96662a](https://github.com/googleapis/js-genai/commit/f96662afee3a47c575c1b34a059c858953b83b62))
+* add trigger resource ([43e0137](https://github.com/googleapis/js-genai/commit/43e0137aa4784a04db4b413905c600118cc27eb2))
+* Add Triggers resource to GoogleGenAI client. ([8d520cd](https://github.com/googleapis/js-genai/commit/8d520cd130c2a16a6340651f16964045bb2fa544))
+* **interactions:** add CodeMenderAgentConfig ([4469a85](https://github.com/googleapis/js-genai/commit/4469a85cd23dea1fb705b25e9077a59cd56c7b95))
+* Populate per-modality prompt token count in embedding responses for gemini-embedding-2 ([163bf72](https://github.com/googleapis/js-genai/commit/163bf727e21c066a983e391884aedea4a6e4dd09))
+
+## [2.11.0](https://github.com/googleapis/js-genai/compare/v2.10.0...v2.11.0) (2026-07-09)
+
+
+### Features
+
+* Add environment_id in network config ([85fe0a5](https://github.com/googleapis/js-genai/commit/85fe0a5bef70c507ba8641016eca5f10359cbac1))
+* Add response_format and Translation_config in GenerationConfig ([3f3b7bc](https://github.com/googleapis/js-genai/commit/3f3b7bc5179d0252470e7a6e87519ff894464a7e))
+* add retrieval result step and new fields to maps and search results ([ecfdc69](https://github.com/googleapis/js-genai/commit/ecfdc69cffe071e5841c562cacac0d4574a86303))
+* Add Tool.exa_ai_search for Gemini Enterprise API ([3f3b7bc](https://github.com/googleapis/js-genai/commit/3f3b7bc5179d0252470e7a6e87519ff894464a7e))
+* support Function declarations during Agent Creation ([824badf](https://github.com/googleapis/js-genai/commit/824badf72b009e72696e3ce5bd39d99e6f17888c))
+* voice consent signature types across all SDK languages. ([5fb5354](https://github.com/googleapis/js-genai/commit/5fb5354de34e8fe394c92ad279bd07e756328005))
+
+
+### Bug Fixes
+
+* **interactions:** accept both dict and list[dict] for transform ([67d2f68](https://github.com/googleapis/js-genai/commit/67d2f683643946e512875065f98bf9b8d628bc61))
+
+
+### Code Refactoring
+
+* **interactions:** remove cached_content, presence_penalty, and frequency_penalty; expose safety_settings and labels ([0f414be](https://github.com/googleapis/js-genai/commit/0f414be2babac4e5d94a23a1880b898cfc5919d4))
+
 ## [2.10.0](https://github.com/googleapis/js-genai/compare/v2.9.0...v2.10.0) (2026-06-24)
 
 
