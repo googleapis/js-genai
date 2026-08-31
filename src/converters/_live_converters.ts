@@ -1507,9 +1507,14 @@ export function liveConnectConfigToVertex(
     );
   }
 
-  if (common.getValueByPath(fromObject, ['translationConfig']) !== undefined) {
-    throw new Error(
-      'translationConfig parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+  const fromTranslationConfig = common.getValueByPath(fromObject, [
+    'translationConfig',
+  ]);
+  if (parentObject !== undefined && fromTranslationConfig != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'generationConfig', 'translationConfig'],
+      fromTranslationConfig,
     );
   }
 
