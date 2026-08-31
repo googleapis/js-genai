@@ -13,7 +13,6 @@
 import { InteractionSseEventInteraction } from "./interaction-sse-event-interaction.js";
 
 export type InteractionCreatedEvent = {
-  event_type: "interaction.created";
   /**
    * The event_id token to be used to resume the interaction stream, from
    *
@@ -21,6 +20,7 @@ export type InteractionCreatedEvent = {
    * this event.
    */
   event_id?: string | undefined;
+  event_type: "interaction.created";
   /**
    * Partial interaction resource emitted by interaction lifecycle SSE events.
    *

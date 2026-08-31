@@ -1278,7 +1278,7 @@ export function generateContentConfigToMldev(
     common.setValueByPath(
       toObject,
       ['responseJsonSchema'],
-      fromResponseJsonSchema,
+      t.tJsonSchema(fromResponseJsonSchema),
     );
   }
 
@@ -1960,6 +1960,13 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
   const fromPartMetadata = common.getValueByPath(fromObject, ['partMetadata']);
   if (fromPartMetadata != null) {
     common.setValueByPath(toObject, ['partMetadata'], fromPartMetadata);
+  }
+
+  const fromMediaProcessing = common.getValueByPath(fromObject, [
+    'mediaProcessing',
+  ]);
+  if (fromMediaProcessing != null) {
+    common.setValueByPath(toObject, ['mediaProcessing'], fromMediaProcessing);
   }
 
   return toObject;

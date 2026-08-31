@@ -69,6 +69,7 @@ import { webhooksRotateSigningSecret } from "./funcs/webhooks-rotate-signing-sec
 import { webhooksUpdate } from "./funcs/webhooks-update.js";
 import { environmentsCreateEnvironment } from "./funcs/environments-create-environment.js";
 import { environmentsDeleteEnvironment } from "./funcs/environments-delete-environment.js";
+import { environmentsFilesList } from "./funcs/environments-files-list.js";
 import { environmentsGetEnvironment } from "./funcs/environments-get-environment.js";
 import { environmentsListEnvironments } from "./funcs/environments-list-environments.js";
 
@@ -332,10 +333,10 @@ export class GeminiNextGenInteractions {
       interactionsGet(
         this.getClient(api_version),
         id,
-        stream,
-        last_event_id,
-        include_input,
         api_version,
+        include_input,
+        last_event_id,
+        stream,
         toGoogleGenAIRequestOptions(options),
       ),
     );
@@ -1022,10 +1023,119 @@ export type ListEnvironmentsParams = {
   page_token?: string;
 };
 
+/**
+ * Output only. The type of the entry.
+ */
+export type EnvironmentFileType = "file" | "directory" | (string & {});
+
+/**
+ * Metadata for a file or directory within an environment.
+ */
+export type EnvironmentFile = {
+  /**
+   * Output only. The creation time of the file/directory.
+   */
+  created?: string | undefined;
+  /**
+   * Output only. The MIME type of the file (e.g., "text/python", "image/png").
+   *
+   * @remarks
+   * Empty for directories.
+   */
+  mime_type?: string | undefined;
+  /**
+   * Output only. The modification time of the file/directory.
+   */
+  modified?: string | undefined;
+  /**
+   * Output only. The name of the file or directory (e.g., "main.py" or "src").
+   */
+  name?: string | undefined;
+  /**
+   * Output only. The full relative path within the environment
+   *
+   * @remarks
+   * (e.g., "workspace/src/main.py").
+   */
+  path?: string | undefined;
+  /**
+   * Output only. The size of the file/directory in bytes.
+   */
+  size_bytes?: string | undefined;
+  /**
+   * Output only. The type of the entry.
+   */
+  type?: EnvironmentFileType | undefined;
+};
+
+/**
+ * Response for `GetEnvironmentFiles`.
+ */
+export type GetEnvironmentFilesResponse = {
+  /**
+   * If the requested path is a directory, this contains its contents.
+   *
+   * @remarks
+   * If the requested path is a file, this contains a single entry with the
+   * file's metadata.
+   * If alt=media was specified, this is empty (content is served via `blob`).
+   */
+  files?: Array<EnvironmentFile> | undefined;
+  /**
+   * Pagination token for directory listing.
+   */
+  next_page_token?: string | undefined;
+};
+
+/**
+ * Alias for GetEnvironmentFilesResponse when listing files.
+ */
+export type ListEnvironmentFilesResponse = GetEnvironmentFilesResponse;
+
+export type ListEnvironmentFilesParams = {
+  environment: string;
+  path: string;
+  page_size?: number;
+  page_token?: string;
+  recursive?: boolean;
+  api_version?: string;
+};
+
+export class GeminiNextGenEnvironmentFiles {
+  constructor(
+    private readonly resolveClient: (apiVersion?: string) => GoogleGenAI,
+  ) {}
+
+  async list(
+    params: ListEnvironmentFilesParams,
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<ListEnvironmentFilesResponse> {
+    const { environment, path, page_size, page_token, recursive, api_version } =
+      params;
+    return unwrapWithSdkHttpResponse(
+      environmentsFilesList(
+        this.resolveClient(api_version),
+        environment,
+        path,
+        api_version,
+        page_size,
+        page_token,
+        recursive,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+}
+
 export class GeminiNextGenEnvironments {
   private sdk: GoogleGenAI | undefined;
+  readonly files: GeminiNextGenEnvironmentFiles;
 
-  constructor(private readonly parentClient: GoogleGenAIParentClient) {}
+  constructor(private readonly parentClient: GoogleGenAIParentClient) {
+    this.files = new GeminiNextGenEnvironmentFiles((apiVersion) =>
+      this.getClient(apiVersion),
+    );
+  }
 
   async create(
     params: environments.CreateEnvironmentRequest & { api_version?: string },

@@ -24,8 +24,8 @@ export type CreateInteractionGlobals = {
  * The request body.
  */
 export type CreateInteractionRequestBody =
-  | interactions.CreateModelInteraction
-  | interactions.CreateAgentInteraction;
+  | interactions.CreateAgentInteraction
+  | interactions.CreateModelInteraction;
 
 export type CreateInteractionRequest = {
   /**
@@ -36,8 +36,8 @@ export type CreateInteractionRequest = {
    * The request body.
    */
   body:
-    | interactions.CreateModelInteraction
-    | interactions.CreateAgentInteraction;
+    | interactions.CreateAgentInteraction
+    | interactions.CreateModelInteraction;
 };
 
 export type CreateInteractionResponse =

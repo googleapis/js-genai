@@ -45,8 +45,11 @@ import {NodeFiles} from './node_files.js';
 
 const LANGUAGE_LABEL_PREFIX = 'gl-node/';
 
-function resolveCloudFlag(options: GoogleGenAIOptions): boolean {
-  if (options.enterprise !== undefined || options.vertexai !== undefined) {
+function resolveCloudFlag(options?: GoogleGenAIOptions): boolean {
+  if (
+    options &&
+    (options.enterprise !== undefined || options.vertexai !== undefined)
+  ) {
     if (
       options.enterprise !== undefined &&
       options.vertexai !== undefined &&
@@ -224,7 +227,7 @@ export class GoogleGenAI {
     return this._environments;
   }
 
-  constructor(options: GoogleGenAIOptions) {
+  constructor(options: GoogleGenAIOptions = {}) {
     this.vertexai = resolveCloudFlag(options);
 
     // Validate explicitly set initializer values.

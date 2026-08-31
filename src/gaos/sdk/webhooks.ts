@@ -31,6 +31,22 @@ import { APIPromise, unwrapAsAPIPromise } from "../types/async.js";
 
 export class Webhooks extends ClientSDK {
   /**
+   * Lists all Webhooks.
+   */
+  list(
+    params?: ListWebhooksParams,
+    options?: Omit<RequestOptions, "extra_body">,
+  ): APIPromise<webhooks.WebhookListResponse> {
+    return unwrapAsAPIPromise(webhooksList(
+      this,
+      params?.api_version,
+      params?.page_size,
+      params?.page_token,
+      options,
+    ));
+  }
+
+  /**
    * Creates a new Webhook.
    */
   create(
@@ -47,17 +63,17 @@ export class Webhooks extends ClientSDK {
   }
 
   /**
-   * Lists all Webhooks.
+   * Deletes a Webhook.
    */
-  list(
-    params?: ListWebhooksParams,
+  delete(
+    id: string,
+    params?: DeleteWebhookParams,
     options?: Omit<RequestOptions, "extra_body">,
-  ): APIPromise<webhooks.WebhookListResponse> {
-    return unwrapAsAPIPromise(webhooksList(
+  ): APIPromise<interactions.Empty> {
+    return unwrapAsAPIPromise(webhooksDelete(
       this,
+      id,
       params?.api_version,
-      params?.page_size,
-      params?.page_token,
       options,
     ));
   }
@@ -101,17 +117,19 @@ export class Webhooks extends ClientSDK {
   }
 
   /**
-   * Deletes a Webhook.
+   * Sends a ping event to a Webhook.
    */
-  delete(
+  ping(
     id: string,
-    params?: DeleteWebhookParams,
-    options?: Omit<RequestOptions, "extra_body">,
-  ): APIPromise<interactions.Empty> {
-    return unwrapAsAPIPromise(webhooksDelete(
+    api_version?: string | undefined,
+    body?: webhooks.PingWebhookRequest | undefined,
+    options?: RequestOptions,
+  ): APIPromise<webhooks.WebhookPingResponse> {
+    return unwrapAsAPIPromise(webhooksPing(
       this,
       id,
-      params?.api_version,
+      api_version,
+      body,
       options,
     ));
   }
@@ -126,24 +144,6 @@ export class Webhooks extends ClientSDK {
     options?: RequestOptions,
   ): APIPromise<webhooks.WebhookRotateSigningSecretResponse> {
     return unwrapAsAPIPromise(webhooksRotateSigningSecret(
-      this,
-      id,
-      api_version,
-      body,
-      options,
-    ));
-  }
-
-  /**
-   * Sends a ping event to a Webhook.
-   */
-  ping(
-    id: string,
-    api_version?: string | undefined,
-    body?: webhooks.PingWebhookRequest | undefined,
-    options?: RequestOptions,
-  ): APIPromise<webhooks.WebhookPingResponse> {
-    return unwrapAsAPIPromise(webhooksPing(
       this,
       id,
       api_version,

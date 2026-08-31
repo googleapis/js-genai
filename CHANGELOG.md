@@ -2,6 +2,66 @@
 
 
 
+## [2.19.0](https://github.com/googleapis/js-genai/compare/v2.18.0...v2.19.0) (2026-08-25)
+
+
+### Features
+
+* Add AudioTranscriptionConfigMode ([c0a37de](https://github.com/googleapis/js-genai/commit/c0a37de9102c1054c2bf9fa2cd3d8b6a4c41fd42))
+* add environment files support and scotty file download helper ([0d6ee9d](https://github.com/googleapis/js-genai/commit/0d6ee9d8e2690e541d12b72205272bba0c33b209))
+* Add TYPE_JPEG2000 to VideoContent.MimeType enum ([41da204](https://github.com/googleapis/js-genai/commit/41da2043cce07211f793647d57d119e04ff2ef48))
+
+
+### Performance Improvements
+
+* Keep the Buffer in the Node tokenizer platform, ~2x faster model parse ([11d804a](https://github.com/googleapis/js-genai/commit/11d804a88fc0ce260d6e4ab80ced4e54d34201ed))
+
+## [2.18.0](https://github.com/googleapis/js-genai/compare/v2.17.1...v2.18.0) (2026-08-19)
+
+
+### Features
+
+* Add `mode` enum (`VERBATIM`, `SMART`) to `AudioTranscriptionConfig` and `TranscriptionConfig`. ([4c5208b](https://github.com/googleapis/js-genai/commit/4c5208baa923cecea897b7b4fdc9de5e49555709))
+* Add enable_data_retention to ToolParallelAiSearch, Add step_count to ReinforcementTuningHyperParameters, Add BidiGenerateContentSetup ([f52c208](https://github.com/googleapis/js-genai/commit/f52c20858c1bf6c7892192bc41cfc027d30b57ab))
+* Add IDLE state to live connection status enum and mark REQUIRES_ACTION as deprecated. ([2f110f2](https://github.com/googleapis/js-genai/commit/2f110f23372cf2ea52452fe57ddf3a4e30833857))
+* add video resolution and extension task parameters ([39b2a2d](https://github.com/googleapis/js-genai/commit/39b2a2dea4c5ff75c1754581b213b9d480504e7d))
+
+
+### Bug Fixes
+
+* fix examples ([3f631be](https://github.com/googleapis/js-genai/commit/3f631be857d0faec43012c2510ce17caea5bffe8))
+
+## [2.17.1](https://github.com/googleapis/js-genai/compare/v2.17.0...v2.17.1) (2026-08-13)
+
+
+### Bug Fixes
+
+* Add gemini-3.7-flash ([c495e82](https://github.com/googleapis/js-genai/commit/c495e82719486d90561eeb7dc476b9fbaa26077b))
+
+## [2.17.0](https://github.com/googleapis/js-genai/compare/v2.16.0...v2.17.0) (2026-08-12)
+
+
+### Features
+
+* Add interaction_status to LiveServerContent ([4489991](https://github.com/googleapis/js-genai/commit/4489991a7c40b22dff75348748048b0b14ac687e))
+* **api:** make the deferred service tier publicly available on Vertex ([9dafee9](https://github.com/googleapis/js-genai/commit/9dafee9cd0f6089221bce5269dbd53fe7fa69806))
+* Make speech_config a structured object. ([9c90665](https://github.com/googleapis/js-genai/commit/9c9066594a57bda7ee417d79f8ef15c8ed0b333d))
+
+## [2.16.0](https://github.com/googleapis/js-genai/compare/v2.15.0...v2.16.0) (2026-08-06)
+
+
+### Features
+
+* Add the Gemini Robotics ER 2 Preview model ([5647ced](https://github.com/googleapis/js-genai/commit/5647cedfcf3fc5f862b01fb908d6aae267d8bb91))
+* Add TOO_MANY_TOOL_CALLS to FinishReason enum. ([a7fa568](https://github.com/googleapis/js-genai/commit/a7fa5683bc86a3edce347f6259fca8face0df3a4))
+* Add top-level errors array to Interaction resource (iAPI) ([b9dfd81](https://github.com/googleapis/js-genai/commit/b9dfd814a16ae985685ebcf5cb99a82625167142))
+* Make HttpOptions.timeout a per-attempt deadline in the JS GenAI SDK. ([8268806](https://github.com/googleapis/js-genai/commit/8268806b3090834870ca6b901bdf289415425bac))
+
+
+### Bug Fixes
+
+* Add propertyOrdering auto-population for ResponseSchema and ResponseJsonSchema for Dotnet SDK ([e26542f](https://github.com/googleapis/js-genai/commit/e26542fc58f832e0b88affab5c266fd0c469d01c))
+
 ## [2.15.0](https://github.com/googleapis/js-genai/compare/v2.14.0...v2.15.0) (2026-07-30)
 
 
