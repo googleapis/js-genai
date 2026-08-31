@@ -22,6 +22,7 @@ export type Task =
   | "image_to_video"
   | "reference_to_video"
   | "edit"
+  | "extend"
   | (string & {});
 
 /**

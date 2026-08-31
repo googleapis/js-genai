@@ -7,8 +7,10 @@
  */
 
 import * as agents from "./models/agents/index.js";
+import * as environments from "./models/environments/index.js";
 import * as interactions from "./models/interactions/index.js";
 import * as operations from "./models/operations/index.js";
+import * as triggers from "./models/triggers/index.js";
 import * as webhooks from "./models/webhooks/index.js";
 
 import type { APICall, APIPromise } from "./types/async.js";
@@ -35,6 +37,11 @@ import type {
   GetInteractionByIdParamsNonStreaming,
   GetInteractionByIdParamsStreaming,
   ListAgentsParams as _ListAgentsRequest,
+  CreateTriggerParams,
+  DeleteTriggerParams,
+  GetTriggerParams,
+  RunTriggerParams,
+  UpdateTriggerParams,
 } from "./models/operations/method-params.js";
 import { RequestOptions } from "./lib/sdks.js";
 import type { Result } from "./types/fp.js";
@@ -46,6 +53,13 @@ import { agentsList } from "./funcs/agents-list.js";
 import { interactionsCancel } from "./funcs/interactions-cancel.js";
 import { interactionsCreate } from "./funcs/interactions-create.js";
 import { interactionsGet } from "./funcs/interactions-get.js";
+import { triggersCreate } from "./funcs/triggers-create.js";
+import { triggersDelete } from "./funcs/triggers-delete.js";
+import { triggersGet } from "./funcs/triggers-get.js";
+import { triggersListExecutions } from "./funcs/triggers-list-executions.js";
+import { triggersList } from "./funcs/triggers-list.js";
+import { triggersRun } from "./funcs/triggers-run.js";
+import { triggersUpdate } from "./funcs/triggers-update.js";
 import { webhooksCreate } from "./funcs/webhooks-create.js";
 import { webhooksDelete } from "./funcs/webhooks-delete.js";
 import { webhooksGet } from "./funcs/webhooks-get.js";
@@ -53,6 +67,11 @@ import { webhooksList } from "./funcs/webhooks-list.js";
 import { webhooksPing } from "./funcs/webhooks-ping.js";
 import { webhooksRotateSigningSecret } from "./funcs/webhooks-rotate-signing-secret.js";
 import { webhooksUpdate } from "./funcs/webhooks-update.js";
+import { environmentsCreateEnvironment } from "./funcs/environments-create-environment.js";
+import { environmentsDeleteEnvironment } from "./funcs/environments-delete-environment.js";
+import { environmentsFilesList } from "./funcs/environments-files-list.js";
+import { environmentsGetEnvironment } from "./funcs/environments-get-environment.js";
+import { environmentsListEnvironments } from "./funcs/environments-list-environments.js";
 
 const LEGACY_LYRIA_MODELS: ReadonlySet<string> = new Set([
   "lyria-3-pro-preview",
@@ -68,6 +87,7 @@ export interface GoogleGenAIParentClient {
   getBaseUrl(): string;
   getApiVersion(): string;
   getDefaultHeaders?(): Record<string, string>;
+  getHeaders?(): Record<string, string> | undefined;
   getAuthHeaders(url?: string): Headers | Promise<Headers>;
 }
 
@@ -109,7 +129,10 @@ export function buildGoogleGenAIClient(
     security:
       options.security ??
       (new GoogleGenAISecurityProvider({
-        defaultHeaders: parentClient.getDefaultHeaders?.(),
+        defaultHeaders: {
+          ...parentClient.getDefaultHeaders?.(),
+          ...parentClient.getHeaders?.(),
+        },
         getAuthHeaders: (url) => parentClient.getAuthHeaders(url),
       }) as SDKOptions["security"]),
     server_url: options.server_url ?? getGoogleGenAIServerURL(parentClient),
@@ -164,6 +187,19 @@ export type ListAgentsParams = {
   pageSize?: number;
   pageToken?: string;
   parent?: string;
+};
+
+export type ListTriggersParams = {
+  api_version?: string;
+  filter?: string;
+  pageSize?: number;
+  pageToken?: string;
+};
+
+export type ListTriggerExecutionsParams = {
+  api_version?: string;
+  pageSize?: number;
+  pageToken?: string;
 };
 
 export type WebhookListParams = {
@@ -297,10 +333,10 @@ export class GeminiNextGenInteractions {
       interactionsGet(
         this.getClient(api_version),
         id,
-        stream,
-        last_event_id,
-        include_input,
         api_version,
+        include_input,
+        last_event_id,
+        stream,
         toGoogleGenAIRequestOptions(options),
       ),
     );
@@ -550,6 +586,135 @@ export class GeminiNextGenWebhooks {
   }
 
   private getClient(): GoogleGenAI {
+    this.sdk ??= buildGoogleGenAIClient(this.parentClient);
+    return this.sdk;
+  }
+}
+
+export class GeminiNextGenTriggers {
+  private sdk: GoogleGenAI | undefined;
+
+  constructor(private readonly parentClient: GoogleGenAIParentClient) {}
+
+  async create(
+    params: CreateTriggerParams,
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<triggers.Trigger> {
+    const { api_version, ...body } = params;
+    return unwrapWithSdkHttpResponse(
+      triggersCreate(
+        this.getClient(api_version),
+        body,
+        api_version,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  async list(
+    params: ListTriggersParams | null | undefined = {},
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<triggers.ListTriggersResponse> {
+    const { api_version, filter, pageSize, pageToken } = params ?? {};
+    return unwrapWithSdkHttpResponse(
+      triggersList(
+        this.getClient(api_version),
+        api_version,
+        filter,
+        pageSize,
+        pageToken,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  async get(
+    id: string,
+    params: GetTriggerParams | null | undefined = {},
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<triggers.Trigger> {
+    return unwrapWithSdkHttpResponse(
+      triggersGet(
+        this.getClient(params?.api_version),
+        id,
+        params?.api_version,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  async update(
+    id: string,
+    params: UpdateTriggerParams,
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<triggers.Trigger> {
+    const { api_version, ...body } = params;
+    return unwrapWithSdkHttpResponse(
+      triggersUpdate(
+        this.getClient(api_version),
+        id,
+        body,
+        api_version,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  async delete(
+    id: string,
+    params: DeleteTriggerParams | null | undefined = {},
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<interactions.Empty> {
+    return unwrapWithSdkHttpResponse(
+      triggersDelete(
+        this.getClient(params?.api_version),
+        id,
+        params?.api_version,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  async run(
+    trigger_id: string,
+    params: RunTriggerParams | null | undefined = {},
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<triggers.TriggerExecution> {
+    return unwrapWithSdkHttpResponse(
+      triggersRun(
+        this.getClient(params?.api_version),
+        trigger_id,
+        params?.api_version,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  async listExecutions(
+    trigger_id: string,
+    params: ListTriggerExecutionsParams | null | undefined = {},
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<triggers.ListTriggerExecutionsResponse> {
+    const { api_version, pageSize, pageToken } = params ?? {};
+    return unwrapWithSdkHttpResponse(
+      triggersListExecutions(
+        this.getClient(api_version),
+        trigger_id,
+        api_version,
+        pageSize,
+        pageToken,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  private getClient(apiVersion: string | undefined): GoogleGenAI {
+    if (apiVersion) {
+      return buildGoogleGenAIClient(this.parentClient, {
+        api_version: apiVersion,
+      });
+    }
+
     this.sdk ??= buildGoogleGenAIClient(this.parentClient);
     return this.sdk;
   }
@@ -850,4 +1015,197 @@ function normalizeInteractionDates(
 
 function normalizeDateLike(value: unknown): unknown {
   return value instanceof Date ? value.toISOString() : value;
+}
+
+export type ListEnvironmentsParams = {
+  api_version?: string;
+  page_size?: number;
+  page_token?: string;
+};
+
+/**
+ * Output only. The type of the entry.
+ */
+export type EnvironmentFileType = "file" | "directory" | (string & {});
+
+/**
+ * Metadata for a file or directory within an environment.
+ */
+export type EnvironmentFile = {
+  /**
+   * Output only. The creation time of the file/directory.
+   */
+  created?: string | undefined;
+  /**
+   * Output only. The MIME type of the file (e.g., "text/python", "image/png").
+   *
+   * @remarks
+   * Empty for directories.
+   */
+  mime_type?: string | undefined;
+  /**
+   * Output only. The modification time of the file/directory.
+   */
+  modified?: string | undefined;
+  /**
+   * Output only. The name of the file or directory (e.g., "main.py" or "src").
+   */
+  name?: string | undefined;
+  /**
+   * Output only. The full relative path within the environment
+   *
+   * @remarks
+   * (e.g., "workspace/src/main.py").
+   */
+  path?: string | undefined;
+  /**
+   * Output only. The size of the file/directory in bytes.
+   */
+  size_bytes?: string | undefined;
+  /**
+   * Output only. The type of the entry.
+   */
+  type?: EnvironmentFileType | undefined;
+};
+
+/**
+ * Response for `GetEnvironmentFiles`.
+ */
+export type GetEnvironmentFilesResponse = {
+  /**
+   * If the requested path is a directory, this contains its contents.
+   *
+   * @remarks
+   * If the requested path is a file, this contains a single entry with the
+   * file's metadata.
+   * If alt=media was specified, this is empty (content is served via `blob`).
+   */
+  files?: Array<EnvironmentFile> | undefined;
+  /**
+   * Pagination token for directory listing.
+   */
+  next_page_token?: string | undefined;
+};
+
+/**
+ * Alias for GetEnvironmentFilesResponse when listing files.
+ */
+export type ListEnvironmentFilesResponse = GetEnvironmentFilesResponse;
+
+export type ListEnvironmentFilesParams = {
+  environment: string;
+  path: string;
+  page_size?: number;
+  page_token?: string;
+  recursive?: boolean;
+  api_version?: string;
+};
+
+export class GeminiNextGenEnvironmentFiles {
+  constructor(
+    private readonly resolveClient: (apiVersion?: string) => GoogleGenAI,
+  ) {}
+
+  async list(
+    params: ListEnvironmentFilesParams,
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<ListEnvironmentFilesResponse> {
+    const { environment, path, page_size, page_token, recursive, api_version } =
+      params;
+    return unwrapWithSdkHttpResponse(
+      environmentsFilesList(
+        this.resolveClient(api_version),
+        environment,
+        path,
+        api_version,
+        page_size,
+        page_token,
+        recursive,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+}
+
+export class GeminiNextGenEnvironments {
+  private sdk: GoogleGenAI | undefined;
+  readonly files: GeminiNextGenEnvironmentFiles;
+
+  constructor(private readonly parentClient: GoogleGenAIParentClient) {
+    this.files = new GeminiNextGenEnvironmentFiles((apiVersion) =>
+      this.getClient(apiVersion),
+    );
+  }
+
+  async create(
+    params: environments.CreateEnvironmentRequest & { api_version?: string },
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<environments.Environment> {
+    const { api_version, ...body } = params;
+    return unwrapWithSdkHttpResponse(
+      environmentsCreateEnvironment(
+        this.getClient(api_version),
+        body,
+        api_version,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  async list(
+    params: ListEnvironmentsParams | null | undefined = {},
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<environments.ListEnvironmentsResponse> {
+    const { api_version, page_size, page_token } = params ?? {};
+    return unwrapWithSdkHttpResponse(
+      environmentsListEnvironments(
+        this.getClient(api_version),
+        api_version,
+        page_size,
+        page_token,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  async get(
+    id: string,
+    params: { api_version?: string } | null | undefined = {},
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<environments.Environment> {
+    return unwrapWithSdkHttpResponse(
+      environmentsGetEnvironment(
+        this.getClient(params?.api_version),
+        id,
+        params?.api_version,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  async delete(
+    id: string,
+    params: { api_version?: string } | null | undefined = {},
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<interactions.Empty> {
+    return unwrapWithSdkHttpResponse(
+      environmentsDeleteEnvironment(
+        this.getClient(params?.api_version),
+        id,
+        params?.api_version,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  private getClient(apiVersion: string | undefined): GoogleGenAI {
+    if (apiVersion) {
+      return buildGoogleGenAIClient(this.parentClient, {
+        api_version: apiVersion,
+      });
+    }
+
+    this.sdk ??= buildGoogleGenAIClient(this.parentClient);
+    return this.sdk;
+  }
 }

@@ -11,9 +11,9 @@
  */
 
 export type ThoughtSignatureDelta = {
-  type: "thought_signature";
   /**
    * Signature to match the backend source to be part of the generation.
    */
   signature?: string | undefined;
+  type: "thought_signature";
 };

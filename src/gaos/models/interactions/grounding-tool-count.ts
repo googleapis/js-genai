@@ -24,11 +24,11 @@ export type GroundingToolCountType =
  */
 export type GroundingToolCount = {
   /**
-   * The grounding tool type associated with the count.
-   */
-  type?: GroundingToolCountType | undefined;
-  /**
    * The number of grounding tool counts.
    */
   count?: number | undefined;
+  /**
+   * The grounding tool type associated with the count.
+   */
+  type?: GroundingToolCountType | undefined;
 };

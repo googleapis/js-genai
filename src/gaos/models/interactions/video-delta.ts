@@ -22,12 +22,13 @@ export type VideoDeltaMimeType =
   | "video/webm"
   | "video/wmv"
   | "video/3gpp"
+  | "video/jpeg2000"
   | (string & {});
 
 export type VideoDelta = {
-  type: "video";
   data?: string | undefined;
-  uri?: string | undefined;
   mime_type?: VideoDeltaMimeType | undefined;
   resolution?: MediaResolution | undefined;
+  type: "video";
+  uri?: string | undefined;
 };

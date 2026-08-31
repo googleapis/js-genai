@@ -22,17 +22,17 @@ export type DocumentContentMimeType =
  * A document content block.
  */
 export type DocumentContent = {
-  type: "document";
   /**
    * The document content.
    */
   data?: string | undefined;
   /**
-   * The URI of the document.
-   */
-  uri?: string | undefined;
-  /**
    * The mime type of the document.
    */
   mime_type?: DocumentContentMimeType | undefined;
+  type: "document";
+  /**
+   * The URI of the document.
+   */
+  uri?: string | undefined;
 };

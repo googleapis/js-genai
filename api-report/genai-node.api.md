@@ -140,6 +140,25 @@ export enum ApiSpec {
 }
 
 // @public
+export enum AspectRatio {
+    ASPECT_RATIO_EIGHT_BY_ONE = "ASPECT_RATIO_EIGHT_BY_ONE",
+    ASPECT_RATIO_FIVE_BY_FOUR = "ASPECT_RATIO_FIVE_BY_FOUR",
+    ASPECT_RATIO_FOUR_BY_FIVE = "ASPECT_RATIO_FOUR_BY_FIVE",
+    ASPECT_RATIO_FOUR_BY_ONE = "ASPECT_RATIO_FOUR_BY_ONE",
+    ASPECT_RATIO_FOUR_BY_THREE = "ASPECT_RATIO_FOUR_BY_THREE",
+    ASPECT_RATIO_NINE_BY_SIXTEEN = "ASPECT_RATIO_NINE_BY_SIXTEEN",
+    ASPECT_RATIO_ONE_BY_EIGHT = "ASPECT_RATIO_ONE_BY_EIGHT",
+    ASPECT_RATIO_ONE_BY_FOUR = "ASPECT_RATIO_ONE_BY_FOUR",
+    ASPECT_RATIO_ONE_BY_ONE = "ASPECT_RATIO_ONE_BY_ONE",
+    ASPECT_RATIO_SIXTEEN_BY_NINE = "ASPECT_RATIO_SIXTEEN_BY_NINE",
+    ASPECT_RATIO_THREE_BY_FOUR = "ASPECT_RATIO_THREE_BY_FOUR",
+    ASPECT_RATIO_THREE_BY_TWO = "ASPECT_RATIO_THREE_BY_TWO",
+    ASPECT_RATIO_TWENTY_ONE_BY_NINE = "ASPECT_RATIO_TWENTY_ONE_BY_NINE",
+    ASPECT_RATIO_TWO_BY_THREE = "ASPECT_RATIO_TWO_BY_THREE",
+    ASPECT_RATIO_UNSPECIFIED = "ASPECT_RATIO_UNSPECIFIED"
+}
+
+// @public
 export interface AudioChunk {
     data?: string;
     mimeType?: string;
@@ -147,11 +166,22 @@ export interface AudioChunk {
 }
 
 // @public
+export class AudioResponseFormat {
+    bitRate?: number;
+    delivery?: Delivery;
+    mimeType?: string;
+    sampleRate?: number;
+}
+
+// @public
 export interface AudioTranscriptionConfig {
     adaptationPhrases?: string[];
+    customVocabulary?: string[];
+    diarization?: boolean;
     languageAuto?: LanguageAuto;
     languageCodes?: string[];
     languageHints?: LanguageHints;
+    wordTimestamp?: boolean;
 }
 
 // @public
@@ -494,13 +524,11 @@ export interface CompletionStats {
 
 // @public
 export interface CompositeReinforcementTuningRewardConfig {
-    // (undocumented)
     weightedRewardConfigs?: CompositeReinforcementTuningRewardConfigWeightedRewardConfig[];
 }
 
 // @public
 export interface CompositeReinforcementTuningRewardConfigWeightedRewardConfig {
-    // (undocumented)
     rewardConfig?: SingleReinforcementTuningRewardConfig;
     weight?: number;
 }
@@ -552,6 +580,7 @@ export interface ContentEmbedding {
 // @public
 export interface ContentEmbeddingStatistics {
     tokenCount?: number;
+    tokensDetails?: ModalityTokenCount[];
     truncated?: boolean;
 }
 
@@ -861,9 +890,12 @@ export interface DatasetDistributionDistributionBucket {
 
 // @public
 export interface DatasetStats {
+    contentsPerExampleDistribution?: DatasetDistribution;
     droppedExampleIndices?: string[];
     droppedExampleReasons?: string[];
+    reinforcementTuningUserDatasetExamples?: ReinforcementTuningUserDatasetExamples;
     totalBillableCharacterCount?: string;
+    totalBillableTokenCount?: string;
     totalTuningCharacterCount?: string;
     tuningDatasetExampleCount?: string;
     tuningStepCount?: string;
@@ -972,6 +1004,13 @@ export interface DeleteResourceJob {
     // (undocumented)
     name?: string;
     sdkHttpResponse?: HttpResponse;
+}
+
+// @public
+export enum Delivery {
+    DELIVERY_UNSPECIFIED = "DELIVERY_UNSPECIFIED",
+    INLINE = "INLINE",
+    URI = "URI"
 }
 
 // @public
@@ -1513,6 +1552,7 @@ export interface GeminiPreferenceExampleCompletion {
 export interface GenerateContentConfig {
     abortSignal?: AbortSignal;
     audioTimestamp?: boolean;
+    audioTranscriptionConfig?: AudioTranscriptionConfig;
     automaticFunctionCalling?: AutomaticFunctionCallingConfig;
     cachedContent?: string;
     candidateCount?: number;
@@ -1713,6 +1753,7 @@ export interface GenerateVideosSource {
 // @public
 export interface GenerationConfig {
     audioTimestamp?: boolean;
+    audioTranscriptionConfig?: AudioTranscriptionConfig;
     candidateCount?: number;
     enableAffectiveDialog?: boolean;
     enableEnhancedCivicAnswers?: boolean;
@@ -1722,6 +1763,7 @@ export interface GenerationConfig {
     mediaResolution?: MediaResolution;
     modelSelectionConfig?: ModelSelectionConfig;
     presencePenalty?: number;
+    responseFormat?: ResponseFormat[];
     responseJsonSchema?: unknown;
     responseLogprobs?: boolean;
     responseMimeType?: string;
@@ -1735,6 +1777,7 @@ export interface GenerationConfig {
     thinkingConfig?: ThinkingConfig;
     topK?: number;
     topP?: number;
+    translationConfig?: TranslationConfig;
 }
 
 // @public
@@ -1888,6 +1931,10 @@ export class GoogleGenAI {
     readonly models: Models;
     // (undocumented)
     readonly operations: Operations;
+    // Warning: (ae-forgotten-export) The symbol "GeminiNextGenTriggers" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    get triggers(): GeminiNextGenTriggers;
     // Warning: (ae-forgotten-export) The symbol "Tunings" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -1916,6 +1963,21 @@ export interface GoogleGenAIOptions {
 export interface GoogleMaps {
     authConfig?: AuthConfig;
     enableWidget?: boolean;
+    groundingTypes?: GoogleMapsGroundingTypes;
+}
+
+// @public
+export interface GoogleMapsGroundingTypes {
+    places?: GoogleMapsPlaces;
+    routing?: GoogleMapsRouting;
+}
+
+// @public
+export interface GoogleMapsPlaces {
+}
+
+// @public
+export interface GoogleMapsRouting {
 }
 
 // @public
@@ -2114,6 +2176,11 @@ export enum HarmSeverity {
 }
 
 // @public
+export interface HistoryConfig {
+    initialHistoryInClientContent?: boolean;
+}
+
+// @public
 export enum HttpElementLocation {
     HTTP_IN_BODY = "HTTP_IN_BODY",
     HTTP_IN_COOKIE = "HTTP_IN_COOKIE",
@@ -2147,6 +2214,11 @@ export class HttpResponse {
 // @public
 export interface HttpRetryOptions {
     attempts?: number;
+    expBase?: number;
+    httpStatusCodes?: number[];
+    initialDelay?: number;
+    jitter?: number;
+    maxDelay?: number;
 }
 
 // @public
@@ -2193,7 +2265,24 @@ export enum ImageResizeMode {
 }
 
 // @public
+export class ImageResponseFormat {
+    aspectRatio?: AspectRatio;
+    delivery?: Delivery;
+    imageSize?: ImageSize;
+    mimeType?: string;
+}
+
+// @public
 export interface ImageSearch {
+}
+
+// @public
+export enum ImageSize {
+    IMAGE_SIZE_FIVE_TWELVE = "IMAGE_SIZE_FIVE_TWELVE",
+    IMAGE_SIZE_FOUR_K = "IMAGE_SIZE_FOUR_K",
+    IMAGE_SIZE_ONE_K = "IMAGE_SIZE_ONE_K",
+    IMAGE_SIZE_TWO_K = "IMAGE_SIZE_TWO_K",
+    IMAGE_SIZE_UNSPECIFIED = "IMAGE_SIZE_UNSPECIFIED"
 }
 
 // @public
@@ -2261,6 +2350,10 @@ export namespace Interactions {
     //
     // (undocumented)
     export type Annotation = Annotation$;
+    // Warning: (ae-forgotten-export) The symbol "AntigravityAgentConfig$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type AntigravityAgentConfig = AntigravityAgentConfig$;
     // Warning: (ae-forgotten-export) The symbol "AudioContent$" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -2289,6 +2382,42 @@ export namespace Interactions {
     //
     // (undocumented)
     export type CodeExecutionResultStep = CodeExecutionResultStep$;
+    // Warning: (ae-forgotten-export) The symbol "CodeMenderAgentConfig$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export interface CodeMenderAgentConfig extends CodeMenderAgentConfig$ {
+    }
+    // (undocumented)
+    export namespace CodeMenderAgentConfig {
+        // Warning: (ae-forgotten-export) The symbol "FindRequest$" needs to be exported by the entry point index.d.ts
+        //
+        // (undocumented)
+        export interface FindRequest extends FindRequest$ {
+        }
+        // (undocumented)
+        export namespace FindRequest {
+            // Warning: (ae-forgotten-export) The symbol "SourceFile$" needs to be exported by the entry point index.d.ts
+            //
+            // (undocumented)
+            export type SourceFile = SourceFile$;
+        }
+        // Warning: (ae-forgotten-export) The symbol "FixRequest$" needs to be exported by the entry point index.d.ts
+        //
+        // (undocumented)
+        export interface FixRequest extends FixRequest$ {
+        }
+        // (undocumented)
+        export namespace FixRequest {
+            // Warning: (ae-forgotten-export) The symbol "SourceFile$2" needs to be exported by the entry point index.d.ts
+            //
+            // (undocumented)
+            export type SourceFile = SourceFile$2;
+        }
+        // Warning: (ae-forgotten-export) The symbol "SessionConfig$" needs to be exported by the entry point index.d.ts
+        //
+        // (undocumented)
+        export type SessionConfig = SessionConfig$;
+    }
     // Warning: (ae-forgotten-export) The symbol "Content$" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -2331,15 +2460,7 @@ export namespace Interactions {
         // Warning: (ae-forgotten-export) The symbol "Allowlist$" needs to be exported by the entry point index.d.ts
         //
         // (undocumented)
-        export interface Allowlist extends Allowlist$ {
-        }
-        // (undocumented)
-        export namespace Allowlist {
-            // Warning: (ae-forgotten-export) The symbol "Allowlist$2" needs to be exported by the entry point index.d.ts
-            //
-            // (undocumented)
-            export type Allowlist = Allowlist$2;
-        }
+        export type Allowlist = Allowlist$;
         // Warning: (ae-forgotten-export) The symbol "Source$" needs to be exported by the entry point index.d.ts
         //
         // (undocumented)
@@ -2485,6 +2606,10 @@ export namespace Interactions {
         // (undocumented)
         export type Result = Result$2;
     }
+    // Warning: (ae-forgotten-export) The symbol "HarmCategory$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type HarmCategory = HarmCategory$;
     // Warning: (ae-forgotten-export) The symbol "ImageConfig$" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -2616,6 +2741,30 @@ export namespace Interactions {
         // (undocumented)
         export type ReviewSnippet = ReviewSnippet$3;
     }
+    // Warning: (ae-forgotten-export) The symbol "RetrievalCallArguments$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type RetrievalCallArguments = RetrievalCallArguments$;
+    // Warning: (ae-forgotten-export) The symbol "RetrievalCallDelta$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export interface RetrievalCallDelta extends RetrievalCallDelta$ {
+    }
+    // (undocumented)
+    export namespace RetrievalCallDelta {
+        // Warning: (ae-forgotten-export) The symbol "Arguments$4" needs to be exported by the entry point index.d.ts
+        //
+        // (undocumented)
+        export type Arguments = Arguments$4;
+    }
+    // Warning: (ae-forgotten-export) The symbol "RetrievalResultDelta$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type RetrievalResultDelta = RetrievalResultDelta$;
+    // Warning: (ae-forgotten-export) The symbol "SafetySetting$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type SafetySetting = SafetySetting$;
     // Warning: (ae-forgotten-export) The symbol "SpeechConfig$" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -2819,6 +2968,10 @@ export namespace Interactions {
     //
     // (undocumented)
     export type ToolChoiceType = ToolChoiceType$;
+    // Warning: (ae-forgotten-export) The symbol "TranscriptionConfig$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type TranscriptionConfig = TranscriptionConfig$;
     // Warning: (ae-forgotten-export) The symbol "URLCitation$" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -2834,10 +2987,10 @@ export namespace Interactions {
     }
     // (undocumented)
     export namespace URLContextCallStep {
-        // Warning: (ae-forgotten-export) The symbol "Arguments$4" needs to be exported by the entry point index.d.ts
+        // Warning: (ae-forgotten-export) The symbol "Arguments$5" needs to be exported by the entry point index.d.ts
         //
         // (undocumented)
-        export type Arguments = Arguments$4;
+        export type Arguments = Arguments$5;
     }
     // Warning: (ae-forgotten-export) The symbol "URLContextResult$" needs to be exported by the entry point index.d.ts
     //
@@ -2903,6 +3056,10 @@ export namespace Interactions {
     //
     // (undocumented)
     export type WebhookConfig = WebhookConfig$;
+    // Warning: (ae-forgotten-export) The symbol "WordInfo$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type WordInfo = WordInfo$;
 }
 
 // @public
@@ -3183,6 +3340,7 @@ export interface LiveClientSetup {
     contextWindowCompression?: ContextWindowCompressionConfig;
     explicitVadSignal?: boolean;
     generationConfig?: GenerationConfig;
+    historyConfig?: HistoryConfig;
     inputAudioTranscription?: AudioTranscriptionConfig;
     model?: string;
     outputAudioTranscription?: AudioTranscriptionConfig;
@@ -3419,6 +3577,7 @@ export interface LiveServerSessionResumptionUpdate {
 // @public
 export interface LiveServerSetupComplete {
     sessionId?: string;
+    voiceConsentSignature?: VoiceConsentSignature;
 }
 
 // @public
@@ -3716,6 +3875,7 @@ export interface PairwiseMetricResult {
 
 // @public
 export interface Part {
+    audioTranscription?: Transcription;
     codeExecutionResult?: CodeExecutionResult;
     executableCode?: ExecutableCode;
     fileData?: FileData;
@@ -4029,6 +4189,7 @@ export interface ReinforcementTuningHyperParameters {
     learningRateMultiplier?: number;
     maxOutputTokens?: number;
     samplesPerPrompt?: number;
+    thinkingBudget?: number;
     thinkingLevel?: ReinforcementTuningThinkingLevel;
 }
 
@@ -4046,7 +4207,6 @@ export interface ReinforcementTuningRewardInfo {
 
 // @public
 export interface ReinforcementTuningSpec {
-    // (undocumented)
     compositeRewardConfig?: CompositeReinforcementTuningRewardConfig;
     hyperParameters?: ReinforcementTuningHyperParameters;
     singleRewardConfig?: SingleReinforcementTuningRewardConfig;
@@ -4079,6 +4239,11 @@ export enum ReinforcementTuningThinkingLevel {
     HIGH = "HIGH",
     MINIMAL = "MINIMAL",
     REINFORCEMENT_TUNING_THINKING_LEVEL_UNSPECIFIED = "REINFORCEMENT_TUNING_THINKING_LEVEL_UNSPECIFIED"
+}
+
+// @public
+export interface ReinforcementTuningUserDatasetExamples {
+    userDatasetExamples?: ReinforcementTuningExample[];
 }
 
 // @public
@@ -4123,13 +4288,23 @@ export class ReplayResponse {
 
 // @public
 export interface ReplicatedVoiceConfig {
+    consentAudio?: string;
     mimeType?: string;
+    voiceConsentSignature?: VoiceConsentSignature;
     voiceSampleAudio?: string;
 }
 
 // @public
 export enum ResourceScope {
     COLLECTION = "COLLECTION"
+}
+
+// @public
+export class ResponseFormat {
+    audio?: AudioResponseFormat;
+    image?: ImageResponseFormat;
+    text?: TextResponseFormat;
+    video?: VideoResponseFormat;
 }
 
 // @public
@@ -4351,6 +4526,8 @@ export class Session {
     sendClientContent(params: types.LiveSendClientContentParameters): void;
     sendRealtimeInput(params: types.LiveSendRealtimeInputParameters): void;
     sendToolResponse(params: types.LiveSendToolResponseParameters): void;
+    // (undocumented)
+    setupComplete?: types.LiveServerSetupComplete;
 }
 
 // @public
@@ -4562,6 +4739,12 @@ export interface TestTableItem {
 }
 
 // @public
+export class TextResponseFormat {
+    mimeType?: string;
+    schema?: unknown;
+}
+
+// @public
 export interface ThinkingConfig {
     includeThoughts?: boolean;
     thinkingBudget?: number;
@@ -4595,6 +4778,7 @@ export interface Tool {
     codeExecution?: ToolCodeExecution;
     computerUse?: ComputerUse;
     enterpriseWebSearch?: EnterpriseWebSearch;
+    exaAiSearch?: ToolExaAiSearch;
     fileSearch?: FileSearch;
     functionDeclarations?: FunctionDeclaration[];
     googleMaps?: GoogleMaps;
@@ -4622,6 +4806,12 @@ export interface ToolConfig {
     functionCallingConfig?: FunctionCallingConfig;
     includeServerSideToolInvocations?: boolean;
     retrievalConfig?: RetrievalConfig;
+}
+
+// @public
+export interface ToolExaAiSearch {
+    apiKey?: string;
+    customConfigs?: Record<string, unknown>;
 }
 
 // @public (undocumented)
@@ -4666,13 +4856,79 @@ export enum TrafficType {
 export interface Transcription {
     finished?: boolean;
     languageCode?: string;
+    speakerLabel?: string;
     text?: string;
+    words?: WordInfo[];
 }
 
 // @public
 export interface TranslationConfig {
     echoTargetLanguage?: boolean;
     targetLanguageCode?: string;
+}
+
+// @public (undocumented)
+export namespace Triggers {
+    // Warning: (ae-forgotten-export) The symbol "ListTriggerExecutionsResponse$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type ListTriggerExecutionsResponse = ListTriggerExecutionsResponse$;
+    // Warning: (ae-forgotten-export) The symbol "ListTriggersResponse$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type ListTriggersResponse = ListTriggersResponse$;
+    // Warning: (ae-forgotten-export) The symbol "Trigger$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type Trigger = Trigger$;
+    // Warning: (ae-forgotten-export) The symbol "TriggerCreateParams$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type TriggerCreateParams = TriggerCreateParams$;
+    // Warning: (ae-forgotten-export) The symbol "TriggerDeleteParams$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type TriggerDeleteParams = TriggerDeleteParams$;
+    // Warning: (ae-forgotten-export) The symbol "TriggerDeleteResponse$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type TriggerDeleteResponse = TriggerDeleteResponse$;
+    // Warning: (ae-forgotten-export) The symbol "TriggerExecution$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type TriggerExecution = TriggerExecution$;
+    // Warning: (ae-forgotten-export) The symbol "TriggerGetParams$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type TriggerGetParams = TriggerGetParams$;
+    // Warning: (ae-forgotten-export) The symbol "TriggerListExecutionsParams$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type TriggerListExecutionsParams = TriggerListExecutionsParams$;
+    // Warning: (ae-forgotten-export) The symbol "TriggerListExecutionsResponse$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type TriggerListExecutionsResponse = TriggerListExecutionsResponse$;
+    // Warning: (ae-forgotten-export) The symbol "TriggerListParams$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type TriggerListParams = TriggerListParams$;
+    // Warning: (ae-forgotten-export) The symbol "TriggerListResponse$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type TriggerListResponse = TriggerListResponse$;
+    // Warning: (ae-forgotten-export) The symbol "TriggerRunParams$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type TriggerRunParams = TriggerRunParams$;
+    // Warning: (ae-forgotten-export) The symbol "TriggerUpdate$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type TriggerUpdate = TriggerUpdate$;
+    // Warning: (ae-forgotten-export) The symbol "TriggerUpdateParams$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type TriggerUpdateParams = TriggerUpdateParams$;
 }
 
 // @public
@@ -4708,6 +4964,7 @@ export interface TuningDataset {
 export interface TuningDataStats {
     distillationDataStats?: DistillationDataStats;
     preferenceOptimizationDataStats?: PreferenceOptimizationDataStats;
+    reinforcementTuningDataStats?: DatasetStats;
     supervisedTuningDataStats?: SupervisedTuningDataStats;
 }
 
@@ -4739,7 +4996,6 @@ export interface TuningJob {
     pipelineJob?: string;
     preferenceOptimizationSpec?: PreferenceOptimizationSpec;
     preTunedModel?: PreTunedModel;
-    // (undocumented)
     reinforcementTuningSpec?: ReinforcementTuningSpec;
     sdkHttpResponse?: HttpResponse;
     serviceAccount?: string;
@@ -5180,6 +5436,14 @@ export enum VideoOrientation {
 }
 
 // @public
+export class VideoResponseFormat {
+    aspectRatio?: AspectRatio;
+    delivery?: Delivery;
+    duration?: string;
+    gcsUri?: string;
+}
+
+// @public
 export interface VoiceActivity {
     audioOffset?: string;
     voiceActivityType?: VoiceActivityType;
@@ -5201,6 +5465,11 @@ export enum VoiceActivityType {
 export interface VoiceConfig {
     prebuiltVoiceConfig?: PrebuiltVoiceConfig;
     replicatedVoiceConfig?: ReplicatedVoiceConfig;
+}
+
+// @public
+export interface VoiceConsentSignature {
+    signature?: string;
 }
 
 // @public
@@ -5295,6 +5564,13 @@ export interface WeightedPrompt {
 export interface WhiteSpaceConfig {
     maxOverlapTokens?: number;
     maxTokensPerChunk?: number;
+}
+
+// @public
+export interface WordInfo {
+    endOffset?: string;
+    startOffset?: string;
+    word?: string;
 }
 
 // (No @packageDocumentation comment for this package)

@@ -5,7 +5,7 @@
  */
 import {GoogleGenAI} from '@google/genai';
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
 const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
@@ -34,18 +34,22 @@ async function throwApiErrorForVertexAI() {
 }
 
 async function main() {
+  let errorCaught = false;
+  const handleError = (e: unknown) => {
+    errorCaught = true;
+    const err = e as Error & {status?: number};
+    console.log('Successfully caught expected API error:');
+    console.log('  name: ', err.name);
+    console.log('  message: ', err.message);
+    console.log('  status: ', err.status);
+  };
   if (GOOGLE_GENAI_USE_VERTEXAI) {
-    await throwApiErrorForVertexAI().catch((e) => {
-      console.error('error name: ', e.name);
-      console.error('error message: ', e.message);
-      console.error('error status: ', e.status);
-    });
+    await throwApiErrorForVertexAI().catch(handleError);
   } else {
-    await throwApiErrorForMLDev().catch((e) => {
-      console.error('error name: ', e.name);
-      console.error('error message: ', e.message);
-      console.error('error status: ', e.status);
-    });
+    await throwApiErrorForMLDev().catch(handleError);
+  }
+  if (!errorCaught) {
+    throw new Error('Expected API error was not thrown');
   }
 }
 

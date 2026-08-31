@@ -52,11 +52,14 @@ async function main() {
       vertexai: false,
       apiKey: GOOGLE_API_KEY,
     };
-    model = 'gemini-live-2.5-flash-preview';
+    model = 'gemini-2.5-flash-native-audio-latest';
   }
   const ai = new GoogleGenAI(options);
   const session = await ai.live.connect({
     model: model,
+    config: {
+      responseModalities: [types.Modality.AUDIO],
+    },
     callbacks: {
       onopen: () => {
         console.log('Live Session Opened');

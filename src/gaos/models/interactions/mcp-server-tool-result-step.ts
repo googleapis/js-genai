@@ -15,35 +15,35 @@ import { FunctionResultSubcontent } from "./function-result-subcontent.js";
 export type MCPServerToolResultStepResult = {};
 
 /**
- * The output from the MCP server call. Can be simple text or rich content.
+ * Required. The output from the MCP server call. Can be simple text or rich content.
  */
 export type MCPServerToolResultStepResultUnion =
+  | Array<FunctionResultSubcontent>
   | MCPServerToolResultStepResult
-  | string
-  | Array<FunctionResultSubcontent>;
+  | string;
 
 /**
  * MCPServer tool result step.
  */
 export type MCPServerToolResultStep = {
-  type: "mcp_server_tool_result";
-  /**
-   * Name of the tool which is called for this specific tool call.
-   */
-  name?: string | undefined;
-  /**
-   * The name of the used MCP server.
-   */
-  server_name?: string | undefined;
   /**
    * Required. ID to match the ID from the function call block.
    */
   call_id: string;
   /**
-   * The output from the MCP server call. Can be simple text or rich content.
+   * Name of the tool which is called for this specific tool call.
+   */
+  name?: string | undefined;
+  /**
+   * Required. The output from the MCP server call. Can be simple text or rich content.
    */
   result:
+    | Array<FunctionResultSubcontent>
     | MCPServerToolResultStepResult
-    | string
-    | Array<FunctionResultSubcontent>;
+    | string;
+  /**
+   * The name of the used MCP server.
+   */
+  server_name?: string | undefined;
+  type: "mcp_server_tool_result";
 };

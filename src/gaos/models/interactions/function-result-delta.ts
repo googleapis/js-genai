@@ -15,17 +15,17 @@ import { FunctionResultSubcontent } from "./function-result-subcontent.js";
 export type FunctionResultDeltaResult = {};
 
 export type FunctionResultDeltaResultUnion =
-  | FunctionResultDeltaResult
   | Array<FunctionResultSubcontent>
+  | FunctionResultDeltaResult
   | string;
 
 export type FunctionResultDelta = {
-  type: "function_result";
-  name?: string | undefined;
-  is_error?: boolean | undefined;
   /**
    * Required. ID to match the ID from the function call block.
    */
   call_id: string;
-  result: FunctionResultDeltaResult | Array<FunctionResultSubcontent> | string;
+  is_error?: boolean | undefined;
+  name?: string | undefined;
+  result: Array<FunctionResultSubcontent> | FunctionResultDeltaResult | string;
+  type: "function_result";
 };

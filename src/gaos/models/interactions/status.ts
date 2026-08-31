@@ -27,6 +27,13 @@ export type Status = {
    */
   code?: number | undefined;
   /**
+   * A list of messages that carry the error details.  There is a common set of
+   *
+   * @remarks
+   * message types for APIs to use.
+   */
+  details?: Array<{ [k: string]: any }> | undefined;
+  /**
    * A developer-facing error message, which should be in English. Any
    *
    * @remarks
@@ -34,11 +41,4 @@ export type Status = {
    * google.rpc.Status.details field, or localized by the client.
    */
   message?: string | undefined;
-  /**
-   * A list of messages that carry the error details.  There is a common set of
-   *
-   * @remarks
-   * message types for APIs to use.
-   */
-  details?: Array<{ [k: string]: any }> | undefined;
 };

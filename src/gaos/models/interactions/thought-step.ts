@@ -16,7 +16,6 @@ import { ThoughtSummaryContent } from "./thought-summary-content.js";
  * A thought step.
  */
 export type ThoughtStep = {
-  type: "thought";
   /**
    * A signature hash for backend validation.
    */
@@ -25,4 +24,5 @@ export type ThoughtStep = {
    * A summary of the thought.
    */
   summary?: Array<ThoughtSummaryContent> | undefined;
+  type: "thought";
 };

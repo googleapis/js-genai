@@ -288,6 +288,42 @@ describe('live', () => {
     expect(receivedMessage.setupComplete).toBeDefined();
   });
 
+  it('connect should populate setupComplete with voiceConsentSignature', async () => {
+    const apiClient = new ApiClient({
+      auth: new FakeAuth(),
+      apiKey: 'test-api-key',
+      uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
+    });
+    const websocketFactory = new FakeWebSocketFactory();
+    const live = new Live(apiClient, new FakeAuth(), websocketFactory);
+
+    const websocketFactorySpy = spyOn(websocketFactory, 'create').and.callFake(
+      (url, headers, callbacks) => {
+        const ws = new FakeWebSocket(url, headers, callbacks);
+        ws.setupCompleteResponse = {
+          voiceConsentSignature: {
+            signature: 'test_sig',
+          },
+        };
+        return ws;
+      },
+    );
+
+    const session = await live.connect({
+      model: 'models/gemini-live-2.5-flash-preview',
+      callbacks: {
+        onmessage: () => {},
+      },
+    });
+
+    expect(websocketFactorySpy).toHaveBeenCalled();
+    expect(session.setupComplete).toBeDefined();
+    expect(session.setupComplete?.voiceConsentSignature?.signature).toBe(
+      'test_sig',
+    );
+  });
+
   it('connect Gemini should fail with setup message using transparent', async () => {
     const apiClient = new ApiClient({
       auth: new FakeAuth(),

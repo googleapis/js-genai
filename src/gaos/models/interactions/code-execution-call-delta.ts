@@ -13,7 +13,6 @@
 import { CodeExecutionCallArguments } from "./code-execution-call-arguments.js";
 
 export type CodeExecutionCallDelta = {
-  type: "code_execution_call";
   /**
    * The arguments to pass to the code execution.
    */
@@ -22,4 +21,5 @@ export type CodeExecutionCallDelta = {
    * A signature hash for backend validation.
    */
   signature?: string | undefined;
+  type: "code_execution_call";
 };

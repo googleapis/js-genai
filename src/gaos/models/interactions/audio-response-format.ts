@@ -11,6 +11,11 @@
  */
 
 /**
+ * The delivery mode for the audio output.
+ */
+export type AudioResponseFormatDelivery = "inline" | "uri" | (string & {});
+
+/**
  * The MIME type of the audio output.
  */
 export type AudioResponseFormatMimeType =
@@ -23,27 +28,9 @@ export type AudioResponseFormatMimeType =
   | (string & {});
 
 /**
- * The delivery mode for the audio output.
- */
-export type AudioResponseFormatDelivery = "inline" | "uri" | (string & {});
-
-/**
  * Configuration for audio output format.
  */
 export type AudioResponseFormat = {
-  type: "audio";
-  /**
-   * The MIME type of the audio output.
-   */
-  mime_type?: AudioResponseFormatMimeType | undefined;
-  /**
-   * The delivery mode for the audio output.
-   */
-  delivery?: AudioResponseFormatDelivery | undefined;
-  /**
-   * Sample rate in Hz.
-   */
-  sample_rate?: number | undefined;
   /**
    * Bit rate in bits per second (bps). Only applicable for compressed formats
    *
@@ -51,4 +38,17 @@ export type AudioResponseFormat = {
    * (MP3, Opus).
    */
   bit_rate?: number | undefined;
+  /**
+   * The delivery mode for the audio output.
+   */
+  delivery?: AudioResponseFormatDelivery | undefined;
+  /**
+   * The MIME type of the audio output.
+   */
+  mime_type?: AudioResponseFormatMimeType | undefined;
+  /**
+   * Sample rate in Hz.
+   */
+  sample_rate?: number | undefined;
+  type: "audio";
 };

@@ -13,9 +13,9 @@
 import { Content } from "./content.js";
 
 export type ThoughtSummaryDelta = {
-  type: "thought_summary";
   /**
    * The content of the response.
    */
   content?: Content | undefined;
+  type: "thought_summary";
 };

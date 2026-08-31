@@ -40,10 +40,10 @@ import { Result } from "../types/fp.js";
 export function interactionsGet(
   client: GoogleGenAICore,
   id: string,
+  api_version?: string | undefined,
+  include_input?: boolean | undefined,
+  last_event_id?: string | undefined,
   stream?: false,
-  last_event_id?: string | undefined,
-  include_input?: boolean | undefined,
-  api_version?: string | undefined,
   options?: Omit<RequestOptions, "extra_body">,
 ): APIPromise<
   Result<
@@ -61,10 +61,10 @@ export function interactionsGet(
 export function interactionsGet(
   client: GoogleGenAICore,
   id: string,
+  api_version?: string | undefined,
+  include_input?: boolean | undefined,
+  last_event_id?: string | undefined,
   stream?: true,
-  last_event_id?: string | undefined,
-  include_input?: boolean | undefined,
-  api_version?: string | undefined,
   options?: Omit<RequestOptions, "extra_body">,
 ): APIPromise<
   Result<
@@ -82,10 +82,10 @@ export function interactionsGet(
 export function interactionsGet(
   client: GoogleGenAICore,
   id: string,
-  stream?: boolean | undefined,
-  last_event_id?: string | undefined,
-  include_input?: boolean | undefined,
   api_version?: string | undefined,
+  include_input?: boolean | undefined,
+  last_event_id?: string | undefined,
+  stream?: boolean | undefined,
   options?: Omit<RequestOptions, "extra_body">,
 ): APIPromise<
   Result<
@@ -103,10 +103,10 @@ export function interactionsGet(
 export function interactionsGet(
   client: GoogleGenAICore,
   id: string,
-  stream?: boolean | undefined,
-  last_event_id?: string | undefined,
-  include_input?: boolean | undefined,
   api_version?: string | undefined,
+  include_input?: boolean | undefined,
+  last_event_id?: string | undefined,
+  stream?: boolean | undefined,
   options?: Omit<RequestOptions, "extra_body">,
 ): APIPromise<
   Result<
@@ -124,10 +124,10 @@ export function interactionsGet(
   return new APIPromise($do(
     client,
     id,
-    stream,
-    last_event_id,
-    include_input,
     api_version,
+    include_input,
+    last_event_id,
+    stream,
     options,
   ));
 }
@@ -135,10 +135,10 @@ export function interactionsGet(
 async function $do(
   client: GoogleGenAICore,
   id: string,
-  stream?: boolean | undefined,
-  last_event_id?: string | undefined,
-  include_input?: boolean | undefined,
   api_version?: string | undefined,
+  include_input?: boolean | undefined,
+  last_event_id?: string | undefined,
+  stream?: boolean | undefined,
   options?: Omit<RequestOptions, "extra_body">,
 ): Promise<
   [
@@ -158,10 +158,10 @@ async function $do(
 > {
   const input: operations.GetInteractionByIdRequest = {
     id: id,
-    stream: stream,
-    last_event_id: last_event_id,
-    include_input: include_input,
     api_version: api_version,
+    include_input: include_input,
+    last_event_id: last_event_id,
+    stream: stream,
   };
 
   const payload = input;

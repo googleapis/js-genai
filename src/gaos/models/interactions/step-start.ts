@@ -11,15 +11,8 @@
  */
 
 import { Step } from "./step.js";
-import { StreamMetadata } from "./stream-metadata.js";
 
 export type StepStart = {
-  event_type: "step.start";
-  index: number;
-  /**
-   * A step in the interaction.
-   */
-  step: Step;
   /**
    * The event_id token to be used to resume the interaction stream, from
    *
@@ -27,5 +20,10 @@ export type StepStart = {
    * this event.
    */
   event_id?: string | undefined;
-  metadata?: StreamMetadata | undefined;
+  event_type: "step.start";
+  index: number;
+  /**
+   * A step in the interaction.
+   */
+  step: Step;
 };

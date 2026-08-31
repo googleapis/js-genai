@@ -24,9 +24,9 @@ export type ImageDeltaMimeType =
   | (string & {});
 
 export type ImageDelta = {
-  type: "image";
   data?: string | undefined;
-  uri?: string | undefined;
   mime_type?: ImageDeltaMimeType | undefined;
   resolution?: MediaResolution | undefined;
+  type: "image";
+  uri?: string | undefined;
 };

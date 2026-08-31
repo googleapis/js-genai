@@ -16,7 +16,8 @@
     "test/packaging/**/*",
     "src/private/**/*",
     "src/interactions-private/**/*",
-    "src/interactions-deprecated/**/*"
+    "src/interactions-deprecated/**/*",
+    "test/private/**/*"
   ],
   "ts-node": {
     "compilerOptions": {

@@ -14,31 +14,34 @@
  * A file citation annotation.
  */
 export type FileCitation = {
-  type: "file_citation";
-  /**
-   * The URI of the file.
-   */
-  document_uri?: string | undefined;
-  /**
-   * The name of the file.
-   */
-  file_name?: string | undefined;
-  /**
-   * Source attributed for a portion of the text.
-   */
-  source?: string | undefined;
   /**
    * User provided metadata about the retrieved context.
    */
   custom_metadata?: { [k: string]: any } | undefined;
   /**
-   * Page number of the cited document, if applicable.
+   * The URI of the file.
    */
-  page_number?: number | undefined;
+  document_uri?: string | undefined;
+  /**
+   * End of the attributed segment, exclusive.
+   */
+  end_index?: number | undefined;
+  /**
+   * The name of the file.
+   */
+  file_name?: string | undefined;
   /**
    * Media ID in-case of image citations, if applicable.
    */
   media_id?: string | undefined;
+  /**
+   * Page number of the cited document, if applicable.
+   */
+  page_number?: number | undefined;
+  /**
+   * Source attributed for a portion of the text.
+   */
+  source?: string | undefined;
   /**
    * Start of segment of the response that is attributed to this source.
    *
@@ -47,8 +50,5 @@ export type FileCitation = {
    * Index indicates the start of the segment, measured in bytes.
    */
   start_index?: number | undefined;
-  /**
-   * End of the attributed segment, exclusive.
-   */
-  end_index?: number | undefined;
+  type: "file_citation";
 };
