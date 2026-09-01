@@ -14,19 +14,22 @@ import * as triggers from "../triggers/index.js";
 
 export type UpdateTriggerGlobals = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
 };
 
 export type UpdateTriggerRequest = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
   /**
-   * Resource name of the trigger.
+   * Required. The ID of the trigger to update.
    */
   id: string;
+  /**
+   * Required. The trigger with updated fields.
+   */
   body: triggers.TriggerUpdate;
 };

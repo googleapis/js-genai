@@ -32,7 +32,7 @@ export class Environments extends ClientSDK {
   }
 
   /**
-   * Lists environments.
+   * Lists environments (HTTP endpoint).
    */
   listEnvironments(
     params?: ListEnvironmentsParams,
@@ -48,7 +48,7 @@ export class Environments extends ClientSDK {
   }
 
   /**
-   * Creates an environment.
+   * Creates an environment (HTTP endpoint).
    */
   createEnvironment(
     body: environments.CreateEnvironmentRequest,
@@ -64,7 +64,7 @@ export class Environments extends ClientSDK {
   }
 
   /**
-   * Deletes an environment.
+   * Deletes an environment (HTTP endpoint).
    */
   deleteEnvironment(
     id: string,
@@ -80,7 +80,7 @@ export class Environments extends ClientSDK {
   }
 
   /**
-   * Gets an environment.
+   * Gets an environment (HTTP endpoint).
    */
   getEnvironment(
     id: string,

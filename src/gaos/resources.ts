@@ -100,7 +100,9 @@ import type { ProcessingResultDelta as ProcessingResultDelta$Import } from "./mo
 import type { ProcessingResultStep as ProcessingResultStep$Import } from "./models/interactions/processing-result-step.js";
 import type { RetrievalCallArguments as RetrievalCallArguments$Import } from "./models/interactions/retrieval-call-arguments.js";
 import type { RetrievalCallDelta as RetrievalCallDelta$Import } from "./models/interactions/retrieval-call-delta.js";
+import type { RetrievalCallStep as RetrievalCallStep$Import } from "./models/interactions/retrieval-call-step.js";
 import type { RetrievalResultDelta as RetrievalResultDelta$Import } from "./models/interactions/retrieval-result-delta.js";
+import type { RetrievalResultStep as RetrievalResultStep$Import } from "./models/interactions/retrieval-result-step.js";
 import type { Retrieval as Retrieval$Import } from "./models/interactions/retrieval.js";
 import type { ReviewSnippet as ReviewSnippet$Import } from "./models/interactions/review-snippet.js";
 import type { SafetySetting as SafetySetting$Import } from "./models/interactions/safety-setting.js";
@@ -114,6 +116,7 @@ import type { StepDelta as StepDelta$Import } from "./models/interactions/step-d
 import type { StepStart as StepStart$Import } from "./models/interactions/step-start.js";
 import type { StepStop as StepStop$Import } from "./models/interactions/step-stop.js";
 import type { Step as Step$Import } from "./models/interactions/step.js";
+import type { StreamMetadata as StreamMetadata$Import } from "./models/interactions/stream-metadata.js";
 import type { TextAnnotationDelta as TextAnnotationDelta$Import } from "./models/interactions/text-annotation-delta.js";
 import type { TextContent as TextContent$Import } from "./models/interactions/text-content.js";
 import type { TextDelta as TextDelta$Import } from "./models/interactions/text-delta.js";
@@ -237,7 +240,6 @@ type GoogleSearchCallStep$ = GoogleSearchCallStep$Import;
 type GoogleSearchResult$ = GoogleSearchResult$Import;
 type GoogleSearchResultStep$ = GoogleSearchResultStep$Import;
 type HarmCategory$ = HarmCategory$Import;
-type ImageConfig$ = ImageConfig$Import;
 type ImageContent$ = ImageContent$Import;
 type ImageResponseFormat$ = ImageResponseFormat$Import;
 type Interaction$ = Interaction$Import;
@@ -265,7 +267,9 @@ type ProcessingCallStep$ = ProcessingCallStep$Import;
 type ProcessingResultStep$ = ProcessingResultStep$Import;
 type RetrievalCallArguments$ = RetrievalCallArguments$Import;
 type RetrievalCallDelta$ = RetrievalCallDelta$Import;
+type RetrievalCallStep$ = RetrievalCallStep$Import;
 type RetrievalResultDelta$ = RetrievalResultDelta$Import;
+type RetrievalResultStep$ = RetrievalResultStep$Import;
 type SafetySetting$ = SafetySetting$Import;
 type SpeechConfig$ = SpeechConfig$Import;
 type Step$ = Step$Import;
@@ -302,6 +306,8 @@ type SourceFile$2 = FileContent$Import;
 type Allowlist$3 = Allowlist$Import;
 type Source$ = Source$Import;
 type Error$2 = ErrorT$Import;
+type Metadata$ = StreamMetadata$Import;
+type ImageConfig$ = ImageConfig$Import;
 type Arguments$2 = GoogleMapsCallArguments$Import;
 type Place$ = GoogleMapsResultPlaces$Import;
 type ReviewSnippet$ = ReviewSnippet$Import;
@@ -310,8 +316,12 @@ type Place$2 = GoogleMapsResultPlaces$Import;
 type ReviewSnippet$2 = ReviewSnippet$Import;
 type Arguments$3 = GoogleSearchCallArguments$Import;
 type Result$2 = GoogleSearchResult$Import;
+type Metadata$2 = StreamMetadata$Import;
+type Metadata$3 = StreamMetadata$Import;
+type Metadata$4 = StreamMetadata$Import;
 type ReviewSnippet$3 = ReviewSnippet$Import;
 type Arguments$4 = RetrievalCallArguments$Import;
+type Arguments$5 = RetrievalCallArguments$Import;
 type ArgumentsDelta$ = ArgumentsDelta$Import;
 type Audio$ = AudioDelta$Import;
 type CodeExecutionCall$ = CodeExecutionCallDelta$Import;
@@ -327,7 +337,7 @@ type GoogleSearchResult$2 = GoogleSearchResultDelta$Import;
 type Image$ = ImageDelta$Import;
 type MCPServerToolCall$ = MCPServerToolCallDelta$Import;
 type MCPServerToolResult$ = MCPServerToolResultDelta$Import;
-type Metadata$ = StepDeltaMetadata$Import;
+type Metadata$5 = StepDeltaMetadata$Import;
 type ProcessingCall$ = ProcessingCallDelta$Import;
 type ProcessingResult$ = ProcessingResultDelta$Import;
 type Text$ = TextDelta$Import;
@@ -337,6 +347,8 @@ type ThoughtSummary$ = ThoughtSummaryDelta$Import;
 type URLContextCall$ = URLContextCallDelta$Import;
 type URLContextResult$2 = URLContextResultDelta$Import;
 type Video$ = VideoDelta$Import;
+type Metadata$6 = StreamMetadata$Import;
+type Metadata$7 = StreamMetadata$Import;
 type CodeExecution$ = CodeExecution$Import;
 type ComputerUse$ = ComputerUse$Import;
 type FileSearch$ = FileSearch$Import;
@@ -348,7 +360,7 @@ type URLContext$ = URLContext$Import;
 type VertexAISearchConfig$ = VertexAISearchConfig$Import;
 type Smart$ = SmartTranscriptionMode$Import;
 type Verbatim$ = VerbatimTranscriptionMode$Import;
-type Arguments$5 = URLContextCallArguments$Import;
+type Arguments$6 = URLContextCallArguments$Import;
 type Result$3 = URLContextResult$Import;
 type CachedTokensByModality$ = ModalityTokens$Import;
 type GroundingToolCount$ = GroundingToolCount$Import;
@@ -503,7 +515,9 @@ export type Result = Result$;
 export type Retrieval = Retrieval$;
 export type RetrievalCallArguments = RetrievalCallArguments$;
 export type RetrievalCallDelta = RetrievalCallDelta$;
+export type RetrievalCallStep = RetrievalCallStep$;
 export type RetrievalResultDelta = RetrievalResultDelta$;
+export type RetrievalResultStep = RetrievalResultStep$;
 export type ReviewSnippet = ReviewSnippet$;
 export type RotateSigningSecretRequest = RotateSigningSecretRequest$;
 export type SafetySetting = SafetySetting$;
@@ -633,7 +647,7 @@ export declare namespace Interactions {
   export type Function = Function$;
   export type FunctionCallStep = FunctionCallStep$;
   export type FunctionResultStep = FunctionResultStep$;
-  export type GenerationConfig = GenerationConfig$;
+  export interface GenerationConfig extends GenerationConfig$ {}
   export type GoogleMapsCallArguments = GoogleMapsCallArguments$;
   export interface GoogleMapsCallStep extends GoogleMapsCallStep$ {}
   export interface GoogleMapsResult extends GoogleMapsResult$ {}
@@ -643,13 +657,14 @@ export declare namespace Interactions {
   export type GoogleSearchResult = GoogleSearchResult$;
   export interface GoogleSearchResultStep extends GoogleSearchResultStep$ {}
   export type HarmCategory = HarmCategory$;
-  export type ImageConfig = ImageConfig$;
   export type ImageContent = ImageContent$;
   export type ImageResponseFormat = ImageResponseFormat$;
   export type Interaction = Interaction$;
   export type InteractionCancelParams = InteractionCancelParams$;
-  export type InteractionCompletedEvent = InteractionCompletedEvent$;
-  export type InteractionCreatedEvent = InteractionCreatedEvent$;
+  export interface InteractionCompletedEvent
+    extends InteractionCompletedEvent$
+  {}
+  export interface InteractionCreatedEvent extends InteractionCreatedEvent$ {}
   export type InteractionCreateParams = InteractionCreateParams$;
   export type InteractionDeleteParams = InteractionDeleteParams$;
   export type InteractionDeleteResponse = InteractionDeleteResponse$;
@@ -658,7 +673,7 @@ export declare namespace Interactions {
     InteractionGetParamsNonStreaming$;
   export type InteractionGetParamsStreaming = InteractionGetParamsStreaming$;
   export type InteractionSSEEvent = InteractionSSEEvent$;
-  export type InteractionStatusUpdate = InteractionStatusUpdate$;
+  export interface InteractionStatusUpdate extends InteractionStatusUpdate$ {}
   export type MCPServerToolCallStep = MCPServerToolCallStep$;
   export type MCPServerToolResultStep = MCPServerToolResultStep$;
   export type Model = Model$;
@@ -668,13 +683,15 @@ export declare namespace Interactions {
   export type ProcessingResultStep = ProcessingResultStep$;
   export type RetrievalCallArguments = RetrievalCallArguments$;
   export interface RetrievalCallDelta extends RetrievalCallDelta$ {}
+  export interface RetrievalCallStep extends RetrievalCallStep$ {}
   export type RetrievalResultDelta = RetrievalResultDelta$;
+  export type RetrievalResultStep = RetrievalResultStep$;
   export type SafetySetting = SafetySetting$;
   export type SpeechConfig = SpeechConfig$;
   export type Step = Step$;
   export interface StepDelta extends StepDelta$ {}
-  export type StepStart = StepStart$;
-  export type StepStop = StepStop$;
+  export interface StepStart extends StepStart$ {}
+  export interface StepStop extends StepStop$ {}
   export type TextContent = TextContent$;
   export type TextResponseFormat = TextResponseFormat$;
   export type ThinkingLevel = ThinkingLevel$;
@@ -716,6 +733,10 @@ export declare namespace Interactions {
   }
   export namespace ErrorEvent {
     export type Error = Error$2;
+    export type Metadata = Metadata$;
+  }
+  export namespace GenerationConfig {
+    export type ImageConfig = ImageConfig$;
   }
   export namespace GoogleMapsCallStep {
     export type Arguments = Arguments$2;
@@ -741,16 +762,28 @@ export declare namespace Interactions {
   export namespace GoogleSearchResultStep {
     export type Result = Result$2;
   }
+  export namespace InteractionCompletedEvent {
+    export type Metadata = Metadata$2;
+  }
+  export namespace InteractionCreatedEvent {
+    export type Metadata = Metadata$3;
+  }
   export namespace InteractionGetParams {
     export type InteractionGetParamsNonStreaming =
       InteractionGetParamsNonStreaming$2;
     export type InteractionGetParamsStreaming = InteractionGetParamsStreaming$2;
+  }
+  export namespace InteractionStatusUpdate {
+    export type Metadata = Metadata$4;
   }
   export namespace PlaceCitation {
     export type ReviewSnippet = ReviewSnippet$3;
   }
   export namespace RetrievalCallDelta {
     export type Arguments = Arguments$4;
+  }
+  export namespace RetrievalCallStep {
+    export type Arguments = Arguments$5;
   }
   export namespace StepDelta {
     export type ArgumentsDelta = ArgumentsDelta$;
@@ -768,7 +801,7 @@ export declare namespace Interactions {
     export type Image = Image$;
     export type MCPServerToolCall = MCPServerToolCall$;
     export type MCPServerToolResult = MCPServerToolResult$;
-    export type Metadata = Metadata$;
+    export type Metadata = Metadata$5;
     export type ProcessingCall = ProcessingCall$;
     export type ProcessingResult = ProcessingResult$;
     export type Text = Text$;
@@ -778,6 +811,12 @@ export declare namespace Interactions {
     export type URLContextCall = URLContextCall$;
     export type URLContextResult = URLContextResult$2;
     export type Video = Video$;
+  }
+  export namespace StepStart {
+    export type Metadata = Metadata$6;
+  }
+  export namespace StepStop {
+    export type Metadata = Metadata$7;
   }
   export namespace Tool {
     export type CodeExecution = CodeExecution$;
@@ -797,7 +836,7 @@ export declare namespace Interactions {
     export type Verbatim = Verbatim$;
   }
   export namespace URLContextCallStep {
-    export type Arguments = Arguments$5;
+    export type Arguments = Arguments$6;
   }
   export namespace URLContextResultStep {
     export type Result = Result$3;

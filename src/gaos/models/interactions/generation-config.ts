@@ -35,15 +35,25 @@ export type ToolChoice = ToolChoiceConfig | ToolChoiceType;
  */
 export type GenerationConfig = {
   /**
-   * The configuration for image interaction.
+   * Penalizes tokens based on their frequency so far.
    *
    * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
+   */
+  frequency_penalty?: number | undefined;
+  /**
+   * The configuration for image interaction.
    */
   image_config?: ImageConfig | undefined;
   /**
    * The maximum number of tokens to include in the response.
    */
   max_output_tokens?: number | undefined;
+  /**
+   * Penalizes tokens that have already appeared.
+   *
+   * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
+   */
+  presence_penalty?: number | undefined;
   /**
    * Seed used in decoding for reproducibility.
    */
@@ -56,12 +66,20 @@ export type GenerationConfig = {
    * A list of character sequences that will stop output interaction.
    */
   stop_sequences?: Array<string> | undefined;
+  /**
+   * Controls the randomness of the output.
+   */
+  temperature?: number | undefined;
   thinking_level?: ThinkingLevel | undefined;
   thinking_summaries?: ThinkingSummaries | undefined;
   /**
    * The tool choice configuration.
    */
   tool_choice?: ToolChoiceConfig | ToolChoiceType | undefined;
+  /**
+   * The maximum cumulative probability of tokens to consider when sampling.
+   */
+  top_p?: number | undefined;
   /**
    * Configuration for speech recognition (transcription).
    */

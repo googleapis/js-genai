@@ -32,7 +32,7 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Creates an environment.
+ * Creates an environment (HTTP endpoint).
  */
 export function environmentsCreateEnvironment(
   client: GoogleGenAICore,

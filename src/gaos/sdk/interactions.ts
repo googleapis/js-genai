@@ -33,10 +33,7 @@ import { APIPromise, unwrapAsAPIPromise } from "../types/async.js";
 
 export class Interactions extends ClientSDK {
   /**
-   * Creating an interaction
-   *
-   * @remarks
-   * Creates a new interaction.
+   * Generates a set of responses from the model.
    */
   create(
     params: CreateAgentInteractionParamsNonStreaming,
@@ -72,10 +69,7 @@ export class Interactions extends ClientSDK {
   }
 
   /**
-   * Deleting an interaction
-   *
-   * @remarks
-   * Deletes the interaction by id.
+   * Deletes an interaction.
    */
   delete(
     id: string,
@@ -91,10 +85,7 @@ export class Interactions extends ClientSDK {
   }
 
   /**
-   * Retrieving an interaction
-   *
-   * @remarks
-   * Retrieves the full details of a single interaction based on its `Interaction.id`.
+   * Gets an interaction.
    */
   get(
     id: string,
@@ -128,10 +119,7 @@ export class Interactions extends ClientSDK {
   }
 
   /**
-   * Canceling an interaction
-   *
-   * @remarks
-   * Cancels an interaction by id. This only applies to background interactions that are still running.
+   * Cancels an interaction.
    */
   cancel(
     id: string,

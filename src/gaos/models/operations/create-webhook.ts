@@ -14,18 +14,18 @@ import * as webhooks from "../webhooks/index.js";
 
 export type CreateWebhookGlobals = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
 };
 
 export type CreateWebhookRequest = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
   /**
-   * Required. The webhook to create.
+   * Required. The HTTP body of the payload.
    */
   body: webhooks.WebhookInput;
 };

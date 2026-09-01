@@ -11,16 +11,24 @@
  */
 
 /**
- * The result of a server-initiated media processing step.
+ * Vertex Retrieval result step.
+ *
+ * @remarks
+ * Used by Vertex Retrieval tools such as Parallel AI, Exa AI, Vertex AI Search,
+ * etc.
  */
-export type ProcessingResultStep = {
+export type RetrievalResultStep = {
   /**
    * Required. ID to match the ID from the function call block.
    */
-  call_id?: string | undefined;
+  call_id: string;
+  /**
+   * Whether the retrieval resulted in an error.
+   */
+  is_error?: boolean | undefined;
   /**
    * A signature hash for backend validation.
    */
   signature?: string | undefined;
-  type: "processing_result";
+  type: "retrieval_result";
 };

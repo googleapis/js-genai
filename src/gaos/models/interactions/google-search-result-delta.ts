@@ -13,6 +13,10 @@
 import { GoogleSearchResult } from "./google-search-result.js";
 
 export type GoogleSearchResultDelta = {
+  /**
+   * Required. ID to match the ID from the function call block.
+   */
+  call_id?: string | undefined;
   is_error?: boolean | undefined;
   result: Array<GoogleSearchResult>;
   /**

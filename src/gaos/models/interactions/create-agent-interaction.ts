@@ -17,6 +17,7 @@ import { DeepResearchAgentConfig } from "./deep-research-agent-config.js";
 import { DynamicAgentConfig } from "./dynamic-agent-config.js";
 import { Environment } from "./environment.js";
 import { InteractionsInput } from "./interactions-input.js";
+import { LocalEnvironmentConfig } from "./local-environment-config.js";
 import { ResponseFormat } from "./response-format.js";
 import { ResponseModality } from "./response-modality.js";
 import { SafetySetting } from "./safety-setting.js";
@@ -25,7 +26,7 @@ import { Tool } from "./tool.js";
 import { WebhookConfig } from "./webhook-config.js";
 
 /**
- * Configuration parameters for the agent interaction.
+ * Parameters for the agent interaction.
  */
 export type CreateAgentInteractionAgentConfig =
   | AntigravityAgentConfig
@@ -34,19 +35,19 @@ export type CreateAgentInteractionAgentConfig =
   | DynamicAgentConfig;
 
 /**
- * The environment configuration for the interaction. Can be an object specifying remote environment sources or a string referencing an existing environment ID.
+ * The environment configuration for the interaction.
  */
-export type CreateAgentInteractionEnvironment = Environment | string;
+export type CreateAgentInteractionEnvironment =
+  | Environment
+  | LocalEnvironmentConfig
+  | string;
 
-/**
- * Enforces that the generated response is a JSON object that complies with the JSON schema specified in this field.
- */
 export type CreateAgentInteractionResponseFormat =
   | ResponseFormat
   | Array<ResponseFormat>;
 
 /**
- * Parameters for creating agent interactions
+ * Interaction for generating the completion using agents.
  */
 export type CreateAgentInteraction = {
   /**
@@ -54,7 +55,7 @@ export type CreateAgentInteraction = {
    */
   agent: AgentOption;
   /**
-   * Configuration parameters for the agent interaction.
+   * Parameters for the agent interaction.
    */
   agent_config?:
     | AntigravityAgentConfig
@@ -67,24 +68,29 @@ export type CreateAgentInteraction = {
    */
   background?: boolean | undefined;
   /**
-   * The environment configuration for the interaction. Can be an object specifying remote environment sources or a string referencing an existing environment ID.
+   * The environment configuration for the interaction.
    */
-  environment?: Environment | string | undefined;
+  environment?: Environment | LocalEnvironmentConfig | string | undefined;
   /**
    * The input for the interaction.
    */
-  input: InteractionsInput;
+  input?: InteractionsInput | undefined;
   /**
-   * The labels with user-defined metadata for the request.
+   * The labels with user-defined metadata for the request. It is used for
+   *
+   * @remarks
+   * billing and reporting only.
+   *
+   * Label keys and values can be no longer than 63 characters
+   * (Unicode codepoints) and can only contain lowercase letters, numeric
+   * characters, underscores, and dashes. International characters are allowed.
+   * Label values are optional. Label keys must start with a letter.
    */
   labels?: { [k: string]: string } | undefined;
   /**
    * The ID of the previous interaction, if any.
    */
   previous_interaction_id?: string | undefined;
-  /**
-   * Enforces that the generated response is a JSON object that complies with the JSON schema specified in this field.
-   */
   response_format?: ResponseFormat | Array<ResponseFormat> | undefined;
   /**
    * The mime type of the response. This is required if response_format is set.

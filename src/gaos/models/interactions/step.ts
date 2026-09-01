@@ -25,6 +25,8 @@ import { MCPServerToolResultStep } from "./mcp-server-tool-result-step.js";
 import { ModelOutputStep } from "./model-output-step.js";
 import { ProcessingCallStep } from "./processing-call-step.js";
 import { ProcessingResultStep } from "./processing-result-step.js";
+import { RetrievalCallStep } from "./retrieval-call-step.js";
+import { RetrievalResultStep } from "./retrieval-result-step.js";
 import { ThoughtStep } from "./thought-step.js";
 import { URLContextCallStep } from "./url-context-call-step.js";
 import { URLContextResultStep } from "./url-context-result-step.js";
@@ -49,6 +51,8 @@ export type Step =
   | ModelOutputStep
   | ProcessingCallStep
   | ProcessingResultStep
+  | RetrievalCallStep
+  | RetrievalResultStep
   | ThoughtStep
   | URLContextCallStep
   | URLContextResultStep

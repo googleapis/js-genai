@@ -27,7 +27,7 @@ import { APIPromise, unwrapAsAPIPromise } from "../types/async.js";
 
 export class Agents extends ClientSDK {
   /**
-   * Lists all Agents.
+   * Lists agents.
    */
   list(
     params?: ListAgentsParams,
@@ -44,7 +44,7 @@ export class Agents extends ClientSDK {
   }
 
   /**
-   * Creates a new Agent (Typed version for SDK).
+   * Creates or updates an agent (upsert by name).
    */
   create(
     params: CreateAgentParams,
@@ -60,7 +60,7 @@ export class Agents extends ClientSDK {
   }
 
   /**
-   * Deletes an Agent.
+   * Deletes an agent and all its versions.
    */
   delete(
     id: string,
@@ -76,7 +76,7 @@ export class Agents extends ClientSDK {
   }
 
   /**
-   * Gets a specific Agent.
+   * Gets an agent (latest version).
    */
   get(
     id: string,

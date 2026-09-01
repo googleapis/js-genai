@@ -32,7 +32,7 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Creates a new Agent (Typed version for SDK).
+ * Creates or updates an agent (upsert by name).
  */
 export function agentsCreate(
   client: GoogleGenAICore,

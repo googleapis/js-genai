@@ -14,18 +14,18 @@ import * as environments from "../environments/index.js";
 
 export type CreateEnvironmentGlobals = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
 };
 
 export type CreateEnvironmentRequest = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
   /**
-   * Required. The environment to create.
+   * Required. The environment to create (HTTP request body).
    */
   body: environments.CreateEnvironmentRequest;
 };

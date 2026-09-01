@@ -18,6 +18,10 @@ export type GoogleMapsCallDelta = {
    */
   arguments?: GoogleMapsCallArguments | undefined;
   /**
+   * Required. A unique ID for this specific tool call.
+   */
+  id?: string | undefined;
+  /**
    * A signature hash for backend validation.
    */
   signature?: string | undefined;

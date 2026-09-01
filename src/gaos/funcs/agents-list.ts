@@ -32,7 +32,7 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Lists all Agents.
+ * Lists agents.
  */
 export function agentsList(
   client: GoogleGenAICore,
