@@ -8,6 +8,8 @@
 # Fail fast
 set -e
 
+mkdir -p temp/api-report
+
 pids=()
 
 # Run all api-extractor commands in parallel
