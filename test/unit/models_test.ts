@@ -1463,17 +1463,19 @@ describe('countTokens', () => {
     let requestBody: Record<string, unknown> | undefined;
     let requestUrl: string | undefined;
 
-    spyOn(global, 'fetch').and.callFake(async (url: RequestInfo | URL, init?: RequestInit) => {
-      requestUrl = String(url);
-      requestBody = JSON.parse(init?.body as string);
-      return new Response(
-        JSON.stringify({
-          totalTokens: 3,
-          totalBillableCharacters: 11,
-        }),
-        fetchOkOptions,
-      );
-    });
+    spyOn(global, 'fetch').and.callFake(
+      async (url: RequestInfo | URL, init?: RequestInit) => {
+        requestUrl = String(url);
+        requestBody = JSON.parse(init?.body as string);
+        return new Response(
+          JSON.stringify({
+            totalTokens: 3,
+            totalBillableCharacters: 11,
+          }),
+          fetchOkOptions,
+        );
+      },
+    );
 
     const response = await client.models.countTokens({
       model: 'gemini-embedding-001',
@@ -1500,16 +1502,18 @@ describe('countTokens', () => {
 
     let requestBody: Record<string, unknown> | undefined;
 
-    spyOn(global, 'fetch').and.callFake(async (_url: RequestInfo | URL, init?: RequestInit) => {
-      requestBody = JSON.parse(init?.body as string);
-      return new Response(
-        JSON.stringify({
-          totalTokens: 6,
-          totalBillableCharacters: 22,
-        }),
-        fetchOkOptions,
-      );
-    });
+    spyOn(global, 'fetch').and.callFake(
+      async (_url: RequestInfo | URL, init?: RequestInit) => {
+        requestBody = JSON.parse(init?.body as string);
+        return new Response(
+          JSON.stringify({
+            totalTokens: 6,
+            totalBillableCharacters: 22,
+          }),
+          fetchOkOptions,
+        );
+      },
+    );
 
     const response = await client.models.countTokens({
       model: 'text-embedding-004',
@@ -1533,15 +1537,17 @@ describe('countTokens', () => {
 
     let requestBody: Record<string, unknown> | undefined;
 
-    spyOn(global, 'fetch').and.callFake(async (_url: RequestInfo | URL, init?: RequestInit) => {
-      requestBody = JSON.parse(init?.body as string);
-      return new Response(
-        JSON.stringify({
-          totalTokens: 4,
-        }),
-        fetchOkOptions,
-      );
-    });
+    spyOn(global, 'fetch').and.callFake(
+      async (_url: RequestInfo | URL, init?: RequestInit) => {
+        requestBody = JSON.parse(init?.body as string);
+        return new Response(
+          JSON.stringify({
+            totalTokens: 4,
+          }),
+          fetchOkOptions,
+        );
+      },
+    );
 
     const response = await client.models.countTokens({
       model: 'text-embedding-004',
@@ -1564,15 +1570,17 @@ describe('countTokens', () => {
 
     let requestBody: Record<string, unknown> | undefined;
 
-    spyOn(global, 'fetch').and.callFake(async (_url: RequestInfo | URL, init?: RequestInit) => {
-      requestBody = JSON.parse(init?.body as string);
-      return new Response(
-        JSON.stringify({
-          totalTokens: 10,
-        }),
-        fetchOkOptions,
-      );
-    });
+    spyOn(global, 'fetch').and.callFake(
+      async (_url: RequestInfo | URL, init?: RequestInit) => {
+        requestBody = JSON.parse(init?.body as string);
+        return new Response(
+          JSON.stringify({
+            totalTokens: 10,
+          }),
+          fetchOkOptions,
+        );
+      },
+    );
 
     const response = await client.models.countTokens({
       model: 'gemini-2.5-flash',
@@ -1599,16 +1607,18 @@ describe('countTokens', () => {
     let requestBody: Record<string, unknown> | undefined;
     let requestUrl: string | undefined;
 
-    spyOn(global, 'fetch').and.callFake(async (url: RequestInfo | URL, init?: RequestInit) => {
-      requestUrl = String(url);
-      requestBody = JSON.parse(init?.body as string);
-      return new Response(
-        JSON.stringify({
-          totalTokens: 2,
-        }),
-        fetchOkOptions,
-      );
-    });
+    spyOn(global, 'fetch').and.callFake(
+      async (url: RequestInfo | URL, init?: RequestInit) => {
+        requestUrl = String(url);
+        requestBody = JSON.parse(init?.body as string);
+        return new Response(
+          JSON.stringify({
+            totalTokens: 2,
+          }),
+          fetchOkOptions,
+        );
+      },
+    );
 
     const response = await client.models.countTokens({
       model: 'gemini-embedding-001',
