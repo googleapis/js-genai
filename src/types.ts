@@ -4861,7 +4861,9 @@ export declare interface CountTokensParameters {
     <https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models>`_. */
   model: string;
   /** Input content. */
-  contents: ContentListUnion;
+  contents?: ContentListUnion;
+  /** Input instances for prediction / embedding models on Vertex AI. */
+  instances?: Array<Record<string, unknown>> | Array<unknown>;
   /** Configuration for counting tokens. */
   config?: CountTokensConfig;
 }
@@ -4874,6 +4876,8 @@ export class CountTokensResponse {
   totalTokens?: number;
   /** Number of tokens in the cached part of the prompt (the cached content). */
   cachedContentTokenCount?: number;
+  /** Total number of billable characters. */
+  totalBillableCharacters?: number;
 }
 
 /** Optional parameters for computing tokens. */
