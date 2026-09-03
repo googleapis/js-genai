@@ -33,6 +33,7 @@ export type Model =
   | "gemini-3.5-flash"
   | "gemini-3.6-flash"
   | "gemini-3.7-flash"
+  | "gemini-3.8-flash"
   | "lyria-3-clip-preview"
   | "lyria-3-pro-preview"
   | "gemini-robotics-er-1.6-preview"

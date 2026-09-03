@@ -2,6 +2,13 @@
 
 
 
+## [2.21.0](https://github.com/googleapis/js-genai/compare/v2.20.0...v2.21.0) (2026-09-02)
+
+
+### Features
+
+* Add Gemini 3.8 Flash model to SDKs and update Flash model descriptions ([4a969fe](https://github.com/googleapis/js-genai/commit/4a969feeb938d05faa8389a476a268c1649a7695))
+
 ## [2.20.0](https://github.com/googleapis/js-genai/compare/v2.19.0...v2.20.0) (2026-08-31)
 
 
