@@ -27,6 +27,9 @@ import {dirname, join, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import ts from 'typescript';
 
+// ---------------------------------------------------------------------------
+// Paths and helpers: sandbox layout plus small utilities used throughout.
+// ---------------------------------------------------------------------------
 const repositoryRoot = resolve(
   dirname(fileURLToPath(import.meta.url)),
   '../..',
@@ -58,6 +61,8 @@ async function linkDependency(name) {
   await symlink(source, destination, 'junction');
 }
 
+// Node10 resolver must select the exact declaration files each entry point
+// advertises; guards against legacy-resolver regressions.
 function assertLegacyResolutions(containingFile) {
   const compilerOptions = {
     module: ts.ModuleKind.CommonJS,
@@ -85,6 +90,8 @@ function assertLegacyResolutions(containingFile) {
   }
 }
 
+// Tarball contract: every published entry must match the allowlist, and the
+// required entries (dist markers + all SentencePiece assets) must be present.
 const allowedTarballEntries = [
   /^package\.json$/,
   /^README\.md$/,
@@ -119,6 +126,9 @@ function assertTarballContents(packResult) {
 }
 
 try {
+  // -------------------------------------------------------------------------
+  // Step 1: Pack the tarball and validate its file manifest.
+  // -------------------------------------------------------------------------
   const packOutput = execFileSync(
     'npm',
     ['pack', '--json', '--ignore-scripts', '--pack-destination', temporaryRoot],
@@ -133,6 +143,10 @@ try {
 
   assertTarballContents(packResult);
 
+  // -------------------------------------------------------------------------
+  // Step 2: Extract the tarball into a sandboxed node_modules and link the
+  // real runtime dependencies (no network install).
+  // -------------------------------------------------------------------------
   await mkdir(packageRoot, {recursive: true});
   run('tar', ['-xzf', tarballPath, '-C', packageRoot, '--strip-components=1']);
 
@@ -144,6 +158,9 @@ try {
   }
   await linkDependency('@types/node');
 
+  // -------------------------------------------------------------------------
+  // Step 3: Run static package linters (publint + attw) on the packed output.
+  // -------------------------------------------------------------------------
   const binDirectory = resolve(repositoryRoot, 'node_modules/.bin');
   const npmEnvironment = {...process.env, NPM_CONFIG_CACHE: npmCache};
   run(join(binDirectory, 'publint'), [], {
@@ -154,6 +171,10 @@ try {
     env: npmEnvironment,
   });
 
+  // -------------------------------------------------------------------------
+  // Step 4: Write runtime fixtures — ESM/CJS/browser export identity, closed
+  // exports boundary, and SentencePiece registration + decode.
+  // -------------------------------------------------------------------------
   await write(
     join(temporaryRoot, 'package.json'),
     `${JSON.stringify({private: true, type: 'module'}, null, 2)}\n`,
@@ -261,6 +282,10 @@ assert.ok(processor);
 `,
   );
 
+  // -------------------------------------------------------------------------
+  // Step 5: Write type-check fixtures — modern NodeNext, no-peer (no MCP), and
+  // legacy Node10 consumers.
+  // -------------------------------------------------------------------------
   const typeImports = `import {GoogleGenAI, mcpToTool} from '@google/genai';
 import * as node from '@google/genai/node';
 import * as web from '@google/genai/web';
@@ -351,6 +376,9 @@ void web;
     )}\n`,
   );
 
+  // -------------------------------------------------------------------------
+  // Step 6: Execute the runtime fixtures, then type-check each consumer.
+  // -------------------------------------------------------------------------
   run(process.execPath, ['runtime-esm.mjs']);
   run(process.execPath, ['runtime-cjs.cjs']);
   run(process.execPath, ['--conditions=browser', 'runtime-browser.mjs']);
@@ -364,6 +392,9 @@ void web;
   run(tsc, ['-p', 'tsconfig.legacy.json']);
   assertLegacyResolutions(join(temporaryRoot, 'legacy.ts'));
 
+  // -------------------------------------------------------------------------
+  // Step 7: Report tarball stats and the checks that passed.
+  // -------------------------------------------------------------------------
   console.log(
     JSON.stringify(
       {
@@ -390,5 +421,6 @@ void web;
     ),
   );
 } finally {
+  // Always remove the sandbox, even on failure.
   await rm(temporaryRoot, {recursive: true, force: true});
 }
