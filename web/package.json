@@ -1,4 +1,6 @@
 {
   "name": "@google/genai/web",
-  "module": "../dist/web/index.mjs"
+  "main": "../dist/commonjs/web/index.js",
+  "module": "../dist/esm/web/index.js",
+  "types": "../dist/commonjs/web/index.d.ts"
 }

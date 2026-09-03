@@ -1,12 +1,12 @@
 /**
  * API Extractor configuration for the vertex_internal subpackage.
  * This configuration extends the one in api-extractor.json and changes
- * input and output paths for the vertex_internal subpath export.
+ * report input and output paths for the vertex_internal subpath export.
  */
 {
   "extends": "./api-extractor.json",
 
-  "mainEntryPointFilePath": "<projectFolder>/dist/src/vertex_internal/index.d.ts",
+  "mainEntryPointFilePath": "<projectFolder>/dist/esm/vertex_internal/index.d.ts",
 
   "messages": {
     "extractorMessageReporting": {
@@ -21,13 +21,5 @@
 
   "apiReport": {
     "reportFileName": "<unscopedPackageName>-vertex-internal"
-  },
-
-  "docModel": {
-    "apiJsonFilePath": "<projectFolder>/temp/vertex_internal/<unscopedPackageName>.api.json"
-  },
-
-  "dtsRollup": {
-    "untrimmedFilePath": "<projectFolder>/dist/vertex_internal/index.d.ts"
   }
 }

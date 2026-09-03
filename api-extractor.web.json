@@ -1,26 +1,14 @@
 /**
  * API Extractor configuration for the web subpackage.
  * This configuration extends the one in api-extractor.json and changes
- * input and output paths.
+ * report input and output paths.
  */
 {
   "extends": "./api-extractor.json",
 
-  "mainEntryPointFilePath": "<projectFolder>/dist/src/web/index.d.ts",
+  "mainEntryPointFilePath": "<projectFolder>/dist/esm/web/index.d.ts",
 
   "apiReport": {
     "reportFileName": "<unscopedPackageName>-web"
-  },
-
-  "docModel": {
-    "apiJsonFilePath": "<projectFolder>/temp/web/<unscopedPackageName>.api.json"
-  },
-
-  "dtsRollup": {
-    "untrimmedFilePath": "<projectFolder>/dist/web/web.d.ts"
-  },
-
-  "tsdocMetadata": {
-    "tsdocMetadataFilePath": "<projectFolder>/dist/web/tsdoc-metadata.json"
   }
 }

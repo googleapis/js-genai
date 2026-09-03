@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "declaration": true,
+    "sourceMap": true,
+    "inlineSources": false
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": [
+    "src/private/**/*",
+    "src/interactions-private/**/*",
+    "src/interactions-deprecated/**/*"
+  ]
+}

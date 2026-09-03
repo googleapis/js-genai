@@ -1,26 +1,14 @@
 /**
  * API Extractor configuration for the node subpackage.
  * This configuration extends the one in api-extractor.json and changes
- * input and output paths.
+ * report input and output paths.
  */
 {
   "extends": "./api-extractor.json",
 
-  "mainEntryPointFilePath": "<projectFolder>/dist/src/node/index.d.ts",
+  "mainEntryPointFilePath": "<projectFolder>/dist/esm/node/index.d.ts",
 
   "apiReport": {
     "reportFileName": "<unscopedPackageName>-node"
-  },
-
-  "docModel": {
-    "apiJsonFilePath": "<projectFolder>/temp/node/<unscopedPackageName>.api.json"
-  },
-
-  "dtsRollup": {
-    "untrimmedFilePath": "<projectFolder>/dist/node/node.d.ts"
-  },
-
-  "tsdocMetadata": {
-    "tsdocMetadataFilePath": "<projectFolder>/dist/node/tsdoc-metadata.json"
   }
 }

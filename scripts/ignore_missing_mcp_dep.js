@@ -4,12 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
+import {readdir, readFile, writeFile} from 'node:fs/promises';
+import {resolve} from 'node:path';
 
 /**
  * This script adds '// @ts-ignore' before the `@modelcontextprotocol/sdk` type imports
- * in the rolled up .d.ts files.
+ * in the emitted .d.ts files.
  *
  * As the `@modelcontextprotocol/sdk` is an optional peer dependency, it may not be
  * available when the project is built or executed.
@@ -31,64 +31,75 @@ import * as path from 'path';
  * runtime error.
  */
 
-/**
- * The list of .d.ts file paths to process.
- */
-const dtsFilePaths = [
-  'dist/node/node.d.ts',
-  'dist/web/web.d.ts',
-  'dist/genai.d.ts',
-  'dist-private/index.d.ts',
-];
+const declarationRoots = ['dist/esm', 'dist/commonjs'];
+// Produced by tooling outside this repository (Google-internal builds);
+// annotated when present, skipped otherwise, and excluded from the count
+// invariant below.
+const externalDeclarations = ['dist-private/index.d.ts'];
+// Two imports survive in each format tree: one in _transformers.d.ts and one
+// in mcp/_mcp.d.ts. The source-only Tool import in _mcp.ts is elided because
+// it does not appear in that module's declaration surface.
+const expectedImportCount = 4;
+const optionalPeerImport =
+  /^(import type .* from ['"]@modelcontextprotocol\/sdk(?:\/[^'"]+)?['"];?)$/gm;
+const ignoreComment =
+  '// @ts-ignore -- @modelcontextprotocol/sdk is an optional peer dependency';
 
-const targetImportLine =
-  "import type { Client } from '@modelcontextprotocol/sdk/client/index.js';";
+async function listDeclarations(directory) {
+  const entries = await readdir(directory, {withFileTypes: true});
+  const declarations = [];
 
-/**
- * Modifies a single file adding ts-ignore before the mcp import.
- *
- * @param {string} filePath The path to the file to modify.
- */
-const processFile = (filePath) => {
-  console.log(`Processing file: ${filePath}`);
-
-  try {
-    const rootDir = path.resolve(import.meta.dirname, '..');
-    const absolutePath = path.resolve(rootDir, filePath);
-
-    if (!fs.existsSync(absolutePath)) {
-      console.warn(`File not found: ${absolutePath}. Skipping.`);
-      return;
+  for (const entry of entries) {
+    const path = resolve(directory, entry.name);
+    if (entry.isDirectory()) {
+      declarations.push(...(await listDeclarations(path)));
+    } else if (entry.name.endsWith('.d.ts')) {
+      declarations.push(path);
     }
-
-    const fileContent = fs.readFileSync(absolutePath, 'utf8');
-
-    if (fileContent.includes(targetImportLine)) {
-      const replacementString = `// @ts-ignore\n${targetImportLine}`;
-
-      const newContent = fileContent.replace(
-        targetImportLine,
-        replacementString,
-      );
-
-      fs.writeFileSync(absolutePath, newContent, 'utf8');
-      console.log(`Successfully modified ${filePath}`);
-    } else {
-      console.log(
-        `Target import line not found in ${filePath}. No changes made.`,
-      );
-    }
-  } catch (error) {
-    console.error(`An error occurred while processing ${filePath}:`, error);
   }
-};
 
-/**
- * Main function to run the script.
- */
-const main = () => {
-  console.log('Editing rolled up .d.ts files for optional type dependency...');
-  dtsFilePaths.forEach(processFile);
-};
+  return declarations;
+}
 
-main();
+async function annotate(path) {
+  const declaration = await readFile(path, 'utf8');
+  const imports = declaration.match(optionalPeerImport) ?? [];
+
+  if (imports.length > 0) {
+    const updatedDeclaration = declaration.replace(
+      optionalPeerImport,
+      `${ignoreComment}\n$1`,
+    );
+    await writeFile(path, updatedDeclaration);
+  }
+
+  return imports.length;
+}
+
+let importCount = 0;
+
+for (const root of declarationRoots) {
+  for (const path of await listDeclarations(resolve(root))) {
+    importCount += await annotate(path);
+  }
+}
+
+for (const externalPath of externalDeclarations) {
+  try {
+    await annotate(resolve(externalPath));
+  } catch (error) {
+    if (error.code !== 'ENOENT') {
+      throw error;
+    }
+    console.warn(`File not found: ${externalPath}. Skipping.`);
+  }
+}
+
+if (importCount !== expectedImportCount) {
+  throw new Error(
+    `Expected ${expectedImportCount} optional MCP type imports, found ${importCount}. ` +
+      'Review the emitted declarations and update this invariant deliberately.',
+  );
+}
+
+console.log(`Annotated ${importCount} optional MCP type imports.`);

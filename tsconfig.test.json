@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist/test-build",
+    "rootDir": "."
+  },
+  "include": ["src/**/*.ts", "test/**/*.ts"],
+  "exclude": [
+    "test/packaging/**/*",
+    "src/private/**/*",
+    "src/interactions-private/**/*",
+    "src/interactions-deprecated/**/*",
+    "test/private/**/*"
+  ]
+}
