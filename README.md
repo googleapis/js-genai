@@ -116,7 +116,6 @@ const ai = new GoogleGenAI({apiKey: 'GEMINI_API_KEY'});
 
 In the browser the initialization code is identical:
 
-
 ```typescript
 import { GoogleGenAI } from '@google/genai';
 const ai = new GoogleGenAI({apiKey: 'GEMINI_API_KEY'});
@@ -242,14 +241,15 @@ main();
 
 ### Function Calling
 
-To let Gemini to interact with external systems, you can provide
-`functionDeclaration` objects as `tools`. To use these tools it's a 4 step
+To let Gemini interact with external systems, you can provide
+`functionDeclaration` objects as `tools`. Using these `tools` requires a
+four-step process:
 
-1. **Declare the function name, description, and parametersJsonSchema**
-2. **Call `generateContent` with function calling enabled**
-3. **Use the returned `FunctionCall` parameters to call your actual function**
-3. **Send the result back to the model (with history, easier in `ai.chat`)
-   as a `FunctionResponse`**
+1. Declare the function name, description, and `parametersJsonSchema`
+2. Call `generateContent` with function calling enabled
+3. Use the returned `FunctionCall` parameters to call your actual function
+4. Send the result back to the model (with history, easier in `ai.chat`) as a
+   `FunctionResponse`
 
 ```typescript
 import {GoogleGenAI, FunctionCallingConfigMode, FunctionDeclaration, Type} from '@google/genai';
@@ -279,8 +279,9 @@ async function main() {
     config: {
       toolConfig: {
         functionCallingConfig: {
-          // Force it to call any function
+          // Override default AUTO mode to force function calling
           mode: FunctionCallingConfigMode.ANY,
+          // Restrict the function call to the specified list
           allowedFunctionNames: ['controlLight'],
         }
       },
@@ -300,7 +301,7 @@ Built-in [MCP](https://modelcontextprotocol.io/introduction) support is an
 experimental feature. You can pass a local MCP server as a tool directly.
 
 ```javascript
-import { GoogleGenAI, FunctionCallingConfigMode , mcpToTool} from '@google/genai';
+import { GoogleGenAI, mcpToTool} from '@google/genai';
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 
@@ -310,6 +311,7 @@ const serverParams = new StdioClientTransport({
   args: ["-y", "@philschmid/weather-mcp"] // MCP Server
 });
 
+// Configure the client
 const client = new Client(
   {
     name: "example-client",
@@ -317,16 +319,16 @@ const client = new Client(
   }
 );
 
-// Configure the client
-const ai = new GoogleGenAI({});
-
 // Initialize the connection between client and server
 await client.connect(serverParams);
+
+// Instantiate the GoogleGenAI SDK
+const ai = new GoogleGenAI({});
 
 // Send request to the model with MCP tools
 const response = await ai.models.generateContent({
   model: "gemini-2.5-flash",
-  contents: `What is the weather in London in ${new Date().toLocaleDateString()}?`,
+  contents: `What is the weather in London on ${new Date().toLocaleDateString()}?`,
   config: {
     tools: [mcpToTool(client)],  // uses the session, will automatically call the tool using automatic function calling
   },
@@ -557,6 +559,7 @@ for (const output of interaction.outputs!) {
 ```
 
 ### Built-in Tools
+
 You can also use Google's built-in tools, such as **Google Search** or **Code
 Execution**.
 
@@ -612,6 +615,7 @@ for (const output of interaction.outputs!) {
 ```
 
 ## How is this different from the other Google AI SDKs
+
 This SDK (`@google/genai`) is Google Deepmind’s "vanilla" SDK for its generative
 AI offerings, and is where Google Deepmind adds new AI features.
 
