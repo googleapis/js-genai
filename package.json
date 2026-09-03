@@ -3,6 +3,9 @@
   "version": "2.20.0",
   "description": "",
   "type": "module",
+  "sideEffects": [
+    "**/sentencepiece_model.pb.js"
+  ],
   "main": "./dist/commonjs/node/index.js",
   "module": "./dist/esm/web/index.js",
   "browser": "./dist/esm/web/index.js",
