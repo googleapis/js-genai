@@ -5,16 +5,15 @@
  */
 import {GoogleGenAI} from '@google/genai';
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
 const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
 
 async function createInteractionsFromMLDev() {
   const ai = new GoogleGenAI({
     apiKey: GEMINI_API_KEY,
-    apiVersion: 'v1alpha',
   });
   const response = await ai.interactions.create({
-    model: 'gemini-3-pro-preview',
+    model: 'gemini-3-flash-preview',
     input: 'What is the weather in New York?',
     tools: [
       {
@@ -43,7 +42,6 @@ async function createInteractionsFromMLDev() {
       },
       required: ['location', 'temperature', 'condition', 'recommendation'],
     },
-    response_mime_type: 'application/json',
   });
 
   console.debug(response);
@@ -53,9 +51,7 @@ async function main() {
   if (GOOGLE_GENAI_USE_VERTEXAI) {
     console.log('Interactions API is not yet supported on Vertex');
   } else {
-    await createInteractionsFromMLDev().catch((e) =>
-      console.error('got error', e),
-    );
+    await createInteractionsFromMLDev();
   }
 }
 

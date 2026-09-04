@@ -49,7 +49,7 @@ export class Caches extends BaseModule {
    * @remarks
    * Context caching is only supported for specific models. See [Gemini
    * Developer API reference](https://ai.google.dev/gemini-api/docs/caching?lang=node/context-cac)
-   * and [Vertex AI reference](https://cloud.google.com/vertex-ai/generative-ai/docs/context-cache/context-cache-overview#supported_models)
+   * and [Gemini Enterprise Agent Platform reference](https://cloud.google.com/vertex-ai/generative-ai/docs/context-cache/context-cache-overview#supported_models)
    * for more information.
    *
    * @param params - The parameters for the create request.

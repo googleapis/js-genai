@@ -50,7 +50,7 @@ export class FileSearchStores extends BaseModule {
 
   /**
    * Uploads a file asynchronously to a given File Search Store.
-   * This method is not available in Vertex AI.
+   * This method is not available in Gemini Enterprise Agent Platform (previously known as Vertex AI).
    * Supported upload sources:
    * - Node.js: File path (string) or Blob object.
    * - Browser: Blob object (e.g., File).
@@ -69,7 +69,7 @@ export class FileSearchStores extends BaseModule {
    *         @see {@link types.UploadToFileSearchStoreParameters#config} for the optional
    *         config in the parameters.
    * @return A promise that resolves to a long running operation.
-   * @throws An error if called on a Vertex AI client.
+   * @throws An error if called on a Gemini Enterprise Agent Platform (previously known as Vertex AI) client.
    * @throws An error if the `mimeType` is not provided and can not be inferred,
    * the `mimeType` can be provided in the `params.config` parameter.
    * @throws An error occurs if a suitable upload location cannot be established.
@@ -89,7 +89,7 @@ export class FileSearchStores extends BaseModule {
   ): Promise<types.UploadToFileSearchStoreOperation> {
     if (this.apiClient.isVertexAI()) {
       throw new Error(
-        'Vertex AI does not support uploading files to a file search store.',
+        'Gemini Enterprise Agent Platform (previously known as Vertex AI) does not support uploading files to a file search store.',
       );
     }
 
@@ -98,6 +98,61 @@ export class FileSearchStores extends BaseModule {
       params.file,
       params.config,
     );
+  }
+
+  /**
+   * Downloads media using a Media ID or URI.
+   * This method is only supported in the Gemini Developer client.
+   *
+   * @param uri - The URI or Media ID of the blob.
+   * @param config - Optional configuration for the download.
+   * @returns A promise that resolves to the blob data as a Uint8Array.
+   */
+  async downloadMedia(
+    uri: string,
+    config?: types.DownloadMediaConfig,
+  ): Promise<Uint8Array> {
+    if (this.apiClient.isVertexAI()) {
+      throw new Error(
+        'This method is only supported in the Gemini Developer client.',
+      );
+    }
+
+    const parsedUri = new URL(uri, 'http://dummy.com');
+    let pathname = parsedUri.pathname;
+    if (pathname.startsWith('/')) {
+      pathname = pathname.slice(1);
+    }
+
+    if (!pathname.includes('/media/')) {
+      throw new Error(
+        `Invalid uri format: ${uri}. Expected to contain /media/`,
+      );
+    }
+
+    const queryParams: Record<string, string> = {};
+    parsedUri.searchParams.forEach((value, key) => {
+      queryParams[key] = value;
+    });
+    queryParams['alt'] = 'media';
+
+    const httpOptions: types.HttpOptions = {
+      ...config?.httpOptions,
+    };
+
+    const response = await this.apiClient.request({
+      path: pathname,
+      httpMethod: 'GET',
+      queryParams: queryParams,
+      httpOptions: httpOptions,
+    });
+
+    if (response instanceof types.HttpResponse) {
+      const arrayBuffer = await response.responseInternal.arrayBuffer();
+      return new Uint8Array(arrayBuffer);
+    } else {
+      throw new Error('Unexpected response type from downloadMedia');
+    }
   }
 
   /**
@@ -119,7 +174,10 @@ export class FileSearchStores extends BaseModule {
         'This method is only supported by the Gemini Developer API.',
       );
     } else {
-      const body = converters.createFileSearchStoreParametersToMldev(params);
+      const body = converters.createFileSearchStoreParametersToMldev(
+        this.apiClient,
+        params,
+      );
       path = common.formatMap(
         'fileSearchStores',
         body['_url'] as Record<string, unknown>,

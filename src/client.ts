@@ -16,8 +16,22 @@ import {CrossUploader} from './cross/_cross_uploader.js';
 import {CrossWebSocketFactory} from './cross/_cross_websocket.js';
 import {Files} from './files.js';
 import {FileSearchStores} from './filesearchstores.js';
-import GeminiNextGenAPI from './interactions/index.js';
-import {Interactions as GeminiNextGenInteractions} from './interactions/resources/interactions.js';
+import type {
+  GeminiNextGenAgents as Agents,
+  GeminiNextGenEnvironments as Environments,
+  GeminiNextGenInteractions as Interactions,
+  GeminiNextGenTriggers as Triggers,
+  GeminiNextGenWebhooks as Webhooks,
+} from './gaos/google-genai.js';
+import {
+  buildGoogleGenAIClient,
+  GeminiNextGenAgents,
+  GeminiNextGenEnvironments,
+  GeminiNextGenInteractions,
+  GeminiNextGenTriggers,
+  GeminiNextGenWebhooks,
+} from './gaos/google-genai.js';
+import type {GoogleGenAI as GeminiNextGenAPI} from './gaos/sdk/sdk.js';
 import {Live} from './live.js';
 import {Models} from './models.js';
 import {Operations} from './operations.js';
@@ -38,8 +52,23 @@ export interface GoogleGenAIOptions {
    * Optional. Determines whether to use the Vertex AI or the Gemini API.
    *
    * @remarks
+   * When true, the {@link https://cloud.google.com/vertex-ai/docs/reference/rest | Gemini Enterprise Agent Platform API} will used.
+   * When false, the {@link https://ai.google.dev/api | Gemini API} will be used.
+   * When both enterprise and vertexai are set, and they have different values,
+   * an Error will be thrown.
+   *
+   * If unset, default SDK behavior is to use the Gemini API service.
+   */
+  enterprise?: boolean;
+  /**
+   * Optional. Determines whether to use the Vertex AI (now Gemini Enterprise Agent Platform) or the Gemini API.
+   * The `enterprise` flag is recommended instead.
+   *
+   * @remarks
    * When true, the {@link https://cloud.google.com/vertex-ai/docs/reference/rest | Vertex AI API} will used.
    * When false, the {@link https://ai.google.dev/api | Gemini API} will be used.
+   * When both enterprise and vertexai are set, and they have different values,
+   * an Error will be thrown.
    *
    * If unset, default SDK behavior is to use the Gemini API service.
    */
@@ -139,52 +168,102 @@ export class GoogleGenAI {
   readonly tunings: Tunings;
   readonly fileSearchStores: FileSearchStores;
   private _interactions: GeminiNextGenInteractions | undefined;
+  private _webhooks: GeminiNextGenWebhooks | undefined;
+  private _agents: GeminiNextGenAgents | undefined;
+  private _environments: GeminiNextGenEnvironments | undefined;
+  private _nextGenClient: GeminiNextGenAPI | undefined;
+  private _triggers: Triggers | undefined;
 
-  get interactions(): GeminiNextGenInteractions {
+  private getNextGenClient(): GeminiNextGenAPI {
+    const httpOpts = this.httpOptions;
+    if (this._nextGenClient === undefined) {
+      this._nextGenClient = buildGoogleGenAIClient(this.apiClient, {
+        timeout_ms: httpOpts?.timeout,
+      });
+    }
+
+    if (httpOpts?.extraBody) {
+      console.warn(
+        'GoogleGenAI: Client level httpOptions.extraBody is not supported by the Gemini NextGen client and will be ignored.',
+      );
+    }
+
+    return this._nextGenClient;
+  }
+
+  get interactions(): Interactions {
     if (this._interactions !== undefined) {
       return this._interactions;
     }
 
-    console.warn(
-      'GoogleGenAI.interactions: Interactions usage is experimental and may change in future versions.',
-    );
-
-    if (this.vertexai) {
-      throw new Error(
-        'This version of the GenAI SDK does not support Vertex AI API for interactions.',
-      );
-    }
-
-    const httpOpts = this.httpOptions;
-
-    // Unsupported Options Warnings
-    if (httpOpts?.extraBody) {
-      console.warn(
-        'GoogleGenAI.interactions: Client level httpOptions.extraBody is not supported by the interactions client and will be ignored.',
-      );
-    }
-
-    const nextGenClient = new GeminiNextGenAPI({
-      baseURL: this.apiClient.getBaseUrl(),
-      apiKey: this.apiKey,
-      apiVersion: this.apiClient.getApiVersion(),
-      clientAdapter: this.apiClient,
-      defaultHeaders: this.apiClient.getDefaultHeaders(),
-      timeout: httpOpts?.timeout,
-      maxRetries: httpOpts?.retryOptions?.attempts,
-    });
-    this._interactions = nextGenClient.interactions;
-
+    this._interactions = new GeminiNextGenInteractions(this.apiClient);
     return this._interactions;
   }
 
-  constructor(options: GoogleGenAIOptions) {
+  get webhooks(): Webhooks {
+    if (this._webhooks !== undefined) {
+      return this._webhooks;
+    }
+
+    this._webhooks = new GeminiNextGenWebhooks(this.apiClient);
+    return this._webhooks;
+  }
+
+  get agents(): Agents {
+    if (this._agents !== undefined) {
+      return this._agents;
+    }
+
+    console.warn(
+      'GoogleGenAI.agents: Agents usage is experimental and may change in future versions.',
+    );
+
+    this._agents = new GeminiNextGenAgents(this.apiClient);
+    return this._agents;
+  }
+
+  get triggers(): Triggers {
+    if (this._triggers !== undefined) {
+      return this._triggers;
+    }
+
+    console.warn(
+      'GoogleGenAI.triggers: Triggers usage is experimental and may change in future versions.',
+    );
+
+    this._triggers = new GeminiNextGenTriggers(this.apiClient);
+    return this._triggers;
+  }
+
+  get environments(): Environments {
+    if (this._environments !== undefined) {
+      return this._environments;
+    }
+
+    console.warn(
+      'GoogleGenAI.environments: Environments usage is experimental and may change in future versions.',
+    );
+
+    this._environments = new GeminiNextGenEnvironments(this.apiClient);
+    return this._environments;
+  }
+
+  constructor(options: GoogleGenAIOptions = {} as GoogleGenAIOptions) {
     if (options.apiKey == null) {
       throw new Error(
         `An API Key must be set when running in an unspecified environment.\n + ${crossError().message}`,
       );
     }
-    this.vertexai = options.vertexai ?? false;
+    if (
+      options.enterprise !== undefined &&
+      options.vertexai !== undefined &&
+      options.enterprise !== options.vertexai
+    ) {
+      throw new Error(
+        'enterprise and vertexAI flags have conflicting values, please set enterprise value only.',
+      );
+    }
+    this.vertexai = options.enterprise ?? options.vertexai ?? false;
     this.apiKey = options.apiKey;
     this.apiVersion = options.apiVersion;
     this.httpOptions = options.httpOptions;
