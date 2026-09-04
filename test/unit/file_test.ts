@@ -100,12 +100,13 @@ describe('File', () => {
       },
       url: 'some-url',
     };
-    const mockResponse = new Response(
-      JSON.stringify({
-        data: 'data1',
-      }),
-      uploadOkOptions,
-    );
+    const createUploadActiveResponse = () =>
+      new Response(
+        JSON.stringify({
+          data: 'data1',
+        }),
+        uploadOkOptions,
+      );
     const fileSize = TEST_FILE_SIZE;
     describe('Node_client', () => {
       it('It should upload the file from a string path.', async () => {
@@ -117,9 +118,12 @@ describe('File', () => {
         const mockResponses = [
           Promise.resolve(new Response('', createUrlOkoptions)),
         ];
+        const activeResponses = [];
 
         for (let i = 0; i < numRequests - 1; i++) {
-          mockResponses.push(Promise.resolve(mockResponse));
+          const activeResponse = createUploadActiveResponse();
+          activeResponses.push(activeResponse);
+          mockResponses.push(Promise.resolve(activeResponse));
         }
         mockResponses.push(
           Promise.resolve(
@@ -138,6 +142,9 @@ describe('File', () => {
 
         await client.files.upload({file: filePath});
         expect(fetchSpy).toHaveBeenCalledTimes(numRequests + 1);
+        expect(
+          activeResponses.every((response) => response.bodyUsed),
+        ).toBeTrue();
 
         const allArgs = fetchSpy.calls.allArgs();
 
@@ -180,11 +187,18 @@ describe('File', () => {
         // of the requests to upload the file.
         const mockResponses = [
           Promise.resolve(new Response('', createUrlOkoptions)),
-          Promise.resolve(new Response('', uploadMissingStatusOptions)),
         ];
+        const missingStatusResponse = new Response(
+          '',
+          uploadMissingStatusOptions,
+        );
+        mockResponses.push(Promise.resolve(missingStatusResponse));
+        const activeResponses = [];
 
         for (let i = 0; i < numRequests - 1; i++) {
-          mockResponses.push(Promise.resolve(mockResponse));
+          const activeResponse = createUploadActiveResponse();
+          activeResponses.push(activeResponse);
+          mockResponses.push(Promise.resolve(activeResponse));
         }
         mockResponses.push(
           Promise.resolve(
@@ -205,6 +219,10 @@ describe('File', () => {
         // 1 initial request to get the upload url, 1 response missing x-goog-upload-status header and then the rest
         // of the requests to upload the file.
         expect(fetchSpy).toHaveBeenCalledTimes(numRequests + 1 + 1);
+        expect(missingStatusResponse.bodyUsed).toBeTrue();
+        expect(
+          activeResponses.every((response) => response.bodyUsed),
+        ).toBeTrue();
 
         const allArgs = fetchSpy.calls.allArgs();
 
@@ -241,9 +259,12 @@ describe('File', () => {
         const mockResponses = [
           Promise.resolve(new Response('', createUrlOkoptions)),
         ];
+        const activeResponses = [];
 
         for (let i = 0; i < numRequests - 1; i++) {
-          mockResponses.push(Promise.resolve(mockResponse));
+          const activeResponse = createUploadActiveResponse();
+          activeResponses.push(activeResponse);
+          mockResponses.push(Promise.resolve(activeResponse));
         }
         mockResponses.push(
           Promise.resolve(
@@ -263,6 +284,9 @@ describe('File', () => {
         await client.files.upload({file: testBlob});
 
         expect(fetchSpy).toHaveBeenCalledTimes(numRequests + 1);
+        expect(
+          activeResponses.every((response) => response.bodyUsed),
+        ).toBeTrue();
         const allArgs = fetchSpy.calls.allArgs();
 
         // make sure we get the correct create url. mimeType and fileSize in the
@@ -304,11 +328,18 @@ describe('File', () => {
         // of the requests to upload the file.
         const mockResponses = [
           Promise.resolve(new Response('', createUrlOkoptions)),
-          Promise.resolve(new Response('', uploadMissingStatusOptions)),
         ];
+        const missingStatusResponse = new Response(
+          '',
+          uploadMissingStatusOptions,
+        );
+        mockResponses.push(Promise.resolve(missingStatusResponse));
+        const activeResponses = [];
 
         for (let i = 0; i < numRequests - 1; i++) {
-          mockResponses.push(Promise.resolve(mockResponse));
+          const activeResponse = createUploadActiveResponse();
+          activeResponses.push(activeResponse);
+          mockResponses.push(Promise.resolve(activeResponse));
         }
         mockResponses.push(
           Promise.resolve(
@@ -329,6 +360,10 @@ describe('File', () => {
 
         // 1 initial request to get the upload url, 1 response missing x-goog-upload-status header and then the rest
         expect(fetchSpy).toHaveBeenCalledTimes(numRequests + 1 + 1);
+        expect(missingStatusResponse.bodyUsed).toBeTrue();
+        expect(
+          activeResponses.every((response) => response.bodyUsed),
+        ).toBeTrue();
         const allArgs = fetchSpy.calls.allArgs();
 
         // make sure we get the correct create url. mimeType and fileSize in the
