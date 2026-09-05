@@ -14,6 +14,10 @@ import { GoogleMapsResult } from "./google-maps-result.js";
 
 export type GoogleMapsResultDelta = {
   /**
+   * Required. ID to match the ID from the function call block.
+   */
+  call_id?: string | undefined;
+  /**
    * The results of the Google Maps.
    */
   result?: Array<GoogleMapsResult> | undefined;

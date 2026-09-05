@@ -50,7 +50,8 @@ export class Triggers extends ClientSDK {
   }
 
   /**
-   * Creates a new trigger that will invoke the specified agent on the given cron schedule.
+   * Creates a new trigger that will invoke the specified agent
+   * on the given cron schedule.
    */
   create(
     params: CreateTriggerParams,
@@ -66,7 +67,8 @@ export class Triggers extends ClientSDK {
   }
 
   /**
-   * Deletes a trigger.
+   * Deletes a trigger. Does not delete past interaction histories
+   * or environments created by past executions.
    */
   delete(
     id: string,
@@ -82,7 +84,7 @@ export class Triggers extends ClientSDK {
   }
 
   /**
-   * Gets details of a single trigger.
+   * Gets a trigger, including recent execution history.
    */
   get(
     id: string,
@@ -98,7 +100,7 @@ export class Triggers extends ClientSDK {
   }
 
   /**
-   * Updates a trigger.
+   * Updates a trigger. Supports partial updates via field_mask.
    */
   update(
     id: string,
@@ -134,7 +136,8 @@ export class Triggers extends ClientSDK {
   }
 
   /**
-   * Runs a trigger immediately.
+   * Immediately fires a trigger, bypassing the cron schedule.
+   * Useful for testing and manual runs.
    */
   run(
     trigger_id: string,

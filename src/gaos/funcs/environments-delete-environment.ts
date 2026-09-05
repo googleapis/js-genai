@@ -32,7 +32,7 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Deletes an environment.
+ * Deletes an environment (HTTP endpoint).
  */
 export function environmentsDeleteEnvironment(
   client: GoogleGenAICore,

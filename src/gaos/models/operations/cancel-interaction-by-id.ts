@@ -12,18 +12,21 @@
 
 export type CancelInteractionByIdGlobals = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
 };
 
 export type CancelInteractionByIdRequest = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
   /**
-   * The unique identifier of the interaction to cancel.
+   * Part of `name`. Required. The name of the interaction to cancel.
+   *
+   * @remarks
+   * Format: `interactions/{interaction}`.
    */
   id: string;
 };

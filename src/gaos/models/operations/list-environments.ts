@@ -12,22 +12,25 @@
 
 export type ListEnvironmentsGlobals = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
 };
 
 export type ListEnvironmentsRequest = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
   /**
-   * Optional. Maximum number of environments to return.\nIf unspecified, defaults to 50. Maximum is 1000.
+   * Maximum number of environments to return.
+   *
+   * @remarks
+   * If unspecified, defaults to 50. Maximum is 1000.
    */
   page_size?: number | undefined;
   /**
-   * Optional. Pagination token.
+   * Pagination token.
    */
   page_token?: string | undefined;
 };

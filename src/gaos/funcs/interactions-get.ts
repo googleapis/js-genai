@@ -32,10 +32,7 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Retrieving an interaction
- *
- * @remarks
- * Retrieves the full details of a single interaction based on its `Interaction.id`.
+ * Gets an interaction.
  */
 export function interactionsGet(
   client: GoogleGenAICore,
@@ -173,12 +170,14 @@ async function $do(
       payload.api_version ?? client._options.api_version,
       { explode: false, charEncoding: "percent" },
     ),
-    id: encodeSimple("id", payload.id, {
+    interactionsId: encodeSimple("interactionsId", payload.id, {
       explode: false,
       charEncoding: "percent",
     }),
   };
-  const path = pathToFunc("/{api_version}/interactions/{id}")(pathParams);
+  const path = pathToFunc("/{api_version}/interactions/{interactionsId}")(
+    pathParams,
+  );
 
   const query = encodeFormQuery({
     "include_input": payload.include_input,

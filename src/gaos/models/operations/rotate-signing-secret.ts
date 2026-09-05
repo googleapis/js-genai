@@ -14,25 +14,22 @@ import * as webhooks from "../webhooks/index.js";
 
 export type RotateSigningSecretGlobals = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
 };
 
 export type RotateSigningSecretRequest = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
   /**
-   * Required. The ID of the webhook for which to generate a signing secret.
-   *
-   * @remarks
-   * Format: `{webhook_id}`
+   * Required. The ID of the webhook for which to rotate the signing secret.
    */
   id: string;
   /**
-   * The request body.
+   * Required. The HTTP body of the payload mapping to `revocation_behavior`.
    */
   body?: webhooks.RotateSigningSecretRequest | undefined;
 };

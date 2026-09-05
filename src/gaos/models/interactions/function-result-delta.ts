@@ -23,5 +23,9 @@ export type FunctionResultDelta = {
   is_error?: boolean | undefined;
   name?: string | undefined;
   result: Array<FunctionResultSubcontent> | FunctionResultDeltaResult | string;
+  /**
+   * A signature hash for backend validation.
+   */
+  signature?: string | undefined;
   type: "function_result";
 };

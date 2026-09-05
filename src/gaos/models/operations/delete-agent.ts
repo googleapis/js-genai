@@ -12,15 +12,18 @@
 
 export type DeleteAgentGlobals = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
 };
 
 export type DeleteAgentRequest = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
+  /**
+   * Part of `name`.
+   */
   id: string;
 };
