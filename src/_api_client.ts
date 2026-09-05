@@ -20,7 +20,7 @@ export const GOOGLE_API_CLIENT_HEADER = 'x-goog-api-client';
 export const SDK_VERSION = '2.21.0'; // x-release-please-version
 const LIBRARY_LABEL = `google-genai-sdk/${SDK_VERSION}`;
 const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
-const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';
+const GOOGLE_AI_API_DEFAULT_VERSION = 'v1';
 
 const MULTI_REGIONAL_LOCATIONS = new Set<string>(['us', 'eu']);
 
