@@ -13,6 +13,17 @@
 import type { AgentListResponse as AgentListResponse$Import } from "./models/agents/agent-list-response.js";
 import type { AgentTool as AgentTool$Import } from "./models/agents/agent-tool.js";
 import type { Agent as Agent$Import } from "./models/agents/agent.js";
+import type { CredentialCreateParams as CredentialCreateParams$Import } from "./models/credentials/credential-create-params.js";
+import type { CredentialListResponse as CredentialListResponse$Import } from "./models/credentials/credential-list-response.js";
+import type { CredentialUpdate as CredentialUpdate$Import } from "./models/credentials/credential-update.js";
+import type { Credential as Credential$Import } from "./models/credentials/credential.js";
+import type { EnvironmentVariableConfig as EnvironmentVariableConfig$Import } from "./models/credentials/environment-variable-config.js";
+import type { EnvironmentVariableUpdateConfig as EnvironmentVariableUpdateConfig$Import } from "./models/credentials/environment-variable-update-config.js";
+import type { HttpBearerConfig as HttpBearerConfig$Import } from "./models/credentials/http-bearer-config.js";
+import type { HttpBearerUpdateConfig as HttpBearerUpdateConfig$Import } from "./models/credentials/http-bearer-update-config.js";
+import type { InjectionLocationEnum as InjectionLocationEnum$Import } from "./models/credentials/injection-location-enum.js";
+import type { OAuth2Config as OAuth2Config$Import } from "./models/credentials/o-auth2-config.js";
+import type { OAuth2UpdateConfig as OAuth2UpdateConfig$Import } from "./models/credentials/o-auth2-update-config.js";
 import type { CreateEnvironmentRequest as CreateEnvironmentRequest$Import } from "./models/environments/create-environment-request.js";
 import type { EnvironmentFile as EnvironmentFile$Import } from "./models/environments/environment-file.js";
 import type { Environment as Environment$Import } from "./models/environments/environment.js";
@@ -41,6 +52,7 @@ import type { DocumentContent as DocumentContent$Import } from "./models/interac
 import type { DocumentDelta as DocumentDelta$Import } from "./models/interactions/document-delta.js";
 import type { DynamicAgentConfig as DynamicAgentConfig$Import } from "./models/interactions/dynamic-agent-config.js";
 import type { Empty as Empty$Import } from "./models/interactions/empty.js";
+import type { EnvVar as EnvVar$Import } from "./models/interactions/env-var.js";
 import type { Allowlist as Allowlist$Import } from "./models/interactions/environment-network-egress-allowlist.js";
 import type { Environment as Environment$Import2 } from "./models/interactions/environment.js";
 import type { ErrorEvent as ErrorEvent$Import } from "./models/interactions/error-event.js";
@@ -151,10 +163,12 @@ import type {
   CreateInteractionParams as CreateInteractionParams$Import,
   CreateWebhookParams as CreateWebhookParams$Import,
   DeleteAgentParams as DeleteAgentParams$Import,
+  DeleteCredentialParams as DeleteCredentialParams$Import,
   DeleteInteractionParams as DeleteInteractionParams$Import,
   DeleteTriggerParams as DeleteTriggerParams$Import,
   DeleteWebhookParams as DeleteWebhookParams$Import,
   GetAgentParams as GetAgentParams$Import,
+  GetCredentialParams as GetCredentialParams$Import,
   GetInteractionByIdParams as GetInteractionByIdParams$Import,
   GetInteractionByIdParamsNonStreaming
     as GetInteractionByIdParamsNonStreaming$Import,
@@ -162,6 +176,7 @@ import type {
   GetTriggerParams as GetTriggerParams$Import,
   GetWebhookParams as GetWebhookParams$Import,
   ListAgentsParams as ListAgentsParams$Import,
+  ListCredentialsParams as ListCredentialsParams$Import,
   ListTriggerExecutionsParams as ListTriggerExecutionsParams$Import,
   ListTriggersParams as ListTriggersParams$Import,
   ListWebhooksParams as ListWebhooksParams$Import,
@@ -193,6 +208,22 @@ type AgentGetParams$ = GetAgentParams$Import;
 type AgentListParams$ = ListAgentsParams$Import;
 type AgentListResponse$ = AgentListResponse$Import;
 type AgentTool$ = AgentTool$Import;
+type Credential$ = Credential$Import;
+type CredentialCreateParams$ = CredentialCreateParams$Import;
+type CredentialDeleteParams$ = DeleteCredentialParams$Import;
+type CredentialDeleteResponse$ = Empty$Import;
+type CredentialGetParams$ = GetCredentialParams$Import;
+type CredentialListParams$ = ListCredentialsParams$Import;
+type CredentialListResponse$ = CredentialListResponse$Import;
+type CredentialUpdate$ = CredentialUpdate$Import;
+type EnvironmentVariableConfig$ = EnvironmentVariableConfig$Import;
+type EnvironmentVariableUpdateConfig$ = EnvironmentVariableUpdateConfig$Import;
+type HttpBearerConfig$ = HttpBearerConfig$Import;
+type HttpBearerUpdateConfig$ = HttpBearerUpdateConfig$Import;
+type InjectionLocation$ = InjectionLocationEnum$Import;
+type InjectionLocationEnum$ = InjectionLocationEnum$Import;
+type OAuth2Config$ = OAuth2Config$Import;
+type OAuth2UpdateConfig$ = OAuth2UpdateConfig$Import;
 type CreateEnvironmentRequest$ = CreateEnvironmentRequest$Import;
 type Environment$ = Environment$Import;
 type EnvironmentDeleteResponse$ = Empty$Import;
@@ -300,6 +331,7 @@ type SessionConfig$ = SessionConfig$Import;
 type SourceFile$ = FileContent$Import;
 type SourceFile$2 = FileContent$Import;
 type Allowlist$3 = Allowlist$Import;
+type EnvVar$ = EnvVar$Import;
 type Source$ = Source$Import;
 type Error$2 = ErrorT$Import;
 type Arguments$2 = GoogleMapsCallArguments$Import;
@@ -425,6 +457,14 @@ export type CreateModelInteractionParamsNonStreaming =
   CreateModelInteractionParamsNonStreaming$;
 export type CreateModelInteractionParamsStreaming =
   CreateModelInteractionParamsStreaming$;
+export type Credential = Credential$;
+export type CredentialCreateParams = CredentialCreateParams$;
+export type CredentialDeleteParams = CredentialDeleteParams$;
+export type CredentialDeleteResponse = CredentialDeleteResponse$;
+export type CredentialGetParams = CredentialGetParams$;
+export type CredentialListParams = CredentialListParams$;
+export type CredentialListResponse = CredentialListResponse$;
+export type CredentialUpdate = CredentialUpdate$;
 export type DeepResearchAgentConfig = DeepResearchAgentConfig$;
 export type Document = Document$;
 export type DocumentContent = DocumentContent$;
@@ -433,6 +473,9 @@ export type Environment = Environment$;
 export type EnvironmentDeleteResponse = EnvironmentDeleteResponse$;
 export type EnvironmentFile = EnvironmentFile$;
 export type EnvironmentListResponse = EnvironmentListResponse$;
+export type EnvironmentVariableConfig = EnvironmentVariableConfig$;
+export type EnvironmentVariableUpdateConfig = EnvironmentVariableUpdateConfig$;
+export type EnvVar = EnvVar$;
 export type Error = Error$;
 export type ErrorEvent = ErrorEvent$;
 export type FileCitation = FileCitation$;
@@ -463,10 +506,14 @@ export type GoogleSearchResult = GoogleSearchResult$;
 export type GoogleSearchResultStep = GoogleSearchResultStep$;
 export type GroundingToolCount = GroundingToolCount$;
 export type HarmCategory = HarmCategory$;
+export type HttpBearerConfig = HttpBearerConfig$;
+export type HttpBearerUpdateConfig = HttpBearerUpdateConfig$;
 export type Image = Image$;
 export type ImageConfig = ImageConfig$;
 export type ImageContent = ImageContent$;
 export type ImageResponseFormat = ImageResponseFormat$;
+export type InjectionLocation = InjectionLocation$;
+export type InjectionLocationEnum = InjectionLocationEnum$;
 export type InputTokensByModality = InputTokensByModality$;
 export type Interaction = Interaction$;
 export type InteractionCancelParams = InteractionCancelParams$;
@@ -491,6 +538,8 @@ export type MCPServerToolResultStep = MCPServerToolResultStep$;
 export type Metadata = Metadata$;
 export type Model = Model$;
 export type ModelOutputStep = ModelOutputStep$;
+export type OAuth2Config = OAuth2Config$;
+export type OAuth2UpdateConfig = OAuth2UpdateConfig$;
 export type OutputTokensByModality = OutputTokensByModality$;
 export type PingWebhookRequest = PingWebhookRequest$;
 export type Place = Place$;
@@ -587,6 +636,25 @@ export declare namespace Agents {
   export type AgentListParams = AgentListParams$;
   export type AgentListResponse = AgentListResponse$;
   export type AgentTool = AgentTool$;
+}
+export declare namespace Credentials {
+  export type Credential = Credential$;
+  export type CredentialCreateParams = CredentialCreateParams$;
+  export type CredentialDeleteParams = CredentialDeleteParams$;
+  export type CredentialDeleteResponse = CredentialDeleteResponse$;
+  export type CredentialGetParams = CredentialGetParams$;
+  export type CredentialListParams = CredentialListParams$;
+  export type CredentialListResponse = CredentialListResponse$;
+  export type CredentialUpdate = CredentialUpdate$;
+  export type EnvironmentVariableConfig = EnvironmentVariableConfig$;
+  export type EnvironmentVariableUpdateConfig =
+    EnvironmentVariableUpdateConfig$;
+  export type HttpBearerConfig = HttpBearerConfig$;
+  export type HttpBearerUpdateConfig = HttpBearerUpdateConfig$;
+  export type InjectionLocation = InjectionLocation$;
+  export type InjectionLocationEnum = InjectionLocationEnum$;
+  export type OAuth2Config = OAuth2Config$;
+  export type OAuth2UpdateConfig = OAuth2UpdateConfig$;
 }
 export declare namespace Environments {
   export interface CreateEnvironmentRequest extends CreateEnvironmentRequest$ {}
@@ -712,6 +780,7 @@ export declare namespace Interactions {
   }
   export namespace Environment {
     export type Allowlist = Allowlist$3;
+    export type EnvVar = EnvVar$;
     export type Source = Source$;
   }
   export namespace ErrorEvent {

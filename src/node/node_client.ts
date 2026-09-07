@@ -16,6 +16,7 @@ import {Files} from '../files.js';
 import {FileSearchStores} from '../filesearchstores.js';
 import type {
   GeminiNextGenAgents as Agents,
+  GeminiNextGenCredentials as Credentials,
   GeminiNextGenEnvironments as Environments,
   GeminiNextGenInteractions as Interactions,
   GeminiNextGenTriggers as Triggers,
@@ -24,6 +25,7 @@ import type {
 import {
   buildGoogleGenAIClient,
   GeminiNextGenAgents,
+  GeminiNextGenCredentials,
   GeminiNextGenEnvironments,
   GeminiNextGenInteractions,
   GeminiNextGenTriggers,
@@ -150,6 +152,7 @@ export class GoogleGenAI {
   private _webhooks: GeminiNextGenWebhooks | undefined;
   private _agents: GeminiNextGenAgents | undefined;
   private _environments: GeminiNextGenEnvironments | undefined;
+  private _credentials: GeminiNextGenCredentials | undefined;
   private _nextGenClient: GeminiNextGenAPI | undefined;
   private _triggers: Triggers | undefined;
 
@@ -225,6 +228,19 @@ export class GoogleGenAI {
 
     this._environments = new GeminiNextGenEnvironments(this.apiClient);
     return this._environments;
+  }
+
+  get credentials(): Credentials {
+    if (this._credentials !== undefined) {
+      return this._credentials;
+    }
+
+    console.warn(
+      'GoogleGenAI.credentials: Credentials usage is experimental and may change in future versions.',
+    );
+
+    this._credentials = new GeminiNextGenCredentials(this.apiClient);
+    return this._credentials;
   }
 
   constructor(options: GoogleGenAIOptions = {}) {
