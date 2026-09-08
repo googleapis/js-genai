@@ -65,10 +65,10 @@ export type Trigger = {
    */
   last_run_time?: string | undefined;
   /**
-   * Optional. The maximum number of consecutive failures allowed before
+   * Optional. The maximum number of consecutive failures allowed before the
    *
    * @remarks
-   * the trigger is automatically paused (status becomes ERROR).
+   * trigger is automatically paused (status becomes ERROR).
    */
   max_consecutive_failures?: number | undefined;
   /**
@@ -80,10 +80,10 @@ export type Trigger = {
    */
   previous_interaction_id?: string | undefined;
   /**
-   * Required. The cron schedule on which the trigger should run.
+   * Required. The cron schedule on which the trigger should run. Standard cron
    *
    * @remarks
-   * Standard cron format.
+   * format.
    */
   schedule: string;
   /**
