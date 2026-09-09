@@ -37,7 +37,7 @@ export type Trigger = {
    */
   display_name?: string | undefined;
   /**
-   * Optional. The environment ID for the trigger execution.
+   * Output only. The environment ID used for trigger execution.
    */
   environment_id?: string | undefined;
   /**
