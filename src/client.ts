@@ -118,6 +118,13 @@ export interface GoogleGenAIOptions {
    * Optional. A set of customizable configuration for HTTP requests.
    */
   httpOptions?: HttpOptions;
+  /**
+   * Optional. A custom fetch implementation to use for all HTTP requests made by the SDK.
+   *
+   * @remarks
+   * If unset, the SDK will use the default `fetch` implementation available in the runtime environment.
+   */
+  fetchImplementation?: typeof fetch;
 }
 
 /**
@@ -277,6 +284,7 @@ export class GoogleGenAI {
       userAgentExtra: LANGUAGE_LABEL_PREFIX + 'cross',
       uploader: new CrossUploader(),
       downloader: new CrossDownloader(),
+      fetchImplementation: options.fetchImplementation,
     });
     this.models = new Models(this.apiClient);
     this.live = new Live(this.apiClient, auth, new CrossWebSocketFactory());

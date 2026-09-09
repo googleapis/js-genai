@@ -1952,6 +1952,7 @@ export interface GoogleGenAIOptions {
     apiKey?: string;
     apiVersion?: string;
     enterprise?: boolean;
+    fetchImplementation?: typeof fetch;
     googleAuthOptions?: GoogleAuthOptions;
     httpOptions?: HttpOptions;
     location?: string;
