@@ -551,15 +551,42 @@ export function countTokensParametersToVertex(
     );
   }
 
-  const fromContents = common.getValueByPath(fromObject, ['contents']);
-  if (fromContents != null) {
-    let transformedList = t.tContents(fromContents);
-    if (Array.isArray(transformedList)) {
-      transformedList = transformedList.map((item) => {
-        return contentToVertex(item, rootObject);
-      });
+  const fromInstances = common.getValueByPath(fromObject, ['instances']);
+  if (fromInstances != null) {
+    common.setValueByPath(toObject, ['instances'], fromInstances);
+  } else {
+    const fromContents = common.getValueByPath(fromObject, ['contents']);
+    if (fromContents != null) {
+      if (
+        typeof fromModel === 'string' &&
+        fromModel.includes('embedding')
+      ) {
+        let transformedList = t.tContentsForEmbed(
+          apiClient,
+          fromContents as types.ContentListUnion,
+        );
+        if (Array.isArray(transformedList)) {
+          transformedList = transformedList.map((item) => {
+            return item;
+          });
+        }
+        common.setValueByPath(
+          toObject,
+          ['instances[]', 'content'],
+          transformedList,
+        );
+      } else {
+        let transformedList = t.tContents(
+          fromContents as types.ContentListUnion,
+        );
+        if (Array.isArray(transformedList)) {
+          transformedList = transformedList.map((item) => {
+            return contentToVertex(item, rootObject);
+          });
+        }
+        common.setValueByPath(toObject, ['contents'], transformedList);
+      }
     }
-    common.setValueByPath(toObject, ['contents'], transformedList);
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
@@ -618,6 +645,17 @@ export function countTokensResponseFromVertex(
   const fromTotalTokens = common.getValueByPath(fromObject, ['totalTokens']);
   if (fromTotalTokens != null) {
     common.setValueByPath(toObject, ['totalTokens'], fromTotalTokens);
+  }
+
+  const fromTotalBillableCharacters = common.getValueByPath(fromObject, [
+    'totalBillableCharacters',
+  ]);
+  if (fromTotalBillableCharacters != null) {
+    common.setValueByPath(
+      toObject,
+      ['totalBillableCharacters'],
+      fromTotalBillableCharacters,
+    );
   }
 
   return toObject;
