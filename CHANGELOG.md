@@ -2,6 +2,20 @@
 
 
 
+## [2.22.0](https://github.com/googleapis/js-genai/compare/v2.21.0...v2.22.0) (2026-09-10)
+
+
+### Features
+
+* Add from_environment support for environment copying ([01ed17e](https://github.com/googleapis/js-genai/commit/01ed17e245d0b5c5293acdf146b6be252ea70ffd))
+
+
+### Bug Fixes
+
+* Add [@ts-ignore](https://github.com/ts-ignore) before optional MCP imports in declaration files ([7b5ef39](https://github.com/googleapis/js-genai/commit/7b5ef39e3d69da292890decd5093629533609ef9))
+* Remove unused field from FunctionResultDelta ([aeb7453](https://github.com/googleapis/js-genai/commit/aeb745302671ac0b70d48a4b4415952f12970a76))
+* Repair node fallback manifest and complete web entries ([0f59bf8](https://github.com/googleapis/js-genai/commit/0f59bf8317bbf782d232c3700d48cd8f5cbaffb5))
+
 ## [2.21.0](https://github.com/googleapis/js-genai/compare/v2.20.0...v2.21.0) (2026-09-02)
 
 
