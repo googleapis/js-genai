@@ -1,0 +1,53 @@
+{
+  "recordID": "Client_Tests_generateAudio_Vertex_AI_should_generate_audio_with_specified_parameters",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/lyria-002:predict",
+        "request": "POST /v1beta1/projects/REDACTED/locations/REDACTED/publishers/google/models/lyria-002:predict HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "67",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Client Tests generateAudio Vertex AI should generate audio with specified parameters"
+        },
+        "bodySegments": [
+          {
+            "instances": [
+              {
+                "prompt": "a simple 8-bit retro video game melody"
+              }
+            ]
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "us-central1-aiplatform.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "9ac8c5a29bdad29941ad8e2aec9e426db75e98a085c25680a4d770b6fd402f93",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Fri, 24 Oct 2025 07:46:32 GMT",
+          "Server": "scaffolding on HTTPServer2"
+        },
+        "bodySegments": [
+          {
+            "predictions": [
+              {
+                "bytesBase64Encoded": "UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQAAAAA="
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
