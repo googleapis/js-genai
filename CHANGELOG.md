@@ -2,6 +2,13 @@
 
 
 
+## [2.23.0](https://github.com/googleapis/js-genai/compare/v2.22.0...v2.23.0) (2026-09-11)
+
+
+### Features
+
+* Add RetrievalCallStep and RetrievalResultStep to interactions schema and SDKs. ([d03d569](https://github.com/googleapis/js-genai/commit/d03d56902e75d11e55d89194346cf6deae6d518e))
+
 ## [2.22.0](https://github.com/googleapis/js-genai/compare/v2.21.0...v2.22.0) (2026-09-10)
 
 
