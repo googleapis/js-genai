@@ -15,14 +15,24 @@
         "default": "./dist/web/index.mjs"
       },
       "node": {
-        "types": "./dist/node/node.d.ts",
-        "import": "./dist/node/index.mjs",
-        "require": "./dist/node/index.cjs",
+        "import": {
+          "types": "./dist/node/node.d.ts",
+          "default": "./dist/node/index.mjs"
+        },
+        "require": {
+          "types": "./dist/node/node.d.cts",
+          "default": "./dist/node/index.cjs"
+        },
         "default": "./dist/node/index.mjs"
       },
-      "types": "./dist/genai.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs",
+      "import": {
+        "types": "./dist/genai.d.ts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/genai.d.cts",
+        "default": "./dist/index.cjs"
+      },
       "default": "./dist/index.mjs"
     },
     "./web": {
@@ -31,32 +41,58 @@
       "default": "./dist/web/index.mjs"
     },
     "./node": {
-      "types": "./dist/node/node.d.ts",
-      "import": "./dist/node/index.mjs",
+      "import": {
+        "types": "./dist/node/node.d.ts",
+        "default": "./dist/node/index.mjs"
+      },
+      "require": {
+        "types": "./dist/node/node.d.cts",
+        "default": "./dist/node/index.cjs"
+      },
       "default": "./dist/node/index.mjs"
     },
     "./tokenizer": {
       "node": {
-        "types": "./dist/tokenizer/node.d.ts",
-        "import": "./dist/tokenizer/node.mjs",
-        "require": "./dist/tokenizer/node.cjs",
+        "import": {
+          "types": "./dist/tokenizer/node.d.ts",
+          "default": "./dist/tokenizer/node.mjs"
+        },
+        "require": {
+          "types": "./dist/tokenizer/node.d.cts",
+          "default": "./dist/tokenizer/node.cjs"
+        },
         "default": "./dist/tokenizer/node.mjs"
       },
-      "types": "./dist/tokenizer/node.d.ts",
-      "import": "./dist/tokenizer/node.mjs",
-      "require": "./dist/tokenizer/node.cjs",
+      "import": {
+        "types": "./dist/tokenizer/node.d.ts",
+        "default": "./dist/tokenizer/node.mjs"
+      },
+      "require": {
+        "types": "./dist/tokenizer/node.d.cts",
+        "default": "./dist/tokenizer/node.cjs"
+      },
       "default": "./dist/tokenizer/node.mjs"
     },
     "./tokenizer/node": {
-      "types": "./dist/tokenizer/node.d.ts",
-      "import": "./dist/tokenizer/node.mjs",
-      "require": "./dist/tokenizer/node.cjs",
+      "import": {
+        "types": "./dist/tokenizer/node.d.ts",
+        "default": "./dist/tokenizer/node.mjs"
+      },
+      "require": {
+        "types": "./dist/tokenizer/node.d.cts",
+        "default": "./dist/tokenizer/node.cjs"
+      },
       "default": "./dist/tokenizer/node.mjs"
     },
     "./vertex_internal": {
-      "types": "./dist/vertex_internal/index.d.ts",
-      "import": "./dist/vertex_internal/index.js",
-      "require": "./dist/vertex_internal/index.cjs"
+      "import": {
+        "types": "./dist/vertex_internal/index.d.ts",
+        "default": "./dist/vertex_internal/index.js"
+      },
+      "require": {
+        "types": "./dist/vertex_internal/index.d.cts",
+        "default": "./dist/vertex_internal/index.cjs"
+      }
     }
   },
   "scripts": {
@@ -65,7 +101,7 @@
     "prepack": "echo 'prepack: no-op'",
     "postpack": "echo 'postpack: no-op'",
     "prebuild": "echo 'prebuild: no-op'",
-    "build": "mkdir -p temp/api-report && patch-package && rollup -c && ./scripts/build_api_reports.sh && node scripts/ignore_missing_mcp_dep.js",
+    "build": "mkdir -p temp/api-report && patch-package && rollup -c && ./scripts/build_api_reports.sh && node scripts/ignore_missing_mcp_dep.js && node scripts/copy_cjs_types.js",
     "api-extractor:dev:main": "api-extractor run --local --verbose",
     "api-extractor:dev:node": "api-extractor run -c api-extractor.node.json --local --verbose",
     "api-extractor:dev:web": "api-extractor run -c api-extractor.web.json --local --verbose",
@@ -92,6 +128,7 @@
   },
   "files": [
     "dist/genai.d.ts",
+    "dist/genai.d.cts",
     "dist/index.mjs",
     "dist/index.cjs",
     "dist/index.mjs.map",
@@ -99,6 +136,7 @@
     "dist/node/index.cjs",
     "dist/node/index.mjs.map",
     "dist/node/node.d.ts",
+    "dist/node/node.d.cts",
     "dist/web/index.mjs",
     "dist/web/index.mjs.map",
     "dist/web/web.d.ts",
@@ -106,9 +144,11 @@
     "dist/tokenizer/node.cjs",
     "dist/tokenizer/node.mjs.map",
     "dist/tokenizer/node.d.ts",
+    "dist/tokenizer/node.d.cts",
     "dist/vertex_internal/index.js",
     "dist/vertex_internal/index.cjs",
     "dist/vertex_internal/index.d.ts",
+    "dist/vertex_internal/index.d.cts",
     "dist/vertex_internal/index.js.map",
     "dist/vertex_internal/index.cjs.map",
     "node/package.json",
