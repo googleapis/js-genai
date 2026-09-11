@@ -7,6 +7,7 @@
  */
 
 import * as agents from "./models/agents/index.js";
+import * as credentials from "./models/credentials/index.js";
 import * as environments from "./models/environments/index.js";
 import * as interactions from "./models/interactions/index.js";
 import * as operations from "./models/operations/index.js";
@@ -72,6 +73,11 @@ import { environmentsDeleteEnvironment } from "./funcs/environments-delete-envir
 import { environmentsFilesList } from "./funcs/environments-files-list.js";
 import { environmentsGetEnvironment } from "./funcs/environments-get-environment.js";
 import { environmentsListEnvironments } from "./funcs/environments-list-environments.js";
+import { credentialsCreate } from "./funcs/credentials-create.js";
+import { credentialsDelete } from "./funcs/credentials-delete.js";
+import { credentialsGet } from "./funcs/credentials-get.js";
+import { credentialsList } from "./funcs/credentials-list.js";
+import { credentialsUpdate } from "./funcs/credentials-update.js";
 
 const LEGACY_LYRIA_MODELS: ReadonlySet<string> = new Set([
   "lyria-3-pro-preview",
@@ -1017,6 +1023,10 @@ function normalizeDateLike(value: unknown): unknown {
   return value instanceof Date ? value.toISOString() : value;
 }
 
+export type CredentialListParams = operations.ListCredentialsParams;
+
+export type CredentialUpdateParams = operations.UpdateCredentialParams;
+
 export type ListEnvironmentsParams = {
   api_version?: string;
   page_size?: number;
@@ -1190,6 +1200,102 @@ export class GeminiNextGenEnvironments {
   ): Promise<interactions.Empty> {
     return unwrapWithSdkHttpResponse(
       environmentsDeleteEnvironment(
+        this.getClient(params?.api_version),
+        id,
+        params?.api_version,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  private getClient(apiVersion: string | undefined): GoogleGenAI {
+    if (apiVersion) {
+      return buildGoogleGenAIClient(this.parentClient, {
+        api_version: apiVersion,
+      });
+    }
+
+    this.sdk ??= buildGoogleGenAIClient(this.parentClient);
+    return this.sdk;
+  }
+}
+
+export class GeminiNextGenCredentials {
+  private sdk: GoogleGenAI | undefined;
+
+  constructor(private readonly parentClient: GoogleGenAIParentClient) {}
+
+  async create(
+    params: credentials.CredentialCreateParams & { api_version?: string },
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<credentials.Credential> {
+    const { api_version, ...body } = params;
+    return unwrapWithSdkHttpResponse(
+      credentialsCreate(
+        this.getClient(api_version),
+        body,
+        api_version,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  async list(
+    params: CredentialListParams | null | undefined = {},
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<credentials.CredentialListResponse> {
+    const { api_version, page_size, page_token } = params ?? {};
+    return unwrapWithSdkHttpResponse(
+      credentialsList(
+        this.getClient(api_version),
+        api_version,
+        page_size,
+        page_token,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  async get(
+    id: string,
+    params: { api_version?: string } | null | undefined = {},
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<credentials.Credential> {
+    return unwrapWithSdkHttpResponse(
+      credentialsGet(
+        this.getClient(params?.api_version),
+        id,
+        params?.api_version,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  async update(
+    id: string,
+    params: CredentialUpdateParams,
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<credentials.Credential> {
+    const { api_version, update_mask, ...body } = params;
+    return unwrapWithSdkHttpResponse(
+      credentialsUpdate(
+        this.getClient(api_version),
+        id,
+        body,
+        api_version,
+        update_mask,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  async delete(
+    id: string,
+    params: { api_version?: string } | null | undefined = {},
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<interactions.Empty> {
+    return unwrapWithSdkHttpResponse(
+      credentialsDelete(
         this.getClient(params?.api_version),
         id,
         params?.api_version,
