@@ -32,12 +32,19 @@ const lastCorrectFetchOkOptions = {
   },
   url: 'some-url',
 };
-const mockResponse = new Response(
-  JSON.stringify({
-    data: 'data1',
-  }),
-  fetchOkOptions,
-);
+function createActiveUploadResponse(onCancel?: () => void): Response {
+  return new Response(
+    new ReadableStream({
+      start(controller) {
+        controller.enqueue(new TextEncoder().encode('{"data":"data1"}'));
+      },
+      cancel() {
+        onCancel?.();
+      },
+    }),
+    fetchOkOptions,
+  );
+}
 
 describe('Node uploader', () => {
   let originalGeminiBaseUrl: string | undefined;
@@ -82,8 +89,11 @@ describe('Node uploader', () => {
       const numRequests = Math.ceil(TEST_FILE_SIZE / DEFAULT_CHUNK_SIZE);
 
       const mockResponses = [];
+      let cancelCount = 0;
       for (let i = 0; i < numRequests - 1; i++) {
-        mockResponses.push(Promise.resolve(mockResponse));
+        mockResponses.push(
+          Promise.resolve(createActiveUploadResponse(() => cancelCount++)),
+        );
       }
       mockResponses.push(
         Promise.resolve(
@@ -106,6 +116,7 @@ describe('Node uploader', () => {
 
       await uploader.upload(filePath, TEST_UPLOAD_URL, client['apiClient']);
       expect(fetchSpy).toHaveBeenCalledTimes(numRequests);
+      expect(cancelCount).toBe(numRequests - 1);
       const allArgs = fetchSpy.calls.allArgs();
       let byteProcessed = 0;
 
@@ -128,8 +139,11 @@ describe('Node uploader', () => {
     const numRequests = Math.ceil(TEST_FILE_SIZE / DEFAULT_CHUNK_SIZE);
 
     const mockResponses = [];
+    let cancelCount = 0;
     for (let i = 0; i < numRequests - 1; i++) {
-      mockResponses.push(Promise.resolve(mockResponse));
+      mockResponses.push(
+        Promise.resolve(createActiveUploadResponse(() => cancelCount++)),
+      );
     }
     mockResponses.push(
       Promise.resolve(
@@ -155,6 +169,7 @@ describe('Node uploader', () => {
       customHttpOptions,
     );
     expect(fetchSpy).toHaveBeenCalledTimes(numRequests);
+    expect(cancelCount).toBe(numRequests - 1);
     const allArgs = fetchSpy.calls.allArgs();
     const rewrittenUrl = allArgs[0][0] as string;
     expect(rewrittenUrl).toContain(
@@ -182,8 +197,11 @@ describe('Node uploader', () => {
       const numRequests = Math.ceil(TEST_FILE_SIZE / DEFAULT_CHUNK_SIZE);
 
       const mockResponses = [];
+      let cancelCount = 0;
       for (let i = 0; i < numRequests - 1; i++) {
-        mockResponses.push(Promise.resolve(mockResponse));
+        mockResponses.push(
+          Promise.resolve(createActiveUploadResponse(() => cancelCount++)),
+        );
       }
       mockResponses.push(
         Promise.resolve(
@@ -205,6 +223,7 @@ describe('Node uploader', () => {
       }
       await uploader.upload(testBlob, TEST_UPLOAD_URL, client['apiClient']);
       expect(fetchSpy).toHaveBeenCalledTimes(numRequests);
+      expect(cancelCount).toBe(numRequests - 1);
       const allArgs = fetchSpy.calls.allArgs();
       let byteProcessed = 0;
       for (let i = 0; i < numRequests; i++) {
