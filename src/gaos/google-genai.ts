@@ -36,7 +36,6 @@ import type {
   GetInteractionByIdParams,
   GetInteractionByIdParamsNonStreaming,
   GetInteractionByIdParamsStreaming,
-  ListAgentsParams as _ListAgentsRequest,
   CreateTriggerParams,
   DeleteTriggerParams,
   GetTriggerParams,
@@ -182,36 +181,15 @@ export type InteractionGetParamsNonStreaming =
 
 export type InteractionGetParamsStreaming = GetInteractionByIdParamsStreaming;
 
-export type ListAgentsParams = {
-  api_version?: string;
-  pageSize?: number;
-  pageToken?: string;
-  parent?: string;
-};
+export type ListAgentsParams = operations.ListAgentsParams;
 
-export type ListTriggersParams = {
-  api_version?: string;
-  filter?: string;
-  pageSize?: number;
-  pageToken?: string;
-};
+export type ListTriggersParams = operations.ListTriggersParams;
 
-export type ListTriggerExecutionsParams = {
-  api_version?: string;
-  pageSize?: number;
-  pageToken?: string;
-};
+export type ListTriggerExecutionsParams = operations.ListTriggerExecutionsParams;
 
-export type WebhookListParams = {
-  api_version?: string;
-  page_size?: number;
-  page_token?: string;
-};
+export type WebhookListParams = operations.ListWebhooksParams;
 
-export type WebhookUpdateParams = {
-  api_version?: string;
-  update_mask?: string;
-} & webhooks.WebhookUpdate;
+export type WebhookUpdateParams = operations.UpdateWebhookParams;
 
 export type WebhookRotateSigningSecretParams =
   webhooks.RotateSigningSecretRequest & { api_version?: string };
@@ -410,13 +388,13 @@ export class GeminiNextGenAgents {
     params: ListAgentsParams | null | undefined = {},
     options?: GoogleGenAIRequestOptions,
   ): Promise<agents.AgentListResponse> {
-    const { api_version, pageSize, pageToken, parent } = params ?? {};
+    const { api_version, page_size, page_token, parent } = params ?? {};
     return unwrapWithSdkHttpResponse(
       agentsList(
         this.getClient(api_version),
         api_version,
-        pageSize,
-        pageToken,
+        page_size,
+        page_token,
         parent,
         toGoogleGenAIRequestOptions(options),
       ),
@@ -615,14 +593,14 @@ export class GeminiNextGenTriggers {
     params: ListTriggersParams | null | undefined = {},
     options?: GoogleGenAIRequestOptions,
   ): Promise<triggers.ListTriggersResponse> {
-    const { api_version, filter, pageSize, pageToken } = params ?? {};
+    const { api_version, filter, page_size, page_token } = params ?? {};
     return unwrapWithSdkHttpResponse(
       triggersList(
         this.getClient(api_version),
         api_version,
         filter,
-        pageSize,
-        pageToken,
+        page_size,
+        page_token,
         toGoogleGenAIRequestOptions(options),
       ),
     );
@@ -695,14 +673,14 @@ export class GeminiNextGenTriggers {
     params: ListTriggerExecutionsParams | null | undefined = {},
     options?: GoogleGenAIRequestOptions,
   ): Promise<triggers.ListTriggerExecutionsResponse> {
-    const { api_version, pageSize, pageToken } = params ?? {};
+    const { api_version, page_size, page_token } = params ?? {};
     return unwrapWithSdkHttpResponse(
       triggersListExecutions(
         this.getClient(api_version),
         trigger_id,
         api_version,
-        pageSize,
-        pageToken,
+        page_size,
+        page_token,
         toGoogleGenAIRequestOptions(options),
       ),
     );
@@ -1017,11 +995,7 @@ function normalizeDateLike(value: unknown): unknown {
   return value instanceof Date ? value.toISOString() : value;
 }
 
-export type ListEnvironmentsParams = {
-  api_version?: string;
-  page_size?: number;
-  page_token?: string;
-};
+export type ListEnvironmentsParams = operations.ListEnvironmentsParams;
 
 /**
  * Output only. The type of the entry.
@@ -1092,14 +1066,7 @@ export type GetEnvironmentFilesResponse = {
  */
 export type ListEnvironmentFilesResponse = GetEnvironmentFilesResponse;
 
-export type ListEnvironmentFilesParams = {
-  environment: string;
-  path: string;
-  page_size?: number;
-  page_token?: string;
-  recursive?: boolean;
-  api_version?: string;
-};
+export type ListEnvironmentFilesParams = operations.GetEnvironmentFilesRequest;
 
 export class GeminiNextGenEnvironmentFiles {
   constructor(
