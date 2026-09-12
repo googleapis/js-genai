@@ -100,7 +100,9 @@ import type { ProcessingResultDelta as ProcessingResultDelta$Import } from "./mo
 import type { ProcessingResultStep as ProcessingResultStep$Import } from "./models/interactions/processing-result-step.js";
 import type { RetrievalCallArguments as RetrievalCallArguments$Import } from "./models/interactions/retrieval-call-arguments.js";
 import type { RetrievalCallDelta as RetrievalCallDelta$Import } from "./models/interactions/retrieval-call-delta.js";
+import type { RetrievalCallStep as RetrievalCallStep$Import } from "./models/interactions/retrieval-call-step.js";
 import type { RetrievalResultDelta as RetrievalResultDelta$Import } from "./models/interactions/retrieval-result-delta.js";
+import type { RetrievalResultStep as RetrievalResultStep$Import } from "./models/interactions/retrieval-result-step.js";
 import type { Retrieval as Retrieval$Import } from "./models/interactions/retrieval.js";
 import type { ReviewSnippet as ReviewSnippet$Import } from "./models/interactions/review-snippet.js";
 import type { SafetySetting as SafetySetting$Import } from "./models/interactions/safety-setting.js";
@@ -265,7 +267,9 @@ type ProcessingCallStep$ = ProcessingCallStep$Import;
 type ProcessingResultStep$ = ProcessingResultStep$Import;
 type RetrievalCallArguments$ = RetrievalCallArguments$Import;
 type RetrievalCallDelta$ = RetrievalCallDelta$Import;
+type RetrievalCallStep$ = RetrievalCallStep$Import;
 type RetrievalResultDelta$ = RetrievalResultDelta$Import;
+type RetrievalResultStep$ = RetrievalResultStep$Import;
 type SafetySetting$ = SafetySetting$Import;
 type SpeechConfig$ = SpeechConfig$Import;
 type Step$ = Step$Import;
@@ -312,6 +316,7 @@ type Arguments$3 = GoogleSearchCallArguments$Import;
 type Result$2 = GoogleSearchResult$Import;
 type ReviewSnippet$3 = ReviewSnippet$Import;
 type Arguments$4 = RetrievalCallArguments$Import;
+type Arguments$5 = RetrievalCallArguments$Import;
 type ArgumentsDelta$ = ArgumentsDelta$Import;
 type Audio$ = AudioDelta$Import;
 type CodeExecutionCall$ = CodeExecutionCallDelta$Import;
@@ -348,7 +353,7 @@ type URLContext$ = URLContext$Import;
 type VertexAISearchConfig$ = VertexAISearchConfig$Import;
 type Smart$ = SmartTranscriptionMode$Import;
 type Verbatim$ = VerbatimTranscriptionMode$Import;
-type Arguments$5 = URLContextCallArguments$Import;
+type Arguments$6 = URLContextCallArguments$Import;
 type Result$3 = URLContextResult$Import;
 type CachedTokensByModality$ = ModalityTokens$Import;
 type GroundingToolCount$ = GroundingToolCount$Import;
@@ -503,7 +508,9 @@ export type Result = Result$;
 export type Retrieval = Retrieval$;
 export type RetrievalCallArguments = RetrievalCallArguments$;
 export type RetrievalCallDelta = RetrievalCallDelta$;
+export type RetrievalCallStep = RetrievalCallStep$;
 export type RetrievalResultDelta = RetrievalResultDelta$;
+export type RetrievalResultStep = RetrievalResultStep$;
 export type ReviewSnippet = ReviewSnippet$;
 export type RotateSigningSecretRequest = RotateSigningSecretRequest$;
 export type SafetySetting = SafetySetting$;
@@ -668,7 +675,9 @@ export declare namespace Interactions {
   export type ProcessingResultStep = ProcessingResultStep$;
   export type RetrievalCallArguments = RetrievalCallArguments$;
   export interface RetrievalCallDelta extends RetrievalCallDelta$ {}
+  export interface RetrievalCallStep extends RetrievalCallStep$ {}
   export type RetrievalResultDelta = RetrievalResultDelta$;
+  export type RetrievalResultStep = RetrievalResultStep$;
   export type SafetySetting = SafetySetting$;
   export type SpeechConfig = SpeechConfig$;
   export type Step = Step$;
@@ -752,6 +761,9 @@ export declare namespace Interactions {
   export namespace RetrievalCallDelta {
     export type Arguments = Arguments$4;
   }
+  export namespace RetrievalCallStep {
+    export type Arguments = Arguments$5;
+  }
   export namespace StepDelta {
     export type ArgumentsDelta = ArgumentsDelta$;
     export type Audio = Audio$;
@@ -797,7 +809,7 @@ export declare namespace Interactions {
     export type Verbatim = Verbatim$;
   }
   export namespace URLContextCallStep {
-    export type Arguments = Arguments$5;
+    export type Arguments = Arguments$6;
   }
   export namespace URLContextResultStep {
     export type Result = Result$3;
