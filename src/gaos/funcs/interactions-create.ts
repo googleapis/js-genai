@@ -32,10 +32,7 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Creating an interaction
- *
- * @remarks
- * Creates a new interaction.
+ * Generates a set of responses from the model.
  */
 export function interactionsCreate(
   client: GoogleGenAICore,

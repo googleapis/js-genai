@@ -38,6 +38,11 @@ export type SDKOptions = {
   api_version?: string | undefined;
 
   /**
+   * Allows setting the api_revision parameter for all supported operations
+   */
+  api_revision?: string | undefined;
+
+  /**
    * Allows setting the user_project parameter for all supported operations
    */
   user_project?: string | undefined;

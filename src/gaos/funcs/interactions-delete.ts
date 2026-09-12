@@ -32,10 +32,7 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Deleting an interaction
- *
- * @remarks
- * Deletes the interaction by id.
+ * Deletes an interaction.
  */
 export function interactionsDelete(
   client: GoogleGenAICore,
@@ -98,12 +95,14 @@ async function $do(
       payload.api_version ?? client._options.api_version,
       { explode: false, charEncoding: "percent" },
     ),
-    id: encodeSimple("id", payload.id, {
+    interactionsId: encodeSimple("interactionsId", payload.id, {
       explode: false,
       charEncoding: "percent",
     }),
   };
-  const path = pathToFunc("/{api_version}/interactions/{id}")(pathParams);
+  const path = pathToFunc("/{api_version}/interactions/{interactionsId}")(
+    pathParams,
+  );
 
   const headers = new Headers(compactMap({
     Accept: "application/json",

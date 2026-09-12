@@ -32,7 +32,8 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Deletes a trigger.
+ * Deletes a trigger. Does not delete past interaction histories
+ * or environments created by past executions.
  */
 export function triggersDelete(
   client: GoogleGenAICore,
@@ -167,9 +168,9 @@ async function $do(
     | InvalidRequestError
     | UnexpectedClientError
   >(
-    M.json<interactions.Empty>(200),
     M.fail("4XX"),
     M.fail("5XX"),
+    M.json<interactions.Empty>("default"),
   )(response, req);
   if (!result.ok) {
     return [result, { status: "complete", request: req, response }];

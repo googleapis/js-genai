@@ -32,7 +32,7 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Updates a trigger.
+ * Updates a trigger. Supports partial updates via field_mask.
  */
 export function triggersUpdate(
   client: GoogleGenAICore,
@@ -172,9 +172,9 @@ async function $do(
     | InvalidRequestError
     | UnexpectedClientError
   >(
-    M.json<triggers.Trigger>(200),
     M.fail("4XX"),
     M.fail("5XX"),
+    M.json<triggers.Trigger>("default"),
   )(response, req);
   if (!result.ok) {
     return [result, { status: "complete", request: req, response }];

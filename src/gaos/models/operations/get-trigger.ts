@@ -12,18 +12,18 @@
 
 export type GetTriggerGlobals = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
 };
 
 export type GetTriggerRequest = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
   /**
-   * Resource name of the trigger.
+   * Required. The ID of the trigger to retrieve.
    */
   id: string;
 };

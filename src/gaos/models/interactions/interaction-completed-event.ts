@@ -11,6 +11,7 @@
  */
 
 import { InteractionSseEventInteraction } from "./interaction-sse-event-interaction.js";
+import { StreamMetadata } from "./stream-metadata.js";
 
 export type InteractionCompletedEvent = {
   /**
@@ -29,4 +30,8 @@ export type InteractionCompletedEvent = {
    * full non-streaming Interaction responses.
    */
   interaction: InteractionSseEventInteraction;
+  /**
+   * Optional metadata accompanying ANY streamed event.
+   */
+  metadata?: StreamMetadata | undefined;
 };

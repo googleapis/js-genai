@@ -12,14 +12,14 @@
 
 export type ListAgentsGlobals = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
 };
 
 export type ListAgentsRequest = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
   page_size?: number | undefined;

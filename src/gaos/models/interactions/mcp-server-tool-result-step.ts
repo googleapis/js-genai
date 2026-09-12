@@ -45,5 +45,9 @@ export type MCPServerToolResultStep = {
    * The name of the used MCP server.
    */
   server_name?: string | undefined;
+  /**
+   * A signature hash for backend validation.
+   */
+  signature?: string | undefined;
   type: "mcp_server_tool_result";
 };

@@ -52,6 +52,12 @@ export type TranscriptionConfig = {
    */
   language_codes?: Array<string> | undefined;
   /**
+   * Deprecated: use language_codes. BCP-47 language codes providing hints about the languages present in the audio.
+   *
+   * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
+   */
+  language_hints?: Array<string> | undefined;
+  /**
    * Discriminated transcription mode options or enum.
    */
   mode?: TranscriptionMode | TranscriptionConfigModeEnum | undefined;

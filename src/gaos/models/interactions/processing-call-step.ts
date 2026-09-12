@@ -20,7 +20,7 @@ export type ProcessingCallStep = {
   /**
    * Required. A unique ID for this specific tool call.
    */
-  id: string;
+  id?: string | undefined;
   /**
    * A signature hash for backend validation.
    */

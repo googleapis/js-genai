@@ -32,7 +32,7 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Gets a specific Agent.
+ * Gets an agent (latest version).
  */
 export function agentsGet(
   client: GoogleGenAICore,
@@ -91,12 +91,12 @@ async function $do(
       payload.api_version ?? client._options.api_version,
       { explode: false, charEncoding: "percent" },
     ),
-    id: encodeSimple("id", payload.id, {
+    agentsId: encodeSimple("agentsId", payload.id, {
       explode: false,
       charEncoding: "percent",
     }),
   };
-  const path = pathToFunc("/{api_version}/agents/{id}")(pathParams);
+  const path = pathToFunc("/{api_version}/agents/{agentsId}")(pathParams);
 
   const headers = new Headers(compactMap({
     Accept: "application/json",

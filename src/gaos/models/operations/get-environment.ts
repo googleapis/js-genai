@@ -12,18 +12,18 @@
 
 export type GetEnvironmentGlobals = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
 };
 
 export type GetEnvironmentRequest = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
   /**
-   * Resource ID segment making up resource `name`. It identifies the resource within its parent collection as described in https://google.aip.dev/122.
+   * Required. The identifier of the environment to retrieve.
    */
   id: string;
 };

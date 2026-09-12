@@ -42,5 +42,9 @@ export type FunctionResultStep = {
    * Required. The result of the tool call.
    */
   result: Array<FunctionResultSubcontent> | FunctionResultStepResult | string;
+  /**
+   * A signature hash for backend validation.
+   */
+  signature?: string | undefined;
   type: "function_result";
 };

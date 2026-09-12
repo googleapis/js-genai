@@ -26,7 +26,6 @@ export type AudioContentMimeType =
   | "audio/opus"
   | "audio/alaw"
   | "audio/mulaw"
-  | "audio/webm"
   | (string & {});
 
 /**

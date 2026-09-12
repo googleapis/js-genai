@@ -26,5 +26,9 @@ export type FunctionCallStep = {
    * Required. The name of the tool to call.
    */
   name: string;
+  /**
+   * A signature hash for backend validation.
+   */
+  signature?: string | undefined;
   type: "function_call";
 };

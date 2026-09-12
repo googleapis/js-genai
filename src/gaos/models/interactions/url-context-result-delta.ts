@@ -13,6 +13,10 @@
 import { URLContextResult } from "./url-context-result.js";
 
 export type URLContextResultDelta = {
+  /**
+   * Required. ID to match the ID from the function call block.
+   */
+  call_id?: string | undefined;
   is_error?: boolean | undefined;
   result: Array<URLContextResult>;
   /**

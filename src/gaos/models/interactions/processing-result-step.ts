@@ -17,7 +17,7 @@ export type ProcessingResultStep = {
   /**
    * Required. ID to match the ID from the function call block.
    */
-  call_id: string;
+  call_id?: string | undefined;
   /**
    * A signature hash for backend validation.
    */

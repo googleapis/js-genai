@@ -14,15 +14,18 @@ import * as triggers from "../triggers/index.js";
 
 export type CreateTriggerGlobals = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
 };
 
 export type CreateTriggerRequest = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
+  /**
+   * Required. The trigger configuration to create.
+   */
   body: triggers.TriggerCreateParams;
 };

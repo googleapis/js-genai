@@ -13,6 +13,10 @@
 import { FileSearchResult } from "./file-search-result.js";
 
 export type FileSearchResultDelta = {
+  /**
+   * Required. ID to match the ID from the function call block.
+   */
+  call_id?: string | undefined;
   result: Array<FileSearchResult>;
   /**
    * A signature hash for backend validation.
