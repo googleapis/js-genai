@@ -1101,9 +1101,50 @@ export type ListEnvironmentFilesParams = {
   api_version?: string;
 };
 
+export type UploadEnvironmentFileParams = {
+  path: string;
+  file: string | Blob | Uint8Array | ArrayBuffer | any;
+  environment?: string;
+  environmentId?: string;
+  mime_type?: string;
+  mimeType?: string;
+  overwrite?: boolean;
+  extract?: boolean;
+  api_version?: string;
+};
+
+function inferMimeType(filePath: string): string | undefined {
+  const ext = filePath.slice(filePath.lastIndexOf('.') + 1).toLowerCase();
+  const mimeTypes: Record<string, string> = {
+    txt: 'text/plain',
+    json: 'application/json',
+    js: 'text/javascript',
+    mjs: 'text/javascript',
+    ts: 'text/plain',
+    py: 'text/x-python',
+    html: 'text/html',
+    htm: 'text/html',
+    css: 'text/css',
+    csv: 'text/csv',
+    xml: 'application/xml',
+    png: 'image/png',
+    jpg: 'image/jpeg',
+    jpeg: 'image/jpeg',
+    gif: 'image/gif',
+    webp: 'image/webp',
+    svg: 'image/svg+xml',
+    pdf: 'application/pdf',
+    zip: 'application/zip',
+    tar: 'application/x-tar',
+    gz: 'application/gzip',
+  };
+  return mimeTypes[ext];
+}
+
 export class GeminiNextGenEnvironmentFiles {
   constructor(
     private readonly resolveClient: (apiVersion?: string) => GoogleGenAI,
+    private readonly parentClient?: GoogleGenAIParentClient,
   ) {}
 
   async list(
@@ -1125,6 +1166,223 @@ export class GeminiNextGenEnvironmentFiles {
       ),
     );
   }
+
+  async download(
+    params: {
+      environment?: string;
+      environmentId?: string;
+      path: string;
+      api_version?: string;
+    },
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<Uint8Array> {
+    const targetEnv = params.environment ?? params.environmentId;
+    if (!targetEnv) {
+      throw new Error('environment or environmentId is required.');
+    }
+    const envName = targetEnv.startsWith('environments/')
+      ? targetEnv
+      : `environments/${targetEnv}`;
+    const cleanPath = params.path.replace(/^\/+/, '');
+    const downloadPath = `${envName}/files/${cleanPath}`;
+
+    const apiClient = this.parentClient as any;
+    if (!apiClient || typeof apiClient.request !== 'function') {
+      throw new Error('apiClient is required to download files.');
+    }
+    const response = await apiClient.request({
+      path: downloadPath,
+      httpMethod: 'GET',
+      queryParams: { alt: 'media' },
+      httpOptions: {
+        ...(options as any)?.httpOptions,
+        apiVersion: params.api_version ?? (options as any)?.httpOptions?.apiVersion,
+      },
+    });
+
+    if (
+      response &&
+      response.responseInternal &&
+      typeof response.responseInternal.arrayBuffer === 'function'
+    ) {
+      const arrayBuffer = await response.responseInternal.arrayBuffer();
+      return new Uint8Array(arrayBuffer);
+    }
+    throw new Error('Unexpected response type from download');
+  }
+
+  async upload(
+    params: UploadEnvironmentFileParams,
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<environments.EnvironmentFile | environments.GetEnvironmentFilesResponse | any> {
+    const targetEnv = params.environment ?? params.environmentId;
+    if (!targetEnv) {
+      throw new Error('environment or environmentId is required.');
+    }
+    const envName = targetEnv.startsWith('environments/')
+      ? targetEnv
+      : `environments/${targetEnv}`;
+    const cleanPath = params.path.replace(/^\/+/, '');
+    const handshakePath = `${envName}/files/${cleanPath}`;
+
+    const apiClient = this.parentClient as any;
+    if (!apiClient || typeof apiClient.request !== 'function') {
+      throw new Error('apiClient is required to upload files.');
+    }
+
+    let fileData: Blob | Uint8Array;
+    let sizeBytes: number = 0;
+    let mimeType = params.mime_type ?? params.mimeType;
+
+    if (typeof params.file === 'string') {
+      let buffer: any;
+      try {
+        const req = (globalThis as any).require;
+        if (req) {
+          const fs = req('fs');
+          buffer = fs.readFileSync(params.file);
+        }
+      } catch {}
+      if (!buffer && typeof (globalThis as any).process !== 'undefined') {
+        try {
+          const mod =
+            (globalThis as any).process.mainModule?.require ?? (globalThis as any).require;
+          if (mod) {
+            const fs = mod('fs');
+            buffer = fs.readFileSync(params.file);
+          }
+        } catch {}
+      }
+      if (buffer) {
+        fileData = new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.byteLength);
+        sizeBytes = fileData.byteLength;
+      } else {
+        throw new Error(
+          `Unable to read file from path "${params.file}". File path string inputs are only supported in Node.js environments.`,
+        );
+      }
+      if (!mimeType) {
+        mimeType = inferMimeType(params.file);
+      }
+    } else if (typeof Blob !== 'undefined' && params.file instanceof Blob) {
+      fileData = params.file;
+      sizeBytes = params.file.size;
+      if (!mimeType && params.file.type) {
+        mimeType = params.file.type;
+      }
+    } else if (params.file instanceof Uint8Array || params.file instanceof ArrayBuffer) {
+      fileData =
+        params.file instanceof ArrayBuffer ? new Uint8Array(params.file) : params.file;
+      sizeBytes = fileData.byteLength;
+    } else if (
+      typeof (globalThis as any).Buffer !== 'undefined' &&
+      typeof (globalThis as any).Buffer.isBuffer === 'function' &&
+      (globalThis as any).Buffer.isBuffer(params.file)
+    ) {
+      const buf = params.file as any;
+      fileData = new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength);
+      sizeBytes = fileData.byteLength;
+    } else {
+      throw new Error('Unsupported file type for upload.');
+    }
+
+    if (!mimeType) {
+      mimeType = 'application/octet-stream';
+    }
+
+    const queryParams: Record<string, string> = {};
+    if (params.overwrite !== undefined) {
+      queryParams['overwrite'] = params.overwrite ? 'true' : 'false';
+    }
+    if (params.extract !== undefined) {
+      queryParams['extract'] = params.extract ? 'true' : 'false';
+    }
+
+    const handshakeHeaders: Record<string, string> = {
+      ...((options as any)?.httpOptions?.headers || {}),
+      'X-Goog-Upload-Protocol': 'resumable',
+      'X-Goog-Upload-Command': 'start',
+      'X-Goog-Upload-Header-Content-Length': `${sizeBytes}`,
+      'X-Goog-Upload-Header-Content-Type': mimeType,
+    };
+
+    const handshakeResponse = await apiClient.request({
+      path: handshakePath,
+      httpMethod: 'PUT',
+      queryParams,
+      httpOptions: {
+        ...(options as any)?.httpOptions,
+        apiVersion: params.api_version ?? (options as any)?.httpOptions?.apiVersion,
+        headers: handshakeHeaders,
+      },
+    });
+
+    const uploadUrl =
+      handshakeResponse?.headers?.['x-goog-upload-url'] ??
+      handshakeResponse?.headers?.['X-Goog-Upload-URL'] ??
+      (typeof handshakeResponse?.headers?.get === 'function'
+        ? handshakeResponse.headers.get('x-goog-upload-url')
+        : undefined);
+
+    if (!uploadUrl) {
+      throw new Error('Failed to get upload URL from upload handshake response.');
+    }
+
+    const CHUNK_SIZE = 8 * 1024 * 1024;
+    let offset = 0;
+    let uploadResponse: any;
+
+    const blob = fileData instanceof Blob ? fileData : new Blob([fileData]);
+
+    while (offset < sizeBytes || (sizeBytes === 0 && offset === 0)) {
+      const end = Math.min(offset + CHUNK_SIZE, sizeBytes);
+      const chunk = blob.slice(offset, end);
+      const isFinal = end >= sizeBytes;
+      const uploadCommand = isFinal ? 'upload, finalize' : 'upload';
+
+      uploadResponse = await apiClient.request({
+        path: '',
+        body: chunk,
+        httpMethod: 'POST',
+        httpOptions: {
+          ...(options as any)?.httpOptions,
+          apiVersion: '',
+          baseUrl: uploadUrl,
+          headers: {
+            ...((options as any)?.httpOptions?.headers || {}),
+            'X-Goog-Upload-Command': uploadCommand,
+            'X-Goog-Upload-Offset': `${offset}`,
+          },
+        },
+      });
+
+      offset = end;
+      if (isFinal) {
+        break;
+      }
+    }
+
+    let resJson: any;
+    if (uploadResponse && typeof uploadResponse.json === 'function') {
+      resJson = await uploadResponse.json();
+    } else if (
+      uploadResponse &&
+      uploadResponse.responseInternal &&
+      typeof uploadResponse.responseInternal.json === 'function'
+    ) {
+      resJson = await uploadResponse.responseInternal.json();
+    }
+
+    if (resJson && typeof resJson === 'object') {
+      if (resJson.file && typeof resJson.file === 'object') {
+        return resJson.file;
+      }
+      if (Array.isArray(resJson.files)) {
+        return resJson;
+      }
+    }
+    return resJson;
+  }
 }
 
 export class GeminiNextGenEnvironments {
@@ -1132,8 +1390,9 @@ export class GeminiNextGenEnvironments {
   readonly files: GeminiNextGenEnvironmentFiles;
 
   constructor(private readonly parentClient: GoogleGenAIParentClient) {
-    this.files = new GeminiNextGenEnvironmentFiles((apiVersion) =>
-      this.getClient(apiVersion),
+    this.files = new GeminiNextGenEnvironmentFiles(
+      (apiVersion) => this.getClient(apiVersion),
+      this.parentClient,
     );
   }
 
