@@ -2,6 +2,44 @@
 
 
 
+## [2.22.0](https://github.com/googleapis/js-genai/compare/v2.21.0...v2.22.0) (2026-09-10)
+
+
+### Features
+
+* Add from_environment support for environment copying ([01ed17e](https://github.com/googleapis/js-genai/commit/01ed17e245d0b5c5293acdf146b6be252ea70ffd))
+
+
+### Bug Fixes
+
+* Add [@ts-ignore](https://github.com/ts-ignore) before optional MCP imports in declaration files ([7b5ef39](https://github.com/googleapis/js-genai/commit/7b5ef39e3d69da292890decd5093629533609ef9))
+* Remove unused field from FunctionResultDelta ([aeb7453](https://github.com/googleapis/js-genai/commit/aeb745302671ac0b70d48a4b4415952f12970a76))
+* Repair node fallback manifest and complete web entries ([0f59bf8](https://github.com/googleapis/js-genai/commit/0f59bf8317bbf782d232c3700d48cd8f5cbaffb5))
+
+## [2.21.0](https://github.com/googleapis/js-genai/compare/v2.20.0...v2.21.0) (2026-09-02)
+
+
+### Features
+
+* Add Gemini 3.8 Flash model to SDKs and update Flash model descriptions ([4a969fe](https://github.com/googleapis/js-genai/commit/4a969feeb938d05faa8389a476a268c1649a7695))
+
+## [2.20.0](https://github.com/googleapis/js-genai/compare/v2.19.0...v2.20.0) (2026-08-31)
+
+
+### Features
+
+* Add support for the audio/webm MIME type. ([b0e3c5f](https://github.com/googleapis/js-genai/commit/b0e3c5f54bbddd875eaa88c699f1b85d5a55918f))
+* Add translation_config SDK support for GEAP. ([3e1d923](https://github.com/googleapis/js-genai/commit/3e1d923ef914812c1d209aa2e5461a717d03a081))
+* add Video Understanding support to the Interactions API ([6ddbeba](https://github.com/googleapis/js-genai/commit/6ddbeba6c3836378f58351e6885f5141aab0c1e7))
+
+
+### Bug Fixes
+
+* Don't set redundant Content-Length on file upload requests ([2f5cc7a](https://github.com/googleapis/js-genai/commit/2f5cc7a00852608a46ffa3bd8cab5d02783810d6))
+* Don't set redundant Content-Length on file upload requests ([2f5cc7a](https://github.com/googleapis/js-genai/commit/2f5cc7a00852608a46ffa3bd8cab5d02783810d6)), refs [#1718](https://github.com/googleapis/js-genai/issues/1718)
+* expose ProcessingCallStep and ProcessingResultStep in Interactions SDK ([b6f8db5](https://github.com/googleapis/js-genai/commit/b6f8db553449199ebba1678dbb0936300e982990))
+* Quote setupComplete key in LiveClientMessage ([4467faf](https://github.com/googleapis/js-genai/commit/4467fafb08948863889f7e87917d311ed39c0884))
+
 ## [2.19.0](https://github.com/googleapis/js-genai/compare/v2.18.0...v2.19.0) (2026-08-25)
 
 
