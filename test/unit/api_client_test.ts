@@ -431,6 +431,72 @@ describe('processStreamResponse', () => {
     const final = await generator.next();
     expect(final.done).toBeTrue();
   });
+
+  it('should not cancel the response body after full consumption', async () => {
+    const cancel = spyOn(
+      ReadableStreamDefaultReader.prototype,
+      'cancel',
+    ).and.callThrough();
+    const response = new Response(
+      new ReadableStream({
+        start(controller) {
+          controller.enqueue(new TextEncoder().encode('data: {"chunk":1}\n\n'));
+          controller.close();
+        },
+      }),
+    );
+
+    const generator = apiClient.processStreamResponse(response);
+    await generator.next();
+    await generator.next();
+
+    expect(cancel).not.toHaveBeenCalled();
+  });
+
+  it('should cancel the response body when the consumer stops early', async () => {
+    let cancelled = false;
+    const response = new Response(
+      new ReadableStream({
+        start(controller) {
+          controller.enqueue(new TextEncoder().encode('data: {"chunk":1}\n\n'));
+        },
+        cancel() {
+          cancelled = true;
+        },
+      }),
+    );
+
+    const generator = apiClient.processStreamResponse(response);
+    await generator.next();
+    await generator.return(undefined);
+
+    expect(cancelled).toBeTrue();
+  });
+
+  it('should preserve the stream error when cancellation fails', async () => {
+    let cancelled = false;
+    const response = new Response(
+      new ReadableStream({
+        start(controller) {
+          controller.enqueue(
+            new TextEncoder().encode(
+              '{"error":{"code":500,"message":"Internal error","status":"INTERNAL"}}',
+            ),
+          );
+        },
+        cancel() {
+          cancelled = true;
+          throw new Error('cancel failed');
+        },
+      }),
+    );
+
+    const generator = apiClient.processStreamResponse(response);
+    await expectAsync(generator.next()).toBeRejectedWithError(
+      'got status: INTERNAL. {"error":{"code":500,"message":"Internal error","status":"INTERNAL"}}',
+    );
+    expect(cancelled).toBeTrue();
+  });
 });
 
 describe('ApiClient', () => {
