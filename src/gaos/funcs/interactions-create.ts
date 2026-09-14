@@ -12,6 +12,7 @@
 
 import { GoogleGenAICore } from "../core.js";
 import { encodeJSON, encodeSimple } from "../lib/encodings.js";
+import { Stream } from "../lib/event-streams.js";
 import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
@@ -27,6 +28,7 @@ import {
   UnexpectedClientError,
 } from "../models/errors/http-client-errors.js";
 import * as errors from "../models/errors/index.js";
+import * as interactions from "../models/interactions/index.js";
 import * as operations from "../models/operations/index.js";
 import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
@@ -44,7 +46,7 @@ export function interactionsCreate(
   options?: RequestOptions,
 ): APIPromise<
   Result<
-    operations.CreateInteractionResponse,
+    interactions.Interaction,
     | errors.CreateInteractionClientError
     | errors.CreateInteractionServerError
     | GoogleGenAiError
@@ -62,7 +64,7 @@ export function interactionsCreate(
   options?: RequestOptions,
 ): APIPromise<
   Result<
-    operations.CreateInteractionResponse,
+    Stream<interactions.InteractionSSEEvent>,
     | errors.CreateInteractionClientError
     | errors.CreateInteractionServerError
     | GoogleGenAiError
