@@ -12,6 +12,7 @@
 
 import { ClientSDK } from "../lib/sdks.js";
 import { Agents } from "./agents.js";
+import { Credentials } from "./credentials.js";
 import { Environments } from "./environments.js";
 import { Interactions } from "./interactions.js";
 import { Triggers } from "./triggers.js";
@@ -21,6 +22,11 @@ export class GoogleGenAI extends ClientSDK {
   private _agents?: Agents;
   get agents(): Agents {
     return (this._agents ??= new Agents(this._options));
+  }
+
+  private _credentials?: Credentials;
+  get credentials(): Credentials {
+    return (this._credentials ??= new Credentials(this._options));
   }
 
   private _environments?: Environments;

@@ -22,6 +22,10 @@ export type Transform = Array<{ [k: string]: string }> | {
  */
 export type AllowlistEntry = {
   /**
+   * Optional. Reference to a server-managed Credential resource by ID.
+   */
+  credential?: string | undefined;
+  /**
    * Domain to allow outbound requests to. Supports wildcards (e.g. '*.googleapis.com'). Use '*' to allow all domains.
    */
   domain: string;
