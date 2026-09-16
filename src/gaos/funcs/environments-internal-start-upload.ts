@@ -18,7 +18,6 @@ import { compactMap } from "../lib/primitives.js";
 import { RequestOptions } from "../lib/sdks.js";
 import { extractSecurity, resolveGlobalSecurity } from "../lib/security.js";
 import { pathToFunc } from "../lib/url.js";
-import * as environments from "../models/environments/index.js";
 import { GoogleGenAiError } from "../models/errors/google-gen-ai-error.js";
 import {
   ConnectionError,
@@ -32,20 +31,28 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Retrieves file metadata or directory contents from an environment's snapshot. To download file contents directly, pass ?alt=media or use the files.download helper.
+ * Start an environment file upload
+ *
+ * @remarks
+ * Starts a resumable upload session for a file in an environment workspace.
+ * Upload the file bytes to the URL returned in the `X-Goog-Upload-URL`
+ * response header, using the resumable upload protocol.
  */
-export function environmentsFilesList(
+export function environmentsInternalStartUpload(
   client: GoogleGenAICore,
   environment: string,
   path: string,
+  x_goog_upload_command: "start" | undefined,
+  x_goog_upload_header_content_length: number,
+  x_goog_upload_header_content_type: string,
+  x_goog_upload_protocol: "resumable" | undefined,
   api_version?: string | undefined,
-  page_size?: number | undefined,
-  page_token?: string | undefined,
-  recursive?: boolean | undefined,
+  extract?: boolean | undefined,
+  overwrite?: boolean | undefined,
   options?: Omit<RequestOptions, "extra_body">,
 ): APIPromise<
   Result<
-    environments.GetEnvironmentFilesResponse,
+    operations.StartEnvironmentFileUploadResponse | undefined,
     | GoogleGenAiError
     | ConnectionError
     | RequestAbortedError
@@ -58,10 +65,13 @@ export function environmentsFilesList(
     client,
     environment,
     path,
+    x_goog_upload_command,
+    x_goog_upload_header_content_length,
+    x_goog_upload_header_content_type,
+    x_goog_upload_protocol,
     api_version,
-    page_size,
-    page_token,
-    recursive,
+    extract,
+    overwrite,
     options,
   ));
 }
@@ -70,15 +80,18 @@ async function $do(
   client: GoogleGenAICore,
   environment: string,
   path: string,
+  x_goog_upload_command: "start" | undefined,
+  x_goog_upload_header_content_length: number,
+  x_goog_upload_header_content_type: string,
+  x_goog_upload_protocol: "resumable" | undefined,
   api_version?: string | undefined,
-  page_size?: number | undefined,
-  page_token?: string | undefined,
-  recursive?: boolean | undefined,
+  extract?: boolean | undefined,
+  overwrite?: boolean | undefined,
   options?: Omit<RequestOptions, "extra_body">,
 ): Promise<
   [
     Result<
-      environments.GetEnvironmentFilesResponse,
+      operations.StartEnvironmentFileUploadResponse | undefined,
       | GoogleGenAiError
       | ConnectionError
       | RequestAbortedError
@@ -89,13 +102,16 @@ async function $do(
     APICall,
   ]
 > {
-  const input: operations.GetEnvironmentFilesRequest = {
+  const input: operations.StartEnvironmentFileUploadRequest = {
     environment: environment,
     path: path,
+    "X-Goog-Upload-Command": x_goog_upload_command,
+    "X-Goog-Upload-Header-Content-Length": x_goog_upload_header_content_length,
+    "X-Goog-Upload-Header-Content-Type": x_goog_upload_header_content_type,
+    "X-Goog-Upload-Protocol": x_goog_upload_protocol,
     api_version: api_version,
-    page_size: page_size,
-    page_token: page_token,
-    recursive: recursive,
+    extract: extract,
+    overwrite: overwrite,
   };
 
   const payload = input;
@@ -117,17 +133,36 @@ async function $do(
     }),
   };
   const path$ = pathToFunc(
-    "/{api_version}/environments/{environment}/files/{path}",
+    "/upload/{api_version}/environments/{environment}/files/{path}",
   )(pathParams);
 
   const query = encodeFormQuery({
-    "page_size": payload.page_size,
-    "page_token": payload.page_token,
-    "recursive": payload.recursive,
+    "extract": payload.extract,
+    "overwrite": payload.overwrite,
   });
 
   const headers = new Headers(compactMap({
-    Accept: "application/json",
+    Accept: "*/*",
+    "X-Goog-Upload-Command": encodeSimple(
+      "X-Goog-Upload-Command",
+      payload["X-Goog-Upload-Command"],
+      { explode: false, charEncoding: "none" },
+    ),
+    "X-Goog-Upload-Header-Content-Length": encodeSimple(
+      "X-Goog-Upload-Header-Content-Length",
+      payload["X-Goog-Upload-Header-Content-Length"],
+      { explode: false, charEncoding: "none" },
+    ),
+    "X-Goog-Upload-Header-Content-Type": encodeSimple(
+      "X-Goog-Upload-Header-Content-Type",
+      payload["X-Goog-Upload-Header-Content-Type"],
+      { explode: false, charEncoding: "none" },
+    ),
+    "X-Goog-Upload-Protocol": encodeSimple(
+      "X-Goog-Upload-Protocol",
+      payload["X-Goog-Upload-Protocol"],
+      { explode: false, charEncoding: "none" },
+    ),
   }));
 
   const securityInput = await extractSecurity(client._options.security);
@@ -136,7 +171,7 @@ async function $do(
   const context = {
     options: client._options,
     base_url: options?.server_url ?? client._baseURL ?? "",
-    operation_id: "GetEnvironmentFiles",
+    operation_id: "StartEnvironmentFileUpload",
     o_auth2_scopes: null,
 
     resolved_security: requestSecurity,
@@ -161,7 +196,7 @@ async function $do(
 
   const requestRes = client._createRequest(context, {
     security: requestSecurity,
-    method: "GET",
+    method: "PUT",
     baseURL: options?.server_url,
     path: path$,
     headers: headers,
@@ -187,8 +222,12 @@ async function $do(
   }
   const response = doResult.value;
 
+  const responseFields = {
+    httpMeta: { response: response, request: req },
+  };
+
   const [result] = await M.match<
-    environments.GetEnvironmentFilesResponse,
+    operations.StartEnvironmentFileUploadResponse | undefined,
     | GoogleGenAiError
     | ConnectionError
     | RequestAbortedError
@@ -196,10 +235,12 @@ async function $do(
     | InvalidRequestError
     | UnexpectedClientError
   >(
-    M.json<environments.GetEnvironmentFilesResponse>(200),
+    M.nil<operations.StartEnvironmentFileUploadResponse | undefined>(200, {
+      hdrs: true,
+    }),
     M.fail("4XX"),
     M.fail("5XX"),
-  )(response, req);
+  )(response, req, { extraFields: responseFields });
   if (!result.ok) {
     return [result, { status: "complete", request: req, response }];
   }

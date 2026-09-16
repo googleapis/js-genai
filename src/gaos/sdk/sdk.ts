@@ -19,6 +19,11 @@ import { Triggers } from "./triggers.js";
 import { Webhooks } from "./webhooks.js";
 
 export class GoogleGenAI extends ClientSDK {
+  private _environments?: Environments;
+  get environments(): Environments {
+    return (this._environments ??= new Environments(this._options));
+  }
+
   private _agents?: Agents;
   get agents(): Agents {
     return (this._agents ??= new Agents(this._options));
@@ -27,11 +32,6 @@ export class GoogleGenAI extends ClientSDK {
   private _credentials?: Credentials;
   get credentials(): Credentials {
     return (this._credentials ??= new Credentials(this._options));
-  }
-
-  private _environments?: Environments;
-  get environments(): Environments {
-    return (this._environments ??= new Environments(this._options));
   }
 
   private _interactions?: Interactions;

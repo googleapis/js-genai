@@ -40,6 +40,7 @@ export * from "./method-params.js";
 export * from "./ping-webhook.js";
 export * from "./rotate-signing-secret.js";
 export * from "./run-trigger.js";
+export * from "./start-environment-file-upload.js";
 export * from "./update-credential.js";
 export * from "./update-trigger.js";
 export * from "./update-webhook.js";

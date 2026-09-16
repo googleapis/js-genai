@@ -44,6 +44,7 @@ import type { ListTriggerExecutionsRequest } from "./list-trigger-executions.js"
 import type { ListTriggersRequest } from "./list-triggers.js";
 import type { ListWebhooksRequest } from "./list-webhooks.js";
 import type { RunTriggerRequest } from "./run-trigger.js";
+import type { StartEnvironmentFileUploadRequest } from "./start-environment-file-upload.js";
 import type { UpdateCredentialRequest } from "./update-credential.js";
 import type { UpdateTriggerRequest } from "./update-trigger.js";
 import type { UpdateWebhookRequest } from "./update-webhook.js";
@@ -242,6 +243,11 @@ export type ListWebhooksParams = ListWebhooksRequest;
 export type RunTriggerParams = Omit<
   RunTriggerRequest,
   "trigger_id"
+>;
+
+export type StartEnvironmentFileUploadParams = Omit<
+  StartEnvironmentFileUploadRequest,
+  "environment" | "path"
 >;
 
 export type UpdateCredentialParams =
