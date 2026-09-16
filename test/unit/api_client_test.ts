@@ -2803,3 +2803,193 @@ describe('includeExtraBodyToRequestInit', () => {
     },
   );
 });
+
+describe('custom fetch', () => {
+  let globalFetchSpy: jasmine.Spy;
+
+  beforeEach(() => {
+    globalFetchSpy = spyOn(globalThis, 'fetch').and.callFake(() =>
+      Promise.resolve(new Response(JSON.stringify({ok: true}), fetchOkOptions)),
+    );
+  });
+
+  it('should use client-level custom fetch for unary requests', async () => {
+    const customFetch = jasmine
+      .createSpy('customFetch')
+      .and.callFake(() =>
+        Promise.resolve(
+          new Response(
+            JSON.stringify({result: 'from-custom-fetch'}),
+            fetchOkOptions,
+          ),
+        ),
+      );
+    const client = new ApiClient({
+      auth: new FakeAuth(),
+      apiKey: 'test-api-key',
+      uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
+      httpOptions: {
+        baseUrl: 'https://generativelanguage.googleapis.com',
+        apiVersion: 'v1beta',
+        fetch: customFetch,
+      },
+    });
+
+    const response = await client.request({
+      path: 'test-path',
+      httpMethod: 'POST',
+      body: JSON.stringify({input: 'hello'}),
+    });
+
+    expect(customFetch).toHaveBeenCalledTimes(1);
+    expect(globalFetchSpy).not.toHaveBeenCalled();
+    const [callUrl, callInit] = customFetch.calls.first().args;
+    expect(callUrl).toContain(
+      'https://generativelanguage.googleapis.com/v1beta/test-path',
+    );
+    expect((callInit as RequestInit).method).toBe('POST');
+    const json = (await response.json()) as Record<string, unknown>;
+    expect(json['result']).toBe('from-custom-fetch');
+  });
+
+  it('should use client-level custom fetch for streaming requests', async () => {
+    const streamContent =
+      'data: {"candidates": [{"content": {"parts": [{"text": "streamed"}]}}]}\n\n';
+    const customFetch = jasmine.createSpy('customFetch').and.callFake(() =>
+      Promise.resolve(
+        new Response(streamContent, {
+          status: 200,
+          statusText: 'OK',
+          headers: {'Content-Type': 'text/event-stream'},
+        }),
+      ),
+    );
+    const client = new ApiClient({
+      auth: new FakeAuth(),
+      apiKey: 'test-api-key',
+      uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
+      httpOptions: {
+        baseUrl: 'https://generativelanguage.googleapis.com',
+        apiVersion: 'v1beta',
+        fetch: customFetch,
+      },
+    });
+
+    const stream = await client.requestStream({
+      path: 'test-stream',
+      httpMethod: 'POST',
+    });
+
+    const chunks = [];
+    for await (const chunk of stream) {
+      chunks.push(chunk);
+    }
+    expect(customFetch).toHaveBeenCalledTimes(1);
+    expect(globalFetchSpy).not.toHaveBeenCalled();
+    expect(chunks.length).toBe(1);
+  });
+
+  it('should allow request-level fetch to override client-level fetch', async () => {
+    const clientFetch = jasmine
+      .createSpy('clientFetch')
+      .and.callFake(() =>
+        Promise.resolve(
+          new Response(JSON.stringify({from: 'client'}), fetchOkOptions),
+        ),
+      );
+    const requestFetch = jasmine
+      .createSpy('requestFetch')
+      .and.callFake(() =>
+        Promise.resolve(
+          new Response(JSON.stringify({from: 'request'}), fetchOkOptions),
+        ),
+      );
+    const client = new ApiClient({
+      auth: new FakeAuth(),
+      apiKey: 'test-api-key',
+      uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
+      httpOptions: {
+        baseUrl: 'https://generativelanguage.googleapis.com',
+        apiVersion: 'v1beta',
+        fetch: clientFetch,
+      },
+    });
+
+    const response = await client.request({
+      path: 'test-path',
+      httpMethod: 'POST',
+      httpOptions: {
+        fetch: requestFetch,
+      },
+    });
+
+    expect(requestFetch).toHaveBeenCalledTimes(1);
+    expect(clientFetch).not.toHaveBeenCalled();
+    expect(globalFetchSpy).not.toHaveBeenCalled();
+    const json = (await response.json()) as Record<string, unknown>;
+    expect(json['from']).toBe('request');
+  });
+
+  it('should preserve client-level fetch when request-level httpOptions does not specify fetch', async () => {
+    const clientFetch = jasmine
+      .createSpy('clientFetch')
+      .and.callFake(() =>
+        Promise.resolve(
+          new Response(JSON.stringify({from: 'client'}), fetchOkOptions),
+        ),
+      );
+    const client = new ApiClient({
+      auth: new FakeAuth(),
+      apiKey: 'test-api-key',
+      uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
+      httpOptions: {
+        baseUrl: 'https://generativelanguage.googleapis.com',
+        apiVersion: 'v1beta',
+        fetch: clientFetch,
+      },
+    });
+
+    await client.request({
+      path: 'test-path',
+      httpMethod: 'POST',
+      httpOptions: {
+        headers: {'X-Custom-Header': 'custom-val'},
+      },
+    });
+
+    expect(clientFetch).toHaveBeenCalledTimes(1);
+    expect(globalFetchSpy).not.toHaveBeenCalled();
+  });
+
+  it('should expose getFetch() on ApiClient', () => {
+    const customFetch = () => Promise.resolve(new Response());
+    const clientWithFetch = new ApiClient({
+      auth: new FakeAuth(),
+      apiKey: 'test-api-key',
+      uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
+      httpOptions: {
+        baseUrl: 'https://generativelanguage.googleapis.com',
+        apiVersion: 'v1beta',
+        fetch: customFetch,
+      },
+    });
+    expect(clientWithFetch.getFetch()).toBe(customFetch);
+
+    const clientWithoutFetch = new ApiClient({
+      auth: new FakeAuth(),
+      apiKey: 'test-api-key',
+      uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
+      httpOptions: {
+        baseUrl: 'https://generativelanguage.googleapis.com',
+        apiVersion: 'v1beta',
+      },
+    });
+    expect(clientWithoutFetch.getFetch()).toBeUndefined();
+  });
+});

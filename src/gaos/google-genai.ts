@@ -22,6 +22,7 @@ import {
 
 import { wrapSDKError } from "./lib/compat-errors.js";
 import { Stream } from "./lib/event-streams.js";
+import { HTTPClient, type Fetcher } from "./lib/http.js";
 import { GoogleGenAI } from "./sdk/sdk.js";
 import type {
   CreateAgentInteractionParamsNonStreaming,
@@ -94,6 +95,7 @@ export interface GoogleGenAIParentClient {
   getDefaultHeaders?(): Record<string, string>;
   getHeaders?(): Record<string, string> | undefined;
   getAuthHeaders(url?: string): Headers | Promise<Headers>;
+  getFetch?(): Fetcher | undefined;
 }
 
 export function getGoogleGenAIServerURL(
@@ -128,8 +130,14 @@ export function buildGoogleGenAIClient(
   parentClient: GoogleGenAIParentClient,
   options: SDKOptions = {},
 ): GoogleGenAI {
+  const fetchFn = options.http_client ? undefined : parentClient.getFetch?.();
+  const httpClient =
+    options.http_client ??
+    (fetchFn ? new HTTPClient({ fetcher: fetchFn }) : undefined);
+
   const sdk = new GoogleGenAI({
     ...options,
+    http_client: httpClient,
     api_version: options.api_version ?? getGoogleGenAIAPIVersion(parentClient),
     security:
       options.security ??

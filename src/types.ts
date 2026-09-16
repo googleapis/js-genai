@@ -2351,6 +2351,8 @@ export declare interface HttpOptions {
   extraBody?: Record<string, unknown>;
   /** HTTP retry options for the request. */
   retryOptions?: HttpRetryOptions;
+  /** Custom fetch implementation to use for network requests. */
+  fetch?: Fetch;
 }
 
 /** Schema is used to define the format of input/output data.
@@ -7925,6 +7927,12 @@ export declare interface RegisterFilesParameters {
   /** Used to override the default configuration. */
   config?: RegisterFilesConfig;
 }
+
+/** A custom fetch function type matching the standard fetch signature. */
+export type Fetch = (
+  input: RequestInfo | URL,
+  init?: RequestInit,
+) => Promise<Response>;
 
 /** Configures automatic detection of activity. */
 export declare interface AutomaticActivityDetection {
