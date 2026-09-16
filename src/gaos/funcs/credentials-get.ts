@@ -11,14 +11,14 @@
  */
 
 import { GoogleGenAICore } from "../core.js";
-import { encodeFormQuery, encodeSimple } from "../lib/encodings.js";
+import { encodeSimple } from "../lib/encodings.js";
 import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
 import { RequestOptions } from "../lib/sdks.js";
 import { extractSecurity, resolveGlobalSecurity } from "../lib/security.js";
 import { pathToFunc } from "../lib/url.js";
-import * as environments from "../models/environments/index.js";
+import * as credentials from "../models/credentials/index.js";
 import { GoogleGenAiError } from "../models/errors/google-gen-ai-error.js";
 import {
   ConnectionError,
@@ -32,20 +32,16 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Retrieves file metadata or directory contents from an environment's snapshot. To download file contents directly, pass ?alt=media or use the files.download helper.
+ * Gets metadata of a single credential (no secret fields).
  */
-export function environmentsFilesList(
+export function credentialsGet(
   client: GoogleGenAICore,
-  environment: string,
-  path: string,
+  id: string,
   api_version?: string | undefined,
-  page_size?: number | undefined,
-  page_token?: string | undefined,
-  recursive?: boolean | undefined,
   options?: Omit<RequestOptions, "extra_body">,
 ): APIPromise<
   Result<
-    environments.GetEnvironmentFilesResponse,
+    credentials.Credential,
     | GoogleGenAiError
     | ConnectionError
     | RequestAbortedError
@@ -56,29 +52,21 @@ export function environmentsFilesList(
 > {
   return new APIPromise($do(
     client,
-    environment,
-    path,
+    id,
     api_version,
-    page_size,
-    page_token,
-    recursive,
     options,
   ));
 }
 
 async function $do(
   client: GoogleGenAICore,
-  environment: string,
-  path: string,
+  id: string,
   api_version?: string | undefined,
-  page_size?: number | undefined,
-  page_token?: string | undefined,
-  recursive?: boolean | undefined,
   options?: Omit<RequestOptions, "extra_body">,
 ): Promise<
   [
     Result<
-      environments.GetEnvironmentFilesResponse,
+      credentials.Credential,
       | GoogleGenAiError
       | ConnectionError
       | RequestAbortedError
@@ -89,13 +77,9 @@ async function $do(
     APICall,
   ]
 > {
-  const input: operations.GetEnvironmentFilesRequest = {
-    environment: environment,
-    path: path,
+  const input: operations.GetCredentialRequest = {
+    id: id,
     api_version: api_version,
-    page_size: page_size,
-    page_token: page_token,
-    recursive: recursive,
   };
 
   const payload = input;
@@ -107,24 +91,12 @@ async function $do(
       payload.api_version ?? client._options.api_version,
       { explode: false, charEncoding: "percent" },
     ),
-    environment: encodeSimple("environment", payload.environment, {
-      explode: false,
-      charEncoding: "percent",
-    }),
-    path: encodeSimple("path", payload.path, {
+    id: encodeSimple("id", payload.id, {
       explode: false,
       charEncoding: "percent",
     }),
   };
-  const path$ = pathToFunc(
-    "/{api_version}/environments/{environment}/files/{path}",
-  )(pathParams);
-
-  const query = encodeFormQuery({
-    "page_size": payload.page_size,
-    "page_token": payload.page_token,
-    "recursive": payload.recursive,
-  });
+  const path = pathToFunc("/{api_version}/credentials/{id}")(pathParams);
 
   const headers = new Headers(compactMap({
     Accept: "application/json",
@@ -136,7 +108,7 @@ async function $do(
   const context = {
     options: client._options,
     base_url: options?.server_url ?? client._baseURL ?? "",
-    operation_id: "GetEnvironmentFiles",
+    operation_id: "GetCredential",
     o_auth2_scopes: null,
 
     resolved_security: requestSecurity,
@@ -163,9 +135,8 @@ async function $do(
     security: requestSecurity,
     method: "GET",
     baseURL: options?.server_url,
-    path: path$,
+    path: path,
     headers: headers,
-    query: query,
     body: body,
     userAgent: client._options.user_agent,
     timeout_ms: options?.timeout_ms || client._options.timeout_ms || -1,
@@ -188,7 +159,7 @@ async function $do(
   const response = doResult.value;
 
   const [result] = await M.match<
-    environments.GetEnvironmentFilesResponse,
+    credentials.Credential,
     | GoogleGenAiError
     | ConnectionError
     | RequestAbortedError
@@ -196,7 +167,7 @@ async function $do(
     | InvalidRequestError
     | UnexpectedClientError
   >(
-    M.json<environments.GetEnvironmentFilesResponse>(200),
+    M.json<credentials.Credential>(200),
     M.fail("4XX"),
     M.fail("5XX"),
   )(response, req);
