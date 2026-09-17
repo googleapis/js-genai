@@ -60,7 +60,6 @@
     }
   },
   "scripts": {
-    "preinstall": "echo 'preinstall: no-op'",
     "prepare": "node scripts/prepare.js",
     "prepack": "echo 'prepack: no-op'",
     "postpack": "echo 'postpack: no-op'",
