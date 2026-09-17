@@ -2,17 +2,6 @@
 
 
 
-## [2.23.0](https://github.com/googleapis/js-genai/compare/v2.22.0...v2.23.0) (2026-09-16)
-
-
-### Features
-
-* add credential APIs resource to gaos. ([0e6410b](https://github.com/googleapis/js-genai/commit/0e6410ba86a95e96e9867b728efc865ca14d94d8))
-* Add RetrievalCallStep and RetrievalResultStep to interactions schema and SDKs. ([d03d569](https://github.com/googleapis/js-genai/commit/d03d56902e75d11e55d89194346cf6deae6d518e))
-* implement environments files upload and download across Python and TypeScript SDKs ([3a4c512](https://github.com/googleapis/js-genai/commit/3a4c5120217e92348912d698eff4f6e61f53f6f0))
-* support custom fetch in HttpOptions ([01897b3](https://github.com/googleapis/js-genai/commit/01897b33eecdbcefbe8e4f83eb336735a2a464b6))
-* wire credential APIs resource to sdk. ([280da75](https://github.com/googleapis/js-genai/commit/280da75a277e2964cbf1dfb8d31400b69aeeed21))
-
 ## [2.22.0](https://github.com/googleapis/js-genai/compare/v2.21.0...v2.22.0) (2026-09-10)
 
 
