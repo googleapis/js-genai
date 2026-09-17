@@ -5,7 +5,10 @@
  */
 
 import {once} from 'node:events';
+import {existsSync, unlinkSync, writeFileSync} from 'node:fs';
 import {createServer, type IncomingHttpHeaders} from 'node:http';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
 
 import {GoogleGenAI} from '../../src/client.js';
 
@@ -387,6 +390,135 @@ describe('Environments Lifecycle', () => {
       expect(res.files).toBeDefined();
       expect(res.files.length).toBe(2);
       expect(res.files[0].name).toBe('a.txt');
+    } finally {
+      server.close();
+      await once(server, 'close');
+    }
+  });
+
+  it('uploads environment file with Blob, Buffer, ArrayBuffer, and file path string', async () => {
+    const capturedRequests: Array<{
+      method: string;
+      url: string;
+      headers: IncomingHttpHeaders;
+      body?: string;
+    }> = [];
+    let serverPort = 0;
+
+    const server = createServer(async (request, response) => {
+      request.setEncoding('utf8');
+      let body = '';
+      for await (const chunk of request) {
+        body += chunk;
+      }
+
+      capturedRequests.push({
+        method: request.method!,
+        url: request.url!,
+        headers: request.headers,
+        body,
+      });
+
+      if (request.method === 'PUT') {
+        response.setHeader(
+          'x-goog-upload-url',
+          `http://127.0.0.1:${serverPort}/upload_multi`,
+        );
+        response.setHeader('x-goog-upload-status', 'active');
+        response.end();
+      } else if (request.method === 'POST' && request.url === '/upload_multi') {
+        response.setHeader('content-type', 'application/json');
+        response.setHeader('x-goog-upload-status', 'final');
+        response.end(
+          JSON.stringify({
+            file: {
+              name: 'uploaded.txt',
+              path: 'workspace/uploaded.txt',
+              size_bytes: `${body.length}`,
+            },
+          }),
+        );
+      }
+    });
+
+    server.listen(0, '127.0.0.1');
+    await once(server, 'listening');
+
+    const address = server.address();
+    expect(address).toBeDefined();
+    if (!address || typeof address !== 'object') {
+      server.close();
+      return;
+    }
+    serverPort = address.port;
+
+    const ai = new GoogleGenAI({
+      apiKey: 'test-api-key',
+      httpOptions: {
+        apiVersion: 'v1beta',
+        baseUrl: `http://127.0.0.1:${address.port}`,
+      },
+    });
+
+    try {
+      // 1. Upload Blob
+      const blob = new Blob(['hello blob content'], {type: 'text/plain'});
+      const blobRes = await ai.environments.files.upload({
+        environment: 'env_abc_123',
+        path: 'blob.txt',
+        file: blob,
+      });
+      expect(blobRes.files).toBeDefined();
+      expect(blobRes.files.length).toBe(1);
+
+      // 2. Upload Buffer
+      const buffer = Buffer.from('hello buffer content');
+      const bufRes = await ai.environments.files.upload({
+        environment: 'env_abc_123',
+        path: 'buf.txt',
+        file: buffer,
+      });
+      expect(bufRes.files).toBeDefined();
+      expect(bufRes.files.length).toBe(1);
+
+      // 3. Upload ArrayBuffer
+      const arrayBuffer = new TextEncoder().encode(
+        'hello arraybuffer content',
+      ).buffer;
+      const abRes = await ai.environments.files.upload({
+        environment: 'env_abc_123',
+        path: 'arraybuffer.txt',
+        file: arrayBuffer,
+      });
+      expect(abRes.files).toBeDefined();
+      expect(abRes.files.length).toBe(1);
+
+      // 4. Upload file path string
+      const tempFilePath = join(tmpdir(), `test_env_upload_${Date.now()}.txt`);
+      writeFileSync(tempFilePath, 'hello file path content');
+      try {
+        const pathRes = await ai.environments.files.upload({
+          environment: 'env_abc_123',
+          path: 'filepath.txt',
+          file: tempFilePath,
+        });
+        expect(pathRes.files).toBeDefined();
+        expect(pathRes.files.length).toBe(1);
+      } finally {
+        if (existsSync(tempFilePath)) {
+          unlinkSync(tempFilePath);
+        }
+      }
+
+      // Check captured requests bodies for chunk posts
+      const chunkPosts = capturedRequests.filter(
+        (r) => r.method === 'POST' && r.url === '/upload_multi',
+      );
+      expect(chunkPosts.length).toBe(4);
+      expect(chunkPosts[0].body).toBe('hello blob content');
+      expect(chunkPosts[1].body).toBe('hello buffer content');
+      expect(chunkPosts[2].body).toBe('hello arraybuffer content');
+      expect(chunkPosts[3].body).toBe('hello file path content');
     } finally {
       server.close();
       await once(server, 'close');
