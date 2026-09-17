@@ -40,6 +40,7 @@ const externalDeps = [
   'os',
   'protobufjs/minimal',
   'protobufjs/minimal.js',
+  'undici',
   'p-retry',
 ];
 
