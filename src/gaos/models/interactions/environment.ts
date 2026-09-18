@@ -17,7 +17,7 @@ import { Source } from "./source.js";
 /**
  * Environment variables to set in the sandbox environment.
  */
-export type Env = { [k: string]: EnvVar } | string;
+export type Env = EnvVar | { [k: string]: EnvVar };
 
 export type NetworkEnum = "disabled";
 
@@ -33,7 +33,7 @@ export type Environment = {
   /**
    * Environment variables to set in the sandbox environment.
    */
-  env?: { [k: string]: EnvVar } | string | undefined;
+  env?: EnvVar | { [k: string]: EnvVar } | undefined;
   /**
    * Optional. The environment ID for the interaction. If specified, the request will
    *
