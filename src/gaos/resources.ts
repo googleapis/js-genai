@@ -158,6 +158,7 @@ import type { VideoDelta as VideoDelta$Import } from "./models/interactions/vide
 import type { VideoResponseFormat as VideoResponseFormat$Import } from "./models/interactions/video-response-format.js";
 import type { WebhookConfig as WebhookConfig$Import } from "./models/interactions/webhook-config.js";
 import type { WordInfo as WordInfo$Import } from "./models/interactions/word-info.js";
+import type { CreateVoiceRequest as CreateVoiceRequest$Import2 } from "./models/operations/create-voice.js";
 import type {
   CancelInteractionByIdParams as CancelInteractionByIdParams$Import,
   CreateAgentParams as CreateAgentParams$Import,
@@ -167,6 +168,7 @@ import type {
   DeleteCredentialParams as DeleteCredentialParams$Import,
   DeleteInteractionParams as DeleteInteractionParams$Import,
   DeleteTriggerParams as DeleteTriggerParams$Import,
+  DeleteVoiceParams as DeleteVoiceParams$Import,
   DeleteWebhookParams as DeleteWebhookParams$Import,
   GetAgentParams as GetAgentParams$Import,
   GetCredentialParams as GetCredentialParams$Import,
@@ -175,11 +177,13 @@ import type {
     as GetInteractionByIdParamsNonStreaming$Import,
   GetInteractionByIdParamsStreaming as GetInteractionByIdParamsStreaming$Import,
   GetTriggerParams as GetTriggerParams$Import,
+  GetVoiceParams as GetVoiceParams$Import,
   GetWebhookParams as GetWebhookParams$Import,
   ListAgentsParams as ListAgentsParams$Import,
   ListCredentialsParams as ListCredentialsParams$Import,
   ListTriggerExecutionsParams as ListTriggerExecutionsParams$Import,
   ListTriggersParams as ListTriggersParams$Import,
+  ListVoicesParams as ListVoicesParams$Import,
   ListWebhooksParams as ListWebhooksParams$Import,
   RunTriggerParams as RunTriggerParams$Import,
   UpdateTriggerParams as UpdateTriggerParams$Import,
@@ -190,6 +194,16 @@ import type { TriggerCreateParams as TriggerCreateParams$Import } from "./models
 import type { TriggerExecution as TriggerExecution$Import } from "./models/triggers/trigger-execution.js";
 import type { TriggerUpdate as TriggerUpdate$Import } from "./models/triggers/trigger-update.js";
 import type { Trigger as Trigger$Import } from "./models/triggers/trigger.js";
+import type { AudioData as AudioData$Import } from "./models/voices/audio-data.js";
+import type { CreateVoiceRequest as CreateVoiceRequest$Import } from "./models/voices/create-voice-request.js";
+import type { DeleteVoiceResponse as DeleteVoiceResponse$Import } from "./models/voices/delete-voice-response.js";
+import type { ListVoicesResponse as ListVoicesResponse$Import } from "./models/voices/list-voices-response.js";
+import type { Pitch as Pitch$Import } from "./models/voices/pitch.js";
+import type { PromptedVoice as PromptedVoice$Import } from "./models/voices/prompted-voice.js";
+import type { ReplicatedVoice as ReplicatedVoice$Import } from "./models/voices/replicated-voice.js";
+import type { VoiceInput as VoiceInput$Import } from "./models/voices/voice-input.js";
+import type { VoiceOutput as VoiceOutput$Import } from "./models/voices/voice-output.js";
+import type { VoiceType as VoiceType$Import } from "./models/voices/voice-type.js";
 import type { PingWebhookRequest as PingWebhookRequest$Import } from "./models/webhooks/ping-webhook-request.js";
 import type { RotateSigningSecretRequest as RotateSigningSecretRequest$Import } from "./models/webhooks/rotate-signing-secret-request.js";
 import type { SigningSecret as SigningSecret$Import } from "./models/webhooks/signing-secret.js";
@@ -406,6 +420,20 @@ type TriggerListResponse$ = ListTriggersResponse$Import;
 type TriggerRunParams$ = RunTriggerParams$Import;
 type TriggerUpdate$ = TriggerUpdate$Import;
 type TriggerUpdateParams$ = UpdateTriggerParams$Import;
+type AudioData$ = AudioData$Import;
+type CreateVoiceRequest$ = CreateVoiceRequest$Import;
+type Pitch$ = Pitch$Import;
+type PromptedVoice$ = PromptedVoice$Import;
+type ReplicatedVoice$ = ReplicatedVoice$Import;
+type VoiceCreateParams$ = CreateVoiceRequest$Import2;
+type VoiceDeleteParams$ = DeleteVoiceParams$Import;
+type VoiceDeleteResponse$ = DeleteVoiceResponse$Import;
+type VoiceGetParams$ = GetVoiceParams$Import;
+type VoiceListParams$ = ListVoicesParams$Import;
+type VoiceListResponse$ = ListVoicesResponse$Import;
+type VoiceType$ = VoiceType$Import;
+type Voice$ = VoiceInput$Import;
+type Voice$2 = VoiceOutput$Import;
 type PingWebhookRequest$ = PingWebhookRequest$Import;
 type RotateSigningSecretRequest$ = RotateSigningSecretRequest$Import;
 type SigningSecret$ = SigningSecret$Import;
@@ -440,6 +468,7 @@ export type Arguments = Arguments$;
 export type ArgumentsDelta = ArgumentsDelta$;
 export type Audio = Audio$;
 export type AudioContent = AudioContent$;
+export type AudioData = AudioData$;
 export type AudioResponseFormat = AudioResponseFormat$;
 export type CachedTokensByModality = CachedTokensByModality$;
 export type CodeExecution = CodeExecution$;
@@ -460,6 +489,7 @@ export type CreateModelInteractionParamsNonStreaming =
   CreateModelInteractionParamsNonStreaming$;
 export type CreateModelInteractionParamsStreaming =
   CreateModelInteractionParamsStreaming$;
+export type CreateVoiceRequest = CreateVoiceRequest$;
 export type Credential = Credential$;
 export type CredentialCreateParams = CredentialCreateParams$;
 export type CredentialDeleteParams = CredentialDeleteParams$;
@@ -544,12 +574,15 @@ export type OAuth2Config = OAuth2Config$;
 export type OAuth2UpdateConfig = OAuth2UpdateConfig$;
 export type OutputTokensByModality = OutputTokensByModality$;
 export type PingWebhookRequest = PingWebhookRequest$;
+export type Pitch = Pitch$;
 export type Place = Place$;
 export type PlaceCitation = PlaceCitation$;
 export type ProcessingCall = ProcessingCall$;
 export type ProcessingCallStep = ProcessingCallStep$;
 export type ProcessingResult = ProcessingResult$;
 export type ProcessingResultStep = ProcessingResultStep$;
+export type PromptedVoice = PromptedVoice$;
+export type ReplicatedVoice = ReplicatedVoice$;
 export type Result = Result$;
 export type Retrieval = Retrieval$;
 export type RetrievalCallArguments = RetrievalCallArguments$;
@@ -613,6 +646,14 @@ export type Video = Video$;
 export type VideoConfig = VideoConfig$;
 export type VideoContent = VideoContent$;
 export type VideoResponseFormat = VideoResponseFormat$;
+export type Voice = Voice$;
+export type VoiceCreateParams = VoiceCreateParams$;
+export type VoiceDeleteParams = VoiceDeleteParams$;
+export type VoiceDeleteResponse = VoiceDeleteResponse$;
+export type VoiceGetParams = VoiceGetParams$;
+export type VoiceListParams = VoiceListParams$;
+export type VoiceListResponse = VoiceListResponse$;
+export type VoiceType = VoiceType$;
 export type Webhook = Webhook$;
 export type WebhookConfig = WebhookConfig$;
 export type WebhookCreateParams = WebhookCreateParams$;
@@ -906,6 +947,26 @@ export declare namespace Triggers {
   export type TriggerRunParams = TriggerRunParams$;
   export type TriggerUpdate = TriggerUpdate$;
   export type TriggerUpdateParams = TriggerUpdateParams$;
+}
+export declare namespace Voices {
+  export type AudioData = AudioData$;
+  export interface CreateVoiceRequest extends CreateVoiceRequest$ {}
+  export type Pitch = Pitch$;
+  export type PromptedVoice = PromptedVoice$;
+  export type ReplicatedVoice = ReplicatedVoice$;
+  export type VoiceCreateParams = VoiceCreateParams$;
+  export type VoiceDeleteParams = VoiceDeleteParams$;
+  export type VoiceDeleteResponse = VoiceDeleteResponse$;
+  export type VoiceGetParams = VoiceGetParams$;
+  export type VoiceListParams = VoiceListParams$;
+  export interface VoiceListResponse extends VoiceListResponse$ {}
+  export type VoiceType = VoiceType$;
+  export namespace CreateVoiceRequest {
+    export type Voice = Voice$;
+  }
+  export namespace VoiceListResponse {
+    export type Voice = Voice$2;
+  }
 }
 export declare namespace Webhooks {
   export type PingWebhookRequest = PingWebhookRequest$;

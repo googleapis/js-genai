@@ -29,6 +29,7 @@ import type { DeleteCredentialRequest } from "./delete-credential.js";
 import type { DeleteEnvironmentRequest } from "./delete-environment.js";
 import type { DeleteInteractionRequest } from "./delete-interaction.js";
 import type { DeleteTriggerRequest } from "./delete-trigger.js";
+import type { DeleteVoiceRequest } from "./delete-voice.js";
 import type { DeleteWebhookRequest } from "./delete-webhook.js";
 import type { GetAgentRequest } from "./get-agent.js";
 import type { GetCredentialRequest } from "./get-credential.js";
@@ -36,12 +37,14 @@ import type { GetEnvironmentFilesRequest } from "./get-environment-files.js";
 import type { GetEnvironmentRequest } from "./get-environment.js";
 import type { GetInteractionByIdRequest } from "./get-interaction-by-id.js";
 import type { GetTriggerRequest } from "./get-trigger.js";
+import type { GetVoiceRequest } from "./get-voice.js";
 import type { GetWebhookRequest } from "./get-webhook.js";
 import type { ListAgentsRequest } from "./list-agents.js";
 import type { ListCredentialsRequest } from "./list-credentials.js";
 import type { ListEnvironmentsRequest } from "./list-environments.js";
 import type { ListTriggerExecutionsRequest } from "./list-trigger-executions.js";
 import type { ListTriggersRequest } from "./list-triggers.js";
+import type { ListVoicesRequest } from "./list-voices.js";
 import type { ListWebhooksRequest } from "./list-webhooks.js";
 import type { RunTriggerRequest } from "./run-trigger.js";
 import type { StartEnvironmentFileUploadRequest } from "./start-environment-file-upload.js";
@@ -177,6 +180,11 @@ export type DeleteTriggerParams = Omit<
   "id"
 >;
 
+export type DeleteVoiceParams = Omit<
+  DeleteVoiceRequest,
+  "id"
+>;
+
 export type DeleteWebhookParams = Omit<
   DeleteWebhookRequest,
   "id"
@@ -220,6 +228,11 @@ export type GetTriggerParams = Omit<
   "id"
 >;
 
+export type GetVoiceParams = Omit<
+  GetVoiceRequest,
+  "id"
+>;
+
 export type GetWebhookParams = Omit<
   GetWebhookRequest,
   "id"
@@ -237,6 +250,8 @@ export type ListTriggerExecutionsParams = Omit<
 >;
 
 export type ListTriggersParams = ListTriggersRequest;
+
+export type ListVoicesParams = ListVoicesRequest;
 
 export type ListWebhooksParams = ListWebhooksRequest;
 
