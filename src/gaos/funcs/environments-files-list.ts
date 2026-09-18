@@ -113,7 +113,7 @@ async function $do(
     }),
     path: encodeSimple("path", payload.path, {
       explode: false,
-      charEncoding: "percent",
+      charEncoding: "percentExceptReserved",
     }),
   };
   const path$ = pathToFunc(

@@ -67,31 +67,6 @@ export function authConfigToMldev(
   return toObject;
 }
 
-export function blobToMldev(
-  fromObject: types.Blob,
-  _rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromData = common.getValueByPath(fromObject, ['data']);
-  if (fromData != null) {
-    common.setValueByPath(toObject, ['data'], fromData);
-  }
-
-  if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
-    throw new Error(
-      'displayName parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
-    );
-  }
-
-  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
-  if (fromMimeType != null) {
-    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
-  }
-
-  return toObject;
-}
-
 export function candidateFromMldev(
   fromObject: types.Candidate,
   rootObject?: unknown,
@@ -1402,31 +1377,6 @@ export function endpointFromVertex(
   ]);
   if (fromDeployedModelId != null) {
     common.setValueByPath(toObject, ['deployedModelId'], fromDeployedModelId);
-  }
-
-  return toObject;
-}
-
-export function fileDataToMldev(
-  fromObject: types.FileData,
-  _rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
-    throw new Error(
-      'displayName parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
-    );
-  }
-
-  const fromFileUri = common.getValueByPath(fromObject, ['fileUri']);
-  if (fromFileUri != null) {
-    common.setValueByPath(toObject, ['fileUri'], fromFileUri);
-  }
-
-  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
-  if (fromMimeType != null) {
-    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
   }
 
   return toObject;
@@ -3473,9 +3423,14 @@ export function generationConfigToVertex(
     );
   }
 
-  if (common.getValueByPath(fromObject, ['translationConfig']) !== undefined) {
-    throw new Error(
-      'translationConfig parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+  const fromTranslationConfig = common.getValueByPath(fromObject, [
+    'translationConfig',
+  ]);
+  if (fromTranslationConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['translationConfig'],
+      fromTranslationConfig,
     );
   }
 
@@ -4238,11 +4193,7 @@ export function partToMldev(
 
   const fromFileData = common.getValueByPath(fromObject, ['fileData']);
   if (fromFileData != null) {
-    common.setValueByPath(
-      toObject,
-      ['fileData'],
-      fileDataToMldev(fromFileData, rootObject),
-    );
+    common.setValueByPath(toObject, ['fileData'], fromFileData);
   }
 
   const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
@@ -4263,11 +4214,7 @@ export function partToMldev(
 
   const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
   if (fromInlineData != null) {
-    common.setValueByPath(
-      toObject,
-      ['inlineData'],
-      blobToMldev(fromInlineData, rootObject),
-    );
+    common.setValueByPath(toObject, ['inlineData'], fromInlineData);
   }
 
   const fromText = common.getValueByPath(fromObject, ['text']);
