@@ -2,6 +2,19 @@
 
 
 
+## [2.24.0](https://github.com/googleapis/js-genai/compare/v2.23.0...v2.24.0) (2026-09-18)
+
+
+### Features
+
+* support field.value_field syntax for map add_union_value annotations. ([51d701a](https://github.com/googleapis/js-genai/commit/51d701aacba529cdaac9a30345d33318fb6bb0d5))
+* update discovery doc ([42f9716](https://github.com/googleapis/js-genai/commit/42f971635d4b4d976d216e691a90f2a907b3965f))
+
+
+### Bug Fixes
+
+* sanitize path parameter descriptions in GAOS OpenAPI generation ([1567962](https://github.com/googleapis/js-genai/commit/15679623eb35393cdf5aa57a22d306494e380d64))
+
 ## [2.23.0](https://github.com/googleapis/js-genai/compare/v2.22.0...v2.23.0) (2026-09-16)
 
 
