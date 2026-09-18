@@ -88,7 +88,6 @@ import type { GoogleSearchResult as GoogleSearchResult$Import } from "./models/i
 import type { GoogleSearch as GoogleSearch$Import } from "./models/interactions/google-search.js";
 import type { GroundingToolCount as GroundingToolCount$Import } from "./models/interactions/grounding-tool-count.js";
 import type { HarmCategory as HarmCategory$Import } from "./models/interactions/harm-category.js";
-import type { ImageConfig as ImageConfig$Import } from "./models/interactions/image-config.js";
 import type { ImageContent as ImageContent$Import } from "./models/interactions/image-content.js";
 import type { ImageDelta as ImageDelta$Import } from "./models/interactions/image-delta.js";
 import type { ImageResponseFormat as ImageResponseFormat$Import } from "./models/interactions/image-response-format.js";
@@ -270,7 +269,6 @@ type GoogleSearchCallStep$ = GoogleSearchCallStep$Import;
 type GoogleSearchResult$ = GoogleSearchResult$Import;
 type GoogleSearchResultStep$ = GoogleSearchResultStep$Import;
 type HarmCategory$ = HarmCategory$Import;
-type ImageConfig$ = ImageConfig$Import;
 type ImageContent$ = ImageContent$Import;
 type ImageResponseFormat$ = ImageResponseFormat$Import;
 type Interaction$ = Interaction$Import;
@@ -514,7 +512,6 @@ export type HarmCategory = HarmCategory$;
 export type HttpBearerConfig = HttpBearerConfig$;
 export type HttpBearerUpdateConfig = HttpBearerUpdateConfig$;
 export type Image = Image$;
-export type ImageConfig = ImageConfig$;
 export type ImageContent = ImageContent$;
 export type ImageResponseFormat = ImageResponseFormat$;
 export type InjectionLocation = InjectionLocation$;
@@ -718,7 +715,6 @@ export declare namespace Interactions {
   export type GoogleSearchResult = GoogleSearchResult$;
   export interface GoogleSearchResultStep extends GoogleSearchResultStep$ {}
   export type HarmCategory = HarmCategory$;
-  export type ImageConfig = ImageConfig$;
   export type ImageContent = ImageContent$;
   export type ImageResponseFormat = ImageResponseFormat$;
   export type Interaction = Interaction$;

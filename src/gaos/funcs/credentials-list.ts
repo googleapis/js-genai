@@ -32,7 +32,7 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Lists credentials for a project.
+ * Lists credentials.
  */
 export function credentialsList(
   client: GoogleGenAICore,
@@ -173,9 +173,9 @@ async function $do(
     | InvalidRequestError
     | UnexpectedClientError
   >(
-    M.json<credentials.CredentialListResponse>(200),
     M.fail("4XX"),
     M.fail("5XX"),
+    M.json<credentials.CredentialListResponse>("default"),
   )(response, req);
   if (!result.ok) {
     return [result, { status: "complete", request: req, response }];

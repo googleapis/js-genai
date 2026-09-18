@@ -107,6 +107,7 @@ export * from "./processing-result-step.js";
 export * from "./rag-resource.js";
 export * from "./rag-retrieval-config.js";
 export * from "./rag-store-config.js";
+export * from "./rank-service.js";
 export * from "./ranking.js";
 export * from "./response-format.js";
 export * from "./response-modality.js";

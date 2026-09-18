@@ -29,7 +29,7 @@ import { APIPromise, unwrapAsAPIPromise } from "../types/async.js";
 
 export class Credentials extends ClientSDK {
   /**
-   * Lists credentials for a project.
+   * Lists credentials.
    */
   list(
     params?: ListCredentialsParams,
@@ -45,7 +45,7 @@ export class Credentials extends ClientSDK {
   }
 
   /**
-   * Creates a credential.
+   * Creates a new credential.
    */
   create(
     params: CreateCredentialParams,
@@ -61,7 +61,7 @@ export class Credentials extends ClientSDK {
   }
 
   /**
-   * Deletes a credential. Fails if referenced by active triggers.
+   * Deletes a credential.
    */
   delete(
     id: string,
@@ -77,7 +77,7 @@ export class Credentials extends ClientSDK {
   }
 
   /**
-   * Gets metadata of a single credential (no secret fields).
+   * Gets a credential by ID.
    */
   get(
     id: string,

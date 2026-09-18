@@ -18,7 +18,7 @@ import { APIPromise, unwrapAsAPIPromise } from "../types/async.js";
 
 export class Files extends ClientSDK {
   /**
-   * Retrieves file metadata or directory contents from an environment's snapshot. To download file contents directly, pass ?alt=media or use the files.download helper.
+   * Retrieves file metadata or directory contents from an environment's snapshot. To download file content, use the download URL returned in the response.
    */
   list(
     environment: string,

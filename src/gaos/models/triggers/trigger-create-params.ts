@@ -42,11 +42,17 @@ export type TriggerCreateParams = {
     | interactions.CreateAgentInteraction
     | interactions.CreateModelInteraction;
   /**
-   * Optional. The maximum number of consecutive failures allowed before the trigger is automatically paused (status becomes ERROR).
+   * Optional. The maximum number of consecutive failures allowed before
+   *
+   * @remarks
+   * the trigger is automatically paused (status becomes ERROR).
    */
   max_consecutive_failures?: number | undefined;
   /**
-   * Required. The cron schedule on which the trigger should run. Standard cron format.
+   * Required. The cron schedule on which the trigger should run.
+   *
+   * @remarks
+   * Standard cron format.
    */
   schedule: string;
   /**

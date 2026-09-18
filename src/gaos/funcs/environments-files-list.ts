@@ -32,7 +32,7 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Retrieves file metadata or directory contents from an environment's snapshot. To download file contents directly, pass ?alt=media or use the files.download helper.
+ * Retrieves file metadata or directory contents from an environment's snapshot. To download file content, use the download URL returned in the response.
  */
 export function environmentsFilesList(
   client: GoogleGenAICore,

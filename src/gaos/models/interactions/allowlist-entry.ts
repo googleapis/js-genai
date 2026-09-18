@@ -26,7 +26,10 @@ export type AllowlistEntry = {
    */
   credential?: string | undefined;
   /**
-   * Domain to allow outbound requests to. Supports wildcards (e.g. '*.googleapis.com'). Use '*' to allow all domains.
+   * Domain to allow outbound requests to. Supports wildcards (e.g.
+   *
+   * @remarks
+   * '*.googleapis.com'). Use '*' to allow all domains.
    */
   domain: string;
   /**

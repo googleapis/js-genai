@@ -12,17 +12,23 @@
 
 export type ListAgentsGlobals = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
 };
 
 export type ListAgentsRequest = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
   page_size?: number | undefined;
   page_token?: string | undefined;
+  /**
+   * Required. The parent resource to list agents from.
+   *
+   * @remarks
+   * Format: `projects/{project}/locations/{location}`
+   */
   parent?: string | undefined;
 };
