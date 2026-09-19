@@ -2049,6 +2049,13 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
     common.setValueByPath(toObject, ['mediaProcessing'], fromMediaProcessing);
   }
 
+  const fromSpeechMetadata = common.getValueByPath(fromObject, [
+    'speechMetadata',
+  ]);
+  if (fromSpeechMetadata != null) {
+    common.setValueByPath(toObject, ['speechMetadata'], fromSpeechMetadata);
+  }
+
   return toObject;
 }
 
@@ -2160,6 +2167,13 @@ export function partToVertex(fromObject: types.Part): Record<string, unknown> {
   ]);
   if (fromMediaProcessing != null) {
     common.setValueByPath(toObject, ['mediaProcessing'], fromMediaProcessing);
+  }
+
+  const fromSpeechMetadata = common.getValueByPath(fromObject, [
+    'speechMetadata',
+  ]);
+  if (fromSpeechMetadata != null) {
+    common.setValueByPath(toObject, ['speechMetadata'], fromSpeechMetadata);
   }
 
   return toObject;
@@ -2706,6 +2720,11 @@ export function voiceConfigToVertex(
       ['prebuiltVoiceConfig'],
       fromPrebuiltVoiceConfig,
     );
+  }
+
+  const fromVoice = common.getValueByPath(fromObject, ['voice']);
+  if (fromVoice != null) {
+    common.setValueByPath(toObject, ['voice'], fromVoice);
   }
 
   return toObject;

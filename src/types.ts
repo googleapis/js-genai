@@ -1923,6 +1923,16 @@ export class ToolResponse {
   response?: Record<string, unknown>;
 }
 
+/** Extra metadata associated with the part for speech synthesis. */
+export declare interface SpeechMetadata {
+  /** The speaker for this part, which must match a `speaker` name in
+      `MultiSpeakerVoiceConfig.speaker_voice_configs`. */
+  speaker?: string;
+  /** The style instruction for how the voice should be synthesized
+      (e.g. "excited, fast-paced"). */
+  style?: string;
+}
+
 /** Information about a single recognized word. */
 export declare interface WordInfo {
   /** Transcript of the word.
@@ -2146,6 +2156,9 @@ export declare interface Part {
   partMetadata?: Record<string, unknown>;
   /** How the model processes this part's media for understanding. */
   mediaProcessing?: MediaProcessing;
+  /** Extra metadata associated with the part for speech synthesis, such
+      as speaker and style. Only valid when `Part.data` is set to `text`. */
+  speechMetadata?: SpeechMetadata;
 }
 /**
  * Creates a `Part` object from a `URI` string.
@@ -2868,6 +2881,8 @@ export declare interface VoiceConfig {
   replicatedVoiceConfig?: ReplicatedVoiceConfig;
   /** The configuration for a prebuilt voice. */
   prebuiltVoiceConfig?: PrebuiltVoiceConfig;
+  /** The speaker identifier for synthesis. */
+  voice?: string;
 }
 
 /** Configuration for a single speaker in a multi-speaker setup. */
