@@ -775,6 +775,11 @@ export function liveClientSetupToMldev(
     common.setValueByPath(toObject, ['safetySettings'], transformedList);
   }
 
+  const fromLabels = common.getValueByPath(fromObject, ['labels']);
+  if (fromLabels != null) {
+    common.setValueByPath(toObject, ['labels'], fromLabels);
+  }
+
   return toObject;
 }
 
@@ -915,6 +920,12 @@ export function liveClientSetupToVertex(
       });
     }
     common.setValueByPath(toObject, ['safetySettings'], transformedList);
+  }
+
+  if (common.getValueByPath(fromObject, ['labels']) !== undefined) {
+    throw new Error(
+      'labels parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+    );
   }
 
   return toObject;
