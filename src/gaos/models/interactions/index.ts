@@ -124,6 +124,7 @@ export * from "./session-config.js";
 export * from "./smart-transcription-mode.js";
 export * from "./source.js";
 export * from "./speaker-config.js";
+export * from "./speech-annotation.js";
 export * from "./speech-config.js";
 export * from "./static-media-processing.js";
 export * from "./status.js";
