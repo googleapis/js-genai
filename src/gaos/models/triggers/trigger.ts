@@ -22,6 +22,13 @@ export type TriggerStatus = "active" | "paused" | "error" | (string & {});
  */
 export type Trigger = {
   /**
+   * The agent that owns this trigger. Set automatically when creating
+   *
+   * @remarks
+   * via the agent-scoped endpoint.
+   */
+  agent_id?: string | undefined;
+  /**
    * Output only. The number of consecutive failures that have occurred
    *
    * @remarks
@@ -32,6 +39,10 @@ export type Trigger = {
    * Output only. The time when the trigger was created.
    */
   create_time?: string | undefined;
+  /**
+   * Cron-specific trigger configuration.
+   */
+  cron?: interactions.CronConfig | undefined;
   /**
    * Optional. The display name of the trigger.
    */
@@ -51,7 +62,11 @@ export type Trigger = {
   /**
    * The Interaction resource.
    */
-  interaction: interactions.Interaction;
+  interaction?: interactions.Interaction | undefined;
+  /**
+   * The Interaction resource.
+   */
+  interaction_template?: interactions.Interaction | undefined;
   /**
    * Output only. The time when the trigger was last paused.
    */
@@ -80,22 +95,38 @@ export type Trigger = {
    */
   previous_interaction_id?: string | undefined;
   /**
-   * Required. The cron schedule on which the trigger should run.
+   * Deprecated: Use cron.schedule instead.
    *
    * @remarks
+   * The cron schedule on which the trigger should run.
    * Standard cron format.
+   *
+   * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
    */
-  schedule: string;
+  schedule?: string | undefined;
+  /**
+   * Execute a script inside the agent's container environment.
+   */
+  script?: interactions.Script | undefined;
   /**
    * Output only. The current status of the trigger.
    */
   status?: TriggerStatus | undefined;
   /**
-   * Required. Time zone in which the schedule should be interpreted.
+   * Deprecated: Use cron.time_zone instead.
+   *
+   * @remarks
+   * Time zone in which the schedule should be interpreted.
+   *
+   * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
    */
-  time_zone: string;
+  time_zone?: string | undefined;
   /**
    * Output only. The time when the trigger was last updated.
    */
   update_time?: string | undefined;
+  /**
+   * Webhook-specific trigger configuration.
+   */
+  webhook?: interactions.WebhookTriggerConfig | undefined;
 };
