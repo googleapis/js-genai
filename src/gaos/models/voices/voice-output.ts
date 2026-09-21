@@ -11,6 +11,7 @@
  */
 
 import * as interactions from "../interactions/index.js";
+import { AudioData } from "./audio-data.js";
 import { Pitch } from "./pitch.js";
 import { PromptedVoice } from "./prompted-voice.js";
 import { VoiceType } from "./voice-type.js";
@@ -121,6 +122,10 @@ export type VoiceOutput = {
    * "GB", "001").
    */
   region_code?: string | undefined;
+  /**
+   * Audio payload used for voice creation.
+   */
+  sample_audio?: AudioData | undefined;
   type: VoiceType;
   /**
    * Statistics on the interaction request's token usage.
