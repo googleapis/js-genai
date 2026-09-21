@@ -20,6 +20,7 @@ import type {
   GeminiNextGenEnvironments as Environments,
   GeminiNextGenInteractions as Interactions,
   GeminiNextGenTriggers as Triggers,
+  GeminiNextGenVoices as Voices,
   GeminiNextGenWebhooks as Webhooks,
 } from '../gaos/google-genai.js';
 import {
@@ -29,6 +30,7 @@ import {
   GeminiNextGenEnvironments,
   GeminiNextGenInteractions,
   GeminiNextGenTriggers,
+  GeminiNextGenVoices,
   GeminiNextGenWebhooks,
 } from '../gaos/google-genai.js';
 import type {GoogleGenAI as GeminiNextGenAPI} from '../gaos/sdk/sdk.js';
@@ -153,6 +155,7 @@ export class GoogleGenAI {
   private _agents: GeminiNextGenAgents | undefined;
   private _environments: GeminiNextGenEnvironments | undefined;
   private _credentials: GeminiNextGenCredentials | undefined;
+  private _voices: GeminiNextGenVoices | undefined;
   private _nextGenClient: GeminiNextGenAPI | undefined;
   private _triggers: Triggers | undefined;
 
@@ -241,6 +244,15 @@ export class GoogleGenAI {
 
     this._credentials = new GeminiNextGenCredentials(this.apiClient);
     return this._credentials;
+  }
+
+  get voices(): Voices {
+    if (this._voices !== undefined) {
+      return this._voices;
+    }
+
+    this._voices = new GeminiNextGenVoices(this.apiClient);
+    return this._voices;
   }
 
   constructor(options: GoogleGenAIOptions = {}) {

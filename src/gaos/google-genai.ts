@@ -12,6 +12,7 @@ import * as environments from "./models/environments/index.js";
 import * as interactions from "./models/interactions/index.js";
 import * as operations from "./models/operations/index.js";
 import * as triggers from "./models/triggers/index.js";
+import * as voices from "./models/voices/index.js";
 import * as webhooks from "./models/webhooks/index.js";
 
 import type { APICall, APIPromise } from "./types/async.js";
@@ -43,6 +44,8 @@ import type {
   GetTriggerParams,
   RunTriggerParams,
   UpdateTriggerParams,
+  DeleteVoiceParams,
+  GetVoiceParams,
 } from "./models/operations/method-params.js";
 import { RequestOptions } from "./lib/sdks.js";
 import type { Result } from "./types/fp.js";
@@ -79,6 +82,10 @@ import { credentialsDelete } from "./funcs/credentials-delete.js";
 import { credentialsGet } from "./funcs/credentials-get.js";
 import { credentialsList } from "./funcs/credentials-list.js";
 import { credentialsUpdate } from "./funcs/credentials-update.js";
+import { voicesCreate } from "./funcs/voices-create.js";
+import { voicesDelete } from "./funcs/voices-delete.js";
+import { voicesGet } from "./funcs/voices-get.js";
+import { voicesList } from "./funcs/voices-list.js";
 
 const LEGACY_LYRIA_MODELS: ReadonlySet<string> = new Set([
   "lyria-3-pro-preview",
@@ -1524,6 +1531,108 @@ export class GeminiNextGenCredentials {
   ): Promise<interactions.Empty> {
     return unwrapWithSdkHttpResponse(
       credentialsDelete(
+        this.getClient(params?.api_version),
+        id,
+        params?.api_version,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  private getClient(apiVersion: string | undefined): GoogleGenAI {
+    if (apiVersion) {
+      return buildGoogleGenAIClient(this.parentClient, {
+        api_version: apiVersion,
+      });
+    }
+
+    this.sdk ??= buildGoogleGenAIClient(this.parentClient);
+    return this.sdk;
+  }
+}
+
+export type ListVoicesParams = operations.ListVoicesParams;
+
+export class GeminiNextGenVoices {
+  private sdk: GoogleGenAI | undefined;
+
+  constructor(private readonly parentClient: GoogleGenAIParentClient) {}
+
+  async create(
+    params: voices.CreateVoiceRequest & { api_version?: string },
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<voices.VoiceOutput> {
+    const { api_version, ...body } = params;
+    return unwrapWithSdkHttpResponse(
+      voicesCreate(
+        this.getClient(api_version),
+        body,
+        api_version,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  async list(
+    params: ListVoicesParams | null | undefined = {},
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<voices.ListVoicesResponse> {
+    const {
+      api_version,
+      accent,
+      contexts,
+      gender,
+      language_code,
+      page_size,
+      page_token,
+      persona,
+      pitch,
+      region_code,
+      search,
+      type,
+    } = params ?? {};
+    return unwrapWithSdkHttpResponse(
+      voicesList(
+        this.getClient(api_version),
+        api_version,
+        accent,
+        contexts,
+        gender,
+        language_code,
+        page_size,
+        page_token,
+        persona,
+        pitch,
+        region_code,
+        search,
+        type,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  async get(
+    id: string,
+    params: GetVoiceParams | null | undefined = {},
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<voices.VoiceOutput> {
+    return unwrapWithSdkHttpResponse(
+      voicesGet(
+        this.getClient(params?.api_version),
+        id,
+        params?.api_version,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  async delete(
+    id: string,
+    params: DeleteVoiceParams | null | undefined = {},
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<voices.DeleteVoiceResponse> {
+    return unwrapWithSdkHttpResponse(
+      voicesDelete(
         this.getClient(params?.api_version),
         id,
         params?.api_version,

@@ -18,6 +18,7 @@ export type {
   Environments,
   Interactions,
   Triggers,
+  Voices,
   Webhooks,
 } from '../gaos/resources.js';
 export * from '../live.js';
