@@ -14,6 +14,7 @@ import { interactionsCancel } from "../funcs/interactions-cancel.js";
 import { interactionsCreate } from "../funcs/interactions-create.js";
 import { interactionsDelete } from "../funcs/interactions-delete.js";
 import { interactionsGet } from "../funcs/interactions-get.js";
+import { Stream } from "../lib/event-streams.js";
 import { ClientSDK, RequestOptions } from "../lib/sdks.js";
 import * as interactions from "../models/interactions/index.js";
 import * as operations from "../models/operations/index.js";
@@ -33,27 +34,24 @@ import { APIPromise, unwrapAsAPIPromise } from "../types/async.js";
 
 export class Interactions extends ClientSDK {
   /**
-   * Creating an interaction
-   *
-   * @remarks
    * Creates a new interaction.
    */
   create(
     params: CreateAgentInteractionParamsNonStreaming,
     options?: RequestOptions,
-  ): APIPromise<operations.CreateInteractionResponse>;
+  ): APIPromise<interactions.Interaction>;
   create(
     params: CreateModelInteractionParamsNonStreaming,
     options?: RequestOptions,
-  ): APIPromise<operations.CreateInteractionResponse>;
+  ): APIPromise<interactions.Interaction>;
   create(
     params: CreateAgentInteractionParamsStreaming,
     options?: RequestOptions,
-  ): APIPromise<operations.CreateInteractionResponse>;
+  ): APIPromise<Stream<interactions.InteractionSSEEvent>>;
   create(
     params: CreateModelInteractionParamsStreaming,
     options?: RequestOptions,
-  ): APIPromise<operations.CreateInteractionResponse>;
+  ): APIPromise<Stream<interactions.InteractionSSEEvent>>;
   create(
     params: CreateInteractionParams,
     options?: RequestOptions,
@@ -72,9 +70,6 @@ export class Interactions extends ClientSDK {
   }
 
   /**
-   * Deleting an interaction
-   *
-   * @remarks
    * Deletes the interaction by id.
    */
   delete(
@@ -91,21 +86,19 @@ export class Interactions extends ClientSDK {
   }
 
   /**
-   * Retrieving an interaction
-   *
-   * @remarks
-   * Retrieves the full details of a single interaction based on its `Interaction.id`.
+   * Retrieves the full details of a single interaction based on its
+   * `Interaction.id`.
    */
   get(
     id: string,
     params?: GetInteractionByIdParamsNonStreaming,
     options?: Omit<RequestOptions, "extra_body">,
-  ): APIPromise<operations.GetInteractionByIdResponse>;
+  ): APIPromise<interactions.Interaction>;
   get(
     id: string,
     params: GetInteractionByIdParamsStreaming,
     options?: Omit<RequestOptions, "extra_body">,
-  ): APIPromise<operations.GetInteractionByIdResponse>;
+  ): APIPromise<Stream<interactions.InteractionSSEEvent>>;
   get(
     id: string,
     params?: GetInteractionByIdParams,
@@ -128,10 +121,8 @@ export class Interactions extends ClientSDK {
   }
 
   /**
-   * Canceling an interaction
-   *
-   * @remarks
-   * Cancels an interaction by id. This only applies to background interactions that are still running.
+   * Cancels an interaction by id. This only applies to background interactions
+   * that are still running.
    */
   cancel(
     id: string,

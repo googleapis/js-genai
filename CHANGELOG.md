@@ -2,6 +2,38 @@
 
 
 
+## [2.23.0](https://github.com/googleapis/js-genai/compare/v2.22.0...v2.23.0) (2026-09-16)
+
+
+### Features
+
+* add credential APIs resource to gaos. ([0e6410b](https://github.com/googleapis/js-genai/commit/0e6410ba86a95e96e9867b728efc865ca14d94d8))
+* Add RetrievalCallStep and RetrievalResultStep to interactions schema and SDKs. ([d03d569](https://github.com/googleapis/js-genai/commit/d03d56902e75d11e55d89194346cf6deae6d518e))
+* implement environments files upload and download across Python and TypeScript SDKs ([3a4c512](https://github.com/googleapis/js-genai/commit/3a4c5120217e92348912d698eff4f6e61f53f6f0))
+* support custom fetch in HttpOptions ([01897b3](https://github.com/googleapis/js-genai/commit/01897b33eecdbcefbe8e4f83eb336735a2a464b6))
+* wire credential APIs resource to sdk. ([280da75](https://github.com/googleapis/js-genai/commit/280da75a277e2964cbf1dfb8d31400b69aeeed21))
+
+## [2.22.0](https://github.com/googleapis/js-genai/compare/v2.21.0...v2.22.0) (2026-09-10)
+
+
+### Features
+
+* Add from_environment support for environment copying ([01ed17e](https://github.com/googleapis/js-genai/commit/01ed17e245d0b5c5293acdf146b6be252ea70ffd))
+
+
+### Bug Fixes
+
+* Add [@ts-ignore](https://github.com/ts-ignore) before optional MCP imports in declaration files ([7b5ef39](https://github.com/googleapis/js-genai/commit/7b5ef39e3d69da292890decd5093629533609ef9))
+* Remove unused field from FunctionResultDelta ([aeb7453](https://github.com/googleapis/js-genai/commit/aeb745302671ac0b70d48a4b4415952f12970a76))
+* Repair node fallback manifest and complete web entries ([0f59bf8](https://github.com/googleapis/js-genai/commit/0f59bf8317bbf782d232c3700d48cd8f5cbaffb5))
+
+## [2.21.0](https://github.com/googleapis/js-genai/compare/v2.20.0...v2.21.0) (2026-09-02)
+
+
+### Features
+
+* Add Gemini 3.8 Flash model to SDKs and update Flash model descriptions ([4a969fe](https://github.com/googleapis/js-genai/commit/4a969feeb938d05faa8389a476a268c1649a7695))
+
 ## [2.20.0](https://github.com/googleapis/js-genai/compare/v2.19.0...v2.20.0) (2026-08-31)
 
 

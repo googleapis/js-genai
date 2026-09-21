@@ -7,6 +7,7 @@
  */
 
 import * as agents from "./models/agents/index.js";
+import * as credentials from "./models/credentials/index.js";
 import * as environments from "./models/environments/index.js";
 import * as interactions from "./models/interactions/index.js";
 import * as operations from "./models/operations/index.js";
@@ -21,6 +22,7 @@ import {
 
 import { wrapSDKError } from "./lib/compat-errors.js";
 import { Stream } from "./lib/event-streams.js";
+import { HTTPClient, type Fetcher } from "./lib/http.js";
 import { GoogleGenAI } from "./sdk/sdk.js";
 import type {
   CreateAgentInteractionParamsNonStreaming,
@@ -36,7 +38,6 @@ import type {
   GetInteractionByIdParams,
   GetInteractionByIdParamsNonStreaming,
   GetInteractionByIdParamsStreaming,
-  ListAgentsParams as _ListAgentsRequest,
   CreateTriggerParams,
   DeleteTriggerParams,
   GetTriggerParams,
@@ -71,7 +72,13 @@ import { environmentsCreateEnvironment } from "./funcs/environments-create-envir
 import { environmentsDeleteEnvironment } from "./funcs/environments-delete-environment.js";
 import { environmentsFilesList } from "./funcs/environments-files-list.js";
 import { environmentsGetEnvironment } from "./funcs/environments-get-environment.js";
+import { environmentsInternalStartUpload } from "./funcs/environments-internal-start-upload.js";
 import { environmentsListEnvironments } from "./funcs/environments-list-environments.js";
+import { credentialsCreate } from "./funcs/credentials-create.js";
+import { credentialsDelete } from "./funcs/credentials-delete.js";
+import { credentialsGet } from "./funcs/credentials-get.js";
+import { credentialsList } from "./funcs/credentials-list.js";
+import { credentialsUpdate } from "./funcs/credentials-update.js";
 
 const LEGACY_LYRIA_MODELS: ReadonlySet<string> = new Set([
   "lyria-3-pro-preview",
@@ -89,6 +96,7 @@ export interface GoogleGenAIParentClient {
   getDefaultHeaders?(): Record<string, string>;
   getHeaders?(): Record<string, string> | undefined;
   getAuthHeaders(url?: string): Headers | Promise<Headers>;
+  getFetch?(): Fetcher | undefined;
 }
 
 export function getGoogleGenAIServerURL(
@@ -123,8 +131,14 @@ export function buildGoogleGenAIClient(
   parentClient: GoogleGenAIParentClient,
   options: SDKOptions = {},
 ): GoogleGenAI {
+  const fetchFn = options.http_client ? undefined : parentClient.getFetch?.();
+  const httpClient =
+    options.http_client ??
+    (fetchFn ? new HTTPClient({ fetcher: fetchFn }) : undefined);
+
   const sdk = new GoogleGenAI({
     ...options,
+    http_client: httpClient,
     api_version: options.api_version ?? getGoogleGenAIAPIVersion(parentClient),
     security:
       options.security ??
@@ -182,36 +196,15 @@ export type InteractionGetParamsNonStreaming =
 
 export type InteractionGetParamsStreaming = GetInteractionByIdParamsStreaming;
 
-export type ListAgentsParams = {
-  api_version?: string;
-  pageSize?: number;
-  pageToken?: string;
-  parent?: string;
-};
+export type ListAgentsParams = operations.ListAgentsParams;
 
-export type ListTriggersParams = {
-  api_version?: string;
-  filter?: string;
-  pageSize?: number;
-  pageToken?: string;
-};
+export type ListTriggersParams = operations.ListTriggersParams;
 
-export type ListTriggerExecutionsParams = {
-  api_version?: string;
-  pageSize?: number;
-  pageToken?: string;
-};
+export type ListTriggerExecutionsParams = operations.ListTriggerExecutionsParams;
 
-export type WebhookListParams = {
-  api_version?: string;
-  page_size?: number;
-  page_token?: string;
-};
+export type WebhookListParams = operations.ListWebhooksParams;
 
-export type WebhookUpdateParams = {
-  api_version?: string;
-  update_mask?: string;
-} & webhooks.WebhookUpdate;
+export type WebhookUpdateParams = operations.UpdateWebhookParams;
 
 export type WebhookRotateSigningSecretParams =
   webhooks.RotateSigningSecretRequest & { api_version?: string };
@@ -410,13 +403,13 @@ export class GeminiNextGenAgents {
     params: ListAgentsParams | null | undefined = {},
     options?: GoogleGenAIRequestOptions,
   ): Promise<agents.AgentListResponse> {
-    const { api_version, pageSize, pageToken, parent } = params ?? {};
+    const { api_version, page_size, page_token, parent } = params ?? {};
     return unwrapWithSdkHttpResponse(
       agentsList(
         this.getClient(api_version),
         api_version,
-        pageSize,
-        pageToken,
+        page_size,
+        page_token,
         parent,
         toGoogleGenAIRequestOptions(options),
       ),
@@ -615,14 +608,14 @@ export class GeminiNextGenTriggers {
     params: ListTriggersParams | null | undefined = {},
     options?: GoogleGenAIRequestOptions,
   ): Promise<triggers.ListTriggersResponse> {
-    const { api_version, filter, pageSize, pageToken } = params ?? {};
+    const { api_version, filter, page_size, page_token } = params ?? {};
     return unwrapWithSdkHttpResponse(
       triggersList(
         this.getClient(api_version),
         api_version,
         filter,
-        pageSize,
-        pageToken,
+        page_size,
+        page_token,
         toGoogleGenAIRequestOptions(options),
       ),
     );
@@ -695,14 +688,14 @@ export class GeminiNextGenTriggers {
     params: ListTriggerExecutionsParams | null | undefined = {},
     options?: GoogleGenAIRequestOptions,
   ): Promise<triggers.ListTriggerExecutionsResponse> {
-    const { api_version, pageSize, pageToken } = params ?? {};
+    const { api_version, page_size, page_token } = params ?? {};
     return unwrapWithSdkHttpResponse(
       triggersListExecutions(
         this.getClient(api_version),
         trigger_id,
         api_version,
-        pageSize,
-        pageToken,
+        page_size,
+        page_token,
         toGoogleGenAIRequestOptions(options),
       ),
     );
@@ -1016,12 +1009,11 @@ function normalizeInteractionDates(
 function normalizeDateLike(value: unknown): unknown {
   return value instanceof Date ? value.toISOString() : value;
 }
+export type CredentialListParams = operations.ListCredentialsParams;
 
-export type ListEnvironmentsParams = {
-  api_version?: string;
-  page_size?: number;
-  page_token?: string;
-};
+export type CredentialUpdateParams = operations.UpdateCredentialParams;
+
+export type ListEnvironmentsParams = operations.ListEnvironmentsParams;
 
 /**
  * Output only. The type of the entry.
@@ -1092,38 +1084,283 @@ export type GetEnvironmentFilesResponse = {
  */
 export type ListEnvironmentFilesResponse = GetEnvironmentFilesResponse;
 
-export type ListEnvironmentFilesParams = {
+export type ListEnvironmentFilesParams = operations.GetEnvironmentFilesRequest;
+
+export type DownloadEnvironmentFileParams = {
   environment: string;
   path: string;
-  page_size?: number;
-  page_token?: string;
-  recursive?: boolean;
   api_version?: string;
 };
+
+export type UploadEnvironmentFileParams = {
+  environment: string;
+  path: string;
+  file: string | Blob | Uint8Array | ArrayBuffer | any;
+  mime_type?: string;
+  overwrite?: boolean;
+  extract?: boolean;
+  api_version?: string;
+};
+
+function inferMimeType(filePath: string): string | undefined {
+  const ext = filePath.slice(filePath.lastIndexOf('.') + 1).toLowerCase();
+  const mimeTypes: Record<string, string> = {
+    txt: 'text/plain',
+    json: 'application/json',
+    js: 'text/javascript',
+    mjs: 'text/javascript',
+    ts: 'text/plain',
+    py: 'text/x-python',
+    html: 'text/html',
+    htm: 'text/html',
+    css: 'text/css',
+    csv: 'text/csv',
+    xml: 'application/xml',
+    png: 'image/png',
+    jpg: 'image/jpeg',
+    jpeg: 'image/jpeg',
+    gif: 'image/gif',
+    webp: 'image/webp',
+    svg: 'image/svg+xml',
+    pdf: 'application/pdf',
+    zip: 'application/zip',
+    tar: 'application/x-tar',
+    gz: 'application/gzip',
+  };
+  return mimeTypes[ext];
+}
 
 export class GeminiNextGenEnvironmentFiles {
   constructor(
     private readonly resolveClient: (apiVersion?: string) => GoogleGenAI,
+    private readonly parentClient?: GoogleGenAIParentClient,
   ) {}
 
   async list(
     params: ListEnvironmentFilesParams,
     options?: GoogleGenAIRequestOptions,
   ): Promise<ListEnvironmentFilesResponse> {
-    const { environment, path, page_size, page_token, recursive, api_version } =
-      params;
     return unwrapWithSdkHttpResponse(
       environmentsFilesList(
-        this.resolveClient(api_version),
-        environment,
-        path,
-        api_version,
-        page_size,
-        page_token,
-        recursive,
+        this.resolveClient(params.api_version),
+        params.environment,
+        params.path,
+        params.api_version,
+        params.page_size,
+        params.page_token,
+        params.recursive,
         toGoogleGenAIRequestOptions(options),
       ),
     );
+  }
+
+  async download(
+    params: DownloadEnvironmentFileParams,
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<Uint8Array> {
+    const targetEnv = params.environment;
+    if (!targetEnv) {
+      throw new Error('environment is required.');
+    }
+    const envName = targetEnv.startsWith('environments/')
+      ? targetEnv
+      : `environments/${targetEnv}`;
+    const cleanPath = params.path.replace(/^\/+/, '');
+    const downloadPath = `${envName}/files/${cleanPath}`;
+
+    const apiClient = this.parentClient as any;
+    if (!apiClient || typeof apiClient.request !== 'function') {
+      throw new Error('apiClient is required to download files.');
+    }
+    const response = await apiClient.request({
+      path: downloadPath,
+      httpMethod: 'GET',
+      queryParams: { alt: 'media' },
+      httpOptions: {
+        ...(options as any)?.httpOptions,
+        apiVersion: params.api_version ?? (options as any)?.httpOptions?.apiVersion,
+      },
+    });
+
+    if (
+      response &&
+      response.responseInternal &&
+      typeof response.responseInternal.arrayBuffer === 'function'
+    ) {
+      const arrayBuffer = await response.responseInternal.arrayBuffer();
+      return new Uint8Array(arrayBuffer);
+    }
+    throw new Error('Unexpected response type from download');
+  }
+
+  async upload(
+    params: UploadEnvironmentFileParams,
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<environments.GetEnvironmentFilesResponse | any> {
+    const targetEnv = params.environment;
+    if (!targetEnv) {
+      throw new Error('environment is required.');
+    }
+    const envName = targetEnv.startsWith('environments/')
+      ? targetEnv
+      : `environments/${targetEnv}`;
+    const cleanPath = params.path.replace(/^\/+/, '');
+    const handshakePath = `${envName}/files/${cleanPath}`;
+
+    const apiClient = this.parentClient as any;
+    if (!apiClient || typeof apiClient.request !== 'function') {
+      throw new Error('apiClient is required to upload files.');
+    }
+
+    let fileData: Blob | Uint8Array;
+    let sizeBytes: number = 0;
+    let mimeType = params.mime_type;
+
+    if (typeof params.file === 'string') {
+      let buffer: any;
+      try {
+        const req = (globalThis as any).require;
+        if (req) {
+          const fs = req('fs');
+          buffer = fs.readFileSync(params.file);
+        }
+      } catch {}
+      if (!buffer && typeof (globalThis as any).process !== 'undefined') {
+        try {
+          const mod =
+            (globalThis as any).process.mainModule?.require ?? (globalThis as any).require;
+          if (mod) {
+            const fs = mod('fs');
+            buffer = fs.readFileSync(params.file);
+          }
+        } catch {}
+      }
+      if (buffer) {
+        fileData = new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.byteLength);
+        sizeBytes = fileData.byteLength;
+      } else {
+        throw new Error(
+          `Unable to read file from path "${params.file}". File path string inputs are only supported in Node.js environments.`,
+        );
+      }
+      if (!mimeType) {
+        mimeType = inferMimeType(params.file);
+      }
+    } else if (typeof Blob !== 'undefined' && params.file instanceof Blob) {
+      fileData = params.file;
+      sizeBytes = params.file.size;
+      if (!mimeType && params.file.type) {
+        mimeType = params.file.type;
+      }
+    } else if (params.file instanceof Uint8Array || params.file instanceof ArrayBuffer) {
+      fileData =
+        params.file instanceof ArrayBuffer ? new Uint8Array(params.file) : params.file;
+      sizeBytes = fileData.byteLength;
+    } else if (
+      typeof (globalThis as any).Buffer !== 'undefined' &&
+      typeof (globalThis as any).Buffer.isBuffer === 'function' &&
+      (globalThis as any).Buffer.isBuffer(params.file)
+    ) {
+      const buf = params.file as any;
+      fileData = new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength);
+      sizeBytes = fileData.byteLength;
+    } else {
+      throw new Error('Unsupported file type for upload.');
+    }
+
+    if (!mimeType) {
+      mimeType = 'application/octet-stream';
+    }
+
+    const cleanEnv = targetEnv.startsWith('environments/')
+      ? targetEnv.replace(/^environments\//, '')
+      : targetEnv;
+
+    const [result, call] = await environmentsInternalStartUpload(
+      this.resolveClient(params.api_version),
+      cleanEnv,
+      cleanPath,
+      'start',
+      sizeBytes,
+      mimeType,
+      'resumable',
+      params.api_version,
+      params.extract,
+      params.overwrite,
+      toGoogleGenAIRequestOptions(options),
+    ).$inspect();
+
+    if (!result.ok) {
+      throw wrapSDKError(result.error);
+    }
+
+    const uploadUrl =
+      call.status === 'complete'
+        ? call.response?.headers?.get('x-goog-upload-url') ??
+          call.response?.headers?.get('X-Goog-Upload-URL')
+        : undefined;
+
+    if (!uploadUrl) {
+      throw new Error('Failed to get upload URL from upload handshake response.');
+    }
+
+    const CHUNK_SIZE = 8 * 1024 * 1024;
+    let offset = 0;
+    let uploadResponse: any;
+
+    const blob = fileData instanceof Blob ? fileData : new Blob([fileData]);
+
+    while (offset < sizeBytes || (sizeBytes === 0 && offset === 0)) {
+      const end = Math.min(offset + CHUNK_SIZE, sizeBytes);
+      const chunk = blob.slice(offset, end);
+      const isFinal = end >= sizeBytes;
+      const uploadCommand = isFinal ? 'upload, finalize' : 'upload';
+
+      uploadResponse = await apiClient.request({
+        path: '',
+        body: chunk,
+        httpMethod: 'POST',
+        httpOptions: {
+          ...(options as any)?.httpOptions,
+          apiVersion: '',
+          baseUrl: uploadUrl,
+          headers: {
+            ...((options as any)?.httpOptions?.headers || {}),
+            'X-Goog-Upload-Command': uploadCommand,
+            'X-Goog-Upload-Offset': `${offset}`,
+          },
+        },
+      });
+
+      offset = end;
+      if (isFinal) {
+        break;
+      }
+    }
+
+    let resJson: any;
+    if (uploadResponse && typeof uploadResponse.json === 'function') {
+      resJson = await uploadResponse.json();
+    } else if (
+      uploadResponse &&
+      uploadResponse.responseInternal &&
+      typeof uploadResponse.responseInternal.json === 'function'
+    ) {
+      resJson = await uploadResponse.responseInternal.json();
+    }
+
+    if (resJson && typeof resJson === 'object') {
+      if (Array.isArray(resJson.files)) {
+        return resJson;
+      }
+      if (resJson.name || resJson.path) {
+        return { files: [resJson] };
+      }
+      if (resJson.file && typeof resJson.file === 'object') {
+        return { files: [resJson.file] };
+      }
+    }
+    return resJson;
   }
 }
 
@@ -1132,8 +1369,9 @@ export class GeminiNextGenEnvironments {
   readonly files: GeminiNextGenEnvironmentFiles;
 
   constructor(private readonly parentClient: GoogleGenAIParentClient) {
-    this.files = new GeminiNextGenEnvironmentFiles((apiVersion) =>
-      this.getClient(apiVersion),
+    this.files = new GeminiNextGenEnvironmentFiles(
+      (apiVersion) => this.getClient(apiVersion),
+      this.parentClient,
     );
   }
 
@@ -1190,6 +1428,102 @@ export class GeminiNextGenEnvironments {
   ): Promise<interactions.Empty> {
     return unwrapWithSdkHttpResponse(
       environmentsDeleteEnvironment(
+        this.getClient(params?.api_version),
+        id,
+        params?.api_version,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  private getClient(apiVersion: string | undefined): GoogleGenAI {
+    if (apiVersion) {
+      return buildGoogleGenAIClient(this.parentClient, {
+        api_version: apiVersion,
+      });
+    }
+
+    this.sdk ??= buildGoogleGenAIClient(this.parentClient);
+    return this.sdk;
+  }
+}
+
+export class GeminiNextGenCredentials {
+  private sdk: GoogleGenAI | undefined;
+
+  constructor(private readonly parentClient: GoogleGenAIParentClient) {}
+
+  async create(
+    params: credentials.CredentialCreateParams & { api_version?: string },
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<credentials.Credential> {
+    const { api_version, ...body } = params;
+    return unwrapWithSdkHttpResponse(
+      credentialsCreate(
+        this.getClient(api_version),
+        body,
+        api_version,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  async list(
+    params: CredentialListParams | null | undefined = {},
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<credentials.CredentialListResponse> {
+    const { api_version, page_size, page_token } = params ?? {};
+    return unwrapWithSdkHttpResponse(
+      credentialsList(
+        this.getClient(api_version),
+        api_version,
+        page_size,
+        page_token,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  async get(
+    id: string,
+    params: { api_version?: string } | null | undefined = {},
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<credentials.Credential> {
+    return unwrapWithSdkHttpResponse(
+      credentialsGet(
+        this.getClient(params?.api_version),
+        id,
+        params?.api_version,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  async update(
+    id: string,
+    params: CredentialUpdateParams,
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<credentials.Credential> {
+    const { api_version, update_mask, ...body } = params;
+    return unwrapWithSdkHttpResponse(
+      credentialsUpdate(
+        this.getClient(api_version),
+        id,
+        body,
+        api_version,
+        update_mask,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  async delete(
+    id: string,
+    params: { api_version?: string } | null | undefined = {},
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<interactions.Empty> {
+    return unwrapWithSdkHttpResponse(
+      credentialsDelete(
         this.getClient(params?.api_version),
         id,
         params?.api_version,

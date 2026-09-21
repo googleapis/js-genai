@@ -32,7 +32,7 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Retrieves a file or directory from an environment's snapshot.
+ * Retrieves file metadata or directory contents from an environment's snapshot. To download file content, use the download URL returned in the response.
  */
 export function environmentsFilesList(
   client: GoogleGenAICore,
@@ -113,7 +113,7 @@ async function $do(
     }),
     path: encodeSimple("path", payload.path, {
       explode: false,
-      charEncoding: "percent",
+      charEncoding: "percentExceptReserved",
     }),
   };
   const path$ = pathToFunc(

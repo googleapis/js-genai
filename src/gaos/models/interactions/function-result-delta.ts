@@ -20,10 +20,6 @@ export type FunctionResultDeltaResultUnion =
   | string;
 
 export type FunctionResultDelta = {
-  /**
-   * Required. ID to match the ID from the function call block.
-   */
-  call_id: string;
   is_error?: boolean | undefined;
   name?: string | undefined;
   result: Array<FunctionResultSubcontent> | FunctionResultDeltaResult | string;

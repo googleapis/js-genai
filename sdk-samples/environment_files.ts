@@ -15,7 +15,9 @@ const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
  * 2. Listing files at root using ai.environments.files.list.
  * 3. Inspecting file metadata (name, size, type).
  * 4. Querying nested directories recursively.
- * 5. Cleaning up the environment.
+ * 5. Uploading a new file using ai.environments.files.upload.
+ * 6. Downloading file content using ai.environments.files.download.
+ * 7. Cleaning up the environment.
  */
 async function environmentFilesSample(ai: GoogleGenAI) {
   console.log('\n--- 1. Creating Environment with Workspace Files ---');
@@ -89,9 +91,36 @@ async function environmentFilesSample(ai: GoogleGenAI) {
       path: 'main.py',
     });
     console.log('main.py file query response:', mainFileResponse);
+
+    // 5. Upload a new file
+    console.log('\n--- 5. Uploading a New File (path="uploaded.txt") ---');
+    const fileBytes = new TextEncoder().encode(
+      'Hello from TypeScript Environment Files upload demo!\n',
+    );
+    const uploadRes = await ai.environments.files.upload({
+      environment: envId,
+      path: 'uploaded.txt',
+      file: fileBytes,
+      mime_type: 'text/plain',
+      overwrite: true,
+    });
+    console.log(
+      `Uploaded file successfully: ${uploadRes.files?.[0]?.name || 'uploaded.txt'}`,
+    );
+
+    // 6. Download file content
+    console.log('\n--- 6. Downloading File Content (path="uploaded.txt") ---');
+    const downloadedBytes = await ai.environments.files.download({
+      environment: envId,
+      path: 'uploaded.txt',
+    });
+    console.log(
+      'Downloaded uploaded.txt content:\n',
+      new TextDecoder().decode(downloadedBytes).trim(),
+    );
   } finally {
-    // 5. Clean up
-    console.log(`\n--- 5. Cleaning up Environment ID: ${envId} ---`);
+    // 7. Clean up
+    console.log(`\n--- 7. Cleaning up Environment ID: ${envId} ---`);
     const deleteRes = await ai.environments.delete(envId);
     console.log('Environment deleted successfully:', deleteRes);
   }
@@ -108,6 +137,9 @@ async function main() {
   const ai = new GoogleGenAI({
     apiKey: GEMINI_API_KEY,
     apiVersion: 'v1alpha',
+    httpOptions: process.env.GOOGLE_GENAI_BASE_URL
+      ? {baseUrl: process.env.GOOGLE_GENAI_BASE_URL}
+      : undefined,
   });
 
   try {

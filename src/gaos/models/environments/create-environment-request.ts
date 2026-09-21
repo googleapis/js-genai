@@ -26,6 +26,14 @@ export type CreateEnvironmentRequestNetworkUnion =
  */
 export type CreateEnvironmentRequest = {
   /**
+   * Optional. The source environment to copy/fork from.
+   *
+   * @remarks
+   * Format: `environments/{environment_id}` or `{environment_id}`.
+   * When specified, `sources` and `env` must be empty.
+   */
+  from_environment?: string | undefined;
+  /**
    * Network configuration for the environment.
    */
   network?:
