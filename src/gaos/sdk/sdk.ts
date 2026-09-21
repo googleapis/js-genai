@@ -15,6 +15,7 @@ import { Agents } from "./agents.js";
 import { Credentials } from "./credentials.js";
 import { Environments } from "./environments.js";
 import { Interactions } from "./interactions.js";
+import { Projects } from "./projects.js";
 import { Triggers } from "./triggers.js";
 import { Voices } from "./voices.js";
 import { Webhooks } from "./webhooks.js";
@@ -38,6 +39,11 @@ export class GoogleGenAI extends ClientSDK {
   private _interactions?: Interactions;
   get interactions(): Interactions {
     return (this._interactions ??= new Interactions(this._options));
+  }
+
+  private _projects?: Projects;
+  get projects(): Projects {
+    return (this._projects ??= new Projects(this._options));
   }
 
   private _triggers?: Triggers;

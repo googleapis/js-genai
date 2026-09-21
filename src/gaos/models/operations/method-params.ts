@@ -48,6 +48,8 @@ import type { ListVoicesRequest } from "./list-voices.js";
 import type { ListWebhooksRequest } from "./list-webhooks.js";
 import type { RunTriggerRequest } from "./run-trigger.js";
 import type { StartEnvironmentFileUploadRequest } from "./start-environment-file-upload.js";
+import type { UpdateAgentByProjectsIdAndLocationsIdAndAgentsIdRequest } from "./update-agent-by-projects-id-and-locations-id-and-agents-id.js";
+import type { UpdateAgentRequest } from "./update-agent.js";
 import type { UpdateCredentialRequest } from "./update-credential.js";
 import type { UpdateTriggerRequest } from "./update-trigger.js";
 import type { UpdateWebhookRequest } from "./update-webhook.js";
@@ -264,6 +266,22 @@ export type StartEnvironmentFileUploadParams = Omit<
   StartEnvironmentFileUploadRequest,
   "environment" | "path"
 >;
+
+export type UpdateAgentByProjectsIdAndLocationsIdAndAgentsIdParams =
+  & Omit<
+    UpdateAgentByProjectsIdAndLocationsIdAndAgentsIdRequest,
+    "agentsId" | "locationsId" | "projectsId" | "body"
+  >
+  & Partial<
+    NonNullable<UpdateAgentByProjectsIdAndLocationsIdAndAgentsIdRequest["body"]>
+  >;
+
+export type UpdateAgentParams =
+  & Omit<
+    UpdateAgentRequest,
+    "agentsId" | "body"
+  >
+  & Partial<NonNullable<UpdateAgentRequest["body"]>>;
 
 export type UpdateCredentialParams =
   & Omit<

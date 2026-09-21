@@ -14,6 +14,7 @@ import { agentsCreate } from "../funcs/agents-create.js";
 import { agentsDelete } from "../funcs/agents-delete.js";
 import { agentsGet } from "../funcs/agents-get.js";
 import { agentsList } from "../funcs/agents-list.js";
+import { agentsUpdateAgent } from "../funcs/agents-update-agent.js";
 import { ClientSDK, RequestOptions } from "../lib/sdks.js";
 import * as agents from "../models/agents/index.js";
 import * as interactions from "../models/interactions/index.js";
@@ -22,6 +23,7 @@ import {
   DeleteAgentParams,
   GetAgentParams,
   ListAgentsParams,
+  UpdateAgentParams,
 } from "../models/operations/method-params.js";
 import { APIPromise, unwrapAsAPIPromise } from "../types/async.js";
 
@@ -87,6 +89,28 @@ export class Agents extends ClientSDK {
       this,
       id,
       params?.api_version,
+      options,
+    ));
+  }
+
+  /**
+   * Updates an existing Agent.
+   */
+  updateAgent(
+    agents_id: string,
+    params?: UpdateAgentParams,
+    options?: RequestOptions,
+  ): APIPromise<agents.Agent> {
+    const { api_version, update_mask, ...body$body } = params ?? {};
+    const body = params === undefined || Object.keys(body$body).length === 0
+      ? undefined
+      : body$body;
+    return unwrapAsAPIPromise(agentsUpdateAgent(
+      this,
+      agents_id,
+      api_version,
+      update_mask,
+      body,
       options,
     ));
   }
