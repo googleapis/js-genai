@@ -87,7 +87,7 @@ describe('Triggers Lifecycle', () => {
       });
       await ai.triggers.list({
         filter: 'some-filter',
-        pageSize: 10,
+        page_size: 10,
       });
       const fetched = await ai.triggers.get('svc_abc');
       await ai.triggers.update('svc_abc', {
@@ -96,7 +96,7 @@ describe('Triggers Lifecycle', () => {
       await ai.triggers.delete('svc_abc');
       await ai.triggers.run('svc_abc');
       await ai.triggers.listExecutions('svc_abc', {
-        pageSize: 5,
+        page_size: 5,
       });
 
       expect(trigger.schedule).toBe('0 0 * * *');

@@ -13,6 +13,12 @@
 import { Agent } from "./agent.js";
 
 export type AgentListResponse = {
+  /**
+   * The list of agents.
+   */
   agents?: Array<Agent> | undefined;
+  /**
+   * A token to retrieve the next page of results.
+   */
   next_page_token?: string | undefined;
 };

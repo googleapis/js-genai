@@ -22,19 +22,26 @@ import { Tool } from "./tool.js";
 import { WebhookConfig } from "./webhook-config.js";
 
 /**
- * The environment configuration for the interaction. Can be an object specifying remote environment sources or a string referencing an existing environment ID.
+ * The environment configuration for the interaction. Can be an object
+ *
+ * @remarks
+ * specifying remote environment sources or a string referencing an existing
+ * environment ID.
  */
 export type CreateModelInteractionEnvironment = Environment | string;
 
 /**
- * Enforces that the generated response is a JSON object that complies with the JSON schema specified in this field.
+ * Enforces that the generated response is a JSON object that complies with
+ *
+ * @remarks
+ * the JSON schema specified in this field.
  */
 export type CreateModelInteractionResponseFormat =
   | ResponseFormat
   | Array<ResponseFormat>;
 
 /**
- * Parameters for creating model interactions
+ * Interaction for generating the completion using models.
  */
 export type CreateModelInteraction = {
   /**
@@ -42,7 +49,17 @@ export type CreateModelInteraction = {
    */
   background?: boolean | undefined;
   /**
-   * The environment configuration for the interaction. Can be an object specifying remote environment sources or a string referencing an existing environment ID.
+   * The name of the cached content used as context to serve the prediction. Note: only used in explicit caching, where users can have control over caching (e.g. what content to cache) and enjoy guaranteed cost savings. Format: cachedContents/{cachedContent}
+   *
+   * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
+   */
+  cached_content?: string | undefined;
+  /**
+   * The environment configuration for the interaction. Can be an object
+   *
+   * @remarks
+   * specifying remote environment sources or a string referencing an existing
+   * environment ID.
    */
   environment?: Environment | string | undefined;
   /**
@@ -52,9 +69,16 @@ export type CreateModelInteraction = {
   /**
    * The input for the interaction.
    */
-  input: InteractionsInput;
+  input?: InteractionsInput | undefined;
   /**
    * The labels with user-defined metadata for the request.
+   *
+   * @remarks
+   *
+   * Label keys and values can be no longer than 63 characters
+   * (Unicode codepoints) and can only contain lowercase letters, numeric
+   * characters, underscores, and dashes. International characters are allowed.
+   * Label values are optional. Label keys must start with a letter.
    */
   labels?: { [k: string]: string } | undefined;
   /**
@@ -66,7 +90,10 @@ export type CreateModelInteraction = {
    */
   previous_interaction_id?: string | undefined;
   /**
-   * Enforces that the generated response is a JSON object that complies with the JSON schema specified in this field.
+   * Enforces that the generated response is a JSON object that complies with
+   *
+   * @remarks
+   * the JSON schema specified in this field.
    */
   response_format?: ResponseFormat | Array<ResponseFormat> | undefined;
   /**
