@@ -120,6 +120,7 @@ import type { SafetySetting as SafetySetting$Import } from "./models/interaction
 import type { SessionConfig as SessionConfig$Import } from "./models/interactions/session-config.js";
 import type { SmartTranscriptionMode as SmartTranscriptionMode$Import } from "./models/interactions/smart-transcription-mode.js";
 import type { Source as Source$Import } from "./models/interactions/source.js";
+import type { SpeechAnnotation as SpeechAnnotation$Import } from "./models/interactions/speech-annotation.js";
 import type { SpeechConfig as SpeechConfig$Import } from "./models/interactions/speech-config.js";
 import type { StaticMediaProcessing as StaticMediaProcessing$Import } from "./models/interactions/static-media-processing.js";
 import type { StepDeltaMetadata as StepDeltaMetadata$Import } from "./models/interactions/step-delta-metadata.js";
@@ -340,6 +341,7 @@ type VideoContent$ = VideoContent$Import;
 type VideoResponseFormat$ = VideoResponseFormat$Import;
 type WebhookConfig$ = WebhookConfig$Import;
 type WordInfo$ = WordInfo$Import;
+type SpeechMetadata$ = SpeechAnnotation$Import;
 type Arguments$ = CodeExecutionCallArguments$Import;
 type FindRequest$ = FindRequest$Import;
 type FixRequest$ = FixRequest$Import;
@@ -599,6 +601,7 @@ export type Smart = Smart$;
 export type Source = Source$;
 export type SourceFile = SourceFile$;
 export type SpeechConfig = SpeechConfig$;
+export type SpeechMetadata = SpeechMetadata$;
 export type Static = Static$;
 export type Step = Step$;
 export type StepDelta = StepDelta$;
@@ -810,6 +813,9 @@ export declare namespace Interactions {
   export type VideoResponseFormat = VideoResponseFormat$;
   export type WebhookConfig = WebhookConfig$;
   export type WordInfo = WordInfo$;
+  export namespace Annotation {
+    export type SpeechMetadata = SpeechMetadata$;
+  }
   export namespace CodeExecutionCallStep {
     export type Arguments = Arguments$;
   }
