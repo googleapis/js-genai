@@ -2,6 +2,23 @@
 
 
 
+## [2.24.0](https://github.com/googleapis/js-genai/compare/v2.23.0...v2.24.0) (2026-09-22)
+
+
+### Features
+
+* add sample_audio to Voice in GAOS SDK ([d001d18](https://github.com/googleapis/js-genai/commit/d001d18f86d67d0799d9dc5a1283b630811ee101))
+* add Voices API resource to GAOS SDK ([f97113f](https://github.com/googleapis/js-genai/commit/f97113fbbd59f79178be1878c3096899cc1e4ec0))
+* expose SpeechMetadata, VoiceConfig.voice, and SpeechAnnotation in public GenAI SDKs ([19b7858](https://github.com/googleapis/js-genai/commit/19b78588251040c6dc098485502d1c7cde2da89a))
+* support field.value_field syntax for map add_union_value annotations. ([51d701a](https://github.com/googleapis/js-genai/commit/51d701aacba529cdaac9a30345d33318fb6bb0d5))
+* update discovery doc ([42f9716](https://github.com/googleapis/js-genai/commit/42f971635d4b4d976d216e691a90f2a907b3965f))
+* wire voice into sdk ([08b568e](https://github.com/googleapis/js-genai/commit/08b568e8028e373278685d4cb1899773cd7fd530))
+
+
+### Bug Fixes
+
+* sanitize path parameter descriptions in GAOS OpenAPI generation ([1567962](https://github.com/googleapis/js-genai/commit/15679623eb35393cdf5aa57a22d306494e380d64))
+
 ## [2.23.0](https://github.com/googleapis/js-genai/compare/v2.22.0...v2.23.0) (2026-09-16)
 
 
