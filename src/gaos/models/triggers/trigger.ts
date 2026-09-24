@@ -47,11 +47,11 @@ export type Trigger = {
   /**
    * Required. Output only. Identifier. The ID of the trigger.
    */
-  id: string;
+  id?: string | undefined;
   /**
-   * Interaction for generating the completion using agents.
+   * The Interaction resource.
    */
-  interaction: interactions.CreateAgentInteraction;
+  interaction?: interactions.Interaction | undefined;
   /**
    * Output only. The time when the trigger was last paused.
    */
@@ -85,7 +85,7 @@ export type Trigger = {
    * @remarks
    * Standard cron format.
    */
-  schedule: string;
+  schedule?: string | undefined;
   /**
    * Output only. The current status of the trigger.
    */
@@ -93,7 +93,7 @@ export type Trigger = {
   /**
    * Required. Time zone in which the schedule should be interpreted.
    */
-  time_zone: string;
+  time_zone?: string | undefined;
   /**
    * Output only. The time when the trigger was last updated.
    */
