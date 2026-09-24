@@ -16,18 +16,20 @@ jobs:
 
     steps:
     - name: Checkout PR Branch
-      uses: actions/checkout@v4
+      uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       with:
         path: pr-branch
+        persist-credentials: false
 
     - name: Checkout Base Branch
-      uses: actions/checkout@v4
+      uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       with:
         ref: ${{ github.base_ref }}
         path: base-branch
+        persist-credentials: false
 
     - name: Setup Node.js (PR Branch)
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
       with:
         node-version: 22.x
         cache: 'npm'
