@@ -12,9 +12,6 @@
 
 import * as interactions from "../interactions/index.js";
 
-/**
- * Required. The interaction request template to be executed.
- */
 export type Interaction =
   | interactions.CreateAgentInteraction
   | interactions.CreateModelInteraction;
@@ -35,9 +32,6 @@ export type TriggerCreateParams = {
    * Optional. The execution timeout for the triggered interaction.
    */
   execution_timeout_seconds?: number | undefined;
-  /**
-   * Required. The interaction request template to be executed.
-   */
   interaction:
     | interactions.CreateAgentInteraction
     | interactions.CreateModelInteraction;
