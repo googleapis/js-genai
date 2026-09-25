@@ -2227,6 +2227,13 @@ export function tuningJobFromVertex(
     common.setValueByPath(toObject, ['veoTuningSpec'], fromVeoTuningSpec);
   }
 
+  const fromGcsMetricsUri = common.getValueByPath(fromObject, [
+    'gcsMetricsUri',
+  ]);
+  if (fromGcsMetricsUri != null) {
+    common.setValueByPath(toObject, ['gcsMetricsUri'], fromGcsMetricsUri);
+  }
+
   return toObject;
 }
 
