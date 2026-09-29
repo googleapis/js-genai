@@ -49,9 +49,9 @@ export type Trigger = {
    */
   id: string;
   /**
-   * The Interaction resource.
+   * Interaction for generating the completion using agents.
    */
-  interaction: interactions.Interaction;
+  interaction: interactions.CreateAgentInteraction;
   /**
    * Output only. The time when the trigger was last paused.
    */

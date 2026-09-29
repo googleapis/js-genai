@@ -13,13 +13,6 @@
 import * as interactions from "../interactions/index.js";
 
 /**
- * Required. The interaction request template to be executed.
- */
-export type Interaction =
-  | interactions.CreateAgentInteraction
-  | interactions.CreateModelInteraction;
-
-/**
  * Parameters for creating a trigger.
  */
 export type TriggerCreateParams = {
@@ -36,11 +29,9 @@ export type TriggerCreateParams = {
    */
   execution_timeout_seconds?: number | undefined;
   /**
-   * Required. The interaction request template to be executed.
+   * Interaction for generating the completion using agents.
    */
-  interaction:
-    | interactions.CreateAgentInteraction
-    | interactions.CreateModelInteraction;
+  interaction: interactions.CreateAgentInteraction;
   /**
    * Optional. The maximum number of consecutive failures allowed before
    *
