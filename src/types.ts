@@ -5988,6 +5988,8 @@ export declare interface TuningJob {
   veoLoraTuningSpec?: VeoLoraTuningSpec;
   /** Tuning Spec for Veo Tuning. */
   veoTuningSpec?: VeoTuningSpec;
+  /** The Cloud Storage metrics URI associated with this tuning job. */
+  gcsMetricsUri?: string;
 }
 
 /** Configuration for the list tuning jobs method. */
