@@ -23,9 +23,11 @@ export type CreateVoiceRequest = {
    *
    * * When `true`, Google stores the voice and returns `Voice.id` (for example,
    *   `voice_abc123def456`), which can be managed via `GetVoice`, `ListVoices`,
-   *   and `DeleteVoice` and referenced by ID in synthesis requests. Projects
-   *   are subject to a maximum active stored voice quota; exceeding the quota
-   *   returns `RESOURCE_EXHAUSTED`.
+   *   and `DeleteVoice` and referenced by ID in synthesis requests. Stored
+   *   voices expire after 1 year of inactivity; using a stored voice in speech
+   *   synthesis or as a `base_voice` in `CreateVoice` extends its
+   *   `expire_time`. Projects are subject to a maximum active stored voice
+   *   quota; exceeding the quota returns `RESOURCE_EXHAUSTED`.
    * * When `false` (default), the voice is not stored by Google and `Voice.key`
    *   (for example, `voicekey_...`) is returned for client-side storage and
    *   synthesis. Optional discovery metadata fields on `voice` are not
