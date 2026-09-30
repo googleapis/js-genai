@@ -2,6 +2,22 @@
 
 
 
+## [2.25.0](https://github.com/googleapis/js-genai/compare/v2.24.0...v2.25.0) (2026-09-30)
+
+
+### Features
+
+* add gcs_metrics_uri for exporting tuning job metrics. ([bc085fb](https://github.com/googleapis/js-genai/commit/bc085fbd32e00bf8355ff5f6c63d1ef7eb9ec686))
+* Add Gemini 3.8 Flash TTS and Gemini 3.8 Flash Lite TTS models to SDKs ([b12dad0](https://github.com/googleapis/js-genai/commit/b12dad09079feee92bc843be0965543baa1ec88d))
+* **genai-sdk:** Add environments dedicated module and from_environment support ([4d7e80b](https://github.com/googleapis/js-genai/commit/4d7e80b03dda3b9104649cb69bd8471f52f0c207))
+* include labels for LiveClientSetup ([d4bcdad](https://github.com/googleapis/js-genai/commit/d4bcdad45f105a7b4c035872406c04e2d42d63d4))
+* support labels for Gemini API GenerateContent ([71c3997](https://github.com/googleapis/js-genai/commit/71c3997f7ede070a6ff6aa7062920efaa7eb21de))
+
+
+### Bug Fixes
+
+* use `CreateAgentInteraction` for `Trigger.interaction` and `TriggerCreateParams.interaction` ([c4341e1](https://github.com/googleapis/js-genai/commit/c4341e113281426e15c5a3bda4bbbd60c10d26b1))
+
 ## [2.24.0](https://github.com/googleapis/js-genai/compare/v2.23.0...v2.24.0) (2026-09-22)
 
 
