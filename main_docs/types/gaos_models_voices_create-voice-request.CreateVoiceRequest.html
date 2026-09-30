@@ -3,9 +3,11 @@
 </div><div class="tsd-comment tsd-typography"><div class="tsd-tag-remarks"><h4 class="tsd-anchor-link"><a id="remarks" class="tsd-anchor"></a>Remarks<a href="#remarks" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><ul>
 <li>When <code>true</code>, Google stores the voice and returns <code>Voice.id</code> (for example,
 <code>voice_abc123def456</code>), which can be managed via <code>GetVoice</code>, <code>ListVoices</code>,
-and <code>DeleteVoice</code> and referenced by ID in synthesis requests. Projects
-are subject to a maximum active stored voice quota; exceeding the quota
-returns <code>RESOURCE_EXHAUSTED</code>.</li>
+and <code>DeleteVoice</code> and referenced by ID in synthesis requests. Stored
+voices expire after 1 year of inactivity; using a stored voice in speech
+synthesis or as a <code>base_voice</code> in <code>CreateVoice</code> extends its
+<code>expire_time</code>. Projects are subject to a maximum active stored voice
+quota; exceeding the quota returns <code>RESOURCE_EXHAUSTED</code>.</li>
 <li>When <code>false</code> (default), the voice is not stored by Google and <code>Voice.key</code>
 (for example, <code>voicekey_...</code>) is returned for client-side storage and
 synthesis. Optional discovery metadata fields on <code>voice</code> are not
