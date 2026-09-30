@@ -17,7 +17,7 @@ const CONTENT_TYPE_HEADER = 'Content-Type';
 const SERVER_TIMEOUT_HEADER = 'X-Server-Timeout';
 const USER_AGENT_HEADER = 'User-Agent';
 export const GOOGLE_API_CLIENT_HEADER = 'x-goog-api-client';
-export const SDK_VERSION = '2.22.0'; // x-release-please-version
+export const SDK_VERSION = '2.24.0'; // x-release-please-version
 const LIBRARY_LABEL = `google-genai-sdk/${SDK_VERSION}`;
 const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
 const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';
@@ -410,6 +410,10 @@ export class ApiClient {
     }
   }
 
+  getFetch(): types.Fetch | undefined {
+    return this.clientOptions.httpOptions?.fetch;
+  }
+
   private getRequestUrlInternal(httpOptions?: types.HttpOptions) {
     if (
       !httpOptions ||
@@ -548,6 +552,7 @@ export class ApiClient {
       patchedHttpOptions.retryOptions,
       patchedHttpOptions.timeout,
       request.abortSignal,
+      patchedHttpOptions.fetch,
     );
   }
 
@@ -558,6 +563,9 @@ export class ApiClient {
     const patchedHttpOptions = JSON.parse(
       JSON.stringify(baseHttpOptions),
     ) as types.HttpOptions;
+    if (baseHttpOptions.fetch) {
+      patchedHttpOptions.fetch = baseHttpOptions.fetch;
+    }
 
     for (const [key, value] of Object.entries(requestHttpOptions)) {
       // Records compile to objects.
@@ -613,6 +621,7 @@ export class ApiClient {
       patchedHttpOptions.retryOptions,
       patchedHttpOptions.timeout,
       request.abortSignal,
+      patchedHttpOptions.fetch,
     );
   }
 
@@ -678,6 +687,7 @@ export class ApiClient {
     retryOptions?: types.HttpRetryOptions,
     timeout?: number,
     abortSignal?: AbortSignal,
+    fetchFn?: types.Fetch,
   ): Promise<types.HttpResponse> {
     return this.apiCall(
       url.toString(),
@@ -688,6 +698,7 @@ export class ApiClient {
       retryOptions,
       timeout,
       abortSignal,
+      fetchFn,
     )
       .then(async (response) => {
         await throwErrorIfNotOK(response);
@@ -709,6 +720,7 @@ export class ApiClient {
     retryOptions?: types.HttpRetryOptions,
     timeout?: number,
     abortSignal?: AbortSignal,
+    fetchFn?: types.Fetch,
   ): Promise<AsyncGenerator<types.HttpResponse>> {
     return this.apiCall(
       url.toString(),
@@ -719,6 +731,7 @@ export class ApiClient {
       retryOptions,
       timeout,
       abortSignal,
+      fetchFn,
     )
       .then(async (response) => {
         await throwErrorIfNotOK(response);
@@ -841,7 +854,9 @@ export class ApiClient {
     retryOptions?: types.HttpRetryOptions,
     timeout?: number,
     abortSignal?: AbortSignal,
+    fetchFn?: types.Fetch,
   ): Promise<Response> {
+    const fetchFunc = fetchFn ?? fetch;
     const retryableStatusCodes =
       retryOptions?.httpStatusCodes ?? DEFAULT_RETRY_HTTP_STATUS_CODES;
     const runFetch = async () => {
@@ -850,7 +865,10 @@ export class ApiClient {
       const attempt = createAttemptSignal(timeout, abortSignal);
       let response: Response;
       try {
-        response = await fetch(url, {...requestInit, signal: attempt.signal});
+        response = await fetchFunc(url, {
+          ...requestInit,
+          signal: attempt.signal,
+        });
       } catch (e) {
         attempt.dispose();
         throw e;

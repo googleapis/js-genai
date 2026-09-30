@@ -230,6 +230,60 @@ async function testExplicitEnvironmentLifecycle(ai: GoogleGenAI) {
   }
 }
 
+/**
+ * 5. Environment Copying using from_environment (AUTOPUSH)
+ */
+async function testEnvironmentCopying(ai: GoogleGenAI) {
+  console.log(
+    '\n--- Scenario 5: Environment Copying using from_environment ---',
+  );
+
+  // 5.1 Create source environment
+  console.log('5.1 Creating source environment with inline source...');
+  const sourceEnv = await ai.environments.create({
+    sources: [
+      {
+        type: 'inline',
+        target: 'main.py',
+        content: 'print("Hello from source environment!")',
+      },
+    ],
+  });
+  const sourceId = sourceEnv.id;
+  if (!sourceId) {
+    throw new Error('Source environment creation failed: ID is undefined.');
+  }
+  console.log('Source environment created with ID:', sourceId);
+
+  // 5.2 Copy/fork environment using from_environment
+  console.log(`5.2 Copying environment from ${sourceId}...`);
+  const copiedEnv = await ai.environments.create({
+    from_environment: sourceId,
+  });
+  const copiedId = copiedEnv.id;
+  if (!copiedId) {
+    throw new Error('Copied environment creation failed: ID is undefined.');
+  }
+  console.log('Copied environment created with ID:', copiedId);
+
+  // 5.3 Verify copied environment exists
+  const fetched = await ai.environments.get(copiedId);
+  console.log('Fetched copied environment details:', fetched);
+  if (fetched.id !== copiedId) {
+    throw new Error(
+      `Fetched ID mismatch: expected ${copiedId}, got ${fetched.id}`,
+    );
+  }
+
+  // 5.4 Clean up both environments
+  console.log(
+    `5.4 Cleaning up copied environment ${copiedId} and source ${sourceId}...`,
+  );
+  await ai.environments.delete(copiedId);
+  await ai.environments.delete(sourceId);
+  console.log('Both environments deleted successfully.');
+}
+
 async function main() {
   const ai = new GoogleGenAI({
     vertexai: false,
@@ -241,6 +295,7 @@ async function main() {
     await testImplicitEnvironmentWithSources(ai);
     await testImplicitEnvironmentStandard(ai);
     await testExplicitEnvironmentLifecycle(ai);
+    await testEnvironmentCopying(ai);
     console.log(
       '\n✅ All Environment Lifecycle test scenarios completed successfully using ONLY API Key!',
     );

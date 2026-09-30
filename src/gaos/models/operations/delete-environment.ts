@@ -12,18 +12,21 @@
 
 export type DeleteEnvironmentGlobals = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
 };
 
 export type DeleteEnvironmentRequest = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
   /**
-   * Resource ID segment making up resource `name`. It identifies the resource within its parent collection as described in https://google.aip.dev/122.
+   * Required. Resource ID segment making up resource `name`. It identifies the resource
+   *
+   * @remarks
+   * within its parent collection as described in https://google.aip.dev/122.
    */
   id: string;
 };

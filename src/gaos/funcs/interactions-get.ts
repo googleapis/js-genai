@@ -12,6 +12,7 @@
 
 import { GoogleGenAICore } from "../core.js";
 import { encodeFormQuery, encodeSimple } from "../lib/encodings.js";
+import { Stream } from "../lib/event-streams.js";
 import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
@@ -27,15 +28,14 @@ import {
   UnexpectedClientError,
 } from "../models/errors/http-client-errors.js";
 import * as errors from "../models/errors/index.js";
+import * as interactions from "../models/interactions/index.js";
 import * as operations from "../models/operations/index.js";
 import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Retrieving an interaction
- *
- * @remarks
- * Retrieves the full details of a single interaction based on its `Interaction.id`.
+ * Retrieves the full details of a single interaction based on its
+ * `Interaction.id`.
  */
 export function interactionsGet(
   client: GoogleGenAICore,
@@ -47,7 +47,7 @@ export function interactionsGet(
   options?: Omit<RequestOptions, "extra_body">,
 ): APIPromise<
   Result<
-    operations.GetInteractionByIdResponse,
+    interactions.Interaction,
     | errors.GetInteractionByIdClientError
     | errors.GetInteractionByIdServerError
     | GoogleGenAiError
@@ -68,7 +68,7 @@ export function interactionsGet(
   options?: Omit<RequestOptions, "extra_body">,
 ): APIPromise<
   Result<
-    operations.GetInteractionByIdResponse,
+    Stream<interactions.InteractionSSEEvent>,
     | errors.GetInteractionByIdClientError
     | errors.GetInteractionByIdServerError
     | GoogleGenAiError
@@ -173,12 +173,14 @@ async function $do(
       payload.api_version ?? client._options.api_version,
       { explode: false, charEncoding: "percent" },
     ),
-    id: encodeSimple("id", payload.id, {
+    interactionsId: encodeSimple("interactionsId", payload.id, {
       explode: false,
       charEncoding: "percent",
     }),
   };
-  const path = pathToFunc("/{api_version}/interactions/{id}")(pathParams);
+  const path = pathToFunc("/{api_version}/interactions/{interactionsId}")(
+    pathParams,
+  );
 
   const query = encodeFormQuery({
     "include_input": payload.include_input,

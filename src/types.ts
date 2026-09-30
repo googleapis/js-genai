@@ -14,6 +14,22 @@ import {
   uploadToFileSearchStoreOperationFromMldev,
 } from './converters/_operations_converters.js';
 
+/** How the model processes input media for understanding. */
+export enum MediaProcessing {
+  /**
+   * Default. Uses model-specific processing
+   */
+  MEDIA_PROCESSING_UNSPECIFIED = 'MEDIA_PROCESSING_UNSPECIFIED',
+  /**
+   * Fixed-rate frame extraction. All frames placed in context.
+   */
+  STATIC = 'STATIC',
+  /**
+   * Model-driven dynamic navigation. Recommended for most use cases.
+   */
+  AGENTIC = 'AGENTIC',
+}
+
 /** Outcome of the code execution. */
 export enum Outcome {
   /**
@@ -460,6 +476,22 @@ export enum FunctionCallingConfigMode {
   VALIDATED = 'VALIDATED',
 }
 
+/** Transcription mode. */
+export enum AudioTranscriptionConfigMode {
+  /**
+   * Unspecified transcription mode.
+   */
+  MODE_UNSPECIFIED = 'MODE_UNSPECIFIED',
+  /**
+   * Verbatim transcription mode.
+   */
+  VERBATIM = 'VERBATIM',
+  /**
+   * Smart transcription mode.
+   */
+  SMART = 'SMART',
+}
+
 /** Output only. The reason why the model stopped generating tokens.
 
 If empty, the model has not stopped generating the tokens. */
@@ -664,6 +696,10 @@ export enum TrafficType {
    * Type for Flex traffic.
    */
   ON_DEMAND_FLEX = 'ON_DEMAND_FLEX',
+  /**
+   * Type for Off-Peak Pay-As-You-Go traffic.
+   */
+  ON_DEMAND_OFFPEAK = 'ON_DEMAND_OFFPEAK',
   /**
    * Type for Provisioned Throughput traffic.
    */
@@ -1222,22 +1258,6 @@ export enum ServiceTier {
   PRIORITY = 'priority',
 }
 
-/** How the model processes input media for understanding. */
-export enum MediaProcessing {
-  /**
-   * Default. Uses model-specific processing
-   */
-  MEDIA_PROCESSING_UNSPECIFIED = 'MEDIA_PROCESSING_UNSPECIFIED',
-  /**
-   * Fixed-rate frame extraction. All frames placed in context.
-   */
-  STATIC = 'STATIC',
-  /**
-   * Model-driven dynamic navigation. Recommended for most use cases.
-   */
-  AGENTIC = 'AGENTIC',
-}
-
 /** The tokenization quality used for given media. */
 export enum PartMediaResolutionLevel {
   /**
@@ -1758,22 +1778,6 @@ export enum TurnCoverage {
   TURN_INCLUDES_AUDIO_ACTIVITY_AND_ALL_VIDEO = 'TURN_INCLUDES_AUDIO_ACTIVITY_AND_ALL_VIDEO',
 }
 
-/** Transcription mode. */
-export enum AudioTranscriptionConfigMode {
-  /**
-   * Unspecified transcription mode.
-   */
-  MODE_UNSPECIFIED = 'MODE_UNSPECIFIED',
-  /**
-   * Verbatim transcription mode.
-   */
-  VERBATIM = 'VERBATIM',
-  /**
-   * Smart transcription mode.
-   */
-  SMART = 'SMART',
-}
-
 /** Scale of the generated music. */
 export enum Scale {
   /**
@@ -1919,6 +1923,16 @@ export class ToolResponse {
   response?: Record<string, unknown>;
 }
 
+/** Extra metadata associated with the part for speech synthesis. */
+export declare interface SpeechMetadata {
+  /** The speaker for this part, which must match a `speaker` name in
+      `MultiSpeakerVoiceConfig.speaker_voice_configs`. */
+  speaker?: string;
+  /** The style instruction for how the voice should be synthesized
+      (e.g. "excited, fast-paced"). */
+  style?: string;
+}
+
 /** Information about a single recognized word. */
 export declare interface WordInfo {
   /** Transcript of the word.
@@ -1970,7 +1984,7 @@ export declare interface ExecutableCode {
 
 /** URI-based data. A FileData message contains a URI pointing to data of a specific media type. It is used to represent images, audio, and video stored in Google Cloud Storage. */
 export declare interface FileData {
-  /** Optional. The display name of the file. Used to provide a label or filename to distinguish files. This field is only returned in `PromptMessage` for prompt management. It is used in the Gemini calls only when server side tools (`code_execution`, `google_search`, and `url_context`) are enabled. This field is not supported in Gemini API. */
+  /** Optional. The display name of the file. Used to provide a label or filename to distinguish files. This field is only returned in `PromptMessage` for prompt management. It is used in the Gemini calls only when server side tools (`code_execution`, `google_search`, and `url_context`) are enabled. */
   displayName?: string;
   /** Required. The URI of the file in Google Cloud Storage. */
   fileUri?: string;
@@ -2086,7 +2100,7 @@ export declare interface Blob {
   /** Required. The raw bytes of the data.
    * @remarks Encoded as base64 string. */
   data?: string;
-  /** Optional. The display name of the blob. Used to provide a label or filename to distinguish blobs. This field is only returned in `PromptMessage` for prompt management. It is used in the Gemini calls only when server-side tools (`code_execution`, `google_search`, and `url_context`) are enabled. This field is not supported in Gemini API. */
+  /** Optional. The display name of the blob. Used to provide a label or filename to distinguish blobs. This field is only returned in `PromptMessage` for prompt management. It is used in the Gemini calls only when server-side tools (`code_execution`, `google_search`, and `url_context`) are enabled. */
   displayName?: string;
   /** Required. The IANA standard MIME type of the source data. */
   mimeType?: string;
@@ -2142,6 +2156,9 @@ export declare interface Part {
   partMetadata?: Record<string, unknown>;
   /** How the model processes this part's media for understanding. */
   mediaProcessing?: MediaProcessing;
+  /** Extra metadata associated with the part for speech synthesis, such
+      as speaker and style. Only valid when `Part.data` is set to `text`. */
+  speechMetadata?: SpeechMetadata;
 }
 /**
  * Creates a `Part` object from a `URI` string.
@@ -2351,6 +2368,8 @@ export declare interface HttpOptions {
   extraBody?: Record<string, unknown>;
   /** HTTP retry options for the request. */
   retryOptions?: HttpRetryOptions;
+  /** Custom fetch implementation to use for network requests. */
+  fetch?: Fetch;
 }
 
 /** Schema is used to define the format of input/output data.
@@ -2656,7 +2675,7 @@ export declare interface StreamableHttpTransport {
   url?: string;
 }
 
-/** A MCPServer is a server that can be called by the model to perform actions. It is a server that implements the MCP protocol. Next ID: 6. This data type is not supported in Vertex AI. */
+/** A MCPServer is a server that can be called by the model to perform actions. It is a server that implements the MCP protocol. Next ID: 7. This data type is not supported in Vertex AI. */
 export declare interface McpServer {
   /** The name of the MCPServer. */
   name?: string;
@@ -2862,6 +2881,8 @@ export declare interface VoiceConfig {
   replicatedVoiceConfig?: ReplicatedVoiceConfig;
   /** The configuration for a prebuilt voice. */
   prebuiltVoiceConfig?: PrebuiltVoiceConfig;
+  /** The speaker identifier for synthesis. */
+  voice?: string;
 }
 
 /** Configuration for a single speaker in a multi-speaker setup. */
@@ -3035,7 +3056,7 @@ export declare interface LanguageHints {
 
 /** The audio transcription configuration in Setup. */
 export declare interface AudioTranscriptionConfig {
-  /** BCP-47 language codes providing hints about the languages present in the audio. If omitted or empty, defaults to automatic language detection. */
+  /** Optional. BCP-47 language codes providing hints about the languages present in the audio. If omitted or empty, defaults to automatic language detection. */
   languageCodes?: string[];
   /** Deprecated: Auto-detection is now the default when language_codes is omitted. This field will be removed in a future version. */
   languageAuto?: LanguageAuto;
@@ -3187,7 +3208,7 @@ export declare interface GenerateContentConfig {
   /** Associates model output to a specific function call.
    */
   toolConfig?: ToolConfig;
-  /** Labels with user-defined metadata to break down billed charges. */
+  /** Labels with user-defined metadata for the request. */
   labels?: Record<string, string>;
   /** Resource name of a context cache that can be used in subsequent
       requests.
@@ -4750,6 +4771,8 @@ export class VideoResponseFormat {
   duration?: string;
   /** Optional. The Google Cloud Storage URI to store the video output. Required for Vertex if delivery is URI. */
   gcsUri?: string;
+  /** Optional. The video output resolution. Supported values: "360p", "720p", "1080p", "4k". */
+  resolution?: string;
 }
 
 /** Configuration for the model to configure output formatting and delivery. This data type is not supported in Gemini API. */
@@ -4827,7 +4850,7 @@ export declare interface GenerationConfig {
   topP?: number;
   /** Optional. Enables enhanced civic answers. It may not be available for all models. This field is not supported in Vertex AI. */
   enableEnhancedCivicAnswers?: boolean;
-  /** Optional. Config for translation. This field is not supported in Vertex AI. */
+  /** Optional. Config for translation. */
   translationConfig?: TranslationConfig;
 }
 
@@ -5538,6 +5561,8 @@ export declare interface ReinforcementTuningExample {
   contents?: Content[];
   /** Corresponds to system_instruction in user-facing GenerateContentRequest. */
   systemInstruction?: Content;
+  /** Optional. Corresponds to tools in user-facing GenerateContentRequest. */
+  tools?: Tool[];
 }
 
 /** Sample reinforcement tuning user data in the training dataset. The contents are truncated for better UI showing. This data type is not supported in Gemini API. */
@@ -5963,6 +5988,8 @@ export declare interface TuningJob {
   veoLoraTuningSpec?: VeoLoraTuningSpec;
   /** Tuning Spec for Veo Tuning. */
   veoTuningSpec?: VeoTuningSpec;
+  /** The Cloud Storage metrics URI associated with this tuning job. */
+  gcsMetricsUri?: string;
 }
 
 /** Configuration for the list tuning jobs method. */
@@ -6181,6 +6208,8 @@ export declare interface ReinforcementTuningRewardInfo {
   reward?: number;
   /** Output only. The user-requested auxiliary info for the reward function. This field is set only if the Cloud Run reward function configured by user returns a "user_requested_aux_info". Refer to ReinforcementTuningCloudRunRewardScorer for more details. */
   userRequestedAuxInfo?: string;
+  /** Output only. In case of an error for this reward, this field will be populated with a detailed error status. */
+  errorStatus?: GoogleRpcStatus;
 }
 
 /** Response for the validate_reward method.
@@ -7926,6 +7955,12 @@ export declare interface RegisterFilesParameters {
   config?: RegisterFilesConfig;
 }
 
+/** A custom fetch function type matching the standard fetch signature. */
+export type Fetch = (
+  input: RequestInfo | URL,
+  init?: RequestInit,
+) => Promise<Response>;
+
 /** Configures automatic detection of activity. */
 export declare interface AutomaticActivityDetection {
   /** If enabled, detected voice and text input count as activity. If disabled, the client must send activity signals. */
@@ -8078,6 +8113,8 @@ export declare interface LiveClientSetup {
       response.
        */
   safetySettings?: SafetySetting[];
+  /** Optional. Labels with user-defined metadata for the request. Optional. Labels must follow standard unified Cloud label requirements: - Label keys must start with a letter. - Label keys and values can be no longer than 63 characters (Unicode codepoints) and can only contain lowercase letters, numeric characters, underscores, and dashes. - International characters are allowed. Usage: - Safety identifiers from aggregators: Use the key `safety_identifier` (e.g. `{"safety_identifier": "user_session_123"}`) */
+  labels?: Record<string, string>;
 }
 
 /** Incremental update of the current conversation delivered from the client.

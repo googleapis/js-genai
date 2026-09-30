@@ -33,10 +33,8 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Canceling an interaction
- *
- * @remarks
- * Cancels an interaction by id. This only applies to background interactions that are still running.
+ * Cancels an interaction by id. This only applies to background interactions
+ * that are still running.
  */
 export function interactionsCancel(
   client: GoogleGenAICore,
@@ -99,14 +97,14 @@ async function $do(
       payload.api_version ?? client._options.api_version,
       { explode: false, charEncoding: "percent" },
     ),
-    id: encodeSimple("id", payload.id, {
+    interactionsId: encodeSimple("interactionsId", payload.id, {
       explode: false,
       charEncoding: "percent",
     }),
   };
-  const path = pathToFunc("/{api_version}/interactions/{id}/cancel")(
-    pathParams,
-  );
+  const path = pathToFunc(
+    "/{api_version}/interactions/{interactionsId}/cancel",
+  )(pathParams);
 
   const headers = new Headers(compactMap({
     Accept: "application/json",

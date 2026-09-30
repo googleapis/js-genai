@@ -90,7 +90,7 @@ const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
 
 async function main() {
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-flash-latest',
     contents: 'Why is the sky blue?',
   });
   console.log(response.text);
@@ -236,7 +236,7 @@ const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
 
 async function main() {
   const response = await ai.models.generateContentStream({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-flash-latest',
     contents: 'Write a 100-word poem.',
   });
   for await (const chunk of response) {
@@ -282,7 +282,7 @@ async function main() {
 
   const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-flash-latest',
     contents: 'Dim the lights so the room feels cozy and warm.',
     config: {
       toolConfig: {
@@ -335,7 +335,7 @@ const ai = new GoogleGenAI({});
 
 // Send request to the model with MCP tools
 const response = await ai.models.generateContent({
-  model: "gemini-2.5-flash",
+  model: "gemini-flash-latest",
   contents: `What is the weather in London on ${new Date().toLocaleDateString()}?`,
   config: {
     tools: [mcpToTool(mcpClient)],  // uses the session, will automatically call the tool using automatic function calling
@@ -410,7 +410,7 @@ for more details.
 
 ```typescript
 const interaction = await ai.interactions.create({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-flash-latest',
     input: 'Hello, how are you?',
 });
 console.debug(interaction);
@@ -425,14 +425,14 @@ conversation by referencing the `previous_interaction_id`.
 ```typescript
 // 1. First turn
 const interaction1 = await ai.interactions.create({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-flash-latest',
     input: 'Hi, my name is Amir.',
 });
 console.debug(interaction1);
 
 // 2. Second turn (passing previous_interaction_id)
 const interaction2 = await ai.interactions.create({
-  model: 'gemini-2.5-flash',
+  model: 'gemini-flash-latest',
   input: 'What is my name?',
   previous_interaction_id: interaction1.id,
 });
@@ -489,7 +489,7 @@ import base64
 // const base64Image = ...;
 
 const interaction = await ai.interactions.create({
-  model: 'gemini-2.5-flash',
+  model: 'gemini-flash-latest',
   input: [
     { type: 'text', text: 'Describe the image.' },
     { type: 'image', data: base64Image, mime_type: 'image/png' },
@@ -515,7 +515,7 @@ const getWeather = (location: string) => {
 
 // 2. Send the request with tools
 let interaction = await ai.interactions.create({
-  model: 'gemini-2.5-flash',
+  model: 'gemini-flash-latest',
   input: 'What is the weather in Mountain View, CA?',
   tools: [
     {
@@ -548,7 +548,7 @@ for (const output of interaction.outputs!) {
 
     // Send result back to the model
     interaction = await ai.interactions.create({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-flash-latest',
       previous_interaction_id: interaction.id,
       input: [
         {
@@ -575,7 +575,7 @@ Execution**.
 
 ```typescript
 const interaction = await ai.interactions.create({
-  model: 'gemini-2.5-flash',
+  model: 'gemini-flash-latest',
   input: 'Who won the last Super Bowl',
   tools: [{ type: 'google_search' }],
 });
@@ -588,7 +588,7 @@ console.debug(interaction);
 
 ```typescript
 const interaction = await ai.interactions.create({
-  model: 'gemini-2.5-flash',
+  model: 'gemini-flash-latest',
   input: 'Calculate the 50th Fibonacci number.',
   tools: [{ type: 'code_execution' }],
 });

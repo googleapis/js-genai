@@ -495,28 +495,6 @@ export function batchJobSourceToVertex(
   return toObject;
 }
 
-export function blobToMldev(fromObject: types.Blob): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromData = common.getValueByPath(fromObject, ['data']);
-  if (fromData != null) {
-    common.setValueByPath(toObject, ['data'], fromData);
-  }
-
-  if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
-    throw new Error(
-      'displayName parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
-    );
-  }
-
-  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
-  if (fromMimeType != null) {
-    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
-  }
-
-  return toObject;
-}
-
 export function cancelBatchJobParametersToMldev(
   apiClient: ApiClient,
   fromObject: types.CancelBatchJobParameters,
@@ -1071,30 +1049,6 @@ export function embeddingsBatchJobSourceToMldev(
   return toObject;
 }
 
-export function fileDataToMldev(
-  fromObject: types.FileData,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
-    throw new Error(
-      'displayName parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
-    );
-  }
-
-  const fromFileUri = common.getValueByPath(fromObject, ['fileUri']);
-  if (fromFileUri != null) {
-    common.setValueByPath(toObject, ['fileUri'], fromFileUri);
-  }
-
-  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
-  if (fromMimeType != null) {
-    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
-  }
-
-  return toObject;
-}
-
 export function functionCallToMldev(
   fromObject: types.FunctionCall,
 ): Record<string, unknown> {
@@ -1329,10 +1283,9 @@ export function generateContentConfigToMldev(
     );
   }
 
-  if (common.getValueByPath(fromObject, ['labels']) !== undefined) {
-    throw new Error(
-      'labels parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
-    );
+  const fromLabels = common.getValueByPath(fromObject, ['labels']);
+  if (parentObject !== undefined && fromLabels != null) {
+    common.setValueByPath(parentObject, ['labels'], fromLabels);
   }
 
   const fromCachedContent = common.getValueByPath(fromObject, [
@@ -1901,11 +1854,7 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
 
   const fromFileData = common.getValueByPath(fromObject, ['fileData']);
   if (fromFileData != null) {
-    common.setValueByPath(
-      toObject,
-      ['fileData'],
-      fileDataToMldev(fromFileData),
-    );
+    common.setValueByPath(toObject, ['fileData'], fromFileData);
   }
 
   const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
@@ -1926,11 +1875,7 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
 
   const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
   if (fromInlineData != null) {
-    common.setValueByPath(
-      toObject,
-      ['inlineData'],
-      blobToMldev(fromInlineData),
-    );
+    common.setValueByPath(toObject, ['inlineData'], fromInlineData);
   }
 
   const fromText = common.getValueByPath(fromObject, ['text']);
@@ -1967,6 +1912,13 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
   ]);
   if (fromMediaProcessing != null) {
     common.setValueByPath(toObject, ['mediaProcessing'], fromMediaProcessing);
+  }
+
+  const fromSpeechMetadata = common.getValueByPath(fromObject, [
+    'speechMetadata',
+  ]);
+  if (fromSpeechMetadata != null) {
+    common.setValueByPath(toObject, ['speechMetadata'], fromSpeechMetadata);
   }
 
   return toObject;

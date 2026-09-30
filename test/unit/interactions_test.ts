@@ -79,6 +79,27 @@ describe('Interactions resource', () => {
       expect(parentClient.getAuthHeaders).toHaveBeenCalled();
     });
 
+    it('should use custom fetch from parentClient when provided', async () => {
+      const customFetchSpy = jasmine
+        .createSpy('customFetch')
+        .and.callFake(() => Promise.resolve(mockJsonResponse()));
+      parentClient.getFetch = jasmine
+        .createSpy('getFetch')
+        .and.returnValue(customFetchSpy);
+      interactions = new GeminiNextGenInteractions(parentClient);
+
+      await interactions.create({
+        agent: 'some-agent',
+        input: 'some input',
+      });
+
+      expect(customFetchSpy).toHaveBeenCalled();
+      expect(fetchSpy).not.toHaveBeenCalled();
+      const [request] = customFetchSpy.calls.first().args as [Request];
+      expect(request.url).toBe('https://my.base.host/somev1/interactions');
+      expect(request.method.toLowerCase()).toEqual('post');
+    });
+
     it('should retry the call', async () => {
       jasmine.clock().install();
       jasmine.clock().mockDate();

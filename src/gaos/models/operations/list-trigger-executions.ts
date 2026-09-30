@@ -12,26 +12,26 @@
 
 export type ListTriggerExecutionsGlobals = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
 };
 
 export type ListTriggerExecutionsRequest = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
   /**
-   * Resource name of the trigger.
-   */
-  trigger_id: string;
-  /**
-   * Optional. The maximum number of executions to return per page.
+   * The maximum number of executions to return per page.
    */
   page_size?: number | undefined;
   /**
-   * Optional. A page token from a previous ListTriggerExecutions call.
+   * A page token from a previous ListTriggerExecutions call.
    */
   page_token?: string | undefined;
+  /**
+   * Required. The trigger ID to list executions from.
+   */
+  trigger_id: string;
 };

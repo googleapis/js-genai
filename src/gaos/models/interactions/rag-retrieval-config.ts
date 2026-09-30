@@ -27,7 +27,7 @@ export type RagRetrievalConfig = {
    */
   hybrid_search?: HybridSearch | undefined;
   /**
-   * Config for Rank Service.
+   * Config for ranking and reranking.
    */
   ranking?: Ranking | undefined;
   /**

@@ -91,12 +91,12 @@ async function $do(
       payload.api_version ?? client._options.api_version,
       { explode: false, charEncoding: "percent" },
     ),
-    id: encodeSimple("id", payload.id, {
+    agentsId: encodeSimple("agentsId", payload.id, {
       explode: false,
       charEncoding: "percent",
     }),
   };
-  const path = pathToFunc("/{api_version}/agents/{id}")(pathParams);
+  const path = pathToFunc("/{api_version}/agents/{agentsId}")(pathParams);
 
   const headers = new Headers(compactMap({
     Accept: "application/json",
