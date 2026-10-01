@@ -151,6 +151,17 @@ export function candidateFromMldev(
     );
   }
 
+  const fromContinuationToken = common.getValueByPath(fromObject, [
+    'continuationToken',
+  ]);
+  if (fromContinuationToken != null) {
+    common.setValueByPath(
+      toObject,
+      ['continuationToken'],
+      fromContinuationToken,
+    );
+  }
+
   return toObject;
 }
 
@@ -1712,6 +1723,17 @@ export function generateContentConfigToMldev(
     );
   }
 
+  const fromContinuationToken = common.getValueByPath(fromObject, [
+    'continuationToken',
+  ]);
+  if (parentObject !== undefined && fromContinuationToken != null) {
+    common.setValueByPath(
+      parentObject,
+      ['continuationToken'],
+      fromContinuationToken,
+    );
+  }
+
   return toObject;
 }
 
@@ -1976,6 +1998,17 @@ export function generateContentConfigToVertex(
       parentObject,
       ['modelArmorConfig'],
       fromModelArmorConfig,
+    );
+  }
+
+  const fromContinuationToken = common.getValueByPath(fromObject, [
+    'continuationToken',
+  ]);
+  if (parentObject !== undefined && fromContinuationToken != null) {
+    common.setValueByPath(
+      parentObject,
+      ['continuationToken'],
+      fromContinuationToken,
     );
   }
 

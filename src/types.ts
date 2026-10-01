@@ -568,6 +568,10 @@ export enum FinishReason {
    * Image generation stopped for a reason not otherwise specified.
    */
   IMAGE_OTHER = 'IMAGE_OTHER',
+  /**
+   * Token generation stopped because the response reached the per-request token limit, but generation is not yet complete. The response can be continued by passing the returned `continuation_token` in a subsequent request.
+   */
+  CONTINUATION = 'CONTINUATION',
 }
 
 /** Output only. The probability of harm for this category. */
@@ -3248,6 +3252,12 @@ export declare interface GenerateContentConfig {
       service. If supplied, safety_settings must not be supplied.
        */
   modelArmorConfig?: ModelArmorConfig;
+  /** An opaque continuation token used to resume generation from a
+      previous response that stopped with `finish_reason` set to
+      `CONTINUATION`.
+      
+  * @remarks Encoded as base64 string. */
+  continuationToken?: string;
 }
 
 /** Config for models.generate_content parameters. */
@@ -3702,6 +3712,11 @@ export declare interface Candidate {
   safetyRatings?: SafetyRating[];
   /** Output only. Metadata returned when the model uses the `url_context` tool to get information from a user-provided URL. */
   urlContextMetadata?: UrlContextMetadata;
+  /** An opaque continuation token returned when `finish_reason` is
+      `CONTINUATION`. Pass it in a subsequent request to continue generation.
+      
+  * @remarks Encoded as base64 string. */
+  continuationToken?: string;
 }
 
 /** Content filter results for a prompt sent in the request. Note: This is sent only in the first stream chunk and only if no candidates were generated due to content violations. */

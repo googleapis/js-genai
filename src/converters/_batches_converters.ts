@@ -614,6 +614,17 @@ export function candidateFromMldev(
     );
   }
 
+  const fromContinuationToken = common.getValueByPath(fromObject, [
+    'continuationToken',
+  ]);
+  if (fromContinuationToken != null) {
+    common.setValueByPath(
+      toObject,
+      ['continuationToken'],
+      fromContinuationToken,
+    );
+  }
+
   return toObject;
 }
 
@@ -1373,6 +1384,17 @@ export function generateContentConfigToMldev(
   if (common.getValueByPath(fromObject, ['modelArmorConfig']) !== undefined) {
     throw new Error(
       'modelArmorConfig parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
+  }
+
+  const fromContinuationToken = common.getValueByPath(fromObject, [
+    'continuationToken',
+  ]);
+  if (parentObject !== undefined && fromContinuationToken != null) {
+    common.setValueByPath(
+      parentObject,
+      ['continuationToken'],
+      fromContinuationToken,
     );
   }
 
