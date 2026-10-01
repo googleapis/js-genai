@@ -11,6 +11,15 @@
  */
 
 /**
+ * Network egress mode. Set via the `"allowlist": "disabled"` short form;
+ *
+ * @remarks
+ * must be the only rule in the allowlist and cannot be combined with
+ * `domain`, `transform` or `credential`.
+ */
+export type AllowlistEntryMode = "disabled";
+
+/**
  * Headers to inject on all outbound requests matching this domain. Accepts a single dict or a list of dicts. The egress proxy injects these automatically.
  */
 export type Transform = Array<{ [k: string]: string }> | {
@@ -32,6 +41,14 @@ export type AllowlistEntry = {
    * '*.googleapis.com'). Use '*' to allow all domains.
    */
   domain: string;
+  /**
+   * Network egress mode. Set via the `"allowlist": "disabled"` short form;
+   *
+   * @remarks
+   * must be the only rule in the allowlist and cannot be combined with
+   * `domain`, `transform` or `credential`.
+   */
+  mode?: AllowlistEntryMode | undefined;
   /**
    * Headers to inject on all outbound requests matching this domain. Accepts a single dict or a list of dicts. The egress proxy injects these automatically.
    */
