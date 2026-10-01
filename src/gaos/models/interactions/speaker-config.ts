@@ -13,9 +13,24 @@
 import { SpeechConfig } from "./speech-config.js";
 
 /**
+ * Optional speech mode. `VERBATIM` is default. `CONVERSATIONAL` is only
+ *
+ * @remarks
+ * supported for multi-speaker.
+ */
+export type SpeakerConfigMode = "verbatim" | "conversational" | (string & {});
+
+/**
  * Configuration for multi-speaker and speech generation.
  */
 export type SpeakerConfig = {
+  /**
+   * Optional speech mode. `VERBATIM` is default. `CONVERSATIONAL` is only
+   *
+   * @remarks
+   * supported for multi-speaker.
+   */
+  mode?: SpeakerConfigMode | undefined;
   /**
    * Individual speaker configurations.
    */
