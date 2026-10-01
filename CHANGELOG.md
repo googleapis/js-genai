@@ -2,6 +2,13 @@
 
 
 
+## [2.26.0](https://github.com/googleapis/js-genai/compare/v2.25.0...v2.26.0) (2026-10-01)
+
+
+### Features
+
+* support continuation_token in GenerateContent ([ac628c5](https://github.com/googleapis/js-genai/commit/ac628c57aaf5ed6b5e2f08aed68731edb18100fc))
+
 ## [2.25.0](https://github.com/googleapis/js-genai/compare/v2.24.0...v2.25.0) (2026-09-30)
 
 
