@@ -2,6 +2,14 @@
 
 
 
+## [2.27.0](https://github.com/googleapis/js-genai/compare/v2.26.0...v2.27.0) (2026-10-02)
+
+
+### Features
+
+* add `lyria-3.5`, `gemini-omni-1.1-flash`, and `gemini-omni-flash-preview` to Interactions `Model` enum ([4ce63d1](https://github.com/googleapis/js-genai/commit/4ce63d11497cc86567ecc7e44677cd687f28deac))
+* support continuation_token in Interactions ([a888ad7](https://github.com/googleapis/js-genai/commit/a888ad73abda6a64dfb140599438afca1033ee2f))
+
 ## [2.26.0](https://github.com/googleapis/js-genai/compare/v2.25.0...v2.26.0) (2026-10-01)
 
 
