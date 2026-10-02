@@ -96,6 +96,14 @@ export type Interaction = {
    */
   cached_content?: string | undefined;
   /**
+   * Opaque token to resume a long decode. Output: set when status is
+   *
+   * @remarks
+   * INCOMPLETE and decoding can be resumed. Input: pass the latest token
+   * back unchanged in CreateInteraction to continue decoding.
+   */
+  continuation_token?: string | undefined;
+  /**
    * Required. Output only. The time at which the response was created in ISO 8601 format
    *
    * @remarks

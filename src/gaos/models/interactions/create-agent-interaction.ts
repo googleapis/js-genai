@@ -74,6 +74,14 @@ export type CreateAgentInteraction = {
    */
   background?: boolean | undefined;
   /**
+   * Opaque token to resume a long decode. Output: set when status is
+   *
+   * @remarks
+   * INCOMPLETE and decoding can be resumed. Input: pass the latest token
+   * back unchanged in CreateInteraction to continue decoding.
+   */
+  continuation_token?: string | undefined;
+  /**
    * The environment configuration for the interaction. Can be an object
    *
    * @remarks
