@@ -949,6 +949,9 @@ function addOutputProperties(interaction: Record<string, any>): unknown {
     if (step.type === "user_input") {
       break;
     }
+    if (step.type === "thought") {
+      continue;
+    }
     if (step.type !== "model_output" || !step.content) {
       if (collecting) {
         break;
