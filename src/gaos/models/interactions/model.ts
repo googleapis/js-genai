@@ -41,4 +41,7 @@ export type Model =
   | "lyria-3-pro-preview"
   | "gemini-robotics-er-1.6-preview"
   | "gemini-robotics-er-2-preview"
+  | "lyria-3.5"
+  | "gemini-omni-1.1-flash"
+  | "gemini-omni-flash-preview"
   | (string & {});
