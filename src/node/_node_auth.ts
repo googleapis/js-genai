@@ -76,7 +76,14 @@ export class NodeAuth implements Auth {
       );
     }
     const authHeaders = await this.googleAuth.getRequestHeaders(url);
-    for (const [key, value] of authHeaders) {
+    // google-auth-library may return either an iterable (Map/Headers) or a plain
+    // object depending on the auth client used. Handle both cases.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const entries =
+      typeof (authHeaders as any)[Symbol.iterator] === 'function'
+        ? authHeaders
+        : Object.entries(authHeaders);
+    for (const [key, value] of entries) {
       if (headers.get(key) !== null) {
         continue;
       }
