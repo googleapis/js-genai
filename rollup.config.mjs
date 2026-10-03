@@ -1,4 +1,6 @@
+import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
+import resolve from '@rollup/plugin-node-resolve';
 import {readFileSync} from 'fs';
 import os from 'os';
 import path from 'path';
@@ -44,6 +46,18 @@ const externalDeps = [
   'protobufjs/minimal',
   'protobufjs/minimal.js',
   'p-retry',
+];
+
+// Web builds must not leave bare npm specifiers — browsers cannot resolve them.
+// Bundle `p-retry` into dist/web; keep other externals that are Node-only unused.
+const webExternalDeps = externalDeps.filter((dep) => dep !== 'p-retry');
+const webPlugins = [
+  ...rollupPlugins,
+  resolve({
+    browser: true,
+    preferBuiltins: false,
+  }),
+  commonjs(),
 ];
 
 export default [
@@ -108,8 +122,8 @@ export default [
       sourcemap: true,
       sourcemapExcludeSources: true,
     },
-    plugins: rollupPlugins,
-    external: externalDeps,
+    plugins: webPlugins,
+    external: webExternalDeps,
   },
 
   // The `tokenizer/node` ES module (dist/tokenizer/node.mjs)
