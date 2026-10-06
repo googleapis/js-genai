@@ -188,6 +188,42 @@ export enum ApiSpec {
   ELASTIC_SEARCH = 'ELASTIC_SEARCH',
 }
 
+/** SafetyPolicy */
+export enum SafetyPolicy {
+  /**
+   * Unspecified safety policy. This value should not be used.
+   */
+  SAFETY_POLICY_UNSPECIFIED = 'SAFETY_POLICY_UNSPECIFIED',
+  /**
+   * Financial transactions safety policy.
+   */
+  FINANCIAL_TRANSACTIONS = 'FINANCIAL_TRANSACTIONS',
+  /**
+   * Sensitive data modification safety policy.
+   */
+  SENSITIVE_DATA_MODIFICATION = 'SENSITIVE_DATA_MODIFICATION',
+  /**
+   * Communication tool safety policy.
+   */
+  COMMUNICATION_TOOL = 'COMMUNICATION_TOOL',
+  /**
+   * Account creation safety policy.
+   */
+  ACCOUNT_CREATION = 'ACCOUNT_CREATION',
+  /**
+   * Data modification safety policy.
+   */
+  DATA_MODIFICATION = 'DATA_MODIFICATION',
+  /**
+   * User consent management safety policy.
+   */
+  USER_CONSENT_MANAGEMENT = 'USER_CONSENT_MANAGEMENT',
+  /**
+   * Legal terms and agreements safety policy.
+   */
+  LEGAL_TERMS_AND_AGREEMENTS = 'LEGAL_TERMS_AND_AGREEMENTS',
+}
+
 /** The environment being operated. */
 export enum Environment {
   /**
@@ -206,42 +242,6 @@ export enum Environment {
    * Operates in a desktop environment.
    */
   ENVIRONMENT_DESKTOP = 'ENVIRONMENT_DESKTOP',
-}
-
-/** SafetyPolicy */
-export enum SafetyPolicy {
-  /**
-   * Unspecified safety policy.
-   */
-  SAFETY_POLICY_UNSPECIFIED = 'SAFETY_POLICY_UNSPECIFIED',
-  /**
-   * Safety policy for financial transactions.
-   */
-  FINANCIAL_TRANSACTIONS = 'FINANCIAL_TRANSACTIONS',
-  /**
-   * Safety policy for sensitive data modification.
-   */
-  SENSITIVE_DATA_MODIFICATION = 'SENSITIVE_DATA_MODIFICATION',
-  /**
-   * Safety policy for communication tools (e.g. Gmail, Chat, Meet).
-   */
-  COMMUNICATION_TOOL = 'COMMUNICATION_TOOL',
-  /**
-   * Safety policy for account creation.
-   */
-  ACCOUNT_CREATION = 'ACCOUNT_CREATION',
-  /**
-   * Safety policy for data modification.
-   */
-  DATA_MODIFICATION = 'DATA_MODIFICATION',
-  /**
-   * Safety policy for user consent management.
-   */
-  USER_CONSENT_MANAGEMENT = 'USER_CONSENT_MANAGEMENT',
-  /**
-   * Safety policy for legal terms and agreements.
-   */
-  LEGAL_TERMS_AND_AGREEMENTS = 'LEGAL_TERMS_AND_AGREEMENTS',
 }
 
 /** Sites with confidence level chosen & above this value will be blocked from the search results. This enum is not supported in Gemini API. */
@@ -2698,7 +2698,7 @@ export declare interface ComputerUse {
   environment?: Environment;
   /** Optional. By default, [predefined functions](https://cloud.google.com/vertex-ai/generative-ai/docs/computer-use#supported-actions) are included in the final model call. Some of them can be explicitly excluded from being automatically included. This can serve two purposes: 1. Using a more restricted / different action space. 2. Improving the definitions / instructions of predefined functions. */
   excludedPredefinedFunctions?: string[];
-  /** Optional. Disabled safety policies for computer use. This field is not supported in Vertex AI. */
+  /** Optional. Disabled safety policies for computer use. */
   disabledSafetyPolicies?: SafetyPolicy[];
 }
 
@@ -6003,7 +6003,7 @@ export declare interface TuningJob {
   veoLoraTuningSpec?: VeoLoraTuningSpec;
   /** Tuning Spec for Veo Tuning. */
   veoTuningSpec?: VeoTuningSpec;
-  /** The Cloud Storage metrics URI associated with this tuning job. */
+  /** Output only. The Cloud Storage metrics URI associated with this TuningJob. */
   gcsMetricsUri?: string;
 }
 
