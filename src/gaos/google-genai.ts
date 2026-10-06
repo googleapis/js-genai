@@ -6,6 +6,7 @@
  * g3-prettier-ignore-file
  */
 
+import type { WebSocketFactory } from "../_websocket.js";
 import * as operations from "./models/operations/index.js";
 import type {
   Agents,
@@ -214,7 +215,10 @@ export type GoogleGenAIInteraction = GoogleGenAIResponseWithSdkHttpResponse<
 export class GeminiNextGenInteractions {
   private sdk: GoogleGenAI | undefined;
 
-  constructor(private readonly parentClient: GoogleGenAIParentClient) {}
+  constructor(
+    private readonly parentClient: GoogleGenAIParentClient,
+    _webSocketFactory?: WebSocketFactory,
+  ) {}
 
   // The per-variant overloads are deliberately non-generic: signature help
   // renders an instantiated type parameter as the inferred object literal,
