@@ -2,6 +2,14 @@
 
 
 
+## [2.28.0](https://github.com/googleapis/js-genai/compare/v2.27.0...v2.28.0) (2026-10-07)
+
+
+### Features
+
+* Support `"allowlist": "disabled"` in environment network config. ([18bc392](https://github.com/googleapis/js-genai/commit/18bc39223fd7f7f31c85ce9c60d3007046c787ee))
+* update discovery doc ([4e996fe](https://github.com/googleapis/js-genai/commit/4e996fec6389945d55d04e3a65948a4358eeb34e))
+
 ## [2.27.0](https://github.com/googleapis/js-genai/compare/v2.26.0...v2.27.0) (2026-10-02)
 
 
