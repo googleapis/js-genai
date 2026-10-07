@@ -97,6 +97,14 @@ export type Interaction = {
    */
   cached_content?: string | undefined;
   /**
+   * The IDs of all server interactions merged into this response when automatic continuation is enabled, in order (ending with the final hop's ID).
+   *
+   * @remarks
+   *
+   * Note: this is added by the SDK.
+   */
+  continuation_ids?: Array<string> | undefined;
+  /**
    * Opaque token to resume a long decode. Output: set when status is
    *
    * @remarks
