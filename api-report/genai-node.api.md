@@ -3316,8 +3316,20 @@ export interface LiveClientContent {
 }
 
 // @public
+export interface LiveClientContextUpdate {
+    systemInstruction?: ContentUnion;
+    tools?: LiveClientContextUpdateTools;
+}
+
+// @public
+export interface LiveClientContextUpdateTools {
+    tools?: ToolListUnion;
+}
+
+// @public
 export interface LiveClientMessage {
     clientContent?: LiveClientContent;
+    contextUpdate?: LiveClientContextUpdate;
     realtimeInput?: LiveClientRealtimeInput;
     setup?: LiveClientSetup;
     toolResponse?: LiveClientToolResponse;
@@ -4524,6 +4536,7 @@ export class Session {
     // (undocumented)
     readonly conn: WebSocket_2;
     sendClientContent(params: types.LiveSendClientContentParameters): void;
+    sendContextUpdate(params: types.LiveClientContextUpdate): void;
     sendRealtimeInput(params: types.LiveSendRealtimeInputParameters): void;
     sendToolResponse(params: types.LiveSendToolResponseParameters): void;
     // (undocumented)
