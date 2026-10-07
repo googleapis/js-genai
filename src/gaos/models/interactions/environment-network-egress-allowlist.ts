@@ -12,22 +12,25 @@
 
 import { AllowlistEntry } from "./allowlist-entry.js";
 
-/**
- * Turns all network off.
- */
 export type Disabled = "disabled";
 
 /**
- * Outbound networking configuration for the sandbox. When specified, restricts which external domains the sandbox can reach. Omit entirely to allow all outbound traffic with no header injection.
+ * List of allowed domains and their configurations. Set to `"disabled"`
+ *
+ * @remarks
+ * to block all network egress.
  */
-export type Allowlist = {
-  /**
-   * List of allowed outbound domains. Only requests to listed domains are permitted. Use [{'domain': '*'}] to allow all domains while still injecting headers on specific ones.
-   */
-  allowlist?: Array<AllowlistEntry> | undefined;
-};
+export type Allowlist = Array<AllowlistEntry> | Disabled;
 
 /**
- * Outbound networking configuration for the sandbox. Accepts an object with an 'allowlist' array to restrict traffic, or the string 'disabled' to turn off all network access. Omit entirely to allow all outbound traffic with no header injection.
+ * Network egress configuration for the environment.
  */
-export type EnvironmentNetworkEgressAllowlist = Allowlist | Disabled;
+export type EnvironmentNetworkEgressAllowlist = {
+  /**
+   * List of allowed domains and their configurations. Set to `"disabled"`
+   *
+   * @remarks
+   * to block all network egress.
+   */
+  allowlist?: Array<AllowlistEntry> | Disabled | undefined;
+};
