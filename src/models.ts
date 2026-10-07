@@ -89,19 +89,19 @@ export class Models extends BaseModule {
    * Makes an API request to generate content with a given model.
    *
    * For the `model` parameter, supported formats for Gemini Enterprise Agent Platform API include:
-   * - The Gemini model ID, for example: 'gemini-2.0-flash'
+   * - The Gemini model ID, for example: 'gemini-flash-latest'
    * - The full resource name starts with 'projects/', for example:
-   *  'projects/my-project-id/locations/us-central1/publishers/google/models/gemini-2.0-flash'
+   *  'projects/my-project-id/locations/us-central1/publishers/google/models/gemini-flash-latest'
    * - The partial resource name with 'publishers/', for example:
-   *  'publishers/google/models/gemini-2.0-flash' or
+   *  'publishers/google/models/gemini-flash-latest' or
    *  'publishers/meta/models/llama-3.1-405b-instruct-maas'
    * - `/` separated publisher and model name, for example:
-   * 'google/gemini-2.0-flash' or 'meta/llama-3.1-405b-instruct-maas'
+   * 'google/gemini-flash-latest' or 'meta/llama-3.1-405b-instruct-maas'
    *
    * For the `model` parameter, supported formats for Gemini API include:
-   * - The Gemini model ID, for example: 'gemini-2.0-flash'
+   * - The Gemini model ID, for example: 'gemini-flash-latest'
    * - The model name starts with 'models/', for example:
-   *  'models/gemini-2.0-flash'
+   *  'models/gemini-flash-latest'
    * - For tuned models, the model name starts with 'tunedModels/',
    * for example:
    * 'tunedModels/1234567890123456789'
@@ -114,7 +114,7 @@ export class Models extends BaseModule {
    * @example
    * ```ts
    * const response = await ai.models.generateContent({
-   *   model: 'gemini-2.0-flash',
+   *   model: 'gemini-flash-latest',
    *   contents: 'why is the sky blue?',
    *   config: {
    *     candidateCount: 2,
@@ -220,19 +220,19 @@ export class Models extends BaseModule {
    * response in chunks.
    *
    * For the `model` parameter, supported formats for Gemini Enterprise Agent Platform API include:
-   * - The Gemini model ID, for example: 'gemini-2.0-flash'
+   * - The Gemini model ID, for example: 'gemini-flash-latest'
    * - The full resource name starts with 'projects/', for example:
-   *  'projects/my-project-id/locations/us-central1/publishers/google/models/gemini-2.0-flash'
+   *  'projects/my-project-id/locations/us-central1/publishers/google/models/gemini-flash-latest'
    * - The partial resource name with 'publishers/', for example:
-   *  'publishers/google/models/gemini-2.0-flash' or
+   *  'publishers/google/models/gemini-flash-latest' or
    *  'publishers/meta/models/llama-3.1-405b-instruct-maas'
    * - `/` separated publisher and model name, for example:
-   * 'google/gemini-2.0-flash' or 'meta/llama-3.1-405b-instruct-maas'
+   * 'google/gemini-flash-latest' or 'meta/llama-3.1-405b-instruct-maas'
    *
    * For the `model` parameter, supported formats for Gemini API include:
-   * - The Gemini model ID, for example: 'gemini-2.0-flash'
+   * - The Gemini model ID, for example: 'gemini-flash-latest'
    * - The model name starts with 'models/', for example:
-   *  'models/gemini-2.0-flash'
+   *  'models/gemini-flash-latest'
    * - For tuned models, the model name starts with 'tunedModels/',
    * for example:
    *  'tunedModels/1234567890123456789'
@@ -245,7 +245,7 @@ export class Models extends BaseModule {
    * @example
    * ```ts
    * const response = await ai.models.generateContentStream({
-   *   model: 'gemini-2.0-flash',
+   *   model: 'gemini-flash-latest',
    *   contents: 'why is the sky blue?',
    *   config: {
    *     maxOutputTokens: 200,
@@ -1336,7 +1336,7 @@ export class Models extends BaseModule {
    *
    * @example
    * ```ts
-   * const modelInfo = await ai.models.get({model: 'gemini-2.0-flash'});
+   * const modelInfo = await ai.models.get({model: 'gemini-flash-latest'});
    * ```
    */
   async get(params: types.GetModelParameters): Promise<types.Model> {
@@ -1709,7 +1709,7 @@ export class Models extends BaseModule {
    * @example
    * ```ts
    * const response = await ai.models.countTokens({
-   *  model: 'gemini-2.0-flash',
+   *  model: 'gemini-flash-latest',
    *  contents: 'The quick brown fox jumps over the lazy dog.'
    * });
    * console.log(response);
@@ -1821,7 +1821,7 @@ export class Models extends BaseModule {
    * @example
    * ```ts
    * const response = await ai.models.computeTokens({
-   *  model: 'gemini-2.0-flash',
+   *  model: 'gemini-flash-latest',
    *  contents: 'What is your name?'
    * });
    * console.log(response);
