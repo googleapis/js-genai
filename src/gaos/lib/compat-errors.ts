@@ -181,7 +181,7 @@ export function wrapSDKError(error: unknown): unknown {
     return wrapAPIError(error);
   }
 
-  if (error instanceof HTTPClientError) {
+  if (isHTTPClientErrorInstance(error)) {
     return wrapHTTPClientError(error);
   }
 
@@ -217,14 +217,39 @@ function wrapAPIError(error: GoogleGenAiError): APIError {
   return wrapped;
 }
 
+// The generated HTTP client errors extend Error without restoring their
+// prototype, so `instanceof` misses them once the SDK is compiled to ES5.
+// Recognise them by name as well.
+const HTTP_CLIENT_ERROR_NAMES: ReadonlySet<string> = new Set([
+  "HTTPClientError",
+  "UnexpectedClientError",
+  "InvalidRequestError",
+  "RequestAbortedError",
+  "RequestTimeoutError",
+  "ConnectionError",
+]);
+
+function isHTTPClientErrorInstance(value: unknown): value is HTTPClientError {
+  if (value instanceof HTTPClientError) {
+    return true;
+  }
+  return value instanceof Error && HTTP_CLIENT_ERROR_NAMES.has(value.name);
+}
+
 function wrapHTTPClientError(error: HTTPClientError): APIConnectionError {
-  if (error instanceof RequestTimeoutError) {
+  if (
+    error instanceof RequestTimeoutError ||
+    error.name === "RequestTimeoutError"
+  ) {
     return new APIConnectionTimeoutError({ message: error.message });
   }
-  if (error instanceof RequestAbortedError) {
+  if (
+    error instanceof RequestAbortedError ||
+    error.name === "RequestAbortedError"
+  ) {
     return new APIUserAbortError({ message: error.message });
   }
-  if (error instanceof ConnectionError) {
+  if (error instanceof ConnectionError || error.name === "ConnectionError") {
     return new APIConnectionError({ message: error.message, cause: error });
   }
   return new APIConnectionError({ message: error.message, cause: error });
