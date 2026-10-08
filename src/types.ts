@@ -1964,6 +1964,12 @@ export declare interface Transcription {
   /** Detailed word-level transcriptions and timing details.
    */
   words?: WordInfo[];
+  /** Start offset in time of the transcription relative to the start of the audio.
+   */
+  startOffset?: string;
+  /** End offset in time of the transcription relative to the start of the audio.
+   */
+  endOffset?: string;
 }
 
 /** Result of executing the ExecutableCode. Generated only when the `CodeExecution` tool is used. */
@@ -8001,6 +8007,8 @@ export declare interface RealtimeInputConfig {
   activityHandling?: ActivityHandling;
   /** Defines which input is included in the user's turn. */
   turnCoverage?: TurnCoverage;
+  /** If true, enables interim transcript timestamps. */
+  interimTranscriptTimestampEnabled?: boolean;
 }
 
 /** Configuration of session resumption mechanism.
