@@ -26,14 +26,14 @@ import { Stream } from "./lib/event-streams.js";
 import { HTTPClient, type Fetcher } from "./lib/http.js";
 import { GoogleGenAI } from "./sdk/sdk.js";
 import type {
-  CreateAgentInteractionParamsNonStreaming,
-  CreateAgentInteractionParamsStreaming,
+  CreateAgentInteractionParamsNonStreaming as GeneratedCreateAgentInteractionParamsNonStreaming,
+  CreateAgentInteractionParamsStreaming as GeneratedCreateAgentInteractionParamsStreaming,
   CreateAgentParams,
-  CreateInteractionParams,
-  CreateInteractionParamsNonStreaming,
-  CreateInteractionParamsStreaming,
-  CreateModelInteractionParamsNonStreaming,
-  CreateModelInteractionParamsStreaming,
+  CreateInteractionParams as GeneratedCreateInteractionParams,
+  CreateInteractionParamsNonStreaming as GeneratedCreateInteractionParamsNonStreaming,
+  CreateInteractionParamsStreaming as GeneratedCreateInteractionParamsStreaming,
+  CreateModelInteractionParamsNonStreaming as GeneratedCreateModelInteractionParamsNonStreaming,
+  CreateModelInteractionParamsStreaming as GeneratedCreateModelInteractionParamsStreaming,
   DeleteAgentParams,
   GetAgentParams,
   GetInteractionByIdParams,
@@ -189,12 +189,53 @@ export type GoogleGenAIInteraction = GoogleGenAIResponseWithSdkHttpResponse<
 
 export type GoogleGenAIInteractionSSEEvent = interactions.InteractionSSEEvent;
 
-export type InteractionCreateParams = CreateInteractionParams;
+/**
+ * Options for automatic long-decode continuation.
+ */
+export type AutomaticContinuationOption = {
+  /**
+   * If true, automatically continue long decoding when the response stops
+   * with status 'continuation_required' and a continuation_token.
+   *
+   * In unary mode, returns the final hop's Interaction (which includes the
+   * complete server-side steps, usage, and derived output_text).
+   * In streaming mode, yields SSE events across all continuation hops as a single
+   * continuous stream.
+   *
+   * Note on billing & failure behavior:
+   * - Foreground continuation hops (background: false) re-prefill and bill input tokens
+   *   on each hop.
+   * - Hops that completed successfully before a failure or timeout are still billed.
+   * - Each request timeout and retry option applies per-hop, not across the entire chain.
+   * - For server-managed continuation without client-side re-prefill billing, consider background: true.
+   */
+  automatic_continuation?: boolean | undefined;
+};
+
+export type InteractionCreateParams = GeneratedCreateInteractionParams &
+  AutomaticContinuationOption;
 
 export type InteractionCreateParamsNonStreaming =
-  CreateInteractionParamsNonStreaming;
+  GeneratedCreateInteractionParamsNonStreaming & AutomaticContinuationOption;
 
-export type InteractionCreateParamsStreaming = CreateInteractionParamsStreaming;
+export type InteractionCreateParamsStreaming =
+  GeneratedCreateInteractionParamsStreaming & AutomaticContinuationOption;
+
+export type CreateModelInteractionParamsNonStreaming =
+  GeneratedCreateModelInteractionParamsNonStreaming &
+    AutomaticContinuationOption;
+
+export type CreateModelInteractionParamsStreaming =
+  GeneratedCreateModelInteractionParamsStreaming &
+    AutomaticContinuationOption;
+
+export type CreateAgentInteractionParamsNonStreaming =
+  GeneratedCreateAgentInteractionParamsNonStreaming &
+    AutomaticContinuationOption;
+
+export type CreateAgentInteractionParamsStreaming =
+  GeneratedCreateAgentInteractionParamsStreaming &
+    AutomaticContinuationOption;
 
 export type InteractionGetParams = GetInteractionByIdParams;
 
@@ -230,30 +271,63 @@ export class GeminiNextGenInteractions {
   // renders an instantiated type parameter as the inferred object literal,
   // hiding the params type name (and property docs) from editors at matched
   // call sites.
+  /**
+   * Creates an interaction with a model.
+   *
+   * When automatic_continuation is enabled, long decoding automatically continues
+   * across multiple HTTP requests if the model stops with status='continuation_required'.
+   */
   create(
     params: CreateModelInteractionParamsNonStreaming,
     options?: GoogleGenAIRequestOptions,
   ): Promise<GoogleGenAIInteraction>;
+  /**
+   * Creates an interaction with an agent.
+   *
+   * When automatic_continuation is enabled, long decoding automatically continues
+   * across multiple HTTP requests if the agent stops with status='continuation_required'.
+   */
   create(
     params: CreateAgentInteractionParamsNonStreaming,
     options?: GoogleGenAIRequestOptions,
   ): Promise<GoogleGenAIInteraction>;
+  /**
+   * Creates a streaming interaction with a model.
+   *
+   * When automatic_continuation is enabled, long decoding automatically continues
+   * across multiple HTTP requests, yielding a single continuous stream of events.
+   */
   create(
     params: CreateModelInteractionParamsStreaming,
     options?: GoogleGenAIRequestOptions,
   ): Promise<Stream<GoogleGenAIInteractionSSEEvent>>;
+  /**
+   * Creates a streaming interaction with an agent.
+   *
+   * When automatic_continuation is enabled, long decoding automatically continues
+   * across multiple HTTP requests, yielding a single continuous stream of events.
+   */
   create(
     params: CreateAgentInteractionParamsStreaming,
     options?: GoogleGenAIRequestOptions,
   ): Promise<Stream<GoogleGenAIInteractionSSEEvent>>;
+  /**
+   * Creates a streaming interaction.
+   */
   create(
     params: InteractionCreateParamsStreaming,
     options?: GoogleGenAIRequestOptions,
   ): Promise<Stream<GoogleGenAIInteractionSSEEvent>>;
+  /**
+   * Creates an interaction.
+   */
   create(
     params: InteractionCreateParamsNonStreaming,
     options?: GoogleGenAIRequestOptions,
   ): Promise<GoogleGenAIInteraction>;
+  /**
+   * Creates an interaction (unary or streaming).
+   */
   create(
     params: InteractionCreateParams,
     options?: GoogleGenAIRequestOptions,
@@ -262,32 +336,101 @@ export class GeminiNextGenInteractions {
     params: InteractionCreateParams,
     options?: GoogleGenAIRequestOptions,
   ): Promise<GoogleGenAIInteraction | Stream<GoogleGenAIInteractionSSEEvent>> {
-    const { api_version, ...request } = params;
-    if (request.stream === true) {
-      const response = await wrapSDKCall(() =>
-        this.getClient(api_version).interactions.create(
-          {
-            ...(request as operations.CreateInteractionRequestBody),
-            stream: true,
-            api_version,
-          },
-          toGoogleGenAIRequestOptions(options, true),
-        ),
-      );
-      return wrapStreamErrors(
-        response as Stream<GoogleGenAIInteractionSSEEvent>,
+    const {
+      api_version,
+      automatic_continuation,
+      ...rawRequest
+    } = params as InteractionCreateParams & AutomaticContinuationOption;
+    const autoContinue = automatic_continuation ?? false;
+
+    const isBackground = (rawRequest as any).background === true;
+    const isAutoContinueFalse = automatic_continuation === false;
+    if (isBackground && isAutoContinueFalse) {
+      throw new Error(
+        "automatic_continuation: false cannot be used with background: true.",
       );
     }
 
-    const response = await unwrapWithSdkHttpResponse(
-      interactionsCreate(
-        this.getClient(api_version),
-        request as operations.CreateInteractionRequestBody,
-        api_version,
-        toGoogleGenAIRequestOptions(options),
-      ),
-    );
-    return addOutputPropertiesIfInteraction(response) as GoogleGenAIInteraction;
+    const isStoreFalse = (rawRequest as any).store === false;
+    if (isStoreFalse && rawRequest.stream !== true && autoContinue) {
+      throw new Error(
+        "automatic_continuation: true cannot be used with store: false in unary mode. Use store: true, stream: true, or background: true for automatic continuation to work.",
+      );
+    }
+
+    if (rawRequest.stream === true) {
+      const sendStreamRequest = async (continuationToken?: string) => {
+        const streamParams = {
+          ...(rawRequest as operations.CreateInteractionRequestBody),
+          stream: true as const,
+          api_version,
+          ...(continuationToken
+            ? { continuation_token: continuationToken }
+            : {}),
+        };
+        const response = await wrapSDKCall(() =>
+          this.getClient(api_version).interactions.create(
+            streamParams,
+            toGoogleGenAIRequestOptions(options, true),
+          ),
+        );
+        return wrapStreamErrors(
+          response as Stream<GoogleGenAIInteractionSSEEvent>,
+        );
+      };
+
+      const initialStream = await sendStreamRequest(
+        (rawRequest as any).continuation_token,
+      );
+      if (!autoContinue) {
+        if (!(rawRequest as any).continuation_token) {
+          return wrapStreamIncompleteWarning(initialStream);
+        }
+        return initialStream;
+      }
+
+      return wrapStreamContinuation(
+        initialStream,
+        (token: string) => sendStreamRequest(token),
+      );
+    }
+
+    const sendUnaryRequest = async (continuationToken?: string) => {
+      const body: operations.CreateInteractionRequestBody = {
+        ...(rawRequest as operations.CreateInteractionRequestBody),
+        ...(continuationToken
+          ? { continuation_token: continuationToken }
+          : {}),
+      };
+      const response = await unwrapWithSdkHttpResponse(
+        interactionsCreate(
+          this.getClient(api_version),
+          body,
+          api_version,
+          toGoogleGenAIRequestOptions(options),
+        ),
+      );
+      return addOutputPropertiesIfInteraction(
+        response,
+      ) as GoogleGenAIInteraction;
+    };
+
+    let current = await sendUnaryRequest((rawRequest as any).continuation_token);
+
+    if (!autoContinue) {
+      if (!(rawRequest as any).continuation_token) {
+        warnIfIncompleteUnary(current);
+      }
+      return current;
+    }
+
+    while (true) {
+      const token = shouldContinueUnary(current);
+      if (!token) {
+        return current;
+      }
+      current = await sendUnaryRequest(token);
+    }
   }
 
   get(
@@ -816,7 +959,7 @@ function wrapStreamErrors<T>(stream: Stream<T>): Stream<T> {
   const asyncIterable = stream as AsyncIterable<T>;
   return new Proxy(stream, {
     get(target, property) {
-      if (property !== Symbol.asyncIterator) {
+      if (property !== Symbol.asyncIterator && property !== "values") {
         const value = Reflect.get(target, property, target) as unknown;
         return typeof value === "function" ? value.bind(target) : value;
       }
@@ -859,6 +1002,237 @@ function wrapStreamErrors<T>(stream: Stream<T>): Stream<T> {
     },
   });
 }
+
+const INCOMPLETE_CONTINUATION_WARNING =
+  "Interaction stopped before completion (status='continuation_required') with a " +
+  "continuation_token because the per-request decode token limit was " +
+  "reached. To resume decoding automatically, pass " +
+  "automatic_continuation: true (note: each continuation hop re-prefills and " +
+  "bills input tokens), or use background: true (the most cost-efficient " +
+  "option for server-managed continuation), or pass continuation_token to " +
+  "interactions.create().";
+
+let incompleteContinuationWarned = false;
+
+function warnIncompleteContinuation(): void {
+  if (!incompleteContinuationWarned) {
+    incompleteContinuationWarned = true;
+    console.warn(INCOMPLETE_CONTINUATION_WARNING);
+  }
+}
+
+function shouldContinueUnary(interaction: any): string | undefined {
+  if (interaction?.status !== "continuation_required") {
+    return undefined;
+  }
+  const token = interaction?.continuation_token;
+  if (typeof token !== "string" || !token) {
+    return undefined;
+  }
+  return token;
+}
+
+function warnIfIncompleteUnary(interaction: any): void {
+  if (shouldContinueUnary(interaction)) {
+    warnIncompleteContinuation();
+  }
+}
+
+function extractHopContinuationState(
+  event: any,
+  hopStatus: string | undefined,
+  hopContinuationToken: string | undefined,
+): {
+  status: string | undefined;
+  token: string | undefined;
+} {
+  if (event?.event_type === "error") {
+    return { status: "error", token: undefined };
+  }
+
+  const interaction = event?.interaction;
+  if (interaction) {
+    if (typeof interaction.status === "string" && interaction.status) {
+      hopStatus = interaction.status;
+    }
+    if (
+      typeof interaction.continuation_token === "string" &&
+      interaction.continuation_token
+    ) {
+      hopContinuationToken = interaction.continuation_token;
+    }
+  }
+
+  if (typeof event?.status === "string" && event.status) {
+    hopStatus = event.status;
+  }
+  if (
+    typeof event?.continuation_token === "string" &&
+    event.continuation_token
+  ) {
+    hopContinuationToken = event.continuation_token;
+  }
+
+  return {
+    status: hopStatus,
+    token: hopContinuationToken,
+  };
+}
+
+function wrapStreamIncompleteWarning(
+  stream: Stream<GoogleGenAIInteractionSSEEvent>,
+): Stream<GoogleGenAIInteractionSSEEvent> {
+  let hopStatus: string | undefined;
+  let hopContinuationToken: string | undefined;
+
+  const asyncIterable =
+    stream as unknown as AsyncIterable<GoogleGenAIInteractionSSEEvent>;
+  return new Proxy(stream, {
+    get(target, property) {
+      if (property !== Symbol.asyncIterator && property !== "values") {
+        const value = Reflect.get(target, property, target) as unknown;
+        return typeof value === "function" ? value.bind(target) : value;
+      }
+      return function wrappedAsyncIterator() {
+        const iterator = asyncIterable[Symbol.asyncIterator]();
+        return {
+          async next(...args: [] | [undefined]) {
+            const result = await iterator.next(...args);
+            if (!result.done) {
+              const state = extractHopContinuationState(
+                result.value,
+                hopStatus,
+                hopContinuationToken,
+              );
+              hopStatus = state.status;
+              hopContinuationToken = state.token;
+            } else {
+              if (
+                hopStatus === "continuation_required" &&
+                hopContinuationToken
+              ) {
+                warnIncompleteContinuation();
+              }
+            }
+            return result;
+          },
+          async return(value?: unknown) {
+            return iterator.return
+              ? iterator.return(value as never)
+              : { done: true, value };
+          },
+          async throw(error?: unknown) {
+            if (iterator.throw) return iterator.throw(error as never);
+            throw error;
+          },
+          [Symbol.asyncIterator]() {
+            return this;
+          },
+        };
+      };
+    },
+  });
+}
+
+const RESUMABLE_STREAM_HOP_STATUSES = new Set<string | undefined>([
+  undefined,
+  "in_progress",
+  "continuation_required",
+]);
+
+function canResumeStreamHop(
+  hopStatus: string | undefined,
+  hopContinuationToken: string | undefined,
+): hopContinuationToken is string {
+  return (
+    typeof hopContinuationToken === "string" &&
+    hopContinuationToken.length > 0 &&
+    RESUMABLE_STREAM_HOP_STATUSES.has(hopStatus)
+  );
+}
+
+function wrapStreamContinuation(
+  initialStream: Stream<GoogleGenAIInteractionSSEEvent>,
+  createNextStream: (
+    token: string,
+  ) => Promise<Stream<GoogleGenAIInteractionSSEEvent>>,
+): Stream<GoogleGenAIInteractionSSEEvent> {
+  let currentStream = initialStream;
+  let currentIterator = (
+    currentStream as unknown as AsyncIterable<GoogleGenAIInteractionSSEEvent>
+  )[Symbol.asyncIterator]();
+  let hopStatus: string | undefined;
+  let hopContinuationToken: string | undefined;
+
+  const readable = new ReadableStream<GoogleGenAIInteractionSSEEvent>({
+    async pull(controller) {
+      while (true) {
+        let chunk: IteratorResult<GoogleGenAIInteractionSSEEvent> | undefined;
+        try {
+          chunk = await currentIterator.next();
+        } catch (e) {
+          if (!canResumeStreamHop(hopStatus, hopContinuationToken)) {
+            controller.error(wrapSDKError(e));
+            return;
+          }
+        }
+
+        if (chunk && !chunk.done && chunk.value !== undefined) {
+          const event = chunk.value;
+          const state = extractHopContinuationState(
+            event,
+            hopStatus,
+            hopContinuationToken,
+          );
+          hopStatus = state.status;
+          hopContinuationToken = state.token;
+          controller.enqueue(event);
+          return;
+        }
+
+        if (canResumeStreamHop(hopStatus, hopContinuationToken)) {
+          const nextToken = hopContinuationToken;
+          hopStatus = undefined;
+          hopContinuationToken = undefined;
+          if (currentIterator.return) {
+            try {
+              await currentIterator.return();
+            } catch {
+              // Ignore cleanup errors when transitioning hops.
+            }
+          }
+          try {
+            currentStream = await createNextStream(nextToken);
+            currentIterator = (
+              currentStream as unknown as AsyncIterable<GoogleGenAIInteractionSSEEvent>
+            )[Symbol.asyncIterator]();
+            continue;
+          } catch (err) {
+            controller.error(wrapSDKError(err));
+            return;
+          }
+        }
+
+        controller.close();
+        return;
+      }
+    },
+    async cancel(reason) {
+      if (currentIterator.return) {
+        await currentIterator.return(reason);
+      }
+    },
+  });
+
+  Object.setPrototypeOf(readable, Stream.prototype);
+  return readable as unknown as Stream<GoogleGenAIInteractionSSEEvent>;
+}
+
+
+export function _resetContinuationWarningsForTesting(): void {
+  incompleteContinuationWarned = false;
+}
+
 
 function attachSdkHttpResponse<T>(
   value: T,
@@ -948,6 +1322,9 @@ function addOutputProperties(interaction: Record<string, any>): unknown {
     const step = steps[i]!;
     if (step.type === "user_input") {
       break;
+    }
+    if (step.type === "thought") {
+      continue;
     }
     if (step.type !== "model_output" || !step.content) {
       if (collecting) {
