@@ -3264,6 +3264,14 @@ export declare interface GenerateContentConfig {
       
   * @remarks Encoded as base64 string. */
   continuationToken?: string;
+  /** If enabled, the continuation token will be consumed from the
+      request and not returned in the response. This allows the SDK to send
+      multiple requests to continue generation until `finish_reason` is no
+      longer `CONTINUATION`. Timeouts, retries, and billing are applied per
+      request. The most efficient way to do long decoding is with
+      `client.interactions.create(background=True)`.
+       */
+  automaticContinuation?: boolean;
 }
 
 /** Config for models.generate_content parameters. */
