@@ -163,8 +163,21 @@ import type { WordInfo as WordInfo$Import } from "./models/interactions/word-inf
 import type { CreateVoiceRequest as CreateVoiceRequest$Import2 } from "./models/operations/create-voice.js";
 import type {
   CancelInteractionByIdParams as CancelInteractionByIdParams$Import,
+  CreateAgentInteractionParams as CreateAgentInteractionParams$Import,
+  CreateAgentInteractionParamsNonStreaming
+    as CreateAgentInteractionParamsNonStreaming$Import,
+  CreateAgentInteractionParamsStreaming
+    as CreateAgentInteractionParamsStreaming$Import,
   CreateAgentParams as CreateAgentParams$Import,
   CreateInteractionParams as CreateInteractionParams$Import,
+  CreateInteractionParamsNonStreaming
+    as CreateInteractionParamsNonStreaming$Import,
+  CreateInteractionParamsStreaming as CreateInteractionParamsStreaming$Import,
+  CreateModelInteractionParams as CreateModelInteractionParams$Import,
+  CreateModelInteractionParamsNonStreaming
+    as CreateModelInteractionParamsNonStreaming$Import,
+  CreateModelInteractionParamsStreaming
+    as CreateModelInteractionParamsStreaming$Import,
   CreateWebhookParams as CreateWebhookParams$Import,
   DeleteAgentParams as DeleteAgentParams$Import,
   DeleteCredentialParams as DeleteCredentialParams$Import,
@@ -294,12 +307,6 @@ type InteractionCreatedEvent$ = InteractionCreatedEvent$Import;
 type InteractionDeleteParams$ = DeleteInteractionParams$Import;
 type InteractionDeleteResponse$ = Empty$Import;
 type InteractionGetParams$ = GetInteractionByIdParams$Import;
-type InteractionGetParamsNonStreaming$ =
-  GetInteractionByIdParamsNonStreaming$Import;
-type InteractionGetParamsNonStreaming$2 =
-  GetInteractionByIdParamsNonStreaming$Import;
-type InteractionGetParamsStreaming$ = GetInteractionByIdParamsStreaming$Import;
-type InteractionGetParamsStreaming$2 = GetInteractionByIdParamsStreaming$Import;
 type InteractionSSEEvent$ = InteractionSSEEvent$Import;
 type InteractionStatusUpdate$ = InteractionStatusUpdate$Import;
 type MCPServerToolCallStep$ = MCPServerToolCallStep$Import;
@@ -456,6 +463,23 @@ type WebhookRotateSigningSecretResponse$ =
   WebhookRotateSigningSecretResponse$Import;
 type WebhookUpdate$ = WebhookUpdate$Import;
 type WebhookUpdateParams$ = WebhookUpdate$Import;
+type CreateAgentInteractionParams$ = CreateAgentInteractionParams$Import;
+type CreateAgentInteractionParamsNonStreaming$2 =
+  CreateAgentInteractionParamsNonStreaming$Import;
+type CreateAgentInteractionParamsStreaming$2 =
+  CreateAgentInteractionParamsStreaming$Import;
+type CreateModelInteractionParams$ = CreateModelInteractionParams$Import;
+type CreateModelInteractionParamsNonStreaming$2 =
+  CreateModelInteractionParamsNonStreaming$Import;
+type CreateModelInteractionParamsStreaming$2 =
+  CreateModelInteractionParamsStreaming$Import;
+type InteractionCreateParamsNonStreaming$ =
+  CreateInteractionParamsNonStreaming$Import;
+type InteractionCreateParamsStreaming$ =
+  CreateInteractionParamsStreaming$Import;
+type InteractionGetParamsNonStreaming$ =
+  GetInteractionByIdParamsNonStreaming$Import;
+type InteractionGetParamsStreaming$ = GetInteractionByIdParamsStreaming$Import;
 export type Agent = Agent$;
 export type AgentCreateParams = AgentCreateParams$;
 export type AgentDeleteParams = AgentDeleteParams$;
@@ -558,6 +582,10 @@ export type InteractionCancelParams = InteractionCancelParams$;
 export type InteractionCompletedEvent = InteractionCompletedEvent$;
 export type InteractionCreatedEvent = InteractionCreatedEvent$;
 export type InteractionCreateParams = InteractionCreateParams$;
+export type InteractionCreateParamsNonStreaming =
+  InteractionCreateParamsNonStreaming$;
+export type InteractionCreateParamsStreaming =
+  InteractionCreateParamsStreaming$;
 export type InteractionDeleteParams = InteractionDeleteParams$;
 export type InteractionDeleteResponse = InteractionDeleteResponse$;
 export type InteractionGetParams = InteractionGetParams$;
@@ -766,6 +794,10 @@ export declare namespace Interactions {
   export type InteractionCompletedEvent = InteractionCompletedEvent$;
   export type InteractionCreatedEvent = InteractionCreatedEvent$;
   export type InteractionCreateParams = InteractionCreateParams$;
+  export type InteractionCreateParamsNonStreaming =
+    InteractionCreateParamsNonStreaming$;
+  export type InteractionCreateParamsStreaming =
+    InteractionCreateParamsStreaming$;
   export type InteractionDeleteParams = InteractionDeleteParams$;
   export type InteractionDeleteResponse = InteractionDeleteResponse$;
   export type InteractionGetParams = InteractionGetParams$;
@@ -867,10 +899,26 @@ export declare namespace Interactions {
   export namespace GoogleSearchResultStep {
     export type Result = Result$2;
   }
+  export namespace InteractionCreateParams {
+    export type CreateAgentInteractionParams = CreateAgentInteractionParams$;
+    export type CreateAgentInteractionParamsNonStreaming =
+      CreateAgentInteractionParamsNonStreaming$2;
+    export type CreateAgentInteractionParamsStreaming =
+      CreateAgentInteractionParamsStreaming$2;
+    export type CreateModelInteractionParams = CreateModelInteractionParams$;
+    export type CreateModelInteractionParamsNonStreaming =
+      CreateModelInteractionParamsNonStreaming$2;
+    export type CreateModelInteractionParamsStreaming =
+      CreateModelInteractionParamsStreaming$2;
+    export type InteractionCreateParamsNonStreaming =
+      InteractionCreateParamsNonStreaming$;
+    export type InteractionCreateParamsStreaming =
+      InteractionCreateParamsStreaming$;
+  }
   export namespace InteractionGetParams {
     export type InteractionGetParamsNonStreaming =
-      InteractionGetParamsNonStreaming$2;
-    export type InteractionGetParamsStreaming = InteractionGetParamsStreaming$2;
+      InteractionGetParamsNonStreaming$;
+    export type InteractionGetParamsStreaming = InteractionGetParamsStreaming$;
   }
   export namespace PlaceCitation {
     export type ReviewSnippet = ReviewSnippet$3;

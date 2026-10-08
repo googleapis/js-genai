@@ -23,6 +23,8 @@ import {
   CreateAgentInteractionParamsNonStreaming,
   CreateAgentInteractionParamsStreaming,
   CreateInteractionParams,
+  CreateInteractionParamsNonStreaming,
+  CreateInteractionParamsStreaming,
   CreateModelInteractionParamsNonStreaming,
   CreateModelInteractionParamsStreaming,
   DeleteInteractionParams,
@@ -50,6 +52,14 @@ export class Interactions extends ClientSDK {
   ): APIPromise<Stream<interactions.InteractionSSEEvent>>;
   create(
     params: CreateModelInteractionParamsStreaming,
+    options?: RequestOptions,
+  ): APIPromise<Stream<interactions.InteractionSSEEvent>>;
+  create(
+    params: CreateInteractionParamsNonStreaming,
+    options?: RequestOptions,
+  ): APIPromise<interactions.Interaction>;
+  create(
+    params: CreateInteractionParamsStreaming,
     options?: RequestOptions,
   ): APIPromise<Stream<interactions.InteractionSSEEvent>>;
   create(
