@@ -8,6 +8,10 @@ const pkg = JSON.parse(
   readFileSync(new URL('./package.json', import.meta.url), 'utf8'),
 );
 
+/** Resolve package exports entry to a file path (string or {default}). */
+const exportPath = (entry) =>
+  typeof entry === 'string' ? entry : entry?.default;
+
 const rollupPlugins = [
   typescript({
     cacheRoot: path.join(os.tmpdir(), 'rpt2_cache'),
@@ -51,7 +55,7 @@ export default [
   {
     input: 'src/index.ts',
     output: {
-      file: pkg.exports['.']['import'],
+      file: exportPath(pkg.exports['.']['import']),
       format: 'es',
       sourcemap: true,
       sourcemapExcludeSources: true,
@@ -64,7 +68,7 @@ export default [
   {
     input: 'src/index.ts',
     output: {
-      file: pkg.exports['.']['require'],
+      file: exportPath(pkg.exports['.']['require']),
       format: 'cjs',
       sourcemap: true,
       sourcemapExcludeSources: true,
@@ -77,7 +81,7 @@ export default [
   {
     input: 'src/node/index.ts',
     output: {
-      file: pkg.exports['./node']['import'],
+      file: exportPath(pkg.exports['./node']['import']),
       format: 'es',
       sourcemap: true,
       sourcemapExcludeSources: true,
@@ -90,7 +94,7 @@ export default [
   {
     input: 'src/node/index.ts',
     output: {
-      file: pkg.exports['.']['node']['require'],
+      file: exportPath(pkg.exports['.']['node']['require']),
       format: 'cjs',
       sourcemap: true,
       sourcemapExcludeSources: true,
@@ -103,7 +107,7 @@ export default [
   {
     input: 'src/web/index.ts',
     output: {
-      file: pkg.exports['./web']['import'],
+      file: exportPath(pkg.exports['./web']['import']),
       format: 'es',
       sourcemap: true,
       sourcemapExcludeSources: true,
