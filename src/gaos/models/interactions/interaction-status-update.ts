@@ -23,6 +23,13 @@ export type InteractionStatusUpdateStatus =
 
 export type InteractionStatusUpdate = {
   /**
+   * An optional opaque continuation token used to resume decoding from the
+   *
+   * @remarks
+   * latest checkpoint after a disconnected stream.
+   */
+  continuation_token?: string | undefined;
+  /**
    * The event_id token to be used to resume the interaction stream, from
    *
    * @remarks
