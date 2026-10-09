@@ -1690,6 +1690,17 @@ export function generateContentConfigToMldev(
     );
   }
 
+  const fromResponseFormat = common.getValueByPath(fromObject, [
+    'responseFormat',
+  ]);
+  if (fromResponseFormat != null) {
+    common.setValueByPath(
+      toObject,
+      ['responseFormat'],
+      responseFormatToMldev(fromResponseFormat, rootObject),
+    );
+  }
+
   return toObject;
 }
 
@@ -1965,6 +1976,12 @@ export function generateContentConfigToVertex(
       parentObject,
       ['continuationToken'],
       fromContinuationToken,
+    );
+  }
+
+  if (common.getValueByPath(fromObject, ['responseFormat']) !== undefined) {
+    throw new Error(
+      'responseFormat parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
     );
   }
 
@@ -4698,6 +4715,36 @@ export function replicatedVoiceConfigToVertex(
   ) {
     throw new Error(
       'voiceConsentSignature parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+    );
+  }
+
+  return toObject;
+}
+
+export function responseFormatToMldev(
+  fromObject: types.ResponseFormat,
+  _rootObject?: unknown,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromAudio = common.getValueByPath(fromObject, ['audio']);
+  if (fromAudio != null) {
+    common.setValueByPath(toObject, ['audio'], fromAudio);
+  }
+
+  const fromImage = common.getValueByPath(fromObject, ['image']);
+  if (fromImage != null) {
+    common.setValueByPath(toObject, ['image'], fromImage);
+  }
+
+  const fromText = common.getValueByPath(fromObject, ['text']);
+  if (fromText != null) {
+    common.setValueByPath(toObject, ['text'], fromText);
+  }
+
+  if (common.getValueByPath(fromObject, ['video']) !== undefined) {
+    throw new Error(
+      'video parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
     );
   }
 
