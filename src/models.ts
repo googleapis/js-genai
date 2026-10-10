@@ -156,17 +156,36 @@ export class Models extends BaseModule {
         hopFinishReason = undefined;
         continuationToken = undefined;
 
-        for await (const chunk of currentStream) {
-          if (chunk.candidates && chunk.candidates.length > 0) {
-            const candidate = chunk.candidates[0];
-            if (candidate.finishReason) {
-              hopFinishReason = candidate.finishReason;
+        try {
+          for await (const chunk of currentStream) {
+            if (chunk.candidates && chunk.candidates.length > 0) {
+              const candidate = chunk.candidates[0];
+              if (candidate.finishReason) {
+                hopFinishReason = candidate.finishReason;
+              }
+              if (candidate.continuationToken) {
+                continuationToken = candidate.continuationToken;
+              } else if (
+                candidate.finishReason &&
+                !afc.isResumableFinishReason(candidate.finishReason)
+              ) {
+                continuationToken = undefined;
+              }
             }
-            if (candidate.continuationToken) {
-              continuationToken = candidate.continuationToken;
-            }
+            yield chunk;
           }
-          yield chunk;
+        } catch (err) {
+          // If a mid-stream error occurs after an intermediate checkpoint
+          // continuationToken was received, resume from that checkpoint.
+          if (
+            !(
+              enableContinuation &&
+              Boolean(continuationToken) &&
+              afc.isResumableFinishReason(hopFinishReason)
+            )
+          ) {
+            throw err;
+          }
         }
       }
     })(this, params, firstStream);

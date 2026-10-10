@@ -131,15 +131,15 @@ describe('continuation token helpers (_afc)', () => {
     ).toBeFalse();
   });
 
-  it('isResumableFinishReason only returns true for FinishReason.CONTINUATION', () => {
+  it('isResumableFinishReason returns true for undefined and FinishReason.CONTINUATION', () => {
     expect(
       afc.isResumableFinishReason(types.FinishReason.CONTINUATION),
     ).toBeTrue();
+    expect(afc.isResumableFinishReason(undefined)).toBeTrue();
     expect(
       afc.isResumableFinishReason(types.FinishReason.MAX_TOKENS),
     ).toBeFalse();
     expect(afc.isResumableFinishReason(types.FinishReason.STOP)).toBeFalse();
-    expect(afc.isResumableFinishReason(undefined)).toBeFalse();
   });
 
   it('prepareContinuationConfig sets continuationToken and strips automaticContinuation without mutating input', () => {
@@ -1084,6 +1084,94 @@ describe('Models automatic continuation', () => {
     expect(args[2][0].config?.continuationToken).toBeUndefined();
     expect(chunks[chunks.length - 1].text).toBe('Sunny in Boston!');
   });
+
+  it('generateContentStream resumes from checkpoint continuationToken on mid-stream cutoff or error', async () => {
+    async function* makeFailingStream(
+      chunks: types.GenerateContentResponse[],
+      errorMessage: string,
+    ): AsyncGenerator<types.GenerateContentResponse> {
+      for (const chunk of chunks) {
+        yield chunk;
+      }
+      throw new Error(errorMessage);
+    }
+
+    const hop1Cutoff = [
+      buildResponse({
+        parts: [{text: 'Checkpoint 1, '}],
+        continuationToken: 'ckpt-tok-1',
+      }),
+    ];
+    const hop2Error = [
+      buildResponse({
+        parts: [{text: 'Checkpoint 2, '}],
+        continuationToken: 'ckpt-tok-2',
+      }),
+    ];
+    const hop3Done = [
+      buildResponse({
+        parts: [{text: 'Earlier checkpoint, '}],
+        continuationToken: 'stale-ckpt-tok',
+      }),
+      buildResponse({
+        parts: [{text: 'Final stop.'}],
+        finishReason: types.FinishReason.STOP,
+      }),
+    ];
+
+    const spy = spyOn(
+      internalModels,
+      'generateContentStreamInternal',
+    ).and.returnValues(
+      Promise.resolve(makeStream(hop1Cutoff)),
+      Promise.resolve(makeFailingStream(hop2Error, 'network drop')),
+      Promise.resolve(makeStream(hop3Done)),
+    );
+
+    const stream = await client.models.generateContentStream({
+      model: 'gemini-2.5-flash',
+      contents: 'Stream with cutoff and error',
+    });
+    const texts: string[] = [];
+    for await (const chunk of stream) {
+      texts.push(chunk.text ?? '');
+    }
+
+    expect(spy).toHaveBeenCalledTimes(3);
+    const args = spy.calls.allArgs();
+    expect(args[0][0].config?.continuationToken).toBeUndefined();
+    expect(args[1][0].config?.continuationToken).toBe('ckpt-tok-1');
+    expect(args[2][0].config?.continuationToken).toBe('ckpt-tok-2');
+    expect(texts).toEqual([
+      'Checkpoint 1, ',
+      'Checkpoint 2, ',
+      'Earlier checkpoint, ',
+      'Final stop.',
+    ]);
+  });
+
+  it('generateContentStream rethrows mid-stream error when no checkpoint continuationToken was received', async () => {
+    async function* makeFailingStream(): AsyncGenerator<types.GenerateContentResponse> {
+      yield buildResponse({parts: [{text: 'No token chunk'}]});
+      throw new Error('unrecoverable stream error');
+    }
+
+    spyOn(internalModels, 'generateContentStreamInternal').and.returnValue(
+      Promise.resolve(makeFailingStream()),
+    );
+
+    const stream = await client.models.generateContentStream({
+      model: 'gemini-2.5-flash',
+      contents: 'Stream with error',
+    });
+    await expectAsync(
+      (async () => {
+        for await (const _ of stream) {
+          // consume
+        }
+      })(),
+    ).toBeRejectedWithError('unrecoverable stream error');
+  });
 });
 
 describe('Chat automatic continuation', () => {
@@ -1553,5 +1641,66 @@ describe('Chat automatic continuation', () => {
       'Hop 2 cut off without finishReason',
     ]);
     expect(chat.getHistory(true)).toEqual([]);
+  });
+
+  it('sendMessageStream resumes from checkpoint continuationToken on mid-stream cutoff or error and records complete history', async () => {
+    async function* makeFailingStream(
+      chunks: types.GenerateContentResponse[],
+      errorMessage: string,
+    ): AsyncGenerator<types.GenerateContentResponse> {
+      for (const chunk of chunks) {
+        yield chunk;
+      }
+      throw new Error(errorMessage);
+    }
+
+    const hop1Cutoff = [
+      buildResponse({
+        parts: [{text: 'Chat ckpt 1, '}],
+        continuationToken: 'chat-ckpt-1',
+      }),
+    ];
+    const hop2Error = [
+      buildResponse({
+        parts: [{text: 'Chat ckpt 2, '}],
+        continuationToken: 'chat-ckpt-2',
+      }),
+    ];
+    const hop3Done = [
+      buildResponse({
+        parts: [{text: 'Chat final.'}],
+        finishReason: types.FinishReason.STOP,
+      }),
+    ];
+
+    const spy = spyOn(client.models, 'generateContentStream').and.returnValues(
+      Promise.resolve(makeStream(hop1Cutoff)),
+      Promise.resolve(makeFailingStream(hop2Error, 'stream interrupted')),
+      Promise.resolve(makeStream(hop3Done)),
+    );
+
+    const chat = client.chats.create({model: 'gemini-2.5-flash'});
+    const stream = await chat.sendMessageStream({message: 'Stream a story'});
+    const receivedTexts: string[] = [];
+    for await (const chunk of stream) {
+      receivedTexts.push(chunk.text ?? '');
+    }
+
+    expect(spy).toHaveBeenCalledTimes(3);
+    const calls = spy.calls.allArgs();
+    expect(calls[0][0].config).toEqual({});
+    expect(calls[1][0].config).toEqual({continuationToken: 'chat-ckpt-1'});
+    expect(calls[2][0].config).toEqual({continuationToken: 'chat-ckpt-2'});
+    expect(receivedTexts).toEqual([
+      'Chat ckpt 1, ',
+      'Chat ckpt 2, ',
+      'Chat final.',
+    ]);
+    expect(chat.getHistory(true)).toEqual([
+      {role: 'user', parts: [{text: 'Stream a story'}]},
+      {role: 'model', parts: [{text: 'Chat ckpt 1, '}]},
+      {role: 'model', parts: [{text: 'Chat ckpt 2, '}]},
+      {role: 'model', parts: [{text: 'Chat final.'}]},
+    ]);
   });
 });
