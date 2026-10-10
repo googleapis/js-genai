@@ -3264,6 +3264,12 @@ export declare interface GenerateContentConfig {
       
   * @remarks Encoded as base64 string. */
   continuationToken?: string;
+  /** Defaults to true. When a response ends with finish reason
+      `CONTINUATION`, the SDK sends the same request again with the response's
+      continuation token until the model finishes. Timeouts, retries and
+      billing apply to each request. Set to false to turn this off.
+       */
+  automaticContinuation?: boolean;
 }
 
 /** Config for models.generate_content parameters. */
