@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import * as afc from './_afc.js';
 import {ApiClient} from './_api_client.js';
 import * as t from './_transformers.js';
 import {Models} from './models.js';
@@ -114,6 +115,9 @@ export class Chats {
    * The config in the params will be used for all requests within the chat
    * session unless overridden by a per-request `config` in
    * @see {@link types.SendMessageParameters#config}.
+   * Automatic continuation (`config.automaticContinuation`) is enabled by
+   * default in chat sessions (`true`). Set `config.automaticContinuation =
+   * false` to disable it.
    *
    * @param params - Parameters for creating a chat session.
    * @returns A new chat session.
@@ -169,7 +173,9 @@ export class Chat {
    *
    * @remarks
    * This method will wait for the previous message to be processed before
-   * sending the next message.
+   * sending the next message. Automatic continuation
+   * (`config.automaticContinuation`) is enabled by default (`true`); set
+   * `config.automaticContinuation = false` to disable it.
    *
    * @see {@link Chat#sendMessageStream} for streaming method.
    * @param params - parameters for sending messages within a chat session.
@@ -189,11 +195,37 @@ export class Chat {
   ): Promise<types.GenerateContentResponse> {
     await this.sendPromise;
     const inputContent = t.tContent(params.message);
-    const responsePromise = this.modelsModule.generateContent({
+    const callConfig = params.config ?? this.config;
+    const requestContents = this.getHistory(true).concat(inputContent);
+    const enableContinuation = afc.shouldEnableAutomaticContinuation(
+      callConfig,
+      true,
+    );
+    const checkParams: types.GenerateContentParameters = {
       model: this.model,
-      contents: this.getHistory(true).concat(inputContent),
-      config: params.config ?? this.config,
-    });
+      contents: [inputContent],
+      config: callConfig,
+    };
+    const isAfcActive =
+      Boolean(callConfig) &&
+      !afc.shouldDisableAfc(callConfig) &&
+      afc.hasCallableTools(checkParams);
+
+    const responsePromise = isAfcActive
+      ? this.modelsModule.generateContent({
+          model: this.model,
+          contents: requestContents,
+          config:
+            enableContinuation &&
+            callConfig?.automaticContinuation === undefined
+              ? {...callConfig, automaticContinuation: true}
+              : callConfig,
+        })
+      : this.generateContentWithContinuation(
+          requestContents,
+          callConfig,
+          enableContinuation,
+        );
     this.sendPromise = (async () => {
       const response = await responsePromise;
       const outputContent = response.candidates?.[0]?.content;
@@ -226,12 +258,41 @@ export class Chat {
     return responsePromise;
   }
 
+  private async generateContentWithContinuation(
+    contents: types.ContentListUnion,
+    config: types.GenerateContentConfig | undefined,
+    enableContinuation: boolean,
+  ): Promise<types.GenerateContentResponse> {
+    const responses: types.GenerateContentResponse[] = [];
+    let continuationToken: string | undefined;
+    while (
+      responses.length === 0 ||
+      (enableContinuation && Boolean(continuationToken))
+    ) {
+      const hopConfig = afc.prepareContinuationConfig(
+        config,
+        continuationToken,
+        true,
+      );
+      const response = await this.modelsModule.generateContent({
+        model: this.model,
+        contents,
+        config: hopConfig,
+      });
+      responses.push(response);
+      continuationToken = afc.shouldContinueGeneration(response);
+    }
+    return afc.mergeContinuationResponses(responses);
+  }
+
   /**
    * Sends a message to the model and returns the response in chunks.
    *
    * @remarks
    * This method will wait for the previous message to be processed before
-   * sending the next message.
+   * sending the next message. Automatic continuation
+   * (`config.automaticContinuation`) is enabled by default (`true`); set
+   * `config.automaticContinuation = false` to disable it.
    *
    * @see {@link Chat#sendMessage} for non-streaming method.
    * @param params - parameters for sending the message.
@@ -253,10 +314,30 @@ export class Chat {
   ): Promise<AsyncGenerator<types.GenerateContentResponse>> {
     await this.sendPromise;
     const inputContent = t.tContent(params.message);
+    const callConfig = params.config ?? this.config;
+    const requestContents = this.getHistory(true).concat(inputContent);
+    const enableContinuation = afc.shouldEnableAutomaticContinuation(
+      callConfig,
+      true,
+    );
+    const checkParams: types.GenerateContentParameters = {
+      model: this.model,
+      contents: [inputContent],
+      config: callConfig,
+    };
+    const isAfcActive =
+      Boolean(callConfig) &&
+      !afc.shouldDisableAfc(callConfig) &&
+      afc.hasCallableTools(checkParams);
+    const firstHopConfig = isAfcActive
+      ? enableContinuation && callConfig?.automaticContinuation === undefined
+        ? {...callConfig, automaticContinuation: true}
+        : callConfig
+      : afc.prepareContinuationConfig(callConfig, undefined, true);
     const streamResponse = this.modelsModule.generateContentStream({
       model: this.model,
-      contents: this.getHistory(true).concat(inputContent),
-      config: params.config ?? this.config,
+      contents: requestContents,
+      config: firstHopConfig,
     });
     // Resolve the internal tracking of send completion promise - `sendPromise`
     // for both success and failure response. The actual failure is still
@@ -265,7 +346,14 @@ export class Chat {
       .then(() => undefined)
       .catch(() => undefined);
     const response = await streamResponse;
-    const result = this.processStreamResponse(response, inputContent);
+    const result = this.processStreamResponse(
+      response,
+      inputContent,
+      requestContents,
+      callConfig,
+      enableContinuation,
+      isAfcActive,
+    );
     return result;
   }
 
@@ -304,18 +392,71 @@ export class Chat {
   private async *processStreamResponse(
     streamResponse: AsyncGenerator<types.GenerateContentResponse>,
     inputContent: types.Content,
+    requestContents?: types.Content[],
+    callConfig?: types.GenerateContentConfig,
+    enableContinuation: boolean = false,
+    isAfcActive: boolean = false,
   ) {
     const outputContent: types.Content[] = [];
-    for await (const chunk of streamResponse) {
-      if (isValidResponse(chunk)) {
-        const content = chunk.candidates?.[0]?.content;
-        if (content !== undefined) {
-          outputContent.push(content);
-        }
+    let currentStream = streamResponse;
+    let hopContinuationToken: string | undefined;
+    let hopFinishReason: types.FinishReason | undefined;
+    let isFirstHop = true;
+    let isValid = true;
+    let finished = false;
+    while (
+      isFirstHop ||
+      (!isAfcActive &&
+        enableContinuation &&
+        Boolean(hopContinuationToken) &&
+        afc.isResumableFinishReason(hopFinishReason) &&
+        requestContents !== undefined)
+    ) {
+      if (!isFirstHop && requestContents !== undefined) {
+        const nextConfig = afc.prepareContinuationConfig(
+          callConfig,
+          hopContinuationToken,
+          true,
+        );
+        currentStream = await this.modelsModule.generateContentStream({
+          model: this.model,
+          contents: requestContents,
+          config: nextConfig,
+        });
       }
-      yield chunk;
+      isFirstHop = false;
+      hopContinuationToken = undefined;
+      hopFinishReason = undefined;
+      finished = false;
+      for await (const chunk of currentStream) {
+        if (hopFinishReason !== undefined) {
+          hopContinuationToken = undefined;
+          hopFinishReason = undefined;
+        }
+        if (isValidResponse(chunk)) {
+          const content = chunk.candidates?.[0]?.content;
+          if (content !== undefined) {
+            outputContent.push(content);
+          }
+        } else {
+          isValid = false;
+        }
+        const candidate = chunk.candidates?.[0];
+        if (candidate?.continuationToken) {
+          hopContinuationToken = candidate.continuationToken;
+        }
+        if (candidate?.finishReason !== undefined) {
+          hopFinishReason = candidate.finishReason;
+          finished = !(
+            enableContinuation &&
+            Boolean(hopContinuationToken) &&
+            afc.isResumableFinishReason(hopFinishReason)
+          );
+        }
+        yield chunk;
+      }
     }
-    this.recordHistory(inputContent, outputContent);
+    this.recordHistory(inputContent, isValid && finished ? outputContent : []);
   }
 
   private recordHistory(

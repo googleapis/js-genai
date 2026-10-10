@@ -30,6 +30,7 @@ import type { Environment as Environment$Import } from "./models/environments/en
 import type { GetEnvironmentFilesResponse as GetEnvironmentFilesResponse$Import } from "./models/environments/get-environment-files-response.js";
 import type { ListEnvironmentsResponse as ListEnvironmentsResponse$Import } from "./models/environments/list-environments-response.js";
 import type { AllowedTools as AllowedTools$Import } from "./models/interactions/allowed-tools.js";
+import type { AllowlistEntry as AllowlistEntry$Import } from "./models/interactions/allowlist-entry.js";
 import type { Annotation as Annotation$Import } from "./models/interactions/annotation.js";
 import type { AntigravityAgentConfig as AntigravityAgentConfig$Import } from "./models/interactions/antigravity-agent-config.js";
 import type { ArgumentsDelta as ArgumentsDelta$Import } from "./models/interactions/arguments-delta.js";
@@ -53,7 +54,7 @@ import type { DocumentDelta as DocumentDelta$Import } from "./models/interaction
 import type { DynamicAgentConfig as DynamicAgentConfig$Import } from "./models/interactions/dynamic-agent-config.js";
 import type { Empty as Empty$Import } from "./models/interactions/empty.js";
 import type { EnvVar as EnvVar$Import } from "./models/interactions/env-var.js";
-import type { Allowlist as Allowlist$Import } from "./models/interactions/environment-network-egress-allowlist.js";
+import type { EnvironmentNetworkEgressAllowlist as EnvironmentNetworkEgressAllowlist$Import } from "./models/interactions/environment-network-egress-allowlist.js";
 import type { Environment as Environment$Import2 } from "./models/interactions/environment.js";
 import type { ErrorEvent as ErrorEvent$Import } from "./models/interactions/error-event.js";
 import type { ErrorT as ErrorT$Import } from "./models/interactions/error.js";
@@ -246,8 +247,7 @@ type EnvironmentDeleteResponse$ = Empty$Import;
 type EnvironmentFile$ = EnvironmentFile$Import;
 type EnvironmentListResponse$ = ListEnvironmentsResponse$Import;
 type GetEnvironmentFilesResponse$ = GetEnvironmentFilesResponse$Import;
-type Allowlist$ = Allowlist$Import;
-type Allowlist$2 = Allowlist$Import;
+type ListEnvironmentsResponse$ = ListEnvironmentsResponse$Import;
 type AllowedTools$ = AllowedTools$Import;
 type Annotation$ = Annotation$Import;
 type AntigravityAgentConfig$ = AntigravityAgentConfig$Import;
@@ -348,9 +348,11 @@ type FixRequest$ = FixRequest$Import;
 type SessionConfig$ = SessionConfig$Import;
 type SourceFile$ = FileContent$Import;
 type SourceFile$2 = FileContent$Import;
-type Allowlist$3 = Allowlist$Import;
 type EnvVar$ = EnvVar$Import;
+type EnvironmentNetworkEgressAllowlist$ =
+  EnvironmentNetworkEgressAllowlist$Import;
 type Source$ = Source$Import;
+type AllowlistEntry$ = AllowlistEntry$Import;
 type Error$2 = ErrorT$Import;
 type Arguments$2 = GoogleMapsCallArguments$Import;
 type Place$ = GoogleMapsResultPlaces$Import;
@@ -463,7 +465,7 @@ export type AgentListParams = AgentListParams$;
 export type AgentListResponse = AgentListResponse$;
 export type AgentTool = AgentTool$;
 export type AllowedTools = AllowedTools$;
-export type Allowlist = Allowlist$;
+export type AllowlistEntry = AllowlistEntry$;
 export type Annotation = Annotation$;
 export type AntigravityAgentConfig = AntigravityAgentConfig$;
 export type Arguments = Arguments$;
@@ -508,6 +510,8 @@ export type Environment = Environment$;
 export type EnvironmentDeleteResponse = EnvironmentDeleteResponse$;
 export type EnvironmentFile = EnvironmentFile$;
 export type EnvironmentListResponse = EnvironmentListResponse$;
+export type EnvironmentNetworkEgressAllowlist =
+  EnvironmentNetworkEgressAllowlist$;
 export type EnvironmentVariableConfig = EnvironmentVariableConfig$;
 export type EnvironmentVariableUpdateConfig = EnvironmentVariableUpdateConfig$;
 export type EnvVar = EnvVar$;
@@ -562,6 +566,7 @@ export type InteractionGetParamsNonStreaming =
 export type InteractionGetParamsStreaming = InteractionGetParamsStreaming$;
 export type InteractionSSEEvent = InteractionSSEEvent$;
 export type InteractionStatusUpdate = InteractionStatusUpdate$;
+export type ListEnvironmentsResponse = ListEnvironmentsResponse$;
 export type ListTriggerExecutionsResponse = ListTriggerExecutionsResponse$;
 export type ListTriggersResponse = ListTriggersResponse$;
 export type MCPServer = MCPServer$;
@@ -705,18 +710,13 @@ export declare namespace Credentials {
   export type OAuth2UpdateConfig = OAuth2UpdateConfig$;
 }
 export declare namespace Environments {
-  export interface CreateEnvironmentRequest extends CreateEnvironmentRequest$ {}
-  export interface Environment extends Environment$ {}
+  export type CreateEnvironmentRequest = CreateEnvironmentRequest$;
+  export type Environment = Environment$;
   export type EnvironmentDeleteResponse = EnvironmentDeleteResponse$;
   export type EnvironmentFile = EnvironmentFile$;
   export type EnvironmentListResponse = EnvironmentListResponse$;
   export type GetEnvironmentFilesResponse = GetEnvironmentFilesResponse$;
-  export namespace CreateEnvironmentRequest {
-    export type Allowlist = Allowlist$;
-  }
-  export namespace Environment {
-    export type Allowlist = Allowlist$2;
-  }
+  export type ListEnvironmentsResponse = ListEnvironmentsResponse$;
 }
 export declare namespace Interactions {
   export type AllowedTools = AllowedTools$;
@@ -831,9 +831,14 @@ export declare namespace Interactions {
     }
   }
   export namespace Environment {
-    export type Allowlist = Allowlist$3;
+    export interface EnvironmentNetworkEgressAllowlist
+      extends EnvironmentNetworkEgressAllowlist$
+    {}
     export type EnvVar = EnvVar$;
     export type Source = Source$;
+    export namespace EnvironmentNetworkEgressAllowlist {
+      export type AllowlistEntry = AllowlistEntry$;
+    }
   }
   export namespace ErrorEvent {
     export type Error = Error$2;

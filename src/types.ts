@@ -188,6 +188,42 @@ export enum ApiSpec {
   ELASTIC_SEARCH = 'ELASTIC_SEARCH',
 }
 
+/** SafetyPolicy */
+export enum SafetyPolicy {
+  /**
+   * Unspecified safety policy. This value should not be used.
+   */
+  SAFETY_POLICY_UNSPECIFIED = 'SAFETY_POLICY_UNSPECIFIED',
+  /**
+   * Financial transactions safety policy.
+   */
+  FINANCIAL_TRANSACTIONS = 'FINANCIAL_TRANSACTIONS',
+  /**
+   * Sensitive data modification safety policy.
+   */
+  SENSITIVE_DATA_MODIFICATION = 'SENSITIVE_DATA_MODIFICATION',
+  /**
+   * Communication tool safety policy.
+   */
+  COMMUNICATION_TOOL = 'COMMUNICATION_TOOL',
+  /**
+   * Account creation safety policy.
+   */
+  ACCOUNT_CREATION = 'ACCOUNT_CREATION',
+  /**
+   * Data modification safety policy.
+   */
+  DATA_MODIFICATION = 'DATA_MODIFICATION',
+  /**
+   * User consent management safety policy.
+   */
+  USER_CONSENT_MANAGEMENT = 'USER_CONSENT_MANAGEMENT',
+  /**
+   * Legal terms and agreements safety policy.
+   */
+  LEGAL_TERMS_AND_AGREEMENTS = 'LEGAL_TERMS_AND_AGREEMENTS',
+}
+
 /** The environment being operated. */
 export enum Environment {
   /**
@@ -206,42 +242,6 @@ export enum Environment {
    * Operates in a desktop environment.
    */
   ENVIRONMENT_DESKTOP = 'ENVIRONMENT_DESKTOP',
-}
-
-/** SafetyPolicy */
-export enum SafetyPolicy {
-  /**
-   * Unspecified safety policy.
-   */
-  SAFETY_POLICY_UNSPECIFIED = 'SAFETY_POLICY_UNSPECIFIED',
-  /**
-   * Safety policy for financial transactions.
-   */
-  FINANCIAL_TRANSACTIONS = 'FINANCIAL_TRANSACTIONS',
-  /**
-   * Safety policy for sensitive data modification.
-   */
-  SENSITIVE_DATA_MODIFICATION = 'SENSITIVE_DATA_MODIFICATION',
-  /**
-   * Safety policy for communication tools (e.g. Gmail, Chat, Meet).
-   */
-  COMMUNICATION_TOOL = 'COMMUNICATION_TOOL',
-  /**
-   * Safety policy for account creation.
-   */
-  ACCOUNT_CREATION = 'ACCOUNT_CREATION',
-  /**
-   * Safety policy for data modification.
-   */
-  DATA_MODIFICATION = 'DATA_MODIFICATION',
-  /**
-   * Safety policy for user consent management.
-   */
-  USER_CONSENT_MANAGEMENT = 'USER_CONSENT_MANAGEMENT',
-  /**
-   * Safety policy for legal terms and agreements.
-   */
-  LEGAL_TERMS_AND_AGREEMENTS = 'LEGAL_TERMS_AND_AGREEMENTS',
 }
 
 /** Sites with confidence level chosen & above this value will be blocked from the search results. This enum is not supported in Gemini API. */
@@ -1964,6 +1964,12 @@ export declare interface Transcription {
   /** Detailed word-level transcriptions and timing details.
    */
   words?: WordInfo[];
+  /** Start offset in time of the transcription relative to the start of the audio.
+   */
+  startOffset?: string;
+  /** End offset in time of the transcription relative to the start of the audio.
+   */
+  endOffset?: string;
 }
 
 /** Result of executing the ExecutableCode. Generated only when the `CodeExecution` tool is used. */
@@ -2698,7 +2704,7 @@ export declare interface ComputerUse {
   environment?: Environment;
   /** Optional. By default, [predefined functions](https://cloud.google.com/vertex-ai/generative-ai/docs/computer-use#supported-actions) are included in the final model call. Some of them can be explicitly excluded from being automatically included. This can serve two purposes: 1. Using a more restricted / different action space. 2. Improving the definitions / instructions of predefined functions. */
   excludedPredefinedFunctions?: string[];
-  /** Optional. Disabled safety policies for computer use. This field is not supported in Vertex AI. */
+  /** Optional. Disabled safety policies for computer use. */
   disabledSafetyPolicies?: SafetyPolicy[];
 }
 
@@ -3258,6 +3264,12 @@ export declare interface GenerateContentConfig {
       
   * @remarks Encoded as base64 string. */
   continuationToken?: string;
+  /** Defaults to true. When a response ends with finish reason
+      `CONTINUATION`, the SDK sends the same request again with the response's
+      continuation token until the model finishes. Timeouts, retries and
+      billing apply to each request. Set to false to turn this off.
+       */
+  automaticContinuation?: boolean;
 }
 
 /** Config for models.generate_content parameters. */
@@ -3810,7 +3822,7 @@ export class GenerateContentResponse {
    * @example
    * ```ts
    * const response = await ai.models.generateContent({
-   *   model: 'gemini-2.0-flash',
+   *   model: 'gemini-flash-latest',
    *   contents:
    *     'Why is the sky blue?',
    * });
@@ -3930,7 +3942,7 @@ export class GenerateContentResponse {
    *   required: ['brightness', 'colorTemperature'],
    *  };
    *  const response = await ai.models.generateContent({
-   *     model: 'gemini-2.0-flash',
+   *     model: 'gemini-flash-latest',
    *     contents: 'Dim the lights so the room feels cozy and warm.',
    *     config: {
    *       tools: [{functionDeclarations: [controlLightFunctionDeclaration]}],
@@ -3978,7 +3990,7 @@ export class GenerateContentResponse {
    * @example
    * ```ts
    * const response = await ai.models.generateContent({
-   *   model: 'gemini-2.0-flash',
+   *   model: 'gemini-flash-latest',
    *   contents:
    *     'What is the sum of the first 50 prime numbers? Generate and run code for the calculation, and make sure you get all 50.'
    *   config: {
@@ -4022,7 +4034,7 @@ export class GenerateContentResponse {
    * @example
    * ```ts
    * const response = await ai.models.generateContent({
-   *   model: 'gemini-2.0-flash',
+   *   model: 'gemini-flash-latest',
    *   contents:
    *     'What is the sum of the first 50 prime numbers? Generate and run code for the calculation, and make sure you get all 50.'
    *   config: {
@@ -6003,7 +6015,7 @@ export declare interface TuningJob {
   veoLoraTuningSpec?: VeoLoraTuningSpec;
   /** Tuning Spec for Veo Tuning. */
   veoTuningSpec?: VeoTuningSpec;
-  /** The Cloud Storage metrics URI associated with this tuning job. */
+  /** Output only. The Cloud Storage metrics URI associated with this TuningJob. */
   gcsMetricsUri?: string;
 }
 
@@ -6161,7 +6173,7 @@ export declare interface CreateTuningJobConfig {
 
 /** Fine-tuning job creation parameters - optional fields. */
 export declare interface CreateTuningJobParametersPrivate {
-  /** The base model that is being tuned, e.g., "gemini-2.5-flash". */
+  /** The base model that is being tuned, e.g., "gemini-flash-latest". */
   baseModel?: string;
   /** The PreTunedModel that is being tuned. */
   preTunedModel?: PreTunedModel;
@@ -6286,7 +6298,7 @@ export declare interface CreateCachedContentConfig {
 
 /** Parameters for caches.create method. */
 export declare interface CreateCachedContentParameters {
-  /** ID of the model to use. Example: gemini-2.0-flash */
+  /** ID of the model to use. Example: gemini-flash-latest */
   model: string;
   /** Configuration that contains optional parameters.
    */
@@ -8001,6 +8013,8 @@ export declare interface RealtimeInputConfig {
   activityHandling?: ActivityHandling;
   /** Defines which input is included in the user's turn. */
   turnCoverage?: TurnCoverage;
+  /** If true, enables interim transcript timestamps. */
+  interimTranscriptTimestampEnabled?: boolean;
 }
 
 /** Configuration of session resumption mechanism.
@@ -8348,7 +8362,7 @@ These parameters are used when creating a chat session with the
 export declare interface CreateChatParameters {
   /** The name of the model to use for the chat session.
 
-      For example: 'gemini-2.0-flash', 'gemini-2.0-flash-lite', etc. See Gemini API
+      For example: 'gemini-flash-latest', 'gemini-flash-lite-latest', etc. See Gemini API
       docs to find the available models.
        */
   model: string;
@@ -8736,7 +8750,7 @@ export declare interface ComputeTokensResult {
 
 /** Fine-tuning job creation parameters - optional fields. */
 export declare interface CreateTuningJobParameters {
-  /** The base model that is being tuned, e.g., "gemini-2.5-flash". */
+  /** The base model that is being tuned, e.g., "gemini-flash-latest". */
   baseModel: string;
   /** Cloud Storage path to file containing training dataset for tuning. The dataset must be formatted as a JSONL file. */
   trainingDataset: TuningDataset;

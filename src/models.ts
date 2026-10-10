@@ -85,28 +85,117 @@ export class Models extends BaseModule {
     }
   };
 
+  private async generateContentWithContinuation(
+    params: types.GenerateContentParameters,
+  ): Promise<types.GenerateContentResponse> {
+    const enableContinuation = afc.shouldEnableAutomaticContinuation(
+      params.config,
+      true,
+    );
+    let continuationToken: string | undefined = undefined;
+    const responses: types.GenerateContentResponse[] = [];
+
+    while (
+      responses.length === 0 ||
+      (enableContinuation && Boolean(continuationToken))
+    ) {
+      const callConfig = afc.prepareContinuationConfig(
+        params.config,
+        continuationToken,
+      );
+      const callParams: types.GenerateContentParameters =
+        callConfig === params.config ? params : {...params, config: callConfig};
+      const response = await this.generateContentInternal(callParams);
+      responses.push(response);
+      continuationToken = afc.shouldContinueGeneration(response);
+    }
+
+    return afc.mergeContinuationResponses(responses);
+  }
+
+  private async generateContentStreamWithContinuation(
+    params: types.GenerateContentParameters,
+  ): Promise<AsyncGenerator<types.GenerateContentResponse>> {
+    const enableContinuation = afc.shouldEnableAutomaticContinuation(
+      params.config,
+      true,
+    );
+    if (!enableContinuation) {
+      return await this.generateContentStreamInternal(params);
+    }
+    const firstStream = await this.generateContentStreamInternal(params);
+    return (async function* (
+      models: Models,
+      initialParams: types.GenerateContentParameters,
+      initialStream: AsyncGenerator<types.GenerateContentResponse>,
+    ) {
+      let currentStream = initialStream;
+      let continuationToken: string | undefined = undefined;
+      let hopFinishReason: types.FinishReason | undefined = undefined;
+      let isFirstHop = true;
+
+      while (
+        isFirstHop ||
+        (enableContinuation &&
+          Boolean(continuationToken) &&
+          afc.isResumableFinishReason(hopFinishReason))
+      ) {
+        if (!isFirstHop) {
+          const callConfig = afc.prepareContinuationConfig(
+            initialParams.config,
+            continuationToken,
+          );
+          const callParams: types.GenerateContentParameters = {
+            ...initialParams,
+            config: callConfig,
+          };
+          currentStream =
+            await models.generateContentStreamInternal(callParams);
+        }
+        isFirstHop = false;
+        hopFinishReason = undefined;
+        continuationToken = undefined;
+
+        for await (const chunk of currentStream) {
+          if (chunk.candidates && chunk.candidates.length > 0) {
+            const candidate = chunk.candidates[0];
+            if (candidate.finishReason) {
+              hopFinishReason = candidate.finishReason;
+            }
+            if (candidate.continuationToken) {
+              continuationToken = candidate.continuationToken;
+            }
+          }
+          yield chunk;
+        }
+      }
+    })(this, params, firstStream);
+  }
+
   /**
    * Makes an API request to generate content with a given model.
    *
    * For the `model` parameter, supported formats for Gemini Enterprise Agent Platform API include:
-   * - The Gemini model ID, for example: 'gemini-2.0-flash'
+   * - The Gemini model ID, for example: 'gemini-flash-latest'
    * - The full resource name starts with 'projects/', for example:
-   *  'projects/my-project-id/locations/us-central1/publishers/google/models/gemini-2.0-flash'
+   *  'projects/my-project-id/locations/us-central1/publishers/google/models/gemini-flash-latest'
    * - The partial resource name with 'publishers/', for example:
-   *  'publishers/google/models/gemini-2.0-flash' or
+   *  'publishers/google/models/gemini-flash-latest' or
    *  'publishers/meta/models/llama-3.1-405b-instruct-maas'
    * - `/` separated publisher and model name, for example:
-   * 'google/gemini-2.0-flash' or 'meta/llama-3.1-405b-instruct-maas'
+   * 'google/gemini-flash-latest' or 'meta/llama-3.1-405b-instruct-maas'
    *
    * For the `model` parameter, supported formats for Gemini API include:
-   * - The Gemini model ID, for example: 'gemini-2.0-flash'
+   * - The Gemini model ID, for example: 'gemini-flash-latest'
    * - The model name starts with 'models/', for example:
-   *  'models/gemini-2.0-flash'
+   *  'models/gemini-flash-latest'
    * - For tuned models, the model name starts with 'tunedModels/',
    * for example:
    * 'tunedModels/1234567890123456789'
    *
-   * Some models support multimodal input and output.
+   * Some models support multimodal input and output. Automatic continuation
+   * (`config.automaticContinuation`) is enabled by default (`true`); set
+   * `config.automaticContinuation = false` to disable it.
    *
    * @param params - The parameters for generating content.
    * @return The response from generating content.
@@ -114,7 +203,7 @@ export class Models extends BaseModule {
    * @example
    * ```ts
    * const response = await ai.models.generateContent({
-   *   model: 'gemini-2.0-flash',
+   *   model: 'gemini-flash-latest',
    *   contents: 'why is the sky blue?',
    *   config: {
    *     candidateCount: 2,
@@ -129,7 +218,7 @@ export class Models extends BaseModule {
     const transformedParams = await this.processParamsMaybeAddMcpUsage(params);
     this.maybeMoveToResponseJsonSchema(params);
     if (!afc.hasCallableTools(params) || afc.shouldDisableAfc(params.config)) {
-      return await this.generateContentInternal(transformedParams);
+      return await this.generateContentWithContinuation(transformedParams);
     }
 
     const incompatibleToolIndexes = afc.findAfcIncompatibleToolIndexes(params);
@@ -154,7 +243,7 @@ export class Models extends BaseModule {
       afc.DEFAULT_MAX_REMOTE_CALLS;
     let remoteCalls = 0;
     while (remoteCalls < maxRemoteCalls) {
-      response = await this.generateContentInternal(transformedParams);
+      response = await this.generateContentWithContinuation(transformedParams);
       if (!response.functionCalls || response.functionCalls!.length === 0) {
         break;
       }
@@ -220,24 +309,26 @@ export class Models extends BaseModule {
    * response in chunks.
    *
    * For the `model` parameter, supported formats for Gemini Enterprise Agent Platform API include:
-   * - The Gemini model ID, for example: 'gemini-2.0-flash'
+   * - The Gemini model ID, for example: 'gemini-flash-latest'
    * - The full resource name starts with 'projects/', for example:
-   *  'projects/my-project-id/locations/us-central1/publishers/google/models/gemini-2.0-flash'
+   *  'projects/my-project-id/locations/us-central1/publishers/google/models/gemini-flash-latest'
    * - The partial resource name with 'publishers/', for example:
-   *  'publishers/google/models/gemini-2.0-flash' or
+   *  'publishers/google/models/gemini-flash-latest' or
    *  'publishers/meta/models/llama-3.1-405b-instruct-maas'
    * - `/` separated publisher and model name, for example:
-   * 'google/gemini-2.0-flash' or 'meta/llama-3.1-405b-instruct-maas'
+   * 'google/gemini-flash-latest' or 'meta/llama-3.1-405b-instruct-maas'
    *
    * For the `model` parameter, supported formats for Gemini API include:
-   * - The Gemini model ID, for example: 'gemini-2.0-flash'
+   * - The Gemini model ID, for example: 'gemini-flash-latest'
    * - The model name starts with 'models/', for example:
-   *  'models/gemini-2.0-flash'
+   *  'models/gemini-flash-latest'
    * - For tuned models, the model name starts with 'tunedModels/',
    * for example:
    *  'tunedModels/1234567890123456789'
    *
-   * Some models support multimodal input and output.
+   * Some models support multimodal input and output. Automatic continuation
+   * (`config.automaticContinuation`) is enabled by default (`true`); set
+   * `config.automaticContinuation = false` to disable it.
    *
    * @param params - The parameters for generating content with streaming response.
    * @return The response from generating content.
@@ -245,7 +336,7 @@ export class Models extends BaseModule {
    * @example
    * ```ts
    * const response = await ai.models.generateContentStream({
-   *   model: 'gemini-2.0-flash',
+   *   model: 'gemini-flash-latest',
    *   contents: 'why is the sky blue?',
    *   config: {
    *     maxOutputTokens: 200,
@@ -263,7 +354,9 @@ export class Models extends BaseModule {
     if (afc.shouldDisableAfc(params.config)) {
       const transformedParams =
         await this.processParamsMaybeAddMcpUsage(params);
-      return await this.generateContentStreamInternal(transformedParams);
+      return await this.generateContentStreamWithContinuation(
+        transformedParams,
+      );
     }
     const incompatibleToolIndexes = afc.findAfcIncompatibleToolIndexes(params);
     if (incompatibleToolIndexes.length > 0) {
@@ -394,7 +487,7 @@ export class Models extends BaseModule {
         const transformedParams =
           await models.processParamsMaybeAddMcpUsage(params);
         const response =
-          await models.generateContentStreamInternal(transformedParams);
+          await models.generateContentStreamWithContinuation(transformedParams);
 
         const functionResponses: types.Part[] = [];
         const responseContents: types.Content[] = [];
@@ -1336,7 +1429,7 @@ export class Models extends BaseModule {
    *
    * @example
    * ```ts
-   * const modelInfo = await ai.models.get({model: 'gemini-2.0-flash'});
+   * const modelInfo = await ai.models.get({model: 'gemini-flash-latest'});
    * ```
    */
   async get(params: types.GetModelParameters): Promise<types.Model> {
@@ -1709,7 +1802,7 @@ export class Models extends BaseModule {
    * @example
    * ```ts
    * const response = await ai.models.countTokens({
-   *  model: 'gemini-2.0-flash',
+   *  model: 'gemini-flash-latest',
    *  contents: 'The quick brown fox jumps over the lazy dog.'
    * });
    * console.log(response);
@@ -1821,7 +1914,7 @@ export class Models extends BaseModule {
    * @example
    * ```ts
    * const response = await ai.models.computeTokens({
-   *  model: 'gemini-2.0-flash',
+   *  model: 'gemini-flash-latest',
    *  contents: 'What is your name?'
    * });
    * console.log(response);
