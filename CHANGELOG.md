@@ -2,6 +2,23 @@
 
 
 
+## [2.29.0](https://github.com/googleapis/js-genai/compare/v2.28.0...v2.29.0) (2026-10-10)
+
+
+### Features
+
+* Add `continuation_token` to the Interactions `interaction.status_update` event. ([a93776c](https://github.com/googleapis/js-genai/commit/a93776c9479d69d280ca1d2fc9784a8cebc5417a))
+* Add a CONTINUATION_REQUIRED Interaction status ([754f71f](https://github.com/googleapis/js-genai/commit/754f71f0f90d0355f32f100a1c338b008a1c89e1))
+* Add startOffset/endOffset to Transcription and interimTranscriptTimestampEnabled to RealtimeInputConfig ([bdbf156](https://github.com/googleapis/js-genai/commit/bdbf1560751d333c6391ca5b4a29799af2baef3c))
+* Add usage in InteractionStatusUpdate events ([8892aea](https://github.com/googleapis/js-genai/commit/8892aeace095b90805890e0fd5cfa027d87bbc70))
+* automatically consume the continuation token ([98637d1](https://github.com/googleapis/js-genai/commit/98637d1f60dd5a02d978aa354d576ce160b5c65c))
+
+
+### Bug Fixes
+
+* do not record incomplete continuation stream turns in curated chat history ([81c3c49](https://github.com/googleapis/js-genai/commit/81c3c49bd2a86c300b23693327df41382f94e535))
+* **gemini-api-cli:** remove unsupported 2.5 and 1.6 models from Interactions model options and CLI examples ([1002720](https://github.com/googleapis/js-genai/commit/1002720893eef0663d020312da552c64d7c5e65e))
+
 ## [2.28.0](https://github.com/googleapis/js-genai/compare/v2.27.0...v2.28.0) (2026-10-07)
 
 
