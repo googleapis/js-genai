@@ -111,11 +111,18 @@ export function shouldEnableAutomaticContinuation(
 
 /**
  * Returns true if finishReason is eligible for automatic continuation.
+ *
+ * Per the continuation protocol, when a continuationToken is present the
+ * backend only sets finishReason to undefined (intermediate checkpoint chunk)
+ * or FinishReason.CONTINUATION (stream end).
  */
 export function isResumableFinishReason(
   finishReason: types.FinishReason | undefined,
 ): boolean {
-  return finishReason === types.FinishReason.CONTINUATION;
+  return (
+    finishReason === undefined ||
+    finishReason === types.FinishReason.CONTINUATION
+  );
 }
 
 /**

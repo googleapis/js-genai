@@ -428,32 +428,53 @@ export class Chat {
       hopContinuationToken = undefined;
       hopFinishReason = undefined;
       finished = false;
-      for await (const chunk of currentStream) {
-        if (hopFinishReason !== undefined) {
-          hopContinuationToken = undefined;
-          hopFinishReason = undefined;
-        }
-        if (isValidResponse(chunk)) {
-          const content = chunk.candidates?.[0]?.content;
-          if (content !== undefined) {
-            outputContent.push(content);
+      try {
+        for await (const chunk of currentStream) {
+          if (hopFinishReason !== undefined) {
+            hopContinuationToken = undefined;
+            hopFinishReason = undefined;
           }
-        } else {
-          isValid = false;
+          if (isValidResponse(chunk)) {
+            const content = chunk.candidates?.[0]?.content;
+            if (content !== undefined) {
+              outputContent.push(content);
+            }
+          } else {
+            isValid = false;
+          }
+          const candidate = chunk.candidates?.[0];
+          if (candidate?.continuationToken) {
+            hopContinuationToken = candidate.continuationToken;
+          } else if (
+            candidate?.finishReason !== undefined &&
+            !afc.isResumableFinishReason(candidate.finishReason)
+          ) {
+            hopContinuationToken = undefined;
+          }
+          if (candidate?.finishReason !== undefined) {
+            hopFinishReason = candidate.finishReason;
+            finished = !(
+              enableContinuation &&
+              Boolean(hopContinuationToken) &&
+              afc.isResumableFinishReason(hopFinishReason)
+            );
+          }
+          yield chunk;
         }
-        const candidate = chunk.candidates?.[0];
-        if (candidate?.continuationToken) {
-          hopContinuationToken = candidate.continuationToken;
-        }
-        if (candidate?.finishReason !== undefined) {
-          hopFinishReason = candidate.finishReason;
-          finished = !(
+      } catch (err) {
+        // If a mid-stream error occurs after an intermediate checkpoint
+        // continuationToken was received, resume from that checkpoint.
+        if (
+          !(
+            !isAfcActive &&
             enableContinuation &&
             Boolean(hopContinuationToken) &&
-            afc.isResumableFinishReason(hopFinishReason)
-          );
+            afc.isResumableFinishReason(hopFinishReason) &&
+            requestContents !== undefined
+          )
+        ) {
+          throw err;
         }
-        yield chunk;
       }
     }
     this.recordHistory(inputContent, isValid && finished ? outputContent : []);
