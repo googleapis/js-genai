@@ -1088,9 +1088,11 @@ describe('Models automatic continuation', () => {
 
 describe('Chat automatic continuation', () => {
   let client: GoogleGenAI;
+  let internalModels: InternalModels;
 
   beforeEach(() => {
     client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    internalModels = client.models as unknown as InternalModels;
   });
 
   it('sendMessage enables automatic continuation by default across 4 hops and records merged response in history', async () => {
@@ -1138,7 +1140,10 @@ describe('Chat automatic continuation', () => {
       },
     });
 
-    const spy = spyOn(client.models, 'generateContent').and.returnValues(
+    const spy = spyOn(
+      internalModels,
+      'generateContentInternal',
+    ).and.returnValues(
       Promise.resolve(hop1),
       Promise.resolve(hop2),
       Promise.resolve(hop3),
@@ -1191,10 +1196,10 @@ describe('Chat automatic continuation', () => {
       functionDeclarations: [{name: 'manual_fn', description: 'manual'}],
     };
 
-    const spy = spyOn(client.models, 'generateContent').and.returnValues(
-      Promise.resolve(hop1),
-      Promise.resolve(hop2),
-    );
+    const spy = spyOn(
+      internalModels,
+      'generateContentInternal',
+    ).and.returnValues(Promise.resolve(hop1), Promise.resolve(hop2));
 
     const chat = client.chats.create({model: 'gemini-2.5-flash'});
     const response = await chat.sendMessage({
@@ -1216,9 +1221,10 @@ describe('Chat automatic continuation', () => {
       finishReason: types.FinishReason.CONTINUATION,
       continuationToken: 'chat-tok-1',
     });
-    const spy = spyOn(client.models, 'generateContent').and.returnValue(
-      Promise.resolve(hop1),
-    );
+    const spy = spyOn(
+      internalModels,
+      'generateContentInternal',
+    ).and.returnValue(Promise.resolve(hop1));
 
     const chat = client.chats.create({
       model: 'gemini-2.5-flash',
@@ -1241,10 +1247,10 @@ describe('Chat automatic continuation', () => {
       finishReason: types.FinishReason.MAX_TOKENS,
       continuationToken: 'chat-tok-2',
     });
-    const spy = spyOn(client.models, 'generateContent').and.returnValues(
-      Promise.resolve(hop1),
-      Promise.resolve(hop2),
-    );
+    const spy = spyOn(
+      internalModels,
+      'generateContentInternal',
+    ).and.returnValues(Promise.resolve(hop1), Promise.resolve(hop2));
 
     const chat = client.chats.create({
       model: 'gemini-2.5-flash',
@@ -1266,7 +1272,6 @@ describe('Chat automatic continuation', () => {
   });
 
   it('sendMessage decouples automatic continuation from AFC (CallableTool)', async () => {
-    const internalModels = client.models as unknown as InternalModels;
     const turn1Hop1 = buildResponse({
       parts: [{text: 'Thinking...', thought: true}],
       finishReason: types.FinishReason.CONTINUATION,
@@ -1349,7 +1354,10 @@ describe('Chat automatic continuation', () => {
       }),
     ];
 
-    const spy = spyOn(client.models, 'generateContentStream').and.returnValues(
+    const spy = spyOn(
+      internalModels,
+      'generateContentStreamInternal',
+    ).and.returnValues(
       Promise.resolve(makeStream(hop1)),
       Promise.resolve(makeStream(hop2)),
       Promise.resolve(makeStream(hop3)),
@@ -1401,9 +1409,10 @@ describe('Chat automatic continuation', () => {
       finishReason: types.FinishReason.CONTINUATION,
       continuationToken: 'chat-stream-tok-1',
     });
-    const spy = spyOn(client.models, 'generateContentStream').and.returnValue(
-      Promise.resolve(makeStream([hop1Chunk])),
-    );
+    const spy = spyOn(
+      internalModels,
+      'generateContentStreamInternal',
+    ).and.returnValue(Promise.resolve(makeStream([hop1Chunk])));
 
     const chat = client.chats.create({model: 'gemini-2.5-flash'});
     const stream = await chat.sendMessageStream({
@@ -1431,7 +1440,10 @@ describe('Chat automatic continuation', () => {
       continuationToken: 'chat-stream-tok-2',
     });
 
-    const spy = spyOn(client.models, 'generateContentStream').and.returnValues(
+    const spy = spyOn(
+      internalModels,
+      'generateContentStreamInternal',
+    ).and.returnValues(
       Promise.resolve(makeStream([hop1Chunk])),
       Promise.resolve(makeStream([hop2Chunk])),
     );
@@ -1460,7 +1472,6 @@ describe('Chat automatic continuation', () => {
   });
 
   it('sendMessageStream decouples automatic continuation from AFC (CallableTool)', async () => {
-    const internalModels = client.models as unknown as InternalModels;
     const turn1Hop1 = [
       buildResponse({
         parts: [{text: 'Thinking...', thought: true}],
@@ -1535,7 +1546,10 @@ describe('Chat automatic continuation', () => {
       }),
     ];
 
-    const spy = spyOn(client.models, 'generateContentStream').and.returnValues(
+    const spy = spyOn(
+      internalModels,
+      'generateContentStreamInternal',
+    ).and.returnValues(
       Promise.resolve(makeStream(hop1)),
       Promise.resolve(makeStream(hop2CutOff)),
     );
