@@ -1,0 +1,77 @@
+{
+  "recordID": "Client_Tests_generateAudio_ML_Dev_should_generate_audio_with_Lyria_3_clip",
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1beta/models/lyria-3-clip-preview:generateContent",
+        "request": "POST /v1beta/models/lyria-3-clip-preview:generateContent HTTP/1.1",
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Accept-Language": "*",
+          "Connection": "keep-alive",
+          "Content-Length": "180",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Mode": "cors",
+          "Test-Name": "Client Tests generateAudio ML Dev should generate audio with Lyria 3 clip"
+        },
+        "bodySegments": [
+          {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "Create a short lo-fi instrumental loop. Instrumental only, no vocals."
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "generationConfig": {
+              "responseModalities": ["AUDIO", "TEXT"]
+            }
+          }
+        ],
+        "previousRequest": "b4d6e60a9b97e7b98c63df9308728c5c88c0b40c398046772c63447b94608b4d",
+        "serverAddress": "generativelanguage.googleapis.com",
+        "port": 443,
+        "protocol": "https"
+      },
+      "shaSum": "8acb2abe8cbd02d56e6f95095310794772cd44ae1537e1b706f12d117903d239",
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Fri, 24 Oct 2025 07:46:30 GMT",
+          "Server": "scaffolding on HTTPServer2"
+        },
+        "bodySegments": [
+          {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "inlineData": {
+                        "mimeType": "audio/wav",
+                        "data": "UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQAAAAA="
+                      }
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "index": 0
+              }
+            ],
+            "modelVersion": "lyria-3-clip-preview",
+            "usageMetadata": {
+              "totalTokenCount": 1
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
