@@ -7,6 +7,7 @@
  */
 
 import * as models from "../models/index.js";
+import { SDK_METADATA } from "../lib/config.js";
 import { env } from "../lib/env.js";
 import { RequestInput } from "../lib/http.js";
 import {
@@ -185,7 +186,12 @@ function applyDefaultHeaders(
   }
 
   for (const [key, value] of new Headers(source)) {
-    if (target.get(key) === null) {
+    const existing = target.get(key);
+    if (
+      existing === null ||
+      (key.toLowerCase() === "user-agent" &&
+        existing === SDK_METADATA.userAgent)
+    ) {
       target.set(key, value);
     }
   }
