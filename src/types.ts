@@ -3166,6 +3166,8 @@ export declare interface GenerateContentConfig {
       random number is used.
        */
   seed?: number;
+  /** Optional. New response format field for the model to configure output formatting and delivery. */
+  responseFormat?: ResponseFormat[];
   /** Output response mimetype of the generated candidate text.
       Supported mimetype:
         - `text/plain`: (default) Text output.
