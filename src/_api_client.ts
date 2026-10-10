@@ -705,6 +705,7 @@ export class ApiClient {
       throw new Error('Response body is empty');
     }
 
+    let fullyConsumed = false;
     try {
       let buffer = '';
       const dataPrefix = 'data:';
@@ -713,6 +714,7 @@ export class ApiClient {
       while (true) {
         const {done, value} = await reader.read();
         if (done) {
+          fullyConsumed = true;
           if (buffer.trim().length > 0) {
             throw new Error('Incomplete JSON segment at the end');
           }
@@ -795,6 +797,9 @@ export class ApiClient {
         }
       }
     } finally {
+      if (!fullyConsumed) {
+        await reader.cancel().catch(() => undefined);
+      }
       reader.releaseLock();
     }
   }
