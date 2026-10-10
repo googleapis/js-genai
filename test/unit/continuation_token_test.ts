@@ -1520,4 +1520,38 @@ describe('Chat automatic continuation', () => {
     expect(args[2][0].config?.continuationToken).toBeUndefined();
     expect(chunks[chunks.length - 1].text).toBe('Sunny in Boston!');
   });
+
+  it('sendMessageStream does not record incomplete continuation hop in curated history', async () => {
+    const hop1 = [
+      buildResponse({
+        parts: [{text: 'Hop 1, '}],
+        finishReason: types.FinishReason.CONTINUATION,
+        continuationToken: 'chat-stream-tok-1',
+      }),
+    ];
+    const hop2CutOff = [
+      buildResponse({
+        parts: [{text: 'Hop 2 cut off without finishReason'}],
+      }),
+    ];
+
+    const spy = spyOn(client.models, 'generateContentStream').and.returnValues(
+      Promise.resolve(makeStream(hop1)),
+      Promise.resolve(makeStream(hop2CutOff)),
+    );
+
+    const chat = client.chats.create({model: 'gemini-2.5-flash'});
+    const stream = await chat.sendMessageStream({message: 'Stream a story'});
+    const receivedTexts: string[] = [];
+    for await (const chunk of stream) {
+      receivedTexts.push(chunk.text ?? '');
+    }
+
+    expect(spy).toHaveBeenCalledTimes(2);
+    expect(receivedTexts).toEqual([
+      'Hop 1, ',
+      'Hop 2 cut off without finishReason',
+    ]);
+    expect(chat.getHistory(true)).toEqual([]);
+  });
 });

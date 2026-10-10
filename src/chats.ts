@@ -351,7 +351,8 @@ export class Chat {
       inputContent,
       requestContents,
       callConfig,
-      enableContinuation && !isAfcActive,
+      enableContinuation,
+      isAfcActive,
     );
     return result;
   }
@@ -394,15 +395,19 @@ export class Chat {
     requestContents?: types.Content[],
     callConfig?: types.GenerateContentConfig,
     enableContinuation: boolean = false,
+    isAfcActive: boolean = false,
   ) {
     const outputContent: types.Content[] = [];
     let currentStream = streamResponse;
     let hopContinuationToken: string | undefined;
     let hopFinishReason: types.FinishReason | undefined;
     let isFirstHop = true;
+    let isValid = true;
+    let finished = false;
     while (
       isFirstHop ||
-      (enableContinuation &&
+      (!isAfcActive &&
+        enableContinuation &&
         Boolean(hopContinuationToken) &&
         afc.isResumableFinishReason(hopFinishReason) &&
         requestContents !== undefined)
@@ -422,12 +427,19 @@ export class Chat {
       isFirstHop = false;
       hopContinuationToken = undefined;
       hopFinishReason = undefined;
+      finished = false;
       for await (const chunk of currentStream) {
+        if (hopFinishReason !== undefined) {
+          hopContinuationToken = undefined;
+          hopFinishReason = undefined;
+        }
         if (isValidResponse(chunk)) {
           const content = chunk.candidates?.[0]?.content;
           if (content !== undefined) {
             outputContent.push(content);
           }
+        } else {
+          isValid = false;
         }
         const candidate = chunk.candidates?.[0];
         if (candidate?.continuationToken) {
@@ -435,11 +447,16 @@ export class Chat {
         }
         if (candidate?.finishReason !== undefined) {
           hopFinishReason = candidate.finishReason;
+          finished = !(
+            enableContinuation &&
+            Boolean(hopContinuationToken) &&
+            afc.isResumableFinishReason(hopFinishReason)
+          );
         }
         yield chunk;
       }
     }
-    this.recordHistory(inputContent, outputContent);
+    this.recordHistory(inputContent, isValid && finished ? outputContent : []);
   }
 
   private recordHistory(
