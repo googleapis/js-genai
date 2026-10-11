@@ -139,9 +139,11 @@ export class Models extends BaseModule {
 
       while (
         isFirstHop ||
-        (enableContinuation &&
-          Boolean(continuationToken) &&
-          afc.isResumableFinishReason(hopFinishReason))
+        afc.canResumeStream(
+          enableContinuation,
+          continuationToken,
+          hopFinishReason,
+        )
       ) {
         if (!isFirstHop) {
           const callConfig = afc.prepareContinuationConfig(
@@ -162,33 +164,37 @@ export class Models extends BaseModule {
           undefined;
 
         try {
-          for await (const chunk of currentStream) {
+          for await (let chunk of currentStream) {
             if (chunk.usageMetadata) {
               if (accumulatedUsage) {
                 const mergedUsage = afc.mergeUsageMetadata(
                   accumulatedUsage,
                   chunk.usageMetadata,
                 );
-                chunk.usageMetadata = mergedUsage;
+                chunk = Object.assign(
+                  new types.GenerateContentResponse(),
+                  chunk,
+                  {usageMetadata: mergedUsage},
+                );
                 hopUsage = mergedUsage;
               } else {
                 afc.attachInitialPromptTokenCount(chunk.usageMetadata);
                 hopUsage = chunk.usageMetadata;
               }
             }
-            if (chunk.candidates && chunk.candidates.length > 0) {
-              const candidate = chunk.candidates[0];
-              if (candidate.finishReason) {
-                hopFinishReason = candidate.finishReason;
+            const firstCandidate = chunk.candidates?.[0];
+            if (firstCandidate) {
+              if (firstCandidate.finishReason !== undefined) {
+                hopFinishReason = firstCandidate.finishReason;
               }
-              if (candidate.continuationToken) {
-                continuationToken = candidate.continuationToken;
-              } else if (
-                candidate.finishReason &&
-                !afc.isResumableFinishReason(candidate.finishReason)
-              ) {
-                continuationToken = undefined;
+              if (firstCandidate.continuationToken) {
+                continuationToken = firstCandidate.continuationToken;
               }
+              afc.clearIntermediateFinishReason(
+                chunk,
+                enableContinuation,
+                continuationToken,
+              );
             }
             yield chunk;
           }
@@ -196,10 +202,10 @@ export class Models extends BaseModule {
           // If a mid-stream error occurs after an intermediate checkpoint
           // continuationToken was received, resume from that checkpoint.
           if (
-            !(
-              enableContinuation &&
-              Boolean(continuationToken) &&
-              afc.isResumableFinishReason(hopFinishReason)
+            !afc.canResumeStream(
+              enableContinuation,
+              continuationToken,
+              hopFinishReason,
             )
           ) {
             throw err;

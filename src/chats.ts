@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import * as afc from './_afc.js';
 import {ApiClient} from './_api_client.js';
 import * as t from './_transformers.js';
 import {Models} from './models.js';
@@ -261,15 +260,10 @@ export class Chat {
   ): Promise<AsyncGenerator<types.GenerateContentResponse>> {
     await this.sendPromise;
     const inputContent = t.tContent(params.message);
-    const callConfig = params.config ?? this.config;
-    const enableContinuation = afc.shouldEnableAutomaticContinuation(
-      callConfig,
-      true,
-    );
     const streamResponse = this.modelsModule.generateContentStream({
       model: this.model,
       contents: this.getHistory(true).concat(inputContent),
-      config: callConfig,
+      config: params.config ?? this.config,
     });
     // Resolve the internal tracking of send completion promise - `sendPromise`
     // for both success and failure response. The actual failure is still
@@ -278,11 +272,7 @@ export class Chat {
       .then(() => undefined)
       .catch(() => undefined);
     const response = await streamResponse;
-    const result = this.processStreamResponse(
-      response,
-      inputContent,
-      enableContinuation,
-    );
+    const result = this.processStreamResponse(response, inputContent);
     return result;
   }
 
@@ -321,18 +311,11 @@ export class Chat {
   private async *processStreamResponse(
     streamResponse: AsyncGenerator<types.GenerateContentResponse>,
     inputContent: types.Content,
-    enableContinuation: boolean = false,
   ) {
     const outputContent: types.Content[] = [];
-    let hopContinuationToken: string | undefined;
-    let hopFinishReason: types.FinishReason | undefined;
     let isValid = true;
     let finished = false;
     for await (const chunk of streamResponse) {
-      if (hopFinishReason !== undefined) {
-        hopContinuationToken = undefined;
-        hopFinishReason = undefined;
-      }
       if (isValidResponse(chunk)) {
         const content = chunk.candidates?.[0]?.content;
         if (content !== undefined) {
@@ -341,17 +324,8 @@ export class Chat {
       } else {
         isValid = false;
       }
-      const candidate = chunk.candidates?.[0];
-      if (candidate?.continuationToken) {
-        hopContinuationToken = candidate.continuationToken;
-      }
-      if (candidate?.finishReason !== undefined) {
-        hopFinishReason = candidate.finishReason;
-        finished = !(
-          enableContinuation &&
-          Boolean(hopContinuationToken) &&
-          afc.isResumableFinishReason(hopFinishReason)
-        );
+      if (chunk.candidates?.[0]?.finishReason !== undefined) {
+        finished = true;
       }
       yield chunk;
     }

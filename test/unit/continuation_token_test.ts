@@ -867,15 +867,6 @@ describe('Models automatic continuation', () => {
   });
 
   it('generateContentStream enables automaticContinuation by default and respects automaticContinuation: false opt-out', async () => {
-    const chunk1 = buildResponse({
-      parts: [{text: 'Chunk 1. '}],
-      finishReason: types.FinishReason.CONTINUATION,
-      continuationToken: 'tok-1',
-    });
-    const chunk2 = buildResponse({
-      parts: [{text: 'Chunk 2.'}],
-      finishReason: types.FinishReason.STOP,
-    });
     const spy = spyOn(internalModels, 'generateContentStreamInternal');
 
     // 1. Default (config omitted, empty config, or AFC disabled) -> enabled
@@ -884,6 +875,15 @@ describe('Models automatic continuation', () => {
       {},
       {automaticFunctionCalling: {disable: true}},
     ] as Array<types.GenerateContentConfig | undefined>) {
+      const chunk1 = buildResponse({
+        parts: [{text: 'Chunk 1. '}],
+        finishReason: types.FinishReason.CONTINUATION,
+        continuationToken: 'tok-1',
+      });
+      const chunk2 = buildResponse({
+        parts: [{text: 'Chunk 2.'}],
+        finishReason: types.FinishReason.STOP,
+      });
       spy.and.returnValues(
         Promise.resolve(makeStream([chunk1])),
         Promise.resolve(makeStream([chunk2])),
@@ -895,18 +895,30 @@ describe('Models automatic continuation', () => {
         contents: 'Stream a story',
         config: cfg,
       });
-      const texts: string[] = [];
+      const received: types.GenerateContentResponse[] = [];
       for await (const chunk of stream) {
-        texts.push(chunk.text ?? '');
+        received.push(chunk);
       }
 
       expect(spy).toHaveBeenCalledTimes(2);
-      expect(texts).toEqual(['Chunk 1. ', 'Chunk 2.']);
+      expect(received.map((c) => c.text ?? '')).toEqual([
+        'Chunk 1. ',
+        'Chunk 2.',
+      ]);
+      expect(received[0].candidates?.[0]?.finishReason).toBeUndefined();
+      expect(received[1].candidates?.[0]?.finishReason).toBe(
+        types.FinishReason.STOP,
+      );
     }
 
     // 2. Explicit automaticContinuation: false -> disabled (both AFC enabled
     // and disabled)
     for (const disableAfc of [false, true]) {
+      const chunk1 = buildResponse({
+        parts: [{text: 'Chunk 1. '}],
+        finishReason: types.FinishReason.CONTINUATION,
+        continuationToken: 'tok-1',
+      });
       spy.and.returnValue(Promise.resolve(makeStream([chunk1])));
       spy.calls.reset();
 
@@ -926,6 +938,9 @@ describe('Models automatic continuation', () => {
       expect(spy).toHaveBeenCalledTimes(1);
       expect(received.length).toBe(1);
       expect(received[0].text).toBe('Chunk 1. ');
+      expect(received[0].candidates?.[0]?.finishReason).toBe(
+        types.FinishReason.CONTINUATION,
+      );
     }
   });
 
@@ -954,16 +969,25 @@ describe('Models automatic continuation', () => {
       contents: 'Stream a story',
       config: {automaticContinuation: true},
     });
-    const texts: string[] = [];
+    const received: types.GenerateContentResponse[] = [];
     for await (const chunk of stream) {
-      texts.push(chunk.text ?? '');
+      received.push(chunk);
     }
 
     expect(spy).toHaveBeenCalledTimes(2);
     const args = spy.calls.allArgs();
     expect(args[0][0].config?.continuationToken).toBeUndefined();
     expect(args[1][0].config?.continuationToken).toBe('stream-tok-1');
-    expect(texts).toEqual(['Hop1-A ', 'Hop1-B ', 'Hop2-A']);
+    expect(received.map((c) => c.text ?? '')).toEqual([
+      'Hop1-A ',
+      'Hop1-B ',
+      'Hop2-A',
+    ]);
+    expect(received[0].candidates?.[0]?.finishReason).toBeUndefined();
+    expect(received[1].candidates?.[0]?.finishReason).toBeUndefined();
+    expect(received[2].candidates?.[0]?.finishReason).toBe(
+      types.FinishReason.STOP,
+    );
   });
 
   it('generateContentStream handles intermediate chunk continuationToken and final chunk finishReason across 4 hops', async () => {
@@ -1035,9 +1059,9 @@ describe('Models automatic continuation', () => {
         contents: 'Stream 4 hops',
         config: cfg,
       });
-      const texts: string[] = [];
+      const chunks: types.GenerateContentResponse[] = [];
       for await (const chunk of stream) {
-        texts.push(chunk.text ?? '');
+        chunks.push(chunk);
       }
 
       expect(spy).toHaveBeenCalledTimes(4);
@@ -1049,7 +1073,20 @@ describe('Models automatic continuation', () => {
       for (const callArg of [args[1][0], args[2][0], args[3][0]]) {
         expect(callArg.contents).toEqual(args[0][0].contents);
       }
-      expect(texts).toEqual(['H1A ', 'H1B ', 'H2A ', 'H2B ', 'H3 ', 'H4.']);
+      expect(chunks.map((c) => c.text ?? '')).toEqual([
+        'H1A ',
+        'H1B ',
+        'H2A ',
+        'H2B ',
+        'H3 ',
+        'H4.',
+      ]);
+      for (const intermediate of chunks.slice(0, 5)) {
+        expect(intermediate.candidates?.[0]?.finishReason).toBeUndefined();
+      }
+      expect(chunks[5].candidates?.[0]?.finishReason).toBe(
+        types.FinishReason.STOP,
+      );
     }
   });
 
@@ -1093,6 +1130,7 @@ describe('Models automatic continuation', () => {
     expect(args[1][0].config?.maxOutputTokens).toBe(64);
     expect(args[1][0].config?.continuationToken).toBe('stream-tok-1');
     expect(received.length).toBe(2);
+    expect(received[0].candidates?.[0]?.finishReason).toBeUndefined();
     expect(received[1].candidates?.[0]?.finishReason).toBe(
       types.FinishReason.MAX_TOKENS,
     );
@@ -1648,9 +1686,9 @@ describe('Chat automatic continuation', () => {
 
     const chat = client.chats.create({model: 'gemini-2.5-flash'});
     const stream = await chat.sendMessageStream({message: 'Stream a story'});
-    const receivedTexts: string[] = [];
+    const receivedChunks: types.GenerateContentResponse[] = [];
     for await (const chunk of stream) {
-      receivedTexts.push(chunk.text ?? '');
+      receivedChunks.push(chunk);
     }
 
     expect(spy).toHaveBeenCalledTimes(4);
@@ -1668,13 +1706,19 @@ describe('Chat automatic continuation', () => {
     for (const call of [calls[1][0], calls[2][0], calls[3][0]]) {
       expect(call.contents).toEqual(calls[0][0].contents);
     }
-    expect(receivedTexts).toEqual([
+    expect(receivedChunks.map((c) => c.text ?? '')).toEqual([
       'Stream 1A, ',
       'Stream 1B, ',
       'Stream 2, ',
       'Stream 3, ',
       'Stream 4.',
     ]);
+    for (const intermediate of receivedChunks.slice(0, 4)) {
+      expect(intermediate.candidates?.[0]?.finishReason).toBeUndefined();
+    }
+    expect(receivedChunks[4].candidates?.[0]?.finishReason).toBe(
+      types.FinishReason.STOP,
+    );
     expect(chat.getHistory(true)).toEqual([
       {role: 'user', parts: [{text: 'Stream a story'}]},
       {role: 'model', parts: [{text: 'Stream 1A, '}]},
@@ -1708,6 +1752,9 @@ describe('Chat automatic continuation', () => {
 
     expect(spy).toHaveBeenCalledTimes(1);
     expect(received.length).toBe(1);
+    expect(received[0].candidates?.[0]?.finishReason).toBe(
+      types.FinishReason.CONTINUATION,
+    );
   });
 
   it('sendMessageStream forwards maxOutputTokens and stops when finishReason is MAX_TOKENS', async () => {
@@ -1748,6 +1795,7 @@ describe('Chat automatic continuation', () => {
       continuationToken: 'chat-stream-tok-1',
     });
     expect(received.length).toBe(2);
+    expect(received[0].candidates?.[0]?.finishReason).toBeUndefined();
     expect(received[1].candidates?.[0]?.finishReason).toBe(
       types.FinishReason.MAX_TOKENS,
     );

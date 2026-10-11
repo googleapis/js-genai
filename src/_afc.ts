@@ -126,6 +126,42 @@ export function isResumableFinishReason(
 }
 
 /**
+ * Returns true if a streaming hop should resume with the next request.
+ */
+export function canResumeStream(
+  enableContinuation: boolean,
+  continuationToken: string | undefined,
+  finishReason: types.FinishReason | undefined,
+): boolean {
+  return (
+    enableContinuation &&
+    Boolean(continuationToken) &&
+    isResumableFinishReason(finishReason)
+  );
+}
+
+/**
+ * Clears finishReason on intermediate streaming continuation chunks.
+ */
+export function clearIntermediateFinishReason(
+  chunk: types.GenerateContentResponse,
+  enableContinuation: boolean,
+  continuationToken: string | undefined,
+): void {
+  const firstCandidate = chunk.candidates?.[0];
+  if (
+    firstCandidate?.finishReason !== undefined &&
+    canResumeStream(
+      enableContinuation,
+      continuationToken,
+      firstCandidate.finishReason,
+    )
+  ) {
+    firstCandidate.finishReason = undefined;
+  }
+}
+
+/**
  * Returns continuationToken if generation should auto-resume, else undefined.
  */
 export function shouldContinueGeneration(
