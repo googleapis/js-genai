@@ -132,6 +132,9 @@ export class Models extends BaseModule {
       let currentStream = initialStream;
       let continuationToken: string | undefined = undefined;
       let hopFinishReason: types.FinishReason | undefined = undefined;
+      let accumulatedUsage:
+        | types.GenerateContentResponseUsageMetadata
+        | undefined = undefined;
       let isFirstHop = true;
 
       while (
@@ -155,9 +158,24 @@ export class Models extends BaseModule {
         isFirstHop = false;
         hopFinishReason = undefined;
         continuationToken = undefined;
+        let hopUsage: types.GenerateContentResponseUsageMetadata | undefined =
+          undefined;
 
         try {
           for await (const chunk of currentStream) {
+            if (chunk.usageMetadata) {
+              if (accumulatedUsage) {
+                const mergedUsage = afc.mergeUsageMetadata(
+                  accumulatedUsage,
+                  chunk.usageMetadata,
+                );
+                chunk.usageMetadata = mergedUsage;
+                hopUsage = mergedUsage;
+              } else {
+                afc.attachInitialPromptTokenCount(chunk.usageMetadata);
+                hopUsage = chunk.usageMetadata;
+              }
+            }
             if (chunk.candidates && chunk.candidates.length > 0) {
               const candidate = chunk.candidates[0];
               if (candidate.finishReason) {
@@ -186,6 +204,9 @@ export class Models extends BaseModule {
           ) {
             throw err;
           }
+        }
+        if (hopUsage) {
+          accumulatedUsage = hopUsage;
         }
       }
     })(this, params, firstStream);

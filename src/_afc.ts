@@ -283,6 +283,85 @@ export function mergeCandidates(
   return merged;
 }
 
+interface UsageWithInitialPrompt
+  extends types.GenerateContentResponseUsageMetadata {
+  _initialPromptTokenCount?: number;
+}
+
+/**
+ * Returns the prompt token count from the initial request prior to any
+ * continuation hops.
+ */
+export function getInitialPromptTokenCount(
+  usage?: types.GenerateContentResponseUsageMetadata,
+): number | undefined {
+  if (!usage) {
+    return undefined;
+  }
+  return (
+    (usage as UsageWithInitialPrompt)._initialPromptTokenCount ??
+    usage.promptTokenCount
+  );
+}
+
+/**
+ * Attaches a non-enumerable _initialPromptTokenCount property and
+ * initialPromptTokenCount getter to a usageMetadata object.
+ */
+export function attachInitialPromptTokenCount(
+  usage: types.GenerateContentResponseUsageMetadata,
+  initialPromptTokenCount?: number,
+): types.GenerateContentResponseUsageMetadata {
+  const resolved = initialPromptTokenCount ?? getInitialPromptTokenCount(usage);
+  if (resolved !== undefined) {
+    Object.defineProperty(usage, '_initialPromptTokenCount', {
+      value: resolved,
+      enumerable: false,
+      configurable: true,
+      writable: true,
+    });
+  }
+  if (
+    !(usage instanceof types.GenerateContentResponseUsageMetadata) &&
+    !Object.prototype.hasOwnProperty.call(usage, 'initialPromptTokenCount')
+  ) {
+    Object.defineProperty(usage, 'initialPromptTokenCount', {
+      get(this: types.GenerateContentResponseUsageMetadata) {
+        return getInitialPromptTokenCount(this);
+      },
+      enumerable: false,
+      configurable: true,
+    });
+  }
+  return usage;
+}
+
+/**
+ * Merges usageMetadata across continuation hops by summing billed token counts
+ * while preserving the initial hop's promptTokenCount in
+ * initialPromptTokenCount.
+ */
+export function mergeUsageMetadata(
+  prev: types.GenerateContentResponseUsageMetadata | undefined,
+  curr: types.GenerateContentResponseUsageMetadata | undefined,
+): types.GenerateContentResponseUsageMetadata | undefined {
+  if (!curr) {
+    return prev ? attachInitialPromptTokenCount(prev) : prev;
+  }
+  if (!prev) {
+    return attachInitialPromptTokenCount(curr);
+  }
+  const initialPrompt =
+    getInitialPromptTokenCount(prev) ?? getInitialPromptTokenCount(curr);
+  const merged = mergeResponseObjects(
+    prev as unknown as Record<string, unknown>,
+    curr as unknown as Record<string, unknown>,
+    false,
+    true,
+  ) as unknown as types.GenerateContentResponseUsageMetadata;
+  return attachInitialPromptTokenCount(merged, initialPrompt);
+}
+
 /**
  * Recursively merges two response/metadata objects across continuation hops.
  */
@@ -307,6 +386,17 @@ export function mergeResponseObjects(
     ) {
       if (currVal !== undefined) {
         mergedData[fieldName] = currVal;
+      }
+      continue;
+    }
+
+    if (fieldName === 'usageMetadata') {
+      const mergedUsage = mergeUsageMetadata(
+        prevVal as types.GenerateContentResponseUsageMetadata | undefined,
+        currVal as types.GenerateContentResponseUsageMetadata | undefined,
+      );
+      if (mergedUsage !== undefined) {
+        mergedData[fieldName] = mergedUsage;
       }
       continue;
     }
@@ -354,7 +444,7 @@ export function mergeResponseObjects(
         prevVal,
         currVal,
         false,
-        fieldName === 'usageMetadata',
+        fieldName === 'usageMetadata' || isUsageMetadata,
       );
     } else {
       mergedData[fieldName] = currVal;
@@ -374,6 +464,9 @@ export function mergeContinuationResponses(
     return new types.GenerateContentResponse();
   }
   if (responses.length === 1) {
+    if (responses[0].usageMetadata) {
+      attachInitialPromptTokenCount(responses[0].usageMetadata);
+    }
     return responses[0];
   }
 

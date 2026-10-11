@@ -422,6 +422,8 @@ describe('continuation token helpers (_afc)', () => {
       {modality: types.MediaModality.TEXT, tokenCount: 35},
       {modality: types.MediaModality.IMAGE, tokenCount: 5},
     ]);
+    expect(merged.initialPromptTokenCount).toBe(10);
+    expect(merged.usageMetadata?.initialPromptTokenCount).toBe(10);
 
     expect(merged.candidates?.[0]?.safetyRatings).toEqual([
       {
@@ -434,6 +436,76 @@ describe('continuation token helpers (_afc)', () => {
         probability: types.HarmProbability.NEGLIGIBLE,
       },
     ]);
+  });
+
+  it('mergeUsageMetadata sums billed token counts and modality details while preserving initialPromptTokenCount', () => {
+    const hop1Usage: types.GenerateContentResponseUsageMetadata = {
+      promptTokenCount: 100,
+      promptTokensDetails: [
+        {modality: types.MediaModality.TEXT, tokenCount: 100},
+      ],
+      cachedContentTokenCount: 80,
+      cacheTokensDetails: [
+        {modality: types.MediaModality.TEXT, tokenCount: 80},
+      ],
+      candidatesTokenCount: 200,
+      candidatesTokensDetails: [
+        {modality: types.MediaModality.TEXT, tokenCount: 200},
+      ],
+      thoughtsTokenCount: 50,
+      toolUsePromptTokenCount: 10,
+      toolUsePromptTokensDetails: [
+        {modality: types.MediaModality.TEXT, tokenCount: 10},
+      ],
+      totalTokenCount: 360,
+    };
+    const hop2Usage: types.GenerateContentResponseUsageMetadata = {
+      promptTokenCount: 350,
+      promptTokensDetails: [
+        {modality: types.MediaModality.TEXT, tokenCount: 350},
+      ],
+      cachedContentTokenCount: 300,
+      cacheTokensDetails: [
+        {modality: types.MediaModality.TEXT, tokenCount: 300},
+      ],
+      candidatesTokenCount: 150,
+      candidatesTokensDetails: [
+        {modality: types.MediaModality.TEXT, tokenCount: 150},
+      ],
+      thoughtsTokenCount: 30,
+      toolUsePromptTokenCount: 5,
+      toolUsePromptTokensDetails: [
+        {modality: types.MediaModality.TEXT, tokenCount: 5},
+      ],
+      totalTokenCount: 535,
+      trafficType: types.TrafficType.ON_DEMAND,
+    };
+
+    expect(afc.mergeUsageMetadata(undefined, hop1Usage)).toBe(hop1Usage);
+    expect(afc.mergeUsageMetadata(hop1Usage, undefined)).toBe(hop1Usage);
+
+    const merged = afc.mergeUsageMetadata(hop1Usage, hop2Usage);
+    expect(merged?.promptTokenCount).toBe(450);
+    expect(merged?.initialPromptTokenCount).toBe(100);
+    expect(afc.getInitialPromptTokenCount(merged)).toBe(100);
+    expect(merged?.promptTokensDetails).toEqual([
+      {modality: types.MediaModality.TEXT, tokenCount: 450},
+    ]);
+    expect(merged?.cachedContentTokenCount).toBe(380);
+    expect(merged?.cacheTokensDetails).toEqual([
+      {modality: types.MediaModality.TEXT, tokenCount: 380},
+    ]);
+    expect(merged?.candidatesTokenCount).toBe(350);
+    expect(merged?.candidatesTokensDetails).toEqual([
+      {modality: types.MediaModality.TEXT, tokenCount: 350},
+    ]);
+    expect(merged?.thoughtsTokenCount).toBe(80);
+    expect(merged?.toolUsePromptTokenCount).toBe(15);
+    expect(merged?.toolUsePromptTokensDetails).toEqual([
+      {modality: types.MediaModality.TEXT, tokenCount: 15},
+    ]);
+    expect(merged?.totalTokenCount).toBe(895);
+    expect(merged?.trafficType).toBe(types.TrafficType.ON_DEMAND);
   });
 });
 
@@ -606,6 +678,8 @@ describe('Models automatic continuation', () => {
       expect(result.usageMetadata?.promptTokenCount).toBe(
         10 + 32778 + 65546 + 98314,
       );
+      expect(result.initialPromptTokenCount).toBe(10);
+      expect(result.usageMetadata?.initialPromptTokenCount).toBe(10);
       expect(result.usageMetadata?.candidatesTokenCount).toBe(32768 * 3 + 1024);
       expect(result.usageMetadata?.thoughtsTokenCount).toBe(
         500 + 300 + 200 + 100,
@@ -1191,6 +1265,105 @@ describe('Models automatic continuation', () => {
     expect(spy).toHaveBeenCalledTimes(2);
     expect(receivedTexts).toEqual(['Hop 1 checkpoint, ', 'Hop 2 no token']);
   });
+
+  it('generateContentStream accumulates usageMetadata across continuation hops', async () => {
+    const hop1 = [
+      buildResponse({
+        parts: [{text: 'Hop 1A, '}],
+        usageMetadata: {
+          promptTokenCount: 20,
+          cachedContentTokenCount: 15,
+          candidatesTokenCount: 50,
+          thoughtsTokenCount: 10,
+          totalTokenCount: 80,
+        },
+      }),
+      buildResponse({
+        parts: [{text: 'Hop 1B, '}],
+        finishReason: types.FinishReason.CONTINUATION,
+        continuationToken: 'stream-usage-tok-1',
+        usageMetadata: {
+          promptTokenCount: 20,
+          cachedContentTokenCount: 15,
+          candidatesTokenCount: 100,
+          thoughtsTokenCount: 30,
+          totalTokenCount: 150,
+        },
+      }),
+    ];
+    const hop2 = [
+      buildResponse({
+        parts: [{text: 'Hop 2A, '}],
+        usageMetadata: {
+          promptTokenCount: 150,
+          cachedContentTokenCount: 120,
+          candidatesTokenCount: 40,
+          thoughtsTokenCount: 5,
+          totalTokenCount: 195,
+        },
+      }),
+      buildResponse({
+        parts: [{text: 'Hop 2B.'}],
+        finishReason: types.FinishReason.STOP,
+        usageMetadata: {
+          promptTokenCount: 150,
+          cachedContentTokenCount: 120,
+          candidatesTokenCount: 80,
+          thoughtsTokenCount: 10,
+          totalTokenCount: 240,
+        },
+      }),
+    ];
+
+    const spy = spyOn(
+      internalModels,
+      'generateContentStreamInternal',
+    ).and.returnValues(
+      Promise.resolve(makeStream(hop1)),
+      Promise.resolve(makeStream(hop2)),
+    );
+
+    const stream = await client.models.generateContentStream({
+      model: 'gemini-2.5-flash',
+      contents: 'Stream with usage',
+    });
+    const chunks: types.GenerateContentResponse[] = [];
+    for await (const chunk of stream) {
+      chunks.push(chunk);
+    }
+
+    expect(spy).toHaveBeenCalledTimes(2);
+    expect(chunks.length).toBe(4);
+    // Hop 1 chunks retain their own hop usage and expose initialPromptTokenCount
+    expect(chunks[0].usageMetadata?.promptTokenCount).toBe(20);
+    expect(chunks[0].initialPromptTokenCount).toBe(20);
+    expect(chunks[0].usageMetadata?.initialPromptTokenCount).toBe(20);
+    expect(chunks[0].usageMetadata?.candidatesTokenCount).toBe(50);
+    expect(chunks[0].usageMetadata?.totalTokenCount).toBe(80);
+    expect(chunks[1].usageMetadata?.promptTokenCount).toBe(20);
+    expect(chunks[1].initialPromptTokenCount).toBe(20);
+    expect(chunks[1].usageMetadata?.initialPromptTokenCount).toBe(20);
+    expect(chunks[1].usageMetadata?.cachedContentTokenCount).toBe(15);
+    expect(chunks[1].usageMetadata?.candidatesTokenCount).toBe(100);
+    expect(chunks[1].usageMetadata?.thoughtsTokenCount).toBe(30);
+    expect(chunks[1].usageMetadata?.totalTokenCount).toBe(150);
+    // Hop 2 chunk 0 sums Hop 1 final usage with Hop 2 chunk 0 usage while preserving initialPromptTokenCount
+    expect(chunks[2].usageMetadata?.promptTokenCount).toBe(20 + 150);
+    expect(chunks[2].initialPromptTokenCount).toBe(20);
+    expect(chunks[2].usageMetadata?.initialPromptTokenCount).toBe(20);
+    expect(chunks[2].usageMetadata?.cachedContentTokenCount).toBe(15 + 120);
+    expect(chunks[2].usageMetadata?.candidatesTokenCount).toBe(100 + 40);
+    expect(chunks[2].usageMetadata?.thoughtsTokenCount).toBe(30 + 5);
+    expect(chunks[2].usageMetadata?.totalTokenCount).toBe(150 + 195);
+    // Hop 2 final chunk sums Hop 1 final usage with Hop 2 final usage while preserving initialPromptTokenCount
+    expect(chunks[3].usageMetadata?.promptTokenCount).toBe(20 + 150);
+    expect(chunks[3].initialPromptTokenCount).toBe(20);
+    expect(chunks[3].usageMetadata?.initialPromptTokenCount).toBe(20);
+    expect(chunks[3].usageMetadata?.cachedContentTokenCount).toBe(15 + 120);
+    expect(chunks[3].usageMetadata?.candidatesTokenCount).toBe(100 + 80);
+    expect(chunks[3].usageMetadata?.thoughtsTokenCount).toBe(30 + 10);
+    expect(chunks[3].usageMetadata?.totalTokenCount).toBe(150 + 240);
+  });
 });
 
 describe('Chat automatic continuation', () => {
@@ -1272,6 +1445,8 @@ describe('Chat automatic continuation', () => {
 
     expect(response.text).toBe('Hop 1, Hop 2, Hop 3, Hop 4.');
     expect(response.usageMetadata?.promptTokenCount).toBe(640);
+    expect(response.initialPromptTokenCount).toBe(10);
+    expect(response.usageMetadata?.initialPromptTokenCount).toBe(10);
     expect(response.usageMetadata?.candidatesTokenCount).toBe(350);
     expect(response.usageMetadata?.thoughtsTokenCount).toBe(50);
     expect(response.usageMetadata?.totalTokenCount).toBe(1040);
