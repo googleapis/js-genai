@@ -3773,6 +3773,8 @@ export class GenerateContentResponseUsageMetadata {
   totalTokenCount?: number;
   /** Output only. The traffic type for this request. */
   trafficType?: TrafficType;
+  /** Output only. The prompt token count from the initial request prior to any continuation hops. */
+  initialPromptTokenCount?: number;
 }
 
 /** The status of the underlying model. This is used to indicate the stage of the underlying model and the retirement time if applicable. This data type is not supported in Vertex AI. */
@@ -4065,6 +4067,19 @@ export class GenerateContentResponse {
       return undefined;
     }
     return codeExecutionResult?.[0]?.output;
+  }
+
+  /**
+   * Returns the prompt token count from the initial request prior to any continuation hops.
+   */
+  get initialPromptTokenCount(): number | undefined {
+    if (!this.usageMetadata) {
+      return undefined;
+    }
+    return (
+      (this.usageMetadata as {_initialPromptTokenCount?: number})
+        ._initialPromptTokenCount ?? this.usageMetadata.promptTokenCount
+    );
   }
 }
 

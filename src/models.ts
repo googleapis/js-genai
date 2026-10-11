@@ -132,13 +132,18 @@ export class Models extends BaseModule {
       let currentStream = initialStream;
       let continuationToken: string | undefined = undefined;
       let hopFinishReason: types.FinishReason | undefined = undefined;
+      let accumulatedUsage:
+        | types.GenerateContentResponseUsageMetadata
+        | undefined = undefined;
       let isFirstHop = true;
 
       while (
         isFirstHop ||
-        (enableContinuation &&
-          Boolean(continuationToken) &&
-          afc.isResumableFinishReason(hopFinishReason))
+        afc.canResumeStream(
+          enableContinuation,
+          continuationToken,
+          hopFinishReason,
+        )
       ) {
         if (!isFirstHop) {
           const callConfig = afc.prepareContinuationConfig(
@@ -155,18 +160,59 @@ export class Models extends BaseModule {
         isFirstHop = false;
         hopFinishReason = undefined;
         continuationToken = undefined;
+        let hopUsage: types.GenerateContentResponseUsageMetadata | undefined =
+          undefined;
 
-        for await (const chunk of currentStream) {
-          if (chunk.candidates && chunk.candidates.length > 0) {
-            const candidate = chunk.candidates[0];
-            if (candidate.finishReason) {
-              hopFinishReason = candidate.finishReason;
+        try {
+          for await (let chunk of currentStream) {
+            if (chunk.usageMetadata) {
+              if (accumulatedUsage) {
+                const mergedUsage = afc.mergeUsageMetadata(
+                  accumulatedUsage,
+                  chunk.usageMetadata,
+                );
+                chunk = Object.assign(
+                  new types.GenerateContentResponse(),
+                  chunk,
+                  {usageMetadata: mergedUsage},
+                );
+                hopUsage = mergedUsage;
+              } else {
+                afc.attachInitialPromptTokenCount(chunk.usageMetadata);
+                hopUsage = chunk.usageMetadata;
+              }
             }
-            if (candidate.continuationToken) {
-              continuationToken = candidate.continuationToken;
+            const firstCandidate = chunk.candidates?.[0];
+            if (firstCandidate) {
+              if (firstCandidate.finishReason !== undefined) {
+                hopFinishReason = firstCandidate.finishReason;
+              }
+              if (firstCandidate.continuationToken) {
+                continuationToken = firstCandidate.continuationToken;
+              }
+              afc.clearIntermediateFinishReason(
+                chunk,
+                enableContinuation,
+                continuationToken,
+              );
             }
+            yield chunk;
           }
-          yield chunk;
+        } catch (err) {
+          // If a mid-stream error occurs after an intermediate checkpoint
+          // continuationToken was received, resume from that checkpoint.
+          if (
+            !afc.canResumeStream(
+              enableContinuation,
+              continuationToken,
+              hopFinishReason,
+            )
+          ) {
+            throw err;
+          }
+        }
+        if (hopUsage) {
+          accumulatedUsage = hopUsage;
         }
       }
     })(this, params, firstStream);

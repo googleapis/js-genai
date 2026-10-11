@@ -131,15 +131,15 @@ describe('continuation token helpers (_afc)', () => {
     ).toBeFalse();
   });
 
-  it('isResumableFinishReason only returns true for FinishReason.CONTINUATION', () => {
+  it('isResumableFinishReason returns true for undefined and FinishReason.CONTINUATION', () => {
     expect(
       afc.isResumableFinishReason(types.FinishReason.CONTINUATION),
     ).toBeTrue();
+    expect(afc.isResumableFinishReason(undefined)).toBeTrue();
     expect(
       afc.isResumableFinishReason(types.FinishReason.MAX_TOKENS),
     ).toBeFalse();
     expect(afc.isResumableFinishReason(types.FinishReason.STOP)).toBeFalse();
-    expect(afc.isResumableFinishReason(undefined)).toBeFalse();
   });
 
   it('prepareContinuationConfig sets continuationToken and strips automaticContinuation without mutating input', () => {
@@ -422,6 +422,8 @@ describe('continuation token helpers (_afc)', () => {
       {modality: types.MediaModality.TEXT, tokenCount: 35},
       {modality: types.MediaModality.IMAGE, tokenCount: 5},
     ]);
+    expect(merged.initialPromptTokenCount).toBe(10);
+    expect(merged.usageMetadata?.initialPromptTokenCount).toBe(10);
 
     expect(merged.candidates?.[0]?.safetyRatings).toEqual([
       {
@@ -434,6 +436,76 @@ describe('continuation token helpers (_afc)', () => {
         probability: types.HarmProbability.NEGLIGIBLE,
       },
     ]);
+  });
+
+  it('mergeUsageMetadata sums billed token counts and modality details while preserving initialPromptTokenCount', () => {
+    const hop1Usage: types.GenerateContentResponseUsageMetadata = {
+      promptTokenCount: 100,
+      promptTokensDetails: [
+        {modality: types.MediaModality.TEXT, tokenCount: 100},
+      ],
+      cachedContentTokenCount: 80,
+      cacheTokensDetails: [
+        {modality: types.MediaModality.TEXT, tokenCount: 80},
+      ],
+      candidatesTokenCount: 200,
+      candidatesTokensDetails: [
+        {modality: types.MediaModality.TEXT, tokenCount: 200},
+      ],
+      thoughtsTokenCount: 50,
+      toolUsePromptTokenCount: 10,
+      toolUsePromptTokensDetails: [
+        {modality: types.MediaModality.TEXT, tokenCount: 10},
+      ],
+      totalTokenCount: 360,
+    };
+    const hop2Usage: types.GenerateContentResponseUsageMetadata = {
+      promptTokenCount: 350,
+      promptTokensDetails: [
+        {modality: types.MediaModality.TEXT, tokenCount: 350},
+      ],
+      cachedContentTokenCount: 300,
+      cacheTokensDetails: [
+        {modality: types.MediaModality.TEXT, tokenCount: 300},
+      ],
+      candidatesTokenCount: 150,
+      candidatesTokensDetails: [
+        {modality: types.MediaModality.TEXT, tokenCount: 150},
+      ],
+      thoughtsTokenCount: 30,
+      toolUsePromptTokenCount: 5,
+      toolUsePromptTokensDetails: [
+        {modality: types.MediaModality.TEXT, tokenCount: 5},
+      ],
+      totalTokenCount: 535,
+      trafficType: types.TrafficType.ON_DEMAND,
+    };
+
+    expect(afc.mergeUsageMetadata(undefined, hop1Usage)).toBe(hop1Usage);
+    expect(afc.mergeUsageMetadata(hop1Usage, undefined)).toBe(hop1Usage);
+
+    const merged = afc.mergeUsageMetadata(hop1Usage, hop2Usage);
+    expect(merged?.promptTokenCount).toBe(450);
+    expect(merged?.initialPromptTokenCount).toBe(100);
+    expect(afc.getInitialPromptTokenCount(merged)).toBe(100);
+    expect(merged?.promptTokensDetails).toEqual([
+      {modality: types.MediaModality.TEXT, tokenCount: 450},
+    ]);
+    expect(merged?.cachedContentTokenCount).toBe(380);
+    expect(merged?.cacheTokensDetails).toEqual([
+      {modality: types.MediaModality.TEXT, tokenCount: 380},
+    ]);
+    expect(merged?.candidatesTokenCount).toBe(350);
+    expect(merged?.candidatesTokensDetails).toEqual([
+      {modality: types.MediaModality.TEXT, tokenCount: 350},
+    ]);
+    expect(merged?.thoughtsTokenCount).toBe(80);
+    expect(merged?.toolUsePromptTokenCount).toBe(15);
+    expect(merged?.toolUsePromptTokensDetails).toEqual([
+      {modality: types.MediaModality.TEXT, tokenCount: 15},
+    ]);
+    expect(merged?.totalTokenCount).toBe(895);
+    expect(merged?.trafficType).toBe(types.TrafficType.ON_DEMAND);
   });
 });
 
@@ -606,6 +678,8 @@ describe('Models automatic continuation', () => {
       expect(result.usageMetadata?.promptTokenCount).toBe(
         10 + 32778 + 65546 + 98314,
       );
+      expect(result.initialPromptTokenCount).toBe(10);
+      expect(result.usageMetadata?.initialPromptTokenCount).toBe(10);
       expect(result.usageMetadata?.candidatesTokenCount).toBe(32768 * 3 + 1024);
       expect(result.usageMetadata?.thoughtsTokenCount).toBe(
         500 + 300 + 200 + 100,
@@ -793,15 +867,6 @@ describe('Models automatic continuation', () => {
   });
 
   it('generateContentStream enables automaticContinuation by default and respects automaticContinuation: false opt-out', async () => {
-    const chunk1 = buildResponse({
-      parts: [{text: 'Chunk 1. '}],
-      finishReason: types.FinishReason.CONTINUATION,
-      continuationToken: 'tok-1',
-    });
-    const chunk2 = buildResponse({
-      parts: [{text: 'Chunk 2.'}],
-      finishReason: types.FinishReason.STOP,
-    });
     const spy = spyOn(internalModels, 'generateContentStreamInternal');
 
     // 1. Default (config omitted, empty config, or AFC disabled) -> enabled
@@ -810,6 +875,15 @@ describe('Models automatic continuation', () => {
       {},
       {automaticFunctionCalling: {disable: true}},
     ] as Array<types.GenerateContentConfig | undefined>) {
+      const chunk1 = buildResponse({
+        parts: [{text: 'Chunk 1. '}],
+        finishReason: types.FinishReason.CONTINUATION,
+        continuationToken: 'tok-1',
+      });
+      const chunk2 = buildResponse({
+        parts: [{text: 'Chunk 2.'}],
+        finishReason: types.FinishReason.STOP,
+      });
       spy.and.returnValues(
         Promise.resolve(makeStream([chunk1])),
         Promise.resolve(makeStream([chunk2])),
@@ -821,18 +895,30 @@ describe('Models automatic continuation', () => {
         contents: 'Stream a story',
         config: cfg,
       });
-      const texts: string[] = [];
+      const received: types.GenerateContentResponse[] = [];
       for await (const chunk of stream) {
-        texts.push(chunk.text ?? '');
+        received.push(chunk);
       }
 
       expect(spy).toHaveBeenCalledTimes(2);
-      expect(texts).toEqual(['Chunk 1. ', 'Chunk 2.']);
+      expect(received.map((c) => c.text ?? '')).toEqual([
+        'Chunk 1. ',
+        'Chunk 2.',
+      ]);
+      expect(received[0].candidates?.[0]?.finishReason).toBeUndefined();
+      expect(received[1].candidates?.[0]?.finishReason).toBe(
+        types.FinishReason.STOP,
+      );
     }
 
     // 2. Explicit automaticContinuation: false -> disabled (both AFC enabled
     // and disabled)
     for (const disableAfc of [false, true]) {
+      const chunk1 = buildResponse({
+        parts: [{text: 'Chunk 1. '}],
+        finishReason: types.FinishReason.CONTINUATION,
+        continuationToken: 'tok-1',
+      });
       spy.and.returnValue(Promise.resolve(makeStream([chunk1])));
       spy.calls.reset();
 
@@ -852,6 +938,9 @@ describe('Models automatic continuation', () => {
       expect(spy).toHaveBeenCalledTimes(1);
       expect(received.length).toBe(1);
       expect(received[0].text).toBe('Chunk 1. ');
+      expect(received[0].candidates?.[0]?.finishReason).toBe(
+        types.FinishReason.CONTINUATION,
+      );
     }
   });
 
@@ -880,16 +969,25 @@ describe('Models automatic continuation', () => {
       contents: 'Stream a story',
       config: {automaticContinuation: true},
     });
-    const texts: string[] = [];
+    const received: types.GenerateContentResponse[] = [];
     for await (const chunk of stream) {
-      texts.push(chunk.text ?? '');
+      received.push(chunk);
     }
 
     expect(spy).toHaveBeenCalledTimes(2);
     const args = spy.calls.allArgs();
     expect(args[0][0].config?.continuationToken).toBeUndefined();
     expect(args[1][0].config?.continuationToken).toBe('stream-tok-1');
-    expect(texts).toEqual(['Hop1-A ', 'Hop1-B ', 'Hop2-A']);
+    expect(received.map((c) => c.text ?? '')).toEqual([
+      'Hop1-A ',
+      'Hop1-B ',
+      'Hop2-A',
+    ]);
+    expect(received[0].candidates?.[0]?.finishReason).toBeUndefined();
+    expect(received[1].candidates?.[0]?.finishReason).toBeUndefined();
+    expect(received[2].candidates?.[0]?.finishReason).toBe(
+      types.FinishReason.STOP,
+    );
   });
 
   it('generateContentStream handles intermediate chunk continuationToken and final chunk finishReason across 4 hops', async () => {
@@ -961,9 +1059,9 @@ describe('Models automatic continuation', () => {
         contents: 'Stream 4 hops',
         config: cfg,
       });
-      const texts: string[] = [];
+      const chunks: types.GenerateContentResponse[] = [];
       for await (const chunk of stream) {
-        texts.push(chunk.text ?? '');
+        chunks.push(chunk);
       }
 
       expect(spy).toHaveBeenCalledTimes(4);
@@ -975,7 +1073,20 @@ describe('Models automatic continuation', () => {
       for (const callArg of [args[1][0], args[2][0], args[3][0]]) {
         expect(callArg.contents).toEqual(args[0][0].contents);
       }
-      expect(texts).toEqual(['H1A ', 'H1B ', 'H2A ', 'H2B ', 'H3 ', 'H4.']);
+      expect(chunks.map((c) => c.text ?? '')).toEqual([
+        'H1A ',
+        'H1B ',
+        'H2A ',
+        'H2B ',
+        'H3 ',
+        'H4.',
+      ]);
+      for (const intermediate of chunks.slice(0, 5)) {
+        expect(intermediate.candidates?.[0]?.finishReason).toBeUndefined();
+      }
+      expect(chunks[5].candidates?.[0]?.finishReason).toBe(
+        types.FinishReason.STOP,
+      );
     }
   });
 
@@ -1019,6 +1130,7 @@ describe('Models automatic continuation', () => {
     expect(args[1][0].config?.maxOutputTokens).toBe(64);
     expect(args[1][0].config?.continuationToken).toBe('stream-tok-1');
     expect(received.length).toBe(2);
+    expect(received[0].candidates?.[0]?.finishReason).toBeUndefined();
     expect(received[1].candidates?.[0]?.finishReason).toBe(
       types.FinishReason.MAX_TOKENS,
     );
@@ -1084,13 +1196,221 @@ describe('Models automatic continuation', () => {
     expect(args[2][0].config?.continuationToken).toBeUndefined();
     expect(chunks[chunks.length - 1].text).toBe('Sunny in Boston!');
   });
+
+  it('generateContentStream resumes from checkpoint continuationToken on mid-stream cutoff or error', async () => {
+    async function* makeFailingStream(
+      chunks: types.GenerateContentResponse[],
+      errorMessage: string,
+    ): AsyncGenerator<types.GenerateContentResponse> {
+      for (const chunk of chunks) {
+        yield chunk;
+      }
+      throw new Error(errorMessage);
+    }
+
+    const hop1Cutoff = [
+      buildResponse({
+        parts: [{text: 'Checkpoint 1, '}],
+        continuationToken: 'ckpt-tok-1',
+      }),
+    ];
+    const hop2Error = [
+      buildResponse({
+        parts: [{text: 'Checkpoint 2, '}],
+        continuationToken: 'ckpt-tok-2',
+      }),
+    ];
+    const hop3Done = [
+      buildResponse({
+        parts: [{text: 'Earlier checkpoint, '}],
+        continuationToken: 'stale-ckpt-tok',
+      }),
+      buildResponse({
+        parts: [{text: 'Final stop.'}],
+        finishReason: types.FinishReason.STOP,
+      }),
+    ];
+
+    const spy = spyOn(
+      internalModels,
+      'generateContentStreamInternal',
+    ).and.returnValues(
+      Promise.resolve(makeStream(hop1Cutoff)),
+      Promise.resolve(makeFailingStream(hop2Error, 'network drop')),
+      Promise.resolve(makeStream(hop3Done)),
+    );
+
+    const stream = await client.models.generateContentStream({
+      model: 'gemini-2.5-flash',
+      contents: 'Stream with cutoff and error',
+    });
+    const texts: string[] = [];
+    for await (const chunk of stream) {
+      texts.push(chunk.text ?? '');
+    }
+
+    expect(spy).toHaveBeenCalledTimes(3);
+    const args = spy.calls.allArgs();
+    expect(args[0][0].config?.continuationToken).toBeUndefined();
+    expect(args[1][0].config?.continuationToken).toBe('ckpt-tok-1');
+    expect(args[2][0].config?.continuationToken).toBe('ckpt-tok-2');
+    expect(texts).toEqual([
+      'Checkpoint 1, ',
+      'Checkpoint 2, ',
+      'Earlier checkpoint, ',
+      'Final stop.',
+    ]);
+  });
+
+  it('generateContentStream rethrows mid-stream error when no checkpoint continuationToken was received in current hop', async () => {
+    async function* makeFailingStream(
+      chunks: types.GenerateContentResponse[],
+    ): AsyncGenerator<types.GenerateContentResponse> {
+      for (const chunk of chunks) {
+        yield chunk;
+      }
+      throw new Error('unrecoverable stream error');
+    }
+
+    const hop1Cutoff = [
+      buildResponse({
+        parts: [{text: 'Hop 1 checkpoint, '}],
+        continuationToken: 'ckpt-tok-1',
+      }),
+    ];
+    const spy = spyOn(
+      internalModels,
+      'generateContentStreamInternal',
+    ).and.returnValues(
+      Promise.resolve(makeStream(hop1Cutoff)),
+      Promise.resolve(
+        makeFailingStream([buildResponse({parts: [{text: 'Hop 2 no token'}]})]),
+      ),
+    );
+
+    const stream = await client.models.generateContentStream({
+      model: 'gemini-2.5-flash',
+      contents: 'Stream with error on hop 2',
+    });
+    const receivedTexts: string[] = [];
+    await expectAsync(
+      (async () => {
+        for await (const chunk of stream) {
+          receivedTexts.push(chunk.text ?? '');
+        }
+      })(),
+    ).toBeRejectedWithError('unrecoverable stream error');
+    expect(spy).toHaveBeenCalledTimes(2);
+    expect(receivedTexts).toEqual(['Hop 1 checkpoint, ', 'Hop 2 no token']);
+  });
+
+  it('generateContentStream accumulates usageMetadata across continuation hops', async () => {
+    const hop1 = [
+      buildResponse({
+        parts: [{text: 'Hop 1A, '}],
+        usageMetadata: {
+          promptTokenCount: 20,
+          cachedContentTokenCount: 15,
+          candidatesTokenCount: 50,
+          thoughtsTokenCount: 10,
+          totalTokenCount: 80,
+        },
+      }),
+      buildResponse({
+        parts: [{text: 'Hop 1B, '}],
+        finishReason: types.FinishReason.CONTINUATION,
+        continuationToken: 'stream-usage-tok-1',
+        usageMetadata: {
+          promptTokenCount: 20,
+          cachedContentTokenCount: 15,
+          candidatesTokenCount: 100,
+          thoughtsTokenCount: 30,
+          totalTokenCount: 150,
+        },
+      }),
+    ];
+    const hop2 = [
+      buildResponse({
+        parts: [{text: 'Hop 2A, '}],
+        usageMetadata: {
+          promptTokenCount: 150,
+          cachedContentTokenCount: 120,
+          candidatesTokenCount: 40,
+          thoughtsTokenCount: 5,
+          totalTokenCount: 195,
+        },
+      }),
+      buildResponse({
+        parts: [{text: 'Hop 2B.'}],
+        finishReason: types.FinishReason.STOP,
+        usageMetadata: {
+          promptTokenCount: 150,
+          cachedContentTokenCount: 120,
+          candidatesTokenCount: 80,
+          thoughtsTokenCount: 10,
+          totalTokenCount: 240,
+        },
+      }),
+    ];
+
+    const spy = spyOn(
+      internalModels,
+      'generateContentStreamInternal',
+    ).and.returnValues(
+      Promise.resolve(makeStream(hop1)),
+      Promise.resolve(makeStream(hop2)),
+    );
+
+    const stream = await client.models.generateContentStream({
+      model: 'gemini-2.5-flash',
+      contents: 'Stream with usage',
+    });
+    const chunks: types.GenerateContentResponse[] = [];
+    for await (const chunk of stream) {
+      chunks.push(chunk);
+    }
+
+    expect(spy).toHaveBeenCalledTimes(2);
+    expect(chunks.length).toBe(4);
+    // Hop 1 chunks retain their own hop usage and expose initialPromptTokenCount
+    expect(chunks[0].usageMetadata?.promptTokenCount).toBe(20);
+    expect(chunks[0].initialPromptTokenCount).toBe(20);
+    expect(chunks[0].usageMetadata?.initialPromptTokenCount).toBe(20);
+    expect(chunks[0].usageMetadata?.candidatesTokenCount).toBe(50);
+    expect(chunks[0].usageMetadata?.totalTokenCount).toBe(80);
+    expect(chunks[1].usageMetadata?.promptTokenCount).toBe(20);
+    expect(chunks[1].initialPromptTokenCount).toBe(20);
+    expect(chunks[1].usageMetadata?.initialPromptTokenCount).toBe(20);
+    expect(chunks[1].usageMetadata?.cachedContentTokenCount).toBe(15);
+    expect(chunks[1].usageMetadata?.candidatesTokenCount).toBe(100);
+    expect(chunks[1].usageMetadata?.thoughtsTokenCount).toBe(30);
+    expect(chunks[1].usageMetadata?.totalTokenCount).toBe(150);
+    // Hop 2 chunk 0 sums Hop 1 final usage with Hop 2 chunk 0 usage while preserving initialPromptTokenCount
+    expect(chunks[2].usageMetadata?.promptTokenCount).toBe(20 + 150);
+    expect(chunks[2].initialPromptTokenCount).toBe(20);
+    expect(chunks[2].usageMetadata?.initialPromptTokenCount).toBe(20);
+    expect(chunks[2].usageMetadata?.cachedContentTokenCount).toBe(15 + 120);
+    expect(chunks[2].usageMetadata?.candidatesTokenCount).toBe(100 + 40);
+    expect(chunks[2].usageMetadata?.thoughtsTokenCount).toBe(30 + 5);
+    expect(chunks[2].usageMetadata?.totalTokenCount).toBe(150 + 195);
+    // Hop 2 final chunk sums Hop 1 final usage with Hop 2 final usage while preserving initialPromptTokenCount
+    expect(chunks[3].usageMetadata?.promptTokenCount).toBe(20 + 150);
+    expect(chunks[3].initialPromptTokenCount).toBe(20);
+    expect(chunks[3].usageMetadata?.initialPromptTokenCount).toBe(20);
+    expect(chunks[3].usageMetadata?.cachedContentTokenCount).toBe(15 + 120);
+    expect(chunks[3].usageMetadata?.candidatesTokenCount).toBe(100 + 80);
+    expect(chunks[3].usageMetadata?.thoughtsTokenCount).toBe(30 + 10);
+    expect(chunks[3].usageMetadata?.totalTokenCount).toBe(150 + 240);
+  });
 });
 
 describe('Chat automatic continuation', () => {
   let client: GoogleGenAI;
+  let internalModels: InternalModels;
 
   beforeEach(() => {
     client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    internalModels = client.models as unknown as InternalModels;
   });
 
   it('sendMessage enables automatic continuation by default across 4 hops and records merged response in history', async () => {
@@ -1138,7 +1458,10 @@ describe('Chat automatic continuation', () => {
       },
     });
 
-    const spy = spyOn(client.models, 'generateContent').and.returnValues(
+    const spy = spyOn(
+      internalModels,
+      'generateContentInternal',
+    ).and.returnValues(
       Promise.resolve(hop1),
       Promise.resolve(hop2),
       Promise.resolve(hop3),
@@ -1160,6 +1483,8 @@ describe('Chat automatic continuation', () => {
 
     expect(response.text).toBe('Hop 1, Hop 2, Hop 3, Hop 4.');
     expect(response.usageMetadata?.promptTokenCount).toBe(640);
+    expect(response.initialPromptTokenCount).toBe(10);
+    expect(response.usageMetadata?.initialPromptTokenCount).toBe(10);
     expect(response.usageMetadata?.candidatesTokenCount).toBe(350);
     expect(response.usageMetadata?.thoughtsTokenCount).toBe(50);
     expect(response.usageMetadata?.totalTokenCount).toBe(1040);
@@ -1191,10 +1516,10 @@ describe('Chat automatic continuation', () => {
       functionDeclarations: [{name: 'manual_fn', description: 'manual'}],
     };
 
-    const spy = spyOn(client.models, 'generateContent').and.returnValues(
-      Promise.resolve(hop1),
-      Promise.resolve(hop2),
-    );
+    const spy = spyOn(
+      internalModels,
+      'generateContentInternal',
+    ).and.returnValues(Promise.resolve(hop1), Promise.resolve(hop2));
 
     const chat = client.chats.create({model: 'gemini-2.5-flash'});
     const response = await chat.sendMessage({
@@ -1216,9 +1541,10 @@ describe('Chat automatic continuation', () => {
       finishReason: types.FinishReason.CONTINUATION,
       continuationToken: 'chat-tok-1',
     });
-    const spy = spyOn(client.models, 'generateContent').and.returnValue(
-      Promise.resolve(hop1),
-    );
+    const spy = spyOn(
+      internalModels,
+      'generateContentInternal',
+    ).and.returnValue(Promise.resolve(hop1));
 
     const chat = client.chats.create({
       model: 'gemini-2.5-flash',
@@ -1241,10 +1567,10 @@ describe('Chat automatic continuation', () => {
       finishReason: types.FinishReason.MAX_TOKENS,
       continuationToken: 'chat-tok-2',
     });
-    const spy = spyOn(client.models, 'generateContent').and.returnValues(
-      Promise.resolve(hop1),
-      Promise.resolve(hop2),
-    );
+    const spy = spyOn(
+      internalModels,
+      'generateContentInternal',
+    ).and.returnValues(Promise.resolve(hop1), Promise.resolve(hop2));
 
     const chat = client.chats.create({
       model: 'gemini-2.5-flash',
@@ -1266,7 +1592,6 @@ describe('Chat automatic continuation', () => {
   });
 
   it('sendMessage decouples automatic continuation from AFC (CallableTool)', async () => {
-    const internalModels = client.models as unknown as InternalModels;
     const turn1Hop1 = buildResponse({
       parts: [{text: 'Thinking...', thought: true}],
       finishReason: types.FinishReason.CONTINUATION,
@@ -1349,7 +1674,10 @@ describe('Chat automatic continuation', () => {
       }),
     ];
 
-    const spy = spyOn(client.models, 'generateContentStream').and.returnValues(
+    const spy = spyOn(
+      internalModels,
+      'generateContentStreamInternal',
+    ).and.returnValues(
       Promise.resolve(makeStream(hop1)),
       Promise.resolve(makeStream(hop2)),
       Promise.resolve(makeStream(hop3)),
@@ -1358,9 +1686,9 @@ describe('Chat automatic continuation', () => {
 
     const chat = client.chats.create({model: 'gemini-2.5-flash'});
     const stream = await chat.sendMessageStream({message: 'Stream a story'});
-    const receivedTexts: string[] = [];
+    const receivedChunks: types.GenerateContentResponse[] = [];
     for await (const chunk of stream) {
-      receivedTexts.push(chunk.text ?? '');
+      receivedChunks.push(chunk);
     }
 
     expect(spy).toHaveBeenCalledTimes(4);
@@ -1378,13 +1706,19 @@ describe('Chat automatic continuation', () => {
     for (const call of [calls[1][0], calls[2][0], calls[3][0]]) {
       expect(call.contents).toEqual(calls[0][0].contents);
     }
-    expect(receivedTexts).toEqual([
+    expect(receivedChunks.map((c) => c.text ?? '')).toEqual([
       'Stream 1A, ',
       'Stream 1B, ',
       'Stream 2, ',
       'Stream 3, ',
       'Stream 4.',
     ]);
+    for (const intermediate of receivedChunks.slice(0, 4)) {
+      expect(intermediate.candidates?.[0]?.finishReason).toBeUndefined();
+    }
+    expect(receivedChunks[4].candidates?.[0]?.finishReason).toBe(
+      types.FinishReason.STOP,
+    );
     expect(chat.getHistory(true)).toEqual([
       {role: 'user', parts: [{text: 'Stream a story'}]},
       {role: 'model', parts: [{text: 'Stream 1A, '}]},
@@ -1401,9 +1735,10 @@ describe('Chat automatic continuation', () => {
       finishReason: types.FinishReason.CONTINUATION,
       continuationToken: 'chat-stream-tok-1',
     });
-    const spy = spyOn(client.models, 'generateContentStream').and.returnValue(
-      Promise.resolve(makeStream([hop1Chunk])),
-    );
+    const spy = spyOn(
+      internalModels,
+      'generateContentStreamInternal',
+    ).and.returnValue(Promise.resolve(makeStream([hop1Chunk])));
 
     const chat = client.chats.create({model: 'gemini-2.5-flash'});
     const stream = await chat.sendMessageStream({
@@ -1417,6 +1752,9 @@ describe('Chat automatic continuation', () => {
 
     expect(spy).toHaveBeenCalledTimes(1);
     expect(received.length).toBe(1);
+    expect(received[0].candidates?.[0]?.finishReason).toBe(
+      types.FinishReason.CONTINUATION,
+    );
   });
 
   it('sendMessageStream forwards maxOutputTokens and stops when finishReason is MAX_TOKENS', async () => {
@@ -1431,7 +1769,10 @@ describe('Chat automatic continuation', () => {
       continuationToken: 'chat-stream-tok-2',
     });
 
-    const spy = spyOn(client.models, 'generateContentStream').and.returnValues(
+    const spy = spyOn(
+      internalModels,
+      'generateContentStreamInternal',
+    ).and.returnValues(
       Promise.resolve(makeStream([hop1Chunk])),
       Promise.resolve(makeStream([hop2Chunk])),
     );
@@ -1454,13 +1795,13 @@ describe('Chat automatic continuation', () => {
       continuationToken: 'chat-stream-tok-1',
     });
     expect(received.length).toBe(2);
+    expect(received[0].candidates?.[0]?.finishReason).toBeUndefined();
     expect(received[1].candidates?.[0]?.finishReason).toBe(
       types.FinishReason.MAX_TOKENS,
     );
   });
 
   it('sendMessageStream decouples automatic continuation from AFC (CallableTool)', async () => {
-    const internalModels = client.models as unknown as InternalModels;
     const turn1Hop1 = [
       buildResponse({
         parts: [{text: 'Thinking...', thought: true}],
@@ -1535,7 +1876,10 @@ describe('Chat automatic continuation', () => {
       }),
     ];
 
-    const spy = spyOn(client.models, 'generateContentStream').and.returnValues(
+    const spy = spyOn(
+      internalModels,
+      'generateContentStreamInternal',
+    ).and.returnValues(
       Promise.resolve(makeStream(hop1)),
       Promise.resolve(makeStream(hop2CutOff)),
     );
@@ -1553,5 +1897,69 @@ describe('Chat automatic continuation', () => {
       'Hop 2 cut off without finishReason',
     ]);
     expect(chat.getHistory(true)).toEqual([]);
+  });
+
+  it('sendMessageStream resumes from checkpoint continuationToken on mid-stream cutoff or error and records complete history', async () => {
+    async function* makeFailingStream(
+      chunks: types.GenerateContentResponse[],
+      errorMessage: string,
+    ): AsyncGenerator<types.GenerateContentResponse> {
+      for (const chunk of chunks) {
+        yield chunk;
+      }
+      throw new Error(errorMessage);
+    }
+
+    const hop1Cutoff = [
+      buildResponse({
+        parts: [{text: 'Chat ckpt 1, '}],
+        continuationToken: 'chat-ckpt-1',
+      }),
+    ];
+    const hop2Error = [
+      buildResponse({
+        parts: [{text: 'Chat ckpt 2, '}],
+        continuationToken: 'chat-ckpt-2',
+      }),
+    ];
+    const hop3Done = [
+      buildResponse({
+        parts: [{text: 'Chat final.'}],
+        finishReason: types.FinishReason.STOP,
+      }),
+    ];
+
+    const spy = spyOn(
+      internalModels,
+      'generateContentStreamInternal',
+    ).and.returnValues(
+      Promise.resolve(makeStream(hop1Cutoff)),
+      Promise.resolve(makeFailingStream(hop2Error, 'stream interrupted')),
+      Promise.resolve(makeStream(hop3Done)),
+    );
+
+    const chat = client.chats.create({model: 'gemini-2.5-flash'});
+    const stream = await chat.sendMessageStream({message: 'Stream a story'});
+    const receivedTexts: string[] = [];
+    for await (const chunk of stream) {
+      receivedTexts.push(chunk.text ?? '');
+    }
+
+    expect(spy).toHaveBeenCalledTimes(3);
+    const calls = spy.calls.allArgs();
+    expect(calls[0][0].config).toEqual({});
+    expect(calls[1][0].config).toEqual({continuationToken: 'chat-ckpt-1'});
+    expect(calls[2][0].config).toEqual({continuationToken: 'chat-ckpt-2'});
+    expect(receivedTexts).toEqual([
+      'Chat ckpt 1, ',
+      'Chat ckpt 2, ',
+      'Chat final.',
+    ]);
+    expect(chat.getHistory(true)).toEqual([
+      {role: 'user', parts: [{text: 'Stream a story'}]},
+      {role: 'model', parts: [{text: 'Chat ckpt 1, '}]},
+      {role: 'model', parts: [{text: 'Chat ckpt 2, '}]},
+      {role: 'model', parts: [{text: 'Chat final.'}]},
+    ]);
   });
 });
