@@ -31,41 +31,67 @@ function printInteractionText(
   }
 }
 
+async function runAutomaticUnaryContinuation(ai: GoogleGenAI) {
+  console.log('--- Automatic Unary Continuation ---');
+  const interaction = await ai.interactions.create({
+    model: MODEL,
+    input: 'Write a 500 word story about a robot.',
+    automatic_continuation: true,
+  });
+  printInteractionText(interaction);
+  console.log(`\nFinal status: ${interaction.status}`);
+}
+
+async function runAutomaticStreamingContinuation(ai: GoogleGenAI) {
+  console.log('\n--- Automatic Streaming Continuation ---');
+  const stream = await ai.interactions.create({
+    model: MODEL,
+    input: 'Write a 500 word story about a robot.',
+    stream: true,
+    automatic_continuation: true,
+  });
+
+  let status: string | undefined;
+  for await (const event of stream) {
+    if (event.event_type === 'step.delta' && event.delta?.type === 'text') {
+      process.stdout.write(event.delta.text ?? '');
+    } else if (event.event_type === 'interaction.completed') {
+      status = event.interaction.status;
+    }
+  }
+  console.log(`\nFinal stream status: ${status}`);
+}
+
 async function runUnaryContinuation(ai: GoogleGenAI) {
-  console.log('--- Unary Continuation ---');
+  console.log('\n--- Manual Unary Continuation ---');
   let interaction = await ai.interactions.create({
     model: MODEL,
     input: 'Write a 500 word story about a robot.',
   });
-  printInteractionText(interaction);
 
   while (
-    interaction.status === 'incomplete' &&
+    interaction.status === 'continuation_required' &&
     interaction.continuation_token
   ) {
     interaction = await ai.interactions.create({
       model: MODEL,
-      previous_interaction_id: interaction.id,
+      input: 'Write a 500 word story about a robot.',
       continuation_token: interaction.continuation_token,
     });
-    printInteractionText(interaction);
   }
+  printInteractionText(interaction);
   console.log(`\nFinal status: ${interaction.status}`);
 }
 
 async function runStreamingContinuation(ai: GoogleGenAI) {
-  console.log('\n--- Streaming Continuation ---');
-  let interactionId: string | undefined;
+  console.log('\n--- Manual Streaming Continuation ---');
   let continuationToken: string | undefined;
   let status: string | undefined;
 
   do {
     const stream = await ai.interactions.create({
       model: MODEL,
-      input: continuationToken
-        ? undefined
-        : 'Write a 500 word story about a robot.',
-      previous_interaction_id: interactionId,
+      input: 'Write a 500 word story about a robot.',
       continuation_token: continuationToken,
       stream: true,
     });
@@ -75,12 +101,11 @@ async function runStreamingContinuation(ai: GoogleGenAI) {
       if (event.event_type === 'step.delta' && event.delta?.type === 'text') {
         process.stdout.write(event.delta.text ?? '');
       } else if (event.event_type === 'interaction.completed') {
-        interactionId = event.interaction.id;
         status = event.interaction.status;
         continuationToken = event.interaction.continuation_token;
       }
     }
-  } while (status === 'incomplete' && continuationToken);
+  } while (status === 'continuation_required' && continuationToken);
   console.log(`\nFinal stream status: ${status}`);
 }
 
@@ -92,6 +117,8 @@ async function main() {
   const ai = new GoogleGenAI({
     apiKey: GEMINI_API_KEY,
   });
+  await runAutomaticUnaryContinuation(ai);
+  await runAutomaticStreamingContinuation(ai);
   await runUnaryContinuation(ai);
   await runStreamingContinuation(ai);
 }
