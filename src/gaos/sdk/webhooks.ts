@@ -99,19 +99,16 @@ export class Webhooks extends ClientSDK {
    */
   update(
     id: string,
-    params?: UpdateWebhookParams,
+    params: UpdateWebhookParams,
     options?: RequestOptions,
   ): APIPromise<webhooks.Webhook> {
-    const { api_version, update_mask, ...body$body } = params ?? {};
-    const body = params === undefined || Object.keys(body$body).length === 0
-      ? undefined
-      : body$body;
+    const { api_version, update_mask, ...body } = params;
     return unwrapAsAPIPromise(webhooksUpdate(
       this,
       id,
+      body,
       api_version,
       update_mask,
-      body,
       options,
     ));
   }
@@ -121,15 +118,15 @@ export class Webhooks extends ClientSDK {
    */
   ping(
     id: string,
+    body: webhooks.PingWebhookRequest,
     api_version?: string | undefined,
-    body?: webhooks.PingWebhookRequest | undefined,
     options?: RequestOptions,
   ): APIPromise<webhooks.WebhookPingResponse> {
     return unwrapAsAPIPromise(webhooksPing(
       this,
       id,
-      api_version,
       body,
+      api_version,
       options,
     ));
   }
@@ -139,15 +136,15 @@ export class Webhooks extends ClientSDK {
    */
   rotateSigningSecret(
     id: string,
+    body: webhooks.RotateSigningSecretRequest,
     api_version?: string | undefined,
-    body?: webhooks.RotateSigningSecretRequest | undefined,
     options?: RequestOptions,
   ): APIPromise<webhooks.WebhookRotateSigningSecretResponse> {
     return unwrapAsAPIPromise(webhooksRotateSigningSecret(
       this,
       id,
-      api_version,
       body,
+      api_version,
       options,
     ));
   }

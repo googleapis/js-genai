@@ -528,9 +528,9 @@ export class GeminiNextGenWebhooks {
       webhooksUpdate(
         this.getClient(),
         id,
+        body,
         api_version,
         update_mask,
-        body,
         toGoogleGenAIRequestOptions(options),
       ),
     );
@@ -561,8 +561,8 @@ export class GeminiNextGenWebhooks {
       webhooksRotateSigningSecret(
         this.getClient(),
         id,
-        api_version,
         body,
+        api_version,
         toGoogleGenAIRequestOptions(options),
       ),
     );
@@ -578,8 +578,8 @@ export class GeminiNextGenWebhooks {
       webhooksPing(
         this.getClient(),
         id,
+        body ?? {},
         api_version,
-        body,
         toGoogleGenAIRequestOptions(options),
       ),
     );

@@ -31,5 +31,5 @@ export type PingWebhookRequest = {
   /**
    * Required. The request body.
    */
-  body?: webhooks.PingWebhookRequest | undefined;
+  body: webhooks.PingWebhookRequest;
 };
