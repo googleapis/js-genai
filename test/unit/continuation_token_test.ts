@@ -142,6 +142,88 @@ describe('continuation token helpers (_afc)', () => {
     expect(afc.isResumableFinishReason(types.FinishReason.STOP)).toBeFalse();
   });
 
+  it('processContinuationStreamChunk updates hopState and clears stale checkpoint continuationToken on non-resumable finishReason', () => {
+    const hopState: afc.StreamContinuationHopState = {};
+    const chunk1 = buildResponse({
+      parts: [{text: 'Checkpoint, '}],
+      continuationToken: 'ckpt-token-1',
+      usageMetadata: {
+        promptTokenCount: 15,
+        candidatesTokenCount: 5,
+        totalTokenCount: 20,
+      },
+    });
+    const out1 = afc.processContinuationStreamChunk(
+      chunk1,
+      true,
+      undefined,
+      hopState,
+    );
+    expect(hopState.continuationToken).toBe('ckpt-token-1');
+    expect(hopState.hopFinishReason).toBeUndefined();
+    expect(out1.usageMetadata?.initialPromptTokenCount).toBe(15);
+
+    const chunk2 = buildResponse({
+      parts: [{text: 'Done.'}],
+      finishReason: types.FinishReason.STOP,
+    });
+    const out2 = afc.processContinuationStreamChunk(
+      chunk2,
+      true,
+      undefined,
+      hopState,
+    );
+    expect(hopState.continuationToken).toBeUndefined();
+    expect(hopState.hopFinishReason).toBe(types.FinishReason.STOP);
+    expect(out2.candidates?.[0]?.finishReason).toBe(types.FinishReason.STOP);
+  });
+
+  it('shouldRethrowStreamError returns true for AbortError, aborted signal, or non-resumable hopState', () => {
+    const resumableHopState: afc.StreamContinuationHopState = {
+      continuationToken: 'ckpt-1',
+      hopFinishReason: undefined,
+    };
+    expect(
+      afc.shouldRethrowStreamError(
+        new Error('network drop'),
+        undefined,
+        true,
+        resumableHopState,
+      ),
+    ).toBeFalse();
+
+    const abortErr = new Error('The operation was aborted');
+    abortErr.name = 'AbortError';
+    expect(
+      afc.shouldRethrowStreamError(
+        abortErr,
+        undefined,
+        true,
+        resumableHopState,
+      ),
+    ).toBeTrue();
+
+    const controller = new AbortController();
+    controller.abort();
+    expect(
+      afc.shouldRethrowStreamError(
+        new Error('network drop'),
+        {abortSignal: controller.signal},
+        true,
+        resumableHopState,
+      ),
+    ).toBeTrue();
+
+    expect(
+      afc.shouldRethrowStreamError(
+        new Error('network drop'),
+        undefined,
+        false,
+        resumableHopState,
+      ),
+    ).toBeTrue();
+  });
+
   it('prepareContinuationConfig sets continuationToken and strips automaticContinuation without mutating input', () => {
     expect(afc.prepareContinuationConfig(undefined, undefined)).toBeUndefined();
     expect(afc.prepareContinuationConfig(undefined, 'tok-1')).toEqual({
@@ -1401,6 +1483,118 @@ describe('Models automatic continuation', () => {
     expect(chunks[3].usageMetadata?.candidatesTokenCount).toBe(100 + 80);
     expect(chunks[3].usageMetadata?.thoughtsTokenCount).toBe(30 + 10);
     expect(chunks[3].usageMetadata?.totalTokenCount).toBe(150 + 240);
+  });
+
+  it('generateContentStream discards stale checkpoint continuationToken when candidate ends with STOP', async () => {
+    const chunk1 = buildResponse({
+      parts: [{text: 'Chunk 1 with checkpoint, '}],
+      continuationToken: 'checkpoint-token-1',
+    });
+    const chunk2 = buildResponse({
+      parts: [{text: 'Chunk 2 final.'}],
+      finishReason: types.FinishReason.STOP,
+    });
+
+    const spy = spyOn(
+      internalModels,
+      'generateContentStreamInternal',
+    ).and.returnValues(Promise.resolve(makeStream([chunk1, chunk2])));
+
+    const stream = await client.models.generateContentStream({
+      model: 'gemini-2.5-flash',
+      contents: 'Generate text',
+      config: {automaticContinuation: true},
+    });
+
+    const chunks: types.GenerateContentResponse[] = [];
+    for await (const chunk of stream) {
+      chunks.push(chunk);
+    }
+
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(chunks.length).toBe(2);
+    expect(chunks[0].text).toBe('Chunk 1 with checkpoint, ');
+    expect(chunks[1].text).toBe('Chunk 2 final.');
+    expect(chunks[1].candidates?.[0]?.finishReason).toBe(
+      types.FinishReason.STOP,
+    );
+    expect(chunks[1].candidates?.[0]?.continuationToken).toBeUndefined();
+  });
+
+  it('generateContentStream re-throws AbortError and does not attempt continuation', async () => {
+    const abortController = new AbortController();
+    async function* makeAbortingStream(): AsyncGenerator<types.GenerateContentResponse> {
+      yield buildResponse({
+        parts: [{text: 'Checkpoint before abort, '}],
+        continuationToken: 'ckpt-before-abort',
+      });
+      abortController.abort();
+      const abortError = new Error('The operation was aborted');
+      abortError.name = 'AbortError';
+      throw abortError;
+    }
+
+    const spy = spyOn(
+      internalModels,
+      'generateContentStreamInternal',
+    ).and.returnValues(Promise.resolve(makeAbortingStream()));
+
+    const stream = await client.models.generateContentStream({
+      model: 'gemini-2.5-flash',
+      contents: 'Generate with abort',
+      config: {
+        automaticContinuation: true,
+        abortSignal: abortController.signal,
+      },
+    });
+
+    let caughtError: unknown;
+    try {
+      for await (const chunk of stream) {
+        // First chunk should arrive
+        expect(chunk.text).toBe('Checkpoint before abort, ');
+      }
+    } catch (e) {
+      caughtError = e;
+    }
+
+    expect(caughtError).toBeDefined();
+    expect((caughtError as Error).name).toBe('AbortError');
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it('generateContentStream attaches initialPromptTokenCount even when automaticContinuation is false', async () => {
+    const chunk1 = buildResponse({
+      parts: [{text: 'Chunk with usage'}],
+      finishReason: types.FinishReason.STOP,
+      usageMetadata: {
+        promptTokenCount: 42,
+        candidatesTokenCount: 10,
+        totalTokenCount: 52,
+      },
+    });
+
+    const spy = spyOn(
+      internalModels,
+      'generateContentStreamInternal',
+    ).and.returnValues(Promise.resolve(makeStream([chunk1])));
+
+    const stream = await client.models.generateContentStream({
+      model: 'gemini-2.5-flash',
+      contents: 'Generate with opt-out',
+      config: {automaticContinuation: false},
+    });
+
+    const received: types.GenerateContentResponse[] = [];
+    for await (const chunk of stream) {
+      received.push(chunk);
+    }
+
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(received.length).toBe(1);
+    expect(received[0].usageMetadata?.promptTokenCount).toBe(42);
+    expect(received[0].usageMetadata?.initialPromptTokenCount).toBe(42);
+    expect(afc.getInitialPromptTokenCount(received[0].usageMetadata)).toBe(42);
   });
 });
 

@@ -120,9 +120,6 @@ export class Models extends BaseModule {
       params.config,
       true,
     );
-    if (!enableContinuation) {
-      return await this.generateContentStreamInternal(params);
-    }
     const firstStream = await this.generateContentStreamInternal(params);
     return (async function* (
       models: Models,
@@ -130,8 +127,7 @@ export class Models extends BaseModule {
       initialStream: AsyncGenerator<types.GenerateContentResponse>,
     ) {
       let currentStream = initialStream;
-      let continuationToken: string | undefined = undefined;
-      let hopFinishReason: types.FinishReason | undefined = undefined;
+      let hopState: afc.StreamContinuationHopState = {};
       let accumulatedUsage:
         | types.GenerateContentResponseUsageMetadata
         | undefined = undefined;
@@ -141,14 +137,14 @@ export class Models extends BaseModule {
         isFirstHop ||
         afc.canResumeStream(
           enableContinuation,
-          continuationToken,
-          hopFinishReason,
+          hopState.continuationToken,
+          hopState.hopFinishReason,
         )
       ) {
         if (!isFirstHop) {
           const callConfig = afc.prepareContinuationConfig(
             initialParams.config,
-            continuationToken,
+            hopState.continuationToken,
           );
           const callParams: types.GenerateContentParameters = {
             ...initialParams,
@@ -158,61 +154,34 @@ export class Models extends BaseModule {
             await models.generateContentStreamInternal(callParams);
         }
         isFirstHop = false;
-        hopFinishReason = undefined;
-        continuationToken = undefined;
-        let hopUsage: types.GenerateContentResponseUsageMetadata | undefined =
-          undefined;
+        hopState = {};
 
         try {
           for await (let chunk of currentStream) {
-            if (chunk.usageMetadata) {
-              if (accumulatedUsage) {
-                const mergedUsage = afc.mergeUsageMetadata(
-                  accumulatedUsage,
-                  chunk.usageMetadata,
-                );
-                chunk = Object.assign(
-                  new types.GenerateContentResponse(),
-                  chunk,
-                  {usageMetadata: mergedUsage},
-                );
-                hopUsage = mergedUsage;
-              } else {
-                afc.attachInitialPromptTokenCount(chunk.usageMetadata);
-                hopUsage = chunk.usageMetadata;
-              }
-            }
-            const firstCandidate = chunk.candidates?.[0];
-            if (firstCandidate) {
-              if (firstCandidate.finishReason !== undefined) {
-                hopFinishReason = firstCandidate.finishReason;
-              }
-              if (firstCandidate.continuationToken) {
-                continuationToken = firstCandidate.continuationToken;
-              }
-              afc.clearIntermediateFinishReason(
-                chunk,
-                enableContinuation,
-                continuationToken,
-              );
-            }
+            chunk = afc.processContinuationStreamChunk(
+              chunk,
+              enableContinuation,
+              accumulatedUsage,
+              hopState,
+            );
             yield chunk;
           }
         } catch (err) {
           // If a mid-stream error occurs after an intermediate checkpoint
           // continuationToken was received, resume from that checkpoint.
           if (
-            !afc.canResumeStream(
+            afc.shouldRethrowStreamError(
+              err,
+              params.config,
               enableContinuation,
-              continuationToken,
-              hopFinishReason,
+              hopState,
             )
           ) {
             throw err;
           }
         }
-        if (hopUsage) {
-          accumulatedUsage = hopUsage;
+        if (hopState.hopUsage) {
+          accumulatedUsage = hopState.hopUsage;
         }
       }
     })(this, params, firstStream);

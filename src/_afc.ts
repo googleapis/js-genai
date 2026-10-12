@@ -162,6 +162,85 @@ export function clearIntermediateFinishReason(
 }
 
 /**
+ * Mutable per-hop state tracked while consuming a streaming continuation hop.
+ */
+export interface StreamContinuationHopState {
+  continuationToken?: string;
+  hopFinishReason?: types.FinishReason;
+  hopUsage?: types.GenerateContentResponseUsageMetadata;
+}
+
+/**
+ * Processes a single streaming chunk during continuation-aware streaming:
+ * merges or attaches usage metadata (including initialPromptTokenCount),
+ * updates the hop's continuationToken and finishReason state, and clears
+ * intermediate finishReason values when the stream will auto-resume.
+ */
+export function processContinuationStreamChunk(
+  chunk: types.GenerateContentResponse,
+  enableContinuation: boolean,
+  accumulatedUsage: types.GenerateContentResponseUsageMetadata | undefined,
+  hopState: StreamContinuationHopState,
+): types.GenerateContentResponse {
+  if (chunk.usageMetadata) {
+    if (accumulatedUsage) {
+      const mergedUsage = mergeUsageMetadata(
+        accumulatedUsage,
+        chunk.usageMetadata,
+      );
+      chunk = Object.assign(new types.GenerateContentResponse(), chunk, {
+        usageMetadata: mergedUsage,
+      });
+      hopState.hopUsage = mergedUsage;
+    } else {
+      attachInitialPromptTokenCount(chunk.usageMetadata);
+      hopState.hopUsage = chunk.usageMetadata;
+    }
+  }
+  const firstCandidate = chunk.candidates?.[0];
+  if (firstCandidate) {
+    if (firstCandidate.finishReason !== undefined) {
+      hopState.hopFinishReason = firstCandidate.finishReason;
+    }
+    if (firstCandidate.continuationToken) {
+      hopState.continuationToken = firstCandidate.continuationToken;
+    } else if (
+      firstCandidate.finishReason !== undefined &&
+      !isResumableFinishReason(firstCandidate.finishReason)
+    ) {
+      hopState.continuationToken = undefined;
+    }
+    clearIntermediateFinishReason(
+      chunk,
+      enableContinuation,
+      hopState.continuationToken,
+    );
+  }
+  return chunk;
+}
+
+/**
+ * Returns true if a mid-stream error should be re-thrown instead of resuming
+ * from a checkpoint continuationToken.
+ */
+export function shouldRethrowStreamError(
+  err: unknown,
+  config: types.GenerateContentConfig | undefined,
+  enableContinuation: boolean,
+  hopState: StreamContinuationHopState,
+): boolean {
+  return (
+    Boolean(config?.abortSignal?.aborted) ||
+    (err instanceof Error && err.name === 'AbortError') ||
+    !canResumeStream(
+      enableContinuation,
+      hopState.continuationToken,
+      hopState.hopFinishReason,
+    )
+  );
+}
+
+/**
  * Returns continuationToken if generation should auto-resume, else undefined.
  */
 export function shouldContinueGeneration(
