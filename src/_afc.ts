@@ -372,10 +372,47 @@ export function attachInitialPromptTokenCount(
   return usage;
 }
 
+function addOptionalNumbers(
+  a: number | undefined,
+  b: number | undefined,
+): number | undefined {
+  if (a === undefined) return b;
+  if (b === undefined) return a;
+  return a + b;
+}
+
+function extractBillableUsage(
+  usage: types.GenerateContentResponseUsageMetadata,
+): types.BillableUsage {
+  if (usage.billableUsage) {
+    return usage.billableUsage;
+  }
+  const billable: types.BillableUsage = {};
+  if (usage.promptTokenCount !== undefined) {
+    billable.promptTokenCount = usage.promptTokenCount;
+  }
+  if (usage.cachedContentTokenCount !== undefined) {
+    billable.cachedContentTokenCount = usage.cachedContentTokenCount;
+  }
+  if (usage.candidatesTokenCount !== undefined) {
+    billable.candidatesTokenCount = usage.candidatesTokenCount;
+  }
+  if (usage.thoughtsTokenCount !== undefined) {
+    billable.thoughtsTokenCount = usage.thoughtsTokenCount;
+  }
+  if (usage.toolUsePromptTokenCount !== undefined) {
+    billable.toolUsePromptTokenCount = usage.toolUsePromptTokenCount;
+  }
+  if (usage.totalTokenCount !== undefined) {
+    billable.totalTokenCount = usage.totalTokenCount;
+  }
+  return billable;
+}
+
 /**
- * Merges usageMetadata across continuation hops by summing billed token counts
- * while preserving the initial hop's promptTokenCount in
- * initialPromptTokenCount.
+ * Merges usageMetadata across continuation hops by preserving initial prompt
+ * context window usage on top-level fields and accumulating total billed token
+ * counts in billableUsage.
  */
 export function mergeUsageMetadata(
   prev: types.GenerateContentResponseUsageMetadata | undefined,
@@ -389,12 +426,93 @@ export function mergeUsageMetadata(
   }
   const initialPrompt =
     getInitialPromptTokenCount(prev) ?? getInitialPromptTokenCount(curr);
+  const prevBillable = extractBillableUsage(prev);
+  const currBillable = extractBillableUsage(curr);
   const merged = mergeResponseObjects(
     prev as unknown as Record<string, unknown>,
     curr as unknown as Record<string, unknown>,
     false,
     true,
   ) as unknown as types.GenerateContentResponseUsageMetadata;
+
+  // Preserve initial prompt context fields from the first hop that reported them.
+  const preservedPrompt = prev.promptTokenCount ?? curr.promptTokenCount;
+  if (preservedPrompt !== undefined) {
+    merged.promptTokenCount = preservedPrompt;
+  }
+  const preservedCached =
+    prev.cachedContentTokenCount ?? curr.cachedContentTokenCount;
+  if (preservedCached !== undefined) {
+    merged.cachedContentTokenCount = preservedCached;
+  }
+  const preservedPromptDetails =
+    prev.promptTokensDetails && prev.promptTokensDetails.length > 0
+      ? prev.promptTokensDetails
+      : curr.promptTokensDetails;
+  if (preservedPromptDetails !== undefined) {
+    merged.promptTokensDetails = preservedPromptDetails.map((d) => ({...d}));
+  }
+  const preservedCacheDetails =
+    prev.cacheTokensDetails && prev.cacheTokensDetails.length > 0
+      ? prev.cacheTokensDetails
+      : curr.cacheTokensDetails;
+  if (preservedCacheDetails !== undefined) {
+    merged.cacheTokensDetails = preservedCacheDetails.map((d) => ({...d}));
+  }
+
+  // Recompute context-window totalTokenCount from preserved initial prompt + accumulated output/thought/tool tokens.
+  if (
+    merged.promptTokenCount !== undefined ||
+    merged.candidatesTokenCount !== undefined ||
+    merged.thoughtsTokenCount !== undefined ||
+    merged.toolUsePromptTokenCount !== undefined ||
+    prev.totalTokenCount !== undefined ||
+    curr.totalTokenCount !== undefined
+  ) {
+    merged.totalTokenCount =
+      (merged.promptTokenCount ?? 0) +
+      (merged.candidatesTokenCount ?? 0) +
+      (merged.thoughtsTokenCount ?? 0) +
+      (merged.toolUsePromptTokenCount ?? 0);
+  }
+
+  const billableUsage: types.BillableUsage = {};
+  const bPrompt = addOptionalNumbers(
+    prevBillable.promptTokenCount,
+    currBillable.promptTokenCount,
+  );
+  if (bPrompt !== undefined) billableUsage.promptTokenCount = bPrompt;
+  const bCached = addOptionalNumbers(
+    prevBillable.cachedContentTokenCount,
+    currBillable.cachedContentTokenCount,
+  );
+  if (bCached !== undefined) billableUsage.cachedContentTokenCount = bCached;
+  const bCandidates = addOptionalNumbers(
+    prevBillable.candidatesTokenCount,
+    currBillable.candidatesTokenCount,
+  );
+  if (bCandidates !== undefined) {
+    billableUsage.candidatesTokenCount = bCandidates;
+  }
+  const bThoughts = addOptionalNumbers(
+    prevBillable.thoughtsTokenCount,
+    currBillable.thoughtsTokenCount,
+  );
+  if (bThoughts !== undefined) billableUsage.thoughtsTokenCount = bThoughts;
+  const bToolUse = addOptionalNumbers(
+    prevBillable.toolUsePromptTokenCount,
+    currBillable.toolUsePromptTokenCount,
+  );
+  if (bToolUse !== undefined) {
+    billableUsage.toolUsePromptTokenCount = bToolUse;
+  }
+  const bTotal = addOptionalNumbers(
+    prevBillable.totalTokenCount,
+    currBillable.totalTokenCount,
+  );
+  if (bTotal !== undefined) billableUsage.totalTokenCount = bTotal;
+  merged.billableUsage = billableUsage;
+
   return attachInitialPromptTokenCount(merged, initialPrompt);
 }
 

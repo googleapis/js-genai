@@ -3775,6 +3775,24 @@ export class GenerateContentResponseUsageMetadata {
   trafficType?: TrafficType;
   /** Output only. The prompt token count from the initial request prior to any continuation hops. */
   initialPromptTokenCount?: number;
+  /** Output only. Cumulative billable token usage summed across all continuation hops. */
+  billableUsage?: BillableUsage;
+}
+
+/** Cumulative billable token usage summed across all continuation hops. */
+export declare interface BillableUsage {
+  /** Cumulative billed prompt token count summed across all continuation hops. */
+  promptTokenCount?: number;
+  /** Cumulative billed cached content token count summed across all continuation hops. */
+  cachedContentTokenCount?: number;
+  /** Cumulative billed output token count summed across all continuation hops. */
+  candidatesTokenCount?: number;
+  /** Cumulative billed thoughts token count summed across all continuation hops. */
+  thoughtsTokenCount?: number;
+  /** Cumulative billed tool-use prompt token count summed across all continuation hops. */
+  toolUsePromptTokenCount?: number;
+  /** Cumulative billed total token count summed across all continuation hops. */
+  totalTokenCount?: number;
 }
 
 /** The status of the underlying model. This is used to indicate the stage of the underlying model and the retirement time if applicable. This data type is not supported in Vertex AI. */

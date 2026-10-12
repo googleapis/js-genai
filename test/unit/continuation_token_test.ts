@@ -414,14 +414,19 @@ describe('continuation token helpers (_afc)', () => {
       {text: 'world!'},
     ]);
 
-    expect(merged.usageMetadata?.promptTokenCount).toBe(40);
+    expect(merged.usageMetadata?.promptTokenCount).toBe(10);
     expect(merged.usageMetadata?.candidatesTokenCount).toBe(35);
-    expect(merged.usageMetadata?.totalTokenCount).toBe(83);
+    expect(merged.usageMetadata?.totalTokenCount).toBe(53);
     expect(merged.usageMetadata?.thoughtsTokenCount).toBe(8);
     expect(merged.usageMetadata?.promptTokensDetails).toEqual([
-      {modality: types.MediaModality.TEXT, tokenCount: 35},
-      {modality: types.MediaModality.IMAGE, tokenCount: 5},
+      {modality: types.MediaModality.TEXT, tokenCount: 10},
     ]);
+    expect(merged.usageMetadata?.billableUsage).toEqual({
+      promptTokenCount: 40,
+      candidatesTokenCount: 35,
+      thoughtsTokenCount: 8,
+      totalTokenCount: 83,
+    });
     expect(merged.initialPromptTokenCount).toBe(10);
     expect(merged.usageMetadata?.initialPromptTokenCount).toBe(10);
 
@@ -438,7 +443,7 @@ describe('continuation token helpers (_afc)', () => {
     ]);
   });
 
-  it('mergeUsageMetadata sums billed token counts and modality details while preserving initialPromptTokenCount', () => {
+  it('mergeUsageMetadata preserves initial prompt context window usage and accumulates billableUsage', () => {
     const hop1Usage: types.GenerateContentResponseUsageMetadata = {
       promptTokenCount: 100,
       promptTokensDetails: [
@@ -485,15 +490,15 @@ describe('continuation token helpers (_afc)', () => {
     expect(afc.mergeUsageMetadata(hop1Usage, undefined)).toBe(hop1Usage);
 
     const merged = afc.mergeUsageMetadata(hop1Usage, hop2Usage);
-    expect(merged?.promptTokenCount).toBe(450);
+    expect(merged?.promptTokenCount).toBe(100);
     expect(merged?.initialPromptTokenCount).toBe(100);
     expect(afc.getInitialPromptTokenCount(merged)).toBe(100);
     expect(merged?.promptTokensDetails).toEqual([
-      {modality: types.MediaModality.TEXT, tokenCount: 450},
+      {modality: types.MediaModality.TEXT, tokenCount: 100},
     ]);
-    expect(merged?.cachedContentTokenCount).toBe(380);
+    expect(merged?.cachedContentTokenCount).toBe(80);
     expect(merged?.cacheTokensDetails).toEqual([
-      {modality: types.MediaModality.TEXT, tokenCount: 380},
+      {modality: types.MediaModality.TEXT, tokenCount: 80},
     ]);
     expect(merged?.candidatesTokenCount).toBe(350);
     expect(merged?.candidatesTokensDetails).toEqual([
@@ -504,7 +509,15 @@ describe('continuation token helpers (_afc)', () => {
     expect(merged?.toolUsePromptTokensDetails).toEqual([
       {modality: types.MediaModality.TEXT, tokenCount: 15},
     ]);
-    expect(merged?.totalTokenCount).toBe(895);
+    expect(merged?.totalTokenCount).toBe(545);
+    expect(merged?.billableUsage).toEqual({
+      promptTokenCount: 450,
+      cachedContentTokenCount: 380,
+      candidatesTokenCount: 350,
+      thoughtsTokenCount: 80,
+      toolUsePromptTokenCount: 15,
+      totalTokenCount: 895,
+    });
     expect(merged?.trafficType).toBe(types.TrafficType.ON_DEMAND);
   });
 });
@@ -675,9 +688,7 @@ describe('Models automatic continuation', () => {
         {text: 'Hop 3 part. '},
         {text: 'Hop 4 final part.'},
       ]);
-      expect(result.usageMetadata?.promptTokenCount).toBe(
-        10 + 32778 + 65546 + 98314,
-      );
+      expect(result.usageMetadata?.promptTokenCount).toBe(10);
       expect(result.initialPromptTokenCount).toBe(10);
       expect(result.usageMetadata?.initialPromptTokenCount).toBe(10);
       expect(result.usageMetadata?.candidatesTokenCount).toBe(32768 * 3 + 1024);
@@ -685,8 +696,14 @@ describe('Models automatic continuation', () => {
         500 + 300 + 200 + 100,
       );
       expect(result.usageMetadata?.totalTokenCount).toBe(
-        33278 + 65846 + 98514 + 99438,
+        10 + (32768 * 3 + 1024) + (500 + 300 + 200 + 100),
       );
+      expect(result.usageMetadata?.billableUsage).toEqual({
+        promptTokenCount: 10 + 32778 + 65546 + 98314,
+        candidatesTokenCount: 32768 * 3 + 1024,
+        thoughtsTokenCount: 500 + 300 + 200 + 100,
+        totalTokenCount: 33278 + 65846 + 98514 + 99438,
+      });
       // Caller's config is not mutated
       expect(userConfig.continuationToken).toBeUndefined();
     }
@@ -1385,22 +1402,36 @@ describe('Models automatic continuation', () => {
     expect(chunks[1].usageMetadata?.candidatesTokenCount).toBe(100);
     expect(chunks[1].usageMetadata?.thoughtsTokenCount).toBe(30);
     expect(chunks[1].usageMetadata?.totalTokenCount).toBe(150);
-    // Hop 2 chunk 0 sums Hop 1 final usage with Hop 2 chunk 0 usage while preserving initialPromptTokenCount
-    expect(chunks[2].usageMetadata?.promptTokenCount).toBe(20 + 150);
+    // Hop 2 chunk 0 preserves Hop 1 initial prompt context and accumulates billableUsage
+    expect(chunks[2].usageMetadata?.promptTokenCount).toBe(20);
     expect(chunks[2].initialPromptTokenCount).toBe(20);
     expect(chunks[2].usageMetadata?.initialPromptTokenCount).toBe(20);
-    expect(chunks[2].usageMetadata?.cachedContentTokenCount).toBe(15 + 120);
+    expect(chunks[2].usageMetadata?.cachedContentTokenCount).toBe(15);
     expect(chunks[2].usageMetadata?.candidatesTokenCount).toBe(100 + 40);
     expect(chunks[2].usageMetadata?.thoughtsTokenCount).toBe(30 + 5);
-    expect(chunks[2].usageMetadata?.totalTokenCount).toBe(150 + 195);
-    // Hop 2 final chunk sums Hop 1 final usage with Hop 2 final usage while preserving initialPromptTokenCount
-    expect(chunks[3].usageMetadata?.promptTokenCount).toBe(20 + 150);
+    expect(chunks[2].usageMetadata?.totalTokenCount).toBe(20 + 140 + 35);
+    expect(chunks[2].usageMetadata?.billableUsage).toEqual({
+      promptTokenCount: 20 + 150,
+      cachedContentTokenCount: 15 + 120,
+      candidatesTokenCount: 100 + 40,
+      thoughtsTokenCount: 30 + 5,
+      totalTokenCount: 150 + 195,
+    });
+    // Hop 2 final chunk preserves Hop 1 initial prompt context and accumulates billableUsage
+    expect(chunks[3].usageMetadata?.promptTokenCount).toBe(20);
     expect(chunks[3].initialPromptTokenCount).toBe(20);
     expect(chunks[3].usageMetadata?.initialPromptTokenCount).toBe(20);
-    expect(chunks[3].usageMetadata?.cachedContentTokenCount).toBe(15 + 120);
+    expect(chunks[3].usageMetadata?.cachedContentTokenCount).toBe(15);
     expect(chunks[3].usageMetadata?.candidatesTokenCount).toBe(100 + 80);
     expect(chunks[3].usageMetadata?.thoughtsTokenCount).toBe(30 + 10);
-    expect(chunks[3].usageMetadata?.totalTokenCount).toBe(150 + 240);
+    expect(chunks[3].usageMetadata?.totalTokenCount).toBe(20 + 180 + 40);
+    expect(chunks[3].usageMetadata?.billableUsage).toEqual({
+      promptTokenCount: 20 + 150,
+      cachedContentTokenCount: 15 + 120,
+      candidatesTokenCount: 100 + 80,
+      thoughtsTokenCount: 30 + 10,
+      totalTokenCount: 150 + 240,
+    });
   });
 });
 
@@ -1482,12 +1513,18 @@ describe('Chat automatic continuation', () => {
     }
 
     expect(response.text).toBe('Hop 1, Hop 2, Hop 3, Hop 4.');
-    expect(response.usageMetadata?.promptTokenCount).toBe(640);
+    expect(response.usageMetadata?.promptTokenCount).toBe(10);
     expect(response.initialPromptTokenCount).toBe(10);
     expect(response.usageMetadata?.initialPromptTokenCount).toBe(10);
     expect(response.usageMetadata?.candidatesTokenCount).toBe(350);
     expect(response.usageMetadata?.thoughtsTokenCount).toBe(50);
-    expect(response.usageMetadata?.totalTokenCount).toBe(1040);
+    expect(response.usageMetadata?.totalTokenCount).toBe(410);
+    expect(response.usageMetadata?.billableUsage).toEqual({
+      promptTokenCount: 640,
+      candidatesTokenCount: 350,
+      thoughtsTokenCount: 50,
+      totalTokenCount: 1040,
+    });
     expect(chat.getHistory(true)).toEqual([
       {role: 'user', parts: [{text: 'Tell me a story'}]},
       {
