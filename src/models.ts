@@ -132,10 +132,12 @@ export class Models extends BaseModule {
       let currentStream = initialStream;
       let continuationToken: string | undefined = undefined;
       let hopFinishReason: types.FinishReason | undefined = undefined;
+      let hopHasPromptFeedback = false;
       let accumulatedUsage:
         | types.GenerateContentResponseUsageMetadata
         | undefined = undefined;
       let isFirstHop = true;
+      let reconnectsWithoutProgress = 0;
 
       while (
         isFirstHop ||
@@ -143,6 +145,7 @@ export class Models extends BaseModule {
           enableContinuation,
           continuationToken,
           hopFinishReason,
+          hopHasPromptFeedback,
         )
       ) {
         if (!isFirstHop) {
@@ -158,13 +161,24 @@ export class Models extends BaseModule {
             await models.generateContentStreamInternal(callParams);
         }
         isFirstHop = false;
+        const hopStartToken = continuationToken;
         hopFinishReason = undefined;
+        hopHasPromptFeedback = false;
+        let hopHasYieldedContent = false;
         continuationToken = undefined;
+        let hasHopError = false;
+        let hopError: unknown = undefined;
         let hopUsage: types.GenerateContentResponseUsageMetadata | undefined =
           undefined;
 
         try {
           for await (let chunk of currentStream) {
+            if (
+              chunk.promptFeedback !== undefined &&
+              chunk.promptFeedback !== null
+            ) {
+              hopHasPromptFeedback = true;
+            }
             if (chunk.usageMetadata) {
               if (accumulatedUsage) {
                 const mergedUsage = afc.mergeUsageMetadata(
@@ -184,6 +198,12 @@ export class Models extends BaseModule {
             }
             const firstCandidate = chunk.candidates?.[0];
             if (firstCandidate) {
+              if (
+                firstCandidate.content?.parts &&
+                firstCandidate.content.parts.length > 0
+              ) {
+                hopHasYieldedContent = true;
+              }
               if (firstCandidate.finishReason !== undefined) {
                 hopFinishReason = firstCandidate.finishReason;
               }
@@ -199,20 +219,38 @@ export class Models extends BaseModule {
             yield chunk;
           }
         } catch (err) {
-          // If a mid-stream error occurs after an intermediate checkpoint
-          // continuationToken was received, resume from that checkpoint.
-          if (
-            !afc.canResumeStream(
-              enableContinuation,
-              continuationToken,
-              hopFinishReason,
-            )
-          ) {
-            throw err;
-          }
+          hasHopError = true;
+          hopError = err;
         }
         if (hopUsage) {
           accumulatedUsage = hopUsage;
+        }
+        ({continuationToken, reconnectsWithoutProgress} =
+          afc.nextStreamContinuationToken({
+            hopStartToken,
+            hopToken: continuationToken,
+            finishReason: hopFinishReason,
+            hasPromptFeedback: hopHasPromptFeedback,
+            hopHasYieldedContent,
+            reconnectsWithoutProgress,
+          }));
+        if (
+          !afc.canResumeStream(
+            enableContinuation,
+            continuationToken,
+            hopFinishReason,
+            hopHasPromptFeedback,
+          )
+        ) {
+          if (hasHopError) {
+            throw hopError;
+          }
+          afc.throwIfIncompleteContinuationStream(
+            enableContinuation,
+            hopStartToken,
+            hopFinishReason,
+            hopHasPromptFeedback,
+          );
         }
       }
     })(this, params, firstStream);

@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {ApiError} from './errors.js';
 import * as types from './types.js';
 
 export const DEFAULT_MAX_REMOTE_CALLS = 10;
@@ -132,12 +133,97 @@ export function canResumeStream(
   enableContinuation: boolean,
   continuationToken: string | undefined,
   finishReason: types.FinishReason | undefined,
+  hasPromptFeedback = false,
 ): boolean {
   return (
     enableContinuation &&
+    !hasPromptFeedback &&
     Boolean(continuationToken) &&
     isResumableFinishReason(finishReason)
   );
+}
+
+/**
+ * Throws an ApiError if an automatic continuation stream hop ended
+ * prematurely without a finishReason or promptFeedback.
+ */
+export function throwIfIncompleteContinuationStream(
+  enableContinuation: boolean,
+  hopStartToken: string | undefined,
+  finishReason: types.FinishReason | undefined,
+  hasPromptFeedback = false,
+): void {
+  if (
+    enableContinuation &&
+    Boolean(hopStartToken) &&
+    finishReason === undefined &&
+    !hasPromptFeedback
+  ) {
+    throw new ApiError({
+      message:
+        'Automatic continuation stream ended prematurely without a finishReason.',
+      status: 0,
+    });
+  }
+}
+
+/**
+ * Maximum number of consecutive streaming reconnects that do not receive a new
+ * checkpoint continuationToken before stopping or surfacing the error.
+ */
+export const MAX_STREAM_RECONNECTS_WITHOUT_PROGRESS = 3;
+
+/**
+ * Returns the continuationToken to resume the next streaming hop from and the
+ * updated reconnectsWithoutProgress count.
+ *
+ * Long-decode checkpoints are only emitted partway through each hop, so a
+ * connection can drop before the hop has produced a checkpoint of its own. In
+ * that case the hop can be retried from the token it was started with.
+ */
+export function nextStreamContinuationToken(params: {
+  hopStartToken?: string;
+  hopToken?: string;
+  finishReason?: types.FinishReason;
+  hasPromptFeedback?: boolean;
+  hopHasYieldedContent?: boolean;
+  reconnectsWithoutProgress: number;
+}): {
+  continuationToken: string | undefined;
+  reconnectsWithoutProgress: number;
+} {
+  const {
+    hopStartToken,
+    hopToken,
+    finishReason,
+    hasPromptFeedback = false,
+    hopHasYieldedContent = false,
+    reconnectsWithoutProgress,
+  } = params;
+  if (finishReason !== undefined || hasPromptFeedback) {
+    if (
+      finishReason === types.FinishReason.CONTINUATION &&
+      !hasPromptFeedback &&
+      hopToken &&
+      hopToken !== hopStartToken
+    ) {
+      return {continuationToken: hopToken, reconnectsWithoutProgress: 0};
+    }
+    return {continuationToken: undefined, reconnectsWithoutProgress: 0};
+  }
+  if (hopToken && hopToken !== hopStartToken) {
+    return {continuationToken: hopToken, reconnectsWithoutProgress: 0};
+  }
+  if (
+    hopHasYieldedContent ||
+    reconnectsWithoutProgress >= MAX_STREAM_RECONNECTS_WITHOUT_PROGRESS
+  ) {
+    return {continuationToken: undefined, reconnectsWithoutProgress};
+  }
+  return {
+    continuationToken: hopStartToken,
+    reconnectsWithoutProgress: reconnectsWithoutProgress + 1,
+  };
 }
 
 /**
@@ -285,6 +371,26 @@ function isModalityTokenCountArray(
   );
 }
 
+function clearStaleContinuationOnCandidate(
+  cand: types.Candidate,
+): types.Candidate {
+  if (
+    cand.continuationToken === undefined &&
+    cand.finishReason !== types.FinishReason.CONTINUATION
+  ) {
+    return cand;
+  }
+  const cleaned: types.Candidate = {
+    ...cand,
+    continuationToken: undefined,
+  };
+  if (cand.finishReason === types.FinishReason.CONTINUATION) {
+    cleaned.finishReason = undefined;
+    cleaned.finishMessage = undefined;
+  }
+  return cleaned;
+}
+
 /**
  * Merges candidate lists element-wise across continuation hops.
  */
@@ -296,7 +402,7 @@ export function mergeCandidates(
     return currCandidates;
   }
   if (currCandidates.length === 0) {
-    return prevCandidates;
+    return prevCandidates.map(clearStaleContinuationOnCandidate);
   }
   const merged: types.Candidate[] = [];
   const minLen = Math.min(prevCandidates.length, currCandidates.length);
@@ -311,7 +417,9 @@ export function mergeCandidates(
     );
   }
   if (prevCandidates.length > minLen) {
-    merged.push(...prevCandidates.slice(minLen));
+    merged.push(
+      ...prevCandidates.slice(minLen).map(clearStaleContinuationOnCandidate),
+    );
   }
   if (currCandidates.length > minLen) {
     merged.push(...currCandidates.slice(minLen));
@@ -438,7 +546,12 @@ export function mergeResponseObjects(
     }
 
     if (currVal === undefined || currVal === null) {
-      if (prevVal !== undefined) {
+      if (fieldName === 'candidates' && Array.isArray(prevVal)) {
+        mergedData[fieldName] = mergeCandidates(
+          prevVal as types.Candidate[],
+          [],
+        );
+      } else if (prevVal !== undefined) {
         mergedData[fieldName] = prevVal;
       }
     } else if (prevVal === undefined || prevVal === null) {
