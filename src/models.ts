@@ -25,6 +25,74 @@ export class Models extends BaseModule {
   private static loggedGenerateImagesWarning = false;
   private static loggedEditImageWarning = false;
   private static loggedGenerateVideosWarning = false;
+  private static loggedTemperatureWarning = false;
+  private static loggedTopPWarning = false;
+  private static loggedTopKWarning = false;
+  private static loggedThinkingBudgetWarning = false;
+
+  private static isGemini36OrNewer(model: string): boolean {
+    if (!model) {
+      return false;
+    }
+    const parts = model.split('/');
+    const modelId = parts[parts.length - 1].toLowerCase();
+    const match = /^gemini-(\d+)(?:\.(\d+))?(?:-|$)/.exec(modelId);
+    if (!match) {
+      return false;
+    }
+    const major = parseInt(match[1], 10);
+    const minor = match[2] !== undefined ? parseInt(match[2], 10) : 0;
+    return major > 3 || (major === 3 && minor >= 6);
+  }
+
+  private warnUnsupportedParameters(
+    model: string,
+    config?: types.GenerateContentConfig,
+  ): void {
+    if (!config || !Models.isGemini36OrNewer(model)) {
+      return;
+    }
+    if (
+      config.temperature !== undefined &&
+      config.temperature !== null &&
+      !Models.loggedTemperatureWarning
+    ) {
+      Models.loggedTemperatureWarning = true;
+      console.warn(
+        'temperature is not supported on Gemini 3.6 and newer models and is ignored.',
+      );
+    }
+    if (
+      config.topP !== undefined &&
+      config.topP !== null &&
+      !Models.loggedTopPWarning
+    ) {
+      Models.loggedTopPWarning = true;
+      console.warn(
+        'top_p is not supported on Gemini 3.6 and newer models and is ignored.',
+      );
+    }
+    if (
+      config.topK !== undefined &&
+      config.topK !== null &&
+      !Models.loggedTopKWarning
+    ) {
+      Models.loggedTopKWarning = true;
+      console.warn(
+        'top_k is not supported on Gemini 3.6 and newer models and is ignored.',
+      );
+    }
+    if (
+      config.thinkingConfig?.thinkingBudget !== undefined &&
+      config.thinkingConfig?.thinkingBudget !== null &&
+      !Models.loggedThinkingBudgetWarning
+    ) {
+      Models.loggedThinkingBudgetWarning = true;
+      console.warn(
+        'thinking_budget is not supported on Gemini 3.6 and newer models and is ignored. Please use thinking_level instead.',
+      );
+    }
+  }
 
   /**
    * Calculates embeddings for the given contents.
@@ -261,6 +329,7 @@ export class Models extends BaseModule {
   generateContent = async (
     params: types.GenerateContentParameters,
   ): Promise<types.GenerateContentResponse> => {
+    this.warnUnsupportedParameters(params.model, params.config);
     const transformedParams = await this.processParamsMaybeAddMcpUsage(params);
     this.maybeMoveToResponseJsonSchema(params);
     if (!afc.hasCallableTools(params) || afc.shouldDisableAfc(params.config)) {
@@ -396,6 +465,7 @@ export class Models extends BaseModule {
   generateContentStream = async (
     params: types.GenerateContentParameters,
   ): Promise<AsyncGenerator<types.GenerateContentResponse>> => {
+    this.warnUnsupportedParameters(params.model, params.config);
     this.maybeMoveToResponseJsonSchema(params);
     if (afc.shouldDisableAfc(params.config)) {
       const transformedParams =

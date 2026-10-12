@@ -8,6 +8,7 @@ import {
   GeminiNextGenInteractions,
   GoogleGenAIParentClient,
 } from '../../src/gaos/google-genai.js';
+import {GoogleGenAIAuthHook} from '../../src/gaos/hooks/google-genai-auth.js';
 
 describe('Interactions resource', () => {
   let parentClient: jasmine.SpyObj<GoogleGenAIParentClient>;
@@ -313,5 +314,77 @@ describe('Interactions resource', () => {
       }
       expect(received).toBe(largeData);
     });
+  });
+
+  describe('unsupported parameter warnings on Gemini >= 3.6', () => {
+    function resetWarningFlags() {
+      GoogleGenAIAuthHook.loggedTemperatureWarning = false;
+      GoogleGenAIAuthHook.loggedTopPWarning = false;
+      GoogleGenAIAuthHook.loggedTopKWarning = false;
+    }
+
+    beforeEach(() => {
+      resetWarningFlags();
+    });
+
+    afterEach(() => {
+      resetWarningFlags();
+    });
+
+    for (const model of ['gemini-3.6-flash', 'gemini-3.8-flash']) {
+      it(`warns once for temperature, top_p, and top_k on ${model}`, async () => {
+        const warnSpy = spyOn(console, 'warn');
+        const generationConfig = {
+          temperature: 0.7,
+          top_p: 0.9,
+          top_k: 40,
+        };
+
+        await interactions.create({
+          model,
+          input: 'hello',
+          generation_config: generationConfig,
+        });
+
+        expect(warnSpy).toHaveBeenCalledTimes(3);
+        expect(warnSpy).toHaveBeenCalledWith(
+          'temperature is not supported on Gemini 3.6 and newer models and is ignored.',
+        );
+        expect(warnSpy).toHaveBeenCalledWith(
+          'top_p is not supported on Gemini 3.6 and newer models and is ignored.',
+        );
+        expect(warnSpy).toHaveBeenCalledWith(
+          'top_k is not supported on Gemini 3.6 and newer models and is ignored.',
+        );
+
+        // Repeated call should not warn again.
+        warnSpy.calls.reset();
+        await interactions.create({
+          model,
+          input: 'hello again',
+          generation_config: generationConfig,
+        });
+        expect(warnSpy).not.toHaveBeenCalled();
+      });
+    }
+
+    for (const model of ['gemini-2.5-flash', 'gemini-3.1-pro']) {
+      it(`does not warn on ${model}`, async () => {
+        const warnSpy = spyOn(console, 'warn');
+        const generationConfig = {
+          temperature: 0.7,
+          top_p: 0.9,
+          top_k: 40,
+        };
+
+        await interactions.create({
+          model,
+          input: 'hello',
+          generation_config: generationConfig,
+        });
+
+        expect(warnSpy).not.toHaveBeenCalled();
+      });
+    }
   });
 });
