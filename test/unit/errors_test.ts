@@ -35,14 +35,10 @@ describe('ApiError', () => {
       }
 
       static [Symbol.hasInstance](value: unknown): boolean {
-        if (this !== BundledCopyApiError) {
-          return Function.prototype[Symbol.hasInstance].call(this, value);
-        }
         return (
-          Function.prototype[Symbol.hasInstance].call(this, value) ||
-          (typeof value === 'object' &&
-            value !== null &&
-            (value as Record<symbol, unknown>)[brandSymbol] === true)
+          typeof value === 'object' &&
+          value !== null &&
+          (value as Record<symbol, unknown>)[brandSymbol] === true
         );
       }
     }
