@@ -37,7 +37,6 @@ import type { ArgumentsDelta as ArgumentsDelta$Import } from "./models/interacti
 import type { AudioContent as AudioContent$Import } from "./models/interactions/audio-content.js";
 import type { AudioDelta as AudioDelta$Import } from "./models/interactions/audio-delta.js";
 import type { AudioResponseFormat as AudioResponseFormat$Import } from "./models/interactions/audio-response-format.js";
-import type { BillableUsage as BillableUsage$Import } from "./models/interactions/billable-usage.js";
 import type { CodeExecutionCallArguments as CodeExecutionCallArguments$Import } from "./models/interactions/code-execution-call-arguments.js";
 import type { CodeExecutionCallDelta as CodeExecutionCallDelta$Import } from "./models/interactions/code-execution-call-delta.js";
 import type { CodeExecutionCallStep as CodeExecutionCallStep$Import } from "./models/interactions/code-execution-call-step.js";
@@ -411,7 +410,6 @@ type Smart$ = SmartTranscriptionMode$Import;
 type Verbatim$ = VerbatimTranscriptionMode$Import;
 type Arguments$6 = URLContextCallArguments$Import;
 type Result$3 = URLContextResult$Import;
-type BillableUsage$ = BillableUsage$Import;
 type CachedTokensByModality$ = ModalityTokens$Import;
 type GroundingToolCount$ = GroundingToolCount$Import;
 type InputTokensByModality$ = ModalityTokens$Import;
@@ -500,7 +498,6 @@ export type Audio = Audio$;
 export type AudioContent = AudioContent$;
 export type AudioData = AudioData$;
 export type AudioResponseFormat = AudioResponseFormat$;
-export type BillableUsage = BillableUsage$;
 export type CachedTokensByModality = CachedTokensByModality$;
 export type CodeExecution = CodeExecution$;
 export type CodeExecutionCall = CodeExecutionCall$;
@@ -983,7 +980,6 @@ export declare namespace Interactions {
     export type Result = Result$3;
   }
   export namespace Usage {
-    export type BillableUsage = BillableUsage$;
     export type CachedTokensByModality = CachedTokensByModality$;
     export type GroundingToolCount = GroundingToolCount$;
     export type InputTokensByModality = InputTokensByModality$;
