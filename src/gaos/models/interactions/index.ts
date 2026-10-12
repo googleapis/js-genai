@@ -19,6 +19,7 @@ export * from "./arguments-delta.js";
 export * from "./audio-content.js";
 export * from "./audio-delta.js";
 export * from "./audio-response-format.js";
+export * from "./billable-usage.js";
 export * from "./code-execution-call-arguments.js";
 export * from "./code-execution-call-delta.js";
 export * from "./code-execution-call-step.js";
