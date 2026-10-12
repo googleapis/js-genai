@@ -9,6 +9,7 @@ import {zodToJsonSchema} from 'zod-to-json-schema';
 
 import {GoogleGenAI} from '../../src/client.js';
 import {mcpToTool} from '../../src/mcp/_mcp.js';
+import {Models} from '../../src/models.js';
 import * as types from '../../src/types.js';
 
 import {
@@ -1449,4 +1450,159 @@ describe('generateContentStream regression', () => {
 
     expect(receivedText).toBe(largeText);
   });
+});
+
+describe('unsupported parameter warnings on Gemini >= 3.6', () => {
+  const modelsWarningFlags = Models as unknown as {
+    loggedTemperatureWarning: boolean;
+    loggedTopPWarning: boolean;
+    loggedTopKWarning: boolean;
+    loggedThinkingBudgetWarning: boolean;
+  };
+
+  function resetWarningFlags() {
+    modelsWarningFlags.loggedTemperatureWarning = false;
+    modelsWarningFlags.loggedTopPWarning = false;
+    modelsWarningFlags.loggedTopKWarning = false;
+    modelsWarningFlags.loggedThinkingBudgetWarning = false;
+  }
+
+  beforeEach(() => {
+    resetWarningFlags();
+  });
+
+  afterEach(() => {
+    resetWarningFlags();
+  });
+
+  for (const model of [
+    'gemini-3.6-flash',
+    'gemini-3.8-flash',
+    'models/gemini-3.6-flash',
+  ]) {
+    it(`warns once per parameter in generateContent on ${model}`, async () => {
+      const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+      spyOn(global, 'fetch').and.callFake(() =>
+        Promise.resolve(
+          new Response(
+            JSON.stringify(mockGenerateContentResponse),
+            fetchOkOptions,
+          ),
+        ),
+      );
+      const warnSpy = spyOn(console, 'warn');
+
+      const config: types.GenerateContentConfig = {
+        temperature: 0.7,
+        topP: 0.9,
+        topK: 40,
+        thinkingConfig: {
+          thinkingBudget: 1024,
+        },
+      };
+
+      await client.models.generateContent({
+        model,
+        contents: 'hello',
+        config,
+      });
+
+      expect(warnSpy).toHaveBeenCalledTimes(4);
+      expect(warnSpy).toHaveBeenCalledWith(
+        'temperature is not supported on Gemini 3.6 and newer models and is ignored.',
+      );
+      expect(warnSpy).toHaveBeenCalledWith(
+        'top_p is not supported on Gemini 3.6 and newer models and is ignored.',
+      );
+      expect(warnSpy).toHaveBeenCalledWith(
+        'top_k is not supported on Gemini 3.6 and newer models and is ignored.',
+      );
+      expect(warnSpy).toHaveBeenCalledWith(
+        'thinking_budget is not supported on Gemini 3.6 and newer models and is ignored. Please use thinking_level instead.',
+      );
+
+      // Repeated call should not warn again.
+      warnSpy.calls.reset();
+      await client.models.generateContent({
+        model,
+        contents: 'hello again',
+        config,
+      });
+      expect(warnSpy).not.toHaveBeenCalled();
+    });
+  }
+
+  it('warns once per parameter in generateContentStream on gemini-3.6-flash', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    spyOn(global, 'fetch').and.callFake(() =>
+      Promise.resolve(
+        new Response(
+          createMockReadableStream(JSON.stringify(mockGenerateContentResponse)),
+          fetchOkOptions,
+        ),
+      ),
+    );
+    const warnSpy = spyOn(console, 'warn');
+
+    const config: types.GenerateContentConfig = {
+      temperature: 0.5,
+      topP: 0.8,
+      topK: 20,
+      thinkingConfig: {
+        thinkingBudget: 512,
+      },
+    };
+
+    const stream1 = await client.models.generateContentStream({
+      model: 'gemini-3.6-flash',
+      contents: 'hello',
+      config,
+    });
+    for await (const _chunk of stream1) {
+      // consume stream
+    }
+
+    expect(warnSpy).toHaveBeenCalledTimes(4);
+
+    warnSpy.calls.reset();
+    const stream2 = await client.models.generateContentStream({
+      model: 'gemini-3.6-flash',
+      contents: 'hello again',
+      config,
+    });
+    for await (const _chunk of stream2) {
+      // consume stream
+    }
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
+
+  for (const model of ['gemini-2.5-flash', 'gemini-3.1-pro']) {
+    it(`does not warn on ${model}`, async () => {
+      const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+      spyOn(global, 'fetch').and.callFake(() =>
+        Promise.resolve(
+          new Response(
+            JSON.stringify(mockGenerateContentResponse),
+            fetchOkOptions,
+          ),
+        ),
+      );
+      const warnSpy = spyOn(console, 'warn');
+
+      await client.models.generateContent({
+        model,
+        contents: 'hello',
+        config: {
+          temperature: 0.7,
+          topP: 0.9,
+          topK: 40,
+          thinkingConfig: {
+            thinkingBudget: 1024,
+          },
+        },
+      });
+
+      expect(warnSpy).not.toHaveBeenCalled();
+    });
+  }
 });

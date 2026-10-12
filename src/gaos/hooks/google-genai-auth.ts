@@ -17,6 +17,7 @@ import {
 } from "./types.js";
 
 export const GOOGLE_GENAI_API_REVISION = "2026-05-20";
+const GEMINI_VERSION_PATTERN = /^gemini-(\d+)(?:\.(\d+))?(?:-|$)/;
 
 type GoogleGenAISecurity = models.Security;
 
@@ -53,10 +54,15 @@ export class GoogleGenAISecurityProvider {
 export class GoogleGenAIAuthHook
   implements BeforeCreateRequestHook, BeforeRequestHook
 {
+  static loggedTemperatureWarning = false;
+  static loggedTopPWarning = false;
+  static loggedTopKWarning = false;
+
   beforeCreateRequest(
-    _hookCtx: BeforeCreateRequestContext,
+    hookCtx: BeforeCreateRequestContext,
     input: RequestInput,
   ): RequestInput {
+    warnUnsupportedInteractionParameters(hookCtx, input);
     return {
       ...input,
       url: decodeSDKLevelAPIVersionPath(input.url),
@@ -85,6 +91,70 @@ export class GoogleGenAIAuthHook
     applyAuth(request.headers, security);
 
     return request;
+  }
+}
+
+function isGemini36OrNewer(model?: string): boolean {
+  if (!model) {
+    return false;
+  }
+  const parts = model.split("/");
+  const modelId = parts[parts.length - 1].toLowerCase();
+  const match = GEMINI_VERSION_PATTERN.exec(modelId);
+  if (!match) {
+    return false;
+  }
+  const major = parseInt(match[1], 10);
+  const minor = match[2] !== undefined ? parseInt(match[2], 10) : 0;
+  return major > 3 || (major === 3 && minor >= 6);
+}
+
+function warnUnsupportedInteractionParameters(
+  hookCtx: BeforeCreateRequestContext,
+  input: RequestInput,
+): void {
+  if (
+    hookCtx.operation_id !== "CreateInteraction" ||
+    typeof input.options?.body !== "string"
+  ) {
+    return;
+  }
+  let body: unknown;
+  try {
+    body = JSON.parse(input.options.body);
+  } catch {
+    return;
+  }
+  if (typeof body !== "object" || body === null) {
+    return;
+  }
+  const record = body as Record<string, unknown>;
+  const model = record["model"];
+  if (typeof model !== "string" || !isGemini36OrNewer(model)) {
+    return;
+  }
+  const generationConfig = record["generation_config"];
+  if (typeof generationConfig !== "object" || generationConfig === null) {
+    return;
+  }
+  const config = generationConfig as Record<string, unknown>;
+  if (config["temperature"] != null && !GoogleGenAIAuthHook.loggedTemperatureWarning) {
+    GoogleGenAIAuthHook.loggedTemperatureWarning = true;
+    console.warn(
+      "temperature is not supported on Gemini 3.6 and newer models and is ignored.",
+    );
+  }
+  if (config["top_p"] != null && !GoogleGenAIAuthHook.loggedTopPWarning) {
+    GoogleGenAIAuthHook.loggedTopPWarning = true;
+    console.warn(
+      "top_p is not supported on Gemini 3.6 and newer models and is ignored.",
+    );
+  }
+  if (config["top_k"] != null && !GoogleGenAIAuthHook.loggedTopKWarning) {
+    GoogleGenAIAuthHook.loggedTopKWarning = true;
+    console.warn(
+      "top_k is not supported on Gemini 3.6 and newer models and is ignored.",
+    );
   }
 }
 
