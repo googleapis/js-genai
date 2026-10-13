@@ -2,6 +2,13 @@
 
 
 
+## [2.29.1](https://github.com/googleapis/js-genai/compare/v2.29.0...v2.29.1) (2026-10-13)
+
+
+### Bug Fixes
+
+* concatenate output_text across multi-step model responses in a turn ([567cc8a](https://github.com/googleapis/js-genai/commit/567cc8a1731850d3d3f22c0f9cf3b0b3664cf79f))
+
 ## [2.29.0](https://github.com/googleapis/js-genai/compare/v2.28.0...v2.29.0) (2026-10-13)
 
 
