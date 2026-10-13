@@ -104,6 +104,7 @@ export interface GoogleGenAIParentClient {
   getHeaders?(): Record<string, string> | undefined;
   getAuthHeaders(url?: string): Headers | Promise<Headers>;
   getFetch?(): Fetcher | undefined;
+  getTimeout?(): number | undefined;
 }
 
 export function getGoogleGenAIServerURL(
@@ -136,19 +137,21 @@ export function getGoogleGenAIAPIVersion(
 
 export function buildGoogleGenAIClient(
   parentClient: GoogleGenAIParentClient,
-  options: SDKOptions = {},
+  options: SDKOptions & { timeout?: number } = {},
 ): GoogleGenAI {
-  const fetchFn = options.http_client ? undefined : parentClient.getFetch?.();
+  const { timeout, ...rest } = options;
+  const fetchFn = rest.http_client ? undefined : parentClient.getFetch?.();
   const httpClient =
-    options.http_client ??
+    rest.http_client ??
     (fetchFn ? new HTTPClient({ fetcher: fetchFn }) : undefined);
+  const timeout_ms = rest.timeout_ms ?? timeout ?? parentClient.getTimeout?.();
 
   const sdk = new GoogleGenAI({
-    ...options,
+    ...rest,
     http_client: httpClient,
-    api_version: options.api_version ?? getGoogleGenAIAPIVersion(parentClient),
+    api_version: rest.api_version ?? getGoogleGenAIAPIVersion(parentClient),
     security:
-      options.security ??
+      rest.security ??
       (new GoogleGenAISecurityProvider({
         defaultHeaders: {
           ...parentClient.getDefaultHeaders?.(),
@@ -156,7 +159,8 @@ export function buildGoogleGenAIClient(
         },
         getAuthHeaders: (url) => parentClient.getAuthHeaders(url),
       }) as SDKOptions["security"]),
-    server_url: options.server_url ?? getGoogleGenAIServerURL(parentClient),
+    server_url: rest.server_url ?? getGoogleGenAIServerURL(parentClient),
+    timeout_ms,
   });
   return sdk;
 }
