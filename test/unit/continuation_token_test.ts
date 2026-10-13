@@ -334,7 +334,12 @@ describe('continuation token helpers (_afc)', () => {
 
     // Empty arrays on either side
     expect(afc.mergeCandidates([], [c1Hop2])).toEqual([c1Hop2]);
-    expect(afc.mergeCandidates([c1Hop1], [])).toEqual([c1Hop1]);
+    expect(afc.mergeCandidates([c1Hop1], [])).toEqual([
+      {
+        content: {role: 'model', parts: [{text: 'C0-H1 '}]},
+        index: 0,
+      },
+    ]);
 
     // 2 candidates + 3 candidates -> 3 merged candidates
     const merged2To3 = afc.mergeCandidates(
@@ -518,6 +523,47 @@ describe('continuation token helpers (_afc)', () => {
         probability: types.HarmProbability.NEGLIGIBLE,
       },
     ]);
+  });
+
+  it('mergeContinuationResponses clears finishReason and preserves promptFeedback when a continuation hop returns no candidates', () => {
+    const hop1 = buildResponse({
+      parts: [{text: 'Partial output before block.'}],
+      finishReason: types.FinishReason.CONTINUATION,
+      continuationToken: 'tok-hop-1',
+      finishMessage: 'Continuing',
+      usageMetadata: {
+        promptTokenCount: 10,
+        candidatesTokenCount: 100,
+        totalTokenCount: 110,
+      },
+    });
+
+    for (const emptyCandidates of [undefined, [] as types.Candidate[]]) {
+      const hop2 = new types.GenerateContentResponse();
+      hop2.candidates = emptyCandidates;
+      hop2.promptFeedback = {
+        blockReason: types.BlockedReason.OTHER,
+        blockReasonMessage: 'Blocked on continuation hop',
+      };
+      hop2.usageMetadata = {
+        promptTokenCount: 110,
+        totalTokenCount: 110,
+      };
+
+      const merged = afc.mergeContinuationResponses([hop1, hop2]);
+
+      expect(merged.text).toBe('Partial output before block.');
+      expect(merged.candidates?.length).toBe(1);
+      expect(merged.candidates?.[0]?.finishReason).toBeUndefined();
+      expect(merged.candidates?.[0]?.continuationToken).toBeUndefined();
+      expect(merged.candidates?.[0]?.finishMessage).toBeUndefined();
+      expect(merged.promptFeedback).toEqual({
+        blockReason: types.BlockedReason.OTHER,
+        blockReasonMessage: 'Blocked on continuation hop',
+      });
+      expect(merged.usageMetadata?.promptTokenCount).toBe(120);
+      expect(merged.usageMetadata?.initialPromptTokenCount).toBe(10);
+    }
   });
 
   it('mergeUsageMetadata sums billed token counts and modality details while preserving initialPromptTokenCount', () => {

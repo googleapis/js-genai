@@ -375,7 +375,15 @@ export function mergeCandidates(
     return currCandidates;
   }
   if (currCandidates.length === 0) {
-    return prevCandidates;
+    return prevCandidates.map(
+      (prevCandidate) =>
+        mergeResponseObjects(
+          prevCandidate as unknown as Record<string, unknown>,
+          {},
+          true,
+          false,
+        ) as unknown as types.Candidate,
+    );
   }
   const merged: types.Candidate[] = [];
   const minLen = Math.min(prevCandidates.length, currCandidates.length);
@@ -505,6 +513,21 @@ export function mergeResponseObjects(
       continue;
     }
 
+    // Route candidates through mergeCandidates even when curr.candidates is
+    // undefined/null so preserved candidates clear terminal continuation state.
+    if (
+      !isCandidate &&
+      !isUsageMetadata &&
+      fieldName === 'candidates' &&
+      Array.isArray(prevVal)
+    ) {
+      mergedData[fieldName] = mergeCandidates(
+        prevVal as types.Candidate[],
+        (Array.isArray(currVal) ? currVal : []) as types.Candidate[],
+      );
+      continue;
+    }
+
     if (fieldName === 'usageMetadata') {
       const mergedUsage = mergeUsageMetadata(
         prevVal as types.GenerateContentResponseUsageMetadata | undefined,
@@ -533,12 +556,7 @@ export function mergeResponseObjects(
     ) {
       mergedData[fieldName] = prevVal + currVal;
     } else if (Array.isArray(prevVal) && Array.isArray(currVal)) {
-      if (fieldName === 'candidates') {
-        mergedData[fieldName] = mergeCandidates(
-          prevVal as types.Candidate[],
-          currVal as types.Candidate[],
-        );
-      } else if (
+      if (
         isModalityTokenCountArray(fieldName, prevVal) ||
         isModalityTokenCountArray(fieldName, currVal)
       ) {
