@@ -233,6 +233,13 @@ export class Models extends BaseModule {
     const transformedParams = await this.processParamsMaybeAddMcpUsage(params);
     this.maybeMoveToResponseJsonSchema(params);
     if (!afc.hasCallableTools(params) || afc.shouldDisableAfc(params.config)) {
+      const enableContinuation = afc.shouldEnableAutomaticContinuation(
+        params.config,
+        true,
+      );
+      if (!enableContinuation) {
+        return await this.generateContentInternal(transformedParams);
+      }
       return await this.generateContentWithContinuation(transformedParams);
     }
 
