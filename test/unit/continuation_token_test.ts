@@ -1563,7 +1563,7 @@ describe('Models automatic continuation', () => {
     expect(spy).toHaveBeenCalledTimes(1);
   });
 
-  it('generateContentStream attaches initialPromptTokenCount even when automaticContinuation is false', async () => {
+  it('generateContentStream does not attach initialPromptTokenCount when automaticContinuation is false', async () => {
     const chunk1 = buildResponse({
       parts: [{text: 'Chunk with usage'}],
       finishReason: types.FinishReason.STOP,
@@ -1593,8 +1593,7 @@ describe('Models automatic continuation', () => {
     expect(spy).toHaveBeenCalledTimes(1);
     expect(received.length).toBe(1);
     expect(received[0].usageMetadata?.promptTokenCount).toBe(42);
-    expect(received[0].usageMetadata?.initialPromptTokenCount).toBe(42);
-    expect(afc.getInitialPromptTokenCount(received[0].usageMetadata)).toBe(42);
+    expect(received[0].usageMetadata?.initialPromptTokenCount).toBeUndefined();
   });
 });
 

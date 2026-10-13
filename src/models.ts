@@ -369,6 +369,13 @@ export class Models extends BaseModule {
     if (afc.shouldDisableAfc(params.config)) {
       const transformedParams =
         await this.processParamsMaybeAddMcpUsage(params);
+      const enableContinuation = afc.shouldEnableAutomaticContinuation(
+        params.config,
+        true,
+      );
+      if (!enableContinuation) {
+        return await this.generateContentStreamInternal(transformedParams);
+      }
       return await this.generateContentStreamWithContinuation(
         transformedParams,
       );
