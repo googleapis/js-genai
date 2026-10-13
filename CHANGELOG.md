@@ -2,6 +2,32 @@
 
 
 
+## [2.29.0](https://github.com/googleapis/js-genai/compare/v2.28.0...v2.29.0) (2026-10-13)
+
+
+### Features
+
+* accumulate streaming continuation usage metadata and expose initialPromptTokenCount ([dbc961f](https://github.com/googleapis/js-genai/commit/dbc961f0294e3fdc9d8fc277b9921bada8f97b90))
+* Add `continuation_token` to the Interactions `interaction.status_update` event. ([a93776c](https://github.com/googleapis/js-genai/commit/a93776c9479d69d280ca1d2fc9784a8cebc5417a))
+* Add a CONTINUATION_REQUIRED Interaction status ([754f71f](https://github.com/googleapis/js-genai/commit/754f71f0f90d0355f32f100a1c338b008a1c89e1))
+* add billable token counts fields ([839ffc2](https://github.com/googleapis/js-genai/commit/839ffc25de12a47a66db10d236d53d59d97d0530))
+* Add startOffset/endOffset to Transcription and interimTranscriptTimestampEnabled to RealtimeInputConfig ([bdbf156](https://github.com/googleapis/js-genai/commit/bdbf1560751d333c6391ca5b4a29799af2baef3c))
+* Add usage in InteractionStatusUpdate events ([8892aea](https://github.com/googleapis/js-genai/commit/8892aeace095b90805890e0fd5cfa027d87bbc70))
+* automatically consume the continuation token ([98637d1](https://github.com/googleapis/js-genai/commit/98637d1f60dd5a02d978aa354d576ce160b5c65c))
+* **cli:** update Speakeasy generator to v2.948.0, bump CLI to v0.4.2, and apply CLI overlay fixes ([22d53ec](https://github.com/googleapis/js-genai/commit/22d53ec2f7dc94416fac20bbbf68585712c527c3))
+
+
+### Bug Fixes
+
+* clear intermediate CONTINUATION finishReason in streaming continuation ([22706af](https://github.com/googleapis/js-genai/commit/22706af4f7d770a64df2aa0557011549380d2350))
+* do not record incomplete continuation stream turns in curated chat history ([81c3c49](https://github.com/googleapis/js-genai/commit/81c3c49bd2a86c300b23693327df41382f94e535))
+* **gemini-api-cli:** remove unsupported 2.5 and 1.6 models from Interactions model options and CLI examples ([1002720](https://github.com/googleapis/js-genai/commit/1002720893eef0663d020312da552c64d7c5e65e))
+* **js:** do not set initial prompt token count for requests that do not use automatic consumption of continuation token ([0885fb9](https://github.com/googleapis/js-genai/commit/0885fb917cba113fcbe4294731473de5be1fc55f))
+* **js:** fix streaming continuation edge cases (stale token, AbortError, initialPromptTokenCount) ([f3d10a6](https://github.com/googleapis/js-genai/commit/f3d10a68f010825ebf07b13857012ac78ea92546))
+* Raise default HTTP timeouts so long-running requests aren't killed client-side ([10e850c](https://github.com/googleapis/js-genai/commit/10e850c21ab87d00c7e63e7c8afa592c5d407f0e))
+* resume streaming generation from the latest checkpoint continuation token on mid-stream errors or cutoffs ([625ac2c](https://github.com/googleapis/js-genai/commit/625ac2c3a663719e57efbf51055a36b1e27a86d8))
+* Update EnvironmentConfig.env schema to map keys to EnvVar or string. ([8478e12](https://github.com/googleapis/js-genai/commit/8478e1222137e288fa3eaedbc5111bd090dbf400))
+
 ## [2.28.0](https://github.com/googleapis/js-genai/compare/v2.27.0...v2.28.0) (2026-10-07)
 
 
