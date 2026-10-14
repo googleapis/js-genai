@@ -6,6 +6,7 @@
 
 import * as afc from '../../src/_afc.js';
 import {GoogleGenAI} from '../../src/client.js';
+import {ApiError} from '../../src/errors.js';
 import * as types from '../../src/types.js';
 
 function buildResponse(options: {
@@ -83,6 +84,32 @@ async function* makeStream(
   }
 }
 
+/**
+ * Calls the private StreamContinuation.nextResumeToken with the given hop state
+ * and reconnect count.
+ */
+function nextResumeToken(params: {
+  startToken?: string;
+  token?: string;
+  finishReason?: types.FinishReason;
+  hasPromptFeedback?: boolean;
+  hasYieldedContent?: boolean;
+  reconnectsWithoutProgress: number;
+}): {continuationToken: string | undefined; reconnectsWithoutProgress: number} {
+  const {reconnectsWithoutProgress, ...hop} = params;
+  const state = new afc.StreamContinuation(undefined);
+  state['hop'] = {
+    startToken: undefined,
+    hasPromptFeedback: false,
+    hasYieldedContent: false,
+    receivedAnyChunk: false,
+    ...hop,
+  };
+  state['reconnectsWithoutProgress'] = reconnectsWithoutProgress;
+  const [continuationToken, reconnects] = state['nextResumeToken']();
+  return {continuationToken, reconnectsWithoutProgress: reconnects};
+}
+
 interface InternalModels {
   generateContentInternal: (
     params: types.GenerateContentParameters,
@@ -142,8 +169,9 @@ describe('continuation token helpers (_afc)', () => {
     expect(afc.isResumableFinishReason(types.FinishReason.STOP)).toBeFalse();
   });
 
-  it('processContinuationStreamChunk updates hopState and clears stale checkpoint continuationToken on non-resumable finishReason', () => {
-    const hopState: afc.StreamContinuationHopState = {};
+  it('StreamContinuation.observe updates hop state and clears stale checkpoint continuationToken on non-resumable finishReason', () => {
+    const state = new afc.StreamContinuation(undefined);
+    state.startHop();
     const chunk1 = buildResponse({
       parts: [{text: 'Checkpoint, '}],
       continuationToken: 'ckpt-token-1',
@@ -153,75 +181,241 @@ describe('continuation token helpers (_afc)', () => {
         totalTokenCount: 20,
       },
     });
-    const out1 = afc.processContinuationStreamChunk(
-      chunk1,
-      true,
-      undefined,
-      hopState,
-    );
-    expect(hopState.continuationToken).toBe('ckpt-token-1');
-    expect(hopState.hopFinishReason).toBeUndefined();
+    const out1 = state.observe(chunk1);
+    expect(state['hop'].token).toBe('ckpt-token-1');
+    expect(state['hop'].finishReason).toBeUndefined();
     expect(out1.usageMetadata?.initialPromptTokenCount).toBe(15);
 
     const chunk2 = buildResponse({
       parts: [{text: 'Done.'}],
       finishReason: types.FinishReason.STOP,
     });
-    const out2 = afc.processContinuationStreamChunk(
-      chunk2,
-      true,
-      undefined,
-      hopState,
-    );
-    expect(hopState.continuationToken).toBeUndefined();
-    expect(hopState.hopFinishReason).toBe(types.FinishReason.STOP);
+    const out2 = state.observe(chunk2);
+    expect(state['hop'].token).toBeUndefined();
+    expect(state['hop'].finishReason).toBe(types.FinishReason.STOP);
     expect(out2.candidates?.[0]?.finishReason).toBe(types.FinishReason.STOP);
   });
 
-  it('shouldRethrowStreamError returns true for AbortError, aborted signal, or non-resumable hopState', () => {
-    const resumableHopState: afc.StreamContinuationHopState = {
-      continuationToken: 'ckpt-1',
-      hopFinishReason: undefined,
-    };
+  it('StreamContinuation.observe tracks promptFeedback and yielded content on hop state', () => {
+    const state = new afc.StreamContinuation(undefined);
+    state.startHop();
+    state.observe(buildResponse({parts: [], continuationToken: 'ckpt-1'}));
+    expect(state['hop'].hasYieldedContent).toBeFalse();
+    expect(state['hop'].hasPromptFeedback).toBeFalse();
+
+    state.observe(buildResponse({parts: [{text: 'content'}]}));
+    expect(state['hop'].hasYieldedContent).toBeTrue();
+
+    const blockedChunk = new types.GenerateContentResponse();
+    blockedChunk.promptFeedback = {blockReason: types.BlockedReason.SAFETY};
+    state.observe(blockedChunk);
+    expect(state['hop'].hasPromptFeedback).toBeTrue();
+    expect(() => state.endHop({error: new Error('network drop')})).toThrowError(
+      'network drop',
+    );
+  });
+
+  it('StreamContinuation.endHop rethrows for AbortError, aborted signal, or non-resumable hop state', () => {
+    function resumableState(
+      config?: types.GenerateContentConfig,
+    ): afc.StreamContinuation {
+      const state = new afc.StreamContinuation(config);
+      state.startHop();
+      state['hop'].token = 'ckpt-1';
+      return state;
+    }
     expect(
-      afc.shouldRethrowStreamError(
-        new Error('network drop'),
-        undefined,
-        true,
-        resumableHopState,
-      ),
-    ).toBeFalse();
+      resumableState().endHop({error: new Error('network drop')}),
+    ).toBeTrue();
 
     const abortErr = new Error('The operation was aborted');
     abortErr.name = 'AbortError';
-    expect(
-      afc.shouldRethrowStreamError(
-        abortErr,
-        undefined,
-        true,
-        resumableHopState,
-      ),
-    ).toBeTrue();
+    expect(() => resumableState().endHop({error: abortErr})).toThrow(abortErr);
 
     const controller = new AbortController();
     controller.abort();
-    expect(
-      afc.shouldRethrowStreamError(
-        new Error('network drop'),
-        {abortSignal: controller.signal},
-        true,
-        resumableHopState,
-      ),
-    ).toBeTrue();
+    expect(() =>
+      resumableState({abortSignal: controller.signal}).endHop({
+        error: new Error('network drop'),
+      }),
+    ).toThrowError('network drop');
 
+    expect(() =>
+      resumableState({automaticContinuation: false}).endHop({
+        error: new Error('network drop'),
+      }),
+    ).toThrowError('network drop');
+  });
+
+  it('StreamContinuation.endHop rethrows an ApiError immediately only if the hop received no chunk', () => {
+    const rejected = new ApiError({message: 'unavailable', status: 503});
+    const state = new afc.StreamContinuation(undefined);
+    state.startHop();
+    state.observe(
+      buildResponse({parts: [{text: 'a'}], continuationToken: 'c1'}),
+    );
+    expect(state.endHop()).toBeTrue();
+    // Rejected before any chunk: not retried from the hop's start token.
+    state.startHop();
+    expect(() => state.endHop({error: rejected})).toThrow(rejected);
+
+    // The same error after the hop received a chunk resumes as before.
+    const midStream = new afc.StreamContinuation(undefined);
+    midStream.startHop();
+    midStream.observe(buildResponse({parts: [], continuationToken: 'c1'}));
+    expect(midStream.endHop({error: rejected})).toBeTrue();
+  });
+
+  it('StreamContinuation.endHop keeps the latest error since progress and throws it when giving up', () => {
+    const drop = new Error('network drop');
+    const state = new afc.StreamContinuation(undefined);
+    state.startHop();
+    state.observe(
+      buildResponse({parts: [{text: 'a'}], continuationToken: 'c1'}),
+    );
+    expect(state.endHop()).toBeTrue();
+    state.startHop();
+    expect(state.endHop({error: drop})).toBeTrue();
+    for (let i = 1; i < afc.MAX_STREAM_RECONNECTS_WITHOUT_PROGRESS; i++) {
+      state.startHop();
+      expect(state.endHop()).toBeTrue();
+    }
+    state.startHop();
+    expect(() => state.endHop()).toThrow(drop);
+
+    // Progress clears the remembered error.
+    const recovered = new afc.StreamContinuation(undefined);
+    recovered.startHop();
+    recovered.observe(buildResponse({parts: [], continuationToken: 'c1'}));
+    expect(recovered.endHop()).toBeTrue();
+    recovered.startHop();
+    expect(recovered.endHop({error: drop})).toBeTrue();
+    recovered.startHop();
+    recovered.observe(buildResponse({parts: [], continuationToken: 'c2'}));
+    expect(recovered.endHop()).toBeTrue();
+    recovered.startHop();
+    recovered.observe(buildResponse({parts: [{text: 'b'}]}));
+    expect(recovered.endHop()).toBeFalse();
+
+    // A stale error is not thrown when the API ends the hop itself.
+    const finished = new afc.StreamContinuation(undefined);
+    finished.startHop();
+    finished.observe(buildResponse({parts: [], continuationToken: 'c1'}));
+    expect(finished.endHop()).toBeTrue();
+    finished.startHop();
+    expect(finished.endHop({error: drop})).toBeTrue();
+    finished.startHop();
+    finished.observe(
+      buildResponse({parts: [], finishReason: types.FinishReason.STOP}),
+    );
+    expect(finished.endHop()).toBeFalse();
+  });
+
+  it('StreamContinuation.nextResumeToken advances on new checkpoint, retries hopStartToken on drop, and stops on finishReason or exhausted budget', () => {
+    // New checkpoint token resets reconnectsWithoutProgress
     expect(
-      afc.shouldRethrowStreamError(
-        new Error('network drop'),
-        undefined,
-        false,
-        resumableHopState,
-      ),
-    ).toBeTrue();
+      nextResumeToken({
+        startToken: 'tok-1',
+        token: 'tok-2',
+        finishReason: undefined,
+        reconnectsWithoutProgress: 2,
+      }),
+    ).toEqual({continuationToken: 'tok-2', reconnectsWithoutProgress: 0});
+
+    // Initial hop (startToken: undefined) failing without checkpoint cannot resume
+    expect(
+      nextResumeToken({
+        startToken: undefined,
+        token: undefined,
+        finishReason: undefined,
+        reconnectsWithoutProgress: 0,
+      }),
+    ).toEqual({continuationToken: undefined, reconnectsWithoutProgress: 1});
+
+    // Resumed hop failing before its own checkpoint retries from hopStartToken
+    expect(
+      nextResumeToken({
+        startToken: 'tok-1',
+        token: undefined,
+        finishReason: undefined,
+        reconnectsWithoutProgress: 0,
+      }),
+    ).toEqual({continuationToken: 'tok-1', reconnectsWithoutProgress: 1});
+
+    // Echoing the same hopStartToken without progress counts as a retry
+    expect(
+      nextResumeToken({
+        startToken: 'tok-1',
+        token: 'tok-1',
+        finishReason: undefined,
+        reconnectsWithoutProgress: 1,
+      }),
+    ).toEqual({continuationToken: 'tok-1', reconnectsWithoutProgress: 2});
+
+    // Exhausted retry budget returns undefined
+    expect(
+      nextResumeToken({
+        startToken: 'tok-1',
+        token: undefined,
+        finishReason: undefined,
+        reconnectsWithoutProgress: afc.MAX_STREAM_RECONNECTS_WITHOUT_PROGRESS,
+      }),
+    ).toEqual({
+      continuationToken: undefined,
+      reconnectsWithoutProgress: afc.MAX_STREAM_RECONNECTS_WITHOUT_PROGRESS,
+    });
+
+    // Resumed hop that yielded content before dropping without a checkpoint does not retry hopStartToken
+    expect(
+      nextResumeToken({
+        startToken: 'tok-1',
+        token: undefined,
+        finishReason: undefined,
+        hasYieldedContent: true,
+        reconnectsWithoutProgress: 0,
+      }),
+    ).toEqual({continuationToken: undefined, reconnectsWithoutProgress: 0});
+    expect(
+      nextResumeToken({
+        startToken: 'tok-1',
+        token: 'tok-1',
+        finishReason: undefined,
+        hasYieldedContent: true,
+        reconnectsWithoutProgress: 1,
+      }),
+    ).toEqual({continuationToken: undefined, reconnectsWithoutProgress: 1});
+
+    // Server ending hop with finishReason but no new token never replays hopStartToken
+    expect(
+      nextResumeToken({
+        startToken: 'tok-1',
+        token: undefined,
+        finishReason: types.FinishReason.CONTINUATION,
+        reconnectsWithoutProgress: 0,
+      }),
+    ).toEqual({continuationToken: undefined, reconnectsWithoutProgress: 0});
+    expect(
+      nextResumeToken({
+        startToken: 'tok-1',
+        token: 'tok-1',
+        finishReason: types.FinishReason.CONTINUATION,
+        reconnectsWithoutProgress: 0,
+      }),
+    ).toEqual({continuationToken: undefined, reconnectsWithoutProgress: 0});
+
+    // Prompt feedback stops continuation without retrying hopStartToken
+    expect(
+      nextResumeToken({
+        startToken: 'tok-1',
+        token: undefined,
+        finishReason: undefined,
+        hasPromptFeedback: true,
+        reconnectsWithoutProgress: 2,
+      }),
+    ).toEqual({continuationToken: undefined, reconnectsWithoutProgress: 0});
+    expect(
+      afc.canResumeStream(true, 'tok-1', types.FinishReason.CONTINUATION, true),
+    ).toBeFalse();
   });
 
   it('prepareContinuationConfig sets continuationToken and strips automaticContinuation without mutating input', () => {
@@ -1629,7 +1823,7 @@ describe('Models automatic continuation', () => {
     ]);
   });
 
-  it('generateContentStream rethrows mid-stream error when no checkpoint continuationToken was received in current hop', async () => {
+  it('generateContentStream rethrows mid-stream error after exhausting retries when no new checkpoint continuationToken is received in resumed hop', async () => {
     async function* makeFailingStream(
       chunks: types.GenerateContentResponse[],
     ): AsyncGenerator<types.GenerateContentResponse> {
@@ -1645,13 +1839,14 @@ describe('Models automatic continuation', () => {
         continuationToken: 'ckpt-tok-1',
       }),
     ];
+    const maxRetries = afc.MAX_STREAM_RECONNECTS_WITHOUT_PROGRESS;
     const spy = spyOn(
       internalModels,
       'generateContentStreamInternal',
     ).and.returnValues(
       Promise.resolve(makeStream(hop1Cutoff)),
-      Promise.resolve(
-        makeFailingStream([buildResponse({parts: [{text: 'Hop 2 no token'}]})]),
+      ...Array.from({length: maxRetries + 1}, () =>
+        Promise.resolve(makeFailingStream([])),
       ),
     );
 
@@ -1667,8 +1862,256 @@ describe('Models automatic continuation', () => {
         }
       })(),
     ).toBeRejectedWithError('unrecoverable stream error');
+    expect(spy).toHaveBeenCalledTimes(maxRetries + 2);
+    const args = spy.calls.allArgs();
+    expect(args[0][0].config?.continuationToken).toBeUndefined();
+    for (let i = 1; i < maxRetries + 2; i++) {
+      expect(args[i][0].config?.continuationToken).toBe('ckpt-tok-1');
+    }
+    expect(receivedTexts).toEqual(['Hop 1 checkpoint, ']);
+  });
+
+  it('generateContentStream retries from hopStartToken when resumed hop drops or cuts off before yielding content', async () => {
+    async function* makeFailingStream(
+      chunks: types.GenerateContentResponse[],
+      errorMessage: string,
+    ): AsyncGenerator<types.GenerateContentResponse> {
+      for (const chunk of chunks) {
+        yield chunk;
+      }
+      throw new Error(errorMessage);
+    }
+
+    const hop1 = [
+      buildResponse({
+        parts: [{text: 'Hop 1, '}],
+        finishReason: types.FinishReason.CONTINUATION,
+        continuationToken: 'hop1-boundary-tok',
+      }),
+    ];
+    const hop2RetryDone = [
+      buildResponse({
+        parts: [{text: 'Hop 2 completed.'}],
+        finishReason: types.FinishReason.STOP,
+      }),
+    ];
+
+    const spy = spyOn(
+      internalModels,
+      'generateContentStreamInternal',
+    ).and.returnValues(
+      Promise.resolve(makeStream(hop1)),
+      Promise.resolve(makeFailingStream([], 'transient drop')),
+      Promise.resolve(makeStream([])),
+      Promise.resolve(makeStream(hop2RetryDone)),
+    );
+
+    const stream = await client.models.generateContentStream({
+      model: 'gemini-2.5-flash',
+      contents: 'Stream with hop 2 pre-checkpoint drops',
+    });
+    const receivedTexts: string[] = [];
+    for await (const chunk of stream) {
+      receivedTexts.push(chunk.text ?? '');
+    }
+
+    expect(spy).toHaveBeenCalledTimes(4);
+    const args = spy.calls.allArgs();
+    expect(args[0][0].config?.continuationToken).toBeUndefined();
+    expect(args[1][0].config?.continuationToken).toBe('hop1-boundary-tok');
+    expect(args[2][0].config?.continuationToken).toBe('hop1-boundary-tok');
+    expect(args[3][0].config?.continuationToken).toBe('hop1-boundary-tok');
+    expect(receivedTexts).toEqual(['Hop 1, ', 'Hop 2 completed.']);
+  });
+
+  it('generateContentStream does not retry hopStartToken when resumed hop yields content before dropping without a checkpoint', async () => {
+    async function* makeFailingStream(
+      chunks: types.GenerateContentResponse[],
+      errorMessage: string,
+    ): AsyncGenerator<types.GenerateContentResponse> {
+      for (const chunk of chunks) {
+        yield chunk;
+      }
+      throw new Error(errorMessage);
+    }
+
+    const hop1 = [
+      buildResponse({
+        parts: [{text: 'Hop 1, '}],
+        finishReason: types.FinishReason.CONTINUATION,
+        continuationToken: 'hop1-boundary-tok',
+      }),
+    ];
+    const hop2PartialChunk = buildResponse({
+      parts: [{text: 'Hop 2 partial content'}],
+    });
+
+    const spy = spyOn(internalModels, 'generateContentStreamInternal');
+
+    // Case 1: Stream error after yielding candidate content parts
+    spy.and.returnValues(
+      Promise.resolve(makeStream(hop1)),
+      Promise.resolve(
+        makeFailingStream([hop2PartialChunk], 'mid-hop stream error'),
+      ),
+    );
+    spy.calls.reset();
+
+    const errorStream = await client.models.generateContentStream({
+      model: 'gemini-2.5-flash',
+      contents: 'Stream with mid-hop error after content',
+    });
+    const errorTexts: string[] = [];
+    await expectAsync(
+      (async () => {
+        for await (const chunk of errorStream) {
+          errorTexts.push(chunk.text ?? '');
+        }
+      })(),
+    ).toBeRejectedWithError('mid-hop stream error');
+
     expect(spy).toHaveBeenCalledTimes(2);
-    expect(receivedTexts).toEqual(['Hop 1 checkpoint, ', 'Hop 2 no token']);
+    expect(errorTexts).toEqual(['Hop 1, ', 'Hop 2 partial content']);
+
+    // Case 2: Clean close without finishReason after yielding candidate
+    // content parts ends the stream normally.
+    spy.and.returnValues(
+      Promise.resolve(makeStream(hop1)),
+      Promise.resolve(makeStream([hop2PartialChunk])),
+    );
+    spy.calls.reset();
+
+    const cutoffStream = await client.models.generateContentStream({
+      model: 'gemini-2.5-flash',
+      contents: 'Stream with mid-hop clean cutoff after content',
+    });
+    const cutoffTexts: string[] = [];
+    for await (const chunk of cutoffStream) {
+      cutoffTexts.push(chunk.text ?? '');
+    }
+
+    expect(spy).toHaveBeenCalledTimes(2);
+    expect(cutoffTexts).toEqual(['Hop 1, ', 'Hop 2 partial content']);
+  });
+
+  it('generateContentStream stops when resumed hop ends with CONTINUATION finishReason but no new continuationToken', async () => {
+    const hop1 = [
+      buildResponse({
+        parts: [{text: 'Hop 1, '}],
+        finishReason: types.FinishReason.CONTINUATION,
+        continuationToken: 'hop1-tok',
+      }),
+    ];
+    const hop2NoNewToken = [
+      buildResponse({
+        parts: [{text: 'Hop 2 ends with CONTINUATION but no token.'}],
+        finishReason: types.FinishReason.CONTINUATION,
+      }),
+    ];
+
+    const spy = spyOn(
+      internalModels,
+      'generateContentStreamInternal',
+    ).and.returnValues(
+      Promise.resolve(makeStream(hop1)),
+      Promise.resolve(makeStream(hop2NoNewToken)),
+    );
+
+    const stream = await client.models.generateContentStream({
+      model: 'gemini-2.5-flash',
+      contents: 'Stream where hop 2 omits continuationToken',
+    });
+    const chunks: types.GenerateContentResponse[] = [];
+    for await (const chunk of stream) {
+      chunks.push(chunk);
+    }
+
+    expect(spy).toHaveBeenCalledTimes(2);
+    expect(chunks.map((c) => c.text ?? '')).toEqual([
+      'Hop 1, ',
+      'Hop 2 ends with CONTINUATION but no token.',
+    ]);
+    expect(chunks[0].candidates?.[0]?.finishReason).toBeUndefined();
+    expect(chunks[1].candidates?.[0]?.finishReason).toBe(
+      types.FinishReason.CONTINUATION,
+    );
+  });
+
+  it('generateContentStream does not resume from checkpoint continuationToken after a prompt-blocked chunk', async () => {
+    const blockedChunk = new types.GenerateContentResponse();
+    blockedChunk.promptFeedback = {
+      blockReason: types.BlockedReason.SAFETY,
+    };
+    const hop1 = [
+      buildResponse({parts: [{text: 'Partial, '}]}),
+      buildResponse({
+        parts: [{text: 'checkpoint.'}],
+        continuationToken: 'ckpt-tok-1',
+      }),
+      blockedChunk,
+    ];
+    const spy = spyOn(
+      internalModels,
+      'generateContentStreamInternal',
+    ).and.returnValues(
+      Promise.resolve(makeStream(hop1)),
+      Promise.resolve(makeStream(hop1)),
+    );
+
+    const stream = await client.models.generateContentStream({
+      model: 'gemini-2.5-flash',
+      contents: 'Stream that gets blocked',
+    });
+    const chunks: types.GenerateContentResponse[] = [];
+    for await (const chunk of stream) {
+      chunks.push(chunk);
+    }
+
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(chunks.length).toBe(3);
+    expect(chunks[0].text).toBe('Partial, ');
+    expect(chunks[1].text).toBe('checkpoint.');
+    expect(chunks[2].candidates).toBeUndefined();
+    expect(chunks[2].promptFeedback?.blockReason).toBe(
+      types.BlockedReason.SAFETY,
+    );
+  });
+
+  it('generateContentStream rethrows mid-stream error after a prompt-blocked chunk instead of resuming', async () => {
+    const blockedChunk = new types.GenerateContentResponse();
+    blockedChunk.promptFeedback = {
+      blockReason: types.BlockedReason.SAFETY,
+    };
+    async function* makeBlockedThenFailingStream(): AsyncGenerator<types.GenerateContentResponse> {
+      yield buildResponse({
+        parts: [{text: 'checkpoint.'}],
+        continuationToken: 'ckpt-tok-1',
+      });
+      yield blockedChunk;
+      throw new Error('stream error after block');
+    }
+    const spy = spyOn(
+      internalModels,
+      'generateContentStreamInternal',
+    ).and.returnValues(
+      Promise.resolve(makeBlockedThenFailingStream()),
+      Promise.resolve(makeStream([buildResponse({parts: [{text: 'x'}]})])),
+    );
+
+    const stream = await client.models.generateContentStream({
+      model: 'gemini-2.5-flash',
+      contents: 'Stream that gets blocked then errors',
+    });
+    let count = 0;
+    await expectAsync(
+      (async () => {
+        for await (const _chunk of stream) {
+          count++;
+        }
+      })(),
+    ).toBeRejectedWithError('stream error after block');
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(count).toBe(2);
   });
 
   it('generateContentStream accumulates usageMetadata across continuation hops', async () => {
@@ -2066,6 +2509,228 @@ describe('Models automatic continuation', () => {
     expect(received.length).toBe(1);
     expect(received[0].usageMetadata?.promptTokenCount).toBe(42);
     expect(received[0].usageMetadata?.initialPromptTokenCount).toBeUndefined();
+  });
+
+  it('generateContentStream does not retry hopStartToken when resumed hop returns promptFeedback without candidates', async () => {
+    const hop1 = [
+      buildResponse({
+        parts: [{text: 'Hop 1 text, '}],
+        finishReason: types.FinishReason.CONTINUATION,
+        continuationToken: 'stream-tok-before-block',
+      }),
+    ];
+    const hop2BlockedChunk = new types.GenerateContentResponse();
+    hop2BlockedChunk.candidates = undefined;
+    hop2BlockedChunk.promptFeedback = {
+      blockReason: types.BlockedReason.SAFETY,
+    };
+
+    const spy = spyOn(
+      internalModels,
+      'generateContentStreamInternal',
+    ).and.returnValues(
+      Promise.resolve(makeStream(hop1)),
+      Promise.resolve(makeStream([hop2BlockedChunk])),
+    );
+
+    const stream = await client.models.generateContentStream({
+      model: 'gemini-2.5-flash',
+      contents: 'Stream that gets blocked on hop 2',
+    });
+    const chunks: types.GenerateContentResponse[] = [];
+    for await (const chunk of stream) {
+      chunks.push(chunk);
+    }
+
+    expect(spy).toHaveBeenCalledTimes(2);
+    expect(chunks.length).toBe(2);
+    expect(chunks[0].text).toBe('Hop 1 text, ');
+    expect(chunks[0].candidates?.[0]?.finishReason).toBeUndefined();
+    expect(chunks[1].promptFeedback?.blockReason).toBe(
+      types.BlockedReason.SAFETY,
+    );
+  });
+
+  it('generateContentStream ends normally after exhausting retries when resumed hop closes cleanly without a finishReason', async () => {
+    const hop1 = [
+      buildResponse({
+        parts: [{text: 'Hop 1 text, '}],
+        finishReason: types.FinishReason.CONTINUATION,
+        continuationToken: 'stream-tok-incomplete',
+      }),
+    ];
+    const maxRetries = afc.MAX_STREAM_RECONNECTS_WITHOUT_PROGRESS;
+
+    const spy = spyOn(
+      internalModels,
+      'generateContentStreamInternal',
+    ).and.returnValues(
+      Promise.resolve(makeStream(hop1)),
+      ...Array.from({length: maxRetries + 1}, () =>
+        Promise.resolve(makeStream([])),
+      ),
+    );
+
+    const stream = await client.models.generateContentStream({
+      model: 'gemini-2.5-flash',
+      contents: 'Stream that closes cleanly with 0 chunks on hop 2',
+    });
+    const receivedTexts: string[] = [];
+    for await (const chunk of stream) {
+      receivedTexts.push(chunk.text ?? '');
+    }
+
+    expect(spy).toHaveBeenCalledTimes(maxRetries + 2);
+    const args = spy.calls.allArgs();
+    expect(args[0][0].config?.continuationToken).toBeUndefined();
+    for (let i = 1; i < maxRetries + 2; i++) {
+      expect(args[i][0].config?.continuationToken).toBe(
+        'stream-tok-incomplete',
+      );
+    }
+    expect(receivedTexts).toEqual(['Hop 1 text, ']);
+  });
+
+  it('generateContentStream rethrows an ApiError rejecting a resumed hop before any chunk without retrying', async () => {
+    const hop1 = [
+      buildResponse({
+        parts: [{text: 'Hop 1, '}],
+        finishReason: types.FinishReason.CONTINUATION,
+        continuationToken: 'hop1-tok',
+      }),
+    ];
+    // eslint-disable-next-line require-yield
+    async function* makeErrorEventStream(): AsyncGenerator<types.GenerateContentResponse> {
+      throw new ApiError({message: 'error event', status: 500});
+    }
+    const cases: Array<{
+      name: string;
+      hop2: () => Promise<AsyncGenerator<types.GenerateContentResponse>>;
+      message: string;
+    }> = [
+      {
+        name: 'HTTP error status',
+        hop2: () =>
+          Promise.reject(new ApiError({message: 'unavailable', status: 503})),
+        message: 'unavailable',
+      },
+      {
+        name: 'error event before any chunk',
+        hop2: () => Promise.resolve(makeErrorEventStream()),
+        message: 'error event',
+      },
+    ];
+    const spy = spyOn(internalModels, 'generateContentStreamInternal');
+    for (const c of cases) {
+      // Create the rejected promise lazily so it is never left unhandled.
+      const hops = [() => Promise.resolve(makeStream(hop1)), c.hop2];
+      spy.and.callFake(async () => hops[spy.calls.count() - 1]());
+      spy.calls.reset();
+      const stream = await client.models.generateContentStream({
+        model: 'gemini-2.5-flash',
+        contents: `Resumed hop rejected: ${c.name}`,
+      });
+      const receivedTexts: string[] = [];
+      await expectAsync(
+        (async () => {
+          for await (const chunk of stream) {
+            receivedTexts.push(chunk.text ?? '');
+          }
+        })(),
+      )
+        .withContext(c.name)
+        .toBeRejectedWithError(ApiError, c.message);
+      expect(spy).withContext(c.name).toHaveBeenCalledTimes(2);
+      expect(spy.calls.argsFor(1)[0].config?.continuationToken)
+        .withContext(c.name)
+        .toBe('hop1-tok');
+      expect(receivedTexts).withContext(c.name).toEqual(['Hop 1, ']);
+    }
+  });
+
+  it('generateContentStream retries a resumed hop whose request fails with a transport error', async () => {
+    const hop1 = [
+      buildResponse({
+        parts: [{text: 'Hop 1, '}],
+        finishReason: types.FinishReason.CONTINUATION,
+        continuationToken: 'hop1-tok',
+      }),
+    ];
+    const hop2Done = [
+      buildResponse({
+        parts: [{text: 'Hop 2 done.'}],
+        finishReason: types.FinishReason.STOP,
+      }),
+    ];
+    // Create the rejected promise lazily so it is never left unhandled.
+    const hops = [
+      () => Promise.resolve(makeStream(hop1)),
+      () => Promise.reject(new TypeError('fetch failed')),
+      () => Promise.resolve(makeStream(hop2Done)),
+    ];
+    const spy = spyOn(
+      internalModels,
+      'generateContentStreamInternal',
+    ).and.callFake(async () => hops[spy.calls.count() - 1]());
+
+    const stream = await client.models.generateContentStream({
+      model: 'gemini-2.5-flash',
+      contents: 'Resumed hop request fails with a transport error',
+    });
+    const receivedTexts: string[] = [];
+    for await (const chunk of stream) {
+      receivedTexts.push(chunk.text ?? '');
+    }
+
+    expect(spy).toHaveBeenCalledTimes(3);
+    const args = spy.calls.allArgs();
+    expect(args[1][0].config?.continuationToken).toBe('hop1-tok');
+    expect(args[2][0].config?.continuationToken).toBe('hop1-tok');
+    expect(receivedTexts).toEqual(['Hop 1, ', 'Hop 2 done.']);
+  });
+
+  it('generateContentStream rethrows a drop followed by clean empty closes after exhausting retries', async () => {
+    // eslint-disable-next-line require-yield
+    async function* makeDroppedStream(): AsyncGenerator<types.GenerateContentResponse> {
+      throw new Error('connection reset');
+    }
+    const hop1 = [
+      buildResponse({
+        parts: [{text: 'Hop 1, '}],
+        finishReason: types.FinishReason.CONTINUATION,
+        continuationToken: 'hop1-tok',
+      }),
+    ];
+    const maxRetries = afc.MAX_STREAM_RECONNECTS_WITHOUT_PROGRESS;
+    const spy = spyOn(
+      internalModels,
+      'generateContentStreamInternal',
+    ).and.returnValues(
+      Promise.resolve(makeStream(hop1)),
+      Promise.resolve(makeDroppedStream()),
+      ...Array.from({length: maxRetries}, () =>
+        Promise.resolve(makeStream([])),
+      ),
+    );
+
+    const stream = await client.models.generateContentStream({
+      model: 'gemini-2.5-flash',
+      contents: 'Drop then clean empty closes',
+    });
+    const receivedTexts: string[] = [];
+    await expectAsync(
+      (async () => {
+        for await (const chunk of stream) {
+          receivedTexts.push(chunk.text ?? '');
+        }
+      })(),
+    ).toBeRejectedWithError('connection reset');
+    expect(spy).toHaveBeenCalledTimes(maxRetries + 2);
+    const args = spy.calls.allArgs();
+    for (let i = 1; i < maxRetries + 2; i++) {
+      expect(args[i][0].config?.continuationToken).toBe('hop1-tok');
+    }
+    expect(receivedTexts).toEqual(['Hop 1, ']);
   });
 });
 
@@ -2527,7 +3192,7 @@ describe('Chat automatic continuation', () => {
     expect(chunks[chunks.length - 1].text).toBe('Sunny in Boston!');
   });
 
-  it('sendMessageStream does not record incomplete continuation hop in curated history', async () => {
+  it('sendMessageStream ends normally when a resumed hop closes without a finishReason', async () => {
     const hop1 = [
       buildResponse({
         parts: [{text: 'Hop 1, '}],

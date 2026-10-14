@@ -116,73 +116,38 @@ export class Models extends BaseModule {
   private async generateContentStreamWithContinuation(
     params: types.GenerateContentParameters,
   ): Promise<AsyncGenerator<types.GenerateContentResponse>> {
-    const enableContinuation = afc.shouldEnableAutomaticContinuation(
-      params.config,
-      true,
-    );
+    const state = new afc.StreamContinuation(params.config);
+    // The first hop has no continuationToken, so its config is params.config.
+    state.startHop();
     const firstStream = await this.generateContentStreamInternal(params);
     return (async function* (
       models: Models,
       initialParams: types.GenerateContentParameters,
       initialStream: AsyncGenerator<types.GenerateContentResponse>,
     ) {
-      let currentStream = initialStream;
-      let hopState: afc.StreamContinuationHopState = {};
-      let accumulatedUsage:
-        | types.GenerateContentResponseUsageMetadata
-        | undefined = undefined;
-      let isFirstHop = true;
-
-      while (
-        isFirstHop ||
-        afc.canResumeStream(
-          enableContinuation,
-          hopState.continuationToken,
-          hopState.hopFinishReason,
-        )
-      ) {
-        if (!isFirstHop) {
-          const callConfig = afc.prepareContinuationConfig(
-            initialParams.config,
-            hopState.continuationToken,
-          );
-          const callParams: types.GenerateContentParameters = {
-            ...initialParams,
-            config: callConfig,
-          };
-          currentStream =
-            await models.generateContentStreamInternal(callParams);
-        }
-        isFirstHop = false;
-        hopState = {};
-
+      // The first hop was opened by the caller. Later hops are opened inside
+      // the try block, so a failure to open one is handled by endHop like a
+      // mid-stream error.
+      let openHop = async () => initialStream;
+      while (true) {
+        let hopError: {error: unknown} | undefined = undefined;
         try {
-          for await (let chunk of currentStream) {
-            chunk = afc.processContinuationStreamChunk(
-              chunk,
-              enableContinuation,
-              accumulatedUsage,
-              hopState,
-            );
-            yield chunk;
+          for await (const chunk of await openHop()) {
+            yield state.observe(chunk);
           }
-        } catch (err) {
-          // If a mid-stream error occurs after an intermediate checkpoint
-          // continuationToken was received, resume from that checkpoint.
-          if (
-            afc.shouldRethrowStreamError(
-              err,
-              params.config,
-              enableContinuation,
-              hopState,
-            )
-          ) {
-            throw err;
-          }
+        } catch (error) {
+          hopError = {error};
         }
-        if (hopState.hopUsage) {
-          accumulatedUsage = hopState.hopUsage;
+        // Resume from a new checkpoint, retry a dropped hop from its starting
+        // continuationToken if it yielded no content, or stop.
+        if (!state.endHop(hopError)) {
+          return;
         }
+        const callParams: types.GenerateContentParameters = {
+          ...initialParams,
+          config: state.startHop(),
+        };
+        openHop = () => models.generateContentStreamInternal(callParams);
       }
     })(this, params, firstStream);
   }

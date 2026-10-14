@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {ApiError} from './errors.js';
 import * as types from './types.js';
 
 export const DEFAULT_MAX_REMOTE_CALLS = 10;
@@ -132,13 +133,21 @@ export function canResumeStream(
   enableContinuation: boolean,
   continuationToken: string | undefined,
   finishReason: types.FinishReason | undefined,
+  hasPromptFeedback = false,
 ): boolean {
   return (
     enableContinuation &&
+    !hasPromptFeedback &&
     Boolean(continuationToken) &&
     isResumableFinishReason(finishReason)
   );
 }
+
+/**
+ * Maximum number of consecutive streaming reconnects that do not receive a new
+ * checkpoint continuationToken before stopping or surfacing the error.
+ */
+export const MAX_STREAM_RECONNECTS_WITHOUT_PROGRESS = 3;
 
 /**
  * Clears finishReason on intermediate streaming continuation chunks.
@@ -162,82 +171,290 @@ export function clearIntermediateFinishReason(
 }
 
 /**
- * Mutable per-hop state tracked while consuming a streaming continuation hop.
+ * Returns true if a mid-stream error was caused by the caller aborting the
+ * request (aborted abortSignal or an AbortError).
  */
-export interface StreamContinuationHopState {
-  continuationToken?: string;
-  hopFinishReason?: types.FinishReason;
-  hopUsage?: types.GenerateContentResponseUsageMetadata;
-}
-
-/**
- * Processes a single streaming chunk during continuation-aware streaming:
- * merges or attaches usage metadata (including initialPromptTokenCount),
- * updates the hop's continuationToken and finishReason state, and clears
- * intermediate finishReason values when the stream will auto-resume.
- */
-export function processContinuationStreamChunk(
-  chunk: types.GenerateContentResponse,
-  enableContinuation: boolean,
-  accumulatedUsage: types.GenerateContentResponseUsageMetadata | undefined,
-  hopState: StreamContinuationHopState,
-): types.GenerateContentResponse {
-  if (chunk.usageMetadata) {
-    if (accumulatedUsage) {
-      const mergedUsage = mergeUsageMetadata(
-        accumulatedUsage,
-        chunk.usageMetadata,
-      );
-      chunk = Object.assign(new types.GenerateContentResponse(), chunk, {
-        usageMetadata: mergedUsage,
-      });
-      hopState.hopUsage = mergedUsage;
-    } else {
-      attachInitialPromptTokenCount(chunk.usageMetadata);
-      hopState.hopUsage = chunk.usageMetadata;
-    }
-  }
-  const firstCandidate = chunk.candidates?.[0];
-  if (firstCandidate) {
-    if (firstCandidate.finishReason !== undefined) {
-      hopState.hopFinishReason = firstCandidate.finishReason;
-    }
-    if (firstCandidate.continuationToken) {
-      hopState.continuationToken = firstCandidate.continuationToken;
-    } else if (
-      firstCandidate.finishReason !== undefined &&
-      !isResumableFinishReason(firstCandidate.finishReason)
-    ) {
-      hopState.continuationToken = undefined;
-    }
-    clearIntermediateFinishReason(
-      chunk,
-      enableContinuation,
-      hopState.continuationToken,
-    );
-  }
-  return chunk;
-}
-
-/**
- * Returns true if a mid-stream error should be re-thrown instead of resuming
- * from a checkpoint continuationToken.
- */
-export function shouldRethrowStreamError(
+function isStreamAborted(
   err: unknown,
   config: types.GenerateContentConfig | undefined,
-  enableContinuation: boolean,
-  hopState: StreamContinuationHopState,
 ): boolean {
   return (
     Boolean(config?.abortSignal?.aborted) ||
-    (err instanceof Error && err.name === 'AbortError') ||
-    !canResumeStream(
-      enableContinuation,
-      hopState.continuationToken,
-      hopState.hopFinishReason,
-    )
+    (err instanceof Error && err.name === 'AbortError')
   );
+}
+
+/**
+ * What was observed during one hop (HTTP request) of a continuation stream.
+ */
+interface StreamHop {
+  /**
+   * The continuationToken the hop was requested with (undefined for the
+   * initial request).
+   */
+  readonly startToken: string | undefined;
+  /** The latest checkpoint continuationToken received during the hop. */
+  token?: string;
+  /**
+   * The finishReason received during the hop, or undefined if the stream ended
+   * (or failed) without one.
+   */
+  finishReason?: types.FinishReason;
+  /** Whether any chunk in this hop carried promptFeedback (terminal). */
+  hasPromptFeedback: boolean;
+  /** Whether this hop has yielded candidate content parts. */
+  hasYieldedContent: boolean;
+  /** Whether this hop has received any chunk at all. */
+  receivedAnyChunk: boolean;
+  /**
+   * Usage for the whole stream so far: the usage of all previous hops plus this
+   * hop's latest usageMetadata. Within a hop, each chunk's usageMetadata is the
+   * server's running total for the hop, so it replaces the previous value (it
+   * is not summed); a chunk without usageMetadata leaves it unchanged.
+   */
+  usage?: types.GenerateContentResponseUsageMetadata;
+}
+
+/**
+ * State of a generateContentStream call with automatic continuation.
+ *
+ * A stream is made of one or more hops (HTTP requests). Each hop after the
+ * first resumes from a continuationToken. The caller drives the loop:
+ *
+ * ```ts
+ * const state = new StreamContinuation(config);
+ * while (true) {
+ *   const callConfig = state.startHop();
+ *   let hopError: {error: unknown} | undefined = undefined;
+ *   try {
+ *     for await (const chunk of <stream request with callConfig>) {
+ *       yield state.observe(chunk);
+ *     }
+ *   } catch (error) {
+ *     hopError = {error};
+ *   }
+ *   if (!state.endHop(hopError)) return;
+ * }
+ * ```
+ *
+ * Per-hop state lives in a private `StreamHop` record that is replaced by
+ * `startHop()`, so it is always reset between hops. Loop state (usage
+ * accumulated across hops, the token to resume from, the reconnect count, and
+ * the latest error since the stream last made progress) carries across hops.
+ *
+ * Usage metadata: within a hop, each chunk's usageMetadata is the server's
+ * running total for that hop, so the latest one is the hop's usage (chunks are
+ * not summed). Across hops, the hops' usage is summed, since each hop is a
+ * separate request. Each yielded chunk that has usageMetadata carries the
+ * usage of all previous hops plus its own.
+ *
+ * Errors are handled as follows (see `endHop`):
+ *
+ * - An `ApiError` (from an HTTP error status or an error event in the stream)
+ *   raised before the hop received any chunk means the request was rejected.
+ *   It is thrown immediately, without a continuation retry: retrying a
+ *   rejected request (with backoff) is left to the HTTP client's
+ *   `httpOptions.retryOptions`.
+ * - Other errors (transport drops, network errors) and clean closes without a
+ *   finishReason are retried as described in `endHop`. The latest error since
+ *   the stream last made progress is kept, and thrown if the stream gives up,
+ *   so a drop followed by clean empty closes is not silently lost.
+ */
+export class StreamContinuation {
+  /** Whether automatic continuation is enabled for this call. */
+  readonly enableContinuation: boolean;
+  /**
+   * Usage of all finished hops, summed. Each hop is a separate request whose
+   * usage the server reports independently, so hop totals are added (unlike
+   * chunks within a hop; see `StreamHop.usage`).
+   */
+  private accumulatedUsageAcrossHops?: types.GenerateContentResponseUsageMetadata;
+  /** Token the next hop resumes from (undefined for the initial request). */
+  private resumeToken?: string;
+  /** Number of consecutive hops that ended without a new continuationToken. */
+  private reconnectsWithoutProgress = 0;
+  /**
+   * The latest hop error since the stream last made progress (a new
+   * checkpoint token or yielded content), wrapped so that a thrown `undefined`
+   * is still an error.
+   */
+  private lastError?: {error: unknown};
+  private hop: StreamHop = newStreamHop(undefined);
+
+  constructor(
+    private readonly config: types.GenerateContentConfig | undefined,
+  ) {
+    this.enableContinuation = shouldEnableAutomaticContinuation(config, true);
+  }
+
+  /** Starts a new hop and returns the config to request it with. */
+  startHop(): types.GenerateContentConfig | undefined {
+    this.hop = newStreamHop(this.resumeToken);
+    return prepareContinuationConfig(this.config, this.resumeToken);
+  }
+
+  /**
+   * Records one streamed chunk and returns the chunk to yield.
+   *
+   * The returned chunk has its usageMetadata (if any) set to this hop's latest
+   * usage plus the usage of all previous hops (or initialPromptTokenCount
+   * attached on the first hop) and its intermediate finishReason cleared when
+   * the stream will auto-continue.
+   */
+  observe(chunk: types.GenerateContentResponse): types.GenerateContentResponse {
+    const hop = this.hop;
+    hop.receivedAnyChunk = true;
+    if (chunk.promptFeedback !== undefined && chunk.promptFeedback !== null) {
+      hop.hasPromptFeedback = true;
+    }
+    if (chunk.usageMetadata) {
+      if (this.accumulatedUsageAcrossHops) {
+        const mergedUsage = mergeUsageMetadata(
+          this.accumulatedUsageAcrossHops,
+          chunk.usageMetadata,
+        );
+        chunk = Object.assign(new types.GenerateContentResponse(), chunk, {
+          usageMetadata: mergedUsage,
+        });
+        hop.usage = mergedUsage;
+      } else {
+        attachInitialPromptTokenCount(chunk.usageMetadata);
+        hop.usage = chunk.usageMetadata;
+      }
+    }
+    const firstCandidate = chunk.candidates?.[0];
+    if (firstCandidate) {
+      if (
+        firstCandidate.content?.parts &&
+        firstCandidate.content.parts.length > 0
+      ) {
+        hop.hasYieldedContent = true;
+      }
+      if (firstCandidate.finishReason !== undefined) {
+        hop.finishReason = firstCandidate.finishReason;
+      }
+      if (firstCandidate.continuationToken) {
+        hop.token = firstCandidate.continuationToken;
+      } else if (
+        firstCandidate.finishReason !== undefined &&
+        !isResumableFinishReason(firstCandidate.finishReason)
+      ) {
+        hop.token = undefined;
+      }
+      clearIntermediateFinishReason(chunk, this.enableContinuation, hop.token);
+    }
+    return chunk;
+  }
+
+  /**
+   * Ends the current hop. Returns true if another hop should be started.
+   *
+   * If the stream fails or ends without a terminal finishReason, the next hop
+   * resumes from the latest checkpoint token. If the hop failed before
+   * emitting a checkpoint of its own and before yielding content, it is
+   * retried from the token it started with.
+   *
+   * An `ApiError` thrown before the hop received any chunk (the request was
+   * rejected, e.g. with an HTTP error status) is rethrown immediately without
+   * a continuation retry; retrying it is left to `httpOptions.retryOptions`.
+   *
+   * If the stream gives up (the hop ended without a finishReason or
+   * promptFeedback and can't be resumed), the latest error since the stream
+   * last made progress is thrown, even if the final hop closed cleanly.
+   *
+   * @param hopError - Wraps the error thrown while opening or consuming the
+   *     hop's stream, if any (wrapped so that a thrown `undefined` is still an
+   *     error).
+   * @throws The wrapped error, if the caller aborted the request, the request
+   *     was rejected, or the stream can't be resumed; or the latest error since
+   *     the stream last made progress, if the stream gives up.
+   */
+  endHop(hopError?: {error: unknown}): boolean {
+    const hop = this.hop;
+    if (hop.usage) {
+      this.accumulatedUsageAcrossHops = hop.usage;
+    }
+    if (
+      hopError &&
+      (isStreamAborted(hopError.error, this.config) ||
+        (hopError.error instanceof ApiError && !hop.receivedAnyChunk))
+    ) {
+      throw hopError.error;
+    }
+    const madeProgress =
+      hop.hasYieldedContent ||
+      (Boolean(hop.token) && hop.token !== hop.startToken);
+    if (hopError) {
+      this.lastError = hopError;
+    } else if (madeProgress) {
+      this.lastError = undefined;
+    }
+    [this.resumeToken, this.reconnectsWithoutProgress] = this.nextResumeToken();
+    const canResume = canResumeStream(
+      this.enableContinuation,
+      this.resumeToken,
+      hop.finishReason,
+      hop.hasPromptFeedback,
+    );
+    if (canResume) {
+      return true;
+    }
+    if (hopError) {
+      throw hopError.error;
+    }
+    // Never surface a stale error when the API ended the hop itself.
+    const gaveUp = hop.finishReason === undefined && !hop.hasPromptFeedback;
+    if (gaveUp && this.lastError) {
+      throw this.lastError.error;
+    }
+    return false;
+  }
+
+  /**
+   * Returns [token to resume from or undefined to stop, updated reconnect
+   * count].
+   *
+   * Long-decode checkpoints are only emitted partway through each hop, so a
+   * connection can drop before the hop has produced a checkpoint of its own.
+   * In that case, if no candidate content has been yielded yet, the hop can be
+   * retried from the token it was started with.
+   */
+  private nextResumeToken(): [string | undefined, number] {
+    const hop = this.hop;
+    const reconnects = this.reconnectsWithoutProgress;
+    if (hop.finishReason !== undefined || hop.hasPromptFeedback) {
+      if (
+        hop.finishReason === types.FinishReason.CONTINUATION &&
+        !hop.hasPromptFeedback &&
+        hop.token &&
+        hop.token !== hop.startToken
+      ) {
+        return [hop.token, 0];
+      }
+      // The server ended the hop without a new token (or returned
+      // promptFeedback); replaying the same token would only repeat the hop.
+      return [undefined, 0];
+    }
+    if (hop.token && hop.token !== hop.startToken) {
+      return [hop.token, 0];
+    }
+    if (
+      hop.hasYieldedContent ||
+      reconnects >= MAX_STREAM_RECONNECTS_WITHOUT_PROGRESS
+    ) {
+      return [undefined, reconnects];
+    }
+    return [hop.startToken, reconnects + 1];
+  }
+}
+
+function newStreamHop(startToken: string | undefined): StreamHop {
+  return {
+    startToken,
+    hasPromptFeedback: false,
+    hasYieldedContent: false,
+    receivedAnyChunk: false,
+  };
 }
 
 /**
