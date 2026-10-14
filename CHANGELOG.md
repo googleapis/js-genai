@@ -2,6 +2,21 @@
 
 
 
+## [2.30.0](https://github.com/googleapis/js-genai/compare/v2.29.1...v2.30.0) (2026-10-14)
+
+
+### Features
+
+* **interactions:** add gemini-4-argon to Model enum ([8a3c307](https://github.com/googleapis/js-genai/commit/8a3c3074a6688cc12c9f30c2366089cd94622fd6))
+
+
+### Bug Fixes
+
+* clear continuation state and preserve prompt feedback when continuation hop returns no candidates ([e63d1f1](https://github.com/googleapis/js-genai/commit/e63d1f184811ac2ddec2a17e206e5a6c1c79ed6e))
+* fix the grounding metadata merging for automatic continuation in generate content and generate content stream ([6bfba87](https://github.com/googleapis/js-genai/commit/6bfba8790e9a3a663884db10290b2909b7ca4b0b))
+* make continuation streams retry dropped hops, stop on prompt_feedback, and keep real errors in generate_content ([6bdc0d9](https://github.com/googleapis/js-genai/commit/6bdc0d98709df070c935e812bb126dcffaedff97))
+* type GeminiNextGen signatures with public, importable names ([ad3fb89](https://github.com/googleapis/js-genai/commit/ad3fb891c91b8b57fee846f3319442150d77d622))
+
 ## [2.29.1](https://github.com/googleapis/js-genai/compare/v2.29.0...v2.29.1) (2026-10-13)
 
 
