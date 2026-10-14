@@ -118,15 +118,15 @@ export class Webhooks extends ClientSDK {
    */
   ping(
     id: string,
-    body: webhooks.PingWebhookRequest,
     api_version?: string | undefined,
+    body?: webhooks.PingWebhookRequest | undefined,
     options?: RequestOptions,
   ): APIPromise<webhooks.WebhookPingResponse> {
     return unwrapAsAPIPromise(webhooksPing(
       this,
       id,
-      body,
       api_version,
+      body,
       options,
     ));
   }

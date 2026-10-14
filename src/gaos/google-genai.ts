@@ -580,8 +580,8 @@ export class GeminiNextGenWebhooks {
       webhooksPing(
         this.getClient(),
         id,
-        body ?? {},
         api_version,
+        body,
         toGoogleGenAIRequestOptions(options),
       ),
     );
