@@ -566,6 +566,245 @@ describe('continuation token helpers (_afc)', () => {
     }
   });
 
+  it('mergeContinuationResponses shifts groundingSupports chunk and part indices across hops', () => {
+    const hop1 = buildResponse({
+      parts: [{text: 'Thinking...', thought: true}, {text: 'part 1 '}],
+      finishReason: types.FinishReason.CONTINUATION,
+      continuationToken: 'tok-1',
+      groundingMetadata: {
+        groundingChunks: [
+          {
+            image: {
+              imageUri: 'https://img1.example/a.png',
+              sourceUri: 'https://source1.example/img',
+              title: 'Image 1',
+              domain: 'source1.example',
+            },
+          },
+          {
+            web: {
+              uri: 'https://source1.example',
+              title: 'Source 1',
+            },
+          },
+        ],
+        groundingSupports: [
+          {
+            groundingChunkIndices: [0, 1],
+            confidenceScores: [0.9, 0.8],
+            segment: {
+              partIndex: 1,
+              startIndex: 0,
+              endIndex: 7,
+              text: 'part 1 ',
+            },
+          },
+        ],
+      },
+    });
+
+    const hop2 = buildResponse({
+      parts: [{text: 'part 2 '}],
+      finishReason: types.FinishReason.STOP,
+      groundingMetadata: {
+        groundingChunks: [
+          {
+            web: {
+              uri: 'https://source2.example',
+              title: 'Source 2',
+            },
+          },
+        ],
+        groundingSupports: [
+          {
+            groundingChunkIndices: [0],
+            confidenceScores: [0.95],
+            segment: {
+              partIndex: 0,
+              startIndex: 0,
+              endIndex: 7,
+              text: 'part 2 ',
+            },
+          },
+          {
+            // Omitted partIndex (defaults to 0) should also be shifted by hop1's part count (2).
+            groundingChunkIndices: [0],
+            segment: {
+              startIndex: 0,
+              endIndex: 7,
+              text: 'part 2 ',
+            },
+          },
+        ],
+      },
+    });
+
+    const merged = afc.mergeContinuationResponses([hop1, hop2]);
+    const cand = merged.candidates?.[0];
+    const gm = cand?.groundingMetadata;
+
+    expect(gm?.groundingChunks?.length).toBe(3);
+    expect(gm?.groundingSupports?.length).toBe(3);
+
+    expect(gm?.groundingSupports?.[0]?.groundingChunkIndices).toEqual([0, 1]);
+    expect(gm?.groundingSupports?.[0]?.segment?.partIndex).toBe(1);
+
+    const s1 = gm?.groundingSupports?.[1];
+    expect(s1?.groundingChunkIndices).toEqual([2]);
+    expect(s1?.segment?.partIndex).toBe(2);
+    expect(gm?.groundingChunks?.[s1!.groundingChunkIndices![0]]?.web?.uri).toBe(
+      'https://source2.example',
+    );
+    expect(cand?.content?.parts?.[s1!.segment!.partIndex!]?.text).toBe(
+      'part 2 ',
+    );
+
+    const s2 = gm?.groundingSupports?.[2];
+    expect(s2?.groundingChunkIndices).toEqual([2]);
+    expect(s2?.segment?.partIndex).toBe(2);
+
+    // Ensure hop2 input was not mutated.
+    expect(
+      hop2.candidates?.[0]?.groundingMetadata?.groundingSupports?.[0]
+        ?.groundingChunkIndices,
+    ).toEqual([0]);
+    expect(
+      hop2.candidates?.[0]?.groundingMetadata?.groundingSupports?.[0]?.segment
+        ?.partIndex,
+    ).toBe(0);
+    expect(
+      hop2.candidates?.[0]?.groundingMetadata?.groundingSupports?.[1]?.segment
+        ?.partIndex,
+    ).toBeUndefined();
+  });
+
+  it('mergeContinuationResponses handles groundingSupports corner cases (3 hops, missing metadata/segment, empty chunk indices, multi-candidate)', () => {
+    const hop1 = Object.assign(new types.GenerateContentResponse(), {
+      candidates: [
+        {
+          index: 0,
+          content: {
+            role: 'model',
+            parts: [{text: 'c0-h1-p0 '}, {text: 'c0-h1-p1 '}],
+          },
+          finishReason: types.FinishReason.CONTINUATION,
+          continuationToken: 't1',
+        },
+        {
+          index: 1,
+          content: {
+            role: 'model',
+            parts: [{text: 'c1-h1-p0 '}],
+          },
+          groundingMetadata: {
+            groundingChunks: [{web: {uri: 'https://c1-s0.example'}}],
+          },
+          finishReason: types.FinishReason.CONTINUATION,
+          continuationToken: 't1-c1',
+        },
+      ],
+    });
+
+    const hop2 = Object.assign(new types.GenerateContentResponse(), {
+      candidates: [
+        {
+          index: 0,
+          content: {
+            role: 'model',
+            parts: [{text: 'c0-h2-p0 '}],
+          },
+          groundingMetadata: {
+            groundingChunks: [
+              {web: {uri: 'https://c0-s0.example'}},
+              {web: {uri: 'https://c0-s1.example'}},
+            ],
+          },
+          finishReason: types.FinishReason.CONTINUATION,
+          continuationToken: 't2',
+        },
+        {
+          index: 1,
+          content: {
+            role: 'model',
+            parts: [{text: 'c1-h2-p0 '}],
+          },
+          groundingMetadata: {
+            groundingChunks: [{web: {uri: 'https://c1-s1.example'}}],
+            groundingSupports: [
+              {
+                groundingChunkIndices: [0],
+                segment: {partIndex: 0, text: 'c1-h2-p0 '},
+              },
+            ],
+          },
+          finishReason: types.FinishReason.STOP,
+        },
+      ],
+    });
+
+    const hop3 = Object.assign(new types.GenerateContentResponse(), {
+      candidates: [
+        {
+          index: 0,
+          content: {
+            role: 'model',
+            parts: [{text: 'c0-h3-p0.'}],
+          },
+          groundingMetadata: {
+            groundingChunks: [{web: {uri: 'https://c0-s2.example'}}],
+            groundingSupports: [
+              {
+                groundingChunkIndices: [0],
+              },
+              {
+                groundingChunkIndices: [],
+                segment: {partIndex: 0, text: 'c0-h3-p0.'},
+              },
+              {
+                groundingChunkIndices: [0],
+                segment: {partIndex: 0, text: 'c0-h3-p0.'},
+              },
+            ],
+          },
+          finishReason: types.FinishReason.STOP,
+        },
+      ],
+    });
+
+    const merged = afc.mergeContinuationResponses([hop1, hop2, hop3]);
+
+    const cand0 = merged.candidates?.[0];
+    const gm0 = cand0?.groundingMetadata;
+    expect(cand0?.content?.parts?.length).toBe(4);
+    expect(gm0?.groundingChunks?.length).toBe(3);
+    expect(gm0?.groundingSupports?.length).toBe(3);
+    expect(gm0?.groundingSupports?.[0]?.segment).toBeUndefined();
+    expect(gm0?.groundingSupports?.[0]?.groundingChunkIndices).toEqual([2]);
+    expect(gm0?.groundingSupports?.[1]?.groundingChunkIndices).toEqual([]);
+    expect(gm0?.groundingSupports?.[1]?.segment?.partIndex).toBe(3);
+    const s2 = gm0?.groundingSupports?.[2];
+    expect(
+      gm0?.groundingChunks?.[s2!.groundingChunkIndices![0]]?.web?.uri,
+    ).toBe('https://c0-s2.example');
+    expect(cand0?.content?.parts?.[s2!.segment!.partIndex!]?.text).toBe(
+      'c0-h3-p0.',
+    );
+
+    const cand1 = merged.candidates?.[1];
+    const gm1 = cand1?.groundingMetadata;
+    expect(gm1?.groundingSupports?.[0]?.groundingChunkIndices).toEqual([1]);
+    expect(gm1?.groundingSupports?.[0]?.segment?.partIndex).toBe(1);
+    expect(
+      gm1?.groundingChunks?.[
+        gm1!.groundingSupports![0].groundingChunkIndices![0]
+      ]?.web?.uri,
+    ).toBe('https://c1-s1.example');
+    expect(
+      cand1?.content?.parts?.[gm1!.groundingSupports![0].segment!.partIndex!]
+        ?.text,
+    ).toBe('c1-h2-p0 ');
+  });
+
   it('mergeUsageMetadata sums billed token counts and modality details while preserving initialPromptTokenCount', () => {
     const hop1Usage: types.GenerateContentResponseUsageMetadata = {
       promptTokenCount: 100,
@@ -1529,6 +1768,193 @@ describe('Models automatic continuation', () => {
     expect(chunks[3].usageMetadata?.candidatesTokenCount).toBe(100 + 80);
     expect(chunks[3].usageMetadata?.thoughtsTokenCount).toBe(30 + 10);
     expect(chunks[3].usageMetadata?.totalTokenCount).toBe(150 + 240);
+  });
+
+  it('generateContent merges groundingMetadata across hops with shifted chunk and part indices', async () => {
+    const hop1 = Object.assign(new types.GenerateContentResponse(), {
+      candidates: [
+        {
+          content: {role: 'model', parts: [{text: 'part 1 '}]},
+          finishReason: types.FinishReason.CONTINUATION,
+          continuationToken: 'tok-1',
+          groundingMetadata: {
+            groundingChunks: [{web: {uri: 'https://source1.example'}}],
+            groundingSupports: [
+              {
+                groundingChunkIndices: [0],
+                segment: {partIndex: 0, text: 'part 1 '},
+              },
+            ],
+          },
+        },
+      ],
+    });
+    const hop2 = Object.assign(new types.GenerateContentResponse(), {
+      candidates: [
+        {
+          content: {role: 'model', parts: [{text: 'part 2 '}]},
+          finishReason: types.FinishReason.STOP,
+          groundingMetadata: {
+            groundingChunks: [{web: {uri: 'https://source2.example'}}],
+            groundingSupports: [
+              {
+                groundingChunkIndices: [0],
+                segment: {partIndex: 0, text: 'part 2 '},
+              },
+            ],
+          },
+        },
+      ],
+    });
+
+    const spy = spyOn(
+      internalModels,
+      'generateContentInternal',
+    ).and.returnValues(Promise.resolve(hop1), Promise.resolve(hop2));
+
+    const response = await client.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: 'Grounded query',
+    });
+
+    expect(spy).toHaveBeenCalledTimes(2);
+    const cand = response.candidates?.[0];
+    const gm = cand?.groundingMetadata;
+    expect(gm?.groundingSupports?.length).toBe(2);
+    const s = gm?.groundingSupports?.[1];
+    expect(gm?.groundingChunks?.[s!.groundingChunkIndices![0]]?.web?.uri).toBe(
+      'https://source2.example',
+    );
+    expect(cand?.content?.parts?.[s!.segment!.partIndex!]?.text).toBe(
+      'part 2 ',
+    );
+  });
+
+  it('generateContentStream preserves per-chunk groundingMetadata and merges shifted indices across hops', async () => {
+    const hop1: types.GenerateContentResponse[] = [
+      buildResponse({parts: [{text: 'hop 1 intro, '}]}),
+      Object.assign(
+        buildResponse({
+          parts: [{text: 'hop 1 grounded. '}],
+          finishReason: types.FinishReason.CONTINUATION,
+          continuationToken: 'tok-stream-1',
+        }),
+        {
+          candidates: [
+            {
+              content: {role: 'model', parts: [{text: 'hop 1 grounded. '}]},
+              finishReason: types.FinishReason.CONTINUATION,
+              continuationToken: 'tok-stream-1',
+              groundingMetadata: {
+                groundingChunks: [{web: {uri: 'https://source1.example'}}],
+                groundingSupports: [
+                  {
+                    groundingChunkIndices: [0],
+                    segment: {partIndex: 0, text: 'hop 1 grounded. '},
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      ),
+    ];
+    const hop2: types.GenerateContentResponse[] = [
+      buildResponse({parts: [{text: 'hop 2 intro, '}]}),
+      Object.assign(
+        buildResponse({
+          parts: [{text: 'hop 2 grounded.'}],
+          finishReason: types.FinishReason.STOP,
+        }),
+        {
+          candidates: [
+            {
+              content: {role: 'model', parts: [{text: 'hop 2 grounded.'}]},
+              finishReason: types.FinishReason.STOP,
+              groundingMetadata: {
+                groundingChunks: [{web: {uri: 'https://source2.example'}}],
+                groundingSupports: [
+                  {
+                    groundingChunkIndices: [0],
+                    segment: {partIndex: 0, text: 'hop 2 grounded.'},
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      ),
+    ];
+
+    const spy = spyOn(
+      internalModels,
+      'generateContentStreamInternal',
+    ).and.returnValues(
+      Promise.resolve(makeStream(hop1)),
+      Promise.resolve(makeStream(hop2)),
+    );
+
+    const stream = await client.models.generateContentStream({
+      model: 'gemini-2.5-flash',
+      contents: 'Grounded stream',
+    });
+    const chunks: types.GenerateContentResponse[] = [];
+    for await (const chunk of stream) {
+      chunks.push(chunk);
+    }
+
+    expect(spy).toHaveBeenCalledTimes(2);
+    expect(chunks.length).toBe(4);
+    // Each yielded chunk keeps per-chunk indices resolving to that chunk's groundingChunks[0] and parts[0].
+    const sHop1 =
+      chunks[1].candidates?.[0]?.groundingMetadata?.groundingSupports?.[0];
+    expect(
+      chunks[1].candidates?.[0]?.groundingMetadata?.groundingChunks?.[
+        sHop1!.groundingChunkIndices![0]
+      ]?.web?.uri,
+    ).toBe('https://source1.example');
+    expect(
+      chunks[1].candidates?.[0]?.content?.parts?.[sHop1!.segment!.partIndex!]
+        ?.text,
+    ).toBe('hop 1 grounded. ');
+    expect(chunks[1].candidates?.[0]?.finishReason).toBeUndefined();
+
+    const sHop2 =
+      chunks[3].candidates?.[0]?.groundingMetadata?.groundingSupports?.[0];
+    expect(
+      chunks[3].candidates?.[0]?.groundingMetadata?.groundingChunks?.[
+        sHop2!.groundingChunkIndices![0]
+      ]?.web?.uri,
+    ).toBe('https://source2.example');
+    expect(
+      chunks[3].candidates?.[0]?.content?.parts?.[sHop2!.segment!.partIndex!]
+        ?.text,
+    ).toBe('hop 2 grounded.');
+    expect(chunks[3].candidates?.[0]?.finishReason).toBe(
+      types.FinishReason.STOP,
+    );
+
+    // Merging the streamed chunks shifts indices across all 4 chunks.
+    const merged = afc.mergeContinuationResponses(chunks);
+    const cand = merged.candidates?.[0];
+    const gm = cand?.groundingMetadata;
+    expect(gm?.groundingSupports?.length).toBe(2);
+    expect(
+      gm?.groundingChunks?.[gm!.groundingSupports![0].groundingChunkIndices![0]]
+        ?.web?.uri,
+    ).toBe('https://source1.example');
+    expect(
+      cand?.content?.parts?.[gm!.groundingSupports![0].segment!.partIndex!]
+        ?.text,
+    ).toBe('hop 1 grounded. ');
+    expect(
+      gm?.groundingChunks?.[gm!.groundingSupports![1].groundingChunkIndices![0]]
+        ?.web?.uri,
+    ).toBe('https://source2.example');
+    expect(
+      cand?.content?.parts?.[gm!.groundingSupports![1].segment!.partIndex!]
+        ?.text,
+    ).toBe('hop 2 grounded.');
   });
 
   it('generateContentStream discards stale checkpoint continuationToken when candidate ends with STOP', async () => {

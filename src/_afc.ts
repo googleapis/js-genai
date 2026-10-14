@@ -486,6 +486,73 @@ export function mergeUsageMetadata(
 }
 
 /**
+ * Shifts curr's GroundingSupport chunk and part indices by prev's lengths
+ * without mutating curr.
+ */
+function shiftCandidateGroundingSupports(
+  prev: Record<string, unknown>,
+  curr: Record<string, unknown>,
+): Record<string, unknown> {
+  const currGm = curr['groundingMetadata'] as
+    | types.GroundingMetadata
+    | undefined;
+  const currSupports = currGm?.groundingSupports;
+  if (!Array.isArray(currSupports) || currSupports.length === 0) {
+    return curr;
+  }
+
+  const prevContent = prev['content'] as types.Content | undefined;
+  const partOffset = Array.isArray(prevContent?.parts)
+    ? prevContent!.parts!.length
+    : 0;
+  const prevGm = prev['groundingMetadata'] as
+    | types.GroundingMetadata
+    | undefined;
+  const chunkOffset = Array.isArray(prevGm?.groundingChunks)
+    ? prevGm!.groundingChunks!.length
+    : 0;
+
+  if (partOffset === 0 && chunkOffset === 0) {
+    return curr;
+  }
+
+  const shiftedSupports = currSupports.map((support) => {
+    if (!support || typeof support !== 'object') {
+      return support;
+    }
+    const nextSupport: types.GroundingSupport = {...support};
+    if (
+      chunkOffset > 0 &&
+      Array.isArray(support.groundingChunkIndices) &&
+      support.groundingChunkIndices.length > 0
+    ) {
+      nextSupport.groundingChunkIndices = support.groundingChunkIndices.map(
+        (idx) => idx + chunkOffset,
+      );
+    }
+    if (
+      partOffset > 0 &&
+      support.segment &&
+      typeof support.segment === 'object'
+    ) {
+      nextSupport.segment = {
+        ...support.segment,
+        partIndex: (support.segment.partIndex ?? 0) + partOffset,
+      };
+    }
+    return nextSupport;
+  });
+
+  return {
+    ...curr,
+    groundingMetadata: {
+      ...currGm,
+      groundingSupports: shiftedSupports,
+    },
+  };
+}
+
+/**
  * Recursively merges two response/metadata objects across continuation hops.
  */
 export function mergeResponseObjects(
@@ -494,6 +561,9 @@ export function mergeResponseObjects(
   isCandidate = false,
   isUsageMetadata = false,
 ): Record<string, unknown> {
+  if (isCandidate) {
+    curr = shiftCandidateGroundingSupports(prev, curr);
+  }
   const mergedData: Record<string, unknown> = {};
   const keys = new Set([...Object.keys(prev), ...Object.keys(curr)]);
 
