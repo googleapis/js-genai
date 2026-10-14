@@ -37,8 +37,8 @@ import { Result } from "../types/fp.js";
 export function webhooksPing(
   client: GoogleGenAICore,
   id: string,
-  body: webhooks.PingWebhookRequest,
   api_version?: string | undefined,
+  body?: webhooks.PingWebhookRequest | undefined,
   options?: RequestOptions,
 ): APIPromise<
   Result<
@@ -54,8 +54,8 @@ export function webhooksPing(
   return new APIPromise($do(
     client,
     id,
-    body,
     api_version,
+    body,
     options,
   ));
 }
@@ -63,8 +63,8 @@ export function webhooksPing(
 async function $do(
   client: GoogleGenAICore,
   id: string,
-  body: webhooks.PingWebhookRequest,
   api_version?: string | undefined,
+  body?: webhooks.PingWebhookRequest | undefined,
   options?: RequestOptions,
 ): Promise<
   [
@@ -82,8 +82,8 @@ async function $do(
 > {
   const input: operations.PingWebhookRequest = {
     id: id,
-    body: body,
     api_version: api_version,
+    body: body,
   };
 
   const payload = input;
