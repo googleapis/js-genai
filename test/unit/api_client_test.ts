@@ -182,6 +182,31 @@ describe('processStreamResponse', () => {
     );
   });
 
+  it('should throw an ApiError if an SSE data event contains an error object', async () => {
+    const validChunk =
+      'data: {"candidates": [{"content": {"parts": [{"text": "The"}],"role": "model"},"finishReason": "STOP","index": 0}]}\n\n';
+    const errorEvent =
+      'data: {"error": {"code": 503, "message": "Service unavailable", "status": "UNAVAILABLE"}}\n\n';
+    const stream = new Readable();
+    stream.push(validChunk + errorEvent);
+    stream.push(null);
+    const readableStream = new ReadableStream({
+      start(controller) {
+        stream.on('data', (chunk) => controller.enqueue(chunk));
+        stream.on('end', () => controller.close());
+        stream.on('error', (err) => controller.error(err));
+      },
+    });
+    const response = new Response(readableStream);
+
+    const generator = apiClient.processStreamResponse(response);
+    const first = await generator.next();
+    expect(first.done).toBeFalse();
+    await expectAsync(generator.next()).toBeRejectedWithError(
+      'got status: UNAVAILABLE. {"error":{"code":503,"message":"Service unavailable","status":"UNAVAILABLE"}}',
+    );
+  });
+
   it('should yield the json chunk data', async () => {
     const validChunk1 =
       'data: {"candidates": [{"content": {"parts": [{"text": "The"}],"role": "model"},"finishReason": "STOP","index": 0}],"usageMetadata": {"promptTokenCount": 8,"candidatesTokenCount": 1,"totalTokenCount": 9}}\n\n';
