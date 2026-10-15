@@ -12,7 +12,7 @@
 
 import { AllowlistEntry } from "./allowlist-entry.js";
 
-export type Disabled = "disabled";
+export type Disabled = "disabled" | (string & {});
 
 /**
  * List of allowed domains and their configurations. Set to `"disabled"`

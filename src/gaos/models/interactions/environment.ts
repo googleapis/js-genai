@@ -16,7 +16,7 @@ import { Source } from "./source.js";
 
 export type Env = EnvVar | string;
 
-export type NetworkEnum = "disabled";
+export type NetworkEnum = "disabled" | (string & {});
 
 /**
  * Network configuration for the environment.
