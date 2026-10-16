@@ -39,6 +39,10 @@ export type InteractionSseEventInteraction = {
    */
   agent?: string | undefined;
   /**
+   * Output only. Opaque token to resume a long decode when status is incomplete.
+   */
+  continuation_token?: string | undefined;
+  /**
    * Output only. The time at which the response was created in ISO 8601 format.
    */
   created?: string | undefined;

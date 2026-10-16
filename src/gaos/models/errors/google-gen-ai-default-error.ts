@@ -44,5 +44,6 @@ export class GoogleGenAiDefaultError extends GoogleGenAiError {
     message = message.trim();
     super(message, httpMeta);
     this.name = "GoogleGenAiDefaultError";
+    Object.setPrototypeOf(this, new.target.prototype);
   }
 }

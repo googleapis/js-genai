@@ -10,7 +10,8 @@
     "src/g3_node_deprecated/**",
     "src/g3_web_deprecated/**",
     "src/vertex_internal/**",
-    "src/interactions-deprecated/**"
+    "src/interactions-deprecated/**",
+    "packaging/**"
   ],
   "excludePrivate": true,
   "excludeProtected": true,

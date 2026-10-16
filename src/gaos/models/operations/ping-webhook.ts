@@ -29,7 +29,7 @@ export type PingWebhookRequest = {
    */
   id: string;
   /**
-   * Required. The request body.
+   * The request body.
    */
   body?: webhooks.PingWebhookRequest | undefined;
 };

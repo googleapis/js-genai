@@ -365,6 +365,48 @@ if you are specifying those, you need to explicitly provide the full
 `Content[]` structure making it explicit which Parts are 'spoken' by the model,
 or the user. The SDK will throw an exception if you try this.
 
+### Automatic Continuation
+
+Automatic continuation is enabled by default. When a response stops with
+`finishReason` set to `CONTINUATION` and returns a `continuationToken`, the SDK
+automatically sends follow-up requests with the token until generation completes
+and returns the merged response. To disable automatic continuation, set
+`automaticContinuation: false` in `config`.
+
+Streaming (`generateContentStream`) and chats (`chat.sendMessage` and
+`chat.sendMessageStream`) work very similarly.
+
+```typescript
+import {GoogleGenAI} from '@google/genai';
+
+const ai = new GoogleGenAI({
+  enterprise: true,
+  project: 'your_project',
+  location: 'your_location',
+});
+
+async function main() {
+  // Automatic continuation is enabled by default.
+  const response = await ai.models.generateContent({
+    model: 'gemini-flash-latest',
+    contents: 'Write a comprehensive multi-chapter guide on compiler design.',
+  });
+  console.log(response.text);
+
+  // Set automaticContinuation to false to disable automatic continuation.
+  const singleHopResponse = await ai.models.generateContent({
+    model: 'gemini-flash-latest',
+    contents: 'Write a comprehensive multi-chapter guide on compiler design.',
+    config: {
+      automaticContinuation: false,
+    },
+  });
+  console.log(singleHopResponse.text);
+}
+
+main();
+```
+
 ## Error Handling
 
 To handle errors raised by the API, the SDK provides this [ApiError](https://github.com/googleapis/js-genai/blob/main/src/errors.ts) class.
