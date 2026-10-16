@@ -762,31 +762,7 @@ export class ApiClient {
         const chunkString = decoder.decode(value, {stream: true});
 
         // Parse and throw an error if the chunk contains an error.
-        try {
-          const chunkJson = JSON.parse(chunkString) as Record<string, unknown>;
-          if ('error' in chunkJson) {
-            const errorJson = JSON.parse(
-              JSON.stringify(chunkJson['error']),
-            ) as Record<string, unknown>;
-            const status = errorJson['status'] as string;
-            const code = errorJson['code'] as number;
-            const errorMessage = `got status: ${status}. ${JSON.stringify(
-              chunkJson,
-            )}`;
-            if (code >= 400 && code < 600) {
-              const apiError = new ApiError({
-                message: errorMessage,
-                status: code,
-              });
-              throw apiError;
-            }
-          }
-        } catch (e: unknown) {
-          const error = e as Error;
-          if (error.name === 'ApiError') {
-            throw e;
-          }
-        }
+        throwIfStreamErrorChunk(chunkString);
         buffer += chunkString;
 
         let delimiterIndex = -1;
@@ -820,6 +796,7 @@ export class ApiClient {
             const processedChunkString = trimmedEvent
               .substring(dataPrefix.length)
               .trim();
+            throwIfStreamErrorChunk(processedChunkString);
             try {
               const partialResponse = new Response(processedChunkString, {
                 headers: response?.headers,
@@ -1124,6 +1101,37 @@ export class ApiClient {
       );
     }
     return uploadUrl;
+  }
+}
+
+function throwIfStreamErrorChunk(chunkString: string) {
+  try {
+    const chunkJson = JSON.parse(chunkString) as Record<string, unknown>;
+    if (
+      chunkJson !== null &&
+      typeof chunkJson === 'object' &&
+      'error' in chunkJson &&
+      chunkJson['error'] !== null &&
+      typeof chunkJson['error'] === 'object'
+    ) {
+      const errorJson = chunkJson['error'] as Record<string, unknown>;
+      const status = errorJson['status'] as string;
+      const code = errorJson['code'] as number;
+      const errorMessage = `got status: ${status}. ${JSON.stringify(
+        chunkJson,
+      )}`;
+      if (typeof code === 'number' && code >= 400 && code < 600) {
+        throw new ApiError({
+          message: errorMessage,
+          status: code,
+        });
+      }
+    }
+  } catch (e: unknown) {
+    const error = e as Error;
+    if (error?.name === 'ApiError') {
+      throw e;
+    }
   }
 }
 
