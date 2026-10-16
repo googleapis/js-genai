@@ -50,7 +50,8 @@ export class Triggers extends ClientSDK {
   }
 
   /**
-   * Creates a new trigger that will invoke the specified agent on the given cron schedule.
+   * Creates a new trigger that will invoke the specified agent on the given
+   * cron schedule.
    */
   create(
     params: CreateTriggerParams,

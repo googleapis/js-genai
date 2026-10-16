@@ -12,6 +12,9 @@
 
 import { InteractionSseEventInteraction } from "./interaction-sse-event-interaction.js";
 
+/**
+ * Server response confirming that a new interaction was created.
+ */
 export type InteractionCreatedEvent = {
   /**
    * The event_id token to be used to resume the interaction stream, from

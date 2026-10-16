@@ -14,12 +14,9 @@ import { EnvVar } from "./env-var.js";
 import { EnvironmentNetworkEgressAllowlist } from "./environment-network-egress-allowlist.js";
 import { Source } from "./source.js";
 
-/**
- * Environment variables to set in the sandbox environment.
- */
-export type Env = EnvVar | { [k: string]: EnvVar };
+export type Env = EnvVar | string;
 
-export type NetworkEnum = "disabled";
+export type NetworkEnum = "disabled" | (string & {});
 
 /**
  * Network configuration for the environment.
@@ -33,7 +30,7 @@ export type Environment = {
   /**
    * Environment variables to set in the sandbox environment.
    */
-  env?: EnvVar | { [k: string]: EnvVar } | undefined;
+  env?: { [k: string]: EnvVar | string } | undefined;
   /**
    * Optional. The environment ID for the interaction. If specified, the request will
    *

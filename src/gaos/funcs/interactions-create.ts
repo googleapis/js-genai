@@ -34,9 +34,6 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Creating an interaction
- *
- * @remarks
  * Creates a new interaction.
  */
 export function interactionsCreate(

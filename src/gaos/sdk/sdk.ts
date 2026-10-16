@@ -16,6 +16,7 @@ import { Credentials } from "./credentials.js";
 import { Environments } from "./environments.js";
 import { Interactions } from "./interactions.js";
 import { Triggers } from "./triggers.js";
+import { Voices } from "./voices.js";
 import { Webhooks } from "./webhooks.js";
 
 export class GoogleGenAI extends ClientSDK {
@@ -42,6 +43,11 @@ export class GoogleGenAI extends ClientSDK {
   private _triggers?: Triggers;
   get triggers(): Triggers {
     return (this._triggers ??= new Triggers(this._options));
+  }
+
+  private _voices?: Voices;
+  get voices(): Voices {
+    return (this._voices ??= new Voices(this._options));
   }
 
   private _webhooks?: Webhooks;

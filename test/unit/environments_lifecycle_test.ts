@@ -11,6 +11,7 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 
 import {GoogleGenAI} from '../../src/client.js';
+import {type Environments} from '../../src/index.js';
 
 describe('Environments Lifecycle', () => {
   it('routes through Google GenAI client', async () => {
@@ -523,5 +524,12 @@ describe('Environments Lifecycle', () => {
       server.close();
       await once(server, 'close');
     }
+  });
+
+  it('supports from_environment parameter and models exported from index', async () => {
+    const resourceRequest: Environments.CreateEnvironmentRequest = {
+      from_environment: 'environments/env_abc_123',
+    };
+    expect(resourceRequest.from_environment).toBe('environments/env_abc_123');
   });
 });

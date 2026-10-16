@@ -12,7 +12,7 @@
 
 import * as interactions from "../interactions/index.js";
 
-export type EnvironmentNetworkEnum = "disabled";
+export type EnvironmentNetworkEnum = "disabled" | (string & {});
 
 /**
  * Network configuration for the environment.

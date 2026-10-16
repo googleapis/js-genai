@@ -14,15 +14,18 @@ import * as credentials from "../credentials/index.js";
 
 export type CreateCredentialGlobals = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
 };
 
 export type CreateCredentialRequest = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
+  /**
+   * Required. The request body.
+   */
   body: credentials.CredentialCreateParams;
 };

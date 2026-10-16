@@ -151,6 +151,17 @@ export function candidateFromMldev(
     );
   }
 
+  const fromContinuationToken = common.getValueByPath(fromObject, [
+    'continuationToken',
+  ]);
+  if (fromContinuationToken != null) {
+    common.setValueByPath(
+      toObject,
+      ['continuationToken'],
+      fromContinuationToken,
+    );
+  }
+
   return toObject;
 }
 
@@ -226,50 +237,6 @@ export function computeTokensResponseFromVertex(
       });
     }
     common.setValueByPath(toObject, ['tokensInfo'], transformedList);
-  }
-
-  return toObject;
-}
-
-export function computerUseToVertex(
-  fromObject: types.ComputerUse,
-  _rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromEnablePromptInjectionDetection = common.getValueByPath(fromObject, [
-    'enablePromptInjectionDetection',
-  ]);
-  if (fromEnablePromptInjectionDetection != null) {
-    common.setValueByPath(
-      toObject,
-      ['enablePromptInjectionDetection'],
-      fromEnablePromptInjectionDetection,
-    );
-  }
-
-  const fromEnvironment = common.getValueByPath(fromObject, ['environment']);
-  if (fromEnvironment != null) {
-    common.setValueByPath(toObject, ['environment'], fromEnvironment);
-  }
-
-  const fromExcludedPredefinedFunctions = common.getValueByPath(fromObject, [
-    'excludedPredefinedFunctions',
-  ]);
-  if (fromExcludedPredefinedFunctions != null) {
-    common.setValueByPath(
-      toObject,
-      ['excludedPredefinedFunctions'],
-      fromExcludedPredefinedFunctions,
-    );
-  }
-
-  if (
-    common.getValueByPath(fromObject, ['disabledSafetyPolicies']) !== undefined
-  ) {
-    throw new Error(
-      'disabledSafetyPolicies parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
-    );
   }
 
   return toObject;
@@ -1619,10 +1586,9 @@ export function generateContentConfigToMldev(
     );
   }
 
-  if (common.getValueByPath(fromObject, ['labels']) !== undefined) {
-    throw new Error(
-      'labels parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
-    );
+  const fromLabels = common.getValueByPath(fromObject, ['labels']);
+  if (parentObject !== undefined && fromLabels != null) {
+    common.setValueByPath(parentObject, ['labels'], fromLabels);
   }
 
   const fromCachedContent = common.getValueByPath(fromObject, [
@@ -1710,6 +1676,17 @@ export function generateContentConfigToMldev(
   if (common.getValueByPath(fromObject, ['modelArmorConfig']) !== undefined) {
     throw new Error(
       'modelArmorConfig parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
+  }
+
+  const fromContinuationToken = common.getValueByPath(fromObject, [
+    'continuationToken',
+  ]);
+  if (parentObject !== undefined && fromContinuationToken != null) {
+    common.setValueByPath(
+      parentObject,
+      ['continuationToken'],
+      fromContinuationToken,
     );
   }
 
@@ -1977,6 +1954,17 @@ export function generateContentConfigToVertex(
       parentObject,
       ['modelArmorConfig'],
       fromModelArmorConfig,
+    );
+  }
+
+  const fromContinuationToken = common.getValueByPath(fromObject, [
+    'continuationToken',
+  ]);
+  if (parentObject !== undefined && fromContinuationToken != null) {
+    common.setValueByPath(
+      parentObject,
+      ['continuationToken'],
+      fromContinuationToken,
     );
   }
 
@@ -4253,6 +4241,13 @@ export function partToMldev(
     common.setValueByPath(toObject, ['mediaProcessing'], fromMediaProcessing);
   }
 
+  const fromSpeechMetadata = common.getValueByPath(fromObject, [
+    'speechMetadata',
+  ]);
+  if (fromSpeechMetadata != null) {
+    common.setValueByPath(toObject, ['speechMetadata'], fromSpeechMetadata);
+  }
+
   return toObject;
 }
 
@@ -4367,6 +4362,13 @@ export function partToVertex(
   ]);
   if (fromMediaProcessing != null) {
     common.setValueByPath(toObject, ['mediaProcessing'], fromMediaProcessing);
+  }
+
+  const fromSpeechMetadata = common.getValueByPath(fromObject, [
+    'speechMetadata',
+  ]);
+  if (fromSpeechMetadata != null) {
+    common.setValueByPath(toObject, ['speechMetadata'], fromSpeechMetadata);
   }
 
   return toObject;
@@ -5199,11 +5201,7 @@ export function toolToVertex(
 
   const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
   if (fromComputerUse != null) {
-    common.setValueByPath(
-      toObject,
-      ['computerUse'],
-      computerUseToVertex(fromComputerUse, rootObject),
-    );
+    common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
   }
 
   const fromEnterpriseWebSearch = common.getValueByPath(fromObject, [
@@ -5824,6 +5822,11 @@ export function voiceConfigToVertex(
       ['prebuiltVoiceConfig'],
       fromPrebuiltVoiceConfig,
     );
+  }
+
+  const fromVoice = common.getValueByPath(fromObject, ['voice']);
+  if (fromVoice != null) {
+    common.setValueByPath(toObject, ['voice'], fromVoice);
   }
 
   return toObject;
