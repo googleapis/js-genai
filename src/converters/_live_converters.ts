@@ -466,6 +466,100 @@ export function liveClientContentToVertex(
   return toObject;
 }
 
+export function liveClientContextUpdateToMldev(
+  fromObject: types.LiveClientContextUpdate,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromSystemInstruction = common.getValueByPath(fromObject, [
+    'systemInstruction',
+  ]);
+  if (fromSystemInstruction != null) {
+    common.setValueByPath(
+      toObject,
+      ['systemInstruction'],
+      contentToMldev(t.tContent(fromSystemInstruction)),
+    );
+  }
+
+  const fromTools = common.getValueByPath(fromObject, ['tools']);
+  if (fromTools != null) {
+    common.setValueByPath(
+      toObject,
+      ['tools'],
+      liveClientContextUpdateToolsToMldev(fromTools),
+    );
+  }
+
+  return toObject;
+}
+
+export function liveClientContextUpdateToVertex(
+  fromObject: types.LiveClientContextUpdate,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromSystemInstruction = common.getValueByPath(fromObject, [
+    'systemInstruction',
+  ]);
+  if (fromSystemInstruction != null) {
+    common.setValueByPath(
+      toObject,
+      ['systemInstruction'],
+      contentToVertex(t.tContent(fromSystemInstruction)),
+    );
+  }
+
+  const fromTools = common.getValueByPath(fromObject, ['tools']);
+  if (fromTools != null) {
+    common.setValueByPath(
+      toObject,
+      ['tools'],
+      liveClientContextUpdateToolsToVertex(fromTools),
+    );
+  }
+
+  return toObject;
+}
+
+export function liveClientContextUpdateToolsToMldev(
+  fromObject: types.LiveClientContextUpdateTools,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromTools = common.getValueByPath(fromObject, ['tools']);
+  if (fromTools != null) {
+    let transformedList = t.tTools(fromTools);
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return toolToMldev(t.tTool(item));
+      });
+    }
+    common.setValueByPath(toObject, ['tools'], transformedList);
+  }
+
+  return toObject;
+}
+
+export function liveClientContextUpdateToolsToVertex(
+  fromObject: types.LiveClientContextUpdateTools,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromTools = common.getValueByPath(fromObject, ['tools']);
+  if (fromTools != null) {
+    let transformedList = t.tTools(fromTools);
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return toolToVertex(t.tTool(item));
+      });
+    }
+    common.setValueByPath(toObject, ['tools'], transformedList);
+  }
+
+  return toObject;
+}
+
 export function liveClientMessageToMldev(
   fromObject: types.LiveClientMessage,
 ): Record<string, unknown> {
@@ -501,6 +595,17 @@ export function liveClientMessageToMldev(
   const fromToolResponse = common.getValueByPath(fromObject, ['toolResponse']);
   if (fromToolResponse != null) {
     common.setValueByPath(toObject, ['toolResponse'], fromToolResponse);
+  }
+
+  const fromContextUpdate = common.getValueByPath(fromObject, [
+    'contextUpdate',
+  ]);
+  if (fromContextUpdate != null) {
+    common.setValueByPath(
+      toObject,
+      ['contextUpdate'],
+      liveClientContextUpdateToMldev(fromContextUpdate),
+    );
   }
 
   return toObject;
@@ -545,6 +650,17 @@ export function liveClientMessageToVertex(
   const fromToolResponse = common.getValueByPath(fromObject, ['toolResponse']);
   if (fromToolResponse != null) {
     common.setValueByPath(toObject, ['toolResponse'], fromToolResponse);
+  }
+
+  const fromContextUpdate = common.getValueByPath(fromObject, [
+    'contextUpdate',
+  ]);
+  if (fromContextUpdate != null) {
+    common.setValueByPath(
+      toObject,
+      ['contextUpdate'],
+      liveClientContextUpdateToVertex(fromContextUpdate),
+    );
   }
 
   return toObject;
