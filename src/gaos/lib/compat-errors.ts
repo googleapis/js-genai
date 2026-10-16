@@ -14,7 +14,14 @@ import {
 } from "../models/errors/http-client-errors.js";
 import { GoogleGenAiError } from "../models/errors/google-gen-ai-error.js";
 
-export class GeminiNextGenAPIClientError extends Error {}
+/** Base error class for Gemini NextGen API client errors. */
+export class GeminiNextGenAPIClientError extends Error {
+  constructor(message?: string) {
+    super(message);
+    this.name = this.constructor.name;
+    Object.setPrototypeOf(this, new.target.prototype);
+  }
+}
 
 /** General errors raised by the GenAI API. */
 export class APIError<
@@ -170,7 +177,7 @@ export function wrapSDKError(error: unknown): unknown {
     return error;
   }
 
-  if (error instanceof GoogleGenAiError) {
+  if (isGoogleGenAiErrorInstance(error)) {
     return wrapAPIError(error);
   }
 
@@ -179,6 +186,17 @@ export function wrapSDKError(error: unknown): unknown {
   }
 
   return error;
+}
+
+function isGoogleGenAiErrorInstance(value: unknown): value is GoogleGenAiError {
+  if (value instanceof GoogleGenAiError) {
+    return true;
+  }
+  return (
+    value instanceof Error &&
+    typeof (value as { statusCode?: unknown }).statusCode === "number" &&
+    typeof (value as { body?: unknown }).body === "string"
+  );
 }
 
 function wrapAPIError(error: GoogleGenAiError): APIError {
