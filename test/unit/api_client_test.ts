@@ -1860,7 +1860,64 @@ describe('ApiClient', () => {
         commonKey: 'requestCommon', // request commonKey overwrites client commonKey
       });
     });
-    it('should set undici dispatcher on requestInit when timeout is provided for request', async () => {
+    it('should disable undici header/body timeouts when no timeout is provided for request', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth('test-api-key'),
+        apiKey: 'test-api-key',
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(
+            JSON.stringify(mockGenerateContentResponse),
+            fetchOkOptions,
+          ),
+        ),
+      );
+
+      await client.request({
+        path: 'test-path',
+        httpMethod: 'POST',
+      });
+
+      const fetchArgs = fetchSpy.calls.first().args;
+      const requestInit = fetchArgs[1] as Record<string, unknown>;
+      expect(requestInit['signal']).toBeUndefined();
+      const dispatcher = requestInit['dispatcher'] as {
+        dispatch: (opts: Record<string, unknown>, handler: unknown) => unknown;
+      };
+      expect(dispatcher).toBeDefined();
+
+      const globalDispatcherSymbol = Symbol.for('undici.globalDispatcher.1');
+      const globalRecord = globalThis as Record<symbol, unknown>;
+      const originalGlobalDispatcher = globalRecord[globalDispatcherSymbol];
+      const dispatchSpy = jasmine
+        .createSpy('dispatch')
+        .and.returnValue('dispatched');
+      globalRecord[globalDispatcherSymbol] = {dispatch: dispatchSpy};
+      try {
+        const handler = {};
+        const result = dispatcher.dispatch(
+          {path: '/v1beta/models', method: 'POST'},
+          handler,
+        );
+        expect(result).toBe('dispatched');
+        expect(dispatchSpy).toHaveBeenCalledWith(
+          {
+            path: '/v1beta/models',
+            method: 'POST',
+            headersTimeout: 0,
+            bodyTimeout: 0,
+          },
+          handler,
+        );
+      } finally {
+        globalRecord[globalDispatcherSymbol] = originalGlobalDispatcher;
+      }
+    });
+
+    it('should disable undici timeouts and enforce a short timeout via the abort timer', async () => {
       const client = new ApiClient({
         auth: new FakeAuth('test-api-key'),
         apiKey: 'test-api-key',
@@ -1876,24 +1933,47 @@ describe('ApiClient', () => {
         ),
       );
       const mockTimer = jasmine.createSpyObj('timeout', ['unref']);
-      spyOn(global, 'setTimeout').and.returnValue(mockTimer);
+      const setTimeoutSpy = spyOn(global, 'setTimeout').and.returnValue(
+        mockTimer,
+      );
 
       await client.request({
         path: 'test-path',
         httpMethod: 'POST',
-        httpOptions: {timeout: 600000}, // 10 minutes — exceeds undici's 300s default
+        httpOptions: {timeout: 30000}, // 30s — shorter than undici's 300s default
       });
 
       const fetchArgs = fetchSpy.calls.first().args;
       const requestInit = fetchArgs[1] as Record<string, unknown>;
-      // dispatcher must be set so undici's built-in headersTimeout/bodyTimeout
-      // do not fire before the user-supplied timeout.
-      if (requestInit['dispatcher']) {
-        expect(requestInit['dispatcher']).toBeDefined();
+      expect(requestInit['signal']).toBeInstanceOf(AbortSignal);
+      expect(setTimeoutSpy).toHaveBeenCalledWith(jasmine.any(Function), 30000);
+      const dispatcher = requestInit['dispatcher'] as {
+        dispatch: (opts: Record<string, unknown>, handler: unknown) => unknown;
+      };
+      expect(dispatcher).toBeDefined();
+
+      const globalDispatcherSymbol = Symbol.for('undici.globalDispatcher.1');
+      const globalRecord = globalThis as Record<symbol, unknown>;
+      const originalGlobalDispatcher = globalRecord[globalDispatcherSymbol];
+      const dispatchSpy = jasmine.createSpy('dispatch');
+      globalRecord[globalDispatcherSymbol] = {dispatch: dispatchSpy};
+      try {
+        const handler = {};
+        dispatcher.dispatch({path: '/test'}, handler);
+        expect(dispatchSpy).toHaveBeenCalledWith(
+          {
+            path: '/test',
+            headersTimeout: 0,
+            bodyTimeout: 0,
+          },
+          handler,
+        );
+      } finally {
+        globalRecord[globalDispatcherSymbol] = originalGlobalDispatcher;
       }
     });
 
-    it('should set undici dispatcher headersTimeout and bodyTimeout to the provided timeout for request', async () => {
+    it('should disable undici timeouts and enforce a long timeout via the abort timer', async () => {
       const client = new ApiClient({
         auth: new FakeAuth('test-api-key'),
         apiKey: 'test-api-key',
@@ -1909,49 +1989,74 @@ describe('ApiClient', () => {
         ),
       );
       const mockTimer = jasmine.createSpyObj('timeout', ['unref']);
-      spyOn(global, 'setTimeout').and.returnValue(mockTimer);
-
-      await client.request({
-        path: 'test-path',
-        httpMethod: 'POST',
-        httpOptions: {timeout: 120000},
-      });
-
-      const fetchArgs = fetchSpy.calls.first().args;
-      const requestInit = fetchArgs[1] as Record<string, unknown>;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const dispatcher = requestInit['dispatcher'] as any;
-      if (dispatcher) {
-        expect(dispatcher).toBeDefined();
-      }
-      if (dispatcher && dispatcher.options) {
-        expect(dispatcher.options.headersTimeout).toBe(120000);
-        expect(dispatcher.options.bodyTimeout).toBe(120000);
-      }
-    });
-
-    it('should not set undici dispatcher when no timeout is provided for request', async () => {
-      const client = new ApiClient({
-        auth: new FakeAuth('test-api-key'),
-        apiKey: 'test-api-key',
-        uploader: new CrossUploader(),
-        downloader: new CrossDownloader(),
-      });
-      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
-        Promise.resolve(
-          new Response(
-            JSON.stringify(mockGenerateContentResponse),
-            fetchOkOptions,
-          ),
-        ),
+      const setTimeoutSpy = spyOn(global, 'setTimeout').and.returnValue(
+        mockTimer,
       );
 
       await client.request({
         path: 'test-path',
         httpMethod: 'POST',
+        httpOptions: {timeout: 2400000}, // 40 minutes
       });
 
       const fetchArgs = fetchSpy.calls.first().args;
+      const requestInit = fetchArgs[1] as Record<string, unknown>;
+      expect(requestInit['signal']).toBeInstanceOf(AbortSignal);
+      expect(setTimeoutSpy).toHaveBeenCalledWith(
+        jasmine.any(Function),
+        2400000,
+      );
+      const dispatcher = requestInit['dispatcher'] as {
+        dispatch: (opts: Record<string, unknown>, handler: unknown) => unknown;
+      };
+      expect(dispatcher).toBeDefined();
+
+      const globalDispatcherSymbol = Symbol.for('undici.globalDispatcher.1');
+      const globalRecord = globalThis as Record<symbol, unknown>;
+      const originalGlobalDispatcher = globalRecord[globalDispatcherSymbol];
+      const dispatchSpy = jasmine.createSpy('dispatch');
+      globalRecord[globalDispatcherSymbol] = {dispatch: dispatchSpy};
+      try {
+        const handler = {};
+        dispatcher.dispatch({path: '/test'}, handler);
+        expect(dispatchSpy).toHaveBeenCalledWith(
+          {
+            path: '/test',
+            headersTimeout: 0,
+            bodyTimeout: 0,
+          },
+          handler,
+        );
+      } finally {
+        globalRecord[globalDispatcherSymbol] = originalGlobalDispatcher;
+      }
+    });
+
+    it('should not set undici dispatcher when custom fetch is provided in httpOptions', async () => {
+      const customFetch = jasmine
+        .createSpy('customFetch')
+        .and.returnValue(
+          Promise.resolve(
+            new Response(
+              JSON.stringify(mockGenerateContentResponse),
+              fetchOkOptions,
+            ),
+          ),
+        );
+      const client = new ApiClient({
+        auth: new FakeAuth('test-api-key'),
+        apiKey: 'test-api-key',
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+        httpOptions: {fetch: customFetch},
+      });
+
+      await client.request({
+        path: 'test-path',
+        httpMethod: 'POST',
+      });
+
+      const fetchArgs = customFetch.calls.first().args;
       const requestInit = fetchArgs[1] as Record<string, unknown>;
       expect(requestInit['dispatcher']).toBeUndefined();
     });
@@ -2511,7 +2616,7 @@ describe('ApiClient', () => {
         'https://custom-client-base-url.googleapis.com/v1beta1/test-path?alt=sse',
       );
     });
-    it('should set undici dispatcher on requestInit when timeout is provided for requestStream', async () => {
+    it('should set undici dispatcher with timeouts disabled on requestInit for requestStream', async () => {
       const client = new ApiClient({
         auth: new FakeAuth('test-api-key'),
         apiKey: 'test-api-key',
@@ -2537,8 +2642,29 @@ describe('ApiClient', () => {
 
       const fetchArgs = fetchSpy.calls.first().args;
       const requestInit = fetchArgs[1] as Record<string, unknown>;
-      if (requestInit['dispatcher']) {
-        expect(requestInit['dispatcher']).toBeDefined();
+      const dispatcher = requestInit['dispatcher'] as {
+        dispatch: (opts: Record<string, unknown>, handler: unknown) => unknown;
+      };
+      expect(dispatcher).toBeDefined();
+
+      const globalDispatcherSymbol = Symbol.for('undici.globalDispatcher.1');
+      const globalRecord = globalThis as Record<symbol, unknown>;
+      const originalGlobalDispatcher = globalRecord[globalDispatcherSymbol];
+      const dispatchSpy = jasmine.createSpy('dispatch');
+      globalRecord[globalDispatcherSymbol] = {dispatch: dispatchSpy};
+      try {
+        const handler = {};
+        dispatcher.dispatch({path: '/test-stream'}, handler);
+        expect(dispatchSpy).toHaveBeenCalledWith(
+          {
+            path: '/test-stream',
+            headersTimeout: 0,
+            bodyTimeout: 0,
+          },
+          handler,
+        );
+      } finally {
+        globalRecord[globalDispatcherSymbol] = originalGlobalDispatcher;
       }
     });
     it('should send X-Server-Timeout header when timeout is set but no custom headers are provided for requestStream', async () => {

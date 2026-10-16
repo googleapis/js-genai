@@ -2,6 +2,8 @@ import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import resolve from '@rollup/plugin-node-resolve';
 import {readFileSync} from 'fs';
+import os from 'os';
+import path from 'path';
 import typescript from 'rollup-plugin-typescript2';
 
 const pkg = JSON.parse(
@@ -10,6 +12,7 @@ const pkg = JSON.parse(
 
 const rollupPlugins = [
   typescript({
+    cacheRoot: path.join(os.tmpdir(), 'rpt2_cache'),
     tsconfigOverride: {
       exclude: ['test/**', 'src/private/**'],
     },

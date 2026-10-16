@@ -614,6 +614,17 @@ export function candidateFromMldev(
     );
   }
 
+  const fromContinuationToken = common.getValueByPath(fromObject, [
+    'continuationToken',
+  ]);
+  if (fromContinuationToken != null) {
+    common.setValueByPath(
+      toObject,
+      ['continuationToken'],
+      fromContinuationToken,
+    );
+  }
+
   return toObject;
 }
 
@@ -1283,10 +1294,9 @@ export function generateContentConfigToMldev(
     );
   }
 
-  if (common.getValueByPath(fromObject, ['labels']) !== undefined) {
-    throw new Error(
-      'labels parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
-    );
+  const fromLabels = common.getValueByPath(fromObject, ['labels']);
+  if (parentObject !== undefined && fromLabels != null) {
+    common.setValueByPath(parentObject, ['labels'], fromLabels);
   }
 
   const fromCachedContent = common.getValueByPath(fromObject, [
@@ -1374,6 +1384,17 @@ export function generateContentConfigToMldev(
   if (common.getValueByPath(fromObject, ['modelArmorConfig']) !== undefined) {
     throw new Error(
       'modelArmorConfig parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
+  }
+
+  const fromContinuationToken = common.getValueByPath(fromObject, [
+    'continuationToken',
+  ]);
+  if (parentObject !== undefined && fromContinuationToken != null) {
+    common.setValueByPath(
+      parentObject,
+      ['continuationToken'],
+      fromContinuationToken,
     );
   }
 
@@ -1913,6 +1934,13 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
   ]);
   if (fromMediaProcessing != null) {
     common.setValueByPath(toObject, ['mediaProcessing'], fromMediaProcessing);
+  }
+
+  const fromSpeechMetadata = common.getValueByPath(fromObject, [
+    'speechMetadata',
+  ]);
+  if (fromSpeechMetadata != null) {
+    common.setValueByPath(toObject, ['speechMetadata'], fromSpeechMetadata);
   }
 
   return toObject;

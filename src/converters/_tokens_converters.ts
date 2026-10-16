@@ -656,6 +656,13 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
     common.setValueByPath(toObject, ['mediaProcessing'], fromMediaProcessing);
   }
 
+  const fromSpeechMetadata = common.getValueByPath(fromObject, [
+    'speechMetadata',
+  ]);
+  if (fromSpeechMetadata != null) {
+    common.setValueByPath(toObject, ['speechMetadata'], fromSpeechMetadata);
+  }
+
   return toObject;
 }
 
