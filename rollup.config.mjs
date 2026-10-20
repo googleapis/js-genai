@@ -1,4 +1,6 @@
+import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
+import resolve from '@rollup/plugin-node-resolve';
 import {readFileSync} from 'fs';
 import os from 'os';
 import path from 'path';
@@ -44,6 +46,16 @@ const externalDeps = [
   'protobufjs/minimal',
   'protobufjs/minimal.js',
   'p-retry',
+];
+
+// Browsers cannot resolve bare module specifiers, so the web build bundles its
+// runtime npm dependencies. `p-retry` is CommonJS, hence `commonjs()`.
+// `resolve()` must come before the TypeScript plugin.
+const webExternalDeps = externalDeps.filter((dep) => dep !== 'p-retry');
+const webRollupPlugins = [
+  resolve({browser: true, preferBuiltins: false}),
+  commonjs(),
+  ...rollupPlugins,
 ];
 
 export default [
@@ -108,8 +120,8 @@ export default [
       sourcemap: true,
       sourcemapExcludeSources: true,
     },
-    plugins: rollupPlugins,
-    external: externalDeps,
+    plugins: webRollupPlugins,
+    external: webExternalDeps,
   },
 
   // The `tokenizer/node` ES module (dist/tokenizer/node.mjs)
