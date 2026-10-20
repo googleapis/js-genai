@@ -20,6 +20,9 @@ if tar -xzOf "${TARBALL}" package/package.json \
   exit 1
 fi
 
+echo "Checking that the web bundle loads without a bundler..."
+node test/packaging/check_web_bundle.mjs
+
 echo "Building sdk-samples..."
 
 pushd sdk-samples
