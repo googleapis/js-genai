@@ -2985,6 +2985,17 @@ export declare interface ImageConfig {
   prominentPeople?: ProminentPeople;
 }
 
+/** Configuration for persisting output assets to external storage. */
+export declare interface GenerationOutputConfig {
+  /** Optional. The Cloud Storage URI prefix or directory where
+      generated media assets should be written (e.g. "gs://my-bucket/prefix/").
+      Supported URI schemes: "gs://". When set, media bytes are written directly
+      to this location and returned as FileData with a file_uri instead of raw
+      inline bytes.
+       */
+  outputUriPrefix?: string;
+}
+
 /** The configuration for automated routing. When automated routing is specified, the routing will be determined by the pretrained routing model and customer provided model routing preference. This data type is not supported in Gemini API. */
 export declare interface GenerationConfigRoutingConfigAutoRoutingMode {
   /** The model routing preference. */
@@ -3270,6 +3281,10 @@ export declare interface GenerateContentConfig {
       billing apply to each request. Set to false to turn this off.
        */
   automaticContinuation?: boolean;
+  /** Optional. Configuration for persisting output assets to external
+      storage.
+       */
+  generationOutputConfig?: GenerationOutputConfig;
 }
 
 /** Config for models.generate_content parameters. */

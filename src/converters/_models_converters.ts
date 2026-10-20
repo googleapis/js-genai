@@ -1690,6 +1690,14 @@ export function generateContentConfigToMldev(
     );
   }
 
+  if (
+    common.getValueByPath(fromObject, ['generationOutputConfig']) !== undefined
+  ) {
+    throw new Error(
+      'generationOutputConfig parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
+  }
+
   return toObject;
 }
 
@@ -1965,6 +1973,17 @@ export function generateContentConfigToVertex(
       parentObject,
       ['continuationToken'],
       fromContinuationToken,
+    );
+  }
+
+  const fromGenerationOutputConfig = common.getValueByPath(fromObject, [
+    'generationOutputConfig',
+  ]);
+  if (parentObject !== undefined && fromGenerationOutputConfig != null) {
+    common.setValueByPath(
+      parentObject,
+      ['outputConfig'],
+      fromGenerationOutputConfig,
     );
   }
 
