@@ -1116,6 +1116,9 @@ export class ApiClient {
       );
     }
 
+    // Read the unused body so the runtime releases it.
+    await httpResponse.responseInternal.text();
+
     const uploadUrl: string | undefined =
       httpResponse?.headers?.['x-goog-upload-url'];
     if (uploadUrl === undefined) {

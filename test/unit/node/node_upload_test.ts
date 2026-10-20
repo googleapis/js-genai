@@ -4,7 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {ApiClient} from '../../../src/_api_client.js';
+import {CrossDownloader} from '../../../src/cross/_cross_downloader.js';
+import {NodeUploader} from '../../../src/node/_node_uploader.js';
 import {GoogleGenAI} from '../../../src/node/node_client.js';
+import {FakeAuth} from '../../_fake_auth.js';
 import {createZeroFilledTempFile} from '../../_generate_test_file.js';
 
 const DEFAULT_CHUNK_SIZE = 1024 * 1024 * 8; // bytes
@@ -32,12 +36,15 @@ const lastCorrectFetchOkOptions = {
   },
   url: 'some-url',
 };
-const mockResponse = new Response(
-  JSON.stringify({
-    data: 'data1',
-  }),
-  fetchOkOptions,
-);
+// Each call needs a fresh Response, since the uploader reads its body.
+function makeActiveResponse(): Response {
+  return new Response(
+    JSON.stringify({
+      data: 'data1',
+    }),
+    fetchOkOptions,
+  );
+}
 
 describe('Node uploader', () => {
   let originalGeminiBaseUrl: string | undefined;
@@ -83,7 +90,7 @@ describe('Node uploader', () => {
 
       const mockResponses = [];
       for (let i = 0; i < numRequests - 1; i++) {
-        mockResponses.push(Promise.resolve(mockResponse));
+        mockResponses.push(Promise.resolve(makeActiveResponse()));
       }
       mockResponses.push(
         Promise.resolve(
@@ -120,6 +127,32 @@ describe('Node uploader', () => {
       expect(byteProcessed).toBe(fileSize);
       console.log(`byteProcessed: ${byteProcessed}, fileSize: ${fileSize}`);
     });
+
+    // Deno reports an unread fetch body as a leak, so every intermediate
+    // chunk response must be read before the next chunk is sent.
+    it('should read intermediate chunk response bodies when uploading from a path', async () => {
+      const uploader = new NodeUploader();
+      const apiClient = new ApiClient({
+        auth: new FakeAuth(),
+        apiKey: 'fake-api-key',
+        uploader,
+        downloader: new CrossDownloader(),
+      });
+      const activeResponse = makeActiveResponse();
+      const responses = [Promise.resolve(activeResponse)];
+      const numRequests = Math.ceil(TEST_FILE_SIZE / DEFAULT_CHUNK_SIZE);
+      for (let i = 1; i < numRequests - 1; i++) {
+        responses.push(Promise.resolve(makeActiveResponse()));
+      }
+      responses.push(
+        Promise.resolve(new Response('{}', lastCorrectFetchOkOptions)),
+      );
+      spyOn(global, 'fetch').and.returnValues(...responses);
+
+      await uploader.upload(filePath, TEST_UPLOAD_URL, apiClient);
+
+      expect(activeResponse.bodyUsed).toBeTrue();
+    });
   });
 
   it('should rewrite the upload URL when httpOptions.baseUrl is provided', async () => {
@@ -129,7 +162,7 @@ describe('Node uploader', () => {
 
     const mockResponses = [];
     for (let i = 0; i < numRequests - 1; i++) {
-      mockResponses.push(Promise.resolve(mockResponse));
+      mockResponses.push(Promise.resolve(makeActiveResponse()));
     }
     mockResponses.push(
       Promise.resolve(
@@ -183,7 +216,7 @@ describe('Node uploader', () => {
 
       const mockResponses = [];
       for (let i = 0; i < numRequests - 1; i++) {
-        mockResponses.push(Promise.resolve(mockResponse));
+        mockResponses.push(Promise.resolve(makeActiveResponse()));
       }
       mockResponses.push(
         Promise.resolve(
