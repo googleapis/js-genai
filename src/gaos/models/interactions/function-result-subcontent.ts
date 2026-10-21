@@ -12,5 +12,9 @@
 
 import { ImageContent } from "./image-content.js";
 import { TextContent } from "./text-content.js";
+import { VideoContent } from "./video-content.js";
 
-export type FunctionResultSubcontent = ImageContent | TextContent;
+export type FunctionResultSubcontent =
+  | ImageContent
+  | TextContent
+  | VideoContent;
