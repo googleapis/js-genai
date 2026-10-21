@@ -400,6 +400,104 @@ describe('processStreamResponse', () => {
     expect(result).toEqual(expectedResponse);
   });
 
+  it('should find a delimiter split across network chunks', async () => {
+    const payload =
+      'data: {"candidates": [{"content": {"parts": [{"text": "One"}],"role": "model"}}]}\r\n\r\ndata: {"candidates": [{"content": {"parts": [{"text": "Two"}],"role": "model"}}]}\n\n';
+    // Split so the '\r\n\r\n' delimiter straddles two reads, for every
+    // possible split point inside the delimiter.
+    const firstDelimiterStart = payload.indexOf('\r\n\r\n');
+    for (let offset = 1; offset < 4; offset++) {
+      const splitAt = firstDelimiterStart + offset;
+      const stream = new Readable();
+      stream.push(payload.substring(0, splitAt));
+      stream.push(payload.substring(splitAt));
+      stream.push(null);
+      const readableStream = new ReadableStream({
+        start(controller) {
+          stream.on('data', (chunk) => controller.enqueue(chunk));
+          stream.on('end', () => controller.close());
+          stream.on('error', (err) => controller.error(err));
+        },
+      });
+      const response = new Response(readableStream);
+
+      const texts: string[] = [];
+      for await (const jsonChunk of apiClient.processStreamResponse(
+        response,
+      )) {
+        const typedChunk = new types.GenerateContentResponse();
+        Object.assign(typedChunk, await jsonChunk.json());
+        texts.push(typedChunk.text!);
+      }
+      expect(texts).toEqual(['One', 'Two']);
+    }
+  });
+
+  it('should yield multiple events arriving in a single chunk', async () => {
+    const payload =
+      'data: {"candidates": [{"content": {"parts": [{"text": "One"}],"role": "model"}}]}\n\n' +
+      'data: {"candidates": [{"content": {"parts": [{"text": "Two"}],"role": "model"}}]}\r\r' +
+      'data: {"candidates": [{"content": {"parts": [{"text": "Three"}],"role": "model"}}]}\r\n\r\n';
+    const stream = new Readable();
+    stream.push(payload);
+    stream.push(null);
+    const readableStream = new ReadableStream({
+      start(controller) {
+        stream.on('data', (chunk) => controller.enqueue(chunk));
+        stream.on('end', () => controller.close());
+        stream.on('error', (err) => controller.error(err));
+      },
+    });
+    const response = new Response(readableStream);
+
+    const texts: string[] = [];
+    for await (const jsonChunk of apiClient.processStreamResponse(response)) {
+      const typedChunk = new types.GenerateContentResponse();
+      Object.assign(typedChunk, await jsonChunk.json());
+      texts.push(typedChunk.text!);
+    }
+    expect(texts).toEqual(['One', 'Two', 'Three']);
+  });
+
+  it('should parse a multi-megabyte single event in bounded time', async () => {
+    // A 48MB single-line event (the size class of a streamed 4K generated
+    // image as base64 inlineData) delivered in 64KiB reads. With full-buffer
+    // rescanning this takes quadratic time (several seconds); with windowed
+    // scanning it is linear and finishes in well under a second.
+    const largeData = 'A'.repeat(48 * 1024 * 1024);
+    const ssePayload = `data: {"data": "${largeData}"}\n\n`;
+
+    const stream = new Readable();
+    const chunkSize = 64 * 1024;
+    for (let i = 0; i < ssePayload.length; i += chunkSize) {
+      stream.push(ssePayload.substring(i, i + chunkSize));
+    }
+    stream.push(null);
+
+    const readableStream = new ReadableStream({
+      start(controller) {
+        stream.on('data', (chunk) =>
+          controller.enqueue(new TextEncoder().encode(chunk)),
+        );
+        stream.on('end', () => controller.close());
+      },
+    });
+    const response = new Response(readableStream);
+
+    const start = Date.now();
+    const generator = apiClient.processStreamResponse(response);
+    const result = await generator.next();
+    const elapsedMs = Date.now() - start;
+    expect(result.done).toBeFalse();
+    const json = await result.value.json();
+    expect(json.data).toBe(largeData);
+    const final = await generator.next();
+    expect(final.done).toBeTrue();
+    // Generous bound: linear parsing finishes in well under a second; the
+    // previous quadratic behavior took several seconds for this size.
+    expect(elapsedMs).toBeLessThan(3000);
+  });
+
   it('should handle large fragmented payloads correctly (regression for $O(n^2)$)', async () => {
     const largeData = 'A'.repeat(10 * 1024);
     const jsonPayload = JSON.stringify({data: largeData});
