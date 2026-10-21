@@ -7,7 +7,7 @@ on:
     branches: [ 'main' ]
 
 env:
-  SPEAKEASY_VERSION: v2.948.9
+  SPEAKEASY_VERSION: v2.950.5
 
 jobs:
   test:
