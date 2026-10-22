@@ -12,6 +12,7 @@
 
 import { AudioContent } from "./audio-content.js";
 import { DocumentContent } from "./document-content.js";
+import { FunctionT } from "./function.js";
 import { ImageContent } from "./image-content.js";
 import { TextContent } from "./text-content.js";
 import { VideoContent } from "./video-content.js";
@@ -19,6 +20,7 @@ import { VideoContent } from "./video-content.js";
 export type FunctionResultSubcontent =
   | AudioContent
   | DocumentContent
+  | FunctionT
   | ImageContent
   | TextContent
   | VideoContent;
