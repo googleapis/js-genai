@@ -61,8 +61,7 @@
   },
   "scripts": {
     "preinstall": "echo 'preinstall: no-op'",
-    "prepare": "node scripts/prepare.js",
-    "prepack": "echo 'prepack: no-op'",
+    "prepack": "node scripts/prepack.js",
     "prebuild": "echo 'prebuild: no-op'",
     "build": "mkdir -p temp/api-report && patch-package && rollup -c && ./scripts/build_api_reports.sh && node scripts/ignore_missing_mcp_dep.js",
     "api-extractor:dev:main": "api-extractor run --local --verbose",
