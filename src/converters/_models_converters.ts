@@ -1698,6 +1698,11 @@ export function generateContentConfigToMldev(
     );
   }
 
+  const fromStore = common.getValueByPath(fromObject, ['store']);
+  if (parentObject !== undefined && fromStore != null) {
+    common.setValueByPath(parentObject, ['store'], fromStore);
+  }
+
   return toObject;
 }
 
@@ -1984,6 +1989,12 @@ export function generateContentConfigToVertex(
       parentObject,
       ['outputConfig'],
       fromGenerationOutputConfig,
+    );
+  }
+
+  if (common.getValueByPath(fromObject, ['store']) !== undefined) {
+    throw new Error(
+      'store parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
     );
   }
 

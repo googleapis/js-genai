@@ -3285,6 +3285,11 @@ export declare interface GenerateContentConfig {
       storage.
        */
   generationOutputConfig?: GenerationOutputConfig;
+  /** Configures the logging behavior for a given request. If set, it
+      takes precedence over the project-level logging config. This field is not
+      supported in Gemini Enterprise Agent Platform.
+       */
+  store?: boolean;
 }
 
 /** Config for models.generate_content parameters. */
@@ -8396,6 +8401,9 @@ If included the server will send SessionResumptionUpdate messages. */
   safetySettings?: SafetySetting[];
   /** Config for translation. */
   translationConfig?: TranslationConfig;
+  /** Labels with user-defined metadata for the session. In Gemini
+      Enterprise Agent Platform, they are used for billing and reporting. */
+  labels?: Record<string, string>;
 }
 
 /** Parameters for connecting to the live API. */

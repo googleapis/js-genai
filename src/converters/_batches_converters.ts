@@ -1406,6 +1406,11 @@ export function generateContentConfigToMldev(
     );
   }
 
+  const fromStore = common.getValueByPath(fromObject, ['store']);
+  if (parentObject !== undefined && fromStore != null) {
+    common.setValueByPath(parentObject, ['store'], fromStore);
+  }
+
   return toObject;
 }
 
