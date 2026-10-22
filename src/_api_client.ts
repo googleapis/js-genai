@@ -748,6 +748,10 @@ export class ApiClient {
 
     try {
       let buffer = '';
+      // The last up-to-3 characters of `buffer`, kept so that a delimiter
+      // split across network chunks is still found without rescanning the
+      // whole buffer (the longest delimiter is 4 characters).
+      let bufferTail = '';
       const dataPrefix = 'data:';
       const delimiters = ['\n\n', '\r\r', '\r\n\r\n'];
 
@@ -787,7 +791,19 @@ export class ApiClient {
             throw e;
           }
         }
+        // Search for delimiters only in a small window (the last up-to-3
+        // characters of the previous buffer plus the new chunk) instead of
+        // the whole accumulated buffer. Rescanning the whole buffer on every
+        // network chunk is O(n^2) in the event size (both the indexOf scan
+        // itself and V8 flattening the concatenated rope string), which
+        // blocks the event loop for many seconds while a multi-megabyte
+        // event (e.g. a 2K/4K generated image) is streaming in. Regions
+        // scanned on previous iterations are known to contain no delimiter.
+        const previousWindowStart = buffer.length - bufferTail.length;
         buffer += chunkString;
+        let window = bufferTail + chunkString;
+        let windowStart = previousWindowStart;
+        bufferTail = window.length > 3 ? window.slice(-3) : window;
 
         let delimiterIndex = -1;
         let delimiterLength = 0;
@@ -797,7 +813,7 @@ export class ApiClient {
           delimiterLength = 0;
 
           for (const delimiter of delimiters) {
-            const index = buffer.indexOf(delimiter);
+            const index = window.indexOf(delimiter);
             if (
               index !== -1 &&
               (delimiterIndex === -1 || index < delimiterIndex)
@@ -811,8 +827,14 @@ export class ApiClient {
             break; // No complete event in buffer
           }
 
-          const eventString = buffer.substring(0, delimiterIndex);
-          buffer = buffer.substring(delimiterIndex + delimiterLength);
+          const absoluteIndex = windowStart + delimiterIndex;
+          const eventString = buffer.substring(0, absoluteIndex);
+          buffer = buffer.substring(absoluteIndex + delimiterLength);
+          // After extracting an event the remainder is small; scan all of it
+          // so any further complete events in this chunk are still found.
+          window = buffer;
+          windowStart = 0;
+          bufferTail = buffer.length > 3 ? buffer.slice(-3) : buffer;
 
           const trimmedEvent = eventString.trim();
 
