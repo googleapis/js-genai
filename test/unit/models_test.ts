@@ -1450,3 +1450,190 @@ describe('generateContentStream regression', () => {
     expect(receivedText).toBe(largeText);
   });
 });
+
+describe('countTokens', () => {
+  it('should serialize contents as instances for embedding models on Vertex AI', async () => {
+    const client = new GoogleGenAI({
+      vertexai: true,
+      project: 'test-project',
+      location: 'us-central1',
+      apiKey: 'test-api-key',
+    });
+
+    let requestBody: Record<string, unknown> | undefined;
+    let requestUrl: string | undefined;
+
+    spyOn(global, 'fetch').and.callFake(
+      async (url: RequestInfo | URL, init?: RequestInit) => {
+        requestUrl = String(url);
+        requestBody = JSON.parse(init?.body as string);
+        return new Response(
+          JSON.stringify({
+            totalTokens: 3,
+            totalBillableCharacters: 11,
+          }),
+          fetchOkOptions,
+        );
+      },
+    );
+
+    const response = await client.models.countTokens({
+      model: 'gemini-embedding-001',
+      contents: 'Hello world',
+    });
+
+    expect(requestUrl).toContain(
+      'publishers/google/models/gemini-embedding-001:countTokens',
+    );
+    expect(requestBody).toEqual({
+      instances: [{content: 'Hello world'}],
+    });
+    expect(response.totalTokens).toBe(3);
+    expect(response.totalBillableCharacters).toBe(11);
+  });
+
+  it('should serialize array of contents as multiple instances for embedding models on Vertex AI', async () => {
+    const client = new GoogleGenAI({
+      vertexai: true,
+      project: 'test-project',
+      location: 'us-central1',
+      apiKey: 'test-api-key',
+    });
+
+    let requestBody: Record<string, unknown> | undefined;
+
+    spyOn(global, 'fetch').and.callFake(
+      async (_url: RequestInfo | URL, init?: RequestInit) => {
+        requestBody = JSON.parse(init?.body as string);
+        return new Response(
+          JSON.stringify({
+            totalTokens: 6,
+            totalBillableCharacters: 22,
+          }),
+          fetchOkOptions,
+        );
+      },
+    );
+
+    const response = await client.models.countTokens({
+      model: 'text-embedding-004',
+      contents: ['Doc 1', 'Doc 2'],
+    });
+
+    expect(requestBody).toEqual({
+      instances: [{content: 'Doc 1'}, {content: 'Doc 2'}],
+    });
+    expect(response.totalTokens).toBe(6);
+    expect(response.totalBillableCharacters).toBe(22);
+  });
+
+  it('should pass through explicit instances on Vertex AI', async () => {
+    const client = new GoogleGenAI({
+      vertexai: true,
+      project: 'test-project',
+      location: 'us-central1',
+      apiKey: 'test-api-key',
+    });
+
+    let requestBody: Record<string, unknown> | undefined;
+
+    spyOn(global, 'fetch').and.callFake(
+      async (_url: RequestInfo | URL, init?: RequestInit) => {
+        requestBody = JSON.parse(init?.body as string);
+        return new Response(
+          JSON.stringify({
+            totalTokens: 4,
+          }),
+          fetchOkOptions,
+        );
+      },
+    );
+
+    const response = await client.models.countTokens({
+      model: 'text-embedding-004',
+      instances: [{content: 'Custom input text'}],
+    });
+
+    expect(requestBody).toEqual({
+      instances: [{content: 'Custom input text'}],
+    });
+    expect(response.totalTokens).toBe(4);
+  });
+
+  it('should serialize contents as contents for generative models on Vertex AI', async () => {
+    const client = new GoogleGenAI({
+      vertexai: true,
+      project: 'test-project',
+      location: 'us-central1',
+      apiKey: 'test-api-key',
+    });
+
+    let requestBody: Record<string, unknown> | undefined;
+
+    spyOn(global, 'fetch').and.callFake(
+      async (_url: RequestInfo | URL, init?: RequestInit) => {
+        requestBody = JSON.parse(init?.body as string);
+        return new Response(
+          JSON.stringify({
+            totalTokens: 10,
+          }),
+          fetchOkOptions,
+        );
+      },
+    );
+
+    const response = await client.models.countTokens({
+      model: 'gemini-2.5-flash',
+      contents: 'Hello generative model',
+    });
+
+    expect(requestBody).toEqual({
+      contents: [
+        {
+          role: 'user',
+          parts: [{text: 'Hello generative model'}],
+        },
+      ],
+    });
+    expect(response.totalTokens).toBe(10);
+  });
+
+  it('should serialize contents as contents for ML Dev even with embedding model', async () => {
+    const client = new GoogleGenAI({
+      vertexai: false,
+      apiKey: 'fake-api-key',
+    });
+
+    let requestBody: Record<string, unknown> | undefined;
+    let requestUrl: string | undefined;
+
+    spyOn(global, 'fetch').and.callFake(
+      async (url: RequestInfo | URL, init?: RequestInit) => {
+        requestUrl = String(url);
+        requestBody = JSON.parse(init?.body as string);
+        return new Response(
+          JSON.stringify({
+            totalTokens: 2,
+          }),
+          fetchOkOptions,
+        );
+      },
+    );
+
+    const response = await client.models.countTokens({
+      model: 'gemini-embedding-001',
+      contents: 'Hello dev api',
+    });
+
+    expect(requestUrl).toContain('models/gemini-embedding-001:countTokens');
+    expect(requestBody).toEqual({
+      contents: [
+        {
+          role: 'user',
+          parts: [{text: 'Hello dev api'}],
+        },
+      ],
+    });
+    expect(response.totalTokens).toBe(2);
+  });
+});
