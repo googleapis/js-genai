@@ -2,6 +2,26 @@
 
 
 
+## [2.31.0](https://github.com/googleapis/js-genai/compare/v2.30.0...v2.31.0) (2026-10-22)
+
+
+### Features
+
+* Add `store` to `GenerateContentConfig` (Gemini Developer API only) and `labels` to `LiveConnectConfig`. ([0b52aa5](https://github.com/googleapis/js-genai/commit/0b52aa5ffad1016e1106c5d0918eb8d0d9c26702))
+* add base_voice to PromptedVoice in GAOS SDK ([d62820b](https://github.com/googleapis/js-genai/commit/d62820bb92119c11171cb28ccdd43bb4f6f0734b))
+* Add generation_output_config to GenerateContentConfig ([e82a75a](https://github.com/googleapis/js-genai/commit/e82a75a8bfe56529ff2651645b19509199360cbc))
+* Add Live API in-session context updates (`send_context_update`) and types across GenAI SDKs. ([177ee68](https://github.com/googleapis/js-genai/commit/177ee684ada5d2fd39450e88a9416b301eaa6ff4))
+* include AudioContent, DocumentContent, and VideoContent in FunctionResultSubContent ([aeaed4e](https://github.com/googleapis/js-genai/commit/aeaed4ed17a2e15f29962d390fb2220712fa3b36))
+* **sdks:** enable `fixes.openSingleValueEnumsOct2026` across all SDKs ([0059474](https://github.com/googleapis/js-genai/commit/0059474f74758a6f2e9930985b749bc6a7277eb9))
+* update discovery doc ([40d6e98](https://github.com/googleapis/js-genai/commit/40d6e98aca99d0a08e9d318da51f5a418c7695da))
+
+
+### Bug Fixes
+
+* **genai:** raise mid-stream SSE errors and dropped connections consistently across SDKs; add continuation conformance tests ([38f6ebc](https://github.com/googleapis/js-genai/commit/38f6ebcda2c39edc588f4274f4abdd2d41e31e9c))
+* **interactions:** sync InteractionSseEventInteractionStatus enum with InteractionStatus ([be6aa9f](https://github.com/googleapis/js-genai/commit/be6aa9fc5d3425d37c96138a9bdc0e7b81ccc080))
+* **triggers:** fix agent triggers OpenAPI overlays, numeric fields, and SDK patches ([0e9031d](https://github.com/googleapis/js-genai/commit/0e9031d2e355ead32a274860f1ebb2b066aab0cc))
+
 ## [2.30.0](https://github.com/googleapis/js-genai/compare/v2.29.1...v2.30.0) (2026-10-14)
 
 
