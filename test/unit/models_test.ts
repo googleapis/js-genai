@@ -1450,3 +1450,149 @@ describe('generateContentStream regression', () => {
     expect(receivedText).toBe(largeText);
   });
 });
+
+describe('responseFormat in GenerateContentConfig', () => {
+  it('should include responseFormat in generationConfig for Gemini API generateContent', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+      Promise.resolve(
+        new Response(
+          JSON.stringify(mockGenerateContentResponse),
+          fetchOkOptions,
+        ),
+      ),
+    );
+    const responseFormat: types.ResponseFormat[] = [
+      {audio: {mimeType: 'audio/l16'}},
+    ];
+
+    await client.models.generateContent({
+      model: 'gemini-3.8-flash-tts',
+      contents: 'hi',
+      config: {
+        responseModalities: ['AUDIO'],
+        responseFormat,
+      },
+    });
+
+    const parsedGenerationConfig = (
+      JSON.parse(fetchSpy.calls.allArgs()[0][1]?.['body'] as string) as Record<
+        string,
+        unknown
+      >
+    )['generationConfig'] as Record<string, unknown>;
+    expect(parsedGenerationConfig['responseModalities']).toEqual(['AUDIO']);
+    expect(parsedGenerationConfig['responseFormat']).toEqual(responseFormat);
+  });
+
+  it('should include responseFormat in generationConfig for Vertex AI generateContent', async () => {
+    const client = new GoogleGenAI({
+      vertexai: true,
+      project: 'fake-project',
+      location: 'us-central1',
+      apiKey: 'fake-api-key',
+    });
+    const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+      Promise.resolve(
+        new Response(
+          JSON.stringify(mockGenerateContentResponse),
+          fetchOkOptions,
+        ),
+      ),
+    );
+    const responseFormat: types.ResponseFormat[] = [
+      {audio: {mimeType: 'audio/l16'}},
+    ];
+
+    await client.models.generateContent({
+      model: 'gemini-3.8-flash-tts',
+      contents: 'hi',
+      config: {
+        responseModalities: ['AUDIO'],
+        responseFormat,
+      },
+    });
+
+    const parsedGenerationConfig = (
+      JSON.parse(fetchSpy.calls.allArgs()[0][1]?.['body'] as string) as Record<
+        string,
+        unknown
+      >
+    )['generationConfig'] as Record<string, unknown>;
+    expect(parsedGenerationConfig['responseModalities']).toEqual(['AUDIO']);
+    expect(parsedGenerationConfig['responseFormat']).toEqual(responseFormat);
+  });
+
+  it('should include responseFormat in generationConfig for Gemini API generateContentStream', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const mockStream = createMockReadableStream(
+      JSON.stringify(mockGenerateContentResponse),
+    );
+    const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+      Promise.resolve(new Response(mockStream, fetchOkOptions)),
+    );
+    const responseFormat: types.ResponseFormat[] = [
+      {audio: {mimeType: 'audio/l16'}},
+    ];
+
+    const stream = await client.models.generateContentStream({
+      model: 'gemini-3.8-flash-tts',
+      contents: 'hi',
+      config: {
+        responseModalities: ['AUDIO'],
+        responseFormat,
+      },
+    });
+    for await (const _chunk of stream) {
+      // consume stream
+    }
+
+    const parsedGenerationConfig = (
+      JSON.parse(fetchSpy.calls.allArgs()[0][1]?.['body'] as string) as Record<
+        string,
+        unknown
+      >
+    )['generationConfig'] as Record<string, unknown>;
+    expect(parsedGenerationConfig['responseModalities']).toEqual(['AUDIO']);
+    expect(parsedGenerationConfig['responseFormat']).toEqual(responseFormat);
+  });
+
+  it('should include responseFormat in generationConfig for Vertex AI generateContentStream', async () => {
+    const client = new GoogleGenAI({
+      vertexai: true,
+      project: 'fake-project',
+      location: 'us-central1',
+      apiKey: 'fake-api-key',
+    });
+    const mockStream = createMockReadableStream(
+      JSON.stringify(mockGenerateContentResponse),
+    );
+    const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+      Promise.resolve(new Response(mockStream, fetchOkOptions)),
+    );
+    const responseFormat: types.ResponseFormat[] = [
+      {audio: {mimeType: 'audio/l16'}},
+    ];
+
+    const stream = await client.models.generateContentStream({
+      model: 'gemini-3.8-flash-tts',
+      contents: 'hi',
+      config: {
+        responseModalities: ['AUDIO'],
+        responseFormat,
+      },
+    });
+    for await (const _chunk of stream) {
+      // consume stream
+    }
+
+    const parsedGenerationConfig = (
+      JSON.parse(fetchSpy.calls.allArgs()[0][1]?.['body'] as string) as Record<
+        string,
+        unknown
+      >
+    )['generationConfig'] as Record<string, unknown>;
+    expect(parsedGenerationConfig['responseModalities']).toEqual(['AUDIO']);
+    expect(parsedGenerationConfig['responseFormat']).toEqual(responseFormat);
+  });
+});
