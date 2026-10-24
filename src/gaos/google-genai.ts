@@ -381,6 +381,18 @@ export class GeminiNextGenAgents {
 
   constructor(private readonly parentClient: GoogleGenAIParentClient) {}
 
+  get triggers(): GoogleGenAI["agents"] extends { readonly triggers: infer T }
+    ? T
+    : undefined {
+    return (
+      this.getClient(undefined).agents as {
+        readonly triggers?: unknown;
+      }
+    ).triggers as GoogleGenAI["agents"] extends { readonly triggers: infer T }
+      ? T
+      : undefined;
+  }
+
   async create(
     params: Agents.AgentCreateParams | null | undefined = {},
     options?: GoogleGenAIRequestOptions,
