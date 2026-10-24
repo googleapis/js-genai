@@ -147,6 +147,7 @@ async function uploadBlobInternal(
         // duplicate is rejected by undici >= 7.26 (#1718).
       };
 
+      await discardResponseBody(response);
       response = await apiClient.request({
         path: '',
         body: chunk,
@@ -174,6 +175,7 @@ async function uploadBlobInternal(
     // TODO(b/401391430) Investigate why the upload status is not finalized
     // even though all content has been uploaded.
     if (fileSize <= offset) {
+      await discardResponseBody(response);
       throw new Error(
         'All content has been uploaded, but the upload status is not finalized.',
       );
@@ -186,6 +188,13 @@ async function uploadBlobInternal(
 export async function getBlobStat(file: Blob): Promise<FileStat> {
   const fileStat: FileStat = {size: file.size, type: file.type};
   return fileStat;
+}
+
+/** Reads an unused response body; Deno reports unread bodies as leaks. */
+export async function discardResponseBody(
+  response: HttpResponse,
+): Promise<void> {
+  await response.responseInternal.text();
 }
 
 export function sleep(ms: number): Promise<void> {

@@ -11,7 +11,10 @@ import {
   includeExtraBodyToRequestInit,
 } from '../../src/_api_client.js';
 import {CrossDownloader} from '../../src/cross/_cross_downloader.js';
-import {CrossUploader} from '../../src/cross/_cross_uploader.js';
+import {
+  CrossUploader,
+  MAX_CHUNK_SIZE,
+} from '../../src/cross/_cross_uploader.js';
 import * as types from '../../src/types.js';
 import {FakeAuth} from '../_fake_auth.js';
 
@@ -3142,5 +3145,152 @@ describe('custom fetch', () => {
       },
     });
     expect(clientWithoutFetch.getFetch()).toBeUndefined();
+  });
+});
+
+describe('upload response bodies', () => {
+  const UPLOAD_URL =
+    'https://generativelanguage.googleapis.com/upload/v1beta/files?upload_id=test-upload-id&upload_protocol=resumable';
+
+  let apiClient: ApiClient;
+
+  beforeEach(() => {
+    apiClient = new ApiClient({
+      auth: new FakeAuth(),
+      apiKey: 'test-api-key',
+      uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
+    });
+  });
+
+  function makeStartResponse(): Response {
+    return new Response('{}', {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'x-goog-upload-url': UPLOAD_URL,
+      },
+    });
+  }
+
+  function makeChunkResponse(body: unknown, uploadStatus?: string): Response {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    if (uploadStatus) {
+      headers['x-goog-upload-status'] = uploadStatus;
+    }
+    return new Response(JSON.stringify(body), {status: 200, headers});
+  }
+
+  // Deno reports an unread fetch body as a leak, so the SDK must read the
+  // start response even though it only uses its headers.
+  it('should read the start response body in uploadFile', async () => {
+    const startResponse = makeStartResponse();
+    const finalResponse = makeChunkResponse(
+      {file: {name: 'files/abc'}},
+      'final',
+    );
+    spyOn(global, 'fetch').and.returnValues(
+      Promise.resolve(startResponse),
+      Promise.resolve(finalResponse),
+    );
+
+    const file = await apiClient.uploadFile(
+      new Blob(['hello'], {type: 'text/plain'}),
+    );
+
+    expect(startResponse.bodyUsed).toBeTrue();
+    expect(file.name).toBe('files/abc');
+  });
+
+  it('should read the start response body in uploadFileToFileSearchStore', async () => {
+    const startResponse = makeStartResponse();
+    const finalResponse = makeChunkResponse(
+      {name: 'fileSearchStores/test-store/upload/operations/op1'},
+      'final',
+    );
+    spyOn(global, 'fetch').and.returnValues(
+      Promise.resolve(startResponse),
+      Promise.resolve(finalResponse),
+    );
+
+    const operation = await apiClient.uploadFileToFileSearchStore(
+      'fileSearchStores/test-store',
+      new Blob(['hello'], {type: 'text/plain'}),
+    );
+
+    expect(startResponse.bodyUsed).toBeTrue();
+    expect(operation.name).toBe(
+      'fileSearchStores/test-store/upload/operations/op1',
+    );
+  });
+
+  it('should read the start response body when the upload url header is missing', async () => {
+    const startResponse = new Response('{}', {
+      status: 200,
+      headers: {'Content-Type': 'application/json'},
+    });
+    spyOn(global, 'fetch').and.returnValue(Promise.resolve(startResponse));
+
+    await expectAsync(
+      apiClient.uploadFile(new Blob(['hello'], {type: 'text/plain'})),
+    ).toBeRejectedWithError(/Failed to get upload url/);
+
+    expect(startResponse.bodyUsed).toBeTrue();
+  });
+
+  it('should read intermediate chunk response bodies', async () => {
+    const activeResponse = makeChunkResponse({}, 'active');
+    const finalResponse = makeChunkResponse(
+      {file: {name: 'files/abc'}},
+      'final',
+    );
+    spyOn(global, 'fetch').and.returnValues(
+      Promise.resolve(makeStartResponse()),
+      Promise.resolve(activeResponse),
+      Promise.resolve(finalResponse),
+    );
+
+    const file = await apiClient.uploadFile(
+      new Blob([new Uint8Array(MAX_CHUNK_SIZE + 1)], {type: 'text/plain'}),
+    );
+
+    expect(activeResponse.bodyUsed).toBeTrue();
+    expect(file.name).toBe('files/abc');
+  });
+
+  it('should read the body of a chunk response retried for missing upload status', async () => {
+    const missingStatusResponse = makeChunkResponse({});
+    const finalResponse = makeChunkResponse(
+      {file: {name: 'files/abc'}},
+      'final',
+    );
+    spyOn(global, 'fetch').and.returnValues(
+      Promise.resolve(makeStartResponse()),
+      Promise.resolve(missingStatusResponse),
+      Promise.resolve(finalResponse),
+    );
+
+    const file = await apiClient.uploadFile(
+      new Blob(['hello'], {type: 'text/plain'}),
+    );
+
+    expect(missingStatusResponse.bodyUsed).toBeTrue();
+    expect(file.name).toBe('files/abc');
+  });
+
+  it('should read the last active chunk body when the upload is not finalized', async () => {
+    const activeResponse = makeChunkResponse({}, 'active');
+    spyOn(global, 'fetch').and.returnValues(
+      Promise.resolve(makeStartResponse()),
+      Promise.resolve(activeResponse),
+    );
+
+    await expectAsync(
+      apiClient.uploadFile(new Blob(['hello'], {type: 'text/plain'})),
+    ).toBeRejectedWithError(/upload status is not finalized/);
+
+    expect(activeResponse.bodyUsed).toBeTrue();
   });
 });
