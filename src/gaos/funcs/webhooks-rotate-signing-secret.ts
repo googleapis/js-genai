@@ -37,8 +37,8 @@ import { Result } from "../types/fp.js";
 export function webhooksRotateSigningSecret(
   client: GoogleGenAICore,
   id: string,
+  body: webhooks.RotateSigningSecretRequest,
   api_version?: string | undefined,
-  body?: webhooks.RotateSigningSecretRequest | undefined,
   options?: RequestOptions,
 ): APIPromise<
   Result<
@@ -54,8 +54,8 @@ export function webhooksRotateSigningSecret(
   return new APIPromise($do(
     client,
     id,
-    api_version,
     body,
+    api_version,
     options,
   ));
 }
@@ -63,8 +63,8 @@ export function webhooksRotateSigningSecret(
 async function $do(
   client: GoogleGenAICore,
   id: string,
+  body: webhooks.RotateSigningSecretRequest,
   api_version?: string | undefined,
-  body?: webhooks.RotateSigningSecretRequest | undefined,
   options?: RequestOptions,
 ): Promise<
   [
@@ -82,8 +82,8 @@ async function $do(
 > {
   const input: operations.RotateSigningSecretRequest = {
     id: id,
-    api_version: api_version,
     body: body,
+    api_version: api_version,
   };
 
   const payload = input;

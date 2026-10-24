@@ -116,104 +116,38 @@ export class Models extends BaseModule {
   private async generateContentStreamWithContinuation(
     params: types.GenerateContentParameters,
   ): Promise<AsyncGenerator<types.GenerateContentResponse>> {
-    const enableContinuation = afc.shouldEnableAutomaticContinuation(
-      params.config,
-      true,
-    );
-    if (!enableContinuation) {
-      return await this.generateContentStreamInternal(params);
-    }
+    const state = new afc.StreamContinuation(params.config);
+    // The first hop has no continuationToken, so its config is params.config.
+    state.startHop();
     const firstStream = await this.generateContentStreamInternal(params);
     return (async function* (
       models: Models,
       initialParams: types.GenerateContentParameters,
       initialStream: AsyncGenerator<types.GenerateContentResponse>,
     ) {
-      let currentStream = initialStream;
-      let continuationToken: string | undefined = undefined;
-      let hopFinishReason: types.FinishReason | undefined = undefined;
-      let accumulatedUsage:
-        | types.GenerateContentResponseUsageMetadata
-        | undefined = undefined;
-      let isFirstHop = true;
-
-      while (
-        isFirstHop ||
-        afc.canResumeStream(
-          enableContinuation,
-          continuationToken,
-          hopFinishReason,
-        )
-      ) {
-        if (!isFirstHop) {
-          const callConfig = afc.prepareContinuationConfig(
-            initialParams.config,
-            continuationToken,
-          );
-          const callParams: types.GenerateContentParameters = {
-            ...initialParams,
-            config: callConfig,
-          };
-          currentStream =
-            await models.generateContentStreamInternal(callParams);
-        }
-        isFirstHop = false;
-        hopFinishReason = undefined;
-        continuationToken = undefined;
-        let hopUsage: types.GenerateContentResponseUsageMetadata | undefined =
-          undefined;
-
+      // The first hop was opened by the caller. Later hops are opened inside
+      // the try block, so a failure to open one is handled by endHop like a
+      // mid-stream error.
+      let openHop = async () => initialStream;
+      while (true) {
+        let hopError: {error: unknown} | undefined = undefined;
         try {
-          for await (let chunk of currentStream) {
-            if (chunk.usageMetadata) {
-              if (accumulatedUsage) {
-                const mergedUsage = afc.mergeUsageMetadata(
-                  accumulatedUsage,
-                  chunk.usageMetadata,
-                );
-                chunk = Object.assign(
-                  new types.GenerateContentResponse(),
-                  chunk,
-                  {usageMetadata: mergedUsage},
-                );
-                hopUsage = mergedUsage;
-              } else {
-                afc.attachInitialPromptTokenCount(chunk.usageMetadata);
-                hopUsage = chunk.usageMetadata;
-              }
-            }
-            const firstCandidate = chunk.candidates?.[0];
-            if (firstCandidate) {
-              if (firstCandidate.finishReason !== undefined) {
-                hopFinishReason = firstCandidate.finishReason;
-              }
-              if (firstCandidate.continuationToken) {
-                continuationToken = firstCandidate.continuationToken;
-              }
-              afc.clearIntermediateFinishReason(
-                chunk,
-                enableContinuation,
-                continuationToken,
-              );
-            }
-            yield chunk;
+          for await (const chunk of await openHop()) {
+            yield state.observe(chunk);
           }
-        } catch (err) {
-          // If a mid-stream error occurs after an intermediate checkpoint
-          // continuationToken was received, resume from that checkpoint.
-          if (
-            !afc.canResumeStream(
-              enableContinuation,
-              continuationToken,
-              hopFinishReason,
-            )
-          ) {
-            throw err;
-          }
+        } catch (error) {
+          hopError = {error};
         }
-        if (hopUsage) {
-          accumulatedUsage = hopUsage;
+        // Resume from a new checkpoint, retry a dropped hop from its starting
+        // continuationToken if it yielded no content, or stop.
+        if (!state.endHop(hopError)) {
+          return;
         }
+        const callParams: types.GenerateContentParameters = {
+          ...initialParams,
+          config: state.startHop(),
+        };
+        openHop = () => models.generateContentStreamInternal(callParams);
       }
     })(this, params, firstStream);
   }
@@ -264,6 +198,13 @@ export class Models extends BaseModule {
     const transformedParams = await this.processParamsMaybeAddMcpUsage(params);
     this.maybeMoveToResponseJsonSchema(params);
     if (!afc.hasCallableTools(params) || afc.shouldDisableAfc(params.config)) {
+      const enableContinuation = afc.shouldEnableAutomaticContinuation(
+        params.config,
+        true,
+      );
+      if (!enableContinuation) {
+        return await this.generateContentInternal(transformedParams);
+      }
       return await this.generateContentWithContinuation(transformedParams);
     }
 
@@ -400,6 +341,13 @@ export class Models extends BaseModule {
     if (afc.shouldDisableAfc(params.config)) {
       const transformedParams =
         await this.processParamsMaybeAddMcpUsage(params);
+      const enableContinuation = afc.shouldEnableAutomaticContinuation(
+        params.config,
+        true,
+      );
+      if (!enableContinuation) {
+        return await this.generateContentStreamInternal(transformedParams);
+      }
       return await this.generateContentStreamWithContinuation(
         transformedParams,
       );

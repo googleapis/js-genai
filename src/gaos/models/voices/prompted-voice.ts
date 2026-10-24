@@ -19,6 +19,17 @@
  */
 export type PromptedVoice = {
   /**
+   * Optional. The name or ID of an existing base voice to edit or remix.
+   *
+   * @remarks
+   * Use the voice name for prebuilt voices (e.g., `Puck`) or the voice ID for
+   * previously created voices (e.g., `voice_abc123`). This can be any
+   * prompted or replicated voice that the user has access to.
+   * When present, `input` describes relative alterations to make to the base
+   * voice.
+   */
+  base_voice?: string | undefined;
+  /**
    * Required. The natural-language prompt describing the desired voice, e.g.
    *
    * @remarks

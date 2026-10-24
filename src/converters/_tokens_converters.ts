@@ -515,6 +515,11 @@ export function liveConnectConfigToMldev(
     );
   }
 
+  const fromLabels = common.getValueByPath(fromObject, ['labels']);
+  if (parentObject !== undefined && fromLabels != null) {
+    common.setValueByPath(parentObject, ['setup', 'labels'], fromLabels);
+  }
+
   return toObject;
 }
 

@@ -37,9 +37,9 @@ import { Result } from "../types/fp.js";
 export function webhooksUpdate(
   client: GoogleGenAICore,
   id: string,
+  body: webhooks.WebhookUpdate,
   api_version?: string | undefined,
   update_mask?: string | undefined,
-  body?: webhooks.WebhookUpdate | undefined,
   options?: RequestOptions,
 ): APIPromise<
   Result<
@@ -55,9 +55,9 @@ export function webhooksUpdate(
   return new APIPromise($do(
     client,
     id,
+    body,
     api_version,
     update_mask,
-    body,
     options,
   ));
 }
@@ -65,9 +65,9 @@ export function webhooksUpdate(
 async function $do(
   client: GoogleGenAICore,
   id: string,
+  body: webhooks.WebhookUpdate,
   api_version?: string | undefined,
   update_mask?: string | undefined,
-  body?: webhooks.WebhookUpdate | undefined,
   options?: RequestOptions,
 ): Promise<
   [
@@ -85,9 +85,9 @@ async function $do(
 > {
   const input: operations.UpdateWebhookRequest = {
     id: id,
+    body: body,
     api_version: api_version,
     update_mask: update_mask,
-    body: body,
   };
 
   const payload = input;
