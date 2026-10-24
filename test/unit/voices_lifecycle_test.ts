@@ -33,8 +33,8 @@ describe('Voices Lifecycle', () => {
         response.setHeader('content-type', 'application/json');
         if (
           request.method === 'GET' &&
-          (request.url === '/v1beta/voices' ||
-            request.url?.startsWith('/v1beta/voices?'))
+          (request.url === '/v1/voices' ||
+            request.url?.startsWith('/v1/voices?'))
         ) {
           response.end(
             JSON.stringify({
@@ -93,7 +93,6 @@ describe('Voices Lifecycle', () => {
     const ai = new GoogleGenAI({
       apiKey: 'test-api-key',
       httpOptions: {
-        apiVersion: 'v1beta',
         baseUrl: `http://127.0.0.1:${address.port}`,
       },
     });
@@ -130,10 +129,10 @@ describe('Voices Lifecycle', () => {
       await ai.voices.delete('voice_abc123');
 
       expect(captured).toEqual([
-        'POST /v1beta/voices',
-        'GET /v1beta/voices?language_code=en-US',
-        'GET /v1beta/voices/voice_abc123',
-        'DELETE /v1beta/voices/voice_abc123',
+        'POST /v1/voices',
+        'GET /v1/voices?language_code=en-US',
+        'GET /v1/voices/voice_abc123',
+        'DELETE /v1/voices/voice_abc123',
       ]);
 
       expect(capturedBodies[0]).toEqual({

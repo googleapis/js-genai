@@ -37,7 +37,7 @@ describe('File', () => {
   describe('delete', () => {
     it('It should delete the file by given config', async () => {
       const deleteUrl =
-        'https://generativelanguage.googleapis.com/v1beta/files/6h7lat0gfq5n';
+        'https://generativelanguage.googleapis.com/v1/files/6h7lat0gfq5n';
       const deleteOkoptions = {
         status: 200,
         statusText: 'OK',
