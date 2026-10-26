@@ -33,6 +33,13 @@ export interface WebSocket {
 
 export interface WebSocketFactory {
   /**
+   * Whether the WebSocket transport forwards handshake HTTP headers.
+   *
+   * Browser WebSocket implementations ignore custom headers and set this to
+   * `false`. When omitted, header support is assumed.
+   */
+  readonly supportsHeaders?: boolean;
+  /**
    * Returns a new WebSocket instance.
    */
   create(

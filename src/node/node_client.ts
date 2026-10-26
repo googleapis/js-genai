@@ -172,7 +172,10 @@ export class GoogleGenAI {
       return this._interactions;
     }
 
-    this._interactions = new GeminiNextGenInteractions(this.apiClient);
+    this._interactions = new GeminiNextGenInteractions(
+      this.apiClient,
+      new NodeWebSocketFactory(),
+    );
     return this._interactions;
   }
 
