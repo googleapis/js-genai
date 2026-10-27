@@ -305,4 +305,4 @@ export type UpdateWebhookParams =
     UpdateWebhookRequest,
     "id" | "body"
   >
-  & Partial<NonNullable<UpdateWebhookRequest["body"]>>;
+  & UpdateWebhookRequest["body"];

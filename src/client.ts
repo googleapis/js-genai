@@ -16,15 +16,6 @@ import {CrossUploader} from './cross/_cross_uploader.js';
 import {CrossWebSocketFactory} from './cross/_cross_websocket.js';
 import {Files} from './files.js';
 import {FileSearchStores} from './filesearchstores.js';
-import type {
-  GeminiNextGenAgents as Agents,
-  GeminiNextGenCredentials as Credentials,
-  GeminiNextGenEnvironments as Environments,
-  GeminiNextGenInteractions as Interactions,
-  GeminiNextGenTriggers as Triggers,
-  GeminiNextGenVoices as Voices,
-  GeminiNextGenWebhooks as Webhooks,
-} from './gaos/google-genai.js';
 import {
   buildGoogleGenAIClient,
   GeminiNextGenAgents,
@@ -178,7 +169,7 @@ export class GoogleGenAI {
   private _credentials: GeminiNextGenCredentials | undefined;
   private _voices: GeminiNextGenVoices | undefined;
   private _nextGenClient: GeminiNextGenAPI | undefined;
-  private _triggers: Triggers | undefined;
+  private _triggers: GeminiNextGenTriggers | undefined;
 
   private getNextGenClient(): GeminiNextGenAPI {
     const httpOpts = this.httpOptions;
@@ -197,16 +188,19 @@ export class GoogleGenAI {
     return this._nextGenClient;
   }
 
-  get interactions(): Interactions {
+  get interactions(): GeminiNextGenInteractions {
     if (this._interactions !== undefined) {
       return this._interactions;
     }
 
-    this._interactions = new GeminiNextGenInteractions(this.apiClient);
+    this._interactions = new GeminiNextGenInteractions(
+      this.apiClient,
+      new CrossWebSocketFactory(),
+    );
     return this._interactions;
   }
 
-  get webhooks(): Webhooks {
+  get webhooks(): GeminiNextGenWebhooks {
     if (this._webhooks !== undefined) {
       return this._webhooks;
     }
@@ -215,7 +209,7 @@ export class GoogleGenAI {
     return this._webhooks;
   }
 
-  get agents(): Agents {
+  get agents(): GeminiNextGenAgents {
     if (this._agents !== undefined) {
       return this._agents;
     }
@@ -228,7 +222,7 @@ export class GoogleGenAI {
     return this._agents;
   }
 
-  get triggers(): Triggers {
+  get triggers(): GeminiNextGenTriggers {
     if (this._triggers !== undefined) {
       return this._triggers;
     }
@@ -241,7 +235,7 @@ export class GoogleGenAI {
     return this._triggers;
   }
 
-  get environments(): Environments {
+  get environments(): GeminiNextGenEnvironments {
     if (this._environments !== undefined) {
       return this._environments;
     }
@@ -254,7 +248,7 @@ export class GoogleGenAI {
     return this._environments;
   }
 
-  get credentials(): Credentials {
+  get credentials(): GeminiNextGenCredentials {
     if (this._credentials !== undefined) {
       return this._credentials;
     }
@@ -267,7 +261,7 @@ export class GoogleGenAI {
     return this._credentials;
   }
 
-  get voices(): Voices {
+  get voices(): GeminiNextGenVoices {
     if (this._voices !== undefined) {
       return this._voices;
     }

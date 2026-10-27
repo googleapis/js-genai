@@ -31,5 +31,5 @@ export type RotateSigningSecretRequest = {
   /**
    * Required. The request body.
    */
-  body?: webhooks.RotateSigningSecretRequest | undefined;
+  body: webhooks.RotateSigningSecretRequest;
 };
