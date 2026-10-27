@@ -20,8 +20,8 @@ import { VideoContent } from "./video-content.js";
  * The content of the response.
  */
 export type Content =
-  | TextContent
-  | ImageContent
   | AudioContent
   | DocumentContent
+  | ImageContent
+  | TextContent
   | VideoContent;

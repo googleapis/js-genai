@@ -17,12 +17,12 @@ if [[ ! -d "$BUILD_DIR" ]]; then
 fi
 
 
-# Generate sample list (excluding live_server.js since it is blocking)
+# Generate sample list (excluding live_server.js since it is blocking and constants.js which only exports constants)
 if [[ ! -f "$LISTING_FILE" ]]; then
   echo "INFO: '$LISTING_FILE' not found. Generating sorted list from '${BUILD_DIR}/*.js'..."
-  find "$BUILD_DIR" -maxdepth 1 -name "*.js" ! -name "live_server.js" | sort > "${LISTING_FILE}.tmp"
+  find "$BUILD_DIR" -maxdepth 1 -name "*.js" ! -name "live_server.js" ! -name "constants.js" | sort > "${LISTING_FILE}.tmp"
   mv "${LISTING_FILE}.tmp" "$LISTING_FILE"
-  echo "INFO: List generated in '$LISTING_FILE' (live_server.js excluded)."
+  echo "INFO: List generated in '$LISTING_FILE' (live_server.js and constants.js excluded)."
 fi
 
 if [[ ! -s "$LISTING_FILE" ]]; then

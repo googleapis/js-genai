@@ -39,5 +39,6 @@ export class GoogleGenAiError extends Error {
     this.rawResponse = httpMeta?.response;
 
     this.name = "GoogleGenAiError";
+    Object.setPrototypeOf(this, new.target.prototype);
   }
 }

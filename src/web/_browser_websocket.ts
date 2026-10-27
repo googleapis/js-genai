@@ -11,6 +11,8 @@ import {
 } from '../_websocket.js';
 
 export class BrowserWebSocketFactory implements WebSocketFactory {
+  readonly supportsHeaders = false;
+
   create(
     url: string,
     headers: Record<string, string>,

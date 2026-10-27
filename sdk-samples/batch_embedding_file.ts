@@ -10,18 +10,15 @@ import {GoogleGenAI, JobState} from '@google/genai';
 import * as fs from 'fs/promises';
 import {tmpdir} from 'os';
 import * as path from 'path';
+import {MODEL_EMBEDDING} from './constants.js';
 
 // Get your API key from  https://aistudio.google.com/app/apikey
 // and set it as the GEMINI_API_KEY environment variable.
 const client = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY!,
-  httpOptions: {
-    // Use the staging endpoint for testing
-    baseUrl: 'https://autopush-generativelanguage.sandbox.googleapis.com',
-  },
+  apiKey: process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY,
 });
 
-const EMBEDDING_MODEL = 'models/gemini-embedding-001';
+const EMBEDDING_MODEL = MODEL_EMBEDDING;
 
 async function batchEmbedFile() {
   // This is need to allow easy smoke testing of the sample.
@@ -33,12 +30,16 @@ async function batchEmbedFile() {
   }
   console.log('--- Batch Embedding with File Input ---');
 
+  const modelResource = EMBEDDING_MODEL.startsWith('models/')
+    ? EMBEDDING_MODEL
+    : `models/${EMBEDDING_MODEL}`;
+
   // 1. Prepare the input file content (JSONL)
   const jsonlContent = [
     {
       'key': 'request_1',
       'request': {
-        'model': EMBEDDING_MODEL,
+        'model': modelResource,
         'content': {'parts': [{'text': 'The quick brown fox'}]},
         'outputDimensionality': 5,
       },
@@ -46,7 +47,7 @@ async function batchEmbedFile() {
     {
       'key': 'request_2',
       'request': {
-        'model': EMBEDDING_MODEL,
+        'model': modelResource,
         'content': {'parts': [{'text': 'jumps over the lazy dog'}]},
       },
       'outputDimensionality': 5,
@@ -54,7 +55,7 @@ async function batchEmbedFile() {
     {
       'key': 'request_3',
       'request': {
-        'model': EMBEDDING_MODEL,
+        'model': modelResource,
         'content': {'parts': [{'text': 'A delightful summer day'}]},
         'outputDimensionality': 5,
       },

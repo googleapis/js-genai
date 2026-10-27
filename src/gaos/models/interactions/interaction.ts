@@ -33,6 +33,32 @@ import { VideoContent } from "./video-content.js";
 import { WebhookConfig } from "./webhook-config.js";
 
 /**
+ * Configuration parameters for the agent interaction.
+ */
+export type InteractionAgentConfig =
+  | AntigravityAgentConfig
+  | CodeMenderAgentConfig
+  | DeepResearchAgentConfig
+  | DynamicAgentConfig;
+
+/**
+ * The environment configuration for the interaction. Can be an object
+ *
+ * @remarks
+ * specifying remote environment sources or a string referencing an existing
+ * environment ID.
+ */
+export type InteractionEnvironment = Environment | string;
+
+/**
+ * Enforces that the generated response is a JSON object that complies with
+ *
+ * @remarks
+ * the JSON schema specified in this field.
+ */
+export type InteractionResponseFormat = ResponseFormat | Array<ResponseFormat>;
+
+/**
  * Required. Output only. The status of the interaction.
  */
 export type InteractionStatus =
@@ -47,90 +73,43 @@ export type InteractionStatus =
   | (string & {});
 
 /**
- * Enforces that the generated response is a JSON object that complies with the JSON schema specified in this field.
- */
-export type InteractionResponseFormat = Array<ResponseFormat> | ResponseFormat;
-
-/**
- * The environment configuration for the interaction. Can be an object specifying remote environment sources or a string referencing an existing environment ID.
- */
-export type InteractionEnvironment = Environment | string;
-
-/**
- * Configuration parameters for the agent interaction.
- */
-export type InteractionAgentConfig =
-  | DynamicAgentConfig
-  | DeepResearchAgentConfig
-  | CodeMenderAgentConfig
-  | AntigravityAgentConfig;
-
-/**
  * The Interaction resource.
  */
 export type Interaction = {
-  /**
-   * The model that will complete your prompt.\n\nSee [models](https://ai.google.dev/gemini-api/docs/models) for additional details.
-   */
-  model?: Model | undefined;
   /**
    * The agent to interact with.
    */
   agent?: AgentOption | undefined;
   /**
-   * Required. Output only. A unique identifier for the interaction completion.
+   * Configuration parameters for the agent interaction.
    */
-  id: string;
+  agent_config?:
+    | AntigravityAgentConfig
+    | CodeMenderAgentConfig
+    | DeepResearchAgentConfig
+    | DynamicAgentConfig
+    | undefined;
   /**
-   * Required. Output only. The status of the interaction.
+   * The name of the cached content used as context to serve the prediction. Note: only used in explicit caching, where users can have control over caching (e.g. what content to cache) and enjoy guaranteed cost savings. Format: cachedContents/{cachedContent}
+   *
+   * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
    */
-  status: InteractionStatus;
+  cached_content?: string | undefined;
   /**
-   * Output only. The time at which the response was created in ISO 8601 format
+   * Required. Output only. The time at which the response was created in ISO 8601 format
    *
    * @remarks
    * (YYYY-MM-DDThh:mm:ssZ).
    */
   created?: string | undefined;
   /**
-   * Output only. The time at which the response was last updated in ISO 8601 format
+   * The environment configuration for the interaction. Can be an object
    *
    * @remarks
-   * (YYYY-MM-DDThh:mm:ssZ).
+   * specifying remote environment sources or a string referencing an existing
+   * environment ID.
    */
-  updated?: string | undefined;
-  /**
-   * System instruction for the interaction.
-   */
-  system_instruction?: string | undefined;
-  /**
-   * A list of tool declarations the model may call during interaction.
-   */
-  tools?: Array<Tool> | undefined;
-  /**
-   * Output only. Diagnostic faults / platform errors recorded on the interaction.
-   */
-  errors?: Array<ErrorT> | undefined;
-  /**
-   * Statistics on the interaction request's token usage.
-   */
-  usage?: Usage | undefined;
-  /**
-   * The requested modalities of the response (TEXT, IMAGE, AUDIO).
-   *
-   * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
-   */
-  response_modalities?: Array<ResponseModality> | undefined;
-  /**
-   * The mime type of the response. This is required if response_format is set.
-   *
-   * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
-   */
-  response_mime_type?: string | undefined;
-  /**
-   * The ID of the previous interaction, if any.
-   */
-  previous_interaction_id?: string | undefined;
+  environment?: Environment | string | undefined;
   /**
    * Output only. The environment ID for the interaction. Only populated if environment
    *
@@ -138,48 +117,45 @@ export type Interaction = {
    * config is set in the request.
    */
   environment_id?: string | undefined;
-  service_tier?: ServiceTier | undefined;
   /**
-   * Message for configuring webhook events for a request.
+   * Output only. Diagnostic faults / platform errors recorded on the interaction.
    */
-  webhook_config?: WebhookConfig | undefined;
-  /**
-   * Output only. The steps that make up the interaction, when included in the response.
-   */
-  steps?: Array<Step> | undefined;
-  /**
-   * Enforces that the generated response is a JSON object that complies with the JSON schema specified in this field.
-   */
-  response_format?: Array<ResponseFormat> | ResponseFormat | undefined;
-  /**
-   * The environment configuration for the interaction. Can be an object specifying remote environment sources or a string referencing an existing environment ID.
-   */
-  environment?: Environment | string | undefined;
+  errors?: Array<ErrorT> | undefined;
   /**
    * Configuration parameters for model interactions.
    */
   generation_config?: GenerationConfig | undefined;
   /**
-   * Configuration parameters for the agent interaction.
+   * Required. Output only. A unique identifier for the interaction completion.
    */
-  agent_config?:
-    | DynamicAgentConfig
-    | DeepResearchAgentConfig
-    | CodeMenderAgentConfig
-    | AntigravityAgentConfig
-    | undefined;
-  /**
-   * Safety settings for the interaction.
-   */
-  safety_settings?: Array<SafetySetting> | undefined;
-  /**
-   * The labels with user-defined metadata for the request.
-   */
-  labels?: { [k: string]: string } | undefined;
+  id: string;
   /**
    * The input for the interaction.
    */
   input?: InteractionsInput | undefined;
+  /**
+   * The labels with user-defined metadata for the request.
+   *
+   * @remarks
+   *
+   * Label keys and values can be no longer than 63 characters
+   * (Unicode codepoints) and can only contain lowercase letters, numeric
+   * characters, underscores, and dashes. International characters are allowed.
+   * Label values are optional. Label keys must start with a letter.
+   */
+  labels?: { [k: string]: string } | undefined;
+  /**
+   * The model that will complete your prompt.\n\nSee [models](https://ai.google.dev/gemini-api/docs/models) for additional details.
+   */
+  model?: Model | undefined;
+  /**
+   * An audio content block.
+   */
+  output_audio?: AudioContent | undefined;
+  /**
+   * An image content block.
+   */
+  output_image?: ImageContent | undefined;
   /**
    * Concatenated text from the last model output in response to the current request.
    *
@@ -189,15 +165,66 @@ export type Interaction = {
    */
   output_text?: string | undefined;
   /**
-   * An image content block.
-   */
-  output_image?: ImageContent | undefined;
-  /**
-   * An audio content block.
-   */
-  output_audio?: AudioContent | undefined;
-  /**
    * A video content block.
    */
   output_video?: VideoContent | undefined;
+  /**
+   * The ID of the previous interaction, if any.
+   */
+  previous_interaction_id?: string | undefined;
+  /**
+   * Enforces that the generated response is a JSON object that complies with
+   *
+   * @remarks
+   * the JSON schema specified in this field.
+   */
+  response_format?: ResponseFormat | Array<ResponseFormat> | undefined;
+  /**
+   * The mime type of the response. This is required if response_format is set.
+   *
+   * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
+   */
+  response_mime_type?: string | undefined;
+  /**
+   * The requested modalities of the response (TEXT, IMAGE, AUDIO).
+   *
+   * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
+   */
+  response_modalities?: Array<ResponseModality> | undefined;
+  /**
+   * Safety settings for the interaction.
+   */
+  safety_settings?: Array<SafetySetting> | undefined;
+  service_tier?: ServiceTier | undefined;
+  /**
+   * Required. Output only. The status of the interaction.
+   */
+  status: InteractionStatus;
+  /**
+   * Required. Output only. The steps that make up the interaction, when included in the response.
+   */
+  steps?: Array<Step> | undefined;
+  /**
+   * System instruction for the interaction.
+   */
+  system_instruction?: string | undefined;
+  /**
+   * A list of tool declarations the model may call during interaction.
+   */
+  tools?: Array<Tool> | undefined;
+  /**
+   * Required. Output only. The time at which the response was last updated in ISO 8601 format
+   *
+   * @remarks
+   * (YYYY-MM-DDThh:mm:ssZ).
+   */
+  updated?: string | undefined;
+  /**
+   * Statistics on the interaction request's token usage.
+   */
+  usage?: Usage | undefined;
+  /**
+   * Message for configuring webhook events for a request.
+   */
+  webhook_config?: WebhookConfig | undefined;
 };

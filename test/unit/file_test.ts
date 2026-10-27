@@ -351,6 +351,39 @@ describe('File', () => {
         }
         expect(byteProcessed).toBe(fileSize);
       });
+      it('It should not send a Content-Length that undici >= 7.26 would reject.', async () => {
+        const testBlob = new Blob([new Uint8Array(8)], {
+          type: DEFAULT_TEST_MIMETYPE,
+        });
+
+        spyOn(global, 'fetch').and.callFake((_input, init) => {
+          const headers = init?.headers as Headers | undefined;
+          // Mimic undici >= 7.26, which rejects a request that carries both a
+          // body and an explicit Content-Length (#1718).
+          if (init?.body && headers?.get('Content-Length')) {
+            return Promise.reject(
+              new TypeError('fetch failed', {
+                cause: {code: 'UND_ERR_INVALID_ARG'},
+              }),
+            );
+          }
+          // The chunk request carries the upload offset; anything else is the
+          // initial request that returns the upload url.
+          if (headers?.get('X-Goog-Upload-Offset') !== null) {
+            return Promise.resolve(
+              new Response(
+                JSON.stringify({file: {name: 'files/test-file'}}),
+                lastCorrectFetchOkOptions,
+              ),
+            );
+          }
+          return Promise.resolve(new Response('', createUrlOkoptions));
+        });
+
+        const uploaded = await client.files.upload({file: testBlob});
+
+        expect(uploaded.name).toBe('files/test-file');
+      });
     });
   });
   describe('registerFiles', () => {

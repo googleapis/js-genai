@@ -5,24 +5,9 @@
  */
 import {GoogleGenAI} from '@google/genai';
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
 const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
-
-async function generateImagesFromMLDev() {
-  const ai = new GoogleGenAI({vertexai: false, apiKey: GEMINI_API_KEY});
-  const response = await ai.models.generateImages({
-    model: 'imagen-4.0-generate-001',
-    prompt: 'Robot holding a red skateboard',
-    config: {
-      numberOfImages: 1,
-      includeRaiReason: true,
-    },
-  });
-
-  console.debug(response?.generatedImages?.[0]?.image?.imageBytes);
-}
 
 async function generateImagesFromVertexAI() {
   const ai = new GoogleGenAI({
@@ -44,11 +29,11 @@ async function generateImagesFromVertexAI() {
 
 async function main() {
   if (GOOGLE_GENAI_USE_VERTEXAI) {
-    await generateImagesFromVertexAI().catch((e) =>
-      console.error('got error', e),
-    );
+    await generateImagesFromVertexAI();
   } else {
-    await generateImagesFromMLDev().catch((e) => console.error('got error', e));
+    console.error(
+      'Generating images is not supported in Gemini Developer API.',
+    );
   }
 }
 

@@ -114,6 +114,9 @@ export class Chats {
    * The config in the params will be used for all requests within the chat
    * session unless overridden by a per-request `config` in
    * @see {@link types.SendMessageParameters#config}.
+   * Automatic continuation (`config.automaticContinuation`) is enabled by
+   * default in chat sessions (`true`). Set `config.automaticContinuation =
+   * false` to disable it.
    *
    * @param params - Parameters for creating a chat session.
    * @returns A new chat session.
@@ -169,7 +172,9 @@ export class Chat {
    *
    * @remarks
    * This method will wait for the previous message to be processed before
-   * sending the next message.
+   * sending the next message. Automatic continuation
+   * (`config.automaticContinuation`) is enabled by default (`true`); set
+   * `config.automaticContinuation = false` to disable it.
    *
    * @see {@link Chat#sendMessageStream} for streaming method.
    * @param params - parameters for sending messages within a chat session.
@@ -231,7 +236,9 @@ export class Chat {
    *
    * @remarks
    * This method will wait for the previous message to be processed before
-   * sending the next message.
+   * sending the next message. Automatic continuation
+   * (`config.automaticContinuation`) is enabled by default (`true`); set
+   * `config.automaticContinuation = false` to disable it.
    *
    * @see {@link Chat#sendMessage} for non-streaming method.
    * @param params - parameters for sending the message.
@@ -306,16 +313,23 @@ export class Chat {
     inputContent: types.Content,
   ) {
     const outputContent: types.Content[] = [];
+    let isValid = true;
+    let finished = false;
     for await (const chunk of streamResponse) {
       if (isValidResponse(chunk)) {
         const content = chunk.candidates?.[0]?.content;
         if (content !== undefined) {
           outputContent.push(content);
         }
+      } else {
+        isValid = false;
+      }
+      if (chunk.candidates?.[0]?.finishReason !== undefined) {
+        finished = true;
       }
       yield chunk;
     }
-    this.recordHistory(inputContent, outputContent);
+    this.recordHistory(inputContent, isValid && finished ? outputContent : []);
   }
 
   private recordHistory(

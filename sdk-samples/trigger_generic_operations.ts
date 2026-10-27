@@ -5,7 +5,8 @@
  */
 import {GoogleGenAI} from '@google/genai';
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
+const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
 
 async function genericOperationTriggers() {
   const ai = new GoogleGenAI({
@@ -51,7 +52,9 @@ async function genericOperationTriggers() {
   for (const trigger of triggerListResponse.triggers || []) {
     console.log('Trigger:', trigger);
   }
-  const found = triggerListResponse.triggers!.some((t) => t.id === triggerId);
+  const found = triggerListResponse.triggers!.some(
+    (t: {id?: string}) => t.id === triggerId,
+  );
   if (!found)
     throw new Error('Created trigger not found in ListTriggers response');
 
@@ -79,7 +82,7 @@ async function genericOperationTriggers() {
   // is in progress
   console.log('Listing executions for trigger:', triggerId);
   const listExecutionsResponse = await ai.triggers.listExecutions(triggerId, {
-    pageSize: 5,
+    page_size: 5,
   });
   const executions = listExecutionsResponse.trigger_executions || [];
   console.log('Trigger executions:', executions);
@@ -92,9 +95,11 @@ async function genericOperationTriggers() {
 }
 
 async function main() {
-  await genericOperationTriggers().catch((e) =>
-    console.error('Error in triggers operations:', e),
-  );
+  if (GOOGLE_GENAI_USE_VERTEXAI) {
+    console.log('Triggers API is not yet supported on Vertex AI.');
+    return;
+  }
+  await genericOperationTriggers();
 }
 
 main();

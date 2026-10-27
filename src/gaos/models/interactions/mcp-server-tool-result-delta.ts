@@ -15,15 +15,15 @@ import { FunctionResultSubcontent } from "./function-result-subcontent.js";
 export type MCPServerToolResultDeltaResult = {};
 
 export type MCPServerToolResultDeltaResultUnion =
-  | MCPServerToolResultDeltaResult
   | Array<FunctionResultSubcontent>
+  | MCPServerToolResultDeltaResult
   | string;
 
 export type MCPServerToolResultDelta = {
   name?: string | undefined;
   result:
-    | MCPServerToolResultDeltaResult
     | Array<FunctionResultSubcontent>
+    | MCPServerToolResultDeltaResult
     | string;
   server_name?: string | undefined;
   type: "mcp_server_tool_result";

@@ -4,8 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import {GoogleGenAI} from '@google/genai';
+import {MODEL_FLASH_LITE} from './constants.js';
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
 
 const BLOB = new Blob(
   [
@@ -80,7 +81,7 @@ async function uploadBlobToFileSearchStore(fileSearchStoreName: string) {
 async function fileSearch(fileSearchStoreName: string) {
   const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: MODEL_FLASH_LITE,
     contents: "What is the character's name in the story?",
     config: {
       tools: [

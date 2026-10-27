@@ -13,23 +13,30 @@
 /**
  * Headers to inject on all outbound requests matching this domain. Accepts a single dict or a list of dicts. The egress proxy injects these automatically.
  */
-export type Transform =
-  | { [k: string]: string }
-  | Array<{ [k: string]: string }>;
+export type Transform = Array<{ [k: string]: string }> | {
+  [k: string]: string;
+};
 
 /**
  * A single domain allowlist rule with optional header injection.
  */
 export type AllowlistEntry = {
   /**
-   * Domain to allow outbound requests to. Supports wildcards (e.g. '*.googleapis.com'). Use '*' to allow all domains.
+   * Optional. Reference to a server-managed Credential resource by ID.
+   */
+  credential?: string | undefined;
+  /**
+   * Domain to allow outbound requests to. Supports wildcards (e.g.
+   *
+   * @remarks
+   * '*.googleapis.com'). Use '*' to allow all domains.
    */
   domain: string;
   /**
    * Headers to inject on all outbound requests matching this domain. Accepts a single dict or a list of dicts. The egress proxy injects these automatically.
    */
   transform?:
-    | { [k: string]: string }
     | Array<{ [k: string]: string }>
+    | { [k: string]: string }
     | undefined;
 };

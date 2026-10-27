@@ -24,6 +24,8 @@ export type InteractionSseEventInteractionStatus =
   | "failed"
   | "cancelled"
   | "incomplete"
+  | "budget_exceeded"
+  | "queued"
   | (string & {});
 
 /**
@@ -35,40 +37,44 @@ export type InteractionSseEventInteractionStatus =
  */
 export type InteractionSseEventInteraction = {
   /**
-   * Required. Output only. A unique identifier for the interaction completion.
-   */
-  id: string;
-  /**
-   * Output only. The resource type.
-   */
-  object?: string | undefined;
-  /**
-   * The model that will complete your prompt.
-   */
-  model?: string | undefined;
-  /**
    * The agent to interact with.
    */
   agent?: string | undefined;
   /**
-   * Required. Output only. The status of the interaction.
+   * Output only. Opaque token to resume a long decode when status is incomplete.
    */
-  status: InteractionSseEventInteractionStatus;
+  continuation_token?: string | undefined;
   /**
    * Output only. The time at which the response was created in ISO 8601 format.
    */
   created?: string | undefined;
   /**
-   * Output only. The time at which the response was last updated in ISO 8601 format.
+   * Required. Output only. A unique identifier for the interaction completion.
    */
-  updated?: string | undefined;
+  id: string;
+  /**
+   * The model that will complete your prompt.
+   */
+  model?: string | undefined;
+  /**
+   * Output only. The resource type.
+   */
+  object?: string | undefined;
   service_tier?: ServiceTier | undefined;
   /**
-   * Statistics on the interaction request's token usage.
+   * Required. Output only. The status of the interaction.
    */
-  usage?: Usage | undefined;
+  status: InteractionSseEventInteractionStatus;
   /**
    * Output only. The steps that make up the interaction, if included in this event.
    */
   steps?: Array<Step> | undefined;
+  /**
+   * Output only. The time at which the response was last updated in ISO 8601 format.
+   */
+  updated?: string | undefined;
+  /**
+   * Statistics on the interaction request's token usage.
+   */
+  usage?: Usage | undefined;
 };

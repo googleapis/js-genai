@@ -26,6 +26,7 @@ export type AudioContentMimeType =
   | "audio/opus"
   | "audio/alaw"
   | "audio/mulaw"
+  | "audio/webm"
   | (string & {});
 
 /**
@@ -41,6 +42,10 @@ export type AudioContent = {
    */
   data?: string | undefined;
   /**
+   * The mime type of the audio.
+   */
+  mime_type?: AudioContentMimeType | undefined;
+  /**
    * The sample rate of the audio.
    */
   sample_rate?: number | undefined;
@@ -49,8 +54,4 @@ export type AudioContent = {
    * The URI of the audio.
    */
   uri?: string | undefined;
-  /**
-   * The mime type of the audio.
-   */
-  mime_type?: AudioContentMimeType | undefined;
 };

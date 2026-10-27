@@ -11,5 +11,7 @@
  */
 
 export * from "./create-environment-request.js";
+export * from "./environment-file.js";
 export * from "./environment.js";
+export * from "./get-environment-files-response.js";
 export * from "./list-environments-response.js";

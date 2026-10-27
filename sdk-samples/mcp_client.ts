@@ -8,8 +8,9 @@ import {Client} from '@modelcontextprotocol/sdk/client/index.js';
 import {InMemoryTransport} from '@modelcontextprotocol/sdk/inMemory.js';
 import {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js';
 import {z} from 'zod';
+import {MODEL_FLASH_LITE} from './constants.js';
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
 const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
@@ -19,7 +20,7 @@ async function mcpSample(ai: GoogleGenAI) {
   const beepingClient = await spinUpBeepingServer();
 
   await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: MODEL_FLASH_LITE,
     contents:
       'Use the printer to print a simple math question in red and the answer in blue, and beep with the beeper, also tell me a joke. IMPORTANT DONT FORGET TO BEEP AT THE END',
     config: {
@@ -75,7 +76,7 @@ async function spinUpPrintingServer(): Promise<Client> {
     name: 'printer',
     version: '1.0.0',
   });
-  client.connect(transports[1]);
+  await client.connect(transports[1]);
 
   return client;
 }
@@ -100,7 +101,7 @@ async function spinUpBeepingServer(): Promise<Client> {
     name: 'beeper',
     version: '1.0.0',
   });
-  client.connect(transports[1]);
+  await client.connect(transports[1]);
 
   return client;
 }
@@ -117,7 +118,7 @@ async function main() {
     ai = new GoogleGenAI({vertexai: false, apiKey: GEMINI_API_KEY});
   }
 
-  mcpSample(ai);
+  await mcpSample(ai);
 }
 
 main();

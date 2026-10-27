@@ -82,7 +82,7 @@ const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
 
 async function main() {
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-flash-latest',
     contents: 'Why is the sky blue?',
   });
   console.log(response.text);
@@ -115,7 +115,6 @@ const ai = new GoogleGenAI({apiKey: 'GEMINI_API_KEY'});
 >   Use server-side implementations in production environments.
 
 In the browser the initialization code is identical:
-
 
 ```typescript
 import { GoogleGenAI } from '@google/genai';
@@ -229,7 +228,7 @@ const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
 
 async function main() {
   const response = await ai.models.generateContentStream({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-flash-latest',
     contents: 'Write a 100-word poem.',
   });
   for await (const chunk of response) {
@@ -242,14 +241,15 @@ main();
 
 ### Function Calling
 
-To let Gemini to interact with external systems, you can provide
-`functionDeclaration` objects as `tools`. To use these tools it's a 4 step
+To let Gemini interact with external systems, you can provide
+`functionDeclaration` objects as `tools`. Using these `tools` requires a
+four-step process:
 
-1. **Declare the function name, description, and parametersJsonSchema**
-2. **Call `generateContent` with function calling enabled**
-3. **Use the returned `FunctionCall` parameters to call your actual function**
-3. **Send the result back to the model (with history, easier in `ai.chat`)
-   as a `FunctionResponse`**
+1. Declare the function name, description, and `parametersJsonSchema`
+2. Call `generateContent` with function calling enabled
+3. Use the returned `FunctionCall` parameters to call your actual function
+4. Send the result back to the model (with history, easier in `ai.chat`) as a
+   `FunctionResponse`
 
 ```typescript
 import {GoogleGenAI, FunctionCallingConfigMode, FunctionDeclaration, Type} from '@google/genai';
@@ -274,13 +274,14 @@ async function main() {
 
   const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-flash-latest',
     contents: 'Dim the lights so the room feels cozy and warm.',
     config: {
       toolConfig: {
         functionCallingConfig: {
-          // Force it to call any function
+          // Override default AUTO mode to force function calling
           mode: FunctionCallingConfigMode.ANY,
+          // Restrict the function call to the specified list
           allowedFunctionNames: ['controlLight'],
         }
       },
@@ -300,8 +301,8 @@ Built-in [MCP](https://modelcontextprotocol.io/introduction) support is an
 experimental feature. You can pass a local MCP server as a tool directly.
 
 ```javascript
-import { GoogleGenAI, FunctionCallingConfigMode , mcpToTool} from '@google/genai';
-import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { GoogleGenAI, mcpToTool} from '@google/genai';
+import { Client as McpClient } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 
 // Create server parameters for stdio connection
@@ -310,31 +311,32 @@ const serverParams = new StdioClientTransport({
   args: ["-y", "@philschmid/weather-mcp"] // MCP Server
 });
 
-const client = new Client(
+// Configure the MCP client
+const mcpClient = new McpClient(
   {
     name: "example-client",
     version: "1.0.0"
   }
 );
 
-// Configure the client
-const ai = new GoogleGenAI({});
-
 // Initialize the connection between client and server
-await client.connect(serverParams);
+await mcpClient.connect(serverParams);
+
+// Instantiate the GoogleGenAI SDK
+const ai = new GoogleGenAI({});
 
 // Send request to the model with MCP tools
 const response = await ai.models.generateContent({
-  model: "gemini-2.5-flash",
-  contents: `What is the weather in London in ${new Date().toLocaleDateString()}?`,
+  model: "gemini-flash-latest",
+  contents: `What is the weather in London on ${new Date().toLocaleDateString()}?`,
   config: {
-    tools: [mcpToTool(client)],  // uses the session, will automatically call the tool using automatic function calling
+    tools: [mcpToTool(mcpClient)],  // uses the session, will automatically call the tool using automatic function calling
   },
 });
 console.log(response.text);
 
 // Close the connection
-await client.close();
+await mcpClient.close();
 ```
 
 ### Generate Content
@@ -362,6 +364,48 @@ instance with role 'user'.
 if you are specifying those, you need to explicitly provide the full
 `Content[]` structure making it explicit which Parts are 'spoken' by the model,
 or the user. The SDK will throw an exception if you try this.
+
+### Automatic Continuation
+
+Automatic continuation is enabled by default. When a response stops with
+`finishReason` set to `CONTINUATION` and returns a `continuationToken`, the SDK
+automatically sends follow-up requests with the token until generation completes
+and returns the merged response. To disable automatic continuation, set
+`automaticContinuation: false` in `config`.
+
+Streaming (`generateContentStream`) and chats (`chat.sendMessage` and
+`chat.sendMessageStream`) work very similarly.
+
+```typescript
+import {GoogleGenAI} from '@google/genai';
+
+const ai = new GoogleGenAI({
+  enterprise: true,
+  project: 'your_project',
+  location: 'your_location',
+});
+
+async function main() {
+  // Automatic continuation is enabled by default.
+  const response = await ai.models.generateContent({
+    model: 'gemini-flash-latest',
+    contents: 'Write a comprehensive multi-chapter guide on compiler design.',
+  });
+  console.log(response.text);
+
+  // Set automaticContinuation to false to disable automatic continuation.
+  const singleHopResponse = await ai.models.generateContent({
+    model: 'gemini-flash-latest',
+    contents: 'Write a comprehensive multi-chapter guide on compiler design.',
+    config: {
+      automaticContinuation: false,
+    },
+  });
+  console.log(singleHopResponse.text);
+}
+
+main();
+```
 
 ## Error Handling
 
@@ -400,7 +444,7 @@ for more details.
 
 ```typescript
 const interaction = await ai.interactions.create({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-flash-latest',
     input: 'Hello, how are you?',
 });
 console.debug(interaction);
@@ -415,14 +459,14 @@ conversation by referencing the `previous_interaction_id`.
 ```typescript
 // 1. First turn
 const interaction1 = await ai.interactions.create({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-flash-latest',
     input: 'Hi, my name is Amir.',
 });
 console.debug(interaction1);
 
 // 2. Second turn (passing previous_interaction_id)
 const interaction2 = await ai.interactions.create({
-  model: 'gemini-2.5-flash',
+  model: 'gemini-flash-latest',
   input: 'What is my name?',
   previous_interaction_id: interaction1.id,
 });
@@ -479,7 +523,7 @@ import base64
 // const base64Image = ...;
 
 const interaction = await ai.interactions.create({
-  model: 'gemini-2.5-flash',
+  model: 'gemini-flash-latest',
   input: [
     { type: 'text', text: 'Describe the image.' },
     { type: 'image', data: base64Image, mime_type: 'image/png' },
@@ -505,7 +549,7 @@ const getWeather = (location: string) => {
 
 // 2. Send the request with tools
 let interaction = await ai.interactions.create({
-  model: 'gemini-2.5-flash',
+  model: 'gemini-flash-latest',
   input: 'What is the weather in Mountain View, CA?',
   tools: [
     {
@@ -538,7 +582,7 @@ for (const output of interaction.outputs!) {
 
     // Send result back to the model
     interaction = await ai.interactions.create({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-flash-latest',
       previous_interaction_id: interaction.id,
       input: [
         {
@@ -557,6 +601,7 @@ for (const output of interaction.outputs!) {
 ```
 
 ### Built-in Tools
+
 You can also use Google's built-in tools, such as **Google Search** or **Code
 Execution**.
 
@@ -564,7 +609,7 @@ Execution**.
 
 ```typescript
 const interaction = await ai.interactions.create({
-  model: 'gemini-2.5-flash',
+  model: 'gemini-flash-latest',
   input: 'Who won the last Super Bowl',
   tools: [{ type: 'google_search' }],
 });
@@ -577,7 +622,7 @@ console.debug(interaction);
 
 ```typescript
 const interaction = await ai.interactions.create({
-  model: 'gemini-2.5-flash',
+  model: 'gemini-flash-latest',
   input: 'Calculate the 50th Fibonacci number.',
   tools: [{ type: 'code_execution' }],
 });
@@ -612,6 +657,7 @@ for (const output of interaction.outputs!) {
 ```
 
 ## How is this different from the other Google AI SDKs
+
 This SDK (`@google/genai`) is Google Deepmind’s "vanilla" SDK for its generative
 AI offerings, and is where Google Deepmind adds new AI features.
 

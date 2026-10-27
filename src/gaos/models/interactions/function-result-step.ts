@@ -18,8 +18,8 @@ export type FunctionResultStepResult = {};
  * Required. The result of the tool call.
  */
 export type FunctionResultStepResultUnion =
-  | FunctionResultStepResult
   | Array<FunctionResultSubcontent>
+  | FunctionResultStepResult
   | string;
 
 /**
@@ -41,6 +41,6 @@ export type FunctionResultStep = {
   /**
    * Required. The result of the tool call.
    */
-  result: FunctionResultStepResult | Array<FunctionResultSubcontent> | string;
+  result: Array<FunctionResultSubcontent> | FunctionResultStepResult | string;
   type: "function_result";
 };

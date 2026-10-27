@@ -23,6 +23,7 @@ export type AudioDeltaMimeType =
   | "audio/opus"
   | "audio/alaw"
   | "audio/mulaw"
+  | "audio/webm"
   | (string & {});
 
 export type AudioDelta = {

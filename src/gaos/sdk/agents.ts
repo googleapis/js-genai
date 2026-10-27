@@ -27,22 +27,6 @@ import { APIPromise, unwrapAsAPIPromise } from "../types/async.js";
 
 export class Agents extends ClientSDK {
   /**
-   * Creates a new Agent (Typed version for SDK).
-   */
-  create(
-    params: CreateAgentParams,
-    options?: RequestOptions,
-  ): APIPromise<agents.Agent> {
-    const { api_version, ...body } = params;
-    return unwrapAsAPIPromise(agentsCreate(
-      this,
-      body,
-      api_version,
-      options,
-    ));
-  }
-
-  /**
    * Lists all Agents.
    */
   list(
@@ -60,17 +44,17 @@ export class Agents extends ClientSDK {
   }
 
   /**
-   * Gets a specific Agent.
+   * Creates a new Agent (Typed version for SDK).
    */
-  get(
-    id: string,
-    params?: GetAgentParams,
-    options?: Omit<RequestOptions, "extra_body">,
+  create(
+    params: CreateAgentParams,
+    options?: RequestOptions,
   ): APIPromise<agents.Agent> {
-    return unwrapAsAPIPromise(agentsGet(
+    const { api_version, ...body } = params;
+    return unwrapAsAPIPromise(agentsCreate(
       this,
-      id,
-      params?.api_version,
+      body,
+      api_version,
       options,
     ));
   }
@@ -84,6 +68,22 @@ export class Agents extends ClientSDK {
     options?: Omit<RequestOptions, "extra_body">,
   ): APIPromise<interactions.Empty> {
     return unwrapAsAPIPromise(agentsDelete(
+      this,
+      id,
+      params?.api_version,
+      options,
+    ));
+  }
+
+  /**
+   * Gets a specific Agent.
+   */
+  get(
+    id: string,
+    params?: GetAgentParams,
+    options?: Omit<RequestOptions, "extra_body">,
+  ): APIPromise<agents.Agent> {
+    return unwrapAsAPIPromise(agentsGet(
       this,
       id,
       params?.api_version,

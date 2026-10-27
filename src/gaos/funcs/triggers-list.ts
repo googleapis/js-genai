@@ -178,9 +178,9 @@ async function $do(
     | InvalidRequestError
     | UnexpectedClientError
   >(
-    M.json<triggers.ListTriggersResponse>(200),
     M.fail("4XX"),
     M.fail("5XX"),
+    M.json<triggers.ListTriggersResponse>("default"),
   )(response, req);
   if (!result.ok) {
     return [result, { status: "complete", request: req, response }];

@@ -12,14 +12,8 @@
 
 import { Content } from "./content.js";
 import { Step } from "./step.js";
-import { Turn } from "./turn.js";
 
 /**
  * The input for the interaction.
  */
-export type InteractionsInput =
-  | string
-  | Array<Step>
-  | Array<Content>
-  | Array<Turn>
-  | Content;
+export type InteractionsInput = Content | Array<Step> | Array<Content> | string;
