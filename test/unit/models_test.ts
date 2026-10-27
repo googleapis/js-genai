@@ -157,6 +157,33 @@ const mockGenerateContentResponseWithAnotherFunctionCall: types.GenerateContentR
     types.GenerateContentResponse.prototype,
   );
 
+const mockGenerateContentAudioResponse: types.GenerateContentResponse =
+  Object.setPrototypeOf(
+    {
+      candidates: [
+        {
+          content: {
+            parts: [
+              {
+                text: 'Caption: instrumental lo-fi clip',
+              },
+              {
+                inlineData: {
+                  mimeType: 'audio/mpeg',
+                  data: 'U29tZUJhc2U2NEF1ZGlv',
+                },
+              },
+            ],
+            role: 'model',
+          },
+          finishReason: types.FinishReason.STOP,
+          index: 0,
+        },
+      ],
+    },
+    types.GenerateContentResponse.prototype,
+  );
+
 function createMockReadableStream(chunk: string): ReadableStream<Uint8Array> {
   const encoder = new TextEncoder();
   return new ReadableStream({
@@ -1448,5 +1475,107 @@ describe('generateContentStream regression', () => {
     }
 
     expect(receivedText).toBe(largeText);
+  });
+});
+
+describe('generateAudio', () => {
+  it('should route Lyria 3 clip through Gemini generateContent', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+      Promise.resolve(
+        new Response(
+          JSON.stringify(mockGenerateContentAudioResponse),
+          fetchOkOptions,
+        ),
+      ),
+    );
+
+    const response = await client.models.generateAudio({
+      model: 'lyria-3-clip-preview',
+      prompt: 'Create a short lo-fi loop.',
+    });
+
+    const [url, init] = fetchSpy.calls.allArgs()[0] as [string, RequestInit];
+    const parsedBody = JSON.parse(init.body as string) as Record<
+      string,
+      unknown
+    >;
+
+    expect(url).toContain('models/lyria-3-clip-preview:generateContent');
+    expect(parsedBody['generationConfig']).toEqual({
+      responseModalities: [types.Modality.AUDIO, types.Modality.TEXT],
+    });
+    expect(response.predictions).toEqual([
+      {bytesBase64Encoded: 'U29tZUJhc2U2NEF1ZGlv'},
+    ]);
+  });
+
+  it('should route Lyria 3 pro through Vertex generateContent', async () => {
+    const client = new GoogleGenAI({vertexai: true, apiKey: 'fake-api-key'});
+    const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+      Promise.resolve(
+        new Response(
+          JSON.stringify(mockGenerateContentAudioResponse),
+          fetchOkOptions,
+        ),
+      ),
+    );
+
+    const response = await client.models.generateAudio({
+      model: 'lyria-3-pro-preview',
+      prompt: 'Create a dreamy indie pop song.',
+    });
+
+    const [url] = fetchSpy.calls.allArgs()[0] as [string, RequestInit];
+
+    expect(url).toContain(
+      'publishers/google/models/lyria-3-pro-preview:generateContent',
+    );
+    expect(response.predictions).toEqual([
+      {bytesBase64Encoded: 'U29tZUJhc2U2NEF1ZGlv'},
+    ]);
+  });
+
+  it('should reject predict-only parameters for Lyria 3 models', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const fetchSpy = spyOn(global, 'fetch');
+
+    await expectAsync(
+      client.models.generateAudio({
+        model: 'lyria-3-clip-preview',
+        prompt: 'Create a short lo-fi loop.',
+        seed: 123,
+      }),
+    ).toBeRejectedWithError(
+      'generateAudio() with Lyria 3 models does not support seed. Use models.generateContent() for advanced Lyria 3 requests.',
+    );
+
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
+  it('should keep Lyria 2 on the Vertex predict endpoint', async () => {
+    const client = new GoogleGenAI({vertexai: true, apiKey: 'fake-api-key'});
+    const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+      Promise.resolve(
+        new Response(
+          JSON.stringify({
+            predictions: [{bytesBase64Encoded: 'T2xkTHlyaWFBdWRpbw=='}],
+          }),
+          fetchOkOptions,
+        ),
+      ),
+    );
+
+    const response = await client.models.generateAudio({
+      model: 'lyria-002',
+      prompt: 'Create an 8-bit melody.',
+    });
+
+    const [url] = fetchSpy.calls.allArgs()[0] as [string, RequestInit];
+
+    expect(url).toContain('publishers/google/models/lyria-002:predict');
+    expect(response.predictions).toEqual([
+      {bytesBase64Encoded: 'T2xkTHlyaWFBdWRpbw=='},
+    ]);
   });
 });
