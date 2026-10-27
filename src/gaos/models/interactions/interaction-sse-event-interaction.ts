@@ -24,6 +24,8 @@ export type InteractionSseEventInteractionStatus =
   | "failed"
   | "cancelled"
   | "incomplete"
+  | "budget_exceeded"
+  | "queued"
   | (string & {});
 
 /**

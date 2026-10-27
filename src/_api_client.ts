@@ -17,7 +17,7 @@ const CONTENT_TYPE_HEADER = 'Content-Type';
 const SERVER_TIMEOUT_HEADER = 'X-Server-Timeout';
 const USER_AGENT_HEADER = 'User-Agent';
 export const GOOGLE_API_CLIENT_HEADER = 'x-goog-api-client';
-export const SDK_VERSION = '2.27.0'; // x-release-please-version
+export const SDK_VERSION = '2.31.0'; // x-release-please-version
 const LIBRARY_LABEL = `google-genai-sdk/${SDK_VERSION}`;
 const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
 const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';
@@ -40,31 +40,60 @@ declare interface NodeJSTimeout {
   unref(): this;
 }
 
+const UNDICI_GLOBAL_DISPATCHER_SYMBOL = Symbol.for('undici.globalDispatcher.1');
+
+function isNodeRuntime(): boolean {
+  const globals = globalThis as {
+    process?: {versions?: {node?: string}};
+  };
+  return typeof globals.process?.versions?.node === 'string';
+}
+
 /**
- * Raises Undici's internal header/body timeouts to at least `timeout` ms.
+ * Returns a per-request Undici dispatcher that delegates to the global
+ * dispatcher with Undici's own header/body timeouts disabled (0).
  *
- * In Node > 18 the built-in fetch is backed by Undici, which sets a global
- * dispatcher tracking its own headersTimeout and bodyTimeout via Symbol
- * properties. Those would otherwise fire before a longer caller-supplied
- * timeout.
+ * In Node.js, the built-in fetch is backed by Undici, whose default 300s
+ * headersTimeout/bodyTimeout would kill long requests (e.g. long-decode) on
+ * their own. Like the other SDKs, there is no client-side timeout by default
+ * (the server bounds requests: 10 min unary, 20 min streaming); an explicit
+ * `httpOptions.timeout` is enforced separately by the SDK's abort timer.
  */
-function raiseUndiciTimeouts(timeout: number) {
-  const dispatcherSymbol = Symbol.for('undici.globalDispatcher.1');
-  const globalDispatcher = (globalThis as Record<symbol, unknown>)[
-    dispatcherSymbol
-  ] as Record<symbol, unknown> | undefined;
-  if (!globalDispatcher) {
-    return;
-  }
-  for (const sym of Object.getOwnPropertySymbols(globalDispatcher)) {
-    const desc = sym.description;
-    if (desc?.includes('headers timeout') || desc?.includes('body timeout')) {
-      const currentTimeout = globalDispatcher[sym];
-      if (typeof currentTimeout === 'number') {
-        globalDispatcher[sym] = Math.max(currentTimeout, timeout);
+function createUndiciNoTimeoutDispatcher(): unknown {
+  return {
+    dispatch(opts: Record<string, unknown>, handler: unknown) {
+      let globalDispatcher = (
+        globalThis as unknown as Record<
+          symbol,
+          {dispatch?: (o: unknown, h: unknown) => unknown}
+        >
+      )[UNDICI_GLOBAL_DISPATCHER_SYMBOL];
+      if (!globalDispatcher && typeof Headers !== 'undefined') {
+        // Trigger Node's lazy Undici initialization if not yet initialized.
+        new Headers();
+        globalDispatcher = (
+          globalThis as unknown as Record<
+            symbol,
+            {dispatch?: (o: unknown, h: unknown) => unknown}
+          >
+        )[UNDICI_GLOBAL_DISPATCHER_SYMBOL];
       }
-    }
-  }
+      if (
+        !globalDispatcher ||
+        typeof globalDispatcher.dispatch !== 'function'
+      ) {
+        throw new Error('Undici globalDispatcher is not available.');
+      }
+      return globalDispatcher.dispatch(
+        {
+          ...opts,
+          headersTimeout: 0,
+          bodyTimeout: 0,
+        },
+        handler,
+      );
+    },
+  };
 }
 
 /** The abort plumbing for a single HTTP attempt. */
@@ -401,6 +430,13 @@ export class ApiClient {
     return this.clientOptions.httpOptions?.fetch;
   }
 
+  /**
+   * Returns the configured HTTP timeout in milliseconds, if any.
+   */
+  getTimeout(): number | undefined {
+    return this.clientOptions.httpOptions?.timeout;
+  }
+
   private getRequestUrlInternal(httpOptions?: types.HttpOptions) {
     if (
       !httpOptions ||
@@ -617,8 +653,13 @@ export class ApiClient {
     httpOptions: types.HttpOptions,
     url: string,
   ): Promise<RequestInit> {
-    if (httpOptions?.timeout && httpOptions.timeout > 0) {
-      raiseUndiciTimeouts(httpOptions.timeout);
+    if (
+      isNodeRuntime() &&
+      !httpOptions?.fetch &&
+      !('dispatcher' in requestInit)
+    ) {
+      (requestInit as Record<string, unknown>)['dispatcher'] =
+        createUndiciNoTimeoutDispatcher();
     }
     if (httpOptions && httpOptions.extraBody !== null) {
       includeExtraBodyToRequestInit(
@@ -721,31 +762,7 @@ export class ApiClient {
         const chunkString = decoder.decode(value, {stream: true});
 
         // Parse and throw an error if the chunk contains an error.
-        try {
-          const chunkJson = JSON.parse(chunkString) as Record<string, unknown>;
-          if ('error' in chunkJson) {
-            const errorJson = JSON.parse(
-              JSON.stringify(chunkJson['error']),
-            ) as Record<string, unknown>;
-            const status = errorJson['status'] as string;
-            const code = errorJson['code'] as number;
-            const errorMessage = `got status: ${status}. ${JSON.stringify(
-              chunkJson,
-            )}`;
-            if (code >= 400 && code < 600) {
-              const apiError = new ApiError({
-                message: errorMessage,
-                status: code,
-              });
-              throw apiError;
-            }
-          }
-        } catch (e: unknown) {
-          const error = e as Error;
-          if (error.name === 'ApiError') {
-            throw e;
-          }
-        }
+        throwIfStreamErrorChunk(chunkString);
         buffer += chunkString;
 
         let delimiterIndex = -1;
@@ -779,6 +796,7 @@ export class ApiClient {
             const processedChunkString = trimmedEvent
               .substring(dataPrefix.length)
               .trim();
+            throwIfStreamErrorChunk(processedChunkString);
             try {
               const partialResponse = new Response(processedChunkString, {
                 headers: response?.headers,
@@ -1083,6 +1101,37 @@ export class ApiClient {
       );
     }
     return uploadUrl;
+  }
+}
+
+function throwIfStreamErrorChunk(chunkString: string) {
+  try {
+    const chunkJson = JSON.parse(chunkString) as Record<string, unknown>;
+    if (
+      chunkJson !== null &&
+      typeof chunkJson === 'object' &&
+      'error' in chunkJson &&
+      chunkJson['error'] !== null &&
+      typeof chunkJson['error'] === 'object'
+    ) {
+      const errorJson = chunkJson['error'] as Record<string, unknown>;
+      const status = errorJson['status'] as string;
+      const code = errorJson['code'] as number;
+      const errorMessage = `got status: ${status}. ${JSON.stringify(
+        chunkJson,
+      )}`;
+      if (typeof code === 'number' && code >= 400 && code < 600) {
+        throw new ApiError({
+          message: errorMessage,
+          status: code,
+        });
+      }
+    }
+  } catch (e: unknown) {
+    const error = e as Error;
+    if (error?.name === 'ApiError') {
+      throw e;
+    }
   }
 }
 

@@ -1170,6 +1170,244 @@ describe('live', () => {
       'publishers/google/models/gemini-2.0-flash-live-preview-04-09',
     );
   });
+
+  for (const vertexai of [false, true]) {
+    const backendName = vertexai ? 'Vertex' : 'MLDev';
+
+    it(`sendContextUpdate should send systemInstruction string (${backendName})`, async () => {
+      const apiClient = new ApiClient({
+        auth: new FakeAuth(),
+        apiKey: 'test-api-key',
+        vertexai,
+        project: vertexai ? 'test-project' : undefined,
+        location: vertexai ? 'us-central1' : undefined,
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const websocketFactory = new FakeWebSocketFactory();
+      const live = new Live(apiClient, new FakeAuth(), websocketFactory);
+
+      let websocketSpy!: jasmine.Spy;
+      spyOn(websocketFactory, 'create').and.callFake(
+        (url, headers, callbacks) => {
+          const websocket = new FakeWebSocket(url, headers, callbacks);
+          spyOn(websocket, 'connect').and.callThrough();
+          websocketSpy = spyOn(websocket, 'send').and.callThrough();
+          return websocket;
+        },
+      );
+
+      const session = await live.connect({
+        model: 'models/gemini-live-2.5-flash-preview',
+        callbacks: {
+          onmessage: function (e: types.LiveServerMessage) {
+            void e;
+          },
+        },
+      });
+
+      session.sendContextUpdate({
+        systemInstruction: 'You are a helpful assistant.',
+      });
+
+      expect(websocketSpy.calls.count()).toBe(2);
+      const sentData = JSON.parse(websocketSpy.calls.all()[1].args[0]);
+      expect(sentData).toEqual({
+        contextUpdate: {
+          systemInstruction: {
+            parts: [{text: 'You are a helpful assistant.'}],
+            role: 'user',
+          },
+        },
+      });
+    });
+
+    it(`sendContextUpdate should send clear tools (${backendName})`, async () => {
+      const apiClient = new ApiClient({
+        auth: new FakeAuth(),
+        apiKey: 'test-api-key',
+        vertexai,
+        project: vertexai ? 'test-project' : undefined,
+        location: vertexai ? 'us-central1' : undefined,
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const websocketFactory = new FakeWebSocketFactory();
+      const live = new Live(apiClient, new FakeAuth(), websocketFactory);
+
+      let websocketSpy!: jasmine.Spy;
+      spyOn(websocketFactory, 'create').and.callFake(
+        (url, headers, callbacks) => {
+          const websocket = new FakeWebSocket(url, headers, callbacks);
+          spyOn(websocket, 'connect').and.callThrough();
+          websocketSpy = spyOn(websocket, 'send').and.callThrough();
+          return websocket;
+        },
+      );
+
+      const session = await live.connect({
+        model: 'models/gemini-live-2.5-flash-preview',
+        callbacks: {
+          onmessage: function (e: types.LiveServerMessage) {
+            void e;
+          },
+        },
+      });
+
+      session.sendContextUpdate({
+        tools: {tools: []},
+      });
+
+      expect(websocketSpy.calls.count()).toBe(2);
+      const sentData = JSON.parse(websocketSpy.calls.all()[1].args[0]);
+      expect(sentData).toEqual({
+        contextUpdate: {
+          tools: {
+            tools: [],
+          },
+        },
+      });
+    });
+
+    it(`sendContextUpdate should send function declaration tools (${backendName})`, async () => {
+      const apiClient = new ApiClient({
+        auth: new FakeAuth(),
+        apiKey: 'test-api-key',
+        vertexai,
+        project: vertexai ? 'test-project' : undefined,
+        location: vertexai ? 'us-central1' : undefined,
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const websocketFactory = new FakeWebSocketFactory();
+      const live = new Live(apiClient, new FakeAuth(), websocketFactory);
+
+      let websocketSpy!: jasmine.Spy;
+      spyOn(websocketFactory, 'create').and.callFake(
+        (url, headers, callbacks) => {
+          const websocket = new FakeWebSocket(url, headers, callbacks);
+          spyOn(websocket, 'connect').and.callThrough();
+          websocketSpy = spyOn(websocket, 'send').and.callThrough();
+          return websocket;
+        },
+      );
+
+      const session = await live.connect({
+        model: 'models/gemini-live-2.5-flash-preview',
+        callbacks: {
+          onmessage: function (e: types.LiveServerMessage) {
+            void e;
+          },
+        },
+      });
+
+      session.sendContextUpdate({
+        tools: {
+          tools: [
+            {
+              functionDeclarations: [
+                {
+                  name: 'get_current_weather',
+                  description: 'Gets the weather for a location.',
+                },
+              ],
+            },
+          ],
+        },
+      });
+
+      expect(websocketSpy.calls.count()).toBe(2);
+      const sentData = JSON.parse(websocketSpy.calls.all()[1].args[0]);
+      expect(sentData).toEqual({
+        contextUpdate: {
+          tools: {
+            tools: [
+              {
+                functionDeclarations: [
+                  {
+                    name: 'get_current_weather',
+                    description: 'Gets the weather for a location.',
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      });
+    });
+
+    it(`sendContextUpdate should send both systemInstruction and tools (${backendName})`, async () => {
+      const apiClient = new ApiClient({
+        auth: new FakeAuth(),
+        apiKey: 'test-api-key',
+        vertexai,
+        project: vertexai ? 'test-project' : undefined,
+        location: vertexai ? 'us-central1' : undefined,
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      });
+      const websocketFactory = new FakeWebSocketFactory();
+      const live = new Live(apiClient, new FakeAuth(), websocketFactory);
+
+      let websocketSpy!: jasmine.Spy;
+      spyOn(websocketFactory, 'create').and.callFake(
+        (url, headers, callbacks) => {
+          const websocket = new FakeWebSocket(url, headers, callbacks);
+          spyOn(websocket, 'connect').and.callThrough();
+          websocketSpy = spyOn(websocket, 'send').and.callThrough();
+          return websocket;
+        },
+      );
+
+      const session = await live.connect({
+        model: 'models/gemini-live-2.5-flash-preview',
+        callbacks: {
+          onmessage: function (e: types.LiveServerMessage) {
+            void e;
+          },
+        },
+      });
+
+      session.sendContextUpdate({
+        systemInstruction: 'Updated instruction.',
+        tools: {
+          tools: [
+            {
+              functionDeclarations: [
+                {
+                  name: 'get_current_weather',
+                  description: 'Gets the weather for a location.',
+                },
+              ],
+            },
+          ],
+        },
+      });
+
+      expect(websocketSpy.calls.count()).toBe(2);
+      const sentData = JSON.parse(websocketSpy.calls.all()[1].args[0]);
+      expect(sentData).toEqual({
+        contextUpdate: {
+          systemInstruction: {
+            parts: [{text: 'Updated instruction.'}],
+            role: 'user',
+          },
+          tools: {
+            tools: [
+              {
+                functionDeclarations: [
+                  {
+                    name: 'get_current_weather',
+                    description: 'Gets the weather for a location.',
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      });
+    });
+  }
 });
 
 // TODO: b/395958466 - Add unit tests for Session.

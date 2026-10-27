@@ -17,6 +17,7 @@ import {
 } from "./types.js";
 
 export const GOOGLE_GENAI_API_REVISION = "2026-05-20";
+const UNDICI_GLOBAL_DISPATCHER_SYMBOL = Symbol.for("undici.globalDispatcher.1");
 
 type GoogleGenAISecurity = models.Security;
 
@@ -54,12 +55,26 @@ export class GoogleGenAIAuthHook
   implements BeforeCreateRequestHook, BeforeRequestHook
 {
   beforeCreateRequest(
-    _hookCtx: BeforeCreateRequestContext,
+    hookCtx: BeforeCreateRequestContext,
     input: RequestInput,
   ): RequestInput {
+    const options: Record<string, unknown> = {
+      ...(input.options ?? {}),
+    };
+    if (
+      isNodeRuntime() &&
+      !hasCustomHttpClient(hookCtx.options.http_client) &&
+      !("dispatcher" in options)
+    ) {
+      // Disable Undici's own 300s header/body timeouts. An explicit timeout_ms
+      // is still enforced by the SDK via AbortSignal.timeout().
+      options["dispatcher"] = createUndiciNoTimeoutDispatcher();
+    }
+
     return {
       ...input,
       url: decodeSDKLevelAPIVersionPath(input.url),
+      options: options as RequestInit,
     };
   }
 
@@ -259,4 +274,59 @@ function hasSecurityValue(security: GoogleGenAISecurity): boolean {
     security.access_token !== undefined ||
     security.default_headers !== undefined
   );
+}
+
+function isNodeRuntime(): boolean {
+  const globals = globalThis as {
+    process?: { versions?: { node?: string } };
+  };
+  return typeof globals.process?.versions?.node === "string";
+}
+
+function hasCustomHttpClient(httpClient: unknown): boolean {
+  if (!httpClient || typeof httpClient !== "object") {
+    return false;
+  }
+  if ("options" in httpClient) {
+    const opts = (httpClient as { options?: { fetcher?: unknown } }).options;
+    return Boolean(opts?.fetcher);
+  }
+  return true;
+}
+
+/**
+ * Returns a per-request Undici dispatcher that delegates to the global
+ * dispatcher with Undici's own header/body timeouts disabled (0), so there is
+ * no client-side timeout by default (the server bounds requests: 10 min unary,
+ * 20 min streaming).
+ */
+function createUndiciNoTimeoutDispatcher(): {
+  dispatch(opts: Record<string, unknown>, handler: unknown): unknown;
+} {
+  return {
+    dispatch(opts: Record<string, unknown>, handler: unknown): unknown {
+      const globalDispatcher = (
+        globalThis as Record<
+          symbol,
+          { dispatch?: (o: unknown, h: unknown) => unknown }
+        >
+      )[UNDICI_GLOBAL_DISPATCHER_SYMBOL];
+      if (
+        !globalDispatcher ||
+        typeof globalDispatcher.dispatch !== "function"
+      ) {
+        throw new TypeError(
+          "Undici globalDispatcher is not available in this Node.js runtime.",
+        );
+      }
+      return globalDispatcher.dispatch(
+        {
+          ...opts,
+          headersTimeout: 0,
+          bodyTimeout: 0,
+        },
+        handler,
+      );
+    },
+  };
 }

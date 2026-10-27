@@ -30,6 +30,7 @@ import type { Environment as Environment$Import } from "./models/environments/en
 import type { GetEnvironmentFilesResponse as GetEnvironmentFilesResponse$Import } from "./models/environments/get-environment-files-response.js";
 import type { ListEnvironmentsResponse as ListEnvironmentsResponse$Import } from "./models/environments/list-environments-response.js";
 import type { AllowedTools as AllowedTools$Import } from "./models/interactions/allowed-tools.js";
+import type { AllowlistEntry as AllowlistEntry$Import } from "./models/interactions/allowlist-entry.js";
 import type { Annotation as Annotation$Import } from "./models/interactions/annotation.js";
 import type { AntigravityAgentConfig as AntigravityAgentConfig$Import } from "./models/interactions/antigravity-agent-config.js";
 import type { ArgumentsDelta as ArgumentsDelta$Import } from "./models/interactions/arguments-delta.js";
@@ -53,7 +54,7 @@ import type { DocumentDelta as DocumentDelta$Import } from "./models/interaction
 import type { DynamicAgentConfig as DynamicAgentConfig$Import } from "./models/interactions/dynamic-agent-config.js";
 import type { Empty as Empty$Import } from "./models/interactions/empty.js";
 import type { EnvVar as EnvVar$Import } from "./models/interactions/env-var.js";
-import type { Allowlist as Allowlist$Import } from "./models/interactions/environment-network-egress-allowlist.js";
+import type { EnvironmentNetworkEgressAllowlist as EnvironmentNetworkEgressAllowlist$Import } from "./models/interactions/environment-network-egress-allowlist.js";
 import type { Environment as Environment$Import2 } from "./models/interactions/environment.js";
 import type { ErrorEvent as ErrorEvent$Import } from "./models/interactions/error-event.js";
 import type { ErrorT as ErrorT$Import } from "./models/interactions/error.js";
@@ -162,8 +163,21 @@ import type { WordInfo as WordInfo$Import } from "./models/interactions/word-inf
 import type { CreateVoiceRequest as CreateVoiceRequest$Import2 } from "./models/operations/create-voice.js";
 import type {
   CancelInteractionByIdParams as CancelInteractionByIdParams$Import,
+  CreateAgentInteractionParams as CreateAgentInteractionParams$Import,
+  CreateAgentInteractionParamsNonStreaming
+    as CreateAgentInteractionParamsNonStreaming$Import,
+  CreateAgentInteractionParamsStreaming
+    as CreateAgentInteractionParamsStreaming$Import,
   CreateAgentParams as CreateAgentParams$Import,
   CreateInteractionParams as CreateInteractionParams$Import,
+  CreateInteractionParamsNonStreaming
+    as CreateInteractionParamsNonStreaming$Import,
+  CreateInteractionParamsStreaming as CreateInteractionParamsStreaming$Import,
+  CreateModelInteractionParams as CreateModelInteractionParams$Import,
+  CreateModelInteractionParamsNonStreaming
+    as CreateModelInteractionParamsNonStreaming$Import,
+  CreateModelInteractionParamsStreaming
+    as CreateModelInteractionParamsStreaming$Import,
   CreateWebhookParams as CreateWebhookParams$Import,
   DeleteAgentParams as DeleteAgentParams$Import,
   DeleteCredentialParams as DeleteCredentialParams$Import,
@@ -246,8 +260,7 @@ type EnvironmentDeleteResponse$ = Empty$Import;
 type EnvironmentFile$ = EnvironmentFile$Import;
 type EnvironmentListResponse$ = ListEnvironmentsResponse$Import;
 type GetEnvironmentFilesResponse$ = GetEnvironmentFilesResponse$Import;
-type Allowlist$ = Allowlist$Import;
-type Allowlist$2 = Allowlist$Import;
+type ListEnvironmentsResponse$ = ListEnvironmentsResponse$Import;
 type AllowedTools$ = AllowedTools$Import;
 type Annotation$ = Annotation$Import;
 type AntigravityAgentConfig$ = AntigravityAgentConfig$Import;
@@ -294,12 +307,6 @@ type InteractionCreatedEvent$ = InteractionCreatedEvent$Import;
 type InteractionDeleteParams$ = DeleteInteractionParams$Import;
 type InteractionDeleteResponse$ = Empty$Import;
 type InteractionGetParams$ = GetInteractionByIdParams$Import;
-type InteractionGetParamsNonStreaming$ =
-  GetInteractionByIdParamsNonStreaming$Import;
-type InteractionGetParamsNonStreaming$2 =
-  GetInteractionByIdParamsNonStreaming$Import;
-type InteractionGetParamsStreaming$ = GetInteractionByIdParamsStreaming$Import;
-type InteractionGetParamsStreaming$2 = GetInteractionByIdParamsStreaming$Import;
 type InteractionSSEEvent$ = InteractionSSEEvent$Import;
 type InteractionStatusUpdate$ = InteractionStatusUpdate$Import;
 type MCPServerToolCallStep$ = MCPServerToolCallStep$Import;
@@ -348,9 +355,11 @@ type FixRequest$ = FixRequest$Import;
 type SessionConfig$ = SessionConfig$Import;
 type SourceFile$ = FileContent$Import;
 type SourceFile$2 = FileContent$Import;
-type Allowlist$3 = Allowlist$Import;
 type EnvVar$ = EnvVar$Import;
+type EnvironmentNetworkEgressAllowlist$ =
+  EnvironmentNetworkEgressAllowlist$Import;
 type Source$ = Source$Import;
+type AllowlistEntry$ = AllowlistEntry$Import;
 type Error$2 = ErrorT$Import;
 type Arguments$2 = GoogleMapsCallArguments$Import;
 type Place$ = GoogleMapsResultPlaces$Import;
@@ -454,6 +463,23 @@ type WebhookRotateSigningSecretResponse$ =
   WebhookRotateSigningSecretResponse$Import;
 type WebhookUpdate$ = WebhookUpdate$Import;
 type WebhookUpdateParams$ = WebhookUpdate$Import;
+type CreateAgentInteractionParams$ = CreateAgentInteractionParams$Import;
+type CreateAgentInteractionParamsNonStreaming$2 =
+  CreateAgentInteractionParamsNonStreaming$Import;
+type CreateAgentInteractionParamsStreaming$2 =
+  CreateAgentInteractionParamsStreaming$Import;
+type CreateModelInteractionParams$ = CreateModelInteractionParams$Import;
+type CreateModelInteractionParamsNonStreaming$2 =
+  CreateModelInteractionParamsNonStreaming$Import;
+type CreateModelInteractionParamsStreaming$2 =
+  CreateModelInteractionParamsStreaming$Import;
+type InteractionCreateParamsNonStreaming$ =
+  CreateInteractionParamsNonStreaming$Import;
+type InteractionCreateParamsStreaming$ =
+  CreateInteractionParamsStreaming$Import;
+type InteractionGetParamsNonStreaming$ =
+  GetInteractionByIdParamsNonStreaming$Import;
+type InteractionGetParamsStreaming$ = GetInteractionByIdParamsStreaming$Import;
 export type Agent = Agent$;
 export type AgentCreateParams = AgentCreateParams$;
 export type AgentDeleteParams = AgentDeleteParams$;
@@ -463,7 +489,7 @@ export type AgentListParams = AgentListParams$;
 export type AgentListResponse = AgentListResponse$;
 export type AgentTool = AgentTool$;
 export type AllowedTools = AllowedTools$;
-export type Allowlist = Allowlist$;
+export type AllowlistEntry = AllowlistEntry$;
 export type Annotation = Annotation$;
 export type AntigravityAgentConfig = AntigravityAgentConfig$;
 export type Arguments = Arguments$;
@@ -508,6 +534,8 @@ export type Environment = Environment$;
 export type EnvironmentDeleteResponse = EnvironmentDeleteResponse$;
 export type EnvironmentFile = EnvironmentFile$;
 export type EnvironmentListResponse = EnvironmentListResponse$;
+export type EnvironmentNetworkEgressAllowlist =
+  EnvironmentNetworkEgressAllowlist$;
 export type EnvironmentVariableConfig = EnvironmentVariableConfig$;
 export type EnvironmentVariableUpdateConfig = EnvironmentVariableUpdateConfig$;
 export type EnvVar = EnvVar$;
@@ -554,6 +582,10 @@ export type InteractionCancelParams = InteractionCancelParams$;
 export type InteractionCompletedEvent = InteractionCompletedEvent$;
 export type InteractionCreatedEvent = InteractionCreatedEvent$;
 export type InteractionCreateParams = InteractionCreateParams$;
+export type InteractionCreateParamsNonStreaming =
+  InteractionCreateParamsNonStreaming$;
+export type InteractionCreateParamsStreaming =
+  InteractionCreateParamsStreaming$;
 export type InteractionDeleteParams = InteractionDeleteParams$;
 export type InteractionDeleteResponse = InteractionDeleteResponse$;
 export type InteractionGetParams = InteractionGetParams$;
@@ -562,6 +594,7 @@ export type InteractionGetParamsNonStreaming =
 export type InteractionGetParamsStreaming = InteractionGetParamsStreaming$;
 export type InteractionSSEEvent = InteractionSSEEvent$;
 export type InteractionStatusUpdate = InteractionStatusUpdate$;
+export type ListEnvironmentsResponse = ListEnvironmentsResponse$;
 export type ListTriggerExecutionsResponse = ListTriggerExecutionsResponse$;
 export type ListTriggersResponse = ListTriggersResponse$;
 export type MCPServer = MCPServer$;
@@ -705,18 +738,13 @@ export declare namespace Credentials {
   export type OAuth2UpdateConfig = OAuth2UpdateConfig$;
 }
 export declare namespace Environments {
-  export interface CreateEnvironmentRequest extends CreateEnvironmentRequest$ {}
-  export interface Environment extends Environment$ {}
+  export type CreateEnvironmentRequest = CreateEnvironmentRequest$;
+  export type Environment = Environment$;
   export type EnvironmentDeleteResponse = EnvironmentDeleteResponse$;
   export type EnvironmentFile = EnvironmentFile$;
   export type EnvironmentListResponse = EnvironmentListResponse$;
   export type GetEnvironmentFilesResponse = GetEnvironmentFilesResponse$;
-  export namespace CreateEnvironmentRequest {
-    export type Allowlist = Allowlist$;
-  }
-  export namespace Environment {
-    export type Allowlist = Allowlist$2;
-  }
+  export type ListEnvironmentsResponse = ListEnvironmentsResponse$;
 }
 export declare namespace Interactions {
   export type AllowedTools = AllowedTools$;
@@ -766,6 +794,10 @@ export declare namespace Interactions {
   export type InteractionCompletedEvent = InteractionCompletedEvent$;
   export type InteractionCreatedEvent = InteractionCreatedEvent$;
   export type InteractionCreateParams = InteractionCreateParams$;
+  export type InteractionCreateParamsNonStreaming =
+    InteractionCreateParamsNonStreaming$;
+  export type InteractionCreateParamsStreaming =
+    InteractionCreateParamsStreaming$;
   export type InteractionDeleteParams = InteractionDeleteParams$;
   export type InteractionDeleteResponse = InteractionDeleteResponse$;
   export type InteractionGetParams = InteractionGetParams$;
@@ -831,9 +863,14 @@ export declare namespace Interactions {
     }
   }
   export namespace Environment {
-    export type Allowlist = Allowlist$3;
+    export interface EnvironmentNetworkEgressAllowlist
+      extends EnvironmentNetworkEgressAllowlist$
+    {}
     export type EnvVar = EnvVar$;
     export type Source = Source$;
+    export namespace EnvironmentNetworkEgressAllowlist {
+      export type AllowlistEntry = AllowlistEntry$;
+    }
   }
   export namespace ErrorEvent {
     export type Error = Error$2;
@@ -862,10 +899,26 @@ export declare namespace Interactions {
   export namespace GoogleSearchResultStep {
     export type Result = Result$2;
   }
+  export namespace InteractionCreateParams {
+    export type CreateAgentInteractionParams = CreateAgentInteractionParams$;
+    export type CreateAgentInteractionParamsNonStreaming =
+      CreateAgentInteractionParamsNonStreaming$2;
+    export type CreateAgentInteractionParamsStreaming =
+      CreateAgentInteractionParamsStreaming$2;
+    export type CreateModelInteractionParams = CreateModelInteractionParams$;
+    export type CreateModelInteractionParamsNonStreaming =
+      CreateModelInteractionParamsNonStreaming$2;
+    export type CreateModelInteractionParamsStreaming =
+      CreateModelInteractionParamsStreaming$2;
+    export type InteractionCreateParamsNonStreaming =
+      InteractionCreateParamsNonStreaming$;
+    export type InteractionCreateParamsStreaming =
+      InteractionCreateParamsStreaming$;
+  }
   export namespace InteractionGetParams {
     export type InteractionGetParamsNonStreaming =
-      InteractionGetParamsNonStreaming$2;
-    export type InteractionGetParamsStreaming = InteractionGetParamsStreaming$2;
+      InteractionGetParamsNonStreaming$;
+    export type InteractionGetParamsStreaming = InteractionGetParamsStreaming$;
   }
   export namespace PlaceCitation {
     export type ReviewSnippet = ReviewSnippet$3;

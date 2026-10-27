@@ -35,5 +35,5 @@ export type UpdateWebhookRequest = {
   /**
    * Required. The request body.
    */
-  body?: webhooks.WebhookUpdate | undefined;
+  body: webhooks.WebhookUpdate;
 };

@@ -65,49 +65,6 @@ export function authConfigToMldev(
   return toObject;
 }
 
-export function computerUseToVertex(
-  fromObject: types.ComputerUse,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromEnablePromptInjectionDetection = common.getValueByPath(fromObject, [
-    'enablePromptInjectionDetection',
-  ]);
-  if (fromEnablePromptInjectionDetection != null) {
-    common.setValueByPath(
-      toObject,
-      ['enablePromptInjectionDetection'],
-      fromEnablePromptInjectionDetection,
-    );
-  }
-
-  const fromEnvironment = common.getValueByPath(fromObject, ['environment']);
-  if (fromEnvironment != null) {
-    common.setValueByPath(toObject, ['environment'], fromEnvironment);
-  }
-
-  const fromExcludedPredefinedFunctions = common.getValueByPath(fromObject, [
-    'excludedPredefinedFunctions',
-  ]);
-  if (fromExcludedPredefinedFunctions != null) {
-    common.setValueByPath(
-      toObject,
-      ['excludedPredefinedFunctions'],
-      fromExcludedPredefinedFunctions,
-    );
-  }
-
-  if (
-    common.getValueByPath(fromObject, ['disabledSafetyPolicies']) !== undefined
-  ) {
-    throw new Error(
-      'disabledSafetyPolicies parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
-    );
-  }
-
-  return toObject;
-}
-
 export function contentToMldev(
   fromObject: types.Content,
 ): Record<string, unknown> {
@@ -509,6 +466,100 @@ export function liveClientContentToVertex(
   return toObject;
 }
 
+export function liveClientContextUpdateToMldev(
+  fromObject: types.LiveClientContextUpdate,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromSystemInstruction = common.getValueByPath(fromObject, [
+    'systemInstruction',
+  ]);
+  if (fromSystemInstruction != null) {
+    common.setValueByPath(
+      toObject,
+      ['systemInstruction'],
+      contentToMldev(t.tContent(fromSystemInstruction)),
+    );
+  }
+
+  const fromTools = common.getValueByPath(fromObject, ['tools']);
+  if (fromTools != null) {
+    common.setValueByPath(
+      toObject,
+      ['tools'],
+      liveClientContextUpdateToolsToMldev(fromTools),
+    );
+  }
+
+  return toObject;
+}
+
+export function liveClientContextUpdateToVertex(
+  fromObject: types.LiveClientContextUpdate,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromSystemInstruction = common.getValueByPath(fromObject, [
+    'systemInstruction',
+  ]);
+  if (fromSystemInstruction != null) {
+    common.setValueByPath(
+      toObject,
+      ['systemInstruction'],
+      contentToVertex(t.tContent(fromSystemInstruction)),
+    );
+  }
+
+  const fromTools = common.getValueByPath(fromObject, ['tools']);
+  if (fromTools != null) {
+    common.setValueByPath(
+      toObject,
+      ['tools'],
+      liveClientContextUpdateToolsToVertex(fromTools),
+    );
+  }
+
+  return toObject;
+}
+
+export function liveClientContextUpdateToolsToMldev(
+  fromObject: types.LiveClientContextUpdateTools,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromTools = common.getValueByPath(fromObject, ['tools']);
+  if (fromTools != null) {
+    let transformedList = t.tTools(fromTools);
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return toolToMldev(t.tTool(item));
+      });
+    }
+    common.setValueByPath(toObject, ['tools'], transformedList);
+  }
+
+  return toObject;
+}
+
+export function liveClientContextUpdateToolsToVertex(
+  fromObject: types.LiveClientContextUpdateTools,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromTools = common.getValueByPath(fromObject, ['tools']);
+  if (fromTools != null) {
+    let transformedList = t.tTools(fromTools);
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return toolToVertex(t.tTool(item));
+      });
+    }
+    common.setValueByPath(toObject, ['tools'], transformedList);
+  }
+
+  return toObject;
+}
+
 export function liveClientMessageToMldev(
   fromObject: types.LiveClientMessage,
 ): Record<string, unknown> {
@@ -544,6 +595,17 @@ export function liveClientMessageToMldev(
   const fromToolResponse = common.getValueByPath(fromObject, ['toolResponse']);
   if (fromToolResponse != null) {
     common.setValueByPath(toObject, ['toolResponse'], fromToolResponse);
+  }
+
+  const fromContextUpdate = common.getValueByPath(fromObject, [
+    'contextUpdate',
+  ]);
+  if (fromContextUpdate != null) {
+    common.setValueByPath(
+      toObject,
+      ['contextUpdate'],
+      liveClientContextUpdateToMldev(fromContextUpdate),
+    );
   }
 
   return toObject;
@@ -588,6 +650,17 @@ export function liveClientMessageToVertex(
   const fromToolResponse = common.getValueByPath(fromObject, ['toolResponse']);
   if (fromToolResponse != null) {
     common.setValueByPath(toObject, ['toolResponse'], fromToolResponse);
+  }
+
+  const fromContextUpdate = common.getValueByPath(fromObject, [
+    'contextUpdate',
+  ]);
+  if (fromContextUpdate != null) {
+    common.setValueByPath(
+      toObject,
+      ['contextUpdate'],
+      liveClientContextUpdateToVertex(fromContextUpdate),
+    );
   }
 
   return toObject;
@@ -1177,6 +1250,11 @@ export function liveConnectConfigToMldev(
     );
   }
 
+  const fromLabels = common.getValueByPath(fromObject, ['labels']);
+  if (parentObject !== undefined && fromLabels != null) {
+    common.setValueByPath(parentObject, ['setup', 'labels'], fromLabels);
+  }
+
   return toObject;
 }
 
@@ -1429,6 +1507,11 @@ export function liveConnectConfigToVertex(
       ['setup', 'generationConfig', 'translationConfig'],
       fromTranslationConfig,
     );
+  }
+
+  const fromLabels = common.getValueByPath(fromObject, ['labels']);
+  if (parentObject !== undefined && fromLabels != null) {
+    common.setValueByPath(parentObject, ['setup', 'labels'], fromLabels);
   }
 
   return toObject;
@@ -2462,11 +2545,7 @@ export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
 
   const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
   if (fromComputerUse != null) {
-    common.setValueByPath(
-      toObject,
-      ['computerUse'],
-      computerUseToVertex(fromComputerUse),
-    );
+    common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
   }
 
   const fromEnterpriseWebSearch = common.getValueByPath(fromObject, [

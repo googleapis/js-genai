@@ -1411,6 +1411,19 @@ export function generateContentConfigToMldev(
     );
   }
 
+  if (
+    common.getValueByPath(fromObject, ['generationOutputConfig']) !== undefined
+  ) {
+    throw new Error(
+      'generationOutputConfig parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
+  }
+
+  const fromStore = common.getValueByPath(fromObject, ['store']);
+  if (parentObject !== undefined && fromStore != null) {
+    common.setValueByPath(parentObject, ['store'], fromStore);
+  }
+
   return toObject;
 }
 
