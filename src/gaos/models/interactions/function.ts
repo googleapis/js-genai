@@ -24,6 +24,12 @@ export type FunctionT = {
   name?: string | undefined;
   /**
    * The JSON Schema for the function's parameters.
+   *
+   * @remarks
+   *
+   * Supports a subset of JSON Schema. `minLength`, `maxLength`,
+   * `minProperties`, `maxProperties`, `uniqueItems`, `contains`,
+   * `minContains`, and `maxContains` are ignored and not enforced.
    */
   parameters?: any | undefined;
   type: "function";

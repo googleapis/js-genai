@@ -8,6 +8,16 @@ import {once} from 'node:events';
 import {createServer} from 'node:http';
 
 import {GoogleGenAI} from '../../src/client.js';
+import {
+  APIError,
+  BadRequestError,
+  NotFoundError,
+  wrapSDKError,
+} from '../../src/gaos/lib/compat-errors.js';
+import {
+  GoogleGenAiDefaultError,
+  GoogleGenAiError,
+} from '../../src/gaos/models/errors/index.js';
 
 describe('Triggers Lifecycle', () => {
   it('routes through Google GenAI client', async () => {
@@ -87,7 +97,7 @@ describe('Triggers Lifecycle', () => {
       });
       await ai.triggers.list({
         filter: 'some-filter',
-        pageSize: 10,
+        page_size: 10,
       });
       const fetched = await ai.triggers.get('svc_abc');
       await ai.triggers.update('svc_abc', {
@@ -96,7 +106,7 @@ describe('Triggers Lifecycle', () => {
       await ai.triggers.delete('svc_abc');
       await ai.triggers.run('svc_abc');
       await ai.triggers.listExecutions('svc_abc', {
-        pageSize: 5,
+        page_size: 5,
       });
 
       expect(trigger.schedule).toBe('0 0 * * *');
@@ -114,5 +124,56 @@ describe('Triggers Lifecycle', () => {
       server.close();
       await once(server, 'close');
     }
+  });
+
+  it('preserves prototype chain and wraps errors in wrapSDKError', () => {
+    const request = new Request(
+      'https://generativelanguage.googleapis.com/v1beta/triggers',
+    );
+    const response400 = new Response(
+      '{"error":{"message":"invalid argument"}}',
+      {
+        status: 400,
+        headers: {'content-type': 'application/json'},
+      },
+    );
+    const baseErr = new GoogleGenAiError('bad request', {
+      request,
+      response: response400,
+      body: '{"error":{"message":"invalid argument"}}',
+    });
+    expect(baseErr instanceof Error).toBeTrue();
+    expect(baseErr instanceof GoogleGenAiError).toBeTrue();
+
+    const defaultErr = new GoogleGenAiDefaultError('not found', {
+      request,
+      response: new Response('{"error":{"message":"missing"}}', {
+        status: 404,
+        headers: {'content-type': 'application/json'},
+      }),
+      body: '{"error":{"message":"missing"}}',
+    });
+    expect(defaultErr instanceof Error).toBeTrue();
+    expect(defaultErr instanceof GoogleGenAiError).toBeTrue();
+    expect(defaultErr instanceof GoogleGenAiDefaultError).toBeTrue();
+
+    const wrapped400 = wrapSDKError(baseErr);
+    expect(wrapped400 instanceof APIError).toBeTrue();
+    expect(wrapped400 instanceof BadRequestError).toBeTrue();
+    expect((wrapped400 as APIError).status).toBe(400);
+
+    // Simulate ES5 transpilation where instanceof GoogleGenAiError fails,
+    // verifying the duck-typing fallback in isGoogleGenAiErrorInstance.
+    const es5LikeErr = new Error('not found');
+    Object.assign(es5LikeErr, {
+      statusCode: 404,
+      body: '{"message":"trigger not found"}',
+      headers: new Headers({'content-type': 'application/json'}),
+      contentType: 'application/json',
+    });
+    const wrapped404 = wrapSDKError(es5LikeErr);
+    expect(wrapped404 instanceof APIError).toBeTrue();
+    expect(wrapped404 instanceof NotFoundError).toBeTrue();
+    expect((wrapped404 as APIError).status).toBe(404);
   });
 });

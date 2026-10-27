@@ -42,12 +42,19 @@ export type InteractionAgentConfig =
   | DynamicAgentConfig;
 
 /**
- * The environment configuration for the interaction. Can be an object specifying remote environment sources or a string referencing an existing environment ID.
+ * The environment configuration for the interaction. Can be an object
+ *
+ * @remarks
+ * specifying remote environment sources or a string referencing an existing
+ * environment ID.
  */
 export type InteractionEnvironment = Environment | string;
 
 /**
- * Enforces that the generated response is a JSON object that complies with the JSON schema specified in this field.
+ * Enforces that the generated response is a JSON object that complies with
+ *
+ * @remarks
+ * the JSON schema specified in this field.
  */
 export type InteractionResponseFormat = ResponseFormat | Array<ResponseFormat>;
 
@@ -83,14 +90,24 @@ export type Interaction = {
     | DynamicAgentConfig
     | undefined;
   /**
-   * Output only. The time at which the response was created in ISO 8601 format
+   * The name of the cached content used as context to serve the prediction. Note: only used in explicit caching, where users can have control over caching (e.g. what content to cache) and enjoy guaranteed cost savings. Format: cachedContents/{cachedContent}
+   *
+   * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
+   */
+  cached_content?: string | undefined;
+  /**
+   * Required. Output only. The time at which the response was created in ISO 8601 format
    *
    * @remarks
    * (YYYY-MM-DDThh:mm:ssZ).
    */
   created?: string | undefined;
   /**
-   * The environment configuration for the interaction. Can be an object specifying remote environment sources or a string referencing an existing environment ID.
+   * The environment configuration for the interaction. Can be an object
+   *
+   * @remarks
+   * specifying remote environment sources or a string referencing an existing
+   * environment ID.
    */
   environment?: Environment | string | undefined;
   /**
@@ -118,6 +135,13 @@ export type Interaction = {
   input?: InteractionsInput | undefined;
   /**
    * The labels with user-defined metadata for the request.
+   *
+   * @remarks
+   *
+   * Label keys and values can be no longer than 63 characters
+   * (Unicode codepoints) and can only contain lowercase letters, numeric
+   * characters, underscores, and dashes. International characters are allowed.
+   * Label values are optional. Label keys must start with a letter.
    */
   labels?: { [k: string]: string } | undefined;
   /**
@@ -149,7 +173,10 @@ export type Interaction = {
    */
   previous_interaction_id?: string | undefined;
   /**
-   * Enforces that the generated response is a JSON object that complies with the JSON schema specified in this field.
+   * Enforces that the generated response is a JSON object that complies with
+   *
+   * @remarks
+   * the JSON schema specified in this field.
    */
   response_format?: ResponseFormat | Array<ResponseFormat> | undefined;
   /**
@@ -174,7 +201,7 @@ export type Interaction = {
    */
   status: InteractionStatus;
   /**
-   * Output only. The steps that make up the interaction, when included in the response.
+   * Required. Output only. The steps that make up the interaction, when included in the response.
    */
   steps?: Array<Step> | undefined;
   /**
@@ -186,7 +213,7 @@ export type Interaction = {
    */
   tools?: Array<Tool> | undefined;
   /**
-   * Output only. The time at which the response was last updated in ISO 8601 format
+   * Required. Output only. The time at which the response was last updated in ISO 8601 format
    *
    * @remarks
    * (YYYY-MM-DDThh:mm:ssZ).

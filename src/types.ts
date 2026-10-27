@@ -14,6 +14,22 @@ import {
   uploadToFileSearchStoreOperationFromMldev,
 } from './converters/_operations_converters.js';
 
+/** How the model processes input media for understanding. */
+export enum MediaProcessing {
+  /**
+   * Default. Uses model-specific processing
+   */
+  MEDIA_PROCESSING_UNSPECIFIED = 'MEDIA_PROCESSING_UNSPECIFIED',
+  /**
+   * Fixed-rate frame extraction. All frames placed in context.
+   */
+  STATIC = 'STATIC',
+  /**
+   * Model-driven dynamic navigation. Recommended for most use cases.
+   */
+  AGENTIC = 'AGENTIC',
+}
+
 /** Outcome of the code execution. */
 export enum Outcome {
   /**
@@ -172,60 +188,60 @@ export enum ApiSpec {
   ELASTIC_SEARCH = 'ELASTIC_SEARCH',
 }
 
-/** The environment being operated. */
-export enum Environment {
-  /**
-   * Defaults to browser.
-   */
-  ENVIRONMENT_UNSPECIFIED = 'ENVIRONMENT_UNSPECIFIED',
-  /**
-   * Operates in a web browser.
-   */
-  ENVIRONMENT_BROWSER = 'ENVIRONMENT_BROWSER',
-  /**
-   * Operates in a mobile environment.
-   */
-  ENVIRONMENT_MOBILE = 'ENVIRONMENT_MOBILE',
-  /**
-   * Operates in a desktop environment.
-   */
-  ENVIRONMENT_DESKTOP = 'ENVIRONMENT_DESKTOP',
-}
-
 /** SafetyPolicy */
 export enum SafetyPolicy {
   /**
-   * Unspecified safety policy.
+   * The safety policy is unspecified.
    */
   SAFETY_POLICY_UNSPECIFIED = 'SAFETY_POLICY_UNSPECIFIED',
   /**
-   * Safety policy for financial transactions.
+   * Policy that restricts financial transactions.
    */
   FINANCIAL_TRANSACTIONS = 'FINANCIAL_TRANSACTIONS',
   /**
-   * Safety policy for sensitive data modification.
+   * Policy that restricts modification of sensitive data.
    */
   SENSITIVE_DATA_MODIFICATION = 'SENSITIVE_DATA_MODIFICATION',
   /**
-   * Safety policy for communication tools (e.g. Gmail, Chat, Meet).
+   * Policy that restricts the use of communication tools.
    */
   COMMUNICATION_TOOL = 'COMMUNICATION_TOOL',
   /**
-   * Safety policy for account creation.
+   * Policy that restricts the creation of accounts.
    */
   ACCOUNT_CREATION = 'ACCOUNT_CREATION',
   /**
-   * Safety policy for data modification.
+   * Policy that restricts general data modification.
    */
   DATA_MODIFICATION = 'DATA_MODIFICATION',
   /**
-   * Safety policy for user consent management.
+   * Policy that restricts user consent management.
    */
   USER_CONSENT_MANAGEMENT = 'USER_CONSENT_MANAGEMENT',
   /**
-   * Safety policy for legal terms and agreements.
+   * Policy that restricts interaction with legal terms and agreements.
    */
   LEGAL_TERMS_AND_AGREEMENTS = 'LEGAL_TERMS_AND_AGREEMENTS',
+}
+
+/** The target environment where the computer use tool operates. */
+export enum Environment {
+  /**
+   * The environment is unspecified.
+   */
+  ENVIRONMENT_UNSPECIFIED = 'ENVIRONMENT_UNSPECIFIED',
+  /**
+   * The tool operates in a web browser.
+   */
+  ENVIRONMENT_BROWSER = 'ENVIRONMENT_BROWSER',
+  /**
+   * The tool operates in a mobile environment.
+   */
+  ENVIRONMENT_MOBILE = 'ENVIRONMENT_MOBILE',
+  /**
+   * The tool operates in a desktop environment.
+   */
+  ENVIRONMENT_DESKTOP = 'ENVIRONMENT_DESKTOP',
 }
 
 /** Sites with confidence level chosen & above this value will be blocked from the search results. This enum is not supported in Gemini API. */
@@ -460,6 +476,22 @@ export enum FunctionCallingConfigMode {
   VALIDATED = 'VALIDATED',
 }
 
+/** Transcription mode. */
+export enum AudioTranscriptionConfigMode {
+  /**
+   * Unspecified transcription mode.
+   */
+  MODE_UNSPECIFIED = 'MODE_UNSPECIFIED',
+  /**
+   * Verbatim transcription mode.
+   */
+  VERBATIM = 'VERBATIM',
+  /**
+   * Smart transcription mode.
+   */
+  SMART = 'SMART',
+}
+
 /** Output only. The reason why the model stopped generating tokens.
 
 If empty, the model has not stopped generating the tokens. */
@@ -536,6 +568,10 @@ export enum FinishReason {
    * Image generation stopped for a reason not otherwise specified.
    */
   IMAGE_OTHER = 'IMAGE_OTHER',
+  /**
+   * Token generation stopped because the response reached the per-request token limit, but generation is not yet complete. The response can be continued by passing the returned `continuation_token` in a subsequent request.
+   */
+  CONTINUATION = 'CONTINUATION',
 }
 
 /** Output only. The probability of harm for this category. */
@@ -664,6 +700,10 @@ export enum TrafficType {
    * Type for Flex traffic.
    */
   ON_DEMAND_FLEX = 'ON_DEMAND_FLEX',
+  /**
+   * Type for Off-Peak Pay-As-You-Go traffic.
+   */
+  ON_DEMAND_OFFPEAK = 'ON_DEMAND_OFFPEAK',
   /**
    * Type for Provisioned Throughput traffic.
    */
@@ -1222,22 +1262,6 @@ export enum ServiceTier {
   PRIORITY = 'priority',
 }
 
-/** How the model processes input media for understanding. */
-export enum MediaProcessing {
-  /**
-   * Default. Uses model-specific processing
-   */
-  MEDIA_PROCESSING_UNSPECIFIED = 'MEDIA_PROCESSING_UNSPECIFIED',
-  /**
-   * Fixed-rate frame extraction. All frames placed in context.
-   */
-  STATIC = 'STATIC',
-  /**
-   * Model-driven dynamic navigation. Recommended for most use cases.
-   */
-  AGENTIC = 'AGENTIC',
-}
-
 /** The tokenization quality used for given media. */
 export enum PartMediaResolutionLevel {
   /**
@@ -1758,22 +1782,6 @@ export enum TurnCoverage {
   TURN_INCLUDES_AUDIO_ACTIVITY_AND_ALL_VIDEO = 'TURN_INCLUDES_AUDIO_ACTIVITY_AND_ALL_VIDEO',
 }
 
-/** Transcription mode. */
-export enum AudioTranscriptionConfigMode {
-  /**
-   * Unspecified transcription mode.
-   */
-  MODE_UNSPECIFIED = 'MODE_UNSPECIFIED',
-  /**
-   * Verbatim transcription mode.
-   */
-  VERBATIM = 'VERBATIM',
-  /**
-   * Smart transcription mode.
-   */
-  SMART = 'SMART',
-}
-
 /** Scale of the generated music. */
 export enum Scale {
   /**
@@ -1919,6 +1927,16 @@ export class ToolResponse {
   response?: Record<string, unknown>;
 }
 
+/** Extra metadata associated with the part for speech synthesis. */
+export declare interface SpeechMetadata {
+  /** The speaker for this part, which must match a `speaker` name in
+      `MultiSpeakerVoiceConfig.speaker_voice_configs`. */
+  speaker?: string;
+  /** The style instruction for how the voice should be synthesized
+      (e.g. "excited, fast-paced"). */
+  style?: string;
+}
+
 /** Information about a single recognized word. */
 export declare interface WordInfo {
   /** Transcript of the word.
@@ -1946,6 +1964,12 @@ export declare interface Transcription {
   /** Detailed word-level transcriptions and timing details.
    */
   words?: WordInfo[];
+  /** Start offset in time of the transcription relative to the start of the audio.
+   */
+  startOffset?: string;
+  /** End offset in time of the transcription relative to the start of the audio.
+   */
+  endOffset?: string;
 }
 
 /** Result of executing the ExecutableCode. Generated only when the `CodeExecution` tool is used. */
@@ -1970,7 +1994,7 @@ export declare interface ExecutableCode {
 
 /** URI-based data. A FileData message contains a URI pointing to data of a specific media type. It is used to represent images, audio, and video stored in Google Cloud Storage. */
 export declare interface FileData {
-  /** Optional. The display name of the file. Used to provide a label or filename to distinguish files. This field is only returned in `PromptMessage` for prompt management. It is used in the Gemini calls only when server side tools (`code_execution`, `google_search`, and `url_context`) are enabled. This field is not supported in Gemini API. */
+  /** Optional. The display name of the file. Used to provide a label or filename to distinguish files. This field is only returned in `PromptMessage` for prompt management. It is used in the Gemini calls only when server side tools (`code_execution`, `google_search`, and `url_context`) are enabled. */
   displayName?: string;
   /** Required. The URI of the file in Google Cloud Storage. */
   fileUri?: string;
@@ -2086,7 +2110,7 @@ export declare interface Blob {
   /** Required. The raw bytes of the data.
    * @remarks Encoded as base64 string. */
   data?: string;
-  /** Optional. The display name of the blob. Used to provide a label or filename to distinguish blobs. This field is only returned in `PromptMessage` for prompt management. It is used in the Gemini calls only when server-side tools (`code_execution`, `google_search`, and `url_context`) are enabled. This field is not supported in Gemini API. */
+  /** Optional. The display name of the blob. Used to provide a label or filename to distinguish blobs. This field is only returned in `PromptMessage` for prompt management. It is used in the Gemini calls only when server-side tools (`code_execution`, `google_search`, and `url_context`) are enabled. */
   displayName?: string;
   /** Required. The IANA standard MIME type of the source data. */
   mimeType?: string;
@@ -2142,6 +2166,9 @@ export declare interface Part {
   partMetadata?: Record<string, unknown>;
   /** How the model processes this part's media for understanding. */
   mediaProcessing?: MediaProcessing;
+  /** Extra metadata associated with the part for speech synthesis, such
+      as speaker and style. Only valid when `Part.data` is set to `text`. */
+  speechMetadata?: SpeechMetadata;
 }
 /**
  * Creates a `Part` object from a `URI` string.
@@ -2351,6 +2378,8 @@ export declare interface HttpOptions {
   extraBody?: Record<string, unknown>;
   /** HTTP retry options for the request. */
   retryOptions?: HttpRetryOptions;
+  /** Custom fetch implementation to use for network requests. */
+  fetch?: Fetch;
 }
 
 /** Schema is used to define the format of input/output data.
@@ -2656,7 +2685,7 @@ export declare interface StreamableHttpTransport {
   url?: string;
 }
 
-/** A MCPServer is a server that can be called by the model to perform actions. It is a server that implements the MCP protocol. Next ID: 6. This data type is not supported in Vertex AI. */
+/** A MCPServer is a server that can be called by the model to perform actions. It is a server that implements the MCP protocol. Next ID: 7. This data type is not supported in Vertex AI. */
 export declare interface McpServer {
   /** The name of the MCPServer. */
   name?: string;
@@ -2667,15 +2696,15 @@ export declare interface McpServer {
 /** Tool that executes code generated by the model, and automatically returns the result to the model. See also ExecutableCode and CodeExecutionResult, which are input and output to this tool. This data type is not supported in Gemini API. */
 export declare interface ToolCodeExecution {}
 
-/** Tool to support computer use. */
+/** A tool that enables the model to interact directly with a computer environment. */
 export declare interface ComputerUse {
-  /** Optional. Enables the prompt injection detection check on computer-use request. */
+  /** Optional. Whether to enable the prompt injection detection check on the computer use request. */
   enablePromptInjectionDetection?: boolean;
-  /** Required. The environment being operated. */
+  /** Required. The target environment where the computer use tool operates. */
   environment?: Environment;
-  /** Optional. By default, [predefined functions](https://cloud.google.com/vertex-ai/generative-ai/docs/computer-use#supported-actions) are included in the final model call. Some of them can be explicitly excluded from being automatically included. This can serve two purposes: 1. Using a more restricted / different action space. 2. Improving the definitions / instructions of predefined functions. */
+  /** Optional. A list of predefined functions to explicitly exclude from the model call. By default, [predefined functions](https://cloud.google.com/vertex-ai/generative-ai/docs/computer-use#supported-actions) are included. Excluding functions allows for a more restricted action space or custom definitions for predefined functions. */
   excludedPredefinedFunctions?: string[];
-  /** Optional. Disabled safety policies for computer use. This field is not supported in Vertex AI. */
+  /** Optional. A list of safety policies to disable for the computer use tool. */
   disabledSafetyPolicies?: SafetyPolicy[];
 }
 
@@ -2862,6 +2891,8 @@ export declare interface VoiceConfig {
   replicatedVoiceConfig?: ReplicatedVoiceConfig;
   /** The configuration for a prebuilt voice. */
   prebuiltVoiceConfig?: PrebuiltVoiceConfig;
+  /** The speaker identifier for synthesis. */
+  voice?: string;
 }
 
 /** Configuration for a single speaker in a multi-speaker setup. */
@@ -2954,6 +2985,17 @@ export declare interface ImageConfig {
   prominentPeople?: ProminentPeople;
 }
 
+/** Configuration for persisting output assets to external storage. */
+export declare interface GenerationOutputConfig {
+  /** Optional. The Cloud Storage URI prefix or directory where
+      generated media assets should be written (e.g. "gs://my-bucket/prefix/").
+      Supported URI schemes: "gs://". When set, media bytes are written directly
+      to this location and returned as FileData with a file_uri instead of raw
+      inline bytes.
+       */
+  outputUriPrefix?: string;
+}
+
 /** The configuration for automated routing. When automated routing is specified, the routing will be determined by the pretrained routing model and customer provided model routing preference. This data type is not supported in Gemini API. */
 export declare interface GenerationConfigRoutingConfigAutoRoutingMode {
   /** The model routing preference. */
@@ -3035,7 +3077,7 @@ export declare interface LanguageHints {
 
 /** The audio transcription configuration in Setup. */
 export declare interface AudioTranscriptionConfig {
-  /** BCP-47 language codes providing hints about the languages present in the audio. If omitted or empty, defaults to automatic language detection. */
+  /** Optional. BCP-47 language codes providing hints about the languages present in the audio. If omitted or empty, defaults to automatic language detection. */
   languageCodes?: string[];
   /** Deprecated: Auto-detection is now the default when language_codes is omitted. This field will be removed in a future version. */
   languageAuto?: LanguageAuto;
@@ -3187,7 +3229,7 @@ export declare interface GenerateContentConfig {
   /** Associates model output to a specific function call.
    */
   toolConfig?: ToolConfig;
-  /** Labels with user-defined metadata to break down billed charges. */
+  /** Labels with user-defined metadata for the request. */
   labels?: Record<string, string>;
   /** Resource name of a context cache that can be used in subsequent
       requests.
@@ -3227,6 +3269,27 @@ export declare interface GenerateContentConfig {
       service. If supplied, safety_settings must not be supplied.
        */
   modelArmorConfig?: ModelArmorConfig;
+  /** An opaque continuation token used to resume generation from a
+      previous response that stopped with `finish_reason` set to
+      `CONTINUATION`.
+      
+  * @remarks Encoded as base64 string. */
+  continuationToken?: string;
+  /** Defaults to true. When a response ends with finish reason
+      `CONTINUATION`, the SDK sends the same request again with the response's
+      continuation token until the model finishes. Timeouts, retries and
+      billing apply to each request. Set to false to turn this off.
+       */
+  automaticContinuation?: boolean;
+  /** Optional. Configuration for persisting output assets to external
+      storage.
+       */
+  generationOutputConfig?: GenerationOutputConfig;
+  /** Configures the logging behavior for a given request. If set, it
+      takes precedence over the project-level logging config. This field is not
+      supported in Gemini Enterprise Agent Platform.
+       */
+  store?: boolean;
 }
 
 /** Config for models.generate_content parameters. */
@@ -3681,6 +3744,9 @@ export declare interface Candidate {
   safetyRatings?: SafetyRating[];
   /** Output only. Metadata returned when the model uses the `url_context` tool to get information from a user-provided URL. */
   urlContextMetadata?: UrlContextMetadata;
+  /** Output only. An optional opaque continuation token returned when `finish_reason` is `CONTINUATION`. Clients can pass this token in a subsequent `GenerateContentRequest` to continue generation.
+   * @remarks Encoded as base64 string. */
+  continuationToken?: string;
 }
 
 /** Content filter results for a prompt sent in the request. Note: This is sent only in the first stream chunk and only if no candidates were generated due to content violations. */
@@ -3725,6 +3791,8 @@ export class GenerateContentResponseUsageMetadata {
   totalTokenCount?: number;
   /** Output only. The traffic type for this request. */
   trafficType?: TrafficType;
+  /** Output only. The prompt token count from the initial request prior to any continuation hops. */
+  initialPromptTokenCount?: number;
 }
 
 /** The status of the underlying model. This is used to indicate the stage of the underlying model and the retirement time if applicable. This data type is not supported in Vertex AI. */
@@ -3774,7 +3842,7 @@ export class GenerateContentResponse {
    * @example
    * ```ts
    * const response = await ai.models.generateContent({
-   *   model: 'gemini-2.0-flash',
+   *   model: 'gemini-flash-latest',
    *   contents:
    *     'Why is the sky blue?',
    * });
@@ -3894,7 +3962,7 @@ export class GenerateContentResponse {
    *   required: ['brightness', 'colorTemperature'],
    *  };
    *  const response = await ai.models.generateContent({
-   *     model: 'gemini-2.0-flash',
+   *     model: 'gemini-flash-latest',
    *     contents: 'Dim the lights so the room feels cozy and warm.',
    *     config: {
    *       tools: [{functionDeclarations: [controlLightFunctionDeclaration]}],
@@ -3942,7 +4010,7 @@ export class GenerateContentResponse {
    * @example
    * ```ts
    * const response = await ai.models.generateContent({
-   *   model: 'gemini-2.0-flash',
+   *   model: 'gemini-flash-latest',
    *   contents:
    *     'What is the sum of the first 50 prime numbers? Generate and run code for the calculation, and make sure you get all 50.'
    *   config: {
@@ -3986,7 +4054,7 @@ export class GenerateContentResponse {
    * @example
    * ```ts
    * const response = await ai.models.generateContent({
-   *   model: 'gemini-2.0-flash',
+   *   model: 'gemini-flash-latest',
    *   contents:
    *     'What is the sum of the first 50 prime numbers? Generate and run code for the calculation, and make sure you get all 50.'
    *   config: {
@@ -4017,6 +4085,19 @@ export class GenerateContentResponse {
       return undefined;
     }
     return codeExecutionResult?.[0]?.output;
+  }
+
+  /**
+   * Returns the prompt token count from the initial request prior to any continuation hops.
+   */
+  get initialPromptTokenCount(): number | undefined {
+    if (!this.usageMetadata) {
+      return undefined;
+    }
+    return (
+      (this.usageMetadata as {_initialPromptTokenCount?: number})
+        ._initialPromptTokenCount ?? this.usageMetadata.promptTokenCount
+    );
   }
 }
 
@@ -4750,6 +4831,8 @@ export class VideoResponseFormat {
   duration?: string;
   /** Optional. The Google Cloud Storage URI to store the video output. Required for Vertex if delivery is URI. */
   gcsUri?: string;
+  /** Optional. The video output resolution. Supported values: "360p", "720p", "1080p", "4k". */
+  resolution?: string;
 }
 
 /** Configuration for the model to configure output formatting and delivery. This data type is not supported in Gemini API. */
@@ -4827,7 +4910,7 @@ export declare interface GenerationConfig {
   topP?: number;
   /** Optional. Enables enhanced civic answers. It may not be available for all models. This field is not supported in Vertex AI. */
   enableEnhancedCivicAnswers?: boolean;
-  /** Optional. Config for translation. This field is not supported in Vertex AI. */
+  /** Optional. Config for translation. */
   translationConfig?: TranslationConfig;
 }
 
@@ -5538,6 +5621,8 @@ export declare interface ReinforcementTuningExample {
   contents?: Content[];
   /** Corresponds to system_instruction in user-facing GenerateContentRequest. */
   systemInstruction?: Content;
+  /** Optional. Corresponds to tools in user-facing GenerateContentRequest. */
+  tools?: Tool[];
 }
 
 /** Sample reinforcement tuning user data in the training dataset. The contents are truncated for better UI showing. This data type is not supported in Gemini API. */
@@ -5963,6 +6048,8 @@ export declare interface TuningJob {
   veoLoraTuningSpec?: VeoLoraTuningSpec;
   /** Tuning Spec for Veo Tuning. */
   veoTuningSpec?: VeoTuningSpec;
+  /** Output only. The Cloud Storage metrics URI associated with this TuningJob. */
+  gcsMetricsUri?: string;
 }
 
 /** Configuration for the list tuning jobs method. */
@@ -6119,7 +6206,7 @@ export declare interface CreateTuningJobConfig {
 
 /** Fine-tuning job creation parameters - optional fields. */
 export declare interface CreateTuningJobParametersPrivate {
-  /** The base model that is being tuned, e.g., "gemini-2.5-flash". */
+  /** The base model that is being tuned, e.g., "gemini-flash-latest". */
   baseModel?: string;
   /** The PreTunedModel that is being tuned. */
   preTunedModel?: PreTunedModel;
@@ -6181,6 +6268,8 @@ export declare interface ReinforcementTuningRewardInfo {
   reward?: number;
   /** Output only. The user-requested auxiliary info for the reward function. This field is set only if the Cloud Run reward function configured by user returns a "user_requested_aux_info". Refer to ReinforcementTuningCloudRunRewardScorer for more details. */
   userRequestedAuxInfo?: string;
+  /** Output only. In case of an error for this reward, this field will be populated with a detailed error status. */
+  errorStatus?: GoogleRpcStatus;
 }
 
 /** Response for the validate_reward method.
@@ -6242,7 +6331,7 @@ export declare interface CreateCachedContentConfig {
 
 /** Parameters for caches.create method. */
 export declare interface CreateCachedContentParameters {
-  /** ID of the model to use. Example: gemini-2.0-flash */
+  /** ID of the model to use. Example: gemini-flash-latest */
   model: string;
   /** Configuration that contains optional parameters.
    */
@@ -7926,6 +8015,12 @@ export declare interface RegisterFilesParameters {
   config?: RegisterFilesConfig;
 }
 
+/** A custom fetch function type matching the standard fetch signature. */
+export type Fetch = (
+  input: RequestInfo | URL,
+  init?: RequestInit,
+) => Promise<Response>;
+
 /** Configures automatic detection of activity. */
 export declare interface AutomaticActivityDetection {
   /** If enabled, detected voice and text input count as activity. If disabled, the client must send activity signals. */
@@ -7951,6 +8046,8 @@ export declare interface RealtimeInputConfig {
   activityHandling?: ActivityHandling;
   /** Defines which input is included in the user's turn. */
   turnCoverage?: TurnCoverage;
+  /** If true, enables interim transcript timestamps. */
+  interimTranscriptTimestampEnabled?: boolean;
 }
 
 /** Configuration of session resumption mechanism.
@@ -8078,6 +8175,8 @@ export declare interface LiveClientSetup {
       response.
        */
   safetySettings?: SafetySetting[];
+  /** Optional. Labels with user-defined metadata for the request. Optional. Labels must follow standard unified Cloud label requirements: - Label keys must start with a letter. - Label keys and values can be no longer than 63 characters (Unicode codepoints) and can only contain lowercase letters, numeric characters, underscores, and dashes. - International characters are allowed. Usage: - Safety identifiers from aggregators: Use the key `safety_identifier` (e.g. `{"safety_identifier": "user_session_123"}`) */
+  labels?: Record<string, string>;
 }
 
 /** Incremental update of the current conversation delivered from the client.
@@ -8165,6 +8264,31 @@ export class LiveClientToolResponse {
   functionResponses?: FunctionResponse[];
 }
 
+/** A wrapper around the list of tools.
+
+This wrapper exists because a bare `repeated Tool` field cannot tell apart
+"not sending a tools update" from "clearing all tools": an unset repeated
+field and an empty repeated field look identical on the wire. Wrapping the
+list in a message adds a presence bit, so the two cases become: - `tools`
+field unset: no update; keep the previously provided tools. - `tools` field
+set (even with an empty list): replace the current tools with the provided
+list, which may be empty to clear all tools. */
+export declare interface LiveClientContextUpdateTools {
+  /** The list of tools the model may use to generate the next response. */
+  tools?: ToolListUnion;
+}
+
+/** Updates to the context of the current session.
+
+Only fields that are set will be updated. Updates are guaranteed to be
+processed *in order* with the rest of the inputs. */
+export declare interface LiveClientContextUpdate {
+  /** Updated system instruction for the model. If set, overrides `BidiGenerateContentSetup.system_instruction`. The system instructions are part of the model preamble, so updating them invalidates the prefix cache. Clients should only update this field when strictly necessary as it might have a performance impact on the model generation. */
+  systemInstruction?: ContentUnion;
+  /** An updated list of tools the model may use to generate the subsequent responses. If set, this list replaces the previously provided tools. The tools are part of the model preamble, so updating them invalidates the prefix cache. Clients should only update this field when strictly necessary as it might have a performance impact on the model generation. */
+  tools?: LiveClientContextUpdateTools;
+}
+
 /** Messages sent by the client in the API call. */
 export declare interface LiveClientMessage {
   /** Message to be sent by the system when connecting to the API. SDK users should not send this message. */
@@ -8175,6 +8299,8 @@ export declare interface LiveClientMessage {
   realtimeInput?: LiveClientRealtimeInput;
   /** Response to a `ToolCallMessage` received from the server. */
   toolResponse?: LiveClientToolResponse;
+  /** Updates to the context of the current session. */
+  contextUpdate?: LiveClientContextUpdate;
 }
 
 /** Session config for the API connection. */
@@ -8275,6 +8401,9 @@ If included the server will send SessionResumptionUpdate messages. */
   safetySettings?: SafetySetting[];
   /** Config for translation. */
   translationConfig?: TranslationConfig;
+  /** Labels with user-defined metadata for the session. In Gemini
+      Enterprise Agent Platform, they are used for billing and reporting. */
+  labels?: Record<string, string>;
 }
 
 /** Parameters for connecting to the live API. */
@@ -8296,7 +8425,7 @@ These parameters are used when creating a chat session with the
 export declare interface CreateChatParameters {
   /** The name of the model to use for the chat session.
 
-      For example: 'gemini-2.0-flash', 'gemini-2.0-flash-lite', etc. See Gemini API
+      For example: 'gemini-flash-latest', 'gemini-flash-lite-latest', etc. See Gemini API
       docs to find the available models.
        */
   model: string;
@@ -8684,7 +8813,7 @@ export declare interface ComputeTokensResult {
 
 /** Fine-tuning job creation parameters - optional fields. */
 export declare interface CreateTuningJobParameters {
-  /** The base model that is being tuned, e.g., "gemini-2.5-flash". */
+  /** The base model that is being tuned, e.g., "gemini-flash-latest". */
   baseModel: string;
   /** Cloud Storage path to file containing training dataset for tuning. The dataset must be formatted as a JSONL file. */
   trainingDataset: TuningDataset;

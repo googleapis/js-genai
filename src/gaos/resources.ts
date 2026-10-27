@@ -13,12 +13,24 @@
 import type { AgentListResponse as AgentListResponse$Import } from "./models/agents/agent-list-response.js";
 import type { AgentTool as AgentTool$Import } from "./models/agents/agent-tool.js";
 import type { Agent as Agent$Import } from "./models/agents/agent.js";
+import type { CredentialCreateParams as CredentialCreateParams$Import } from "./models/credentials/credential-create-params.js";
+import type { CredentialListResponse as CredentialListResponse$Import } from "./models/credentials/credential-list-response.js";
+import type { CredentialUpdate as CredentialUpdate$Import } from "./models/credentials/credential-update.js";
+import type { Credential as Credential$Import } from "./models/credentials/credential.js";
+import type { EnvironmentVariableConfig as EnvironmentVariableConfig$Import } from "./models/credentials/environment-variable-config.js";
+import type { EnvironmentVariableUpdateConfig as EnvironmentVariableUpdateConfig$Import } from "./models/credentials/environment-variable-update-config.js";
+import type { HttpBearerConfig as HttpBearerConfig$Import } from "./models/credentials/http-bearer-config.js";
+import type { HttpBearerUpdateConfig as HttpBearerUpdateConfig$Import } from "./models/credentials/http-bearer-update-config.js";
+import type { InjectionLocationEnum as InjectionLocationEnum$Import } from "./models/credentials/injection-location-enum.js";
+import type { OAuth2Config as OAuth2Config$Import } from "./models/credentials/o-auth2-config.js";
+import type { OAuth2UpdateConfig as OAuth2UpdateConfig$Import } from "./models/credentials/o-auth2-update-config.js";
 import type { CreateEnvironmentRequest as CreateEnvironmentRequest$Import } from "./models/environments/create-environment-request.js";
 import type { EnvironmentFile as EnvironmentFile$Import } from "./models/environments/environment-file.js";
 import type { Environment as Environment$Import } from "./models/environments/environment.js";
 import type { GetEnvironmentFilesResponse as GetEnvironmentFilesResponse$Import } from "./models/environments/get-environment-files-response.js";
 import type { ListEnvironmentsResponse as ListEnvironmentsResponse$Import } from "./models/environments/list-environments-response.js";
 import type { AllowedTools as AllowedTools$Import } from "./models/interactions/allowed-tools.js";
+import type { AllowlistEntry as AllowlistEntry$Import } from "./models/interactions/allowlist-entry.js";
 import type { Annotation as Annotation$Import } from "./models/interactions/annotation.js";
 import type { AntigravityAgentConfig as AntigravityAgentConfig$Import } from "./models/interactions/antigravity-agent-config.js";
 import type { ArgumentsDelta as ArgumentsDelta$Import } from "./models/interactions/arguments-delta.js";
@@ -41,7 +53,8 @@ import type { DocumentContent as DocumentContent$Import } from "./models/interac
 import type { DocumentDelta as DocumentDelta$Import } from "./models/interactions/document-delta.js";
 import type { DynamicAgentConfig as DynamicAgentConfig$Import } from "./models/interactions/dynamic-agent-config.js";
 import type { Empty as Empty$Import } from "./models/interactions/empty.js";
-import type { Allowlist as Allowlist$Import } from "./models/interactions/environment-network-egress-allowlist.js";
+import type { EnvVar as EnvVar$Import } from "./models/interactions/env-var.js";
+import type { EnvironmentNetworkEgressAllowlist as EnvironmentNetworkEgressAllowlist$Import } from "./models/interactions/environment-network-egress-allowlist.js";
 import type { Environment as Environment$Import2 } from "./models/interactions/environment.js";
 import type { ErrorEvent as ErrorEvent$Import } from "./models/interactions/error-event.js";
 import type { ErrorT as ErrorT$Import } from "./models/interactions/error.js";
@@ -76,7 +89,6 @@ import type { GoogleSearchResult as GoogleSearchResult$Import } from "./models/i
 import type { GoogleSearch as GoogleSearch$Import } from "./models/interactions/google-search.js";
 import type { GroundingToolCount as GroundingToolCount$Import } from "./models/interactions/grounding-tool-count.js";
 import type { HarmCategory as HarmCategory$Import } from "./models/interactions/harm-category.js";
-import type { ImageConfig as ImageConfig$Import } from "./models/interactions/image-config.js";
 import type { ImageContent as ImageContent$Import } from "./models/interactions/image-content.js";
 import type { ImageDelta as ImageDelta$Import } from "./models/interactions/image-delta.js";
 import type { ImageResponseFormat as ImageResponseFormat$Import } from "./models/interactions/image-response-format.js";
@@ -100,13 +112,16 @@ import type { ProcessingResultDelta as ProcessingResultDelta$Import } from "./mo
 import type { ProcessingResultStep as ProcessingResultStep$Import } from "./models/interactions/processing-result-step.js";
 import type { RetrievalCallArguments as RetrievalCallArguments$Import } from "./models/interactions/retrieval-call-arguments.js";
 import type { RetrievalCallDelta as RetrievalCallDelta$Import } from "./models/interactions/retrieval-call-delta.js";
+import type { RetrievalCallStep as RetrievalCallStep$Import } from "./models/interactions/retrieval-call-step.js";
 import type { RetrievalResultDelta as RetrievalResultDelta$Import } from "./models/interactions/retrieval-result-delta.js";
+import type { RetrievalResultStep as RetrievalResultStep$Import } from "./models/interactions/retrieval-result-step.js";
 import type { Retrieval as Retrieval$Import } from "./models/interactions/retrieval.js";
 import type { ReviewSnippet as ReviewSnippet$Import } from "./models/interactions/review-snippet.js";
 import type { SafetySetting as SafetySetting$Import } from "./models/interactions/safety-setting.js";
 import type { SessionConfig as SessionConfig$Import } from "./models/interactions/session-config.js";
 import type { SmartTranscriptionMode as SmartTranscriptionMode$Import } from "./models/interactions/smart-transcription-mode.js";
 import type { Source as Source$Import } from "./models/interactions/source.js";
+import type { SpeechAnnotation as SpeechAnnotation$Import } from "./models/interactions/speech-annotation.js";
 import type { SpeechConfig as SpeechConfig$Import } from "./models/interactions/speech-config.js";
 import type { StaticMediaProcessing as StaticMediaProcessing$Import } from "./models/interactions/static-media-processing.js";
 import type { StepDeltaMetadata as StepDeltaMetadata$Import } from "./models/interactions/step-delta-metadata.js";
@@ -145,25 +160,45 @@ import type { VideoDelta as VideoDelta$Import } from "./models/interactions/vide
 import type { VideoResponseFormat as VideoResponseFormat$Import } from "./models/interactions/video-response-format.js";
 import type { WebhookConfig as WebhookConfig$Import } from "./models/interactions/webhook-config.js";
 import type { WordInfo as WordInfo$Import } from "./models/interactions/word-info.js";
+import type { CreateVoiceRequest as CreateVoiceRequest$Import2 } from "./models/operations/create-voice.js";
 import type {
   CancelInteractionByIdParams as CancelInteractionByIdParams$Import,
+  CreateAgentInteractionParams as CreateAgentInteractionParams$Import,
+  CreateAgentInteractionParamsNonStreaming
+    as CreateAgentInteractionParamsNonStreaming$Import,
+  CreateAgentInteractionParamsStreaming
+    as CreateAgentInteractionParamsStreaming$Import,
   CreateAgentParams as CreateAgentParams$Import,
   CreateInteractionParams as CreateInteractionParams$Import,
+  CreateInteractionParamsNonStreaming
+    as CreateInteractionParamsNonStreaming$Import,
+  CreateInteractionParamsStreaming as CreateInteractionParamsStreaming$Import,
+  CreateModelInteractionParams as CreateModelInteractionParams$Import,
+  CreateModelInteractionParamsNonStreaming
+    as CreateModelInteractionParamsNonStreaming$Import,
+  CreateModelInteractionParamsStreaming
+    as CreateModelInteractionParamsStreaming$Import,
   CreateWebhookParams as CreateWebhookParams$Import,
   DeleteAgentParams as DeleteAgentParams$Import,
+  DeleteCredentialParams as DeleteCredentialParams$Import,
   DeleteInteractionParams as DeleteInteractionParams$Import,
   DeleteTriggerParams as DeleteTriggerParams$Import,
+  DeleteVoiceParams as DeleteVoiceParams$Import,
   DeleteWebhookParams as DeleteWebhookParams$Import,
   GetAgentParams as GetAgentParams$Import,
+  GetCredentialParams as GetCredentialParams$Import,
   GetInteractionByIdParams as GetInteractionByIdParams$Import,
   GetInteractionByIdParamsNonStreaming
     as GetInteractionByIdParamsNonStreaming$Import,
   GetInteractionByIdParamsStreaming as GetInteractionByIdParamsStreaming$Import,
   GetTriggerParams as GetTriggerParams$Import,
+  GetVoiceParams as GetVoiceParams$Import,
   GetWebhookParams as GetWebhookParams$Import,
   ListAgentsParams as ListAgentsParams$Import,
+  ListCredentialsParams as ListCredentialsParams$Import,
   ListTriggerExecutionsParams as ListTriggerExecutionsParams$Import,
   ListTriggersParams as ListTriggersParams$Import,
+  ListVoicesParams as ListVoicesParams$Import,
   ListWebhooksParams as ListWebhooksParams$Import,
   RunTriggerParams as RunTriggerParams$Import,
   UpdateTriggerParams as UpdateTriggerParams$Import,
@@ -174,6 +209,16 @@ import type { TriggerCreateParams as TriggerCreateParams$Import } from "./models
 import type { TriggerExecution as TriggerExecution$Import } from "./models/triggers/trigger-execution.js";
 import type { TriggerUpdate as TriggerUpdate$Import } from "./models/triggers/trigger-update.js";
 import type { Trigger as Trigger$Import } from "./models/triggers/trigger.js";
+import type { AudioData as AudioData$Import } from "./models/voices/audio-data.js";
+import type { CreateVoiceRequest as CreateVoiceRequest$Import } from "./models/voices/create-voice-request.js";
+import type { DeleteVoiceResponse as DeleteVoiceResponse$Import } from "./models/voices/delete-voice-response.js";
+import type { ListVoicesResponse as ListVoicesResponse$Import } from "./models/voices/list-voices-response.js";
+import type { Pitch as Pitch$Import } from "./models/voices/pitch.js";
+import type { PromptedVoice as PromptedVoice$Import } from "./models/voices/prompted-voice.js";
+import type { ReplicatedVoice as ReplicatedVoice$Import } from "./models/voices/replicated-voice.js";
+import type { VoiceInput as VoiceInput$Import } from "./models/voices/voice-input.js";
+import type { VoiceOutput as VoiceOutput$Import } from "./models/voices/voice-output.js";
+import type { VoiceType as VoiceType$Import } from "./models/voices/voice-type.js";
 import type { PingWebhookRequest as PingWebhookRequest$Import } from "./models/webhooks/ping-webhook-request.js";
 import type { RotateSigningSecretRequest as RotateSigningSecretRequest$Import } from "./models/webhooks/rotate-signing-secret-request.js";
 import type { SigningSecret as SigningSecret$Import } from "./models/webhooks/signing-secret.js";
@@ -193,14 +238,29 @@ type AgentGetParams$ = GetAgentParams$Import;
 type AgentListParams$ = ListAgentsParams$Import;
 type AgentListResponse$ = AgentListResponse$Import;
 type AgentTool$ = AgentTool$Import;
+type Credential$ = Credential$Import;
+type CredentialCreateParams$ = CredentialCreateParams$Import;
+type CredentialDeleteParams$ = DeleteCredentialParams$Import;
+type CredentialDeleteResponse$ = Empty$Import;
+type CredentialGetParams$ = GetCredentialParams$Import;
+type CredentialListParams$ = ListCredentialsParams$Import;
+type CredentialListResponse$ = CredentialListResponse$Import;
+type CredentialUpdate$ = CredentialUpdate$Import;
+type EnvironmentVariableConfig$ = EnvironmentVariableConfig$Import;
+type EnvironmentVariableUpdateConfig$ = EnvironmentVariableUpdateConfig$Import;
+type HttpBearerConfig$ = HttpBearerConfig$Import;
+type HttpBearerUpdateConfig$ = HttpBearerUpdateConfig$Import;
+type InjectionLocation$ = InjectionLocationEnum$Import;
+type InjectionLocationEnum$ = InjectionLocationEnum$Import;
+type OAuth2Config$ = OAuth2Config$Import;
+type OAuth2UpdateConfig$ = OAuth2UpdateConfig$Import;
 type CreateEnvironmentRequest$ = CreateEnvironmentRequest$Import;
 type Environment$ = Environment$Import;
 type EnvironmentDeleteResponse$ = Empty$Import;
 type EnvironmentFile$ = EnvironmentFile$Import;
 type EnvironmentListResponse$ = ListEnvironmentsResponse$Import;
 type GetEnvironmentFilesResponse$ = GetEnvironmentFilesResponse$Import;
-type Allowlist$ = Allowlist$Import;
-type Allowlist$2 = Allowlist$Import;
+type ListEnvironmentsResponse$ = ListEnvironmentsResponse$Import;
 type AllowedTools$ = AllowedTools$Import;
 type Annotation$ = Annotation$Import;
 type AntigravityAgentConfig$ = AntigravityAgentConfig$Import;
@@ -237,7 +297,6 @@ type GoogleSearchCallStep$ = GoogleSearchCallStep$Import;
 type GoogleSearchResult$ = GoogleSearchResult$Import;
 type GoogleSearchResultStep$ = GoogleSearchResultStep$Import;
 type HarmCategory$ = HarmCategory$Import;
-type ImageConfig$ = ImageConfig$Import;
 type ImageContent$ = ImageContent$Import;
 type ImageResponseFormat$ = ImageResponseFormat$Import;
 type Interaction$ = Interaction$Import;
@@ -248,12 +307,6 @@ type InteractionCreatedEvent$ = InteractionCreatedEvent$Import;
 type InteractionDeleteParams$ = DeleteInteractionParams$Import;
 type InteractionDeleteResponse$ = Empty$Import;
 type InteractionGetParams$ = GetInteractionByIdParams$Import;
-type InteractionGetParamsNonStreaming$ =
-  GetInteractionByIdParamsNonStreaming$Import;
-type InteractionGetParamsNonStreaming$2 =
-  GetInteractionByIdParamsNonStreaming$Import;
-type InteractionGetParamsStreaming$ = GetInteractionByIdParamsStreaming$Import;
-type InteractionGetParamsStreaming$2 = GetInteractionByIdParamsStreaming$Import;
 type InteractionSSEEvent$ = InteractionSSEEvent$Import;
 type InteractionStatusUpdate$ = InteractionStatusUpdate$Import;
 type MCPServerToolCallStep$ = MCPServerToolCallStep$Import;
@@ -265,7 +318,9 @@ type ProcessingCallStep$ = ProcessingCallStep$Import;
 type ProcessingResultStep$ = ProcessingResultStep$Import;
 type RetrievalCallArguments$ = RetrievalCallArguments$Import;
 type RetrievalCallDelta$ = RetrievalCallDelta$Import;
+type RetrievalCallStep$ = RetrievalCallStep$Import;
 type RetrievalResultDelta$ = RetrievalResultDelta$Import;
+type RetrievalResultStep$ = RetrievalResultStep$Import;
 type SafetySetting$ = SafetySetting$Import;
 type SpeechConfig$ = SpeechConfig$Import;
 type Step$ = Step$Import;
@@ -293,14 +348,18 @@ type VideoContent$ = VideoContent$Import;
 type VideoResponseFormat$ = VideoResponseFormat$Import;
 type WebhookConfig$ = WebhookConfig$Import;
 type WordInfo$ = WordInfo$Import;
+type SpeechMetadata$ = SpeechAnnotation$Import;
 type Arguments$ = CodeExecutionCallArguments$Import;
 type FindRequest$ = FindRequest$Import;
 type FixRequest$ = FixRequest$Import;
 type SessionConfig$ = SessionConfig$Import;
 type SourceFile$ = FileContent$Import;
 type SourceFile$2 = FileContent$Import;
-type Allowlist$3 = Allowlist$Import;
+type EnvVar$ = EnvVar$Import;
+type EnvironmentNetworkEgressAllowlist$ =
+  EnvironmentNetworkEgressAllowlist$Import;
 type Source$ = Source$Import;
+type AllowlistEntry$ = AllowlistEntry$Import;
 type Error$2 = ErrorT$Import;
 type Arguments$2 = GoogleMapsCallArguments$Import;
 type Place$ = GoogleMapsResultPlaces$Import;
@@ -312,6 +371,7 @@ type Arguments$3 = GoogleSearchCallArguments$Import;
 type Result$2 = GoogleSearchResult$Import;
 type ReviewSnippet$3 = ReviewSnippet$Import;
 type Arguments$4 = RetrievalCallArguments$Import;
+type Arguments$5 = RetrievalCallArguments$Import;
 type ArgumentsDelta$ = ArgumentsDelta$Import;
 type Audio$ = AudioDelta$Import;
 type CodeExecutionCall$ = CodeExecutionCallDelta$Import;
@@ -348,7 +408,7 @@ type URLContext$ = URLContext$Import;
 type VertexAISearchConfig$ = VertexAISearchConfig$Import;
 type Smart$ = SmartTranscriptionMode$Import;
 type Verbatim$ = VerbatimTranscriptionMode$Import;
-type Arguments$5 = URLContextCallArguments$Import;
+type Arguments$6 = URLContextCallArguments$Import;
 type Result$3 = URLContextResult$Import;
 type CachedTokensByModality$ = ModalityTokens$Import;
 type GroundingToolCount$ = GroundingToolCount$Import;
@@ -371,6 +431,20 @@ type TriggerListResponse$ = ListTriggersResponse$Import;
 type TriggerRunParams$ = RunTriggerParams$Import;
 type TriggerUpdate$ = TriggerUpdate$Import;
 type TriggerUpdateParams$ = UpdateTriggerParams$Import;
+type AudioData$ = AudioData$Import;
+type CreateVoiceRequest$ = CreateVoiceRequest$Import;
+type Pitch$ = Pitch$Import;
+type PromptedVoice$ = PromptedVoice$Import;
+type ReplicatedVoice$ = ReplicatedVoice$Import;
+type VoiceCreateParams$ = CreateVoiceRequest$Import2;
+type VoiceDeleteParams$ = DeleteVoiceParams$Import;
+type VoiceDeleteResponse$ = DeleteVoiceResponse$Import;
+type VoiceGetParams$ = GetVoiceParams$Import;
+type VoiceListParams$ = ListVoicesParams$Import;
+type VoiceListResponse$ = ListVoicesResponse$Import;
+type VoiceType$ = VoiceType$Import;
+type Voice$ = VoiceInput$Import;
+type Voice$2 = VoiceOutput$Import;
 type PingWebhookRequest$ = PingWebhookRequest$Import;
 type RotateSigningSecretRequest$ = RotateSigningSecretRequest$Import;
 type SigningSecret$ = SigningSecret$Import;
@@ -389,6 +463,23 @@ type WebhookRotateSigningSecretResponse$ =
   WebhookRotateSigningSecretResponse$Import;
 type WebhookUpdate$ = WebhookUpdate$Import;
 type WebhookUpdateParams$ = WebhookUpdate$Import;
+type CreateAgentInteractionParams$ = CreateAgentInteractionParams$Import;
+type CreateAgentInteractionParamsNonStreaming$2 =
+  CreateAgentInteractionParamsNonStreaming$Import;
+type CreateAgentInteractionParamsStreaming$2 =
+  CreateAgentInteractionParamsStreaming$Import;
+type CreateModelInteractionParams$ = CreateModelInteractionParams$Import;
+type CreateModelInteractionParamsNonStreaming$2 =
+  CreateModelInteractionParamsNonStreaming$Import;
+type CreateModelInteractionParamsStreaming$2 =
+  CreateModelInteractionParamsStreaming$Import;
+type InteractionCreateParamsNonStreaming$ =
+  CreateInteractionParamsNonStreaming$Import;
+type InteractionCreateParamsStreaming$ =
+  CreateInteractionParamsStreaming$Import;
+type InteractionGetParamsNonStreaming$ =
+  GetInteractionByIdParamsNonStreaming$Import;
+type InteractionGetParamsStreaming$ = GetInteractionByIdParamsStreaming$Import;
 export type Agent = Agent$;
 export type AgentCreateParams = AgentCreateParams$;
 export type AgentDeleteParams = AgentDeleteParams$;
@@ -398,13 +489,14 @@ export type AgentListParams = AgentListParams$;
 export type AgentListResponse = AgentListResponse$;
 export type AgentTool = AgentTool$;
 export type AllowedTools = AllowedTools$;
-export type Allowlist = Allowlist$;
+export type AllowlistEntry = AllowlistEntry$;
 export type Annotation = Annotation$;
 export type AntigravityAgentConfig = AntigravityAgentConfig$;
 export type Arguments = Arguments$;
 export type ArgumentsDelta = ArgumentsDelta$;
 export type Audio = Audio$;
 export type AudioContent = AudioContent$;
+export type AudioData = AudioData$;
 export type AudioResponseFormat = AudioResponseFormat$;
 export type CachedTokensByModality = CachedTokensByModality$;
 export type CodeExecution = CodeExecution$;
@@ -425,6 +517,15 @@ export type CreateModelInteractionParamsNonStreaming =
   CreateModelInteractionParamsNonStreaming$;
 export type CreateModelInteractionParamsStreaming =
   CreateModelInteractionParamsStreaming$;
+export type CreateVoiceRequest = CreateVoiceRequest$;
+export type Credential = Credential$;
+export type CredentialCreateParams = CredentialCreateParams$;
+export type CredentialDeleteParams = CredentialDeleteParams$;
+export type CredentialDeleteResponse = CredentialDeleteResponse$;
+export type CredentialGetParams = CredentialGetParams$;
+export type CredentialListParams = CredentialListParams$;
+export type CredentialListResponse = CredentialListResponse$;
+export type CredentialUpdate = CredentialUpdate$;
 export type DeepResearchAgentConfig = DeepResearchAgentConfig$;
 export type Document = Document$;
 export type DocumentContent = DocumentContent$;
@@ -433,6 +534,11 @@ export type Environment = Environment$;
 export type EnvironmentDeleteResponse = EnvironmentDeleteResponse$;
 export type EnvironmentFile = EnvironmentFile$;
 export type EnvironmentListResponse = EnvironmentListResponse$;
+export type EnvironmentNetworkEgressAllowlist =
+  EnvironmentNetworkEgressAllowlist$;
+export type EnvironmentVariableConfig = EnvironmentVariableConfig$;
+export type EnvironmentVariableUpdateConfig = EnvironmentVariableUpdateConfig$;
+export type EnvVar = EnvVar$;
 export type Error = Error$;
 export type ErrorEvent = ErrorEvent$;
 export type FileCitation = FileCitation$;
@@ -463,16 +569,23 @@ export type GoogleSearchResult = GoogleSearchResult$;
 export type GoogleSearchResultStep = GoogleSearchResultStep$;
 export type GroundingToolCount = GroundingToolCount$;
 export type HarmCategory = HarmCategory$;
+export type HttpBearerConfig = HttpBearerConfig$;
+export type HttpBearerUpdateConfig = HttpBearerUpdateConfig$;
 export type Image = Image$;
-export type ImageConfig = ImageConfig$;
 export type ImageContent = ImageContent$;
 export type ImageResponseFormat = ImageResponseFormat$;
+export type InjectionLocation = InjectionLocation$;
+export type InjectionLocationEnum = InjectionLocationEnum$;
 export type InputTokensByModality = InputTokensByModality$;
 export type Interaction = Interaction$;
 export type InteractionCancelParams = InteractionCancelParams$;
 export type InteractionCompletedEvent = InteractionCompletedEvent$;
 export type InteractionCreatedEvent = InteractionCreatedEvent$;
 export type InteractionCreateParams = InteractionCreateParams$;
+export type InteractionCreateParamsNonStreaming =
+  InteractionCreateParamsNonStreaming$;
+export type InteractionCreateParamsStreaming =
+  InteractionCreateParamsStreaming$;
 export type InteractionDeleteParams = InteractionDeleteParams$;
 export type InteractionDeleteResponse = InteractionDeleteResponse$;
 export type InteractionGetParams = InteractionGetParams$;
@@ -481,6 +594,7 @@ export type InteractionGetParamsNonStreaming =
 export type InteractionGetParamsStreaming = InteractionGetParamsStreaming$;
 export type InteractionSSEEvent = InteractionSSEEvent$;
 export type InteractionStatusUpdate = InteractionStatusUpdate$;
+export type ListEnvironmentsResponse = ListEnvironmentsResponse$;
 export type ListTriggerExecutionsResponse = ListTriggerExecutionsResponse$;
 export type ListTriggersResponse = ListTriggersResponse$;
 export type MCPServer = MCPServer$;
@@ -491,19 +605,26 @@ export type MCPServerToolResultStep = MCPServerToolResultStep$;
 export type Metadata = Metadata$;
 export type Model = Model$;
 export type ModelOutputStep = ModelOutputStep$;
+export type OAuth2Config = OAuth2Config$;
+export type OAuth2UpdateConfig = OAuth2UpdateConfig$;
 export type OutputTokensByModality = OutputTokensByModality$;
 export type PingWebhookRequest = PingWebhookRequest$;
+export type Pitch = Pitch$;
 export type Place = Place$;
 export type PlaceCitation = PlaceCitation$;
 export type ProcessingCall = ProcessingCall$;
 export type ProcessingCallStep = ProcessingCallStep$;
 export type ProcessingResult = ProcessingResult$;
 export type ProcessingResultStep = ProcessingResultStep$;
+export type PromptedVoice = PromptedVoice$;
+export type ReplicatedVoice = ReplicatedVoice$;
 export type Result = Result$;
 export type Retrieval = Retrieval$;
 export type RetrievalCallArguments = RetrievalCallArguments$;
 export type RetrievalCallDelta = RetrievalCallDelta$;
+export type RetrievalCallStep = RetrievalCallStep$;
 export type RetrievalResultDelta = RetrievalResultDelta$;
+export type RetrievalResultStep = RetrievalResultStep$;
 export type ReviewSnippet = ReviewSnippet$;
 export type RotateSigningSecretRequest = RotateSigningSecretRequest$;
 export type SafetySetting = SafetySetting$;
@@ -513,6 +634,7 @@ export type Smart = Smart$;
 export type Source = Source$;
 export type SourceFile = SourceFile$;
 export type SpeechConfig = SpeechConfig$;
+export type SpeechMetadata = SpeechMetadata$;
 export type Static = Static$;
 export type Step = Step$;
 export type StepDelta = StepDelta$;
@@ -560,6 +682,14 @@ export type Video = Video$;
 export type VideoConfig = VideoConfig$;
 export type VideoContent = VideoContent$;
 export type VideoResponseFormat = VideoResponseFormat$;
+export type Voice = Voice$;
+export type VoiceCreateParams = VoiceCreateParams$;
+export type VoiceDeleteParams = VoiceDeleteParams$;
+export type VoiceDeleteResponse = VoiceDeleteResponse$;
+export type VoiceGetParams = VoiceGetParams$;
+export type VoiceListParams = VoiceListParams$;
+export type VoiceListResponse = VoiceListResponse$;
+export type VoiceType = VoiceType$;
 export type Webhook = Webhook$;
 export type WebhookConfig = WebhookConfig$;
 export type WebhookCreateParams = WebhookCreateParams$;
@@ -588,19 +718,33 @@ export declare namespace Agents {
   export type AgentListResponse = AgentListResponse$;
   export type AgentTool = AgentTool$;
 }
+export declare namespace Credentials {
+  export type Credential = Credential$;
+  export type CredentialCreateParams = CredentialCreateParams$;
+  export type CredentialDeleteParams = CredentialDeleteParams$;
+  export type CredentialDeleteResponse = CredentialDeleteResponse$;
+  export type CredentialGetParams = CredentialGetParams$;
+  export type CredentialListParams = CredentialListParams$;
+  export type CredentialListResponse = CredentialListResponse$;
+  export type CredentialUpdate = CredentialUpdate$;
+  export type EnvironmentVariableConfig = EnvironmentVariableConfig$;
+  export type EnvironmentVariableUpdateConfig =
+    EnvironmentVariableUpdateConfig$;
+  export type HttpBearerConfig = HttpBearerConfig$;
+  export type HttpBearerUpdateConfig = HttpBearerUpdateConfig$;
+  export type InjectionLocation = InjectionLocation$;
+  export type InjectionLocationEnum = InjectionLocationEnum$;
+  export type OAuth2Config = OAuth2Config$;
+  export type OAuth2UpdateConfig = OAuth2UpdateConfig$;
+}
 export declare namespace Environments {
-  export interface CreateEnvironmentRequest extends CreateEnvironmentRequest$ {}
-  export interface Environment extends Environment$ {}
+  export type CreateEnvironmentRequest = CreateEnvironmentRequest$;
+  export type Environment = Environment$;
   export type EnvironmentDeleteResponse = EnvironmentDeleteResponse$;
   export type EnvironmentFile = EnvironmentFile$;
   export type EnvironmentListResponse = EnvironmentListResponse$;
   export type GetEnvironmentFilesResponse = GetEnvironmentFilesResponse$;
-  export namespace CreateEnvironmentRequest {
-    export type Allowlist = Allowlist$;
-  }
-  export namespace Environment {
-    export type Allowlist = Allowlist$2;
-  }
+  export type ListEnvironmentsResponse = ListEnvironmentsResponse$;
 }
 export declare namespace Interactions {
   export type AllowedTools = AllowedTools$;
@@ -643,7 +787,6 @@ export declare namespace Interactions {
   export type GoogleSearchResult = GoogleSearchResult$;
   export interface GoogleSearchResultStep extends GoogleSearchResultStep$ {}
   export type HarmCategory = HarmCategory$;
-  export type ImageConfig = ImageConfig$;
   export type ImageContent = ImageContent$;
   export type ImageResponseFormat = ImageResponseFormat$;
   export type Interaction = Interaction$;
@@ -651,6 +794,10 @@ export declare namespace Interactions {
   export type InteractionCompletedEvent = InteractionCompletedEvent$;
   export type InteractionCreatedEvent = InteractionCreatedEvent$;
   export type InteractionCreateParams = InteractionCreateParams$;
+  export type InteractionCreateParamsNonStreaming =
+    InteractionCreateParamsNonStreaming$;
+  export type InteractionCreateParamsStreaming =
+    InteractionCreateParamsStreaming$;
   export type InteractionDeleteParams = InteractionDeleteParams$;
   export type InteractionDeleteResponse = InteractionDeleteResponse$;
   export type InteractionGetParams = InteractionGetParams$;
@@ -668,7 +815,9 @@ export declare namespace Interactions {
   export type ProcessingResultStep = ProcessingResultStep$;
   export type RetrievalCallArguments = RetrievalCallArguments$;
   export interface RetrievalCallDelta extends RetrievalCallDelta$ {}
+  export interface RetrievalCallStep extends RetrievalCallStep$ {}
   export type RetrievalResultDelta = RetrievalResultDelta$;
+  export type RetrievalResultStep = RetrievalResultStep$;
   export type SafetySetting = SafetySetting$;
   export type SpeechConfig = SpeechConfig$;
   export type Step = Step$;
@@ -696,6 +845,9 @@ export declare namespace Interactions {
   export type VideoResponseFormat = VideoResponseFormat$;
   export type WebhookConfig = WebhookConfig$;
   export type WordInfo = WordInfo$;
+  export namespace Annotation {
+    export type SpeechMetadata = SpeechMetadata$;
+  }
   export namespace CodeExecutionCallStep {
     export type Arguments = Arguments$;
   }
@@ -711,8 +863,14 @@ export declare namespace Interactions {
     }
   }
   export namespace Environment {
-    export type Allowlist = Allowlist$3;
+    export interface EnvironmentNetworkEgressAllowlist
+      extends EnvironmentNetworkEgressAllowlist$
+    {}
+    export type EnvVar = EnvVar$;
     export type Source = Source$;
+    export namespace EnvironmentNetworkEgressAllowlist {
+      export type AllowlistEntry = AllowlistEntry$;
+    }
   }
   export namespace ErrorEvent {
     export type Error = Error$2;
@@ -741,16 +899,35 @@ export declare namespace Interactions {
   export namespace GoogleSearchResultStep {
     export type Result = Result$2;
   }
+  export namespace InteractionCreateParams {
+    export type CreateAgentInteractionParams = CreateAgentInteractionParams$;
+    export type CreateAgentInteractionParamsNonStreaming =
+      CreateAgentInteractionParamsNonStreaming$2;
+    export type CreateAgentInteractionParamsStreaming =
+      CreateAgentInteractionParamsStreaming$2;
+    export type CreateModelInteractionParams = CreateModelInteractionParams$;
+    export type CreateModelInteractionParamsNonStreaming =
+      CreateModelInteractionParamsNonStreaming$2;
+    export type CreateModelInteractionParamsStreaming =
+      CreateModelInteractionParamsStreaming$2;
+    export type InteractionCreateParamsNonStreaming =
+      InteractionCreateParamsNonStreaming$;
+    export type InteractionCreateParamsStreaming =
+      InteractionCreateParamsStreaming$;
+  }
   export namespace InteractionGetParams {
     export type InteractionGetParamsNonStreaming =
-      InteractionGetParamsNonStreaming$2;
-    export type InteractionGetParamsStreaming = InteractionGetParamsStreaming$2;
+      InteractionGetParamsNonStreaming$;
+    export type InteractionGetParamsStreaming = InteractionGetParamsStreaming$;
   }
   export namespace PlaceCitation {
     export type ReviewSnippet = ReviewSnippet$3;
   }
   export namespace RetrievalCallDelta {
     export type Arguments = Arguments$4;
+  }
+  export namespace RetrievalCallStep {
+    export type Arguments = Arguments$5;
   }
   export namespace StepDelta {
     export type ArgumentsDelta = ArgumentsDelta$;
@@ -797,7 +974,7 @@ export declare namespace Interactions {
     export type Verbatim = Verbatim$;
   }
   export namespace URLContextCallStep {
-    export type Arguments = Arguments$5;
+    export type Arguments = Arguments$6;
   }
   export namespace URLContextResultStep {
     export type Result = Result$3;
@@ -829,6 +1006,26 @@ export declare namespace Triggers {
   export type TriggerRunParams = TriggerRunParams$;
   export type TriggerUpdate = TriggerUpdate$;
   export type TriggerUpdateParams = TriggerUpdateParams$;
+}
+export declare namespace Voices {
+  export type AudioData = AudioData$;
+  export interface CreateVoiceRequest extends CreateVoiceRequest$ {}
+  export type Pitch = Pitch$;
+  export type PromptedVoice = PromptedVoice$;
+  export type ReplicatedVoice = ReplicatedVoice$;
+  export type VoiceCreateParams = VoiceCreateParams$;
+  export type VoiceDeleteParams = VoiceDeleteParams$;
+  export type VoiceDeleteResponse = VoiceDeleteResponse$;
+  export type VoiceGetParams = VoiceGetParams$;
+  export type VoiceListParams = VoiceListParams$;
+  export interface VoiceListResponse extends VoiceListResponse$ {}
+  export type VoiceType = VoiceType$;
+  export namespace CreateVoiceRequest {
+    export type Voice = Voice$;
+  }
+  export namespace VoiceListResponse {
+    export type Voice = Voice$2;
+  }
 }
 export declare namespace Webhooks {
   export type PingWebhookRequest = PingWebhookRequest$;

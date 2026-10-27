@@ -12,22 +12,22 @@
 
 export type ListWebhooksGlobals = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
 };
 
 export type ListWebhooksRequest = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
   /**
-   * Optional. The maximum number of webhooks to return. The service may return fewer than
+   * Optional. The maximum number of webhooks to return. The service may return
    *
    * @remarks
-   * this value. If unspecified, at most 50 webhooks will be returned.
-   * The maximum value is 1000.
+   * fewer than this value. If unspecified, at most 50 webhooks will be
+   * returned. The maximum value is 1000.
    */
   page_size?: number | undefined;
   /**

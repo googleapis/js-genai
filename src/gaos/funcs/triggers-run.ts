@@ -91,12 +91,12 @@ async function $do(
       payload.api_version ?? client._options.api_version,
       { explode: false, charEncoding: "percent" },
     ),
-    trigger_id: encodeSimple("trigger_id", payload.trigger_id, {
+    triggerId: encodeSimple("triggerId", payload.trigger_id, {
       explode: false,
       charEncoding: "percent",
     }),
   };
-  const path = pathToFunc("/{api_version}/triggers/{trigger_id}/executions")(
+  const path = pathToFunc("/{api_version}/triggers/{triggerId}/executions")(
     pathParams,
   );
 
@@ -169,9 +169,9 @@ async function $do(
     | InvalidRequestError
     | UnexpectedClientError
   >(
-    M.json<triggers.TriggerExecution>(200),
     M.fail("4XX"),
     M.fail("5XX"),
+    M.json<triggers.TriggerExecution>("default"),
   )(response, req);
   if (!result.ok) {
     return [result, { status: "complete", request: req, response }];

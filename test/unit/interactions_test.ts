@@ -8,6 +8,8 @@ import {
   GeminiNextGenInteractions,
   GoogleGenAIParentClient,
 } from '../../src/gaos/google-genai.js';
+import {GoogleGenAIAuthHook} from '../../src/gaos/hooks/google-genai-auth.js';
+import {HTTPClient} from '../../src/gaos/lib/http.js';
 
 describe('Interactions resource', () => {
   let parentClient: jasmine.SpyObj<GoogleGenAIParentClient>;
@@ -77,6 +79,27 @@ describe('Interactions resource', () => {
       expect(request.url).toBe('https://my.base.host/somev1/interactions');
       expect(request.method.toLowerCase()).toEqual('post');
       expect(parentClient.getAuthHeaders).toHaveBeenCalled();
+    });
+
+    it('should use custom fetch from parentClient when provided', async () => {
+      const customFetchSpy = jasmine
+        .createSpy('customFetch')
+        .and.callFake(() => Promise.resolve(mockJsonResponse()));
+      parentClient.getFetch = jasmine
+        .createSpy('getFetch')
+        .and.returnValue(customFetchSpy);
+      interactions = new GeminiNextGenInteractions(parentClient);
+
+      await interactions.create({
+        agent: 'some-agent',
+        input: 'some input',
+      });
+
+      expect(customFetchSpy).toHaveBeenCalled();
+      expect(fetchSpy).not.toHaveBeenCalled();
+      const [request] = customFetchSpy.calls.first().args as [Request];
+      expect(request.url).toBe('https://my.base.host/somev1/interactions');
+      expect(request.method.toLowerCase()).toEqual('post');
     });
 
     it('should retry the call', async () => {
@@ -291,6 +314,140 @@ describe('Interactions resource', () => {
         }
       }
       expect(received).toBe(largeData);
+    });
+  });
+
+  describe('timeout and Undici dispatcher', () => {
+    it('should inherit timeout from parentClient.getTimeout()', () => {
+      parentClient.getTimeout = jasmine
+        .createSpy('getTimeout')
+        .and.returnValue(600000);
+      const customInteractions = new GeminiNextGenInteractions(parentClient);
+      // The underlying GAOS client is created lazily on first use.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const sdk = (customInteractions as any).getClient(undefined);
+      expect(parentClient.getTimeout).toHaveBeenCalled();
+      expect(sdk._options.timeout_ms).toBe(600000);
+    });
+
+    it('should attach Undici dispatcher with timeouts disabled in GoogleGenAIAuthHook', () => {
+      const hook = new GoogleGenAIAuthHook();
+      const result = hook.beforeCreateRequest(
+        {
+          base_url: 'https://my.base.host',
+          operation_id: 'createInteraction',
+          o_auth2_scopes: null,
+          retry_config: {strategy: 'none'},
+          resolved_security: null,
+          options: {http_client: new HTTPClient()},
+        },
+        {
+          url: new URL('https://my.base.host/v1beta/interactions'),
+          options: {method: 'POST'},
+        },
+      );
+
+      const options = result.options as Record<string, unknown>;
+      const dispatcher = options['dispatcher'] as {
+        dispatch: (opts: Record<string, unknown>, handler: unknown) => unknown;
+      };
+      expect(dispatcher).toBeDefined();
+
+      const globalDispatcherSymbol = Symbol.for('undici.globalDispatcher.1');
+      const globalRecord = globalThis as Record<symbol, unknown>;
+      const originalGlobalDispatcher = globalRecord[globalDispatcherSymbol];
+      const dispatchSpy = jasmine
+        .createSpy('dispatch')
+        .and.returnValue('dispatched');
+      globalRecord[globalDispatcherSymbol] = {dispatch: dispatchSpy};
+      try {
+        const handler = {};
+        const dispatched = dispatcher.dispatch(
+          {path: '/v1beta/interactions', method: 'POST'},
+          handler,
+        );
+        expect(dispatched).toBe('dispatched');
+        expect(dispatchSpy).toHaveBeenCalledWith(
+          {
+            path: '/v1beta/interactions',
+            method: 'POST',
+            headersTimeout: 0,
+            bodyTimeout: 0,
+          },
+          handler,
+        );
+      } finally {
+        globalRecord[globalDispatcherSymbol] = originalGlobalDispatcher;
+      }
+    });
+
+    it('should keep Undici timeouts disabled when timeout_ms is set in GoogleGenAIAuthHook', () => {
+      const hook = new GoogleGenAIAuthHook();
+      const result = hook.beforeCreateRequest(
+        {
+          base_url: 'https://my.base.host',
+          operation_id: 'createInteraction',
+          o_auth2_scopes: null,
+          retry_config: {strategy: 'none'},
+          resolved_security: null,
+          options: {http_client: new HTTPClient(), timeout_ms: 2400000},
+          timeout_ms: 2400000,
+        },
+        {
+          url: new URL('https://my.base.host/v1beta/interactions'),
+          options: {method: 'POST'},
+        },
+      );
+
+      const options = result.options as Record<string, unknown>;
+      const dispatcher = options['dispatcher'] as {
+        dispatch: (opts: Record<string, unknown>, handler: unknown) => unknown;
+      };
+      expect(dispatcher).toBeDefined();
+
+      const globalDispatcherSymbol = Symbol.for('undici.globalDispatcher.1');
+      const globalRecord = globalThis as Record<symbol, unknown>;
+      const originalGlobalDispatcher = globalRecord[globalDispatcherSymbol];
+      const dispatchSpy = jasmine.createSpy('dispatch');
+      globalRecord[globalDispatcherSymbol] = {dispatch: dispatchSpy};
+      try {
+        const handler = {};
+        dispatcher.dispatch({path: '/v1beta/interactions'}, handler);
+        expect(dispatchSpy).toHaveBeenCalledWith(
+          {
+            path: '/v1beta/interactions',
+            headersTimeout: 0,
+            bodyTimeout: 0,
+          },
+          handler,
+        );
+      } finally {
+        globalRecord[globalDispatcherSymbol] = originalGlobalDispatcher;
+      }
+    });
+
+    it('should not attach Undici dispatcher when custom fetcher is provided on HTTPClient', () => {
+      const hook = new GoogleGenAIAuthHook();
+      const customHttpClient = new HTTPClient({
+        fetcher: () => Promise.resolve(mockJsonResponse()),
+      });
+      const result = hook.beforeCreateRequest(
+        {
+          base_url: 'https://my.base.host',
+          operation_id: 'createInteraction',
+          o_auth2_scopes: null,
+          retry_config: {strategy: 'none'},
+          resolved_security: null,
+          options: {http_client: customHttpClient},
+        },
+        {
+          url: new URL('https://my.base.host/v1beta/interactions'),
+          options: {method: 'POST'},
+        },
+      );
+
+      const options = result.options as Record<string, unknown>;
+      expect(options['dispatcher']).toBeUndefined();
     });
   });
 });
