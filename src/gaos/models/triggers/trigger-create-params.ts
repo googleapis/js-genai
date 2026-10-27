@@ -13,24 +13,9 @@
 import * as interactions from "../interactions/index.js";
 
 /**
- * Required. The interaction request template to be executed.
- */
-export type Interaction =
-  | interactions.CreateAgentInteraction
-  | interactions.CreateModelInteraction;
-
-/**
  * Parameters for creating a trigger.
  */
 export type TriggerCreateParams = {
-  /**
-   * Required. The cron schedule on which the trigger should run. Standard cron format.
-   */
-  schedule: string;
-  /**
-   * Required. Time zone in which the schedule should be interpreted.
-   */
-  time_zone: string;
   /**
    * Optional. The display name of the trigger.
    */
@@ -40,17 +25,29 @@ export type TriggerCreateParams = {
    */
   environment_id?: string | undefined;
   /**
-   * Optional. The maximum number of consecutive failures allowed before the trigger is automatically paused (status becomes ERROR).
-   */
-  max_consecutive_failures?: number | undefined;
-  /**
    * Optional. The execution timeout for the triggered interaction.
    */
   execution_timeout_seconds?: number | undefined;
   /**
-   * Required. The interaction request template to be executed.
+   * Interaction for generating the completion using agents.
    */
-  interaction:
-    | interactions.CreateAgentInteraction
-    | interactions.CreateModelInteraction;
+  interaction: interactions.CreateAgentInteraction;
+  /**
+   * Optional. The maximum number of consecutive failures allowed before
+   *
+   * @remarks
+   * the trigger is automatically paused (status becomes ERROR).
+   */
+  max_consecutive_failures?: number | undefined;
+  /**
+   * Required. The cron schedule on which the trigger should run.
+   *
+   * @remarks
+   * Standard cron format.
+   */
+  schedule: string;
+  /**
+   * Required. Time zone in which the schedule should be interpreted.
+   */
+  time_zone: string;
 };

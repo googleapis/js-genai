@@ -65,95 +65,6 @@ export function authConfigToMldev(
   return toObject;
 }
 
-export function blobToMldev(fromObject: types.Blob): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromData = common.getValueByPath(fromObject, ['data']);
-  if (fromData != null) {
-    common.setValueByPath(toObject, ['data'], fromData);
-  }
-
-  if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
-    throw new Error(
-      'displayName parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
-    );
-  }
-
-  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
-  if (fromMimeType != null) {
-    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
-  }
-
-  return toObject;
-}
-
-export function codeExecutionResultToVertex(
-  fromObject: types.CodeExecutionResult,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromOutcome = common.getValueByPath(fromObject, ['outcome']);
-  if (fromOutcome != null) {
-    common.setValueByPath(toObject, ['outcome'], fromOutcome);
-  }
-
-  const fromOutput = common.getValueByPath(fromObject, ['output']);
-  if (fromOutput != null) {
-    common.setValueByPath(toObject, ['output'], fromOutput);
-  }
-
-  if (common.getValueByPath(fromObject, ['id']) !== undefined) {
-    throw new Error(
-      'id parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
-    );
-  }
-
-  return toObject;
-}
-
-export function computerUseToVertex(
-  fromObject: types.ComputerUse,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromEnablePromptInjectionDetection = common.getValueByPath(fromObject, [
-    'enablePromptInjectionDetection',
-  ]);
-  if (fromEnablePromptInjectionDetection != null) {
-    common.setValueByPath(
-      toObject,
-      ['enablePromptInjectionDetection'],
-      fromEnablePromptInjectionDetection,
-    );
-  }
-
-  const fromEnvironment = common.getValueByPath(fromObject, ['environment']);
-  if (fromEnvironment != null) {
-    common.setValueByPath(toObject, ['environment'], fromEnvironment);
-  }
-
-  const fromExcludedPredefinedFunctions = common.getValueByPath(fromObject, [
-    'excludedPredefinedFunctions',
-  ]);
-  if (fromExcludedPredefinedFunctions != null) {
-    common.setValueByPath(
-      toObject,
-      ['excludedPredefinedFunctions'],
-      fromExcludedPredefinedFunctions,
-    );
-  }
-
-  if (
-    common.getValueByPath(fromObject, ['disabledSafetyPolicies']) !== undefined
-  ) {
-    throw new Error(
-      'disabledSafetyPolicies parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
-    );
-  }
-
-  return toObject;
-}
-
 export function contentToMldev(
   fromObject: types.Content,
 ): Record<string, unknown> {
@@ -456,54 +367,6 @@ export function deleteCachedContentResponseFromVertex(
   ]);
   if (fromSdkHttpResponse != null) {
     common.setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
-  }
-
-  return toObject;
-}
-
-export function executableCodeToVertex(
-  fromObject: types.ExecutableCode,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromCode = common.getValueByPath(fromObject, ['code']);
-  if (fromCode != null) {
-    common.setValueByPath(toObject, ['code'], fromCode);
-  }
-
-  const fromLanguage = common.getValueByPath(fromObject, ['language']);
-  if (fromLanguage != null) {
-    common.setValueByPath(toObject, ['language'], fromLanguage);
-  }
-
-  if (common.getValueByPath(fromObject, ['id']) !== undefined) {
-    throw new Error(
-      'id parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
-    );
-  }
-
-  return toObject;
-}
-
-export function fileDataToMldev(
-  fromObject: types.FileData,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
-    throw new Error(
-      'displayName parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
-    );
-  }
-
-  const fromFileUri = common.getValueByPath(fromObject, ['fileUri']);
-  if (fromFileUri != null) {
-    common.setValueByPath(toObject, ['fileUri'], fromFileUri);
-  }
-
-  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
-  if (fromMimeType != null) {
-    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
   }
 
   return toObject;
@@ -880,11 +743,7 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
 
   const fromFileData = common.getValueByPath(fromObject, ['fileData']);
   if (fromFileData != null) {
-    common.setValueByPath(
-      toObject,
-      ['fileData'],
-      fileDataToMldev(fromFileData),
-    );
+    common.setValueByPath(toObject, ['fileData'], fromFileData);
   }
 
   const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
@@ -905,11 +764,7 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
 
   const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
   if (fromInlineData != null) {
-    common.setValueByPath(
-      toObject,
-      ['inlineData'],
-      blobToMldev(fromInlineData),
-    );
+    common.setValueByPath(toObject, ['inlineData'], fromInlineData);
   }
 
   const fromText = common.getValueByPath(fromObject, ['text']);
@@ -939,6 +794,20 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
   const fromPartMetadata = common.getValueByPath(fromObject, ['partMetadata']);
   if (fromPartMetadata != null) {
     common.setValueByPath(toObject, ['partMetadata'], fromPartMetadata);
+  }
+
+  const fromMediaProcessing = common.getValueByPath(fromObject, [
+    'mediaProcessing',
+  ]);
+  if (fromMediaProcessing != null) {
+    common.setValueByPath(toObject, ['mediaProcessing'], fromMediaProcessing);
+  }
+
+  const fromSpeechMetadata = common.getValueByPath(fromObject, [
+    'speechMetadata',
+  ]);
+  if (fromSpeechMetadata != null) {
+    common.setValueByPath(toObject, ['speechMetadata'], fromSpeechMetadata);
   }
 
   return toObject;
@@ -984,7 +853,7 @@ export function partToVertex(fromObject: types.Part): Record<string, unknown> {
     common.setValueByPath(
       toObject,
       ['codeExecutionResult'],
-      codeExecutionResultToVertex(fromCodeExecutionResult),
+      fromCodeExecutionResult,
     );
   }
 
@@ -992,11 +861,7 @@ export function partToVertex(fromObject: types.Part): Record<string, unknown> {
     'executableCode',
   ]);
   if (fromExecutableCode != null) {
-    common.setValueByPath(
-      toObject,
-      ['executableCode'],
-      executableCodeToVertex(fromExecutableCode),
-    );
+    common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
   }
 
   const fromFileData = common.getValueByPath(fromObject, ['fileData']);
@@ -1049,6 +914,20 @@ export function partToVertex(fromObject: types.Part): Record<string, unknown> {
     throw new Error(
       'partMetadata parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
     );
+  }
+
+  const fromMediaProcessing = common.getValueByPath(fromObject, [
+    'mediaProcessing',
+  ]);
+  if (fromMediaProcessing != null) {
+    common.setValueByPath(toObject, ['mediaProcessing'], fromMediaProcessing);
+  }
+
+  const fromSpeechMetadata = common.getValueByPath(fromObject, [
+    'speechMetadata',
+  ]);
+  if (fromSpeechMetadata != null) {
+    common.setValueByPath(toObject, ['speechMetadata'], fromSpeechMetadata);
   }
 
   return toObject;
@@ -1267,11 +1146,7 @@ export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
 
   const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
   if (fromComputerUse != null) {
-    common.setValueByPath(
-      toObject,
-      ['computerUse'],
-      computerUseToVertex(fromComputerUse),
-    );
+    common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
   }
 
   const fromEnterpriseWebSearch = common.getValueByPath(fromObject, [

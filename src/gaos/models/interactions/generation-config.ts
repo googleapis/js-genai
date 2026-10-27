@@ -11,6 +11,7 @@
  */
 
 import { ImageConfig } from "./image-config.js";
+import { SpeakerConfig } from "./speaker-config.js";
 import { SpeechConfig } from "./speech-config.js";
 import { ThinkingLevel } from "./thinking-level.js";
 import { ThinkingSummaries } from "./thinking-summaries.js";
@@ -18,6 +19,11 @@ import { ToolChoiceConfig } from "./tool-choice-config.js";
 import { ToolChoiceType } from "./tool-choice-type.js";
 import { TranscriptionConfig } from "./transcription-config.js";
 import { VideoConfig } from "./video-config.js";
+
+/**
+ * Optional. Speech and multi-speaker configuration.
+ */
+export type SpeechConfigUnion = SpeakerConfig | Array<SpeechConfig>;
 
 /**
  * The tool choice configuration.
@@ -43,19 +49,31 @@ export type GenerationConfig = {
    */
   seed?: number | undefined;
   /**
-   * Configuration for speech interaction.
+   * Optional. Speech and multi-speaker configuration.
    */
-  speech_config?: Array<SpeechConfig> | undefined;
+  speech_config?: SpeakerConfig | Array<SpeechConfig> | undefined;
   /**
    * A list of character sequences that will stop output interaction.
    */
   stop_sequences?: Array<string> | undefined;
+  /**
+   * Controls the randomness of the output.
+   *
+   * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
+   */
+  temperature?: number | undefined;
   thinking_level?: ThinkingLevel | undefined;
   thinking_summaries?: ThinkingSummaries | undefined;
   /**
    * The tool choice configuration.
    */
   tool_choice?: ToolChoiceConfig | ToolChoiceType | undefined;
+  /**
+   * The maximum cumulative probability of tokens to consider when sampling.
+   *
+   * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
+   */
+  top_p?: number | undefined;
   /**
    * Configuration for speech recognition (transcription).
    */

@@ -4,36 +4,21 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import {GoogleGenAI} from '@google/genai';
+import {MODEL_FLASH_LITE} from './constants.js';
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
 const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
-
-async function generateContentFromMLDev() {
-  const ai = new GoogleGenAI({vertexai: false, apiKey: GEMINI_API_KEY});
-
-  const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
-    contents: 'Hello!',
-    config: {
-      responseLogprobs: true,
-    },
-  });
-
-  console.debug(JSON.stringify(response));
-}
 
 async function generateContentFromVertexAI() {
   const ai = new GoogleGenAI({
     vertexai: true,
     project: GOOGLE_CLOUD_PROJECT,
-    location: GOOGLE_CLOUD_LOCATION,
+    location: GOOGLE_CLOUD_LOCATION || 'us-central1',
   });
 
   const response = await ai.models.generateContent({
-    // Only 002 models + flash 1.5 8b models are enabled with log probs option.
-    model: 'gemini-1.5-flash-002',
+    model: MODEL_FLASH_LITE,
     contents: 'Hello!',
     config: {
       responseLogprobs: true,
@@ -45,13 +30,9 @@ async function generateContentFromVertexAI() {
 
 async function main() {
   if (GOOGLE_GENAI_USE_VERTEXAI) {
-    await generateContentFromVertexAI().catch((e) =>
-      console.error('got error', e),
-    );
+    await generateContentFromVertexAI();
   } else {
-    await generateContentFromMLDev().catch((e) =>
-      console.error('got error', e),
-    );
+    console.log('Logprobs is not currently supported in Gemini Developer API.');
   }
 }
 

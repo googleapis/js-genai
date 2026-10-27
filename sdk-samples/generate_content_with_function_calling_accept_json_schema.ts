@@ -7,7 +7,9 @@
 import {FunctionCallingConfigMode, GoogleGenAI} from '@google/genai';
 import {z} from 'zod';
 import {zodToJsonSchema} from 'zod-to-json-schema';
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+import {MODEL_FLASH_LITE} from './constants.js';
+
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
 const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
@@ -15,7 +17,7 @@ const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
 async function generateContentFromMLDev() {
   const ai = new GoogleGenAI({vertexai: false, apiKey: GEMINI_API_KEY});
   const response = await ai.models.generateContent({
-    model: 'gemini-2.0-flash',
+    model: MODEL_FLASH_LITE,
     contents: 'Dim the lights so the room feels cozy and warm.',
     config: {
       tools: [
@@ -60,7 +62,7 @@ async function generateContentFromVertexAI() {
   });
 
   const response = await ai.models.generateContent({
-    model: 'gemini-2.0-flash',
+    model: MODEL_FLASH_LITE,
     contents: 'Dim the lights so the room feels cozy and warm.',
     config: {
       tools: [
@@ -99,13 +101,9 @@ async function generateContentFromVertexAI() {
 
 async function main() {
   if (GOOGLE_GENAI_USE_VERTEXAI) {
-    await generateContentFromVertexAI().catch((e) =>
-      console.error('got error', e),
-    );
+    await generateContentFromVertexAI();
   } else {
-    await generateContentFromMLDev().catch((e) =>
-      console.error('got error', e),
-    );
+    await generateContentFromMLDev();
   }
 }
 

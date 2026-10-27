@@ -3,9 +3,11 @@
  * Copyright 2025 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
-import {ContentListUnion, createPartFromUri, GoogleGenAI} from '@google/genai';
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+import {ContentListUnion, createPartFromUri, GoogleGenAI} from '@google/genai';
+import {MODEL_FLASH_LITE} from './constants.js';
+
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
 const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
 
 async function generateContentFromFileUploadMLDev() {
@@ -51,7 +53,7 @@ async function generateContentFromFileUploadMLDev() {
   }
 
   const response = await ai.models.generateContent({
-    model: 'gemini-2.0-flash',
+    model: MODEL_FLASH_LITE,
     contents: content,
   });
 
@@ -63,9 +65,7 @@ async function main() {
     console.log('Vertex AI is not supported for this sample.');
     return;
   } else {
-    await generateContentFromFileUploadMLDev().catch((e) =>
-      console.error('got error', e),
-    );
+    await generateContentFromFileUploadMLDev();
   }
 }
 

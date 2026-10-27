@@ -5,7 +5,7 @@
  */
 import {GoogleGenAI} from '@google/genai';
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
 const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
 
 async function createInteractionsFromMLDev() {
@@ -26,9 +26,7 @@ async function main() {
   if (GOOGLE_GENAI_USE_VERTEXAI) {
     console.log('Interactions API is not yet supported on Vertex');
   } else {
-    await createInteractionsFromMLDev().catch((e) =>
-      console.error('got error', e),
-    );
+    await createInteractionsFromMLDev();
   }
 }
 

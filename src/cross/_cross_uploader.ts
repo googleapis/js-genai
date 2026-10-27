@@ -143,7 +143,8 @@ async function uploadBlobInternal(
         ...(httpOptions?.headers || {}),
         'X-Goog-Upload-Command': uploadCommand,
         'X-Goog-Upload-Offset': String(offset),
-        'Content-Length': String(chunkSize),
+        // Don't set Content-Length: fetch derives it from the body, and a
+        // duplicate is rejected by undici >= 7.26 (#1718).
       };
 
       response = await apiClient.request({

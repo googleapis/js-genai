@@ -85,7 +85,7 @@ async function main() {
       apiKey: GEMINI_API_KEY,
     });
     const model = 'gemini-live-2.5-flash-preview';
-    await live(client, model).catch((e) => console.error('got error', e));
+    await live(client, model);
   }
 }
 

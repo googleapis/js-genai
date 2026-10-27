@@ -25,28 +25,35 @@ import { Tool } from "./tool.js";
 import { WebhookConfig } from "./webhook-config.js";
 
 /**
- * Enforces that the generated response is a JSON object that complies with the JSON schema specified in this field.
+ * Configuration parameters for the agent interaction.
  */
-export type CreateAgentInteractionResponseFormat =
-  | Array<ResponseFormat>
-  | ResponseFormat;
+export type CreateAgentInteractionAgentConfig =
+  | AntigravityAgentConfig
+  | CodeMenderAgentConfig
+  | DeepResearchAgentConfig
+  | DynamicAgentConfig;
 
 /**
- * The environment configuration for the interaction. Can be an object specifying remote environment sources or a string referencing an existing environment ID.
+ * The environment configuration for the interaction. Can be an object
+ *
+ * @remarks
+ * specifying remote environment sources or a string referencing an existing
+ * environment ID.
  */
 export type CreateAgentInteractionEnvironment = Environment | string;
 
 /**
- * Configuration parameters for the agent interaction.
+ * Enforces that the generated response is a JSON object that complies with
+ *
+ * @remarks
+ * the JSON schema specified in this field.
  */
-export type CreateAgentInteractionAgentConfig =
-  | DynamicAgentConfig
-  | DeepResearchAgentConfig
-  | CodeMenderAgentConfig
-  | AntigravityAgentConfig;
+export type CreateAgentInteractionResponseFormat =
+  | ResponseFormat
+  | Array<ResponseFormat>;
 
 /**
- * Parameters for creating agent interactions
+ * Interaction for generating the completion using agents.
  */
 export type CreateAgentInteraction = {
   /**
@@ -54,17 +61,77 @@ export type CreateAgentInteraction = {
    */
   agent: AgentOption;
   /**
-   * Input only. Whether the interaction will be streamed.
+   * Configuration parameters for the agent interaction.
    */
-  stream?: boolean | undefined;
+  agent_config?:
+    | AntigravityAgentConfig
+    | CodeMenderAgentConfig
+    | DeepResearchAgentConfig
+    | DynamicAgentConfig
+    | undefined;
+  /**
+   * Input only. Whether to run the model interaction in the background.
+   */
+  background?: boolean | undefined;
+  /**
+   * The environment configuration for the interaction. Can be an object
+   *
+   * @remarks
+   * specifying remote environment sources or a string referencing an existing
+   * environment ID.
+   */
+  environment?: Environment | string | undefined;
+  /**
+   * The input for the interaction.
+   */
+  input?: InteractionsInput | undefined;
+  /**
+   * The labels with user-defined metadata for the request.
+   *
+   * @remarks
+   *
+   * Label keys and values can be no longer than 63 characters
+   * (Unicode codepoints) and can only contain lowercase letters, numeric
+   * characters, underscores, and dashes. International characters are allowed.
+   * Label values are optional. Label keys must start with a letter.
+   */
+  labels?: { [k: string]: string } | undefined;
+  /**
+   * The ID of the previous interaction, if any.
+   */
+  previous_interaction_id?: string | undefined;
+  /**
+   * Enforces that the generated response is a JSON object that complies with
+   *
+   * @remarks
+   * the JSON schema specified in this field.
+   */
+  response_format?: ResponseFormat | Array<ResponseFormat> | undefined;
+  /**
+   * The mime type of the response. This is required if response_format is set.
+   *
+   * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
+   */
+  response_mime_type?: string | undefined;
+  /**
+   * The requested modalities of the response (TEXT, IMAGE, AUDIO).
+   *
+   * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
+   */
+  response_modalities?: Array<ResponseModality> | undefined;
+  /**
+   * Safety settings for the interaction.
+   */
+  safety_settings?: Array<SafetySetting> | undefined;
+  service_tier?: ServiceTier | undefined;
   /**
    * Input only. Whether to store the response and request for later retrieval.
    */
   store?: boolean | undefined;
   /**
-   * Input only. Whether to run the model interaction in the background.
+   * Input only. Whether the interaction will be streamed.
    */
-  background?: boolean | undefined;
+  stream?: boolean | undefined;
   /**
    * System instruction for the interaction.
    */
@@ -74,53 +141,7 @@ export type CreateAgentInteraction = {
    */
   tools?: Array<Tool> | undefined;
   /**
-   * The requested modalities of the response (TEXT, IMAGE, AUDIO).
-   *
-   * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
-   */
-  response_modalities?: Array<ResponseModality> | undefined;
-  /**
-   * The mime type of the response. This is required if response_format is set.
-   *
-   * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
-   */
-  response_mime_type?: string | undefined;
-  /**
-   * The ID of the previous interaction, if any.
-   */
-  previous_interaction_id?: string | undefined;
-  service_tier?: ServiceTier | undefined;
-  /**
    * Message for configuring webhook events for a request.
    */
   webhook_config?: WebhookConfig | undefined;
-  /**
-   * Enforces that the generated response is a JSON object that complies with the JSON schema specified in this field.
-   */
-  response_format?: Array<ResponseFormat> | ResponseFormat | undefined;
-  /**
-   * The environment configuration for the interaction. Can be an object specifying remote environment sources or a string referencing an existing environment ID.
-   */
-  environment?: Environment | string | undefined;
-  /**
-   * Configuration parameters for the agent interaction.
-   */
-  agent_config?:
-    | DynamicAgentConfig
-    | DeepResearchAgentConfig
-    | CodeMenderAgentConfig
-    | AntigravityAgentConfig
-    | undefined;
-  /**
-   * Safety settings for the interaction.
-   */
-  safety_settings?: Array<SafetySetting> | undefined;
-  /**
-   * The labels with user-defined metadata for the request.
-   */
-  labels?: { [k: string]: string } | undefined;
-  /**
-   * The input for the interaction.
-   */
-  input: InteractionsInput;
 };

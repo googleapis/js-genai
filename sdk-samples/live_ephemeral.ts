@@ -159,7 +159,7 @@ async function main() {
     apiVersion: 'v1alpha',
   });
 
-  await live(client, model).catch((e) => console.error('got error', e));
+  await live(client, model);
 }
 
 main();

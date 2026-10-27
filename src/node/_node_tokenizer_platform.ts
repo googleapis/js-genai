@@ -25,17 +25,21 @@ export class NodeTokenizerCache implements TokenizerCache {
     this.cacheDir = path.join(os.tmpdir(), 'vertexai_tokenizer_model');
   }
 
-  async load(
-    cacheKey: string,
-    expectedHash: string,
-  ): Promise<Uint8Array | null> {
+  // Narrower than `TokenizerCache.load`, which returns `Uint8Array | null` so
+  // that the web implementation can satisfy it too. `Buffer` is a `Uint8Array`,
+  // so this still implements the interface, and stating it here keeps the
+  // native-decode path below from looking like an accident.
+  async load(cacheKey: string, expectedHash: string): Promise<Buffer | null> {
     const filePath = path.join(this.cacheDir, cacheKey);
     try {
       const data = await fs.readFile(filePath);
       const hash = crypto.createHash('sha256').update(data).digest('hex');
 
       if (hash === expectedHash) {
-        return new Uint8Array(data);
+        // Returned as-is rather than copied into a plain `Uint8Array`: keeping
+        // the `Buffer` lets protobufjs select its `BufferReader`, which decodes
+        // strings with native `utf8Slice`.
+        return data;
       }
 
       await this.removeFile(filePath);
@@ -74,7 +78,9 @@ export class NodeTokenizerCache implements TokenizerCache {
  * Node.js implementation of tokenizer file system operations.
  */
 export class NodeTokenizerFileSystem implements TokenizerFileSystem {
-  async fetchFromUrl(url: string): Promise<Uint8Array> {
+  // Narrower than `TokenizerFileSystem.fetchFromUrl` for the same reason as
+  // `NodeTokenizerCache.load` above.
+  async fetchFromUrl(url: string): Promise<Buffer> {
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error(
@@ -82,7 +88,9 @@ export class NodeTokenizerFileSystem implements TokenizerFileSystem {
       );
     }
     const arrayBuffer = await response.arrayBuffer();
-    return new Uint8Array(arrayBuffer);
+    // `Buffer.from` rather than `new Uint8Array` for the same reason as in
+    // `NodeTokenizerCache.load`: it keeps protobufjs on its native decode path.
+    return Buffer.from(arrayBuffer);
   }
 
   async validateHash(data: Uint8Array, expectedHash: string): Promise<boolean> {

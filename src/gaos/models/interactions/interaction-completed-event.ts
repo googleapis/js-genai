@@ -12,8 +12,14 @@
 
 import { InteractionSseEventInteraction } from "./interaction-sse-event-interaction.js";
 
+/**
+ * Signals that the Interaction completed. Sent when the Interaction receives
+ *
+ * @remarks
+ * Complete/Cancel or naturally terminates. No more input can be sent to the
+ * Interaction after this.
+ */
 export type InteractionCompletedEvent = {
-  event_type: "interaction.completed";
   /**
    * The event_id token to be used to resume the interaction stream, from
    *
@@ -21,6 +27,7 @@ export type InteractionCompletedEvent = {
    * this event.
    */
   event_id?: string | undefined;
+  event_type: "interaction.completed";
   /**
    * Partial interaction resource emitted by interaction lifecycle SSE events.
    *

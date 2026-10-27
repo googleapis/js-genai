@@ -13,7 +13,7 @@
 /**
  * Programming language of the `code`.
  */
-export type Language = "python";
+export type Language = "python" | "bash" | (string & {});
 
 /**
  * The arguments to pass to the code execution.

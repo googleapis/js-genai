@@ -65,95 +65,6 @@ export function authConfigToMldev(
   return toObject;
 }
 
-export function blobToMldev(fromObject: types.Blob): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromData = common.getValueByPath(fromObject, ['data']);
-  if (fromData != null) {
-    common.setValueByPath(toObject, ['data'], fromData);
-  }
-
-  if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
-    throw new Error(
-      'displayName parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
-    );
-  }
-
-  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
-  if (fromMimeType != null) {
-    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
-  }
-
-  return toObject;
-}
-
-export function codeExecutionResultToVertex(
-  fromObject: types.CodeExecutionResult,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromOutcome = common.getValueByPath(fromObject, ['outcome']);
-  if (fromOutcome != null) {
-    common.setValueByPath(toObject, ['outcome'], fromOutcome);
-  }
-
-  const fromOutput = common.getValueByPath(fromObject, ['output']);
-  if (fromOutput != null) {
-    common.setValueByPath(toObject, ['output'], fromOutput);
-  }
-
-  if (common.getValueByPath(fromObject, ['id']) !== undefined) {
-    throw new Error(
-      'id parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
-    );
-  }
-
-  return toObject;
-}
-
-export function computerUseToVertex(
-  fromObject: types.ComputerUse,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromEnablePromptInjectionDetection = common.getValueByPath(fromObject, [
-    'enablePromptInjectionDetection',
-  ]);
-  if (fromEnablePromptInjectionDetection != null) {
-    common.setValueByPath(
-      toObject,
-      ['enablePromptInjectionDetection'],
-      fromEnablePromptInjectionDetection,
-    );
-  }
-
-  const fromEnvironment = common.getValueByPath(fromObject, ['environment']);
-  if (fromEnvironment != null) {
-    common.setValueByPath(toObject, ['environment'], fromEnvironment);
-  }
-
-  const fromExcludedPredefinedFunctions = common.getValueByPath(fromObject, [
-    'excludedPredefinedFunctions',
-  ]);
-  if (fromExcludedPredefinedFunctions != null) {
-    common.setValueByPath(
-      toObject,
-      ['excludedPredefinedFunctions'],
-      fromExcludedPredefinedFunctions,
-    );
-  }
-
-  if (
-    common.getValueByPath(fromObject, ['disabledSafetyPolicies']) !== undefined
-  ) {
-    throw new Error(
-      'disabledSafetyPolicies parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
-    );
-  }
-
-  return toObject;
-}
-
 export function contentToMldev(
   fromObject: types.Content,
 ): Record<string, unknown> {
@@ -197,54 +108,6 @@ export function contentToVertex(
   const fromRole = common.getValueByPath(fromObject, ['role']);
   if (fromRole != null) {
     common.setValueByPath(toObject, ['role'], fromRole);
-  }
-
-  return toObject;
-}
-
-export function executableCodeToVertex(
-  fromObject: types.ExecutableCode,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromCode = common.getValueByPath(fromObject, ['code']);
-  if (fromCode != null) {
-    common.setValueByPath(toObject, ['code'], fromCode);
-  }
-
-  const fromLanguage = common.getValueByPath(fromObject, ['language']);
-  if (fromLanguage != null) {
-    common.setValueByPath(toObject, ['language'], fromLanguage);
-  }
-
-  if (common.getValueByPath(fromObject, ['id']) !== undefined) {
-    throw new Error(
-      'id parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
-    );
-  }
-
-  return toObject;
-}
-
-export function fileDataToMldev(
-  fromObject: types.FileData,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
-    throw new Error(
-      'displayName parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
-    );
-  }
-
-  const fromFileUri = common.getValueByPath(fromObject, ['fileUri']);
-  if (fromFileUri != null) {
-    common.setValueByPath(toObject, ['fileUri'], fromFileUri);
-  }
-
-  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
-  if (fromMimeType != null) {
-    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
   }
 
   return toObject;
@@ -481,9 +344,14 @@ export function generationConfigToVertex(
     );
   }
 
-  if (common.getValueByPath(fromObject, ['translationConfig']) !== undefined) {
-    throw new Error(
-      'translationConfig parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+  const fromTranslationConfig = common.getValueByPath(fromObject, [
+    'translationConfig',
+  ]);
+  if (fromTranslationConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['translationConfig'],
+      fromTranslationConfig,
     );
   }
 
@@ -598,6 +466,100 @@ export function liveClientContentToVertex(
   return toObject;
 }
 
+export function liveClientContextUpdateToMldev(
+  fromObject: types.LiveClientContextUpdate,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromSystemInstruction = common.getValueByPath(fromObject, [
+    'systemInstruction',
+  ]);
+  if (fromSystemInstruction != null) {
+    common.setValueByPath(
+      toObject,
+      ['systemInstruction'],
+      contentToMldev(t.tContent(fromSystemInstruction)),
+    );
+  }
+
+  const fromTools = common.getValueByPath(fromObject, ['tools']);
+  if (fromTools != null) {
+    common.setValueByPath(
+      toObject,
+      ['tools'],
+      liveClientContextUpdateToolsToMldev(fromTools),
+    );
+  }
+
+  return toObject;
+}
+
+export function liveClientContextUpdateToVertex(
+  fromObject: types.LiveClientContextUpdate,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromSystemInstruction = common.getValueByPath(fromObject, [
+    'systemInstruction',
+  ]);
+  if (fromSystemInstruction != null) {
+    common.setValueByPath(
+      toObject,
+      ['systemInstruction'],
+      contentToVertex(t.tContent(fromSystemInstruction)),
+    );
+  }
+
+  const fromTools = common.getValueByPath(fromObject, ['tools']);
+  if (fromTools != null) {
+    common.setValueByPath(
+      toObject,
+      ['tools'],
+      liveClientContextUpdateToolsToVertex(fromTools),
+    );
+  }
+
+  return toObject;
+}
+
+export function liveClientContextUpdateToolsToMldev(
+  fromObject: types.LiveClientContextUpdateTools,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromTools = common.getValueByPath(fromObject, ['tools']);
+  if (fromTools != null) {
+    let transformedList = t.tTools(fromTools);
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return toolToMldev(t.tTool(item));
+      });
+    }
+    common.setValueByPath(toObject, ['tools'], transformedList);
+  }
+
+  return toObject;
+}
+
+export function liveClientContextUpdateToolsToVertex(
+  fromObject: types.LiveClientContextUpdateTools,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromTools = common.getValueByPath(fromObject, ['tools']);
+  if (fromTools != null) {
+    let transformedList = t.tTools(fromTools);
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return toolToVertex(t.tTool(item));
+      });
+    }
+    common.setValueByPath(toObject, ['tools'], transformedList);
+  }
+
+  return toObject;
+}
+
 export function liveClientMessageToMldev(
   fromObject: types.LiveClientMessage,
 ): Record<string, unknown> {
@@ -627,16 +589,23 @@ export function liveClientMessageToMldev(
     'realtimeInput',
   ]);
   if (fromRealtimeInput != null) {
-    common.setValueByPath(
-      toObject,
-      ['realtimeInput'],
-      liveClientRealtimeInputToMldev(fromRealtimeInput),
-    );
+    common.setValueByPath(toObject, ['realtimeInput'], fromRealtimeInput);
   }
 
   const fromToolResponse = common.getValueByPath(fromObject, ['toolResponse']);
   if (fromToolResponse != null) {
     common.setValueByPath(toObject, ['toolResponse'], fromToolResponse);
+  }
+
+  const fromContextUpdate = common.getValueByPath(fromObject, [
+    'contextUpdate',
+  ]);
+  if (fromContextUpdate != null) {
+    common.setValueByPath(
+      toObject,
+      ['contextUpdate'],
+      liveClientContextUpdateToMldev(fromContextUpdate),
+    );
   }
 
   return toObject;
@@ -683,57 +652,15 @@ export function liveClientMessageToVertex(
     common.setValueByPath(toObject, ['toolResponse'], fromToolResponse);
   }
 
-  return toObject;
-}
-
-export function liveClientRealtimeInputToMldev(
-  fromObject: types.LiveClientRealtimeInput,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromMediaChunks = common.getValueByPath(fromObject, ['mediaChunks']);
-  if (fromMediaChunks != null) {
-    let transformedList = fromMediaChunks;
-    if (Array.isArray(transformedList)) {
-      transformedList = transformedList.map((item) => {
-        return blobToMldev(item);
-      });
-    }
-    common.setValueByPath(toObject, ['mediaChunks'], transformedList);
-  }
-
-  const fromAudio = common.getValueByPath(fromObject, ['audio']);
-  if (fromAudio != null) {
-    common.setValueByPath(toObject, ['audio'], blobToMldev(fromAudio));
-  }
-
-  const fromAudioStreamEnd = common.getValueByPath(fromObject, [
-    'audioStreamEnd',
+  const fromContextUpdate = common.getValueByPath(fromObject, [
+    'contextUpdate',
   ]);
-  if (fromAudioStreamEnd != null) {
-    common.setValueByPath(toObject, ['audioStreamEnd'], fromAudioStreamEnd);
-  }
-
-  const fromVideo = common.getValueByPath(fromObject, ['video']);
-  if (fromVideo != null) {
-    common.setValueByPath(toObject, ['video'], blobToMldev(fromVideo));
-  }
-
-  const fromText = common.getValueByPath(fromObject, ['text']);
-  if (fromText != null) {
-    common.setValueByPath(toObject, ['text'], fromText);
-  }
-
-  const fromActivityStart = common.getValueByPath(fromObject, [
-    'activityStart',
-  ]);
-  if (fromActivityStart != null) {
-    common.setValueByPath(toObject, ['activityStart'], fromActivityStart);
-  }
-
-  const fromActivityEnd = common.getValueByPath(fromObject, ['activityEnd']);
-  if (fromActivityEnd != null) {
-    common.setValueByPath(toObject, ['activityEnd'], fromActivityEnd);
+  if (fromContextUpdate != null) {
+    common.setValueByPath(
+      toObject,
+      ['contextUpdate'],
+      liveClientContextUpdateToVertex(fromContextUpdate),
+    );
   }
 
   return toObject;
@@ -921,6 +848,11 @@ export function liveClientSetupToMldev(
     common.setValueByPath(toObject, ['safetySettings'], transformedList);
   }
 
+  const fromLabels = common.getValueByPath(fromObject, ['labels']);
+  if (fromLabels != null) {
+    common.setValueByPath(toObject, ['labels'], fromLabels);
+  }
+
   return toObject;
 }
 
@@ -1061,6 +993,12 @@ export function liveClientSetupToVertex(
       });
     }
     common.setValueByPath(toObject, ['safetySettings'], transformedList);
+  }
+
+  if (common.getValueByPath(fromObject, ['labels']) !== undefined) {
+    throw new Error(
+      'labels parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+    );
   }
 
   return toObject;
@@ -1312,6 +1250,11 @@ export function liveConnectConfigToMldev(
     );
   }
 
+  const fromLabels = common.getValueByPath(fromObject, ['labels']);
+  if (parentObject !== undefined && fromLabels != null) {
+    common.setValueByPath(parentObject, ['setup', 'labels'], fromLabels);
+  }
+
   return toObject;
 }
 
@@ -1555,10 +1498,20 @@ export function liveConnectConfigToVertex(
     );
   }
 
-  if (common.getValueByPath(fromObject, ['translationConfig']) !== undefined) {
-    throw new Error(
-      'translationConfig parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+  const fromTranslationConfig = common.getValueByPath(fromObject, [
+    'translationConfig',
+  ]);
+  if (parentObject !== undefined && fromTranslationConfig != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'generationConfig', 'translationConfig'],
+      fromTranslationConfig,
     );
+  }
+
+  const fromLabels = common.getValueByPath(fromObject, ['labels']);
+  if (parentObject !== undefined && fromLabels != null) {
+    common.setValueByPath(parentObject, ['setup', 'labels'], fromLabels);
   }
 
   return toObject;
@@ -1770,7 +1723,7 @@ export function liveSendRealtimeInputParametersToMldev(
     let transformedList = t.tBlobs(fromMedia);
     if (Array.isArray(transformedList)) {
       transformedList = transformedList.map((item) => {
-        return blobToMldev(item);
+        return item;
       });
     }
     common.setValueByPath(toObject, ['mediaChunks'], transformedList);
@@ -1778,11 +1731,7 @@ export function liveSendRealtimeInputParametersToMldev(
 
   const fromAudio = common.getValueByPath(fromObject, ['audio']);
   if (fromAudio != null) {
-    common.setValueByPath(
-      toObject,
-      ['audio'],
-      blobToMldev(t.tAudioBlob(fromAudio)),
-    );
+    common.setValueByPath(toObject, ['audio'], t.tAudioBlob(fromAudio));
   }
 
   const fromAudioStreamEnd = common.getValueByPath(fromObject, [
@@ -1794,11 +1743,7 @@ export function liveSendRealtimeInputParametersToMldev(
 
   const fromVideo = common.getValueByPath(fromObject, ['video']);
   if (fromVideo != null) {
-    common.setValueByPath(
-      toObject,
-      ['video'],
-      blobToMldev(t.tImageBlob(fromVideo)),
-    );
+    common.setValueByPath(toObject, ['video'], t.tImageBlob(fromVideo));
   }
 
   const fromText = common.getValueByPath(fromObject, ['text']);
@@ -2138,11 +2083,7 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
 
   const fromFileData = common.getValueByPath(fromObject, ['fileData']);
   if (fromFileData != null) {
-    common.setValueByPath(
-      toObject,
-      ['fileData'],
-      fileDataToMldev(fromFileData),
-    );
+    common.setValueByPath(toObject, ['fileData'], fromFileData);
   }
 
   const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
@@ -2163,11 +2104,7 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
 
   const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
   if (fromInlineData != null) {
-    common.setValueByPath(
-      toObject,
-      ['inlineData'],
-      blobToMldev(fromInlineData),
-    );
+    common.setValueByPath(toObject, ['inlineData'], fromInlineData);
   }
 
   const fromText = common.getValueByPath(fromObject, ['text']);
@@ -2197,6 +2134,20 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
   const fromPartMetadata = common.getValueByPath(fromObject, ['partMetadata']);
   if (fromPartMetadata != null) {
     common.setValueByPath(toObject, ['partMetadata'], fromPartMetadata);
+  }
+
+  const fromMediaProcessing = common.getValueByPath(fromObject, [
+    'mediaProcessing',
+  ]);
+  if (fromMediaProcessing != null) {
+    common.setValueByPath(toObject, ['mediaProcessing'], fromMediaProcessing);
+  }
+
+  const fromSpeechMetadata = common.getValueByPath(fromObject, [
+    'speechMetadata',
+  ]);
+  if (fromSpeechMetadata != null) {
+    common.setValueByPath(toObject, ['speechMetadata'], fromSpeechMetadata);
   }
 
   return toObject;
@@ -2242,7 +2193,7 @@ export function partToVertex(fromObject: types.Part): Record<string, unknown> {
     common.setValueByPath(
       toObject,
       ['codeExecutionResult'],
-      codeExecutionResultToVertex(fromCodeExecutionResult),
+      fromCodeExecutionResult,
     );
   }
 
@@ -2250,11 +2201,7 @@ export function partToVertex(fromObject: types.Part): Record<string, unknown> {
     'executableCode',
   ]);
   if (fromExecutableCode != null) {
-    common.setValueByPath(
-      toObject,
-      ['executableCode'],
-      executableCodeToVertex(fromExecutableCode),
-    );
+    common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
   }
 
   const fromFileData = common.getValueByPath(fromObject, ['fileData']);
@@ -2307,6 +2254,20 @@ export function partToVertex(fromObject: types.Part): Record<string, unknown> {
     throw new Error(
       'partMetadata parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
     );
+  }
+
+  const fromMediaProcessing = common.getValueByPath(fromObject, [
+    'mediaProcessing',
+  ]);
+  if (fromMediaProcessing != null) {
+    common.setValueByPath(toObject, ['mediaProcessing'], fromMediaProcessing);
+  }
+
+  const fromSpeechMetadata = common.getValueByPath(fromObject, [
+    'speechMetadata',
+  ]);
+  if (fromSpeechMetadata != null) {
+    common.setValueByPath(toObject, ['speechMetadata'], fromSpeechMetadata);
   }
 
   return toObject;
@@ -2584,11 +2545,7 @@ export function toolToVertex(fromObject: types.Tool): Record<string, unknown> {
 
   const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
   if (fromComputerUse != null) {
-    common.setValueByPath(
-      toObject,
-      ['computerUse'],
-      computerUseToVertex(fromComputerUse),
-    );
+    common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
   }
 
   const fromEnterpriseWebSearch = common.getValueByPath(fromObject, [
@@ -2853,6 +2810,11 @@ export function voiceConfigToVertex(
       ['prebuiltVoiceConfig'],
       fromPrebuiltVoiceConfig,
     );
+  }
+
+  const fromVoice = common.getValueByPath(fromObject, ['voice']);
+  if (fromVoice != null) {
+    common.setValueByPath(toObject, ['voice'], fromVoice);
   }
 
   return toObject;

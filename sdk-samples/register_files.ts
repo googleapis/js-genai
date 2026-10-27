@@ -5,8 +5,9 @@
  */
 import {GoogleGenAI} from '@google/genai';
 import {GoogleAuth} from 'google-auth-library';
+import {MODEL_FLASH_LITE} from './constants.js';
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
 const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
 
 async function registerFilesMLDev() {
@@ -17,8 +18,11 @@ async function registerFilesMLDev() {
   // auth: {} will use application default credentials to access GCS.
   // Note: registerFiles is only supported by the Gemini Developer API (MLDev), not Vertex AI.
   const auth = new GoogleAuth({
-    scopes:
-      'https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/devstorage.read_only',
+    scopes: [
+      'https://www.googleapis.com/auth/generative-language',
+      'https://www.googleapis.com/auth/cloud-platform',
+      'https://www.googleapis.com/auth/devstorage.read_only',
+    ],
   });
   console.log(auth);
 
@@ -38,7 +42,7 @@ async function registerFilesMLDev() {
 
   // Add the file to the contents.
   const result = await ai.models.generateContent({
-    model: 'gemini-3-flash-preview',
+    model: MODEL_FLASH_LITE,
     contents: ['can you summarize this file?', {fileData: {fileUri: file.uri}}],
   });
 
@@ -51,8 +55,21 @@ async function main() {
       'registerFiles is only supported by the Gemini Developer API (MLDev), not Vertex AI.',
     );
     return;
-  } else {
-    await registerFilesMLDev().catch((e) => console.error('got error', e));
+  }
+  try {
+    await registerFilesMLDev();
+  } catch (e: unknown) {
+    const err = e as Error & {status?: number};
+    if (
+      err.status === 403 &&
+      err.message?.includes('insufficient authentication scopes')
+    ) {
+      console.warn(
+        'Skipping register_files: ADC credentials lack generative-language scope.',
+      );
+      return;
+    }
+    throw e;
   }
 }
 

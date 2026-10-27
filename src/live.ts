@@ -211,8 +211,8 @@ export class Live {
         void handleWebSocketMessage(
           apiClient,
           (msg: types.LiveServerMessage) => {
-            if (msg.setupComplete && !session.setupComplete) {
-              session.setupComplete = msg.setupComplete;
+            if (msg['setupComplete'] && !session.setupComplete) {
+              session.setupComplete = msg['setupComplete'];
               setupCompleteResolve({});
             }
             if (sessionResolved) {
@@ -531,6 +531,33 @@ export class Session {
 
     const clientMessage: types.LiveClientMessage =
       this.tLiveClienttToolResponse(this.apiClient, params);
+    this.conn.send(JSON.stringify(clientMessage));
+  }
+
+  /**
+    Send a context update message over the established connection.
+
+    @param params - Contains properties `systemInstruction` and/or `tools`.
+
+    @remarks
+    Updates to the context of the current session. Only fields that are set will
+    be updated. Updates are guaranteed to be processed in order with the rest of
+    the inputs.
+
+    @experimental
+   */
+  sendContextUpdate(params: types.LiveClientContextUpdate) {
+    let clientMessage: types.LiveClientMessage = {};
+
+    if (this.apiClient.isVertexAI()) {
+      clientMessage = {
+        'contextUpdate': converters.liveClientContextUpdateToVertex(params),
+      };
+    } else {
+      clientMessage = {
+        'contextUpdate': converters.liveClientContextUpdateToMldev(params),
+      };
+    }
     this.conn.send(JSON.stringify(clientMessage));
   }
 

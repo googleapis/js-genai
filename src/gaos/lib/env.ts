@@ -13,8 +13,8 @@
 import { SDKOptions } from "./config.js";
 
 export interface Env {
-  GOOGLE_GENAI_API_KEY?: string | undefined;
   GOOGLE_GENAI_ACCESS_TOKEN?: string | undefined;
+  GOOGLE_GENAI_API_KEY?: string | undefined;
 
   /**
    * Sets the api_version parameter for all supported operations
