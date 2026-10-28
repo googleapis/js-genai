@@ -11,7 +11,7 @@
 The Google Gen AI JavaScript SDK is designed for
 TypeScript and JavaScript developers to build applications powered by Gemini. The SDK
 supports both the [Gemini Developer API](https://ai.google.dev/gemini-api/docs)
-and [Gemini Enterprise Agent Platform](https://docs.cloud.google.com/gemini-enterprise-agent-platform).
+and [Gemini Enterprise Agent Platform](https://docs.cloud.google.com/gemini-enterprise-agent-platform) (formerly Vertex AI).
 
 > [!WARNING]
 > **Updates to Automatic Function Calling (AFC) in upcoming SDK version:**
@@ -94,9 +94,36 @@ main();
 ## Initialization
 
 The Google Gen AI SDK provides support for both the
-[Google AI Studio](https://ai.google.dev/gemini-api/docs) and
+[Gemini Developer API](https://ai.google.dev/gemini-api/docs) and
 [Gemini Enterprise Agent Platform](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/overview)
  implementations of the Gemini API.
+
+<details>
+<summary><b>Gemini Developer API or Gemini Enterprise Agent Platform?</b></summary>
+
+Both services serve Gemini models through the same `GoogleGenAI` interface.
+Gemini Enterprise Agent Platform was formerly called Vertex AI. The older
+`vertexai: true` option and `GOOGLE_GENAI_USE_VERTEXAI` variable still select
+it.
+
+| | Gemini Developer API | Gemini Enterprise Agent Platform |
+| --- | --- | --- |
+| Select it with | The default | `enterprise: true`, or `GOOGLE_GENAI_USE_ENTERPRISE=true` in Node.js |
+| Authentication | An API key from [Google AI Studio](https://aistudio.google.com/apikey) | [Google Cloud credentials](https://cloud.google.com/docs/authentication) with a `project` and `location`, or an API key (Express mode) |
+| Setup | An API key only | A Google Cloud project with billing and the Vertex AI API enabled. See [Prerequisites](#prerequisites). |
+| Endpoint | `generativelanguage.googleapis.com` | `aiplatform.googleapis.com` for the `global` location, or a regional endpoint for the `location` you set |
+| Browser | Supported, with an API key | `project` and `location` are not supported in browsers |
+| Available only on this service | `ai.files`, `ai.fileSearchStores`, `ai.authTokens.create`, `ai.batches.createEmbeddings`, `ai.live.music` | `ai.models.editImage`, `upscaleImage`, `recontextImage`, `segmentImage` and `computeTokens` |
+
+Models, quotas and pricing differ between the services. See the
+[Gemini Developer API docs](https://ai.google.dev/gemini-api/docs) and the
+[Gemini Enterprise Agent Platform docs](https://docs.cloud.google.com/gemini-enterprise-agent-platform).
+
+Start with the Gemini Developer API if you want an API key and no Google Cloud
+setup. Use Gemini Enterprise Agent Platform if your app runs in a Google Cloud
+project and needs Google Cloud authentication or regional endpoints.
+
+</details>
 
 ### Gemini Developer API
 
