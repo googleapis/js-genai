@@ -121,6 +121,7 @@ describe('Triggers Lifecycle', () => {
         'GET /v1beta/triggers/svc_abc/executions?page_size=5',
       ]);
     } finally {
+      server.closeAllConnections();
       server.close();
       await once(server, 'close');
     }

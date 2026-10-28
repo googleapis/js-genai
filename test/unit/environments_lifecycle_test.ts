@@ -109,6 +109,7 @@ describe('Environments Lifecycle', () => {
         from_environment: 'environments/env_abc_123',
       });
     } finally {
+      server.closeAllConnections();
       server.close();
       await once(server, 'close');
     }
@@ -179,6 +180,7 @@ describe('Environments Lifecycle', () => {
         'GET /v1beta/environments/env_abc_123/files/src/?recursive=true',
       ]);
     } finally {
+      server.closeAllConnections();
       server.close();
       await once(server, 'close');
     }
@@ -220,6 +222,7 @@ describe('Environments Lifecycle', () => {
         'GET /v1beta/environments/env_abc_123/files/main.py?alt=media',
       ]);
     } finally {
+      server.closeAllConnections();
       server.close();
       await once(server, 'close');
     }
@@ -331,6 +334,7 @@ describe('Environments Lifecycle', () => {
       expect(chunkPost.headers['x-goog-upload-offset']).toBe('0');
       expect(chunkPost.body).toBe('hello world');
     } finally {
+      server.closeAllConnections();
       server.close();
       await once(server, 'close');
     }
@@ -392,6 +396,7 @@ describe('Environments Lifecycle', () => {
       expect(res.files.length).toBe(2);
       expect(res.files[0].name).toBe('a.txt');
     } finally {
+      server.closeAllConnections();
       server.close();
       await once(server, 'close');
     }
@@ -521,6 +526,7 @@ describe('Environments Lifecycle', () => {
       expect(chunkPosts[2].body).toBe('hello arraybuffer content');
       expect(chunkPosts[3].body).toBe('hello file path content');
     } finally {
+      server.closeAllConnections();
       server.close();
       await once(server, 'close');
     }

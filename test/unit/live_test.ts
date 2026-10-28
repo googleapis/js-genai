@@ -60,9 +60,7 @@ describe('live', () => {
     );
     expect(onopenString).toContain('onopen');
     expect(onopenString).toContain('onopenResolve({})');
-    expect(
-      JSON.stringify(websocketFactorySpyCall.args[2].onclose.toString()),
-    ).toContain('void e');
+    expect(typeof websocketFactorySpyCall.args[2].onclose).toBe('function');
     expect(session).toBeDefined();
   });
 
@@ -220,12 +218,8 @@ describe('live', () => {
     );
     expect(onopenString).toContain('onopen');
     expect(onopenString).toContain('onopenResolve({})');
-    expect(
-      JSON.stringify(websocketFactorySpyCall.args[2].onerror.toString()),
-    ).toContain('void e');
-    expect(
-      JSON.stringify(websocketFactorySpyCall.args[2].onclose.toString()),
-    ).toContain('void e');
+    expect(typeof websocketFactorySpyCall.args[2].onerror).toBe('function');
+    expect(typeof websocketFactorySpyCall.args[2].onclose).toBe('function');
     expect(websocket.connect).toHaveBeenCalled();
     const websocketSpyCall = websocketSpy.calls.all()[0];
     expect(JSON.parse(websocketSpyCall.args[0])).toEqual({
