@@ -7,6 +7,16 @@
  */
 
 import type { WebSocketFactory } from "../_websocket.js";
+import {
+  CallDeadline,
+  ContinuationTimeoutError,
+  continueStream,
+  continueUnaryInteraction,
+  hopBody,
+  prepareCreateRequest,
+  warnIfIncompleteUnary,
+  withIncompleteStreamWarning,
+} from "../_interactions_continuation.js";
 import * as operations from "./models/operations/index.js";
 import type {
   Agents,
@@ -24,7 +34,12 @@ import {
   GoogleGenAISecurityProvider,
 } from "./hooks/google-genai-auth.js";
 
-import { wrapSDKError } from "./lib/compat-errors.js";
+import {
+  APIConnectionError,
+  APIError,
+  APIUserAbortError,
+  wrapSDKError,
+} from "./lib/compat-errors.js";
 import { Stream } from "./lib/event-streams.js";
 import { HTTPClient, type Fetcher } from "./lib/http.js";
 import { GoogleGenAI } from "./sdk/sdk.js";
@@ -151,6 +166,11 @@ export type GoogleGenAIRequestOptions = {
   /**
    * Sets a timeout, in milliseconds, on HTTP requests made by an SDK method. If
    * `fetchOptions.signal` is set then it will take precedence over this option.
+   *
+   * For `interactions.create()` with automatic continuation enabled (the
+   * default), this bounds the whole call across continuation hops: each hop is
+   * sent with the time left, and once it runs out the call stops with a
+   * `ContinuationInterruptedError`. See `AutomaticContinuationOption`.
    */
   timeout_ms?: number;
   /**
@@ -212,6 +232,77 @@ export type GoogleGenAIInteraction = GoogleGenAIResponseWithSdkHttpResponse<
   Omit<Interactions.Interaction, "steps"> & { steps: Interactions.Step[] }
 >;
 
+/**
+ * SDK-only option of `interactions.create()` controlling automatic
+ * continuation of long decodes.
+ */
+export type AutomaticContinuationOption = {
+  /**
+   * Defaults to `true`. When `true`, the SDK automatically resumes decoding
+   * across multiple continuation hops whenever a response or stream stops at
+   * the per-request decode token limit (`status: 'requires_continuation'`
+   * with a `continuation_token`) until the interaction completes, reaches
+   * `incomplete` (e.g. `max_output_tokens`), requires action, or fails. Pass
+   * `automatic_continuation: false` to disable: the single server response is
+   * then returned untouched (so callers can drive continuation themselves),
+   * with a one-time console warning when it stops at `requires_continuation`.
+   *
+   * - For `stream: true`, the events of all continuation hops are yielded
+   *   verbatim and in order on the returned `Stream`, including each hop's
+   *   `interaction.created` and intermediate `interaction.completed` (with
+   *   `status: 'requires_continuation'`); check `status` on
+   *   `interaction.completed` events rather than treating the first one as the
+   *   end of the output. A hop that drops before any output was yielded since
+   *   its latest checkpoint is resumed from that checkpoint (up to 3
+   *   consecutive reconnects without progress).
+   * - For unary calls, each continuation hop is a separate interaction on the
+   *   server that only contains that hop's output. The SDK merges the hops
+   *   into one `Interaction`: `steps` are concatenated in hop order, `usage`
+   *   token counts are summed across hops (with `usage.initial_input_tokens`
+   *   set to the first hop's input tokens), and all other fields (`id`,
+   *   `status`, ...) come from the final hop; the final hop's `id` can be
+   *   passed as `previous_interaction_id` to continue the conversation.
+   *   `continuation_ids` lists the ids of every hop in order (the last one is
+   *   `id`); note that `interactions.get(id)` and `interactions.delete(id)`
+   *   act on the final hop only. `previous_interaction_id`, `created` and
+   *   `input` come from the first hop.
+   * - With `store` enabled (the default), each continuation hop sends the hop
+   *   that issued the `continuation_token` as `previous_interaction_id` and
+   *   omits `input` (the server already has it). With `store: false`, the
+   *   original `input` is resent with the token.
+   * - Client-side continuation is skipped for `background: true` and agent
+   *   interactions (`agent` / `agent_config`), whose loops are managed by the
+   *   server. `background: true` with an explicit
+   *   `automatic_continuation: false` is rejected.
+   * - Timeouts: a numeric per-request `timeout_ms` (or `timeout`) in the
+   *   request options is a wall-clock budget for the whole `create()` call.
+   *   Each hop is sent with the time left, and once it runs out the call stops
+   *   with a `ContinuationInterruptedError` (see below) so the work so far can
+   *   be resumed. The client-level `httpOptions.timeout` and the retry options
+   *   apply to each hop separately: transient errors on a continuation hop
+   *   retry that hop using the latest `continuation_token` without restarting
+   *   from the initial request.
+   * - Billing note: with `background: false`, each continuation hop
+   *   re-prefills the conversation and generated prefix, so input tokens are
+   *   billed on every hop (and summed in `usage.total_input_tokens`). If an
+   *   unrecoverable error occurs after one or more hops have completed, those
+   *   completed hops are still billed. For server-managed continuation without
+   *   client-side hop loops, use `background: true` (with `store: true`).
+   * - Errors: a failure on the first request is thrown as usual. A failure
+   *   after progress (a later hop, or a stream after a resumable checkpoint)
+   *   is thrown as `ContinuationInterruptedError` (with the failure as
+   *   `cause`) carrying `continuationToken`, `interactionId` and
+   *   `continuationIds`, plus `partialInteraction` (the completed hops merged,
+   *   for unary calls), so the output already produced is not lost and the
+   *   call can be resumed manually. Running out of the per-request timeout
+   *   after progress is reported the same way.
+   */
+  automatic_continuation?: boolean | undefined;
+};
+
+type CreateInteractionParamsWithOptions = Interactions.InteractionCreateParams &
+  AutomaticContinuationOption;
+
 export class GeminiNextGenInteractions {
   private sdk: GoogleGenAI | undefined;
 
@@ -224,64 +315,173 @@ export class GeminiNextGenInteractions {
   // renders an instantiated type parameter as the inferred object literal,
   // hiding the params type name (and property docs) from editors at matched
   // call sites.
+  /**
+   * Creates a model interaction. Long decodes are continued automatically
+   * across hops and merged into one interaction unless
+   * `automatic_continuation: false` is passed; see
+   * {@link AutomaticContinuationOption}.
+   */
   create(
-    params: Interactions.InteractionCreateParams.CreateModelInteractionParamsNonStreaming,
+    params: Interactions.InteractionCreateParams.CreateModelInteractionParamsNonStreaming &
+      AutomaticContinuationOption,
     options?: GoogleGenAIRequestOptions,
   ): Promise<GoogleGenAIInteraction>;
+  /**
+   * Creates an agent interaction. Agent loops are managed by the server, so
+   * `automatic_continuation` has no effect; see
+   * {@link AutomaticContinuationOption}.
+   */
   create(
-    params: Interactions.InteractionCreateParams.CreateAgentInteractionParamsNonStreaming,
+    params: Interactions.InteractionCreateParams.CreateAgentInteractionParamsNonStreaming &
+      AutomaticContinuationOption,
     options?: GoogleGenAIRequestOptions,
   ): Promise<GoogleGenAIInteraction>;
+  /**
+   * Creates a streaming model interaction. Long decodes are continued
+   * automatically: the returned stream yields the events of every hop unless
+   * `automatic_continuation: false` is passed; see
+   * {@link AutomaticContinuationOption}.
+   */
   create(
-    params: Interactions.InteractionCreateParams.CreateModelInteractionParamsStreaming,
+    params: Interactions.InteractionCreateParams.CreateModelInteractionParamsStreaming &
+      AutomaticContinuationOption,
     options?: GoogleGenAIRequestOptions,
   ): Promise<Stream<Interactions.InteractionSSEEvent>>;
+  /**
+   * Creates a streaming agent interaction. Agent loops are managed by the
+   * server, so `automatic_continuation` has no effect; see
+   * {@link AutomaticContinuationOption}.
+   */
   create(
-    params: Interactions.InteractionCreateParams.CreateAgentInteractionParamsStreaming,
+    params: Interactions.InteractionCreateParams.CreateAgentInteractionParamsStreaming &
+      AutomaticContinuationOption,
     options?: GoogleGenAIRequestOptions,
   ): Promise<Stream<Interactions.InteractionSSEEvent>>;
+  /**
+   * Creates a streaming interaction; see {@link AutomaticContinuationOption}.
+   */
   create(
-    params: Interactions.InteractionCreateParams.InteractionCreateParamsStreaming,
+    params: Interactions.InteractionCreateParams.InteractionCreateParamsStreaming &
+      AutomaticContinuationOption,
     options?: GoogleGenAIRequestOptions,
   ): Promise<Stream<Interactions.InteractionSSEEvent>>;
+  /**
+   * Creates an interaction; see {@link AutomaticContinuationOption}.
+   */
   create(
-    params: Interactions.InteractionCreateParams.InteractionCreateParamsNonStreaming,
+    params: Interactions.InteractionCreateParams.InteractionCreateParamsNonStreaming &
+      AutomaticContinuationOption,
     options?: GoogleGenAIRequestOptions,
   ): Promise<GoogleGenAIInteraction>;
+  /**
+   * Creates an interaction; see {@link AutomaticContinuationOption}.
+   */
   create(
-    params: Interactions.InteractionCreateParams,
+    params: CreateInteractionParamsWithOptions,
     options?: GoogleGenAIRequestOptions,
   ): Promise<GoogleGenAIInteraction | Stream<Interactions.InteractionSSEEvent>>;
   async create(
-    params: Interactions.InteractionCreateParams,
+    params: CreateInteractionParamsWithOptions,
     options?: GoogleGenAIRequestOptions,
   ): Promise<GoogleGenAIInteraction | Stream<Interactions.InteractionSSEEvent>> {
-    const { api_version, ...request } = params;
-    if (request.stream === true) {
-      const response = await wrapSDKCall(() =>
-        this.getClient(api_version).interactions.create(
-          {
-            ...(request as operations.CreateInteractionRequestBody),
-            stream: true,
-            api_version,
-          },
-          toGoogleGenAIRequestOptions(options, true),
-        ),
-      );
-      return wrapStreamErrors(
-        response as Stream<Interactions.InteractionSSEEvent>,
+    const { api_version, automatic_continuation, ...request } = params;
+    // Throws before any request when background: true is combined with an
+    // explicit automatic_continuation: false.
+    const prepared = prepareCreateRequest(
+      request as Record<string, unknown>,
+      automatic_continuation,
+    );
+    // A numeric per-request timeout bounds the whole call (all hops) when
+    // continuation runs; otherwise request options are passed through as-is.
+    const deadline = new CallDeadline(options?.timeout_ms ?? options?.timeout, {
+      enabled: prepared.enableContinuation,
+    });
+    const hopOptions = (): GoogleGenAIRequestOptions | undefined => {
+      if (!deadline.bounded) {
+        return options;
+      }
+      const { timeout: _timeout, ...rest } = options ?? {};
+      return { ...rest, timeout_ms: deadline.hopTimeoutMs() };
+    };
+    const client = this.getClient(api_version);
+
+    if (prepared.stream) {
+      const openHop = async (
+        token?: string,
+        tokenOwnerId?: string,
+      ): Promise<Stream<Interactions.InteractionSSEEvent>> => {
+        const response = await wrapSDKCall(() =>
+          client.interactions.create(
+            {
+              ...(hopBody(
+                prepared,
+                token,
+                tokenOwnerId,
+              ) as operations.CreateInteractionRequestBody),
+              stream: true,
+              api_version,
+            },
+            toGoogleGenAIRequestOptions(hopOptions(), true),
+          ),
+        );
+        return wrapStreamErrors(
+          response as Stream<Interactions.InteractionSSEEvent>,
+        );
+      };
+
+      const firstHop = await openHop();
+      if (!prepared.enableContinuation) {
+        if (prepared.callerToken) {
+          return firstHop;
+        }
+        return streamFromAsyncIterable(withIncompleteStreamWarning(firstHop));
+      }
+      return streamFromAsyncIterable(
+        continueStream(firstHop, openHop, {
+          initialContinuationToken: prepared.callerToken,
+          isConnectionError: (error) =>
+            error instanceof APIConnectionError &&
+            !(error instanceof APIUserAbortError),
+          isFatalError: (error) => error instanceof APIUserAbortError,
+          wrapIterationError: wrapStreamTransportError,
+          deadline,
+        }),
       );
     }
 
-    const response = await unwrapWithSdkHttpResponse(
-      interactionsCreate(
-        this.getClient(api_version),
-        request as operations.CreateInteractionRequestBody,
-        api_version,
-        toGoogleGenAIRequestOptions(options),
-      ),
-    );
-    return addOutputPropertiesIfInteraction(response) as GoogleGenAIInteraction;
+    const sendOnce = async (
+      token?: string,
+      tokenOwnerId?: string,
+    ): Promise<unknown> =>
+      unwrapWithSdkHttpResponse(
+        interactionsCreate(
+          client,
+          hopBody(
+            prepared,
+            token,
+            tokenOwnerId,
+          ) as operations.CreateInteractionRequestBody,
+          api_version,
+          toGoogleGenAIRequestOptions(hopOptions()),
+        ),
+      );
+
+    const response = await sendOnce();
+    if (prepared.enableContinuation) {
+      return (await continueUnaryInteraction(response, sendOnce, {
+        initialContinuationToken: prepared.callerToken,
+        normalizeInteraction: normalizeInteractionShape,
+        finalizeInteraction: addOutputProperties,
+        deadline,
+      })) as GoogleGenAIInteraction;
+    }
+    const result = addOutputPropertiesIfInteraction(
+      response,
+    ) as GoogleGenAIInteraction;
+    if (!prepared.callerToken) {
+      warnIfIncompleteUnary(result);
+    }
+    return result;
   }
 
   get(
@@ -871,6 +1071,57 @@ function wrapStreamErrors<T>(stream: Stream<T>): Stream<T> {
       };
     },
   });
+}
+
+/**
+ * Maps an error raised while reading a hop's events to the SDK's error for a
+ * transport failure. HTTP status errors (already `APIError`s) and the
+ * continuation deadline pass through unchanged; a mid-stream disconnect
+ * (which `fetch` surfaces as a bare `TypeError`) becomes an
+ * `APIConnectionError`, and an abort becomes an `APIUserAbortError`.
+ */
+function wrapStreamTransportError(error: unknown): unknown {
+  const wrapped = wrapSDKError(error);
+  if (
+    wrapped instanceof APIError ||
+    wrapped instanceof ContinuationTimeoutError
+  ) {
+    return wrapped;
+  }
+  if (wrapped instanceof Error && wrapped.name === "AbortError") {
+    return new APIUserAbortError({ message: wrapped.message });
+  }
+  const message = wrapped instanceof Error ? wrapped.message : String(wrapped);
+  return new APIConnectionError({ message, cause: wrapped });
+}
+
+/**
+ * Exposes an async iterable (e.g. the continuation generator) as a `Stream`,
+ * the type the generated client returns for SSE responses. Events are pulled
+ * one at a time as the consumer reads them (no read-ahead), so the next hop is
+ * only opened once the caller asks for more events, and cancelling the stream
+ * (or breaking out of `for await`) closes the current hop's connection.
+ */
+function streamFromAsyncIterable<T>(iterable: AsyncIterable<T>): Stream<T> {
+  const iterator = iterable[Symbol.asyncIterator]();
+  const readable = new ReadableStream<T>(
+    {
+      async pull(controller) {
+        const result = await iterator.next();
+        if (result.done) {
+          controller.close();
+        } else {
+          controller.enqueue(result.value);
+        }
+      },
+      async cancel() {
+        await iterator.return?.();
+      },
+    },
+    { highWaterMark: 0 },
+  );
+  Object.setPrototypeOf(readable, Stream.prototype);
+  return readable as Stream<T>;
 }
 
 function attachSdkHttpResponse<T>(
