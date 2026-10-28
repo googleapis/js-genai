@@ -149,6 +149,7 @@ describe('Voices Lifecycle', () => {
         },
       });
     } finally {
+      server.closeAllConnections();
       server.close();
       await once(server, 'close');
     }

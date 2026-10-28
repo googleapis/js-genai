@@ -195,6 +195,7 @@ describe('Credentials Lifecycle', () => {
         scopes: ['https://www.googleapis.com/auth/cloud-platform'],
       });
     } finally {
+      server.closeAllConnections();
       server.close();
       await once(server, 'close');
     }
