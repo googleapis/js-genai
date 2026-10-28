@@ -18,4 +18,5 @@ export type AgentOption =
   | "deep-research-preview-04-2026"
   | "deep-research-max-preview-04-2026"
   | "antigravity-preview-05-2026"
+  | "antigravity-preview-09-2026"
   | (string & {});

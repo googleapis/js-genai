@@ -20,7 +20,7 @@ async function genericOperationTriggers() {
     time_zone: 'America/Argentina/Buenos_Aires',
     display_name: 'issue-solver',
     interaction: {
-      agent: 'antigravity-preview-05-2026',
+      agent: 'antigravity-preview-09-2026',
       input: 'List all files under /workspace and describe what you find.',
       environment: {
         type: 'remote',
