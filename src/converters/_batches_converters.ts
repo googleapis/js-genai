@@ -9,7 +9,7 @@
 import {ApiClient} from '../_api_client.js';
 import * as common from '../_common.js';
 import * as t from '../_transformers.js';
-import type * as types from '../types.js';
+import * as types from '../types.js';
 
 export function authConfigToMldev(
   fromObject: types.AuthConfig,
@@ -1690,6 +1690,13 @@ export function inlinedResponseFromMldev(
   const fromError = common.getValueByPath(fromObject, ['error']);
   if (fromError != null) {
     common.setValueByPath(toObject, ['error'], fromError);
+  }
+
+  const responseValue = toObject['response'];
+  if (responseValue != null) {
+    const typedResponse = new types.GenerateContentResponse();
+    Object.assign(typedResponse, responseValue);
+    toObject['response'] = typedResponse;
   }
 
   return toObject;
