@@ -24,8 +24,14 @@ import {
 } from "../models/operations/method-params.js";
 import { APIPromise, unwrapAsAPIPromise } from "../types/async.js";
 import { Files } from "./files.js";
+import { Internal } from "./internal.js";
 
 export class Environments extends ClientSDK {
+  private _internal?: Internal;
+  get internal(): Internal {
+    return (this._internal ??= new Internal(this._options));
+  }
+
   private _files?: Files;
   get files(): Files {
     return (this._files ??= new Files(this._options));

@@ -535,6 +535,33 @@ export class Session {
   }
 
   /**
+    Send a context update message over the established connection.
+
+    @param params - Contains properties `systemInstruction` and/or `tools`.
+
+    @remarks
+    Updates to the context of the current session. Only fields that are set will
+    be updated. Updates are guaranteed to be processed in order with the rest of
+    the inputs.
+
+    @experimental
+   */
+  sendContextUpdate(params: types.LiveClientContextUpdate) {
+    let clientMessage: types.LiveClientMessage = {};
+
+    if (this.apiClient.isVertexAI()) {
+      clientMessage = {
+        'contextUpdate': converters.liveClientContextUpdateToVertex(params),
+      };
+    } else {
+      clientMessage = {
+        'contextUpdate': converters.liveClientContextUpdateToMldev(params),
+      };
+    }
+    this.conn.send(JSON.stringify(clientMessage));
+  }
+
+  /**
      Terminates the WebSocket connection.
 
      @experimental

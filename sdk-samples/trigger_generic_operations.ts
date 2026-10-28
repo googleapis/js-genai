@@ -82,7 +82,7 @@ async function genericOperationTriggers() {
   // is in progress
   console.log('Listing executions for trigger:', triggerId);
   const listExecutionsResponse = await ai.triggers.listExecutions(triggerId, {
-    pageSize: 5,
+    page_size: 5,
   });
   const executions = listExecutionsResponse.trigger_executions || [];
   console.log('Trigger executions:', executions);

@@ -48,7 +48,7 @@ export type ImageResponseFormatImageSize =
 /**
  * The MIME type of the image output.
  */
-export type ImageResponseFormatMimeType = "image/jpeg";
+export type ImageResponseFormatMimeType = "image/jpeg" | (string & {});
 
 /**
  * Configuration for image output format.

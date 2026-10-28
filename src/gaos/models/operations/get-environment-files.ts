@@ -12,17 +12,23 @@
 
 export type GetEnvironmentFilesGlobals = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
 };
 
 export type GetEnvironmentFilesRequest = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
+  /**
+   * The ID of the environment whose snapshot to read.
+   */
   environment: string;
+  /**
+   * Path of the file or directory inside the environment workspace, relative to its root (e.g. src).
+   */
   path: string;
   /**
    * Optional. Maximum number of entries to return per page (for directory listing).

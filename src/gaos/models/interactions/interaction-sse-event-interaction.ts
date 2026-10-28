@@ -24,6 +24,9 @@ export type InteractionSseEventInteractionStatus =
   | "failed"
   | "cancelled"
   | "incomplete"
+  | "budget_exceeded"
+  | "queued"
+  | "requires_continuation"
   | (string & {});
 
 /**
@@ -38,6 +41,10 @@ export type InteractionSseEventInteraction = {
    * The agent to interact with.
    */
   agent?: string | undefined;
+  /**
+   * Output only. Opaque token to resume a long decode when status is incomplete.
+   */
+  continuation_token?: string | undefined;
   /**
    * Output only. The time at which the response was created in ISO 8601 format.
    */

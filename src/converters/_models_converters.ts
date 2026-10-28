@@ -67,31 +67,6 @@ export function authConfigToMldev(
   return toObject;
 }
 
-export function blobToMldev(
-  fromObject: types.Blob,
-  _rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromData = common.getValueByPath(fromObject, ['data']);
-  if (fromData != null) {
-    common.setValueByPath(toObject, ['data'], fromData);
-  }
-
-  if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
-    throw new Error(
-      'displayName parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
-    );
-  }
-
-  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
-  if (fromMimeType != null) {
-    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
-  }
-
-  return toObject;
-}
-
 export function candidateFromMldev(
   fromObject: types.Candidate,
   rootObject?: unknown,
@@ -176,6 +151,17 @@ export function candidateFromMldev(
     );
   }
 
+  const fromContinuationToken = common.getValueByPath(fromObject, [
+    'continuationToken',
+  ]);
+  if (fromContinuationToken != null) {
+    common.setValueByPath(
+      toObject,
+      ['continuationToken'],
+      fromContinuationToken,
+    );
+  }
+
   return toObject;
 }
 
@@ -251,50 +237,6 @@ export function computeTokensResponseFromVertex(
       });
     }
     common.setValueByPath(toObject, ['tokensInfo'], transformedList);
-  }
-
-  return toObject;
-}
-
-export function computerUseToVertex(
-  fromObject: types.ComputerUse,
-  _rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromEnablePromptInjectionDetection = common.getValueByPath(fromObject, [
-    'enablePromptInjectionDetection',
-  ]);
-  if (fromEnablePromptInjectionDetection != null) {
-    common.setValueByPath(
-      toObject,
-      ['enablePromptInjectionDetection'],
-      fromEnablePromptInjectionDetection,
-    );
-  }
-
-  const fromEnvironment = common.getValueByPath(fromObject, ['environment']);
-  if (fromEnvironment != null) {
-    common.setValueByPath(toObject, ['environment'], fromEnvironment);
-  }
-
-  const fromExcludedPredefinedFunctions = common.getValueByPath(fromObject, [
-    'excludedPredefinedFunctions',
-  ]);
-  if (fromExcludedPredefinedFunctions != null) {
-    common.setValueByPath(
-      toObject,
-      ['excludedPredefinedFunctions'],
-      fromExcludedPredefinedFunctions,
-    );
-  }
-
-  if (
-    common.getValueByPath(fromObject, ['disabledSafetyPolicies']) !== undefined
-  ) {
-    throw new Error(
-      'disabledSafetyPolicies parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
-    );
   }
 
   return toObject;
@@ -1407,31 +1349,6 @@ export function endpointFromVertex(
   return toObject;
 }
 
-export function fileDataToMldev(
-  fromObject: types.FileData,
-  _rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
-    throw new Error(
-      'displayName parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
-    );
-  }
-
-  const fromFileUri = common.getValueByPath(fromObject, ['fileUri']);
-  if (fromFileUri != null) {
-    common.setValueByPath(toObject, ['fileUri'], fromFileUri);
-  }
-
-  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
-  if (fromMimeType != null) {
-    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
-  }
-
-  return toObject;
-}
-
 export function functionCallToMldev(
   fromObject: types.FunctionCall,
   _rootObject?: unknown,
@@ -1669,10 +1586,9 @@ export function generateContentConfigToMldev(
     );
   }
 
-  if (common.getValueByPath(fromObject, ['labels']) !== undefined) {
-    throw new Error(
-      'labels parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
-    );
+  const fromLabels = common.getValueByPath(fromObject, ['labels']);
+  if (parentObject !== undefined && fromLabels != null) {
+    common.setValueByPath(parentObject, ['labels'], fromLabels);
   }
 
   const fromCachedContent = common.getValueByPath(fromObject, [
@@ -1761,6 +1677,30 @@ export function generateContentConfigToMldev(
     throw new Error(
       'modelArmorConfig parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
     );
+  }
+
+  const fromContinuationToken = common.getValueByPath(fromObject, [
+    'continuationToken',
+  ]);
+  if (parentObject !== undefined && fromContinuationToken != null) {
+    common.setValueByPath(
+      parentObject,
+      ['continuationToken'],
+      fromContinuationToken,
+    );
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['generationOutputConfig']) !== undefined
+  ) {
+    throw new Error(
+      'generationOutputConfig parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
+  }
+
+  const fromStore = common.getValueByPath(fromObject, ['store']);
+  if (parentObject !== undefined && fromStore != null) {
+    common.setValueByPath(parentObject, ['store'], fromStore);
   }
 
   return toObject;
@@ -2027,6 +1967,34 @@ export function generateContentConfigToVertex(
       parentObject,
       ['modelArmorConfig'],
       fromModelArmorConfig,
+    );
+  }
+
+  const fromContinuationToken = common.getValueByPath(fromObject, [
+    'continuationToken',
+  ]);
+  if (parentObject !== undefined && fromContinuationToken != null) {
+    common.setValueByPath(
+      parentObject,
+      ['continuationToken'],
+      fromContinuationToken,
+    );
+  }
+
+  const fromGenerationOutputConfig = common.getValueByPath(fromObject, [
+    'generationOutputConfig',
+  ]);
+  if (parentObject !== undefined && fromGenerationOutputConfig != null) {
+    common.setValueByPath(
+      parentObject,
+      ['outputConfig'],
+      fromGenerationOutputConfig,
+    );
+  }
+
+  if (common.getValueByPath(fromObject, ['store']) !== undefined) {
+    throw new Error(
+      'store parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
     );
   }
 
@@ -3473,9 +3441,14 @@ export function generationConfigToVertex(
     );
   }
 
-  if (common.getValueByPath(fromObject, ['translationConfig']) !== undefined) {
-    throw new Error(
-      'translationConfig parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+  const fromTranslationConfig = common.getValueByPath(fromObject, [
+    'translationConfig',
+  ]);
+  if (fromTranslationConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['translationConfig'],
+      fromTranslationConfig,
     );
   }
 
@@ -4238,11 +4211,7 @@ export function partToMldev(
 
   const fromFileData = common.getValueByPath(fromObject, ['fileData']);
   if (fromFileData != null) {
-    common.setValueByPath(
-      toObject,
-      ['fileData'],
-      fileDataToMldev(fromFileData, rootObject),
-    );
+    common.setValueByPath(toObject, ['fileData'], fromFileData);
   }
 
   const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
@@ -4263,11 +4232,7 @@ export function partToMldev(
 
   const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
   if (fromInlineData != null) {
-    common.setValueByPath(
-      toObject,
-      ['inlineData'],
-      blobToMldev(fromInlineData, rootObject),
-    );
+    common.setValueByPath(toObject, ['inlineData'], fromInlineData);
   }
 
   const fromText = common.getValueByPath(fromObject, ['text']);
@@ -4304,6 +4269,13 @@ export function partToMldev(
   ]);
   if (fromMediaProcessing != null) {
     common.setValueByPath(toObject, ['mediaProcessing'], fromMediaProcessing);
+  }
+
+  const fromSpeechMetadata = common.getValueByPath(fromObject, [
+    'speechMetadata',
+  ]);
+  if (fromSpeechMetadata != null) {
+    common.setValueByPath(toObject, ['speechMetadata'], fromSpeechMetadata);
   }
 
   return toObject;
@@ -4420,6 +4392,13 @@ export function partToVertex(
   ]);
   if (fromMediaProcessing != null) {
     common.setValueByPath(toObject, ['mediaProcessing'], fromMediaProcessing);
+  }
+
+  const fromSpeechMetadata = common.getValueByPath(fromObject, [
+    'speechMetadata',
+  ]);
+  if (fromSpeechMetadata != null) {
+    common.setValueByPath(toObject, ['speechMetadata'], fromSpeechMetadata);
   }
 
   return toObject;
@@ -5252,11 +5231,7 @@ export function toolToVertex(
 
   const fromComputerUse = common.getValueByPath(fromObject, ['computerUse']);
   if (fromComputerUse != null) {
-    common.setValueByPath(
-      toObject,
-      ['computerUse'],
-      computerUseToVertex(fromComputerUse, rootObject),
-    );
+    common.setValueByPath(toObject, ['computerUse'], fromComputerUse);
   }
 
   const fromEnterpriseWebSearch = common.getValueByPath(fromObject, [
@@ -5877,6 +5852,11 @@ export function voiceConfigToVertex(
       ['prebuiltVoiceConfig'],
       fromPrebuiltVoiceConfig,
     );
+  }
+
+  const fromVoice = common.getValueByPath(fromObject, ['voice']);
+  if (fromVoice != null) {
+    common.setValueByPath(toObject, ['voice'], fromVoice);
   }
 
   return toObject;

@@ -11,12 +11,27 @@ export * from '../chats.js';
 export {GoogleGenAIOptions} from '../client.js';
 export * from '../errors.js';
 export {Files} from '../files.js';
+export type {
+  CredentialUpdateParams,
+  DownloadEnvironmentFileParams,
+  GoogleGenAIInteraction,
+  GoogleGenAIRequestOptions,
+  GoogleGenAIResponseWithSdkHttpResponse,
+  GoogleGenAISdkHttpResponse,
+  ListEnvironmentFilesParams,
+  ListEnvironmentFilesResponse,
+  ListEnvironmentsParams,
+  UploadEnvironmentFileParams,
+} from '../gaos/google-genai.js';
 export type {SseMessage, Stream} from '../gaos/lib/event-streams.js';
+export type {BackoffStrategy, RetryConfig} from '../gaos/lib/retries.js';
 export type {
   Agents,
+  Credentials,
   Environments,
   Interactions,
   Triggers,
+  Voices,
   Webhooks,
 } from '../gaos/resources.js';
 export * from '../live.js';

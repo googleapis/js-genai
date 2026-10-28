@@ -12,15 +12,18 @@
 
 export type GetAgentGlobals = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
 };
 
 export type GetAgentRequest = {
   /**
-   * Which version of the API to use.
+   * API version for request routing.
    */
   api_version?: string | undefined;
+  /**
+   * Required. The name of the agent to retrieve.
+   */
   id: string;
 };
