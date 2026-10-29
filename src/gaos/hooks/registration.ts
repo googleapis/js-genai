@@ -22,4 +22,6 @@ export function initHooks(hooks: Hooks) {
   const googleGenAIAuthHook = new GoogleGenAIAuthHook();
   hooks.registerBeforeCreateRequestHook(googleGenAIAuthHook);
   hooks.registerBeforeRequestHook(googleGenAIAuthHook);
+  hooks.registerAfterSuccessHook(googleGenAIAuthHook);
+  hooks.registerAfterErrorHook(googleGenAIAuthHook);
 }
