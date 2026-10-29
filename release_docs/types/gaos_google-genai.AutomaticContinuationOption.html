@@ -1,0 +1,62 @@
+<!DOCTYPE html><html class="default" lang="en" data-base=".."><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>AutomaticContinuationOption | @google/genai</title><meta name="description" content="Documentation for @google/genai"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script><script async src="../assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><div class="table-cell" id="tsd-search"><div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-search"></use></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div><div class="field"><div id="tsd-toolbar-links"></div></div><ul class="results"><li class="state loading">Preparing search index...</li><li class="state failure">The search index is not available</li></ul><a href="../index.html" class="title">@google/genai</a></div><div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-menu"></use></svg></a></div></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><ul class="tsd-breadcrumb"><li><a href="../modules.html">@google/genai</a></li><li><a href="../modules/gaos_google-genai.html">gaos/google-genai</a></li><li><a href="gaos_google-genai.AutomaticContinuationOption.html">AutomaticContinuationOption</a></li></ul><h1>Type Alias AutomaticContinuationOption</h1></div><div class="tsd-signature"><span class="tsd-kind-type-alias">AutomaticContinuationOption</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-kind-property">automatic_continuation</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span> <span class="tsd-signature-symbol">}</span></div><div class="tsd-comment tsd-typography"><p>SDK-only option of <code>interactions.create()</code> controlling automatic
+continuation of long decodes.</p>
+</div><div class="tsd-type-declaration"><h4>Type declaration</h4><ul class="tsd-parameters"><li class="tsd-parameter"><h5><code class="tsd-tag">Optional</code><span class="tsd-kind-property">automatic_continuation</span><a id="__typeautomatic_continuation" class="tsd-anchor"></a><span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span></h5><div class="tsd-comment tsd-typography"><p>Defaults to <code>true</code>. When <code>true</code>, the SDK automatically resumes decoding
+across multiple continuation hops whenever a response or stream stops at
+the per-request decode token limit (<code>status: 'requires_continuation'</code>
+with a <code>continuation_token</code>) until the interaction completes, reaches
+<code>incomplete</code> (e.g. <code>max_output_tokens</code>), requires action, or fails. Pass
+<code>automatic_continuation: false</code> to disable: the single server response is
+then returned untouched (so callers can drive continuation themselves),
+with a one-time console warning when it stops at <code>requires_continuation</code>.</p>
+<ul>
+<li>For <code>stream: true</code>, the events of all continuation hops are yielded
+verbatim and in order on the returned <code>Stream</code>, including each hop's
+<code>interaction.created</code> and intermediate <code>interaction.completed</code> (with
+<code>status: 'requires_continuation'</code>); check <code>status</code> on
+<code>interaction.completed</code> events rather than treating the first one as the
+end of the output. A hop that drops before any output was yielded since
+its latest checkpoint is resumed from that checkpoint (up to 3
+consecutive reconnects without progress).</li>
+<li>For unary calls, each continuation hop is a separate interaction on the
+server that only contains that hop's output. The SDK merges the hops
+into one <code>Interaction</code>: <code>steps</code> are concatenated in hop order, <code>usage</code>
+token counts are summed across hops (with <code>usage.initial_input_tokens</code>
+set to the first hop's input tokens), and all other fields (<code>id</code>,
+<code>status</code>, ...) come from the final hop; the final hop's <code>id</code> can be
+passed as <code>previous_interaction_id</code> to continue the conversation.
+<code>continuation_ids</code> lists the ids of every hop in order (the last one is
+<code>id</code>); note that <code>interactions.get(id)</code> and <code>interactions.delete(id)</code>
+act on the final hop only. <code>previous_interaction_id</code>, <code>created</code> and
+<code>input</code> come from the first hop.</li>
+<li>With <code>store</code> enabled (the default), each continuation hop sends the hop
+that issued the <code>continuation_token</code> as <code>previous_interaction_id</code> and
+omits <code>input</code> (the server already has it). With <code>store: false</code>, the
+original <code>input</code> is resent with the token.</li>
+<li>Client-side continuation is skipped for <code>background: true</code> and agent
+interactions (<code>agent</code> / <code>agent_config</code>), whose loops are managed by the
+server. <code>background: true</code> with an explicit
+<code>automatic_continuation: false</code> is rejected.</li>
+<li>Timeouts: a numeric per-request <code>timeout_ms</code> (or <code>timeout</code>) in the
+request options is a wall-clock budget for the whole <code>create()</code> call.
+Each hop is sent with the time left, and once it runs out the call stops
+with a <code>ContinuationInterruptedError</code> (see below) so the work so far can
+be resumed. The client-level <code>httpOptions.timeout</code> and the retry options
+apply to each hop separately: transient errors on a continuation hop
+retry that hop using the latest <code>continuation_token</code> without restarting
+from the initial request.</li>
+<li>Billing note: with <code>background: false</code>, each continuation hop
+re-prefills the conversation and generated prefix, so input tokens are
+billed on every hop (and summed in <code>usage.total_input_tokens</code>). If an
+unrecoverable error occurs after one or more hops have completed, those
+completed hops are still billed. For server-managed continuation without
+client-side hop loops, use <code>background: true</code> (with <code>store: true</code>).</li>
+<li>Errors: a failure on the first request is thrown as usual. A failure
+after progress (a later hop, or a stream after a resumable checkpoint)
+is thrown as <code>ContinuationInterruptedError</code> (with the failure as
+<code>cause</code>) carrying <code>continuationToken</code>, <code>interactionId</code> and
+<code>continuationIds</code>, plus <code>partialInteraction</code> (the completed hops merged,
+for unary calls), so the output already produced is not lost and the
+call can be resumed manually. Running out of the per-request timeout
+after progress is reported the same way.</li>
+</ul>
+</div><div class="tsd-comment tsd-typography"></div></li></ul></div><div class="tsd-comment tsd-typography"></div><aside class="tsd-sources"><ul><li>Defined in <a href="https://github.com/googleapis/js-genai/blob/v2.32.0/src/gaos/google-genai.ts#L239">src/gaos/google-genai.ts:239</a></li></ul></aside></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div></div><div class="site-menu"><nav class="tsd-navigation"><a href="../modules.html">@google/genai</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer><div class="overlay"></div></body></html>
