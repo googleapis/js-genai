@@ -1304,3 +1304,246 @@ export function includeExtraBodyToRequestInit(
   const mergedBody = deepMerge(currentBodyObject, extraBody);
   requestInit.body = JSON.stringify(mergedBody);
 }
+
+const AGENT_MESSAGE_HEADER = 'agent-message';
+const AGENT_MESSAGE_TOKEN_RE = /^[A-Za-z*][A-Za-z0-9!#$%&'*+.^_`|~:/-]*$/;
+const SEEN_AGENT_MESSAGES_SYMBOL = Symbol.for('google.genai.seenAgentMessages');
+
+// Fallback used if the shared set can't be stored on `globalThis` (for example
+// in a runtime with frozen globals).
+let localSeenAgentMessages: Set<string> | undefined;
+
+/**
+ * Returns the process-wide set of Agent-Message warning strings already
+ * emitted. The set lives on `globalThis` so duplicate copies of this module
+ * share it. Created lazily, never at import time.
+ */
+function getSeenAgentMessages(): Set<string> {
+  const globals = globalThis as Record<symbol, Set<string> | undefined>;
+  let seen = globals[SEEN_AGENT_MESSAGES_SYMBOL] ?? localSeenAgentMessages;
+  if (!seen) {
+    seen = new Set<string>();
+    try {
+      globals[SEEN_AGENT_MESSAGES_SYMBOL] = seen;
+    } catch {
+      localSeenAgentMessages = seen;
+    }
+  }
+  return seen;
+}
+
+/** Clears the set of emitted Agent-Message warnings. For tests. */
+export function clearSeenAgentMessages(): void {
+  getSeenAgentMessages().clear();
+}
+
+function splitUnquoted(text: string, delimiter: string): string[] | null {
+  const parts: string[] = [];
+  let start = 0;
+  let inQuotes = false;
+  let isDisplayString = false;
+  let escaped = false;
+
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (inQuotes) {
+      if (!isDisplayString) {
+        if (escaped) {
+          escaped = false;
+          continue;
+        }
+        if (ch === '\\') {
+          escaped = true;
+          continue;
+        }
+      }
+      if (ch === '"') {
+        inQuotes = false;
+        isDisplayString = false;
+      }
+    } else {
+      if (ch === '"') {
+        inQuotes = true;
+        isDisplayString = i > 0 && text[i - 1] === '%';
+      } else if (ch === delimiter) {
+        parts.push(text.slice(start, i));
+        start = i + 1;
+      }
+    }
+  }
+
+  if (inQuotes) {
+    return null;
+  }
+  parts.push(text.slice(start));
+  return parts;
+}
+
+function unescapeQuotedString(inner: string): string | null {
+  const out: string[] = [];
+  let escaped = false;
+  for (const ch of inner) {
+    if (escaped) {
+      if (ch !== '"' && ch !== '\\') {
+        return null;
+      }
+      out.push(ch);
+      escaped = false;
+    } else if (ch === '\\') {
+      escaped = true;
+    } else if (ch === '"') {
+      return null;
+    } else {
+      out.push(ch);
+    }
+  }
+  if (escaped) {
+    return null;
+  }
+  return out.join('');
+}
+
+function decodePercentEncodedUtf8(inner: string): string {
+  if (!inner.includes('%')) {
+    return inner;
+  }
+  const encoder = new TextEncoder();
+  const bytes: number[] = [];
+  const tokens = inner.split(/(%[0-9A-Fa-f]{2})/);
+  for (const token of tokens) {
+    if (!token) {
+      continue;
+    }
+    if (token.length === 3 && /^%[0-9A-Fa-f]{2}$/.test(token)) {
+      bytes.push(parseInt(token.slice(1), 16));
+    } else {
+      for (const b of encoder.encode(token)) {
+        bytes.push(b);
+      }
+    }
+  }
+  return new TextDecoder('utf-8', {fatal: false}).decode(new Uint8Array(bytes));
+}
+
+function parseStructuredAgentMessageItem(rawItem: string): string | null {
+  const item = rawItem.trim();
+  if (!item) {
+    return null;
+  }
+
+  const parts = splitUnquoted(item, ';');
+  if (!parts || parts.length < 2) {
+    return null;
+  }
+
+  const code = parts[0].trim();
+  if (!AGENT_MESSAGE_TOKEN_RE.test(code)) {
+    return null;
+  }
+
+  let msgValue: string | null = null;
+  for (const rawParam of parts.slice(1)) {
+    const param = rawParam.trim();
+    if (!param) {
+      return null;
+    }
+    const eqIndex = param.indexOf('=');
+    if (eqIndex === -1) {
+      if (!AGENT_MESSAGE_TOKEN_RE.test(param)) {
+        return null;
+      }
+      continue;
+    }
+
+    const key = param.slice(0, eqIndex).trim();
+    const val = param.slice(eqIndex + 1).trim();
+    if (!AGENT_MESSAGE_TOKEN_RE.test(key) || !val) {
+      return null;
+    }
+
+    if (key === 'msg') {
+      if (val.startsWith('%"') && val.endsWith('"') && val.length >= 3) {
+        const inner = val.slice(2, -1);
+        if (inner.includes('"')) {
+          return null;
+        }
+        msgValue = decodePercentEncodedUtf8(inner);
+      } else if (val.startsWith('"') && val.endsWith('"') && val.length >= 2) {
+        msgValue = unescapeQuotedString(val.slice(1, -1));
+        if (msgValue === null) {
+          return null;
+        }
+      } else {
+        return null;
+      }
+    }
+  }
+
+  return msgValue ? msgValue : null;
+}
+
+/**
+ * Parses an Agent-Message response header into warning strings.
+ */
+export function parseAgentMessageHeader(headerValue: string): string[] {
+  if (typeof headerValue !== 'string') {
+    return [];
+  }
+  const stripped = headerValue.trim();
+  if (!stripped) {
+    return [];
+  }
+
+  // Plain-text fallback for headers that aren't RFC 9651 structured items.
+  if (
+    !stripped.includes(';') &&
+    !stripped.includes('=') &&
+    stripped.includes(' ')
+  ) {
+    if (!stripped.startsWith('"') && !stripped.endsWith('"')) {
+      return [stripped];
+    }
+  }
+
+  const items = splitUnquoted(stripped, ',');
+  if (items === null) {
+    return [];
+  }
+
+  const messages: string[] = [];
+  for (const rawItem of items) {
+    const msg = parseStructuredAgentMessageItem(rawItem);
+    if (msg) {
+      messages.push(msg);
+    }
+  }
+  return messages;
+}
+
+/**
+ * Emits deduplicated console warnings from Agent-Message response headers.
+ *
+ * Shared by the GenerateContent client and the Interactions (GAOS) hooks so
+ * each message is shown at most once per process.
+ */
+export function warnFromAgentMessageHeaders(
+  headers: Headers | undefined,
+): void {
+  try {
+    // `Headers.get` is case-insensitive and joins repeated headers with ", ",
+    // which is a valid structured-field list.
+    const headerVal = headers?.get(AGENT_MESSAGE_HEADER);
+    if (!headerVal) {
+      return;
+    }
+    const seen = getSeenAgentMessages();
+    for (const msg of parseAgentMessageHeader(headerVal)) {
+      if (!seen.has(msg)) {
+        seen.add(msg);
+        console.warn(`[Gemini API] ${msg}`);
+      }
+    }
+  } catch {
+    // Ignore header parsing errors so API calls are never disrupted.
+  }
+}
