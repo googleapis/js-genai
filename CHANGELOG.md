@@ -2,6 +2,14 @@
 
 
 
+## [2.33.0](https://github.com/googleapis/js-genai/compare/v2.32.0...v2.33.0) (2026-10-30)
+
+
+### Features
+
+* **cli:** use gemini-3.5-transcribe as default model for transcribe command ([df29944](https://github.com/googleapis/js-genai/commit/df2994493dd07c0d9900e7c46e768e525abc6277))
+* Disable GenerateVideos for Gemini API, update tests/READMEs ([3f65d02](https://github.com/googleapis/js-genai/commit/3f65d021308199fe0af9dd95e8aff4a3b7c89a6c))
+
 ## [2.32.0](https://github.com/googleapis/js-genai/compare/v2.31.0...v2.32.0) (2026-10-29)
 
 
