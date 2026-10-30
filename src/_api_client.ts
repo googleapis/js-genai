@@ -755,6 +755,7 @@ export class ApiClient {
         const {done, value} = await reader.read();
         if (done) {
           if (buffer.trim().length > 0) {
+            throwIfStreamErrorChunk(buffer.trim());
             throw new Error('Incomplete JSON segment at the end');
           }
           break;
@@ -809,6 +810,8 @@ export class ApiClient {
                 `exception parsing stream chunk ${processedChunkString}. ${e}`,
               );
             }
+          } else {
+            throwIfStreamErrorChunk(trimmedEvent);
           }
         }
       }
