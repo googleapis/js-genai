@@ -2514,176 +2514,6 @@ export function generateImagesResponseFromVertex(
   return toObject;
 }
 
-export function generateVideosConfigToMldev(
-  fromObject: types.GenerateVideosConfig,
-  parentObject: Record<string, unknown>,
-  rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromNumberOfVideos = common.getValueByPath(fromObject, [
-    'numberOfVideos',
-  ]);
-  if (parentObject !== undefined && fromNumberOfVideos != null) {
-    common.setValueByPath(
-      parentObject,
-      ['parameters', 'sampleCount'],
-      fromNumberOfVideos,
-    );
-  }
-
-  if (common.getValueByPath(fromObject, ['outputGcsUri']) !== undefined) {
-    throw new Error(
-      'outputGcsUri parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
-    );
-  }
-
-  if (common.getValueByPath(fromObject, ['fps']) !== undefined) {
-    throw new Error(
-      'fps parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
-    );
-  }
-
-  const fromDurationSeconds = common.getValueByPath(fromObject, [
-    'durationSeconds',
-  ]);
-  if (parentObject !== undefined && fromDurationSeconds != null) {
-    common.setValueByPath(
-      parentObject,
-      ['parameters', 'durationSeconds'],
-      fromDurationSeconds,
-    );
-  }
-
-  if (common.getValueByPath(fromObject, ['seed']) !== undefined) {
-    throw new Error(
-      'seed parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
-    );
-  }
-
-  const fromAspectRatio = common.getValueByPath(fromObject, ['aspectRatio']);
-  if (parentObject !== undefined && fromAspectRatio != null) {
-    common.setValueByPath(
-      parentObject,
-      ['parameters', 'aspectRatio'],
-      fromAspectRatio,
-    );
-  }
-
-  const fromResolution = common.getValueByPath(fromObject, ['resolution']);
-  if (parentObject !== undefined && fromResolution != null) {
-    common.setValueByPath(
-      parentObject,
-      ['parameters', 'resolution'],
-      fromResolution,
-    );
-  }
-
-  const fromPersonGeneration = common.getValueByPath(fromObject, [
-    'personGeneration',
-  ]);
-  if (parentObject !== undefined && fromPersonGeneration != null) {
-    common.setValueByPath(
-      parentObject,
-      ['parameters', 'personGeneration'],
-      fromPersonGeneration,
-    );
-  }
-
-  if (common.getValueByPath(fromObject, ['pubsubTopic']) !== undefined) {
-    throw new Error(
-      'pubsubTopic parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
-    );
-  }
-
-  const fromNegativePrompt = common.getValueByPath(fromObject, [
-    'negativePrompt',
-  ]);
-  if (parentObject !== undefined && fromNegativePrompt != null) {
-    common.setValueByPath(
-      parentObject,
-      ['parameters', 'negativePrompt'],
-      fromNegativePrompt,
-    );
-  }
-
-  const fromEnhancePrompt = common.getValueByPath(fromObject, [
-    'enhancePrompt',
-  ]);
-  if (parentObject !== undefined && fromEnhancePrompt != null) {
-    common.setValueByPath(
-      parentObject,
-      ['parameters', 'enhancePrompt'],
-      fromEnhancePrompt,
-    );
-  }
-
-  if (common.getValueByPath(fromObject, ['generateAudio']) !== undefined) {
-    throw new Error(
-      'generateAudio parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
-    );
-  }
-
-  const fromLastFrame = common.getValueByPath(fromObject, ['lastFrame']);
-  if (parentObject !== undefined && fromLastFrame != null) {
-    common.setValueByPath(
-      parentObject,
-      ['instances[0]', 'lastFrame'],
-      imageToMldev(fromLastFrame, rootObject),
-    );
-  }
-
-  const fromReferenceImages = common.getValueByPath(fromObject, [
-    'referenceImages',
-  ]);
-  if (parentObject !== undefined && fromReferenceImages != null) {
-    let transformedList = fromReferenceImages;
-    if (Array.isArray(transformedList)) {
-      transformedList = transformedList.map((item) => {
-        return videoGenerationReferenceImageToMldev(item, rootObject);
-      });
-    }
-    common.setValueByPath(
-      parentObject,
-      ['instances[0]', 'referenceImages'],
-      transformedList,
-    );
-  }
-
-  if (common.getValueByPath(fromObject, ['mask']) !== undefined) {
-    throw new Error(
-      'mask parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
-    );
-  }
-
-  if (common.getValueByPath(fromObject, ['compressionQuality']) !== undefined) {
-    throw new Error(
-      'compressionQuality parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
-    );
-  }
-
-  if (common.getValueByPath(fromObject, ['labels']) !== undefined) {
-    throw new Error(
-      'labels parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
-    );
-  }
-
-  const fromWebhookConfig = common.getValueByPath(fromObject, [
-    'webhookConfig',
-  ]);
-  if (parentObject !== undefined && fromWebhookConfig != null) {
-    common.setValueByPath(parentObject, ['webhookConfig'], fromWebhookConfig);
-  }
-
-  if (common.getValueByPath(fromObject, ['resizeMode']) !== undefined) {
-    throw new Error(
-      'resizeMode parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
-    );
-  }
-
-  return toObject;
-}
-
 export function generateVideosConfigToVertex(
   fromObject: types.GenerateVideosConfig,
   parentObject: Record<string, unknown>,
@@ -2872,47 +2702,6 @@ export function generateVideosConfigToVertex(
   return toObject;
 }
 
-export function generateVideosOperationFromMldev(
-  fromObject: types.GenerateVideosOperation,
-  rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName != null) {
-    common.setValueByPath(toObject, ['name'], fromName);
-  }
-
-  const fromMetadata = common.getValueByPath(fromObject, ['metadata']);
-  if (fromMetadata != null) {
-    common.setValueByPath(toObject, ['metadata'], fromMetadata);
-  }
-
-  const fromDone = common.getValueByPath(fromObject, ['done']);
-  if (fromDone != null) {
-    common.setValueByPath(toObject, ['done'], fromDone);
-  }
-
-  const fromError = common.getValueByPath(fromObject, ['error']);
-  if (fromError != null) {
-    common.setValueByPath(toObject, ['error'], fromError);
-  }
-
-  const fromResponse = common.getValueByPath(fromObject, [
-    'response',
-    'generateVideoResponse',
-  ]);
-  if (fromResponse != null) {
-    common.setValueByPath(
-      toObject,
-      ['response'],
-      generateVideosResponseFromMldev(fromResponse, rootObject),
-    );
-  }
-
-  return toObject;
-}
-
 export function generateVideosOperationFromVertex(
   fromObject: types.GenerateVideosOperation,
   rootObject?: unknown,
@@ -2946,58 +2735,6 @@ export function generateVideosOperationFromVertex(
       ['response'],
       generateVideosResponseFromVertex(fromResponse, rootObject),
     );
-  }
-
-  return toObject;
-}
-
-export function generateVideosParametersToMldev(
-  apiClient: ApiClient,
-  fromObject: types.GenerateVideosParameters,
-  rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromModel = common.getValueByPath(fromObject, ['model']);
-  if (fromModel != null) {
-    common.setValueByPath(
-      toObject,
-      ['_url', 'model'],
-      t.tModel(apiClient, fromModel),
-    );
-  }
-
-  const fromPrompt = common.getValueByPath(fromObject, ['prompt']);
-  if (fromPrompt != null) {
-    common.setValueByPath(toObject, ['instances[0]', 'prompt'], fromPrompt);
-  }
-
-  const fromImage = common.getValueByPath(fromObject, ['image']);
-  if (fromImage != null) {
-    common.setValueByPath(
-      toObject,
-      ['instances[0]', 'image'],
-      imageToMldev(fromImage, rootObject),
-    );
-  }
-
-  const fromVideo = common.getValueByPath(fromObject, ['video']);
-  if (fromVideo != null) {
-    common.setValueByPath(
-      toObject,
-      ['instances[0]', 'video'],
-      videoToMldev(fromVideo, rootObject),
-    );
-  }
-
-  const fromSource = common.getValueByPath(fromObject, ['source']);
-  if (fromSource != null) {
-    generateVideosSourceToMldev(fromSource, toObject, rootObject);
-  }
-
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig != null) {
-    generateVideosConfigToMldev(fromConfig, toObject, rootObject);
   }
 
   return toObject;
@@ -3055,50 +2792,6 @@ export function generateVideosParametersToVertex(
   return toObject;
 }
 
-export function generateVideosResponseFromMldev(
-  fromObject: types.GenerateVideosResponse,
-  rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromGeneratedVideos = common.getValueByPath(fromObject, [
-    'generatedSamples',
-  ]);
-  if (fromGeneratedVideos != null) {
-    let transformedList = fromGeneratedVideos;
-    if (Array.isArray(transformedList)) {
-      transformedList = transformedList.map((item) => {
-        return generatedVideoFromMldev(item, rootObject);
-      });
-    }
-    common.setValueByPath(toObject, ['generatedVideos'], transformedList);
-  }
-
-  const fromRaiMediaFilteredCount = common.getValueByPath(fromObject, [
-    'raiMediaFilteredCount',
-  ]);
-  if (fromRaiMediaFilteredCount != null) {
-    common.setValueByPath(
-      toObject,
-      ['raiMediaFilteredCount'],
-      fromRaiMediaFilteredCount,
-    );
-  }
-
-  const fromRaiMediaFilteredReasons = common.getValueByPath(fromObject, [
-    'raiMediaFilteredReasons',
-  ]);
-  if (fromRaiMediaFilteredReasons != null) {
-    common.setValueByPath(
-      toObject,
-      ['raiMediaFilteredReasons'],
-      fromRaiMediaFilteredReasons,
-    );
-  }
-
-  return toObject;
-}
-
 export function generateVideosResponseFromVertex(
   fromObject: types.GenerateVideosResponse,
   rootObject?: unknown,
@@ -3135,39 +2828,6 @@ export function generateVideosResponseFromVertex(
       toObject,
       ['raiMediaFilteredReasons'],
       fromRaiMediaFilteredReasons,
-    );
-  }
-
-  return toObject;
-}
-
-export function generateVideosSourceToMldev(
-  fromObject: types.GenerateVideosSource,
-  parentObject: Record<string, unknown>,
-  rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromPrompt = common.getValueByPath(fromObject, ['prompt']);
-  if (parentObject !== undefined && fromPrompt != null) {
-    common.setValueByPath(parentObject, ['instances[0]', 'prompt'], fromPrompt);
-  }
-
-  const fromImage = common.getValueByPath(fromObject, ['image']);
-  if (parentObject !== undefined && fromImage != null) {
-    common.setValueByPath(
-      parentObject,
-      ['instances[0]', 'image'],
-      imageToMldev(fromImage, rootObject),
-    );
-  }
-
-  const fromVideo = common.getValueByPath(fromObject, ['video']);
-  if (parentObject !== undefined && fromVideo != null) {
-    common.setValueByPath(
-      parentObject,
-      ['instances[0]', 'video'],
-      videoToMldev(fromVideo, rootObject),
     );
   }
 
@@ -3274,24 +2934,6 @@ export function generatedImageMaskFromVertex(
       });
     }
     common.setValueByPath(toObject, ['labels'], transformedList);
-  }
-
-  return toObject;
-}
-
-export function generatedVideoFromMldev(
-  fromObject: types.GeneratedVideo,
-  rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromVideo = common.getValueByPath(fromObject, ['video']);
-  if (fromVideo != null) {
-    common.setValueByPath(
-      toObject,
-      ['video'],
-      videoFromMldev(fromVideo, rootObject),
-    );
   }
 
   return toObject;
@@ -3760,35 +3402,6 @@ export function imageFromVertex(
   ]);
   if (fromImageBytes != null) {
     common.setValueByPath(toObject, ['imageBytes'], t.tBytes(fromImageBytes));
-  }
-
-  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
-  if (fromMimeType != null) {
-    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
-  }
-
-  return toObject;
-}
-
-export function imageToMldev(
-  fromObject: types.Image,
-  _rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (common.getValueByPath(fromObject, ['gcsUri']) !== undefined) {
-    throw new Error(
-      'gcsUri parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
-    );
-  }
-
-  const fromImageBytes = common.getValueByPath(fromObject, ['imageBytes']);
-  if (fromImageBytes != null) {
-    common.setValueByPath(
-      toObject,
-      ['bytesBase64Encoded'],
-      t.tBytes(fromImageBytes),
-    );
   }
 
   const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
@@ -5726,30 +5339,6 @@ export function upscaleImageResponseFromVertex(
   return toObject;
 }
 
-export function videoFromMldev(
-  fromObject: types.Video,
-  _rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromUri = common.getValueByPath(fromObject, ['uri']);
-  if (fromUri != null) {
-    common.setValueByPath(toObject, ['uri'], fromUri);
-  }
-
-  const fromVideoBytes = common.getValueByPath(fromObject, ['encodedVideo']);
-  if (fromVideoBytes != null) {
-    common.setValueByPath(toObject, ['videoBytes'], t.tBytes(fromVideoBytes));
-  }
-
-  const fromMimeType = common.getValueByPath(fromObject, ['encoding']);
-  if (fromMimeType != null) {
-    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
-  }
-
-  return toObject;
-}
-
 export function videoFromVertex(
   fromObject: types.Video,
   _rootObject?: unknown,
@@ -5799,31 +5388,6 @@ export function videoGenerationMaskToVertex(
   return toObject;
 }
 
-export function videoGenerationReferenceImageToMldev(
-  fromObject: types.VideoGenerationReferenceImage,
-  rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromImage = common.getValueByPath(fromObject, ['image']);
-  if (fromImage != null) {
-    common.setValueByPath(
-      toObject,
-      ['image'],
-      imageToMldev(fromImage, rootObject),
-    );
-  }
-
-  const fromReferenceType = common.getValueByPath(fromObject, [
-    'referenceType',
-  ]);
-  if (fromReferenceType != null) {
-    common.setValueByPath(toObject, ['referenceType'], fromReferenceType);
-  }
-
-  return toObject;
-}
-
 export function videoGenerationReferenceImageToVertex(
   fromObject: types.VideoGenerationReferenceImage,
   rootObject?: unknown,
@@ -5844,30 +5408,6 @@ export function videoGenerationReferenceImageToVertex(
   ]);
   if (fromReferenceType != null) {
     common.setValueByPath(toObject, ['referenceType'], fromReferenceType);
-  }
-
-  return toObject;
-}
-
-export function videoToMldev(
-  fromObject: types.Video,
-  _rootObject?: unknown,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromUri = common.getValueByPath(fromObject, ['uri']);
-  if (fromUri != null) {
-    common.setValueByPath(toObject, ['uri'], fromUri);
-  }
-
-  const fromVideoBytes = common.getValueByPath(fromObject, ['videoBytes']);
-  if (fromVideoBytes != null) {
-    common.setValueByPath(toObject, ['encodedVideo'], t.tBytes(fromVideoBytes));
-  }
-
-  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
-  if (fromMimeType != null) {
-    common.setValueByPath(toObject, ['encoding'], fromMimeType);
   }
 
   return toObject;

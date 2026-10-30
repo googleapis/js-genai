@@ -5,78 +5,12 @@
  */
 import {GoogleGenAI} from '@google/genai';
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
 const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
 
 async function delay(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function generateVideosFromMLDev() {
-  const ai = new GoogleGenAI({
-    vertexai: false,
-    apiKey: GEMINI_API_KEY,
-  });
-  let operation1 = await ai.models.generateVideos({
-    model: 'veo-3.1-generate-preview',
-    source: {
-      prompt: 'Rain',
-    },
-    config: {
-      numberOfVideos: 1,
-    },
-  });
-
-  while (!operation1.done) {
-    console.log('Waiting for completion');
-    await delay(10000);
-    operation1 = await ai.operations.get({operation: operation1});
-  }
-
-  const videos = operation1.response?.generatedVideos;
-  if (videos === undefined || videos.length === 0) {
-    throw new Error('No videos generated');
-  }
-
-  videos.forEach((video, i) => {
-    ai.files.download({
-      file: video,
-      downloadPath: `video${i}.mp4`,
-    });
-    console.log('Downloaded video', `video${i}.mp4`);
-  });
-
-  let operation2 = await ai.models.generateVideos({
-    model: 'veo-3.1-generate-preview',
-    source: {
-      prompt: 'Sun',
-      video: videos[0].video,
-    },
-    config: {
-      numberOfVideos: 1,
-    },
-  });
-
-  while (!operation2.done) {
-    console.log('Waiting for completion');
-    await delay(10000);
-    operation2 = await ai.operations.get({operation: operation2});
-  }
-
-  const videos2 = operation2.response?.generatedVideos;
-  if (videos2 === undefined || videos2.length === 0) {
-    throw new Error('No videos generated');
-  }
-
-  videos2.forEach((video, i) => {
-    ai.files.download({
-      file: video,
-      downloadPath: `video${i}.mp4`,
-    });
-    console.log('Downloaded extended video', `video${i}.mp4`);
-  });
 }
 
 async function generateVideosFromVertexAI() {
@@ -119,7 +53,9 @@ async function main() {
     if (GOOGLE_GENAI_USE_VERTEXAI) {
       await generateVideosFromVertexAI();
     } else {
-      await generateVideosFromMLDev();
+      console.error(
+        'Generating videos is not supported in Gemini Developer API.',
+      );
     }
   } catch (e: unknown) {
     if ((e as {status?: number})?.status === 429) {
