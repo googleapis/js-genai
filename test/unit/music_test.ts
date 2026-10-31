@@ -4,7 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {ApiClient, SDK_VERSION} from '../../src/_api_client.js';
+import {
+  ApiClient,
+  GOOGLE_AI_API_DEFAULT_VERSION,
+  SDK_VERSION,
+} from '../../src/_api_client.js';
 import {WebSocketCallbacks} from '../../src/_websocket.js';
 import {CrossDownloader} from '../../src/cross/_cross_downloader.js';
 import {CrossUploader} from '../../src/cross/_cross_uploader.js';
@@ -60,7 +64,7 @@ describe('LiveMusic', () => {
       const websocketCreateSpy = websocketFactory.create as jasmine.Spy;
       const websocketFactorySpyCall = websocketCreateSpy.calls.all()[0];
       expect(websocketFactorySpyCall.args[0]).toBe(
-        'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateMusic?key=test-api-key',
+        `wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.${GOOGLE_AI_API_DEFAULT_VERSION}.GenerativeService.BidiGenerateMusic?key=test-api-key`,
       );
       expect(JSON.stringify(websocketFactorySpyCall.args[1])).toBe(
         `{"content-type":"application/json","user-agent":"google-genai-sdk/${

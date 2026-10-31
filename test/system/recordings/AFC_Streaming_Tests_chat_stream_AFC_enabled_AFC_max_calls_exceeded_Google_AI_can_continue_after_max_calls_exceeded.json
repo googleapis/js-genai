@@ -4,8 +4,8 @@
     {
       "request": {
         "method": "POST",
-        "url": "/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse",
-        "request": "POST /v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse HTTP/1.1",
+        "url": "/v1/models/gemini-2.5-flash:streamGenerateContent?alt=sse",
+        "request": "POST /v1/models/gemini-2.5-flash:streamGenerateContent?alt=sse HTTP/1.1",
         "headers": {
           "Accept": "*/*",
           "Accept-Encoding": "gzip, deflate",
@@ -62,7 +62,7 @@
         "port": 443,
         "protocol": "https"
       },
-      "shaSum": "cb29a507b27acf421ccb13fd4e75924849c1d717dd2fbdd51d9502a00f6eda2c",
+      "shaSum": "c35013a91743483354cad7431e26377d4a6de61e29dc429027d74b737aabbb57",
       "response": {
         "statusCode": 200,
         "headers": {
@@ -121,8 +121,8 @@
     {
       "request": {
         "method": "POST",
-        "url": "/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse",
-        "request": "POST /v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse HTTP/1.1",
+        "url": "/v1/models/gemini-2.5-flash:streamGenerateContent?alt=sse",
+        "request": "POST /v1/models/gemini-2.5-flash:streamGenerateContent?alt=sse HTTP/1.1",
         "headers": {
           "Accept": "*/*",
           "Accept-Encoding": "gzip, deflate",
@@ -202,12 +202,12 @@
             ]
           }
         ],
-        "previousRequest": "cb29a507b27acf421ccb13fd4e75924849c1d717dd2fbdd51d9502a00f6eda2c",
+        "previousRequest": "c35013a91743483354cad7431e26377d4a6de61e29dc429027d74b737aabbb57",
         "serverAddress": "generativelanguage.googleapis.com",
         "port": 443,
         "protocol": "https"
       },
-      "shaSum": "dfead60f77f54b72cce7827374ef3934e5b63e769ebc1e64394322ed03f37b7d",
+      "shaSum": "a149d74f577f7b04d8c86f466ff462cdce7c6ab3035c54f6f9608b41dd0089d1",
       "response": {
         "statusCode": 200,
         "headers": {
@@ -266,8 +266,8 @@
     {
       "request": {
         "method": "POST",
-        "url": "/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse",
-        "request": "POST /v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse HTTP/1.1",
+        "url": "/v1/models/gemini-2.5-flash:streamGenerateContent?alt=sse",
+        "request": "POST /v1/models/gemini-2.5-flash:streamGenerateContent?alt=sse HTTP/1.1",
         "headers": {
           "Accept": "*/*",
           "Accept-Encoding": "gzip, deflate",
@@ -375,12 +375,12 @@
             ]
           }
         ],
-        "previousRequest": "dfead60f77f54b72cce7827374ef3934e5b63e769ebc1e64394322ed03f37b7d",
+        "previousRequest": "a149d74f577f7b04d8c86f466ff462cdce7c6ab3035c54f6f9608b41dd0089d1",
         "serverAddress": "generativelanguage.googleapis.com",
         "port": 443,
         "protocol": "https"
       },
-      "shaSum": "4e29cd5d6ea8db7b84bab5658c243edd3ae8eb98d1ee85479ce158150b38166e",
+      "shaSum": "1e34906caaf56005d70aafd01557f4ffb743ef6a14f07b2c80d38745d16ad011",
       "response": {
         "statusCode": 200,
         "headers": {
