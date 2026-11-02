@@ -26,6 +26,7 @@ export type InteractionSseEventInteractionStatus =
   | "incomplete"
   | "budget_exceeded"
   | "queued"
+  | "requires_continuation"
   | (string & {});
 
 /**

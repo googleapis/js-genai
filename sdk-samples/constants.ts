@@ -62,7 +62,7 @@ export const SEGMENT_IMAGE_MODEL_NAME = 'image-segmentation-001';
 /**
  * The name of the Veo model to be used in the examples.
  */
-export const VEO_MODEL_NAME = 'veo-3.1-generate-preview';
+export const VEO_MODEL_NAME = 'veo-3.1-generate-001';
 
 /**
  * The name of the embedding model to be used in the examples.

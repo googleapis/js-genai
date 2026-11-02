@@ -2017,41 +2017,9 @@ export class Models extends BaseModule {
         return typedResp;
       });
     } else {
-      const body = converters.generateVideosParametersToMldev(
-        this.apiClient,
-        params,
-        params,
+      throw new Error(
+        'This method is only supported by the Gemini Enterprise Agent Platform (previously known as Vertex AI).',
       );
-      path = common.formatMap(
-        '{model}:predictLongRunning',
-        body['_url'] as Record<string, unknown>,
-      );
-      queryParams = body['_query'] as Record<string, string>;
-      delete body['_url'];
-      delete body['_query'];
-
-      response = this.apiClient
-        .request({
-          path: path,
-          queryParams: queryParams,
-          body: JSON.stringify(body),
-          httpMethod: 'POST',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
-        })
-        .then((httpResponse) => {
-          return httpResponse.json();
-        }) as Promise<types.GenerateVideosOperation>;
-
-      return response.then((apiResponse) => {
-        const resp = converters.generateVideosOperationFromMldev(
-          apiResponse,
-          params,
-        );
-        const typedResp = new types.GenerateVideosOperation();
-        Object.assign(typedResp, resp);
-        return typedResp;
-      });
     }
   }
 }

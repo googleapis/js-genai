@@ -41,6 +41,7 @@ export type Model =
   | "gemini-4-argon"
   | "gemini-3.8-flash-tts"
   | "gemini-3.8-flash-lite-tts"
+  | "gemini-3.5-transcribe"
   | "lyria-3-clip-preview"
   | "lyria-3-pro-preview"
   | "gemini-robotics-er-1.6-preview"

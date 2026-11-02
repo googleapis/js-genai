@@ -81,7 +81,18 @@ export function wrapEventStreamResponse<T>(
     { dataRequired: opts.dataRequired ?? true },
   );
 }
-export class Stream<T> extends ReadableStream<T> {
+const ReadableStreamBase = function (
+  this: object,
+  underlyingSource?: UnderlyingSource,
+  strategy?: QueuingStrategy,
+) {
+  const stream = new ReadableStream(underlyingSource, strategy);
+  Object.setPrototypeOf(stream, Object.getPrototypeOf(this));
+  return stream;
+} as unknown as typeof ReadableStream;
+ReadableStreamBase.prototype = ReadableStream.prototype;
+
+export class Stream<T> extends ReadableStreamBase<T> {
   constructor(
     responseBody: ReadableStream<Uint8Array>,
     parse: (x: SseMessage<string>) => IteratorResult<T, undefined>,

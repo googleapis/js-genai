@@ -2032,7 +2032,7 @@ export declare interface FunctionCall {
   willContinue?: boolean;
 }
 
-/** URI based data for function response. This data type is not supported in Gemini API. */
+/** URI based data for function response. */
 export class FunctionResponseFileData {
   /** Optional. Display name of the file data. Used to provide a label or filename to distinguish file datas. This field is only returned in PromptMessage for prompt management. It is currently used in the Gemini GenerateContent calls only when server side tools (code_execution, google_search, and url_context) are enabled. */
   displayName?: string;
@@ -2047,7 +2047,7 @@ export class FunctionResponseBlob {
   /** Required. Raw bytes.
    * @remarks Encoded as base64 string. */
   data?: string;
-  /** Optional. Display name of the blob. Used to provide a label or filename to distinguish blobs. This field is only returned in PromptMessage for prompt management. It is currently used in the Gemini GenerateContent calls only when server side tools (code_execution, google_search, and url_context) are enabled. This field is not supported in Gemini API. */
+  /** Optional. Display name of the blob. Used to provide a label or filename to distinguish blobs. This field is only returned in PromptMessage for prompt management. It is currently used in the Gemini GenerateContent calls only when server side tools (code_execution, google_search, and url_context) are enabled. */
   displayName?: string;
   /** Required. The IANA standard MIME type of the source data. */
   mimeType?: string;
@@ -2055,10 +2055,12 @@ export class FunctionResponseBlob {
 
 /** A datatype containing media that is part of a `FunctionResponse` message. A `FunctionResponsePart` consists of data which has an associated datatype. A `FunctionResponsePart` can only contain one of the accepted types in `FunctionResponsePart.data`. A `FunctionResponsePart` must have a fixed IANA MIME type identifying the type and subtype of the media if the `inline_data` field is filled with raw bytes. */
 export class FunctionResponsePart {
-  /** URI based data. This field is not supported in Gemini API. */
+  /** URI based data. */
   fileData?: FunctionResponseFileData;
   /** Inline media bytes. */
   inlineData?: FunctionResponseBlob;
+  /** Optional. How the model processes this part's media for understanding. Only meaningful for video parts (`inline_data` or `file_data` with video mime). Non-video parts ignore this field. This field is not supported in Vertex AI. */
+  mediaProcessing?: MediaProcessing;
 }
 /**
  * Creates a `FunctionResponsePart` object from a `base64` encoded `string`.
@@ -2671,7 +2673,7 @@ export declare interface Retrieval {
   vertexRagStore?: VertexRagStore;
 }
 
-/** A transport that can stream HTTP requests and responses. Next ID: 6. This data type is not supported in Vertex AI. */
+/** A transport that can stream HTTP requests and responses. This data type is not supported in Vertex AI. */
 export declare interface StreamableHttpTransport {
   /** Optional: Fields for authentication headers, timeouts, etc., if needed. */
   headers?: Record<string, string>;
@@ -2685,7 +2687,7 @@ export declare interface StreamableHttpTransport {
   url?: string;
 }
 
-/** A MCPServer is a server that can be called by the model to perform actions. It is a server that implements the MCP protocol. Next ID: 7. This data type is not supported in Vertex AI. */
+/** A MCPServer is a server that can be called by the model to perform actions. It is a server that implements the MCP protocol. This data type is not supported in Vertex AI. */
 export declare interface McpServer {
   /** The name of the MCPServer. */
   name?: string;
