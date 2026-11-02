@@ -440,6 +440,75 @@ export function functionCallingConfigToMldev(
   return toObject;
 }
 
+export function functionResponsePartToVertex(
+  fromObject: types.FunctionResponsePart,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromFileData = common.getValueByPath(fromObject, ['fileData']);
+  if (fromFileData != null) {
+    common.setValueByPath(toObject, ['fileData'], fromFileData);
+  }
+
+  const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
+  if (fromInlineData != null) {
+    common.setValueByPath(toObject, ['inlineData'], fromInlineData);
+  }
+
+  if (common.getValueByPath(fromObject, ['mediaProcessing']) !== undefined) {
+    throw new Error(
+      'mediaProcessing parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+    );
+  }
+
+  return toObject;
+}
+
+export function functionResponseToVertex(
+  fromObject: types.FunctionResponse,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromId = common.getValueByPath(fromObject, ['id']);
+  if (fromId != null) {
+    common.setValueByPath(toObject, ['id'], fromId);
+  }
+
+  const fromName = common.getValueByPath(fromObject, ['name']);
+  if (fromName != null) {
+    common.setValueByPath(toObject, ['name'], fromName);
+  }
+
+  const fromParts = common.getValueByPath(fromObject, ['parts']);
+  if (fromParts != null) {
+    let transformedList = fromParts;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return functionResponsePartToVertex(item);
+      });
+    }
+    common.setValueByPath(toObject, ['parts'], transformedList);
+  }
+
+  const fromResponse = common.getValueByPath(fromObject, ['response']);
+  if (fromResponse != null) {
+    common.setValueByPath(toObject, ['response'], fromResponse);
+  }
+
+  const fromScheduling = common.getValueByPath(fromObject, ['scheduling']);
+  if (fromScheduling != null) {
+    common.setValueByPath(toObject, ['scheduling'], fromScheduling);
+  }
+
+  if (common.getValueByPath(fromObject, ['willContinue']) !== undefined) {
+    throw new Error(
+      'willContinue parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+    );
+  }
+
+  return toObject;
+}
+
 export function getCachedContentParametersToMldev(
   apiClient: ApiClient,
   fromObject: types.GetCachedContentParameters,
@@ -878,7 +947,11 @@ export function partToVertex(fromObject: types.Part): Record<string, unknown> {
     'functionResponse',
   ]);
   if (fromFunctionResponse != null) {
-    common.setValueByPath(toObject, ['functionResponse'], fromFunctionResponse);
+    common.setValueByPath(
+      toObject,
+      ['functionResponse'],
+      functionResponseToVertex(fromFunctionResponse),
+    );
   }
 
   const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);

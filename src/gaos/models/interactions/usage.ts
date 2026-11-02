@@ -26,6 +26,10 @@ export type Usage = {
    */
   grounding_tool_count?: Array<GroundingToolCount> | undefined;
   /**
+   * Number of input tokens used in the first turn of this interaction.
+   */
+  initial_input_tokens?: number | undefined;
+  /**
    * A breakdown of input token usage by modality.
    */
   input_tokens_by_modality?: Array<ModalityTokens> | undefined;

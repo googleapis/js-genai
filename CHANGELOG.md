@@ -2,6 +2,22 @@
 
 
 
+## [2.32.0](https://github.com/googleapis/js-genai/compare/v2.31.0...v2.32.0) (2026-10-29)
+
+
+### Features
+
+* Add support for continuation_token and requires_continuation status ([c7b2fd2](https://github.com/googleapis/js-genai/commit/c7b2fd217981551a4c242b708c713bef132f598c))
+* add video upscale task parameter ([54b9b19](https://github.com/googleapis/js-genai/commit/54b9b1951751e411b74ef22ef595ce1977262bc4))
+* **interactions:** add automatic_continuation to interactions.create in the TypeScript SDK ([99f1892](https://github.com/googleapis/js-genai/commit/99f1892164d3988a0c2f056a25f122d1652dc3fe))
+* **interactions:** declare continuation_ids on Interaction ([9cf3280](https://github.com/googleapis/js-genai/commit/9cf3280ece6eba1a421541dbe79bc930f5ae85d9))
+* support video understanding in Gemini Developer API ([7c82322](https://github.com/googleapis/js-genai/commit/7c82322c2b78249d03da308bee2fdaea1bd93202))
+
+
+### Bug Fixes
+
+* **interactions:** align SDK User-Agent and x-goog-api-client headers ([dda511e](https://github.com/googleapis/js-genai/commit/dda511e175984ea4bb72b2e850ac7b7f520ea66a))
+
 ## [2.31.0](https://github.com/googleapis/js-genai/compare/v2.30.0...v2.31.0) (2026-10-22)
 
 
