@@ -70,6 +70,7 @@ export type InteractionStatus =
   | "incomplete"
   | "budget_exceeded"
   | "queued"
+  | "requires_continuation"
   | (string & {});
 
 /**
@@ -95,6 +96,22 @@ export type Interaction = {
    * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
    */
   cached_content?: string | undefined;
+  /**
+   * The IDs of all server interactions merged into this response when automatic continuation is enabled, in order (ending with the final hop's ID).
+   *
+   * @remarks
+   *
+   * Note: this is added by the SDK.
+   */
+  continuation_ids?: Array<string> | undefined;
+  /**
+   * Opaque token to resume a long decode. Output: set when status is
+   *
+   * @remarks
+   * REQUIRES_CONTINUATION and decoding can be resumed. Input: pass the latest
+   * token back unchanged in CreateInteraction to continue decoding.
+   */
+  continuation_token?: string | undefined;
   /**
    * Required. Output only. The time at which the response was created in ISO 8601 format
    *

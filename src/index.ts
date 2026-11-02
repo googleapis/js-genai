@@ -14,6 +14,7 @@ export type {GoogleGenAIOptions} from './client.js';
 export * from './errors.js';
 export {Files} from './files.js';
 export type {
+  AutomaticContinuationOption,
   CredentialUpdateParams,
   DownloadEnvironmentFileParams,
   GoogleGenAIInteraction,
