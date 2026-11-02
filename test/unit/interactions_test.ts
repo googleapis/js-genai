@@ -102,6 +102,27 @@ describe('Interactions resource', () => {
       expect(request.method.toLowerCase()).toEqual('post');
     });
 
+    it('should forward SDK User-Agent and x-goog-api-client default headers', async () => {
+      const sdkHeader = 'google-genai-sdk/1.0.0 gl-node/v20.0.0';
+      parentClient.getDefaultHeaders = jasmine
+        .createSpy('getDefaultHeaders')
+        .and.returnValue({
+          'User-Agent': sdkHeader,
+          'x-goog-api-client': sdkHeader,
+        });
+      interactions = new GeminiNextGenInteractions(parentClient);
+
+      await interactions.create({
+        agent: 'some-agent',
+        input: 'some input',
+      });
+
+      expect(fetchSpy).toHaveBeenCalled();
+      const [request] = fetchSpy.calls.first().args as [Request];
+      expect(request.headers.get('user-agent')).toBe(sdkHeader);
+      expect(request.headers.get('x-goog-api-client')).toBe(sdkHeader);
+    });
+
     it('should retry the call', async () => {
       jasmine.clock().install();
       jasmine.clock().mockDate();

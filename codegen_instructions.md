@@ -77,9 +77,9 @@ const ai = new GoogleGenAI({});
     -   **Low Latency & High Volume Tasks:** `gemini-2.5-flash-lite`
     -   **Fast Image Generation and Editing:** `gemini-2.5-flash-image` (aka Nano Banana)
     -   **High-Quality Image Generation and Editing:** `gemini-3-pro-image-preview` (aka Nano Banana Pro)
-    -   **High-Fidelity Video Generation:** `veo-3.0-generate-001` or `veo-3.1-generate-preview`
-    -   **Fast Video Generation:** `veo-3.0-fast-generate-001` or `veo-3.1-fast-generate-preview`
-    -   **Advanced Video Editing Tasks:** `veo-3.1-generate-preview`
+    -   **High-Fidelity Video Generation:** `veo-3.0-generate-001` or `veo-3.1-generate-001`
+    -   **Fast Video Generation:** `veo-3.0-fast-generate-001`
+    -   **Advanced Video Editing Tasks:** `veo-3.1-generate-001`
 
 -   It is also acceptable to use the following model if explicitly requested by
     the user:

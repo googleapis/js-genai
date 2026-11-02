@@ -476,7 +476,7 @@ console.debug(interaction2);
 
 ### Agents (Deep Research)
 
-You can use specialized agents like `deep-research-pro-preview-12-2025` for
+You can use specialized agents like `deep-research-preview-04-2026` for
 complex tasks.
 
 ```typescript
@@ -488,7 +488,7 @@ function sleep(ms: number): Promise<void> {
 const initialInteraction = await ai.interactions.create({
   input:
       'Research the history of the Google TPUs with a focus on 2025 and 2026.',
-  agent: 'deep-research-pro-preview-12-2025',
+  agent: 'deep-research-preview-04-2026',
   background: true,
 });
 
