@@ -40,7 +40,7 @@ async function testImplicitEnvironmentWithSources(ai: GoogleGenAI) {
     'Creating interaction with inline sources and network allowlist...',
   );
   const interaction = await ai.interactions.create({
-    agent: 'agents/antigravity-preview-05-2026',
+    agent: 'agents/antigravity-preview-09-2026',
     input: 'hello implicit environment with sources',
     environment: {
       type: 'remote',
@@ -93,9 +93,9 @@ async function testImplicitEnvironmentWithSources(ai: GoogleGenAI) {
  */
 async function testImplicitEnvironmentStandard(ai: GoogleGenAI) {
   console.log('\n--- Scenario 3: Standard Implicit Environment Creation ---');
-  console.log('Creating interaction with agent antigravity-preview-05-2026...');
+  console.log('Creating interaction with agent antigravity-preview-09-2026...');
   const interaction = await ai.interactions.create({
-    agent: 'agents/antigravity-preview-05-2026',
+    agent: 'agents/antigravity-preview-09-2026',
     input: 'hello autopush master verification',
     environment: {
       type: 'remote',
