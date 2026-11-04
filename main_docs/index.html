@@ -117,9 +117,18 @@ you're using the Gemini Developer API or the Gemini Enterprise Agent Platform.</
 <pre><code class="typescript"><span class="hl-3">import</span><span class="hl-1"> {</span><span class="hl-4">GoogleGenAI</span><span class="hl-1">} </span><span class="hl-3">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@google/genai&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">ai</span><span class="hl-1"> = </span><span class="hl-5">new</span><span class="hl-1"> </span><span class="hl-0">GoogleGenAI</span><span class="hl-1">();</span>
 </code><button type="button">Copy</button></pre>
 
-<a id="api-selection" class="tsd-anchor"></a><h2 class="tsd-anchor-link">API Selection<a href="#api-selection" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>By default, the SDK uses the beta API endpoints provided by Google to support
-preview features in the APIs. The stable API endpoints can be selected by
-setting the API version to <code>v1</code>.</p>
+<a id="api-selection" class="tsd-anchor"></a><h2 class="tsd-anchor-link">API Selection<a href="#api-selection" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>By default, the SDK uses:</p>
+<ul>
+<li>the stable <code>v1</code> API endpoints for the Gemini Developer API.</li>
+<li>and the beta <code>v1beta1</code> API endpoints for Gemini Enterprise Agent Platform.</li>
+</ul>
+<p>A different API version (for example <code>v1beta</code> or <code>v1alpha</code>) can be selected
+with <code>apiVersion</code> (or <code>httpOptions.apiVersion</code>). In Node.js, it can also be
+selected with the <code>GOOGLE_GENAI_API_VERSION</code> environment variable. An
+explicitly configured version takes precedence over the environment variable.
+Setting <code>GOOGLE_GENAI_API_VERSION=beta</code> selects the beta version of whichever
+backend is in use: <code>v1beta</code> for the Gemini Developer API and <code>v1beta1</code> for
+Gemini Enterprise Agent Platform.</p>
 <p>To set the API version use <code>apiVersion</code>. For example, to set the API version to
 <code>v1</code> for Gemini Enterprise Agent Platform:</p>
 <pre><code class="typescript"><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">ai</span><span class="hl-1"> = </span><span class="hl-5">new</span><span class="hl-1"> </span><span class="hl-0">GoogleGenAI</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-4">enterprise:</span><span class="hl-1"> </span><span class="hl-5">true</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">project:</span><span class="hl-1"> </span><span class="hl-2">&#39;your_project&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">location:</span><span class="hl-1"> </span><span class="hl-2">&#39;your_location&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">apiVersion:</span><span class="hl-1"> </span><span class="hl-2">&#39;v1&#39;</span><br/><span class="hl-1">});</span>
