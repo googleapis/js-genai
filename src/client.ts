@@ -96,7 +96,9 @@ export interface GoogleGenAIOptions {
    * Optional. The API version to use.
    *
    * @remarks
-   * If unset, the default API version will be used.
+   * If neither this nor `httpOptions.apiVersion` is set, the
+   * `GOOGLE_GENAI_API_VERSION` environment variable (Node runtimes only) is
+   * used if set; otherwise the default API version for the backend is used.
    */
   apiVersion?: string;
   /**

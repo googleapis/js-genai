@@ -10,6 +10,7 @@ import {createServer, type IncomingHttpHeaders} from 'node:http';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 
+import {GOOGLE_AI_API_DEFAULT_VERSION} from '../../src/_api_client.js';
 import {GoogleGenAI} from '../../src/client.js';
 import {type Environments} from '../../src/index.js';
 
@@ -64,7 +65,6 @@ describe('Environments Lifecycle', () => {
     const ai = new GoogleGenAI({
       apiKey: 'test-api-key',
       httpOptions: {
-        apiVersion: 'v1beta',
         baseUrl: `http://127.0.0.1:${address.port}`,
       },
     });
@@ -90,11 +90,11 @@ describe('Environments Lifecycle', () => {
       expect(copiedEnvironment.id).toBe('env_abc_123');
       expect(fetched.id).toBe('env_abc_123');
       expect(captured).toEqual([
-        'POST /v1beta/environments',
-        'POST /v1beta/environments',
-        'GET /v1beta/environments?page_size=10',
-        'GET /v1beta/environments/env_abc_123',
-        'DELETE /v1beta/environments/env_abc_123',
+        `POST /${GOOGLE_AI_API_DEFAULT_VERSION}/environments`,
+        `POST /${GOOGLE_AI_API_DEFAULT_VERSION}/environments`,
+        `GET /${GOOGLE_AI_API_DEFAULT_VERSION}/environments?page_size=10`,
+        `GET /${GOOGLE_AI_API_DEFAULT_VERSION}/environments/env_abc_123`,
+        `DELETE /${GOOGLE_AI_API_DEFAULT_VERSION}/environments/env_abc_123`,
       ]);
       expect(capturedBodies[0]).toEqual({
         sources: [
@@ -147,7 +147,6 @@ describe('Environments Lifecycle', () => {
     const ai = new GoogleGenAI({
       apiKey: 'test-api-key',
       httpOptions: {
-        apiVersion: 'v1beta',
         baseUrl: `http://127.0.0.1:${address.port}`,
       },
     });
@@ -174,9 +173,9 @@ describe('Environments Lifecycle', () => {
       expect(listRes.files?.[0]?.name).toBe('main.py');
 
       expect(captured).toEqual([
-        'GET /v1beta/environments/env_abc_123/files/main.py',
-        'GET /v1beta/environments/env_abc_123/files/main.py?page_size=5',
-        'GET /v1beta/environments/env_abc_123/files/src/?recursive=true',
+        `GET /${GOOGLE_AI_API_DEFAULT_VERSION}/environments/env_abc_123/files/main.py`,
+        `GET /${GOOGLE_AI_API_DEFAULT_VERSION}/environments/env_abc_123/files/main.py?page_size=5`,
+        `GET /${GOOGLE_AI_API_DEFAULT_VERSION}/environments/env_abc_123/files/src/?recursive=true`,
       ]);
     } finally {
       server.close();
@@ -205,7 +204,6 @@ describe('Environments Lifecycle', () => {
     const ai = new GoogleGenAI({
       apiKey: 'test-api-key',
       httpOptions: {
-        apiVersion: 'v1beta',
         baseUrl: `http://127.0.0.1:${address.port}`,
       },
     });
@@ -217,7 +215,7 @@ describe('Environments Lifecycle', () => {
       });
       expect(new TextDecoder().decode(content)).toBe('hello world content');
       expect(captured).toEqual([
-        'GET /v1beta/environments/env_abc_123/files/main.py?alt=media',
+        `GET /${GOOGLE_AI_API_DEFAULT_VERSION}/environments/env_abc_123/files/main.py?alt=media`,
       ]);
     } finally {
       server.close();
@@ -287,7 +285,6 @@ describe('Environments Lifecycle', () => {
     const ai = new GoogleGenAI({
       apiKey: 'test-api-key',
       httpOptions: {
-        apiVersion: 'v1beta',
         baseUrl: `http://127.0.0.1:${address.port}`,
       },
     });
@@ -311,7 +308,7 @@ describe('Environments Lifecycle', () => {
       const handshake = capturedRequests[0];
       expect(handshake.method).toBe('PUT');
       expect(handshake.url).toBe(
-        '/upload/v1beta/environments/env_abc_123/files/test.txt?overwrite=true',
+        `/upload/${GOOGLE_AI_API_DEFAULT_VERSION}/environments/env_abc_123/files/test.txt?overwrite=true`,
       );
       expect(handshake.headers['x-goog-upload-protocol']).toBe('resumable');
       expect(handshake.headers['x-goog-upload-command']).toBe('start');
@@ -375,7 +372,6 @@ describe('Environments Lifecycle', () => {
     const ai = new GoogleGenAI({
       apiKey: 'test-api-key',
       httpOptions: {
-        apiVersion: 'v1beta',
         baseUrl: `http://127.0.0.1:${address.port}`,
       },
     });
@@ -456,7 +452,6 @@ describe('Environments Lifecycle', () => {
     const ai = new GoogleGenAI({
       apiKey: 'test-api-key',
       httpOptions: {
-        apiVersion: 'v1beta',
         baseUrl: `http://127.0.0.1:${address.port}`,
       },
     });

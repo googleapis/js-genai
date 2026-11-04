@@ -20,7 +20,18 @@ export const GOOGLE_API_CLIENT_HEADER = 'x-goog-api-client';
 export const SDK_VERSION = '2.32.0'; // x-release-please-version
 const LIBRARY_LABEL = `google-genai-sdk/${SDK_VERSION}`;
 const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
-const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';
+export const GOOGLE_AI_API_DEFAULT_VERSION = 'v1';
+
+let defaultGoogleAiApiVersionOverride: string | undefined;
+
+/**
+ * Overrides the default API version for the Gemini Developer API.
+ *
+ * @internal
+ */
+export function setDefaultGoogleAiApiVersion(version?: string) {
+  defaultGoogleAiApiVersionOverride = version;
+}
 
 const MULTI_REGIONAL_LOCATIONS = new Set<string>(['us', 'eu']);
 
@@ -353,7 +364,9 @@ export class ApiClient {
         console.warn('API key should be set when using the Gemini API.');
       }
       initHttpOptions.apiVersion =
-        this.clientOptions.apiVersion ?? GOOGLE_AI_API_DEFAULT_VERSION;
+        this.clientOptions.apiVersion ??
+        defaultGoogleAiApiVersionOverride ??
+        GOOGLE_AI_API_DEFAULT_VERSION;
       initHttpOptions.baseUrl = `https://generativelanguage.googleapis.com/`;
     }
 
