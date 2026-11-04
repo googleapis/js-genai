@@ -571,7 +571,7 @@ export class Models extends BaseModule {
     if (!Models.loggedGenerateImagesWarning) {
       Models.loggedGenerateImagesWarning = true;
       console.warn(
-        'The generateImages method is deprecated and will be removed in the next major release (not before Jan. 1 2027). Please use the generateContent method with image models instead. See https://ai.google.dev/gemini-api/docs/deprecations#imagen-models and https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/capabilities/image-generation#generate-images',
+        'The generateImages method is deprecated and will be removed in the next major release (not before Jan. 1 2027). Please use the generateContent method with image models instead. See https://aistudio.google.com/docs/deprecations#imagen-models and https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/capabilities/image-generation#generate-images',
       );
     }
     return await this.generateImagesInternal(params).then((apiResponse) => {
@@ -669,7 +669,7 @@ export class Models extends BaseModule {
     if (!Models.loggedEditImageWarning) {
       Models.loggedEditImageWarning = true;
       console.warn(
-        'The editImage method is deprecated and will be removed in the next major release (not before Jan. 1 2027). Please use the generateContent method with image models instead. See https://ai.google.dev/gemini-api/docs/deprecations#imagen-models and https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/capabilities/gemini-edit-images#edit-an-image',
+        'The editImage method is deprecated and will be removed in the next major release (not before Jan. 1 2027). Please use the generateContent method with image models instead. See https://aistudio.google.com/docs/deprecations#imagen-models and https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/capabilities/gemini-edit-images#edit-an-image',
       );
     }
     const paramsInternal: _internal_types.EditImageParametersInternal = {
