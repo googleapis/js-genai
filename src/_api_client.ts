@@ -6,7 +6,6 @@
 
 import pRetry from 'p-retry';
 import {Auth} from './_auth.js';
-import * as common from './_common.js';
 import {Downloader} from './_downloader.js';
 import {Uploader} from './_uploader.js';
 import {uploadToFileSearchStoreConfigToMldev} from './converters/_filesearchstores_converters.js';
@@ -493,11 +492,46 @@ export class ApiClient {
     }
   }
 
+  private resolveApiVersionInPath(path: string, apiVersion: string): string {
+    const placeholder = '{api_version}';
+    if (apiVersion !== '') {
+      return path.replaceAll(placeholder, apiVersion);
+    }
+    return path
+      .replaceAll(`${placeholder}/`, '')
+      .replaceAll(`/${placeholder}`, '')
+      .replaceAll(placeholder, '');
+  }
+
   private constructUrl(
     path: string,
     httpOptions: types.HttpOptions,
     prependProjectLocation: boolean,
   ): URL {
+    if (path.includes('{api_version}')) {
+      if (
+        !httpOptions ||
+        httpOptions.baseUrl === undefined ||
+        httpOptions.apiVersion === undefined
+      ) {
+        throw new Error('HTTP options are not correctly set.');
+      }
+      const baseUrl = httpOptions.baseUrl.endsWith('/')
+        ? httpOptions.baseUrl.slice(0, -1)
+        : httpOptions.baseUrl;
+      const urlElement: Array<string> = [baseUrl];
+      if (prependProjectLocation) {
+        urlElement.push(this.getBaseResourcePath());
+      }
+      const resolvedPath = this.resolveApiVersionInPath(
+        path,
+        httpOptions.apiVersion,
+      );
+      if (resolvedPath !== '') {
+        urlElement.push(resolvedPath);
+      }
+      return new URL(`${urlElement.join('/')}`);
+    }
     const urlElement: Array<string> = [this.getRequestUrlInternal(httpOptions)];
     if (prependProjectLocation) {
       urlElement.push(this.getBaseResourcePath());
@@ -999,12 +1033,8 @@ export class ApiClient {
       file: fileToUpload,
     };
     const fileName = this.getFileName(file);
-    const path = common.formatMap(
-      'upload/v1beta/files',
-      body['_url'] as Record<string, unknown>,
-    );
     const uploadUrl = await this.fetchUploadUrl(
-      path,
+      'upload/{api_version}/files',
       fileToUpload.sizeBytes,
       fileToUpload.mimeType,
       fileName,
@@ -1040,7 +1070,7 @@ export class ApiClient {
         'Can not determine mimeType. Please provide mimeType in the config.',
       );
     }
-    const path = `upload/v1beta/${fileSearchStoreName}:uploadToFileSearchStore`;
+    const path = `upload/{api_version}/${fileSearchStoreName}:uploadToFileSearchStore`;
     const fileName = this.getFileName(file);
     const body: Record<string, unknown> = {};
     if (config != null) {
@@ -1076,22 +1106,18 @@ export class ApiClient {
     body: Record<string, unknown>,
     configHttpOptions?: types.HttpOptions,
   ): Promise<string> {
-    let httpOptions: types.HttpOptions = {};
-    if (configHttpOptions) {
-      httpOptions = configHttpOptions;
-    } else {
-      httpOptions = {
-        apiVersion: '', // api-version is set in the path.
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Goog-Upload-Protocol': 'resumable',
-          'X-Goog-Upload-Command': 'start',
-          'X-Goog-Upload-Header-Content-Length': `${sizeBytes}`,
-          'X-Goog-Upload-Header-Content-Type': `${mimeType}`,
-          ...(fileName ? {'X-Goog-Upload-File-Name': fileName} : {}),
-        },
-      };
-    }
+    const httpOptions: types.HttpOptions = {
+      ...configHttpOptions,
+      headers: {
+        ...configHttpOptions?.headers,
+        'Content-Type': 'application/json',
+        'X-Goog-Upload-Protocol': 'resumable',
+        'X-Goog-Upload-Command': 'start',
+        'X-Goog-Upload-Header-Content-Length': `${sizeBytes}`,
+        'X-Goog-Upload-Header-Content-Type': `${mimeType}`,
+        ...(fileName ? {'X-Goog-Upload-File-Name': fileName} : {}),
+      },
+    };
 
     const httpResponse = await this.request({
       path,

@@ -6,6 +6,7 @@
 
 import {GOOGLE_AI_API_DEFAULT_VERSION} from '../../src/_api_client.js';
 import {GoogleGenAI} from '../../src/node/index.js';
+import * as types from '../../src/types.js';
 import {createZeroFilledTempFile} from '../_generate_test_file.js';
 
 describe('File', () => {
@@ -65,8 +66,7 @@ describe('File', () => {
     const DEFAULT_CHUNK_SIZE = 1024 * 1024 * 8; // bytes
     const TEST_FILE_SIZE = 1024 * 1024 * 30; // bytes
     const DEFAULT_TEST_MIMETYPE = 'text/plain';
-    const TEST_CREATE_URL =
-      'https://generativelanguage.googleapis.com/upload/v1beta/files';
+    const TEST_CREATE_URL = `https://generativelanguage.googleapis.com/upload/${GOOGLE_AI_API_DEFAULT_VERSION}/files`;
     const TEST_UPLOAD_URL =
       'https://generativelanguage.googleapis.com/upload/v1beta/files?upload_id=test-upload-id&upload_protocol=resumable';
 
@@ -384,6 +384,156 @@ describe('File', () => {
 
         expect(uploaded.name).toBe('files/test-file');
       });
+    });
+  });
+  describe('upload API version', () => {
+    const BASE_URL = 'https://generativelanguage.googleapis.com';
+    const RESUMABLE_URL = `${BASE_URL}/upload/resumable?upload_id=test-upload-id`;
+    let originalApiVersionEnv: string | undefined;
+
+    beforeEach(() => {
+      originalApiVersionEnv = process.env['GOOGLE_GENAI_API_VERSION'];
+      delete process.env['GOOGLE_GENAI_API_VERSION'];
+    });
+
+    afterEach(() => {
+      if (originalApiVersionEnv !== undefined) {
+        process.env['GOOGLE_GENAI_API_VERSION'] = originalApiVersionEnv;
+      } else {
+        delete process.env['GOOGLE_GENAI_API_VERSION'];
+      }
+    });
+
+    // Fakes the resumable upload protocol: the start request returns the
+    // upload url, the chunk request finalizes the upload with `finalBody`.
+    function fakeUploadFetch(finalBody: unknown): jasmine.Spy {
+      return spyOn(global, 'fetch').and.callFake((_input, init) => {
+        const headers = init?.headers as Headers | undefined;
+        if (headers?.get('X-Goog-Upload-Offset') !== null) {
+          return Promise.resolve(
+            new Response(JSON.stringify(finalBody), {
+              status: 200,
+              headers: {
+                'Content-Type': 'application/json',
+                'x-goog-upload-status': 'final',
+              },
+            }),
+          );
+        }
+        return Promise.resolve(
+          new Response('', {
+            status: 200,
+            headers: {
+              'Content-Type': 'application/json',
+              'x-goog-upload-url': RESUMABLE_URL,
+            },
+          }),
+        );
+      });
+    }
+
+    function testBlob(): Blob {
+      return new Blob([new Uint8Array(8)], {type: 'text/plain'});
+    }
+
+    async function uploadFile(
+      genai: GoogleGenAI,
+      httpOptions?: types.HttpOptions,
+    ): Promise<jasmine.Spy> {
+      const fetchSpy = fakeUploadFetch({file: {name: 'files/test-file'}});
+      await genai.files.upload({file: testBlob(), config: {httpOptions}});
+      return fetchSpy;
+    }
+
+    async function uploadToStore(
+      genai: GoogleGenAI,
+      httpOptions?: types.HttpOptions,
+    ): Promise<jasmine.Spy> {
+      const fetchSpy = fakeUploadFetch({
+        name: 'fileSearchStores/test-store/upload/operations/test-op',
+      });
+      await genai.fileSearchStores.uploadToFileSearchStore({
+        fileSearchStoreName: 'fileSearchStores/test-store',
+        file: testBlob(),
+        config: {mimeType: 'text/plain', httpOptions},
+      });
+      return fetchSpy;
+    }
+
+    it('files.upload uses the default API version', async () => {
+      const genai = new GoogleGenAI({apiKey: 'fake-api-key'});
+      const fetchSpy = await uploadFile(genai);
+      expect(fetchSpy.calls.argsFor(0)[0]).toBe(
+        `${BASE_URL}/upload/${GOOGLE_AI_API_DEFAULT_VERSION}/files`,
+      );
+      expect(fetchSpy.calls.argsFor(1)[0]).toBe(RESUMABLE_URL);
+    });
+
+    it('uploadToFileSearchStore uses the default API version', async () => {
+      const genai = new GoogleGenAI({apiKey: 'fake-api-key'});
+      const fetchSpy = await uploadToStore(genai);
+      expect(fetchSpy.calls.argsFor(0)[0]).toBe(
+        `${BASE_URL}/upload/${GOOGLE_AI_API_DEFAULT_VERSION}/fileSearchStores/test-store:uploadToFileSearchStore`,
+      );
+    });
+
+    const clientOptionCases: Array<[string, () => GoogleGenAI]> = [
+      [
+        'apiVersion',
+        () => new GoogleGenAI({apiKey: 'fake-api-key', apiVersion: 'v1alpha'}),
+      ],
+      [
+        'httpOptions.apiVersion',
+        () =>
+          new GoogleGenAI({
+            apiKey: 'fake-api-key',
+            httpOptions: {apiVersion: 'v1alpha'},
+          }),
+      ],
+      [
+        'GOOGLE_GENAI_API_VERSION',
+        () => {
+          process.env['GOOGLE_GENAI_API_VERSION'] = 'v1alpha';
+          return new GoogleGenAI({apiKey: 'fake-api-key'});
+        },
+      ],
+    ];
+    for (const [name, makeClient] of clientOptionCases) {
+      it(`files.upload uses the API version from ${name}`, async () => {
+        const fetchSpy = await uploadFile(makeClient());
+        expect(fetchSpy.calls.argsFor(0)[0]).toBe(
+          `${BASE_URL}/upload/v1alpha/files`,
+        );
+      });
+
+      it(`uploadToFileSearchStore uses the API version from ${name}`, async () => {
+        const fetchSpy = await uploadToStore(makeClient());
+        expect(fetchSpy.calls.argsFor(0)[0]).toBe(
+          `${BASE_URL}/upload/v1alpha/fileSearchStores/test-store:uploadToFileSearchStore`,
+        );
+      });
+    }
+
+    it('files.upload uses a per-request API version and keeps upload headers', async () => {
+      const genai = new GoogleGenAI({apiKey: 'fake-api-key'});
+      const fetchSpy = await uploadFile(genai, {
+        apiVersion: 'v1alpha',
+        headers: {'X-Custom': 'custom'},
+      });
+      const [url, init] = fetchSpy.calls.argsFor(0);
+      expect(url).toBe(`${BASE_URL}/upload/v1alpha/files`);
+      const headers = init?.headers as Headers;
+      expect(headers.get('X-Goog-Upload-Protocol')).toBe('resumable');
+      expect(headers.get('X-Goog-Upload-Command')).toBe('start');
+      expect(headers.get('X-Custom')).toBe('custom');
+    });
+
+    it('uploadToFileSearchStore uses a per-request API version', async () => {
+      const genai = new GoogleGenAI({apiKey: 'fake-api-key'});
+      const fetchSpy = await uploadToStore(genai, {apiVersion: 'v1alpha'});
+      expect(fetchSpy.calls.argsFor(0)[0]).toBe(
+        `${BASE_URL}/upload/v1alpha/fileSearchStores/test-store:uploadToFileSearchStore`,
+      );
     });
   });
   describe('registerFiles', () => {
