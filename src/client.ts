@@ -48,7 +48,7 @@ export interface GoogleGenAIOptions {
    *
    * @remarks
    * When true, the {@link https://cloud.google.com/vertex-ai/docs/reference/rest | Gemini Enterprise Agent Platform API} will used.
-   * When false, the {@link https://ai.google.dev/api | Gemini API} will be used.
+   * When false, the {@link https://aistudio.google.com/api-reference | Gemini API} will be used.
    * When both enterprise and vertexai are set, and they have different values,
    * an Error will be thrown.
    *
@@ -61,7 +61,7 @@ export interface GoogleGenAIOptions {
    *
    * @remarks
    * When true, the {@link https://cloud.google.com/vertex-ai/docs/reference/rest | Vertex AI API} will used.
-   * When false, the {@link https://ai.google.dev/api | Gemini API} will be used.
+   * When false, the {@link https://aistudio.google.com/api-reference | Gemini API} will be used.
    * When both enterprise and vertexai are set, and they have different values,
    * an Error will be thrown.
    *

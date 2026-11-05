@@ -90,7 +90,7 @@ export type CreateModelInteraction = {
    */
   labels?: { [k: string]: string } | undefined;
   /**
-   * The model that will complete your prompt.\n\nSee [models](https://ai.google.dev/gemini-api/docs/models) for additional details.
+   * The model that will complete your prompt.\n\nSee [models](https://aistudio.google.com/docs/models) for additional details.
    */
   model: Model;
   /**

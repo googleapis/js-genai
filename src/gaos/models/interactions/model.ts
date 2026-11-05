@@ -11,7 +11,7 @@
  */
 
 /**
- * The model that will complete your prompt.\n\nSee [models](https://ai.google.dev/gemini-api/docs/models) for additional details.
+ * The model that will complete your prompt.\n\nSee [models](https://aistudio.google.com/docs/models) for additional details.
  */
 export type Model =
   | "gemma-4-26b-a4b-it"
