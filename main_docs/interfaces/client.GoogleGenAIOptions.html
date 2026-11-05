@@ -16,7 +16,7 @@
 used if set; otherwise the default API version for the backend is used.</p>
 </div></div><aside class="tsd-sources"><ul><li>Defined in <a href="https://github.com/googleapis/js-genai/blob/main/src/client.ts#L103">src/client.ts:103</a></li></ul></aside></section><section class="tsd-panel tsd-member"><a id="enterprise" class="tsd-anchor"></a><h3 class="tsd-anchor-link"><code class="tsd-tag">Optional</code><span>enterprise</span><a href="#enterprise" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><div class="tsd-signature"><span class="tsd-kind-property">enterprise</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div><div class="tsd-comment tsd-typography"><p>Optional. Determines whether to use the Vertex AI or the Gemini API.</p>
 </div><div class="tsd-comment tsd-typography"><div class="tsd-tag-remarks"><h4 class="tsd-anchor-link"><a id="remarks-2" class="tsd-anchor"></a>Remarks<a href="#remarks-2" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>When true, the <a href="https://cloud.google.com/vertex-ai/docs/reference/rest">Gemini Enterprise Agent Platform API</a> will used.
-When false, the <a href="https://ai.google.dev/api">Gemini API</a> will be used.
+When false, the <a href="https://aistudio.google.com/api-reference">Gemini API</a> will be used.
 When both enterprise and vertexai are set, and they have different values,
 an Error will be thrown.</p>
 <p>If unset, default SDK behavior is to use the Gemini API service.</p>
@@ -32,7 +32,7 @@ an Error will be thrown.</p>
 </div></div><aside class="tsd-sources"><ul><li>Defined in <a href="https://github.com/googleapis/js-genai/blob/main/src/client.ts#L79">src/client.ts:79</a></li></ul></aside></section><section class="tsd-panel tsd-member"><a id="vertexai" class="tsd-anchor"></a><h3 class="tsd-anchor-link"><code class="tsd-tag">Optional</code><span>vertexai</span><a href="#vertexai" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><div class="tsd-signature"><span class="tsd-kind-property">vertexai</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div><div class="tsd-comment tsd-typography"><p>Optional. Determines whether to use the Vertex AI (now Gemini Enterprise Agent Platform) or the Gemini API.
 The <code>enterprise</code> flag is recommended instead.</p>
 </div><div class="tsd-comment tsd-typography"><div class="tsd-tag-remarks"><h4 class="tsd-anchor-link"><a id="remarks-6" class="tsd-anchor"></a>Remarks<a href="#remarks-6" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>When true, the <a href="https://cloud.google.com/vertex-ai/docs/reference/rest">Vertex AI API</a> will used.
-When false, the <a href="https://ai.google.dev/api">Gemini API</a> will be used.
+When false, the <a href="https://aistudio.google.com/api-reference">Gemini API</a> will be used.
 When both enterprise and vertexai are set, and they have different values,
 an Error will be thrown.</p>
 <p>If unset, default SDK behavior is to use the Gemini API service.</p>
