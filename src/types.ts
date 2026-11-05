@@ -2376,7 +2376,7 @@ export declare interface HttpOptions {
   /** Extra parameters to add to the request body.
       The structure must match the backend API's request structure.
       - Gemini Enterprise Agent Platform backend API docs: https://cloud.google.com/vertex-ai/docs/reference/rest
-      - GeminiAPI backend API docs: https://ai.google.dev/api/rest */
+      - GeminiAPI backend API docs: https://aistudio.google.com/api-reference */
   extraBody?: Record<string, unknown>;
   /** HTTP retry options for the request. */
   retryOptions?: HttpRetryOptions;
@@ -8749,7 +8749,7 @@ export declare interface AuthToken {
 export declare interface LiveConnectConstraints {
   /** ID of the model to configure in the ephemeral token for Live API.
       For a list of models, see `Gemini models
-      <https://ai.google.dev/gemini-api/docs/models>`. */
+      <https://aistudio.google.com/docs/models>`. */
   model?: string;
   /** Configuration specific to Live API connections created using this token. */
   config?: LiveConnectConfig;
