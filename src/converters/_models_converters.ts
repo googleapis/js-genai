@@ -1257,6 +1257,13 @@ export function embedContentResponseFromMldev(
     common.setValueByPath(toObject, ['metadata'], fromMetadata);
   }
 
+  const fromUsageMetadata = common.getValueByPath(fromObject, [
+    'usageMetadata',
+  ]);
+  if (fromUsageMetadata != null) {
+    common.setValueByPath(toObject, ['usageMetadata'], fromUsageMetadata);
+  }
+
   return toObject;
 }
 
@@ -1290,6 +1297,22 @@ export function embedContentResponseFromVertex(
   const fromMetadata = common.getValueByPath(fromObject, ['metadata']);
   if (fromMetadata != null) {
     common.setValueByPath(toObject, ['metadata'], fromMetadata);
+  }
+
+  const fromTruncated = common.getValueByPath(fromObject, ['truncated']);
+  if (fromTruncated != null) {
+    common.setValueByPath(toObject, ['truncated'], fromTruncated);
+  }
+
+  const fromUsageMetadata = common.getValueByPath(fromObject, [
+    'usageMetadata',
+  ]);
+  if (fromUsageMetadata != null) {
+    common.setValueByPath(
+      toObject,
+      ['usageMetadata'],
+      usageMetadataFromVertex(fromUsageMetadata, rootObject),
+    );
   }
 
   if (
@@ -5334,6 +5357,134 @@ export function upscaleImageResponseFromVertex(
       });
     }
     common.setValueByPath(toObject, ['generatedImages'], transformedList);
+  }
+
+  return toObject;
+}
+
+export function usageMetadataFromVertex(
+  fromObject: types.UsageMetadata,
+  _rootObject?: unknown,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromResponseTokenCount = common.getValueByPath(fromObject, [
+    'candidatesTokenCount',
+  ]);
+  if (fromResponseTokenCount != null) {
+    common.setValueByPath(
+      toObject,
+      ['responseTokenCount'],
+      fromResponseTokenCount,
+    );
+  }
+
+  const fromResponseTokensDetails = common.getValueByPath(fromObject, [
+    'candidatesTokensDetails',
+  ]);
+  if (fromResponseTokensDetails != null) {
+    let transformedList = fromResponseTokensDetails;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return item;
+      });
+    }
+    common.setValueByPath(toObject, ['responseTokensDetails'], transformedList);
+  }
+
+  const fromCacheTokensDetails = common.getValueByPath(fromObject, [
+    'cacheTokensDetails',
+  ]);
+  if (fromCacheTokensDetails != null) {
+    let transformedList = fromCacheTokensDetails;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return item;
+      });
+    }
+    common.setValueByPath(toObject, ['cacheTokensDetails'], transformedList);
+  }
+
+  const fromCachedContentTokenCount = common.getValueByPath(fromObject, [
+    'cachedContentTokenCount',
+  ]);
+  if (fromCachedContentTokenCount != null) {
+    common.setValueByPath(
+      toObject,
+      ['cachedContentTokenCount'],
+      fromCachedContentTokenCount,
+    );
+  }
+
+  const fromPromptTokenCount = common.getValueByPath(fromObject, [
+    'promptTokenCount',
+  ]);
+  if (fromPromptTokenCount != null) {
+    common.setValueByPath(toObject, ['promptTokenCount'], fromPromptTokenCount);
+  }
+
+  const fromPromptTokensDetails = common.getValueByPath(fromObject, [
+    'promptTokensDetails',
+  ]);
+  if (fromPromptTokensDetails != null) {
+    let transformedList = fromPromptTokensDetails;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return item;
+      });
+    }
+    common.setValueByPath(toObject, ['promptTokensDetails'], transformedList);
+  }
+
+  const fromThoughtsTokenCount = common.getValueByPath(fromObject, [
+    'thoughtsTokenCount',
+  ]);
+  if (fromThoughtsTokenCount != null) {
+    common.setValueByPath(
+      toObject,
+      ['thoughtsTokenCount'],
+      fromThoughtsTokenCount,
+    );
+  }
+
+  const fromToolUsePromptTokenCount = common.getValueByPath(fromObject, [
+    'toolUsePromptTokenCount',
+  ]);
+  if (fromToolUsePromptTokenCount != null) {
+    common.setValueByPath(
+      toObject,
+      ['toolUsePromptTokenCount'],
+      fromToolUsePromptTokenCount,
+    );
+  }
+
+  const fromToolUsePromptTokensDetails = common.getValueByPath(fromObject, [
+    'toolUsePromptTokensDetails',
+  ]);
+  if (fromToolUsePromptTokensDetails != null) {
+    let transformedList = fromToolUsePromptTokensDetails;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return item;
+      });
+    }
+    common.setValueByPath(
+      toObject,
+      ['toolUsePromptTokensDetails'],
+      transformedList,
+    );
+  }
+
+  const fromTotalTokenCount = common.getValueByPath(fromObject, [
+    'totalTokenCount',
+  ]);
+  if (fromTotalTokenCount != null) {
+    common.setValueByPath(toObject, ['totalTokenCount'], fromTotalTokenCount);
+  }
+
+  const fromTrafficType = common.getValueByPath(fromObject, ['trafficType']);
+  if (fromTrafficType != null) {
+    common.setValueByPath(toObject, ['trafficType'], fromTrafficType);
   }
 
   return toObject;
