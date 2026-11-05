@@ -1,5 +1,8 @@
+import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
-import {readFileSync} from 'fs';
+import resolve from '@rollup/plugin-node-resolve';
+import {readdirSync, readFileSync} from 'fs';
+import {createRequire} from 'module';
 import os from 'os';
 import path from 'path';
 import typescript from 'rollup-plugin-typescript2';
@@ -45,6 +48,43 @@ const externalDeps = [
   'protobufjs/minimal.js',
   'p-retry',
 ];
+
+// Browsers cannot resolve bare module specifiers, so the web build bundles its
+// runtime npm dependencies. `p-retry` is CommonJS, hence `commonjs()`.
+// `resolve()` must come before the TypeScript plugin. `resolveOnly` keeps any
+// other bare import external, so test/packaging/check_web_bundle.mjs flags it
+// instead of it being inlined silently.
+const webBundledDeps = ['p-retry', 'retry'];
+const webExternalDeps = externalDeps.filter(
+  (dep) => !webBundledDeps.includes(dep),
+);
+const webRollupPlugins = [
+  resolve({browser: true, preferBuiltins: false, resolveOnly: webBundledDeps}),
+  commonjs(),
+  ...rollupPlugins,
+];
+
+// The inlined packages' licenses require their notices in every copy, so the
+// web bundle starts with each package's license file.
+function bundledLicensesBanner(deps) {
+  const require = createRequire(import.meta.url);
+  const notices = deps.map((dep) => {
+    const dir = path.dirname(require.resolve(`${dep}/package.json`));
+    const file = readdirSync(dir).find((name) =>
+      /^licen[cs]e(\.(md|txt))?$/i.test(name),
+    );
+    if (!file) {
+      throw new Error(`No license file found for bundled package ${dep}`);
+    }
+    return `${dep}\n\n${readFileSync(path.join(dir, file), 'utf8').trim()}`;
+  });
+  const text = ['This file includes the following third-party packages.']
+    .concat(notices)
+    .join('\n\n')
+    .replaceAll('*/', '* /');
+  const lines = text.split('\n').map((line) => ` * ${line}`.trimEnd());
+  return ['/**', ' * @license', ...lines, ' */'].join('\n');
+}
 
 export default [
   // Cross ES module (dist/index.mjs)
@@ -105,11 +145,12 @@ export default [
     output: {
       file: pkg.exports['./web']['import'],
       format: 'es',
+      banner: bundledLicensesBanner(webBundledDeps),
       sourcemap: true,
       sourcemapExcludeSources: true,
     },
-    plugins: rollupPlugins,
-    external: externalDeps,
+    plugins: webRollupPlugins,
+    external: webExternalDeps,
   },
 
   // The `tokenizer/node` ES module (dist/tokenizer/node.mjs)
