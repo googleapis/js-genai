@@ -6908,14 +6908,38 @@ export declare interface File {
   error?: FileStatus;
 }
 
+/** A file that can be referenced by ID from subsequent Claude model requests. The JSON representation of this message matches the Claude Files API File object field-for-field, so that code written against that API parses these responses unchanged. This data type is not supported in Gemini API. */
+export declare interface ClaudeFile {
+  /** Output only. The time at which the file was created. */
+  createdAt?: string;
+  /** Output only. Whether the contents of this file can be retrieved with `DownloadFile`. False for user-uploaded files, true for tool-generated ones. */
+  downloadable?: boolean;
+  /** Output only. The time at which the file expires and is deleted, set from the `expires_in_seconds` upload form field. Unset for files that do not expire, which is serialised as `null`. */
+  expiresAt?: string;
+  /** Output only. The original name of the uploaded file, taken from the `Content-Disposition` header on upload. Between 1 and 255 characters. Control characters and the characters `<>:"|?*\/` are not accepted. */
+  filename?: string;
+  /** Output only. The server-assigned identifier of the file, for example `file_abc123`. This is the ID to pass in subsequent model requests. */
+  id?: string;
+  /** Output only. The media type of the file, taken from the `Content-Type` header of the file part on upload. */
+  mimeType?: string;
+  /** Output only. The size of the file in bytes. */
+  sizeBytes?: number;
+  /** Output only. The object type. Always `file`. */
+  type?: string;
+}
+
 /** Response for the list files method. */
 export class ListFilesResponse {
   /** Used to retain the full HTTP response. */
   sdkHttpResponse?: HttpResponse;
-  /** A token that can be sent as a `page_token` into a subsequent `ListFiles` call. */
+  /** A token that can be sent as a `page_token` into a subsequent `ListFiles` call. This field is not supported in Vertex AI. */
   nextPageToken?: string;
-  /** The list of `File`s. */
+  /** The list of `File`s. This field is not supported in Vertex AI. */
   files?: File[];
+  /** The files. This field is not supported in Gemini API. */
+  data?: ClaudeFile[];
+  /** Opaque cursor for the next page. Unset on the last page, and always unset when `ids` was supplied, since batch fetch is single-page. This field is not supported in Gemini API. */
+  nextPage?: string;
 }
 
 /** Used to override the default configuration. */
@@ -6996,6 +7020,10 @@ export declare interface DeleteFileParameters {
 export class DeleteFileResponse {
   /** Used to retain the full HTTP response. */
   sdkHttpResponse?: HttpResponse;
+  /** The ID of the deleted file. */
+  id?: string;
+  /** The object type. Always `file_deleted`. */
+  type?: string;
 }
 
 /** Used to override the default configuration. */
