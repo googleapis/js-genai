@@ -471,8 +471,11 @@ export function tLiveSpeechConfig(
 }
 
 export function tTool(tool: types.Tool): types.Tool {
-  if (tool.functionDeclarations) {
-    for (const functionDeclaration of tool.functionDeclarations) {
+  // Create a deep copy to avoid mutating the original object.
+  const clonedTool = structuredClone(tool);
+  
+  if (clonedTool.functionDeclarations) {
+    for (const functionDeclaration of clonedTool.functionDeclarations) {
       if (functionDeclaration.parameters) {
         if (!Object.keys(functionDeclaration.parameters).includes('$schema')) {
           functionDeclaration.parameters = processJsonSchema(
@@ -501,7 +504,7 @@ export function tTool(tool: types.Tool): types.Tool {
       }
     }
   }
-  return tool;
+  return clonedTool;
 }
 
 export function tTools(tools: types.ToolListUnion | unknown): types.Tool[] {
