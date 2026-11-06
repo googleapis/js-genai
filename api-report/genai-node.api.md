@@ -113,7 +113,23 @@ export interface ApiAuthApiKeyConfig {
 }
 
 // @public
+export class APIConnectionError extends InteractionsAPIError<undefined, undefined, undefined> {
+    constructor({ message, cause, }: {
+        message?: string | undefined;
+        cause?: Error | unknown | undefined;
+    });
+}
+
+// @public
+export class APIConnectionTimeoutError extends APIConnectionError {
+    constructor({ message }?: {
+        message?: string;
+    });
+}
+
+// @public
 export class ApiError extends Error {
+    static [Symbol.hasInstance]: (instance: unknown) => boolean;
     constructor(options: ApiErrorInfo);
     status: number;
 }
@@ -122,6 +138,13 @@ export class ApiError extends Error {
 export interface ApiErrorInfo {
     message: string;
     status: number;
+}
+
+// @public
+export class APIUserAbortError extends InteractionsAPIError<undefined, undefined, undefined> {
+    constructor({ message }?: {
+        message?: string;
+    });
 }
 
 // @public
@@ -226,6 +249,10 @@ export interface AuthConfigOidcConfig {
 }
 
 // @public
+export class AuthenticationError extends InteractionsAPIError<401, Headers> {
+}
+
+// @public
 export interface AuthToken {
     expireTime?: string;
     name?: string;
@@ -284,6 +311,10 @@ export type BackoffStrategy = {
     exponent: number;
     maxElapsedTime: number;
 };
+
+// @public
+export class BadRequestError extends InteractionsAPIError<400, Headers> {
+}
 
 // @public
 export interface BaseUrlParameters {
@@ -583,6 +614,10 @@ export class ComputeTokensResponse {
 // @public
 export interface ComputeTokensResult {
     tokensInfo?: TokensInfo[];
+}
+
+// @public
+export class ConflictError extends InteractionsAPIError<409, Headers> {
 }
 
 // @public
@@ -1673,6 +1708,11 @@ export enum FunctionResponseScheduling {
 // @public
 export interface GcsSource {
     uris?: string[];
+}
+
+// @public
+export class GeminiNextGenAPIClientError extends Error {
+    constructor(message?: string);
 }
 
 // @public
@@ -3317,6 +3357,22 @@ export namespace Interactions {
 }
 
 // @public
+export class InteractionsAPIError<TStatus extends number | undefined = number | undefined, THeaders extends Headers | undefined = Headers | undefined, TError extends object | undefined = object | undefined> extends GeminiNextGenAPIClientError {
+    constructor(status: TStatus, error: TError, message: string | undefined, headers: THeaders);
+    readonly body: string;
+    // (undocumented)
+    cause: unknown;
+    readonly contentType: string;
+    readonly error: TError;
+    // (undocumented)
+    static generate(status: number | undefined, errorResponse: object | undefined, message: string | undefined, headers: Headers | undefined): InteractionsAPIError;
+    readonly headers: THeaders;
+    readonly rawResponse: Response | undefined;
+    readonly status: TStatus;
+    readonly statusCode: TStatus;
+}
+
+// @public
 export enum InteractionStatus {
     IDLE = "IDLE",
     IN_PROGRESS = "IN_PROGRESS",
@@ -3328,6 +3384,10 @@ export enum InteractionStatus {
 export interface InternalRegisterFilesParameters {
     config?: RegisterFilesConfig;
     uris: string[];
+}
+
+// @public
+export class InternalServerError extends InteractionsAPIError<number, Headers> {
 }
 
 // @public
@@ -4079,6 +4139,10 @@ export enum MusicGenerationMode {
 }
 
 // @public
+export class NotFoundError extends InteractionsAPIError<404, Headers> {
+}
+
+// @public
 export interface Operation<T> {
     done?: boolean;
     error?: Record<string, unknown>;
@@ -4237,6 +4301,10 @@ export interface PartnerModelTuningSpec {
 export type PartUnion = Part | string;
 
 // @public
+export class PermissionDeniedError extends InteractionsAPIError<403, Headers> {
+}
+
+// @public
 export enum PersonGeneration {
     ALLOW_ADULT = "ALLOW_ADULT",
     ALLOW_ALL = "ALLOW_ALL",
@@ -4368,6 +4436,10 @@ export interface RagRetrievalConfigRankingLlmRanker {
 // @public
 export interface RagRetrievalConfigRankingRankService {
     modelName?: string;
+}
+
+// @public
+export class RateLimitError extends InteractionsAPIError<429, Headers> {
 }
 
 // @public
@@ -5461,6 +5533,10 @@ export enum Type {
     OBJECT = "OBJECT",
     STRING = "STRING",
     TYPE_UNSPECIFIED = "TYPE_UNSPECIFIED"
+}
+
+// @public
+export class UnprocessableEntityError extends InteractionsAPIError<422, Headers> {
 }
 
 // @public
