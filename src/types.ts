@@ -3850,7 +3850,7 @@ export class GenerateContentResponse {
    * @example
    * ```ts
    * const response = await ai.models.generateContent({
-   *   model: 'gemini-flash-latest',
+   *   model: 'gemini-3.8-flash',
    *   contents:
    *     'Why is the sky blue?',
    * });
@@ -3970,7 +3970,7 @@ export class GenerateContentResponse {
    *   required: ['brightness', 'colorTemperature'],
    *  };
    *  const response = await ai.models.generateContent({
-   *     model: 'gemini-flash-latest',
+   *     model: 'gemini-3.8-flash',
    *     contents: 'Dim the lights so the room feels cozy and warm.',
    *     config: {
    *       tools: [{functionDeclarations: [controlLightFunctionDeclaration]}],
@@ -4018,7 +4018,7 @@ export class GenerateContentResponse {
    * @example
    * ```ts
    * const response = await ai.models.generateContent({
-   *   model: 'gemini-flash-latest',
+   *   model: 'gemini-3.8-flash',
    *   contents:
    *     'What is the sum of the first 50 prime numbers? Generate and run code for the calculation, and make sure you get all 50.'
    *   config: {
@@ -4062,7 +4062,7 @@ export class GenerateContentResponse {
    * @example
    * ```ts
    * const response = await ai.models.generateContent({
-   *   model: 'gemini-flash-latest',
+   *   model: 'gemini-3.8-flash',
    *   contents:
    *     'What is the sum of the first 50 prime numbers? Generate and run code for the calculation, and make sure you get all 50.'
    *   config: {
@@ -6214,7 +6214,7 @@ export declare interface CreateTuningJobConfig {
 
 /** Fine-tuning job creation parameters - optional fields. */
 export declare interface CreateTuningJobParametersPrivate {
-  /** The base model that is being tuned, e.g., "gemini-flash-latest". */
+  /** The base model that is being tuned, e.g., "gemini-3.8-flash". */
   baseModel?: string;
   /** The PreTunedModel that is being tuned. */
   preTunedModel?: PreTunedModel;
@@ -6339,7 +6339,7 @@ export declare interface CreateCachedContentConfig {
 
 /** Parameters for caches.create method. */
 export declare interface CreateCachedContentParameters {
-  /** ID of the model to use. Example: gemini-flash-latest */
+  /** ID of the model to use. Example: gemini-3.8-flash */
   model: string;
   /** Configuration that contains optional parameters.
    */
@@ -8461,7 +8461,7 @@ These parameters are used when creating a chat session with the
 export declare interface CreateChatParameters {
   /** The name of the model to use for the chat session.
 
-      For example: 'gemini-flash-latest', 'gemini-flash-lite-latest', etc. See Gemini API
+      For example: 'gemini-3.8-flash', 'gemini-flash-lite-latest', etc. See Gemini API
       docs to find the available models.
        */
   model: string;
@@ -8849,7 +8849,7 @@ export declare interface ComputeTokensResult {
 
 /** Fine-tuning job creation parameters - optional fields. */
 export declare interface CreateTuningJobParameters {
-  /** The base model that is being tuned, e.g., "gemini-flash-latest". */
+  /** The base model that is being tuned, e.g., "gemini-3.8-flash". */
   baseModel: string;
   /** Cloud Storage path to file containing training dataset for tuning. The dataset must be formatted as a JSONL file. */
   trainingDataset: TuningDataset;
