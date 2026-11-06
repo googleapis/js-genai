@@ -27,6 +27,7 @@ import {
   RequestTimeoutError,
   UnexpectedClientError,
 } from "../models/errors/http-client-errors.js";
+import * as errors from "../models/errors/index.js";
 import * as operations from "../models/operations/index.js";
 import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
@@ -46,6 +47,8 @@ export function environmentsFilesList(
 ): APIPromise<
   Result<
     environments.GetEnvironmentFilesResponse,
+    | errors.ApiClientError
+    | errors.ApiServerError
     | GoogleGenAiError
     | ConnectionError
     | RequestAbortedError
@@ -79,6 +82,8 @@ async function $do(
   [
     Result<
       environments.GetEnvironmentFilesResponse,
+      | errors.ApiClientError
+      | errors.ApiServerError
       | GoogleGenAiError
       | ConnectionError
       | RequestAbortedError
@@ -187,8 +192,14 @@ async function $do(
   }
   const response = doResult.value;
 
+  const responseFields = {
+    httpMeta: { response: response, request: req },
+  };
+
   const [result] = await M.match<
     environments.GetEnvironmentFilesResponse,
+    | errors.ApiClientError
+    | errors.ApiServerError
     | GoogleGenAiError
     | ConnectionError
     | RequestAbortedError
@@ -197,9 +208,9 @@ async function $do(
     | UnexpectedClientError
   >(
     M.json<environments.GetEnvironmentFilesResponse>(200),
-    M.fail("4XX"),
-    M.fail("5XX"),
-  )(response, req);
+    M.jsonErr<errors.ApiClientError>("4XX", errors.ApiClientError),
+    M.jsonErr<errors.ApiServerError>("5XX", errors.ApiServerError),
+  )(response, req, { extraFields: responseFields });
   if (!result.ok) {
     return [result, { status: "complete", request: req, response }];
   }
