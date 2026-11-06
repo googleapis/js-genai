@@ -7,9 +7,32 @@
 
 ### ⚠ BREAKING CHANGES
 
-* **interactions:** In the typed SDKs, `CodeExecutionResultStep.result` changes from `string` to the `CodeExecutionResultStepResult` union. Code that reads `result` as a string must now check which variant is present and read the string from it. The JSON for text-only results is unchanged.
-* The minimum supported Node.js version is now 22. There are no API changes, and both the CommonJS and ESM bundles are still published. Users who must stay on Node 20 should pin to @google/genai@^2.
-* default Gemini API version to v1 instead of v1beta across SDKs
+* **Default Gemini Developer API version is now `v1` (was `v1beta`)** ([3f477bf](https://github.com/googleapis/js-genai/commit/3f477bfbbf26ba596e4ad0469f8c9663b340c872))
+  * Clients targeting the **Gemini Developer API** now default to API version `v1` instead of `v1beta`.
+  * **No effect on Gemini Enterprise Agent Platform (Vertex AI) defaults:** Clients with `vertexai: true` are **unaffected** by this default change and continue to default to `v1beta1`.
+  * **How to configure or restore the previous default via environment variable (Node.js):** Set `GOOGLE_GENAI_API_VERSION` (works for both Gemini Developer API and Enterprise / Vertex AI clients when no version is set in code):
+    ```bash
+    # Restores the beta default ('v1beta' on Gemini Developer API, 'v1beta1' on Enterprise / Vertex AI)
+    export GOOGLE_GENAI_API_VERSION=beta
+
+    # Or set an explicit API version string on either platform (e.g. 'v1', 'v1beta', 'v1beta1')
+    export GOOGLE_GENAI_API_VERSION=v1beta
+    ```
+  * **How to set the API version in code:** Pass `apiVersion` (or `httpOptions.apiVersion`) to `GoogleGenAI` (takes precedence over `GOOGLE_GENAI_API_VERSION`):
+    ```ts
+    import { GoogleGenAI } from '@google/genai';
+
+    const ai = new GoogleGenAI({
+      apiVersion: 'v1beta',
+    });
+    ```
+
+* **Minimum supported Node.js version is now 22 (was 20)** ([7b9fbf0](https://github.com/googleapis/js-genai/commit/7b9fbf06b4bc729be60e433c458a3b80fffee5f0))
+  * Following Node.js 20 reaching end-of-life (2026-04-30), `package.json` `engines.node` now requires `>=22.0.0`.
+  * There are no runtime API or bundle changes resulting from this bump, and both CommonJS and ESM bundles continue to be published.
+  * Users who must remain on Node.js 20 should pin to `@google/genai@^2` (or ignore engine checks if supported by their environment).
+
+* **interactions:** `CodeExecutionResultStep.result` is now typed as `Array<Content> | string` (`CodeExecutionResultStepResult`) instead of `string` ([b36ce99](https://github.com/googleapis/js-genai/commit/b36ce993edaaface54b3c603176f08e7ef057f19)). The JSON and runtime value for text-only results are still a plain `string`, but TypeScript code reading `step.result` as a `string` may need to narrow the union (`typeof step.result === 'string'`).
 
 ### Features
 
