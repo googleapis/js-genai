@@ -2,6 +2,59 @@
 
 
 
+## [3.0.0](https://github.com/googleapis/js-genai/compare/v2.32.0...v3.0.0) (2026-11-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* **Default Gemini Developer API version is now `v1` (was `v1beta`)** ([3f477bf](https://github.com/googleapis/js-genai/commit/3f477bfbbf26ba596e4ad0469f8c9663b340c872))
+  * Clients targeting the **Gemini Developer API** now default to API version `v1` instead of `v1beta`.
+  * **No effect on Gemini Enterprise (Vertex AI) defaults:** Clients with `vertexai: true` are **unaffected** by this default change and continue to default to `v1beta1`.
+  * **How to configure or restore the previous default via environment variable (Node.js):** Set `GOOGLE_GENAI_API_VERSION` (works for both Gemini Developer API and Enterprise / Vertex AI clients when no version is set in code):
+    ```bash
+    # Restores the beta default ('v1beta' on Gemini Developer API, 'v1beta1' on Enterprise / Vertex AI)
+    export GOOGLE_GENAI_API_VERSION=beta
+
+    # Or set an explicit API version string on either platform (e.g. 'v1', 'v1beta', 'v1beta1')
+    export GOOGLE_GENAI_API_VERSION=v1beta
+    ```
+  * **How to set the API version in code:** Pass `apiVersion` (or `httpOptions.apiVersion`) to `GoogleGenAI` (takes precedence over `GOOGLE_GENAI_API_VERSION`):
+    ```ts
+    import { GoogleGenAI } from '@google/genai';
+
+    const ai = new GoogleGenAI({
+      apiVersion: 'v1beta',
+    });
+    ```
+
+* **Minimum supported Node.js version is now 22 (was 20)** ([7b9fbf0](https://github.com/googleapis/js-genai/commit/7b9fbf06b4bc729be60e433c458a3b80fffee5f0))
+  * Following Node.js 20 reaching end-of-life (2026-04-30), `package.json` `engines.node` now requires `>=22.0.0`.
+  * There are no runtime API or bundle changes resulting from this bump, and both CommonJS and ESM bundles continue to be published.
+  * Users who must remain on Node.js 20 should pin to `@google/genai@^2` (or ignore engine checks if supported by their environment).
+
+* **interactions:** `CodeExecutionResultStep.result` is now typed as `Array<Content> | string` (`CodeExecutionResultStepResult`) instead of `string` ([b36ce99](https://github.com/googleapis/js-genai/commit/b36ce993edaaface54b3c603176f08e7ef057f19)). The JSON and runtime value for text-only results are still a plain `string`, but TypeScript code reading `step.result` as a `string` may need to narrow the union (`typeof step.result === 'string'`).
+
+### Features
+
+* Add `source_text` to `AudioTranscriptionConfig` and `SmartTranscriptionMode`. ([ddb5158](https://github.com/googleapis/js-genai/commit/ddb5158860a255baaa36e6138a501803082150ce))
+* Add MALFORMED_RESPONSE to FinishReason ([032d50c](https://github.com/googleapis/js-genai/commit/032d50c8b25a99f8072e76a065076f5f9585c9d6)), refs [#2937](https://github.com/googleapis/js-genai/issues/2937)
+* **cli:** use gemini-3.5-transcribe as default model for transcribe command ([df29944](https://github.com/googleapis/js-genai/commit/df2994493dd07c0d9900e7c46e768e525abc6277))
+* default Gemini API version to v1 instead of v1beta across SDKs ([3f477bf](https://github.com/googleapis/js-genai/commit/3f477bfbbf26ba596e4ad0469f8c9663b340c872))
+* Disable GenerateVideos for Gemini API, update tests/READMEs ([3f65d02](https://github.com/googleapis/js-genai/commit/3f65d021308199fe0af9dd95e8aff4a3b7c89a6c))
+* drop support for Node 20; Node.js &gt;=22 is now required ([7b9fbf0](https://github.com/googleapis/js-genai/commit/7b9fbf06b4bc729be60e433c458a3b80fffee5f0))
+* **interactions:** add Office and OpenDocument MIME types ([b24cfc2](https://github.com/googleapis/js-genai/commit/b24cfc2212905946f74c86de78c0e13117a23b20))
+* **interactions:** support multimodal content in CodeExecutionResultStep.result ([b36ce99](https://github.com/googleapis/js-genai/commit/b36ce993edaaface54b3c603176f08e7ef057f19))
+* support GOOGLE_GENAI_API_VERSION environment variable across SDKs ([3f477bf](https://github.com/googleapis/js-genai/commit/3f477bfbbf26ba596e4ad0469f8c9663b340c872))
+* update discovery doc ([8be9344](https://github.com/googleapis/js-genai/commit/8be934486e01c6ba50905634d354f02e6ba12311))
+
+
+### Bug Fixes
+
+* Raise protobufjs and ws minimums to patched versions ([71827d0](https://github.com/googleapis/js-genai/commit/71827d05bdde09fecc05ed177531d3497c6be86a)), refs [#1611](https://github.com/googleapis/js-genai/issues/1611)
+* Reject Live.connect() when the WebSocket errors or closes before setup completes ([04eaa81](https://github.com/googleapis/js-genai/commit/04eaa818b75b9870f85470f2646323befa70956b)), refs [#1257](https://github.com/googleapis/js-genai/issues/1257)
+* respect configured and default API version for Gemini API file uploads across SDKs ([bdb4e42](https://github.com/googleapis/js-genai/commit/bdb4e42ddfac71e5fdbc53d6d64c8db9956ba966))
+* stop emitting array indices in auth token fieldMask ([80e7b3d](https://github.com/googleapis/js-genai/commit/80e7b3d32c1f521ea730671aa4b6cb5518d67312)), refs [#1492](https://github.com/googleapis/js-genai/issues/1492)
+
 ## [2.32.0](https://github.com/googleapis/js-genai/compare/v2.31.0...v2.32.0) (2026-10-29)
 
 
