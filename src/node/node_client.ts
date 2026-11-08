@@ -339,7 +339,18 @@ export class GoogleGenAI {
       }
     }
 
-    this.apiVersion = options.apiVersion;
+    const envApiVersion = getEnv('GOOGLE_GENAI_API_VERSION') || undefined;
+    const resolvedEnvApiVersion =
+      envApiVersion === 'beta'
+        ? this.vertexai
+          ? 'v1beta1'
+          : 'v1beta'
+        : envApiVersion;
+    this.apiVersion =
+      options.apiVersion ??
+      (options.httpOptions?.apiVersion !== undefined
+        ? undefined
+        : resolvedEnvApiVersion);
     this.httpOptions = options.httpOptions;
     const auth = new NodeAuth({
       apiKey: this.apiKey,

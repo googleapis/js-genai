@@ -12,6 +12,7 @@ import {
   startTestServer,
   stopTestServer,
 } from 'test-server-sdk';
+import {setDefaultGoogleAiApiVersion} from '../../src/_api_client.js';
 import {setDefaultBaseUrls} from '../../src/_base_url.js';
 
 const packageRoot = process.cwd();
@@ -48,6 +49,8 @@ export async function setupTestServer() {
       return new Headers();
     };
     isPatched = true;
+    // Checked-in Gemini API recordings were recorded against v1beta.
+    setDefaultGoogleAiApiVersion('v1beta');
   }
 }
 
@@ -61,4 +64,5 @@ export async function shutdownTestServer() {
     GoogleAuth.prototype.getRequestHeaders = originalRequestHeaders;
     isPatched = false;
   }
+  setDefaultGoogleAiApiVersion(undefined);
 }

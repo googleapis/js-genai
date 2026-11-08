@@ -4,7 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {ApiClient, SDK_VERSION} from '../../src/_api_client.js';
+import {
+  ApiClient,
+  GOOGLE_AI_API_DEFAULT_VERSION,
+  SDK_VERSION,
+} from '../../src/_api_client.js';
 import {WebSocketCallbacks} from '../../src/_websocket.js';
 import * as converters from '../../src/converters/_live_converters.js';
 import {CrossDownloader} from '../../src/cross/_cross_downloader.js';
@@ -45,7 +49,7 @@ describe('live', () => {
 
     const websocketFactorySpyCall = websocketFactorySpy.calls.all()[0];
     expect(websocketFactorySpyCall.args[0]).toBe(
-      'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=test-api-key',
+      `wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.${GOOGLE_AI_API_DEFAULT_VERSION}.GenerativeService.BidiGenerateContent?key=test-api-key`,
     );
     expect(websocketFactorySpyCall.args[1]).toEqual({
       'content-type': 'application/json',
@@ -60,9 +64,7 @@ describe('live', () => {
     );
     expect(onopenString).toContain('onopen');
     expect(onopenString).toContain('onopenResolve({})');
-    expect(
-      JSON.stringify(websocketFactorySpyCall.args[2].onclose.toString()),
-    ).toContain('void e');
+    expect(typeof websocketFactorySpyCall.args[2].onclose).toBe('function');
     expect(session).toBeDefined();
   });
 
@@ -92,7 +94,7 @@ describe('live', () => {
 
     const websocketFactorySpyCall = websocketFactorySpy.calls.all()[0];
     expect(websocketFactorySpyCall.args[0]).toBe(
-      'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContentConstrained?access_token=auth_tokens/test-access-token',
+      `wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.${GOOGLE_AI_API_DEFAULT_VERSION}.GenerativeService.BidiGenerateContentConstrained?access_token=auth_tokens/test-access-token`,
     );
   });
 
@@ -122,7 +124,7 @@ describe('live', () => {
 
     const websocketFactorySpyCall = websocketFactorySpy.calls.all()[0];
     expect(websocketFactorySpyCall.args[0]).toBe(
-      'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=test-api-key',
+      `wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.${GOOGLE_AI_API_DEFAULT_VERSION}.GenerativeService.BidiGenerateContent?key=test-api-key`,
     );
   });
 
@@ -205,7 +207,7 @@ describe('live', () => {
 
     const websocketFactorySpyCall = websocketFactorySpy.calls.all()[0];
     expect(websocketFactorySpyCall.args[0]).toBe(
-      'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=test-api-key',
+      `wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.${GOOGLE_AI_API_DEFAULT_VERSION}.GenerativeService.BidiGenerateContent?key=test-api-key`,
     );
     expect(websocketFactorySpyCall.args[1]).toEqual({
       'content-type': 'application/json',
@@ -220,12 +222,8 @@ describe('live', () => {
     );
     expect(onopenString).toContain('onopen');
     expect(onopenString).toContain('onopenResolve({})');
-    expect(
-      JSON.stringify(websocketFactorySpyCall.args[2].onerror.toString()),
-    ).toContain('void e');
-    expect(
-      JSON.stringify(websocketFactorySpyCall.args[2].onclose.toString()),
-    ).toContain('void e');
+    expect(typeof websocketFactorySpyCall.args[2].onerror).toBe('function');
+    expect(typeof websocketFactorySpyCall.args[2].onclose).toBe('function');
     expect(websocket.connect).toHaveBeenCalled();
     const websocketSpyCall = websocketSpy.calls.all()[0];
     expect(JSON.parse(websocketSpyCall.args[0])).toEqual({

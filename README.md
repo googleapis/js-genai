@@ -11,7 +11,7 @@
 The Google Gen AI JavaScript SDK is designed for
 TypeScript and JavaScript developers to build applications powered by Gemini. The SDK
 supports both the [Gemini Developer API](https://ai.google.dev/gemini-api/docs)
-and [Gemini Enterprise Agent Platform](https://docs.cloud.google.com/gemini-enterprise-agent-platform).
+and [Gemini Enterprise Agent Platform](https://docs.cloud.google.com/gemini-enterprise-agent-platform) (formerly Vertex AI).
 
 > [!WARNING]
 > **Updates to Automatic Function Calling (AFC) in upcoming SDK version:**
@@ -45,7 +45,7 @@ We recommend using our Code Generation instructions [`codegen_instructions.md`](
 
 ## Prerequisites
 
-1. Node.js version 20 or later
+1. Node.js version 22 or later
 
 ### The following are required for Gemini Enterprise Agent Platform users (excluding Vertex AI Studio)
 1.  [Select](https://console.cloud.google.com/project) or [create](https://cloud.google.com/resource-manager/docs/creating-managing-projects#creating_a_project) a Google Cloud project.
@@ -82,7 +82,7 @@ const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
 
 async function main() {
   const response = await ai.models.generateContent({
-    model: 'gemini-flash-latest',
+    model: 'gemini-3.8-flash',
     contents: 'Why is the sky blue?',
   });
   console.log(response.text);
@@ -94,9 +94,36 @@ main();
 ## Initialization
 
 The Google Gen AI SDK provides support for both the
-[Google AI Studio](https://ai.google.dev/gemini-api/docs) and
+[Gemini Developer API](https://ai.google.dev/gemini-api/docs) and
 [Gemini Enterprise Agent Platform](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/overview)
  implementations of the Gemini API.
+
+<details>
+<summary><b>Gemini Developer API or Gemini Enterprise Agent Platform?</b></summary>
+
+Both services serve Gemini models through the same `GoogleGenAI` interface.
+Gemini Enterprise Agent Platform was formerly called Vertex AI. The older
+`vertexai: true` option and `GOOGLE_GENAI_USE_VERTEXAI` variable still select
+it.
+
+| | Gemini Developer API | Gemini Enterprise Agent Platform |
+| --- | --- | --- |
+| Select it with | The default | `enterprise: true`, or `GOOGLE_GENAI_USE_ENTERPRISE=true` in Node.js |
+| Authentication | An API key from [Google AI Studio](https://aistudio.google.com/apikey) | [Google Cloud credentials](https://cloud.google.com/docs/authentication) with a `project` and `location`, or an API key (Express mode) |
+| Setup | An API key only | A Google Cloud project with billing and the Vertex AI API enabled. See [Prerequisites](#prerequisites). |
+| Endpoint | `generativelanguage.googleapis.com` | `aiplatform.googleapis.com` for the `global` location, or a regional endpoint for the `location` you set |
+| Browser | Supported, with an API key | Express mode only: select it with `vertexai: true` and an API key. Browsers do not support `enterprise: true`, `project` or `location`. |
+| Available only on this service | `ai.files`, `ai.fileSearchStores`, `ai.authTokens.create`, `ai.batches.createEmbeddings`, `ai.live.music` | `ai.models.generateImages`, `generateVideos`, `editImage`, `upscaleImage`, `recontextImage`, `segmentImage` and `computeTokens` |
+
+Models, quotas and pricing differ between the services. See the
+[Gemini Developer API docs](https://ai.google.dev/gemini-api/docs) and the
+[Gemini Enterprise Agent Platform docs](https://docs.cloud.google.com/gemini-enterprise-agent-platform).
+
+Start with the Gemini Developer API if you want an API key and no Google Cloud
+setup. Use Gemini Enterprise Agent Platform if your app runs in a Google Cloud
+project and needs Google Cloud authentication or regional endpoints.
+
+</details>
 
 ### Gemini Developer API
 
@@ -164,9 +191,17 @@ const ai = new GoogleGenAI();
 
 ## API Selection
 
-By default, the SDK uses the beta API endpoints provided by Google to support
-preview features in the APIs. The stable API endpoints can be selected by
-setting the API version to `v1`.
+By default, the SDK uses:
+- the stable `v1` API endpoints for the Gemini Developer API.
+- and the beta `v1beta1` API endpoints for Gemini Enterprise Agent Platform.
+
+A different API version (for example `v1beta` or `v1alpha`) can be selected
+with `apiVersion` (or `httpOptions.apiVersion`). In Node.js, it can also be
+selected with the `GOOGLE_GENAI_API_VERSION` environment variable. An
+explicitly configured version takes precedence over the environment variable.
+Setting `GOOGLE_GENAI_API_VERSION=beta` selects the beta version of whichever
+backend is in use: `v1beta` for the Gemini Developer API and `v1beta1` for
+Gemini Enterprise Agent Platform.
 
 To set the API version use `apiVersion`. For example, to set the API version to
 `v1` for Gemini Enterprise Agent Platform:
@@ -228,7 +263,7 @@ const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
 
 async function main() {
   const response = await ai.models.generateContentStream({
-    model: 'gemini-flash-latest',
+    model: 'gemini-3.8-flash',
     contents: 'Write a 100-word poem.',
   });
   for await (const chunk of response) {
@@ -274,7 +309,7 @@ async function main() {
 
   const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
   const response = await ai.models.generateContent({
-    model: 'gemini-flash-latest',
+    model: 'gemini-3.8-flash',
     contents: 'Dim the lights so the room feels cozy and warm.',
     config: {
       toolConfig: {
@@ -327,7 +362,7 @@ const ai = new GoogleGenAI({});
 
 // Send request to the model with MCP tools
 const response = await ai.models.generateContent({
-  model: "gemini-flash-latest",
+  model: "gemini-3.8-flash",
   contents: `What is the weather in London on ${new Date().toLocaleDateString()}?`,
   config: {
     tools: [mcpToTool(mcpClient)],  // uses the session, will automatically call the tool using automatic function calling
@@ -388,14 +423,14 @@ const ai = new GoogleGenAI({
 async function main() {
   // Automatic continuation is enabled by default.
   const response = await ai.models.generateContent({
-    model: 'gemini-flash-latest',
+    model: 'gemini-3.8-flash',
     contents: 'Write a comprehensive multi-chapter guide on compiler design.',
   });
   console.log(response.text);
 
   // Set automaticContinuation to false to disable automatic continuation.
   const singleHopResponse = await ai.models.generateContent({
-    model: 'gemini-flash-latest',
+    model: 'gemini-3.8-flash',
     contents: 'Write a comprehensive multi-chapter guide on compiler design.',
     config: {
       automaticContinuation: false,
@@ -444,7 +479,7 @@ for more details.
 
 ```typescript
 const interaction = await ai.interactions.create({
-    model: 'gemini-flash-latest',
+    model: 'gemini-3.8-flash',
     input: 'Hello, how are you?',
 });
 console.debug(interaction);
@@ -459,14 +494,14 @@ conversation by referencing the `previous_interaction_id`.
 ```typescript
 // 1. First turn
 const interaction1 = await ai.interactions.create({
-    model: 'gemini-flash-latest',
+    model: 'gemini-3.8-flash',
     input: 'Hi, my name is Amir.',
 });
 console.debug(interaction1);
 
 // 2. Second turn (passing previous_interaction_id)
 const interaction2 = await ai.interactions.create({
-  model: 'gemini-flash-latest',
+  model: 'gemini-3.8-flash',
   input: 'What is my name?',
   previous_interaction_id: interaction1.id,
 });
@@ -476,7 +511,7 @@ console.debug(interaction2);
 
 ### Agents (Deep Research)
 
-You can use specialized agents like `deep-research-pro-preview-12-2025` for
+You can use specialized agents like `deep-research-preview-04-2026` for
 complex tasks.
 
 ```typescript
@@ -488,7 +523,7 @@ function sleep(ms: number): Promise<void> {
 const initialInteraction = await ai.interactions.create({
   input:
       'Research the history of the Google TPUs with a focus on 2025 and 2026.',
-  agent: 'deep-research-pro-preview-12-2025',
+  agent: 'deep-research-preview-04-2026',
   background: true,
 });
 
@@ -523,7 +558,7 @@ import base64
 // const base64Image = ...;
 
 const interaction = await ai.interactions.create({
-  model: 'gemini-flash-latest',
+  model: 'gemini-3.8-flash',
   input: [
     { type: 'text', text: 'Describe the image.' },
     { type: 'image', data: base64Image, mime_type: 'image/png' },
@@ -549,7 +584,7 @@ const getWeather = (location: string) => {
 
 // 2. Send the request with tools
 let interaction = await ai.interactions.create({
-  model: 'gemini-flash-latest',
+  model: 'gemini-3.8-flash',
   input: 'What is the weather in Mountain View, CA?',
   tools: [
     {
@@ -582,7 +617,7 @@ for (const output of interaction.outputs!) {
 
     // Send result back to the model
     interaction = await ai.interactions.create({
-      model: 'gemini-flash-latest',
+      model: 'gemini-3.8-flash',
       previous_interaction_id: interaction.id,
       input: [
         {
@@ -609,7 +644,7 @@ Execution**.
 
 ```typescript
 const interaction = await ai.interactions.create({
-  model: 'gemini-flash-latest',
+  model: 'gemini-3.8-flash',
   input: 'Who won the last Super Bowl',
   tools: [{ type: 'google_search' }],
 });
@@ -622,7 +657,7 @@ console.debug(interaction);
 
 ```typescript
 const interaction = await ai.interactions.create({
-  model: 'gemini-flash-latest',
+  model: 'gemini-3.8-flash',
   input: 'Calculate the 50th Fibonacci number.',
   tools: [{ type: 'code_execution' }],
 });

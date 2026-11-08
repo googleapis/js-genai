@@ -181,7 +181,15 @@ export interface AudioTranscriptionConfig {
     languageAuto?: LanguageAuto;
     languageCodes?: string[];
     languageHints?: LanguageHints;
+    mode?: AudioTranscriptionConfigMode;
     wordTimestamp?: boolean;
+}
+
+// @public
+export enum AudioTranscriptionConfigMode {
+    MODE_UNSPECIFIED = "MODE_UNSPECIFIED",
+    SMART = "SMART",
+    VERBATIM = "VERBATIM"
 }
 
 // @public
@@ -219,7 +227,10 @@ export interface AuthConfigOidcConfig {
 
 // @public
 export interface AuthToken {
+    expireTime?: string;
     name?: string;
+    newSessionExpireTime?: string;
+    uses?: number;
 }
 
 // @public
@@ -265,6 +276,14 @@ export interface AvatarConfig {
     customizedAvatar?: CustomizedAvatar;
     videoBitrateBps?: number;
 }
+
+// @public
+export type BackoffStrategy = {
+    initialInterval: number;
+    maxInterval: number;
+    exponent: number;
+    maxElapsedTime: number;
+};
 
 // @public
 export interface BaseUrlParameters {
@@ -456,6 +475,7 @@ export interface Candidate {
     avgLogprobs?: number;
     citationMetadata?: CitationMetadata;
     content?: Content;
+    continuationToken?: string;
     finishMessage?: string;
     finishReason?: FinishReason;
     groundingMetadata?: GroundingMetadata;
@@ -845,6 +865,80 @@ export interface CreateTuningJobParametersPrivate {
 // @public
 export function createUserContent(partOrString: PartListUnion | string): Content;
 
+// @public (undocumented)
+export namespace Credentials {
+    // Warning: (ae-forgotten-export) The symbol "Credential$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type Credential = Credential$;
+    // Warning: (ae-forgotten-export) The symbol "CredentialCreateParams$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type CredentialCreateParams = CredentialCreateParams$;
+    // Warning: (ae-forgotten-export) The symbol "CredentialDeleteParams$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type CredentialDeleteParams = CredentialDeleteParams$;
+    // Warning: (ae-forgotten-export) The symbol "CredentialDeleteResponse$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type CredentialDeleteResponse = CredentialDeleteResponse$;
+    // Warning: (ae-forgotten-export) The symbol "CredentialGetParams$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type CredentialGetParams = CredentialGetParams$;
+    // Warning: (ae-forgotten-export) The symbol "CredentialListParams$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type CredentialListParams = CredentialListParams$;
+    // Warning: (ae-forgotten-export) The symbol "CredentialListResponse$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type CredentialListResponse = CredentialListResponse$;
+    // Warning: (ae-forgotten-export) The symbol "CredentialUpdate$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type CredentialUpdate = CredentialUpdate$;
+    // Warning: (ae-forgotten-export) The symbol "EnvironmentVariableConfig$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type EnvironmentVariableConfig = EnvironmentVariableConfig$;
+    // Warning: (ae-forgotten-export) The symbol "EnvironmentVariableUpdateConfig$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type EnvironmentVariableUpdateConfig = EnvironmentVariableUpdateConfig$;
+    // Warning: (ae-forgotten-export) The symbol "HttpBearerConfig$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type HttpBearerConfig = HttpBearerConfig$;
+    // Warning: (ae-forgotten-export) The symbol "HttpBearerUpdateConfig$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type HttpBearerUpdateConfig = HttpBearerUpdateConfig$;
+    // Warning: (ae-forgotten-export) The symbol "InjectionLocation$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type InjectionLocation = InjectionLocation$;
+    // Warning: (ae-forgotten-export) The symbol "InjectionLocationEnum$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type InjectionLocationEnum = InjectionLocationEnum$;
+    // Warning: (ae-forgotten-export) The symbol "OAuth2Config$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type OAuth2Config = OAuth2Config$;
+    // Warning: (ae-forgotten-export) The symbol "OAuth2UpdateConfig$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type OAuth2UpdateConfig = OAuth2UpdateConfig$;
+}
+
+// @public (undocumented)
+export type CredentialUpdateParams = Credentials.CredentialUpdate & {
+    api_version?: string | undefined;
+    update_mask?: string | undefined;
+};
+
 // @public
 export interface CustomCodeExecutionResult {
     score?: number;
@@ -1074,6 +1168,13 @@ export enum DocumentState {
 // @public (undocumented)
 export type DownloadableFileUnion = string | File_2 | GeneratedVideo | Video;
 
+// @public (undocumented)
+export type DownloadEnvironmentFileParams = {
+    environment: string;
+    path: string;
+    api_version?: string;
+};
+
 // @public
 export interface DownloadFileConfig {
     abortSignal?: AbortSignal;
@@ -1259,6 +1360,38 @@ export enum Environment {
     ENVIRONMENT_UNSPECIFIED = "ENVIRONMENT_UNSPECIFIED"
 }
 
+// @public (undocumented)
+export namespace Environments {
+    // Warning: (ae-forgotten-export) The symbol "CreateEnvironmentRequest$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type CreateEnvironmentRequest = CreateEnvironmentRequest$;
+    // Warning: (ae-forgotten-export) The symbol "Environment$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type Environment = Environment$;
+    // Warning: (ae-forgotten-export) The symbol "EnvironmentDeleteResponse$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type EnvironmentDeleteResponse = EnvironmentDeleteResponse$;
+    // Warning: (ae-forgotten-export) The symbol "EnvironmentFile$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type EnvironmentFile = EnvironmentFile$;
+    // Warning: (ae-forgotten-export) The symbol "EnvironmentListResponse$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type EnvironmentListResponse = EnvironmentListResponse$;
+    // Warning: (ae-forgotten-export) The symbol "GetEnvironmentFilesResponse$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type GetEnvironmentFilesResponse = GetEnvironmentFilesResponse$;
+    // Warning: (ae-forgotten-export) The symbol "ListEnvironmentsResponse$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type ListEnvironmentsResponse = ListEnvironmentsResponse$;
+}
+
 // @public
 export class EvaluateDatasetResponse {
     aggregationOutput?: AggregationOutput;
@@ -1324,6 +1457,9 @@ export enum FeatureSelectionPreference {
     // (undocumented)
     PRIORITIZE_QUALITY = "PRIORITIZE_QUALITY"
 }
+
+// @public
+export type Fetch = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
 
 // @public (undocumented)
 export interface FetchPredictOperationConfig {
@@ -1432,6 +1568,7 @@ export interface FileStatus {
 // @public
 export enum FinishReason {
     BLOCKLIST = "BLOCKLIST",
+    CONTINUATION = "CONTINUATION",
     FINISH_REASON_UNSPECIFIED = "FINISH_REASON_UNSPECIFIED",
     IMAGE_OTHER = "IMAGE_OTHER",
     IMAGE_PROHIBITED_CONTENT = "IMAGE_PROHIBITED_CONTENT",
@@ -1447,6 +1584,7 @@ export enum FinishReason {
     SAFETY = "SAFETY",
     SPII = "SPII",
     STOP = "STOP",
+    TOO_MANY_TOOL_CALLS = "TOO_MANY_TOOL_CALLS",
     UNEXPECTED_TOOL_CALL = "UNEXPECTED_TOOL_CALL"
 }
 
@@ -1521,6 +1659,7 @@ export class FunctionResponseFileData {
 export class FunctionResponsePart {
     fileData?: FunctionResponseFileData;
     inlineData?: FunctionResponseBlob;
+    mediaProcessing?: MediaProcessing;
 }
 
 // @public
@@ -1553,11 +1692,14 @@ export interface GenerateContentConfig {
     abortSignal?: AbortSignal;
     audioTimestamp?: boolean;
     audioTranscriptionConfig?: AudioTranscriptionConfig;
+    automaticContinuation?: boolean;
     automaticFunctionCalling?: AutomaticFunctionCallingConfig;
     cachedContent?: string;
     candidateCount?: number;
+    continuationToken?: string;
     enableEnhancedCivicAnswers?: boolean;
     frequencyPenalty?: number;
+    generationOutputConfig?: GenerationOutputConfig;
     httpOptions?: HttpOptions;
     imageConfig?: ImageConfig;
     labels?: Record<string, string>;
@@ -1578,6 +1720,7 @@ export interface GenerateContentConfig {
     serviceTier?: ServiceTier;
     speechConfig?: SpeechConfigUnion;
     stopSequences?: string[];
+    store?: boolean;
     systemInstruction?: ContentUnion;
     temperature?: number;
     thinkingConfig?: ThinkingConfig;
@@ -1603,6 +1746,7 @@ export class GenerateContentResponse {
     get data(): string | undefined;
     get executableCode(): string | undefined;
     get functionCalls(): FunctionCall[] | undefined;
+    get initialPromptTokenCount(): number | undefined;
     modelStatus?: ModelStatus;
     modelVersion?: string;
     promptFeedback?: GenerateContentResponsePromptFeedback;
@@ -1625,6 +1769,7 @@ export class GenerateContentResponseUsageMetadata {
     cacheTokensDetails?: ModalityTokenCount[];
     candidatesTokenCount?: number;
     candidatesTokensDetails?: ModalityTokenCount[];
+    initialPromptTokenCount?: number;
     promptTokenCount?: number;
     promptTokensDetails?: ModalityTokenCount[];
     thoughtsTokenCount?: number;
@@ -1801,6 +1946,11 @@ export interface GenerationConfigThinkingConfig extends ThinkingConfig {
 }
 
 // @public
+export interface GenerationOutputConfig {
+    outputUriPrefix?: string;
+}
+
+// @public
 export interface GetBatchJobConfig {
     abortSignal?: AbortSignal;
     httpOptions?: HttpOptions;
@@ -1900,7 +2050,7 @@ export interface GetTuningJobParameters {
 
 // @public
 export class GoogleGenAI {
-    constructor(options: GoogleGenAIOptions);
+    constructor(options?: GoogleGenAIOptions);
     // Warning: (ae-forgotten-export) The symbol "GeminiNextGenAgents" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -1915,6 +2065,14 @@ export class GoogleGenAI {
     readonly caches: Caches;
     // (undocumented)
     readonly chats: Chats;
+    // Warning: (ae-forgotten-export) The symbol "GeminiNextGenCredentials" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    get credentials(): GeminiNextGenCredentials;
+    // Warning: (ae-forgotten-export) The symbol "GeminiNextGenEnvironments" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    get environments(): GeminiNextGenEnvironments;
     // (undocumented)
     readonly files: Files;
     // Warning: (ae-forgotten-export) The symbol "FileSearchStores" needs to be exported by the entry point index.d.ts
@@ -1941,11 +2099,20 @@ export class GoogleGenAI {
     readonly tunings: Tunings;
     // (undocumented)
     readonly vertexai: boolean;
+    // Warning: (ae-forgotten-export) The symbol "GeminiNextGenVoices" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    get voices(): GeminiNextGenVoices;
     // Warning: (ae-forgotten-export) The symbol "GeminiNextGenWebhooks" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
     get webhooks(): GeminiNextGenWebhooks;
 }
+
+// @public (undocumented)
+export type GoogleGenAIInteraction = GoogleGenAIResponseWithSdkHttpResponse<Omit<Interactions.Interaction, "steps"> & {
+    steps: Interactions.Step[];
+}>;
 
 // @public
 export interface GoogleGenAIOptions {
@@ -1958,6 +2125,35 @@ export interface GoogleGenAIOptions {
     project?: string;
     vertexai?: boolean;
 }
+
+// @public (undocumented)
+export type GoogleGenAIRequestOptions = {
+    timeout_ms?: number;
+    retries?: RetryConfig;
+    retry_codes?: string[];
+    server_url?: string | URL;
+    fetch_options?: Omit<RequestInit, "method" | "body">;
+    extra_query?: Record<string, unknown>;
+    extra_body?: Record<string, unknown>;
+    timeout?: number;
+    maxRetries?: number;
+    defaultBaseURL?: string;
+    fetchOptions?: Omit<RequestInit, "method" | "body">;
+    query?: unknown;
+    body?: unknown;
+} & Omit<RequestInit, "method" | "body">;
+
+// @public (undocumented)
+export type GoogleGenAIResponseWithSdkHttpResponse<T> = T & {
+    sdkHttpResponse?: GoogleGenAISdkHttpResponse;
+};
+
+// @public (undocumented)
+export type GoogleGenAISdkHttpResponse = {
+    headers?: Record<string, string>;
+    responseInternal: Response;
+    json(): Promise<unknown>;
+};
 
 // @public
 export interface GoogleMaps {
@@ -2197,6 +2393,7 @@ export interface HttpOptions {
     baseUrl?: string;
     baseUrlResourceScope?: ResourceScope;
     extraBody?: Record<string, unknown>;
+    fetch?: Fetch;
     headers?: Record<string, string>;
     retryOptions?: HttpRetryOptions;
     timeout?: number;
@@ -2350,6 +2547,13 @@ export namespace Interactions {
     //
     // (undocumented)
     export type Annotation = Annotation$;
+    // (undocumented)
+    export namespace Annotation {
+        // Warning: (ae-forgotten-export) The symbol "SpeechMetadata$" needs to be exported by the entry point index.d.ts
+        //
+        // (undocumented)
+        export type SpeechMetadata = SpeechMetadata$;
+    }
     // Warning: (ae-forgotten-export) The symbol "AntigravityAgentConfig$" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -2450,22 +2654,38 @@ export namespace Interactions {
     //
     // (undocumented)
     export type DynamicAgentConfig = DynamicAgentConfig$;
-    // Warning: (ae-forgotten-export) The symbol "Environment$" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "Environment$2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    export interface Environment extends Environment$ {
+    export interface Environment extends Environment$2 {
     }
     // (undocumented)
     export namespace Environment {
-        // Warning: (ae-forgotten-export) The symbol "Allowlist$" needs to be exported by the entry point index.d.ts
+        // Warning: (ae-forgotten-export) The symbol "EnvironmentNetworkEgressAllowlist$" needs to be exported by the entry point index.d.ts
         //
         // (undocumented)
-        export type Allowlist = Allowlist$;
+        export interface EnvironmentNetworkEgressAllowlist extends EnvironmentNetworkEgressAllowlist$ {
+        }
+        // (undocumented)
+        export namespace EnvironmentNetworkEgressAllowlist {
+            // Warning: (ae-forgotten-export) The symbol "AllowlistEntry$" needs to be exported by the entry point index.d.ts
+            //
+            // (undocumented)
+            export type AllowlistEntry = AllowlistEntry$;
+        }
+        // Warning: (ae-forgotten-export) The symbol "EnvVar$" needs to be exported by the entry point index.d.ts
+        //
+        // (undocumented)
+        export type EnvVar = EnvVar$;
         // Warning: (ae-forgotten-export) The symbol "Source$" needs to be exported by the entry point index.d.ts
         //
         // (undocumented)
         export type Source = Source$;
     }
+    // Warning: (ae-forgotten-export) The symbol "Error$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type Error = Error$;
     // Warning: (ae-forgotten-export) The symbol "ErrorEvent$" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -2473,14 +2693,10 @@ export namespace Interactions {
     }
     // (undocumented)
     export namespace ErrorEvent {
-        // Warning: (ae-forgotten-export) The symbol "Error$" needs to be exported by the entry point index.d.ts
+        // Warning: (ae-forgotten-export) The symbol "Error$2" needs to be exported by the entry point index.d.ts
         //
         // (undocumented)
-        export type Error = Error$;
-        // Warning: (ae-forgotten-export) The symbol "Metadata$" needs to be exported by the entry point index.d.ts
-        //
-        // (undocumented)
-        export type Metadata = Metadata$;
+        export type Error = Error$2;
     }
     // Warning: (ae-forgotten-export) The symbol "FileCitation$" needs to be exported by the entry point index.d.ts
     //
@@ -2610,10 +2826,6 @@ export namespace Interactions {
     //
     // (undocumented)
     export type HarmCategory = HarmCategory$;
-    // Warning: (ae-forgotten-export) The symbol "ImageConfig$" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
-    export type ImageConfig = ImageConfig$;
     // Warning: (ae-forgotten-export) The symbol "ImageContent$" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -2633,31 +2845,54 @@ export namespace Interactions {
     // Warning: (ae-forgotten-export) The symbol "InteractionCompletedEvent$" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    export interface InteractionCompletedEvent extends InteractionCompletedEvent$ {
-    }
-    // (undocumented)
-    export namespace InteractionCompletedEvent {
-        // Warning: (ae-forgotten-export) The symbol "Metadata$2" needs to be exported by the entry point index.d.ts
-        //
-        // (undocumented)
-        export type Metadata = Metadata$2;
-    }
+    export type InteractionCompletedEvent = InteractionCompletedEvent$;
     // Warning: (ae-forgotten-export) The symbol "InteractionCreatedEvent$" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    export interface InteractionCreatedEvent extends InteractionCreatedEvent$ {
-    }
-    // (undocumented)
-    export namespace InteractionCreatedEvent {
-        // Warning: (ae-forgotten-export) The symbol "Metadata$3" needs to be exported by the entry point index.d.ts
-        //
-        // (undocumented)
-        export type Metadata = Metadata$3;
-    }
+    export type InteractionCreatedEvent = InteractionCreatedEvent$;
     // Warning: (ae-forgotten-export) The symbol "InteractionCreateParams$" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
     export type InteractionCreateParams = InteractionCreateParams$;
+    // (undocumented)
+    export namespace InteractionCreateParams {
+        // Warning: (ae-forgotten-export) The symbol "CreateAgentInteractionParams$" needs to be exported by the entry point index.d.ts
+        //
+        // (undocumented)
+        export type CreateAgentInteractionParams = CreateAgentInteractionParams$;
+        // Warning: (ae-forgotten-export) The symbol "CreateAgentInteractionParamsNonStreaming$2" needs to be exported by the entry point index.d.ts
+        //
+        // (undocumented)
+        export type CreateAgentInteractionParamsNonStreaming = CreateAgentInteractionParamsNonStreaming$2;
+        // Warning: (ae-forgotten-export) The symbol "CreateAgentInteractionParamsStreaming$2" needs to be exported by the entry point index.d.ts
+        //
+        // (undocumented)
+        export type CreateAgentInteractionParamsStreaming = CreateAgentInteractionParamsStreaming$2;
+        // Warning: (ae-forgotten-export) The symbol "CreateModelInteractionParams$" needs to be exported by the entry point index.d.ts
+        //
+        // (undocumented)
+        export type CreateModelInteractionParams = CreateModelInteractionParams$;
+        // Warning: (ae-forgotten-export) The symbol "CreateModelInteractionParamsNonStreaming$2" needs to be exported by the entry point index.d.ts
+        //
+        // (undocumented)
+        export type CreateModelInteractionParamsNonStreaming = CreateModelInteractionParamsNonStreaming$2;
+        // Warning: (ae-forgotten-export) The symbol "CreateModelInteractionParamsStreaming$2" needs to be exported by the entry point index.d.ts
+        //
+        // (undocumented)
+        export type CreateModelInteractionParamsStreaming = CreateModelInteractionParamsStreaming$2;
+        // Warning: (ae-forgotten-export) The symbol "InteractionCreateParamsNonStreaming$" needs to be exported by the entry point index.d.ts
+        //
+        // (undocumented)
+        export type InteractionCreateParamsNonStreaming = InteractionCreateParamsNonStreaming$;
+        // Warning: (ae-forgotten-export) The symbol "InteractionCreateParamsStreaming$" needs to be exported by the entry point index.d.ts
+        //
+        // (undocumented)
+        export type InteractionCreateParamsStreaming = InteractionCreateParamsStreaming$;
+    }
+    // (undocumented)
+    export type InteractionCreateParamsNonStreaming = InteractionCreateParamsNonStreaming$;
+    // (undocumented)
+    export type InteractionCreateParamsStreaming = InteractionCreateParamsStreaming$;
     // Warning: (ae-forgotten-export) The symbol "InteractionDeleteParams$" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -2672,21 +2907,17 @@ export namespace Interactions {
     export type InteractionGetParams = InteractionGetParams$;
     // (undocumented)
     export namespace InteractionGetParams {
-        // Warning: (ae-forgotten-export) The symbol "InteractionGetParamsNonStreaming$2" needs to be exported by the entry point index.d.ts
+        // Warning: (ae-forgotten-export) The symbol "InteractionGetParamsNonStreaming$" needs to be exported by the entry point index.d.ts
         //
         // (undocumented)
-        export type InteractionGetParamsNonStreaming = InteractionGetParamsNonStreaming$2;
-        // Warning: (ae-forgotten-export) The symbol "InteractionGetParamsStreaming$2" needs to be exported by the entry point index.d.ts
+        export type InteractionGetParamsNonStreaming = InteractionGetParamsNonStreaming$;
+        // Warning: (ae-forgotten-export) The symbol "InteractionGetParamsStreaming$" needs to be exported by the entry point index.d.ts
         //
         // (undocumented)
-        export type InteractionGetParamsStreaming = InteractionGetParamsStreaming$2;
+        export type InteractionGetParamsStreaming = InteractionGetParamsStreaming$;
     }
-    // Warning: (ae-forgotten-export) The symbol "InteractionGetParamsNonStreaming$" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     export type InteractionGetParamsNonStreaming = InteractionGetParamsNonStreaming$;
-    // Warning: (ae-forgotten-export) The symbol "InteractionGetParamsStreaming$" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     export type InteractionGetParamsStreaming = InteractionGetParamsStreaming$;
     // Warning: (ae-forgotten-export) The symbol "InteractionSSEEvent$" needs to be exported by the entry point index.d.ts
@@ -2696,15 +2927,7 @@ export namespace Interactions {
     // Warning: (ae-forgotten-export) The symbol "InteractionStatusUpdate$" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    export interface InteractionStatusUpdate extends InteractionStatusUpdate$ {
-    }
-    // (undocumented)
-    export namespace InteractionStatusUpdate {
-        // Warning: (ae-forgotten-export) The symbol "Metadata$4" needs to be exported by the entry point index.d.ts
-        //
-        // (undocumented)
-        export type Metadata = Metadata$4;
-    }
+    export type InteractionStatusUpdate = InteractionStatusUpdate$;
     // Warning: (ae-forgotten-export) The symbol "MCPServerToolCallStep$" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -2720,15 +2943,7 @@ export namespace Interactions {
     // Warning: (ae-forgotten-export) The symbol "ModelOutputStep$" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    export interface ModelOutputStep extends ModelOutputStep$ {
-    }
-    // (undocumented)
-    export namespace ModelOutputStep {
-        // Warning: (ae-forgotten-export) The symbol "Error$2" needs to be exported by the entry point index.d.ts
-        //
-        // (undocumented)
-        export type Error = Error$2;
-    }
+    export type ModelOutputStep = ModelOutputStep$;
     // Warning: (ae-forgotten-export) The symbol "PlaceCitation$" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -2741,6 +2956,14 @@ export namespace Interactions {
         // (undocumented)
         export type ReviewSnippet = ReviewSnippet$3;
     }
+    // Warning: (ae-forgotten-export) The symbol "ProcessingCallStep$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type ProcessingCallStep = ProcessingCallStep$;
+    // Warning: (ae-forgotten-export) The symbol "ProcessingResultStep$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type ProcessingResultStep = ProcessingResultStep$;
     // Warning: (ae-forgotten-export) The symbol "RetrievalCallArguments$" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -2757,10 +2980,26 @@ export namespace Interactions {
         // (undocumented)
         export type Arguments = Arguments$4;
     }
+    // Warning: (ae-forgotten-export) The symbol "RetrievalCallStep$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export interface RetrievalCallStep extends RetrievalCallStep$ {
+    }
+    // (undocumented)
+    export namespace RetrievalCallStep {
+        // Warning: (ae-forgotten-export) The symbol "Arguments$5" needs to be exported by the entry point index.d.ts
+        //
+        // (undocumented)
+        export type Arguments = Arguments$5;
+    }
     // Warning: (ae-forgotten-export) The symbol "RetrievalResultDelta$" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
     export type RetrievalResultDelta = RetrievalResultDelta$;
+    // Warning: (ae-forgotten-export) The symbol "RetrievalResultStep$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type RetrievalResultStep = RetrievalResultStep$;
     // Warning: (ae-forgotten-export) The symbol "SafetySetting$" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -2840,10 +3079,18 @@ export namespace Interactions {
         //
         // (undocumented)
         export type MCPServerToolResult = MCPServerToolResult$;
-        // Warning: (ae-forgotten-export) The symbol "Metadata$5" needs to be exported by the entry point index.d.ts
+        // Warning: (ae-forgotten-export) The symbol "Metadata$" needs to be exported by the entry point index.d.ts
         //
         // (undocumented)
-        export type Metadata = Metadata$5;
+        export type Metadata = Metadata$;
+        // Warning: (ae-forgotten-export) The symbol "ProcessingCall$" needs to be exported by the entry point index.d.ts
+        //
+        // (undocumented)
+        export type ProcessingCall = ProcessingCall$;
+        // Warning: (ae-forgotten-export) The symbol "ProcessingResult$" needs to be exported by the entry point index.d.ts
+        //
+        // (undocumented)
+        export type ProcessingResult = ProcessingResult$;
         // Warning: (ae-forgotten-export) The symbol "Text$" needs to be exported by the entry point index.d.ts
         //
         // (undocumented)
@@ -2876,27 +3123,11 @@ export namespace Interactions {
     // Warning: (ae-forgotten-export) The symbol "StepStart$" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    export interface StepStart extends StepStart$ {
-    }
-    // (undocumented)
-    export namespace StepStart {
-        // Warning: (ae-forgotten-export) The symbol "Metadata$6" needs to be exported by the entry point index.d.ts
-        //
-        // (undocumented)
-        export type Metadata = Metadata$6;
-    }
+    export type StepStart = StepStart$;
     // Warning: (ae-forgotten-export) The symbol "StepStop$" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    export interface StepStop extends StepStop$ {
-    }
-    // (undocumented)
-    export namespace StepStop {
-        // Warning: (ae-forgotten-export) The symbol "Metadata$7" needs to be exported by the entry point index.d.ts
-        //
-        // (undocumented)
-        export type Metadata = Metadata$7;
-    }
+    export type StepStop = StepStop$;
     // Warning: (ae-forgotten-export) The symbol "TextContent$" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -2972,6 +3203,21 @@ export namespace Interactions {
     //
     // (undocumented)
     export type TranscriptionConfig = TranscriptionConfig$;
+    // Warning: (ae-forgotten-export) The symbol "TranscriptionMode$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type TranscriptionMode = TranscriptionMode$;
+    // (undocumented)
+    export namespace TranscriptionMode {
+        // Warning: (ae-forgotten-export) The symbol "Smart$" needs to be exported by the entry point index.d.ts
+        //
+        // (undocumented)
+        export type Smart = Smart$;
+        // Warning: (ae-forgotten-export) The symbol "Verbatim$" needs to be exported by the entry point index.d.ts
+        //
+        // (undocumented)
+        export type Verbatim = Verbatim$;
+    }
     // Warning: (ae-forgotten-export) The symbol "URLCitation$" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -2987,10 +3233,10 @@ export namespace Interactions {
     }
     // (undocumented)
     export namespace URLContextCallStep {
-        // Warning: (ae-forgotten-export) The symbol "Arguments$5" needs to be exported by the entry point index.d.ts
+        // Warning: (ae-forgotten-export) The symbol "Arguments$6" needs to be exported by the entry point index.d.ts
         //
         // (undocumented)
-        export type Arguments = Arguments$5;
+        export type Arguments = Arguments$6;
     }
     // Warning: (ae-forgotten-export) The symbol "URLContextResult$" needs to be exported by the entry point index.d.ts
     //
@@ -3047,7 +3293,15 @@ export namespace Interactions {
     // Warning: (ae-forgotten-export) The symbol "VideoContent$" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    export type VideoContent = VideoContent$;
+    export interface VideoContent extends VideoContent$ {
+    }
+    // (undocumented)
+    export namespace VideoContent {
+        // Warning: (ae-forgotten-export) The symbol "Static$" needs to be exported by the entry point index.d.ts
+        //
+        // (undocumented)
+        export type Static = Static$;
+    }
     // Warning: (ae-forgotten-export) The symbol "VideoResponseFormat$" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -3060,6 +3314,14 @@ export namespace Interactions {
     //
     // (undocumented)
     export type WordInfo = WordInfo$;
+}
+
+// @public
+export enum InteractionStatus {
+    IDLE = "IDLE",
+    IN_PROGRESS = "IN_PROGRESS",
+    INTERACTION_STATUS_UNSPECIFIED = "INTERACTION_STATUS_UNSPECIFIED",
+    REQUIRES_ACTION = "REQUIRES_ACTION"
 }
 
 // @public
@@ -3191,6 +3453,26 @@ export class ListDocumentsResponse {
     nextPageToken?: string;
     sdkHttpResponse?: HttpResponse;
 }
+
+// @public (undocumented)
+export type ListEnvironmentFilesParams = {
+    api_version?: string | undefined;
+    environment: string;
+    path: string;
+    page_size?: number | undefined;
+    page_token?: string | undefined;
+    recursive?: boolean | undefined;
+};
+
+// @public
+export type ListEnvironmentFilesResponse = Environments.GetEnvironmentFilesResponse;
+
+// @public (undocumented)
+export type ListEnvironmentsParams = {
+    api_version?: string | undefined;
+    page_size?: number | undefined;
+    page_token?: string | undefined;
+};
 
 // @public (undocumented)
 export interface ListFilesConfig {
@@ -3354,6 +3636,7 @@ export interface LiveClientSetup {
     generationConfig?: GenerationConfig;
     historyConfig?: HistoryConfig;
     inputAudioTranscription?: AudioTranscriptionConfig;
+    labels?: Record<string, string>;
     model?: string;
     outputAudioTranscription?: AudioTranscriptionConfig;
     proactivity?: ProactivityConfig;
@@ -3379,6 +3662,7 @@ export interface LiveConnectConfig {
     generationConfig?: GenerationConfig;
     httpOptions?: HttpOptions;
     inputAudioTranscription?: AudioTranscriptionConfig;
+    labels?: Record<string, string>;
     maxOutputTokens?: number;
     mediaResolution?: MediaResolution;
     outputAudioTranscription?: AudioTranscriptionConfig;
@@ -3549,6 +3833,7 @@ export interface LiveServerContent {
     generationComplete?: boolean;
     groundingMetadata?: GroundingMetadata;
     inputTranscription?: Transcription;
+    interactionStatus?: InteractionStatus;
     interimInputTranscription?: Transcription;
     interrupted?: boolean;
     modelTurn?: Content;
@@ -3676,6 +3961,13 @@ export enum MediaModality {
     MODALITY_UNSPECIFIED = "MODALITY_UNSPECIFIED",
     TEXT = "TEXT",
     VIDEO = "VIDEO"
+}
+
+// @public
+export enum MediaProcessing {
+    AGENTIC = "AGENTIC",
+    MEDIA_PROCESSING_UNSPECIFIED = "MEDIA_PROCESSING_UNSPECIFIED",
+    STATIC = "STATIC"
 }
 
 // @public
@@ -3894,8 +4186,10 @@ export interface Part {
     functionCall?: FunctionCall;
     functionResponse?: FunctionResponse;
     inlineData?: Blob_2;
+    mediaProcessing?: MediaProcessing;
     mediaResolution?: PartMediaResolution;
     partMetadata?: Record<string, unknown>;
+    speechMetadata?: SpeechMetadata;
     text?: string;
     thought?: boolean;
     thoughtSignature?: string;
@@ -4093,6 +4387,7 @@ export class RawReferenceImage {
 export interface RealtimeInputConfig {
     activityHandling?: ActivityHandling;
     automaticActivityDetection?: AutomaticActivityDetection;
+    interimTranscriptTimestampEnabled?: boolean;
     turnCoverage?: TurnCoverage;
 }
 
@@ -4189,6 +4484,7 @@ export interface ReinforcementTuningExample {
     contents?: Content[];
     references?: Record<string, string>;
     systemInstruction?: Content;
+    tools?: Tool[];
 }
 
 // @public
@@ -4201,6 +4497,7 @@ export interface ReinforcementTuningHyperParameters {
     learningRateMultiplier?: number;
     maxOutputTokens?: number;
     samplesPerPrompt?: number;
+    stepCount?: string;
     thinkingBudget?: number;
     thinkingLevel?: ReinforcementTuningThinkingLevel;
 }
@@ -4213,6 +4510,7 @@ export class ReinforcementTuningParseResponseConfig {
 
 // @public
 export interface ReinforcementTuningRewardInfo {
+    errorStatus?: GoogleRpcStatus;
     reward?: number;
     userRequestedAuxInfo?: string;
 }
@@ -4344,6 +4642,20 @@ export interface RetrievalConfig {
 export interface RetrievalMetadata {
     googleSearchDynamicRetrievalScore?: number;
 }
+
+// @public (undocumented)
+export type RetryConfig = {
+    strategy: "none";
+} | {
+    strategy: "backoff";
+    backoff?: BackoffStrategy;
+    retryConnectionErrors?: boolean;
+} | {
+    strategy: "attempt-count-backoff";
+    maxRetries: number;
+    backoff?: Partial<BackoffStrategy>;
+    retryConnectionErrors?: boolean;
+};
 
 // @public
 export interface RougeMetricValue {
@@ -4588,6 +4900,12 @@ export interface SpeechConfig {
 
 // @public (undocumented)
 export type SpeechConfigUnion = SpeechConfig | string;
+
+// @public
+export interface SpeechMetadata {
+    speaker?: string;
+    style?: string;
+}
 
 // @public (undocumented)
 export type SseMessage<T> = {
@@ -4834,6 +5152,8 @@ export type ToolListUnion = ToolUnion[];
 export interface ToolParallelAiSearch {
     apiKey?: string;
     customConfigs?: Record<string, unknown>;
+    enableDataRetention?: boolean;
+    enableZeroDataRetention?: boolean;
 }
 
 // @public
@@ -4849,6 +5169,7 @@ export enum ToolType {
     GOOGLE_MAPS = "GOOGLE_MAPS",
     GOOGLE_SEARCH_IMAGE = "GOOGLE_SEARCH_IMAGE",
     GOOGLE_SEARCH_WEB = "GOOGLE_SEARCH_WEB",
+    MEDIA_PROCESSING = "MEDIA_PROCESSING",
     TOOL_TYPE_UNSPECIFIED = "TOOL_TYPE_UNSPECIFIED",
     URL_CONTEXT = "URL_CONTEXT"
 }
@@ -4860,6 +5181,7 @@ export type ToolUnion = Tool | CallableTool;
 export enum TrafficType {
     ON_DEMAND = "ON_DEMAND",
     ON_DEMAND_FLEX = "ON_DEMAND_FLEX",
+    ON_DEMAND_OFFPEAK = "ON_DEMAND_OFFPEAK",
     ON_DEMAND_PRIORITY = "ON_DEMAND_PRIORITY",
     PROVISIONED_THROUGHPUT = "PROVISIONED_THROUGHPUT",
     TRAFFIC_TYPE_UNSPECIFIED = "TRAFFIC_TYPE_UNSPECIFIED"
@@ -4867,9 +5189,11 @@ export enum TrafficType {
 
 // @public
 export interface Transcription {
+    endOffset?: string;
     finished?: boolean;
     languageCode?: string;
     speakerLabel?: string;
+    startOffset?: string;
     text?: string;
     words?: WordInfo[];
 }
@@ -5002,6 +5326,7 @@ export interface TuningJob {
     evaluateDatasetRuns?: EvaluateDatasetRun[];
     experiment?: string;
     fullFineTuningSpec?: FullFineTuningSpec;
+    gcsMetricsUri?: string;
     labels?: Record<string, string>;
     name?: string;
     outputUri?: string;
@@ -5171,6 +5496,17 @@ export interface UpdateModelParameters {
     // (undocumented)
     model: string;
 }
+
+// @public (undocumented)
+export type UploadEnvironmentFileParams = {
+    environment: string;
+    path: string;
+    file: string | Blob | Uint8Array | ArrayBuffer | any;
+    mime_type?: string;
+    overwrite?: boolean;
+    extract?: boolean;
+    api_version?: string;
+};
 
 // @public
 export interface UploadFileConfig {
@@ -5454,6 +5790,7 @@ export class VideoResponseFormat {
     delivery?: Delivery;
     duration?: string;
     gcsUri?: string;
+    resolution?: string;
 }
 
 // @public
@@ -5478,11 +5815,80 @@ export enum VoiceActivityType {
 export interface VoiceConfig {
     prebuiltVoiceConfig?: PrebuiltVoiceConfig;
     replicatedVoiceConfig?: ReplicatedVoiceConfig;
+    voice?: string;
 }
 
 // @public
 export interface VoiceConsentSignature {
     signature?: string;
+}
+
+// @public (undocumented)
+export namespace Voices {
+    // Warning: (ae-forgotten-export) The symbol "AudioData$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type AudioData = AudioData$;
+    // Warning: (ae-forgotten-export) The symbol "CreateVoiceRequest$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export interface CreateVoiceRequest extends CreateVoiceRequest$ {
+    }
+    // (undocumented)
+    export namespace CreateVoiceRequest {
+        // Warning: (ae-forgotten-export) The symbol "Voice$" needs to be exported by the entry point index.d.ts
+        //
+        // (undocumented)
+        export type Voice = Voice$;
+    }
+    // Warning: (ae-forgotten-export) The symbol "Pitch$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type Pitch = Pitch$;
+    // Warning: (ae-forgotten-export) The symbol "PromptedVoice$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type PromptedVoice = PromptedVoice$;
+    // Warning: (ae-forgotten-export) The symbol "ReplicatedVoice$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type ReplicatedVoice = ReplicatedVoice$;
+    // Warning: (ae-forgotten-export) The symbol "VoiceCreateParams$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type VoiceCreateParams = VoiceCreateParams$;
+    // Warning: (ae-forgotten-export) The symbol "VoiceDeleteParams$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type VoiceDeleteParams = VoiceDeleteParams$;
+    // Warning: (ae-forgotten-export) The symbol "VoiceDeleteResponse$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type VoiceDeleteResponse = VoiceDeleteResponse$;
+    // Warning: (ae-forgotten-export) The symbol "VoiceGetParams$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type VoiceGetParams = VoiceGetParams$;
+    // Warning: (ae-forgotten-export) The symbol "VoiceListParams$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type VoiceListParams = VoiceListParams$;
+    // Warning: (ae-forgotten-export) The symbol "VoiceListResponse$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export interface VoiceListResponse extends VoiceListResponse$ {
+    }
+    // (undocumented)
+    export namespace VoiceListResponse {
+        // Warning: (ae-forgotten-export) The symbol "Voice$2" needs to be exported by the entry point index.d.ts
+        //
+        // (undocumented)
+        export type Voice = Voice$2;
+    }
+    // Warning: (ae-forgotten-export) The symbol "VoiceType$" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    export type VoiceType = VoiceType$;
 }
 
 // @public

@@ -14,5 +14,13 @@
  * Configuration for smart transcription mode.
  */
 export type SmartTranscriptionMode = {
+  /**
+   * The source text to be edited or rewritten via voice instructions.
+   *
+   * @remarks
+   * When provided, the model performs voice-driven editing and outputs the
+   * finalized replacement text.
+   */
+  source_text?: string | undefined;
   type: "smart";
 };

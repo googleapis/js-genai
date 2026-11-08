@@ -97,6 +97,14 @@ export type Interaction = {
    */
   cached_content?: string | undefined;
   /**
+   * The IDs of all server interactions merged into this response when automatic continuation is enabled, in order (ending with the final hop's ID).
+   *
+   * @remarks
+   *
+   * Note: this is added by the SDK.
+   */
+  continuation_ids?: Array<string> | undefined;
+  /**
    * Opaque token to resume a long decode. Output: set when status is
    *
    * @remarks
@@ -154,7 +162,7 @@ export type Interaction = {
    */
   labels?: { [k: string]: string } | undefined;
   /**
-   * The model that will complete your prompt.\n\nSee [models](https://ai.google.dev/gemini-api/docs/models) for additional details.
+   * The model that will complete your prompt.\n\nSee [models](https://aistudio.google.com/docs/models) for additional details.
    */
   model?: Model | undefined;
   /**

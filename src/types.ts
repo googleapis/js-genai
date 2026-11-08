@@ -572,6 +572,10 @@ export enum FinishReason {
    * Token generation stopped because the response reached the per-request token limit, but generation is not yet complete. The response can be continued by passing the returned `continuation_token` in a subsequent request.
    */
   CONTINUATION = 'CONTINUATION',
+  /**
+   * Token generation stopped because the response was malformed.
+   */
+  MALFORMED_RESPONSE = 'MALFORMED_RESPONSE',
 }
 
 /** Output only. The probability of harm for this category. */
@@ -2032,7 +2036,7 @@ export declare interface FunctionCall {
   willContinue?: boolean;
 }
 
-/** URI based data for function response. This data type is not supported in Gemini API. */
+/** URI based data for function response. */
 export class FunctionResponseFileData {
   /** Optional. Display name of the file data. Used to provide a label or filename to distinguish file datas. This field is only returned in PromptMessage for prompt management. It is currently used in the Gemini GenerateContent calls only when server side tools (code_execution, google_search, and url_context) are enabled. */
   displayName?: string;
@@ -2047,7 +2051,7 @@ export class FunctionResponseBlob {
   /** Required. Raw bytes.
    * @remarks Encoded as base64 string. */
   data?: string;
-  /** Optional. Display name of the blob. Used to provide a label or filename to distinguish blobs. This field is only returned in PromptMessage for prompt management. It is currently used in the Gemini GenerateContent calls only when server side tools (code_execution, google_search, and url_context) are enabled. This field is not supported in Gemini API. */
+  /** Optional. Display name of the blob. Used to provide a label or filename to distinguish blobs. This field is only returned in PromptMessage for prompt management. It is currently used in the Gemini GenerateContent calls only when server side tools (code_execution, google_search, and url_context) are enabled. */
   displayName?: string;
   /** Required. The IANA standard MIME type of the source data. */
   mimeType?: string;
@@ -2055,10 +2059,12 @@ export class FunctionResponseBlob {
 
 /** A datatype containing media that is part of a `FunctionResponse` message. A `FunctionResponsePart` consists of data which has an associated datatype. A `FunctionResponsePart` can only contain one of the accepted types in `FunctionResponsePart.data`. A `FunctionResponsePart` must have a fixed IANA MIME type identifying the type and subtype of the media if the `inline_data` field is filled with raw bytes. */
 export class FunctionResponsePart {
-  /** URI based data. This field is not supported in Gemini API. */
+  /** URI based data. */
   fileData?: FunctionResponseFileData;
   /** Inline media bytes. */
   inlineData?: FunctionResponseBlob;
+  /** Optional. How the model processes this part's media for understanding. Only meaningful for video parts (`inline_data` or `file_data` with video mime). Non-video parts ignore this field. This field is not supported in Vertex AI. */
+  mediaProcessing?: MediaProcessing;
 }
 /**
  * Creates a `FunctionResponsePart` object from a `base64` encoded `string`.
@@ -2671,7 +2677,7 @@ export declare interface Retrieval {
   vertexRagStore?: VertexRagStore;
 }
 
-/** A transport that can stream HTTP requests and responses. Next ID: 6. This data type is not supported in Vertex AI. */
+/** A transport that can stream HTTP requests and responses. This data type is not supported in Vertex AI. */
 export declare interface StreamableHttpTransport {
   /** Optional: Fields for authentication headers, timeouts, etc., if needed. */
   headers?: Record<string, string>;
@@ -2685,7 +2691,7 @@ export declare interface StreamableHttpTransport {
   url?: string;
 }
 
-/** A MCPServer is a server that can be called by the model to perform actions. It is a server that implements the MCP protocol. Next ID: 7. This data type is not supported in Vertex AI. */
+/** A MCPServer is a server that can be called by the model to perform actions. It is a server that implements the MCP protocol. This data type is not supported in Vertex AI. */
 export declare interface McpServer {
   /** The name of the MCPServer. */
   name?: string;
@@ -3095,6 +3101,8 @@ export declare interface AudioTranscriptionConfig {
   diarization?: boolean;
   /** Optional. Configures transcription mode. Supported values: `VERBATIM`, `SMART`. If unspecified, defaults to `VERBATIM` transcription. In `SMART` mode, the model performs disfluency removal (eliminating filler words, repetitions, and false starts), light grammatical cleanup, automatic formatting (paragraphs, bullet points, numbered lists), and minor user edits (inline self-corrections). Timestamps and diarization are incompatible with mode `SMART`. */
   mode?: AudioTranscriptionConfigMode;
+  /** Optional. The source text to be edited or rewritten via voice instructions. When provided in `SMART` mode, the model evaluates the audio input against this text and emits the complete replacement text in the candidate response rather than appending to it. */
+  sourceText?: string;
 }
 
 /** Configuration for Model Armor. Model Armor is a Google Cloud service that provides safety and security filtering for prompts and responses. It helps protect your AI applications from risks such as harmful content, sensitive data leakage, and prompt injection attacks. This data type is not supported in Gemini API. */
@@ -3842,7 +3850,7 @@ export class GenerateContentResponse {
    * @example
    * ```ts
    * const response = await ai.models.generateContent({
-   *   model: 'gemini-flash-latest',
+   *   model: 'gemini-3.8-flash',
    *   contents:
    *     'Why is the sky blue?',
    * });
@@ -3962,7 +3970,7 @@ export class GenerateContentResponse {
    *   required: ['brightness', 'colorTemperature'],
    *  };
    *  const response = await ai.models.generateContent({
-   *     model: 'gemini-flash-latest',
+   *     model: 'gemini-3.8-flash',
    *     contents: 'Dim the lights so the room feels cozy and warm.',
    *     config: {
    *       tools: [{functionDeclarations: [controlLightFunctionDeclaration]}],
@@ -4010,7 +4018,7 @@ export class GenerateContentResponse {
    * @example
    * ```ts
    * const response = await ai.models.generateContent({
-   *   model: 'gemini-flash-latest',
+   *   model: 'gemini-3.8-flash',
    *   contents:
    *     'What is the sum of the first 50 prime numbers? Generate and run code for the calculation, and make sure you get all 50.'
    *   config: {
@@ -4054,7 +4062,7 @@ export class GenerateContentResponse {
    * @example
    * ```ts
    * const response = await ai.models.generateContent({
-   *   model: 'gemini-flash-latest',
+   *   model: 'gemini-3.8-flash',
    *   contents:
    *     'What is the sum of the first 50 prime numbers? Generate and run code for the calculation, and make sure you get all 50.'
    *   config: {
@@ -6206,7 +6214,7 @@ export declare interface CreateTuningJobConfig {
 
 /** Fine-tuning job creation parameters - optional fields. */
 export declare interface CreateTuningJobParametersPrivate {
-  /** The base model that is being tuned, e.g., "gemini-flash-latest". */
+  /** The base model that is being tuned, e.g., "gemini-3.8-flash". */
   baseModel?: string;
   /** The PreTunedModel that is being tuned. */
   preTunedModel?: PreTunedModel;
@@ -6331,7 +6339,7 @@ export declare interface CreateCachedContentConfig {
 
 /** Parameters for caches.create method. */
 export declare interface CreateCachedContentParameters {
-  /** ID of the model to use. Example: gemini-flash-latest */
+  /** ID of the model to use. Example: gemini-3.8-flash */
   model: string;
   /** Configuration that contains optional parameters.
    */
@@ -6904,14 +6912,38 @@ export declare interface File {
   error?: FileStatus;
 }
 
+/** A file that can be referenced by ID from subsequent Claude model requests. The JSON representation of this message matches the Claude Files API File object field-for-field, so that code written against that API parses these responses unchanged. This data type is not supported in Gemini API. */
+export declare interface ClaudeFile {
+  /** Output only. The time at which the file was created. */
+  createdAt?: string;
+  /** Output only. Whether the contents of this file can be retrieved with `DownloadFile`. False for user-uploaded files, true for tool-generated ones. */
+  downloadable?: boolean;
+  /** Output only. The time at which the file expires and is deleted, set from the `expires_in_seconds` upload form field. Unset for files that do not expire, which is serialised as `null`. */
+  expiresAt?: string;
+  /** Output only. The original name of the uploaded file, taken from the `Content-Disposition` header on upload. Between 1 and 255 characters. Control characters and the characters `<>:"|?*\/` are not accepted. */
+  filename?: string;
+  /** Output only. The server-assigned identifier of the file, for example `file_abc123`. This is the ID to pass in subsequent model requests. */
+  id?: string;
+  /** Output only. The media type of the file, taken from the `Content-Type` header of the file part on upload. */
+  mimeType?: string;
+  /** Output only. The size of the file in bytes. */
+  sizeBytes?: number;
+  /** Output only. The object type. Always `file`. */
+  type?: string;
+}
+
 /** Response for the list files method. */
 export class ListFilesResponse {
   /** Used to retain the full HTTP response. */
   sdkHttpResponse?: HttpResponse;
-  /** A token that can be sent as a `page_token` into a subsequent `ListFiles` call. */
+  /** A token that can be sent as a `page_token` into a subsequent `ListFiles` call. This field is not supported in Vertex AI. */
   nextPageToken?: string;
-  /** The list of `File`s. */
+  /** The list of `File`s. This field is not supported in Vertex AI. */
   files?: File[];
+  /** The files. This field is not supported in Gemini API. */
+  data?: ClaudeFile[];
+  /** Opaque cursor for the next page. Unset on the last page, and always unset when `ids` was supplied, since batch fetch is single-page. This field is not supported in Gemini API. */
+  nextPage?: string;
 }
 
 /** Used to override the default configuration. */
@@ -6992,6 +7024,10 @@ export declare interface DeleteFileParameters {
 export class DeleteFileResponse {
   /** Used to retain the full HTTP response. */
   sdkHttpResponse?: HttpResponse;
+  /** The ID of the deleted file. */
+  id?: string;
+  /** The object type. Always `file_deleted`. */
+  type?: string;
 }
 
 /** Used to override the default configuration. */
@@ -8425,7 +8461,7 @@ These parameters are used when creating a chat session with the
 export declare interface CreateChatParameters {
   /** The name of the model to use for the chat session.
 
-      For example: 'gemini-flash-latest', 'gemini-flash-lite-latest', etc. See Gemini API
+      For example: 'gemini-3.8-flash', 'gemini-flash-lite-latest', etc. See Gemini API
       docs to find the available models.
        */
   model: string;
@@ -8813,7 +8849,7 @@ export declare interface ComputeTokensResult {
 
 /** Fine-tuning job creation parameters - optional fields. */
 export declare interface CreateTuningJobParameters {
-  /** The base model that is being tuned, e.g., "gemini-flash-latest". */
+  /** The base model that is being tuned, e.g., "gemini-3.8-flash". */
   baseModel: string;
   /** Cloud Storage path to file containing training dataset for tuning. The dataset must be formatted as a JSONL file. */
   trainingDataset: TuningDataset;

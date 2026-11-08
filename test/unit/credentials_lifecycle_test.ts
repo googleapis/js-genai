@@ -7,6 +7,7 @@
 import {once} from 'node:events';
 import {createServer} from 'node:http';
 
+import {GOOGLE_AI_API_DEFAULT_VERSION} from '../../src/_api_client.js';
 import {GoogleGenAI} from '../../src/client.js';
 
 describe('Credentials Lifecycle', () => {
@@ -31,7 +32,10 @@ describe('Credentials Lifecycle', () => {
           }
         }
         response.setHeader('content-type', 'application/json');
-        if (request.method === 'GET' && request.url === '/v1beta/credentials') {
+        if (
+          request.method === 'GET' &&
+          request.url === `/${GOOGLE_AI_API_DEFAULT_VERSION}/credentials`
+        ) {
           response.end(
             JSON.stringify({
               credentials: [
@@ -88,7 +92,6 @@ describe('Credentials Lifecycle', () => {
     const ai = new GoogleGenAI({
       apiKey: 'test-api-key',
       httpOptions: {
-        apiVersion: 'v1beta',
         baseUrl: `http://127.0.0.1:${address.port}`,
       },
     });
@@ -159,15 +162,15 @@ describe('Credentials Lifecycle', () => {
       await ai.credentials.delete('cred_bearer_123');
 
       expect(captured).toEqual([
-        'POST /v1beta/credentials',
-        'POST /v1beta/credentials',
-        'POST /v1beta/credentials',
-        'GET /v1beta/credentials',
-        'GET /v1beta/credentials/cred_bearer_123',
-        'PATCH /v1beta/credentials/cred_bearer_123',
-        'PATCH /v1beta/credentials/cred_env_123',
-        'PATCH /v1beta/credentials/cred_oauth_123',
-        'DELETE /v1beta/credentials/cred_bearer_123',
+        `POST /${GOOGLE_AI_API_DEFAULT_VERSION}/credentials`,
+        `POST /${GOOGLE_AI_API_DEFAULT_VERSION}/credentials`,
+        `POST /${GOOGLE_AI_API_DEFAULT_VERSION}/credentials`,
+        `GET /${GOOGLE_AI_API_DEFAULT_VERSION}/credentials`,
+        `GET /${GOOGLE_AI_API_DEFAULT_VERSION}/credentials/cred_bearer_123`,
+        `PATCH /${GOOGLE_AI_API_DEFAULT_VERSION}/credentials/cred_bearer_123`,
+        `PATCH /${GOOGLE_AI_API_DEFAULT_VERSION}/credentials/cred_env_123`,
+        `PATCH /${GOOGLE_AI_API_DEFAULT_VERSION}/credentials/cred_oauth_123`,
+        `DELETE /${GOOGLE_AI_API_DEFAULT_VERSION}/credentials/cred_bearer_123`,
       ]);
 
       // Verify request bodies

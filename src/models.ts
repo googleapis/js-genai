@@ -156,19 +156,19 @@ export class Models extends BaseModule {
    * Makes an API request to generate content with a given model.
    *
    * For the `model` parameter, supported formats for Gemini Enterprise Agent Platform API include:
-   * - The Gemini model ID, for example: 'gemini-flash-latest'
+   * - The Gemini model ID, for example: 'gemini-3.8-flash'
    * - The full resource name starts with 'projects/', for example:
-   *  'projects/my-project-id/locations/us-central1/publishers/google/models/gemini-flash-latest'
+   *  'projects/my-project-id/locations/us-central1/publishers/google/models/gemini-3.8-flash'
    * - The partial resource name with 'publishers/', for example:
-   *  'publishers/google/models/gemini-flash-latest' or
+   *  'publishers/google/models/gemini-3.8-flash' or
    *  'publishers/meta/models/llama-3.1-405b-instruct-maas'
    * - `/` separated publisher and model name, for example:
-   * 'google/gemini-flash-latest' or 'meta/llama-3.1-405b-instruct-maas'
+   * 'google/gemini-3.8-flash' or 'meta/llama-3.1-405b-instruct-maas'
    *
    * For the `model` parameter, supported formats for Gemini API include:
-   * - The Gemini model ID, for example: 'gemini-flash-latest'
+   * - The Gemini model ID, for example: 'gemini-3.8-flash'
    * - The model name starts with 'models/', for example:
-   *  'models/gemini-flash-latest'
+   *  'models/gemini-3.8-flash'
    * - For tuned models, the model name starts with 'tunedModels/',
    * for example:
    * 'tunedModels/1234567890123456789'
@@ -183,7 +183,7 @@ export class Models extends BaseModule {
    * @example
    * ```ts
    * const response = await ai.models.generateContent({
-   *   model: 'gemini-flash-latest',
+   *   model: 'gemini-3.8-flash',
    *   contents: 'why is the sky blue?',
    *   config: {
    *     candidateCount: 2,
@@ -296,19 +296,19 @@ export class Models extends BaseModule {
    * response in chunks.
    *
    * For the `model` parameter, supported formats for Gemini Enterprise Agent Platform API include:
-   * - The Gemini model ID, for example: 'gemini-flash-latest'
+   * - The Gemini model ID, for example: 'gemini-3.8-flash'
    * - The full resource name starts with 'projects/', for example:
-   *  'projects/my-project-id/locations/us-central1/publishers/google/models/gemini-flash-latest'
+   *  'projects/my-project-id/locations/us-central1/publishers/google/models/gemini-3.8-flash'
    * - The partial resource name with 'publishers/', for example:
-   *  'publishers/google/models/gemini-flash-latest' or
+   *  'publishers/google/models/gemini-3.8-flash' or
    *  'publishers/meta/models/llama-3.1-405b-instruct-maas'
    * - `/` separated publisher and model name, for example:
-   * 'google/gemini-flash-latest' or 'meta/llama-3.1-405b-instruct-maas'
+   * 'google/gemini-3.8-flash' or 'meta/llama-3.1-405b-instruct-maas'
    *
    * For the `model` parameter, supported formats for Gemini API include:
-   * - The Gemini model ID, for example: 'gemini-flash-latest'
+   * - The Gemini model ID, for example: 'gemini-3.8-flash'
    * - The model name starts with 'models/', for example:
-   *  'models/gemini-flash-latest'
+   *  'models/gemini-3.8-flash'
    * - For tuned models, the model name starts with 'tunedModels/',
    * for example:
    *  'tunedModels/1234567890123456789'
@@ -323,7 +323,7 @@ export class Models extends BaseModule {
    * @example
    * ```ts
    * const response = await ai.models.generateContentStream({
-   *   model: 'gemini-flash-latest',
+   *   model: 'gemini-3.8-flash',
    *   contents: 'why is the sky blue?',
    *   config: {
    *     maxOutputTokens: 200,
@@ -1423,7 +1423,7 @@ export class Models extends BaseModule {
    *
    * @example
    * ```ts
-   * const modelInfo = await ai.models.get({model: 'gemini-flash-latest'});
+   * const modelInfo = await ai.models.get({model: 'gemini-3.8-flash'});
    * ```
    */
   async get(params: types.GetModelParameters): Promise<types.Model> {
@@ -1796,7 +1796,7 @@ export class Models extends BaseModule {
    * @example
    * ```ts
    * const response = await ai.models.countTokens({
-   *  model: 'gemini-flash-latest',
+   *  model: 'gemini-3.8-flash',
    *  contents: 'The quick brown fox jumps over the lazy dog.'
    * });
    * console.log(response);
@@ -1908,7 +1908,7 @@ export class Models extends BaseModule {
    * @example
    * ```ts
    * const response = await ai.models.computeTokens({
-   *  model: 'gemini-flash-latest',
+   *  model: 'gemini-3.8-flash',
    *  contents: 'What is your name?'
    * });
    * console.log(response);
@@ -2017,41 +2017,9 @@ export class Models extends BaseModule {
         return typedResp;
       });
     } else {
-      const body = converters.generateVideosParametersToMldev(
-        this.apiClient,
-        params,
-        params,
+      throw new Error(
+        'This method is only supported by the Gemini Enterprise Agent Platform (previously known as Vertex AI).',
       );
-      path = common.formatMap(
-        '{model}:predictLongRunning',
-        body['_url'] as Record<string, unknown>,
-      );
-      queryParams = body['_query'] as Record<string, string>;
-      delete body['_url'];
-      delete body['_query'];
-
-      response = this.apiClient
-        .request({
-          path: path,
-          queryParams: queryParams,
-          body: JSON.stringify(body),
-          httpMethod: 'POST',
-          httpOptions: params.config?.httpOptions,
-          abortSignal: params.config?.abortSignal,
-        })
-        .then((httpResponse) => {
-          return httpResponse.json();
-        }) as Promise<types.GenerateVideosOperation>;
-
-      return response.then((apiResponse) => {
-        const resp = converters.generateVideosOperationFromMldev(
-          apiResponse,
-          params,
-        );
-        const typedResp = new types.GenerateVideosOperation();
-        Object.assign(typedResp, resp);
-        return typedResp;
-      });
     }
   }
 }

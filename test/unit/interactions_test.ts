@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {GOOGLE_AI_API_DEFAULT_VERSION} from '../../src/_api_client.js';
 import {
   GeminiNextGenInteractions,
   GoogleGenAIParentClient,
@@ -100,6 +101,27 @@ describe('Interactions resource', () => {
       const [request] = customFetchSpy.calls.first().args as [Request];
       expect(request.url).toBe('https://my.base.host/somev1/interactions');
       expect(request.method.toLowerCase()).toEqual('post');
+    });
+
+    it('should forward SDK User-Agent and x-goog-api-client default headers', async () => {
+      const sdkHeader = 'google-genai-sdk/1.0.0 gl-node/v20.0.0';
+      parentClient.getDefaultHeaders = jasmine
+        .createSpy('getDefaultHeaders')
+        .and.returnValue({
+          'User-Agent': sdkHeader,
+          'x-goog-api-client': sdkHeader,
+        });
+      interactions = new GeminiNextGenInteractions(parentClient);
+
+      await interactions.create({
+        agent: 'some-agent',
+        input: 'some input',
+      });
+
+      expect(fetchSpy).toHaveBeenCalled();
+      const [request] = fetchSpy.calls.first().args as [Request];
+      expect(request.headers.get('user-agent')).toBe(sdkHeader);
+      expect(request.headers.get('x-goog-api-client')).toBe(sdkHeader);
     });
 
     it('should retry the call', async () => {
@@ -342,7 +364,9 @@ describe('Interactions resource', () => {
           options: {http_client: new HTTPClient()},
         },
         {
-          url: new URL('https://my.base.host/v1beta/interactions'),
+          url: new URL(
+            `https://my.base.host/${GOOGLE_AI_API_DEFAULT_VERSION}/interactions`,
+          ),
           options: {method: 'POST'},
         },
       );
@@ -363,13 +387,16 @@ describe('Interactions resource', () => {
       try {
         const handler = {};
         const dispatched = dispatcher.dispatch(
-          {path: '/v1beta/interactions', method: 'POST'},
+          {
+            path: `/${GOOGLE_AI_API_DEFAULT_VERSION}/interactions`,
+            method: 'POST',
+          },
           handler,
         );
         expect(dispatched).toBe('dispatched');
         expect(dispatchSpy).toHaveBeenCalledWith(
           {
-            path: '/v1beta/interactions',
+            path: `/${GOOGLE_AI_API_DEFAULT_VERSION}/interactions`,
             method: 'POST',
             headersTimeout: 0,
             bodyTimeout: 0,
@@ -394,7 +421,9 @@ describe('Interactions resource', () => {
           timeout_ms: 2400000,
         },
         {
-          url: new URL('https://my.base.host/v1beta/interactions'),
+          url: new URL(
+            `https://my.base.host/${GOOGLE_AI_API_DEFAULT_VERSION}/interactions`,
+          ),
           options: {method: 'POST'},
         },
       );
@@ -412,10 +441,13 @@ describe('Interactions resource', () => {
       globalRecord[globalDispatcherSymbol] = {dispatch: dispatchSpy};
       try {
         const handler = {};
-        dispatcher.dispatch({path: '/v1beta/interactions'}, handler);
+        dispatcher.dispatch(
+          {path: `/${GOOGLE_AI_API_DEFAULT_VERSION}/interactions`},
+          handler,
+        );
         expect(dispatchSpy).toHaveBeenCalledWith(
           {
-            path: '/v1beta/interactions',
+            path: `/${GOOGLE_AI_API_DEFAULT_VERSION}/interactions`,
             headersTimeout: 0,
             bodyTimeout: 0,
           },
@@ -441,7 +473,9 @@ describe('Interactions resource', () => {
           options: {http_client: customHttpClient},
         },
         {
-          url: new URL('https://my.base.host/v1beta/interactions'),
+          url: new URL(
+            `https://my.base.host/${GOOGLE_AI_API_DEFAULT_VERSION}/interactions`,
+          ),
           options: {method: 'POST'},
         },
       );

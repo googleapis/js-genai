@@ -9,7 +9,7 @@ import {File, UploadToFileSearchStoreOperation} from './types.js';
 
 /**
  * Represents the size and mimeType of a file. The information is used to
- * request the upload URL from the https://generativelanguage.googleapis.com/upload/v1beta/files endpoint.
+ * request the upload URL from the https://generativelanguage.googleapis.com/upload/{api_version}/files endpoint.
  * This interface defines the structure for constructing and executing HTTP
  * requests.
  */
@@ -32,7 +32,7 @@ export interface Uploader {
    * @param file The file to upload. file is in string type or a Blob.
    * @param uploadUrl The upload URL as a string is where the file will be
    *     uploaded to. The uploadUrl must be a url that was returned by the
-   * https://generativelanguage.googleapis.com/upload/v1beta/files endpoint
+   * https://generativelanguage.googleapis.com/upload/{api_version}/files endpoint
    * @param apiClient The ApiClient to use for uploading.
    * @return A Promise that resolves to types.File.
    */
@@ -49,7 +49,7 @@ export interface Uploader {
    * @param file The file to upload. file is in string type or a Blob.
    * @param uploadUrl The upload URL as a string is where the file will be
    *     uploaded to. The uploadUrl must be a url that was returned by the
-   * https://generativelanguage.googleapis.com/upload/v1beta/{file_search_store_name}:uploadToFileSearchStore endpoint
+   * https://generativelanguage.googleapis.com/upload/{api_version}/{file_search_store_name}:uploadToFileSearchStore endpoint
    * @param apiClient The ApiClient to use for uploading.
    * @param httpOptions Optional HTTP options to merge.
    * @return A Promise that resolves to types.UploadToFileSearchStoreOperation.

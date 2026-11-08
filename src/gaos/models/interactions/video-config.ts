@@ -23,6 +23,7 @@ export type Task =
   | "reference_to_video"
   | "edit"
   | "extend"
+  | "upscale"
   | (string & {});
 
 /**

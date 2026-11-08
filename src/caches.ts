@@ -59,7 +59,7 @@ export class Caches extends BaseModule {
    * ```ts
    * const contents = ...; // Initialize the content to cache.
    * const response = await ai.caches.create({
-   *   model: 'gemini-flash-latest',
+   *   model: 'gemini-3.8-flash',
    *   config: {
    *    'contents': contents,
    *    'displayName': 'test cache',

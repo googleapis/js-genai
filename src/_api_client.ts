@@ -6,7 +6,6 @@
 
 import pRetry from 'p-retry';
 import {Auth} from './_auth.js';
-import * as common from './_common.js';
 import {Downloader} from './_downloader.js';
 import {Uploader} from './_uploader.js';
 import {uploadToFileSearchStoreConfigToMldev} from './converters/_filesearchstores_converters.js';
@@ -17,10 +16,21 @@ const CONTENT_TYPE_HEADER = 'Content-Type';
 const SERVER_TIMEOUT_HEADER = 'X-Server-Timeout';
 const USER_AGENT_HEADER = 'User-Agent';
 export const GOOGLE_API_CLIENT_HEADER = 'x-goog-api-client';
-export const SDK_VERSION = '2.31.0'; // x-release-please-version
+export const SDK_VERSION = '3.0.0';  // x-release-please-version
 const LIBRARY_LABEL = `google-genai-sdk/${SDK_VERSION}`;
 const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
-const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';
+export const GOOGLE_AI_API_DEFAULT_VERSION = 'v1';
+
+let defaultGoogleAiApiVersionOverride: string | undefined;
+
+/**
+ * Overrides the default API version for the Gemini Developer API.
+ *
+ * @internal
+ */
+export function setDefaultGoogleAiApiVersion(version?: string) {
+  defaultGoogleAiApiVersionOverride = version;
+}
 
 const MULTI_REGIONAL_LOCATIONS = new Set<string>(['us', 'eu']);
 
@@ -353,7 +363,9 @@ export class ApiClient {
         console.warn('API key should be set when using the Gemini API.');
       }
       initHttpOptions.apiVersion =
-        this.clientOptions.apiVersion ?? GOOGLE_AI_API_DEFAULT_VERSION;
+        this.clientOptions.apiVersion ??
+        defaultGoogleAiApiVersionOverride ??
+        GOOGLE_AI_API_DEFAULT_VERSION;
       initHttpOptions.baseUrl = `https://generativelanguage.googleapis.com/`;
     }
 
@@ -480,11 +492,46 @@ export class ApiClient {
     }
   }
 
+  private resolveApiVersionInPath(path: string, apiVersion: string): string {
+    const placeholder = '{api_version}';
+    if (apiVersion !== '') {
+      return path.replaceAll(placeholder, apiVersion);
+    }
+    return path
+      .replaceAll(`${placeholder}/`, '')
+      .replaceAll(`/${placeholder}`, '')
+      .replaceAll(placeholder, '');
+  }
+
   private constructUrl(
     path: string,
     httpOptions: types.HttpOptions,
     prependProjectLocation: boolean,
   ): URL {
+    if (path.includes('{api_version}')) {
+      if (
+        !httpOptions ||
+        httpOptions.baseUrl === undefined ||
+        httpOptions.apiVersion === undefined
+      ) {
+        throw new Error('HTTP options are not correctly set.');
+      }
+      const baseUrl = httpOptions.baseUrl.endsWith('/')
+        ? httpOptions.baseUrl.slice(0, -1)
+        : httpOptions.baseUrl;
+      const urlElement: Array<string> = [baseUrl];
+      if (prependProjectLocation) {
+        urlElement.push(this.getBaseResourcePath());
+      }
+      const resolvedPath = this.resolveApiVersionInPath(
+        path,
+        httpOptions.apiVersion,
+      );
+      if (resolvedPath !== '') {
+        urlElement.push(resolvedPath);
+      }
+      return new URL(`${urlElement.join('/')}`);
+    }
     const urlElement: Array<string> = [this.getRequestUrlInternal(httpOptions)];
     if (prependProjectLocation) {
       urlElement.push(this.getBaseResourcePath());
@@ -991,12 +1038,8 @@ export class ApiClient {
       file: fileToUpload,
     };
     const fileName = this.getFileName(file);
-    const path = common.formatMap(
-      'upload/v1beta/files',
-      body['_url'] as Record<string, unknown>,
-    );
     const uploadUrl = await this.fetchUploadUrl(
-      path,
+      'upload/{api_version}/files',
       fileToUpload.sizeBytes,
       fileToUpload.mimeType,
       fileName,
@@ -1032,7 +1075,7 @@ export class ApiClient {
         'Can not determine mimeType. Please provide mimeType in the config.',
       );
     }
-    const path = `upload/v1beta/${fileSearchStoreName}:uploadToFileSearchStore`;
+    const path = `upload/{api_version}/${fileSearchStoreName}:uploadToFileSearchStore`;
     const fileName = this.getFileName(file);
     const body: Record<string, unknown> = {};
     if (config != null) {
@@ -1068,22 +1111,18 @@ export class ApiClient {
     body: Record<string, unknown>,
     configHttpOptions?: types.HttpOptions,
   ): Promise<string> {
-    let httpOptions: types.HttpOptions = {};
-    if (configHttpOptions) {
-      httpOptions = configHttpOptions;
-    } else {
-      httpOptions = {
-        apiVersion: '', // api-version is set in the path.
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Goog-Upload-Protocol': 'resumable',
-          'X-Goog-Upload-Command': 'start',
-          'X-Goog-Upload-Header-Content-Length': `${sizeBytes}`,
-          'X-Goog-Upload-Header-Content-Type': `${mimeType}`,
-          ...(fileName ? {'X-Goog-Upload-File-Name': fileName} : {}),
-        },
-      };
-    }
+    const httpOptions: types.HttpOptions = {
+      ...configHttpOptions,
+      headers: {
+        ...configHttpOptions?.headers,
+        'Content-Type': 'application/json',
+        'X-Goog-Upload-Protocol': 'resumable',
+        'X-Goog-Upload-Command': 'start',
+        'X-Goog-Upload-Header-Content-Length': `${sizeBytes}`,
+        'X-Goog-Upload-Header-Content-Type': `${mimeType}`,
+        ...(fileName ? {'X-Goog-Upload-File-Name': fileName} : {}),
+      },
+    };
 
     const httpResponse = await this.request({
       path,

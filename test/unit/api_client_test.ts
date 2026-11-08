@@ -8,6 +8,7 @@ import {Readable} from 'stream';
 
 import {
   ApiClient,
+  GOOGLE_AI_API_DEFAULT_VERSION,
   includeExtraBodyToRequestInit,
 } from '../../src/_api_client.js';
 import {CrossDownloader} from '../../src/cross/_cross_downloader.js';
@@ -666,7 +667,9 @@ describe('ApiClient', () => {
         downloader: new CrossDownloader(),
       });
       // baseUrl is based on apiVersion
-      expect(client.getRequestUrl()).toContain('/v1');
+      expect(client.getRequestUrl()).toContain(
+        `/${GOOGLE_AI_API_DEFAULT_VERSION}`,
+      );
       expect(client.isVertexAI()).toBeFalse();
     });
 
@@ -1990,13 +1993,13 @@ describe('ApiClient', () => {
       try {
         const handler = {};
         const result = dispatcher.dispatch(
-          {path: '/v1beta/models', method: 'POST'},
+          {path: `/${GOOGLE_AI_API_DEFAULT_VERSION}/models`, method: 'POST'},
           handler,
         );
         expect(result).toBe('dispatched');
         expect(dispatchSpy).toHaveBeenCalledWith(
           {
-            path: '/v1beta/models',
+            path: `/${GOOGLE_AI_API_DEFAULT_VERSION}/models`,
             method: 'POST',
             headersTimeout: 0,
             bodyTimeout: 0,
@@ -2506,7 +2509,7 @@ describe('ApiClient', () => {
       await client.requestStream({path: 'test-path', httpMethod: 'POST'});
       const fetchArgs = fetchSpy.calls.first().args;
       expect(fetchArgs[0]).toBe(
-        'https://generativelanguage.googleapis.com/v1beta/test-path?alt=sse',
+        `https://generativelanguage.googleapis.com/${GOOGLE_AI_API_DEFAULT_VERSION}/test-path?alt=sse`,
       );
       // @ts-expect-error TS2532: Object is possibly 'undefined'.
       expect(fetchArgs[1].signal instanceof AbortSignal).toBeTrue();
@@ -3020,7 +3023,6 @@ describe('includeExtraBodyToRequestInit', () => {
     },
   );
 });
-
 describe('custom fetch', () => {
   let globalFetchSpy: jasmine.Spy;
 
@@ -3048,7 +3050,6 @@ describe('custom fetch', () => {
       downloader: new CrossDownloader(),
       httpOptions: {
         baseUrl: 'https://generativelanguage.googleapis.com',
-        apiVersion: 'v1beta',
         fetch: customFetch,
       },
     });
@@ -3063,7 +3064,7 @@ describe('custom fetch', () => {
     expect(globalFetchSpy).not.toHaveBeenCalled();
     const [callUrl, callInit] = customFetch.calls.first().args;
     expect(callUrl).toContain(
-      'https://generativelanguage.googleapis.com/v1beta/test-path',
+      `https://generativelanguage.googleapis.com/${GOOGLE_AI_API_DEFAULT_VERSION}/test-path`,
     );
     expect((callInit as RequestInit).method).toBe('POST');
     const json = (await response.json()) as Record<string, unknown>;
@@ -3208,5 +3209,18 @@ describe('custom fetch', () => {
       },
     });
     expect(clientWithoutFetch.getFetch()).toBeUndefined();
+  });
+});
+
+describe('ApiClient apiVersion initialization', () => {
+  it('initializes apiVersion from options', () => {
+    const client = new ApiClient({
+      auth: new FakeAuth(),
+      uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
+      apiKey: 'test-key',
+      apiVersion: 'v1beta',
+    });
+    expect(client.clientOptions.httpOptions?.apiVersion).toBe('v1beta');
   });
 });

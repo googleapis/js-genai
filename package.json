@@ -1,6 +1,6 @@
 {
   "name": "@google/genai",
-  "version": "2.31.0",
+  "version": "3.0.0",
   "description": "",
   "type": "module",
   "main": "dist/node/index.mjs",
@@ -60,7 +60,6 @@
     }
   },
   "scripts": {
-    "preinstall": "echo 'preinstall: no-op'",
     "prepare": "node scripts/prepare.js",
     "prepack": "echo 'prepack: no-op'",
     "prebuild": "echo 'prebuild: no-op'",
@@ -84,7 +83,7 @@
     "generate-proto": "pbjs -t static-module -w es6 -o src/cross/sentencepiece/sentencepiece_model.pb.js src/cross/sentencepiece/sentencepiece_model.proto && pbts -o src/cross/sentencepiece/sentencepiece_model.pb.d.ts src/cross/sentencepiece/sentencepiece_model.pb.js && sed -i.bak 's/import \\* as \\$protobuf from \"protobufjs\\/minimal\"/import \\$protobuf from \"protobufjs\\/minimal.js\"/' src/cross/sentencepiece/sentencepiece_model.pb.js && rm src/cross/sentencepiece/sentencepiece_model.pb.js.bak"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.0.0"
   },
   "overrides": {
     "tmp": "^0.2.4"
@@ -120,7 +119,7 @@
     "@modelcontextprotocol/sdk": "^1.25.2",
     "@rollup/plugin-json": "^6.1.0",
     "@types/jasmine": "^5.1.2",
-    "@types/node": "^20.9.0",
+    "@types/node": "^22.0.0",
     "@types/node-fetch": "^2.6.13",
     "@types/unist": "^3.0.3",
     "@types/ws": "^8.5.14",
@@ -152,8 +151,8 @@
   "dependencies": {
     "google-auth-library": "^10.3.0",
     "p-retry": "^4.6.2",
-    "protobufjs": "^7.5.4",
-    "ws": "^8.18.0"
+    "protobufjs": "^7.6.5",
+    "ws": "^8.21.0"
   },
   "peerDependencies": {
     "@modelcontextprotocol/sdk": "^1.25.2"
