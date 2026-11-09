@@ -10,7 +10,7 @@
 
 The Google Gen AI JavaScript SDK is designed for
 TypeScript and JavaScript developers to build applications powered by Gemini. The SDK
-supports both the [Gemini Developer API](https://ai.google.dev/gemini-api/docs)
+supports both the [Gemini Developer API](https://aistudio.google.com/docs)
 and [Gemini Enterprise Agent Platform](https://docs.cloud.google.com/gemini-enterprise-agent-platform) (formerly Vertex AI).
 
 > [!WARNING]
@@ -94,7 +94,7 @@ main();
 ## Initialization
 
 The Google Gen AI SDK provides support for both the
-[Gemini Developer API](https://ai.google.dev/gemini-api/docs) and
+[Gemini Developer API](https://aistudio.google.com/docs) and
 [Gemini Enterprise Agent Platform](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/overview)
  implementations of the Gemini API.
 
@@ -472,7 +472,7 @@ The Interactions API is a unified interface for interacting with Gemini models
 and agents. It simplifies state management, tool orchestration, and long-running
 tasks.
 
-See the [documentation site](https://ai.google.dev/gemini-api/docs/interactions)
+See the [documentation site](https://aistudio.google.com/docs/interactions-overview)
 for more details.
 
 ### Basic Interaction
@@ -696,7 +696,7 @@ for (const output of interaction.outputs!) {
 This SDK (`@google/genai`) is Google Deepmind’s "vanilla" SDK for its generative
 AI offerings, and is where Google Deepmind adds new AI features.
 
-Models hosted either on the [Gemini Enterprise Agent Platform](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/overview) or the [Gemini Developer platform](https://ai.google.dev/gemini-api/docs) are accessible through this SDK.
+Models hosted either on the [Gemini Enterprise Agent Platform](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/overview) or the [Gemini Developer platform](https://aistudio.google.com/docs) are accessible through this SDK.
 
 Other SDKs may be offering additional AI frameworks on top of this SDK, or may
 be targeting specific project environments (like Firebase).
