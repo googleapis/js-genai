@@ -5,7 +5,7 @@
 <hr>
 <p>The Google Gen AI JavaScript SDK is designed for
 TypeScript and JavaScript developers to build applications powered by Gemini. The SDK
-supports both the <a href="https://ai.google.dev/gemini-api/docs">Gemini Developer API</a>
+supports both the <a href="https://aistudio.google.com/docs">Gemini Developer API</a>
 and <a href="https://docs.cloud.google.com/gemini-enterprise-agent-platform">Gemini Enterprise Agent Platform</a> (formerly Vertex AI).</p>
 <div class="tsd-alert tsd-alert-warning"><div class="tsd-alert-title"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><use href="assets/icons.svg#icon-alertWarning"></use></svg><span>Warning</span></div><p>
 <strong>Updates to Automatic Function Calling (AFC) in upcoming SDK version:</strong>
@@ -82,7 +82,7 @@ Use server-side implementations in production environments.</p>
 </code><button type="button">Copy</button></pre>
 
 <a id="initialization" class="tsd-anchor"></a><h2 class="tsd-anchor-link">Initialization<a href="#initialization" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>The Google Gen AI SDK provides support for both the
-<a href="https://ai.google.dev/gemini-api/docs">Gemini Developer API</a> and
+<a href="https://aistudio.google.com/docs">Gemini Developer API</a> and
 <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/learn/overview">Gemini Enterprise Agent Platform</a>
 implementations of the Gemini API.</p>
 <details>
@@ -270,7 +270,7 @@ and returns the merged response. To disable automatic continuation, set
 <a id="interactions" class="tsd-anchor"></a><h2 class="tsd-anchor-link">Interactions<a href="#interactions" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>The Interactions API is a unified interface for interacting with Gemini models
 and agents. It simplifies state management, tool orchestration, and long-running
 tasks.</p>
-<p>See the <a href="https://ai.google.dev/gemini-api/docs/interactions">documentation site</a>
+<p>See the <a href="https://aistudio.google.com/docs/interactions-overview">documentation site</a>
 for more details.</p>
 <a id="basic-interaction" class="tsd-anchor"></a><h3 class="tsd-anchor-link">Basic Interaction<a href="#basic-interaction" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><pre><code class="typescript"><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">interaction</span><span class="hl-1"> = </span><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-4">ai</span><span class="hl-1">.</span><span class="hl-4">interactions</span><span class="hl-1">.</span><span class="hl-0">create</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-4">model:</span><span class="hl-1"> </span><span class="hl-2">&#39;gemini-3.8-flash&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">input:</span><span class="hl-1"> </span><span class="hl-2">&#39;Hello, how are you?&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">});</span><br/><span class="hl-4">console</span><span class="hl-1">.</span><span class="hl-0">debug</span><span class="hl-1">(</span><span class="hl-4">interaction</span><span class="hl-1">);</span><br/>
 </code><button type="button">Copy</button></pre>
@@ -310,7 +310,7 @@ specify the <code>response_modalities</code>.</p>
 
 <a id="how-is-this-different-from-the-other-google-ai-sdks" class="tsd-anchor"></a><h2 class="tsd-anchor-link">How is this different from the other Google AI SDKs<a href="#how-is-this-different-from-the-other-google-ai-sdks" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>This SDK (<code>@google/genai</code>) is Google Deepmind’s &quot;vanilla&quot; SDK for its generative
 AI offerings, and is where Google Deepmind adds new AI features.</p>
-<p>Models hosted either on the <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/learn/overview">Gemini Enterprise Agent Platform</a> or the <a href="https://ai.google.dev/gemini-api/docs">Gemini Developer platform</a> are accessible through this SDK.</p>
+<p>Models hosted either on the <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/learn/overview">Gemini Enterprise Agent Platform</a> or the <a href="https://aistudio.google.com/docs">Gemini Developer platform</a> are accessible through this SDK.</p>
 <p>Other SDKs may be offering additional AI frameworks on top of this SDK, or may
 be targeting specific project environments (like Firebase).</p>
 <p>The <code>@google/generative_language</code> and <code>@google-cloud/vertexai</code> SDKs are previous
