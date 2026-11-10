@@ -2,6 +2,17 @@
 
 
 
+## [3.1.0](https://github.com/googleapis/js-genai/compare/v3.0.0...v3.1.0) (2026-11-10)
+
+
+### Features
+
+* add `gemini-omni-1.2-flash` and make it the `gemini-api video` default ([cd31e9f](https://github.com/googleapis/js-genai/commit/cd31e9f9ea3aac359be9666a37180b5a908b8293))
+* Add `proactive_video` to `ProactivityConfig` for the Live API. ([2164fe7](https://github.com/googleapis/js-genai/commit/2164fe72de77aea191c1e43e7d8f346426752c0d))
+* add `xhigh` thinking level to Interactions ThinkingLevel ([eff6729](https://github.com/googleapis/js-genai/commit/eff6729f1cedc97167b670625ce6385c294c8208))
+* add usage_metadata (including traffic_type) and truncated to EmbedContentResponse for Gemini Enterprise API ([81d42ca](https://github.com/googleapis/js-genai/commit/81d42caa5c24bbb7823538762ba2ef707ba7dad4))
+* **interactions:** add gemini-4-carbon and gemini-omni-1.2-flash to Model enum ([d406013](https://github.com/googleapis/js-genai/commit/d406013f9f46384dc53e4729be48923fb9fb3942))
+
 ## [3.0.0](https://github.com/googleapis/js-genai/compare/v2.32.0...v3.0.0) (2026-11-06)
 
 
