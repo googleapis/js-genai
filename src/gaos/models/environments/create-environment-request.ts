@@ -26,14 +26,6 @@ export type CreateEnvironmentRequestNetworkUnion =
  */
 export type CreateEnvironmentRequest = {
   /**
-   * Optional. Arbitrary customer-defined JSON configuration passed through
-   *
-   * @remarks
-   * to the self-hosted environment poller. Only supported when `mode` is
-   * `SELF_HOSTED`.
-   */
-  custom_config?: { [k: string]: any } | undefined;
-  /**
    * Optional. The source environment to copy/fork from.
    *
    * @remarks
@@ -41,10 +33,6 @@ export type CreateEnvironmentRequest = {
    * When specified, `sources` and `env` must be empty.
    */
   from_environment?: string | undefined;
-  /**
-   * The compute lifecycle mode for an environment.
-   */
-  mode?: interactions.EnvironmentMode | undefined;
   /**
    * Network configuration for the environment.
    */
@@ -56,12 +44,4 @@ export type CreateEnvironmentRequest = {
    * Sources to be mounted into the environment.
    */
   sources?: Array<interactions.Source> | undefined;
-  /**
-   * Optional. System instruction applied to interactions running in this
-   *
-   * @remarks
-   * environment. Only supported for `SELF_HOSTED` environments, where it is
-   * recommended.
-   */
-  system_instruction?: string | undefined;
 };

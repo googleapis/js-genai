@@ -1305,10 +1305,6 @@ export type ListEnvironmentsParams = {
    */
   api_version?: string | undefined;
   /**
-   * Optional. Filter environments by compute lifecycle mode.
-   */
-  mode?: Environments.EnvironmentMode | undefined;
-  /**
    * Optional. Maximum number of environments to return.
    *
    * @remarks
@@ -1662,12 +1658,11 @@ export class GeminiNextGenEnvironments {
     params: ListEnvironmentsParams | null | undefined = {},
     options?: GoogleGenAIRequestOptions,
   ): Promise<Environments.EnvironmentListResponse> {
-    const { api_version, mode, page_size, page_token } = params ?? {};
+    const { api_version, page_size, page_token } = params ?? {};
     return unwrapWithSdkHttpResponse(
       environmentsListEnvironments(
         this.getClient(api_version),
         api_version,
-        mode,
         page_size,
         page_token,
         toGoogleGenAIRequestOptions(options),

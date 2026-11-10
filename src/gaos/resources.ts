@@ -54,7 +54,6 @@ import type { DocumentDelta as DocumentDelta$Import } from "./models/interaction
 import type { DynamicAgentConfig as DynamicAgentConfig$Import } from "./models/interactions/dynamic-agent-config.js";
 import type { Empty as Empty$Import } from "./models/interactions/empty.js";
 import type { EnvVar as EnvVar$Import } from "./models/interactions/env-var.js";
-import type { EnvironmentMode as EnvironmentMode$Import } from "./models/interactions/environment-mode.js";
 import type { EnvironmentNetworkEgressAllowlist as EnvironmentNetworkEgressAllowlist$Import } from "./models/interactions/environment-network-egress-allowlist.js";
 import type { Environment as Environment$Import2 } from "./models/interactions/environment.js";
 import type { ErrorEvent as ErrorEvent$Import } from "./models/interactions/error-event.js";
@@ -260,7 +259,6 @@ type Environment$ = Environment$Import;
 type EnvironmentDeleteResponse$ = Empty$Import;
 type EnvironmentFile$ = EnvironmentFile$Import;
 type EnvironmentListResponse$ = ListEnvironmentsResponse$Import;
-type EnvironmentMode$ = EnvironmentMode$Import;
 type GetEnvironmentFilesResponse$ = GetEnvironmentFilesResponse$Import;
 type ListEnvironmentsResponse$ = ListEnvironmentsResponse$Import;
 type AllowedTools$ = AllowedTools$Import;
@@ -281,7 +279,6 @@ type DeepResearchAgentConfig$ = DeepResearchAgentConfig$Import;
 type DocumentContent$ = DocumentContent$Import;
 type DynamicAgentConfig$ = DynamicAgentConfig$Import;
 type Environment$2 = Environment$Import2;
-type EnvironmentMode$2 = EnvironmentMode$Import;
 type Error$ = ErrorT$Import;
 type ErrorEvent$ = ErrorEvent$Import;
 type FileCitation$ = FileCitation$Import;
@@ -537,7 +534,6 @@ export type Environment = Environment$;
 export type EnvironmentDeleteResponse = EnvironmentDeleteResponse$;
 export type EnvironmentFile = EnvironmentFile$;
 export type EnvironmentListResponse = EnvironmentListResponse$;
-export type EnvironmentMode = EnvironmentMode$;
 export type EnvironmentNetworkEgressAllowlist =
   EnvironmentNetworkEgressAllowlist$;
 export type EnvironmentVariableConfig = EnvironmentVariableConfig$;
@@ -747,7 +743,6 @@ export declare namespace Environments {
   export type EnvironmentDeleteResponse = EnvironmentDeleteResponse$;
   export type EnvironmentFile = EnvironmentFile$;
   export type EnvironmentListResponse = EnvironmentListResponse$;
-  export type EnvironmentMode = EnvironmentMode$;
   export type GetEnvironmentFilesResponse = GetEnvironmentFilesResponse$;
   export type ListEnvironmentsResponse = ListEnvironmentsResponse$;
 }
@@ -774,7 +769,6 @@ export declare namespace Interactions {
   export type DocumentContent = DocumentContent$;
   export type DynamicAgentConfig = DynamicAgentConfig$;
   export interface Environment extends Environment$2 {}
-  export type EnvironmentMode = EnvironmentMode$2;
   export type Error = Error$;
   export interface ErrorEvent extends ErrorEvent$ {}
   export type FileCitation = FileCitation$;

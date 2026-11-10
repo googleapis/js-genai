@@ -38,24 +38,6 @@ export type Environment = {
    */
   created?: string | undefined;
   /**
-   * Output only. Arbitrary customer-defined JSON configuration passed through to the
-   *
-   * @remarks
-   * self-hosted environment poller. Only populated for `self_hosted`
-   * environments when configured.
-   */
-  custom_config?: { [k: string]: any } | undefined;
-  /**
-   * Output only. Secret token generated upon environment creation for self_hosted
-   *
-   * @remarks
-   * environments. Used by the self-hosted sandbox daemon to authenticate
-   * polling and streaming requests. Only returned in the CreateEnvironment
-   * response; omitted from subsequent GetEnvironment and ListEnvironments
-   * calls.
-   */
-  environment_key?: string | undefined;
-  /**
    * Output only. The number of files in the environment, output only.
    */
   file_count?: string | undefined;
@@ -70,10 +52,6 @@ export type Environment = {
    * (YYYY-MM-DDThh:mm:ssZ).
    */
   last_accessed?: string | undefined;
-  /**
-   * The compute lifecycle mode for an environment.
-   */
-  mode?: interactions.EnvironmentMode | undefined;
   /**
    * Network configuration for the environment.
    */
