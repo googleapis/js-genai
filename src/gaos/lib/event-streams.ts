@@ -160,23 +160,40 @@ export class Stream<T> extends ReadableStreamBase<T> {
     })[Symbol.asyncIterator];
     if (typeof fn === "function") return fn.call(this, options);
     const reader = this.getReader();
+    let released = false;
+    const release = () => {
+      released = true;
+      reader.releaseLock();
+    };
     const iterator = {
       next: async () => {
-        const r = await reader.read();
+        if (released) return { done: true, value: undefined };
+        const r = await reader.read().catch((e: unknown) => {
+          release();
+          throw e;
+        });
         if (r.done) {
-          reader.releaseLock();
+          release();
           return { done: true, value: undefined };
         }
         return { done: false, value: r.value };
       },
       throw: async (e?: unknown) => {
-        await reader.cancel(e);
-        reader.releaseLock();
+        if (released) return { done: true, value: undefined };
+        try {
+          await reader.cancel(e);
+        } finally {
+          release();
+        }
         return { done: true, value: undefined };
       },
       return: async () => {
-        await reader.cancel("done");
-        reader.releaseLock();
+        if (released) return { done: true, value: undefined };
+        try {
+          await reader.cancel("done");
+        } finally {
+          release();
+        }
         return { done: true, value: undefined };
       },
       [Symbol.asyncIterator]() {
