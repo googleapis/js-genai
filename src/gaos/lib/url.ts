@@ -14,30 +14,120 @@ const hasOwn = Object.prototype.hasOwnProperty;
 
 export type Params = Partial<Record<string, string | number>>;
 
+// WHATWG URL parsing strips tab and newline characters, trims leading and
+// trailing C0 controls and spaces, ends the path at "?" or "#", treats "\" as
+// "/" in special schemes, resolves "%2e" as "." when removing dot segments, and
+// reads a leading scheme or "//" as overriding the base URL.
+const ignoredURLCharsRE = /[\t\n\r]/g;
+// eslint-disable-next-line no-control-regex
+const trimmedURLCharsRE = /^[\x00-\x20]+|[\x00-\x20]+$/g;
+const pathEndRE = /[?#]/;
+const segmentSeparatorRE = /[/\\]/;
+const dotSegmentRE = /^(?:\.|%2e){1,2}$/i;
+const baseOverrideRE = /^(?:[a-zA-Z][a-zA-Z0-9+.-]*:|[/\\]{2})/;
+
+function hasDotSegment(value: string): boolean {
+  const path = value.replace(ignoredURLCharsRE, "").split(pathEndRE, 1)[0];
+  return (path ?? "")
+    .split(segmentSeparatorRE)
+    .some((part) => dotSegmentRE.test(part.replace(trimmedURLCharsRE, "")));
+}
+
+function overridesBaseURL(path: string): boolean {
+  return baseOverrideRE.test(
+    path.replace(ignoredURLCharsRE, "").replace(trimmedURLCharsRE, ""),
+  );
+}
+
+function isBlankSegment(value: string): boolean {
+  return value.replace(trimmedURLCharsRE, "") === "";
+}
+
+function parameterError(names: string[], problem: string): Error {
+  const subject =
+    names.length === 1
+      ? `Parameter '${names[0]}'`
+      : `Parameters '${names.join("', '")}'`;
+  return new Error(`${subject} ${problem}`);
+}
+
 export function pathToFunc(
   pathPattern: string,
-  options?: { charEncoding?: "percent" | "none" },
+  options?: {
+    charEncoding?: "percent" | "none";
+    rejectDotSegments?: boolean;
+  },
 ): (params?: Params) => string {
   const paramRE = /\{([a-zA-Z0-9_][a-zA-Z0-9_-]*?)\}/g;
 
   return function buildURLPath(params: Record<string, unknown> = {}): string {
-    return pathPattern
-      .replace(paramRE, function (_, placeholder) {
-        if (!hasOwn.call(params, placeholder)) {
-          throw new Error(`Parameter '${placeholder}' is required`);
-        }
+    const leadingContributors: string[] = [];
+    let leadingSegmentFound = false;
 
-        const value = params[placeholder];
-        if (typeof value !== "string" && typeof value !== "number") {
-          throw new Error(
-            `Parameter '${placeholder}' must be a string or number`,
+    const path = pathPattern
+      .split("/")
+      .map((segment) => {
+        const contributors: string[] = [];
+        const rendered = segment.replace(paramRE, function (_, placeholder) {
+          if (!hasOwn.call(params, placeholder)) {
+            throw new Error(`Parameter '${placeholder}' is required`);
+          }
+
+          const value = params[placeholder];
+          if (typeof value !== "string" && typeof value !== "number") {
+            throw new Error(
+              `Parameter '${placeholder}' must be a string or number`,
+            );
+          }
+
+          const encoded =
+            options?.charEncoding === "percent"
+              ? encodeURIComponent(`${value}`)
+              : `${value}`;
+          if (options?.rejectDotSegments && pathEndRE.test(encoded)) {
+            throw parameterError(
+              [placeholder],
+              "must not contain an unencoded '?' or '#'",
+            );
+          }
+          if (encoded !== "") {
+            contributors.push(placeholder);
+          }
+          return encoded;
+        });
+
+        if (
+          options?.rejectDotSegments &&
+          contributors.length > 0 &&
+          hasDotSegment(rendered)
+        ) {
+          throw parameterError(
+            contributors,
+            "must not form a '.' or '..' path segment",
           );
         }
 
-        return options?.charEncoding === "percent"
-          ? encodeURIComponent(`${value}`)
-          : `${value}`;
+        if (!leadingSegmentFound) {
+          leadingContributors.push(...contributors);
+          leadingSegmentFound = !isBlankSegment(rendered);
+        }
+
+        return rendered;
       })
+      .join("/")
       .replace(/^\/+/, "");
+
+    if (
+      options?.rejectDotSegments &&
+      leadingContributors.length > 0 &&
+      overridesBaseURL(path)
+    ) {
+      throw parameterError(
+        leadingContributors,
+        "must not start the path with a URL scheme or '//'",
+      );
+    }
+
+    return path;
   };
 }

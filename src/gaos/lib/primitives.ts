@@ -172,3 +172,32 @@ export function isPlainObject(
     return false;
   }
 }
+
+function exceedsMaxLength(value: string, maxLength: number): boolean {
+  if (value.length <= maxLength) {
+    return false;
+  }
+  let codePoints = 0;
+  for (const _ of value) {
+    if (++codePoints > maxLength) {
+      return true;
+    }
+  }
+  return false;
+}
+
+export function withinMaxLength(maxLength: number): (value: string) => boolean {
+  return (value) => !exceedsMaxLength(value, maxLength);
+}
+
+// A value over maxLength is rejected by withinMaxLength, so the pattern is not
+// run against arbitrarily long input.
+export function matchesPattern(
+  pattern: string,
+  maxLength?: number,
+): (value: string) => boolean {
+  const re = new RegExp(pattern, "u");
+  return (value) =>
+    (maxLength !== undefined && exceedsMaxLength(value, maxLength)) ||
+    re.test(value);
+}
