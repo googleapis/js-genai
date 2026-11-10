@@ -17,11 +17,20 @@ export type ListEnvironmentsGlobals = {
   api_version?: string | undefined;
 };
 
+/**
+ * Optional. Filter environments by compute lifecycle mode.
+ */
+export type Mode = "on_demand" | "self_hosted";
+
 export type ListEnvironmentsRequest = {
   /**
    * API version for request routing.
    */
   api_version?: string | undefined;
+  /**
+   * Optional. Filter environments by compute lifecycle mode.
+   */
+  mode?: Mode | undefined;
   /**
    * Optional. Maximum number of environments to return.
    *
