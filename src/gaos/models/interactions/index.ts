@@ -36,6 +36,7 @@ export * from "./document-delta.js";
 export * from "./dynamic-agent-config.js";
 export * from "./empty.js";
 export * from "./env-var.js";
+export * from "./environment-mode.js";
 export * from "./environment-network-egress-allowlist.js";
 export * from "./environment.js";
 export * from "./error-event.js";
