@@ -778,6 +778,26 @@ export enum ModelStage {
   RETIRED = 'RETIRED',
 }
 
+/** Pricing and performance service tier. */
+export enum ServiceTier {
+  /**
+   * Default service tier, which is standard.
+   */
+  UNSPECIFIED = 'unspecified',
+  /**
+   * Flex service tier.
+   */
+  FLEX = 'flex',
+  /**
+   * Standard service tier.
+   */
+  STANDARD = 'standard',
+  /**
+   * Priority service tier.
+   */
+  PRIORITY = 'priority',
+}
+
 /** The media resolution to use. */
 export enum MediaResolution {
   /**
@@ -1244,26 +1264,6 @@ export enum DocumentState {
    * Some `Chunks` of the `Document` failed processing.
    */
   STATE_FAILED = 'STATE_FAILED',
-}
-
-/** Pricing and performance service tier. */
-export enum ServiceTier {
-  /**
-   * Default service tier, which is standard.
-   */
-  UNSPECIFIED = 'unspecified',
-  /**
-   * Flex service tier.
-   */
-  FLEX = 'flex',
-  /**
-   * Standard service tier.
-   */
-  STANDARD = 'standard',
-  /**
-   * Priority service tier.
-   */
-  PRIORITY = 'priority',
 }
 
 /** The tokenization quality used for given media. */
@@ -2380,7 +2380,7 @@ export declare interface HttpOptions {
   /** Extra parameters to add to the request body.
       The structure must match the backend API's request structure.
       - Gemini Enterprise Agent Platform backend API docs: https://cloud.google.com/vertex-ai/docs/reference/rest
-      - GeminiAPI backend API docs: https://ai.google.dev/api/rest */
+      - GeminiAPI backend API docs: https://aistudio.google.com/api-reference */
   extraBody?: Record<string, unknown>;
   /** HTTP retry options for the request. */
   retryOptions?: HttpRetryOptions;
@@ -4223,6 +4223,34 @@ export declare interface EmbedContentMetadata {
   billableCharacterCount?: number;
 }
 
+/** Usage metadata about response(s). */
+export declare interface UsageMetadata {
+  /** Total number of tokens across all the generated response candidates. */
+  responseTokenCount?: number;
+  /** List of modalities that were returned in the response. */
+  responseTokensDetails?: ModalityTokenCount[];
+  /** Output only. A detailed breakdown of the token count for each modality in the cached content. */
+  cacheTokensDetails?: ModalityTokenCount[];
+  /** Output only. The number of tokens in the cached content that was used for this request. */
+  cachedContentTokenCount?: number;
+  /** The total number of tokens in the prompt. This includes any text, images, or other media provided in the request. When `cached_content` is set, this also includes the number of tokens in the cached content. */
+  promptTokenCount?: number;
+  /** Output only. A detailed breakdown of the token count for each modality in the prompt. */
+  promptTokensDetails?: ModalityTokenCount[];
+  /** Output only. The number of tokens that were part of the model's generated "thoughts" output, if applicable. */
+  thoughtsTokenCount?: number;
+  /** Output only. The number of tokens in the results from tool executions, which are provided back to the model as input, if applicable. */
+  toolUsePromptTokenCount?: number;
+  /** Output only. A detailed breakdown by modality of the token counts from the results of tool executions, which are provided back to the model as input. */
+  toolUsePromptTokensDetails?: ModalityTokenCount[];
+  /** The total number of tokens for the entire request. This is the sum of `prompt_token_count`, `candidates_token_count`, `tool_use_prompt_token_count`, and `thoughts_token_count`. */
+  totalTokenCount?: number;
+  /** Output only. The traffic type for this request. This field is not supported in Gemini API. */
+  trafficType?: TrafficType;
+  /** Output only. Service tier of the request. This field is not supported in Vertex AI. */
+  serviceTier?: ServiceTier;
+}
+
 /** Response for the embed_content method. */
 export class EmbedContentResponse {
   /** Used to retain the full HTTP response. */
@@ -4234,6 +4262,10 @@ export class EmbedContentResponse {
   /** Gemini Enterprise Agent Platform only. Metadata about the request.
    */
   metadata?: EmbedContentMetadata;
+  /** Whether the input content was truncated before generating the embedding. This field is not supported in Gemini API. */
+  truncated?: boolean;
+  /** Usage metadata about the response(s). */
+  usageMetadata?: UsageMetadata;
 }
 
 /** The config for generating an images. */
@@ -7869,34 +7901,6 @@ export declare interface LiveServerToolCallCancellation {
   ids?: string[];
 }
 
-/** Usage metadata about response(s). */
-export declare interface UsageMetadata {
-  /** Total number of tokens across all the generated response candidates. */
-  responseTokenCount?: number;
-  /** List of modalities that were returned in the response. */
-  responseTokensDetails?: ModalityTokenCount[];
-  /** Output only. A detailed breakdown of the token count for each modality in the cached content. */
-  cacheTokensDetails?: ModalityTokenCount[];
-  /** Output only. The number of tokens in the cached content that was used for this request. */
-  cachedContentTokenCount?: number;
-  /** The total number of tokens in the prompt. This includes any text, images, or other media provided in the request. When `cached_content` is set, this also includes the number of tokens in the cached content. */
-  promptTokenCount?: number;
-  /** Output only. A detailed breakdown of the token count for each modality in the prompt. */
-  promptTokensDetails?: ModalityTokenCount[];
-  /** Output only. The number of tokens that were part of the model's generated "thoughts" output, if applicable. */
-  thoughtsTokenCount?: number;
-  /** Output only. The number of tokens in the results from tool executions, which are provided back to the model as input, if applicable. */
-  toolUsePromptTokenCount?: number;
-  /** Output only. A detailed breakdown by modality of the token counts from the results of tool executions, which are provided back to the model as input. */
-  toolUsePromptTokensDetails?: ModalityTokenCount[];
-  /** The total number of tokens for the entire request. This is the sum of `prompt_token_count`, `candidates_token_count`, `tool_use_prompt_token_count`, and `thoughts_token_count`. */
-  totalTokenCount?: number;
-  /** Output only. The traffic type for this request. This field is not supported in Gemini API. */
-  trafficType?: TrafficType;
-  /** Output only. Service tier of the request. This field is not supported in Vertex AI. */
-  serviceTier?: ServiceTier;
-}
-
 /** Server will not be able to service client soon. */
 export declare interface LiveServerGoAway {
   /** The remaining time before the connection will be terminated as ABORTED. The minimal time returned here is specified differently together with the rate limits for a given model. */
@@ -8124,6 +8128,11 @@ export declare interface ProactivityConfig {
         example, this allows the model to ignore out of context speech or to stay
         silent if the user did not make a request, yet. */
   proactiveAudio?: boolean;
+  /** If enabled, the system might trigger a generation on each received
+      image. This requires that `proactive_audio` is enabled. The rate
+      of generation depends on the rate of incoming images and can cause a
+      significant increase in cost. */
+  proactiveVideo?: boolean;
 }
 
 /** Configuration for history exchange between client and server. */
@@ -8781,7 +8790,7 @@ export declare interface AuthToken {
 export declare interface LiveConnectConstraints {
   /** ID of the model to configure in the ephemeral token for Live API.
       For a list of models, see `Gemini models
-      <https://ai.google.dev/gemini-api/docs/models>`. */
+      <https://aistudio.google.com/docs/models>`. */
   model?: string;
   /** Configuration specific to Live API connections created using this token. */
   config?: LiveConnectConfig;

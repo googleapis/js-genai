@@ -4306,6 +4306,7 @@ export interface PreTunedModel {
 // @public
 export interface ProactivityConfig {
     proactiveAudio?: boolean;
+    proactiveVideo?: boolean;
 }
 
 // @public
