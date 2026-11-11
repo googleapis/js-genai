@@ -11,6 +11,7 @@ const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
 async function genericOperationTriggers() {
   const ai = new GoogleGenAI({
     apiKey: GEMINI_API_KEY,
+    apiVersion: 'v1beta',
   });
 
   // 1. Create a trigger pointing to the agent

@@ -42,6 +42,7 @@ async function main() {
     options = {
       vertexai: false,
       apiKey: GOOGLE_API_KEY,
+      apiVersion: 'v1beta',
     };
     defaultModel = 'gemini-live-2.5-flash-preview';
   }

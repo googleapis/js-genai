@@ -51,6 +51,7 @@ async function main() {
       // Google AI
       vertexai: false,
       apiKey: GOOGLE_API_KEY,
+      apiVersion: 'v1beta',
     };
     model = 'gemini-2.5-flash-native-audio-latest';
   }

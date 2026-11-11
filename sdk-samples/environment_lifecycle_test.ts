@@ -288,6 +288,7 @@ async function main() {
   const ai = new GoogleGenAI({
     vertexai: false,
     apiKey: GEMINI_API_KEY,
+    apiVersion: 'v1beta',
   });
 
   try {
