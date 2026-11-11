@@ -2,6 +2,14 @@
 
 
 
+## [3.2.0](https://github.com/googleapis/js-genai/compare/v3.1.0...v3.2.0) (2026-11-11)
+
+
+### Features
+
+* add the Decisions API (`client.decisions.create`) to the GenAI SDKs ([3712be2](https://github.com/googleapis/js-genai/commit/3712be237dc9ba6d4d5e3fab9306cf1d74216490))
+* **environments:** introduce self-hosted BYOS mode, system_instruction, custom_config, and environment_key in SDKs and CLI ([ac855bd](https://github.com/googleapis/js-genai/commit/ac855bd788e25a4b14aeacfe49ffa1c0e9d03040))
+
 ## [3.1.0](https://github.com/googleapis/js-genai/compare/v3.0.0...v3.1.0) (2026-11-10)
 
 
