@@ -16,6 +16,7 @@ import {
   buildGoogleGenAIClient,
   GeminiNextGenAgents,
   GeminiNextGenCredentials,
+  GeminiNextGenDecisions,
   GeminiNextGenEnvironments,
   GeminiNextGenInteractions,
   GeminiNextGenTriggers,
@@ -95,6 +96,7 @@ export class GoogleGenAI {
   private _environments: GeminiNextGenEnvironments | undefined;
   private _credentials: GeminiNextGenCredentials | undefined;
   private _voices: GeminiNextGenVoices | undefined;
+  private _decisions: GeminiNextGenDecisions | undefined;
   private _nextGenClient: GeminiNextGenAPI | undefined;
   private _triggers: GeminiNextGenTriggers | undefined;
 
@@ -195,6 +197,15 @@ export class GoogleGenAI {
 
     this._voices = new GeminiNextGenVoices(this.apiClient);
     return this._voices;
+  }
+
+  get decisions(): GeminiNextGenDecisions {
+    if (this._decisions !== undefined) {
+      return this._decisions;
+    }
+
+    this._decisions = new GeminiNextGenDecisions(this.apiClient);
+    return this._decisions;
   }
 
   constructor(options: GoogleGenAIOptions = {} as GoogleGenAIOptions) {

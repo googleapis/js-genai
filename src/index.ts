@@ -31,6 +31,7 @@ export type {BackoffStrategy, RetryConfig} from './gaos/lib/retries.js';
 export type {
   Agents,
   Credentials,
+  Decisions,
   Environments,
   Interactions,
   Triggers,

@@ -13,6 +13,7 @@
 export * from "./cancel-interaction-by-id.js";
 export * from "./create-agent.js";
 export * from "./create-credential.js";
+export * from "./create-decision.js";
 export * from "./create-environment.js";
 export * from "./create-interaction.js";
 export * from "./create-trigger.js";

@@ -21,6 +21,7 @@ import * as operations from "./models/operations/index.js";
 import type {
   Agents,
   Credentials,
+  Decisions,
   Environments,
   Interactions,
   Triggers,
@@ -83,6 +84,7 @@ import { voicesCreate } from "./funcs/voices-create.js";
 import { voicesDelete } from "./funcs/voices-delete.js";
 import { voicesGet } from "./funcs/voices-get.js";
 import { voicesList } from "./funcs/voices-list.js";
+import { decisionsCreate } from "./funcs/decisions-create.js";
 
 const LEGACY_LYRIA_MODELS: ReadonlySet<string> = new Set([
   "lyria-3-pro-preview",
@@ -1891,6 +1893,38 @@ export class GeminiNextGenVoices {
         this.getClient(params?.api_version),
         id,
         params?.api_version,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  private getClient(apiVersion: string | undefined): GoogleGenAI {
+    if (apiVersion) {
+      return buildGoogleGenAIClient(this.parentClient, {
+        api_version: apiVersion,
+      });
+    }
+
+    this.sdk ??= buildGoogleGenAIClient(this.parentClient);
+    return this.sdk;
+  }
+}
+
+export class GeminiNextGenDecisions {
+  private sdk: GoogleGenAI | undefined;
+
+  constructor(private readonly parentClient: GoogleGenAIParentClient) {}
+
+  async create(
+    params: Decisions.CreateDecisionRequest & { api_version?: string },
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<Decisions.CreateDecisionResponse> {
+    const { api_version, ...body } = params;
+    return unwrapWithSdkHttpResponse(
+      decisionsCreate(
+        this.getClient(api_version),
+        body,
+        api_version,
         toGoogleGenAIRequestOptions(options),
       ),
     );
