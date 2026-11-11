@@ -326,6 +326,10 @@ export enum ThinkingLevel {
    * High thinking level.
    */
   HIGH = 'HIGH',
+  /**
+   * XHIGH thinking level.
+   */
+  XHIGH = 'XHIGH',
 }
 
 /** Enum that controls the generation of people. */

@@ -15,4 +15,5 @@ export type ThinkingLevel =
   | "low"
   | "medium"
   | "high"
+  | "xhigh"
   | (string & {});
