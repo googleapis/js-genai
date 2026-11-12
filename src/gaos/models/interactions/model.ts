@@ -40,6 +40,7 @@ export type Model =
   | "gemini-3.8-flash"
   | "gemini-4-argon"
   | "gemini-4-carbon"
+  | "gemini-4-hydrogen"
   | "gemini-3.8-flash-tts"
   | "gemini-3.8-flash-lite-tts"
   | "gemini-3.5-transcribe"
