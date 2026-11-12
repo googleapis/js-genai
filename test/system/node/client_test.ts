@@ -20,7 +20,7 @@ import {
 import {createZeroFilledTempFile} from '../../_generate_test_file.js';
 import {setupTestServer, shutdownTestServer} from '../test_server.js';
 
-const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY || 'test-api-key';
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'test-api-key';
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
 const MODEL = 'gemini-2.5-flash';
@@ -50,7 +50,7 @@ describe('Client Tests', () => {
     it('ML Dev should generate content with specified parameters', async () => {
       const client = new GoogleGenAI({
         vertexai: false,
-        apiKey: GOOGLE_API_KEY,
+        apiKey: GEMINI_API_KEY,
         httpOptions,
       });
       const response = await client.models.generateContent({
@@ -111,7 +111,7 @@ describe('Client Tests', () => {
     it('ML Dev should generate content with system instruction', async () => {
       const client = new GoogleGenAI({
         vertexai: false,
-        apiKey: GOOGLE_API_KEY,
+        apiKey: GEMINI_API_KEY,
         httpOptions,
       });
       const response = await client.models.generateContent({
@@ -231,7 +231,7 @@ describe('Client Tests', () => {
       });
       const client = new GoogleGenAI({
         vertexai: false,
-        apiKey: GOOGLE_API_KEY,
+        apiKey: GEMINI_API_KEY,
         httpOptions,
       });
       const response = await client.models.generateContent({
@@ -306,7 +306,7 @@ describe('Client Tests', () => {
 
       const client = new GoogleGenAI({
         vertexai: false,
-        apiKey: GOOGLE_API_KEY,
+        apiKey: GEMINI_API_KEY,
         httpOptions,
       });
       const response = await client.models.generateContent({
@@ -376,7 +376,7 @@ describe('Client Tests', () => {
       });
       const client = new GoogleGenAI({
         vertexai: false,
-        apiKey: GOOGLE_API_KEY,
+        apiKey: GEMINI_API_KEY,
         httpOptions,
       });
       const response = await client.models.generateContent({
@@ -451,7 +451,7 @@ describe('Client Tests', () => {
 
       const client = new GoogleGenAI({
         vertexai: false,
-        apiKey: GOOGLE_API_KEY,
+        apiKey: GEMINI_API_KEY,
         httpOptions,
       });
       const response = await client.models.generateContent({
@@ -501,7 +501,7 @@ describe('Client Tests', () => {
       console.log('httpoptions: ', httpOptions);
       const client = new GoogleGenAI({
         vertexai: false,
-        apiKey: GOOGLE_API_KEY,
+        apiKey: GEMINI_API_KEY,
         httpOptions,
       });
       const response = await client.models.generateContent({
@@ -591,7 +591,7 @@ describe('Client Tests', () => {
     it('ML Dev should return the headers in the sdkHttpResponse by default', async () => {
       const client = new GoogleGenAI({
         vertexai: false,
-        apiKey: GOOGLE_API_KEY,
+        apiKey: GEMINI_API_KEY,
         httpOptions,
       });
       const response = await client.models.generateContent({
@@ -718,7 +718,7 @@ describe('Client Tests', () => {
       it('ML Dev will throw error when enabbled streamFunctionCallArguments', async () => {
         const client = new GoogleGenAI({
           vertexai: false,
-          apiKey: GOOGLE_API_KEY,
+          apiKey: GEMINI_API_KEY,
           httpOptions,
         });
         try {
@@ -863,7 +863,7 @@ describe('Client Tests', () => {
     it('ML Dev should stream generate content with system instruction', async () => {
       const client = new GoogleGenAI({
         vertexai: false,
-        apiKey: GOOGLE_API_KEY,
+        apiKey: GEMINI_API_KEY,
         httpOptions,
       });
       const response = await client.models.generateContentStream({
@@ -929,7 +929,7 @@ describe('Client Tests', () => {
     it('ML Dev should return the headers in the sdkHttpResponse for each chunk', async () => {
       const client = new GoogleGenAI({
         vertexai: false,
-        apiKey: GOOGLE_API_KEY,
+        apiKey: GEMINI_API_KEY,
         httpOptions,
       });
       const response = await client.models.generateContentStream({
@@ -981,7 +981,7 @@ describe('Client Tests', () => {
     it('ML Dev should stream generate content with image output', async () => {
       const client = new GoogleGenAI({
         vertexai: false,
-        apiKey: GOOGLE_API_KEY,
+        apiKey: GEMINI_API_KEY,
         httpOptions,
       });
       const response = await client.models.generateContentStream({
@@ -1062,7 +1062,7 @@ describe('Client Tests', () => {
     it('ML Dev should generate image with specified parameters', async () => {
       const client = new GoogleGenAI({
         vertexai: false,
-        apiKey: GOOGLE_API_KEY,
+        apiKey: GEMINI_API_KEY,
         httpOptions,
       });
       await expectAsync(
@@ -1119,7 +1119,7 @@ describe('Client Tests', () => {
     it('generate content should return thought field', async () => {
       const client = new GoogleGenAI({
         vertexai: false,
-        apiKey: GOOGLE_API_KEY,
+        apiKey: GEMINI_API_KEY,
         httpOptions: {apiVersion: 'v1alpha', headers: {'Test-Name': testName}},
       });
       const response = await client.models.generateContent({
@@ -1142,7 +1142,7 @@ describe('Client Tests', () => {
     it('ML Dev should count tokens with specified parameters', async () => {
       const client = new GoogleGenAI({
         vertexai: false,
-        apiKey: GOOGLE_API_KEY,
+        apiKey: GEMINI_API_KEY,
         httpOptions,
       });
 
@@ -1237,7 +1237,7 @@ describe('Client Tests', () => {
     it('ML Dev should call server side MCP server', async () => {
       const client = new GoogleGenAI({
         vertexai: false,
-        apiKey: GOOGLE_API_KEY,
+        apiKey: GEMINI_API_KEY,
         httpOptions,
       });
 
@@ -1273,7 +1273,7 @@ describe('Client Tests', () => {
     it('ML Dev should call server side MCP server, stream', async () => {
       const client = new GoogleGenAI({
         vertexai: false,
-        apiKey: GOOGLE_API_KEY,
+        apiKey: GEMINI_API_KEY,
         httpOptions,
       });
 
@@ -1406,7 +1406,7 @@ describe('Client Tests', () => {
     it('ML Dev list files with specified parameters', async () => {
       const client = new GoogleGenAI({
         vertexai: false,
-        apiKey: GOOGLE_API_KEY,
+        apiKey: GEMINI_API_KEY,
         httpOptions,
       });
       const response = await client.files.list({config: {'pageSize': 2}});
@@ -1423,7 +1423,7 @@ describe('Client Tests', () => {
     it('ML Dev list files with pagers', async () => {
       const client = new GoogleGenAI({
         vertexai: false,
-        apiKey: GOOGLE_API_KEY,
+        apiKey: GEMINI_API_KEY,
         httpOptions,
       });
       const pager = await client.files.list({config: {pageSize: 2}});
@@ -1443,7 +1443,7 @@ describe('Client Tests', () => {
     it('ML Dev should upload the file from a string path and get just uploaded file with specified parameters', async () => {
       const client = new GoogleGenAI({
         vertexai: false,
-        apiKey: GOOGLE_API_KEY,
+        apiKey: GEMINI_API_KEY,
         httpOptions,
       });
       // generate a temp file
@@ -1466,7 +1466,7 @@ describe('Client Tests', () => {
     it('ML Dev should upload the file from a Blob and get just uploaded file with specified parameters', async () => {
       const client = new GoogleGenAI({
         vertexai: false,
-        apiKey: GOOGLE_API_KEY,
+        apiKey: GEMINI_API_KEY,
         httpOptions,
       });
       // generate a temp file

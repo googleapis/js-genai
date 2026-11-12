@@ -19,7 +19,7 @@ import {
 } from '../../../src/types.js';
 import {setupTestServer, shutdownTestServer} from '../test_server.js';
 
-const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY || 'test-api-key';
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'test-api-key';
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
 
@@ -69,7 +69,7 @@ describe('MCP related client Tests', () => {
       const mcpCallableTool = mcpToTool(await greetServerStructuredOutput());
       const client = new GoogleGenAI({
         vertexai: false,
-        apiKey: GOOGLE_API_KEY,
+        apiKey: GEMINI_API_KEY,
         httpOptions,
       });
       try {
@@ -204,7 +204,7 @@ describe('MCP related client Tests', () => {
     it('ML Dev one CallableTool with MCPClients and conduct automated function calling', async () => {
       const ai = new GoogleGenAI({
         vertexai: false,
-        apiKey: GOOGLE_API_KEY,
+        apiKey: GEMINI_API_KEY,
         httpOptions,
       });
       const mcpCallableTool = mcpToTool(
@@ -262,7 +262,7 @@ describe('MCP related client Tests', () => {
     it('ML Dev test with greeter server (parameter as nullable union type)', async () => {
       const ai = new GoogleGenAI({
         vertexai: false,
-        apiKey: GOOGLE_API_KEY,
+        apiKey: GEMINI_API_KEY,
         httpOptions,
       });
       const mcpCallableTool = mcpToTool(await greetServer());
@@ -353,7 +353,7 @@ describe('MCP related client Tests', () => {
     it('ML Dev Multiple CallableTool with MCPClients and conduct automated function calling', async () => {
       const ai = new GoogleGenAI({
         vertexai: false,
-        apiKey: GOOGLE_API_KEY,
+        apiKey: GEMINI_API_KEY,
         httpOptions,
       });
       const callableTool1 = mcpToTool(await spinUpPrintingServer());
@@ -452,7 +452,7 @@ describe('MCP related client Tests', () => {
     it('ML Dev test with greeter server (structured output) happy path', async () => {
       const ai = new GoogleGenAI({
         vertexai: false,
-        apiKey: GOOGLE_API_KEY,
+        apiKey: GEMINI_API_KEY,
         httpOptions,
       });
       const mcpCallableTool = mcpToTool(await greetServerStructuredOutput());
@@ -597,7 +597,7 @@ describe('MCP related client Tests', () => {
     it('ML Dev test with greeter server (structured output) error thrown by tool', async () => {
       const ai = new GoogleGenAI({
         vertexai: false,
-        apiKey: GOOGLE_API_KEY,
+        apiKey: GEMINI_API_KEY,
         httpOptions,
       });
       const mcpCallableTool = mcpToTool(await greetServerStructuredOutput());
@@ -694,7 +694,7 @@ describe('MCP related client Tests', () => {
     it('ML Dev test with greeter server (structured output) mcp error', async () => {
       const ai = new GoogleGenAI({
         vertexai: false,
-        apiKey: GOOGLE_API_KEY,
+        apiKey: GEMINI_API_KEY,
         httpOptions,
       });
       const mcpCallableTool = mcpToTool(await greetServerStructuredOutput());
@@ -757,7 +757,7 @@ describe('MCP related client Tests', () => {
     it('ML Dev will give FunctionDeclaration back when AFC is disabled', async () => {
       const ai = new GoogleGenAI({
         vertexai: false,
-        apiKey: GOOGLE_API_KEY,
+        apiKey: GEMINI_API_KEY,
         httpOptions,
       });
       const callableTool1 = mcpToTool(await spinUpPrintingServer());
@@ -830,7 +830,7 @@ describe('MCP related client Tests', () => {
     it('ML Dev can take mixed tools when AFC is disabled', async () => {
       const ai = new GoogleGenAI({
         vertexai: false,
-        apiKey: GOOGLE_API_KEY,
+        apiKey: GEMINI_API_KEY,
         httpOptions,
       });
       const callableTool1 = mcpToTool(await spinUpPrintingServer());
