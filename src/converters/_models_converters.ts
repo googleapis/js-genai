@@ -1604,6 +1604,19 @@ export function generateContentConfigToMldev(
     common.setValueByPath(toObject, ['seed'], fromSeed);
   }
 
+  const fromResponseFormat = common.getValueByPath(fromObject, [
+    'responseFormat',
+  ]);
+  if (fromResponseFormat != null) {
+    let transformedList = fromResponseFormat;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return item;
+      });
+    }
+    common.setValueByPath(toObject, ['responseFormat'], transformedList);
+  }
+
   const fromResponseMimeType = common.getValueByPath(fromObject, [
     'responseMimeType',
   ]);
@@ -1889,6 +1902,19 @@ export function generateContentConfigToVertex(
   const fromSeed = common.getValueByPath(fromObject, ['seed']);
   if (fromSeed != null) {
     common.setValueByPath(toObject, ['seed'], fromSeed);
+  }
+
+  const fromResponseFormat = common.getValueByPath(fromObject, [
+    'responseFormat',
+  ]);
+  if (fromResponseFormat != null) {
+    let transformedList = fromResponseFormat;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return item;
+      });
+    }
+    common.setValueByPath(toObject, ['responseFormat'], transformedList);
   }
 
   const fromResponseMimeType = common.getValueByPath(fromObject, [
