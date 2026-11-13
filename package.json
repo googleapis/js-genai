@@ -97,7 +97,10 @@
     "minimatch@>=7 <12": "^11.0.8",
     "lodash": "^4.18.1",
     "ajv@>=7 <9": "^8.20.0",
-    "ajv@<7": "^6.14.0"
+    "ajv@<7": "^6.14.0",
+    "brace-expansion@<2": "^1.1.21",
+    "brace-expansion@>=2 <3": "^2.1.7",
+    "brace-expansion@>=4 <6": "^5.0.12"
   },
   "files": [
     "dist/genai.d.ts",
