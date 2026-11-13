@@ -3462,6 +3462,10 @@ export declare interface GenerateContentConfig {
       supported in Gemini Enterprise Agent Platform.
        */
   store?: boolean;
+  /** Temporary test field to trigger Copybara GitHub PRs and verify
+      GitHub Actions.
+       */
+  testGithubActionsField?: string;
 }
 
 /** Config for models.generate_content parameters. */

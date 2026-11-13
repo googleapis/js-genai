@@ -1940,6 +1940,17 @@ export function generateContentConfigToMldev(
     common.setValueByPath(parentObject, ['store'], fromStore);
   }
 
+  const fromTestGithubActionsField = common.getValueByPath(fromObject, [
+    'testGithubActionsField',
+  ]);
+  if (parentObject !== undefined && fromTestGithubActionsField != null) {
+    common.setValueByPath(
+      parentObject,
+      ['testGithubActionsField'],
+      fromTestGithubActionsField,
+    );
+  }
+
   return toObject;
 }
 
@@ -2232,6 +2243,17 @@ export function generateContentConfigToVertex(
   if (common.getValueByPath(fromObject, ['store']) !== undefined) {
     throw new Error(
       'store parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+    );
+  }
+
+  const fromTestGithubActionsField = common.getValueByPath(fromObject, [
+    'testGithubActionsField',
+  ]);
+  if (parentObject !== undefined && fromTestGithubActionsField != null) {
+    common.setValueByPath(
+      parentObject,
+      ['testGithubActionsField'],
+      fromTestGithubActionsField,
     );
   }
 

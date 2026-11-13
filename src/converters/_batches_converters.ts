@@ -1411,6 +1411,17 @@ export function generateContentConfigToMldev(
     common.setValueByPath(parentObject, ['store'], fromStore);
   }
 
+  const fromTestGithubActionsField = common.getValueByPath(fromObject, [
+    'testGithubActionsField',
+  ]);
+  if (parentObject !== undefined && fromTestGithubActionsField != null) {
+    common.setValueByPath(
+      parentObject,
+      ['testGithubActionsField'],
+      fromTestGithubActionsField,
+    );
+  }
+
   return toObject;
 }
 
