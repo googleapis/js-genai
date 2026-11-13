@@ -33,6 +33,7 @@ export class BrowserWebSocket implements Ws {
 
   connect(): void {
     this.ws = new WebSocket(this.url);
+    this.ws.binaryType = 'arraybuffer';
 
     this.ws.onopen = this.callbacks.onopen;
     this.ws.onerror = this.callbacks.onerror;
