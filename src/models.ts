@@ -11,7 +11,13 @@ import {ApiClient} from './_api_client.js';
 import * as common from './_common.js';
 import {BaseModule} from './_common.js';
 import * as _internal_types from './_internal_types.js';
-import {tContents} from './_transformers.js';
+import {
+  tContents,
+  tEmbedContents,
+  tIsMultimodalEmbeddingModel,
+  tIsVertexEmbedContentModel,
+  tIsVertexMaasModel,
+} from './_transformers.js';
 import * as converters from './converters/_models_converters.js';
 import * as mcp from './mcp/_mcp.js';
 import {PagedItem, Pager} from './pagers.js';
@@ -51,35 +57,45 @@ export class Models extends BaseModule {
     params: types.EmbedContentParameters,
   ): Promise<types.EmbedContentResponse> => {
     if (!this.apiClient.isVertexAI()) {
-      const isGeminiEmbedding2Model =
-        params.model.includes('gemini-embedding-2');
-      if (isGeminiEmbedding2Model) {
-        params.contents = tContents(params.contents);
-      }
-      return await this.embedContentInternal(params);
+      const mldevContents = tIsMultimodalEmbeddingModel(params.model)
+        ? tContents(params.contents)
+        : params.contents;
+      return await this.embedContentInternal({
+        model: params.model,
+        contents: mldevContents,
+        config: params.config,
+      });
     }
-    const isVertexEmbedContentModel =
-      (params.model.includes('gemini') &&
-        params.model !== 'gemini-embedding-001') ||
-      params.model.includes('maas');
 
-    if (isVertexEmbedContentModel) {
-      const contents = tContents(params.contents);
+    if (tIsVertexEmbedContentModel(params.model)) {
+      const contents = tEmbedContents(params.model, params.contents);
       if (contents.length > 1) {
-        throw new Error(
-          'The embedContent API for this model only supports one content at a time.',
-        );
+        if (tIsVertexMaasModel(params.model)) {
+          throw new Error(
+            'The embedContent API for this model only supports one content at a time.',
+          );
+        }
+        const paramsPrivate: types.EmbedContentParametersPrivate = {
+          model: params.model,
+          batchContents: contents,
+          embeddingApiType: types.EmbeddingApiType.BATCH_EMBED_CONTENTS,
+          config: params.config,
+        };
+        return await this.embedContentInternal(paramsPrivate);
       }
       const paramsPrivate: types.EmbedContentParametersPrivate = {
-        ...params,
+        model: params.model,
         content: contents[0],
         embeddingApiType: types.EmbeddingApiType.EMBED_CONTENT,
+        config: params.config,
       };
       return await this.embedContentInternal(paramsPrivate);
     } else {
       const paramsPrivate: types.EmbedContentParametersPrivate = {
-        ...params,
+        model: params.model,
+        contents: params.contents,
         embeddingApiType: types.EmbeddingApiType.PREDICT,
+        config: params.config,
       };
       return await this.embedContentInternal(paramsPrivate);
     }

@@ -1450,3 +1450,318 @@ describe('generateContentStream regression', () => {
     expect(receivedText).toBe(largeText);
   });
 });
+
+describe('embedContent endpoint routing', () => {
+  it('routes single gemini-embedding-001 on Vertex to :embedContent', async () => {
+    const client = new GoogleGenAI({vertexai: true, apiKey: 'fake-api-key'});
+    const fetchSpy = spyOn(global, 'fetch').and.resolveTo(
+      new Response(
+        JSON.stringify({
+          embedding: {values: [0.1, 0.2]},
+          usageMetadata: {
+            promptTokenCount: 4,
+            trafficType: 'PROVISIONED_THROUGHPUT',
+          },
+          truncated: false,
+        }),
+        fetchOkOptions,
+      ),
+    );
+    const resp = await client.models.embedContent({
+      model: 'gemini-embedding-001',
+      contents: 'hello',
+      config: {outputDimensionality: 2, taskType: 'RETRIEVAL_DOCUMENT'},
+    });
+    const [url, init] = fetchSpy.calls.allArgs()[0];
+    expect(String(url)).toContain('gemini-embedding-001:embedContent');
+    const body = JSON.parse(init?.body as string) as Record<string, unknown>;
+    expect(body['content']).toBeDefined();
+    expect(body['instances']).toBeUndefined();
+    expect(body['requests']).toBeUndefined();
+    expect(resp.embeddings?.length).toBe(1);
+    expect(resp.usageMetadata?.trafficType).toBe(
+      types.TrafficType.PROVISIONED_THROUGHPUT,
+    );
+  });
+
+  it('routes string array on Vertex to :batchEmbedContents as separate Contents', async () => {
+    const client = new GoogleGenAI({vertexai: true, apiKey: 'fake-api-key'});
+    const fetchSpy = spyOn(global, 'fetch').and.callFake(
+      async () =>
+        new Response(
+          JSON.stringify({
+            embeddings: [{values: [0.1, 0.2]}, {values: [0.3, 0.4]}],
+            usageMetadata: {promptTokenCount: 8, trafficType: 'ON_DEMAND'},
+          }),
+          fetchOkOptions,
+        ),
+    );
+    const resp = await client.models.embedContent({
+      model: 'gemini-embedding-001',
+      contents: ['hello', 'world'],
+      config: {outputDimensionality: 2, title: 'doc'},
+    });
+    const [url, init] = fetchSpy.calls.allArgs()[0];
+    expect(String(url)).toContain('gemini-embedding-001:batchEmbedContents');
+    const body = JSON.parse(init?.body as string) as Record<string, unknown>;
+    expect(body['content']).toBeUndefined();
+    expect(body['instances']).toBeUndefined();
+    const requests = body['requests'] as Array<Record<string, unknown>>;
+    expect(requests.length).toBe(2);
+    expect(requests[0]['embedContentConfig']).toEqual({
+      outputDimensionality: 2,
+      title: 'doc',
+    });
+    expect(resp.embeddings?.length).toBe(2);
+
+    const partListResp = await client.models.embedContent({
+      model: 'gemini-embedding-001',
+      contents: [{text: 'hello'}, {text: 'world'}],
+    });
+    const [partUrl, partInit] = fetchSpy.calls.allArgs()[1];
+    expect(String(partUrl)).toContain(
+      'gemini-embedding-001:batchEmbedContents',
+    );
+    const partBody = JSON.parse(partInit?.body as string) as {
+      requests: unknown[];
+    };
+    expect(partBody.requests.length).toBe(2);
+    expect(partListResp.embeddings?.length).toBe(2);
+
+    const contentListResp = await client.models.embedContent({
+      model: 'gemini-embedding-001',
+      contents: [
+        {role: 'user', parts: [{text: 'hello'}]},
+        {role: 'user', parts: [{text: 'world'}]},
+      ],
+    });
+    const [contentUrl, contentInit] = fetchSpy.calls.allArgs()[2];
+    expect(String(contentUrl)).toContain(
+      'gemini-embedding-001:batchEmbedContents',
+    );
+    const contentBody = JSON.parse(contentInit?.body as string) as {
+      requests: unknown[];
+    };
+    expect(contentBody.requests.length).toBe(2);
+    expect(contentListResp.embeddings?.length).toBe(2);
+  });
+
+  it('keeps a multi-part Content as 1 input for gemini-embedding-001 on Vertex', async () => {
+    const client = new GoogleGenAI({vertexai: true, apiKey: 'fake-api-key'});
+    const fetchSpy = spyOn(global, 'fetch').and.callFake(
+      async () =>
+        new Response(
+          JSON.stringify({embedding: {values: [0.1, 0.2]}}),
+          fetchOkOptions,
+        ),
+    );
+    const resp = await client.models.embedContent({
+      model: 'gemini-embedding-001',
+      contents: {role: 'user', parts: [{text: 'hello'}, {text: 'world'}]},
+    });
+    const [url, init] = fetchSpy.calls.allArgs()[0];
+    expect(String(url)).toContain('gemini-embedding-001:embedContent');
+    const body = JSON.parse(init?.body as string) as {
+      content: {parts: unknown[]};
+    };
+    expect(body.content.parts.length).toBe(2);
+    expect(resp.embeddings?.length).toBe(1);
+  });
+
+  it('keeps multimodal mixed part list as 1 Content on :embedContent', async () => {
+    const client = new GoogleGenAI({vertexai: true, apiKey: 'fake-api-key'});
+    const fetchSpy = spyOn(global, 'fetch').and.resolveTo(
+      new Response(
+        JSON.stringify({embedding: {values: [0.1, 0.2]}}),
+        fetchOkOptions,
+      ),
+    );
+    const resp = await client.models.embedContent({
+      model: 'gemini-embedding-2',
+      contents: [
+        'caption',
+        {
+          fileData: {
+            fileUri: 'gs://bucket/img.png',
+            mimeType: 'image/png',
+          },
+        },
+      ],
+    });
+    const [url] = fetchSpy.calls.allArgs()[0];
+    expect(String(url)).toContain('gemini-embedding-2:embedContent');
+    expect(resp.embeddings?.length).toBe(1);
+  });
+
+  it('merges string array into 1 Content for gemini-embedding-2 on both backends and splits explicit Content[]', async () => {
+    const vertexClient = new GoogleGenAI({
+      vertexai: true,
+      apiKey: 'fake-api-key',
+    });
+    const mldevClient = new GoogleGenAI({
+      vertexai: false,
+      apiKey: 'fake-api-key',
+    });
+    const fetchSpy = spyOn(global, 'fetch').and.callFake(async (url) => {
+      if (String(url).endsWith(':embedContent')) {
+        return new Response(
+          JSON.stringify({embedding: {values: [0.1, 0.2]}}),
+          fetchOkOptions,
+        );
+      }
+      return new Response(
+        JSON.stringify({
+          embeddings: [{values: [0.1, 0.2]}],
+        }),
+        fetchOkOptions,
+      );
+    });
+
+    const vertexStrArrResp = await vertexClient.models.embedContent({
+      model: 'gemini-embedding-2',
+      contents: ['hello', 'world'],
+    });
+    const [vertexUrl, vertexInit] = fetchSpy.calls.allArgs()[0];
+    expect(String(vertexUrl)).toContain('gemini-embedding-2:embedContent');
+    const vertexBody = JSON.parse(vertexInit?.body as string) as Record<
+      string,
+      unknown
+    >;
+    const vertexContent = vertexBody['content'] as {parts: unknown[]};
+    expect(vertexContent.parts.length).toBe(2);
+    expect(vertexStrArrResp.embeddings?.length).toBe(1);
+
+    const mldevStrArrResp = await mldevClient.models.embedContent({
+      model: 'gemini-embedding-2',
+      contents: ['hello', 'world'],
+    });
+    const [mldevUrl, mldevInit] = fetchSpy.calls.allArgs()[1];
+    expect(String(mldevUrl)).toContain('gemini-embedding-2:batchEmbedContents');
+    const mldevBody = JSON.parse(mldevInit?.body as string) as {
+      requests: Array<{content: {parts: unknown[]}}>;
+    };
+    expect(mldevBody.requests.length).toBe(1);
+    expect(mldevBody.requests[0].content.parts.length).toBe(2);
+    expect(mldevStrArrResp.embeddings?.length).toBe(1);
+
+    const vertexPartArrResp = await vertexClient.models.embedContent({
+      model: 'gemini-embedding-2',
+      contents: [{text: 'hello'}, {text: 'world'}],
+    });
+    const [vertexPartUrl, vertexPartInit] = fetchSpy.calls.allArgs()[2];
+    expect(String(vertexPartUrl)).toContain('gemini-embedding-2:embedContent');
+    const vertexPartBody = JSON.parse(vertexPartInit?.body as string) as {
+      content: {parts: unknown[]};
+    };
+    expect(vertexPartBody.content.parts.length).toBe(2);
+    expect(vertexPartArrResp.embeddings?.length).toBe(1);
+
+    const mldevPartArrResp = await mldevClient.models.embedContent({
+      model: 'gemini-embedding-2',
+      contents: [{text: 'hello'}, {text: 'world'}],
+    });
+    const [mldevPartUrl, mldevPartInit] = fetchSpy.calls.allArgs()[3];
+    expect(String(mldevPartUrl)).toContain(
+      'gemini-embedding-2:batchEmbedContents',
+    );
+    const mldevPartBody = JSON.parse(mldevPartInit?.body as string) as {
+      requests: Array<{content: {parts: unknown[]}}>;
+    };
+    expect(mldevPartBody.requests.length).toBe(1);
+    expect(mldevPartBody.requests[0].content.parts.length).toBe(2);
+    expect(mldevPartArrResp.embeddings?.length).toBe(1);
+
+    fetchSpy.and.resolveTo(
+      new Response(
+        JSON.stringify({
+          embeddings: [{values: [0.1, 0.2]}, {values: [0.3, 0.4]}],
+        }),
+        fetchOkOptions,
+      ),
+    );
+    const vertexBatchResp = await vertexClient.models.embedContent({
+      model: 'gemini-embedding-2',
+      contents: [
+        {role: 'user', parts: [{text: 'hello'}]},
+        {role: 'user', parts: [{text: 'world'}]},
+      ],
+    });
+    const [batchUrl, batchInit] = fetchSpy.calls.allArgs()[4];
+    expect(String(batchUrl)).toContain('gemini-embedding-2:batchEmbedContents');
+    const batchBody = JSON.parse(batchInit?.body as string) as {
+      requests: unknown[];
+    };
+    expect(batchBody.requests.length).toBe(2);
+    expect(vertexBatchResp.embeddings?.length).toBe(2);
+  });
+
+  it('keeps text-embedding-005 on :predict even when project ID contains gemini', async () => {
+    const client = new GoogleGenAI({vertexai: true, apiKey: 'fake-api-key'});
+    const fetchSpy = spyOn(global, 'fetch').and.resolveTo(
+      new Response(
+        JSON.stringify({
+          predictions: [{embeddings: {values: [0.5, 0.6]}}],
+        }),
+        fetchOkOptions,
+      ),
+    );
+    const resp = await client.models.embedContent({
+      model:
+        'projects/my-gemini-app/locations/us-central1/publishers/google/models/text-embedding-005',
+      contents: ['a', 'b'],
+    });
+    const [url, init] = fetchSpy.calls.allArgs()[0];
+    expect(String(url)).toContain('text-embedding-005:predict');
+    const body = JSON.parse(init?.body as string) as Record<string, unknown>;
+    expect(body['instances']).toBeDefined();
+    expect(resp.embeddings?.length).toBe(1);
+  });
+
+  it('merges MaaS string arrays into 1 Content on :embedContent and rejects multiple Contents client-side', async () => {
+    const client = new GoogleGenAI({vertexai: true, apiKey: 'fake-api-key'});
+    const fetchSpy = spyOn(global, 'fetch').and.callFake(
+      async () =>
+        new Response(
+          JSON.stringify({embedding: {values: [0.1, 0.2]}}),
+          fetchOkOptions,
+        ),
+    );
+    const singleResp = await client.models.embedContent({
+      model: 'publishers/intfloat/models/multilingual-e5-large-instruct-maas',
+      contents: 'hello',
+    });
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    expect(String(fetchSpy.calls.allArgs()[0][0])).toContain(
+      'multilingual-e5-large-instruct-maas:embedContent',
+    );
+    expect(singleResp.embeddings?.length).toBe(1);
+
+    const strArrResp = await client.models.embedContent({
+      model: 'publishers/intfloat/models/multilingual-e5-large-instruct-maas',
+      contents: ['hello', 'world'],
+    });
+    expect(fetchSpy).toHaveBeenCalledTimes(2);
+    const [strArrUrl, strArrInit] = fetchSpy.calls.allArgs()[1];
+    expect(String(strArrUrl)).toContain(
+      'multilingual-e5-large-instruct-maas:embedContent',
+    );
+    const strArrBody = JSON.parse(strArrInit?.body as string) as {
+      content: {parts: unknown[]};
+    };
+    expect(strArrBody.content.parts.length).toBe(2);
+    expect(strArrResp.embeddings?.length).toBe(1);
+
+    await expectAsync(
+      client.models.embedContent({
+        model: 'publishers/intfloat/models/multilingual-e5-large-instruct-maas',
+        contents: [
+          {role: 'user', parts: [{text: 'hello'}]},
+          {role: 'user', parts: [{text: 'world'}]},
+        ],
+      }),
+    ).toBeRejectedWithError(
+      'The embedContent API for this model only supports one content at a time.',
+    );
+    expect(fetchSpy).toHaveBeenCalledTimes(2);
+  });
+});
