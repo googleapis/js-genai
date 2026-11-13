@@ -975,6 +975,15 @@ export function embedContentConfigToVertex(
         fromTaskType,
       );
     }
+  } else if (discriminatorTaskType === 'BATCH_EMBED_CONTENTS') {
+    const fromTaskType = common.getValueByPath(fromObject, ['taskType']);
+    if (parentObject !== undefined && fromTaskType != null) {
+      common.setValueByPath(
+        parentObject,
+        ['requests[]', 'embedContentConfig', 'taskType'],
+        fromTaskType,
+      );
+    }
   }
 
   let discriminatorTitle = common.getValueByPath(rootObject, [
@@ -994,6 +1003,15 @@ export function embedContentConfigToVertex(
       common.setValueByPath(
         parentObject,
         ['embedContentConfig', 'title'],
+        fromTitle,
+      );
+    }
+  } else if (discriminatorTitle === 'BATCH_EMBED_CONTENTS') {
+    const fromTitle = common.getValueByPath(fromObject, ['title']);
+    if (parentObject !== undefined && fromTitle != null) {
+      common.setValueByPath(
+        parentObject,
+        ['requests[]', 'embedContentConfig', 'title'],
         fromTitle,
       );
     }
@@ -1024,6 +1042,17 @@ export function embedContentConfigToVertex(
       common.setValueByPath(
         parentObject,
         ['embedContentConfig', 'outputDimensionality'],
+        fromOutputDimensionality,
+      );
+    }
+  } else if (discriminatorOutputDimensionality === 'BATCH_EMBED_CONTENTS') {
+    const fromOutputDimensionality = common.getValueByPath(fromObject, [
+      'outputDimensionality',
+    ]);
+    if (parentObject !== undefined && fromOutputDimensionality != null) {
+      common.setValueByPath(
+        parentObject,
+        ['requests[]', 'embedContentConfig', 'outputDimensionality'],
         fromOutputDimensionality,
       );
     }
@@ -1074,6 +1103,17 @@ export function embedContentConfigToVertex(
         fromAutoTruncate,
       );
     }
+  } else if (discriminatorAutoTruncate === 'BATCH_EMBED_CONTENTS') {
+    const fromAutoTruncate = common.getValueByPath(fromObject, [
+      'autoTruncate',
+    ]);
+    if (parentObject !== undefined && fromAutoTruncate != null) {
+      common.setValueByPath(
+        parentObject,
+        ['requests[]', 'embedContentConfig', 'autoTruncate'],
+        fromAutoTruncate,
+      );
+    }
   }
 
   let discriminatorDocumentOcr = common.getValueByPath(rootObject, [
@@ -1088,6 +1128,15 @@ export function embedContentConfigToVertex(
       common.setValueByPath(
         parentObject,
         ['embedContentConfig', 'documentOcr'],
+        fromDocumentOcr,
+      );
+    }
+  } else if (discriminatorDocumentOcr === 'BATCH_EMBED_CONTENTS') {
+    const fromDocumentOcr = common.getValueByPath(fromObject, ['documentOcr']);
+    if (parentObject !== undefined && fromDocumentOcr != null) {
+      common.setValueByPath(
+        parentObject,
+        ['requests[]', 'embedContentConfig', 'documentOcr'],
         fromDocumentOcr,
       );
     }
@@ -1107,6 +1156,17 @@ export function embedContentConfigToVertex(
       common.setValueByPath(
         parentObject,
         ['embedContentConfig', 'audioTrackExtraction'],
+        fromAudioTrackExtraction,
+      );
+    }
+  } else if (discriminatorAudioTrackExtraction === 'BATCH_EMBED_CONTENTS') {
+    const fromAudioTrackExtraction = common.getValueByPath(fromObject, [
+      'audioTrackExtraction',
+    ]);
+    if (parentObject !== undefined && fromAudioTrackExtraction != null) {
+      common.setValueByPath(
+        parentObject,
+        ['requests[]', 'embedContentConfig', 'audioTrackExtraction'],
         fromAudioTrackExtraction,
       );
     }
@@ -1145,6 +1205,12 @@ export function embedContentParametersPrivateToMldev(
   const fromContent = common.getValueByPath(fromObject, ['content']);
   if (fromContent != null) {
     contentToMldev(t.tContent(fromContent), rootObject);
+  }
+
+  if (common.getValueByPath(fromObject, ['batchContents']) !== undefined) {
+    throw new Error(
+      'batchContents parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
@@ -1216,6 +1282,31 @@ export function embedContentParametersPrivateToVertex(
         toObject,
         ['content'],
         contentToVertex(t.tContent(fromContent), rootObject),
+      );
+    }
+  }
+
+  let discriminatorBatchContents = common.getValueByPath(rootObject, [
+    'embeddingApiType',
+  ]);
+  if (discriminatorBatchContents === undefined) {
+    discriminatorBatchContents = 'PREDICT';
+  }
+  if (discriminatorBatchContents === 'BATCH_EMBED_CONTENTS') {
+    const fromBatchContents = common.getValueByPath(fromObject, [
+      'batchContents',
+    ]);
+    if (fromBatchContents != null) {
+      let transformedList = t.tContents(fromBatchContents);
+      if (Array.isArray(transformedList)) {
+        transformedList = transformedList.map((item) => {
+          return contentToVertex(item, rootObject);
+        });
+      }
+      common.setValueByPath(
+        toObject,
+        ['requests[]', 'content'],
+        transformedList,
       );
     }
   }
@@ -1345,6 +1436,19 @@ export function embedContentResponseFromVertex(
       }
       (embedding as types.ContentEmbedding).statistics = stats;
       common.setValueByPath(toObject, ['embeddings'], [embedding]);
+    }
+  } else if (
+    rootObject &&
+    common.getValueByPath(rootObject, ['embeddingApiType']) ===
+      'BATCH_EMBED_CONTENTS'
+  ) {
+    const embeddings = common.getValueByPath(fromObject, ['embeddings']);
+    if (Array.isArray(embeddings)) {
+      common.setValueByPath(
+        toObject,
+        ['embeddings'],
+        embeddings.map((item) => contentEmbeddingFromVertex(item, rootObject)),
+      );
     }
   }
 

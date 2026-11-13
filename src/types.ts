@@ -1378,6 +1378,10 @@ export enum EmbeddingApiType {
    * embedContent API Endpoint
    */
   EMBED_CONTENT = 'EMBED_CONTENT',
+  /**
+   * batchEmbedContents API Endpoint
+   */
+  BATCH_EMBED_CONTENTS = 'BATCH_EMBED_CONTENTS',
 }
 
 /** Enum that controls the safety filter level for objectionable content. */
@@ -4211,6 +4215,9 @@ export declare interface EmbedContentParametersPrivate {
   /** The Gemini Enterprise Agent Platform embedding API to use.
    */
   embeddingApiType?: EmbeddingApiType;
+  /** The multiple contents to embed.
+   */
+  batchContents?: ContentListUnion;
   /** Configuration that contains optional parameters.
    */
   config?: EmbedContentConfig;

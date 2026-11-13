@@ -11,7 +11,7 @@ import {ApiClient} from './_api_client.js';
 import * as common from './_common.js';
 import {BaseModule} from './_common.js';
 import * as _internal_types from './_internal_types.js';
-import {tContents, tIsVertexEmbedContentModel} from './_transformers.js';
+import {tContents} from './_transformers.js';
 import * as converters from './converters/_models_converters.js';
 import * as mcp from './mcp/_mcp.js';
 import {PagedItem, Pager} from './pagers.js';
@@ -1013,9 +1013,16 @@ export class Models extends BaseModule {
         params,
         params,
       );
-      const endpointUrl = tIsVertexEmbedContentModel(params.model)
-        ? '{model}:embedContent'
-        : '{model}:predict';
+      let endpointUrl = '{model}:predict';
+      if (
+        params.embeddingApiType === types.EmbeddingApiType.BATCH_EMBED_CONTENTS
+      ) {
+        endpointUrl = '{model}:batchEmbedContents';
+      } else if (
+        params.embeddingApiType === types.EmbeddingApiType.EMBED_CONTENT
+      ) {
+        endpointUrl = '{model}:embedContent';
+      }
       path = common.formatMap(
         endpointUrl,
         body['_url'] as Record<string, unknown>,
