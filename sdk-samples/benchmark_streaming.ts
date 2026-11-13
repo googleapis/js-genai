@@ -7,7 +7,7 @@
 import {GoogleGenAI, type Interactions} from '@google/genai';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import {type z} from 'zod';
+import {type z} from 'zod/v3';
 
 function invariant(condition: unknown, message?: string): asserts condition {
   if (!condition) {

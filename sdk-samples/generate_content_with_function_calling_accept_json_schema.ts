@@ -5,7 +5,7 @@
  */
 
 import {FunctionCallingConfigMode, GoogleGenAI} from '@google/genai';
-import {z} from 'zod';
+import {z} from 'zod/v3';
 import {zodToJsonSchema} from 'zod-to-json-schema';
 import {MODEL_FLASH_LITE} from './constants.js';
 

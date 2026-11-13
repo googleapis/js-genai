@@ -5,7 +5,7 @@
  */
 
 import {fail} from 'assert';
-import {z} from 'zod';
+import {z} from 'zod/v3';
 import {zodToJsonSchema} from 'zod-to-json-schema';
 
 import {

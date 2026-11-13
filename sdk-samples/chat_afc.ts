@@ -7,7 +7,7 @@ import {FunctionCallingConfigMode, GoogleGenAI, mcpToTool} from '@google/genai';
 import {Client} from '@modelcontextprotocol/sdk/client/index.js';
 import {InMemoryTransport} from '@modelcontextprotocol/sdk/inMemory.js';
 import {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js';
-import {z} from 'zod';
+import {z} from 'zod/v3';
 import {MODEL_FLASH_LITE} from './constants.js';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;

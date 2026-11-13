@@ -5,7 +5,7 @@
  */
 
 import {GoogleAuthOptions} from 'google-auth-library';
-import {z} from 'zod';
+import {z} from 'zod/v3';
 import {zodToJsonSchema} from 'zod-to-json-schema';
 
 import {GoogleGenAI} from '../../../src/node/node_client.js';

@@ -7,7 +7,7 @@
 import {Client as McpClient} from '@modelcontextprotocol/sdk/client/index.js';
 import {InMemoryTransport} from '@modelcontextprotocol/sdk/inMemory.js';
 import {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js';
-import {z} from 'zod';
+import {z} from 'zod/v3';
 
 import {mcpToTool} from '../../../src/mcp/_mcp.js';
 import {GoogleGenAI} from '../../../src/node/node_client.js';

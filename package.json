@@ -88,7 +88,16 @@
     "node": ">=20.0.0"
   },
   "overrides": {
-    "tmp": "^0.2.4"
+    "tmp": "^0.2.6",
+    "js-yaml@<4": "^3.15.2",
+    "js-yaml@>=4 <5": "^4.3.2",
+    "qs": "^6.16.1",
+    "tar": "^7.5.23",
+    "glob@>=9 <15": "^14.0.6",
+    "minimatch@>=7 <12": "^11.0.8",
+    "lodash": "^4.18.1",
+    "ajv@>=7 <9": "^8.20.0",
+    "ajv@<7": "^6.14.0"
   },
   "files": [
     "dist/genai.d.ts",
@@ -132,7 +141,7 @@
     "jasmine-reporters": "^2.4.0",
     "node-fetch": "^3.3.2",
     "npm-run-all": "^4.1.5",
-    "nyc": "^17.1.0",
+    "nyc": "^18.0.0",
     "patch-package": "^8.0.1",
     "prettier": "3.3.3",
     "prettier-plugin-organize-imports": "^4.1.0",
@@ -147,7 +156,7 @@
     "typescript-eslint": "8.24.1",
     "undici": "^7.16.0",
     "undici-types": "^7.16.0",
-    "zod": "^3.25.0",
+    "zod": "^4.6.7",
     "zod-to-json-schema": "^3.25.0"
   },
   "dependencies": {

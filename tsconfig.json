@@ -9,9 +9,17 @@
     "strict": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "lib": ["es2022", "dom", "dom.iterable"]
+    "lib": [
+      "es2022",
+      "dom",
+      "dom.iterable"
+    ],
+    "allowSyntheticDefaultImports": true
   },
-  "include": ["src/**/*.ts", "test/**/*.ts"],
+  "include": [
+    "src/**/*.ts",
+    "test/**/*.ts"
+  ],
   "exclude": [
     "test/packaging/**/*",
     "src/private/**/*",
