@@ -2,6 +2,13 @@
 
 
 
+## [3.4.0](https://github.com/googleapis/js-genai/compare/v3.3.0...v3.4.0) (2026-11-14)
+
+
+### Features
+
+* support batch inputs and usage metadata for Gemini embedding models on Gemini Enterprise API ([2efab95](https://github.com/googleapis/js-genai/commit/2efab9574d810b2b6cbb5eab9abd7f07c08a4e35))
+
 ## [3.3.0](https://github.com/googleapis/js-genai/compare/v3.2.0...v3.3.0) (2026-11-12)
 
 
