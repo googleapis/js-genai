@@ -12,6 +12,11 @@
 
 import * as interactions from "../interactions/index.js";
 
+/**
+ * The compute lifecycle mode for this environment.
+ */
+export type CreateEnvironmentRequestMode = "on_demand" | "self_hosted";
+
 export type CreateEnvironmentRequestNetworkEnum = "disabled";
 
 /**
@@ -34,6 +39,10 @@ export type CreateEnvironmentRequest = {
    */
   from_environment?: string | undefined;
   /**
+   * The compute lifecycle mode for this environment.
+   */
+  mode?: CreateEnvironmentRequestMode | undefined;
+  /**
    * Network configuration for the environment.
    */
   network?:
@@ -44,4 +53,12 @@ export type CreateEnvironmentRequest = {
    * Sources to be mounted into the environment.
    */
   sources?: Array<interactions.Source> | undefined;
+  /**
+   * Optional. System instruction applied to interactions running in this
+   *
+   * @remarks
+   * environment. Only supported for `SELF_HOSTED` environments, where it is
+   * recommended.
+   */
+  system_instruction?: string | undefined;
 };

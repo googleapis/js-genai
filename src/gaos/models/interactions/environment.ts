@@ -16,6 +16,11 @@ import { Source } from "./source.js";
 
 export type Env = EnvVar | string;
 
+/**
+ * The compute lifecycle mode for this environment.
+ */
+export type EnvironmentMode = "on_demand" | "self_hosted" | (string & {});
+
 export type NetworkEnum = "disabled" | (string & {});
 
 /**
@@ -38,6 +43,10 @@ export type Environment = {
    * update the existing environment instead of creating a new one.
    */
   environment_id?: string | undefined;
+  /**
+   * The compute lifecycle mode for this environment.
+   */
+  mode?: EnvironmentMode | undefined;
   /**
    * Network configuration for the environment.
    */
