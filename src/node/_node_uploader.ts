@@ -15,6 +15,7 @@ import {
   MAX_CHUNK_SIZE,
   MAX_RETRY_COUNT,
   X_GOOG_UPLOAD_STATUS_HEADER_FIELD,
+  discardResponseBody,
   getBlobStat,
   sleep,
   uploadBlob,
@@ -288,6 +289,7 @@ export class NodeUploader implements Uploader {
             // duplicate is rejected by undici >= 7.26 (#1718).
           };
 
+          await discardResponseBody(response);
           response = await apiClient.request({
             path: '',
             body: chunk,
@@ -315,6 +317,7 @@ export class NodeUploader implements Uploader {
           break;
         }
         if (fileSize <= offset) {
+          await discardResponseBody(response);
           throw new Error(
             'All content has been uploaded, but the upload status is not finalized.',
           );

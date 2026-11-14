@@ -100,12 +100,14 @@ describe('File', () => {
       },
       url: 'some-url',
     };
-    const mockResponse = new Response(
-      JSON.stringify({
-        data: 'data1',
-      }),
-      uploadOkOptions,
-    );
+    // Each call needs a fresh Response, since the uploader reads its body.
+    const makeActiveResponse = () =>
+      new Response(
+        JSON.stringify({
+          data: 'data1',
+        }),
+        uploadOkOptions,
+      );
     const fileSize = TEST_FILE_SIZE;
     describe('Node_client', () => {
       it('It should upload the file from a string path.', async () => {
@@ -119,7 +121,7 @@ describe('File', () => {
         ];
 
         for (let i = 0; i < numRequests - 1; i++) {
-          mockResponses.push(Promise.resolve(mockResponse));
+          mockResponses.push(Promise.resolve(makeActiveResponse()));
         }
         mockResponses.push(
           Promise.resolve(
@@ -184,7 +186,7 @@ describe('File', () => {
         ];
 
         for (let i = 0; i < numRequests - 1; i++) {
-          mockResponses.push(Promise.resolve(mockResponse));
+          mockResponses.push(Promise.resolve(makeActiveResponse()));
         }
         mockResponses.push(
           Promise.resolve(
@@ -243,7 +245,7 @@ describe('File', () => {
         ];
 
         for (let i = 0; i < numRequests - 1; i++) {
-          mockResponses.push(Promise.resolve(mockResponse));
+          mockResponses.push(Promise.resolve(makeActiveResponse()));
         }
         mockResponses.push(
           Promise.resolve(
@@ -308,7 +310,7 @@ describe('File', () => {
         ];
 
         for (let i = 0; i < numRequests - 1; i++) {
-          mockResponses.push(Promise.resolve(mockResponse));
+          mockResponses.push(Promise.resolve(makeActiveResponse()));
         }
         mockResponses.push(
           Promise.resolve(
