@@ -8475,6 +8475,8 @@ If included the server will send SessionResumptionUpdate messages. */
   /** Labels with user-defined metadata for the session. In Gemini
       Enterprise Agent Platform, they are used for billing and reporting. */
   labels?: Record<string, string>;
+  /** Configures the exchange of history between the client and the server. */
+  historyConfig?: HistoryConfig;
 }
 
 /** Parameters for connecting to the live API. */
