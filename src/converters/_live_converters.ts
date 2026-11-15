@@ -148,114 +148,6 @@ export function functionCallToMldev(
   return toObject;
 }
 
-export function functionResponsePartToVertex(
-  fromObject: types.FunctionResponsePart,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromFileData = common.getValueByPath(fromObject, ['fileData']);
-  if (fromFileData != null) {
-    common.setValueByPath(toObject, ['fileData'], fromFileData);
-  }
-
-  const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
-  if (fromInlineData != null) {
-    common.setValueByPath(toObject, ['inlineData'], fromInlineData);
-  }
-
-  if (common.getValueByPath(fromObject, ['mediaProcessing']) !== undefined) {
-    throw new Error(
-      'mediaProcessing parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
-    );
-  }
-
-  const fromMediaResolution = common.getValueByPath(fromObject, [
-    'mediaResolution',
-  ]);
-  if (fromMediaResolution != null) {
-    common.setValueByPath(toObject, ['mediaResolution'], fromMediaResolution);
-  }
-
-  const fromVideoMetadata = common.getValueByPath(fromObject, [
-    'videoMetadata',
-  ]);
-  if (fromVideoMetadata != null) {
-    common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
-  }
-
-  const fromDocumentMetadata = common.getValueByPath(fromObject, [
-    'documentMetadata',
-  ]);
-  if (fromDocumentMetadata != null) {
-    common.setValueByPath(toObject, ['documentMetadata'], fromDocumentMetadata);
-  }
-
-  const fromSpreadsheetMetadata = common.getValueByPath(fromObject, [
-    'spreadsheetMetadata',
-  ]);
-  if (fromSpreadsheetMetadata != null) {
-    common.setValueByPath(
-      toObject,
-      ['spreadsheetMetadata'],
-      fromSpreadsheetMetadata,
-    );
-  }
-
-  const fromAudioMetadata = common.getValueByPath(fromObject, [
-    'audioMetadata',
-  ]);
-  if (fromAudioMetadata != null) {
-    common.setValueByPath(toObject, ['audioMetadata'], fromAudioMetadata);
-  }
-
-  return toObject;
-}
-
-export function functionResponseToVertex(
-  fromObject: types.FunctionResponse,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromId = common.getValueByPath(fromObject, ['id']);
-  if (fromId != null) {
-    common.setValueByPath(toObject, ['id'], fromId);
-  }
-
-  const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName != null) {
-    common.setValueByPath(toObject, ['name'], fromName);
-  }
-
-  const fromParts = common.getValueByPath(fromObject, ['parts']);
-  if (fromParts != null) {
-    let transformedList = fromParts;
-    if (Array.isArray(transformedList)) {
-      transformedList = transformedList.map((item) => {
-        return functionResponsePartToVertex(item);
-      });
-    }
-    common.setValueByPath(toObject, ['parts'], transformedList);
-  }
-
-  const fromResponse = common.getValueByPath(fromObject, ['response']);
-  if (fromResponse != null) {
-    common.setValueByPath(toObject, ['response'], fromResponse);
-  }
-
-  const fromScheduling = common.getValueByPath(fromObject, ['scheduling']);
-  if (fromScheduling != null) {
-    common.setValueByPath(toObject, ['scheduling'], fromScheduling);
-  }
-
-  if (common.getValueByPath(fromObject, ['willContinue']) !== undefined) {
-    throw new Error(
-      'willContinue parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
-    );
-  }
-
-  return toObject;
-}
-
 export function generationConfigToVertex(
   fromObject: types.GenerationConfig,
 ): Record<string, unknown> {
@@ -757,11 +649,7 @@ export function liveClientMessageToVertex(
 
   const fromToolResponse = common.getValueByPath(fromObject, ['toolResponse']);
   if (fromToolResponse != null) {
-    common.setValueByPath(
-      toObject,
-      ['toolResponse'],
-      liveClientToolResponseToVertex(fromToolResponse),
-    );
+    common.setValueByPath(toObject, ['toolResponse'], fromToolResponse);
   }
 
   const fromContextUpdate = common.getValueByPath(fromObject, [
@@ -1111,27 +999,6 @@ export function liveClientSetupToVertex(
     throw new Error(
       'labels parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
     );
-  }
-
-  return toObject;
-}
-
-export function liveClientToolResponseToVertex(
-  fromObject: types.LiveClientToolResponse,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromFunctionResponses = common.getValueByPath(fromObject, [
-    'functionResponses',
-  ]);
-  if (fromFunctionResponses != null) {
-    let transformedList = fromFunctionResponses;
-    if (Array.isArray(transformedList)) {
-      transformedList = transformedList.map((item) => {
-        return functionResponseToVertex(item);
-      });
-    }
-    common.setValueByPath(toObject, ['functionResponses'], transformedList);
   }
 
   return toObject;
@@ -2376,11 +2243,7 @@ export function partToVertex(fromObject: types.Part): Record<string, unknown> {
     'functionResponse',
   ]);
   if (fromFunctionResponse != null) {
-    common.setValueByPath(
-      toObject,
-      ['functionResponse'],
-      functionResponseToVertex(fromFunctionResponse),
-    );
+    common.setValueByPath(toObject, ['functionResponse'], fromFunctionResponse);
   }
 
   const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);

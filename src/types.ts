@@ -2214,7 +2214,7 @@ export class FunctionResponsePart {
   fileData?: FunctionResponseFileData;
   /** Inline media bytes. */
   inlineData?: FunctionResponseBlob;
-  /** Optional. How the model processes this part's media for understanding. Only meaningful for video parts (`inline_data` or `file_data` with video mime). Non-video parts ignore this field. This field is not supported in Vertex AI. */
+  /** Optional. Processes this part's media for understanding. Only meaningful for video parts (`inline_data` or `file_data` with video mime). Non-video parts ignore this field. */
   mediaProcessing?: MediaProcessing;
   /** Media resolution for the input media. */
   mediaResolution?: PartMediaResolution;
@@ -2671,14 +2671,14 @@ export declare interface AuthConfig {
 /** Grounding with Google Maps Places data (e.g. QueryPlaces). This is the default Google Maps grounding type when no other type is specified. This data type is not supported in Gemini API. */
 export declare interface GoogleMapsPlaces {}
 
-/** Grounding with Google Maps Routing APIs (ComputeRoutes and SearchAlongRoute). This data type is not supported in Gemini API. */
+/** Grounding with Google Maps Routing APIs (ComputeRoutes and SearchAlongRoute). Also enabled by default for Gemini 4 and later models when no grounding type is specified. This data type is not supported in Gemini API. */
 export declare interface GoogleMapsRouting {}
 
 /** Defines the types of Google Maps grounding that can be enabled and their configurations. This data type is not supported in Gemini API. */
 export declare interface GoogleMapsGroundingTypes {
   /** Optional. Enables grounding with Google Maps Places. This is the default grounding type when no `GroundingTypes` are specified. */
   places?: GoogleMapsPlaces;
-  /** Optional. Enables grounding with Google Maps Routing APIs (ComputeRoutes and SearchAlongRoute). */
+  /** Optional. Enables grounding with Google Maps Routing APIs (ComputeRoutes and SearchAlongRoute). Also enabled by default for Gemini 4 and later models when no `GroundingTypes` are specified. */
   routing?: GoogleMapsRouting;
 }
 
@@ -2688,7 +2688,7 @@ export declare interface GoogleMaps {
   authConfig?: AuthConfig;
   /** Deprecated. The Google Maps contextual widget behavior in Grounding with Google Maps is being deprecated; this field is planned for removal and no longer has any effect once removed. Optional. Whether to return a widget context token in the GroundingMetadata of the response. */
   enableWidget?: boolean;
-  /** Optional. Specifies the types of Google Maps grounding to enable. Defaults to `places` when unset. This field is not supported in Gemini API. */
+  /** Optional. Specifies the types of Google Maps grounding to enable. Defaults to `places` when unset, and to `places` and `routing` for Gemini 4 and later models. When set, only the listed types are enabled; for example, setting only `places` disables routing. This field is not supported in Gemini API. */
   groundingTypes?: GoogleMapsGroundingTypes;
 }
 
@@ -6181,6 +6181,26 @@ export declare interface VeoTuningSpec {
   validationDatasetUri?: string;
 }
 
+/** Hyperparameters for Omni LoRA tuning. This data type is not supported in Gemini API. */
+export declare interface OmniHyperParameters {
+  /** Optional. Adapter size for Omni LoRA tuning. */
+  adapterSize?: AdapterSize;
+  /** Optional. Number of complete passes the model makes over the entire training dataset during training. */
+  epochCount?: string;
+  /** Optional. Multiplier for adjusting the default learning rate. */
+  learningRateMultiplier?: number;
+  /** Optional. The tuning task for Omni LoRA tuning. */
+  tuningTask?: TuningTask;
+}
+
+/** Tuning Spec for Omni LoRA Model Tuning. This data type is not supported in Gemini API. */
+export declare interface OmniLoraTuningSpec {
+  /** Optional. Hyperparameters for Omni LoRA tuning. */
+  hyperParameters?: OmniHyperParameters;
+  /** Required. Cloud Storage path to the file containing training dataset for Omni LoRA tuning. The dataset must be formatted as a JSONL file. */
+  trainingDatasetUri?: string;
+}
+
 /** A tuning job. */
 export declare interface TuningJob {
   /** Used to retain the full HTTP response. */
@@ -6250,6 +6270,8 @@ export declare interface TuningJob {
   veoTuningSpec?: VeoTuningSpec;
   /** Output only. The Cloud Storage metrics URI associated with this TuningJob. */
   gcsMetricsUri?: string;
+  /** Optional. Tuning Spec for Omni LoRA Tuning. */
+  omniLoraTuningSpec?: OmniLoraTuningSpec;
 }
 
 /** Configuration for the list tuning jobs method. */
