@@ -7,9 +7,14 @@
 import {z} from 'zod';
 import {zodToJsonSchema} from 'zod-to-json-schema';
 
+import {ApiClient} from '../../src/_api_client.js';
 import {GoogleGenAI} from '../../src/client.js';
+import {CrossDownloader} from '../../src/cross/_cross_downloader.js';
+import {CrossUploader} from '../../src/cross/_cross_uploader.js';
 import {mcpToTool} from '../../src/mcp/_mcp.js';
+import {Models} from '../../src/models.js';
 import * as types from '../../src/types.js';
+import {FakeAuth} from '../_fake_auth.js';
 
 import {
   spinUpBeepingServer,
@@ -1763,5 +1768,101 @@ describe('embedContent endpoint routing', () => {
       'The embedContent API for this model only supports one content at a time.',
     );
     expect(fetchSpy).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe('embedContent location routing', () => {
+  function vertexModels(location: string): Models {
+    return new Models(
+      new ApiClient({
+        auth: new FakeAuth(),
+        vertexai: true,
+        project: 'test-project',
+        location,
+        uploader: new CrossUploader(),
+        downloader: new CrossDownloader(),
+      }),
+    );
+  }
+
+  function fakeEmbedFetch() {
+    return spyOn(global, 'fetch').and.callFake(async (url, init) => {
+      const body = JSON.parse(init?.body as string) as {
+        instances?: unknown[];
+        requests?: unknown[];
+      };
+      let payload: unknown;
+      if (String(url).endsWith(':embedContent')) {
+        payload = {embedding: {values: [0.1, 0.2]}};
+      } else if (String(url).endsWith(':batchEmbedContents')) {
+        payload = {embeddings: body.requests!.map(() => ({values: [0.1]}))};
+      } else {
+        payload = {
+          predictions: body.instances!.map(() => ({
+            embeddings: {values: [0.5, 0.6]},
+          })),
+        };
+      }
+      return new Response(JSON.stringify(payload), fetchOkOptions);
+    });
+  }
+
+  it('routes gemini-embedding-001 to :predict on the global endpoint', async () => {
+    const fetchSpy = fakeEmbedFetch();
+    const models = vertexModels('global');
+    const single = await models.embedContent({
+      model: 'gemini-embedding-001',
+      contents: 'hello',
+    });
+    const multi = await models.embedContent({
+      model: 'gemini-embedding-001',
+      contents: ['hello', 'world'],
+    });
+    const [singleUrl, singleInit] = fetchSpy.calls.allArgs()[0];
+    expect(String(singleUrl)).toContain(
+      'aiplatform.googleapis.com/v1beta1/projects/test-project/locations/global/publishers/google/models/gemini-embedding-001:predict',
+    );
+    const singleBody = JSON.parse(singleInit?.body as string) as {
+      instances: unknown[];
+    };
+    expect(singleBody.instances.length).toBe(1);
+    expect(single.embeddings?.length).toBe(1);
+    const [multiUrl, multiInit] = fetchSpy.calls.allArgs()[1];
+    expect(String(multiUrl)).toContain('gemini-embedding-001:predict');
+    const multiBody = JSON.parse(multiInit?.body as string) as {
+      instances: unknown[];
+    };
+    expect(multiBody.instances.length).toBe(2);
+    expect(multi.embeddings?.length).toBe(2);
+  });
+
+  it('routes gemini-embedding-001 to :embedContent in a region', async () => {
+    const fetchSpy = fakeEmbedFetch();
+    const models = vertexModels('us-central1');
+    await models.embedContent({
+      model: 'gemini-embedding-001',
+      contents: 'hello',
+    });
+    await models.embedContent({
+      model: 'gemini-embedding-001',
+      contents: ['hello', 'world'],
+    });
+    expect(String(fetchSpy.calls.allArgs()[0][0])).toContain(
+      'us-central1-aiplatform.googleapis.com/v1beta1/projects/test-project/locations/us-central1/publishers/google/models/gemini-embedding-001:embedContent',
+    );
+    expect(String(fetchSpy.calls.allArgs()[1][0])).toContain(
+      'gemini-embedding-001:batchEmbedContents',
+    );
+  });
+
+  it('routes gemini-embedding-2 to :embedContent on the global endpoint', async () => {
+    const fetchSpy = fakeEmbedFetch();
+    await vertexModels('global').embedContent({
+      model: 'gemini-embedding-2',
+      contents: 'hello',
+    });
+    expect(String(fetchSpy.calls.allArgs()[0][0])).toContain(
+      'gemini-embedding-2:embedContent',
+    );
   });
 });

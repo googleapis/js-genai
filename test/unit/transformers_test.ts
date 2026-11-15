@@ -1622,6 +1622,28 @@ describe('tFileName', () => {
 });
 
 describe('embedding transformers', () => {
+  it('keeps gemini-embedding-001 off embedContent on the global endpoint', () => {
+    expect(
+      tIsVertexEmbedContentModel('gemini-embedding-001', 'global'),
+    ).toBeFalse();
+    expect(
+      tIsVertexEmbedContentModel(
+        'publishers/google/models/gemini-embedding-001',
+        'global',
+      ),
+    ).toBeFalse();
+    expect(
+      tIsVertexEmbedContentModel('gemini-embedding-001', 'us-central1'),
+    ).toBeTrue();
+    expect(tIsVertexEmbedContentModel('gemini-embedding-2', 'global')).toBeTrue();
+    expect(
+      tIsVertexEmbedContentModel(
+        'publishers/intfloat/models/multilingual-e5-large-instruct-maas',
+        'global',
+      ),
+    ).toBeTrue();
+  });
+
   it('classifies embedding models by terminal model ID', () => {
     expect(tIsVertexEmbedContentModel('gemini-embedding-001')).toBeTrue();
     expect(tIsVertexEmbedContentModel('gemini-embedding-2')).toBeTrue();

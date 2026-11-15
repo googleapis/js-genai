@@ -995,8 +995,17 @@ export function tJobState(state: unknown): string {
 }
 
 /** Checks if the model uses the embedContent endpoint on Gemini Enterprise API. */
-export function tIsVertexEmbedContentModel(model: string): boolean {
+export function tIsVertexEmbedContentModel(
+  model: string,
+  location?: string,
+): boolean {
   const modelId = model.split('/').pop() ?? model;
+  // The global endpoint does not serve embedContent for gemini-embedding-001,
+  // so it stays on predict there. Regional endpoints serve it, and Provisioned
+  // Throughput needs it (b/580981789).
+  if (location === 'global' && modelId.startsWith('gemini-embedding-001')) {
+    return false;
+  }
   return modelId.includes('gemini') || modelId.includes('maas');
 }
 

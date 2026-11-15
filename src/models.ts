@@ -67,7 +67,9 @@ export class Models extends BaseModule {
       });
     }
 
-    if (tIsVertexEmbedContentModel(params.model)) {
+    if (
+      tIsVertexEmbedContentModel(params.model, this.apiClient.getLocation())
+    ) {
       const contents = tEmbedContents(params.model, params.contents);
       if (contents.length > 1) {
         if (tIsVertexMaasModel(params.model)) {
