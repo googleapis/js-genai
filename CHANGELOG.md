@@ -2,6 +2,20 @@
 
 
 
+## [3.4.0](https://github.com/googleapis/js-genai/compare/v3.3.0...v3.4.0) (2026-11-16)
+
+
+### Features
+
+* Add tool search types to the Interactions SDKs ([dd109f4](https://github.com/googleapis/js-genai/commit/dd109f4ff4d1fef66c886a69164def4605491a97))
+* **interactions:** expose static file processing options ([9f081ac](https://github.com/googleapis/js-genai/commit/9f081acbfc8dba9ff6edf826cd09f4b2659713db))
+* support batch inputs and usage metadata for Gemini embedding models on Gemini Enterprise API ([2efab95](https://github.com/googleapis/js-genai/commit/2efab9574d810b2b6cbb5eab9abd7f07c08a4e35))
+
+
+### Bug Fixes
+
+* keep the SDK version bump in release imports ([97e941f](https://github.com/googleapis/js-genai/commit/97e941f2d039e9200c1906930fa4a64ab5e470a5))
+
 ## [3.3.0](https://github.com/googleapis/js-genai/compare/v3.2.0...v3.3.0) (2026-11-12)
 
 
