@@ -5,6 +5,7 @@
  */
 
 import pRetry from 'p-retry';
+import {GOOGLE_AI_API_DEFAULT_VERSION} from './_api_default_version.js';
 import {Auth} from './_auth.js';
 import {Downloader} from './_downloader.js';
 import {Uploader} from './_uploader.js';
@@ -19,7 +20,7 @@ export const GOOGLE_API_CLIENT_HEADER = 'x-goog-api-client';
 export const SDK_VERSION = '3.3.0'; // x-release-please-version
 const LIBRARY_LABEL = `google-genai-sdk/${SDK_VERSION}`;
 const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
-export const GOOGLE_AI_API_DEFAULT_VERSION = 'v1';
+export {GOOGLE_AI_API_DEFAULT_VERSION};
 
 let defaultGoogleAiApiVersionOverride: string | undefined;
 
