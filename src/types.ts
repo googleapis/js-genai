@@ -1348,6 +1348,42 @@ export enum ToolType {
   MEDIA_PROCESSING = 'MEDIA_PROCESSING',
 }
 
+/** Content layers to extract from a document. */
+export enum DocumentMetadataContentLayer {
+  /**
+   * Default value.
+   */
+  CONTENT_LAYER_UNSPECIFIED = 'CONTENT_LAYER_UNSPECIFIED',
+  /**
+   * Rendered page images.
+   */
+  PAGE_IMAGE = 'PAGE_IMAGE',
+  /**
+   * Extracted page text.
+   */
+  PAGE_TEXT = 'PAGE_TEXT',
+}
+
+/** Content layers to extract from a spreadsheet. */
+export enum SpreadsheetMetadataContentLayer {
+  /**
+   * Default value.
+   */
+  CONTENT_LAYER_UNSPECIFIED = 'CONTENT_LAYER_UNSPECIFIED',
+  /**
+   * Cell values, merges, and formats.
+   */
+  DATA = 'DATA',
+  /**
+   * Formula expressions and their computed results.
+   */
+  FORMULAS = 'FORMULAS',
+  /**
+   * A rendered image of the sheet.
+   */
+  VISUAL = 'VISUAL',
+}
+
 /** Resource scope. */
 export enum ResourceScope {
   /**
@@ -1921,6 +1957,26 @@ export enum LiveMusicPlaybackControl {
   RESET_CONTEXT = 'RESET_CONTEXT',
 }
 
+/** Content layers to extract from a video. */
+export enum VideoMetadataContentLayer {
+  /**
+   * Default value.
+   */
+  CONTENT_LAYER_UNSPECIFIED = 'CONTENT_LAYER_UNSPECIFIED',
+  /**
+   * Extract video frames.
+   */
+  FRAMES = 'FRAMES',
+  /**
+   * Extract audio track.
+   */
+  AUDIO = 'AUDIO',
+  /**
+   * Extract audio transcript.
+   */
+  TRANSCRIPT = 'TRANSCRIPT',
+}
+
 /** Media resolution for the input media. */
 export declare interface PartMediaResolution {
   /** The tokenization quality used for given media.
@@ -1969,6 +2025,53 @@ export declare interface SpeechMetadata {
   /** The style instruction for how the voice should be synthesized
       (e.g. "excited, fast-paced"). */
   style?: string;
+}
+
+/** Metadata describes the input document content.
+
+Set this in `Part.document_metadata` or
+`FunctionResponsePart.document_metadata` when `inline_data` or `file_data`
+contains a document to configure static document preprocessing. */
+export declare interface DocumentMetadata {
+  /** 1-indexed inclusive start page. */
+  startPage?: number;
+  /** 1-indexed inclusive end page. */
+  endPage?: number;
+  /** Content layers to return. If empty, defaults to [PAGE_IMAGE] when
+      DocumentMetadata is set. When DocumentMetadata is not set, default
+      document processing is used (for example, page images for PDFs). */
+  contentLayers?: DocumentMetadataContentLayer[];
+}
+
+/** Metadata describes the input spreadsheet content.
+
+Set this in `Part.spreadsheet_metadata` or
+`FunctionResponsePart.spreadsheet_metadata` when `inline_data` or `file_data`
+contains a spreadsheet to configure static spreadsheet preprocessing. */
+export declare interface SpreadsheetMetadata {
+  /** The range of cells to extract, in A1 notation (e.g. "A1:D10").
+      If not set, the full occupied area of the sheet is used. */
+  visibleCells?: string;
+  /** The 1-indexed index of the sheet to extract, in workbook order. If
+      not set, the first sheet is used. */
+  sheetIndex?: number;
+  /** Content layers to return. If empty, defaults to [DATA, FORMULAS]
+      when SpreadsheetMetadata is set. */
+  contentLayers?: SpreadsheetMetadataContentLayer[];
+}
+
+/** Metadata describes the input audio content.
+
+Set this in `Part.audio_metadata` or `FunctionResponsePart.audio_metadata`
+when `inline_data` or `file_data` contains audio to configure static audio
+preprocessing. */
+export declare interface AudioMetadata {
+  /** The start offset of the audio, relative to the start of the audio
+      stream. */
+  startOffset?: string;
+  /** The end offset of the audio, relative to the start of the audio
+      stream. */
+  endOffset?: string;
 }
 
 /** Information about a single recognized word. */
@@ -2087,7 +2190,25 @@ export class FunctionResponseBlob {
   mimeType?: string;
 }
 
-/** A datatype containing media that is part of a `FunctionResponse` message. A `FunctionResponsePart` consists of data which has an associated datatype. A `FunctionResponsePart` can only contain one of the accepted types in `FunctionResponsePart.data`. A `FunctionResponsePart` must have a fixed IANA MIME type identifying the type and subtype of the media if the `inline_data` field is filled with raw bytes. */
+/** Provides metadata for a video, including the start and end offsets for clipping and the frame rate. */
+export declare interface VideoMetadata {
+  /** Optional. The end offset of the video. */
+  endOffset?: string;
+  /** Optional. The frame rate of the video sent to the model. If not specified, the default value is 1.0. The valid range is (0.0, 24.0]. */
+  fps?: number;
+  /** Optional. The start offset of the video. */
+  startOffset?: string;
+  /** Content layers to return. If empty, defaults to [FRAMES, AUDIO]. */
+  contentLayers?: VideoMetadataContentLayer[];
+}
+
+/** A datatype containing media that is part of a `FunctionResponse` message.
+
+A `FunctionResponsePart` consists of data which has an associated datatype. A
+`FunctionResponsePart` can only contain one of the accepted types in
+`FunctionResponsePart.data`. A `FunctionResponsePart` must have a fixed IANA
+MIME type identifying the type and subtype of the media if the `inline_data`
+field is filled with raw bytes. */
 export class FunctionResponsePart {
   /** URI based data. */
   fileData?: FunctionResponseFileData;
@@ -2095,6 +2216,20 @@ export class FunctionResponsePart {
   inlineData?: FunctionResponseBlob;
   /** Optional. How the model processes this part's media for understanding. Only meaningful for video parts (`inline_data` or `file_data` with video mime). Non-video parts ignore this field. This field is not supported in Vertex AI. */
   mediaProcessing?: MediaProcessing;
+  /** Media resolution for the input media. */
+  mediaResolution?: PartMediaResolution;
+  /** Video metadata. The metadata should only be specified while the
+      video data is presented in inline_data or file_data. */
+  videoMetadata?: VideoMetadata;
+  /** Document metadata. The metadata should only be specified while the
+      document data is presented in inline_data or file_data. */
+  documentMetadata?: DocumentMetadata;
+  /** Spreadsheet metadata. The metadata should only be specified while
+      the spreadsheet data is presented in inline_data or file_data. */
+  spreadsheetMetadata?: SpreadsheetMetadata;
+  /** Audio metadata. The metadata should only be specified while the
+      audio data is presented in inline_data or file_data. */
+  audioMetadata?: AudioMetadata;
 }
 /**
  * Creates a `FunctionResponsePart` object from a `base64` encoded `string`.
@@ -2152,16 +2287,6 @@ export declare interface Blob {
   mimeType?: string;
 }
 
-/** Provides metadata for a video, including the start and end offsets for clipping and the frame rate. */
-export declare interface VideoMetadata {
-  /** Optional. The end offset of the video. */
-  endOffset?: string;
-  /** Optional. The frame rate of the video sent to the model. If not specified, the default value is 1.0. The valid range is (0.0, 24.0]. */
-  fps?: number;
-  /** Optional. The start offset of the video. */
-  startOffset?: string;
-}
-
 /** A datatype containing media content.
 
 Exactly one field within a Part should be set, representing the specific type
@@ -2205,6 +2330,15 @@ export declare interface Part {
   /** Extra metadata associated with the part for speech synthesis, such
       as speaker and style. Only valid when `Part.data` is set to `text`. */
   speechMetadata?: SpeechMetadata;
+  /** Document metadata. The metadata should only be specified while the
+      document data is presented in inline_data or file_data. */
+  documentMetadata?: DocumentMetadata;
+  /** Spreadsheet metadata. The metadata should only be specified while
+      the spreadsheet data is presented in inline_data or file_data. */
+  spreadsheetMetadata?: SpreadsheetMetadata;
+  /** Audio metadata. The metadata should only be specified while the
+      audio data is presented in inline_data or file_data. */
+  audioMetadata?: AudioMetadata;
 }
 /**
  * Creates a `Part` object from a `URI` string.
