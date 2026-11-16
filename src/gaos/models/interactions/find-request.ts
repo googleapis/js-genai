@@ -15,7 +15,7 @@ import { FileContent } from "./file-content.js";
 /**
  * The mode of the find session.
  */
-export type Mode = "scan" | "verify" | (string & {});
+export type FindRequestMode = "scan" | "verify" | (string & {});
 
 /**
  * Request parameters specific to FIND sessions, used for discovering
@@ -42,7 +42,7 @@ export type FindRequest = {
   /**
    * The mode of the find session.
    */
-  mode?: Mode | undefined;
+  mode?: FindRequestMode | undefined;
   /**
    * A list of source files to provide as context for the scan.
    */

@@ -12,6 +12,11 @@
 
 import * as interactions from "../interactions/index.js";
 
+/**
+ * Output only. The compute lifecycle mode for this environment.
+ */
+export type EnvironmentMode = "on_demand" | "self_hosted" | (string & {});
+
 export type EnvironmentNetworkEnum = "disabled" | (string & {});
 
 /**
@@ -38,6 +43,16 @@ export type Environment = {
    */
   created?: string | undefined;
   /**
+   * Output only. OUTPUT_ONLY. Secret token generated upon environment creation for
+   *
+   * @remarks
+   * self_hosted environments. Used by the sandbox daemon to authenticate
+   * LeaseInteractions and CreateInteractionBidiStream. Only returned in the
+   * response of CreateEnvironment; never exposed in subsequent GetEnvironment
+   * calls.
+   */
+  environment_key?: string | undefined;
+  /**
    * Output only. The number of files in the environment, output only.
    */
   file_count?: string | undefined;
@@ -52,6 +67,10 @@ export type Environment = {
    * (YYYY-MM-DDThh:mm:ssZ).
    */
   last_accessed?: string | undefined;
+  /**
+   * Output only. The compute lifecycle mode for this environment.
+   */
+  mode?: EnvironmentMode | undefined;
   /**
    * Network configuration for the environment.
    */

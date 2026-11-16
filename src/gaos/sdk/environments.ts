@@ -47,6 +47,7 @@ export class Environments extends ClientSDK {
     return unwrapAsAPIPromise(environmentsListEnvironments(
       this,
       params?.api_version,
+      params?.mode,
       params?.page_size,
       params?.page_token,
       options,
