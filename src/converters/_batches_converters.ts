@@ -552,6 +552,13 @@ export function candidateFromMldev(
     );
   }
 
+  const fromFinishMessage = common.getValueByPath(fromObject, [
+    'finishMessage',
+  ]);
+  if (fromFinishMessage != null) {
+    common.setValueByPath(toObject, ['finishMessage'], fromFinishMessage);
+  }
+
   const fromTokenCount = common.getValueByPath(fromObject, ['tokenCount']);
   if (fromTokenCount != null) {
     common.setValueByPath(toObject, ['tokenCount'], fromTokenCount);
