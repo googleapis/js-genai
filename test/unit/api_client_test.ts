@@ -457,6 +457,110 @@ describe('processStreamResponse', () => {
     const final = await generator.next();
     expect(final.done).toBeTrue();
   });
+
+  /** Returns a response whose body yields exactly the given chunks. */
+  function responseFromChunks(chunks: string[]): Response {
+    const encoder = new TextEncoder();
+    return new Response(
+      new ReadableStream({
+        start(controller) {
+          for (const chunk of chunks) {
+            controller.enqueue(encoder.encode(chunk));
+          }
+          controller.close();
+        },
+      }),
+    );
+  }
+
+  /** Collects the text of every event the parser yields. */
+  async function eventTexts(response: Response): Promise<string[]> {
+    const texts: string[] = [];
+    for await (const event of apiClient.processStreamResponse(response)) {
+      texts.push(await event.responseInternal.text());
+    }
+    return texts;
+  }
+
+  const delimiters = ['\n\n', '\r\r', '\r\n\r\n'];
+
+  // Parsing one large event must not rescan or copy the buffered data on
+  // every chunk, so the time grows linearly with the event size.
+  it('should parse a large event split into 64 KiB chunks in linear time', async () => {
+    const largeData = 'A'.repeat(32 * 1024 * 1024);
+    const payload = new TextEncoder().encode(
+      `data: ${JSON.stringify({data: largeData})}\n\n`,
+    );
+    const chunkSize = 64 * 1024;
+    let offset = 0;
+    const response = new Response(
+      new ReadableStream({
+        pull(controller) {
+          if (offset >= payload.length) {
+            controller.close();
+            return;
+          }
+          controller.enqueue(payload.subarray(offset, offset + chunkSize));
+          offset += chunkSize;
+        },
+      }),
+    );
+
+    const generator = apiClient.processStreamResponse(response);
+    const start = performance.now();
+    const result = await generator.next();
+    const elapsedMs = performance.now() - start;
+
+    expect(elapsedMs).withContext('parse time in ms').toBeLessThan(1500);
+    expect(result.done).toBeFalse();
+    const json = (await result.value.json()) as {data: string};
+    expect(json.data === largeData).toBeTrue();
+    expect((await generator.next()).done).toBeTrue();
+  }, 60000);
+
+  // A delimiter that straddles two chunks must still end the event.
+  it('should find a delimiter split across two chunks at every split point', async () => {
+    for (const d of delimiters) {
+      for (let k = 0; k <= d.length; k++) {
+        const texts = await eventTexts(
+          responseFromChunks([
+            'data: {"text":"One"}' + d.slice(0, k),
+            d.slice(k) + 'data: {"text":"Two"}' + d,
+          ]),
+        );
+        expect(texts)
+          .withContext(`delimiter ${JSON.stringify(d)}, split at ${k}`)
+          .toEqual(['{"text":"One"}', '{"text":"Two"}']);
+      }
+    }
+  });
+
+  // One chunk can complete several events and start another one.
+  it('should yield several events from one chunk', async () => {
+    const texts = await eventTexts(
+      responseFromChunks([
+        'data: {"n":1}\n\ndata: {"n":2}\r\rdata: {"n":3}\r\n\r\ndata: {"n',
+        '":4}\n\n',
+      ]),
+    );
+    expect(texts).toEqual(['{"n":1}', '{"n":2}', '{"n":3}', '{"n":4}']);
+  });
+
+  // One-character chunks make the delimiter search span several chunks.
+  it('should split events the same way for one-character chunks', async () => {
+    const inputs = [
+      'data: {"n":1}\r\n\ndata: {"n":2}\n\r\n\r\ndata: {"n":3}\r\r\n\r\n',
+      ...delimiters.map(
+        (d) => 'data: {"text":"One"}' + d + 'data: {"text":"Two"}' + d,
+      ),
+    ];
+    for (const input of inputs) {
+      const whole = await eventTexts(responseFromChunks([input]));
+      const split = await eventTexts(responseFromChunks(input.split('')));
+      expect(whole).withContext(JSON.stringify(input)).not.toEqual([]);
+      expect(split).withContext(JSON.stringify(input)).toEqual(whole);
+    }
+  });
 });
 
 describe('ApiClient', () => {

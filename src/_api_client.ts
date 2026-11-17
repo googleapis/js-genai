@@ -796,8 +796,12 @@ export class ApiClient {
 
     try {
       let buffer = '';
+      // End of `buffer` that may start a delimiter the next chunk completes.
+      // Kept apart from `buffer` so that no per-chunk work reads `buffer`.
+      let tail = '';
       const dataPrefix = 'data:';
       const delimiters = ['\n\n', '\r\r', '\r\n\r\n'];
+      const tailLength = Math.max(...delimiters.map((d) => d.length)) - 1;
 
       while (true) {
         const {done, value} = await reader.read();
@@ -811,6 +815,11 @@ export class ApiClient {
 
         // Parse and throw an error if the chunk contains an error.
         throwIfStreamErrorChunk(chunkString);
+        // `buffer` holds no delimiter here, so the next one ends in this
+        // chunk. Reading `buffer` itself would make V8 flatten (copy) the
+        // whole concatenated string on every chunk.
+        let searchText = tail + chunkString;
+        let searchOffset = buffer.length - tail.length;
         buffer += chunkString;
 
         let delimiterIndex = -1;
@@ -821,7 +830,7 @@ export class ApiClient {
           delimiterLength = 0;
 
           for (const delimiter of delimiters) {
-            const index = buffer.indexOf(delimiter);
+            const index = searchText.indexOf(delimiter);
             if (
               index !== -1 &&
               (delimiterIndex === -1 || index < delimiterIndex)
@@ -835,8 +844,12 @@ export class ApiClient {
             break; // No complete event in buffer
           }
 
+          delimiterIndex += searchOffset;
           const eventString = buffer.substring(0, delimiterIndex);
           buffer = buffer.substring(delimiterIndex + delimiterLength);
+          // The rest came from this chunk, so it is cheap to search.
+          searchText = buffer;
+          searchOffset = 0;
 
           const trimmedEvent = eventString.trim();
 
@@ -859,6 +872,7 @@ export class ApiClient {
             }
           }
         }
+        tail = searchText.slice(-tailLength);
       }
     } finally {
       reader.releaseLock();
