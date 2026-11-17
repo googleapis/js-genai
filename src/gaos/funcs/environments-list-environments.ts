@@ -27,6 +27,7 @@ import {
   RequestTimeoutError,
   UnexpectedClientError,
 } from "../models/errors/http-client-errors.js";
+import * as interactions from "../models/interactions/index.js";
 import * as operations from "../models/operations/index.js";
 import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
@@ -37,6 +38,7 @@ import { Result } from "../types/fp.js";
 export function environmentsListEnvironments(
   client: GoogleGenAICore,
   api_version?: string | undefined,
+  mode?: interactions.EnvironmentMode | undefined,
   page_size?: number | undefined,
   page_token?: string | undefined,
   options?: Omit<RequestOptions, "extra_body">,
@@ -54,6 +56,7 @@ export function environmentsListEnvironments(
   return new APIPromise($do(
     client,
     api_version,
+    mode,
     page_size,
     page_token,
     options,
@@ -63,6 +66,7 @@ export function environmentsListEnvironments(
 async function $do(
   client: GoogleGenAICore,
   api_version?: string | undefined,
+  mode?: interactions.EnvironmentMode | undefined,
   page_size?: number | undefined,
   page_token?: string | undefined,
   options?: Omit<RequestOptions, "extra_body">,
@@ -82,6 +86,7 @@ async function $do(
 > {
   const input: operations.ListEnvironmentsRequest | undefined = {
     api_version: api_version,
+    mode: mode,
     page_size: page_size,
     page_token: page_token,
   };
@@ -99,6 +104,7 @@ async function $do(
   const path = pathToFunc("/{api_version}/environments")(pathParams);
 
   const query = encodeFormQuery({
+    "mode": payload?.mode,
     "page_size": payload?.page_size,
     "page_token": payload?.page_token,
   });
