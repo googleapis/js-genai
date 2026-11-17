@@ -125,4 +125,49 @@ describe('Batches inlined responses', () => {
       inlinedResponses[0].response instanceof types.GenerateContentResponse,
     ).toBeTrue();
   });
+
+  // The input file name in the response metadata populates src.fileName.
+  it('get sets src.fileName from the input file name', async () => {
+    spyOn(global, 'fetch').and.returnValue(
+      Promise.resolve(
+        okResponse({
+          name: 'batches/file-name',
+          metadata: {
+            state: 'BATCH_STATE_PENDING',
+            inputConfig: {fileName: 'files/abc'},
+          },
+        }),
+      ),
+    );
+
+    const job = await client.batches.get({name: 'batches/file-name'});
+
+    expect(job.src?.fileName).toEqual('files/abc');
+    expect(job.src?.inlinedRequests).toBeUndefined();
+  });
+
+  // Inline requests in the response are not mapped to src.
+  it('get leaves src unset for inlined requests', async () => {
+    spyOn(global, 'fetch').and.returnValue(
+      Promise.resolve(
+        okResponse({
+          name: 'batches/inline-requests',
+          metadata: {
+            state: 'BATCH_STATE_PENDING',
+            inputConfig: {
+              requests: {
+                requests: [
+                  {request: {contents: [{parts: [{text: 'Hello'}]}]}},
+                ],
+              },
+            },
+          },
+        }),
+      ),
+    );
+
+    const job = await client.batches.get({name: 'batches/inline-requests'});
+
+    expect(job.src).toBeUndefined();
+  });
 });

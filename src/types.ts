@@ -7463,7 +7463,7 @@ export declare interface BatchJob {
   /** The name of the model that produces the predictions via the BatchJob.
    */
   model?: string;
-  /** Configuration for the input data. This field is for Gemini Enterprise Agent Platform only.
+  /** Configuration for the input data. In Gemini Developer API responses, only `file_name` is populated.
    */
   src?: BatchJobSource;
   /** Configuration for the output data.
