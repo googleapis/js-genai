@@ -26,6 +26,31 @@ export type {
   ListEnvironmentsParams,
   UploadEnvironmentFileParams,
 } from './gaos/google-genai.js';
+export {
+  APIWebRTCError,
+  InteractionWebRTCConnection,
+  InteractionWebRTCTransport,
+  type InteractionWebRTCTransportOptions,
+} from './gaos/interactions-webrtc.js';
+export {
+  APIWebSocketError,
+  InteractionWebSocketConnection,
+  type ClientEvent,
+  type ClientEventBatch,
+  type ClientEventList,
+  type CreateInteractionAuthTokenParams,
+  type DeleteInteractionAuthTokenParams,
+  type ErrorEvent,
+  type FunctionResultEvent,
+  type ImageContent,
+  type InputDeliveryMode,
+  type InteractionAuthToken,
+  type InteractionAuthTokenCreateParams,
+  type InteractionConnectParams,
+  type ServerEvent,
+  type TextContent,
+} from './gaos/interactions-websocket.js';
+export {APIConnectionError, APIError} from './gaos/lib/compat-errors.js';
 export type {SseMessage, Stream} from './gaos/lib/event-streams.js';
 export type {BackoffStrategy, RetryConfig} from './gaos/lib/retries.js';
 export type {
