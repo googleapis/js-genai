@@ -21,6 +21,7 @@ export type InteractionStatusUpdateStatus =
   | "incomplete"
   | "budget_exceeded"
   | "queued"
+  | "idle"
   | "requires_continuation"
   | (string & {});
 
