@@ -2,6 +2,13 @@
 
 
 
+## [3.6.0](https://github.com/googleapis/js-genai/compare/v3.5.0...v3.6.0) (2026-11-18)
+
+
+### Features
+
+* **sdk:** Add tool retrieval and function result schemas in public SDK ([3fb59de](https://github.com/googleapis/js-genai/commit/3fb59de0536ec9db9e17442f85e331eaba7f9bf0))
+
 ## [3.5.0](https://github.com/googleapis/js-genai/compare/v3.4.0...v3.5.0) (2026-11-18)
 
 
