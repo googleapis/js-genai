@@ -175,6 +175,7 @@ import type { ThoughtSummaryDelta as ThoughtSummaryDelta$Import } from "./models
 import type { ToolChoiceConfig as ToolChoiceConfig$Import } from "./models/interactions/tool-choice-config.js";
 import type { ToolChoiceType as ToolChoiceType$Import } from "./models/interactions/tool-choice-type.js";
 import type { ToolSearchCallDelta as ToolSearchCallDelta$Import } from "./models/interactions/tool-search-call-delta.js";
+import type { ToolSearchCallStepArguments as ToolSearchCallStepArguments$Import } from "./models/interactions/tool-search-call-step-arguments.js";
 import type { ToolSearchCallStep as ToolSearchCallStep$Import } from "./models/interactions/tool-search-call-step.js";
 import type { ToolSearchResultDelta as ToolSearchResultDelta$Import } from "./models/interactions/tool-search-result-delta.js";
 import type { ToolSearchResultStep as ToolSearchResultStep$Import } from "./models/interactions/tool-search-result-step.js";
@@ -413,6 +414,9 @@ type ThoughtStep$ = ThoughtStep$Import;
 type Tool$ = Tool$Import;
 type ToolChoiceConfig$ = ToolChoiceConfig$Import;
 type ToolChoiceType$ = ToolChoiceType$Import;
+type ToolSearchCallStep$ = ToolSearchCallStep$Import;
+type ToolSearchCallStepArguments$ = ToolSearchCallStepArguments$Import;
+type ToolSearchResultStep$ = ToolSearchResultStep$Import;
 type TranscriptionConfig$ = TranscriptionConfig$Import;
 type TranscriptionMode$ = TranscriptionMode$Import;
 type URLCitation$ = URLCitation$Import;
@@ -460,8 +464,6 @@ type Status$ = Status$Import;
 type ReviewSnippet$3 = ReviewSnippet$Import;
 type Arguments$4 = RetrievalCallArguments$Import;
 type Arguments$5 = RetrievalCallArguments$Import;
-type ToolSearchCall$ = ToolSearchCallStep$Import;
-type ToolSearchResult$ = ToolSearchResultStep$Import;
 type ArgumentsDelta$ = ArgumentsDelta$Import;
 type Audio$ = AudioDelta$Import;
 type CodeExecutionCall$ = CodeExecutionCallDelta$Import;
@@ -484,8 +486,8 @@ type Text$ = TextDelta$Import;
 type TextAnnotationDelta$ = TextAnnotationDelta$Import;
 type ThoughtSignature$ = ThoughtSignatureDelta$Import;
 type ThoughtSummary$ = ThoughtSummaryDelta$Import;
-type ToolSearchCall$2 = ToolSearchCallDelta$Import;
-type ToolSearchResult$2 = ToolSearchResultDelta$Import;
+type ToolSearchCall$ = ToolSearchCallDelta$Import;
+type ToolSearchResult$ = ToolSearchResultDelta$Import;
 type URLContextCall$ = URLContextCallDelta$Import;
 type URLContextResult$2 = URLContextResultDelta$Import;
 type Video$ = VideoDelta$Import;
@@ -784,7 +786,10 @@ export type ToolChoiceConfig = ToolChoiceConfig$;
 export type ToolChoiceType = ToolChoiceType$;
 export type ToolSearch = ToolSearch$;
 export type ToolSearchCall = ToolSearchCall$;
+export type ToolSearchCallStep = ToolSearchCallStep$;
+export type ToolSearchCallStepArguments = ToolSearchCallStepArguments$;
 export type ToolSearchResult = ToolSearchResult$;
+export type ToolSearchResultStep = ToolSearchResultStep$;
 export type ToolUseTokensByModality = ToolUseTokensByModality$;
 export type TranscriptionConfig = TranscriptionConfig$;
 export type TranscriptionMode = TranscriptionMode$;
@@ -1007,6 +1012,9 @@ export declare namespace Interactions {
   export type Tool = Tool$;
   export type ToolChoiceConfig = ToolChoiceConfig$;
   export type ToolChoiceType = ToolChoiceType$;
+  export type ToolSearchCallStep = ToolSearchCallStep$;
+  export type ToolSearchCallStepArguments = ToolSearchCallStepArguments$;
+  export type ToolSearchResultStep = ToolSearchResultStep$;
   export type TranscriptionConfig = TranscriptionConfig$;
   export type TranscriptionMode = TranscriptionMode$;
   export type URLCitation = URLCitation$;
@@ -1118,10 +1126,6 @@ export declare namespace Interactions {
   export namespace RetrievalCallStep {
     export type Arguments = Arguments$5;
   }
-  export namespace Step {
-    export type ToolSearchCall = ToolSearchCall$;
-    export type ToolSearchResult = ToolSearchResult$;
-  }
   export namespace StepDelta {
     export type ArgumentsDelta = ArgumentsDelta$;
     export type Audio = Audio$;
@@ -1145,8 +1149,8 @@ export declare namespace Interactions {
     export type TextAnnotationDelta = TextAnnotationDelta$;
     export type ThoughtSignature = ThoughtSignature$;
     export type ThoughtSummary = ThoughtSummary$;
-    export type ToolSearchCall = ToolSearchCall$2;
-    export type ToolSearchResult = ToolSearchResult$2;
+    export type ToolSearchCall = ToolSearchCall$;
+    export type ToolSearchResult = ToolSearchResult$;
     export type URLContextCall = URLContextCall$;
     export type URLContextResult = URLContextResult$2;
     export type Video = Video$;

@@ -2,20 +2,6 @@
 
 
 
-## [3.5.0](https://github.com/googleapis/js-genai/compare/v3.4.0...v3.5.0) (2026-11-18)
-
-
-### Features
-
-* **environments:** introduce self-hosted BYOS mode, system_instruction, custom_config, and environment_key in SDKs and CLI ([814b960](https://github.com/googleapis/js-genai/commit/814b960f5700dda333a35fcad94cfa29314bb936))
-* Generate Live Interactions types and auth-token client in the public SDKs. ([5698aa9](https://github.com/googleapis/js-genai/commit/5698aa95be55d73c3a4677073f7efd4c9ee37e4d))
-* **interactions:** add experimental Live Interactions (WebSocket and WebRTC) SDK support ([5e86b32](https://github.com/googleapis/js-genai/commit/5e86b32a45ae20ee5a067ad4bce62a735c63e07a))
-
-
-### Bug Fixes
-
-* return GenerateContentResponse instances for batch inlined responses ([3ee5c10](https://github.com/googleapis/js-genai/commit/3ee5c10ebb002f84ac4743178a76a3cdc8afad5c)), refs [#1433](https://github.com/googleapis/js-genai/issues/1433)
-
 ## [3.4.0](https://github.com/googleapis/js-genai/compare/v3.3.0...v3.4.0) (2026-11-16)
 
 

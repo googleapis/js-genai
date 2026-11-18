@@ -21,6 +21,10 @@ export type MCPServer = {
    */
   allowed_tools?: Array<AllowedTools> | undefined;
   /**
+   * If true, loading of tools on this MCP server is deferred.
+   */
+  defer_loading?: boolean | undefined;
+  /**
    * Optional: Fields for authentication headers, timeouts, etc., if needed.
    */
   headers?: { [k: string]: string } | undefined;
