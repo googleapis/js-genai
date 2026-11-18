@@ -2,6 +2,13 @@
 
 
 
+## [3.6.1](https://github.com/googleapis/js-genai/compare/v3.6.0...v3.6.1) (2026-11-18)
+
+
+### Bug Fixes
+
+* update sdk enum ([634630d](https://github.com/googleapis/js-genai/commit/634630d93422c531d7cccc737cd233598effbb75))
+
 ## [3.6.0](https://github.com/googleapis/js-genai/compare/v3.5.0...v3.6.0) (2026-11-18)
 
 
