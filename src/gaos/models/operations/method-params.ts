@@ -21,12 +21,14 @@ import type { CreateModelInteraction } from "../interactions/create-model-intera
 import type { CancelInteractionByIdRequest } from "./cancel-interaction-by-id.js";
 import type { CreateAgentRequest } from "./create-agent.js";
 import type { CreateCredentialRequest } from "./create-credential.js";
+import type { CreateInteractionAuthTokenRequest } from "./create-interaction-auth-token.js";
 import type { CreateInteractionRequest } from "./create-interaction.js";
 import type { CreateTriggerRequest } from "./create-trigger.js";
 import type { CreateWebhookRequest } from "./create-webhook.js";
 import type { DeleteAgentRequest } from "./delete-agent.js";
 import type { DeleteCredentialRequest } from "./delete-credential.js";
 import type { DeleteEnvironmentRequest } from "./delete-environment.js";
+import type { DeleteInteractionAuthTokenRequest } from "./delete-interaction-auth-token.js";
 import type { DeleteInteractionRequest } from "./delete-interaction.js";
 import type { DeleteTriggerRequest } from "./delete-trigger.js";
 import type { DeleteVoiceRequest } from "./delete-voice.js";
@@ -91,6 +93,13 @@ export type OAuth2ConfigParams =
     "body"
   >
   & OAuth2Config;
+
+export type CreateInteractionAuthTokenParams =
+  & Omit<
+    CreateInteractionAuthTokenRequest,
+    "interaction_id" | "body"
+  >
+  & CreateInteractionAuthTokenRequest["body"];
 
 export type CreateInteractionParams =
   & Omit<
@@ -168,6 +177,11 @@ export type DeleteCredentialParams = Omit<
 export type DeleteEnvironmentParams = Omit<
   DeleteEnvironmentRequest,
   "id"
+>;
+
+export type DeleteInteractionAuthTokenParams = Omit<
+  DeleteInteractionAuthTokenRequest,
+  "auth_token" | "interaction_id"
 >;
 
 export type DeleteInteractionParams = Omit<

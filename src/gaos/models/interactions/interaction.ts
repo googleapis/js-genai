@@ -70,6 +70,7 @@ export type InteractionStatus =
   | "incomplete"
   | "budget_exceeded"
   | "queued"
+  | "idle"
   | "requires_continuation"
   | (string & {});
 
