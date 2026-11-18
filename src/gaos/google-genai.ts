@@ -85,6 +85,149 @@ import { voicesDelete } from "./funcs/voices-delete.js";
 import { voicesGet } from "./funcs/voices-get.js";
 import { voicesList } from "./funcs/voices-list.js";
 import { decisionsCreate } from "./funcs/decisions-create.js";
+import { interactionsAuthTokensCreate } from "./funcs/interactions-auth-tokens-create.js";
+import { interactionsAuthTokensDelete } from "./funcs/interactions-auth-tokens-delete.js";
+import type { ClientEvent } from "./models/interactions/client-event.js";
+import type { Empty } from "./models/interactions/empty.js";
+import type { ErrorEvent } from "./models/interactions/error-event.js";
+import type { ImageContent } from "./models/interactions/image-content.js";
+import type { InteractionAuthToken } from "./models/interactions/interaction-auth-token.js";
+import type { InteractionAuthTokenCreateParams } from "./models/interactions/interaction-auth-token-create-params.js";
+import type { InteractionCancelledEvent } from "./models/interactions/interaction-cancelled-event.js";
+import type { ServerEvent } from "./models/interactions/server-event.js";
+import type { TextContent } from "./models/interactions/text-content.js";
+import type { UserActionInput } from "./models/interactions/user-action-input.js";
+import type { WorldPromptContent } from "./models/interactions/world-prompt-content.js";
+import type { WorldReferenceImage } from "./models/interactions/world-reference-image.js";
+import type {
+  WorldPrompt,
+  WorldSetupEvent,
+} from "./models/interactions/world-setup-event.js";
+import type {
+  CreateInteractionAuthTokenParams,
+  DeleteInteractionAuthTokenParams,
+} from "./models/operations/method-params.js";
+import {
+  APIWebRTCError,
+  connectWebRTCInteraction as genericConnectWebRTCInteraction,
+  InteractionWebRTCConnection as GenericInteractionWebRTCConnection,
+  InteractionWebRTCTransport,
+  type InteractionWebRTCTransportOptions,
+} from "../_interactions_webrtc.js";
+import {
+  APIWebSocketError,
+  connectWebSocketInteraction as genericConnectWebSocketInteraction,
+  type InteractionConnectParams,
+  type InteractionParentClient,
+  InteractionWebSocketConnection as GenericInteractionWebSocketConnection,
+  LocalUsageError,
+  warnLiveInteractionsExperimental,
+} from "../_interactions_websocket.js";
+
+/**
+ * An interaction connection over WebSocket.
+ *
+ * Experimental: Live Interactions SDK support is experimental and may change
+ * in future versions.
+ *
+ * @experimental
+ */
+export type InteractionWebSocketConnection =
+  GenericInteractionWebSocketConnection<ClientEvent, ServerEvent | ErrorEvent>;
+export const InteractionWebSocketConnection: new (
+  id: string,
+) => InteractionWebSocketConnection = GenericInteractionWebSocketConnection;
+
+/**
+ * An interaction connection over WebRTC.
+ *
+ * Experimental: Live Interactions SDK support is experimental and may change
+ * in future versions.
+ *
+ * @experimental
+ */
+export type InteractionWebRTCConnection = GenericInteractionWebRTCConnection<
+  ClientEvent,
+  ServerEvent | ErrorEvent
+>;
+export const InteractionWebRTCConnection: new (
+  id: string,
+  transport: InteractionWebRTCTransport,
+) => InteractionWebRTCConnection = GenericInteractionWebRTCConnection;
+
+/**
+ * Connects a live interaction over WebSocket.
+ *
+ * Experimental: Live Interactions SDK support is experimental and may change
+ * in future versions.
+ *
+ * @experimental
+ */
+export function connectWebSocketInteraction(
+  parentClient: InteractionParentClient,
+  webSocketFactory: WebSocketFactory | undefined,
+  id: string,
+  params: InteractionConnectParams = {},
+  options?: GoogleGenAIRequestOptions,
+): Promise<InteractionWebSocketConnection> {
+  return genericConnectWebSocketInteraction<
+    ClientEvent,
+    ServerEvent | ErrorEvent
+  >(
+    parentClient,
+    webSocketFactory,
+    id,
+    params,
+    options,
+    GOOGLE_GENAI_API_REVISION,
+  );
+}
+
+/**
+ * Connects a live interaction over WebRTC.
+ *
+ * Experimental: Live Interactions SDK support is experimental and may change
+ * in future versions.
+ *
+ * @experimental
+ */
+export function connectWebRTCInteraction(
+  parentClient: InteractionParentClient,
+  id: string,
+  params: InteractionConnectParams = {},
+  options?: GoogleGenAIRequestOptions,
+): Promise<InteractionWebRTCConnection> {
+  return genericConnectWebRTCInteraction<ClientEvent, ServerEvent | ErrorEvent>(
+    parentClient,
+    id,
+    params,
+    options,
+  );
+}
+
+export {
+  APIWebRTCError,
+  APIWebSocketError,
+  type ClientEvent,
+  type CreateInteractionAuthTokenParams,
+  type DeleteInteractionAuthTokenParams,
+  type ErrorEvent,
+  type ImageContent,
+  type InteractionAuthToken,
+  type InteractionAuthTokenCreateParams,
+  type InteractionCancelledEvent,
+  type InteractionConnectParams,
+  type InteractionParentClient,
+  InteractionWebRTCTransport,
+  type InteractionWebRTCTransportOptions,
+  type ServerEvent,
+  type TextContent,
+  type UserActionInput,
+  type WorldPrompt,
+  type WorldPromptContent,
+  type WorldReferenceImage,
+  type WorldSetupEvent,
+};
 
 const LEGACY_LYRIA_MODELS: ReadonlySet<string> = new Set([
   "lyria-3-pro-preview",
@@ -98,7 +241,9 @@ export interface GoogleGenAIParentClient {
   getProject(): string | undefined;
   getLocation(): string | undefined;
   getBaseUrl(): string;
+  getWebsocketBaseUrl?(): string;
   getApiVersion(): string;
+  getApiKey?(): string | undefined;
   getDefaultHeaders?(): Record<string, string>;
   getHeaders?(): Record<string, string> | undefined;
   getAuthHeaders(url?: string): Headers | Promise<Headers>;
@@ -305,13 +450,99 @@ export type AutomaticContinuationOption = {
 type CreateInteractionParamsWithOptions = Interactions.InteractionCreateParams &
   AutomaticContinuationOption;
 
+/**
+ * Sub-resource for creating and deleting short-lived Live Interaction auth tokens.
+ *
+ * Experimental: Live Interactions SDK support is experimental and may change
+ * in future versions.
+ *
+ * @experimental
+ */
+export class GeminiNextGenInteractionAuthTokens {
+  constructor(
+    private readonly resolveClient: (apiVersion?: string) => GoogleGenAI,
+    private readonly isVertexAI: () => boolean = () => false,
+  ) {}
+
+  /**
+   * Creates a short-lived auth token for a Live Interaction.
+   *
+   * Experimental: Live Interactions SDK support is experimental and may change
+   * in future versions.
+   *
+   * @experimental
+   */
+  async create(
+    interaction_id: string,
+    params: CreateInteractionAuthTokenParams | null | undefined = {},
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<GoogleGenAIResponseWithSdkHttpResponse<InteractionAuthToken>> {
+    warnLiveInteractionsExperimental();
+    if (this.isVertexAI()) {
+      throw new LocalUsageError(
+        "Live Interactions is currently Gemini API only.",
+      );
+    }
+    const { api_version, ...body } = params ?? {};
+    return unwrapWithSdkHttpResponse(
+      interactionsAuthTokensCreate(
+        this.resolveClient(api_version),
+        interaction_id,
+        body,
+        api_version,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+
+  /**
+   * Deletes (revokes) an auth token for a Live Interaction.
+   *
+   * Experimental: Live Interactions SDK support is experimental and may change
+   * in future versions.
+   *
+   * @experimental
+   */
+  async delete(
+    interaction_id: string,
+    auth_token: string,
+    params: DeleteInteractionAuthTokenParams | null | undefined = {},
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<GoogleGenAIResponseWithSdkHttpResponse<Empty>> {
+    warnLiveInteractionsExperimental();
+    if (this.isVertexAI()) {
+      throw new LocalUsageError(
+        "Live Interactions is currently Gemini API only.",
+      );
+    }
+    const normalizedToken = auth_token.startsWith("auth_tokens/")
+      ? auth_token.slice("auth_tokens/".length)
+      : auth_token;
+    return unwrapWithSdkHttpResponse(
+      interactionsAuthTokensDelete(
+        this.resolveClient(params?.api_version),
+        interaction_id,
+        normalizedToken,
+        params?.api_version,
+        toGoogleGenAIRequestOptions(options),
+      ),
+    );
+  }
+}
+
 export class GeminiNextGenInteractions {
   private sdk: GoogleGenAI | undefined;
+  readonly authTokens: GeminiNextGenInteractionAuthTokens;
 
   constructor(
     private readonly parentClient: GoogleGenAIParentClient,
-    _webSocketFactory?: WebSocketFactory,
-  ) {}
+    private readonly webSocketFactory?: WebSocketFactory,
+  ) {
+    this.authTokens = new GeminiNextGenInteractionAuthTokens(
+      (apiVersion) => this.getClient(apiVersion),
+      () => this.parentClient.isVertexAI(),
+    );
+  }
 
   // The per-variant overloads are deliberately non-generic: signature help
   // renders an instantiated type parameter as the inferred object literal,
@@ -486,6 +717,87 @@ export class GeminiNextGenInteractions {
       warnIfIncompleteUnary(result);
     }
     return result;
+  }
+
+  /**
+   * Connects a WebRTC session to an existing live interaction.
+   *
+   * Experimental: Live Interactions SDK support is experimental and may change
+   * in future versions.
+   *
+   * `receive()` yields server events continuously over the `"events"` data
+   * channel until a terminal server event (`interaction.completed`,
+   * `interaction.canceled`, or `reconnection_required`) arrives or the
+   * connection detaches.
+   *
+   * Terminal server events, errors, and `await connection.cancel()`
+   * automatically flush and close the local WebRTC transport. Call
+   * `connection.detach()` to disconnect locally while leaving the server
+   * interaction resumable, or call `await connection.complete()` and consume
+   * `connection.receive()` until `interaction.completed` to finish.
+   *
+   * @experimental
+   */
+  connect(
+    id: string,
+    params: InteractionConnectParams & { transport: "webrtc" | InteractionWebRTCTransport },
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<InteractionWebRTCConnection>;
+  /**
+   * Connects a WebSocket session to an existing live interaction.
+   *
+   * Experimental: Live Interactions SDK support is experimental and may change
+   * in future versions.
+   *
+   * `receive()` yields server events continuously until a terminal server event
+   * (`interaction.completed`, `interaction.canceled`, or
+   * `reconnection_required`) arrives or the connection detaches.
+   *
+   * Terminal server events, errors, and `await connection.cancel()`
+   * automatically close the local WebSocket. Call `connection.detach()` to
+   * disconnect locally while leaving the server interaction resumable, or call
+   * `await connection.complete()` and consume `connection.receive()` until
+   * `interaction.completed` to finish.
+   *
+   * @experimental
+   */
+  connect(
+    id: string,
+    params?: InteractionConnectParams & { transport?: "websocket" },
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<InteractionWebSocketConnection>;
+  /**
+   * Connects a WebSocket or WebRTC session to an existing live interaction.
+   *
+   * Experimental: Live Interactions SDK support is experimental and may change
+   * in future versions.
+   *
+   * @experimental
+   */
+  connect(
+    id: string,
+    params?: InteractionConnectParams,
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<InteractionWebSocketConnection | InteractionWebRTCConnection>;
+  connect(
+    id: string,
+    params: InteractionConnectParams = {},
+    options?: GoogleGenAIRequestOptions,
+  ): Promise<InteractionWebSocketConnection | InteractionWebRTCConnection> {
+    warnLiveInteractionsExperimental();
+    if (
+      params.transport === "webrtc" ||
+      params.transport instanceof InteractionWebRTCTransport
+    ) {
+      return connectWebRTCInteraction(this.parentClient, id, params, options);
+    }
+    return connectWebSocketInteraction(
+      this.parentClient,
+      this.webSocketFactory,
+      id,
+      params,
+      options,
+    );
   }
 
   get(
