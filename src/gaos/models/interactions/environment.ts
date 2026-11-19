@@ -44,7 +44,9 @@ export type Environment = {
    * Optional. The environment ID for the interaction. If specified, the request will
    *
    * @remarks
-   * update the existing environment instead of creating a new one.
+   * update the existing environment instead of creating a new one;
+   * creation-only fields (`env` and `sources`) cannot be updated when resuming
+   * an existing environment.
    */
   environment_id?: string | undefined;
   /**
