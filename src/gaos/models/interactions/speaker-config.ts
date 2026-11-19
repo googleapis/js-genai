@@ -13,6 +13,11 @@
 import { SpeechConfig } from "./speech-config.js";
 
 /**
+ * Controls text normalization before speech synthesis.
+ */
+export type TextNormalization = "auto" | "enabled" | "disabled" | (string & {});
+
+/**
  * Configuration for multi-speaker and speech generation.
  */
 export type SpeakerConfig = {
@@ -20,4 +25,8 @@ export type SpeakerConfig = {
    * Individual speaker configurations.
    */
   speakers?: Array<SpeechConfig> | undefined;
+  /**
+   * Controls text normalization before speech synthesis.
+   */
+  text_normalization?: TextNormalization | undefined;
 };

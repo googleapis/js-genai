@@ -1404,6 +1404,26 @@ export enum FeatureSelectionPreference {
   PRIORITIZE_COST = 'PRIORITIZE_COST',
 }
 
+/** Text normalization mode for speech synthesis. */
+export enum TextNormalization {
+  /**
+   * Unspecified text normalization mode. Defaults to `AUTO`.
+   */
+  TEXT_NORMALIZATION_UNSPECIFIED = 'TEXT_NORMALIZATION_UNSPECIFIED',
+  /**
+   * Automatically determines whether to apply text normalization based on the model and speech mode.
+   */
+  AUTO = 'AUTO',
+  /**
+   * Enables text normalization for numbers, currencies, dates, and units.
+   */
+  ENABLED = 'ENABLED',
+  /**
+   * Disables text normalization for pre-normalized or phonetic inputs.
+   */
+  DISABLED = 'DISABLED',
+}
+
 /** Enum representing the Gemini Enterprise Agent Platform embedding API to use. */
 export enum EmbeddingApiType {
   /**
@@ -3087,6 +3107,8 @@ export declare interface SpeechConfig {
   languageCode?: string;
   /** The configuration for a multi-speaker text-to-speech request. This field is mutually exclusive with `voice_config`. */
   multiSpeakerVoiceConfig?: MultiSpeakerVoiceConfig;
+  /** Optional. Controls text normalization before speech synthesis. This field is not supported in Vertex AI. */
+  textNormalization?: TextNormalization;
 }
 
 /** The configuration for automatic function calling. */

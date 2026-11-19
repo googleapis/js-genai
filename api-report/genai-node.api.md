@@ -4896,6 +4896,7 @@ export interface SpeakerVoiceConfig {
 export interface SpeechConfig {
     languageCode?: string;
     multiSpeakerVoiceConfig?: MultiSpeakerVoiceConfig;
+    textNormalization?: TextNormalization;
     voiceConfig?: VoiceConfig;
 }
 
@@ -5068,6 +5069,14 @@ export interface TestTableItem {
     overrideReplayId?: string;
     parameters?: Record<string, unknown>;
     skipInApiMode?: string;
+}
+
+// @public
+export enum TextNormalization {
+    AUTO = "AUTO",
+    DISABLED = "DISABLED",
+    ENABLED = "ENABLED",
+    TEXT_NORMALIZATION_UNSPECIFIED = "TEXT_NORMALIZATION_UNSPECIFIED"
 }
 
 // @public

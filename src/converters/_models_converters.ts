@@ -4911,6 +4911,12 @@ export function speechConfigToVertex(
     );
   }
 
+  if (common.getValueByPath(fromObject, ['textNormalization']) !== undefined) {
+    throw new Error(
+      'textNormalization parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
+    );
+  }
+
   return toObject;
 }
 
