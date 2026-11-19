@@ -15,9 +15,8 @@ import { encodeFormQuery, encodeSimple } from "../lib/encodings.js";
 import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
-import { RequestOptions } from "../lib/sdks.js";
+import { encodePath, RequestOptions } from "../lib/sdks.js";
 import { extractSecurity, resolveGlobalSecurity } from "../lib/security.js";
-import { pathToFunc } from "../lib/url.js";
 import * as environments from "../models/environments/index.js";
 import { GoogleGenAiError } from "../models/errors/google-gen-ai-error.js";
 import {
@@ -116,9 +115,14 @@ async function $do(
       charEncoding: "percentExceptReserved",
     }),
   };
-  const path$ = pathToFunc(
+  const pathResult = encodePath(
     "/{api_version}/environments/{environment}/files/{path}",
-  )(pathParams);
+    pathParams,
+  );
+  if (!pathResult.ok) {
+    return [pathResult, { status: "invalid" }];
+  }
+  const path$ = pathResult.value;
 
   const query = encodeFormQuery({
     "page_size": payload.page_size,

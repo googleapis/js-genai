@@ -29,6 +29,12 @@ export interface Env {
   GOOGLE_GENAI_DEBUG?: boolean | undefined;
 }
 
+function parseEnvFlag(value: unknown): boolean {
+  return ["true", "1", "yes", "on"].includes(
+    String(value).trim().toLowerCase(),
+  );
+}
+
 /**
  * Checks for the existence of the Deno global object to determine the environment.
  * @returns {boolean} True if the runtime is Deno, false otherwise.
@@ -62,7 +68,11 @@ export function env(): Env {
     envObject = globals.process?.env ?? {};
   }
 
-  envMemo = envObject as unknown as Env;
+  envMemo = Object.create(envObject, {
+    GOOGLE_GENAI_DEBUG: {
+      get: () => parseEnvFlag(envObject["GOOGLE_GENAI_DEBUG"]),
+    },
+  }) as Env;
   return envMemo;
 }
 
