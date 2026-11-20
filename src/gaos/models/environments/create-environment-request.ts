@@ -24,7 +24,7 @@ export type CreateEnvironmentRequestNetworkUnion =
   | CreateEnvironmentRequestNetworkEnum;
 
 /**
- * Request for `CreateEnvironment`.
+ * Request for creating an environment.
  */
 export type CreateEnvironmentRequest = {
   /**

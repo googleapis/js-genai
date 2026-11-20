@@ -13,7 +13,7 @@
 import { Environment } from "./environment.js";
 
 /**
- * Response for `ListEnvironments`.
+ * Response for listing environments.
  */
 export type ListEnvironmentsResponse = {
   /**

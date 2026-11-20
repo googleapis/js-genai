@@ -31,7 +31,7 @@ export type ListWebhooksRequest = {
    */
   page_size?: number | undefined;
   /**
-   * Optional. A page token, received from a previous `ListWebhooks` call.
+   * Optional. A page token, received from a previous call to list webhooks.
    *
    * @remarks
    * Provide this to retrieve the subsequent page.

@@ -11,6 +11,6 @@
  */
 
 /**
- * Request message for WebhookService.PingWebhook.
+ * Request for pinging a webhook.
  */
 export type PingWebhookRequest = {};

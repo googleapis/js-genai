@@ -13,7 +13,7 @@
 import { Webhook } from "./webhook.js";
 
 /**
- * Response message for WebhookService.ListWebhooks.
+ * Response for listing webhooks.
  */
 export type WebhookListResponse = {
   /**

@@ -13,7 +13,7 @@
 import { EnvironmentFile } from "./environment-file.js";
 
 /**
- * Response for `GetEnvironmentFiles`.
+ * Response for getting an environment's files.
  */
 export type GetEnvironmentFilesResponse = {
   /**

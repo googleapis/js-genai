@@ -27,7 +27,7 @@ export type ListTriggerExecutionsRequest = {
    */
   page_size?: number | undefined;
   /**
-   * A page token from a previous ListTriggerExecutions call.
+   * A page token from a previous call to list trigger executions.
    */
   page_token?: string | undefined;
   /**

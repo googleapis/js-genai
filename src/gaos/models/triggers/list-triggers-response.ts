@@ -13,14 +13,14 @@
 import { Trigger } from "./trigger.js";
 
 /**
- * Response message for TriggerService.ListTriggers.
+ * Response for listing triggers.
  */
 export type ListTriggersResponse = {
   /**
-   * A page token, received from a previous `ListTriggers` call.
+   * A token to retrieve the next page of triggers. Pass it as `page_token` in
    *
    * @remarks
-   * Provide this to retrieve the subsequent page.
+   * the next request. If empty, there are no more pages.
    */
   next_page_token?: string | undefined;
   /**
