@@ -6,9 +6,8 @@
 environments when configured.</p>
 </div></div></li><li class="tsd-parameter"><h5><code class="tsd-tag">Optional</code><span class="tsd-kind-property">environment_key</span><a id="__typeenvironment_key" class="tsd-anchor"></a><span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span></h5><div class="tsd-comment tsd-typography"><p>Output only. Secret token generated upon environment creation for self_hosted</p>
 </div><div class="tsd-comment tsd-typography"><div class="tsd-tag-remarks"><h4 class="tsd-anchor-link"><a id="remarks-2" class="tsd-anchor"></a>Remarks<a href="#remarks-2" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>environments. Used by the self-hosted sandbox daemon to authenticate
-polling and streaming requests. Only returned in the CreateEnvironment
-response; omitted from subsequent GetEnvironment and ListEnvironments
-calls.</p>
+polling and streaming requests. Only returned when the environment is
+created; omitted when getting or listing environments later.</p>
 </div></div></li><li class="tsd-parameter"><h5><code class="tsd-tag">Optional</code><span class="tsd-kind-property">file_count</span><a id="__typefile_count" class="tsd-anchor"></a><span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span></h5><div class="tsd-comment tsd-typography"><p>Output only. The number of files in the environment, output only.</p>
 </div><div class="tsd-comment tsd-typography"></div></li><li class="tsd-parameter"><h5><span class="tsd-kind-property">id</span><a id="__typeid" class="tsd-anchor"></a><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5><div class="tsd-comment tsd-typography"><p>Required. Output only. The ID of the environment.</p>
 </div><div class="tsd-comment tsd-typography"></div></li><li class="tsd-parameter"><h5><code class="tsd-tag">Optional</code><span class="tsd-kind-property">last_accessed</span><a id="__typelast_accessed" class="tsd-anchor"></a><span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span></h5><div class="tsd-comment tsd-typography"><p>Output only. The time at which the environment was last accessed in ISO 8601 format</p>
