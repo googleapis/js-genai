@@ -6,11 +6,17 @@
  * g3-prettier-ignore-file
  */
 
+// Shared with the GenerateContent client so each message is shown once per process.
+import { warnFromAgentMessageHeaders } from "../../_api_client.js";
 import * as models from "../models/index.js";
 import { SDK_METADATA } from "../lib/config.js";
 import { env } from "../lib/env.js";
 import { RequestInput } from "../lib/http.js";
 import {
+  AfterErrorContext,
+  AfterErrorHook,
+  AfterSuccessContext,
+  AfterSuccessHook,
   BeforeCreateRequestContext,
   BeforeCreateRequestHook,
   BeforeRequestContext,
@@ -53,7 +59,11 @@ export class GoogleGenAISecurityProvider {
 }
 
 export class GoogleGenAIAuthHook
-  implements BeforeCreateRequestHook, BeforeRequestHook
+  implements
+    BeforeCreateRequestHook,
+    BeforeRequestHook,
+    AfterSuccessHook,
+    AfterErrorHook
 {
   beforeCreateRequest(
     hookCtx: BeforeCreateRequestContext,
@@ -101,6 +111,25 @@ export class GoogleGenAIAuthHook
     applyAuth(request.headers, security);
 
     return request;
+  }
+
+  afterSuccess(
+    _hookCtx: AfterSuccessContext,
+    response: Response,
+  ): Response {
+    warnFromAgentMessageHeaders(response.headers);
+    return response;
+  }
+
+  afterError(
+    _hookCtx: AfterErrorContext,
+    response: Response | null,
+    error: unknown,
+  ): { response: Response | null; error: unknown } {
+    if (response) {
+      warnFromAgentMessageHeaders(response.headers);
+    }
+    return { response, error };
   }
 }
 
