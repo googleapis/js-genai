@@ -2,6 +2,14 @@
 
 
 
+## [3.7.0](https://github.com/googleapis/js-genai/compare/v3.6.1...v3.7.0) (2026-11-21)
+
+
+### Features
+
+* Add `text_normalization` to `SpeechConfig` (Gemini API). ([f5834e0](https://github.com/googleapis/js-genai/commit/f5834e097ec19dfa49501b6be91e3af6dd2532c5))
+* **environments:** expose CreateEnvironmentRequest.env on the gemini platform ([6fe408e](https://github.com/googleapis/js-genai/commit/6fe408efcdf6763986b5d03c16ec157779fc20a7))
+
 ## [3.6.1](https://github.com/googleapis/js-genai/compare/v3.6.0...v3.6.1) (2026-11-18)
 
 
