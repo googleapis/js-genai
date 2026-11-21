@@ -274,6 +274,15 @@ export function batchJobFromMldev(
     );
   }
 
+  const fromSrcFileName = common.getValueByPath(fromObject, [
+    'metadata',
+    'inputConfig',
+    'fileName',
+  ]);
+  if (fromSrcFileName != null) {
+    common.setValueByPath(toObject, ['src', 'fileName'], fromSrcFileName);
+  }
+
   return toObject;
 }
 
