@@ -24,6 +24,7 @@ describe('Decisions API', () => {
           capturedBodies.push(JSON.parse(bodyStr));
         }
         response.setHeader('content-type', 'application/json');
+        response.setHeader('connection', 'close');
         response.end(
           JSON.stringify({
             answers: {
@@ -88,6 +89,7 @@ describe('Decisions API', () => {
         },
       });
     } finally {
+      server.closeAllConnections?.();
       server.close();
       await once(server, 'close');
     }
