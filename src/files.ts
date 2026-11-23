@@ -198,7 +198,7 @@ export class Files extends BaseModule {
     } else {
       const body = converters.createFileParametersToMldev(params);
       path = common.formatMap(
-        'upload/v1beta/files',
+        'upload/{api_version}/files',
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;

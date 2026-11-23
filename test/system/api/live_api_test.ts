@@ -178,7 +178,11 @@ for (const backend of LIVE_BACKENDS) {
             project: process.env['GOOGLE_CLOUD_PROJECT'],
             location: backend.location ?? process.env['GOOGLE_CLOUD_LOCATION'],
           })
-        : new GoogleGenAI({apiKey: process.env['GOOGLE_API_KEY']});
+        : // The Gemini API only serves the Live WebSocket on v1beta.
+          new GoogleGenAI({
+            apiKey: process.env['GOOGLE_API_KEY'],
+            httpOptions: {apiVersion: 'v1beta'},
+          });
     });
 
     async function connect(

@@ -668,6 +668,31 @@ export function partToMldev(fromObject: types.Part): Record<string, unknown> {
     common.setValueByPath(toObject, ['speechMetadata'], fromSpeechMetadata);
   }
 
+  const fromDocumentMetadata = common.getValueByPath(fromObject, [
+    'documentMetadata',
+  ]);
+  if (fromDocumentMetadata != null) {
+    common.setValueByPath(toObject, ['documentMetadata'], fromDocumentMetadata);
+  }
+
+  const fromSpreadsheetMetadata = common.getValueByPath(fromObject, [
+    'spreadsheetMetadata',
+  ]);
+  if (fromSpreadsheetMetadata != null) {
+    common.setValueByPath(
+      toObject,
+      ['spreadsheetMetadata'],
+      fromSpreadsheetMetadata,
+    );
+  }
+
+  const fromAudioMetadata = common.getValueByPath(fromObject, [
+    'audioMetadata',
+  ]);
+  if (fromAudioMetadata != null) {
+    common.setValueByPath(toObject, ['audioMetadata'], fromAudioMetadata);
+  }
+
   return toObject;
 }
 

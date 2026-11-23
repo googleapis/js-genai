@@ -18,7 +18,7 @@ export type RevocationBehavior =
   | "revoke_previous_secrets_immediately";
 
 /**
- * Request message for WebhookService.RotateSigningSecret.
+ * Request for rotating a webhook's signing secret.
  */
 export type RotateSigningSecretRequest = {
   /**

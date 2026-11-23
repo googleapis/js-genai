@@ -24,7 +24,7 @@ export type AgentConfig = interactions.AntigravityAgentConfig;
 export type BaseEnvironment = interactions.Environment | string;
 
 /**
- * An agent definition for the CreateAgent API.
+ * An agent definition, used when creating an agent.
  *
  * @remarks
  * This message is the target for annotation-parser-based JSON parsing.

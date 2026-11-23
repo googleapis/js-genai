@@ -4306,6 +4306,7 @@ export interface PreTunedModel {
 // @public
 export interface ProactivityConfig {
     proactiveAudio?: boolean;
+    proactiveVideo?: boolean;
 }
 
 // @public
@@ -4895,6 +4896,7 @@ export interface SpeakerVoiceConfig {
 export interface SpeechConfig {
     languageCode?: string;
     multiSpeakerVoiceConfig?: MultiSpeakerVoiceConfig;
+    textNormalization?: TextNormalization;
     voiceConfig?: VoiceConfig;
 }
 
@@ -5070,6 +5072,14 @@ export interface TestTableItem {
 }
 
 // @public
+export enum TextNormalization {
+    AUTO = "AUTO",
+    DISABLED = "DISABLED",
+    ENABLED = "ENABLED",
+    TEXT_NORMALIZATION_UNSPECIFIED = "TEXT_NORMALIZATION_UNSPECIFIED"
+}
+
+// @public
 export class TextResponseFormat {
     mimeType?: string;
     schema?: unknown;
@@ -5088,7 +5098,8 @@ export enum ThinkingLevel {
     LOW = "LOW",
     MEDIUM = "MEDIUM",
     MINIMAL = "MINIMAL",
-    THINKING_LEVEL_UNSPECIFIED = "THINKING_LEVEL_UNSPECIFIED"
+    THINKING_LEVEL_UNSPECIFIED = "THINKING_LEVEL_UNSPECIFIED",
+    XHIGH = "XHIGH"
 }
 
 // @public (undocumented)

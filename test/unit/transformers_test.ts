@@ -11,8 +11,12 @@ import {ApiClient} from '../../src/_api_client.js';
 import {
   tContent,
   tContents,
+  tEmbedContents,
   tExtractModels,
   tFileName,
+  tIsMultimodalEmbeddingModel,
+  tIsVertexEmbedContentModel,
+  tIsVertexMaasModel,
   tModel,
   tModelsUrl,
   tPart,
@@ -1614,5 +1618,163 @@ describe('tFileName', () => {
   });
   it('generated video file with no uri', () => {
     expect(tFileName({video: {uri: undefined}})).toEqual(undefined);
+  });
+});
+
+describe('embedding transformers', () => {
+  it('classifies embedding models by terminal model ID', () => {
+    expect(tIsVertexEmbedContentModel('gemini-embedding-001')).toBeTrue();
+    expect(tIsVertexEmbedContentModel('gemini-embedding-2')).toBeTrue();
+    expect(
+      tIsVertexEmbedContentModel(
+        'publishers/intfloat/models/multilingual-e5-large-instruct-maas',
+      ),
+    ).toBeTrue();
+    expect(
+      tIsVertexEmbedContentModel(
+        'projects/my-gemini-app/locations/us-central1/publishers/google/models/text-embedding-005',
+      ),
+    ).toBeFalse();
+
+    expect(
+      tIsVertexMaasModel(
+        'publishers/intfloat/models/multilingual-e5-large-instruct-maas',
+      ),
+    ).toBeTrue();
+    expect(
+      tIsVertexMaasModel(
+        'projects/my-maas-app/locations/us-central1/publishers/google/models/gemini-embedding-001',
+      ),
+    ).toBeFalse();
+
+    expect(tIsMultimodalEmbeddingModel('gemini-embedding-2')).toBeTrue();
+    expect(
+      tIsMultimodalEmbeddingModel('models/gemini-embedding-2-preview'),
+    ).toBeTrue();
+    expect(
+      tIsMultimodalEmbeddingModel(
+        'publishers/google/models/gemini-embedding-2',
+      ),
+    ).toBeTrue();
+    expect(tIsMultimodalEmbeddingModel('gemini-embedding-3')).toBeTrue();
+    expect(tIsMultimodalEmbeddingModel('gemini-embedding-001')).toBeFalse();
+    expect(
+      tIsMultimodalEmbeddingModel(
+        'publishers/google/models/gemini-embedding-001',
+      ),
+    ).toBeFalse();
+    expect(
+      tIsMultimodalEmbeddingModel('gemini-embedding-exp-03-07'),
+    ).toBeFalse();
+    expect(tIsMultimodalEmbeddingModel('text-embedding-005')).toBeFalse();
+    expect(
+      tIsMultimodalEmbeddingModel(
+        'publishers/intfloat/models/multilingual-e5-large-instruct-maas',
+      ),
+    ).toBeFalse();
+  });
+
+  it('splits string[], Part[], and Content[] into separate Contents for gemini-embedding-001', () => {
+    expect(tEmbedContents('gemini-embedding-001', ['hello', 'world'])).toEqual([
+      {role: 'user', parts: [{text: 'hello'}]},
+      {role: 'user', parts: [{text: 'world'}]},
+    ]);
+    expect(
+      tEmbedContents('gemini-embedding-001', [
+        {text: 'hello'},
+        {text: 'world'},
+      ]),
+    ).toEqual([
+      {role: 'user', parts: [{text: 'hello'}]},
+      {role: 'user', parts: [{text: 'world'}]},
+    ]);
+    expect(
+      tEmbedContents('gemini-embedding-001', [
+        {role: 'user', parts: [{text: 'hello'}]},
+        {role: 'user', parts: [{text: 'world'}]},
+      ]),
+    ).toEqual([
+      {role: 'user', parts: [{text: 'hello'}]},
+      {role: 'user', parts: [{text: 'world'}]},
+    ]);
+  });
+
+  it('keeps a Content with several Parts as 1 Content for gemini-embedding-001', () => {
+    expect(
+      tEmbedContents('gemini-embedding-001', {
+        role: 'user',
+        parts: [{text: 'hello'}, {text: 'world'}],
+      }),
+    ).toEqual([{role: 'user', parts: [{text: 'hello'}, {text: 'world'}]}]);
+    expect(
+      tEmbedContents('gemini-embedding-001', [
+        {role: 'user', parts: [{text: 'hello'}, {text: 'world'}]},
+        {role: 'user', parts: [{text: 'again'}]},
+      ]),
+    ).toEqual([
+      {role: 'user', parts: [{text: 'hello'}, {text: 'world'}]},
+      {role: 'user', parts: [{text: 'again'}]},
+    ]);
+  });
+
+  it('merges string[] and Part[] into 1 Content for multimodal Gemini embedding models and preserves explicit Content[]', () => {
+    expect(tEmbedContents('gemini-embedding-2', ['hello', 'world'])).toEqual([
+      {role: 'user', parts: [{text: 'hello'}, {text: 'world'}]},
+    ]);
+    expect(
+      tEmbedContents('gemini-embedding-2', [{text: 'hello'}, {text: 'world'}]),
+    ).toEqual([{role: 'user', parts: [{text: 'hello'}, {text: 'world'}]}]);
+    expect(
+      tEmbedContents('gemini-embedding-2', [
+        'hello',
+        {
+          fileData: {
+            fileUri:
+              'gs://cloud-samples-data/generative-ai/audio/Chirp-3-Docs-Dive.mp3',
+            mimeType: 'audio/mpeg',
+          },
+        },
+      ]),
+    ).toEqual([
+      {
+        role: 'user',
+        parts: [
+          {text: 'hello'},
+          {
+            fileData: {
+              fileUri:
+                'gs://cloud-samples-data/generative-ai/audio/Chirp-3-Docs-Dive.mp3',
+              mimeType: 'audio/mpeg',
+            },
+          },
+        ],
+      },
+    ]);
+    expect(
+      tEmbedContents('gemini-embedding-2', [
+        {role: 'user', parts: [{text: 'hello'}]},
+        {role: 'user', parts: [{text: 'world'}]},
+      ]),
+    ).toEqual([
+      {role: 'user', parts: [{text: 'hello'}]},
+      {role: 'user', parts: [{text: 'world'}]},
+    ]);
+  });
+
+  it('merges string[] into 1 Content for MaaS models and preserves explicit Content[]', () => {
+    const maasModel =
+      'publishers/intfloat/models/multilingual-e5-large-instruct-maas';
+    expect(tEmbedContents(maasModel, ['hello', 'world'])).toEqual([
+      {role: 'user', parts: [{text: 'hello'}, {text: 'world'}]},
+    ]);
+    expect(
+      tEmbedContents(maasModel, [
+        {role: 'user', parts: [{text: 'hello'}]},
+        {role: 'user', parts: [{text: 'world'}]},
+      ]),
+    ).toEqual([
+      {role: 'user', parts: [{text: 'hello'}]},
+      {role: 'user', parts: [{text: 'world'}]},
+    ]);
   });
 });

@@ -1105,6 +1105,45 @@ export function functionResponsePartToVertex(
     );
   }
 
+  const fromMediaResolution = common.getValueByPath(fromObject, [
+    'mediaResolution',
+  ]);
+  if (fromMediaResolution != null) {
+    common.setValueByPath(toObject, ['mediaResolution'], fromMediaResolution);
+  }
+
+  const fromVideoMetadata = common.getValueByPath(fromObject, [
+    'videoMetadata',
+  ]);
+  if (fromVideoMetadata != null) {
+    common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
+  }
+
+  const fromDocumentMetadata = common.getValueByPath(fromObject, [
+    'documentMetadata',
+  ]);
+  if (fromDocumentMetadata != null) {
+    common.setValueByPath(toObject, ['documentMetadata'], fromDocumentMetadata);
+  }
+
+  const fromSpreadsheetMetadata = common.getValueByPath(fromObject, [
+    'spreadsheetMetadata',
+  ]);
+  if (fromSpreadsheetMetadata != null) {
+    common.setValueByPath(
+      toObject,
+      ['spreadsheetMetadata'],
+      fromSpreadsheetMetadata,
+    );
+  }
+
+  const fromAudioMetadata = common.getValueByPath(fromObject, [
+    'audioMetadata',
+  ]);
+  if (fromAudioMetadata != null) {
+    common.setValueByPath(toObject, ['audioMetadata'], fromAudioMetadata);
+  }
+
   return toObject;
 }
 
@@ -1602,6 +1641,31 @@ export function partToVertex(
   ]);
   if (fromSpeechMetadata != null) {
     common.setValueByPath(toObject, ['speechMetadata'], fromSpeechMetadata);
+  }
+
+  const fromDocumentMetadata = common.getValueByPath(fromObject, [
+    'documentMetadata',
+  ]);
+  if (fromDocumentMetadata != null) {
+    common.setValueByPath(toObject, ['documentMetadata'], fromDocumentMetadata);
+  }
+
+  const fromSpreadsheetMetadata = common.getValueByPath(fromObject, [
+    'spreadsheetMetadata',
+  ]);
+  if (fromSpreadsheetMetadata != null) {
+    common.setValueByPath(
+      toObject,
+      ['spreadsheetMetadata'],
+      fromSpreadsheetMetadata,
+    );
+  }
+
+  const fromAudioMetadata = common.getValueByPath(fromObject, [
+    'audioMetadata',
+  ]);
+  if (fromAudioMetadata != null) {
+    common.setValueByPath(toObject, ['audioMetadata'], fromAudioMetadata);
   }
 
   return toObject;

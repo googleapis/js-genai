@@ -994,9 +994,49 @@ export function tJobState(state: unknown): string {
   }
 }
 
+/** Checks if the model uses the embedContent endpoint on Gemini Enterprise API. */
 export function tIsVertexEmbedContentModel(model: string): boolean {
+  const modelId = model.split('/').pop() ?? model;
+  return modelId.includes('gemini') || modelId.includes('maas');
+}
+
+/** Checks if the model is a third-party MaaS model on Gemini Enterprise API. */
+export function tIsVertexMaasModel(model: string): boolean {
+  const modelId = model.split('/').pop() ?? model;
+  return modelId.includes('maas');
+}
+
+/** Checks if the model is a multimodal Gemini embedding model. */
+export function tIsMultimodalEmbeddingModel(model: string): boolean {
+  const modelId = model.split('/').pop() ?? model;
   return (
-    (model.includes('gemini') && model !== 'gemini-embedding-001') ||
-    model.includes('maas')
+    modelId.includes('gemini') &&
+    !modelId.startsWith('gemini-embedding-001') &&
+    !modelId.startsWith('gemini-embedding-exp')
   );
+}
+
+/**
+ * Normalizes embedContent inputs. Multimodal Gemini embedding models and MaaS
+ * models merge strings and Parts into one Content; other models get one Content
+ * per list element.
+ */
+export function tEmbedContents(
+  model: string,
+  origin?: types.ContentListUnion,
+): types.Content[] {
+  if (tIsMultimodalEmbeddingModel(model) || tIsVertexMaasModel(model)) {
+    return tContents(origin);
+  }
+  if (
+    origin === null ||
+    origin === undefined ||
+    (Array.isArray(origin) && origin.length === 0)
+  ) {
+    throw new Error('contents are required');
+  }
+  if (Array.isArray(origin)) {
+    return origin.map((item) => tContent(item));
+  }
+  return [tContent(origin)];
 }

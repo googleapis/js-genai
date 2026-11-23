@@ -10,6 +10,7 @@ import {createServer, type IncomingHttpHeaders} from 'node:http';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 
+import {GOOGLE_AI_API_DEFAULT_VERSION} from '../../src/_api_client.js';
 import {GoogleGenAI} from '../../src/client.js';
 import {type Environments} from '../../src/index.js';
 
@@ -64,7 +65,6 @@ describe('Environments Lifecycle', () => {
     const ai = new GoogleGenAI({
       apiKey: 'test-api-key',
       httpOptions: {
-        apiVersion: 'v1beta',
         baseUrl: `http://127.0.0.1:${address.port}`,
       },
     });
@@ -83,6 +83,7 @@ describe('Environments Lifecycle', () => {
         from_environment: 'environments/env_abc_123',
       });
       await ai.environments.list({page_size: 10});
+      await ai.environments.list({mode: 'self_hosted', page_size: 10});
       const fetched = await ai.environments.get('env_abc_123');
       await ai.environments.delete('env_abc_123');
 
@@ -90,11 +91,12 @@ describe('Environments Lifecycle', () => {
       expect(copiedEnvironment.id).toBe('env_abc_123');
       expect(fetched.id).toBe('env_abc_123');
       expect(captured).toEqual([
-        'POST /v1beta/environments',
-        'POST /v1beta/environments',
-        'GET /v1beta/environments?page_size=10',
-        'GET /v1beta/environments/env_abc_123',
-        'DELETE /v1beta/environments/env_abc_123',
+        `POST /${GOOGLE_AI_API_DEFAULT_VERSION}/environments`,
+        `POST /${GOOGLE_AI_API_DEFAULT_VERSION}/environments`,
+        `GET /${GOOGLE_AI_API_DEFAULT_VERSION}/environments?page_size=10`,
+        `GET /${GOOGLE_AI_API_DEFAULT_VERSION}/environments?mode=self_hosted&page_size=10`,
+        `GET /${GOOGLE_AI_API_DEFAULT_VERSION}/environments/env_abc_123`,
+        `DELETE /${GOOGLE_AI_API_DEFAULT_VERSION}/environments/env_abc_123`,
       ]);
       expect(capturedBodies[0]).toEqual({
         sources: [
@@ -147,7 +149,6 @@ describe('Environments Lifecycle', () => {
     const ai = new GoogleGenAI({
       apiKey: 'test-api-key',
       httpOptions: {
-        apiVersion: 'v1beta',
         baseUrl: `http://127.0.0.1:${address.port}`,
       },
     });
@@ -174,9 +175,9 @@ describe('Environments Lifecycle', () => {
       expect(listRes.files?.[0]?.name).toBe('main.py');
 
       expect(captured).toEqual([
-        'GET /v1beta/environments/env_abc_123/files/main.py',
-        'GET /v1beta/environments/env_abc_123/files/main.py?page_size=5',
-        'GET /v1beta/environments/env_abc_123/files/src/?recursive=true',
+        `GET /${GOOGLE_AI_API_DEFAULT_VERSION}/environments/env_abc_123/files/main.py`,
+        `GET /${GOOGLE_AI_API_DEFAULT_VERSION}/environments/env_abc_123/files/main.py?page_size=5`,
+        `GET /${GOOGLE_AI_API_DEFAULT_VERSION}/environments/env_abc_123/files/src/?recursive=true`,
       ]);
     } finally {
       server.close();
@@ -205,7 +206,6 @@ describe('Environments Lifecycle', () => {
     const ai = new GoogleGenAI({
       apiKey: 'test-api-key',
       httpOptions: {
-        apiVersion: 'v1beta',
         baseUrl: `http://127.0.0.1:${address.port}`,
       },
     });
@@ -217,7 +217,7 @@ describe('Environments Lifecycle', () => {
       });
       expect(new TextDecoder().decode(content)).toBe('hello world content');
       expect(captured).toEqual([
-        'GET /v1beta/environments/env_abc_123/files/main.py?alt=media',
+        `GET /${GOOGLE_AI_API_DEFAULT_VERSION}/environments/env_abc_123/files/main.py?alt=media`,
       ]);
     } finally {
       server.close();
@@ -287,7 +287,6 @@ describe('Environments Lifecycle', () => {
     const ai = new GoogleGenAI({
       apiKey: 'test-api-key',
       httpOptions: {
-        apiVersion: 'v1beta',
         baseUrl: `http://127.0.0.1:${address.port}`,
       },
     });
@@ -311,7 +310,7 @@ describe('Environments Lifecycle', () => {
       const handshake = capturedRequests[0];
       expect(handshake.method).toBe('PUT');
       expect(handshake.url).toBe(
-        '/upload/v1beta/environments/env_abc_123/files/test.txt?overwrite=true',
+        `/upload/${GOOGLE_AI_API_DEFAULT_VERSION}/environments/env_abc_123/files/test.txt?overwrite=true`,
       );
       expect(handshake.headers['x-goog-upload-protocol']).toBe('resumable');
       expect(handshake.headers['x-goog-upload-command']).toBe('start');
@@ -375,7 +374,6 @@ describe('Environments Lifecycle', () => {
     const ai = new GoogleGenAI({
       apiKey: 'test-api-key',
       httpOptions: {
-        apiVersion: 'v1beta',
         baseUrl: `http://127.0.0.1:${address.port}`,
       },
     });
@@ -456,7 +454,6 @@ describe('Environments Lifecycle', () => {
     const ai = new GoogleGenAI({
       apiKey: 'test-api-key',
       httpOptions: {
-        apiVersion: 'v1beta',
         baseUrl: `http://127.0.0.1:${address.port}`,
       },
     });
@@ -531,5 +528,85 @@ describe('Environments Lifecycle', () => {
       from_environment: 'environments/env_abc_123',
     };
     expect(resourceRequest.from_environment).toBe('environments/env_abc_123');
+  });
+
+  it('supports self_hosted mode, system_instruction, custom_config, environment_key, and optional list filter', async () => {
+    const captured: string[] = [];
+    const capturedBodies: unknown[] = [];
+    const server = createServer((request, response) => {
+      captured.push(`${request.method} ${request.url}`);
+      let body = '';
+      request.on('data', (chunk) => {
+        body += chunk;
+      });
+      request.on('end', () => {
+        if (body) {
+          capturedBodies.push(JSON.parse(body));
+        }
+        response.setHeader('content-type', 'application/json');
+        response.end(
+          JSON.stringify(
+            request.method === 'GET'
+              ? {environments: []}
+              : {
+                  id: 'env_self_hosted_1',
+                  mode: 'self_hosted',
+                  custom_config: {atespace: 'team-a'},
+                  environment_key: 'secret_env_key_123',
+                },
+          ),
+        );
+      });
+    });
+
+    server.listen(0, '127.0.0.1');
+    await once(server, 'listening');
+
+    const address = server.address();
+    if (!address || typeof address !== 'object') {
+      server.close();
+      throw new Error('Expected server address object');
+    }
+
+    const ai = new GoogleGenAI({
+      apiKey: 'test-api-key',
+      httpOptions: {
+        baseUrl: `http://127.0.0.1:${address.port}`,
+      },
+    });
+
+    try {
+      const mode: Environments.EnvironmentMode = 'self_hosted';
+      const created = await ai.environments.create({
+        mode,
+        system_instruction: 'Use custom runtime.',
+        custom_config: {atespace: 'team-a'},
+      });
+      await ai.environments.list();
+      await ai.environments.list(null);
+      await ai.environments.list({mode: undefined});
+      await ai.environments.list({mode: 'on_demand'});
+
+      expect(created.mode).toBe('self_hosted');
+      expect(created.custom_config).toEqual({atespace: 'team-a'});
+      expect(created.environment_key).toBe('secret_env_key_123');
+      expect(capturedBodies).toEqual([
+        {
+          mode: 'self_hosted',
+          system_instruction: 'Use custom runtime.',
+          custom_config: {atespace: 'team-a'},
+        },
+      ]);
+      expect(captured).toEqual([
+        `POST /${GOOGLE_AI_API_DEFAULT_VERSION}/environments`,
+        `GET /${GOOGLE_AI_API_DEFAULT_VERSION}/environments`,
+        `GET /${GOOGLE_AI_API_DEFAULT_VERSION}/environments`,
+        `GET /${GOOGLE_AI_API_DEFAULT_VERSION}/environments`,
+        `GET /${GOOGLE_AI_API_DEFAULT_VERSION}/environments?mode=on_demand`,
+      ]);
+    } finally {
+      server.close();
+      await once(server, 'close');
+    }
   });
 });

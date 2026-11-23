@@ -13,7 +13,7 @@ import {GoogleGenAI} from '../../../src/node/node_client.js';
 import * as types from '../../../src/types.js';
 import {setupTestServer, shutdownTestServer} from '../test_server.js';
 
-const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY || 'test-api-key';
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'test-api-key';
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
 
@@ -162,7 +162,7 @@ describe('live', () => {
   it('ML Dev should send text in async session', async () => {
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
-      apiKey: GOOGLE_API_KEY,
+      apiKey: GEMINI_API_KEY,
       httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
@@ -210,7 +210,7 @@ describe('live', () => {
   it('ML Dev should send content dict in async session', async () => {
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
-      apiKey: GOOGLE_API_KEY,
+      apiKey: GEMINI_API_KEY,
       httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
@@ -259,7 +259,7 @@ describe('live', () => {
   it('ML Dev should receive transcription in async session with transcription enabled', async () => {
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
-      apiKey: GOOGLE_API_KEY,
+      apiKey: GEMINI_API_KEY,
       httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
@@ -325,7 +325,7 @@ describe('live', () => {
   it('ML Dev should return error for invalid input in async session', async () => {
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
-      apiKey: GOOGLE_API_KEY,
+      apiKey: GEMINI_API_KEY,
       httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
@@ -402,7 +402,7 @@ describe('live', () => {
   it('ML Dev should send tool response', async () => {
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
-      apiKey: GOOGLE_API_KEY,
+      apiKey: GEMINI_API_KEY,
       httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
@@ -507,7 +507,7 @@ describe('live', () => {
   it('ML Dev should send tool response with function responses', async () => {
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
-      apiKey: GOOGLE_API_KEY,
+      apiKey: GEMINI_API_KEY,
       httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
@@ -586,7 +586,7 @@ describe('live', () => {
 
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
-      apiKey: GOOGLE_API_KEY,
+      apiKey: GEMINI_API_KEY,
       httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
@@ -613,7 +613,7 @@ describe('live', () => {
     const audioBase64 = await loadFileAsBase64('hello_are_you_there.pcm');
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
-      apiKey: GOOGLE_API_KEY,
+      apiKey: GEMINI_API_KEY,
       httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
@@ -639,7 +639,7 @@ describe('live', () => {
   it('ML Dev should reply to realtime text input', async () => {
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
-      apiKey: GOOGLE_API_KEY,
+      apiKey: GEMINI_API_KEY,
       httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);
@@ -664,7 +664,7 @@ describe('live', () => {
 
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,
-      apiKey: GOOGLE_API_KEY,
+      apiKey: GEMINI_API_KEY,
       httpOptions,
     };
     const client = new GoogleGenAI(clientOpts);

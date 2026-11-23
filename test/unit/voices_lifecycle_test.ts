@@ -7,6 +7,7 @@
 import {once} from 'node:events';
 import {createServer} from 'node:http';
 
+import {GOOGLE_AI_API_DEFAULT_VERSION} from '../../src/_api_client.js';
 import {GoogleGenAI} from '../../src/client.js';
 
 describe('Voices Lifecycle', () => {
@@ -33,8 +34,10 @@ describe('Voices Lifecycle', () => {
         response.setHeader('content-type', 'application/json');
         if (
           request.method === 'GET' &&
-          (request.url === '/v1beta/voices' ||
-            request.url?.startsWith('/v1beta/voices?'))
+          (request.url === `/${GOOGLE_AI_API_DEFAULT_VERSION}/voices` ||
+            request.url?.startsWith(
+              `/${GOOGLE_AI_API_DEFAULT_VERSION}/voices?`,
+            ))
         ) {
           response.end(
             JSON.stringify({
@@ -93,7 +96,6 @@ describe('Voices Lifecycle', () => {
     const ai = new GoogleGenAI({
       apiKey: 'test-api-key',
       httpOptions: {
-        apiVersion: 'v1beta',
         baseUrl: `http://127.0.0.1:${address.port}`,
       },
     });
@@ -130,10 +132,10 @@ describe('Voices Lifecycle', () => {
       await ai.voices.delete('voice_abc123');
 
       expect(captured).toEqual([
-        'POST /v1beta/voices',
-        'GET /v1beta/voices?language_code=en-US',
-        'GET /v1beta/voices/voice_abc123',
-        'DELETE /v1beta/voices/voice_abc123',
+        `POST /${GOOGLE_AI_API_DEFAULT_VERSION}/voices`,
+        `GET /${GOOGLE_AI_API_DEFAULT_VERSION}/voices?language_code=en-US`,
+        `GET /${GOOGLE_AI_API_DEFAULT_VERSION}/voices/voice_abc123`,
+        `DELETE /${GOOGLE_AI_API_DEFAULT_VERSION}/voices/voice_abc123`,
       ]);
 
       expect(capturedBodies[0]).toEqual({

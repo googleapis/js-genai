@@ -186,9 +186,13 @@ export class Live {
     }
 
     let onopenResolve: (value: unknown) => void = () => {};
-    const onopenPromise = new Promise((resolve: (value: unknown) => void) => {
+    let onopenReject: (reason: Error) => void = () => {};
+    const onopenPromise = new Promise((resolve, reject) => {
       onopenResolve = resolve;
+      onopenReject = reject;
     });
+    // Prevents an unhandled rejection if connect() exits before awaiting.
+    void onopenPromise.catch(() => {});
 
     const callbacks: types.LiveCallbacks = params.callbacks;
 
@@ -201,9 +205,19 @@ export class Live {
     let sessionResolved = false;
     const messageQueue: types.LiveServerMessage[] = [];
     let setupCompleteResolve: (value: unknown) => void = () => {};
-    const setupCompletePromise = new Promise((resolve) => {
+    let setupCompleteReject: (reason: Error) => void = () => {};
+    const setupCompletePromise = new Promise((resolve, reject) => {
       setupCompleteResolve = resolve;
+      setupCompleteReject = reject;
     });
+    // Prevents an unhandled rejection if connect() exits before awaiting.
+    void setupCompletePromise.catch(() => {});
+
+    // Rejects whichever connect() phase is still pending.
+    const rejectPendingConnect = (error: Error) => {
+      onopenReject(error);
+      setupCompleteReject(error);
+    };
 
     const websocketCallbacks: WebSocketCallbacks = {
       onopen: onopenAwaitedCallback,
@@ -224,16 +238,32 @@ export class Live {
           event,
         );
       },
-      onerror:
-        callbacks?.onerror ??
-        function (e: ErrorEvent) {
-          void e;
-        },
-      onclose:
-        callbacks?.onclose ??
-        function (e: CloseEvent) {
-          void e;
-        },
+      onerror: (e: ErrorEvent) => {
+        try {
+          callbacks?.onerror?.(e);
+        } finally {
+          rejectPendingConnect(
+            new Error(
+              `Live connection failed before setup completed: ${
+                e?.message || 'WebSocket error'
+              }`,
+            ),
+          );
+        }
+      },
+      onclose: (e: CloseEvent) => {
+        try {
+          callbacks?.onclose?.(e);
+        } finally {
+          rejectPendingConnect(
+            new Error(
+              `Live connection closed before setup completed (code ${
+                e?.code ?? 1006
+              }): ${e?.reason || 'Abnormal closure.'}`,
+            ),
+          );
+        }
+      },
     };
 
     const conn = this.webSocketFactory.create(
@@ -309,7 +339,13 @@ export class Live {
     delete clientMessage['config'];
     const session = new Session(conn, this.apiClient);
     conn.send(JSON.stringify(clientMessage));
-    await setupCompletePromise;
+    try {
+      await setupCompletePromise;
+    } catch (e) {
+      // An error event does not always close the socket, so close it here.
+      conn.close();
+      throw e;
+    }
     sessionResolved = true;
     for (const msg of messageQueue) {
       callbacks.onmessage(msg);

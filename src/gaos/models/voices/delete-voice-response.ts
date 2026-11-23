@@ -11,6 +11,6 @@
  */
 
 /**
- * Response message for `VoicesService.DeleteVoice`.
+ * Response for deleting a voice.
  */
 export type DeleteVoiceResponse = {};

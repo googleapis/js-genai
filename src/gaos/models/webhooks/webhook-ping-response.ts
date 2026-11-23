@@ -11,6 +11,6 @@
  */
 
 /**
- * Response message for WebhookService.PingWebhook.
+ * Response for pinging a webhook.
  */
 export type WebhookPingResponse = {};

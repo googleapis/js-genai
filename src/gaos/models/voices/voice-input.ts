@@ -17,10 +17,10 @@ import { ReplicatedVoice } from "./replicated-voice.js";
 import { VoiceType } from "./voice-type.js";
 
 /**
- * A voice resource representing either a custom voice (created via
+ * A voice resource representing either a custom voice that you create or a
  *
  * @remarks
- * `CreateVoice`) or a prebuilt system voice (returned by `ListVoices`).
+ * prebuilt system voice (returned when listing voices).
  */
 export type VoiceInput = {
   /**
@@ -60,9 +60,9 @@ export type VoiceInput = {
    * Optional. The model used to design or replicate the voice.
    *
    * @remarks
-   * If omitted in `CreateVoice`, defaults to the latest supported voice design
-   * model. Returned in `CreateVoice`, `GetVoice`, and `ListVoices` responses
-   * for custom voices (`"prompted"` and `"replicated"`); unset for `"prebuilt"`
+   * If omitted when creating a voice, defaults to the latest supported voice
+   * design model. Returned when creating, getting, or listing custom voices
+   * (`"prompted"` and `"replicated"`); unset for `"prebuilt"`
    * voices. Created voices can be synthesized across any supported TTS
    * synthesis model.
    */
@@ -79,8 +79,8 @@ export type VoiceInput = {
    * Parameters for prompted voice generation.
    *
    * @remarks
-   * Required in `CreateVoice` when `type` is `"prompted"`. Returned in
-   * `CreateVoice`, `GetVoice`, and `ListVoices` responses for prompted voices.
+   * Required when creating a voice with `type` `"prompted"`. Returned when
+   * creating, getting, or listing prompted voices.
    */
   prompted?: PromptedVoice | undefined;
   /**

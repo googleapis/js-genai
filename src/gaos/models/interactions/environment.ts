@@ -11,6 +11,7 @@
  */
 
 import { EnvVar } from "./env-var.js";
+import { EnvironmentMode } from "./environment-mode.js";
 import { EnvironmentNetworkEgressAllowlist } from "./environment-network-egress-allowlist.js";
 import { Source } from "./source.js";
 
@@ -28,6 +29,14 @@ export type Network = EnvironmentNetworkEgressAllowlist | NetworkEnum;
  */
 export type Environment = {
   /**
+   * Optional. Arbitrary customer-defined JSON configuration passed through
+   *
+   * @remarks
+   * to the self-hosted environment poller. Only supported when `mode` is
+   * `SELF_HOSTED`.
+   */
+  custom_config?: { [k: string]: any } | undefined;
+  /**
    * Environment variables to set in the sandbox environment.
    */
   env?: { [k: string]: EnvVar | string } | undefined;
@@ -35,9 +44,15 @@ export type Environment = {
    * Optional. The environment ID for the interaction. If specified, the request will
    *
    * @remarks
-   * update the existing environment instead of creating a new one.
+   * update the existing environment instead of creating a new one;
+   * creation-only fields (`env` and `sources`) cannot be updated when resuming
+   * an existing environment.
    */
   environment_id?: string | undefined;
+  /**
+   * The compute lifecycle mode for an environment.
+   */
+  mode?: EnvironmentMode | undefined;
   /**
    * Network configuration for the environment.
    */

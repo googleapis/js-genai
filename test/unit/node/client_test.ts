@@ -21,6 +21,7 @@ describe('Client', () => {
     delete process.env['GOOGLE_CLOUD_LOCATION'];
     delete process.env['GOOGLE_GEMINI_BASE_URL'];
     delete process.env['GOOGLE_VERTEX_BASE_URL'];
+    delete process.env['GOOGLE_GENAI_API_VERSION'];
 
     setDefaultBaseUrls({});
   });
@@ -33,6 +34,7 @@ describe('Client', () => {
     delete process.env['GOOGLE_CLOUD_LOCATION'];
     delete process.env['GOOGLE_GEMINI_BASE_URL'];
     delete process.env['GOOGLE_VERTEX_BASE_URL'];
+    delete process.env['GOOGLE_GENAI_API_VERSION'];
 
     setDefaultBaseUrls({});
   });
@@ -104,6 +106,89 @@ describe('Client', () => {
     process.env['GOOGLE_CLOUD_LOCATION'] = 'test_location';
     const client = new GoogleGenAI({apiKey: 'test-api-key'});
     expect(client['location']).toBe('test_location');
+  });
+
+  it('should set apiVersion from GOOGLE_GENAI_API_VERSION for both Gemini API and Vertex AI', () => {
+    process.env['GOOGLE_GENAI_API_VERSION'] = 'v1alpha';
+    const geminiClient = new GoogleGenAI({apiKey: 'test-api-key'});
+    expect(geminiClient['apiVersion']).toBe('v1alpha');
+    expect(geminiClient['apiClient'].getApiVersion()).toBe('v1alpha');
+
+    const vertexClient = new GoogleGenAI({
+      vertexai: true,
+      project: 'test-project',
+      location: 'test-location',
+    });
+    expect(vertexClient['apiVersion']).toBe('v1alpha');
+    expect(vertexClient['apiClient'].getApiVersion()).toBe('v1alpha');
+  });
+
+  it('should map GOOGLE_GENAI_API_VERSION=beta to v1beta for Gemini API and v1beta1 for Vertex AI', () => {
+    process.env['GOOGLE_GENAI_API_VERSION'] = 'beta';
+    const geminiClient = new GoogleGenAI({apiKey: 'test-api-key'});
+    expect(geminiClient['apiVersion']).toBe('v1beta');
+    expect(geminiClient['apiClient'].getApiVersion()).toBe('v1beta');
+
+    const vertexClient = new GoogleGenAI({
+      vertexai: true,
+      project: 'test-project',
+      location: 'test-location',
+    });
+    expect(vertexClient['apiVersion']).toBe('v1beta1');
+    expect(vertexClient['apiClient'].getApiVersion()).toBe('v1beta1');
+  });
+
+  it('should set apiVersion from GOOGLE_GENAI_API_VERSION when Vertex AI is enabled via environment', () => {
+    process.env['GOOGLE_GENAI_API_VERSION'] = 'v1alpha';
+    process.env['GOOGLE_GENAI_USE_VERTEXAI'] = 'true';
+    const vertexClient = new GoogleGenAI({
+      project: 'test-project',
+      location: 'test-location',
+    });
+    expect(vertexClient.vertexai).toBe(true);
+    expect(vertexClient['apiVersion']).toBe('v1alpha');
+    expect(vertexClient['apiClient'].getApiVersion()).toBe('v1alpha');
+  });
+
+  it('should still apply explicit apiVersion and httpOptions.apiVersion for Vertex AI', () => {
+    process.env['GOOGLE_GENAI_API_VERSION'] = 'v1alpha';
+    const vertexWithApiVersion = new GoogleGenAI({
+      vertexai: true,
+      project: 'test-project',
+      location: 'test-location',
+      apiVersion: 'v1',
+    });
+    expect(vertexWithApiVersion['apiClient'].getApiVersion()).toBe('v1');
+
+    const vertexWithHttpOptionsApiVersion = new GoogleGenAI({
+      vertexai: true,
+      project: 'test-project',
+      location: 'test-location',
+      httpOptions: {apiVersion: 'v1'},
+    });
+    expect(vertexWithHttpOptionsApiVersion['apiClient'].getApiVersion()).toBe(
+      'v1',
+    );
+  });
+
+  it('should prioritize explicit apiVersion and httpOptions.apiVersion over GOOGLE_GENAI_API_VERSION', () => {
+    process.env['GOOGLE_GENAI_API_VERSION'] = 'v1alpha';
+
+    const clientWithApiVersion = new GoogleGenAI({
+      apiKey: 'test-api-key',
+      apiVersion: 'v1',
+    });
+    expect(clientWithApiVersion['apiVersion']).toBe('v1');
+    expect(clientWithApiVersion['apiClient'].getApiVersion()).toBe('v1');
+
+    const clientWithHttpOptionsApiVersion = new GoogleGenAI({
+      apiKey: 'test-api-key',
+      httpOptions: {apiVersion: 'v1'},
+    });
+    expect(clientWithHttpOptionsApiVersion['apiVersion']).toBeUndefined();
+    expect(clientWithHttpOptionsApiVersion['apiClient'].getApiVersion()).toBe(
+      'v1',
+    );
   });
 
   it('should prioritize constructor options over environment variables', () => {

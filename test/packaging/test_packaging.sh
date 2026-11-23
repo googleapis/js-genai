@@ -13,6 +13,13 @@ if [ ! -f "${TARBALL}" ]; then
   exit 1
 fi
 
+# npm runs install-time lifecycle scripts on every consumer install.
+if tar -xzOf "${TARBALL}" package/package.json \
+    | jq -e '(.scripts // {}) | has("preinstall") or has("install") or has("postinstall")' > /dev/null; then
+  echo "Error: ${TARBALL} declares an install-time lifecycle script."
+  exit 1
+fi
+
 echo "Building sdk-samples..."
 
 pushd sdk-samples

@@ -11,6 +11,7 @@ const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
 async function createInteractionsFromMLDev() {
   const ai = new GoogleGenAI({
     apiKey: GEMINI_API_KEY,
+    apiVersion: 'v1beta',
   });
   const response = await ai.interactions.create({
     model: 'gemini-2.5-computer-use-preview-10-2025',

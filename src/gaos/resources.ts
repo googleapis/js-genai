@@ -24,6 +24,20 @@ import type { HttpBearerUpdateConfig as HttpBearerUpdateConfig$Import } from "./
 import type { InjectionLocationEnum as InjectionLocationEnum$Import } from "./models/credentials/injection-location-enum.js";
 import type { OAuth2Config as OAuth2Config$Import } from "./models/credentials/o-auth2-config.js";
 import type { OAuth2UpdateConfig as OAuth2UpdateConfig$Import } from "./models/credentials/o-auth2-update-config.js";
+import type { Answer as Answer$Import } from "./models/decisions/answer.js";
+import type { ChoiceAnswer as ChoiceAnswer$Import } from "./models/decisions/choice-answer.js";
+import type { ChoiceQuestion as ChoiceQuestion$Import } from "./models/decisions/choice-question.js";
+import type { CreateDecisionRequest as CreateDecisionRequest$Import } from "./models/decisions/create-decision-request.js";
+import type { CreateDecisionResponse as CreateDecisionResponse$Import } from "./models/decisions/create-decision-response.js";
+import type { DecisionInputContent as DecisionInputContent$Import } from "./models/decisions/decision-input-content.js";
+import type { DecisionInstructionContent as DecisionInstructionContent$Import } from "./models/decisions/decision-instruction-content.js";
+import type { NoulAnswer as NoulAnswer$Import } from "./models/decisions/noul-answer.js";
+import type { NoulCriteria as NoulCriteria$Import } from "./models/decisions/noul-criteria.js";
+import type { NoulQuestion as NoulQuestion$Import } from "./models/decisions/noul-question.js";
+import type { PromptFeedback as PromptFeedback$Import } from "./models/decisions/prompt-feedback.js";
+import type { Question as Question$Import } from "./models/decisions/question.js";
+import type { ScoreAnswer as ScoreAnswer$Import } from "./models/decisions/score-answer.js";
+import type { ScoreQuestion as ScoreQuestion$Import } from "./models/decisions/score-question.js";
 import type { CreateEnvironmentRequest as CreateEnvironmentRequest$Import } from "./models/environments/create-environment-request.js";
 import type { EnvironmentFile as EnvironmentFile$Import } from "./models/environments/environment-file.js";
 import type { Environment as Environment$Import } from "./models/environments/environment.js";
@@ -37,6 +51,9 @@ import type { ArgumentsDelta as ArgumentsDelta$Import } from "./models/interacti
 import type { AudioContent as AudioContent$Import } from "./models/interactions/audio-content.js";
 import type { AudioDelta as AudioDelta$Import } from "./models/interactions/audio-delta.js";
 import type { AudioResponseFormat as AudioResponseFormat$Import } from "./models/interactions/audio-response-format.js";
+import type { AudioStaticMediaProcessing as AudioStaticMediaProcessing$Import } from "./models/interactions/audio-static-media-processing.js";
+import type { CancelInteractionEvent as CancelInteractionEvent$Import } from "./models/interactions/cancel-interaction-event.js";
+import type { ClientEvent as ClientEvent$Import } from "./models/interactions/client-event.js";
 import type { CodeExecutionCallArguments as CodeExecutionCallArguments$Import } from "./models/interactions/code-execution-call-arguments.js";
 import type { CodeExecutionCallDelta as CodeExecutionCallDelta$Import } from "./models/interactions/code-execution-call-delta.js";
 import type { CodeExecutionCallStep as CodeExecutionCallStep$Import } from "./models/interactions/code-execution-call-step.js";
@@ -44,16 +61,22 @@ import type { CodeExecutionResultDelta as CodeExecutionResultDelta$Import } from
 import type { CodeExecutionResultStep as CodeExecutionResultStep$Import } from "./models/interactions/code-execution-result-step.js";
 import type { CodeExecution as CodeExecution$Import } from "./models/interactions/code-execution.js";
 import type { CodeMenderAgentConfig as CodeMenderAgentConfig$Import } from "./models/interactions/code-mender-agent-config.js";
+import type { CompleteInteractionEvent as CompleteInteractionEvent$Import } from "./models/interactions/complete-interaction-event.js";
 import type { ComputerUse as ComputerUse$Import } from "./models/interactions/computer-use.js";
+import type { ConnectInteractionEvent as ConnectInteractionEvent$Import } from "./models/interactions/connect-interaction-event.js";
 import type { Content as Content$Import } from "./models/interactions/content.js";
 import type { CreateAgentInteraction as CreateAgentInteraction$Import } from "./models/interactions/create-agent-interaction.js";
+import type { CreateInteractionEvent as CreateInteractionEvent$Import } from "./models/interactions/create-interaction-event.js";
 import type { CreateModelInteraction as CreateModelInteraction$Import } from "./models/interactions/create-model-interaction.js";
 import type { DeepResearchAgentConfig as DeepResearchAgentConfig$Import } from "./models/interactions/deep-research-agent-config.js";
+import type { DisconnectEvent as DisconnectEvent$Import } from "./models/interactions/disconnect-event.js";
 import type { DocumentContent as DocumentContent$Import } from "./models/interactions/document-content.js";
 import type { DocumentDelta as DocumentDelta$Import } from "./models/interactions/document-delta.js";
+import type { DocumentStaticMediaProcessing as DocumentStaticMediaProcessing$Import } from "./models/interactions/document-static-media-processing.js";
 import type { DynamicAgentConfig as DynamicAgentConfig$Import } from "./models/interactions/dynamic-agent-config.js";
 import type { Empty as Empty$Import } from "./models/interactions/empty.js";
 import type { EnvVar as EnvVar$Import } from "./models/interactions/env-var.js";
+import type { EnvironmentMode as EnvironmentMode$Import } from "./models/interactions/environment-mode.js";
 import type { EnvironmentNetworkEgressAllowlist as EnvironmentNetworkEgressAllowlist$Import } from "./models/interactions/environment-network-egress-allowlist.js";
 import type { Environment as Environment$Import2 } from "./models/interactions/environment.js";
 import type { ErrorEvent as ErrorEvent$Import } from "./models/interactions/error-event.js";
@@ -92,19 +115,28 @@ import type { HarmCategory as HarmCategory$Import } from "./models/interactions/
 import type { ImageContent as ImageContent$Import } from "./models/interactions/image-content.js";
 import type { ImageDelta as ImageDelta$Import } from "./models/interactions/image-delta.js";
 import type { ImageResponseFormat as ImageResponseFormat$Import } from "./models/interactions/image-response-format.js";
+import type { InputEvent as InputEvent$Import } from "./models/interactions/input-event.js";
+import type { InteractionAuthTokenCreateParams as InteractionAuthTokenCreateParams$Import } from "./models/interactions/interaction-auth-token-create-params.js";
+import type { InteractionAuthToken as InteractionAuthToken$Import } from "./models/interactions/interaction-auth-token.js";
+import type { InteractionCancelledEvent as InteractionCancelledEvent$Import } from "./models/interactions/interaction-cancelled-event.js";
 import type { InteractionCompletedEvent as InteractionCompletedEvent$Import } from "./models/interactions/interaction-completed-event.js";
+import type { InteractionConnectedEvent as InteractionConnectedEvent$Import } from "./models/interactions/interaction-connected-event.js";
 import type { InteractionCreatedEvent as InteractionCreatedEvent$Import } from "./models/interactions/interaction-created-event.js";
 import type { InteractionSSEEvent as InteractionSSEEvent$Import } from "./models/interactions/interaction-sse-event.js";
 import type { InteractionStatusUpdate as InteractionStatusUpdate$Import } from "./models/interactions/interaction-status-update.js";
 import type { Interaction as Interaction$Import } from "./models/interactions/interaction.js";
+import type { LiveInteractionCompletedEvent as LiveInteractionCompletedEvent$Import } from "./models/interactions/live-interaction-completed-event.js";
+import type { LiveInteractionCreatedEvent as LiveInteractionCreatedEvent$Import } from "./models/interactions/live-interaction-created-event.js";
 import type { MCPServerToolCallDelta as MCPServerToolCallDelta$Import } from "./models/interactions/mcp-server-tool-call-delta.js";
 import type { MCPServerToolCallStep as MCPServerToolCallStep$Import } from "./models/interactions/mcp-server-tool-call-step.js";
 import type { MCPServerToolResultDelta as MCPServerToolResultDelta$Import } from "./models/interactions/mcp-server-tool-result-delta.js";
 import type { MCPServerToolResultStep as MCPServerToolResultStep$Import } from "./models/interactions/mcp-server-tool-result-step.js";
 import type { MCPServer as MCPServer$Import } from "./models/interactions/mcp-server.js";
+import type { MediaResolution as MediaResolution$Import } from "./models/interactions/media-resolution.js";
 import type { ModalityTokens as ModalityTokens$Import } from "./models/interactions/modality-tokens.js";
 import type { ModelOutputStep as ModelOutputStep$Import } from "./models/interactions/model-output-step.js";
 import type { Model as Model$Import } from "./models/interactions/model.js";
+import type { PageProcessingOptions as PageProcessingOptions$Import } from "./models/interactions/page-processing-options.js";
 import type { PlaceCitation as PlaceCitation$Import } from "./models/interactions/place-citation.js";
 import type { ProcessingCallDelta as ProcessingCallDelta$Import } from "./models/interactions/processing-call-delta.js";
 import type { ProcessingCallStep as ProcessingCallStep$Import } from "./models/interactions/processing-call-step.js";
@@ -118,12 +150,15 @@ import type { RetrievalResultStep as RetrievalResultStep$Import } from "./models
 import type { Retrieval as Retrieval$Import } from "./models/interactions/retrieval.js";
 import type { ReviewSnippet as ReviewSnippet$Import } from "./models/interactions/review-snippet.js";
 import type { SafetySetting as SafetySetting$Import } from "./models/interactions/safety-setting.js";
+import type { ServerEvent as ServerEvent$Import } from "./models/interactions/server-event.js";
 import type { SessionConfig as SessionConfig$Import } from "./models/interactions/session-config.js";
 import type { SmartTranscriptionMode as SmartTranscriptionMode$Import } from "./models/interactions/smart-transcription-mode.js";
 import type { Source as Source$Import } from "./models/interactions/source.js";
 import type { SpeechAnnotation as SpeechAnnotation$Import } from "./models/interactions/speech-annotation.js";
 import type { SpeechConfig as SpeechConfig$Import } from "./models/interactions/speech-config.js";
+import type { SpreadsheetProcessingOptions as SpreadsheetProcessingOptions$Import } from "./models/interactions/spreadsheet-processing-options.js";
 import type { StaticMediaProcessing as StaticMediaProcessing$Import } from "./models/interactions/static-media-processing.js";
+import type { Status as Status$Import } from "./models/interactions/status.js";
 import type { StepDeltaMetadata as StepDeltaMetadata$Import } from "./models/interactions/step-delta-metadata.js";
 import type { StepDelta as StepDelta$Import } from "./models/interactions/step-delta.js";
 import type { StepStart as StepStart$Import } from "./models/interactions/step-start.js";
@@ -139,6 +174,12 @@ import type { ThoughtStep as ThoughtStep$Import } from "./models/interactions/th
 import type { ThoughtSummaryDelta as ThoughtSummaryDelta$Import } from "./models/interactions/thought-summary-delta.js";
 import type { ToolChoiceConfig as ToolChoiceConfig$Import } from "./models/interactions/tool-choice-config.js";
 import type { ToolChoiceType as ToolChoiceType$Import } from "./models/interactions/tool-choice-type.js";
+import type { ToolSearchCallDelta as ToolSearchCallDelta$Import } from "./models/interactions/tool-search-call-delta.js";
+import type { ToolSearchCallStepArguments as ToolSearchCallStepArguments$Import } from "./models/interactions/tool-search-call-step-arguments.js";
+import type { ToolSearchCallStep as ToolSearchCallStep$Import } from "./models/interactions/tool-search-call-step.js";
+import type { ToolSearchResultDelta as ToolSearchResultDelta$Import } from "./models/interactions/tool-search-result-delta.js";
+import type { ToolSearchResultStep as ToolSearchResultStep$Import } from "./models/interactions/tool-search-result-step.js";
+import type { ToolSearch as ToolSearch$Import } from "./models/interactions/tool-search.js";
 import type { Tool as Tool$Import } from "./models/interactions/tool.js";
 import type { TranscriptionConfig as TranscriptionConfig$Import } from "./models/interactions/transcription-config.js";
 import type { TranscriptionMode as TranscriptionMode$Import } from "./models/interactions/transcription-mode.js";
@@ -151,6 +192,7 @@ import type { URLContextResultStep as URLContextResultStep$Import } from "./mode
 import type { URLContextResult as URLContextResult$Import } from "./models/interactions/url-context-result.js";
 import type { URLContext as URLContext$Import } from "./models/interactions/url-context.js";
 import type { Usage as Usage$Import } from "./models/interactions/usage.js";
+import type { UserActionInput as UserActionInput$Import } from "./models/interactions/user-action-input.js";
 import type { UserInputStep as UserInputStep$Import } from "./models/interactions/user-input-step.js";
 import type { VerbatimTranscriptionMode as VerbatimTranscriptionMode$Import } from "./models/interactions/verbatim-transcription-mode.js";
 import type { VertexAISearchConfig as VertexAISearchConfig$Import } from "./models/interactions/vertex-ai-search-config.js";
@@ -160,6 +202,9 @@ import type { VideoDelta as VideoDelta$Import } from "./models/interactions/vide
 import type { VideoResponseFormat as VideoResponseFormat$Import } from "./models/interactions/video-response-format.js";
 import type { WebhookConfig as WebhookConfig$Import } from "./models/interactions/webhook-config.js";
 import type { WordInfo as WordInfo$Import } from "./models/interactions/word-info.js";
+import type { WorldPromptContent as WorldPromptContent$Import } from "./models/interactions/world-prompt-content.js";
+import type { WorldReferenceImage as WorldReferenceImage$Import } from "./models/interactions/world-reference-image.js";
+import type { WorldSetupEvent as WorldSetupEvent$Import } from "./models/interactions/world-setup-event.js";
 import type { CreateVoiceRequest as CreateVoiceRequest$Import2 } from "./models/operations/create-voice.js";
 import type {
   CancelInteractionByIdParams as CancelInteractionByIdParams$Import,
@@ -181,6 +226,7 @@ import type {
   CreateWebhookParams as CreateWebhookParams$Import,
   DeleteAgentParams as DeleteAgentParams$Import,
   DeleteCredentialParams as DeleteCredentialParams$Import,
+  DeleteInteractionAuthTokenParams as DeleteInteractionAuthTokenParams$Import,
   DeleteInteractionParams as DeleteInteractionParams$Import,
   DeleteTriggerParams as DeleteTriggerParams$Import,
   DeleteVoiceParams as DeleteVoiceParams$Import,
@@ -254,11 +300,26 @@ type InjectionLocation$ = InjectionLocationEnum$Import;
 type InjectionLocationEnum$ = InjectionLocationEnum$Import;
 type OAuth2Config$ = OAuth2Config$Import;
 type OAuth2UpdateConfig$ = OAuth2UpdateConfig$Import;
+type Answer$ = Answer$Import;
+type ChoiceAnswer$ = ChoiceAnswer$Import;
+type ChoiceQuestion$ = ChoiceQuestion$Import;
+type CreateDecisionRequest$ = CreateDecisionRequest$Import;
+type CreateDecisionResponse$ = CreateDecisionResponse$Import;
+type DecisionInputContent$ = DecisionInputContent$Import;
+type DecisionInstructionContent$ = DecisionInstructionContent$Import;
+type NoulAnswer$ = NoulAnswer$Import;
+type NoulCriteria$ = NoulCriteria$Import;
+type NoulQuestion$ = NoulQuestion$Import;
+type PromptFeedback$ = PromptFeedback$Import;
+type Question$ = Question$Import;
+type ScoreAnswer$ = ScoreAnswer$Import;
+type ScoreQuestion$ = ScoreQuestion$Import;
 type CreateEnvironmentRequest$ = CreateEnvironmentRequest$Import;
 type Environment$ = Environment$Import;
 type EnvironmentDeleteResponse$ = Empty$Import;
 type EnvironmentFile$ = EnvironmentFile$Import;
 type EnvironmentListResponse$ = ListEnvironmentsResponse$Import;
+type EnvironmentMode$ = EnvironmentMode$Import;
 type GetEnvironmentFilesResponse$ = GetEnvironmentFilesResponse$Import;
 type ListEnvironmentsResponse$ = ListEnvironmentsResponse$Import;
 type AllowedTools$ = AllowedTools$Import;
@@ -266,19 +327,28 @@ type Annotation$ = Annotation$Import;
 type AntigravityAgentConfig$ = AntigravityAgentConfig$Import;
 type AudioContent$ = AudioContent$Import;
 type AudioResponseFormat$ = AudioResponseFormat$Import;
+type AudioStaticMediaProcessing$ = AudioStaticMediaProcessing$Import;
+type CancelInteractionEvent$ = CancelInteractionEvent$Import;
+type ClientEvent$ = ClientEvent$Import;
 type CodeExecutionCallArguments$ = CodeExecutionCallArguments$Import;
 type CodeExecutionCallStep$ = CodeExecutionCallStep$Import;
 type CodeExecutionResultStep$ = CodeExecutionResultStep$Import;
 type CodeMenderAgentConfig$ = CodeMenderAgentConfig$Import;
+type CompleteInteractionEvent$ = CompleteInteractionEvent$Import;
+type ConnectInteractionEvent$ = ConnectInteractionEvent$Import;
 type Content$ = Content$Import;
 type CreateAgentInteractionParamsNonStreaming$ = CreateAgentInteraction$Import;
 type CreateAgentInteractionParamsStreaming$ = CreateAgentInteraction$Import;
+type CreateInteractionEvent$ = CreateInteractionEvent$Import;
 type CreateModelInteractionParamsNonStreaming$ = CreateModelInteraction$Import;
 type CreateModelInteractionParamsStreaming$ = CreateModelInteraction$Import;
 type DeepResearchAgentConfig$ = DeepResearchAgentConfig$Import;
+type DisconnectEvent$ = DisconnectEvent$Import;
 type DocumentContent$ = DocumentContent$Import;
+type DocumentStaticMediaProcessing$ = DocumentStaticMediaProcessing$Import;
 type DynamicAgentConfig$ = DynamicAgentConfig$Import;
 type Environment$2 = Environment$Import2;
+type EnvironmentMode$2 = EnvironmentMode$Import;
 type Error$ = ErrorT$Import;
 type ErrorEvent$ = ErrorEvent$Import;
 type FileCitation$ = FileCitation$Import;
@@ -299,9 +369,13 @@ type GoogleSearchResultStep$ = GoogleSearchResultStep$Import;
 type HarmCategory$ = HarmCategory$Import;
 type ImageContent$ = ImageContent$Import;
 type ImageResponseFormat$ = ImageResponseFormat$Import;
+type InputEvent$ = InputEvent$Import;
 type Interaction$ = Interaction$Import;
+type InteractionAuthToken$ = InteractionAuthToken$Import;
 type InteractionCancelParams$ = CancelInteractionByIdParams$Import;
+type InteractionCancelledEvent$ = InteractionCancelledEvent$Import;
 type InteractionCompletedEvent$ = InteractionCompletedEvent$Import;
+type InteractionConnectedEvent$ = InteractionConnectedEvent$Import;
 type InteractionCreateParams$ = CreateInteractionParams$Import;
 type InteractionCreatedEvent$ = InteractionCreatedEvent$Import;
 type InteractionDeleteParams$ = DeleteInteractionParams$Import;
@@ -309,10 +383,14 @@ type InteractionDeleteResponse$ = Empty$Import;
 type InteractionGetParams$ = GetInteractionByIdParams$Import;
 type InteractionSSEEvent$ = InteractionSSEEvent$Import;
 type InteractionStatusUpdate$ = InteractionStatusUpdate$Import;
+type LiveInteractionCompletedEvent$ = LiveInteractionCompletedEvent$Import;
+type LiveInteractionCreatedEvent$ = LiveInteractionCreatedEvent$Import;
 type MCPServerToolCallStep$ = MCPServerToolCallStep$Import;
 type MCPServerToolResultStep$ = MCPServerToolResultStep$Import;
+type MediaResolution$ = MediaResolution$Import;
 type Model$ = Model$Import;
 type ModelOutputStep$ = ModelOutputStep$Import;
+type PageProcessingOptions$ = PageProcessingOptions$Import;
 type PlaceCitation$ = PlaceCitation$Import;
 type ProcessingCallStep$ = ProcessingCallStep$Import;
 type ProcessingResultStep$ = ProcessingResultStep$Import;
@@ -322,7 +400,9 @@ type RetrievalCallStep$ = RetrievalCallStep$Import;
 type RetrievalResultDelta$ = RetrievalResultDelta$Import;
 type RetrievalResultStep$ = RetrievalResultStep$Import;
 type SafetySetting$ = SafetySetting$Import;
+type ServerEvent$ = ServerEvent$Import;
 type SpeechConfig$ = SpeechConfig$Import;
+type SpreadsheetProcessingOptions$ = SpreadsheetProcessingOptions$Import;
 type Step$ = Step$Import;
 type StepDelta$ = StepDelta$Import;
 type StepStart$ = StepStart$Import;
@@ -334,6 +414,9 @@ type ThoughtStep$ = ThoughtStep$Import;
 type Tool$ = Tool$Import;
 type ToolChoiceConfig$ = ToolChoiceConfig$Import;
 type ToolChoiceType$ = ToolChoiceType$Import;
+type ToolSearchCallStep$ = ToolSearchCallStep$Import;
+type ToolSearchCallStepArguments$ = ToolSearchCallStepArguments$Import;
+type ToolSearchResultStep$ = ToolSearchResultStep$Import;
 type TranscriptionConfig$ = TranscriptionConfig$Import;
 type TranscriptionMode$ = TranscriptionMode$Import;
 type URLCitation$ = URLCitation$Import;
@@ -342,13 +425,21 @@ type URLContextCallStep$ = URLContextCallStep$Import;
 type URLContextResult$ = URLContextResult$Import;
 type URLContextResultStep$ = URLContextResultStep$Import;
 type Usage$ = Usage$Import;
+type UserActionInput$ = UserActionInput$Import;
 type UserInputStep$ = UserInputStep$Import;
 type VideoConfig$ = VideoConfig$Import;
 type VideoContent$ = VideoContent$Import;
 type VideoResponseFormat$ = VideoResponseFormat$Import;
 type WebhookConfig$ = WebhookConfig$Import;
 type WordInfo$ = WordInfo$Import;
+type WorldPromptContent$ = WorldPromptContent$Import;
+type WorldReferenceImage$ = WorldReferenceImage$Import;
+type WorldSetupEvent$ = WorldSetupEvent$Import;
 type SpeechMetadata$ = SpeechAnnotation$Import;
+type InteractionAuthTokenCreateParams$ =
+  InteractionAuthTokenCreateParams$Import;
+type InteractionAuthTokenDeleteParams$ =
+  DeleteInteractionAuthTokenParams$Import;
 type Arguments$ = CodeExecutionCallArguments$Import;
 type FindRequest$ = FindRequest$Import;
 type FixRequest$ = FixRequest$Import;
@@ -369,6 +460,7 @@ type Place$2 = GoogleMapsResultPlaces$Import;
 type ReviewSnippet$2 = ReviewSnippet$Import;
 type Arguments$3 = GoogleSearchCallArguments$Import;
 type Result$2 = GoogleSearchResult$Import;
+type Status$ = Status$Import;
 type ReviewSnippet$3 = ReviewSnippet$Import;
 type Arguments$4 = RetrievalCallArguments$Import;
 type Arguments$5 = RetrievalCallArguments$Import;
@@ -394,6 +486,8 @@ type Text$ = TextDelta$Import;
 type TextAnnotationDelta$ = TextAnnotationDelta$Import;
 type ThoughtSignature$ = ThoughtSignatureDelta$Import;
 type ThoughtSummary$ = ThoughtSummaryDelta$Import;
+type ToolSearchCall$ = ToolSearchCallDelta$Import;
+type ToolSearchResult$ = ToolSearchResultDelta$Import;
 type URLContextCall$ = URLContextCallDelta$Import;
 type URLContextResult$2 = URLContextResultDelta$Import;
 type Video$ = VideoDelta$Import;
@@ -404,6 +498,7 @@ type GoogleMaps$ = GoogleMaps$Import;
 type GoogleSearch$ = GoogleSearch$Import;
 type MCPServer$ = MCPServer$Import;
 type Retrieval$ = Retrieval$Import;
+type ToolSearch$ = ToolSearch$Import;
 type URLContext$ = URLContext$Import;
 type VertexAISearchConfig$ = VertexAISearchConfig$Import;
 type Smart$ = SmartTranscriptionMode$Import;
@@ -491,6 +586,7 @@ export type AgentTool = AgentTool$;
 export type AllowedTools = AllowedTools$;
 export type AllowlistEntry = AllowlistEntry$;
 export type Annotation = Annotation$;
+export type Answer = Answer$;
 export type AntigravityAgentConfig = AntigravityAgentConfig$;
 export type Arguments = Arguments$;
 export type ArgumentsDelta = ArgumentsDelta$;
@@ -498,7 +594,12 @@ export type Audio = Audio$;
 export type AudioContent = AudioContent$;
 export type AudioData = AudioData$;
 export type AudioResponseFormat = AudioResponseFormat$;
+export type AudioStaticMediaProcessing = AudioStaticMediaProcessing$;
 export type CachedTokensByModality = CachedTokensByModality$;
+export type CancelInteractionEvent = CancelInteractionEvent$;
+export type ChoiceAnswer = ChoiceAnswer$;
+export type ChoiceQuestion = ChoiceQuestion$;
+export type ClientEvent = ClientEvent$;
 export type CodeExecution = CodeExecution$;
 export type CodeExecutionCall = CodeExecutionCall$;
 export type CodeExecutionCallArguments = CodeExecutionCallArguments$;
@@ -506,13 +607,18 @@ export type CodeExecutionCallStep = CodeExecutionCallStep$;
 export type CodeExecutionResult = CodeExecutionResult$;
 export type CodeExecutionResultStep = CodeExecutionResultStep$;
 export type CodeMenderAgentConfig = CodeMenderAgentConfig$;
+export type CompleteInteractionEvent = CompleteInteractionEvent$;
 export type ComputerUse = ComputerUse$;
+export type ConnectInteractionEvent = ConnectInteractionEvent$;
 export type Content = Content$;
 export type CreateAgentInteractionParamsNonStreaming =
   CreateAgentInteractionParamsNonStreaming$;
 export type CreateAgentInteractionParamsStreaming =
   CreateAgentInteractionParamsStreaming$;
+export type CreateDecisionRequest = CreateDecisionRequest$;
+export type CreateDecisionResponse = CreateDecisionResponse$;
 export type CreateEnvironmentRequest = CreateEnvironmentRequest$;
+export type CreateInteractionEvent = CreateInteractionEvent$;
 export type CreateModelInteractionParamsNonStreaming =
   CreateModelInteractionParamsNonStreaming$;
 export type CreateModelInteractionParamsStreaming =
@@ -526,14 +632,19 @@ export type CredentialGetParams = CredentialGetParams$;
 export type CredentialListParams = CredentialListParams$;
 export type CredentialListResponse = CredentialListResponse$;
 export type CredentialUpdate = CredentialUpdate$;
+export type DecisionInputContent = DecisionInputContent$;
+export type DecisionInstructionContent = DecisionInstructionContent$;
 export type DeepResearchAgentConfig = DeepResearchAgentConfig$;
+export type DisconnectEvent = DisconnectEvent$;
 export type Document = Document$;
 export type DocumentContent = DocumentContent$;
+export type DocumentStaticMediaProcessing = DocumentStaticMediaProcessing$;
 export type DynamicAgentConfig = DynamicAgentConfig$;
 export type Environment = Environment$;
 export type EnvironmentDeleteResponse = EnvironmentDeleteResponse$;
 export type EnvironmentFile = EnvironmentFile$;
 export type EnvironmentListResponse = EnvironmentListResponse$;
+export type EnvironmentMode = EnvironmentMode$;
 export type EnvironmentNetworkEgressAllowlist =
   EnvironmentNetworkEgressAllowlist$;
 export type EnvironmentVariableConfig = EnvironmentVariableConfig$;
@@ -576,10 +687,18 @@ export type ImageContent = ImageContent$;
 export type ImageResponseFormat = ImageResponseFormat$;
 export type InjectionLocation = InjectionLocation$;
 export type InjectionLocationEnum = InjectionLocationEnum$;
+export type InputEvent = InputEvent$;
 export type InputTokensByModality = InputTokensByModality$;
 export type Interaction = Interaction$;
+export type InteractionAuthToken = InteractionAuthToken$;
+export type InteractionAuthTokenCreateParams =
+  InteractionAuthTokenCreateParams$;
+export type InteractionAuthTokenDeleteParams =
+  InteractionAuthTokenDeleteParams$;
+export type InteractionCancelledEvent = InteractionCancelledEvent$;
 export type InteractionCancelParams = InteractionCancelParams$;
 export type InteractionCompletedEvent = InteractionCompletedEvent$;
+export type InteractionConnectedEvent = InteractionConnectedEvent$;
 export type InteractionCreatedEvent = InteractionCreatedEvent$;
 export type InteractionCreateParams = InteractionCreateParams$;
 export type InteractionCreateParamsNonStreaming =
@@ -597,17 +716,24 @@ export type InteractionStatusUpdate = InteractionStatusUpdate$;
 export type ListEnvironmentsResponse = ListEnvironmentsResponse$;
 export type ListTriggerExecutionsResponse = ListTriggerExecutionsResponse$;
 export type ListTriggersResponse = ListTriggersResponse$;
+export type LiveInteractionCompletedEvent = LiveInteractionCompletedEvent$;
+export type LiveInteractionCreatedEvent = LiveInteractionCreatedEvent$;
 export type MCPServer = MCPServer$;
 export type MCPServerToolCall = MCPServerToolCall$;
 export type MCPServerToolCallStep = MCPServerToolCallStep$;
 export type MCPServerToolResult = MCPServerToolResult$;
 export type MCPServerToolResultStep = MCPServerToolResultStep$;
+export type MediaResolution = MediaResolution$;
 export type Metadata = Metadata$;
 export type Model = Model$;
 export type ModelOutputStep = ModelOutputStep$;
+export type NoulAnswer = NoulAnswer$;
+export type NoulCriteria = NoulCriteria$;
+export type NoulQuestion = NoulQuestion$;
 export type OAuth2Config = OAuth2Config$;
 export type OAuth2UpdateConfig = OAuth2UpdateConfig$;
 export type OutputTokensByModality = OutputTokensByModality$;
+export type PageProcessingOptions = PageProcessingOptions$;
 export type PingWebhookRequest = PingWebhookRequest$;
 export type Pitch = Pitch$;
 export type Place = Place$;
@@ -617,6 +743,8 @@ export type ProcessingCallStep = ProcessingCallStep$;
 export type ProcessingResult = ProcessingResult$;
 export type ProcessingResultStep = ProcessingResultStep$;
 export type PromptedVoice = PromptedVoice$;
+export type PromptFeedback = PromptFeedback$;
+export type Question = Question$;
 export type ReplicatedVoice = ReplicatedVoice$;
 export type Result = Result$;
 export type Retrieval = Retrieval$;
@@ -628,6 +756,9 @@ export type RetrievalResultStep = RetrievalResultStep$;
 export type ReviewSnippet = ReviewSnippet$;
 export type RotateSigningSecretRequest = RotateSigningSecretRequest$;
 export type SafetySetting = SafetySetting$;
+export type ScoreAnswer = ScoreAnswer$;
+export type ScoreQuestion = ScoreQuestion$;
+export type ServerEvent = ServerEvent$;
 export type SessionConfig = SessionConfig$;
 export type SigningSecret = SigningSecret$;
 export type Smart = Smart$;
@@ -635,7 +766,9 @@ export type Source = Source$;
 export type SourceFile = SourceFile$;
 export type SpeechConfig = SpeechConfig$;
 export type SpeechMetadata = SpeechMetadata$;
+export type SpreadsheetProcessingOptions = SpreadsheetProcessingOptions$;
 export type Static = Static$;
+export type Status = Status$;
 export type Step = Step$;
 export type StepDelta = StepDelta$;
 export type StepStart = StepStart$;
@@ -651,6 +784,12 @@ export type ThoughtSummary = ThoughtSummary$;
 export type Tool = Tool$;
 export type ToolChoiceConfig = ToolChoiceConfig$;
 export type ToolChoiceType = ToolChoiceType$;
+export type ToolSearch = ToolSearch$;
+export type ToolSearchCall = ToolSearchCall$;
+export type ToolSearchCallStep = ToolSearchCallStep$;
+export type ToolSearchCallStepArguments = ToolSearchCallStepArguments$;
+export type ToolSearchResult = ToolSearchResult$;
+export type ToolSearchResultStep = ToolSearchResultStep$;
 export type ToolUseTokensByModality = ToolUseTokensByModality$;
 export type TranscriptionConfig = TranscriptionConfig$;
 export type TranscriptionMode = TranscriptionMode$;
@@ -675,6 +814,7 @@ export type URLContextCallStep = URLContextCallStep$;
 export type URLContextResult = URLContextResult$;
 export type URLContextResultStep = URLContextResultStep$;
 export type Usage = Usage$;
+export type UserActionInput = UserActionInput$;
 export type UserInputStep = UserInputStep$;
 export type Verbatim = Verbatim$;
 export type VertexAISearchConfig = VertexAISearchConfig$;
@@ -708,6 +848,9 @@ export type WebhookRotateSigningSecretResponse =
 export type WebhookUpdate = WebhookUpdate$;
 export type WebhookUpdateParams = WebhookUpdateParams$;
 export type WordInfo = WordInfo$;
+export type WorldPromptContent = WorldPromptContent$;
+export type WorldReferenceImage = WorldReferenceImage$;
+export type WorldSetupEvent = WorldSetupEvent$;
 export declare namespace Agents {
   export type Agent = Agent$;
   export type AgentCreateParams = AgentCreateParams$;
@@ -737,12 +880,29 @@ export declare namespace Credentials {
   export type OAuth2Config = OAuth2Config$;
   export type OAuth2UpdateConfig = OAuth2UpdateConfig$;
 }
+export declare namespace Decisions {
+  export type Answer = Answer$;
+  export type ChoiceAnswer = ChoiceAnswer$;
+  export type ChoiceQuestion = ChoiceQuestion$;
+  export type CreateDecisionRequest = CreateDecisionRequest$;
+  export type CreateDecisionResponse = CreateDecisionResponse$;
+  export type DecisionInputContent = DecisionInputContent$;
+  export type DecisionInstructionContent = DecisionInstructionContent$;
+  export type NoulAnswer = NoulAnswer$;
+  export type NoulCriteria = NoulCriteria$;
+  export type NoulQuestion = NoulQuestion$;
+  export type PromptFeedback = PromptFeedback$;
+  export type Question = Question$;
+  export type ScoreAnswer = ScoreAnswer$;
+  export type ScoreQuestion = ScoreQuestion$;
+}
 export declare namespace Environments {
   export type CreateEnvironmentRequest = CreateEnvironmentRequest$;
   export type Environment = Environment$;
   export type EnvironmentDeleteResponse = EnvironmentDeleteResponse$;
   export type EnvironmentFile = EnvironmentFile$;
   export type EnvironmentListResponse = EnvironmentListResponse$;
+  export type EnvironmentMode = EnvironmentMode$;
   export type GetEnvironmentFilesResponse = GetEnvironmentFilesResponse$;
   export type ListEnvironmentsResponse = ListEnvironmentsResponse$;
 }
@@ -752,23 +912,32 @@ export declare namespace Interactions {
   export type AntigravityAgentConfig = AntigravityAgentConfig$;
   export type AudioContent = AudioContent$;
   export type AudioResponseFormat = AudioResponseFormat$;
+  export type AudioStaticMediaProcessing = AudioStaticMediaProcessing$;
+  export type CancelInteractionEvent = CancelInteractionEvent$;
+  export type ClientEvent = ClientEvent$;
   export type CodeExecutionCallArguments = CodeExecutionCallArguments$;
   export interface CodeExecutionCallStep extends CodeExecutionCallStep$ {}
   export type CodeExecutionResultStep = CodeExecutionResultStep$;
   export interface CodeMenderAgentConfig extends CodeMenderAgentConfig$ {}
+  export type CompleteInteractionEvent = CompleteInteractionEvent$;
+  export type ConnectInteractionEvent = ConnectInteractionEvent$;
   export type Content = Content$;
   export type CreateAgentInteractionParamsNonStreaming =
     CreateAgentInteractionParamsNonStreaming$;
   export type CreateAgentInteractionParamsStreaming =
     CreateAgentInteractionParamsStreaming$;
+  export type CreateInteractionEvent = CreateInteractionEvent$;
   export type CreateModelInteractionParamsNonStreaming =
     CreateModelInteractionParamsNonStreaming$;
   export type CreateModelInteractionParamsStreaming =
     CreateModelInteractionParamsStreaming$;
   export type DeepResearchAgentConfig = DeepResearchAgentConfig$;
+  export type DisconnectEvent = DisconnectEvent$;
   export type DocumentContent = DocumentContent$;
+  export type DocumentStaticMediaProcessing = DocumentStaticMediaProcessing$;
   export type DynamicAgentConfig = DynamicAgentConfig$;
   export interface Environment extends Environment$2 {}
+  export type EnvironmentMode = EnvironmentMode$2;
   export type Error = Error$;
   export interface ErrorEvent extends ErrorEvent$ {}
   export type FileCitation = FileCitation$;
@@ -789,9 +958,13 @@ export declare namespace Interactions {
   export type HarmCategory = HarmCategory$;
   export type ImageContent = ImageContent$;
   export type ImageResponseFormat = ImageResponseFormat$;
+  export type InputEvent = InputEvent$;
   export type Interaction = Interaction$;
+  export type InteractionAuthToken = InteractionAuthToken$;
+  export type InteractionCancelledEvent = InteractionCancelledEvent$;
   export type InteractionCancelParams = InteractionCancelParams$;
   export type InteractionCompletedEvent = InteractionCompletedEvent$;
+  export type InteractionConnectedEvent = InteractionConnectedEvent$;
   export type InteractionCreatedEvent = InteractionCreatedEvent$;
   export type InteractionCreateParams = InteractionCreateParams$;
   export type InteractionCreateParamsNonStreaming =
@@ -806,10 +979,16 @@ export declare namespace Interactions {
   export type InteractionGetParamsStreaming = InteractionGetParamsStreaming$;
   export type InteractionSSEEvent = InteractionSSEEvent$;
   export type InteractionStatusUpdate = InteractionStatusUpdate$;
+  export interface LiveInteractionCompletedEvent
+    extends LiveInteractionCompletedEvent$
+  {}
+  export type LiveInteractionCreatedEvent = LiveInteractionCreatedEvent$;
   export type MCPServerToolCallStep = MCPServerToolCallStep$;
   export type MCPServerToolResultStep = MCPServerToolResultStep$;
+  export type MediaResolution = MediaResolution$;
   export type Model = Model$;
   export type ModelOutputStep = ModelOutputStep$;
+  export type PageProcessingOptions = PageProcessingOptions$;
   export interface PlaceCitation extends PlaceCitation$ {}
   export type ProcessingCallStep = ProcessingCallStep$;
   export type ProcessingResultStep = ProcessingResultStep$;
@@ -819,7 +998,9 @@ export declare namespace Interactions {
   export type RetrievalResultDelta = RetrievalResultDelta$;
   export type RetrievalResultStep = RetrievalResultStep$;
   export type SafetySetting = SafetySetting$;
+  export type ServerEvent = ServerEvent$;
   export type SpeechConfig = SpeechConfig$;
+  export type SpreadsheetProcessingOptions = SpreadsheetProcessingOptions$;
   export type Step = Step$;
   export interface StepDelta extends StepDelta$ {}
   export type StepStart = StepStart$;
@@ -831,6 +1012,9 @@ export declare namespace Interactions {
   export type Tool = Tool$;
   export type ToolChoiceConfig = ToolChoiceConfig$;
   export type ToolChoiceType = ToolChoiceType$;
+  export type ToolSearchCallStep = ToolSearchCallStep$;
+  export type ToolSearchCallStepArguments = ToolSearchCallStepArguments$;
+  export type ToolSearchResultStep = ToolSearchResultStep$;
   export type TranscriptionConfig = TranscriptionConfig$;
   export type TranscriptionMode = TranscriptionMode$;
   export type URLCitation = URLCitation$;
@@ -839,14 +1023,24 @@ export declare namespace Interactions {
   export type URLContextResult = URLContextResult$;
   export interface URLContextResultStep extends URLContextResultStep$ {}
   export interface Usage extends Usage$ {}
+  export type UserActionInput = UserActionInput$;
   export type UserInputStep = UserInputStep$;
   export type VideoConfig = VideoConfig$;
   export interface VideoContent extends VideoContent$ {}
   export type VideoResponseFormat = VideoResponseFormat$;
   export type WebhookConfig = WebhookConfig$;
   export type WordInfo = WordInfo$;
+  export type WorldPromptContent = WorldPromptContent$;
+  export type WorldReferenceImage = WorldReferenceImage$;
+  export type WorldSetupEvent = WorldSetupEvent$;
   export namespace Annotation {
     export type SpeechMetadata = SpeechMetadata$;
+  }
+  export namespace AuthTokens {
+    export type InteractionAuthTokenCreateParams =
+      InteractionAuthTokenCreateParams$;
+    export type InteractionAuthTokenDeleteParams =
+      InteractionAuthTokenDeleteParams$;
   }
   export namespace CodeExecutionCallStep {
     export type Arguments = Arguments$;
@@ -920,6 +1114,9 @@ export declare namespace Interactions {
       InteractionGetParamsNonStreaming$;
     export type InteractionGetParamsStreaming = InteractionGetParamsStreaming$;
   }
+  export namespace LiveInteractionCompletedEvent {
+    export type Status = Status$;
+  }
   export namespace PlaceCitation {
     export type ReviewSnippet = ReviewSnippet$3;
   }
@@ -952,6 +1149,8 @@ export declare namespace Interactions {
     export type TextAnnotationDelta = TextAnnotationDelta$;
     export type ThoughtSignature = ThoughtSignature$;
     export type ThoughtSummary = ThoughtSummary$;
+    export type ToolSearchCall = ToolSearchCall$;
+    export type ToolSearchResult = ToolSearchResult$;
     export type URLContextCall = URLContextCall$;
     export type URLContextResult = URLContextResult$2;
     export type Video = Video$;
@@ -964,6 +1163,7 @@ export declare namespace Interactions {
     export type GoogleSearch = GoogleSearch$;
     export type MCPServer = MCPServer$;
     export interface Retrieval extends Retrieval$ {}
+    export type ToolSearch = ToolSearch$;
     export type URLContext = URLContext$;
     export namespace Retrieval {
       export type VertexAISearchConfig = VertexAISearchConfig$;

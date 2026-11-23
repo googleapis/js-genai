@@ -975,6 +975,15 @@ export function embedContentConfigToVertex(
         fromTaskType,
       );
     }
+  } else if (discriminatorTaskType === 'BATCH_EMBED_CONTENTS') {
+    const fromTaskType = common.getValueByPath(fromObject, ['taskType']);
+    if (parentObject !== undefined && fromTaskType != null) {
+      common.setValueByPath(
+        parentObject,
+        ['requests[]', 'embedContentConfig', 'taskType'],
+        fromTaskType,
+      );
+    }
   }
 
   let discriminatorTitle = common.getValueByPath(rootObject, [
@@ -994,6 +1003,15 @@ export function embedContentConfigToVertex(
       common.setValueByPath(
         parentObject,
         ['embedContentConfig', 'title'],
+        fromTitle,
+      );
+    }
+  } else if (discriminatorTitle === 'BATCH_EMBED_CONTENTS') {
+    const fromTitle = common.getValueByPath(fromObject, ['title']);
+    if (parentObject !== undefined && fromTitle != null) {
+      common.setValueByPath(
+        parentObject,
+        ['requests[]', 'embedContentConfig', 'title'],
         fromTitle,
       );
     }
@@ -1024,6 +1042,17 @@ export function embedContentConfigToVertex(
       common.setValueByPath(
         parentObject,
         ['embedContentConfig', 'outputDimensionality'],
+        fromOutputDimensionality,
+      );
+    }
+  } else if (discriminatorOutputDimensionality === 'BATCH_EMBED_CONTENTS') {
+    const fromOutputDimensionality = common.getValueByPath(fromObject, [
+      'outputDimensionality',
+    ]);
+    if (parentObject !== undefined && fromOutputDimensionality != null) {
+      common.setValueByPath(
+        parentObject,
+        ['requests[]', 'embedContentConfig', 'outputDimensionality'],
         fromOutputDimensionality,
       );
     }
@@ -1074,6 +1103,17 @@ export function embedContentConfigToVertex(
         fromAutoTruncate,
       );
     }
+  } else if (discriminatorAutoTruncate === 'BATCH_EMBED_CONTENTS') {
+    const fromAutoTruncate = common.getValueByPath(fromObject, [
+      'autoTruncate',
+    ]);
+    if (parentObject !== undefined && fromAutoTruncate != null) {
+      common.setValueByPath(
+        parentObject,
+        ['requests[]', 'embedContentConfig', 'autoTruncate'],
+        fromAutoTruncate,
+      );
+    }
   }
 
   let discriminatorDocumentOcr = common.getValueByPath(rootObject, [
@@ -1088,6 +1128,15 @@ export function embedContentConfigToVertex(
       common.setValueByPath(
         parentObject,
         ['embedContentConfig', 'documentOcr'],
+        fromDocumentOcr,
+      );
+    }
+  } else if (discriminatorDocumentOcr === 'BATCH_EMBED_CONTENTS') {
+    const fromDocumentOcr = common.getValueByPath(fromObject, ['documentOcr']);
+    if (parentObject !== undefined && fromDocumentOcr != null) {
+      common.setValueByPath(
+        parentObject,
+        ['requests[]', 'embedContentConfig', 'documentOcr'],
         fromDocumentOcr,
       );
     }
@@ -1107,6 +1156,17 @@ export function embedContentConfigToVertex(
       common.setValueByPath(
         parentObject,
         ['embedContentConfig', 'audioTrackExtraction'],
+        fromAudioTrackExtraction,
+      );
+    }
+  } else if (discriminatorAudioTrackExtraction === 'BATCH_EMBED_CONTENTS') {
+    const fromAudioTrackExtraction = common.getValueByPath(fromObject, [
+      'audioTrackExtraction',
+    ]);
+    if (parentObject !== undefined && fromAudioTrackExtraction != null) {
+      common.setValueByPath(
+        parentObject,
+        ['requests[]', 'embedContentConfig', 'audioTrackExtraction'],
         fromAudioTrackExtraction,
       );
     }
@@ -1145,6 +1205,12 @@ export function embedContentParametersPrivateToMldev(
   const fromContent = common.getValueByPath(fromObject, ['content']);
   if (fromContent != null) {
     contentToMldev(t.tContent(fromContent), rootObject);
+  }
+
+  if (common.getValueByPath(fromObject, ['batchContents']) !== undefined) {
+    throw new Error(
+      'batchContents parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.',
+    );
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
@@ -1220,6 +1286,31 @@ export function embedContentParametersPrivateToVertex(
     }
   }
 
+  let discriminatorBatchContents = common.getValueByPath(rootObject, [
+    'embeddingApiType',
+  ]);
+  if (discriminatorBatchContents === undefined) {
+    discriminatorBatchContents = 'PREDICT';
+  }
+  if (discriminatorBatchContents === 'BATCH_EMBED_CONTENTS') {
+    const fromBatchContents = common.getValueByPath(fromObject, [
+      'batchContents',
+    ]);
+    if (fromBatchContents != null) {
+      let transformedList = t.tContents(fromBatchContents);
+      if (Array.isArray(transformedList)) {
+        transformedList = transformedList.map((item) => {
+          return contentToVertex(item, rootObject);
+        });
+      }
+      common.setValueByPath(
+        toObject,
+        ['requests[]', 'content'],
+        transformedList,
+      );
+    }
+  }
+
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig != null) {
     embedContentConfigToVertex(fromConfig, toObject, rootObject);
@@ -1257,6 +1348,13 @@ export function embedContentResponseFromMldev(
     common.setValueByPath(toObject, ['metadata'], fromMetadata);
   }
 
+  const fromUsageMetadata = common.getValueByPath(fromObject, [
+    'usageMetadata',
+  ]);
+  if (fromUsageMetadata != null) {
+    common.setValueByPath(toObject, ['usageMetadata'], fromUsageMetadata);
+  }
+
   return toObject;
 }
 
@@ -1292,6 +1390,22 @@ export function embedContentResponseFromVertex(
     common.setValueByPath(toObject, ['metadata'], fromMetadata);
   }
 
+  const fromTruncated = common.getValueByPath(fromObject, ['truncated']);
+  if (fromTruncated != null) {
+    common.setValueByPath(toObject, ['truncated'], fromTruncated);
+  }
+
+  const fromUsageMetadata = common.getValueByPath(fromObject, [
+    'usageMetadata',
+  ]);
+  if (fromUsageMetadata != null) {
+    common.setValueByPath(
+      toObject,
+      ['usageMetadata'],
+      usageMetadataFromVertex(fromUsageMetadata, rootObject),
+    );
+  }
+
   if (
     rootObject &&
     common.getValueByPath(rootObject, ['embeddingApiType']) === 'EMBED_CONTENT'
@@ -1322,6 +1436,19 @@ export function embedContentResponseFromVertex(
       }
       (embedding as types.ContentEmbedding).statistics = stats;
       common.setValueByPath(toObject, ['embeddings'], [embedding]);
+    }
+  } else if (
+    rootObject &&
+    common.getValueByPath(rootObject, ['embeddingApiType']) ===
+      'BATCH_EMBED_CONTENTS'
+  ) {
+    const embeddings = common.getValueByPath(fromObject, ['embeddings']);
+    if (Array.isArray(embeddings)) {
+      common.setValueByPath(
+        toObject,
+        ['embeddings'],
+        embeddings.map((item) => contentEmbeddingFromVertex(item, rootObject)),
+      );
     }
   }
 
@@ -1439,6 +1566,45 @@ export function functionResponsePartToVertex(
     throw new Error(
       'mediaProcessing parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
     );
+  }
+
+  const fromMediaResolution = common.getValueByPath(fromObject, [
+    'mediaResolution',
+  ]);
+  if (fromMediaResolution != null) {
+    common.setValueByPath(toObject, ['mediaResolution'], fromMediaResolution);
+  }
+
+  const fromVideoMetadata = common.getValueByPath(fromObject, [
+    'videoMetadata',
+  ]);
+  if (fromVideoMetadata != null) {
+    common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
+  }
+
+  const fromDocumentMetadata = common.getValueByPath(fromObject, [
+    'documentMetadata',
+  ]);
+  if (fromDocumentMetadata != null) {
+    common.setValueByPath(toObject, ['documentMetadata'], fromDocumentMetadata);
+  }
+
+  const fromSpreadsheetMetadata = common.getValueByPath(fromObject, [
+    'spreadsheetMetadata',
+  ]);
+  if (fromSpreadsheetMetadata != null) {
+    common.setValueByPath(
+      toObject,
+      ['spreadsheetMetadata'],
+      fromSpreadsheetMetadata,
+    );
+  }
+
+  const fromAudioMetadata = common.getValueByPath(fromObject, [
+    'audioMetadata',
+  ]);
+  if (fromAudioMetadata != null) {
+    common.setValueByPath(toObject, ['audioMetadata'], fromAudioMetadata);
   }
 
   return toObject;
@@ -3962,6 +4128,31 @@ export function partToMldev(
     common.setValueByPath(toObject, ['speechMetadata'], fromSpeechMetadata);
   }
 
+  const fromDocumentMetadata = common.getValueByPath(fromObject, [
+    'documentMetadata',
+  ]);
+  if (fromDocumentMetadata != null) {
+    common.setValueByPath(toObject, ['documentMetadata'], fromDocumentMetadata);
+  }
+
+  const fromSpreadsheetMetadata = common.getValueByPath(fromObject, [
+    'spreadsheetMetadata',
+  ]);
+  if (fromSpreadsheetMetadata != null) {
+    common.setValueByPath(
+      toObject,
+      ['spreadsheetMetadata'],
+      fromSpreadsheetMetadata,
+    );
+  }
+
+  const fromAudioMetadata = common.getValueByPath(fromObject, [
+    'audioMetadata',
+  ]);
+  if (fromAudioMetadata != null) {
+    common.setValueByPath(toObject, ['audioMetadata'], fromAudioMetadata);
+  }
+
   return toObject;
 }
 
@@ -4087,6 +4278,31 @@ export function partToVertex(
   ]);
   if (fromSpeechMetadata != null) {
     common.setValueByPath(toObject, ['speechMetadata'], fromSpeechMetadata);
+  }
+
+  const fromDocumentMetadata = common.getValueByPath(fromObject, [
+    'documentMetadata',
+  ]);
+  if (fromDocumentMetadata != null) {
+    common.setValueByPath(toObject, ['documentMetadata'], fromDocumentMetadata);
+  }
+
+  const fromSpreadsheetMetadata = common.getValueByPath(fromObject, [
+    'spreadsheetMetadata',
+  ]);
+  if (fromSpreadsheetMetadata != null) {
+    common.setValueByPath(
+      toObject,
+      ['spreadsheetMetadata'],
+      fromSpreadsheetMetadata,
+    );
+  }
+
+  const fromAudioMetadata = common.getValueByPath(fromObject, [
+    'audioMetadata',
+  ]);
+  if (fromAudioMetadata != null) {
+    common.setValueByPath(toObject, ['audioMetadata'], fromAudioMetadata);
   }
 
   return toObject;
@@ -4692,6 +4908,12 @@ export function speechConfigToVertex(
       toObject,
       ['multiSpeakerVoiceConfig'],
       multiSpeakerVoiceConfigToVertex(fromMultiSpeakerVoiceConfig, rootObject),
+    );
+  }
+
+  if (common.getValueByPath(fromObject, ['textNormalization']) !== undefined) {
+    throw new Error(
+      'textNormalization parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.',
     );
   }
 
@@ -5334,6 +5556,134 @@ export function upscaleImageResponseFromVertex(
       });
     }
     common.setValueByPath(toObject, ['generatedImages'], transformedList);
+  }
+
+  return toObject;
+}
+
+export function usageMetadataFromVertex(
+  fromObject: types.UsageMetadata,
+  _rootObject?: unknown,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromResponseTokenCount = common.getValueByPath(fromObject, [
+    'candidatesTokenCount',
+  ]);
+  if (fromResponseTokenCount != null) {
+    common.setValueByPath(
+      toObject,
+      ['responseTokenCount'],
+      fromResponseTokenCount,
+    );
+  }
+
+  const fromResponseTokensDetails = common.getValueByPath(fromObject, [
+    'candidatesTokensDetails',
+  ]);
+  if (fromResponseTokensDetails != null) {
+    let transformedList = fromResponseTokensDetails;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return item;
+      });
+    }
+    common.setValueByPath(toObject, ['responseTokensDetails'], transformedList);
+  }
+
+  const fromCacheTokensDetails = common.getValueByPath(fromObject, [
+    'cacheTokensDetails',
+  ]);
+  if (fromCacheTokensDetails != null) {
+    let transformedList = fromCacheTokensDetails;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return item;
+      });
+    }
+    common.setValueByPath(toObject, ['cacheTokensDetails'], transformedList);
+  }
+
+  const fromCachedContentTokenCount = common.getValueByPath(fromObject, [
+    'cachedContentTokenCount',
+  ]);
+  if (fromCachedContentTokenCount != null) {
+    common.setValueByPath(
+      toObject,
+      ['cachedContentTokenCount'],
+      fromCachedContentTokenCount,
+    );
+  }
+
+  const fromPromptTokenCount = common.getValueByPath(fromObject, [
+    'promptTokenCount',
+  ]);
+  if (fromPromptTokenCount != null) {
+    common.setValueByPath(toObject, ['promptTokenCount'], fromPromptTokenCount);
+  }
+
+  const fromPromptTokensDetails = common.getValueByPath(fromObject, [
+    'promptTokensDetails',
+  ]);
+  if (fromPromptTokensDetails != null) {
+    let transformedList = fromPromptTokensDetails;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return item;
+      });
+    }
+    common.setValueByPath(toObject, ['promptTokensDetails'], transformedList);
+  }
+
+  const fromThoughtsTokenCount = common.getValueByPath(fromObject, [
+    'thoughtsTokenCount',
+  ]);
+  if (fromThoughtsTokenCount != null) {
+    common.setValueByPath(
+      toObject,
+      ['thoughtsTokenCount'],
+      fromThoughtsTokenCount,
+    );
+  }
+
+  const fromToolUsePromptTokenCount = common.getValueByPath(fromObject, [
+    'toolUsePromptTokenCount',
+  ]);
+  if (fromToolUsePromptTokenCount != null) {
+    common.setValueByPath(
+      toObject,
+      ['toolUsePromptTokenCount'],
+      fromToolUsePromptTokenCount,
+    );
+  }
+
+  const fromToolUsePromptTokensDetails = common.getValueByPath(fromObject, [
+    'toolUsePromptTokensDetails',
+  ]);
+  if (fromToolUsePromptTokensDetails != null) {
+    let transformedList = fromToolUsePromptTokensDetails;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return item;
+      });
+    }
+    common.setValueByPath(
+      toObject,
+      ['toolUsePromptTokensDetails'],
+      transformedList,
+    );
+  }
+
+  const fromTotalTokenCount = common.getValueByPath(fromObject, [
+    'totalTokenCount',
+  ]);
+  if (fromTotalTokenCount != null) {
+    common.setValueByPath(toObject, ['totalTokenCount'], fromTotalTokenCount);
+  }
+
+  const fromTrafficType = common.getValueByPath(fromObject, ['trafficType']);
+  if (fromTrafficType != null) {
+    common.setValueByPath(toObject, ['trafficType'], fromTrafficType);
   }
 
   return toObject;

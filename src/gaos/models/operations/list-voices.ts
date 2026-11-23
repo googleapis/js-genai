@@ -64,10 +64,10 @@ export type ListVoicesRequest = {
    */
   page_size?: number | undefined;
   /**
-   * Optional. A page token received from a previous `ListVoices` call. Provide
+   * Optional. A page token received from a previous call to list voices.
    *
    * @remarks
-   * this to retrieve the subsequent page.
+   * Provide this to retrieve the subsequent page.
    *
    * When paginating, all filter query parameters (`language_code`,
    * `region_code`, `accent`, `persona`, `context`, `gender`, `pitch`, `type`,

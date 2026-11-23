@@ -83,6 +83,7 @@ async function main() {
     const client = new GoogleGenAI({
       vertexai: false,
       apiKey: GEMINI_API_KEY,
+      apiVersion: 'v1beta',
     });
     const model = 'gemini-live-2.5-flash-preview';
     await live(client, model);

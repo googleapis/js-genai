@@ -59,7 +59,8 @@ export type CreateModelInteraction = {
    *
    * @remarks
    * REQUIRES_CONTINUATION and decoding can be resumed. Input: pass the latest
-   * token back unchanged in CreateInteraction to continue decoding.
+   * token back unchanged when creating the next interaction to continue
+   * decoding.
    */
   continuation_token?: string | undefined;
   /**
@@ -90,7 +91,7 @@ export type CreateModelInteraction = {
    */
   labels?: { [k: string]: string } | undefined;
   /**
-   * The model that will complete your prompt.\n\nSee [models](https://ai.google.dev/gemini-api/docs/models) for additional details.
+   * The model that will complete your prompt.\n\nSee [models](https://aistudio.google.com/docs/models) for additional details.
    */
   model: Model;
   /**

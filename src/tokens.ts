@@ -23,9 +23,11 @@ function getFieldMasks(setup: Record<string, unknown>): string {
     if (Object.prototype.hasOwnProperty.call(setup, key)) {
       const value = setup[key];
       // 2nd layer, recursively get field masks see TODO(b/418290100)
+      // Arrays stay bare: FieldMask paths cannot index repeated fields.
       if (
         typeof value === 'object' &&
         value != null &&
+        !Array.isArray(value) &&
         Object.keys(value).length > 0
       ) {
         const field = Object.keys(value).map((kk) => `${key}.${kk}`);

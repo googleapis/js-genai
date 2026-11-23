@@ -13,7 +13,7 @@
 import { VoiceOutput } from "./voice-output.js";
 
 /**
- * Response message for `VoicesService.ListVoices`.
+ * Response for listing voices.
  */
 export type ListVoicesResponse = {
   /**

@@ -20,6 +20,7 @@ import {
   buildGoogleGenAIClient,
   GeminiNextGenAgents,
   GeminiNextGenCredentials,
+  GeminiNextGenDecisions,
   GeminiNextGenEnvironments,
   GeminiNextGenInteractions,
   GeminiNextGenTriggers,
@@ -48,7 +49,7 @@ export interface GoogleGenAIOptions {
    *
    * @remarks
    * When true, the {@link https://cloud.google.com/vertex-ai/docs/reference/rest | Gemini Enterprise Agent Platform API} will used.
-   * When false, the {@link https://ai.google.dev/api | Gemini API} will be used.
+   * When false, the {@link https://aistudio.google.com/api-reference | Gemini API} will be used.
    * When both enterprise and vertexai are set, and they have different values,
    * an Error will be thrown.
    *
@@ -61,7 +62,7 @@ export interface GoogleGenAIOptions {
    *
    * @remarks
    * When true, the {@link https://cloud.google.com/vertex-ai/docs/reference/rest | Vertex AI API} will used.
-   * When false, the {@link https://ai.google.dev/api | Gemini API} will be used.
+   * When false, the {@link https://aistudio.google.com/api-reference | Gemini API} will be used.
    * When both enterprise and vertexai are set, and they have different values,
    * an Error will be thrown.
    *
@@ -96,7 +97,9 @@ export interface GoogleGenAIOptions {
    * Optional. The API version to use.
    *
    * @remarks
-   * If unset, the default API version will be used.
+   * If neither this nor `httpOptions.apiVersion` is set, the
+   * `GOOGLE_GENAI_API_VERSION` environment variable (Node runtimes only) is
+   * used if set; otherwise the default API version for the backend is used.
    */
   apiVersion?: string;
   /**
@@ -168,6 +171,7 @@ export class GoogleGenAI {
   private _environments: GeminiNextGenEnvironments | undefined;
   private _credentials: GeminiNextGenCredentials | undefined;
   private _voices: GeminiNextGenVoices | undefined;
+  private _decisions: GeminiNextGenDecisions | undefined;
   private _nextGenClient: GeminiNextGenAPI | undefined;
   private _triggers: GeminiNextGenTriggers | undefined;
 
@@ -268,6 +272,15 @@ export class GoogleGenAI {
 
     this._voices = new GeminiNextGenVoices(this.apiClient);
     return this._voices;
+  }
+
+  get decisions(): GeminiNextGenDecisions {
+    if (this._decisions !== undefined) {
+      return this._decisions;
+    }
+
+    this._decisions = new GeminiNextGenDecisions(this.apiClient);
+    return this._decisions;
   }
 
   constructor(options: GoogleGenAIOptions = {} as GoogleGenAIOptions) {

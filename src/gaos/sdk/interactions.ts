@@ -33,8 +33,14 @@ import {
   GetInteractionByIdParamsStreaming,
 } from "../models/operations/method-params.js";
 import { APIPromise, unwrapAsAPIPromise } from "../types/async.js";
+import { AuthTokens } from "./auth-tokens.js";
 
 export class Interactions extends ClientSDK {
+  private _auth_tokens?: AuthTokens;
+  get auth_tokens(): AuthTokens {
+    return (this._auth_tokens ??= new AuthTokens(this._options));
+  }
+
   /**
    * Creates a new interaction.
    */

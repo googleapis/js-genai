@@ -13,7 +13,7 @@
 import { VoiceInput } from "./voice-input.js";
 
 /**
- * Request message for `VoicesService.CreateVoice`.
+ * Request for creating a voice.
  */
 export type CreateVoiceRequest = {
   /**
@@ -22,10 +22,10 @@ export type CreateVoiceRequest = {
    * @remarks
    *
    * * When `true`, Google stores the voice and returns `Voice.id` (for example,
-   *   `voice_abc123def456`), which can be managed via `GetVoice`, `ListVoices`,
-   *   and `DeleteVoice` and referenced by ID in synthesis requests. Stored
-   *   voices expire after 1 year of inactivity; using a stored voice in speech
-   *   synthesis or as a `base_voice` in `CreateVoice` extends its
+   *   `voice_abc123def456`), which you can get, list, and delete, and
+   *   reference by ID in synthesis requests. Stored voices expire after 1
+   *   year of inactivity; using a stored voice in speech synthesis or as a
+   *   `base_voice` when creating another voice extends its
    *   `expire_time`. Projects are subject to a maximum active stored voice
    *   quota; exceeding the quota returns `RESOURCE_EXHAUSTED`.
    * * When `false` (default), the voice is not stored by Google and `Voice.key`
@@ -37,10 +37,10 @@ export type CreateVoiceRequest = {
    */
   store?: boolean | undefined;
   /**
-   * A voice resource representing either a custom voice (created via
+   * A voice resource representing either a custom voice that you create or a
    *
    * @remarks
-   * `CreateVoice`) or a prebuilt system voice (returned by `ListVoices`).
+   * prebuilt system voice (returned when listing voices).
    */
   voice: VoiceInput;
 };

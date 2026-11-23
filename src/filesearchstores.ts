@@ -344,7 +344,7 @@ export class FileSearchStores extends BaseModule {
     } else {
       const body = converters.uploadToFileSearchStoreParametersToMldev(params);
       path = common.formatMap(
-        'upload/v1beta/{file_search_store_name}:uploadToFileSearchStore',
+        'upload/{api_version}/{file_search_store_name}:uploadToFileSearchStore',
         body['_url'] as Record<string, unknown>,
       );
       queryParams = body['_query'] as Record<string, string>;

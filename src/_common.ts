@@ -8,17 +8,19 @@ export class BaseModule {}
 
 export function formatMap(
   templateString: string,
-  valueMap: Record<string, unknown>,
+  valueMap?: Record<string, unknown>,
 ): string {
   // Use a regular expression to find all placeholders in the template string
   const regex = /\{([^}]+)\}/g;
 
   // Replace each placeholder with its corresponding value from the valueMap
   return templateString.replace(regex, (match, key) => {
-    if (Object.prototype.hasOwnProperty.call(valueMap, key)) {
+    if (valueMap && Object.prototype.hasOwnProperty.call(valueMap, key)) {
       const value = valueMap[key];
       // Convert the value to a string if it's not a string already
       return value !== undefined && value !== null ? String(value) : '';
+    } else if (key === 'api_version') {
+      return match;
     } else {
       // Handle missing keys
       throw new Error(`Key '${key}' not found in valueMap.`);

@@ -11,7 +11,7 @@
  */
 
 /**
- * The model that will complete your prompt.\n\nSee [models](https://ai.google.dev/gemini-api/docs/models) for additional details.
+ * The model that will complete your prompt.\n\nSee [models](https://aistudio.google.com/docs/models) for additional details.
  */
 export type Model =
   | "gemma-4-26b-a4b-it"
@@ -39,6 +39,9 @@ export type Model =
   | "gemini-3.7-flash"
   | "gemini-3.8-flash"
   | "gemini-4-argon"
+  | "gemini-4-carbon"
+  | "gemini-4-hydrogen"
+  | "gemini-4-neon"
   | "gemini-3.8-flash-tts"
   | "gemini-3.8-flash-lite-tts"
   | "gemini-3.5-transcribe"
@@ -47,6 +50,7 @@ export type Model =
   | "gemini-robotics-er-1.6-preview"
   | "gemini-robotics-er-2-preview"
   | "lyria-3.5"
+  | "gemini-omni-1.2-flash"
   | "gemini-omni-1.1-flash"
   | "gemini-omni-flash-preview"
   | (string & {});

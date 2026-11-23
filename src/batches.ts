@@ -52,7 +52,7 @@ export class Batches extends BaseModule {
    * @example
    * ```ts
    * const response = await ai.batches.create({
-   *   model: 'gemini-flash-latest',
+   *   model: 'gemini-3.8-flash',
    *   src: {gcsUri: 'gs://bucket/path/to/file.jsonl', format: 'jsonl'},
    *   config: {
    *     dest: {gcsUri: 'gs://bucket/path/output/directory', format: 'jsonl'},

@@ -163,6 +163,7 @@ async function main() {
   let client = new GoogleGenAI({
     vertexai: false,
     apiKey: GEMINI_API_KEY,
+    apiVersion: 'v1beta',
   });
 
   if (GOOGLE_GENAI_MLDEV_USE_EPHEMERAL) {

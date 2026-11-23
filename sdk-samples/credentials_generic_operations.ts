@@ -47,6 +47,7 @@ async function bestEffortDelete(ai: GoogleGenAI, credentialId?: string) {
 async function genericOperationCredentials() {
   const ai = new GoogleGenAI({
     apiKey: GEMINI_API_KEY,
+    apiVersion: 'v1beta',
   });
 
   const testSuffix = Math.random().toString(36).substring(2, 10);

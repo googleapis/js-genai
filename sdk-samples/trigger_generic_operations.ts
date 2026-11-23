@@ -11,6 +11,7 @@ const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
 async function genericOperationTriggers() {
   const ai = new GoogleGenAI({
     apiKey: GEMINI_API_KEY,
+    apiVersion: 'v1beta',
   });
 
   // 1. Create a trigger pointing to the agent
@@ -20,7 +21,7 @@ async function genericOperationTriggers() {
     time_zone: 'America/Argentina/Buenos_Aires',
     display_name: 'issue-solver',
     interaction: {
-      agent: 'antigravity-preview-05-2026',
+      agent: 'antigravity-preview-09-2026',
       input: 'List all files under /workspace and describe what you find.',
       environment: {
         type: 'remote',

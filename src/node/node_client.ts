@@ -18,6 +18,7 @@ import {
   buildGoogleGenAIClient,
   GeminiNextGenAgents,
   GeminiNextGenCredentials,
+  GeminiNextGenDecisions,
   GeminiNextGenEnvironments,
   GeminiNextGenInteractions,
   GeminiNextGenTriggers,
@@ -147,6 +148,7 @@ export class GoogleGenAI {
   private _environments: GeminiNextGenEnvironments | undefined;
   private _credentials: GeminiNextGenCredentials | undefined;
   private _voices: GeminiNextGenVoices | undefined;
+  private _decisions: GeminiNextGenDecisions | undefined;
   private _nextGenClient: GeminiNextGenAPI | undefined;
   private _triggers: GeminiNextGenTriggers | undefined;
 
@@ -249,6 +251,15 @@ export class GoogleGenAI {
     return this._voices;
   }
 
+  get decisions(): GeminiNextGenDecisions {
+    if (this._decisions !== undefined) {
+      return this._decisions;
+    }
+
+    this._decisions = new GeminiNextGenDecisions(this.apiClient);
+    return this._decisions;
+  }
+
   constructor(options: GoogleGenAIOptions = {}) {
     this.vertexai = resolveCloudFlag(options);
 
@@ -339,7 +350,18 @@ export class GoogleGenAI {
       }
     }
 
-    this.apiVersion = options.apiVersion;
+    const envApiVersion = getEnv('GOOGLE_GENAI_API_VERSION') || undefined;
+    const resolvedEnvApiVersion =
+      envApiVersion === 'beta'
+        ? this.vertexai
+          ? 'v1beta1'
+          : 'v1beta'
+        : envApiVersion;
+    this.apiVersion =
+      options.apiVersion ??
+      (options.httpOptions?.apiVersion !== undefined
+        ? undefined
+        : resolvedEnvApiVersion);
     this.httpOptions = options.httpOptions;
     const auth = new NodeAuth({
       apiKey: this.apiKey,

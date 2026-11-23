@@ -11,7 +11,13 @@ import {ApiClient} from './_api_client.js';
 import * as common from './_common.js';
 import {BaseModule} from './_common.js';
 import * as _internal_types from './_internal_types.js';
-import {tContents, tIsVertexEmbedContentModel} from './_transformers.js';
+import {
+  tContents,
+  tEmbedContents,
+  tIsMultimodalEmbeddingModel,
+  tIsVertexEmbedContentModel,
+  tIsVertexMaasModel,
+} from './_transformers.js';
 import * as converters from './converters/_models_converters.js';
 import * as mcp from './mcp/_mcp.js';
 import {PagedItem, Pager} from './pagers.js';
@@ -51,35 +57,45 @@ export class Models extends BaseModule {
     params: types.EmbedContentParameters,
   ): Promise<types.EmbedContentResponse> => {
     if (!this.apiClient.isVertexAI()) {
-      const isGeminiEmbedding2Model =
-        params.model.includes('gemini-embedding-2');
-      if (isGeminiEmbedding2Model) {
-        params.contents = tContents(params.contents);
-      }
-      return await this.embedContentInternal(params);
+      const mldevContents = tIsMultimodalEmbeddingModel(params.model)
+        ? tContents(params.contents)
+        : params.contents;
+      return await this.embedContentInternal({
+        model: params.model,
+        contents: mldevContents,
+        config: params.config,
+      });
     }
-    const isVertexEmbedContentModel =
-      (params.model.includes('gemini') &&
-        params.model !== 'gemini-embedding-001') ||
-      params.model.includes('maas');
 
-    if (isVertexEmbedContentModel) {
-      const contents = tContents(params.contents);
+    if (tIsVertexEmbedContentModel(params.model)) {
+      const contents = tEmbedContents(params.model, params.contents);
       if (contents.length > 1) {
-        throw new Error(
-          'The embedContent API for this model only supports one content at a time.',
-        );
+        if (tIsVertexMaasModel(params.model)) {
+          throw new Error(
+            'The embedContent API for this model only supports one content at a time.',
+          );
+        }
+        const paramsPrivate: types.EmbedContentParametersPrivate = {
+          model: params.model,
+          batchContents: contents,
+          embeddingApiType: types.EmbeddingApiType.BATCH_EMBED_CONTENTS,
+          config: params.config,
+        };
+        return await this.embedContentInternal(paramsPrivate);
       }
       const paramsPrivate: types.EmbedContentParametersPrivate = {
-        ...params,
+        model: params.model,
         content: contents[0],
         embeddingApiType: types.EmbeddingApiType.EMBED_CONTENT,
+        config: params.config,
       };
       return await this.embedContentInternal(paramsPrivate);
     } else {
       const paramsPrivate: types.EmbedContentParametersPrivate = {
-        ...params,
+        model: params.model,
+        contents: params.contents,
         embeddingApiType: types.EmbeddingApiType.PREDICT,
+        config: params.config,
       };
       return await this.embedContentInternal(paramsPrivate);
     }
@@ -156,19 +172,19 @@ export class Models extends BaseModule {
    * Makes an API request to generate content with a given model.
    *
    * For the `model` parameter, supported formats for Gemini Enterprise Agent Platform API include:
-   * - The Gemini model ID, for example: 'gemini-flash-latest'
+   * - The Gemini model ID, for example: 'gemini-3.8-flash'
    * - The full resource name starts with 'projects/', for example:
-   *  'projects/my-project-id/locations/us-central1/publishers/google/models/gemini-flash-latest'
+   *  'projects/my-project-id/locations/us-central1/publishers/google/models/gemini-3.8-flash'
    * - The partial resource name with 'publishers/', for example:
-   *  'publishers/google/models/gemini-flash-latest' or
+   *  'publishers/google/models/gemini-3.8-flash' or
    *  'publishers/meta/models/llama-3.1-405b-instruct-maas'
    * - `/` separated publisher and model name, for example:
-   * 'google/gemini-flash-latest' or 'meta/llama-3.1-405b-instruct-maas'
+   * 'google/gemini-3.8-flash' or 'meta/llama-3.1-405b-instruct-maas'
    *
    * For the `model` parameter, supported formats for Gemini API include:
-   * - The Gemini model ID, for example: 'gemini-flash-latest'
+   * - The Gemini model ID, for example: 'gemini-3.8-flash'
    * - The model name starts with 'models/', for example:
-   *  'models/gemini-flash-latest'
+   *  'models/gemini-3.8-flash'
    * - For tuned models, the model name starts with 'tunedModels/',
    * for example:
    * 'tunedModels/1234567890123456789'
@@ -183,7 +199,7 @@ export class Models extends BaseModule {
    * @example
    * ```ts
    * const response = await ai.models.generateContent({
-   *   model: 'gemini-flash-latest',
+   *   model: 'gemini-3.8-flash',
    *   contents: 'why is the sky blue?',
    *   config: {
    *     candidateCount: 2,
@@ -296,19 +312,19 @@ export class Models extends BaseModule {
    * response in chunks.
    *
    * For the `model` parameter, supported formats for Gemini Enterprise Agent Platform API include:
-   * - The Gemini model ID, for example: 'gemini-flash-latest'
+   * - The Gemini model ID, for example: 'gemini-3.8-flash'
    * - The full resource name starts with 'projects/', for example:
-   *  'projects/my-project-id/locations/us-central1/publishers/google/models/gemini-flash-latest'
+   *  'projects/my-project-id/locations/us-central1/publishers/google/models/gemini-3.8-flash'
    * - The partial resource name with 'publishers/', for example:
-   *  'publishers/google/models/gemini-flash-latest' or
+   *  'publishers/google/models/gemini-3.8-flash' or
    *  'publishers/meta/models/llama-3.1-405b-instruct-maas'
    * - `/` separated publisher and model name, for example:
-   * 'google/gemini-flash-latest' or 'meta/llama-3.1-405b-instruct-maas'
+   * 'google/gemini-3.8-flash' or 'meta/llama-3.1-405b-instruct-maas'
    *
    * For the `model` parameter, supported formats for Gemini API include:
-   * - The Gemini model ID, for example: 'gemini-flash-latest'
+   * - The Gemini model ID, for example: 'gemini-3.8-flash'
    * - The model name starts with 'models/', for example:
-   *  'models/gemini-flash-latest'
+   *  'models/gemini-3.8-flash'
    * - For tuned models, the model name starts with 'tunedModels/',
    * for example:
    *  'tunedModels/1234567890123456789'
@@ -323,7 +339,7 @@ export class Models extends BaseModule {
    * @example
    * ```ts
    * const response = await ai.models.generateContentStream({
-   *   model: 'gemini-flash-latest',
+   *   model: 'gemini-3.8-flash',
    *   contents: 'why is the sky blue?',
    *   config: {
    *     maxOutputTokens: 200,
@@ -571,7 +587,7 @@ export class Models extends BaseModule {
     if (!Models.loggedGenerateImagesWarning) {
       Models.loggedGenerateImagesWarning = true;
       console.warn(
-        'The generateImages method is deprecated and will be removed in the next major release (not before Jan. 1 2027). Please use the generateContent method with image models instead. See https://ai.google.dev/gemini-api/docs/deprecations#imagen-models and https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/capabilities/image-generation#generate-images',
+        'The generateImages method is deprecated and will be removed in the next major release (not before Jan. 1 2027). Please use the generateContent method with image models instead. See https://aistudio.google.com/docs/deprecations#imagen-models and https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/capabilities/image-generation#generate-images',
       );
     }
     return await this.generateImagesInternal(params).then((apiResponse) => {
@@ -669,7 +685,7 @@ export class Models extends BaseModule {
     if (!Models.loggedEditImageWarning) {
       Models.loggedEditImageWarning = true;
       console.warn(
-        'The editImage method is deprecated and will be removed in the next major release (not before Jan. 1 2027). Please use the generateContent method with image models instead. See https://ai.google.dev/gemini-api/docs/deprecations#imagen-models and https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/capabilities/gemini-edit-images#edit-an-image',
+        'The editImage method is deprecated and will be removed in the next major release (not before Jan. 1 2027). Please use the generateContent method with image models instead. See https://aistudio.google.com/docs/deprecations#imagen-models and https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/capabilities/gemini-edit-images#edit-an-image',
       );
     }
     const paramsInternal: _internal_types.EditImageParametersInternal = {
@@ -1013,9 +1029,16 @@ export class Models extends BaseModule {
         params,
         params,
       );
-      const endpointUrl = tIsVertexEmbedContentModel(params.model)
-        ? '{model}:embedContent'
-        : '{model}:predict';
+      let endpointUrl = '{model}:predict';
+      if (
+        params.embeddingApiType === types.EmbeddingApiType.BATCH_EMBED_CONTENTS
+      ) {
+        endpointUrl = '{model}:batchEmbedContents';
+      } else if (
+        params.embeddingApiType === types.EmbeddingApiType.EMBED_CONTENT
+      ) {
+        endpointUrl = '{model}:embedContent';
+      }
       path = common.formatMap(
         endpointUrl,
         body['_url'] as Record<string, unknown>,
@@ -1423,7 +1446,7 @@ export class Models extends BaseModule {
    *
    * @example
    * ```ts
-   * const modelInfo = await ai.models.get({model: 'gemini-flash-latest'});
+   * const modelInfo = await ai.models.get({model: 'gemini-3.8-flash'});
    * ```
    */
   async get(params: types.GetModelParameters): Promise<types.Model> {
@@ -1796,7 +1819,7 @@ export class Models extends BaseModule {
    * @example
    * ```ts
    * const response = await ai.models.countTokens({
-   *  model: 'gemini-flash-latest',
+   *  model: 'gemini-3.8-flash',
    *  contents: 'The quick brown fox jumps over the lazy dog.'
    * });
    * console.log(response);
@@ -1908,7 +1931,7 @@ export class Models extends BaseModule {
    * @example
    * ```ts
    * const response = await ai.models.computeTokens({
-   *  model: 'gemini-flash-latest',
+   *  model: 'gemini-3.8-flash',
    *  contents: 'What is your name?'
    * });
    * console.log(response);
