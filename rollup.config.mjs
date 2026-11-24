@@ -1,4 +1,6 @@
+import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
+import resolve from '@rollup/plugin-node-resolve';
 import {readFileSync} from 'fs';
 import os from 'os';
 import path from 'path';
@@ -45,6 +47,53 @@ const externalDeps = [
   'protobufjs/minimal.js',
   'p-retry',
 ];
+
+// Browsers cannot resolve bare module specifiers, so the web build bundles its
+// runtime npm dependencies. `p-retry` is CommonJS, hence `commonjs()`.
+// `resolve()` must come before the TypeScript plugin. `resolveOnly` keeps any
+// other bare import external, so test/packaging/check_web_bundle.mjs flags it
+// instead of it being inlined silently.
+const webBundledDeps = ['p-retry', 'retry'];
+const webExternalDeps = externalDeps.filter(
+  (dep) => !webBundledDeps.includes(dep),
+);
+const webRollupPlugins = [
+  resolve({browser: true, preferBuiltins: false, resolveOnly: webBundledDeps}),
+  commonjs(),
+  ...rollupPlugins,
+];
+
+// Both bundled packages are MIT-licensed and require their notices in every copy.
+const webLicenseBanner = `/**
+ * @license
+ * Bundles p-retry (MIT) and retry (MIT):
+ *
+ * p-retry:
+ * Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
+ *
+ * retry:
+ * Copyright (c) 2011:
+ * Tim Koschützki (tim@debuggable.com)
+ * Felix Geisendörfer (felix@debuggable.com)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */`;
 
 export default [
   // Cross ES module (dist/index.mjs)
@@ -105,11 +154,12 @@ export default [
     output: {
       file: pkg.exports['./web']['import'],
       format: 'es',
+      banner: webLicenseBanner,
       sourcemap: true,
       sourcemapExcludeSources: true,
     },
-    plugins: rollupPlugins,
-    external: externalDeps,
+    plugins: webRollupPlugins,
+    external: webExternalDeps,
   },
 
   // The `tokenizer/node` ES module (dist/tokenizer/node.mjs)
