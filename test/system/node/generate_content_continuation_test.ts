@@ -8,7 +8,7 @@ import {GoogleGenAI} from '../../../src/node/node_client.js';
 import {FinishReason, HttpOptions} from '../../../src/types.js';
 import {setupTestServer, shutdownTestServer} from '../test_server.js';
 
-const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY || 'test-api-key';
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'test-api-key';
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
 
@@ -38,7 +38,7 @@ describe('GenerateContentContinuationTest', () => {
   it('GenerateContentAutomaticContinuationGeminiTest', async () => {
     const client = new GoogleGenAI({
       vertexai: false,
-      apiKey: GOOGLE_API_KEY,
+      apiKey: GEMINI_API_KEY,
       httpOptions,
     });
     const response = await client.models.generateContent({

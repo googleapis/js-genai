@@ -35,6 +35,7 @@ import { Logger } from "./logger.js";
 import { combineSignals, isPlainObject } from "./primitives.js";
 import { retry, RetryConfig } from "./retries.js";
 import { SecurityState } from "./security.js";
+import { Params, pathToFunc } from "./url.js";
 
 export type RequestOptions = {
   /**
@@ -90,6 +91,19 @@ type RequestConfig = {
   userAgent?: string | undefined;
   timeout_ms?: number;
 };
+
+export function encodePath(
+  pathPattern: string,
+  params: Params,
+): Result<string, InvalidRequestError> {
+  try {
+    return OK(pathToFunc(pathPattern, { rejectDotSegments: true })(params));
+  } catch (err: unknown) {
+    return ERR(
+      new InvalidRequestError(err instanceof Error ? err.message : String(err)),
+    );
+  }
+}
 
 const gt: unknown = typeof globalThis === "undefined" ? null : globalThis;
 const webWorkerLike = typeof gt === "object"

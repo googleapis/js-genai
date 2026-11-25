@@ -17,10 +17,10 @@ import { PromptedVoice } from "./prompted-voice.js";
 import { VoiceType } from "./voice-type.js";
 
 /**
- * A voice resource representing either a custom voice (created via
+ * A voice resource representing either a custom voice that you create or a
  *
  * @remarks
- * `CreateVoice`) or a prebuilt system voice (returned by `ListVoices`).
+ * prebuilt system voice (returned when listing voices).
  */
 export type VoiceOutput = {
   /**
@@ -51,8 +51,8 @@ export type VoiceOutput = {
    * @remarks
    * or replicated voice key (`store = false`) expires. For custom stored voices
    * (`store = true`), this expiration time is extended when the voice is used
-   * for speech synthesis or as a `base_voice` in `CreateVoice`. Unset for
-   * prebuilt catalog voices (`"prebuilt"`), which do not expire.
+   * for speech synthesis or as a `base_voice` when creating another voice.
+   * Unset for prebuilt catalog voices (`"prebuilt"`), which do not expire.
    */
   expire_time?: string | undefined;
   /**
@@ -69,21 +69,22 @@ export type VoiceOutput = {
    *
    * * For Google-managed custom voices (`store = true`), this is a generated ID
    *   with prefix `voice_` (for example, `voice_abc123def456`). Pass
-   *   `voices/{id}` as the `name` in `GetVoice` and `DeleteVoice`, and pass
+   *   `voices/{id}` as the `name` when getting or deleting the voice, and pass
    *   `{id}` directly to `SpeechConfig.voice_config.voice` (or
    *   `SpeechConfig.voice`) during speech synthesis.
-   * * For prebuilt catalog voices (`"prebuilt"` returned by `ListVoices`), this
-   *   is the speaker name (for example, `Puck` or `Charon`).
-   * * Unset when `CreateVoice` is called with `store = false`.
+   * * For prebuilt catalog voices (`"prebuilt"` returned when listing voices),
+   *   this is the speaker name (for example, `Puck` or `Charon`).
+   * * Unset when the voice is created with `store = false`.
    */
   id?: string | undefined;
   /**
    * Output only. The client-managed voice replication key (with prefix
    *
    * @remarks
-   * `voicekey_`). Returned only by `CreateVoice` when `type` is `"replicated"`
-   * and `store` is `false`. Pass this key to `SpeechConfig.voice_config.voice`
-   * (or `SpeechConfig.voice`) during speech synthesis.
+   * `voicekey_`). Returned only when creating a voice with `type`
+   * `"replicated"` and `store` `false`. Pass this key to
+   * `SpeechConfig.voice_config.voice` (or `SpeechConfig.voice`) during speech
+   * synthesis.
    */
   key?: string | undefined;
   /**
@@ -94,9 +95,9 @@ export type VoiceOutput = {
    * Optional. The model used to design or replicate the voice.
    *
    * @remarks
-   * If omitted in `CreateVoice`, defaults to the latest supported voice design
-   * model. Returned in `CreateVoice`, `GetVoice`, and `ListVoices` responses
-   * for custom voices (`"prompted"` and `"replicated"`); unset for `"prebuilt"`
+   * If omitted when creating a voice, defaults to the latest supported voice
+   * design model. Returned when creating, getting, or listing custom voices
+   * (`"prompted"` and `"replicated"`); unset for `"prebuilt"`
    * voices. Created voices can be synthesized across any supported TTS
    * synthesis model.
    */
@@ -113,8 +114,8 @@ export type VoiceOutput = {
    * Parameters for prompted voice generation.
    *
    * @remarks
-   * Required in `CreateVoice` when `type` is `"prompted"`. Returned in
-   * `CreateVoice`, `GetVoice`, and `ListVoices` responses for prompted voices.
+   * Required when creating a voice with `type` `"prompted"`. Returned when
+   * creating, getting, or listing prompted voices.
    */
   prompted?: PromptedVoice | undefined;
   /**

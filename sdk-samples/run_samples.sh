@@ -7,6 +7,10 @@ set -o nounset
 # Pipelines return the exit status of the last command to exit with a non-zero status.
 set -o pipefail
 
+if [[ -z "${GOOGLE_GENAI_USE_VERTEXAI:-}" ]] || [[ "${GOOGLE_GENAI_USE_VERTEXAI}" == "false" ]]; then
+  export GOOGLE_GENAI_API_VERSION="${GOOGLE_GENAI_API_VERSION:-v1}"
+fi
+
 LISTING_FILE="js_files_to_run.txt"
 BUILD_DIR="build"
 FAILED_SAMPLES=() # Track failed samples to log at the end.

@@ -11,7 +11,7 @@
  */
 
 /**
- * Response message for WebhookService.RotateSigningSecret.
+ * Response for rotating a webhook's signing secret.
  */
 export type WebhookRotateSigningSecretResponse = {
   /**

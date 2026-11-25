@@ -50,9 +50,8 @@ export type Environment = {
    *
    * @remarks
    * environments. Used by the self-hosted sandbox daemon to authenticate
-   * polling and streaming requests. Only returned in the CreateEnvironment
-   * response; omitted from subsequent GetEnvironment and ListEnvironments
-   * calls.
+   * polling and streaming requests. Only returned when the environment is
+   * created; omitted when getting or listing environments later.
    */
   environment_key?: string | undefined;
   /**

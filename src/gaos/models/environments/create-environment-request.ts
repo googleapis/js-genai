@@ -12,6 +12,8 @@
 
 import * as interactions from "../interactions/index.js";
 
+export type Env = interactions.EnvVar | string;
+
 export type CreateEnvironmentRequestNetworkEnum = "disabled";
 
 /**
@@ -22,7 +24,7 @@ export type CreateEnvironmentRequestNetworkUnion =
   | CreateEnvironmentRequestNetworkEnum;
 
 /**
- * Request for `CreateEnvironment`.
+ * Request for creating an environment.
  */
 export type CreateEnvironmentRequest = {
   /**
@@ -33,6 +35,10 @@ export type CreateEnvironmentRequest = {
    * `SELF_HOSTED`.
    */
   custom_config?: { [k: string]: any } | undefined;
+  /**
+   * Environment variables to set in the sandbox environment.
+   */
+  env?: { [k: string]: interactions.EnvVar | string } | undefined;
   /**
    * Optional. The source environment to copy/fork from.
    *

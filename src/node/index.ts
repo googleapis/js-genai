@@ -6,30 +6,54 @@
 
 export {setDefaultBaseUrls} from '../_base_url.js';
 export type {BaseUrlParameters} from '../_base_url.js';
+export {APIWebRTCError, APIWebSocketError} from '../_interactions_errors.js';
+export {
+  InteractionWebRTCTransport,
+  type InteractionWebRTCTransportOptions,
+} from '../_interactions_webrtc.js';
+export type {InteractionConnectParams} from '../_interactions_websocket.js';
 export * from '../batches.js';
 export * from '../caches.js';
 export * from '../chats.js';
 export type {GoogleGenAIOptions} from '../client.js';
 export * from '../errors.js';
 export {Files} from '../files.js';
-export type {
-  AutomaticContinuationOption,
-  CredentialUpdateParams,
-  DownloadEnvironmentFileParams,
-  GoogleGenAIInteraction,
-  GoogleGenAIRequestOptions,
-  GoogleGenAIResponseWithSdkHttpResponse,
-  GoogleGenAISdkHttpResponse,
-  ListEnvironmentFilesParams,
-  ListEnvironmentFilesResponse,
-  ListEnvironmentsParams,
-  UploadEnvironmentFileParams,
+export {
+  InteractionWebRTCConnection,
+  InteractionWebSocketConnection,
+  type AutomaticContinuationOption,
+  type ClientEvent,
+  type CreateInteractionAuthTokenParams,
+  type CredentialUpdateParams,
+  type DeleteInteractionAuthTokenParams,
+  type DownloadEnvironmentFileParams,
+  type ErrorEvent,
+  type GoogleGenAIInteraction,
+  type GoogleGenAIRequestOptions,
+  type GoogleGenAIResponseWithSdkHttpResponse,
+  type GoogleGenAISdkHttpResponse,
+  type ImageContent,
+  type InteractionAuthToken,
+  type InteractionAuthTokenCreateParams,
+  type InteractionCancelledEvent,
+  type ListEnvironmentFilesParams,
+  type ListEnvironmentFilesResponse,
+  type ListEnvironmentsParams,
+  type ServerEvent,
+  type TextContent,
+  type UploadEnvironmentFileParams,
+  type UserActionInput,
+  type WorldPrompt,
+  type WorldPromptContent,
+  type WorldReferenceImage,
+  type WorldSetupEvent,
 } from '../gaos/google-genai.js';
 export type {SseMessage, Stream} from '../gaos/lib/event-streams.js';
 export type {BackoffStrategy, RetryConfig} from '../gaos/lib/retries.js';
 export type {
   Agents,
   Credentials,
+  Decisions,
   Environments,
   Interactions,
   Triggers,

@@ -13,14 +13,14 @@
 import { TriggerExecution } from "./trigger-execution.js";
 
 /**
- * Response message for TriggerService.ListTriggerExecutions.
+ * Response for listing trigger executions.
  */
 export type ListTriggerExecutionsResponse = {
   /**
-   * A page token, received from a previous `ListTriggerExecutions` call.
+   * A token to retrieve the next page of trigger executions. Pass it as
    *
    * @remarks
-   * Provide this to retrieve the subsequent page.
+   * `page_token` in the next request. If empty, there are no more pages.
    */
   next_page_token?: string | undefined;
   /**

@@ -2,6 +2,65 @@
 
 
 
+## [3.6.1](https://github.com/googleapis/js-genai/compare/v3.6.0...v3.6.1) (2026-11-18)
+
+
+### Bug Fixes
+
+* update sdk enum ([634630d](https://github.com/googleapis/js-genai/commit/634630d93422c531d7cccc737cd233598effbb75))
+
+## [3.6.0](https://github.com/googleapis/js-genai/compare/v3.5.0...v3.6.0) (2026-11-18)
+
+
+### Features
+
+* **sdk:** Add tool retrieval and function result schemas in public SDK ([3fb59de](https://github.com/googleapis/js-genai/commit/3fb59de0536ec9db9e17442f85e331eaba7f9bf0))
+
+## [3.5.0](https://github.com/googleapis/js-genai/compare/v3.4.0...v3.5.0) (2026-11-18)
+
+
+### Features
+
+* **environments:** introduce self-hosted BYOS mode, system_instruction, custom_config, and environment_key in SDKs and CLI ([814b960](https://github.com/googleapis/js-genai/commit/814b960f5700dda333a35fcad94cfa29314bb936))
+* Generate Live Interactions types and auth-token client in the public SDKs. ([5698aa9](https://github.com/googleapis/js-genai/commit/5698aa95be55d73c3a4677073f7efd4c9ee37e4d))
+* **interactions:** add experimental Live Interactions (WebSocket and WebRTC) SDK support ([5e86b32](https://github.com/googleapis/js-genai/commit/5e86b32a45ae20ee5a067ad4bce62a735c63e07a))
+
+
+### Bug Fixes
+
+* return GenerateContentResponse instances for batch inlined responses ([3ee5c10](https://github.com/googleapis/js-genai/commit/3ee5c10ebb002f84ac4743178a76a3cdc8afad5c)), refs [#1433](https://github.com/googleapis/js-genai/issues/1433)
+
+## [3.4.0](https://github.com/googleapis/js-genai/compare/v3.3.0...v3.4.0) (2026-11-16)
+
+
+### Features
+
+* Add tool search types to the Interactions SDKs ([dd109f4](https://github.com/googleapis/js-genai/commit/dd109f4ff4d1fef66c886a69164def4605491a97))
+* **interactions:** expose static file processing options ([9f081ac](https://github.com/googleapis/js-genai/commit/9f081acbfc8dba9ff6edf826cd09f4b2659713db))
+* support batch inputs and usage metadata for Gemini embedding models on Gemini Enterprise API ([2efab95](https://github.com/googleapis/js-genai/commit/2efab9574d810b2b6cbb5eab9abd7f07c08a4e35))
+
+
+### Bug Fixes
+
+* keep the SDK version bump in release imports ([97e941f](https://github.com/googleapis/js-genai/commit/97e941f2d039e9200c1906930fa4a64ab5e470a5))
+
+## [3.3.0](https://github.com/googleapis/js-genai/compare/v3.2.0...v3.3.0) (2026-11-12)
+
+
+### Features
+
+* Add `XHIGH` and `xhigh` to `ThinkingLevel` across GenAI SDKs and CLI. ([9f4d0ed](https://github.com/googleapis/js-genai/commit/9f4d0eda4072f8380bc4912aa6db0b91d2c87850))
+* Add missing enum values to FinishReason and ReinforcementTuningThinkingLevel ([3a4907d](https://github.com/googleapis/js-genai/commit/3a4907ddbdde4549d0d7306693ba79c34c6356c4))
+* **interactions:** add gemini-4-hydrogen to Model enum ([a606282](https://github.com/googleapis/js-genai/commit/a6062824e72ad61d08cff66b0b00596b906add19))
+
+## [3.2.0](https://github.com/googleapis/js-genai/compare/v3.1.0...v3.2.0) (2026-11-11)
+
+
+### Features
+
+* add the Decisions API (`client.decisions.create`) to the GenAI SDKs ([3712be2](https://github.com/googleapis/js-genai/commit/3712be237dc9ba6d4d5e3fab9306cf1d74216490))
+* **environments:** introduce self-hosted BYOS mode, system_instruction, custom_config, and environment_key in SDKs and CLI ([ac855bd](https://github.com/googleapis/js-genai/commit/ac855bd788e25a4b14aeacfe49ffa1c0e9d03040))
+
 ## [3.1.0](https://github.com/googleapis/js-genai/compare/v3.0.0...v3.1.0) (2026-11-10)
 
 
@@ -21,6 +80,8 @@
 * **Default Gemini Developer API version is now `v1` (was `v1beta`)** ([3f477bf](https://github.com/googleapis/js-genai/commit/3f477bfbbf26ba596e4ad0469f8c9663b340c872))
   * Clients targeting the **Gemini Developer API** now default to API version `v1` instead of `v1beta`.
   * **No effect on Gemini Enterprise (Vertex AI) defaults:** Clients with `vertexai: true` are **unaffected** by this default change and continue to default to `v1beta1`.
+  * **Some models are not available on `v1`, notably:** the `gemini-flash-latest`, `gemini-flash-lite-latest` and `gemini-pro-latest` aliases, and some `-preview` models. They exist only on `v1beta`. To keep using them, use a specific stable model version, or switch back to `v1beta` as shown below.
+  * **The Live API and context caching (`caches`) are not available on `v1`.** The Gemini Developer API serves them only on `v1beta`. To keep using them, switch back to `v1beta` as shown below.
   * **How to configure or restore the previous default via environment variable (Node.js):** Set `GOOGLE_GENAI_API_VERSION` (works for both Gemini Developer API and Enterprise / Vertex AI clients when no version is set in code):
     ```bash
     # Restores the beta default ('v1beta' on Gemini Developer API, 'v1beta1' on Enterprise / Vertex AI)

@@ -128,7 +128,7 @@ async function main() {
     console.log('Interactions API is not yet supported on Vertex');
     return;
   }
-  const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
+  const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY, apiVersion: 'v1beta'});
   await automaticContinuationUnary(ai);
   await automaticContinuationStream(ai);
   await manualContinuation(ai);

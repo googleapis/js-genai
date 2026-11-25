@@ -31,7 +31,7 @@ export type ListTriggersRequest = {
    */
   page_size?: number | undefined;
   /**
-   * Optional. A page token from a previous ListTriggers call.
+   * Optional. A page token from a previous call to list triggers.
    */
   page_token?: string | undefined;
 };

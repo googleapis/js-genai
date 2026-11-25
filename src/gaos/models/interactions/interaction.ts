@@ -70,6 +70,7 @@ export type InteractionStatus =
   | "incomplete"
   | "budget_exceeded"
   | "queued"
+  | "idle"
   | "requires_continuation"
   | (string & {});
 
@@ -109,7 +110,8 @@ export type Interaction = {
    *
    * @remarks
    * REQUIRES_CONTINUATION and decoding can be resumed. Input: pass the latest
-   * token back unchanged in CreateInteraction to continue decoding.
+   * token back unchanged when creating the next interaction to continue
+   * decoding.
    */
   continuation_token?: string | undefined;
   /**

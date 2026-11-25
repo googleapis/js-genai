@@ -7,6 +7,13 @@
  */
 
 import {
+  APIConnectionError,
+  APIError,
+  APIWebRTCError,
+  APIWebSocketError,
+  GeminiNextGenAPIClientError,
+} from "../../_interactions_errors.js";
+import {
   ConnectionError,
   HTTPClientError,
   RequestAbortedError,
@@ -14,117 +21,60 @@ import {
 } from "../models/errors/http-client-errors.js";
 import { GoogleGenAiError } from "../models/errors/google-gen-ai-error.js";
 
-/** Base error class for Gemini NextGen API client errors. */
-export class GeminiNextGenAPIClientError extends Error {
-  constructor(message?: string) {
-    super(message);
-    this.name = this.constructor.name;
-    Object.setPrototypeOf(this, new.target.prototype);
+export {
+  APIConnectionError,
+  APIError,
+  APIWebRTCError,
+  APIWebSocketError,
+  GeminiNextGenAPIClientError,
+};
+
+function generateCompatAPIError(
+  status: number | undefined,
+  errorResponse: object | undefined,
+  message: string | undefined,
+  headers: Headers | undefined,
+): APIError {
+  if (!status || !headers) {
+    return new APIConnectionError({
+      message,
+      cause: errorResponse instanceof Error ? errorResponse : undefined,
+    });
   }
+
+  if (status === 400) {
+    return new BadRequestError(status, errorResponse, message, headers);
+  }
+  if (status === 401) {
+    return new AuthenticationError(status, errorResponse, message, headers);
+  }
+  if (status === 403) {
+    return new PermissionDeniedError(status, errorResponse, message, headers);
+  }
+  if (status === 404) {
+    return new NotFoundError(status, errorResponse, message, headers);
+  }
+  if (status === 409) {
+    return new ConflictError(status, errorResponse, message, headers);
+  }
+  if (status === 422) {
+    return new UnprocessableEntityError(
+      status,
+      errorResponse,
+      message,
+      headers,
+    );
+  }
+  if (status === 429) {
+    return new RateLimitError(status, errorResponse, message, headers);
+  }
+  if (status >= 500) {
+    return new InternalServerError(status, errorResponse, message, headers);
+  }
+  return new APIError(status, errorResponse, message, headers);
 }
 
-/** General errors raised by the GenAI API. */
-export class APIError<
-  TStatus extends number | undefined = number | undefined,
-  THeaders extends Headers | undefined = Headers | undefined,
-  TError extends object | undefined = object | undefined,
-> extends GeminiNextGenAPIClientError {
-  /** HTTP status for the response that caused the error */
-  readonly status: TStatus;
-  /** HTTP headers for the response that caused the error */
-  readonly headers: THeaders;
-  /** JSON body of the response that caused the error */
-  readonly error: TError;
-  /** HTTP status code */
-  readonly statusCode: TStatus;
-  /** HTTP body */
-  readonly body: string;
-  /** HTTP content type */
-  readonly contentType: string;
-  /** Raw response */
-  readonly rawResponse: Response | undefined;
-  override cause: unknown;
-
-  constructor(
-    status: TStatus,
-    error: TError,
-    message: string | undefined,
-    headers: THeaders,
-  ) {
-    super(APIError.makeMessage(status, error, message));
-
-    this.status = status;
-    this.headers = headers;
-    this.error = error;
-    this.statusCode = status;
-    this.body = stringifyErrorBody(error);
-    this.contentType = headers?.get("content-type") || "";
-    this.rawResponse = undefined;
-    this.cause = undefined;
-    this.name = this.constructor.name;
-    Object.setPrototypeOf(this, new.target.prototype);
-  }
-
-  private static makeMessage(
-    status: number | undefined,
-    error: object | undefined,
-    message: string | undefined,
-  ): string {
-    const errorMessage =
-      error && isPlainObject(error) && typeof error["message"] === "string"
-        ? error["message"]
-        : undefined;
-    const errorBody = stringifyErrorBody(error);
-    const msg = errorMessage ?? message ?? (errorBody || "An error occurred");
-    const statusText = status ? `${status} ` : "";
-    return `${statusText}${msg}`;
-  }
-
-  static generate(
-    status: number | undefined,
-    errorResponse: object | undefined,
-    message: string | undefined,
-    headers: Headers | undefined,
-  ): APIError {
-    if (!status || !headers) {
-      return new APIConnectionError({
-        message,
-        cause: errorResponse instanceof Error ? errorResponse : undefined,
-      });
-    }
-
-    if (status === 400) {
-      return new BadRequestError(status, errorResponse, message, headers);
-    }
-    if (status === 401) {
-      return new AuthenticationError(status, errorResponse, message, headers);
-    }
-    if (status === 403) {
-      return new PermissionDeniedError(status, errorResponse, message, headers);
-    }
-    if (status === 404) {
-      return new NotFoundError(status, errorResponse, message, headers);
-    }
-    if (status === 409) {
-      return new ConflictError(status, errorResponse, message, headers);
-    }
-    if (status === 422) {
-      return new UnprocessableEntityError(
-        status,
-        errorResponse,
-        message,
-        headers,
-      );
-    }
-    if (status === 429) {
-      return new RateLimitError(status, errorResponse, message, headers);
-    }
-    if (status >= 500) {
-      return new InternalServerError(status, errorResponse, message, headers);
-    }
-    return new APIError(status, errorResponse, message, headers);
-  }
-}
+APIError.generate = generateCompatAPIError;
 
 export class APIUserAbortError extends APIError<
   undefined,
@@ -133,23 +83,6 @@ export class APIUserAbortError extends APIError<
 > {
   constructor({ message }: { message?: string } = {}) {
     super(undefined, undefined, message || "Request was aborted.", undefined);
-  }
-}
-
-export class APIConnectionError extends APIError<
-  undefined,
-  undefined,
-  undefined
-> {
-  constructor({
-    message,
-    cause,
-  }: {
-    message?: string | undefined;
-    cause?: Error | unknown | undefined;
-  }) {
-    super(undefined, undefined, message || "Connection error.", undefined);
-    this.cause = cause;
   }
 }
 
@@ -201,12 +134,12 @@ function isGoogleGenAiErrorInstance(value: unknown): value is GoogleGenAiError {
 
 function wrapAPIError(error: GoogleGenAiError): APIError {
   const errorPayload = getErrorPayload(error);
-  const wrapped = APIError.generate(
+  const wrapped = generateCompatAPIError(
     error.statusCode,
     errorPayload,
     error.message,
     error.headers,
-  ) as APIError;
+  );
 
   defineReadonly(wrapped, "body", error.body);
   defineReadonly(wrapped, "contentType", error.contentType);
@@ -280,19 +213,6 @@ function getObjectProperty(value: unknown, key: string): unknown {
   return value && typeof value === "object"
     ? (value as Record<string, unknown>)[key]
     : undefined;
-}
-
-function stringifyErrorBody(error: object | undefined): string {
-  if (!error) return "";
-  try {
-    return JSON.stringify(error);
-  } catch {
-    return String(error);
-  }
-}
-
-function isPlainObject(value: unknown): value is Record<string, unknown> {
-  return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
 function isCompatAPIErrorInstance(value: unknown): value is APIError {

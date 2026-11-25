@@ -28,6 +28,8 @@ import { ProcessingResultStep } from "./processing-result-step.js";
 import { RetrievalCallStep } from "./retrieval-call-step.js";
 import { RetrievalResultStep } from "./retrieval-result-step.js";
 import { ThoughtStep } from "./thought-step.js";
+import { ToolSearchCallStep } from "./tool-search-call-step.js";
+import { ToolSearchResultStep } from "./tool-search-result-step.js";
 import { URLContextCallStep } from "./url-context-call-step.js";
 import { URLContextResultStep } from "./url-context-result-step.js";
 import { UserInputStep } from "./user-input-step.js";
@@ -54,6 +56,8 @@ export type Step =
   | RetrievalCallStep
   | RetrievalResultStep
   | ThoughtStep
+  | ToolSearchCallStep
+  | ToolSearchResultStep
   | URLContextCallStep
   | URLContextResultStep
   | UserInputStep;

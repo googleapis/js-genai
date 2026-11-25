@@ -14,8 +14,8 @@
  * Parameters for prompted voice generation.
  *
  * @remarks
- * Required in `CreateVoice` when `type` is `"prompted"`. Returned in
- * `CreateVoice`, `GetVoice`, and `ListVoices` responses for prompted voices.
+ * Required when creating a voice with `type` `"prompted"`. Returned when
+ * creating, getting, or listing prompted voices.
  */
 export type PromptedVoice = {
   /**
