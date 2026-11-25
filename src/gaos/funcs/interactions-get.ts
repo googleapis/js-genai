@@ -16,9 +16,8 @@ import { Stream } from "../lib/event-streams.js";
 import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
-import { RequestOptions } from "../lib/sdks.js";
+import { encodePath, RequestOptions } from "../lib/sdks.js";
 import { extractSecurity, resolveGlobalSecurity } from "../lib/security.js";
-import { pathToFunc } from "../lib/url.js";
 import { GoogleGenAiError } from "../models/errors/google-gen-ai-error.js";
 import {
   ConnectionError,
@@ -178,9 +177,14 @@ async function $do(
       charEncoding: "percent",
     }),
   };
-  const path = pathToFunc("/{api_version}/interactions/{interactionsId}")(
+  const pathResult = encodePath(
+    "/{api_version}/interactions/{interactionsId}",
     pathParams,
   );
+  if (!pathResult.ok) {
+    return [pathResult, { status: "invalid" }];
+  }
+  const path = pathResult.value;
 
   const query = encodeFormQuery({
     "include_input": payload.include_input,
