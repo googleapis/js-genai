@@ -1388,6 +1388,17 @@ export function liveConnectConfigToMldev(
     common.setValueByPath(parentObject, ['setup', 'labels'], fromLabels);
   }
 
+  const fromHistoryConfig = common.getValueByPath(fromObject, [
+    'historyConfig',
+  ]);
+  if (parentObject !== undefined && fromHistoryConfig != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'historyConfig'],
+      fromHistoryConfig,
+    );
+  }
+
   return toObject;
 }
 
@@ -1645,6 +1656,17 @@ export function liveConnectConfigToVertex(
   const fromLabels = common.getValueByPath(fromObject, ['labels']);
   if (parentObject !== undefined && fromLabels != null) {
     common.setValueByPath(parentObject, ['setup', 'labels'], fromLabels);
+  }
+
+  const fromHistoryConfig = common.getValueByPath(fromObject, [
+    'historyConfig',
+  ]);
+  if (parentObject !== undefined && fromHistoryConfig != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'historyConfig'],
+      fromHistoryConfig,
+    );
   }
 
   return toObject;

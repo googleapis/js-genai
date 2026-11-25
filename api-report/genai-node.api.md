@@ -3660,6 +3660,7 @@ export interface LiveConnectConfig {
     enableAffectiveDialog?: boolean;
     explicitVadSignal?: boolean;
     generationConfig?: GenerationConfig;
+    historyConfig?: HistoryConfig;
     httpOptions?: HttpOptions;
     inputAudioTranscription?: AudioTranscriptionConfig;
     labels?: Record<string, string>;

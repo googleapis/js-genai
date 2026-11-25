@@ -520,6 +520,17 @@ export function liveConnectConfigToMldev(
     common.setValueByPath(parentObject, ['setup', 'labels'], fromLabels);
   }
 
+  const fromHistoryConfig = common.getValueByPath(fromObject, [
+    'historyConfig',
+  ]);
+  if (parentObject !== undefined && fromHistoryConfig != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'historyConfig'],
+      fromHistoryConfig,
+    );
+  }
+
   return toObject;
 }
 
