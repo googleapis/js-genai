@@ -29,6 +29,7 @@ export * from '../_common.js';
 export {BaseModule} from '../_common.js';
 export {type Downloader} from '../_downloader.js';
 export {type Uploader} from '../_uploader.js';
+export * from '../errors.js';
 export {NodeAuth, type NodeAuthOptions} from '../node/_node_auth.js';
 export {NodeDownloader} from '../node/_node_downloader.js';
 export {NodeUploader} from '../node/_node_uploader.js';
