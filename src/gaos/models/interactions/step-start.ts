@@ -21,6 +21,9 @@ export type StepStart = {
    */
   event_id?: string | undefined;
   event_type: "step.start";
+  /**
+   * Required. The 0-based index of the step.
+   */
   index: number;
   /**
    * A step in the interaction.

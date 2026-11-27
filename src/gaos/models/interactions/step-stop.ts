@@ -21,6 +21,9 @@ export type StepStop = {
    */
   event_id?: string | undefined;
   event_type: "step.stop";
+  /**
+   * Required. The 0-based index of the step that stopped.
+   */
   index: number;
   /**
    * Statistics on the interaction request's token usage.
