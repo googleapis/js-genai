@@ -23,6 +23,9 @@ export type StepDelta = {
    */
   event_id?: string | undefined;
   event_type: "step.delta";
+  /**
+   * Required. The 0-based index of the step to which this delta applies.
+   */
   index: number;
   /**
    * Optional metadata accompanying ANY streamed event.
