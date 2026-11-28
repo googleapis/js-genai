@@ -14,7 +14,14 @@ export function tModel(apiClient: ApiClient, model: string | unknown): string {
   if (!model || typeof model !== 'string') {
     throw new Error('model is required and must be a string');
   }
-  if (model.includes('..') || model.includes('?') || model.includes('&')) {
+  // Reject `..` only as a complete path segment, since that is the only form
+  // that traverses the URL path. Enterprise gateways use model IDs with
+  // consecutive dots inside a segment (e.g. `team..gemini-3.1-pro`).
+  if (
+    model.split('/').some((segment) => segment === '..') ||
+    model.includes('?') ||
+    model.includes('&')
+  ) {
     throw new Error('invalid model parameter');
   }
 

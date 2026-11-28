@@ -159,6 +159,34 @@ describe('tModel', () => {
       ),
     ).toEqual('publishers/google/models/gemini-2.0-flash');
   });
+  it('accepts model IDs with embedded consecutive dots in a segment', () => {
+    const apiClient = new ApiClient({
+      auth: new FakeAuth(),
+      apiKey: 'test-api-key',
+      uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
+    });
+    expect(tModel(apiClient, 'team..gemini-3.1-pro')).toEqual(
+      'models/team..gemini-3.1-pro',
+    );
+    expect(tModel(apiClient, 'models/team..gemini-3.1-pro')).toEqual(
+      'models/team..gemini-3.1-pro',
+    );
+  });
+
+  it('rejects model IDs with a path traversal segment', () => {
+    const apiClient = new ApiClient({
+      auth: new FakeAuth(),
+      apiKey: 'test-api-key',
+      uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
+    });
+    for (const model of ['../evil', 'models/../evil', 'a/../b', 'a/b/..']) {
+      expect(() => tModel(apiClient, model)).toThrowError(
+        'invalid model parameter',
+      );
+    }
+  });
 });
 
 describe('tModelsUrl', () => {
